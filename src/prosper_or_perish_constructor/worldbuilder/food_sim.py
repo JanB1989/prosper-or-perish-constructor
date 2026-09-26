@@ -1,4 +1,4 @@
-﻿"""Start-food validator: the calibrated population loop for every province pool (``ppc worldbuilder food-sim``).
+"""Start-food validator: the calibrated population loop for every province pool (``ppc worldbuilder food-sim``).
 
 The start placement writes one input row per province/owner pool (``input.csv``: pops, jobs, the location yields,
 building food, market levels, food capacity); this module runs 96 months (1337-1345, the pre-plague window) of the
@@ -15,7 +15,7 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   province whose total consumption is zero or below gets no storage growth bonus (engine, verified 2026-09-25);
 * tribesmen (engine, verified 2026-09-25): the location growth below also carries ``tribal_growth`` x tribal share for
   every pop; when it is positive tribesmen are born at it x ``tribal_land_births`` (0.75) x the free-land factor
-  max(0, 1 - ``tribal_land_slope`` x pop / capacity) (the topographies' ``local_tribesmen_pop_growth = -1`` + 0.75 in the
+  max(0, 1 - ``tribal_land_slope`` x pop / capacity) (the topographies' ``local_tribesmen_pop_growth = -1`` + 0.19 in the
   scaled free-land modifiers since 2026-09-26; slope fitted on the 1345 save), when it is negative they lose it
   unscaled like every pop type;
 * unowned tribal land (owner ``---``, one pool per province, no buildings or markets): no free-land modifier reaches
@@ -28,9 +28,7 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   market victuals price (2.7): the Tavern pays below 12 stored months, the Yard above 20; each staffed level moves
   60 food (a Tavern buys 2 victuals, a Yard packs 1.5); Taverns only get the victuals their market has (staffed
   Yards and other producers; pops compete); a starving pool loses the noble who staffs its Tavern at 0.09 a year;
-* growth per year: -0.0028 + 0.0026 x stored years (cap 2) when fed (the pre-plague fit -0.0048 + 0.0086 x stored
-  years moved by the 2026-09-26 growth law: rank gate -0.002, storage bonus 0.0015), -0.0028 - 0.02 - 0.012 when
-  starving (province_starving -0.02); matches the 1337-1346 game run within ~0.2 %/yr per macro region;
+* growth per year: -0.0048 + 0.0086 x stored years (cap 2) when fed, -0.0048 - 0.04 - 0.012 when starving;
 * each September a pool rolls its harvest (``pp_harvest_*``: peasant food consumption +0.30 .. -0.30, 40 % neutral)
   from a seeded generator, so the run is reproducible; ``harvest = false`` turns the rolls off.
 * ``migration = true`` replaces the starving out-migration sink by the engine's market migration (``migration.py``,
@@ -67,9 +65,9 @@ SEPTEMBER = 5   # month index from the April start
 class SimRules:
     months: int = 96
     victuals_price: float = 2.7
-    growth_base: float = -0.0028       # fit -0.0048 on the pre-plague saves, +0.002 for the rank gate -0.004 -> -0.002 (2026-09-26)
-    growth_per_year: float = 0.0026    # fit 0.0086 with the old 0.0075 storage bonus; 0.0015 per stored year since 2026-09-26
-    starving_growth: float = -0.02     # province_starving (-0.04 before 2026-09-26)
+    growth_base: float = -0.0048
+    growth_per_year: float = 0.0086
+    starving_growth: float = -0.04
     starving_migration: float = -0.012
     emp_elasticity: float = 0.5
     free_land: float = 0.4
@@ -85,10 +83,10 @@ class SimRules:
     collapse_share: float = 0.25
     tribal_share: float = 0.5
     # tribesmen (pp_pop_adjustments.txt, pp_capacity_pressure_effects.txt, pp_country_base_values.txt)
-    tribal_growth: float = 0.004        # pop_percentage_impact local_population_growth (every pop in the location; 0.012 before 2026-09-26)
+    tribal_growth: float = 0.006        # pop_percentage_impact local_population_growth (every pop in the location; 0.012 before 2026-09-26)
     tribal_land_slope: float = 0.75     # free-land factor 1 - slope x pop / capacity (1345 save: 0.75 at start capacity)
     tribal_land_births: float = 0.75    # local_tribesmen_pop_growth of the free-land modifiers (topography brake -1.0)
-    unowned_brake: bool = True          # the rank brake also holds on unowned land (false: the pre-2026-09-26 country brake)
+    unowned_brake: bool = True          # the topography brake also holds on unowned land (false: the pre-2026-09-26 country brake)
     tribal_feeding: float = 0.0         # -pop_percentage_impact local_pop_food_consumption (0 = the tribe feeds nobody)
     tribal_tavern_premium: float = 0.0  # pop_percentage_impact local_province_food_purchase_output_modifier (mod: none;
                                         # -16 tested 2026-09-25: tribal pools starving 38 -> 92, rejected)
@@ -181,7 +179,6 @@ class Pool:
     attraction_fixed: float = 0.1      # mean fixed migration attraction of its locations (base, development, statics)
     type_shares: dict = field(default_factory=dict)   # non-tribal pops by type, share of pop0 - tribesmen
     religion: str = ""                 # dominant pop religion
-    development: float = 0.0           # pop-weighted development of the pool's locations (growth term)
 
 
 def overpopulation(pool: Pool, f: float) -> float:
@@ -536,7 +533,7 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
         pairs = []
         by_type = defaultdict(float)
         religions = defaultdict(float)
-        capacity = lat = lon = weight = fixed = fed_num = fed_den = dev_w = 0.0
+        capacity = lat = lon = weight = fixed = fed_num = fed_den = 0.0
         capital = sim.province_capital(group)
         for tag in tags:
             types = sim.location_pops(tag, converted[tag])
@@ -549,7 +546,6 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
             a = sim.attrs.get(tag, {})
             w = max(1e-6, float(ctx.get("population") or 0.0))
             lat += w * float(a.get("calibrated_lat") or 0.0)
-            dev_w += w * float(ctx.get("development") or 0.0)
             lon += w * float(a.get("calibrated_lon") or 0.0)
             weight += w
             capacity += max(0.0, sim.capacity_k(tag))
@@ -605,7 +601,6 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
             pop_capacity=capacity, attraction_fixed=fixed / len(tags) if tags else 0.1,
             type_shares={k: v / sum(by_type.values()) for k, v in by_type.items()} if by_type else {},
             religion=max(religions, key=religions.get) if religions else "",
-            development=dev_w / weight if weight else 0.0,
         ))
     out.extend(unowned_pools(sim))
     return out
@@ -624,7 +619,7 @@ def unowned_pools(sim) -> list[Pool]:
     tribesmen_food = float(sim.food.get("tribesmen", 0.0))
     out = []
     for province, tags in sorted(by_province.items()):
-        tribesmen = settled = workers = peasant_food = capacity_k = dev_w = pop_w = 0.0
+        tribesmen = settled = workers = peasant_food = capacity_k = 0.0
         cap_rows = []
         for tag in tags:
             for pop in sim.pops.get(tag, []):
@@ -638,9 +633,6 @@ def unowned_pools(sim) -> list[Pool]:
                         peasant_food += pop.size_k * float(sim.food.get("peasants", 0.0))
             target = sim.targets.get(tag, {})
             capacity_k += float(target.get("attribute_flat_people") or 0.0) / 1000.0
-            here = sum(p.size_k for p in sim.pops.get(tag, []))
-            dev_w += here * float(target.get("development") or 0.0)
-            pop_w += here
             cap_rows.append((float(target.get("development") or 0.0), sum(p.size_k for p in sim.pops.get(tag, [])), "rural_settlement"))
         pop0 = sum(p.size_k for t in tags for p in sim.pops.get(t, []))
         if pop0 <= 0:
@@ -652,7 +644,7 @@ def unowned_pools(sim) -> list[Pool]:
             serve_food=0.0, cookshop_levels=0.0, taverns=0.0, yards=0.0, capacity=food_cap,
             start_food=sim.food_model.start_food_share * food_cap, victuals_demand=0.0,
             peasant_share=peasant_food / settled if settled > 1e-9 else 0.0, tribesmen_food=tribesmen_food,
-            n_locations=float(len(tags)), pop_capacity=capacity_k, development=dev_w / pop_w if pop_w else 0.0,
+            n_locations=float(len(tags)), pop_capacity=capacity_k,
         ))
     return out
 

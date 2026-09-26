@@ -22,7 +22,7 @@ def pools():
 
 
 def test_validator_reports_collapse_pinning_and_world_change(tmp_path):
-    rules = fs.SimRules(harvest=False, starving_growth=-0.04)   # mechanics test at the old starvation penalty
+    rules = fs.SimRules(harvest=False)
     rows = fs.simulate(pools(), rules)
     by = {r["province"]: r for r in rows}
     assert by["short"]["collapsing"] and by["short"]["months_starving"] > 48

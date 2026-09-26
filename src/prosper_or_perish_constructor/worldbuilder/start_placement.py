@@ -77,7 +77,7 @@ DEFAULT_RGO_WORKERS_K: dict[str, float] = {"rural_settlement": 1.5, "town": 2.0,
 # supply the import markets should buy. Measured from saves 2026-09-22 (`ppc worldbuilder food-check` refits).
 DEFAULT_VICTUALS: dict[str, Any] = {
     "pop_demand_scale": 0.305,
-    "producers": {"cookshop": 0.65, "victualling_yard": 2.3, "grange": 2.3},
+    "producers": {"cookshop": 0.65, "victualling_yard": 3.0, "grange": 2.3},
     "consumers": {"tavern": 1.2, "lumber_mill": 0.3},
 }
 # Province Food (``local_food``, 1 food per unit) per staffed level on top of ``local_monthly_food``: the output of the

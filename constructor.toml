@@ -311,8 +311,9 @@ megalopolis = 2.3
 # food-check`'s refit.
 pop_demand_scale = 0.305  # observed pop demand vs the goods file's demand_add x demand_multiply (food-check refit on nb.eu5, 2026-09-25; was 0.4)
 # victuals per building level as the market shows them (food-check refits). Cookshops make none since 2026-09-25 (Serve
-# only); the Yard packs 1.5 per level loose and the Tavern buys 2 (the former 90-food Victualler's measured 1.8 x 2/3).
-producers = { victualling_yard = 1.5, grange = 1.5 }
+# only); the Grange packs 1.5 per level loose, the harbour Victualling Yard makes 3 (20 food + shipped grain) and the
+# Tavern buys 2 (the former 90-food Victualler's measured 1.8 x 2/3).
+producers = { victualling_yard = 3.0, grange = 1.5 }
 consumers = { tavern = 1.2, lumber_mill = 0.3 }
 [worldbuilder.start.province_food]
 # Province Food (the local_food good, 1 food per unit) one staffed level makes on top of its local_monthly_food, as the
@@ -341,13 +342,15 @@ start_food_share = 0.10            # game rule pp_starting_province_food default
 capacity = { per_development = 31.97, per_population_k = 3.65, per_location = 99.9, rank = { town = 521.3, city = 815.2, megalopolis = 1240.8 } }
 # placement v2 (start_simulation.place_food_chain)
 tavern_victuals_per_level = 2.0    # victuals a staffed Tavern buys per month (60 food, 30 per victual)
-yard_victuals_per_level = 1.5      # victuals a staffed Victualling Yard packs per month (60 food, loose stores)
+yard_victuals_per_level = 1.5      # victuals a staffed Grange packs per month (60 food, loose stores)
+harbor_yard_victuals_per_level = 3.0   # victuals a staffed harbour Victualling Yard makes (20 food + 5.83 grain)
 # Cookshops serve every dish as Province Food (no Preserve recipes since 2026-09-25)
 cookshop_serve_share = 1.0
 cookshop_drink_food = 12.0         # drink slot Province Food per level (estimate; refit from a save with food-check)
 victuals_target = 1.1              # per market: victuals supply >= demand (Taverns + pops) x this
 yard_surplus_share = 0.25          # Yards only in pools that feed themselves by more than +25 %
-yard_min_capacity_months = 20.0    # ... and whose store can reach the Yard's band (20 months)
+yard_min_capacity_months = 20.0    # ... and whose store can reach the Grange's band (20 months)
+harbor_yard_min_capacity_months = 12.0   # the harbour Yard's band starts lower (break-even about 12 months stored)
 yard_min_level_share = 0.3         # a Yard level once the spare food fills 30 % of one (levels staff partly)
 raw_goods_per_rgo_k = 1.5          # raw food goods per 1,000 RGO workers (nb.eu5 median 1.50)
 serve_raw_goods_share = 0.2        # share of the market's raw food output new Serve Cookshops may use (nb.eu5: 21 % spare)

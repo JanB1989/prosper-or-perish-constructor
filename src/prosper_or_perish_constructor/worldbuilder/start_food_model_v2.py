@@ -65,13 +65,15 @@ class FoodModelConfig:
                                                      # tribal location, scaled by the tribal share (pp_pop_adjustments.txt)
     # placement v2
     tavern_victuals_per_level: float = 2.0           # victuals a staffed Tavern buys per month (60 food)
-    yard_victuals_per_level: float = 1.5             # victuals a staffed Victualling Yard packs per month (60 food, loose)
+    yard_victuals_per_level: float = 1.5             # victuals a staffed Grange packs per month (60 food, loose)
+    harbor_yard_victuals_per_level: float = 3.0      # victuals a staffed harbour Victualling Yard makes (20 food + grain)
     cookshop_serve_share: float = 1.0                # share of cookshop levels whose dish slot runs Serve (all: no Preserve)
     cookshop_drink_food: float = 12.0                # Province Food of the drink slot per level (estimate: ~0.4 of the
                                                      # 0.67 victuals drinks + packing made per level on nb.eu5, x30)
     victuals_target: float = 1.1                     # victuals supply >= demand x this per market
     yard_surplus_share: float = 0.25                 # a pool packs victuals only above this surplus (share of its demand)
-    yard_min_capacity_months: float = 20.0           # ... and only if its store can reach the Yard's band (20 months)
+    yard_min_capacity_months: float = 20.0           # ... and only if its store can reach the Grange's band (20 months)
+    harbor_yard_min_capacity_months: float = 12.0    # the harbour Yard's band (it breaks even at about 12 months stored)
     yard_min_level_share: float = 0.3                # a pool gets a Yard level once its spare food fills this share of one
                                                      # (the engine staffs levels partly, so a level need not be full)
     serve_raw_goods_share: float = 0.2               # share of a market's raw food output new Serve Cookshops may use
@@ -95,8 +97,9 @@ class FoodModelConfig:
                 cap[str(k)] = {str(a): float(b) for a, b in v.items()} if isinstance(v, Mapping) else float(v)
             kwargs["capacity"] = cap
         for name in ("overpopulation_consumption", "start_food_share", "tribal_share_food", "tavern_victuals_per_level", "yard_victuals_per_level",
-                     "cookshop_serve_share", "cookshop_drink_food",
-                     "victuals_target", "yard_surplus_share", "yard_min_capacity_months", "yard_min_level_share", "serve_raw_goods_share",
+                     "harbor_yard_victuals_per_level", "cookshop_serve_share", "cookshop_drink_food",
+                     "victuals_target", "yard_surplus_share", "yard_min_capacity_months", "harbor_yard_min_capacity_months",
+                     "yard_min_level_share", "serve_raw_goods_share",
                      "raw_goods_per_rgo_k", "serve_fallback_raw_goods_share", "import_priority_coverage"):
             if name in raw:
                 kwargs[name] = float(raw[name])

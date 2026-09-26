@@ -11,22 +11,23 @@ building:
     - name: slot_0
       methods:
         - pp_victualling_yard_pack_provisions
+        - pp_victualling_yard_salting_house
         - pp_victualling_yard_ship_stores
     - name: slot_1
       methods:
-        - pp_victualling_yard_surplus_sales
+        - pp_victualling_yard_grain_shipment
+        - pp_victualling_yard_rice_shipment
+        - pp_victualling_yard_millet_shipment
     - name: slot_2
       methods:
-        - pp_victualling_yard_loose_stores
-        - pp_victualling_yard_pottery_jars
-        - pp_victualling_yard_coopered_barrels
-        - pp_victualling_yard_tin_cans
+        - pp_victualling_yard_surplus_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    increase_per_level_cost = 0.13
+    # steep: every further level costs another full base price, so a harbour grows its Yard slowly
+    increase_per_level_cost = 1.0
     max_levels = victualling_yard_max_level
-    pop_type = nobles
+    pop_type = burghers
     employment_size = 0.001
     price = pp_victualling_yard_price
     category = consumer_goods_category
@@ -49,66 +50,64 @@ building:
       pp_victualling_yard_site = yes
     }
 
-    # The Victualling Yard packs the lasting part of a full province store into victuals for the goods market:
-    # each staffed level takes 60 food (the modifier below) and packs 1.5 victuals loose, 1:40 against the Tavern's
-    # 1:30, so food that goes out and comes back always loses a quarter. Packing goods lift it to at most 1:30.
-    # slot 0: packing the store. A real, positive victuals output (production efficiency scales it).
+    # The harbour Yard is the merchants' victualling house: it packs a little of the province store and ships in
+    # grain from the wider market, so it needs far less of the local food than the Grange and makes twice the victuals.
+    # Per level: 20 food + 5.83 grain (12 food each in the farms' Provisioning) = 90 food for 3.0 victuals, which a
+    # Tavern turns back into 90 food: food-neutral, where the Grange loses a quarter (60 food for 1.5 victuals).
+    # slot 0: the province's own food, packed (0.67 victuals from the 20 food); labour or goods, whichever is cheaper.
+    # At default goods prices Hand Packing wins below labour 1.3, the Salting House from 1.3, Ship's Stores from 1.6.
     unique_production_methods = {
       pp_victualling_yard_pack_provisions = {
         produced = victuals
-        manual_labor_cost = 0.2
-        output = 1.5
+        manual_labor_cost = 0.6
+        output = 0.67
         category = building_maintenance
       }
-      # TEST value (2026-09-26), not balanced yet. The AI keeps the first method of a slot, so it stays on Pack Provisions.
-      pp_victualling_yard_ship_stores = {
-        naval_supplies = 0.3
+      pp_victualling_yard_salting_house = {
+        salt = 0.078
         produced = victuals
-        manual_labor_cost = 0.2
-        output = 2.25
+        manual_labor_cost = 0.3
+        output = 0.67
+        category = building_maintenance
+      }
+      pp_victualling_yard_ship_stores = {
+        naval_supplies = 0.12
+        tar = 0.16
+        produced = victuals
+        manual_labor_cost = 0.12
+        output = 0.67
         category = building_maintenance
       }
     }
-    # slot 1: surplus sales, the storage leg (the farms' Surplus Sales good): output modifier = country constant -1
-    # + 8 per stored year = 8y; the 30.52 offset input is the fixed cost. Per level at floor prices (dummy goods and
-    # labour 1 gold, y = stored years, capped at 2, loose stores): profit = 1.5p - 30.72 + 2.0 x 8y
-    # -> at p = 2.7: -10.7 at 12 months, 0 at 20, +5.3 at 24. The Tavern stops at 12 months, so the two keep a
-    # 12-20 month dead band that only closes at about +125 % production efficiency.
+    # slot 1: grain shipments, the long-distance grain the harbour receives (already packed, so no packing slot).
+    unique_production_methods = {
+      pp_victualling_yard_grain_shipment = {
+        wheat = 5.83
+        produced = victuals
+        output = 2.33
+        category = building_maintenance
+      }
+      pp_victualling_yard_rice_shipment = {
+        rice = 5.83
+        produced = victuals
+        output = 2.33
+        category = building_maintenance
+      }
+      pp_victualling_yard_millet_shipment = {
+        millet = 5.83
+        produced = victuals
+        output = 2.33
+        category = building_maintenance
+      }
+    }
+    # slot 2: surplus sales, the storage leg (the farms' Surplus Sales good) at a third of the Grange's weight per level,
+    # matching its 20 food: output modifier = -1 + 8 per stored year = 8y, the offset input is the fixed cost. Per level
+    # at victuals 3.0, grain 1.0, labour 1.3 (Hand Packing): -2.7 gold at 0 months, 0 at 12, +2.6 at 24 (Grange: -26..+6).
     unique_production_methods = {
       pp_victualling_yard_surplus_sales = {
         produced = province_food_sales
-        offset = 30.52
-        output = 2.0
-        category = building_maintenance
-      }
-    }
-    # slot 2: packing goods. Each breaks even at default prices; they only pay where the packing good is cheap.
-    unique_production_methods = {
-      pp_victualling_yard_loose_stores = {
-        category = building_maintenance
-      }
-      pp_victualling_yard_pottery_jars = {
-        pottery = 0.65
-        manual_labor_cost = 0.11
-        produced = victuals
-        output = 0.25
-        debug_max_profit = 0
-        category = building_maintenance
-      }
-      pp_victualling_yard_coopered_barrels = {
-        furniture = 0.30
-        manual_labor_cost = 0.16
-        produced = victuals
-        output = 0.35
-        debug_max_profit = 0
-        category = building_maintenance
-      }
-      pp_victualling_yard_tin_cans = {
-        steel = 0.26
-        manual_labor_cost = 0.22
-        produced = victuals
-        output = 0.5
-        debug_max_profit = 0
+        offset = 5.09
+        output = 0.33
         category = building_maintenance
       }
     }
@@ -117,13 +116,12 @@ building:
     }
 
     modifier = {
-      local_monthly_food = -60.0
+      local_monthly_food = -20.0
       # droop: each staffed level lowers the storage leg a little, so staffing settles instead of flipping
-      # (location-wide, so it also trims the farms' Sell the Surplus there; -0.2 per 60 food as before per food)
-      local_province_food_sales_output_modifier = -0.2
-      local_nobles_estate_power = 0.05
-      local_peasant_enfranchisment = -0.01
-      local_food_capacity = 1200
+      # (location-wide; -0.2 per 60 food as on the Grange, so -0.067 for the Yard's 20 food)
+      local_province_food_sales_output_modifier = -0.067
+      local_burghers_estate_power = 0.05
+      local_food_capacity = 400
       # yards provisioned and refitted the fleets
       local_repair_speed = 0.01
       local_sailors = 0.01
@@ -131,34 +129,23 @@ building:
 prices:
   - key: pp_victualling_yard_price
     body: |2-
-      {gold = 35}
-advancements:
-  - key: victualling_yard_tin_cans_advance
-    body: |2-
-      age = age_6_revolutions
-      unlock_production_method = pp_victualling_yard_tin_cans
-      unlock_production_method = pp_grange_tin_cans
-      requires = steel_mill_advance
-      icon = victualling_yard_tin_cans_advance
-      ai_weight = { add = 150 }
+      {gold = 50}
 localization:
   entries:
     victualling_yard: Victualling Yard
-    victualling_yard_desc: Packs the lasting part of a full province store into [ShowGoodsName('victuals')|e] and ships it out, as the great harbour yards that provisioned fleets did. Only good harbours and the great river ports can hold one; elsewhere the Grange sends the surplus overland. It pays off when the province store is full, and packing goods waste less of the food.
+    victualling_yard_desc: The merchants' victualling house of a great harbour. It ships in grain from the wider market and packs it, with a little of the province store, into [ShowGoodsName('victuals')|e] for the fleets and the markets beyond. Only good harbours and the great river ports can hold one, and each further level costs much more; elsewhere the Grange sends the surplus overland.
     victualling_yard_slot_0: Provisions
-    victualling_yard_slot_1: Surplus Sales
-    victualling_yard_slot_2: Packing
+    victualling_yard_slot_1: Grain Shipments
+    victualling_yard_slot_2: Surplus Sales
     victuals_trade_construction: Victuals Trade Construction
-    pp_victualling_yard_pack_provisions: Pack Provisions
+    pp_victualling_yard_pack_provisions: Hand Packing
+    pp_victualling_yard_salting_house: Salting House
     pp_victualling_yard_ship_stores: Ship's Stores
+    pp_victualling_yard_grain_shipment: Grain Shipment
+    pp_victualling_yard_rice_shipment: Rice Shipment
+    pp_victualling_yard_millet_shipment: Millet Shipment
     pp_victualling_yard_surplus_sales: Sell the Surplus
-    pp_victualling_yard_loose_stores: Loose Stores
-    pp_victualling_yard_pottery_jars: Pottery Jars
-    pp_victualling_yard_coopered_barrels: Coopered Barrels
-    pp_victualling_yard_tin_cans: Tin Cans
     pp_victualling_yard_price: Victualling Yard Price
-    victualling_yard_tin_cans_advance: Tin Cans
-    victualling_yard_tin_cans_advance_desc: Develop canning and tinning methods that pack victuals in metal containers for longer transport and storage.
 icon:
   source_png: ../assets/icons/victualling_yard.png
   output_dds: victualling_yard.dds
@@ -171,11 +158,4 @@ evaluation:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline.
     amortization_months: Surplus Sales output intentionally breaks normal payback bounds.
-    base_output_per_1k: The packing leg turns stored province food into victuals on one noble per level, not a production line.
-  production_methods:
-    pp_victualling_yard_pottery_jars:
-      production_efficiency: 1.00
-    pp_victualling_yard_coopered_barrels:
-      production_efficiency: 1.00
-    pp_victualling_yard_tin_cans:
-      production_efficiency: 1.00
+    base_output_per_1k: The Yard packs and ships victuals on one burgher per level, not a production line.

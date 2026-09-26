@@ -222,12 +222,15 @@ def budget_simulation():
 
 def test_trade_conserves_food_and_keeps_donor_reserve_and_catchment_boundary():
     sim = budget_simulation()
+    # the store packer conserves province food; the harbour Yard ships in grain, so its food does not balance here
+    sim.rules.buildings["grange"] = sim.rules.buildings.pop("victualling_yard")
+    sim.numbers["grange"] = sim.numbers.pop("victualling_yard")
     before = sim.budgets()
     sim.place()
     after = sim.budgets()
     # the town needs 60 x 1.1 = 66 food: two import levels of 60, whose 3 victuals (its gap / 20 food per victual) the
-    # donor's Yards must supply x 1.1 -> Yard levels; the isolated province's market has no victuals
-    assert sim.counts["donor"]["victualling_yard"] == 2
+    # donor's Granges must supply x 1.1 -> Grange levels; the isolated province's market has no victuals
+    assert sim.counts["donor"]["grange"] == 2
     assert sim.counts["town"]["tavern"] == 2
     assert sim.counts["isolated"]["tavern"] == 0
     assert abs(sum(r["supply"] for r in before.values()) - sum(r["supply"] for r in after.values())) < 1e-9

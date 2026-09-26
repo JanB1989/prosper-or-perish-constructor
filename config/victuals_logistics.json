@@ -20,22 +20,12 @@
     "maximum": 36
   },
   "victualling_yard": {
-    "base": 1,
-    "development": 0.06,
-    "population": 0,
-    "harbor": 2,
-    "coast": 2,
-    "river_per_level": 0.6,
-    "navigable": 4,
-    "difficult": 1,
-    "maintained": 2,
+    "harbor_capacity": 4,
     "market_center": 3,
-    "rank": {
-      "town": 1
-    },
-    "food_rgo": 0,
-    "farmland": 0,
-    "maximum": 24
+    "development": 0.05,
+    "threshold": -2,
+    "minimum": 1,
+    "maximum": 10
   },
   "grange": {
     "base": 1,
@@ -74,7 +64,7 @@
   "notes": [
     "Capacity is logistical potential; starting Taverns and Victualling Yards additionally require deficit/surplus and available workers.",
     "Tavern coefficients are 1.5x the former 90-food Victualler caps, so a location can still take in the same food at 60 food per level.",
-    "The Victualling Yard packs the province store, so its cap rewards water transport and market centres, not the location's own crops or people.",
+    "The Victualling Yard (harbour, burghers) ships in grain and packs a little of the store: its cap is harbour capacity (natural harbour, river mouth and harbour buildings) x harbor_capacity + market centre + development, minus the threshold, at least minimum on a Yard site and 0 elsewhere. Most sites hold one level; great harbours, market centres and ports with docks more.",
     "River road state is read from the navigation map variables updated on completion and destruction.",
     "All coefficients are balance choices; no location is hardcoded as a Tavern or Victualling Yard site.",
     "Victualling Yard sites (2026-09-26): not a cold climate, and natural harbour suitability >= sea_harbor next to real sea (a water neighbour without the river navigation variable) or >= any_harbor anywhere. The engine's harbour value includes river_flowing_through_coast (+0.05 per river size), river ports count as coastal. Fitted on historic ports vs empty regions: 1,205 sites, 85 of 98 historic hubs.",

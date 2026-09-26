@@ -26,27 +26,14 @@ tavern_max_level = {
 }
 
 victualling_yard_max_level = {
- add = { desc = PP_VM_CAP_BASE value = 1 }
- add = { desc = PP_VM_CAP_DEVELOPMENT value = development multiply = 0.06 }
- add = { desc = PP_VM_CAP_POPULATION value = population multiply = 0 }
- add = { desc = PP_VM_CAP_HARBOR value = modifier:natural_harbor_suitability max = 3 min = 0 multiply = 2 }
- if = { limit = { is_coastal = yes } add = { desc = PP_VM_CAP_COAST value = 2 } }
- if = { limit = { has_location_modifier = river_flowing_through_1 } add = { desc = PP_VM_CAP_RIVER value = 0.6 } }
- if = { limit = { has_location_modifier = river_flowing_through_2 } add = { desc = PP_VM_CAP_RIVER value = 1.2 } }
- if = { limit = { has_location_modifier = river_flowing_through_3 } add = { desc = PP_VM_CAP_RIVER value = 1.8 } }
- if = { limit = { has_location_modifier = river_flowing_through_4 } add = { desc = PP_VM_CAP_RIVER value = 2.4 } }
- if = { limit = { has_location_modifier = river_flowing_through_5 } add = { desc = PP_VM_CAP_RIVER value = 3.0 } }
- if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 1 var:pp_navigation_map_state = 4 var:pp_navigation_map_state = 6 } } } add = { desc = PP_VM_CAP_NAVIGABLE value = 4 } }
- else_if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 2 var:pp_navigation_map_state = 5 } } } add = { desc = PP_VM_CAP_DIFFICULT value = 1 } }
- if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 } } add = { desc = PP_VM_CAP_MAINTAINED value = 2 } }
+ add = { desc = PP_VM_CAP_HARBOR_CAPACITY value = modifier:harbor_suitability multiply = 4 }
  if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_MARKET value = 3 } }
- if = { limit = { location_rank ?= location_rank:town } add = { desc = PP_VM_CAP_RANK value = 1 } }
- if = { limit = { topography = mountains } add = { desc = PP_VM_CAP_TERRAIN value = -2 } }
- if = { limit = { topography = hills } add = { desc = PP_VM_CAP_TERRAIN value = -1 } }
- if = { limit = { NOT = { pp_victualling_yard_site = yes } } multiply = 0 }
- min = 0
- max = 24
+ add = { desc = PP_VM_CAP_DEVELOPMENT value = development multiply = 0.05 }
+ add = { desc = PP_VM_CAP_THRESHOLD value = -2 }
  floor = yes
+ min = 1
+ max = 10
+ if = { limit = { NOT = { pp_victualling_yard_site = yes } } multiply = 0 }
 }
 
 grange_max_level = {

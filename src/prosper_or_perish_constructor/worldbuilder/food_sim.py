@@ -162,7 +162,8 @@ class SimRules:
     noble_hazard: float = 0.09
     ramp: float = 0.15                  # staffing change per month (defines LAID_OFF / REHIRED_PERCENTAGE = 15)
     tavern_food: float = 60.0            # food per staffed Tavern level (local_monthly_food)
-    yard_food: float = 60.0              # food per staffed Victualling Yard level (-local_monthly_food)
+    yard_food: float = 60.0              # food per staffed Grange level (-local_monthly_food)
+    harbor_yard_food: float = 20.0       # food per staffed harbour Victualling Yard level (-local_monthly_food)
     provision_month: int = 6
     provision_below_months: float = 11.4
     serve_month: int = 1
@@ -200,8 +201,17 @@ class SimRules:
     tavern_starving: float = 8.0
     tavern_cost: float = 2.0
     tavern_droop: float = -0.2
-    # Victualling Yard (per level; blueprints/accepted/buildings/victualling_yard.yml)
-    yard_victuals: float = 1.5          # Pack Provisions (loose stores)
+    # harbour Victualling Yard (per level; blueprints/accepted/buildings/victualling_yard.yml): 20 food and shipped
+    # grain for 3 victuals, a storage leg at a third of the Grange's weight; its grain is bought at grain_price
+    harbor_yard_victuals: float = 3.0   # Hand Packing 0.67 + a Grain Shipment 2.33
+    harbor_yard_grain: float = 5.83
+    grain_price: float = 1.0
+    harbor_yard_amount: float = 0.33
+    harbor_yard_droop: float = -0.067
+    harbor_yard_cost: float = 5.09
+    harbor_yard_labour: float = 0.6
+    # Grange (per level; blueprints/accepted/buildings/grange.yml; the yard_* names predate the split)
+    yard_victuals: float = 1.5          # Porters (loose stores)
     yard_packing_victuals: float = 0.0  # a Packing method's extra victuals (what-if; its goods cost is not modelled)
     yard_amount: float = 2.0            # province_food_sales (shared with the farms' Sell the Surplus)
     yard_const: float = -1.0
@@ -235,6 +245,11 @@ class SimRules:
         return (self.yard_packed() * self.victuals_price + self.yard_amount * max(0.0, m)
                 - self.yard_cost - self.yard_labour)
 
+    def harbor_yard_profit(self, years: float, staffed: float) -> float:
+        m = 1.0 + self.yard_const + self.yard_per_year * years + self.harbor_yard_droop * staffed
+        return (self.harbor_yard_victuals * self.victuals_price + self.harbor_yard_amount * max(0.0, m)
+                - self.harbor_yard_cost - self.harbor_yard_labour - self.harbor_yard_grain * self.grain_price)
+
 
 @dataclass
 class Pool:
@@ -252,11 +267,12 @@ class Pool:
     serve_food: float           # Cookshops' Serve output
     cookshop_levels: float
     taverns: float              # staffed Tavern levels
-    yards: float                # staffed Victualling Yard levels
+    yards: float                # staffed Grange levels
     capacity: float             # food capacity (max stored food)
     start_food: float
     victuals_demand: float      # the pops' and other buildings' victuals demand at start
     victuals_other_supply: float = 0.0
+    harbor_yards: float = 0.0          # staffed harbour Victualling Yard levels (``yards`` counts the Granges)
     overpop: list = field(default_factory=list)   # [(peasants k, pop / capacity)] per location
     overpop_consumption: float = 0.5
     peasant_share: float = 0.6         # share of the demand the peasants eat (the harvest roll moves it)
@@ -378,6 +394,7 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
     prosperity = [0.0] * n
     s_tav = [rules.start_staffed if p.taverns else 0.0 for p in pools]
     s_yard = [rules.start_staffed if p.yards else 0.0 for p in pools]
+    s_harbor = [rules.start_staffed if p.harbor_yards else 0.0 for p in pools]
     nobles = [1.0] * n
     starving = [False] * n
     months_pinned = [0] * n
@@ -442,7 +459,8 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             for i in members:
                 p = pools[i]
                 f = N[i] / base[i]
-                supply += p.yards * s_yard[i] * rules.yard_packed() + p.victuals_other_supply
+                supply += (p.yards * s_yard[i] * rules.yard_packed() + p.harbor_yards * s_harbor[i] * rules.harbor_yard_victuals
+                           + p.victuals_other_supply)
                 demand += p.victuals_demand * f
                 buy += p.taverns * s_tav[i] * rules.tavern_victuals
             total = demand + buy
@@ -470,8 +488,9 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             prov = t >= rules.provision_month and months < rules.provision_below_months
             L = p.taverns * s_tav[i]
             E = p.yards * s_yard[i]
+            H = p.harbor_yards * s_harbor[i]
             inflow = rules.tavern_food * L * fill[i]
-            outflow = rules.yard_food * E
+            outflow = rules.yard_food * E + rules.harbor_yard_food * H
             prod = (p.yield_ * jobless + p.flat_food + (p.provision_food if prov else 0.0)
                     + (p.serve_food if serving else 0.0) + forage[i] + inflow - outflow)
             if rules.tribal_flat_food and N[i] + T[i] > 0:
@@ -494,6 +513,9 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             if p.yards:
                 pe = rules.yard_profit(years[i], E)
                 s_yard[i] = min(1.0, max(0.0, s_yard[i] + (rules.ramp if pe > 0 else -rules.ramp)))
+            if p.harbor_yards:
+                ph = rules.harbor_yard_profit(years[i], H)
+                s_harbor[i] = min(1.0, max(0.0, s_harbor[i] + (rules.ramp if ph > 0 else -rules.ramp)))
             if starving[i]:
                 g = rules.growth_base + rules.starving_growth + (0.0 if rules.migration else rules.starving_migration)
             else:
@@ -539,6 +561,7 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             if cons0 > 1e-9 else None,
             "taverns": p.taverns,
             "yards": p.yards,
+            "harbor_yards": p.harbor_yards,
             "cookshop_levels": p.cookshop_levels,
             "start_months": round(p.start_food / cons0, 2) if cons0 > 1e-9 else None,
             "capacity_months": round(p.capacity / cons0, 2) if cons0 > 1e-9 else None,
@@ -551,6 +574,7 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             "months_pinned": months_pinned[i],
             "tavern_staffed_end": round(s_tav[i], 3),
             "yard_staffed_end": round(s_yard[i], 3),
+            "harbor_yard_staffed_end": round(s_harbor[i], 3),
             "tavern_food": round(tavern_food[i], 1),
             "yard_food": round(yard_food[i], 1),
             "migrated_out_k": round(migrated_out[i], 3),
@@ -682,7 +706,7 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
     for group, tags in sim.groups.items():
         b = budgets[group]
         tribesmen = flat = provision = serve = cookshop = victuals = other_supply = peasant_food = 0.0
-        taverns = yards = 0.0
+        taverns = yards = harbor_yards = 0.0
         pairs = []
         by_type = defaultdict(float)
         religions = defaultdict(float)
@@ -727,7 +751,10 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
                 if key == "tavern":
                     taverns += n
                     continue
-                if key in ("victualling_yard", "grange"):
+                if key == "victualling_yard":
+                    harbor_yards += n
+                    continue
+                if key == "grange":
                     yards += n
                     continue
                 flat += n * mult * sim.numbers.get(key, {}).get("local_monthly_food", 0)
@@ -748,7 +775,8 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
             yield_=yield_, flat_food=flat, provision_food=provision, serve_food=serve, cookshop_levels=cookshop,
             taverns=taverns, yards=yards, capacity=b["food_capacity"],
             start_food=model.start_food_share * b["food_capacity"], victuals_demand=victuals,
-            victuals_other_supply=other_supply, overpop=pairs, overpop_consumption=model.overpopulation_consumption,
+            victuals_other_supply=other_supply, harbor_yards=harbor_yards, overpop=pairs,
+            overpop_consumption=model.overpopulation_consumption,
             peasant_share=peasant_food / demand0 if demand0 > 1e-9 else 0.0,
             tribesmen_food=tribesmen_food, tribal_fed_share=fed_num / fed_den if fed_den > 1e-9 else 0.0,
             winter_cons=winter_num / fed_den if fed_den > 1e-9 else 0.0,

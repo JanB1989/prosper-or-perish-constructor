@@ -137,6 +137,16 @@ prices:
   - key: pp_grange_price
     body: |2-
       {gold = 35}
+advancements:
+  # the key keeps its old Victualling Yard name so saves keep the researched advance; only the Grange packs since the
+  # harbour Yard ships grain already packed
+  - key: victualling_yard_tin_cans_advance
+    body: |2-
+      age = age_6_revolutions
+      unlock_production_method = pp_grange_tin_cans
+      requires = steel_mill_advance
+      icon = victualling_yard_tin_cans_advance
+      ai_weight = { add = 150 }
 localization:
   entries:
     grange: Grange
@@ -153,6 +163,8 @@ localization:
     pp_grange_coopered_barrels: Coopered Barrels
     pp_grange_tin_cans: Tin Cans
     pp_grange_price: Grange Price
+    victualling_yard_tin_cans_advance: Tin Cans
+    victualling_yard_tin_cans_advance_desc: Develop canning and tinning methods that pack victuals in metal containers for longer transport and storage.
 icon:
   source_png: ../assets/icons/grange.png
   output_dds: grange.dds

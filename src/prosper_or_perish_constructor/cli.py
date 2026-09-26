@@ -145,8 +145,8 @@ PROVINCE_FOOD_SALES_TOTAL_MODIFIER_MIN = -0.4
 PROVINCE_FOOD_SALES_TOTAL_MODIFIER_MAX = 0.4
 PROVINCE_FOOD_SALES_GROWTH_CAP_TARGET = 2.0
 PROVINCE_FOOD_SALES_TOLERANCE = 0.000001
-PROVINCE_FOOD_SALES_PROFITABILITY_BLUEPRINT = Path("buildings/victualling_yard.yml")
-PROVINCE_FOOD_SALES_PROFITABILITY_METHOD = "pp_victualling_yard_pack_provisions"
+PROVINCE_FOOD_SALES_PROFITABILITY_BLUEPRINT = Path("buildings/grange.yml")   # the store packer since the harbour Yard split
+PROVINCE_FOOD_SALES_PROFITABILITY_METHOD = "pp_grange_porters"
 PROVINCE_FOOD_SALES_STATIC_TARGETS = {
     "cheap_food_in_location": -0.900,
     "expensive_food_in_location": 0.248,

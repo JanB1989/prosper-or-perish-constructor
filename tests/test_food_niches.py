@@ -64,13 +64,29 @@ def test_the_public_kitchen_needs_a_town_or_the_province_capital() -> None:
     assert "obsolete = cookshop" in text
 
 
-def test_the_victualling_yard_packs_real_victuals_with_packing_methods() -> None:
+def _method(text, key):
+    match = re.search(rf"{key} = \{{([^}}]*)\}}", text, re.S)
+    assert match, key
+    return {k: float(v) if re.fullmatch(r"-?[\d.]+", v) else v for k, v in re.findall(r"(\w+) = (\S+)", match.group(1))}
+
+
+def test_the_harbour_yard_ships_grain_and_packs_little_of_the_store() -> None:
+    """The harbour Victualling Yard (2026-09-26): burghers, 20 food per level, three Provisions methods (labour or
+    goods) and a grain shipment slot; food-neutral against the Tavern; no packing slot (the grain arrives packed)."""
     text = (BLUEPRINTS / "victualling_yard.yml").read_text(encoding="utf-8-sig")
-    assert re.search(r"pp_victualling_yard_pack_provisions = \{[^}]*produced = victuals", text, re.S)
-    for method in ("pottery_jars", "coopered_barrels", "tin_cans"):
-        assert re.search(rf"pp_victualling_yard_{method} = \{{[^}}]*produced = victuals", text, re.S), method
-    assert "unlock_production_method = pp_victualling_yard_tin_cans" in text
-    assert "local_monthly_food = -60.0" in text
+    provisions = [_method(text, f"pp_victualling_yard_{m}") for m in ("pack_provisions", "salting_house", "ship_stores")]
+    shipments = [_method(text, f"pp_victualling_yard_{m}_shipment") for m in ("grain", "rice", "millet")]
+    assert all(m["produced"] == "victuals" and m["output"] == 0.67 for m in provisions)
+    assert [next(g for g in ("wheat", "rice", "millet") if g in m) for m in shipments] == ["wheat", "rice", "millet"]
+    assert all(m["produced"] == "victuals" and m["output"] == 2.33 for m in shipments)
+    assert "local_monthly_food = -20.0" in text and "pop_type = burghers" in text
+    assert "increase_per_level_cost = 1.0" in text and "{gold = 50}" in text
+    # 20 food + 5.83 grain (12 food each in the farms' Provisioning) for 3 victuals = 30 food per victual (the Tavern's)
+    grain = shipments[0]["wheat"]
+    assert abs((20.0 + grain * 12.0) / (0.67 + 2.33) - 30.0) < 0.05
+    assert "tin_cans" not in text and "pottery_jars" not in text
+    grange = (BLUEPRINTS / "grange.yml").read_text(encoding="utf-8-sig")
+    assert "unlock_production_method = pp_grange_tin_cans" in grange   # the advance moved with the packing slot
 
 
 def test_the_logistics_caps_are_generated_under_the_new_names() -> None:
@@ -81,20 +97,41 @@ def test_the_logistics_caps_are_generated_under_the_new_names() -> None:
     assert "raw_material = goods:" not in yard and "vegetation = farmland" not in yard   # it packs the store, not crops
 
 
-def test_yard_pools_prefer_well_connected_surplus() -> None:
+def _packer_sim(caps):
     sim = Simulation.__new__(Simulation)
     sim.food_model = FoodModelConfig()
-    sim.numbers = {Simulation.YARD: {"local_monthly_food": -60.0}}
-    sim.groups = {("A", "river"): ["r"], ("A", "inland"): ["i"]}
+    sim.numbers = {Simulation.YARD: {"local_monthly_food": -20.0}, Simulation.GRANGE: {"local_monthly_food": -60.0}}
     sim.counts = defaultdict(Counter)
-    caps = {"r": 6, "i": 1}
-    sim.cap = lambda tag, key: caps[tag]
+    sim.cap = lambda tag, key: caps.get((tag, key), 0)
+    sim.order = lambda tags, key: [t for t in tags if caps.get((t, key), 0) > sim.counts[t][key]]
+
+    def add(tag, key, want):
+        n = max(0, min(want, caps.get((tag, key), 0) - sim.counts[tag][key]))
+        sim.counts[tag][key] += n
+        return n
+
+    sim.add = add
+    return sim
+
+
+def test_yard_pools_prefer_harbour_sites_then_well_connected_surplus() -> None:
+    caps = {("h", Simulation.YARD): 1, ("r", Simulation.GRANGE): 6, ("i", Simulation.GRANGE): 1}
+    sim = _packer_sim(caps)
+    sim.groups = {("A", "harbour"): ["h"], ("A", "river"): ["r"], ("A", "inland"): ["i"]}
     budgets = {g: {"demand": 1000.0, "supply": 1400.0, "market_food": 0.0, "capacity_months": 30.0, "yard_levels": 0}
                for g in sim.groups}
-    budgets[("A", "inland")]["supply"] = 1500.0          # more surplus, but no river, coast or market
-    order = [g for g, _ in sim._yard_pools(list(sim.groups), budgets, 1.1)]
-    assert order == [("A", "river"), ("A", "inland")]
-    # a pool whose spare food fills 30 % of a level gets one (the engine staffs it partly)
-    budgets = {("A", "river"): {"demand": 1000.0, "supply": 1300.0, "market_food": 0.0, "capacity_months": 30.0, "yard_levels": 0}}
-    sim.groups = {("A", "river"): ["r"]}
-    assert sim._yard_pools(list(sim.groups), budgets, 1.25) == [(("A", "river"), 1)]   # 50 food spare > 0.3 x 60
+    budgets[("A", "inland")]["supply"] = 1500.0          # more surplus, but a smaller cap
+    order = [g for g, *_ in sim._yard_pools(list(sim.groups), budgets, 1.1)]
+    assert order == [("A", "harbour"), ("A", "river"), ("A", "inland")]
+
+
+def test_a_harbour_yard_needs_only_spare_food_a_grange_the_surplus_share() -> None:
+    caps = {("h", Simulation.YARD): 2, ("h", Simulation.GRANGE): 0, ("c", Simulation.GRANGE): 3}
+    sim = _packer_sim(caps)
+    sim.groups = {("A", "port"): ["h"], ("A", "farm"): ["c"]}
+    # both pools feed themselves by only +15 %: below the Grange's 25 % surplus share, above the target
+    budgets = {g: {"demand": 1000.0, "supply": 1150.0, "market_food": 0.0, "capacity_months": 30.0, "yard_levels": 0}
+               for g in sim.groups}
+    placed = sim._place_yards(list(sim.groups), budgets, 1.1, victuals=6.0)
+    assert sim.counts["h"][Simulation.YARD] == 2 and sim.counts["c"][Simulation.GRANGE] == 0
+    assert placed == 2

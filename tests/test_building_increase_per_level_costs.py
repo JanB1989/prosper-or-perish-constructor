@@ -24,6 +24,7 @@ INTENTIONAL_SOURCE_COST_OVERRIDES = {
     "shoen": "vanilla inject keeps the existing historical estate cadence",
     "tavern": "current accepted import market has zero repeat-cost escalation",
     "grange": "steep repeat cost so only market centres and developed capitals grow large Granges",
+    "victualling_yard": "each harbour Yard level costs another full base price, so strong Yards stay rare",
 }
 
 

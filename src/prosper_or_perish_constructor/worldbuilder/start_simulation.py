@@ -366,6 +366,10 @@ class Simulation:
                 static.add(key)
                 for k, v in summed(rules.statics.get(key)).items():
                     mods[k] += v
+            # Harbour capacity (harbor_suitability, the Victualling Yard cap): the engine derives it from the natural
+            # harbour value (location_template_natural_harbor_suitability; Samara in game: 0.25 = its natural 0.25).
+            # Setup docks and shipyards are not modelled: a lower bound, like the roads.
+            mods["harbor_suitability"] += mods["natural_harbor_suitability"]
             # Fertility, soil, sea coast and lake shore modifiers from the setup: the caps test for them
             # (fertility alone moves field management by 3 levels). Their capacity rows are in the attribute flat.
             for key in setup_keys.get(tag, ()):
@@ -831,6 +835,7 @@ class Simulation:
         ):
             demand = overpop = jobless = workers = subs = own_food = day0_flat = serve_food = market_food = pop = store = 0.0
             cookshop = taverns = yards = 0
+            packers = Counter()
             cap_rows = []
             for tag in tags:
                 types = self.location_pops(tag, converted[tag])
@@ -867,6 +872,7 @@ class Simulation:
                         market_food += flat
                     elif k in self.YARDS:
                         yards += n
+                        packers[k] += n
                         market_food += flat
                     elif k in serve_keys:
                         cookshop += n
@@ -904,6 +910,8 @@ class Simulation:
                 "serve_food": serve_food,
                 "tavern_levels": taverns,
                 "yard_levels": yards,
+                "harbor_yard_levels": packers[self.YARD],
+                "grange_levels": packers[self.GRANGE],
                 "market_food": market_food,
                 "supply": supply,
                 "balance": supply - eats,
@@ -966,12 +974,30 @@ class Simulation:
     TAVERN = "tavern"
     YARD = "victualling_yard"
     GRANGE = "grange"
-    # One producer role, two buildings: the Victualling Yard on harbour sites, the Grange at the other province
-    # capitals. Same food chain per level (the Yard's numbers stand for both).
+    # One producer role, two buildings: the harbour Victualling Yard (20 food + shipped grain -> 3 victuals, store band
+    # from about 12 months) on harbour sites, the Grange (60 food -> 1.5 victuals, band from 20 months) at the other
+    # province capitals. Harbour Yard sites are filled first.
     YARDS = (YARD, GRANGE)
 
     def yard_levels(self, tags):
         return sum(self.counts[t][k] for t in tags for k in self.YARDS)
+
+    def packer_levels(self, b):
+        """Packer levels of a pool budget by building (budgets without the split fields count as harbour Yards)."""
+        if "harbor_yard_levels" in b or "grange_levels" in b:
+            return {self.YARD: b.get("harbor_yard_levels", 0), self.GRANGE: b.get("grange_levels", 0)}
+        return {self.YARD: b.get("yard_levels", 0)}
+
+    def packer(self, key):
+        """(food per level, victuals per level, minimum store months) of a packing building: food from its blueprint
+        modifier, victuals and store band from the food model config."""
+        model = self.food_model
+        if key not in self.numbers:
+            return 0.0, 0.0, math.inf   # a building the rules do not define (test fixtures): never placed
+        food = -self.numbers[key]["local_monthly_food"]
+        if key == self.YARD:
+            return food, model.harbor_yard_victuals_per_level, model.harbor_yard_min_capacity_months
+        return food, model.yard_victuals_per_level, model.yard_min_capacity_months
 
     def province_capital(self, group):
         """The pool's province capital: the engine's province capital is not in the setup files, so the highest
@@ -1049,20 +1075,27 @@ class Simulation:
         return supply, demand, imports
 
     def market_victuals_use(self, b):
-        """Expected victuals per month the pool's Taverns buy (+) or its Victualling Yards pack (-): a staffed Tavern
-        only keeps running while the pool is short, so it buys what the pool's gap needs (gap / 30 food per victual)
-        up to 2 per level; a Yard packs what the pool's surplus gives (surplus / 40 food per victual, loose stores),
-        up to 1.5 per level."""
+        """Expected victuals per month the pool's Taverns buy (+) or its packers make (-): a staffed Tavern only keeps
+        running while the pool is short, so it buys what the pool's gap needs (gap / 30 food per victual) up to 2 per
+        level; a packer runs on what the pool's surplus gives, its own food per level at a time (harbour Yard: 20 food,
+        with shipped grain, for 3 victuals; Grange: 60 food for 1.5), harbour Yards first."""
         model = self.food_model
         tavern_rate = self.numbers[self.TAVERN]["local_monthly_food"] / model.tavern_victuals_per_level
-        yard_rate = -self.numbers[self.YARD]["local_monthly_food"] / model.yard_victuals_per_level
         fed = b["supply"] - b["market_food"]
         gap = b["demand"] - fed
         use = 0.0
         if b["tavern_levels"]:
             use += min(b["tavern_levels"] * model.tavern_victuals_per_level, max(0.0, gap) / tavern_rate)
-        if b["yard_levels"]:
-            use -= min(b["yard_levels"] * model.yard_victuals_per_level, max(0.0, -gap) / yard_rate)
+        surplus = max(0.0, -gap)
+        levels = self.packer_levels(b)
+        for key in self.YARDS:
+            n = levels.get(key, 0)
+            if not n:
+                continue
+            food, victuals, _ = self.packer(key)
+            running = min(float(n), surplus / food) if food > 0 else float(n)
+            surplus -= running * food
+            use -= running * victuals
         return use
 
     def _serve_cookshops(self, members, need, room, budgets):
@@ -1097,42 +1130,56 @@ class Simulation:
         return placed
 
     def _yard_pools(self, members, budgets, target):
-        """Pools that may pack victuals: their own food beyond (1 + ``yard_surplus_share``) x demand, a store that can
-        reach the Yard's band, and no Tavern in the province. Well-connected pools first (surplus x the pool's best
-        Victualling Yard cap, which rewards rivers, coasts, harbours and market centres): (group, spare levels)."""
+        """Pools that may pack victuals: spare food beyond the target and no Tavern in the province. Well-connected
+        pools first (surplus x the pool's best packer cap, which rewards harbours, market centres, roads and
+        development), pools with a free harbour Yard site before all others: (group, spare food after the packers
+        already there, store months, whether the pool feeds itself by the Grange's surplus share)."""
         model = self.food_model
-        per_level = -self.numbers[self.YARD]["local_monthly_food"]
         out = []
         for group in members:
             b = budgets[group]
             eats = b["demand"]
             fed = b["supply"] - b["market_food"]
-            if eats <= 0 or fed < eats * (1.0 + model.yard_surplus_share):
-                continue
-            if (b["capacity_months"] or 0.0) < model.yard_min_capacity_months:
+            if eats <= 0:
                 continue
             if any(self.counts[t][self.TAVERN] for t in self.groups[group]):
                 continue
-            spare = math.floor((fed - eats * target) / per_level + 1.0 - model.yard_min_level_share) - b["yard_levels"]
+            levels = self.packer_levels(b)
+            spare = fed - eats * target - sum(n * self.packer(k)[0] for k, n in levels.items())
             if spare > 0:
                 reach = max(self.cap(t, k) for t in self.groups[group] for k in self.YARDS)
-                out.append((group, spare, (fed - eats) * reach))
-        return [(g, n) for g, n, _ in sorted(out, key=lambda x: (-x[2], x[0]))]
+                # a free harbour Yard site first: it packs twice the victuals for a third of the food
+                harbour = any(self.cap(t, self.YARD) > self.counts[t][self.YARD] for t in self.groups[group])
+                surplus_ok = fed >= eats * (1.0 + model.yard_surplus_share)
+                out.append((group, spare, b["capacity_months"] or 0.0, surplus_ok, harbour, (fed - eats) * reach))
+        return [(g, s, m, ok) for g, s, m, ok, _, _ in sorted(out, key=lambda x: (not x[4], -x[5], x[0]))]
 
-    def _place_yards(self, members, budgets, target, levels):
+    def _place_yards(self, members, budgets, target, victuals):
+        """Packer levels until ``victuals`` per month are covered: harbour Victualling Yards on the pool's harbour sites
+        first (their store band starts lower and they ship in their grain, so any spare food will do), then the
+        province capital's Grange (only where the pool feeds itself by ``yard_surplus_share``: it packs the surplus).
+        A level is placed once the pool's spare food fills ``yard_min_level_share`` of that building's food per level.
+        Returns the levels placed."""
+        model = self.food_model
         placed = 0
-        for group, spare in self._yard_pools(members, budgets, target):
-            if levels <= 0:
+        for group, spare, months, surplus_ok in self._yard_pools(members, budgets, target):
+            if victuals <= 1e-6:
                 break
-            want = min(spare, levels)
-            # harbour Yard sites first, then the province capital's Grange
             for key in self.YARDS:
+                food, per_level, min_months = self.packer(key)
+                if months < min_months or food <= 0:
+                    continue
+                if key == self.GRANGE and not surplus_ok:
+                    continue
+                room = math.floor(spare / food + 1.0 - model.yard_min_level_share)
+                want = min(room, math.ceil(victuals / per_level))
                 for tag in self.order(self.groups[group], key):
-                    if want <= 0:
+                    if want <= 0 or victuals <= 1e-6:
                         break
                     n = self.add(tag, key, want)
                     want -= n
-                    levels -= n
+                    spare -= n * food
+                    victuals -= n * per_level
                     placed += n
         return placed
 
@@ -1158,11 +1205,9 @@ class Simulation:
         model = self.food_model
         target = self.start.food_target_ratio
         per_tavern = self.numbers[self.TAVERN]["local_monthly_food"]
-        per_yard = -self.numbers[self.YARD]["local_monthly_food"]
-        if per_tavern <= 0 or per_yard <= 0:
+        if per_tavern <= 0 or any(self.packer(k)[0] <= 0 for k in self.YARDS if k in self.numbers):
             raise ValueError("Start trade requires positive food transfer units")
         vict = model.tavern_victuals_per_level
-        yard_vict = model.yard_victuals_per_level
         _, raw_per_level = self.serve_inputs()
         self.before_trade = self.budgets()
         by_catchment = defaultdict(list)
@@ -1209,7 +1254,7 @@ class Simulation:
                                - max(0.0, self.market_victuals_use(b[g]))) for g in want}
                 missing = max(0.0, (other + bought + sum(max(0.0, c) for c in cost.values())) * model.victuals_target - supply - sold)
                 if missing > 1e-6:
-                    placed = self._place_yards(members, b, target, math.ceil(missing / yard_vict))
+                    placed = self._place_yards(members, b, target, missing)
                     yards += placed
                     if placed:
                         b = self.budgets(groups=members)

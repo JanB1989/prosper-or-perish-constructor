@@ -21,6 +21,8 @@ def write(repo, mod_root):
         "FARMLAND": "Cultivated hinterland",
         "TERRAIN": "Land transport difficulty",
         "ROADS": "Roads",
+        "HARBOR_CAPACITY": "Harbor capacity",
+        "THRESHOLD": "Established harbor trade",
     }
 
     def add(label, value):
@@ -32,7 +34,7 @@ def write(repo, mod_root):
     lines = [
         "# Generated from config/victuals_logistics.json. Both the planner and game use these values."
     ]
-    for role, spec in ((k, cfg[k]) for k in ("tavern", "victualling_yard")):
+    for role, spec in ((k, cfg[k]) for k in ("tavern",)):
         body = [
             add("BASE", spec["base"]),
             add("DEVELOPMENT", f"development multiply = {spec['development']}"),
@@ -81,13 +83,25 @@ def write(repo, mod_root):
             body.append(when("vegetation = farmland", "FARMLAND", spec["farmland"]))
         for terrain, n in cfg["terrain_penalties"].items():
             body.append(when("topography = " + terrain, "TERRAIN", n))
-        if role == "victualling_yard":
-            # Harbour sites only: elsewhere the cap is 0, so the four-yearly cull clears Yards an old save left inland.
-            body.append("if = { limit = { NOT = { pp_victualling_yard_site = yes } } multiply = 0 }")
         body += ["min = 0", f"max = {spec['maximum']}", "floor = yes"]
         lines.append(
             f"{role}_max_level = {{\n " + "\n ".join(body) + "\n}"
         )
+    # The harbour Victualling Yard: harbour capacity (natural harbour + river mouth + docks and shipyards), market centre
+    # and development, minus a threshold, at least `minimum` on a Yard site. Elsewhere 0, so the four-yearly cull clears
+    # Yards an old save left outside the harbour sites.
+    y = cfg["victualling_yard"]
+    body = [
+        add("HARBOR_CAPACITY", f"modifier:harbor_suitability multiply = {y['harbor_capacity']}"),
+        when("is_market_center = yes", "MARKET", y["market_center"]),
+        add("DEVELOPMENT", f"development multiply = {y['development']}"),
+        add("THRESHOLD", y["threshold"]),
+        "floor = yes",
+        f"min = {y['minimum']}",
+        f"max = {y['maximum']}",
+        "if = { limit = { NOT = { pp_victualling_yard_site = yes } } multiply = 0 }",
+    ]
+    lines.append("victualling_yard_max_level = {\n " + "\n ".join(body) + "\n}")
     # The Grange, the Yard's overland twin at province capitals: base, roads, market centre, development.
     g = cfg["grange"]
     body = [add("BASE", g["base"])]

@@ -204,7 +204,8 @@ def build_location_geometry_frame(
     """Approximate lon/lat per location from the centroid of its colour in locations.png.
 
     Columns: location_tag, named_location_hex, map_color_rgb, geometry_status ('ok' | 'missing_color'),
-    pixel_count, centroid_x, centroid_y, approx_lon, approx_lat.
+    pixel_count, centroid_x, centroid_y, bbox_min_x, bbox_max_x, bbox_min_y, bbox_max_y, approx_lon, approx_lat.
+    The pixel bounding box is what the savegame map renderer crops each location with.
     """
     import numpy as np
     from PIL import Image
@@ -217,6 +218,7 @@ def build_location_geometry_frame(
     counts: dict[int, int] = {}
     sum_x: dict[int, float] = {}
     sum_y: dict[int, float] = {}
+    bbox: dict[int, list[int]] = {}  # colour -> [min_x, max_x, min_y, max_y]
     Image.MAX_IMAGE_PIXELS = None
     with Image.open(locations_png_path) as image:
         image = image.convert("RGB")
@@ -230,18 +232,27 @@ def build_location_geometry_frame(
             for index, value in enumerate(values.tolist()):
                 mask = inverse == index
                 n = int(mask.sum())
+                mask_xs, mask_ys = xs[mask], ys[mask]
                 counts[value] = counts.get(value, 0) + n
-                sum_x[value] = sum_x.get(value, 0.0) + float(xs[mask].sum())
-                sum_y[value] = sum_y.get(value, 0.0) + float(ys[mask].sum()) + float(y0) * n
+                sum_x[value] = sum_x.get(value, 0.0) + float(mask_xs.sum())
+                sum_y[value] = sum_y.get(value, 0.0) + float(mask_ys.sum()) + float(y0) * n
+                box = [int(mask_xs.min()), int(mask_xs.max()), int(mask_ys.min()) + y0, int(mask_ys.max()) + y0]
+                if value in bbox:
+                    old = bbox[value]
+                    box = [min(old[0], box[0]), max(old[1], box[1]), min(old[2], box[2]), max(old[3], box[3])]
+                bbox[value] = box
     out = []
     for tag, hex_value in rows.iter_rows():
         color = colors[str(hex_value).lower()]
         n = counts.get(color, 0)
         if not n:
             out.append({"location_tag": str(tag), "named_location_hex": str(hex_value), "map_color_rgb": f"{color:06x}", "geometry_status": "missing_color",
-                        "pixel_count": 0, "centroid_x": None, "centroid_y": None, "approx_lon": None, "approx_lat": None})
+                        "pixel_count": 0, "centroid_x": None, "centroid_y": None, "bbox_min_x": None, "bbox_max_x": None,
+                        "bbox_min_y": None, "bbox_max_y": None, "approx_lon": None, "approx_lat": None})
             continue
         cx, cy = sum_x[color] / n, sum_y[color] / n
+        min_x, max_x, min_y, max_y = bbox[color]
         out.append({"location_tag": str(tag), "named_location_hex": str(hex_value), "map_color_rgb": f"{color:06x}", "geometry_status": "ok", "pixel_count": n,
-                    "centroid_x": cx, "centroid_y": cy, "approx_lon": (cx / width * 360.0) - 180.0, "approx_lat": (float(equator_y) - cy) / (width / 360.0)})
+                    "centroid_x": cx, "centroid_y": cy, "bbox_min_x": min_x, "bbox_max_x": max_x, "bbox_min_y": min_y, "bbox_max_y": max_y,
+                    "approx_lon": (cx / width * 360.0) - 180.0, "approx_lat": (float(equator_y) - cy) / (width / 360.0)})
     return pl.DataFrame(out)

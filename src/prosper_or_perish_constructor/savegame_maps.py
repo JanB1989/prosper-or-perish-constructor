@@ -64,6 +64,7 @@ DEFAULT_UNSELECTED = np.array([184, 184, 178], dtype=np.uint8)
 DEFAULT_NO_DATA = np.array([156, 156, 150], dtype=np.uint8)
 DEFAULT_NO_DATA_STRIPE = np.array([126, 126, 120], dtype=np.uint8)
 DEFAULT_ANIMATION_MAX_BYTES = 9_500_000
+GEOMETRY_BBOX_COLUMNS = ("bbox_min_x", "bbox_max_x", "bbox_min_y", "bbox_max_y")
 COLOR_CONSTRUCTORS = frozenset({"rgb", "hsv", "hsv360"})
 EMPLOYMENT_POPULATION_ROWS = (
     ("nobles", "Nobles"),
@@ -1695,7 +1696,9 @@ def _resolve_cache_path(repo: Path, cache: str | Path | None) -> Path | None:
 
 def _load_or_build_geometry(*, baseline_path: Path, locations_png_path: Path, cache_path: Path | None) -> pl.DataFrame:
     if cache_path is not None and cache_path.exists():
-        return pl.read_parquet(cache_path)
+        cached = pl.read_parquet(cache_path)
+        if set(GEOMETRY_BBOX_COLUMNS).issubset(cached.columns):
+            return cached
     geometry = build_location_geometry_frame(
         baseline_path=baseline_path,
         locations_png_path=locations_png_path,
@@ -1739,7 +1742,7 @@ def _prepare_geometry_frame(
     map_width: int,
     map_height: int,
 ) -> pl.DataFrame:
-    required = {"location_tag", "map_color_rgb", "geometry_status"}
+    required = {"location_tag", "map_color_rgb", "geometry_status", *GEOMETRY_BBOX_COLUMNS}
     missing = required.difference(geometry.columns)
     if missing:
         raise ValueError(f"map geometry is missing columns: {', '.join(sorted(missing))}")
@@ -1747,7 +1750,7 @@ def _prepare_geometry_frame(
         "location_tag",
         "map_color_rgb",
         "geometry_status",
-        *[column for column in ("bbox_min_x", "bbox_max_x", "bbox_min_y", "bbox_max_y") if column in geometry.columns],
+        *GEOMETRY_BBOX_COLUMNS,
     ]
     return (
         geometry.select(columns)

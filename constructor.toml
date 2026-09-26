@@ -173,6 +173,43 @@ vanilla_files = [
   "in_game/events/DHE/flavor_ENG.txt",
 ]
 
+[worldbuilder.navigation_scripts]
+# Vanilla scripts that route fleets over water (find_route) or put ships on the map. The navigable river channels
+# are sea zones, so a river-bank location is is_coastal and can hold a port although most channel groups never
+# reach the open sea; a route to such a location does not exist and the script fails at run time. Every vanilla file
+# using these effects is listed here, patched (exact replacements on the current vanilla file, on top of its
+# [worldbuilder.compat] widening) or reviewed with a reason; navigation_scripts.py fails the apply and
+# tests/test_navigation_scripts.py fails on any vanilla file that is in neither list.
+[worldbuilder.navigation_scripts.reviewed]
+"in_game/common/customizable_localization/ship_prefixes.txt" = "names ships of the navy categories; places nothing"
+"in_game/common/unit_abilities/convert_galley.txt" = "converts existing ships in place; no route, no new location"
+"in_game/events/debug/qa_debug.txt" = "debug console events"
+"in_game/common/effect_localization/location_effects.txt" = "tooltip text of the effect; places nothing"
+"in_game/events/wokou_events.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+"in_game/events/government/societal_values.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+"in_game/events/DHE/flavor_AYD.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+"in_game/events/DHE/flavor_swe_teu.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+"in_game/events/DHE/flavor_chi.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+"in_game/events/DHE/flavor_BYZ.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+"in_game/events/DHE/flavor_MOS.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+"in_game/events/DHE/flavor_LOI.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+"in_game/events/DHE/flavor_ARA.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+"in_game/events/DHE/flavor_MAM.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+"in_game/events/DHE/flavor_CAS.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+"in_game/events/DHE/flavor_pap.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+"in_game/events/situations/golden_age_of_piracy.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+"in_game/events/pirate_events.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+
+[[worldbuilder.navigation_scripts.patches]]
+# Chinese treasure voyage: the fleet starts at a random port of the country and sails over water (find_route,
+# is_land = no) to a random coastal location of the target area and back. A river port or river-bank target has no
+# sea route ("Failed to fetch variable for 'chinese_treasure_next_location' due to not being set").
+file = "in_game/events/DHE/flavor_chi_treasure_expedition.txt"
+replace = [
+  { find = "random_port_in_country = {\n\t\t\tlimit = {\n", with = "random_port_in_country = {\n\t\t\tlimit = {\n\t\t\t\tpp_is_sea_coast = yes\n", count = 1 },
+  { find = "random_location_in_area = {\n\t\t\t\tlimit = { is_coastal = yes }", with = "random_location_in_area = {\n\t\t\t\tlimit = { is_coastal = yes pp_is_sea_coast = yes }", count = 1 },
+]
+
 [worldbuilder.start]
 # Game-start building placement (rural food buildings and the urban food chain) from the capacity model; replaces the
 # savegame-driven food startup compiler. A farm never pushes a location over its cap: spare land = capacity - pops.

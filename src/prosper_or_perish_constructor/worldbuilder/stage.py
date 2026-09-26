@@ -49,6 +49,11 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     if cfg.compat_files:
         families = wb_compat.load_families(cfg.geography_export)
         report["compat_patches"] = wb_compat.write_compat_patches(vanilla_root(repo, project), mod_root, repo, families, cfg.compat_files)
+    # vanilla scripts that route fleets over the open sea must not pick a river channel (after the widening above)
+    from . import navigation_scripts
+
+    report["navigation_scripts"] = navigation_scripts.write(vanilla_root(repo, project), mod_root, repo,
+                                                           navigation_scripts.load(cfg.raw.get("navigation_scripts")), cfg.compat_files)
     from prosper_or_perish_constructor.location_baseline import load_current_location_frame
 
     current = load_current_location_frame(repo, project)

@@ -4,7 +4,7 @@ footprint: rural_village
 labour:
   class: cottage
   methods:
-    pp_market_village_rural_blacksmith: keep  # extra labour so the AI stops making tools from iron where labour is dear
+    pp_market_village_rural_blacksmith: keep  # extra labour + output 0.4 so the AI stops making tools from iron
 building:
   key: market_village
   mode: REPLACE
@@ -48,7 +48,7 @@ building:
     unique_production_methods = {
         pp_market_village_rural_blacksmith = {
             produced = tools
-            output = 0.5
+            output = 0.4
             iron = 0.31
             manual_labor = 0.5
             debug_max_profit = rural_profit_margin

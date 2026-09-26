@@ -26,9 +26,9 @@ location_potential = {
 
 unique_production_methods = {
     pp_market_tobacco_farm_base_tobacco = {
-        manual_labor_cost = 0.036
+        manual_labor_cost = 0.144
         produced = tobacco
-        output = 0.060
+        output = 0.24
         category = building_maintenance
     }
 }
@@ -37,11 +37,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_market_tobacco_farm_curing_racks = {
-        furniture = 0.043 # curing racks and hogsheads
-        fiber_crops = 0.022 # leaf ties
-        manual_labor_cost = 0.027
+        furniture = 0.172 # curing racks and hogsheads
+        fiber_crops = 0.088 # leaf ties
+        manual_labor_cost = 0.108
         produced = tobacco
-        output = 0.080
+        output = 0.32
         category = building_maintenance
     }
 }
@@ -50,19 +50,19 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_market_tobacco_farm_sorting_tables = {
-        furniture = 0.03 # sorting tables and hogsheads
-        fiber_crops = 0.013 # bundle ties
-        paper = 0.01 # packing marks and sale records
-        manual_labor_cost = 0.023
+        furniture = 0.12 # sorting tables and hogsheads
+        fiber_crops = 0.052 # bundle ties
+        paper = 0.04 # packing marks and sale records
+        manual_labor_cost = 0.092
         produced = tobacco
-        output = 0.065
+        output = 0.26
         category = building_maintenance
     }
 }
 
 raw_modifier = {
   farm_capacity_from_market_tobacco_farm = -1
-  local_population_capacity = -5
+  local_population_capacity = -10
 }
 
 modifier = {

@@ -396,7 +396,13 @@ plantation = { land = 10, reserve = 5 }
 herd = { land = 2, reserve = 1 }
 
 [worldbuilder.farm_land.classes]
-plantation = ["cotton_plantation", "sugar_plantation", "tobacco_plantation", "dye_plantation", "chili_plantation"]
+# cash crops take twice the land of grain; their methods carry the throughput to pay for it (2026-09-26: outputs x4)
+plantation = [
+    "cotton_plantation", "sugar_plantation", "tobacco_plantation", "dye_plantation", "chili_plantation",
+    "tobacco_farm", "market_tobacco_farm", "coffee_grove", "terraced_coffee_grove", "cocoa_grove", "managed_cocoa_grove",
+    "tea_garden", "tea_sorting_garden", "sugarcane_farm", "trapiche_sugarcane_farm", "cotton_farm", "market_cotton_farm",
+    "clove_grove", "pepper_garden", "managed_pepper_garden", "saffron_croft", "saffron_kiln_croft",
+]
 herd = ["sheep_farms", "hurdled_sheepcotes", "enclosed_sheep_walks", "horse_breeders", "stud_farm", "elephant_kraal", "cattle_farm", "cattle_farmstead", "cattle_rotations", "cattle_model_farm"]
 
 [building_footprint]

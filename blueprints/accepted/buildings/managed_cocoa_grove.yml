@@ -56,9 +56,9 @@ building:
 
     unique_production_methods = {
         pp_managed_cocoa_grove_base_cocoa = {
-            manual_labor_cost = 0.04
+            manual_labor_cost = 0.16
             produced = cocoa
-            output = 0.050
+            output = 0.2
             category = building_maintenance
         }
     }
@@ -67,11 +67,11 @@ building:
             category = building_maintenance
         }
         pp_managed_cocoa_grove_fermentation_boxes = {
-            furniture = 0.086 # light fermentation boxes and raised trays
-            fiber_crops = 0.034 # drying mats, sacks, and ties
-            manual_labor_cost = 0.054
+            furniture = 0.344 # light fermentation boxes and raised trays
+            fiber_crops = 0.136 # drying mats, sacks, and ties
+            manual_labor_cost = 0.216
             produced = cocoa
-            output = 0.114
+            output = 0.456
             category = building_maintenance
         }
     }
@@ -80,18 +80,18 @@ building:
             category = building_maintenance
         }
         pp_managed_cocoa_grove_managed_shade = {
-            furniture = 0.069 # light seedling benches and shade frames
-            fiber_crops = 0.064 # nursery ties, picking sacks, and shade mats
-            manual_labor_cost = 0.053
+            furniture = 0.276 # light seedling benches and shade frames
+            fiber_crops = 0.256 # nursery ties, picking sacks, and shade mats
+            manual_labor_cost = 0.212
             produced = cocoa
-            output = 0.156
+            output = 0.624
             category = building_maintenance
         }
     }
 
     raw_modifier = {
       farm_capacity_from_managed_cocoa_grove = -1
-      local_population_capacity = -5
+      local_population_capacity = -10
     }
 
     modifier = {

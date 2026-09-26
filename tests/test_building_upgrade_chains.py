@@ -238,10 +238,10 @@ NON_SLAVE_CROP_FARMS = {
         "base_method": "pp_cotton_farm_base_cotton",
         "worked_method": "pp_cotton_farm_gin_house",
         "inputs": {
-            "lumber": "0.076",
-            "fiber_crops": "0.033",
-            "tools": "0.009",
-            "manual_labor_cost": "0.05",
+            "lumber": "0.304",
+            "fiber_crops": "0.132",
+            "tools": "0.036",
+            "manual_labor_cost": "0.2",
         },
         "removed_inputs": {"leather", "slaves_goods"},
     },
@@ -250,10 +250,10 @@ NON_SLAVE_CROP_FARMS = {
         "base_method": "pp_sugarcane_farm_base_sugar",
         "worked_method": "pp_sugarcane_farm_boiling_house",
         "inputs": {
-            "lumber": "0.068",
-            "pottery": "0.082",
-            "tools": "0.008",
-            "manual_labor_cost": "0.051",
+            "lumber": "0.272",
+            "pottery": "0.328",
+            "tools": "0.032",
+            "manual_labor_cost": "0.204",
         },
         "removed_inputs": {"coal", "slaves_goods"},
     },
@@ -262,10 +262,10 @@ NON_SLAVE_CROP_FARMS = {
         "base_method": "pp_tobacco_farm_base_tobacco",
         "worked_method": "pp_tobacco_farm_curing_barns",
         "inputs": {
-            "lumber": "0.096",
-            "fiber_crops": "0.014",
-            "tools": "0.012",
-            "manual_labor_cost": "0.053",
+            "lumber": "0.384",
+            "fiber_crops": "0.056",
+            "tools": "0.048",
+            "manual_labor_cost": "0.212",
         },
         "removed_inputs": {"pottery", "slaves_goods"},
     },
@@ -1774,12 +1774,12 @@ def test_non_slave_crop_farms_are_default_rgo_laborer_buildings() -> None:
         assert "is_colonial_subject" not in body
         assert "plantation_buildings_advance" not in body
         assert re.search(
-            rf"{base_method}\s*=\s*\{{.*?\bproduced\s*=\s*{good}\b.*?\boutput\s*=\s*0\.040\b",
+            rf"{base_method}\s*=\s*\{{.*?\bproduced\s*=\s*{good}\b.*?\boutput\s*=\s*0\.16\b",
             body,
             flags=re.S,
         )
         assert re.search(
-            rf"{worked_method}\s*=\s*\{{.*?\bproduced\s*=\s*{good}\b.*?\boutput\s*=\s*0\.089\b",
+            rf"{worked_method}\s*=\s*\{{.*?\bproduced\s*=\s*{good}\b.*?\boutput\s*=\s*0\.356\b",
             body,
             flags=re.S,
         )
@@ -1861,7 +1861,7 @@ def test_cash_crop_upgrade_chains_use_dedicated_discovery_advances_and_clean_inp
             tools_amounts = _inline_production_method_input_amounts(body, "tools")
             if tools_amounts:
                 assert key in {"market_cotton_farm", "trapiche_sugarcane_farm"}
-                assert max(tools_amounts) <= 0.010
+                assert max(tools_amounts) <= 0.040  # cash-crop methods scaled x4 on 2026-09-26
 
 
 def test_raw_processor_replacements_exclude_matching_raw_materials() -> None:

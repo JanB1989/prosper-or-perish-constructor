@@ -56,9 +56,9 @@ building:
 
     unique_production_methods = {
         pp_tea_sorting_garden_base_tea = {
-            manual_labor_cost = 0.033
+            manual_labor_cost = 0.132
             produced = tea
-            output = 0.055
+            output = 0.22
             category = building_maintenance
         }
     }
@@ -67,12 +67,12 @@ building:
             category = building_maintenance
         }
         pp_tea_sorting_garden_rolling_hearths = {
-            furniture = 0.09 # light tray frames and rolling tables
-            fiber_crops = 0.069 # woven withering mats and baskets
-            pottery = 0.052 # firing hearth pans
-            manual_labor_cost = 0.075
+            furniture = 0.36 # light tray frames and rolling tables
+            fiber_crops = 0.276 # woven withering mats and baskets
+            pottery = 0.208 # firing hearth pans
+            manual_labor_cost = 0.3
             produced = tea
-            output = 0.125
+            output = 0.5
             category = building_maintenance
         }
     }
@@ -81,19 +81,19 @@ building:
             category = building_maintenance
         }
         pp_tea_sorting_garden_paper_packing = {
-            furniture = 0.039 # sorting trays
-            fiber_crops = 0.03 # packing baskets and bale mats
-            paper = 0.047 # wrappers and packing slips
-            manual_labor_cost = 0.044
+            furniture = 0.156 # sorting trays
+            fiber_crops = 0.12 # packing baskets and bale mats
+            paper = 0.188 # wrappers and packing slips
+            manual_labor_cost = 0.176
             produced = tea
-            output = 0.070
+            output = 0.28
             category = building_maintenance
         }
     }
 
     raw_modifier = {
       farm_capacity_from_tea_sorting_garden = -1
-      local_population_capacity = -5
+      local_population_capacity = -10
     }
 
     modifier = {

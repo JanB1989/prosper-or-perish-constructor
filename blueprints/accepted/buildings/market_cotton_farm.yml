@@ -55,9 +55,9 @@ building:
 
     unique_production_methods = {
         pp_market_cotton_farm_base_cotton = {
-            manual_labor_cost = 0.031
+            manual_labor_cost = 0.124
             produced = cotton
-            output = 0.052
+            output = 0.208
             category = building_maintenance
         }
     }
@@ -66,11 +66,11 @@ building:
             category = building_maintenance
         }
         pp_market_cotton_farm_roller_gin_house = {
-            furniture = 0.052 # carpentry for roller gin frames
-            tools = 0.005 # metal rollers and adjustment tools
-            manual_labor_cost = 0.027
+            furniture = 0.208 # carpentry for roller gin frames
+            tools = 0.02 # metal rollers and adjustment tools
+            manual_labor_cost = 0.108
             produced = cotton
-            output = 0.065
+            output = 0.26
             category = building_maintenance
         }
     }
@@ -79,19 +79,19 @@ building:
             category = building_maintenance
         }
         pp_market_cotton_farm_bale_yard = {
-            fiber_crops = 0.039 # picking bags and bale cloth
-            furniture = 0.022 # drying racks and bale press carpentry
-            tools = 0.003 # hand screw press hardware
-            manual_labor_cost = 0.024
+            fiber_crops = 0.156 # picking bags and bale cloth
+            furniture = 0.088 # drying racks and bale press carpentry
+            tools = 0.012 # hand screw press hardware
+            manual_labor_cost = 0.096
             produced = cotton
-            output = 0.041
+            output = 0.164
             category = building_maintenance
         }
     }
 
     raw_modifier = {
       farm_capacity_from_market_cotton_farm = -1
-      local_population_capacity = -5
+      local_population_capacity = -10
     }
 
     modifier = {

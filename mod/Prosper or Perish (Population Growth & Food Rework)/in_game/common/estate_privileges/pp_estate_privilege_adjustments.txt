@@ -37,3 +37,30 @@ TRY_REPLACE:market_fairs = {
 		global_burghers_estate_power = 0.25
 	}
 }
+
+# Road rights: vanilla without the land push; the burghers no longer drag coastal countries towards land.
+TRY_REPLACE:building_roads_rights = {
+	estate = burghers_estate
+
+	country_modifier = {
+		global_burghers_estate_power = 0.33
+		burghers_estate_target_satisfaction = medium_privilege_target_satisfaction
+		burghers_estate_allowed_to_build_roads = yes
+		monthly_towards_centralization = societal_value_monthly_move
+	}
+}
+
+# Noble-sponsored navy: naval push raised from minor to a full monthly move.
+TRY_REPLACE:noble_sponsored_navy = {
+	estate = nobles_estate
+
+	potential = {
+		has_ports = yes
+	}
+	country_modifier = {
+		nobles_estate_target_satisfaction = medium_privilege_target_satisfaction
+		global_nobles_estate_power = 0.33
+		monthly_towards_naval = societal_value_monthly_move
+		navy_galley_maintenance_cost_modifier = -0.1
+	}
+}

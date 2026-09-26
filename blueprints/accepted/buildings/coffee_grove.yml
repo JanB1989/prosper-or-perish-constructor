@@ -51,9 +51,9 @@ building:
 
     unique_production_methods = {
         pp_coffee_grove_base_coffee = {
-            manual_labor_cost = 0.024
+            manual_labor_cost = 0.096
             produced = coffee
-            output = 0.040
+            output = 0.16
             category = building_maintenance
         }
     }
@@ -62,18 +62,18 @@ building:
             category = building_maintenance
         }
         pp_coffee_grove_washing_stations = {
-            lumber = 0.095 # washing troughs
-            pottery = 0.048 # fermentation vats
-            manual_labor_cost = 0.047
+            lumber = 0.38 # washing troughs
+            pottery = 0.192 # fermentation vats
+            manual_labor_cost = 0.188
             produced = coffee
-            output = 0.090
+            output = 0.36
             category = building_maintenance
         }
     }
 
     raw_modifier = {
       farm_capacity_from_coffee_grove = -1
-      local_population_capacity = -5
+      local_population_capacity = -10
     }
 
     modifier = {

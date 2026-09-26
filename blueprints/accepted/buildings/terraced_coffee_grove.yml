@@ -56,9 +56,9 @@ building:
 
     unique_production_methods = {
         pp_terraced_coffee_grove_base_coffee = {
-            manual_labor_cost = 0.045
+            manual_labor_cost = 0.18
             produced = coffee
-            output = 0.075
+            output = 0.3
             category = building_maintenance
         }
     }
@@ -67,12 +67,12 @@ building:
             category = building_maintenance
         }
         pp_terraced_coffee_grove_washing_frames = {
-            fiber_crops = 0.077 # drying mats and sacks
-            pottery = 0.065 # washing and fermentation vessels
-            furniture = 0.043 # light pulping and washing frames
-            manual_labor_cost = 0.057
+            fiber_crops = 0.308 # drying mats and sacks
+            pottery = 0.26 # washing and fermentation vessels
+            furniture = 0.172 # light pulping and washing frames
+            manual_labor_cost = 0.228
             produced = coffee
-            output = 0.120
+            output = 0.48
             category = building_maintenance
         }
     }
@@ -81,18 +81,18 @@ building:
             category = building_maintenance
         }
         pp_terraced_coffee_grove_terraced_shade_gardens = {
-            fiber_crops = 0.03 # shade ties and harvest sacks
-            furniture = 0.026 # light nursery and shade frames
-            manual_labor_cost = 0.022
+            fiber_crops = 0.12 # shade ties and harvest sacks
+            furniture = 0.104 # light nursery and shade frames
+            manual_labor_cost = 0.088
             produced = coffee
-            output = 0.055
+            output = 0.22
             category = building_maintenance
         }
     }
 
     raw_modifier = {
       farm_capacity_from_terraced_coffee_grove = -1
-      local_population_capacity = -5
+      local_population_capacity = -10
     }
 
     modifier = {

@@ -51,9 +51,9 @@ building:
 
     unique_production_methods = {
         pp_sugarcane_farm_base_sugar = {
-            manual_labor_cost = 0.024
+            manual_labor_cost = 0.096
             produced = sugar
-            output = 0.040
+            output = 0.16
             category = building_maintenance
         }
     }
@@ -62,19 +62,19 @@ building:
             category = building_maintenance
         }
         pp_sugarcane_farm_boiling_house = {
-            lumber = 0.068 # cane press frames
-            pottery = 0.082 # sugar molds, syrup jars
-            tools = 0.008 # rollers and knives
-            manual_labor_cost = 0.051
+            lumber = 0.272 # cane press frames
+            pottery = 0.328 # sugar molds, syrup jars
+            tools = 0.032 # rollers and knives
+            manual_labor_cost = 0.204
             produced = sugar
-            output = 0.089
+            output = 0.356
             category = building_maintenance
         }
     }
 
     raw_modifier = {
       farm_capacity_from_sugarcane_farm = -1
-      local_population_capacity = -5
+      local_population_capacity = -10
     }
 
     modifier = {

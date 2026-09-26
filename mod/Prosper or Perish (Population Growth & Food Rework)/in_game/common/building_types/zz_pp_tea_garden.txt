@@ -26,9 +26,9 @@ can_close = yes
 
 unique_production_methods = {
     pp_tea_garden_base_tea = {
-        manual_labor_cost = 0.025
+        manual_labor_cost = 0.098
         produced = tea
-        output = 0.041
+        output = 0.164
         category = building_maintenance
     }
 }
@@ -37,18 +37,18 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_tea_garden_bamboo_withering_trays = {
-        fiber_crops = 0.08 # bamboo trays
-        clay = 0.064 # firing hearths
-        manual_labor_cost = 0.043
+        fiber_crops = 0.32 # bamboo trays
+        clay = 0.256 # firing hearths
+        manual_labor_cost = 0.172
         produced = tea
-        output = 0.087
+        output = 0.348
         category = building_maintenance
     }
 }
 
 raw_modifier = {
   farm_capacity_from_tea_garden = -1
-  local_population_capacity = -5
+  local_population_capacity = -10
 }
 
 modifier = {

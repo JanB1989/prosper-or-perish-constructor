@@ -45,9 +45,9 @@ building:
 
     unique_production_methods = {
         pp_chili_plantation_base_chili = {
-            manual_labor_cost = 0.037
+            manual_labor_cost = 0.148
             produced = chili
-            output = 0.037
+            output = 0.148
             category = building_maintenance
         }
     }
@@ -56,11 +56,11 @@ building:
             category = building_maintenance
         }
         pp_chili_plantation_sun_drying_mats = {
-            fiber_crops = 0.08 # drying mats
-            tools = 0.04 # harvest knives
-            manual_labor_cost = 0.063
+            fiber_crops = 0.32 # drying mats
+            tools = 0.16 # harvest knives
+            manual_labor_cost = 0.252
             produced = chili
-            output = 0.083
+            output = 0.332
             category = building_maintenance
         }
     }

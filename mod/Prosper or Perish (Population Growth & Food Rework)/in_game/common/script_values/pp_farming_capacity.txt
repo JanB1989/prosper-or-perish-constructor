@@ -908,7 +908,7 @@ farm_capacity_max_cotton_farm = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -923,7 +923,7 @@ farm_capacity_max_market_cotton_farm = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -957,7 +957,7 @@ farm_capacity_max_sugarcane_farm = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -972,7 +972,7 @@ farm_capacity_max_trapiche_sugarcane_farm = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -1006,7 +1006,7 @@ farm_capacity_max_tobacco_farm = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -1021,7 +1021,7 @@ farm_capacity_max_market_tobacco_farm = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -1070,7 +1070,7 @@ farm_capacity_max_clove_grove = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -1085,7 +1085,7 @@ farm_capacity_max_cocoa_grove = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -1100,7 +1100,7 @@ farm_capacity_max_managed_cocoa_grove = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -1119,7 +1119,7 @@ farm_capacity_max_coffee_grove = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -1134,7 +1134,7 @@ farm_capacity_max_terraced_coffee_grove = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -1168,7 +1168,7 @@ farm_capacity_max_pepper_garden = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -1183,7 +1183,7 @@ farm_capacity_max_managed_pepper_garden = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -1202,7 +1202,7 @@ farm_capacity_max_saffron_croft = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -1217,7 +1217,7 @@ farm_capacity_max_saffron_kiln_croft = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -1285,7 +1285,7 @@ farm_capacity_max_tea_garden = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {
@@ -1300,7 +1300,7 @@ farm_capacity_max_tea_sorting_garden = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
 		subtract = 5
-		divide = 5
+		divide = 10
 		floor = yes
 	}
 	subtract = {

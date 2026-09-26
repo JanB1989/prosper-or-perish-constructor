@@ -45,9 +45,9 @@ building:
 
     unique_production_methods = {
         pp_dye_plantation_base_dyes = {
-            manual_labor_cost = 0.032
+            manual_labor_cost = 0.128
             produced = dyes
-            output = 0.040
+            output = 0.16
             category = building_maintenance
         }
     }
@@ -56,11 +56,11 @@ building:
             category = building_maintenance
         }
         pp_dye_plantation_vat_curing = {
-            lumber = 0.098 # drying racks, vats
-            tools = 0.033 # knives, presses
-            manual_labor_cost = 0.059
+            lumber = 0.392 # drying racks, vats
+            tools = 0.132 # knives, presses
+            manual_labor_cost = 0.236
             produced = dyes
-            output = 0.089
+            output = 0.356
             category = building_maintenance
         }
     }

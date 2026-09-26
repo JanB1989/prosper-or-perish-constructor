@@ -16,6 +16,9 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   tribal share of the pool's locations, scaled with the pool's tribal share), plus the tribesmen's own food
   (``tribesmen_food`` per 1,000, the pop type's ``pop_food_consumption``; negative = they feed the province). A
   province whose total consumption is zero or below gets no storage growth bonus (engine, verified 2026-09-25);
+  the settled consumption is further scaled by prosperity (+50 % x P, P a pool state fitted on the 1342-1437 run:
+  +0.018 x stored years - 0.0025 starving - 0.075 x P per year), winter (the climates' maximum winter level for three
+  months, Dec-Feb north / Jun-Aug south) and a promotion drift of +0.15 % a year;
 * tribesmen (engine, verified 2026-09-25): the location growth below also carries ``tribal_growth`` x tribal share for
   every pop; when it is positive tribesmen are born at it x ``tribal_land_births`` (0.75) x the free-land factor
   max(0, 1 - ``tribal_land_slope`` x pop / capacity) (the topographies' ``local_tribesmen_pop_growth = -1`` + 0.19 in the
@@ -35,8 +38,10 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   Yards and other producers; pops compete); a starving pool loses the noble who staffs its Tavern at 0.09 a year;
 * growth per year on owned land: -0.0048 + 0.0086 x stored years (cap 2) when fed, -0.0048 - 0.04 - 0.012 when
   starving;
-* each September a pool rolls its harvest (``pp_harvest_*``: peasant food consumption +0.30 .. -0.30, 40 % neutral)
-  from a seeded generator, so the run is reproducible; ``harvest = false`` turns the rolls off.
+* each September the harvest rolls like the mod's harvest system (``variable_harvests.toml``): a shock per sub-continent,
+  then one severity per region from the profile the shock and the region's last harvest select, for every pool of the
+  region (``pp_harvest_*``: peasant food consumption +0.30 .. -0.30); a seeded generator keeps runs reproducible;
+  ``harvest_regional = false`` rolls each pool on its own, ``harvest = false`` turns the rolls off.
 * ``migration = true`` replaces the starving out-migration sink by the engine's market migration (``migration.py``,
   docs/migration_rulebook.md) between pools: each pool stands for its locations (fixed attraction from the setup
   plus the monthly starving, free land, overpopulation, jobs and food-storage terms), the market average and the
@@ -64,6 +69,64 @@ from . import migration as mig
 OUTPUT_RELATIVE_PATH = Path("artifacts/data/worldbuilder/food_sim")
 # pp_harvest_<region>_<quality>: local_peasants_food_consumption per yearly roll, and its weight
 HARVEST_CONS = ((0.30, 0.05), (0.20, 0.10), (0.11, 0.15), (0.0, 0.40), (-0.11, 0.15), (-0.20, 0.10), (-0.30, 0.05))
+# the same values by severity, for the regional rolls of the mod's harvest system (variable_harvests.toml)
+HARVEST_SEVERITY = {"abysmal": 0.30, "very_poor": 0.20, "poor": 0.11, "normal": 0.0,
+                    "good": -0.11, "very_good": -0.20, "bountiful": -0.30}
+HARVEST_CONFIG = Path(__file__).resolve().parents[3] / "variable_harvests.toml"
+# pp_roll_region_harvest_for_<shock>_shock: the profile by the region's previous harvest (generate_variable_harvests.py)
+HARVEST_ROUTES = {
+    "bad": {"bad": "bad_persistent", "good": "neutral", "none": "shock_bad"},
+    "neutral": {"bad": "memory_bad", "good": "memory_good", "none": "neutral"},
+    "good": {"bad": "neutral", "good": "good_persistent", "none": "shock_good"},
+}
+
+
+def load_harvest_config(path: Path = HARVEST_CONFIG) -> dict[str, Any] | None:
+    import tomllib
+
+    return tomllib.loads(path.read_text(encoding="utf-8")) if path.is_file() else None
+
+
+def _weighted(rng: random.Random, weights: Mapping[str, float]) -> str:
+    x, acc = rng.random() * sum(weights.values()), 0.0
+    for key, w in weights.items():
+        acc += w
+        if x < acc:
+            return key
+    return next(reversed(weights))
+
+
+def roll_regional_harvests(rng: random.Random, cfg: Mapping[str, Any], regions: Mapping[str, list[str]],
+                           previous: dict[str, str]) -> dict[str, str]:
+    """One September of the mod's harvest system: a shock per sub-continent (bad / neutral / good), then per region a
+    severity from the profile its shock and its previous harvest select; the result holds for every location of the
+    region for the next year. ``regions`` maps sub-continent -> regions; ``previous`` region -> last severity."""
+    out = {}
+    for sub, regs in regions.items():
+        shock = _weighted(rng, cfg["shock_weights"])
+        for region in regs:
+            last = previous.get(region, "normal")
+            memory = "bad" if last in ("abysmal", "very_poor", "poor") else "good" if last in ("good", "very_good", "bountiful") else "none"
+            out[region] = _weighted(rng, cfg["profiles"][HARVEST_ROUTES[shock][memory]])
+    return out
+# winter_<level>: every pop's local food consumption while the winter lasts (pp_population_growth_and_food_adjustments.txt)
+WINTER_CONSUMPTION = {"none": 0.0, "mild": 0.125, "normal": 0.25, "severe": 0.375}
+# the maximum winter level of each climate (in_game/common/climates: vanilla and the World Builder ha1300_climate_*),
+# keyed like the World Builder location attributes (without the ha1300_climate_ prefix)
+CLIMATE_WINTER = {
+    "arctic": "severe", "subarctic": "severe",
+    "continental": "normal", "continental_monsoon": "normal", "dry_summer_continental": "normal", "cold_steppe": "normal",
+    "subpolar_oceanic": "normal",
+    "oceanic": "mild", "highland_monsoon": "mild", "subtropical_monsoon": "mild", "cold_arid": "mild",
+    "arid": "none", "hot_steppe": "none", "savanna": "none", "mediterranean": "none", "subtropical": "none",
+    "tropical": "none", "tropical_monsoon": "none",
+}
+
+
+def winter_consumption(climate: str | None) -> float:
+    """The winter consumption share of a location at its climate's maximum winter level."""
+    key = str(climate or "").removeprefix("ha1300_climate_")
+    return WINTER_CONSUMPTION[CLIMATE_WINTER.get(key, "none")]
 SEPTEMBER = 5   # month index from the April start
 
 
@@ -81,6 +144,21 @@ class SimRules:
     abundant_peasant_food: float = -0.5     # abundant_free_land local_peasants_food_consumption
     available_peasant_food: float = -0.32   # available_free_land local_peasants_food_consumption
     abundant_food: float = 1.0              # abundant_free_land local_monthly_food (foraging)
+    # prosperity (0..1 per location; the mod's prosperity inject: every settled pop type +50 % food at 100 %), dynamics
+    # fitted on the 100-year run 1342-1437 (saves r7bee, 249k location pairs): dP/yr = +0.0181 x stored years
+    # - 0.0025 starving - 0.0747 x P, so ~0.24 at one stored year and ~0.49 at two
+    prosperity_consumption: float = 0.5
+    prosperity_per_year: float = 0.0181
+    prosperity_starving: float = -0.0025
+    prosperity_decay: float = 0.0747
+    # winter (winter_mild/normal/severe: every pop +12.5 / 25 / 37.5 % food while it lasts): each location at its
+    # climate's maximum level for ``winter_months`` months (Dec-Feb north, Jun-Aug south; the engine's winters are
+    # random up to that level), scaled by ``winter_scale``
+    winter_months: int = 3
+    winter_scale: float = 1.0
+    # promotion: settled food per head rose +0.15 %/yr in the same run (1.305 -> 1.501 per 1k, 1342-1437; cores up,
+    # peasant frontiers down as peasants take the growth)
+    consumption_drift: float = 0.0015
     noble_hazard: float = 0.09
     ramp: float = 0.15                  # staffing change per month (defines LAID_OFF / REHIRED_PERCENTAGE = 15)
     tavern_food: float = 60.0            # food per staffed Tavern level (local_monthly_food)
@@ -104,6 +182,7 @@ class SimRules:
                                         # -16 tested 2026-09-25: tribal pools starving 38 -> 92, rejected)
     start_staffed: float = 1.0          # the setup staffs every market level on day 0 (nb.eu5)
     harvest: bool = True
+    harvest_regional: bool = True       # the mod's regional rolls (variable_harvests.toml); false: independent per pool
     seed: int = 1
     # market migration between pools (migration.py); off = the flat starving_migration sink above
     migration: bool = False
@@ -192,6 +271,9 @@ class Pool:
     type_shares: dict = field(default_factory=dict)   # non-tribal pops by type, share of pop0 - tribesmen
     religion: str = ""                 # dominant pop religion
     growth_offset: float = 0.0         # location growth of the pool's class rows (death sources, e.g. disease burden)
+    winter_cons: float = 0.0           # settled-demand-weighted winter consumption share at the climates' maximum levels
+    region: str = ""                   # the harvest rolls per region and sub-continent (variable_harvests.toml)
+    subcontinent: str = ""
 
 
 def overpopulation(pool: Pool, f: float) -> float:
@@ -293,6 +375,7 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
     born = [0.0] * n
     lost = [0.0] * n
     food = [0.0 if p.owner == UNOWNED else min(p.start_food, p.capacity) for p in pools]   # unowned land has no store
+    prosperity = [0.0] * n
     s_tav = [rules.start_staffed if p.taverns else 0.0 for p in pools]
     s_yard = [rules.start_staffed if p.yards else 0.0 for p in pools]
     nobles = [1.0] * n
@@ -312,26 +395,44 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
     cons = [p.demand0 + overpopulation(p, 1.0) for p in pools]
     rng = random.Random(rules.seed)
     harvest = [0.0] * n
+    harvest_cfg = load_harvest_config() if rules.harvest_regional else None
+    regions: dict[str, list[str]] = defaultdict(list)
+    for p in pools:
+        if p.region and p.region not in regions[p.subcontinent]:
+            regions[p.subcontinent].append(p.region)
+    last_harvest: dict[str, str] = {}
     for t in range(int(rules.months)):
         if rules.harvest and t % 12 == SEPTEMBER:
-            for i in range(n):
-                x, acc = rng.random(), 0.0
-                for value, weight in HARVEST_CONS:
-                    acc += weight
-                    if x < acc:
-                        harvest[i] = value
-                        break
+            if harvest_cfg:
+                # the mod's harvest system: one severity per region (sub-continent shock + the region's last harvest)
+                last_harvest = roll_regional_harvests(rng, harvest_cfg, regions, last_harvest)
+                for i, p in enumerate(pools):
+                    harvest[i] = HARVEST_SEVERITY[last_harvest.get(p.region, "normal")]
+            else:
+                for i in range(n):
+                    x, acc = rng.random(), 0.0
+                    for value, weight in HARVEST_CONS:
+                        acc += weight
+                        if x < acc:
+                            harvest[i] = value
+                            break
         cons = [0.0] * n
         forage = [0.0] * n
         years = [0.0] * n
         serving = t >= rules.serve_month
+        month = t % 12                                    # 0 = April
+        drift = 1.0 + rules.consumption_drift * t / 12.0
         for i, p in enumerate(pools):
             if p.owner == UNOWNED:
                 continue                                  # no owner, no province food: consumption plays no part
             f = N[i] / base[i]
             land_cons, forage[i] = free_land(p, f, rules)
+            winter = (month >= 12 - rules.winter_months - 1 and month < 11) if p.lat >= 0 else (2 <= month < 2 + rules.winter_months)
+            scale = (1.0 + rules.prosperity_consumption * prosperity[i]) * drift
+            if winter:
+                scale += rules.winter_scale * p.winter_cons
             settled = (p.demand0 * f * (1.0 - rules.free_land * max(0.0, 1.0 - f)) * (1.0 + harvest[i] * p.peasant_share)
-                       + (overpopulation(p, f) + land_cons) * (1.0 + harvest[i]))
+                       + (overpopulation(p, f) + land_cons) * (1.0 + harvest[i])) * scale
             cons[i] = settled * (1.0 - fed_share(p, N[i], T[i], share0[i], rules)) + p.tribesmen_food * T[i]
             years[i] = min(2.0, stored_months(food[i], cons[i]) / 12.0)
         # victuals per market: staffed Victualling Yards and other producers; Taverns and pops buy
@@ -408,6 +509,8 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             lost[i] -= min(0.0, dt)
             T[i] += dt
             years_end[i] = min(2.0, months_after / 12.0)
+            prosperity[i] += (rules.prosperity_per_year * years_end[i] + (rules.prosperity_starving if starving[i] else 0.0)
+                              - rules.prosperity_decay * prosperity[i]) / 12.0
         if rules.migration:
             out, inn = migration_month(pools, N, base, starving, years_end, rules, T)
             for i in range(n):
@@ -441,6 +544,9 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             "capacity_months": round(p.capacity / cons0, 2) if cons0 > 1e-9 else None,
             "min_months": round(min_months[i], 2) if min_months[i] < math.inf else None,
             "end_months": round(food[i] / cons[i], 2) if cons[i] > 1e-9 else None,
+            "prosperity_end": round(prosperity[i], 3),
+            "food_end": round(food[i], 2),
+            "consumption_end": round(cons[i], 3),
             "months_starving": months_starving[i],
             "months_pinned": months_pinned[i],
             "tavern_staffed_end": round(s_tav[i], 3),
@@ -580,7 +686,7 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
         pairs = []
         by_type = defaultdict(float)
         religions = defaultdict(float)
-        capacity = lat = lon = weight = fixed = fed_num = fed_den = 0.0
+        capacity = lat = lon = weight = fixed = fed_num = fed_den = winter_num = 0.0
         capital = sim.province_capital(group)
         for tag in tags:
             types = sim.location_pops(tag, converted[tag])
@@ -608,6 +714,7 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
             settled = sum(n * float(sim.food.get(kind, 0.0)) for kind, n in types.items() if kind != "tribesmen" and n > 0)
             fed_num += settled * (max(0.0, types.get("tribesmen", 0.0)) / here if here > 0 else 0.0)
             fed_den += settled
+            winter_num += settled * winter_consumption(a.get("climate"))
             cap = sim.capacity_k(tag)
             peasants = sum(types.get(t, 0.0) for t in model.overpopulation_pop_types)
             if cap > 0 and peasants > 0:
@@ -644,6 +751,9 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
             victuals_other_supply=other_supply, overpop=pairs, overpop_consumption=model.overpopulation_consumption,
             peasant_share=peasant_food / demand0 if demand0 > 1e-9 else 0.0,
             tribesmen_food=tribesmen_food, tribal_fed_share=fed_num / fed_den if fed_den > 1e-9 else 0.0,
+            winter_cons=winter_num / fed_den if fed_den > 1e-9 else 0.0,
+            region=str(sim.base[tags[0]].get("region") or ""),
+            subcontinent=str(sim.base[tags[0]].get("sub_continent") or ""),
             n_locations=float(len(tags)), lat=lat / weight if weight else 0.0, lon=lon / weight if weight else 0.0,
             pop_capacity=capacity, attraction_fixed=fixed / len(tags) if tags else 0.1,
             type_shares={k: v / sum(by_type.values()) for k, v in by_type.items()} if by_type else {},

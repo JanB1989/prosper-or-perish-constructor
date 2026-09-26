@@ -122,6 +122,55 @@ def test_tribal_land_follows_the_location_law_and_unowned_land_stays_put():
     assert abs(unowned["tribesmen_end_k"] - 10.0) < 1e-6                    # no gate, no offset, no births
 
 
+def test_winter_levels_match_the_mod_climates():
+    import re
+    from pathlib import Path
+
+    mod = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    found = {}
+    for f in (mod / "in_game/common/climates").glob("*.txt"):
+        name = None
+        for line in f.read_text(encoding="utf-8-sig").splitlines():
+            m = re.match(r"^(?:\w+:)?([a-z_0-9]+)\s*=\s*\{", line)
+            if m:
+                name = m.group(1).removeprefix("ha1300_climate_")
+            m = re.match(r"^\s*winter\s*=\s*(none|mild|normal|severe)", line)
+            if m and name:
+                found[name] = m.group(1)
+    assert found and all(fs.CLIMATE_WINTER.get(k) == v for k, v in found.items()), found
+    text = (mod / "in_game/common/static_modifiers/pp_population_growth_and_food_adjustments.txt").read_text(encoding="utf-8-sig")
+    for level, share in fs.WINTER_CONSUMPTION.items():
+        if share:
+            block = text.split(f"TRY_INJECT:winter_{level}")[1].split("TRY_INJECT:")[0]
+            assert f"local_peasants_food_consumption = {share:g}" in block
+    assert fs.winter_consumption("ha1300_climate_subarctic") == 0.375 and fs.winter_consumption(None) == 0.0
+
+
+def test_regional_harvests_follow_the_mod_tables():
+    import random
+    from pathlib import Path
+
+    mod = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    text = (mod / "in_game/common/static_modifiers/pp_variable_harvest_modifiers.txt").read_text(encoding="utf-8-sig")
+    for severity, value in fs.HARVEST_SEVERITY.items():
+        if value:
+            block = text.split(f"pp_harvest_western_europe_{severity} = {{")[1].split("\n}")[0]
+            assert f"local_peasants_food_consumption = {value:.2f}" in block
+    cfg = fs.load_harvest_config()
+    assert cfg and set(cfg["profiles"]) >= {p for route in fs.HARVEST_ROUTES.values() for p in route.values()}
+    rolled = fs.roll_regional_harvests(random.Random(3), cfg, {"europe": ["a", "b"], "asia": ["c"]}, {})
+    assert set(rolled) == {"a", "b", "c"} and all(v in fs.HARVEST_SEVERITY for v in rolled.values())
+
+
+def test_prosperity_raises_consumption_toward_its_fitted_equilibrium():
+    rules = fs.SimRules(harvest=False, months=12 * 80, consumption_drift=0.0)
+    # food far above need (the pool doubles and more in 80 years), so the store stays at its cap
+    p = tribal_pool(tribesmen=0.0, pop0=10.0, demand0=10.0, yield_=0.0, flat_food=60.0, capacity=5000.0, start_food=5000.0)
+    row = fs.simulate([p], rules)[0]
+    # a store at the cap: P -> 0.0181 x years / 0.0747 (two years: ~0.49), so consumption +~24 %
+    assert 0.45 < row["prosperity_end"] < 0.5
+
+
 def test_tribal_values_match_the_mod():
     from pathlib import Path
 

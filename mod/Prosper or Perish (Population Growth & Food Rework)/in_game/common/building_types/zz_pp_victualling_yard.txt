@@ -68,7 +68,8 @@ unique_production_methods = {
 # slot 1: food shipments, the long-distance staples the harbour receives (already packed, so no packing slot): grain,
 # dried pulses (ship's pease) and salt fish (market fish is already cured, the fisheries buy the salt). Every staple
 # costs 1 gold and feeds 12 food in Provisioning, so all shipments share the grain numbers and stay food-neutral.
-# Maize needs an advance: the maize lands of the Americas have it from the start, everyone else with Maize Cultivation.
+# Rice and maize need an advance, the same split as their farms: the countries of the rice and maize lands (the farms'
+# native triggers) have it from the start, everyone else gets it with Rice / Maize Cultivation.
 unique_production_methods = {
   pp_victualling_yard_grain_shipment = {
     wheat = 5.83

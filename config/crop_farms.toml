@@ -148,6 +148,7 @@ requires = "agriculture_advance"
 age = "age_3_discovery"
 requires = "new_world_advance"
 name = "Rice Cultivation"
+unlock_production_methods = ["pp_victualling_yard_rice_shipment"]   # rice lands get it from the Yard's own advance
 desc = "Adopt techniques for cultivating rice as a staple crop in suitable regions."
 game_start_name = "Established Rice Cultivation"
 game_start_desc = "Traditional rice cultivation in regions where the crop is already established."

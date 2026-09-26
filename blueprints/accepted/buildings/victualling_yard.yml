@@ -91,7 +91,8 @@ building:
     # slot 1: food shipments, the long-distance staples the harbour receives (already packed, so no packing slot): grain,
     # dried pulses (ship's pease) and salt fish (market fish is already cured, the fisheries buy the salt). Every staple
     # costs 1 gold and feeds 12 food in Provisioning, so all shipments share the grain numbers and stay food-neutral.
-    # Maize needs an advance: the maize lands of the Americas have it from the start, everyone else with Maize Cultivation.
+    # Rice and maize need an advance, the same split as their farms: the countries of the rice and maize lands (the farms'
+    # native triggers) have it from the start, everyone else gets it with Rice / Maize Cultivation.
     unique_production_methods = {
       pp_victualling_yard_grain_shipment = {
         wheat = 5.83
@@ -161,11 +162,25 @@ advancements:
       requires = cannon_maker_advance
       icon = hol_maritime_warfare
       ai_weight = { add = 100 }
-  # the maize lands ship maize from the start; everyone else unlocks the method with Maize Cultivation (maize_farm.yml)
+  # The rice and maize lands ship their staple from the start (starting_technology_level 1, like vanilla's regional crop
+  # advances; level-0 countries research it in the first age without prerequisites); everyone else unlocks the method
+  # with Rice / Maize Cultivation (config/crop_farms.toml unlock_production_methods).
+  - key: victualling_yard_rice_shipment_advance
+    body: |2-
+      age = age_1_traditions
+      starting_technology_level = 1
+      potential = {
+        exists = capital
+        pp_rice_native_country = yes
+      }
+      unlock_production_method = pp_victualling_yard_rice_shipment
+      ai_weight = { add = 50 }
   - key: victualling_yard_maize_shipment_advance
     body: |2-
       age = age_1_traditions
+      starting_technology_level = 1
       potential = {
+        exists = capital
         pp_maize_native_country = yes
       }
       unlock_production_method = pp_victualling_yard_maize_shipment
@@ -190,6 +205,8 @@ localization:
     pp_victualling_yard_legumes_shipment_desc: Dried peas and beans keep for years in the hold and were a fixed part of every ship's rations.
     pp_victualling_yard_fish_shipment: Salt Fish Shipment
     pp_victualling_yard_fish_shipment_desc: Barrels of salted herring, stockfish and salt cod come in from the fishing grounds.
+    victualling_yard_rice_shipment_advance: Rice Shipments
+    victualling_yard_rice_shipment_advance_desc: The harbours of the rice lands ship husked rice along the coasts and rivers to the markets beyond.
     victualling_yard_maize_shipment_advance: Maize Shipments
     victualling_yard_maize_shipment_advance_desc: The harbours of the maize lands ship dried maize along the coasts and rivers to the markets beyond.
     pp_victualling_yard_price: Victualling Yard Price

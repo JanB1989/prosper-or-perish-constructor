@@ -2,6 +2,7 @@
 pp_rice_farm_advance_general = {
 age = age_3_discovery
 requires = new_world_advance
+unlock_production_method = pp_victualling_yard_rice_shipment
 ai_weight = { add = 50 }
 potential = {
     exists = capital

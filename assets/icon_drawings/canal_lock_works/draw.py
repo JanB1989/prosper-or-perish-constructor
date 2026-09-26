@@ -2,17 +2,17 @@
 
 Build: uv run eu5-building icon build --script <this file> --out <out_dir>
 
-Identity: the step in water level. On the left the full lock chamber (high water, a barge waiting);
-at the step a heavy timber gate with its balance beam and paddle rack, water jetting through the
-paddles into the lower tail on the right. A bypass culvert in the chamber wall pours into the canal
-below; the lock-keeper's stone hut stands on the far bank of the tail. Unlike the vanilla
-pound_lock icon (gates seen head-on) the lock runs across the picture.
+Identity: the step in water level. On the left the upper pound lies brim high between ashlar walls;
+at the step one big closed timber gate holds it, its long balance beam reaching back over the
+coping; on the right the lower pound lies far below, white water breaking at the gate foot. Level
+and square to the viewer like the rest of the waterway works. Unlike the vanilla pound lock (two
+gates head-on between stone piers) the lock runs across the picture and the drop carries it.
 """
 
 import math
 
 import numpy as np
-from PIL import Image, ImageChops, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter
 
 from eu5_building_pipeline.iconkit import Icon
 from eu5_building_pipeline.iconkit.canvas import SIZE
@@ -20,24 +20,26 @@ from eu5_building_pipeline.iconkit.canvas import SIZE
 SEED = 23
 REFS = ("pound_lock_canal_infrastructure", "irrigation_systems", "bridge_infrastructure", "aqueduct_system")
 
-# ---- layout (1024 canvas) ----------------------------------------------------------------------
-XL, XS, XR = 120, 560, 920           # left end, the step (lower gate), right end
-UG0, UG1 = 100, 150                 # upper gate leaf
-LG0, LG1 = 572, 672                 # lower gate leaf, just past the chamber wall end
-# upper section (chamber, brim full): far coping top, water top, near kerb top, wall face top
-U_FAR, U_WAT, U_KERB, U_FACE = 384, 404, 484, 512
-# lower section (tail)
-L_FAR, L_WAT, L_KERB, L_FACE = 588, 606, 662, 688
-BASE = 736                          # wall foot, standing in the canal
-BAND_TOP, BAND_BOT = 690, 800
-
+# ---- waterways family palette -------------------------------------------------------------------
 STONE, STONE_DK = "#a08a70", "#665646"
 KERB, KERB_DK = "#c2ae90", "#94806a"
 W_LIGHT, W_DEEP = "#7cb6c6", "#285a6c"
 WOOD, WOOD_DK = "#86603e", "#4e3522"
+GRASS, GRASS_DK = "#8e9c4e", "#526228"
+
+# ---- layout (1024 canvas) ----------------------------------------------------------------------
+XL, XS, XR = 100, 440, 920          # left end, the step (gate heel), right end
+GX1 = 700                           # gate mitre edge
+# upper pound: far bank top, far coping top, water top, near kerb top, near wall face top
+U_BANK, U_FAR, U_WAT, U_KERB, U_FACE = 232, 280, 300, 400, 432
+DROP = 190
+L_BANK, L_FAR, L_WAT, L_KERB, L_FACE = (v + DROP for v in (U_BANK, U_FAR, U_WAT, U_KERB, U_FACE))
+BASE = 760                          # wall foot, standing in the band
+BAND_TOP, BAND_BOT = 722, 820
+GTOP, GBOT = 228, L_WAT + 84        # gate head, gate foot (in the lower pound)
 
 
-# ---- helpers (candidates for the kit) ----------------------------------------------------------
+# ---- helpers ------------------------------------------------------------------------------------
 def layer() -> tuple[Image.Image, ImageDraw.ImageDraw]:
     lay = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
     return lay, ImageDraw.Draw(lay)
@@ -51,7 +53,7 @@ def composite(ic: Icon, lay: Image.Image, mask: Image.Image | None = None) -> No
     ic.image.alpha_composite(lay)
 
 
-def ashlar(ic: Icon, box, base=STONE, dark=STONE_DK, course=(36, 52), width=(70, 150), moss=True) -> None:
+def ashlar(ic: Icon, box, base=STONE, dark=STONE_DK, course=(36, 52), width=(70, 150), moss=True) -> Image.Image:
     """Weathered ashlar face: per-block tint, soft bevels (lit top/left, dark bottom/right), faint
     mortar, grime streaks from the top, darker damp base with moss. No hard outline per block."""
     x0, y0, x1, y1 = box
@@ -79,40 +81,43 @@ def ashlar(ic: Icon, box, base=STONE, dark=STONE_DK, course=(36, 52), width=(70,
             x = xb
         y = yb
     composite(ic, lay, m)
-    # grime streaks running down from the coping
     for _ in range(int((x1 - x0) / 55)):
         sx = R.uniform(x0, x1)
         ln = R.uniform(0.25, 0.7) * (y1 - y0)
         ic.shade(ic.intersect(m, ic.mask("rectangle", (sx - R.uniform(5, 14), y0, sx + R.uniform(5, 14), y0 + ln))),
                  (35, 30, 22), R.uniform(0.10, 0.2), blur=6)
-    # damp darker foot and moss
-    ic.shade(ic.intersect(m, ic.mask("rectangle", (x0, y1 - 110, x1, y1 + 40))), (22, 30, 20), 0.42, blur=26)
+    ic.shade(ic.intersect(m, ic.mask("rectangle", (x0, y1 - min(110, (y1 - y0) * 0.5), x1, y1 + 40))), (22, 30, 20),
+             0.42, blur=24)
     if moss:
         for _ in range(int((x1 - x0) / 40)):
             mx = R.uniform(x0, x1)
-            my = y1 - R.uniform(10, 90)
+            my = y1 - R.uniform(10, min(90, (y1 - y0) * 0.5))
             blob = ic.intersect(m, ic.poly_mask(ic.jitter(mx, my, R.uniform(14, 36), R.uniform(8, 18), 8, 0.3)))
             ic.shade(blob, (86, 104, 48), R.uniform(0.25, 0.45), blur=4)
+    return m
 
 
 def kerb(ic: Icon, x0: float, x1: float, top: float, face: float, lip: float = 16) -> None:
     """Coping stones along a wall head: lit top strip, darker front edge, cast shadow under the lip."""
     R = ic.random
-    mid = top + (face - top) * 0.45
-    ic.fill(ic.mask("rectangle", (x0, top, x1, mid)), KERB, "#ab987c", (x0, x1), vertical=False, noise=0.18)
+    mid = top + (face - top) * 0.5
+    ic.fill(ic.mask("rectangle", (x0, top, x1, mid)), "#d2c0a2", "#b09c80", (x0, x1), vertical=False, noise=0.18)
     ic.fill(ic.mask("rectangle", (x0, mid, x1, face)), "#98826a", "#6e5c4a", (mid, face), noise=0.2)
     x = x0 + R.randint(20, 90)
     while x < x1 - 20:
         ic.line([(x, top + 2), (x, face - 2)], 3, (50, 40, 30, 120))
-        x += R.randint(90, 170)
-    ic.line([(x0, mid), (x1, mid)], 3, (255, 244, 222, 80))
-    ic.shade(ic.mask("rectangle", (x0, face, x1, face + lip)), alpha=0.45, blur=7)
+        x += R.randint(80, 150)
+    ic.line([(x0, top + 3), (x1, top + 3)], 3, (255, 248, 228, 110))
+    ic.line([(x0, mid), (x1, mid)], 3, (255, 244, 222, 70))
+    if lip:
+        ic.shade(ic.mask("rectangle", (x0, face, x1, face + lip)), alpha=0.45, blur=7)
 
 
-def water_strip(ic: Icon, x0: float, x1: float, y0: float, y1: float, reflect: float = 24) -> Image.Image:
+def water_strip(ic: Icon, x0: float, x1: float, y0: float, y1: float, reflect: float = 24,
+                light=W_LIGHT, deep=W_DEEP) -> Image.Image:
     """Open water seen from the raised camera: lighter far edge, far-wall reflection, sparse ripples."""
     m = ic.mask("rectangle", (x0, y0, x1, y1))
-    ic.fill(m, W_LIGHT, W_DEEP, (y0 - 10, y1 + 20), noise=0.08, chroma=0.06)
+    ic.fill(m, light, deep, (y0 - 10, y1 + 20), noise=0.08, chroma=0.06)
     ic.shade(ic.intersect(m, ic.mask("rectangle", (x0, y0, x1, y0 + reflect))), (30, 42, 40), 0.35, blur=8)
     R = ic.random
     lay, d = layer()
@@ -126,30 +131,22 @@ def water_strip(ic: Icon, x0: float, x1: float, y0: float, y1: float, reflect: f
     return m
 
 
-def planks(ic: Icon, pts, c1=WOOD, c2=WOOD_DK, board: float = 26, vertical_boards: bool = True) -> Image.Image:
-    """Board panel: per-board tone, a few grain strokes, soft joints; returns the mask."""
+def planks(ic: Icon, pts, c1=WOOD, c2=WOOD_DK, board: float = 26) -> Image.Image:
+    """Vertical board panel: per-board tone, a few grain strokes, soft joints; returns the mask."""
     m = ic.poly_mask(pts)
     xs, ys = [p[0] for p in pts], [p[1] for p in pts]
     ic.fill(m, c1, c2, (min(ys), max(ys)), noise=0.2)
     R = ic.random
     lay, d = layer()
-    lo, hi = (min(xs), max(xs)) if vertical_boards else (min(ys), max(ys))
-    v = lo
-    while v < hi:
+    v = min(xs)
+    while v < max(xs):
         w = board * R.uniform(0.8, 1.2)
         t = R.uniform(-1, 1)
-        col = (255, 225, 180, int(28 * t)) if t > 0 else (20, 12, 6, int(-40 * t))
-        if vertical_boards:
-            d.rectangle((v, min(ys), v + w, max(ys)), fill=col)
-            for _ in range(2):
-                gx = v + R.uniform(4, w - 4)
-                d.line([(gx, min(ys)), (gx + R.uniform(-4, 4), max(ys))], fill=(40, 24, 12, 60), width=2)
-            d.line([(v, min(ys)), (v, max(ys))], fill=(35, 22, 12, 130), width=3)
-        else:
-            d.rectangle((min(xs), v, max(xs), v + w), fill=col)
-            gy = v + R.uniform(4, w - 4)
-            d.line([(min(xs), gy), (max(xs), gy + R.uniform(-3, 3))], fill=(40, 24, 12, 60), width=2)
-            d.line([(min(xs), v), (max(xs), v)], fill=(35, 22, 12, 130), width=3)
+        d.rectangle((v, min(ys), v + w, max(ys)), fill=(255, 225, 180, int(28 * t)) if t > 0 else (20, 12, 6, int(-40 * t)))
+        for _ in range(2):
+            gx = v + R.uniform(4, max(5, w - 4))
+            d.line([(gx, min(ys)), (gx + R.uniform(-4, 4), max(ys))], fill=(40, 24, 12, 60), width=2)
+        d.line([(v, min(ys)), (v, max(ys))], fill=(35, 22, 12, 130), width=3)
         v += w
     composite(ic, lay, m)
     return m
@@ -160,7 +157,7 @@ def timber(ic: Icon, p0, p1, width: float, c1=WOOD, c2=WOOD_DK) -> None:
     (x0, y0), (x1, y1) = p0, p1
     L = math.hypot(x1 - x0, y1 - y0)
     nx, ny = -(y1 - y0) / L, (x1 - x0) / L
-    if ny < 0:
+    if ny < 0 or (ny == 0 and nx < 0):
         nx, ny = -nx, -ny
     h = width / 2
     pts = [(x0 - nx * h, y0 - ny * h), (x1 - nx * h, y1 - ny * h), (x1 + nx * h, y1 + ny * h), (x0 + nx * h, y0 + ny * h)]
@@ -172,135 +169,19 @@ def timber(ic: Icon, p0, p1, width: float, c1=WOOD, c2=WOOD_DK) -> None:
     ic.outline(pts, 4, (40, 26, 16, 170))
 
 
-def spout(ic: Icon, x: float, y: float, dx: float, dy: float, w: float = 16) -> None:
-    """Water jet leaving an opening at (x, y), arcing by (dx, dy), with a splash where it lands."""
-    ts = np.linspace(0, 1, 18)
-    path = [(x + dx * t, y + dy * t * t) for t in ts]
-    lay, d = layer()
-    d.line(path, fill=(170, 210, 220, 230), width=int(w + 8), joint="curve")
-    d.line(path, fill=(236, 246, 247, 240), width=int(w), joint="curve")
-    d.line([(px - 2, py - w * 0.2) for px, py in path[2:]], fill=(255, 255, 255, 170), width=max(3, int(w * 0.3)))
-    ex, ey = path[-1]
-    for _ in range(12):
-        r = ic.random.uniform(4, 10)
-        sx, sy = ex + ic.random.uniform(-w * 2.2, w * 2.2), ey + ic.random.uniform(-w * 1.2, w * 0.4)
-        d.ellipse((sx - r, sy - r * 0.7, sx + r, sy + r * 0.7), fill=(240, 248, 248, 210))
-    d.ellipse((ex - w * 2.6, ey - w * 0.5, ex + w * 2.6, ey + w * 0.7), fill=(232, 244, 245, 200))
-    ic.image.alpha_composite(lay)
-
-
-# ---- parts -------------------------------------------------------------------------------------
-def hut(ic: Icon) -> None:
-    """Lock-keeper's hut on the far bank of the tail: rubble walls, tiled roof, chimney."""
-    hx0, hx1, eave, ridge, foot = 712, 912, 478, 372, L_FAR + 4
-    ic.rect((850, 318, 884, 420), "#9a8c7a", "#6a5f52", vertical=False, edge=4)  # chimney
-    ic.rect((842, 306, 892, 324), "#877a69", "#5e544a", edge=4)
-    ic.tiles([(hx0 - 24, eave + 8), (hx1 + 20, eave + 8), (hx1 - 8, ridge), (hx0 + 4, ridge)], "#a4684e", "#6a3e2c",
-             course=28, stagger=36)
-    ashlar(ic, (hx0, eave + 8, hx1, foot), "#c2ad8c", "#8a765c", course=(20, 28), width=(30, 56), moss=False)
-    ic.shade(ic.mask("rectangle", (hx0, eave + 8, hx1, eave + 40)), alpha=0.5, blur=9)
-    ic.window(746, 510, 780, 544)
-    ic.door(836, 504, 884, foot - 2, arched=False, surround=None)
-    ic.shade(ic.mask("rectangle", (hx0, foot - 26, hx1, foot)), (25, 30, 18), 0.3, blur=8)
-
-
-def barge(ic: Icon, bx0: float, bx1: float, gun: float, wl: float) -> Image.Image:
-    """Laden river barge waiting in the full chamber; returns the hull mask for the waterline."""
-    ts = np.linspace(0, 1, 30)
-    top = [(bx0 + (bx1 - bx0) * t, gun + 8 * math.sin(math.pi * t) - 18 * (1 - t) ** 6) for t in ts]
-    hull = [(bx0 - 20, gun - 20)] + top + [(bx1 + 6, gun - 2), (bx1 + 4, wl + 14), (bx0 + 30, wl + 14)]
-    far = [(x + 6, y - 20) for x, y in top]
-    ic.poly(far + top[::-1], "#4c3524", "#35251a", edge=0)  # hold interior over the near gunwale
-    L = bx1 - bx0
-    for f, h in ((0.22, 60), (0.38, 68), (0.53, 56)):
-        ic.sack(bx0 + L * f, gun + 4, 60, h, "#c8b288")
-    ic.barrel(bx0 + L * 0.66, gun - 64, bx0 + L * 0.66 + 50, gun + 6)
-    ic.barrel(bx0 + L * 0.80, gun - 52, bx0 + L * 0.80 + 44, gun + 8)
-    hm = planks(ic, hull, "#8a6440", "#4a3220", board=16, vertical_boards=False)
-    ic.shade(ic.intersect(hm, ic.mask("rectangle", (bx0 - 30, wl - 16, bx1 + 10, wl + 20))), alpha=0.4, blur=10)
-    ic.shade(ic.intersect(hm, ic.mask("rectangle", (bx1 - 80, 0, SIZE, SIZE))), alpha=0.2, blur=20)
-    ic.line(top, 11, (58, 40, 26))
-    ic.line([(x, y - 3) for x, y in top], 4, (176, 136, 94, 170))
-    ic.outline(hull, 4, (40, 26, 16, 190))
-    timber(ic, (bx1 + 4, gun - 4), (bx1 + 12, wl + 6), 13)  # rudder
-    timber(ic, (bx1 + 6, gun - 6), (bx1 - 40, gun - 36), 9)  # tiller
-    return hm
-
-
-def gate(ic: Icon, gx0: float, gx1: float, gtop: float, gbot: float, paddles=(), rack: bool = True,
-         post_top: float | None = None) -> Image.Image:
-    """Mitre-gate leaf seen from downstream: planked, rails and brace, heel post, walkway handrail,
-    optional paddle openings and paddle rack with windlass. Returns the leaf mask."""
-    w = gx1 - gx0
-    planks(ic, [(gx1 - 4, gtop + 14), (gx1 + w * 0.3, gtop + 4), (gx1 + w * 0.3, gbot - 30), (gx1 - 4, gbot - 18)],
-           "#5a402c", "#35241a", board=14)  # far leaf beyond the mitre, in shadow
-    leaf = [(gx0, gtop), (gx1, gtop + 8), (gx1, gbot), (gx0, gbot - 6)]
-    lm = planks(ic, leaf, "#94683f", "#4a3120", board=w / 4)
-    n = max(2, int((gbot - gtop) / 110))
-    for y in np.linspace(gtop + 12, gbot - 34, n + 1):  # rails
-        timber(ic, (gx0 - 2, y), (gx1 + 2, y + 8), 16, "#7c5636", "#4a321f")
-    timber(ic, (gx0 + 8, gbot - 40), (gx1 - 8, gtop + 22), 13, "#7c5636", "#4a321f")  # brace
-    ic.shade(ic.intersect(lm, ic.mask("rectangle", (gx0 + w * 0.55, 0, SIZE, SIZE))), alpha=0.25, blur=14)
-    for px, py in paddles:
-        ic.rect((px - 13, py - 12, px + 13, py + 12), "#1f1c18", "#141210", edge=0)
-    timber(ic, (gx0 - 10, post_top or gtop - 40), (gx0 - 10, gbot + 6), 26, "#8c6442", "#4e3522")  # heel post
-    for x in (gx0 + 10, gx1 - 6):
-        timber(ic, (x, gtop + 6), (x, gtop - 54), 10)
-    timber(ic, (gx0 - 12, gtop - 52), (gx1 + 8, gtop - 46), 10)
-    if rack:
-        rx = gx1 - 30
-        timber(ic, (rx, gtop + 10), (rx, gtop - 108), 16, "#6f6860", "#3e3a36")
-        ic.line([(rx - 6, gtop - 96), (rx - 6, gtop)], 3, (30, 30, 32, 200))
-        ic.ellipse((rx - 22, gtop - 126, rx + 20, gtop - 88), "#7a7068", "#403a36", edge=4)
-        timber(ic, (rx, gtop - 107), (rx + 50, gtop - 122), 8, "#6a6058", "#3a3632")
-    return lm
-
-
-def balance_beam(ic: Icon, p0, p1, width: float = 34, shadow: bool = True) -> None:
-    """Balance beam from the gate head down to the towpath, iron strap and worn end block."""
-    if shadow:
-        ic.shade(ic.poly_mask([(p0[0] + 12, p0[1] + 30), (p1[0] + 30, p1[1] + 24), (p1[0] + 36, p1[1] + 46),
-                               (p0[0] + 26, p0[1] + 48)]), alpha=0.35, blur=10)
-    timber(ic, p0, p1, width, "#8e6644", "#523823")
-    t = 0.45
-    sx, sy = p0[0] + (p1[0] - p0[0]) * t, p0[1] + (p1[1] - p0[1]) * t
-    ic.line([(sx - 14, sy - 10), (sx + 14, sy + 12)], 8, (48, 46, 46))
-    dx, dy = (p1[0] - p0[0]), (p1[1] - p0[1])
-    L = math.hypot(dx, dy)
-    ux, uy = dx / L, dy / L
-    timber(ic, (p1[0] - ux * 30, p1[1] - uy * 30), (p1[0] + ux * 10, p1[1] + uy * 10), width + 10, "#7c5838", "#4a321f")
-
-
-def canopy(ic: Icon, cx: float, cy: float, rx: float, ry: float, light="#7a8c4c", dark="#2f3f1e", n: int = 16) -> None:
-    """Tree crown as one massed shape (union of lumps) with form shading, lit clumps upper left and
-    dark pockets lower right; no outlines inside."""
+def turf(ic: Icon, m: Image.Image, light=GRASS, dark=GRASS_DK, density: float = 420) -> None:
+    """Grass-covered earth: gradient, short blade strokes lit and shadowed, a few darker patches."""
+    x0, y0, x1, y1 = m.getbbox()
+    ic.fill(m, light, dark, (y0, y1), noise=0.3, chroma=0.14)
     R = ic.random
-    m = Image.new("L", (SIZE, SIZE), 0)
-    lumps = []
-    for _ in range(n):
-        a = R.uniform(0, 2 * math.pi)
-        d = R.uniform(0.0, 0.6) ** 0.8
-        bx, by = cx + math.cos(a) * rx * d, cy + math.sin(a) * ry * d
-        br = min(rx, ry) * R.uniform(0.45, 0.62)
-        lumps.append((bx, by, br))
-        m = ImageChops.lighter(m, ic.poly_mask(ic.jitter(bx, by, br, br * 0.85, 14, 0.07)))
-    ic.fill(m, light, dark, radial=(cx - rx * 0.6, cy - ry * 0.7, max(rx, ry) * 2.0), noise=0.3, chroma=0.16)
-    for bx, by, br in lumps:  # each lump: lit cap, shaded underside
-        cap = ic.poly_mask(ic.jitter(bx - br * 0.25, by - br * 0.3, br * 0.6, br * 0.45, 8, 0.25))
-        ic.shade(ic.intersect(cap, m), (220, 235, 150), 0.16, blur=3)
-        under = ic.poly_mask(ic.jitter(bx + br * 0.2, by + br * 0.45, br * 0.8, br * 0.35, 8, 0.25))
-        ic.shade(ic.intersect(under, m), (8, 18, 6), 0.3, blur=5)
-    ic.shade(ic.intersect(m, ic.mask("ellipse", (cx - rx * 0.1, cy - ry * 0.1, cx + rx * 1.4, cy + ry * 1.3))),
-             (8, 16, 6), 0.3, blur=20)
-
-
-def tree(ic: Icon, cx: float, cy: float, r: float) -> None:
-    """Riverside tree on the far bank: trunk with two limbs, massed crown."""
-    base = U_FAR - 16
-    timber(ic, (cx + 8, base), (cx, cy + r * 0.2), 24, "#6e5640", "#3a2a1c")
-    timber(ic, (cx + 2, cy + r * 0.45), (cx - r * 0.45, cy), 10, "#6e5640", "#3a2a1c")
-    timber(ic, (cx + 4, cy + r * 0.5), (cx + r * 0.5, cy + r * 0.05), 9, "#6e5640", "#3a2a1c")
-    canopy(ic, cx, cy, r * 1.1, r * 0.8)
+    lay, d = layer()
+    for _ in range(int((x1 - x0) * (y1 - y0) / density)):
+        x, y = R.uniform(x0, x1), R.uniform(y0, y1)
+        h = R.uniform(8, 20)
+        t = R.uniform(-1, 1)
+        col = (228, 236, 170, int(60 * t)) if t > 0 else (18, 28, 8, int(-80 * t))
+        d.line([(x, y), (x + R.uniform(-5, 5), y - h)], fill=col, width=3)
+    composite(ic, lay, m)
 
 
 def weeds(ic: Icon, x: float, y: float, w: float, hang: bool = True) -> None:
@@ -317,86 +198,131 @@ def weeds(ic: Icon, x: float, y: float, w: float, hang: bool = True) -> None:
     ic.image.alpha_composite(lay)
 
 
+def rim_darken(ic: Icon, width: int = 22, alpha: float = 0.4) -> None:
+    """Darken a soft band just inside the silhouette, like the dark rim vanilla icons have."""
+    sil = ic.alpha().point(lambda v: 255 if v > 30 else 0)
+    inner = sil.filter(ImageFilter.MinFilter(2 * width + 1))
+    ring = Image.fromarray(((np.asarray(sil) > 0) & (np.asarray(inner) == 0)).astype("uint8") * 255)
+    ic.shade(ring, alpha=alpha, blur=6)
+
+
+# ---- parts --------------------------------------------------------------------------------------
+def far_bank(ic: Icon, x0: float, x1: float, top: float, bottom: float) -> None:
+    """Grassed far bank behind the coping, with a soft uneven top edge."""
+    R = ic.random
+    xs = np.linspace(x0, x1, 14)
+    edge = [(x, top + R.uniform(-5, 5)) for x in xs]
+    pts = [(x0, bottom)] + edge + [(x1, bottom)]
+    turf(ic, ic.poly_mask(pts))
+    ic.outline(pts, 3, (40, 34, 20, 120))
+    ic.shade(ic.mask("rectangle", (x0, bottom - 14, x1, bottom + 2)), (20, 30, 12), 0.3, blur=6)
+    ic.shade(ic.mask("rectangle", (x0, top - 6, x1, top + 12)), (240, 245, 190), 0.18, blur=6)  # lit brow
+
+
+def gate(ic: Icon) -> None:
+    """One big closed mitre-gate leaf at the step, turned towards the viewer: planked, three rails and
+    a brace, heel and mitre posts, walkway with handrail, paddle rack with windlass."""
+    x0, x1 = XS, GX1
+    skew = 16                                   # the leaf turns away slightly towards the mitre
+    far = [(x1 - 6, GTOP + skew + 10), (x1 + 40, GTOP + skew + 2), (x1 + 40, GBOT - 12), (x1 - 6, GBOT - 4)]
+    planks(ic, far, "#5e432e", "#35241a", board=14)              # far leaf beyond the mitre, in shade
+    leaf = [(x0, GTOP), (x1, GTOP + skew), (x1, GBOT), (x0, GBOT - 6)]
+    lm = planks(ic, leaf, "#aa7e4a", "#5a3e26", board=30)
+    rails = np.linspace(GTOP + 24, GBOT - 40, 3)
+    for y in rails:
+        f = (y - GTOP) / (GBOT - GTOP)
+        timber(ic, (x0 - 2, y), (x1 + 2, y + skew * (1 - f) + 6 * f), 24, "#8a603a", "#4c3420")
+    timber(ic, (x0 + 14, rails[-1] - 8), (x1 - 14, rails[0] + 16), 20, "#8a603a", "#4c3420")  # brace
+    # wet dark foot, lit left edge, shade towards the mitre
+    ic.shade(ic.intersect(lm, ic.mask("rectangle", (0, GBOT - 90, SIZE, SIZE))), (20, 34, 26), 0.45, blur=16)
+    ic.shade(ic.intersect(lm, ic.mask("rectangle", (x0 + (x1 - x0) * 0.6, 0, SIZE, SIZE))), alpha=0.18, blur=26)
+    ic.line([(x0 + 4, GTOP + 6), (x0 + 4, GBOT - 12)], 5, (255, 232, 190, 110))
+    # paddle openings with water spurting through into the lower pound
+    for px, py in ((x0 + 80, GBOT - 58), (x1 - 80, GBOT - 50)):
+        ic.rect((px - 12, py - 10, px + 12, py + 10), "#1f1c18", "#141210", edge=0)
+        lay, d = layer()
+        path = [(px + 22 * t, py + 4 + (GBOT - py) * t * t) for t in np.linspace(0, 1, 12)]
+        d.line(path, fill=(176, 214, 222, 230), width=18, joint="curve")
+        d.line(path, fill=(238, 247, 248, 240), width=11, joint="curve")
+        ic.image.alpha_composite(lay)
+    # heel post (tall), mitre post
+    timber(ic, (x0 - 6, GTOP - 58), (x0 - 6, GBOT + 8), 36, "#936a46", "#523823")
+    timber(ic, (x1 + 2, GTOP + skew - 10), (x1 + 2, GBOT + 4), 22, "#86603e", "#4a321f")
+    # walkway plank on the head, handrail on posts
+    timber(ic, (x0 - 10, GTOP - 6), (x1 + 16, GTOP + skew - 6), 18, "#ae8a62", "#6a4c30")
+    for x in (x0 + 90, x0 + 175, x1 - 6):
+        t = (x - x0) / (x1 - x0)
+        timber(ic, (x, GTOP + skew * t - 10), (x, GTOP + skew * t - 64), 10, "#86603e", "#4e3522")
+    timber(ic, (x0 + 80, GTOP + skew * 0.1 - 62), (x1 + 4, GTOP + skew - 62), 10, "#9a724c", "#553a24")
+    # paddle rack post and windlass
+    rx = x1 - 50
+    timber(ic, (rx, GTOP + skew - 6), (rx, GTOP - 100), 18, "#78726a", "#3e3a36")
+    ic.ellipse((rx - 24, GTOP - 122, rx + 22, GTOP - 80), "#847a70", "#403a36", edge=4)
+    ic.fill(ic.mask("ellipse", (rx - 7, GTOP - 108, rx + 7, GTOP - 94)), "#3a3634", "#1e1c1a", noise=0.05)
+    timber(ic, (rx, GTOP - 101), (rx + 54, GTOP - 116), 8, "#6a6058", "#3a3632")
+
+
+def balance_beam(ic: Icon) -> None:
+    """The long balance beam from the gate head back over the upper coping, resting on a trestle."""
+    p0, p1 = (XS + 150, GTOP - 22), (XL + 50, U_KERB - 40)
+    # shadow on the water and coping below (light from the upper left: falls right and down)
+    ic.shade(ic.poly_mask([(p0[0] + 10, U_WAT + 30), (p1[0] + 40, U_KERB + 6), (p1[0] + 50, U_KERB + 30),
+                           (p0[0] + 20, U_WAT + 60)]), alpha=0.3, blur=12)
+    timber(ic, (p1[0] + 34, U_KERB + 4), (p1[0] + 34, p1[1] + 8), 16, "#6e4e32", "#3e2a1a")  # trestle
+    timber(ic, p0, p1, 44, "#a07850", "#573b24")
+    L = math.hypot(p1[0] - p0[0], p1[1] - p0[1])
+    ux, uy = (p1[0] - p0[0]) / L, (p1[1] - p0[1]) / L
+    for t in (0.2, 0.55):  # iron straps
+        sx, sy = p0[0] + (p1[0] - p0[0]) * t, p0[1] + (p1[1] - p0[1]) * t
+        ic.line([(sx - uy * 24, sy + ux * 24), (sx + uy * 24, sy - ux * 24)], 8, (48, 46, 46))
+    timber(ic, (p1[0] + ux * 50, p1[1] + uy * 50), (p1[0] - ux * 4, p1[1] - uy * 4), 50, "#bea080", "#72563c")
+
+
 def draw(ic: Icon) -> None:
-    band = ic.water_band(top=BAND_TOP, bottom=BAND_BOT, x0=XL - 36, x1=XR + 36, inset=30, sag=26,
+    ic.grade["mute"] = 0.86
+    band = ic.water_band(top=BAND_TOP, bottom=BAND_BOT, x0=XL - 40, x1=XR + 40, inset=30, sag=26,
                          light=W_LIGHT, deep=W_DEEP)
 
-    # tail: far bank, hut, far coping, water
-    ic.fill(ic.mask("rectangle", (XS, L_FAR - 20, XR, L_FAR)), "#7a864a", "#56632f", noise=0.3)
-    hut(ic)
+    # lower pound (behind the gate): far bank, far coping, low water
+    far_bank(ic, XS, XR, L_BANK, L_FAR + 4)
     kerb(ic, XS, XR, L_FAR, L_WAT, lip=0)
-    tail = water_strip(ic, XS, XR, L_WAT, L_KERB, reflect=16)
+    tail = water_strip(ic, XS, XR, L_WAT, L_KERB, reflect=16, light="#6ea4b6", deep="#2a5a6c")
 
-    # chamber: far bank, far coping, water, barge
-    ic.fill(ic.mask("rectangle", (XL, U_FAR - 24, XS + 20, U_FAR)), "#7a864a", "#56632f", noise=0.3)
-    tree(ic, 240, 286, 108)
-    for gx in (150, 300, 470):
-        ic.poly(ic.jitter(gx, U_FAR - 20, ic.random.uniform(22, 36), 12, 7, 0.3), "#86924f", "#52602c", edge=0)
+    # upper pound: far bank, far coping, brim-high water
+    far_bank(ic, XL, XS + 20, U_BANK, U_FAR + 4)
     kerb(ic, XL, XS + 20, U_FAR, U_WAT, lip=0)
-    water_strip(ic, XL, XS, U_WAT, U_KERB)
-    hull = barge(ic, 168, 404, U_WAT + 30, U_KERB - 14)
-    ic.fill(ic.intersect(hull, ic.mask("rectangle", (0, U_KERB - 16, SIZE, SIZE))), W_LIGHT, W_DEEP,
-            (U_WAT - 10, U_KERB + 20), noise=0.08)
-    ic.line([(150, U_KERB - 16), (416, U_KERB - 15)], 5, (225, 240, 242, 170))
+    water_strip(ic, XL, XS, U_WAT, U_KERB, reflect=20, light="#9accd8", deep="#3e7a8c")
 
+    gate(ic)
+    # the gate shades the lower pound to its right
+    ic.shade(ic.intersect(tail, ic.poly_mask([(GX1 + 40, L_WAT), (GX1 + 150, L_WAT), (GX1 + 110, L_KERB),
+                                              (GX1 + 10, L_KERB)])), alpha=0.3, blur=16)
+    # white water breaking at the gate foot and trailing down the pound
+    lay, d = layer()
+    R = ic.random
+    for _ in range(26):
+        r = R.uniform(8, 16)
+        sx, sy = R.uniform(XS + 10, GX1 + 50), GBOT + R.uniform(-4, 8)
+        d.ellipse((sx - r * 1.7, sy - r * 0.5, sx + r * 1.7, sy + r * 0.6), fill=(238, 247, 247, 225))
+    for _ in range(10):
+        x, y = R.uniform(GX1 + 30, XR - 60), R.uniform(GBOT - 6, L_KERB - 6)
+        d.line([(x, y), (x + R.uniform(30, 70), y)], fill=(232, 244, 246, 190), width=6)
+    composite(ic, lay, ic.mask("rectangle", (XS, L_WAT, XR, L_KERB)))
 
-    # lower gate at the step, paddles jetting into the tail
-    GTOP, GBOT = 318, L_KERB - 16
-    gate(ic, LG0, LG1, GTOP, GBOT, paddles=((LG0 + 26, 560), (LG0 + 66, 586)), post_top=GTOP - 70)
-    # the gate shades the hut and the tail beyond it (light from the upper left)
-    ic.shade(ic.poly_mask([(LG1 + 20, GTOP - 40), (LG1 + 80, GTOP), (LG1 + 90, L_KERB), (LG1, L_KERB)]),
-             alpha=0.38, blur=18)
-    ic.line([(LG0 + 3, GTOP + 4), (LG0 + 3, GBOT - 8)], 5, (255, 232, 190, 110))  # lit leaf edge
-    spout(ic, LG0 + 26, 560, 70, 64, 16)
-    spout(ic, LG0 + 66, 586, 80, 44, 14)
-    ic.overlay(lambda d: [d.line([(x, L_WAT + 34 + ic.random.uniform(-6, 6)), (x + 26, L_WAT + 34)],
-                                 fill=(238, 246, 246, 190), width=7) for x in range(LG1 + 20, LG1 + 150, 24)], tail)
-
-    # near walls standing in the canal, copings on top
+    # near walls standing in the band, copings lit on top
     ashlar(ic, (XS, L_FACE, XR, BASE))
-    ic.shade(ic.mask("rectangle", (XS, L_FACE, XS + 70, BASE)), alpha=0.45, blur=16)  # shadow of the step
+    ic.shade(ic.mask("rectangle", (XS, L_FACE, XS + 80, BASE)), alpha=0.4, blur=18)  # shadow of the step
     ashlar(ic, (XL, U_FACE, XS, BASE))
     kerb(ic, XL, XS, U_KERB, U_FACE)
     kerb(ic, XS, XR, L_KERB, L_FACE)
-    ic.line([(XS - 3, U_KERB), (XS - 3, BASE)], 5, (255, 244, 222, 90))
-    # iron mooring ring and a damp seep down the chamber wall
-    ic.overlay(lambda d: d.ellipse((460, 540, 486, 572), outline=(42, 40, 40, 255), width=6))
-    ic.shade(ic.mask("rectangle", (500, U_FACE + 4, 530, BASE)), (30, 40, 26), 0.25, blur=8)
-    for wx, wy, ww in ((160, U_KERB + 2, 40), (410, U_KERB + 4, 30), (536, U_KERB + 2, 24), (700, L_KERB + 2, 34)):
-        weeds(ic, wx, wy, ww)
-    for wx, ww in ((150, 50), (420, 40), (640, 44)):
-        weeds(ic, wx, U_FAR - 2 if wx < XS else L_FAR - 2, ww, hang=False)
-
-    # bypass culvert in the chamber wall pouring into the canal
-    cx0, cx1, cy0 = 250, 320, 620
-    mx = (cx0 + cx1) / 2
-    ic.fill(ic.mask("ellipse", (cx0 - 20, cy0 - 20, cx1 + 20, cy0 + 70)), "#b4a084", "#7e6c56", noise=0.2)
-    ic.fill(ic.mask("rectangle", (cx0 - 20, cy0 + 25, cx1 + 20, BASE)), "#b4a084", "#7e6c56", noise=0.2)
-    ic.fill(ic.mask("ellipse", (cx0, cy0, cx1, cy0 + 70)), "#211d19", "#15120f", noise=0.05)
-    ic.fill(ic.mask("rectangle", (cx0, cy0 + 35, cx1, BASE)), "#211d19", "#15120f", noise=0.05)
-    for a in range(200, 345, 28):
-        ca, sa = math.cos(math.radians(a)), math.sin(math.radians(a))
-        ic.line([(mx + 36 * ca, cy0 + 36 + 36 * sa), (mx + 56 * ca, cy0 + 36 + 56 * sa)], 3, (40, 32, 24, 150))
-    lay, d = layer()
-    d.polygon([(cx0 + 4, 676), (cx1 - 4, 676), (cx1 + 14, BASE + 6), (cx0 - 14, BASE + 6)], fill=(210, 232, 236, 235))
-    for x in np.arange(cx0 + 8, cx1, 14):
-        d.line([(x, 680), (x + (x - mx) * 0.3, BASE)], fill=(255, 255, 255, 170), width=5)
-    ic.image.alpha_composite(lay)
-
+    ic.line([(XS - 3, U_KERB), (XS - 3, BASE)], 6, (30, 22, 15, 150))  # end of the upper wall, turned from the light
+    ic.line([(XL + 3, U_KERB + 4), (XL + 3, BASE)], 4, (255, 244, 222, 70))
+    ic.overlay(lambda d: d.ellipse((372, 486, 400, 520), outline=(42, 40, 40, 255), width=6))  # mooring ring
     walls = ic.mask("rectangle", (XL, U_FACE, XR, BASE + 60))
-    ic.waterline(walls, BASE - 8)
-    ic.foam(XL + 20, XR - 30, BASE - 8)
-    lay, d = layer()
-    for _ in range(16):
-        r = ic.random.uniform(7, 14)
-        sx, sy = ic.random.uniform(cx0 - 44, cx1 + 44), BASE + ic.random.uniform(-12, 16)
-        d.ellipse((sx - r * 1.6, sy - r * 0.6, sx + r * 1.6, sy + r * 0.6), fill=(240, 248, 248, 220))
-    composite(ic, lay, band)
+    ic.waterline(walls, BASE - 22)
+    ic.foam(XL + 10, XR - 10, BASE - 22)
 
-    # balance beams reaching out to the towpath
-    balance_beam(ic, (LG0 - 6, GTOP - 26), (LG0 - 190, U_KERB + 12), 36)
-
-    # bollard with a rope on the tail coping
-    ic.rect((880, L_KERB - 44, 906, L_KERB + 6), "#7a5838", "#46301e", vertical=False, edge=4)
-    ic.ellipse((876, L_KERB - 54, 910, L_KERB - 36), "#9a7650", "#5e4228", edge=4)
-    ic.line([(893, L_KERB - 26), (852, L_KERB + 2), (812, L_KERB + 8)], 7, (120, 96, 60))
+    balance_beam(ic)
+    for wx, wy, ww in ((180, U_KERB + 2, 40), (330, U_KERB + 2, 30), (800, L_KERB + 2, 36)):
+        weeds(ic, wx, wy, ww)
+    rim_darken(ic)

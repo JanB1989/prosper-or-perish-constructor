@@ -5,8 +5,8 @@
 pp_land_potential_chili = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.2 }
-	else_if = { limit = { climate = oceanic } add = -0.04 }
 	else_if = { limit = { climate = tropical } add = 0.03 }
+	else_if = { limit = { climate = oceanic } add = -0.04 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = 0.03 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.2 }
 	else_if = { limit = { climate = subtropical } add = 0.03 }
@@ -60,8 +60,8 @@ pp_land_potential_low_chili = {
 pp_land_potential_cloves = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.25 }
-	else_if = { limit = { climate = oceanic } add = -0.21 }
 	else_if = { limit = { climate = tropical } add = 0.02 }
+	else_if = { limit = { climate = oceanic } add = -0.21 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = 0.02 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.2 }
 	else_if = { limit = { climate = subtropical } add = 0.02 }
@@ -110,8 +110,8 @@ pp_land_potential_low_cloves = {
 pp_land_potential_cocoa = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.2 }
-	else_if = { limit = { climate = oceanic } add = -0.2 }
 	else_if = { limit = { climate = tropical } add = 0.16 }
+	else_if = { limit = { climate = oceanic } add = -0.2 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = 0.03 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.2 }
 	else_if = { limit = { climate = subtropical } add = -0.1 }
@@ -167,8 +167,8 @@ pp_land_potential_low_cocoa = {
 pp_land_potential_coffee = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.32 }
-	else_if = { limit = { climate = oceanic } add = -0.32 }
 	else_if = { limit = { climate = tropical } add = -0.12 }
+	else_if = { limit = { climate = oceanic } add = -0.32 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.12 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.32 }
 	else_if = { limit = { climate = subtropical } add = -0.12 }
@@ -222,8 +222,8 @@ pp_land_potential_low_coffee = {
 pp_land_potential_cotton = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.18 }
-	else_if = { limit = { climate = oceanic } add = -0.32 }
 	else_if = { limit = { climate = tropical } add = -0.16 }
+	else_if = { limit = { climate = oceanic } add = -0.32 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.11 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.32 }
 	else_if = { limit = { climate = subtropical } add = -0.12 }
@@ -278,8 +278,8 @@ pp_land_potential_low_cotton = {
 pp_land_potential_dyes = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.23 }
-	else_if = { limit = { climate = oceanic } add = -0.21 }
 	else_if = { limit = { climate = tropical } add = 0.12 }
+	else_if = { limit = { climate = oceanic } add = -0.21 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = 0.2 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.3 }
 	else_if = { limit = { climate = subtropical } add = -0.12 }
@@ -331,8 +331,8 @@ pp_land_potential_low_dyes = {
 pp_land_potential_fiber_crops = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.19 }
-	else_if = { limit = { climate = oceanic } add = -0.02 }
 	else_if = { limit = { climate = tropical } add = 0.03 }
+	else_if = { limit = { climate = oceanic } add = -0.02 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = 0.08 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.46 }
 	else_if = { limit = { climate = subtropical } add = 0.1 }
@@ -390,8 +390,8 @@ pp_land_potential_low_fiber_crops = {
 pp_land_potential_fruit = {
 	value = 0
 	if = { limit = { climate = continental } add = 0.06 }
-	else_if = { limit = { climate = oceanic } add = 0.11 }
 	else_if = { limit = { climate = tropical } add = 0.29 }
+	else_if = { limit = { climate = oceanic } add = 0.11 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.21 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.06 }
 	else_if = { limit = { climate = subtropical } add = -0.06 }
@@ -447,8 +447,8 @@ pp_land_potential_low_fruit = {
 pp_land_potential_incense = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.37 }
-	else_if = { limit = { climate = oceanic } add = -0.31 }
 	else_if = { limit = { climate = tropical } add = -0.3 }
+	else_if = { limit = { climate = oceanic } add = -0.31 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.01 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.38 }
 	else_if = { limit = { climate = subtropical } add = -0.19 }
@@ -555,8 +555,8 @@ pp_land_potential_low_legumes = {
 pp_land_potential_lumber = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.09 }
-	else_if = { limit = { climate = oceanic } add = 0.04 }
 	else_if = { limit = { climate = tropical } add = 0.04 }
+	else_if = { limit = { climate = oceanic } add = 0.04 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.02 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.2 }
 	else_if = { limit = { climate = subtropical } add = -0.04 }
@@ -611,8 +611,8 @@ pp_land_potential_low_lumber = {
 pp_land_potential_maize = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.05 }
-	else_if = { limit = { climate = oceanic } add = -0.11 }
 	else_if = { limit = { climate = tropical } add = -0.06 }
+	else_if = { limit = { climate = oceanic } add = -0.11 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.05 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.25 }
 	else_if = { limit = { climate = subtropical } add = -0.03 }
@@ -665,8 +665,8 @@ pp_land_potential_low_maize = {
 pp_land_potential_medicaments = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.04 }
-	else_if = { limit = { climate = oceanic } add = -0.04 }
 	else_if = { limit = { climate = tropical } add = -0.04 }
+	else_if = { limit = { climate = oceanic } add = -0.04 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.04 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.16 }
 	else_if = { limit = { climate = subtropical } add = -0.04 }
@@ -721,8 +721,8 @@ pp_land_potential_low_medicaments = {
 pp_land_potential_millet = {
 	value = 0
 	if = { limit = { climate = continental } add = 0.01 }
-	else_if = { limit = { climate = oceanic } add = -0.1 }
 	else_if = { limit = { climate = tropical } add = -0.2 }
+	else_if = { limit = { climate = oceanic } add = -0.1 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = 0.01 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.1 }
 	else_if = { limit = { climate = subtropical } add = -0.18 }
@@ -775,8 +775,8 @@ pp_land_potential_low_millet = {
 pp_land_potential_olives = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.2 }
-	else_if = { limit = { climate = oceanic } add = -0.19 }
 	else_if = { limit = { climate = tropical } add = -0.2 }
+	else_if = { limit = { climate = oceanic } add = -0.19 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.2 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.2 }
 	else_if = { limit = { climate = subtropical } add = -0.19 }
@@ -831,8 +831,8 @@ pp_land_potential_low_olives = {
 pp_land_potential_pepper = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.23 }
-	else_if = { limit = { climate = oceanic } add = -0.23 }
 	else_if = { limit = { climate = tropical } add = -0.03 }
+	else_if = { limit = { climate = oceanic } add = -0.23 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.14 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.28 }
 	else_if = { limit = { climate = subtropical } add = -0.18 }
@@ -889,8 +889,8 @@ pp_land_potential_low_pepper = {
 pp_land_potential_potato = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.12 }
-	else_if = { limit = { climate = oceanic } add = -0.04 }
 	else_if = { limit = { climate = tropical } add = 0.01 }
+	else_if = { limit = { climate = oceanic } add = -0.04 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = 0.08 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.12 }
 	else_if = { limit = { climate = subtropical } add = -0.05 }
@@ -938,8 +938,8 @@ pp_land_potential_low_potato = {
 pp_land_potential_rice = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.36 }
-	else_if = { limit = { climate = oceanic } add = -0.4 }
 	else_if = { limit = { climate = tropical } add = -0.02 }
+	else_if = { limit = { climate = oceanic } add = -0.4 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.05 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.4 }
 	else_if = { limit = { climate = subtropical } add = 0.08 }
@@ -992,8 +992,8 @@ pp_land_potential_low_rice = {
 pp_land_potential_saffron = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.03 }
-	else_if = { limit = { climate = oceanic } add = -0.03 }
 	else_if = { limit = { climate = tropical } add = -0.23 }
+	else_if = { limit = { climate = oceanic } add = -0.03 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.23 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.23 }
 	else_if = { limit = { climate = subtropical } add = -0.08 }
@@ -1049,8 +1049,8 @@ pp_land_potential_low_saffron = {
 pp_land_potential_silk = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.41 }
-	else_if = { limit = { climate = oceanic } add = -0.36 }
 	else_if = { limit = { climate = tropical } add = 0.02 }
+	else_if = { limit = { climate = oceanic } add = -0.36 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = 0.04 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.41 }
 	else_if = { limit = { climate = subtropical } add = -0.04 }
@@ -1108,8 +1108,8 @@ pp_land_potential_low_silk = {
 pp_land_potential_sugar = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.23 }
-	else_if = { limit = { climate = oceanic } add = -0.23 }
 	else_if = { limit = { climate = tropical } add = -0.03 }
+	else_if = { limit = { climate = oceanic } add = -0.23 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.03 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.23 }
 	else_if = { limit = { climate = subtropical } add = 0.08 }
@@ -1165,8 +1165,8 @@ pp_land_potential_low_sugar = {
 pp_land_potential_tea = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.34 }
-	else_if = { limit = { climate = oceanic } add = -0.26 }
 	else_if = { limit = { climate = tropical } add = -0.06 }
+	else_if = { limit = { climate = oceanic } add = -0.26 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.17 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.26 }
 	else_if = { limit = { climate = subtropical } add = -0.06 }
@@ -1218,8 +1218,8 @@ pp_land_potential_low_tea = {
 pp_land_potential_tobacco = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.03 }
-	else_if = { limit = { climate = oceanic } add = -0.1 }
 	else_if = { limit = { climate = tropical } add = -0.21 }
+	else_if = { limit = { climate = oceanic } add = -0.1 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.23 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.3 }
 	else_if = { limit = { climate = subtropical } add = -0.1 }
@@ -1274,8 +1274,8 @@ pp_land_potential_low_tobacco = {
 pp_land_potential_wheat = {
 	value = 0
 	if = { limit = { climate = continental } add = 0.05 }
-	else_if = { limit = { climate = oceanic } add = 0.05 }
 	else_if = { limit = { climate = tropical } add = -0.2 }
+	else_if = { limit = { climate = oceanic } add = 0.05 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.2 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.04 }
 	else_if = { limit = { climate = subtropical } add = -0.04 }
@@ -1328,8 +1328,8 @@ pp_land_potential_low_wheat = {
 pp_land_potential_wine = {
 	value = 0
 	if = { limit = { climate = continental } add = 0.05 }
-	else_if = { limit = { climate = oceanic } add = 0.05 }
 	else_if = { limit = { climate = tropical } add = -0.2 }
+	else_if = { limit = { climate = oceanic } add = 0.05 }
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.33 }
 	else_if = { limit = { climate = ha1300_climate_subarctic } add = -0.2 }
 	else_if = { limit = { climate = subtropical } add = -0.11 }

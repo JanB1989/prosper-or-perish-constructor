@@ -800,7 +800,7 @@ def prepare_publish(
     if clone.returncode != 0:
         message = clone.stderr.lower()
         if "not found" in message or "does not exist" in message or "does not appear to be a git repository" in message:
-            raise SystemExit(f"{site_repo} does not exist yet; create it with `ppc report publish --create` (public repository).")
+            raise SystemExit(f"{site_repo} does not exist yet; create it with `ppc report --create-site` (public repository).")
         raise SystemExit(f"cannot clone {remote}: {clone.stderr.strip()}")
     runs_dir = site / "runs"
     runs_dir.mkdir(exist_ok=True)

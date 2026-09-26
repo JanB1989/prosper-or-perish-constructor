@@ -11,6 +11,7 @@ building:
     - name: slot_0
       methods:
         - pp_victualling_yard_pack_provisions
+        - pp_victualling_yard_ship_stores
     - name: slot_1
       methods:
         - pp_victualling_yard_surplus_sales
@@ -52,6 +53,16 @@ building:
         produced = victuals
         manual_labor_cost = 0.2
         output = 1.5
+        category = building_maintenance
+      }
+      # TEST (2026-09-26): coastal-only, more efficient alternative. A method's potential/allow run in country scope;
+      # the location is scope:target (pattern from the fortress granary methods), so the coast gate sits in allow.
+      pp_victualling_yard_ship_stores = {
+        allow = { scope:target ?= { is_coastal = yes } }
+        naval_supplies = 0.3
+        produced = victuals
+        manual_labor_cost = 0.2
+        output = 2.25
         category = building_maintenance
       }
     }
@@ -135,6 +146,7 @@ localization:
     victualling_yard_slot_2: Packing
     victuals_trade_construction: Victuals Trade Construction
     pp_victualling_yard_pack_provisions: Pack Provisions
+    pp_victualling_yard_ship_stores: Ship's Stores
     pp_victualling_yard_surplus_sales: Sell the Surplus
     pp_victualling_yard_loose_stores: Loose Stores
     pp_victualling_yard_pottery_jars: Pottery Jars

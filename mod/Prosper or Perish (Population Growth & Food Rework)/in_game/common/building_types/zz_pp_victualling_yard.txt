@@ -32,6 +32,16 @@ unique_production_methods = {
     output = 1.5
     category = building_maintenance
   }
+  # TEST (2026-09-26): coastal-only, more efficient alternative. A method's potential/allow run in country scope;
+  # the location is scope:target (pattern from the fortress granary methods), so the coast gate sits in allow.
+  pp_victualling_yard_ship_stores = {
+    allow = { scope:target ?= { is_coastal = yes } }
+    naval_supplies = 0.3
+    produced = victuals
+    manual_labor_cost = 0.2
+    output = 2.25
+    category = building_maintenance
+  }
 }
 # slot 1: surplus sales, the storage leg (the farms' Surplus Sales good): output modifier = country constant -1
 # + 8 per stored year = 8y; the 30.52 offset input is the fixed cost. Per level at floor prices (dummy goods and

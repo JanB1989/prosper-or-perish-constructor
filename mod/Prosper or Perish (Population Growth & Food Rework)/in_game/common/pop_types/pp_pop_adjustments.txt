@@ -72,8 +72,8 @@ TRY_INJECT:peasants = {
 		local_fish_output_modifier = 0.10
 		local_wild_game_output_modifier = 0.10
 		local_fur_output_modifier = 0.10
-		local_victuals_output_modifier = 0.20
-	}	
+		local_local_food_output_modifier = 0.10
+	}
 }
 
 TRY_INJECT:slaves = {

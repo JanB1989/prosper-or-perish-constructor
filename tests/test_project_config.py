@@ -2704,11 +2704,14 @@ def test_land_vs_naval_output_modifiers_are_capped_and_targeted() -> None:
         "global_salt_output_modifier",
         "global_pearls_output_modifier",
         "global_tar_output_modifier",
-        "global_victuals_output_modifier",
     }
 
     assert _global_output_values(left) == {key: 0.05 for key in expected_left}
-    assert _global_output_values(right) == {key: 0.05 for key in expected_right}
+    # victuals are ship provisioning, so naval gets the double share
+    assert _global_output_values(right) == {
+        **{key: 0.05 for key in expected_right},
+        "global_victuals_output_modifier": 0.10,
+    }
 
     for societal_value in (
         "TRY_INJECT:capital_economy_vs_traditional_economy",

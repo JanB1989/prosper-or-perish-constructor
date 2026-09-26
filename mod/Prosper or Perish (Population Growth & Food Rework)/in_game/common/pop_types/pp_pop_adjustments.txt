@@ -91,6 +91,6 @@ TRY_INJECT:slaves = {
 TRY_INJECT:tribesmen = {
 	pop_food_consumption = -1.0
 	pop_percentage_impact = {
-		local_population_growth = 0.012
+		local_population_growth = 0.004 # offset (0.012 before 2026-09-26, it also pushed settled pops in tribal land): +0.2 % net of the rank gate
 	}
 }

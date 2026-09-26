@@ -15,14 +15,14 @@ def pools():
         # fed exactly: stays level
         fs.Pool(owner="A", province="fed", pop0=100.0, demand0=100.0, workers0=90.0, jobs0=0.0, yield_=100 / 90,
                 capacity=2400.0, start_food=400.0, **common),
-        # large surplus and a small store: pinned at the cap
+        # large surplus and a 24-month store: pinned at the cap, grows slowly
         fs.Pool(owner="B", province="rich", pop0=50.0, demand0=50.0, workers0=50.0, jobs0=0.0, yield_=2.0,
-                capacity=600.0, start_food=60.0, **common),
+                capacity=1200.0, start_food=60.0, **common),
     ]
 
 
 def test_validator_reports_collapse_pinning_and_world_change(tmp_path):
-    rules = fs.SimRules(harvest=False)
+    rules = fs.SimRules(harvest=False, starving_growth=-0.04)   # mechanics test at the old starvation penalty
     rows = fs.simulate(pools(), rules)
     by = {r["province"]: r for r in rows}
     assert by["short"]["collapsing"] and by["short"]["months_starving"] > 48
@@ -35,7 +35,7 @@ def test_validator_reports_collapse_pinning_and_world_change(tmp_path):
 
 
 def test_tavern_rescues_the_short_pool_when_the_market_has_victuals(tmp_path):
-    rules = fs.SimRules(harvest=False)
+    rules = fs.SimRules(harvest=False, starving_growth=-0.04)
     ps = pools()
     ps[0].taverns = 1.0
     ps[2].victuals_other_supply = 10.0
@@ -109,15 +109,21 @@ def _unowned_tribe(capacity_k):
                    tribesmen_food=-1.0, pop_capacity=capacity_k)
 
 
-def test_tribesmen_grow_at_most_about_015_percent_a_year_even_on_unowned_land():
+def test_tribesmen_grow_at_most_about_015_percent_a_year_and_not_at_all_on_unowned_land():
+    from dataclasses import replace
+
     rules = fs.SimRules(harvest=False, months=120)
-    empty = fs.simulate([_unowned_tribe(1000.0)], rules)[0]
-    full = fs.simulate([_unowned_tribe(10.0 * 0.75)], rules)[0]        # where the free-land factor 1 - 0.75 pop/cap is 0
+    owned = replace(_unowned_tribe(1000.0), owner="A")
+    empty = fs.simulate([owned], rules)[0]
+    full = fs.simulate([replace(_unowned_tribe(10.0 * 0.75), owner="A")], rules)[0]   # free-land factor 1 - 0.75 pop/cap = 0
     yearly = (empty["tribesmen_end_k"] / 10.0) ** (1 / 10) - 1
-    assert 0.0005 < yearly <= 0.0016                                  # ~0.14 %/yr on empty land
+    assert 0.0002 < yearly <= 0.0016                                  # ~0.15 %/yr at most, on empty owned land
     assert abs(full["tribesmen_end_k"] - 10.0) < 1e-6                  # no births at capacity
+    unowned = fs.simulate([_unowned_tribe(1000.0)], rules)[0]
+    assert abs(unowned["tribesmen_end_k"] - 10.0) < 1e-6               # no free-land modifier on unowned land: no births
     # the engine before 2026-09-26 (brake as a country modifier): unowned tribesmen grew ~1 %/yr
-    old = fs.simulate([_unowned_tribe(1000.0)], fs.SimRules(harvest=False, months=120, unowned_brake=False, tribal_land_births=1.0))[0]
+    old = fs.simulate([_unowned_tribe(1000.0)], fs.SimRules(harvest=False, months=120, unowned_brake=False, tribal_land_births=1.0,
+                                                             growth_base=-0.0048, tribal_growth=0.012))[0]
     assert (old["tribesmen_end_k"] / 10.0) ** (1 / 10) - 1 > 0.01
 
 
@@ -133,4 +139,4 @@ def test_the_tribesmen_birth_brake_is_on_every_topography_not_a_rank_or_country(
     assert blocks >= 20 and topo.count("local_tribesmen_pop_growth = -1.0") == blocks   # every topography, owned or not
     assert "local_tribesmen_pop_growth" not in ranks                     # unowned land gets no rank modifiers
     assert not any(l.strip().startswith("global_tribesmen_pop_growth") for l in country.splitlines())
-    assert land.count("local_tribesmen_pop_growth = 0.19") == 2
+    assert land.count("local_tribesmen_pop_growth = 0.75") == 2

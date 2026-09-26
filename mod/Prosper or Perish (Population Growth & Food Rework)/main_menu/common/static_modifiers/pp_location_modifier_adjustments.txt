@@ -4,11 +4,12 @@ TRY_REPLACE:province_starving = {
 	game_data = {
 		category = province
 	}
-	local_population_growth = -0.04
+	# -0.04 before 2026-09-26: with ~20 % of core provinces starving at any time it outweighed the smaller fed growth
+	local_population_growth = -0.02
 	# Tribesmen (pop_food_consumption 0) still die in a starving province: the engine's starvation deaths hit every pop type
 	# and no per-type exemption exists (tested 2026-09-25: local_tribesmen_pop_growth is a percentage multiplier on their
 	# growth and changes nothing about the Starvation flow). What the mod does exempt them from: the starving-province
-	# migration (flag removed below) and the ranks' -0.004 growth gate (pop_percentage_impact in pp_pop_adjustments.txt).
+	# migration (flag removed below) and the ranks' -0.002 growth gate (pop_percentage_impact in pp_pop_adjustments.txt).
 	local_supply_limit_modifier = -0.25
 	local_migration_attraction = -7.5
 
@@ -79,7 +80,11 @@ TRY_REPLACE:positive_province_food_growth = {
 	# so +50% moves the break-even points by a few weeks.
 	local_province_food_sales_output_modifier = 8.0
 	local_province_food_purchase_output_modifier = -8.0
-	local_population_growth = 0.0075
+	# 0.0075 before 2026-09-26: full stores gave +1.3 %/yr with prosperity, so sparse land (Americas, Africa, Siberia)
+	# boomed. Growth law since then (historical pace 1350-1600 ~0.1-0.4 %/yr): rank gate -0.2 % + 0.15 % per stored
+	# year (cap 2) + prosperity (vanilla, up to +0.2 %): ~+0.3 %/yr on full stores, ~0 at mid stores, starving -2 %.
+	# Growth comes only from food (and offsets): never put positive growth on development or other stats.
+	local_population_growth = 0.0015
 	# Native additive rate cancels the food bonus for self-provisioning tribesmen.
 	# Both rates scale with stored years; other tribal growth sources still apply.
 	local_devastation_recovery = 0.003

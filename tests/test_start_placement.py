@@ -27,7 +27,7 @@ gamma = {
 
 
 def _cfg(tmp_path: Path) -> WorldBuilderConfig:
-    return WorldBuilderConfig(handover=tmp_path, geography_export=tmp_path, building_map={}, farm_land={"arable": {"land": 5.0, "reserve": 5.0}}, farm_classes={}, level_scale={}, level_limit=20, goods_floor=-0.2, sync_geography=False, raw={})
+    return WorldBuilderConfig(handover=tmp_path, geography_export=tmp_path, building_map={}, farm_land={"arable": {"land": 5.0, "reserve": 5.0}}, farm_classes={}, level_scale={}, level_limit=20, sync_geography=False, raw={})
 
 
 def test_parse_pops_reads_type_size_culture_and_religion():

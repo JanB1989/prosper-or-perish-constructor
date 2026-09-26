@@ -10,7 +10,6 @@
   with the level's rows (World Builder levels 1..5 are the engine's five river sizes).
 - coast / lake: static modifiers placed on every shore location, carrying the fit's rows plus the hand-set
   ``[worldbuilder.flavour.<key>]`` effects from constructor.toml.
-- goods floor: per-location lift for the game's RGO where the rows would leave it under the floor.
 - overpopulation: peasant unrest injected into vanilla's ``overpopulation`` modifier.
 - legacy class effects: the mod's former climate/vegetation/topography injects (construction, food decay,
   free building levels) re-keyed onto every World Builder class through its dominant vanilla parent, with the
@@ -43,7 +42,6 @@ ASSIGNMENT_FILES = {
 LEGACY_EFFECTS_DIR = Path("data/worldbuilder/legacy_class_effects")
 STATIC_MODIFIERS_PATH = Path("main_menu/common/static_modifiers/pp_wb_attribute_modifiers.txt")
 RIVER_MODIFIERS_PATH = Path("main_menu/common/static_modifiers/pp_00_wb_river_modifiers.txt")   # sorts before the hand-authored injects into the same blocks
-FLOOR_MODIFIERS_PATH = Path("main_menu/common/static_modifiers/pp_wb_rgo_floor_modifiers.txt")
 ON_ACTION_PATH = Path("in_game/common/on_action/pp_wb_apply_attribute_modifiers.txt")
 SETUP_MODIFIERS_PATH = Path("main_menu/setup/start/21_pp_wb_attribute_modifiers.txt")
 ADJUSTMENTS_PATH = Path("main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt")   # hand-authored; carries TRY_REPLACE:development
@@ -58,6 +56,7 @@ LEGACY_OUTPUTS = (
     "main_menu/common/static_modifiers/pp_nile_delta_base_adjustments.txt",
     "main_menu/localization/english/pp_location_modifiers_l_english.yml",
     "in_game/common/on_action/pp_apply_location_modifiers.txt",
+    "main_menu/common/static_modifiers/pp_wb_rgo_floor_modifiers.txt",   # the RGO floor, removed 2026-09-26
 )
 _BLOCK_RE = re.compile(r"^(?:TRY_INJECT:|TRY_REPLACE:)?(?P<key>[A-Za-z0-9_]+)\s*=\s*\{")
 _NUM_RE = re.compile(r"^\s*(?P<key>[a-z_]+)\s*=\s*(?P<value>-?\d+(?:\.\d+)?)\s*(?:#.*)?$")
@@ -180,24 +179,6 @@ def class_rows(contract: Contract) -> dict[tuple[str, str], dict[str, float]]:
     for climate in climates:
         if ("climate", climate) not in out:
             out[("climate", climate)] = modifiers({}, True)
-    return out
-
-
-def rgo_row_predictions(contract: Contract, rgo_by_location: Mapping[str, str]) -> dict[str, tuple[str, float]]:
-    """location tag -> (RGO good, sum of that good's attribute output rows over the location's classes), for
-    every location whose RGO has fitted rows. The fit intercept is not part of it (not written to the mod)."""
-    rows = class_rows(contract)
-    goods = set(contract.goods)
-    attrs = contract.location_attributes
-    columns = [a for a in {attr for attr, _ in rows} if a in attrs.columns]
-    out: dict[str, tuple[str, float]] = {}
-    for row in attrs.select("location_tag", *columns).iter_rows(named=True):
-        tag = str(row["location_tag"])
-        good = rgo_by_location.get(tag)
-        if good not in goods:
-            continue
-        key = f"local_{good}_output_modifier"
-        out[tag] = (good, round(sum(rows.get((a, str(row[a])), {}).get(key, 0.0) for a in columns), 2))
     return out
 
 
@@ -341,7 +322,7 @@ def setup_modifier_keys(contract: Contract, navigation: Mapping[str, object] | N
     return per_location
 
 
-def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path, vanilla_root: Path, rgo_by_location: Mapping[str, str] | None = None) -> dict[str, object]:
+def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path, vanilla_root: Path) -> dict[str, object]:
     rows = class_rows(contract)
     names: dict[str, str] = {}
     blocks: list[str] = []
@@ -392,23 +373,6 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
     # no goods intercept modifier: the per-good base output at the RGO is the hand-authored raw-material bonus
     # (pp_rgo_bonus_<good>, re-applied when the raw material changes); the fit intercept is dropped
 
-    # goods floor for the game's RGO, on the attribute rows alone (the raw-material bonus comes on top)
-    floor_blocks: list[str] = []
-    floor_names: dict[str, str] = {}
-    lifted = 0
-    predicted_rows = rgo_row_predictions(contract, rgo_by_location) if rgo_by_location is not None else {}
-    for tag, (good, predicted) in sorted(predicted_rows.items()):
-        lift = round(cfg.goods_floor - predicted, 2)
-        if lift < 0.005:
-            continue
-        key = f"pp_wb_rgo_floor_{tag}"
-        floor_blocks.append(render_block(key, {"game_data": "{ category = location }", f"local_{good}_output_modifier": _fmt(lift)}))
-        floor_names[key] = "Established Local Produce"
-        per_location[tag].append(key)
-        lifted += 1
-    (mod_root / FLOOR_MODIFIERS_PATH).parent.mkdir(parents=True, exist_ok=True)
-    (mod_root / FLOOR_MODIFIERS_PATH).write_text("﻿" + "\n\n".join([GENERATED, f"# Lifts the game's own RGO to at least {_fmt(cfg.goods_floor)} output where the attribute rows would leave it lower (the raw-material bonus comes on top).", *floor_blocks]) + "\n", encoding="utf-8", newline="\n")
-
     # flat capacity per development point (the handover's known term), written INTO the hand-authored
     # TRY_REPLACE:development block: the engine ignores a TRY_INJECT into a block the mod itself replaces
     write_development_capacity(mod_root, contract.people_per_development_point)
@@ -438,9 +402,8 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
 
     # localization
     loc = ["l_english:"]
-    for key, label in {**names, **floor_names}.items():
+    for key, label in names.items():
         loc.append(f'  STATIC_MODIFIER_NAME_{key}: "{label}"')
-    loc.append('  STATIC_MODIFIER_DESC_pp_wb_rgo_floor: "The people here have always produced this; the established trade keeps its output up even where the land is poor for it."')
     for key in names:
         loc.append(f'  STATIC_MODIFIER_DESC_{key}: "Subsistence land and goods output from this attribute, fitted from geography and historical land use."')
     (mod_root / LOCALIZATION_PATH).parent.mkdir(parents=True, exist_ok=True)
@@ -450,7 +413,7 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
         path = mod_root / rel
         if path.is_file():
             path.unlink()
-    return {"static_modifiers": len(blocks), "river_levels": len(river_blocks), "floor_lifts": lifted, "locations_with_modifiers": len(per_location)}
+    return {"static_modifiers": len(blocks), "river_levels": len(river_blocks), "locations_with_modifiers": len(per_location)}
 
 
 GOODS_TRIGGERS_PATH = Path("in_game/common/scripted_triggers/goods_triggers.txt")

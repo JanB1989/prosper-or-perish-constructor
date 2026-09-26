@@ -59,7 +59,7 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     current = load_current_location_frame(repo, project)
     cfg = navigation.prepare(repo, cfg, contract, locations=current)
     rgo_by_location = {str(tag): str(rgo) for tag, rgo in current.select("location_tag", "raw_material").iter_rows() if rgo}
-    report["static_modifiers"] = wb_modifiers.write_static_modifiers(contract, cfg, mod_root, vanilla_root(repo, project), rgo_by_location)
+    report["static_modifiers"] = wb_modifiers.write_static_modifiers(contract, cfg, mod_root, vanilla_root(repo, project))
     # the geography chips' tooltips read back the class injects and static modifiers written above
     report["attribute_tooltips"] = wb_tooltips.write(mod_root, vanilla_root(repo, project))
     report["setup_rgos_kept"] = wb_modifiers.write_setup_rgo_keepers(mod_root, rgo_by_location)

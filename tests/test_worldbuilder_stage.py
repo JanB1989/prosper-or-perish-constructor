@@ -39,8 +39,6 @@ def test_units_and_class_rows_fold_intercepts_into_climate_only(tmp_path):
     assert rows[("climate", "arid")]["local_incense_output_modifier"] == 0.3      # 0.4 + the incense intercept -0.1
     assert rows[("climate", "continental")] == {"local_population_capacity": 20.0, "local_wheat_output_modifier": 0.05, "local_incense_output_modifier": -0.1}
     assert rows[("fertility", "high")] == {"local_population_capacity": 2.4, "local_wheat_output_modifier": 0.12}   # no intercept off climate
-    # RGO prediction = the good's rows over the location's classes (its climate row carries the level)
-    assert wb_modifiers.rgo_row_predictions(c, {"a": "wheat", "b": "incense", "c": "iron"}) == {"a": ("wheat", -0.15), "b": ("incense", -0.1)}
 
 
 def test_parse_class_capacity_reads_vanilla_values_and_legacy_effects(tmp_path):
@@ -91,7 +89,7 @@ def test_setup_rows_use_owner_tags_and_scale(tmp_path):
     c = _contract(tmp_path)
     caps = {"land_clearance": {"kind": "clearing", "unit_people": 5200.0, "unit_units": 5.2, "scale": 2.0, "limit": 40}}
     from prosper_or_perish_constructor.worldbuilder.contract import WorldBuilderConfig
-    cfg = WorldBuilderConfig(handover=tmp_path, geography_export=tmp_path, building_map={"clearing": "land_clearance"}, farm_land={"arable": {"land": 5, "reserve": 5}}, farm_classes={}, level_scale={}, level_limit=20, goods_floor=-0.2, sync_geography=False)
+    cfg = WorldBuilderConfig(handover=tmp_path, geography_export=tmp_path, building_map={"clearing": "land_clearance"}, farm_land={"arable": {"land": 5, "reserve": 5}}, farm_classes={}, level_scale={}, level_limit=20, sync_geography=False)
     mod_root = tmp_path / "mod"
     result = wb_buildings.write_setup(c, cfg, caps, {"a": "SWE"}, mod_root)
     text = (mod_root / wb_buildings.SETUP_PATH).read_text(encoding="utf-8-sig")
@@ -109,7 +107,7 @@ def test_location_templates_overlay_replaces_fields_by_tag():
 
 def test_farm_constants_by_class(tmp_path):
     from prosper_or_perish_constructor.worldbuilder.contract import WorldBuilderConfig
-    cfg = WorldBuilderConfig(handover=tmp_path, geography_export=tmp_path, building_map={}, farm_land={"arable": {"land": 5, "reserve": 5}, "herd": {"land": 2, "reserve": 1}}, farm_classes={"herd": ["sheep_farms", "cattle_farm"]}, level_scale={}, level_limit=20, goods_floor=-0.2, sync_geography=False)
+    cfg = WorldBuilderConfig(handover=tmp_path, geography_export=tmp_path, building_map={}, farm_land={"arable": {"land": 5, "reserve": 5}, "herd": {"land": 2, "reserve": 1}}, farm_classes={"herd": ["sheep_farms", "cattle_farm"]}, level_scale={}, level_limit=20, sync_geography=False)
     assert wb_buildings.farm_constants(cfg, "sheep_farms") == (2.0, 1.0) and wb_buildings.farm_constants(cfg, "wheat_farm") == (5.0, 5.0)
     assert wb_buildings.farm_constants(cfg, "cattle_farm") == (2.0, 1.0)
 
@@ -119,7 +117,7 @@ def _cfg(tmp_path: Path, niche: dict | None = None):
 
     return WorldBuilderConfig(
         handover=tmp_path, geography_export=tmp_path, building_map={"clearing": "land_clearance"}, niche=niche or {},
-        farm_land={"arable": {"land": 5.0, "reserve": 5.0}}, farm_classes={}, level_scale={}, level_limit=20, goods_floor=-0.2,
+        farm_land={"arable": {"land": 5.0, "reserve": 5.0}}, farm_classes={}, level_scale={}, level_limit=20,
         sync_geography=False,
     )
 
@@ -214,7 +212,7 @@ def test_static_modifiers_cover_reference_classes_and_are_placed_in_the_setup(tm
     vanilla = tmp_path / "vanilla"
     (vanilla / "game/main_menu/common/static_modifiers").mkdir(parents=True)
     (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("river_flowing_through_1 = {\n\tlocal_population_capacity_modifier = 0.1\n}\n", encoding="utf-8")
-    wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla, {})
+    wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla)
     statics = (tmp_path / wb_modifiers.STATIC_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
     assert "pp_wb_fertility_high = {" in statics and "pp_wb_fertility_moderate = {" in statics   # reference class too
     setup = (tmp_path / wb_modifiers.SETUP_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
@@ -231,29 +229,28 @@ def test_shore_modifiers_carry_flavour_effects_but_never_fitted_keys(tmp_path):
     (vanilla / "game/main_menu/common/static_modifiers").mkdir(parents=True)
     (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("", encoding="utf-8")
     cfg = dataclasses.replace(_cfg(tmp_path), raw={"flavour": {"pp_wb_lake": {"local_migration_attraction": 0.3, "local_defensive": 0.1}}})
-    wb_modifiers.write_static_modifiers(c, cfg, tmp_path, vanilla, {})
+    wb_modifiers.write_static_modifiers(c, cfg, tmp_path, vanilla)
     statics = (tmp_path / wb_modifiers.STATIC_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
     lake = statics.split("pp_wb_lake = {")[1].split("\n}")[0]
     assert "local_migration_attraction = 0.3" in lake and "local_defensive = 0.1" in lake
     bad = dataclasses.replace(cfg, raw={"flavour": {"pp_wb_lake": {"local_population_capacity": 1.0}}})
     with pytest.raises(ValueError, match="fitted keys"):
-        wb_modifiers.write_static_modifiers(c, bad, tmp_path, vanilla, {})
+        wb_modifiers.write_static_modifiers(c, bad, tmp_path, vanilla)
 
 
-def test_goods_floor_lifts_attribute_rows_and_no_intercept_modifier_is_written(tmp_path):
-    import dataclasses
+def test_no_intercept_or_floor_modifier_is_written(tmp_path):
     c = _contract(tmp_path)
     vanilla = tmp_path / "vanilla"
     (vanilla / "game/main_menu/common/static_modifiers").mkdir(parents=True)
     (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("", encoding="utf-8")
-    cfg = dataclasses.replace(_cfg(tmp_path), goods_floor=0.0)
-    wb_modifiers.write_static_modifiers(c, cfg, tmp_path, vanilla, {"a": "wheat", "b": "incense"})
+    stale = tmp_path / "main_menu/common/static_modifiers/pp_wb_rgo_floor_modifiers.txt"
+    stale.parent.mkdir(parents=True, exist_ok=True)
+    stale.write_text("pp_wb_rgo_floor_a = { }\n", encoding="utf-8")
+    wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla)
     statics = (tmp_path / wb_modifiers.STATIC_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
     assert "pp_wb_rgo_base" not in statics     # the raw-material bonus (pp_rgo_bonus_<good>) is the base
-    floors = (tmp_path / wb_modifiers.FLOOR_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
-    assert "pp_wb_rgo_floor_a = {\n\tgame_data = { category = location }\n\tlocal_wheat_output_modifier = 0.15\n}" in floors
-    assert "pp_wb_rgo_floor_b = {\n\tgame_data = { category = location }\n\tlocal_incense_output_modifier = 0.1\n}" in floors
-
+    assert not stale.exists()                  # no floor: the RGO keeps what its rows give
+    assert "pp_wb_rgo_floor" not in (tmp_path / wb_modifiers.LOCALIZATION_PATH).read_text(encoding="utf-8-sig")
 
 def test_class_injects_cancel_vanilla_food_exactly_and_rivers_drop_food(tmp_path):
     c = _contract(tmp_path)
@@ -358,14 +355,14 @@ def test_development_row_from_the_handover(tmp_path):
     adj = tmp_path / wb_modifiers.ADJUSTMENTS_PATH
     adj.parent.mkdir(parents=True, exist_ok=True)
     adj.write_text("\ufeffTRY_REPLACE:development = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n\tlocal_supply_limit_modifier = 0.02\n\tlocal_population_capacity = 0\n\tlocal_population_capacity_modifier = 0.00125\n}\n\nTRY_INJECT:river_flowing_through_1 = {\n\tfree_building_levels = 10\n}\n", encoding="utf-8")
-    wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla, {})
+    wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla)
     text = adj.read_text(encoding="utf-8-sig")
     block = text[text.index("TRY_REPLACE:development"): text.index("TRY_INJECT:river")]
     assert block.count("local_population_capacity") == 1 and "local_population_capacity = 1\n" in block and "0.00125" not in block
     assert "local_supply_limit_modifier = 0.02" in block and "free_building_levels = 10" in text
     assert not (tmp_path / "main_menu/common/static_modifiers/pp_wb_development.txt").exists()
     c.meta["attributes"]["capacity_people_per_development_point"] = 0.0
-    wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla, {})
+    wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla)
     block = adj.read_text(encoding="utf-8-sig").split("TRY_INJECT:river")[0]
     assert "local_population_capacity" not in block and "no population capacity from development" in block
 
@@ -378,7 +375,7 @@ def test_river_replacements_fold_in_the_hand_authored_injects(tmp_path):
     adj = tmp_path / wb_modifiers.ADJUSTMENTS_PATH
     adj.parent.mkdir(parents=True, exist_ok=True)
     adj.write_text("TRY_REPLACE:development = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n}\n\nTRY_INJECT:river_flowing_through_2 = {\n\tlocal_population_capacity_modifier = -0.2\n\tfish_capacity_from_river_size = 1\n\tfree_building_levels = 15\n\tlocal_supply_limit_modifier = 0.05 # vanilla 0.10\n}\n", encoding="utf-8")
-    wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla, {})
+    wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla)
     text = (tmp_path / wb_modifiers.RIVER_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
     block = text[text.index("TRY_REPLACE:river_flowing_through_2"):]
     assert "free_building_levels = 15" in block and "fish_capacity_from_river_size = 1" in block

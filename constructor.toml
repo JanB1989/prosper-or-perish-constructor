@@ -91,7 +91,6 @@ vanilla_baseline = "data/vanilla/locations_with_raw_material.parquet"
 sync_geography = true
 apply_on_build = true
 level_limit = 20
-goods_floor = -0.2
 
 # Hand-set flavour effects on the shore modifiers (pp_wb_coastal, pp_wb_lake), next to the fitted rows.
 # Capacity and goods output stay with the World Builder fit; only other modifier types belong here.

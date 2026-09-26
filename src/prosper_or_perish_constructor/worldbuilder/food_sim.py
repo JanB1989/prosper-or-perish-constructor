@@ -202,14 +202,11 @@ class SimRules:
     tavern_cost: float = 2.0
     tavern_droop: float = -0.2
     # harbour Victualling Yard (per level; blueprints/accepted/buildings/victualling_yard.yml): 20 food and shipped
-    # grain for 3 victuals, a storage leg at a third of the Grange's weight; its grain is bought at grain_price
-    harbor_yard_victuals: float = 3.0   # Hand Packing 0.67 + a Grain Shipment 2.33
+    # grain for 3 victuals, no storage leg; its grain is bought at grain_price, the shipping goods cost about 0.8
+    harbor_yard_victuals: float = 3.0   # Merchantmen 0.67 + a Grain Shipment 2.33
     harbor_yard_grain: float = 5.83
     grain_price: float = 1.0
-    harbor_yard_amount: float = 0.33
-    harbor_yard_droop: float = -0.067
-    harbor_yard_cost: float = 5.09
-    harbor_yard_labour: float = 0.6
+    harbor_yard_labour: float = 0.8
     # Grange (per level; blueprints/accepted/buildings/grange.yml; the yard_* names predate the split)
     yard_victuals: float = 1.5          # Porters (loose stores)
     yard_packing_victuals: float = 0.0  # a Packing method's extra victuals (what-if; its goods cost is not modelled)
@@ -246,9 +243,9 @@ class SimRules:
                 - self.yard_cost - self.yard_labour)
 
     def harbor_yard_profit(self, years: float, staffed: float) -> float:
-        m = 1.0 + self.yard_const + self.yard_per_year * years + self.harbor_yard_droop * staffed
-        return (self.harbor_yard_victuals * self.victuals_price + self.harbor_yard_amount * max(0.0, m)
-                - self.harbor_yard_cost - self.harbor_yard_labour - self.harbor_yard_grain * self.grain_price)
+        # no storage leg: the stored years and the staffing do not change it (kept in the signature for the callers)
+        return (self.harbor_yard_victuals * self.victuals_price
+                - self.harbor_yard_labour - self.harbor_yard_grain * self.grain_price)
 
 
 @dataclass

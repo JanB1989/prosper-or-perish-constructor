@@ -18,9 +18,6 @@ building:
         - pp_victualling_yard_grain_shipment
         - pp_victualling_yard_rice_shipment
         - pp_victualling_yard_millet_shipment
-    - name: slot_2
-      methods:
-        - pp_victualling_yard_surplus_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -109,18 +106,9 @@ building:
         category = building_maintenance
       }
     }
-    # slot 2: surplus sales, the storage leg (the farms' Surplus Sales good) at a third of the Grange's weight per level,
-    # matching its 20 food: output modifier = -1 + 8 per stored year = 8y, the offset input is the fixed cost. Per level
-    # at victuals 3.0, grain 1.0, a shipping method at about 0.8 gold: -2.7 gold at 0 months, 0 at 12, +2.6 at 24
-    # (Grange: -26..+6).
-    unique_production_methods = {
-      pp_victualling_yard_surplus_sales = {
-        produced = province_food_sales
-        offset = 5.09
-        output = 0.33
-        category = building_maintenance
-      }
-    }
+    # No storage leg (2026-09-26): the great harbours live on imported grain and are short of food by nature, so the
+    # Yard's profit follows only the victuals price against grain and shipping. Per level at base prices (victuals 3,
+    # grain 1): about +1.7..+2.3 gold at level 1, falling by the -5 % per level to 0 around level 5.
 
     # per Yard level, staffed or not: the quays, warehouses and moorings crowd the harbour (fewer free building levels),
     # and every level ships a little less (-5 % victuals), so a big Yard never makes food and grows with diminishing returns
@@ -131,9 +119,6 @@ building:
 
     modifier = {
       local_monthly_food = -20.0
-      # droop: each staffed level lowers the storage leg a little, so staffing settles instead of flipping
-      # (location-wide; -0.2 per 60 food as on the Grange, so -0.067 for the Yard's 20 food)
-      local_province_food_sales_output_modifier = -0.067
       local_burghers_estate_power = 0.05
       local_food_capacity = 400
       # yards provisioned and refitted the fleets
@@ -158,7 +143,6 @@ localization:
     victualling_yard_desc: The merchants' victualling house of a great harbour. It ships in grain from the wider market and packs it, with a little of the province store, into [ShowGoodsName('victuals')|e] for the fleets and the markets beyond. Only good harbours and the great river ports can hold one, and each further level costs much more; elsewhere the Grange sends the surplus overland.
     victualling_yard_slot_0: Provisions
     victualling_yard_slot_1: Grain Shipments
-    victualling_yard_slot_2: Surplus Sales
     victuals_trade_construction: Victuals Trade Construction
     pp_victualling_yard_river_barges: River Barges
     pp_victualling_yard_merchantmen: Merchantmen
@@ -168,7 +152,6 @@ localization:
     pp_victualling_yard_grain_shipment: Grain Shipment
     pp_victualling_yard_rice_shipment: Rice Shipment
     pp_victualling_yard_millet_shipment: Millet Shipment
-    pp_victualling_yard_surplus_sales: Sell the Surplus
     pp_victualling_yard_price: Victualling Yard Price
 icon:
   source_png: ../assets/icons/victualling_yard.png
@@ -181,5 +164,4 @@ evaluation:
     profit_percent: Province food market transfers intentionally use internal balancing goods.
     input_throughput: Existing accepted input scale predates the global employment throughput baseline.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline.
-    amortization_months: Surplus Sales output intentionally breaks normal payback bounds.
     base_output_per_1k: The Yard packs and ships victuals on one burgher per level, not a production line.

@@ -568,18 +568,16 @@ def test_victuals_trade_templates_split_export_and_import_flows() -> None:
         for path in (TAVERN_BLUEPRINT, TAVERN_RENDERED)
     )
 
-    # the harbour Victualling Yard packs a little of the store and ships in grain: real victuals, no negative input, a
-    # storage leg at a third of the Grange's weight, no packing slot (the grain arrives packed)
+    # the harbour Victualling Yard packs a little of the store and ships in grain: real victuals, no negative input, no
+    # storage leg (its profit follows the victuals and grain prices only), no packing slot (the grain arrives packed)
     assert "victualling_yard: Victualling Yard" in yard_texts[0]
     for text in yard_texts:
         assert "pp_victualling_yard_merchantmen" in text
         assert re.search(r"pp_victualling_yard_merchantmen = \{[^}]*produced = victuals[^}]*output = 0\.67", text, re.S)
         assert re.search(r"pp_victualling_yard_grain_shipment = \{[^}]*wheat = 5\.83[^}]*output = 2\.33", text, re.S)
-        assert re.search(r"pp_victualling_yard_surplus_sales = \{[^}]*offset = 5\.09[^}]*output = 0\.33\b", text, re.S)
-        assert "produced = province_food_sales" in text
+        assert "surplus_sales" not in text and "province_food_sales" not in text
         assert not re.search(r"\bvictuals = -", text)
         assert "export_tally" not in text
-        assert "local_province_food_sales_output_modifier = -0.067" in text
         assert "pp_tavern_serve_victuals" not in text
         for packing in ("loose_stores", "pottery_jars", "coopered_barrels", "tin_cans"):
             assert f"pp_victualling_yard_{packing}" not in text

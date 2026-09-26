@@ -86,18 +86,9 @@ unique_production_methods = {
     category = building_maintenance
   }
 }
-# slot 2: surplus sales, the storage leg (the farms' Surplus Sales good) at a third of the Grange's weight per level,
-# matching its 20 food: output modifier = -1 + 8 per stored year = 8y, the offset input is the fixed cost. Per level
-# at victuals 3.0, grain 1.0, a shipping method at about 0.8 gold: -2.7 gold at 0 months, 0 at 12, +2.6 at 24
-# (Grange: -26..+6).
-unique_production_methods = {
-  pp_victualling_yard_surplus_sales = {
-    produced = province_food_sales
-    offset = 5.09
-    output = 0.33
-    category = building_maintenance
-  }
-}
+# No storage leg (2026-09-26): the great harbours live on imported grain and are short of food by nature, so the
+# Yard's profit follows only the victuals price against grain and shipping. Per level at base prices (victuals 3,
+# grain 1): about +1.7..+2.3 gold at level 1, falling by the -5 % per level to 0 around level 5.
 
 # per Yard level, staffed or not: the quays, warehouses and moorings crowd the harbour (fewer free building levels),
 # and every level ships a little less (-5 % victuals), so a big Yard never makes food and grows with diminishing returns
@@ -109,9 +100,6 @@ raw_modifier = {
 
 modifier = {
   local_monthly_food = -20.0
-  # droop: each staffed level lowers the storage leg a little, so staffing settles instead of flipping
-  # (location-wide; -0.2 per 60 food as on the Grange, so -0.067 for the Yard's 20 food)
-  local_province_food_sales_output_modifier = -0.067
   local_burghers_estate_power = 0.05
   local_food_capacity = 400
   # yards provisioned and refitted the fleets

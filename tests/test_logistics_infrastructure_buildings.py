@@ -572,8 +572,8 @@ def test_victuals_trade_templates_split_export_and_import_flows() -> None:
     # storage leg at a third of the Grange's weight, no packing slot (the grain arrives packed)
     assert "victualling_yard: Victualling Yard" in yard_texts[0]
     for text in yard_texts:
-        assert "pp_victualling_yard_pack_provisions" in text
-        assert re.search(r"pp_victualling_yard_pack_provisions = \{[^}]*produced = victuals[^}]*output = 0\.67", text, re.S)
+        assert "pp_victualling_yard_merchantmen" in text
+        assert re.search(r"pp_victualling_yard_merchantmen = \{[^}]*produced = victuals[^}]*output = 0\.67", text, re.S)
         assert re.search(r"pp_victualling_yard_grain_shipment = \{[^}]*wheat = 5\.83[^}]*output = 2\.33", text, re.S)
         assert re.search(r"pp_victualling_yard_surplus_sales = \{[^}]*offset = 5\.09[^}]*output = 0\.33\b", text, re.S)
         assert "produced = province_food_sales" in text
@@ -592,7 +592,7 @@ def test_victuals_trade_templates_split_export_and_import_flows() -> None:
         assert "output = 0.533" in text
         assert "victuals = 2.0" in text
         assert "local_province_food_purchase_output_modifier = -0.2" in text
-        assert "pp_victualling_yard_pack_provisions" not in text
+        assert "pp_victualling_yard_merchantmen" not in text
 
     for text in yard_texts:
         assert "local_monthly_food = -20.0" in text

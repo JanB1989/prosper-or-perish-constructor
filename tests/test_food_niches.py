@@ -74,13 +74,25 @@ def test_the_harbour_yard_ships_grain_and_packs_little_of_the_store() -> None:
     """The harbour Victualling Yard (2026-09-26): burghers, 20 food per level, three Provisions methods (labour or
     goods) and a grain shipment slot; food-neutral against the Tavern; no packing slot (the grain arrives packed)."""
     text = (BLUEPRINTS / "victualling_yard.yml").read_text(encoding="utf-8-sig")
-    provisions = [_method(text, f"pp_victualling_yard_{m}") for m in ("pack_provisions", "salting_house", "ship_stores")]
+    provisions = [_method(text, f"pp_victualling_yard_{m}") for m in ("river_barges", "merchantmen", "armed_convoy")]
     shipments = [_method(text, f"pp_victualling_yard_{m}_shipment") for m in ("grain", "rice", "millet")]
-    assert all(m["produced"] == "victuals" and m["output"] == 0.67 for m in provisions)
+    # shipping cost methods: the better ships lose less cargo, and the labour share falls from method to method
+    assert all(m["produced"] == "victuals" for m in provisions)
+    outputs = [m["output"] for m in provisions]
+    assert outputs == sorted(outputs) and outputs[0] < outputs[-1]
+    labour = [m["manual_labor_cost"] for m in provisions]
+    assert labour == sorted(labour, reverse=True)
+    assert "cannons" in provisions[2] and "requires = cannon_maker_advance" in text
+    # the Yard never makes food: with the -5 % victuals per level, the best method and a grain shipment at one level
+    # give no more victuals than 90 food buys back at a Tavern (30 food each)
+    assert "local_victuals_output_modifier = -0.05" in text
+    assert (max(outputs) + 2.33) * 0.95 <= 3.0 + 1e-9
+    assert "employment_size = 0.2" in text
     assert [next(g for g in ("wheat", "rice", "millet") if g in m) for m in shipments] == ["wheat", "rice", "millet"]
     assert all(m["produced"] == "victuals" and m["output"] == 2.33 for m in shipments)
     assert "local_monthly_food = -20.0" in text and "pop_type = burghers" in text
-    assert "increase_per_level_cost = 1.0" in text and "{gold = 50}" in text
+    assert "increase_per_level_cost = 1.0" in text and "{gold = 50 sailors = 0.25}" in text
+    assert "free_building_levels = -5" in text
     # 20 food + 5.83 grain (12 food each in the farms' Provisioning) for 3 victuals = 30 food per victual (the Tavern's)
     grain = shipments[0]["wheat"]
     assert abs((20.0 + grain * 12.0) / (0.67 + 2.33) - 30.0) < 0.05

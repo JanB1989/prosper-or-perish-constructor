@@ -2616,12 +2616,13 @@ def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -
         assert buildings[building]["price"] is None, building
         assert buildings[building]["price_kind"] == "baseline_age", building
 
-    for building, price in (
-        ("tavern", "pp_tavern_price"),
-        ("victualling_yard", "pp_victualling_yard_price"),
+    # the Tavern stays a one-pop market; the harbour Yard employs about 200 burghers per level (test value 2026-09-26)
+    for building, price, employment in (
+        ("tavern", "pp_tavern_price", 0.001),
+        ("victualling_yard", "pp_victualling_yard_price", 0.2),
     ):
         victualling_yard = buildings[building]
-        assert victualling_yard["employment_size"] == 0.001
+        assert victualling_yard["employment_size"] == employment
         assert victualling_yard["price"] == price
         assert victualling_yard["price_kind"] == "explicit"
 

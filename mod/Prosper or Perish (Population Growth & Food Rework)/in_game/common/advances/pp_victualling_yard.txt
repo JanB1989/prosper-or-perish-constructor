@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:victualling_yard:advancement
+victualling_yard_armed_convoy_advance = {
+age = age_2_renaissance
+unlock_production_method = pp_victualling_yard_armed_convoy
+requires = cannon_maker_advance
+icon = hol_maritime_warfare
+ai_weight = { add = 100 }
+}
+# <<< eu5-building-pipeline:victualling_yard:advancement

@@ -67,7 +67,7 @@ building:
             tools = 0.048 # knives and presses
             manual_labor_cost = 0.212
             produced = tobacco
-            output = 0.356
+            output = 0.641
             category = building_maintenance
         }
     }
@@ -106,3 +106,5 @@ evaluation:
         base_output_per_1k: Passive field output follows the accepted small specialty-crop baseline rather than the generic raw-site band.
     pp_tobacco_farm_curing_barns:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Cash-crop processing breaks even at 0.6x base so the home market can run a surplus for trade (2026-09-26); the high base-price profit is intended.

@@ -60,7 +60,7 @@ building:
             coal = 0.172 # drying heat
             manual_labor_cost = 0.256
             produced = cloves
-            output = 0.316
+            output = 0.504
             category = building_maintenance
         }
     }
@@ -101,3 +101,4 @@ evaluation:
       production_efficiency: 1.1
       allow_rules:
         amortization_months: Existing accepted spice grove payback is faster than the new amortization minimum; revisit during the clove grove rebalance.
+        profit_percent: Cash-crop processing breaks even at 0.6x base so the home market can run a surplus for trade (2026-09-26); the high base-price profit is intended.

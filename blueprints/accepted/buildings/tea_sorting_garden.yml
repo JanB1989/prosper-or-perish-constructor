@@ -72,7 +72,7 @@ building:
             pottery = 0.208 # firing hearth pans
             manual_labor_cost = 0.3
             produced = tea
-            output = 0.5
+            output = 1.189
             category = building_maintenance
         }
     }
@@ -86,7 +86,7 @@ building:
             paper = 0.188 # wrappers and packing slips
             manual_labor_cost = 0.176
             produced = tea
-            output = 0.28
+            output = 0.701
             category = building_maintenance
         }
     }
@@ -137,5 +137,9 @@ evaluation:
         base_output_per_1k: Passive base output intentionally carries a smaller share of the full worked tea output after the high-base rebalance.
     pp_tea_sorting_garden_rolling_hearths:
       production_efficiency: 1.1
+      allow_rules:
+        profit_percent: Cash-crop processing breaks even at 0.6x base so the home market can run a surplus for trade (2026-09-26); the high base-price profit is intended.
     pp_tea_sorting_garden_paper_packing:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Cash-crop processing breaks even at 0.6x base so the home market can run a surplus for trade (2026-09-26); the high base-price profit is intended.

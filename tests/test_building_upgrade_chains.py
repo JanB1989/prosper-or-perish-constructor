@@ -237,6 +237,7 @@ NON_SLAVE_CROP_FARMS = {
         "good": "cotton",
         "base_method": "pp_cotton_farm_base_cotton",
         "worked_method": "pp_cotton_farm_gin_house",
+        "worked_output": "0.619",  # breaks even at 0.6x base (2026-09-26)
         "inputs": {
             "lumber": "0.304",
             "fiber_crops": "0.132",
@@ -249,6 +250,7 @@ NON_SLAVE_CROP_FARMS = {
         "good": "sugar",
         "base_method": "pp_sugarcane_farm_base_sugar",
         "worked_method": "pp_sugarcane_farm_boiling_house",
+        "worked_output": "0.618",
         "inputs": {
             "lumber": "0.272",
             "pottery": "0.328",
@@ -261,6 +263,7 @@ NON_SLAVE_CROP_FARMS = {
         "good": "tobacco",
         "base_method": "pp_tobacco_farm_base_tobacco",
         "worked_method": "pp_tobacco_farm_curing_barns",
+        "worked_output": "0.641",
         "inputs": {
             "lumber": "0.384",
             "fiber_crops": "0.056",
@@ -1779,7 +1782,7 @@ def test_non_slave_crop_farms_are_default_rgo_laborer_buildings() -> None:
             flags=re.S,
         )
         assert re.search(
-            rf"{worked_method}\s*=\s*\{{.*?\bproduced\s*=\s*{good}\b.*?\boutput\s*=\s*0\.356\b",
+            rf"{worked_method}\s*=\s*\{{.*?\bproduced\s*=\s*{good}\b.*?\boutput\s*=\s*{re.escape(expected['worked_output'])}\b",
             body,
             flags=re.S,
         )

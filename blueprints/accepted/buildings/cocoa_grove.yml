@@ -66,7 +66,7 @@ building:
             fiber_crops = 0.116 # drying mats, sacks, and ties
             manual_labor_cost = 0.24
             produced = cocoa
-            output = 0.356
+            output = 0.567
             category = building_maintenance
         }
     }
@@ -105,3 +105,5 @@ evaluation:
         base_output_per_1k: Passive base output intentionally carries 30% of the full worked cocoa output after the high-base rebalance.
     pp_cocoa_grove_fermentation_houses:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Cash-crop processing breaks even at 0.6x base so the home market can run a surplus for trade (2026-09-26); the high base-price profit is intended.

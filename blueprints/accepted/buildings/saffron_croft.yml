@@ -66,7 +66,7 @@ building:
             coal = 0.172 # brazier fuel
             manual_labor_cost = 0.156
             produced = saffron
-            output = 0.204
+            output = 0.282
             category = building_maintenance
         }
     }
@@ -104,3 +104,5 @@ evaluation:
         base_output_per_1k: Passive base output intentionally carries 30% of the full worked saffron output after the high-base rebalance.
     pp_saffron_croft_toasting_braziers:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Cash-crop processing breaks even at 0.6x base so the home market can run a surplus for trade (2026-09-26); the high base-price profit is intended.

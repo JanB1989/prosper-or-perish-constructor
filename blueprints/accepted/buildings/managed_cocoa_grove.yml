@@ -71,7 +71,7 @@ building:
             fiber_crops = 0.136 # drying mats, sacks, and ties
             manual_labor_cost = 0.216
             produced = cocoa
-            output = 0.456
+            output = 0.634
             category = building_maintenance
         }
     }
@@ -84,7 +84,7 @@ building:
             fiber_crops = 0.256 # nursery ties, picking sacks, and shade mats
             manual_labor_cost = 0.212
             produced = cocoa
-            output = 0.624
+            output = 0.647
             category = building_maintenance
         }
     }
@@ -136,6 +136,8 @@ evaluation:
         base_output_per_1k: Passive base output intentionally carries the cocoa grove baseline forward for the managed upgrade.
     pp_managed_cocoa_grove_fermentation_boxes:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Cash-crop processing breaks even at 0.6x base so the home market can run a surplus for trade (2026-09-26); the high base-price profit is intended.
     pp_managed_cocoa_grove_managed_shade:
       production_efficiency: 1.05
       allow_rules:

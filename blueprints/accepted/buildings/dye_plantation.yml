@@ -60,7 +60,7 @@ building:
             tools = 0.132 # knives, presses
             manual_labor_cost = 0.236
             produced = dyes
-            output = 0.356
+            output = 0.563
             category = building_maintenance
         }
     }
@@ -99,3 +99,5 @@ evaluation:
         base_output_per_1k: Passive base output intentionally carries 30% of the full worked dye output after the high-base rebalance.
     pp_dye_plantation_vat_curing:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Cash-crop processing breaks even at 0.6x base so the home market can run a surplus for trade (2026-09-26); the high base-price profit is intended.

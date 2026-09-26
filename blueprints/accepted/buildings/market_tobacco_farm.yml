@@ -71,7 +71,7 @@ building:
             fiber_crops = 0.088 # leaf ties
             manual_labor_cost = 0.108
             produced = tobacco
-            output = 0.32
+            output = 0.445
             category = building_maintenance
         }
     }
@@ -85,7 +85,7 @@ building:
             paper = 0.04 # packing marks and sale records
             manual_labor_cost = 0.092
             produced = tobacco
-            output = 0.26
+            output = 0.354
             category = building_maintenance
         }
     }
@@ -139,7 +139,11 @@ evaluation:
       production_efficiency: 1.0
     pp_market_tobacco_farm_curing_racks:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Cash-crop processing breaks even at 0.6x base so the home market can run a surplus for trade (2026-09-26); the high base-price profit is intended.
     pp_market_tobacco_farm_loose_packing:
       production_efficiency: 1.0
     pp_market_tobacco_farm_sorting_tables:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Cash-crop processing breaks even at 0.6x base so the home market can run a surplus for trade (2026-09-26); the high base-price profit is intended.

@@ -67,7 +67,7 @@ building:
             tools = 0.032 # rollers and knives
             manual_labor_cost = 0.204
             produced = sugar
-            output = 0.356
+            output = 0.618
             category = building_maintenance
         }
     }
@@ -106,3 +106,5 @@ evaluation:
         base_output_per_1k: Passive field output follows the accepted small specialty-crop baseline rather than the generic raw-site band.
     pp_sugarcane_farm_boiling_house:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Cash-crop processing breaks even at 0.6x base so the home market can run a surplus for trade (2026-09-26); the high base-price profit is intended.

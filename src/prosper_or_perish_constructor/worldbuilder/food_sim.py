@@ -8,8 +8,11 @@ quarter of their people, the pools pinned at the storage cap (over-supplied) and
 Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1345.3):
 
 * jobs = jobs0 x (N / N0) ^ 0.5; jobless = peasants and slaves - jobs; subsistence = jobless x yield;
-* consumption = demand0 x N / N0 x (1 - 0.4 x (1 - N / N0)) + overpopulation (+0.5 peasant food per unit of
-  pop / capacity - 1, location by location), less the share the tribe feeds (``tribal_feeding`` x the demand-weighted
+* consumption = demand0 x N / N0 + overpopulation (+0.5 peasant food per unit of pop / capacity - 1, location by
+  location) + the free-land modifiers (peasants -50 % on abundant land, below 10 % of capacity and 10k people,
+  else -32 % on available land, each x 1 - pop / capacity per location; abundant land also forages +1 food; the
+  fitted stand-in ``free_land`` of -0.4 x the drop below the start size is 0 since 2026-09-26), less the share the
+  tribe feeds (``tribal_feeding`` x the demand-weighted
   tribal share of the pool's locations, scaled with the pool's tribal share), plus the tribesmen's own food
   (``tribesmen_food`` per 1,000, the pop type's ``pop_food_consumption``; negative = they feed the province). A
   province whose total consumption is zero or below gets no storage growth bonus (engine, verified 2026-09-25);
@@ -18,8 +21,10 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   max(0, 1 - ``tribal_land_slope`` x pop / capacity) (the topographies' ``local_tribesmen_pop_growth = -1`` + 0.19 in the
   scaled free-land modifiers since 2026-09-26; slope fitted on the 1345 save), when it is negative they lose it
   unscaled like every pop type;
-* unowned tribal land (owner ``---``, one pool per province, no buildings or markets): no free-land modifier reaches
-  it, so its tribesmen have no births (game-verified 2026-09-26);
+* unowned tribal land (owner ``---``, one pool per province, no buildings or markets): no owner, so no rank gate, no
+  province food store, no storage bonus and no starving; its growth is ``tribal_growth`` x tribal share (plus the class
+  rows' ``growth_offset``); no free-land modifier reaches it, so its tribesmen have no births (game-verified
+  2026-09-26, Boror: only the tribesmen share in the growth tooltip);
   ``unowned_brake = false`` reproduces the engine before 2026-09-26, when the brake was a country modifier and unowned
   land got births x (1 + the free-land share) (tribesmen ~ +1 %/yr there);
 * farms, villages and orchards run Provisioning from month 6 while the store is below ~11 months (their Sell leg
@@ -28,7 +33,8 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   market victuals price (2.7): the Tavern pays below 12 stored months, the Yard above 20; each staffed level moves
   60 food (a Tavern buys 2 victuals, a Yard packs 1.5); Taverns only get the victuals their market has (staffed
   Yards and other producers; pops compete); a starving pool loses the noble who staffs its Tavern at 0.09 a year;
-* growth per year: -0.0048 + 0.0086 x stored years (cap 2) when fed, -0.0048 - 0.04 - 0.012 when starving;
+* growth per year on owned land: -0.0048 + 0.0086 x stored years (cap 2) when fed, -0.0048 - 0.04 - 0.012 when
+  starving;
 * each September a pool rolls its harvest (``pp_harvest_*``: peasant food consumption +0.30 .. -0.30, 40 % neutral)
   from a seeded generator, so the run is reproducible; ``harvest = false`` turns the rolls off.
 * ``migration = true`` replaces the starving out-migration sink by the engine's market migration (``migration.py``,
@@ -70,7 +76,11 @@ class SimRules:
     starving_growth: float = -0.04
     starving_migration: float = -0.012
     emp_elasticity: float = 0.5
-    free_land: float = 0.4
+    free_land: float = 0.0              # fitted stand-in (0.4 x the drop below the start size) before the free-land modifiers below
+    # free-land modifiers (pp_capacity_pressure_effects.txt), engine-scaled per location (migration.free_land_scales)
+    abundant_peasant_food: float = -0.5     # abundant_free_land local_peasants_food_consumption
+    available_peasant_food: float = -0.32   # available_free_land local_peasants_food_consumption
+    abundant_food: float = 1.0              # abundant_free_land local_monthly_food (foraging)
     noble_hazard: float = 0.09
     ramp: float = 0.15                  # staffing change per month (defines LAID_OFF / REHIRED_PERCENTAGE = 15)
     tavern_food: float = 60.0            # food per staffed Tavern level (local_monthly_food)
@@ -83,11 +93,13 @@ class SimRules:
     collapse_share: float = 0.25
     tribal_share: float = 0.5
     # tribesmen (pp_pop_adjustments.txt, pp_capacity_pressure_effects.txt, pp_country_base_values.txt)
-    tribal_growth: float = 0.006        # pop_percentage_impact local_population_growth (every pop in the location; 0.012 before 2026-09-26)
+    tribal_growth: float = 0.0          # pop_percentage_impact local_population_growth (every pop in the location; removed
+                                        # 2026-09-26, 0.006 / 0.012 before)
     tribal_land_slope: float = 0.75     # free-land factor 1 - slope x pop / capacity (1345 save: 0.75 at start capacity)
     tribal_land_births: float = 0.75    # local_tribesmen_pop_growth of the free-land modifiers (topography brake -1.0)
     unowned_brake: bool = True          # the topography brake also holds on unowned land (false: the pre-2026-09-26 country brake)
     tribal_feeding: float = 0.0         # -pop_percentage_impact local_pop_food_consumption (0 = the tribe feeds nobody)
+    tribal_flat_food: float = 2.0       # pop_percentage_impact local_monthly_food of the tribesmen: food per location at 100 % tribal share
     tribal_tavern_premium: float = 0.0  # pop_percentage_impact local_province_food_purchase_output_modifier (mod: none;
                                         # -16 tested 2026-09-25: tribal pools starving 38 -> 92, rejected)
     start_staffed: float = 1.0          # the setup staffs every market level on day 0 (nb.eu5)
@@ -183,7 +195,23 @@ class Pool:
 
 
 def overpopulation(pool: Pool, f: float) -> float:
-    return pool.overpop_consumption * sum(p * f * max(0.0, f * r - 1.0) for p, r in pool.overpop)
+    return pool.overpop_consumption * sum(p * f * max(0.0, f * r - 1.0) for p, r, *_ in pool.overpop)
+
+
+def free_land(pool: Pool, f: float, rules: SimRules) -> tuple[float, float]:
+    """(peasant food change, foraging food) of the free-land modifiers, location by location: ``abundant_free_land``
+    below 10 % of capacity and 10k people, else ``available_free_land`` below capacity, each scaled 1 - pop/capacity
+    (migration.free_land_scales, engine-verified). Needs the location capacity in ``overpop`` (peasants, pop/capacity,
+    capacity); older two-value rows carry no free-land effect."""
+    cons = forage = 0.0
+    for row in pool.overpop:
+        if len(row) < 3 or row[2] <= 0:
+            continue
+        peasants, ratio, cap = row[0], row[1], row[2]
+        abundant, available, _ = mig.free_land_scales(f * ratio * cap, cap)
+        cons += peasants * f * (rules.abundant_peasant_food * abundant + rules.available_peasant_food * available)
+        forage += rules.abundant_food * abundant
+    return cons, forage
 
 
 def _km(a: Pool, b: Pool) -> float:
@@ -264,7 +292,7 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
     share0 = [T[i] / p.pop0 if p.pop0 > 0 else 0.0 for i, p in enumerate(pools)]
     born = [0.0] * n
     lost = [0.0] * n
-    food = [min(p.start_food, p.capacity) for p in pools]
+    food = [0.0 if p.owner == UNOWNED else min(p.start_food, p.capacity) for p in pools]   # unowned land has no store
     s_tav = [rules.start_staffed if p.taverns else 0.0 for p in pools]
     s_yard = [rules.start_staffed if p.yards else 0.0 for p in pools]
     nobles = [1.0] * n
@@ -294,12 +322,16 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
                         harvest[i] = value
                         break
         cons = [0.0] * n
+        forage = [0.0] * n
         years = [0.0] * n
         serving = t >= rules.serve_month
         for i, p in enumerate(pools):
+            if p.owner == UNOWNED:
+                continue                                  # no owner, no province food: consumption plays no part
             f = N[i] / base[i]
+            land_cons, forage[i] = free_land(p, f, rules)
             settled = (p.demand0 * f * (1.0 - rules.free_land * max(0.0, 1.0 - f)) * (1.0 + harvest[i] * p.peasant_share)
-                       + overpopulation(p, f) * (1.0 + harvest[i]))
+                       + (overpopulation(p, f) + land_cons) * (1.0 + harvest[i]))
             cons[i] = settled * (1.0 - fed_share(p, N[i], T[i], share0[i], rules)) + p.tribesmen_food * T[i]
             years[i] = min(2.0, stored_months(food[i], cons[i]) / 12.0)
         # victuals per market: staffed Victualling Yards and other producers; Taverns and pops buy
@@ -318,6 +350,17 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             for i in members:
                 fill[i] = share
         for i, p in enumerate(pools):
+            if p.owner == UNOWNED:
+                # unowned land (engine, 2026-09-26): no owner, so no rank gate, no province food store, no storage
+                # bonus and no starving; only the tribesmen's share-weighted growth and the class rows reach it
+                pop = N[i] + T[i]
+                g = rules.tribal_growth * (T[i] / pop if pop > 0 else 0.0) + p.growth_offset
+                N[i] *= 1.0 + g / 12.0
+                dt = T[i] * (g * free_land_factor(p, pop, rules) if g > 0 else g) / 12.0
+                born[i] += max(0.0, dt)
+                lost[i] -= min(0.0, dt)
+                T[i] += dt
+                continue
             f = N[i] / base[i]
             jobs = p.jobs0 * f ** rules.emp_elasticity
             workers = p.workers0 * f
@@ -329,7 +372,9 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             inflow = rules.tavern_food * L * fill[i]
             outflow = rules.yard_food * E
             prod = (p.yield_ * jobless + p.flat_food + (p.provision_food if prov else 0.0)
-                    + (p.serve_food if serving else 0.0) + inflow - outflow)
+                    + (p.serve_food if serving else 0.0) + forage[i] + inflow - outflow)
+            if rules.tribal_flat_food and N[i] + T[i] > 0:
+                prod += rules.tribal_flat_food * p.n_locations * T[i] / (N[i] + T[i])   # production, not negative consumption
             tavern_food[i] += inflow
             yard_food[i] += outflow
             food[i] = min(p.capacity, max(0.0, food[i] + prod - cons[i]))
@@ -459,7 +504,7 @@ def write_inputs(path: Path, pools: list[Pool]) -> None:
         writer.writeheader()
         for p in pools:
             row = asdict(p)
-            row["overpop"] = json.dumps([[round(a, 4), round(b, 4)] for a, b in p.overpop])
+            row["overpop"] = json.dumps([[round(x, 4) for x in r] for r in p.overpop])
             row["type_shares"] = json.dumps({k: round(v, 5) for k, v in sorted(p.type_shares.items())})
             writer.writerow(row)
 
@@ -566,7 +611,7 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
             cap = sim.capacity_k(tag)
             peasants = sum(types.get(t, 0.0) for t in model.overpopulation_pop_types)
             if cap > 0 and peasants > 0:
-                pairs.append((peasants, here / cap))
+                pairs.append((peasants, here / cap, cap))
             victuals += float(v["pop_demand_scale"]) * sum(n * sim.victuals_pop_factors.get(k, 0.0) for k, n in types.items())
             mult = sim.food_mult.get(tag, 1.0)
             for key, n in sim.staffed[tag].items():

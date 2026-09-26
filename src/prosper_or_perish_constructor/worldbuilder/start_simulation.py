@@ -807,6 +807,10 @@ class Simulation:
                 demand += sum(n * self.food.get(kind, 0) for kind, n in types.items())
                 here = sum(max(0.0, n) for n in types.values())
                 pop += here
+                if here > 0:                              # the tribal share's flat food (tribesmen pop_percentage_impact)
+                    tribal = float(model.tribal_share_food) * max(0.0, types.get("tribesmen", 0.0)) / here
+                    own_food += tribal
+                    day0_flat += tribal
                 overpop += fm.overpopulation_food(
                     sum(types.get(t, 0.0) for t in model.overpopulation_pop_types), here, self.capacity_k(tag), model
                 )

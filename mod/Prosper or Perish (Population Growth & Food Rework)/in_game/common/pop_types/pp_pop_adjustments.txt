@@ -80,19 +80,20 @@ TRY_INJECT:slaves = {
 	pop_food_consumption = 0.5 # 1.0
 }
 
-# Tribesmen grow with free land only (2026-09-25): their share of the location adds this growth, and the per-type
-# multiplier (-100 % on every topography, +75 % x free-land share in abundant/available_free_land) turns it into
-# births only where land is free. Settled pops in mixed locations get the same share-weighted addition.
-# Tribesmen live off herds, hunting and tribute, outside the province food store: a negative consumption adds food
-# (verified in game 2026-09-25; a percentage consumption modifier stops at -100 % and cannot do this). 1k tribesmen
-# trade in half of what 1k peasants eat (-1.0 before 2026-09-26: herders and hunters traded with farmers but did not
-# feed them; at -1.0 they covered 1.0x the settled demand in North America and 1.8x in South America, so tribal
-# frontiers grew ~+0.9 %/yr against a historical +0.1-0.2). A province whose total consumption turns negative gets
-# no storage growth bonus: tribal land then grows by the base rate plus the share-weighted growth above, i.e. by
-# land, not by food.
+# Tribesmen (2026-09-26) live off herds, hunting and tribute outside the province food store: they eat nothing and feed
+# nobody per head (pop_food_consumption -1.0, then -0.5 before: at -1.0 they covered 1.0x the settled demand in North
+# America and 1.8x in South America, and the settled pops among them grew ~+0.9 %/yr against a historical +0.1-0.2).
+# Their land trades a small flat amount of food to the settled instead, scaled by the tribal share of the location and
+# not by the size of the tribe. They have no growth of their own: the share-weighted +0.6 % that offset the ranks'
+# -0.4 % gate is gone (it pushed the settled pops of tribal land as well), so on owned land they follow the location's
+# law (rank gate, storage bonus where the province stores food) with births braked to the free land (topography -100 %,
+# free-land modifiers +75 % x the free share); on unowned land (no gate, no store) nothing moves.
+# Tribal land develops and takes up institutions slowly.
 TRY_INJECT:tribesmen = {
-	pop_food_consumption = -0.5
+	pop_food_consumption = 0
 	pop_percentage_impact = {
-		local_population_growth = 0.006 # offset of the ranks -0.004 gate: +0.2 % net in tribal land (0.012 before 2026-09-26, it also pushed settled pops in tribal land)
+		local_monthly_food = 2
+		local_monthly_development_modifier = -0.75
+		local_institution_growth_modifier = -0.75
 	}
 }

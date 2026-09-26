@@ -5,8 +5,8 @@
 	# Marker for the location view's land chip: the engine applies this modifier, the GUI can only read modifier values.
 	pp_land_abundant = 1
 	# Tribesmen growth is land-driven: gives back a little of the topography's -100 % birth brake while land is free
-	# (the engine scales this by 1 - pop / capacity). 0.75 x their ~0.2 %/yr location growth (rank gate -0.4 % + their
-	# own +0.6 %) = at most ~0.15 %/yr on empty land, zero at capacity. Unowned land gets no free-land modifiers.
+	# (the engine scales this by 1 - pop / capacity): births = 0.75 x the location growth (rank gate -0.4 % + the
+	# province's storage bonus) on empty land, zero at capacity. Unowned land gets no free-land modifiers.
 	local_tribesmen_pop_growth = 0.75
 	# local_disease_resistance = 0.25
 	local_migration_attraction = 2
@@ -58,8 +58,8 @@ TRY_REPLACE:available_free_land = {
 	# Marker for the location view's land chip: the engine applies this modifier, the GUI can only read modifier values.
 	pp_land_available = 1
 	# Tribesmen growth is land-driven: gives back a little of the topography's -100 % birth brake while land is free
-	# (the engine scales this by 1 - pop / capacity). 0.75 x their ~0.2 %/yr location growth (rank gate -0.4 % + their
-	# own +0.6 %) = at most ~0.15 %/yr on empty land, zero at capacity. Unowned land gets no free-land modifiers.
+	# (the engine scales this by 1 - pop / capacity): births = 0.75 x the location growth (rank gate -0.4 % + the
+	# province's storage bonus) on empty land, zero at capacity. Unowned land gets no free-land modifiers.
 	local_tribesmen_pop_growth = 0.75
 	# local_disease_resistance = 0.25
 	local_migration_attraction = 1

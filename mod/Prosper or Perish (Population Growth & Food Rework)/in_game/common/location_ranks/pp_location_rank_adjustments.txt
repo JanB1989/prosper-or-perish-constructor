@@ -1,5 +1,5 @@
 ﻿# In general cities and towns are now way worse at producing food.
-# The -0.004 growth gate below is cancelled for tribesmen by their pop-type pop_percentage_impact (pp_pop_adjustments.txt).
+# The -0.004 growth gate below also applies to tribesmen on owned land (their share-weighted offset was removed 2026-09-26).
 # The tribesmen birth brake is on the topography classes (worldbuilder/modifiers.py): unowned land gets no rank modifiers.
 # Building in cities and towns is also more expensive in general to slow snowball down a bit
 # They are better at storing food though.

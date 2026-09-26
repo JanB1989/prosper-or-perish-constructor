@@ -72,13 +72,14 @@ def test_starvation_hits_tribesmen_unless_they_feed_the_province():
     rules = fs.SimRules(harvest=False, months=48)
     hungry = fs.simulate([tribal_pool()], rules)[0]
     assert hungry["months_starving"] > 40 and hungry["tribesmen_end_k"] < 90.0 and hungry["tribesmen_born_k"] == 0.0
-    fed = fs.simulate([tribal_pool(tribesmen_food=-1.0)], rules)[0]
+    # what-if knobs of the pre-2026-09-26 design: tribesmen feeding the province and their share-weighted growth
+    fed = fs.simulate([tribal_pool(tribesmen_food=-1.0)], fs.SimRules(harvest=False, months=48, tribal_growth=0.006))[0]
     assert fed["months_starving"] == 0 and fed["tribesmen_lost_k"] == 0.0 and fed["tribesmen_end_k"] > 90.0
     assert fed["end_months"] is None                   # net negative consumption: no storage signal
 
 
 def test_tribesmen_births_need_free_land_and_storage_needs_positive_consumption():
-    rules = fs.SimRules(harvest=False, months=24)
+    rules = fs.SimRules(harvest=False, months=24, tribal_growth=0.006)   # a positive location growth to be born from
     full = fs.simulate([tribal_pool(tribesmen_food=-1.0, pop_capacity=100.0 * rules.tribal_land_slope)], rules)[0]
     empty = fs.simulate([tribal_pool(tribesmen_food=-1.0)], rules)[0]
     assert full["tribesmen_born_k"] == 0.0 and empty["tribesmen_born_k"] > 0.0
@@ -109,10 +110,35 @@ def _unowned_tribe(capacity_k):
                    tribesmen_food=-1.0, pop_capacity=capacity_k)
 
 
-def test_tribesmen_grow_at_most_about_015_percent_a_year_and_not_at_all_on_unowned_land():
+def test_tribal_land_follows_the_location_law_and_unowned_land_stays_put():
     from dataclasses import replace
 
     rules = fs.SimRules(harvest=False, months=120)
+    heartland = replace(_unowned_tribe(1000.0), owner="A", tribesmen_food=0.0)   # owned, only tribesmen, who eat nothing
+    row = fs.simulate([heartland], rules)[0]
+    yearly = (row["tribesmen_end_k"] / 10.0) ** (1 / 10) - 1
+    assert row["tribesmen_born_k"] == 0.0 and abs(yearly - rules.growth_base) < 0.0002   # no store signal: the gate only
+    unowned = fs.simulate([replace(_unowned_tribe(1000.0), tribesmen_food=0.0)], rules)[0]
+    assert abs(unowned["tribesmen_end_k"] - 10.0) < 1e-6                    # no gate, no offset, no births
+
+
+def test_tribal_values_match_the_mod():
+    from pathlib import Path
+
+    from prosper_or_perish_constructor.worldbuilder.start_food_model_v2 import FoodModelConfig
+
+    mod = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    text = (mod / "in_game/common/pop_types/pp_pop_adjustments.txt").read_text(encoding="utf-8-sig")
+    block = text.split("TRY_INJECT:tribesmen")[1]
+    assert "pop_food_consumption = 0\n" in block and "local_population_growth" not in block
+    assert f"local_monthly_food = {fs.SimRules().tribal_flat_food:g}" in block
+    assert FoodModelConfig().tribal_share_food == fs.SimRules().tribal_flat_food and fs.SimRules().tribal_growth == 0.0
+
+
+def test_tribesmen_grow_at_most_about_015_percent_a_year_and_not_at_all_on_unowned_land():
+    from dataclasses import replace
+
+    rules = fs.SimRules(harvest=False, months=120, tribal_growth=0.006)   # the land-birth mechanism under the old offset
     owned = replace(_unowned_tribe(1000.0), owner="A")
     empty = fs.simulate([owned], rules)[0]
     full = fs.simulate([replace(_unowned_tribe(10.0 * 0.75), owner="A")], rules)[0]   # free-land factor 1 - 0.75 pop/cap = 0
@@ -125,6 +151,49 @@ def test_tribesmen_grow_at_most_about_015_percent_a_year_and_not_at_all_on_unown
     old = fs.simulate([_unowned_tribe(1000.0)], fs.SimRules(harvest=False, months=120, unowned_brake=False, tribal_land_births=1.0,
                                                              growth_base=-0.0048, tribal_growth=0.012))[0]
     assert (old["tribesmen_end_k"] / 10.0) ** (1 / 10) - 1 > 0.01
+
+
+def test_unowned_land_has_no_rank_gate_store_or_starving():
+    from dataclasses import replace
+
+    rules = fs.SimRules(harvest=False, months=120)
+    mixed = replace(_unowned_tribe(1000.0), pop0=20.0, demand0=50.0)          # 10k settled among 10k tribesmen, no food
+    row = fs.simulate([mixed], rules)[0]
+    assert row["months_starving"] == 0 and row["tribesmen_lost_k"] == 0.0
+    settled_rate = ((row["pop_end_k"] - row["tribesmen_end_k"]) / 10.0) ** (1 / 10) - 1
+    assert abs(settled_rate - rules.tribal_growth * 0.5) < 0.0002           # only the tribal share's growth, no gate
+    bare = fs.simulate([mixed], replace(rules, tribal_growth=0.0))[0]
+    assert abs(bare["pop_end_k"] - 20.0) < 1e-6                             # nothing moves without the offset
+
+
+def test_free_land_cuts_peasant_food_by_the_engine_scales():
+    p = tribal_pool(tribesmen=0.0, pop0=10.0, demand0=10.0, overpop=[(10.0, 0.2, 50.0), (5.0, 0.05, 100.0)])
+    rules = fs.SimRules()
+    cons, forage = fs.free_land(p, 1.0, rules)
+    # 10k peasants at 20 % of capacity: available land, -0.32 x 0.8; 5k at 5 % of 100k (pop 5k < 10k): abundant, -0.5 x 0.95
+    assert abs(cons - (10.0 * -0.32 * 0.8 + 5.0 * -0.5 * 0.95)) < 1e-9 and abs(forage - 0.95) < 1e-9
+    cons5, forage5 = fs.free_land(p, 5.0, rules)                    # 5x the people: the first location is full,
+    assert abs(cons5 - 25.0 * -0.32 * 0.75) < 1e-9 and forage5 == 0.0  # the second at 25 % (25k): available, x 0.75
+    assert fs.free_land(replace_overpop(p, [(10.0, 0.2)]), 1.0, rules) == (0.0, 0.0)             # no capacity known: no effect
+
+
+def replace_overpop(p, rows):
+    from dataclasses import replace
+
+    return replace(p, overpop=rows)
+
+
+def test_free_land_values_match_the_mod():
+    from pathlib import Path
+
+    mod = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    text = (mod / "main_menu/common/static_modifiers/pp_capacity_pressure_effects.txt").read_text(encoding="utf-8-sig")
+    abundant = text.split("TRY_REPLACE:abundant_free_land")[1].split("TRY_REPLACE:")[0]
+    available = text.split("TRY_REPLACE:available_free_land")[1].split("TRY_REPLACE:")[0]
+    rules = fs.SimRules()
+    assert f"local_peasants_food_consumption = {rules.abundant_peasant_food}" in abundant
+    assert f"local_peasants_food_consumption = {rules.available_peasant_food}" in available
+    assert f"local_monthly_food = {rules.abundant_food:g}" in abundant
 
 
 def test_the_tribesmen_birth_brake_is_on_every_topography_not_a_rank_or_country():

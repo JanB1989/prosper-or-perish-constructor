@@ -7,7 +7,7 @@ pp_tavern_wanted = {
 	is_province_capital = yes
 	modifier:pp_province_food_storage_months < pp_tavern_low_storage_months
 	# ...and the store is really short: the engine drops the storage modifier (and this marker) when the province's
-	# consumption is zero or negative, e.g. tribesmen feeding it, so a full surplus province reads 0 months above.
+	# consumption is zero or negative, e.g. purely tribal land whose pops eat nothing, so a full surplus province reads 0 months above.
 	# province_monthly_food_production is the net monthly change (verified 2026-09-25: tribal Taoer +315, Uppland -169);
 	# starving provinces whose balance already turned positive stay eligible.
 	province = {

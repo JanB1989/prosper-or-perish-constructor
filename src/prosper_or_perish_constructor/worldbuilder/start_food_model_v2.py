@@ -61,6 +61,8 @@ class FoodModelConfig:
     overpopulation_pop_types: tuple[str, ...] = ("peasants",)
     capacity: Mapping[str, Any] = field(default_factory=lambda: {k: (dict(v) if isinstance(v, dict) else v) for k, v in DEFAULT_CAPACITY.items()})
     start_food_share: float = 0.10                   # game rule pp_starting_province_food default: 10 % of capacity
+    tribal_share_food: float = 2.0                   # tribesmen pop_percentage_impact local_monthly_food: food of a fully
+                                                     # tribal location, scaled by the tribal share (pp_pop_adjustments.txt)
     # placement v2
     tavern_victuals_per_level: float = 2.0           # victuals a staffed Tavern buys per month (60 food)
     yard_victuals_per_level: float = 1.5             # victuals a staffed Victualling Yard packs per month (60 food, loose)
@@ -92,7 +94,7 @@ class FoodModelConfig:
             for k, v in raw["capacity"].items():
                 cap[str(k)] = {str(a): float(b) for a, b in v.items()} if isinstance(v, Mapping) else float(v)
             kwargs["capacity"] = cap
-        for name in ("overpopulation_consumption", "start_food_share", "tavern_victuals_per_level", "yard_victuals_per_level",
+        for name in ("overpopulation_consumption", "start_food_share", "tribal_share_food", "tavern_victuals_per_level", "yard_victuals_per_level",
                      "cookshop_serve_share", "cookshop_drink_food",
                      "victuals_target", "yard_surplus_share", "yard_min_capacity_months", "yard_min_level_share", "serve_raw_goods_share",
                      "raw_goods_per_rgo_k", "serve_fallback_raw_goods_share", "import_priority_coverage"):

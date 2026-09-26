@@ -87,6 +87,57 @@ TRY_INJECT:mercantilism_vs_free_trade = {
 	}
 }
 
+# Outward societies want the colonial cash crops and grow them: demand raises their price, which makes
+# cash-crop land overseas worth colonizing. Inward ones are content with local goods.
+TRY_INJECT:outward_vs_inward = {
+	left_modifier = {
+		global_dyes_output_modifier = 0.10
+		global_incense_output_modifier = 0.10
+		global_tobacco_output_modifier = 0.10
+		global_cocoa_output_modifier = 0.10
+		global_coffee_output_modifier = 0.10
+		global_tea_output_modifier = 0.10
+		global_sugar_output_modifier = 0.10
+		global_chili_output_modifier = 0.10
+		global_cloves_output_modifier = 0.10
+		global_pepper_output_modifier = 0.10
+		global_saffron_output_modifier = 0.10
+		global_cotton_output_modifier = 0.10
+		global_silk_output_modifier = 0.10
+		global_wine_output_modifier = 0.10
+		global_dyes_pop_demand = 0.15
+		global_incense_pop_demand = 0.15
+		global_tobacco_pop_demand = 0.15
+		global_cocoa_pop_demand = 0.15
+		global_coffee_pop_demand = 0.15
+		global_tea_pop_demand = 0.15
+		global_sugar_pop_demand = 0.15
+		global_chili_pop_demand = 0.15
+		global_cloves_pop_demand = 0.15
+		global_pepper_pop_demand = 0.15
+		global_saffron_pop_demand = 0.15
+		global_cotton_pop_demand = 0.15
+		global_silk_pop_demand = 0.15
+		global_wine_pop_demand = 0.15
+	}
+	right_modifier = {
+		global_dyes_pop_demand = -0.05
+		global_incense_pop_demand = -0.05
+		global_tobacco_pop_demand = -0.05
+		global_cocoa_pop_demand = -0.05
+		global_coffee_pop_demand = -0.05
+		global_tea_pop_demand = -0.05
+		global_sugar_pop_demand = -0.05
+		global_chili_pop_demand = -0.05
+		global_cloves_pop_demand = -0.05
+		global_pepper_pop_demand = -0.05
+		global_saffron_pop_demand = -0.05
+		global_cotton_pop_demand = -0.05
+		global_silk_pop_demand = -0.05
+		global_wine_pop_demand = -0.05
+	}
+}
+
 TRY_INJECT:serfdom_vs_free_subjects = {
 	left_modifier = {
 		global_raw_material_output = -0.10

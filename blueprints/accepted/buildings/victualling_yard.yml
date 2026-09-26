@@ -49,21 +49,23 @@ building:
     # 1:30, so food that goes out and comes back always loses a quarter. Packing goods lift it to at most 1:30.
     # slot 0: packing the store. A real, positive victuals output (production efficiency scales it).
     unique_production_methods = {
+      # TEST (2026-09-26): the two Provisions methods split by coast (the AI never switched to the coastal one while
+      # both were open). A method's potential/allow run in country scope; the location is scope:target (pattern from
+      # the fortress granary methods), so the gates sit in allow.
       pp_victualling_yard_pack_provisions = {
         produced = victuals
         manual_labor_cost = 0.2
         output = 1.5
         category = building_maintenance
+        allow = { scope:target ?= { is_coastal = no } }
       }
-      # TEST (2026-09-26): coastal-only, more efficient alternative. A method's potential/allow run in country scope;
-      # the location is scope:target (pattern from the fortress granary methods), so the coast gate sits in allow.
       pp_victualling_yard_ship_stores = {
-        allow = { scope:target ?= { is_coastal = yes } }
         naval_supplies = 0.3
         produced = victuals
         manual_labor_cost = 0.2
         output = 2.25
         category = building_maintenance
+        allow = { scope:target ?= { is_coastal = yes } }
       }
     }
     # slot 1: surplus sales, the storage leg (the farms' Surplus Sales good): output modifier = country constant -1

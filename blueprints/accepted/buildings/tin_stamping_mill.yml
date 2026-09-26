@@ -57,7 +57,7 @@ building:
 
     unique_production_methods = {
         pp_tin_stamping_mill_base_tin = {
-            manual_labor_cost = 0.04
+            manual_labor = 0.04
             produced = tin
             output = 0.1
             category = building_maintenance
@@ -70,7 +70,7 @@ building:
         pp_tin_stamping_mill_tin = {
             lumber = 0.37
             tools = 0.27
-            manual_labor_cost = 0.23
+            manual_labor = 0.23
             produced = tin
             output = 0.95
             category = building_maintenance
@@ -83,7 +83,7 @@ building:
         pp_tin_stamping_mill_copper = {
             lumber = 0.046
             tools = 0.026
-            manual_labor_cost = 0.025
+            manual_labor = 0.025
             produced = copper
             output = 0.068
             category = building_maintenance
@@ -91,7 +91,7 @@ building:
         pp_tin_stamping_mill_lead = {
             lumber = 0.046
             tools = 0.026
-            manual_labor_cost = 0.025
+            manual_labor = 0.025
             produced = lead
             output = 0.102
             category = building_maintenance

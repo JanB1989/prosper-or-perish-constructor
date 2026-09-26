@@ -65,7 +65,7 @@ building:
 
     unique_production_methods = {
         pp_maize_farm_base = {
-            manual_labor_cost = 0.012
+            manual_labor = 0.012
             produced = maize
             output = 0.06
             category = building_maintenance
@@ -77,7 +77,7 @@ building:
         }
         pp_maize_farm_hill_planting = {
             tools = 0.004
-            manual_labor_cost = 0.01
+            manual_labor = 0.01
             produced = maize
             output = 0.1
             debug_max_profit = 0
@@ -86,7 +86,7 @@ building:
         pp_maize_farm_milpa = {
             legumes = 0.016
             livestock = 0.009
-            manual_labor_cost = 0.007
+            manual_labor = 0.007
             produced = maize
             output = 0.11
             debug_max_profit = 0

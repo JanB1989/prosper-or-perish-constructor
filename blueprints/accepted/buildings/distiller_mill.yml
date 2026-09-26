@@ -34,7 +34,7 @@ building:
         pp_distiller_mill_sugar_distillery_mill_maintenance = {
             sugar = 2.57
             glass = 0.54
-            manual_labor_cost = 0.38
+            manual_labor = 0.38
             produced = liquor
             output = 4.0
             category = mills_input
@@ -43,7 +43,7 @@ building:
         pp_distiller_mill_rice_distillery_mill_maintenance = {
             rice = 7.21
             glass = 0.7
-            manual_labor_cost = 0.4
+            manual_labor = 0.4
             produced = liquor
             output = 4.0
             category = mills_input
@@ -52,7 +52,7 @@ building:
         pp_distiller_mill_potato_distillery_mill_maintenance = {
             potato = 7.27
             glass = 0.68
-            manual_labor_cost = 0.4
+            manual_labor = 0.4
             produced = liquor
             output = 4.0
             category = mills_input
@@ -61,7 +61,7 @@ building:
         pp_distiller_mill_wheat_distillery_mill_maintenance = {
             wheat = 7.27
             glass = 0.68
-            manual_labor_cost = 0.4
+            manual_labor = 0.4
             produced = liquor
             output = 4.0
             category = mills_input
@@ -70,7 +70,7 @@ building:
         pp_distiller_mill_scottish_whisky_distillery_mill_maintenance = {
             millet = 7.17
             glass = 0.72
-            manual_labor_cost = 0.38
+            manual_labor = 0.38
             produced = liquor
             output = 4.0
             category = mills_input

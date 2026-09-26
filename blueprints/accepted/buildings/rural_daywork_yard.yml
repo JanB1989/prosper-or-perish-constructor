@@ -33,21 +33,21 @@ building:
 
     unique_production_methods = {
       pp_rural_daywork_yard_harvest_gangs = {
-        produced = manual_labor_cost
+        produced = manual_labor
         output = 1.45
         beer = 0.6
         fiber_crops = 0.5
         category = building_maintenance
       }
       pp_rural_daywork_yard_ox_teams = {
-        produced = manual_labor_cost
+        produced = manual_labor
         output = 1.5
         livestock = 1.0
         leather = 0.25
         category = building_maintenance
       }
       pp_rural_daywork_yard_ditch_gangs = {
-        produced = manual_labor_cost
+        produced = manual_labor
         output = 1.45
         clay = 1.2
         lumber = 0.6

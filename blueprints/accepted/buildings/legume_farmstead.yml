@@ -61,7 +61,7 @@ building:
 
     unique_production_methods = {
         pp_legume_farmstead_base = {
-            manual_labor_cost = 0.016
+            manual_labor = 0.016
             produced = legumes
             output = 0.08
             category = building_maintenance
@@ -76,7 +76,7 @@ building:
             livestock = 0.043
             fiber_crops = 0.052
             pottery = 0.052
-            manual_labor_cost = 0.049
+            manual_labor = 0.049
             produced = legumes
             output = 0.59
             debug_max_profit = 0
@@ -90,7 +90,7 @@ building:
         pp_legume_farmstead_yard_hives = {
             fiber_crops = 0.022
             pottery = 0.01
-            manual_labor_cost = 0.008
+            manual_labor = 0.008
             produced = beeswax
             output = 0.12
             debug_max_profit = 0

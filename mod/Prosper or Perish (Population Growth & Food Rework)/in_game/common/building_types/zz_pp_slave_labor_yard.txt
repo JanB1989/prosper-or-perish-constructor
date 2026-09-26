@@ -35,7 +35,7 @@ construction_demand = plantation_construction
 
 unique_production_methods = {
   pp_slave_labor_yard_grain_rations = {
-    produced = manual_labor_cost
+    produced = manual_labor
     output = 2.85
     slaves_goods = 0.8
     millet = 0.8
@@ -43,7 +43,7 @@ unique_production_methods = {
     category = building_maintenance
   }
   pp_slave_labor_yard_salt_fish_rations = {
-    produced = manual_labor_cost
+    produced = manual_labor
     output = 2.75
     slaves_goods = 0.8
     fish = 1.0
@@ -51,7 +51,7 @@ unique_production_methods = {
     category = building_maintenance
   }
   pp_slave_labor_yard_provision_grounds = {
-    produced = manual_labor_cost
+    produced = manual_labor
     output = 2.5
     slaves_goods = 1.0
     fiber_crops = 0.3

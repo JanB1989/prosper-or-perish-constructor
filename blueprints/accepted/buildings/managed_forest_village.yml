@@ -71,25 +71,25 @@ building:
     }
     unique_production_methods = {
         pp_managed_forest_village_base_leather = {
-            manual_labor_cost = 0.06
+            manual_labor = 0.06
             produced = leather
             output = 0.10
             category = building_maintenance
         }
         pp_managed_forest_village_base_wild_game = {
-            manual_labor_cost = 0.02
+            manual_labor = 0.02
             produced = wild_game
             output = 0.10
             category = building_maintenance
         }
         pp_managed_forest_village_base_fur = {
-            manual_labor_cost = 0.04
+            manual_labor = 0.04
             produced = fur
             output = 0.10
             category = building_maintenance
         }
         pp_managed_forest_village_base_beeswax = {
-            manual_labor_cost = 0.04
+            manual_labor = 0.04
             produced = beeswax
             output = 0.10
             category = building_maintenance
@@ -106,7 +106,7 @@ building:
             tools = 0.13
             horses = 0.054
             victuals = 0.054
-            manual_labor_cost = 0.14
+            manual_labor = 0.14
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -117,7 +117,7 @@ building:
             horses = 0.11
             victuals = 0.098
             lumber = 0.072
-            manual_labor_cost = 0.15
+            manual_labor = 0.15
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -128,7 +128,7 @@ building:
             horses = 0.1
             victuals = 0.1
             lumber = 0.088
-            manual_labor_cost = 0.15
+            manual_labor = 0.15
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -139,7 +139,7 @@ building:
             cloth = 0.09
             lumber = 0.12
             victuals = 0.093
-            manual_labor_cost = 0.16
+            manual_labor = 0.16
             debug_max_profit = 0
             category = building_maintenance
         }

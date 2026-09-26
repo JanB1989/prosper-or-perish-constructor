@@ -57,7 +57,7 @@ building:
 
     unique_production_methods = {
         pp_cattle_model_farm_base = {
-            manual_labor_cost = 0.03
+            manual_labor = 0.03
             produced = livestock
             output = 0.1
             category = building_maintenance
@@ -72,7 +72,7 @@ building:
             horses = 0.17
             legumes = 0.32
             paper = 0.11
-            manual_labor_cost = 0.15
+            manual_labor = 0.15
             produced = livestock
             output = 1.4
             debug_max_profit = 0

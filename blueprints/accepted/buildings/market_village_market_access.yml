@@ -50,7 +50,7 @@ building:
             produced = tools
             output = 0.5
             iron = 0.31
-            manual_labor_cost = 0.5
+            manual_labor = 0.5
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }
@@ -58,7 +58,7 @@ building:
             millet = 0.39
             lumber = 0.079
             tools = 0.056
-            manual_labor_cost = 0.24
+            manual_labor = 0.24
             produced = beer
             output = 0.5
             debug_max_profit = rural_profit_margin
@@ -68,7 +68,7 @@ building:
             produced = weaponry
             output = 0.2
             lumber = 0.25
-            manual_labor_cost = 0.15
+            manual_labor = 0.15
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }
@@ -76,7 +76,7 @@ building:
             produced = jewelry
             output = 0.1
             stone = 0.32
-            manual_labor_cost = 0.11
+            manual_labor = 0.11
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }
@@ -84,7 +84,7 @@ building:
             produced = pottery
             output = 0.2
             clay = 0.25
-            manual_labor_cost = 0.042
+            manual_labor = 0.042
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }

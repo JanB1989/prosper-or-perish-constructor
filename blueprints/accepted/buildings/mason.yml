@@ -29,7 +29,7 @@ building:
     unique_production_methods = {
         pp_mason_stone_bricks = {
             stone = 0.32
-            manual_labor_cost = 0.11
+            manual_labor = 0.11
             produced = masonry
             output = 0.5
             debug_max_profit = rural_profit_margin
@@ -37,7 +37,7 @@ building:
         }
         pp_mason_clay_bricks = {
             clay = 0.64
-            manual_labor_cost = 0.11
+            manual_labor = 0.11
             produced = masonry
             output = 0.5
             debug_max_profit = rural_profit_margin

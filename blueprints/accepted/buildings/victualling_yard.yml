@@ -61,7 +61,7 @@ building:
       pp_victualling_yard_river_barges = {
         cloth = 0.05
         lumber = 0.08
-        manual_labor_cost = 0.28
+        manual_labor = 0.28
         produced = victuals
         output = 0.5
         category = building_maintenance
@@ -69,7 +69,7 @@ building:
       pp_victualling_yard_merchantmen = {
         naval_supplies = 0.13
         tar = 0.17
-        manual_labor_cost = 0.08
+        manual_labor = 0.08
         produced = victuals
         output = 0.67
         category = building_maintenance
@@ -79,7 +79,7 @@ building:
         naval_supplies = 0.10
         medicaments = 0.25
         cannons = 0.06
-        manual_labor_cost = 0.04
+        manual_labor = 0.04
         produced = victuals
         output = 0.8
         category = building_maintenance
@@ -165,3 +165,7 @@ evaluation:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline.
     base_output_per_1k: The Yard packs and ships victuals on one burgher per level, not a production line.
+  production_methods:
+    pp_victualling_yard_river_barges:
+      allow_rules:
+        amortization_months: Cheap barges pay back fast once the storage leg is gone (2026-09-26); the margin is deliberate.

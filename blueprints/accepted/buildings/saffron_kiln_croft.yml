@@ -56,7 +56,7 @@ building:
 
     unique_production_methods = {
         pp_saffron_kiln_croft_base_saffron = {
-            manual_labor_cost = 0.22
+            manual_labor = 0.22
             produced = saffron
             output = 0.22
             category = building_maintenance
@@ -68,7 +68,7 @@ building:
         }
         pp_saffron_kiln_croft_livestock_manure = {
             livestock = 0.156 # manure for richer crocus beds
-            manual_labor_cost = 0.036
+            manual_labor = 0.036
             produced = saffron
             output = 0.2
             category = building_maintenance
@@ -81,7 +81,7 @@ building:
         pp_saffron_kiln_croft_pottery_kilns = {
             pottery = 0.276 # trays and covered drying pans
             coal = 0.12 # light brazier and kiln fuel
-            manual_labor_cost = 0.084
+            manual_labor = 0.084
             produced = saffron
             output = 0.38
             category = building_maintenance

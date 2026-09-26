@@ -25,7 +25,7 @@ location_potential = {
 
 unique_production_methods = {
     pp_wheat_farmstead_base = {
-        manual_labor_cost = 0.016
+        manual_labor = 0.016
         produced = wheat
         output = 0.08
         category = building_maintenance
@@ -40,7 +40,7 @@ unique_production_methods = {
         livestock = 0.086
         tools = 0.017
         lumber = 0.022
-        manual_labor_cost = 0.059
+        manual_labor = 0.059
         produced = wheat
         output = 0.64
         debug_max_profit = 0

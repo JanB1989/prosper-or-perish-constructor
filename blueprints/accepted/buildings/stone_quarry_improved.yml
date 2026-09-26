@@ -68,7 +68,7 @@ building:
 
     unique_production_methods = {
         pp_stone_quarry_improved_base_stone = {
-            manual_labor_cost = 0.03
+            manual_labor = 0.03
             produced = stone
             output = 0.15
             category = building_maintenance
@@ -83,7 +83,7 @@ building:
             tools = 0.16 # chisels, wedges, tackle
             leather = 0.043 # slings and straps
             horses = 0.043 # hoist and cart teams
-            manual_labor_cost = 0.24
+            manual_labor = 0.24
             produced = stone
             output = 1.66
             category = building_maintenance
@@ -93,7 +93,7 @@ building:
             tools = 0.15 # picks, wedges, dressing tools
             leather = 0.034 # yokes and straps
             livestock = 0.052 # ox haulage teams
-            manual_labor_cost = 0.18
+            manual_labor = 0.18
             produced = stone
             output = 1.47
             category = building_maintenance
@@ -106,7 +106,7 @@ building:
         pp_stone_quarry_improved_rubble_breaking = {
             lumber = 0.034 # sorting screens, bins
             tools = 0.026 # hammers and sieves
-            manual_labor_cost = 0.024
+            manual_labor = 0.024
             produced = sand
             output = 0.30
             category = building_maintenance

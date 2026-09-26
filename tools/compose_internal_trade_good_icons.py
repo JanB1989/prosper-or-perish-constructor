@@ -12,7 +12,7 @@ ILLUSTRATION_SIZE = (1080, 440)
 
 ICON_SOURCES = {
     "local_food": ROOT / "assets" / "icons" / "province_food_market" / "sources" / "local_food.png",
-    "manual_labor_cost": ROOT / "assets" / "icons" / "manual_labor_cost" / "sources" / "employees.png",
+    "manual_labor": ROOT / "assets" / "icons" / "manual_labor" / "sources" / "employees.png",
     "offset": ROOT / "assets" / "icons" / "offset" / "sources" / "balance.png",
 }
 ILLUSTRATION_SOURCES = {

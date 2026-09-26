@@ -1027,7 +1027,7 @@ class Simulation:
                     inputs = {
                         e.key: float(e.value) for e in method.value.entries
                         if isinstance(e.value, (int, float)) and (e.key in known or not known)
-                        and e.key not in ("output", "manual_labor_cost", "debug_max_profit")
+                        and e.key not in ("output", "manual_labor", "debug_max_profit")
                     }
                     goods.update(inputs)
                     if method.key == serve:

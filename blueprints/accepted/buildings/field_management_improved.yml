@@ -51,19 +51,19 @@ building:
         legumes = 0.04
         livestock = 0.02
         tools = 0.015
-        manual_labor_cost = 0.006
+        manual_labor = 0.006
         category = building_maintenance
       }
       pp_field_management_improved_drill = {
         tools = 0.022
         horses = 0.015
-        manual_labor_cost = 0.006
+        manual_labor = 0.006
         category = building_maintenance
       }
       pp_field_management_improved_liming = {
         stone = 0.06
         tools = 0.015
-        manual_labor_cost = 0.008
+        manual_labor = 0.008
         category = building_maintenance
       }
     }

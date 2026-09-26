@@ -63,7 +63,7 @@ building:
 
     unique_production_methods = {
         pp_rice_farmstead_base = {
-            manual_labor_cost = 0.016
+            manual_labor = 0.016
             produced = rice
             output = 0.08
             category = building_maintenance
@@ -78,7 +78,7 @@ building:
             clay = 0.21
             lumber = 0.043
             tools = 0.014
-            manual_labor_cost = 0.055
+            manual_labor = 0.055
             produced = rice
             output = 0.64
             debug_max_profit = 0

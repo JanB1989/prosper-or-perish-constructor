@@ -26,7 +26,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_coffee_grove_base_coffee = {
-        manual_labor_cost = 0.096
+        manual_labor = 0.096
         produced = coffee
         output = 0.16
         category = building_maintenance
@@ -39,7 +39,7 @@ unique_production_methods = {
     pp_coffee_grove_washing_stations = {
         lumber = 0.38 # washing troughs
         pottery = 0.192 # fermentation vats
-        manual_labor_cost = 0.188
+        manual_labor = 0.188
         produced = coffee
         output = 0.581
         category = building_maintenance

@@ -48,7 +48,7 @@ age_throughput_growth = 0.10
 throughput_tolerance = 0.30
 amortization_months_max = 360
 amortization_months_min = 120
-base_method_input_goods = ["manual_labor_cost"]  # base methods pay a token labour cost and stay base methods
+base_method_input_goods = ["manual_labor"]  # base methods pay a token labour cost and stay base methods
 
 [building_scaling]
 increase_per_level_cost_multiplier = 0.75
@@ -62,7 +62,7 @@ provisioning_reference_base_output = 0.06
 
 
 [blueprint_evaluation.price_overrides]
-manual_labor_cost = 1.0   # labour is balanced at its price floor (20 % of 5), see [production_labour]
+manual_labor = 1.0   # labour is balanced at its price floor (20 % of 5), see [production_labour]
 local_food = 0.1          # Province Food is pinned at its price floor (20 % of 0.5) by its base supply
 
 [blueprint_evaluation.throughput_gold_per_1k]
@@ -478,11 +478,11 @@ extractive_open = 0.05        # quarries, pits, diggings, salt pans
 land_reserve = -0.25          # hunting grounds, royal forests and gardens, cattle enclosures
 
 [production_labour]
-# Every producing production method pays part of its input cost in manual_labor_cost. Enabled blueprints tag their
+# Every producing production method pays part of its input cost in manual_labor. Enabled blueprints tag their
 # producing methods with `labour: { class: <class>, methods: { <method>: <class> } }`. `ppc labour apply` rewrites the
 # method bodies so labour takes the class share of the total input cost at base prices (the cost itself stays);
 # `ppc labour check` reports untagged methods and methods off their class (ppc build prints it).
-good = "manual_labor_cost"
+good = "manual_labor"
 price_floor_share = 0.2       # balance labour at its price floor: 20 % of the default price 5 = 1 gold (labour yards sell into scarcity)
 tolerance = 0.02              # a method within this share of its class is left alone (a rounding step moves about 0.01)
 min_good_share = 0.05         # goods worth less than this share of a method's input cost are folded into the rest

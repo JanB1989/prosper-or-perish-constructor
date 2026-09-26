@@ -30,7 +30,7 @@ building:
         pp_iron_mill_iron_mill_maintenance = {
             iron = 2.81
             coal = 0.7
-            manual_labor_cost = 0.48
+            manual_labor = 0.48
             category = mills_input
             produced = tools
             output = 4.0
@@ -38,7 +38,7 @@ building:
         }
         pp_iron_mill_steel_tools = {
             steel = 2.25
-            manual_labor_cost = 0.46
+            manual_labor = 0.46
             category = mills_input
             produced = tools
             output = 4.0

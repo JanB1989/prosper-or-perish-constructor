@@ -56,7 +56,7 @@ building:
 
     unique_production_methods = {
         pp_coal_mine_base_coal = {
-            manual_labor_cost = 0.048
+            manual_labor = 0.048
             produced = coal
             output = 0.12
             category = building_maintenance
@@ -70,7 +70,7 @@ building:
             lumber = 0.2
             tools = 0.23
             beeswax = 0.049
-            manual_labor_cost = 0.25
+            manual_labor = 0.25
             produced = coal
             output = 1.0
             debug_max_profit = 1
@@ -79,7 +79,7 @@ building:
         pp_coal_mine_bell_pits = {
             lumber = 0.3
             beeswax = 0.073
-            manual_labor_cost = 0.55
+            manual_labor = 0.55
             produced = coal
             output = 0.8
             category = building_maintenance
@@ -92,7 +92,7 @@ building:
         pp_coal_mine_fireclay = {
             lumber = 0.033
             tools = 0.025
-            manual_labor_cost = 0.028
+            manual_labor = 0.028
             produced = clay
             output = 0.336
             category = building_maintenance

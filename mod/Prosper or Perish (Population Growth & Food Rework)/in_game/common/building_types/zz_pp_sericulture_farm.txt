@@ -26,7 +26,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_sericulture_farm_base_silk = {
-        manual_labor_cost = 0.032
+        manual_labor = 0.032
         produced = silk
         output = 0.040
         category = building_maintenance
@@ -39,7 +39,7 @@ unique_production_methods = {
     pp_sericulture_farm_cocoon_reeling = {
         lumber = 0.098 # rearing trays, frames
         tools = 0.033 # knives, reels
-        manual_labor_cost = 0.059
+        manual_labor = 0.059
         produced = silk
         output = 0.089
         category = building_maintenance

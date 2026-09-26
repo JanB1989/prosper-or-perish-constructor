@@ -1,4 +1,4 @@
-"""Production labour: every producing production method pays part of its input cost in ``manual_labor_cost``.
+"""Production labour: every producing production method pays part of its input cost in ``manual_labor``.
 
 Each enabled blueprint with producing methods carries a ``labour`` tag::
 
@@ -120,7 +120,7 @@ def load_config(project: Path) -> LabourConfig:
                 f"{project}: {CONFIG_SECTION}.classes.{name} must be a share in [0, 1), {{ output_share = x }} or \"keep\", got {value!r}"
             )
     return LabourConfig(
-        good=str(section.get("good", "manual_labor_cost")),
+        good=str(section.get("good", "manual_labor")),
         price_floor_share=float(section.get("price_floor_share", 0.2)),
         tolerance=float(section.get("tolerance", 0.02)),
         min_good_share=float(section.get("min_good_share", 0.05)),

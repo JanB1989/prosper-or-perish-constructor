@@ -95,7 +95,7 @@ building:
 
     unique_production_methods = {
         pp_salt_mine_improved_base_salt = {
-            manual_labor_cost = 0.07
+            manual_labor = 0.07
             produced = salt
             output = 0.070
             category = building_maintenance
@@ -110,7 +110,7 @@ building:
             tools = 0.19 # pumps and picks
             horses = 0.097 # hauling teams
             leather = 0.069 # harness and buckets
-            manual_labor_cost = 0.3
+            manual_labor = 0.3
             produced = salt
             output = 0.366
             category = building_maintenance

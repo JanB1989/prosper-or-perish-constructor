@@ -51,7 +51,7 @@ building:
 
     unique_production_methods = {
         pp_tobacco_farm_base_tobacco = {
-            manual_labor_cost = 0.096
+            manual_labor = 0.096
             produced = tobacco
             output = 0.16
             category = building_maintenance
@@ -65,7 +65,7 @@ building:
             lumber = 0.384 # curing barns
             fiber_crops = 0.056 # hanging cords, packing twine
             tools = 0.048 # knives and presses
-            manual_labor_cost = 0.212
+            manual_labor = 0.212
             produced = tobacco
             output = 0.641
             category = building_maintenance

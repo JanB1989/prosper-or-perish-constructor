@@ -2946,14 +2946,14 @@ def test_internal_trade_good_icons_use_game_compatible_dds_layout() -> None:
         icon_root / "trade_goods" / "icon_goods_province_food_purchase.dds",
         icon_root / "modifier_types" / "province_food_sales_positive.dds",
         icon_root / "modifier_types" / "province_food_purchase_positive.dds",
-        icon_root / "trade_goods" / "icon_goods_manual_labor_cost.dds",
-        icon_root / "modifier_types" / "manual_labor_cost_positive.dds",
+        icon_root / "trade_goods" / "icon_goods_manual_labor.dds",
+        icon_root / "modifier_types" / "manual_labor_positive.dds",
         icon_root / "trade_goods" / "icon_goods_offset.dds",
         icon_root / "modifier_types" / "offset_positive.dds",
         icon_root / "modifier_types" / "pp_province_food_storage_months.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_province_food_sales.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_province_food_purchase.dds",
-        icon_root / "trade_goods" / "illustrations" / "icon_goods_manual_labor_cost.dds",
+        icon_root / "trade_goods" / "illustrations" / "icon_goods_manual_labor.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_offset.dds",
     )
 
@@ -3024,7 +3024,7 @@ def test_victuals_trade_construction_and_coastal_saltern_debug_keys_are_localize
     # production labour (primary class share) replaced part of the goods on 2026-09-23
     assert values["clay"] == 1.09
     assert values["pottery"] == 0.31
-    assert values["manual_labor_cost"] == 0.19
+    assert values["manual_labor"] == 0.19
 
 
 def test_salt_rgo_bonus_reduces_food_decay_without_affecting_saltpeter() -> None:

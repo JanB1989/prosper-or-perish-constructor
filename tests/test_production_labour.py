@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 CONFIG = """
 [production_labour]
-good = "manual_labor_cost"
+good = "manual_labor"
 price_floor_share = 0.2
 tolerance = 0.02
 min_good_share = 0.05
@@ -22,7 +22,7 @@ base = { output_share = 0.20 }
 craft = 0.20
 """
 
-PRICES = {"manual_labor_cost": 5.0, "wheat": 1.0, "lumber": 2.0, "tools": 4.0, "stone": 1.0, "alum": 3.0, "beer": 2.0, "sand": 0.5}
+PRICES = {"manual_labor": 5.0, "wheat": 1.0, "lumber": 2.0, "tools": 4.0, "stone": 1.0, "alum": 3.0, "beer": 2.0, "sand": 0.5}
 
 BREWERY = """version: 2
 tag: brewery
@@ -56,7 +56,7 @@ building:
         }
         pp_brewery_market = {
             wheat = 2
-            manual_labor_cost = 0.3
+            manual_labor = 0.3
             produced = beer
             output = 1.0
         }
@@ -108,28 +108,28 @@ def test_apply_moves_the_class_share_onto_labour_and_keeps_the_cost(repo: Path) 
     result = pl.apply(repo, repo / "constructor.toml", PRICES)
     assert not result.problems
     after = _methods(repo)["pp_brewery_wheat"]
-    labour = after.inputs["manual_labor_cost"]
-    cost_after = sum(a * (PRICES[g] * (0.2 if g == "manual_labor_cost" else 1)) for g, a in after.inputs.items())
+    labour = after.inputs["manual_labor"]
+    cost_after = sum(a * (PRICES[g] * (0.2 if g == "manual_labor" else 1)) for g, a in after.inputs.items())
     assert cost_after == pytest.approx(cost_before, abs=0.01)
     assert labour * 1.0 / cost_after == pytest.approx(0.20, abs=0.01)
     assert after.inputs["stone"] == 0.0  # zero lines stay
     text = (repo / pl.BLUEPRINT_ROOT_RELATIVE / "buildings/brewery.yml").read_text(encoding="utf-8")
     assert "wheat = 0.8 # malt" in text  # comments survive
     # the new labour line follows the last goods line, inside the literal block
-    assert "            stone = 0.0\n            manual_labor_cost = 0.4\n" in text
+    assert "            stone = 0.0\n            manual_labor = 0.4\n" in text
 
 
 def test_base_methods_pay_labour_worth_a_share_of_their_output(repo: Path) -> None:
     pl.apply(repo, repo / "constructor.toml", PRICES)
     base = _methods(repo)["pp_brewery_base"]
     # 20 % of 0.5 beer x 2 gold = 0.2 gold = 0.2 labour at 1 gold
-    assert base.inputs == {"manual_labor_cost": 0.2}
+    assert base.inputs == {"manual_labor": 0.2}
 
 
 def test_keep_methods_and_idle_methods_are_untouched(repo: Path) -> None:
     pl.apply(repo, repo / "constructor.toml", PRICES)
     methods = _methods(repo)
-    assert methods["pp_brewery_market"].inputs == {"wheat": 2.0, "manual_labor_cost": 0.3}
+    assert methods["pp_brewery_market"].inputs == {"wheat": 2.0, "manual_labor": 0.3}
     assert methods["pp_brewery_idle"].inputs == {}
 
 
@@ -154,7 +154,7 @@ def test_small_goods_and_goods_beyond_max_are_dropped(repo: Path) -> None:
     plan = next(p for p in result.plans if p.method.name == "pp_brewery_wheat")
     # alum (0.03 gold of 2.13) is under 5 %; sand (0.1 gold) is the fourth good with max_goods = 3
     assert plan.dropped == ["alum", "sand"]
-    assert set(_methods(repo)["pp_brewery_wheat"].inputs) == {"wheat", "lumber", "tools", "stone", "manual_labor_cost"}
+    assert set(_methods(repo)["pp_brewery_wheat"].inputs) == {"wheat", "lumber", "tools", "stone", "manual_labor"}
 
 
 def test_check_reports_untagged_and_unknown_classes(repo: Path) -> None:
@@ -166,8 +166,8 @@ def test_check_reports_untagged_and_unknown_classes(repo: Path) -> None:
 
 
 def test_methods_producing_labour_are_not_labour_methods() -> None:
-    method = pl.Method(Path("x.yml"), "yard", "pp_yard", {"victuals": 2.0}, "manual_labor_cost", 8.0)
-    assert not pl.is_labour_method(method, "manual_labor_cost")
+    method = pl.Method(Path("x.yml"), "yard", "pp_yard", {"victuals": 2.0}, "manual_labor", 8.0)
+    assert not pl.is_labour_method(method, "manual_labor")
 
 
 def test_every_enabled_producing_method_is_tagged_and_on_its_class() -> None:

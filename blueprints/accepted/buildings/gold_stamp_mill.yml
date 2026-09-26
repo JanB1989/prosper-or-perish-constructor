@@ -56,7 +56,7 @@ building:
 
     unique_production_methods = {
         pp_gold_stamp_mill_base_gold = {
-            manual_labor_cost = 0.18
+            manual_labor = 0.18
             produced = goods_gold
             output = 0.1
             category = building_maintenance
@@ -70,7 +70,7 @@ building:
             lumber = 0.33
             tools = 0.28
             mercury = 0.08
-            manual_labor_cost = 0.19
+            manual_labor = 0.19
             produced = goods_gold
             output = 0.26
             category = building_maintenance
@@ -84,7 +84,7 @@ building:
             lumber = 0.045
             tools = 0.036
             mercury = 0.009
-            manual_labor_cost = 0.025
+            manual_labor = 0.025
             produced = silver
             output = 0.047
             category = building_maintenance
@@ -93,7 +93,7 @@ building:
             lumber = 0.045
             tools = 0.027
             mercury = 0.009
-            manual_labor_cost = 0.022
+            manual_labor = 0.022
             produced = copper
             output = 0.1
             category = building_maintenance

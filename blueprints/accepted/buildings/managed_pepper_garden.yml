@@ -57,7 +57,7 @@ building:
 
     unique_production_methods = {
         pp_managed_pepper_garden_base_pepper = {
-            manual_labor_cost = 0.184
+            manual_labor = 0.184
             produced = pepper
             output = 0.184
             category = building_maintenance
@@ -70,7 +70,7 @@ building:
         pp_managed_pepper_garden_bamboo_drying_mats = {
             fiber_crops = 0.276 # bamboo mats, harvest baskets, and vine ties
             pottery = 0.172 # blanching pots and storage jars
-            manual_labor_cost = 0.116
+            manual_labor = 0.116
             produced = pepper
             output = 0.42
             category = building_maintenance
@@ -83,7 +83,7 @@ building:
         pp_managed_pepper_garden_garbling_tables = {
             furniture = 0.136 # light sorting racks and tables
             fiber_crops = 0.104 # sacks, screens, and woven trays
-            manual_labor_cost = 0.104
+            manual_labor = 0.104
             produced = pepper
             output = 0.24
             category = building_maintenance

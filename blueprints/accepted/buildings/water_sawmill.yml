@@ -67,7 +67,7 @@ building:
 
     unique_production_methods = {
         pp_water_sawmill_base_lumber = {
-            manual_labor_cost = 0.028
+            manual_labor = 0.028
             produced = lumber
             output = 0.079
             category = building_maintenance
@@ -82,7 +82,7 @@ building:
             output = 1.400
             tools = 0.42 # saw frame, gearing
             horses = 0.12 # fast log hauling
-            manual_labor_cost = 0.22
+            manual_labor = 0.22
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -91,7 +91,7 @@ building:
             output = 1.360
             horses = 0.12 # fast log hauling
             victuals = 0.5 # sawyer provisions
-            manual_labor_cost = 0.21
+            manual_labor = 0.21
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -100,7 +100,7 @@ building:
             output = 1.314
             tools = 0.41 # saw frame, gearing
             livestock = 0.23 # ox log hauling
-            manual_labor_cost = 0.21
+            manual_labor = 0.21
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -109,7 +109,7 @@ building:
             output = 1.269
             livestock = 0.23 # ox log hauling
             victuals = 0.48 # sawyer provisions
-            manual_labor_cost = 0.23
+            manual_labor = 0.23
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -120,7 +120,7 @@ building:
         }
         pp_water_sawmill_extra_rations = {
             victuals = 0.63 # crew rations
-            manual_labor_cost = 0.22
+            manual_labor = 0.22
             produced = lumber
             output = 1.208
             debug_max_profit = 0
@@ -128,7 +128,7 @@ building:
         }
         pp_water_sawmill_wound_salves = {
             medicaments = 0.17 # injury treatment
-            manual_labor_cost = 0.02
+            manual_labor = 0.02
             produced = lumber
             output = 0.138
             debug_max_profit = 0

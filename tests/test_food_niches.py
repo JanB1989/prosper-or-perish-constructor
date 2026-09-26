@@ -80,7 +80,7 @@ def test_the_harbour_yard_ships_grain_and_packs_little_of_the_store() -> None:
     assert all(m["produced"] == "victuals" for m in provisions)
     outputs = [m["output"] for m in provisions]
     assert outputs == sorted(outputs) and outputs[0] < outputs[-1]
-    labour = [m["manual_labor_cost"] for m in provisions]
+    labour = [m["manual_labor"] for m in provisions]
     assert labour == sorted(labour, reverse=True)
     assert "cannons" in provisions[2] and "requires = cannon_maker_advance" in text
     # the Yard never makes food: with the -5 % victuals per level, the best method and a grain shipment at one level

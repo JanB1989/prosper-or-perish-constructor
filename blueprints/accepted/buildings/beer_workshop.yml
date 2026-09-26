@@ -35,7 +35,7 @@ building:
             wheat = 1.01
             lumber = 0.25
             tools = 0.1
-            manual_labor_cost = 0.2
+            manual_labor = 0.2
             produced = beer
             output = 1.1
             debug_max_profit = workshop_profit_margin
@@ -45,7 +45,7 @@ building:
             millet = 1.01
             lumber = 0.25
             tools = 0.1
-            manual_labor_cost = 0.2
+            manual_labor = 0.2
             produced = beer
             output = 1.1
             debug_max_profit = workshop_profit_margin
@@ -55,7 +55,7 @@ building:
             fruit = 1.06
             lumber = 0.21
             tools = 0.11
-            manual_labor_cost = 0.18
+            manual_labor = 0.18
             produced = beer
             output = 1.1
             debug_max_profit = workshop_profit_margin
@@ -64,7 +64,7 @@ building:
         pp_beer_workshop_maize_beer_workshop_maintenance = {
             maize = 1.42
             pottery = 0.33
-            manual_labor_cost = 0.19
+            manual_labor = 0.19
             produced = beer
             output = 1.1
             debug_max_profit = workshop_profit_margin
@@ -74,7 +74,7 @@ building:
             wheat = 1.32
             lumber = 0.24
             tools = 0.12
-            manual_labor_cost = 0.24
+            manual_labor = 0.24
             produced = beer
             output = 1.3
             category = workshop_input
@@ -85,7 +85,7 @@ building:
             millet = 0.53
             lumber = 0.21
             tools = 0.11
-            manual_labor_cost = 0.2
+            manual_labor = 0.2
             produced = beer
             output = 1.1
             debug_max_profit = workshop_profit_margin
@@ -95,7 +95,7 @@ building:
             rice = 1.01
             lumber = 0.25
             tools = 0.1
-            manual_labor_cost = 0.2
+            manual_labor = 0.2
             produced = beer
             output = 1.1
             debug_max_profit = workshop_profit_margin

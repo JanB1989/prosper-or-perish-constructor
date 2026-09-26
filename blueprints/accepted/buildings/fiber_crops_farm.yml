@@ -48,7 +48,7 @@ building:
 
     unique_production_methods = {
         pp_fiber_crops_farm_base_fiber_crops = {
-            manual_labor_cost = 0.035
+            manual_labor = 0.035
             produced = fiber_crops
             output = 0.088
             category = building_maintenance
@@ -63,7 +63,7 @@ building:
             clay = 0.15 # lined retting pits
             coal = 0.025 # controlled drying heat
             leather = 0.014 # soft handling pads and aprons
-            manual_labor_cost = 0.058
+            manual_labor = 0.058
             produced = fiber_crops
             output = 0.187
             category = building_maintenance

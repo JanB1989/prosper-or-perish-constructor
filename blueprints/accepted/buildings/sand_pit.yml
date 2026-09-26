@@ -50,7 +50,7 @@ building:
 
     unique_production_methods = {
         pp_sand_pit_base_sand = {
-            manual_labor_cost = 0.011
+            manual_labor = 0.011
             produced = sand
             output = 0.105
             category = building_maintenance
@@ -63,7 +63,7 @@ building:
         pp_sand_pit_screened_pits = {
             lumber = 0.033 # screens and pit shoring
             tools = 0.011 # shovels and sieves
-            manual_labor_cost = 0.019
+            manual_labor = 0.019
             produced = sand
             output = 0.233
             category = building_maintenance

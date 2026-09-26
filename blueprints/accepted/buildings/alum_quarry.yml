@@ -55,7 +55,7 @@ building:
 
     unique_production_methods = {
         pp_alum_quarry_base_alum = {
-            manual_labor_cost = 0.048
+            manual_labor = 0.048
             produced = alum
             output = 0.08
             category = building_maintenance
@@ -68,7 +68,7 @@ building:
         pp_alum_quarry_alum = {
             lumber = 0.16
             tools = 0.21
-            manual_labor_cost = 0.21
+            manual_labor = 0.21
             produced = alum
             output = 0.424
             category = building_maintenance
@@ -81,7 +81,7 @@ building:
         pp_alum_quarry_stone = {
             lumber = 0.033
             tools = 0.025
-            manual_labor_cost = 0.028
+            manual_labor = 0.028
             produced = stone
             output = 0.168
             category = building_maintenance
@@ -89,7 +89,7 @@ building:
         pp_alum_quarry_clay = {
             lumber = 0.025
             tools = 0.016
-            manual_labor_cost = 0.022
+            manual_labor = 0.022
             produced = clay
             output = 0.264
             category = building_maintenance

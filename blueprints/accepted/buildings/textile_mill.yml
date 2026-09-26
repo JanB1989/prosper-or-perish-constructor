@@ -32,7 +32,7 @@ building:
         pp_textile_mill_cotton_mill_maintenance = {
             cotton = 2.37
             dyes = 0.32
-            manual_labor_cost = 0.32
+            manual_labor = 0.32
             produced = cloth
             output = 3.0
             debug_max_profit = mills_profit_margin
@@ -41,7 +41,7 @@ building:
         pp_textile_mill_wool_mill_maintenance = {
             wool = 2.28
             dyes = 0.3
-            manual_labor_cost = 0.31
+            manual_labor = 0.31
             produced = cloth
             output = 2.5
             debug_max_profit = mills_profit_margin
@@ -50,7 +50,7 @@ building:
         pp_textile_mill_fiber_crops_mill_maintenance = {
             fiber_crops = 2.88
             dyes = 0.29
-            manual_labor_cost = 0.29
+            manual_labor = 0.29
             produced = cloth
             output = 2.5
             debug_max_profit = mills_profit_margin

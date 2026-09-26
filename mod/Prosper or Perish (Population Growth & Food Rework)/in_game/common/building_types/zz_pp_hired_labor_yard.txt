@@ -19,7 +19,7 @@ construction_demand = workshop_construction
 
 unique_production_methods = {
   pp_hired_labor_yard_sack_porters = {
-    produced = manual_labor_cost
+    produced = manual_labor
     output = 2.85
     fiber_crops = 1.0
     beer = 0.8
@@ -27,14 +27,14 @@ unique_production_methods = {
     category = building_maintenance
   }
   pp_hired_labor_yard_carters = {
-    produced = manual_labor_cost
+    produced = manual_labor
     output = 4.1
     horses = 1.2
     lumber = 1.6
     category = building_maintenance
   }
   pp_hired_labor_yard_labour_exchange = {
-    produced = manual_labor_cost
+    produced = manual_labor
     output = 4
     furniture = 0.8
     paper = 0.6

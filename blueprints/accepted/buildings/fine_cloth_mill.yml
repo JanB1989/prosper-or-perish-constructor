@@ -31,7 +31,7 @@ building:
         pp_fine_cloth_mill_fine_cloth_mill_maintenance = {
             cloth = 6.96
             dyes = 0.47
-            manual_labor_cost = 0.95
+            manual_labor = 0.95
             produced = fine_cloth
             output = 4.0
             debug_max_profit = mills_profit_margin
@@ -40,7 +40,7 @@ building:
         pp_fine_cloth_mill_silk_cloth_mill_maintenance = {
             silk = 5.22
             dyes = 0.47
-            manual_labor_cost = 0.95
+            manual_labor = 0.95
             produced = fine_cloth
             output = 4.0
             debug_max_profit = mills_profit_margin

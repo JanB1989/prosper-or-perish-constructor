@@ -34,7 +34,7 @@ building:
             copper = 0.54
             tin = 0.11
             tools = 0.34
-            manual_labor_cost = 0.32
+            manual_labor = 0.32
             produced = firearms
             output = 1.1
             debug_max_profit = workshop_profit_margin
@@ -43,7 +43,7 @@ building:
         pp_guns_workshop_guns_workshop_iron_maintenance = {
             iron = 0.48
             tools = 0.3
-            manual_labor_cost = 0.3
+            manual_labor = 0.3
             produced = firearms
             output = 1.0
             debug_max_profit = workshop_profit_margin
@@ -54,7 +54,7 @@ building:
         pp_guns_workshop_guns_workshop_ammunition_lead_maintenance = {
             lead = 0.11
             saltpeter = 0.11
-            manual_labor_cost = 0.04
+            manual_labor = 0.04
             produced = firearms
             output = 0.2
             debug_max_profit = workshop_profit_margin
@@ -63,7 +63,7 @@ building:
         pp_guns_workshop_guns_workshop_ammunition_iron_maintenance = {
             iron = 0.11
             saltpeter = 0.11
-            manual_labor_cost = 0.055
+            manual_labor = 0.055
             produced = firearms
             output = 0.25
             debug_max_profit = workshop_profit_margin

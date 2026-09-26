@@ -71,7 +71,7 @@ unique_production_methods = {
         produced = stone
         output = 0.5
         tools = 0.12
-        manual_labor_cost = 0.075
+        manual_labor = 0.075
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }
@@ -80,7 +80,7 @@ unique_production_methods = {
         output = 0.6
         tools = 0.16
         fiber_crops = 0.17
-        manual_labor_cost = 0.16
+        manual_labor = 0.16
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }
@@ -89,7 +89,7 @@ unique_production_methods = {
         output = 0.5
         lumber = 0.22
         tools = 0.12
-        manual_labor_cost = 0.19
+        manual_labor = 0.19
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }
@@ -98,7 +98,7 @@ unique_production_methods = {
         output = 0.3
         sand = 0.57
         tools = 0.17
-        manual_labor_cost = 0.19
+        manual_labor = 0.19
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }
@@ -107,7 +107,7 @@ unique_production_methods = {
         output = 0.8
         lumber = 0.25
         tools = 0.057
-        manual_labor_cost = 0.14
+        manual_labor = 0.14
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }

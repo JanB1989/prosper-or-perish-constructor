@@ -56,7 +56,7 @@ building:
 
     unique_production_methods = {
         pp_tea_sorting_garden_base_tea = {
-            manual_labor_cost = 0.132
+            manual_labor = 0.132
             produced = tea
             output = 0.22
             category = building_maintenance
@@ -70,7 +70,7 @@ building:
             furniture = 0.36 # light tray frames and rolling tables
             fiber_crops = 0.276 # woven withering mats and baskets
             pottery = 0.208 # firing hearth pans
-            manual_labor_cost = 0.3
+            manual_labor = 0.3
             produced = tea
             output = 1.189
             category = building_maintenance
@@ -84,7 +84,7 @@ building:
             furniture = 0.156 # sorting trays
             fiber_crops = 0.12 # packing baskets and bale mats
             paper = 0.188 # wrappers and packing slips
-            manual_labor_cost = 0.176
+            manual_labor = 0.176
             produced = tea
             output = 0.701
             category = building_maintenance

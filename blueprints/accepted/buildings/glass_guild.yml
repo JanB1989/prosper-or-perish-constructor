@@ -33,7 +33,7 @@ building:
             lumber = 0.19
             sand = 0.94
             tools = 0.36
-            manual_labor_cost = 0.31
+            manual_labor = 0.31
             produced = glass
             output = 0.75
             debug_max_profit = guild_profit_margin
@@ -44,7 +44,7 @@ building:
             sand = 1.03
             tools = 0.42
             lead = 0.082
-            manual_labor_cost = 0.44
+            manual_labor = 0.44
             produced = glass
             output = 1.0
             debug_max_profit = guild_profit_margin

@@ -28,18 +28,18 @@ unique_production_methods = {
   pp_field_management_convertible_leys = {
     legumes = 0.04
     livestock = 0.02
-    manual_labor_cost = 0.012
+    manual_labor = 0.012
     category = building_maintenance
   }
   pp_field_management_convertible_stall_manure = {
     livestock = 0.05
-    manual_labor_cost = 0.01
+    manual_labor = 0.01
     category = building_maintenance
   }
   pp_field_management_convertible_marling = {
     stone = 0.05
     tools = 0.01
-    manual_labor_cost = 0.01
+    manual_labor = 0.01
     category = building_maintenance
   }
 }

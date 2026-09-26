@@ -46,7 +46,7 @@ building:
 
     unique_production_methods = {
         pp_incense_grove_base_incense = {
-            manual_labor_cost = 0.05
+            manual_labor = 0.05
             produced = incense
             output = 0.100
             category = building_maintenance
@@ -60,7 +60,7 @@ building:
             fiber_crops = 0.096 # collection cloth and baskets
             lumber = 0.096 # drying racks and shelters
             tools = 0.019 # tapping knives
-            manual_labor_cost = 0.092
+            manual_labor = 0.092
             produced = incense
             output = 0.222
             category = building_maintenance

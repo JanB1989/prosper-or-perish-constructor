@@ -26,7 +26,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_pepper_garden_base_pepper = {
-        manual_labor_cost = 0.136
+        manual_labor = 0.136
         produced = pepper
         output = 0.136
         category = building_maintenance
@@ -39,7 +39,7 @@ unique_production_methods = {
     pp_pepper_garden_blanched_garbling_yards = {
         pottery = 0.52 # blanching pots
         coal = 0.256 # boiling fuel
-        manual_labor_cost = 0.216
+        manual_labor = 0.216
         produced = pepper
         output = 0.416
         category = building_maintenance

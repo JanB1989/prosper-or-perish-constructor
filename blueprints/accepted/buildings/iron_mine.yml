@@ -56,7 +56,7 @@ building:
 
     unique_production_methods = {
         pp_iron_mine_base_iron = {
-            manual_labor_cost = 0.056
+            manual_labor = 0.056
             produced = iron
             output = 0.08
             category = building_maintenance
@@ -70,7 +70,7 @@ building:
             lumber = 0.16 # pit props, sorting sheds
             tools = 0.18 # picks, wedges, hammers
             beeswax = 0.04 # candles, sealants
-            manual_labor_cost = 0.22
+            manual_labor = 0.22
             produced = iron
             output = 0.424
             category = building_maintenance
@@ -79,7 +79,7 @@ building:
             horses = 0.11 # whim draft teams
             leather = 0.048 # harness, buckets
             beeswax = 0.024 # mine candles, seals
-            manual_labor_cost = 0.1
+            manual_labor = 0.1
             produced = iron
             output = 0.251
             category = building_maintenance
@@ -88,7 +88,7 @@ building:
             fiber_crops = 0.11 # sacks, screens
             cloth = 0.057 # sorting cloths
             beeswax = 0.025 # candles, seals
-            manual_labor_cost = 0.089
+            manual_labor = 0.089
             produced = iron
             output = 0.21
             category = building_maintenance
@@ -101,7 +101,7 @@ building:
         pp_iron_mine_ochre = {
             lumber = 0.033 # washing troughs, racks
             tools = 0.025 # sieves, shovels
-            manual_labor_cost = 0.028
+            manual_labor = 0.028
             produced = dyes
             output = 0.042
             category = building_maintenance

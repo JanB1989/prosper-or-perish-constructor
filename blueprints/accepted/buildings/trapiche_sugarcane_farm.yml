@@ -55,7 +55,7 @@ building:
 
     unique_production_methods = {
         pp_trapiche_sugarcane_farm_base_sugar = {
-            manual_labor_cost = 0.096
+            manual_labor = 0.096
             produced = sugar
             output = 0.16
             category = building_maintenance
@@ -68,7 +68,7 @@ building:
         pp_trapiche_sugarcane_farm_open_kettles = {
             pottery = 0.42 # sugar molds and boiling pans
             tools = 0.012 # skimmers and ladles
-            manual_labor_cost = 0.072
+            manual_labor = 0.072
             produced = sugar
             output = 0.332
             category = building_maintenance
@@ -81,7 +81,7 @@ building:
         pp_trapiche_sugarcane_farm_trapiche_pressing = {
             furniture = 0.156 # trapiche carpentry and wooden rollers
             tools = 0.02 # roller fittings and cane knives
-            manual_labor_cost = 0.084
+            manual_labor = 0.084
             produced = sugar
             output = 0.343
             category = building_maintenance

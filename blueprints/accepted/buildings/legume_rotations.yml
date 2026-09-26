@@ -62,7 +62,7 @@ building:
 
     unique_production_methods = {
         pp_legume_rotations_base = {
-            manual_labor_cost = 0.014
+            manual_labor = 0.014
             produced = legumes
             output = 0.07
             category = building_maintenance
@@ -77,7 +77,7 @@ building:
             horses = 0.13
             livestock = 0.089
             cloth = 0.036
-            manual_labor_cost = 0.15
+            manual_labor = 0.15
             produced = legumes
             output = 1.56
             debug_max_profit = 0
@@ -88,7 +88,7 @@ building:
             horses = 0.12
             livestock = 0.11
             fiber_crops = 0.08
-            manual_labor_cost = 0.16
+            manual_labor = 0.16
             produced = legumes
             output = 1.62
             debug_max_profit = 0
@@ -104,7 +104,7 @@ building:
             lumber = 0.089
             fiber_crops = 0.071
             pottery = 0.045
-            manual_labor_cost = 0.055
+            manual_labor = 0.055
             produced = beeswax
             output = 0.31
             debug_max_profit = 0

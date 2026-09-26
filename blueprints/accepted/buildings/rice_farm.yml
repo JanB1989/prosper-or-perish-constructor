@@ -65,7 +65,7 @@ building:
 
     unique_production_methods = {
         pp_rice_farm_base = {
-            manual_labor_cost = 0.012
+            manual_labor = 0.012
             produced = rice
             output = 0.06
             category = building_maintenance
@@ -78,7 +78,7 @@ building:
         pp_rice_farm_dryland_rice = {
             livestock = 0.014
             tools = 0.003
-            manual_labor_cost = 0.006
+            manual_labor = 0.006
             produced = rice
             output = 0.1
             debug_max_profit = 0
@@ -87,7 +87,7 @@ building:
         pp_rice_farm_wet_paddy = {
             livestock = 0.006
             clay = 0.011
-            manual_labor_cost = 0.011
+            manual_labor = 0.011
             produced = rice
             output = 0.11
             debug_max_profit = 0

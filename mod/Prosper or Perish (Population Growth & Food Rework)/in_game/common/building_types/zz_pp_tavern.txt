@@ -31,7 +31,7 @@ unique_production_methods = {
   pp_tavern_serve_victuals = {
     produced = offset
     victuals = 2.0
-    manual_labor_cost = 0.2
+    manual_labor = 0.2
     output = 0.167
     category = building_maintenance
   }

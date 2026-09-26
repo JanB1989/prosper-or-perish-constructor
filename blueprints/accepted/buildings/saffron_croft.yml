@@ -51,7 +51,7 @@ building:
 
     unique_production_methods = {
         pp_saffron_croft_base_saffron = {
-            manual_labor_cost = 0.092
+            manual_labor = 0.092
             produced = saffron
             output = 0.092
             category = building_maintenance
@@ -64,7 +64,7 @@ building:
         pp_saffron_croft_toasting_braziers = {
             pottery = 0.344 # warming pans
             coal = 0.172 # brazier fuel
-            manual_labor_cost = 0.156
+            manual_labor = 0.156
             produced = saffron
             output = 0.282
             category = building_maintenance

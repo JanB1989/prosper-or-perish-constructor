@@ -131,7 +131,7 @@ ______ test_goods_producer_blueprints_have_scaled_increase_per_level_cost ______
                 )
     
 >       assert not mismatches
-E       AssertionError: assert not ['hired_labor_yard: expected 0.13 from manual_labor_cost, found 0.18', 'rural_daywork_yard: expected 0.13 from manual_labor_cost, found 0.18', 'slave_labor_yard: expected 0.13 from manual_labor_cost, found 0.18']
+E       AssertionError: assert not ['hired_labor_yard: expected 0.13 from manual_labor, found 0.18', 'rural_daywork_yard: expected 0.13 from manual_labor, found 0.18', 'slave_labor_yard: expected 0.13 from manual_labor, found 0.18']
 
 tests/test_building_increase_per_level_costs.py:50: AssertionError
 _____ test_pop_rgo_building_cost_classification_uses_raw_material_methods ______

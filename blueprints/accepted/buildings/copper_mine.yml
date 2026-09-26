@@ -58,7 +58,7 @@ building:
 
     unique_production_methods = {
         pp_copper_mine_base_copper = {
-            manual_labor_cost = 0.054
+            manual_labor = 0.054
             produced = copper
             output = 0.09
             category = building_maintenance
@@ -72,7 +72,7 @@ building:
             lumber = 0.22
             tools = 0.26
             beeswax = 0.061
-            manual_labor_cost = 0.31
+            manual_labor = 0.31
             produced = copper
             output = 0.6
             category = building_maintenance
@@ -80,7 +80,7 @@ building:
         pp_copper_mine_fire_setting = {
             lumber = 0.33
             beeswax = 0.092
-            manual_labor_cost = 0.63
+            manual_labor = 0.63
             produced = copper
             output = 0.48
             category = building_maintenance
@@ -94,7 +94,7 @@ building:
             lumber = 0.025
             tools = 0.025
             lead = 0.016
-            manual_labor_cost = 0.033
+            manual_labor = 0.033
             produced = silver
             output = 0.033
             category = building_maintenance
@@ -103,7 +103,7 @@ building:
             lumber = 0.025
             tools = 0.025
             lead = 0.016
-            manual_labor_cost = 0.033
+            manual_labor = 0.033
             produced = goods_gold
             output = 0.026
             category = building_maintenance
@@ -111,7 +111,7 @@ building:
         pp_copper_mine_tin = {
             lumber = 0.025
             tools = 0.016
-            manual_labor_cost = 0.022
+            manual_labor = 0.022
             produced = tin
             output = 0.06
             category = building_maintenance

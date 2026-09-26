@@ -31,7 +31,7 @@ category = rgo_building_category
 
 unique_production_methods = {
     pp_stone_quarry_base_stone = {
-        manual_labor_cost = 0.021
+        manual_labor = 0.021
         produced = stone
         output = 0.105
         category = building_maintenance
@@ -45,7 +45,7 @@ unique_production_methods = {
         lumber = 0.049 # rollers and shoring
         leather = 0.019 # hoist straps
         tools = 0.011 # picks and wedges
-        manual_labor_cost = 0.041
+        manual_labor = 0.041
         produced = stone
         output = 0.233
         category = building_maintenance

@@ -26,7 +26,7 @@ REPLACE:fruit_orchard = {
     }
     unique_production_methods = {
         pp_fruit_orchard_base_fruit = {
-            manual_labor_cost = 0.012
+            manual_labor = 0.012
             produced = fruit
             output = 0.06
             category = building_maintenance
@@ -40,7 +40,7 @@ REPLACE:fruit_orchard = {
             produced = fruit
             output = 0.166
             lumber = 0.086 # stakes, crates, pruning frames
-            manual_labor_cost = 0.033
+            manual_labor = 0.033
             debug_max_profit = 0
             category = building_maintenance
         }

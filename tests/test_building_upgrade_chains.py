@@ -226,7 +226,7 @@ RAW_MATERIAL_BASE_PRODUCERS = {
     "tobacco_plantation": ("tobacco", "pp_tobacco_plantation_base_tobacco"),
     "tobacco_farm": ("tobacco", "pp_tobacco_farm_base_tobacco"),
 }
-LABOUR_GOOD = "manual_labor_cost"
+LABOUR_GOOD = "manual_labor"
 SLAVE_PLANTATION_REPLACEMENTS = {
     "cotton_plantation": "cotton",
     "sugar_plantation": "sugar",
@@ -242,7 +242,7 @@ NON_SLAVE_CROP_FARMS = {
             "lumber": "0.304",
             "fiber_crops": "0.132",
             "tools": "0.036",
-            "manual_labor_cost": "0.2",
+            "manual_labor": "0.2",
         },
         "removed_inputs": {"leather", "slaves_goods"},
     },
@@ -255,7 +255,7 @@ NON_SLAVE_CROP_FARMS = {
             "lumber": "0.272",
             "pottery": "0.328",
             "tools": "0.032",
-            "manual_labor_cost": "0.204",
+            "manual_labor": "0.204",
         },
         "removed_inputs": {"coal", "slaves_goods"},
     },
@@ -268,7 +268,7 @@ NON_SLAVE_CROP_FARMS = {
             "lumber": "0.384",
             "fiber_crops": "0.056",
             "tools": "0.048",
-            "manual_labor_cost": "0.212",
+            "manual_labor": "0.212",
         },
         "removed_inputs": {"pottery", "slaves_goods"},
     },
@@ -863,7 +863,7 @@ def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> Non
 
     # production labour (2026-09-23) folded the small cloth input into labour
     assert re.search(
-        r"pp_offshore_fishery_herring_busses\s*=\s*\{.*?\bfiber_crops\s*=\s*0\.18\b.*?\bmanual_labor_cost\s*=\s*0\.13\b",
+        r"pp_offshore_fishery_herring_busses\s*=\s*\{.*?\bfiber_crops\s*=\s*0\.18\b.*?\bmanual_labor\s*=\s*0\.13\b",
         body,
         flags=re.S,
     )

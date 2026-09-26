@@ -62,7 +62,7 @@ building:
 
     unique_production_methods = {
         pp_nursery_orchard_base_fruit = {
-            manual_labor_cost = 0.017
+            manual_labor = 0.017
             produced = fruit
             output = 0.085
             category = building_maintenance
@@ -79,7 +79,7 @@ building:
             pottery = 0.047 # earthen nursery pots and storage crocks
             tools = 0.028 # pruning and grafting knives
             furniture = 0.021 # sorting racks and apple-loft boards
-            manual_labor_cost = 0.061
+            manual_labor = 0.061
             debug_max_profit = 0
             category = building_maintenance
         }

@@ -47,7 +47,7 @@ building:
 
     unique_production_methods = {
         pp_saltpeter_beds_base_saltpeter = {
-            manual_labor_cost = 0.04
+            manual_labor = 0.04
             produced = saltpeter
             output = 0.100
             category = building_maintenance
@@ -61,7 +61,7 @@ building:
             livestock = 0.14 # manure beds
             pottery = 0.068 # leaching vats
             fiber_crops = 0.021 # straw bedding
-            manual_labor_cost = 0.064
+            manual_labor = 0.064
             produced = saltpeter
             output = 0.222
             category = building_maintenance

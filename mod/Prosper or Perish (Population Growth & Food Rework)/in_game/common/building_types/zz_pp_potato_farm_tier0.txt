@@ -31,7 +31,7 @@ country_potential = {
 
 unique_production_methods = {
     pp_potato_farm_base = {
-        manual_labor_cost = 0.012
+        manual_labor = 0.012
         produced = potato
         output = 0.06
         category = building_maintenance
@@ -43,7 +43,7 @@ unique_production_methods = {
     }
     pp_potato_farm_lazy_beds = {
         tools = 0.004
-        manual_labor_cost = 0.01
+        manual_labor = 0.01
         produced = potato
         output = 0.1
         debug_max_profit = 0.587
@@ -52,7 +52,7 @@ unique_production_methods = {
     pp_potato_farm_ridged_fields = {
         livestock = 0.014
         tools = 0.003
-        manual_labor_cost = 0.006
+        manual_labor = 0.006
         produced = potato
         output = 0.11
         debug_max_profit = 0.811

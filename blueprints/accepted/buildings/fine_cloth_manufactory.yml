@@ -33,7 +33,7 @@ building:
     unique_production_methods = {
         pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance = {
             silk = 2.76
-            manual_labor_cost = 0.81
+            manual_labor = 0.81
             produced = fine_cloth
             output = 2.0
             category = manufactory_input
@@ -42,7 +42,7 @@ building:
         pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance = {
             produced = fine_cloth
             cloth = 3.67
-            manual_labor_cost = 0.84
+            manual_labor = 0.84
             output = 2.0
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
@@ -51,7 +51,7 @@ building:
     unique_production_methods = {
         pp_fine_cloth_manufactory_standard_cloth_manufactory_maintenance = {
             dyes = 0.24
-            manual_labor_cost = 0.092
+            manual_labor = 0.092
             produced = fine_cloth
             output = 0.2
             category = guild_input
@@ -62,7 +62,7 @@ building:
             output = 0.4
             dyes = 0.44
             alum = 0.11
-            manual_labor_cost = 0.16
+            manual_labor = 0.16
             category = guild_input
             debug_max_profit = manufactory_profit_margin
         }

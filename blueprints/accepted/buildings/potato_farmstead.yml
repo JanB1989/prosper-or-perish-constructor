@@ -63,7 +63,7 @@ building:
 
     unique_production_methods = {
         pp_potato_farmstead_base = {
-            manual_labor_cost = 0.016
+            manual_labor = 0.016
             produced = potato
             output = 0.08
             category = building_maintenance
@@ -78,7 +78,7 @@ building:
             clay = 0.16
             fiber_crops = 0.052
             tools = 0.017
-            manual_labor_cost = 0.06
+            manual_labor = 0.06
             produced = potato
             output = 0.65
             debug_max_profit = 0

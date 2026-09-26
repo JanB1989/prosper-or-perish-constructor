@@ -1,7 +1,7 @@
 """debug_max_profit carries each method's base-price profit, so the engine's load check stays quiet."""
 from prosper_or_perish_constructor import profit_margins as pm
 
-PRICES = {"lumber": 1.0, "tar": 2.0, "manual_labor_cost": 1.0, "iron": 3.0, "tools": 3.0}
+PRICES = {"lumber": 1.0, "tar": 2.0, "manual_labor": 1.0, "iron": 3.0, "tools": 3.0}
 TARGETS = {"rural_profit_margin": 0.2}
 
 BUILDING = """\
@@ -12,11 +12,11 @@ REPLACE:tar_kiln = {
             produced = tar
             output = 1.0
             lumber = 0.91
-            manual_labor_cost = 0.35
+            manual_labor = 0.35
             debug_max_profit = rural_profit_margin
         }
         pp_tar_kiln_base = {
-            manual_labor_cost = 0.5
+            manual_labor = 0.5
             produced = tar
             output = 0.25
         }
@@ -32,7 +32,7 @@ REPLACE:tar_kiln = {
 
 def test_the_profit_is_output_value_over_input_cost_like_the_engine():
     # 2.0 / (0.91 + 0.35) - 1: the formula matched all 618 methods error.log listed on 2026-09-23
-    assert round(pm.profit("{ produced = tar output = 1.0 lumber = 0.91 manual_labor_cost = 0.35 }", PRICES), 4) == 0.5873
+    assert round(pm.profit("{ produced = tar output = 1.0 lumber = 0.91 manual_labor = 0.35 }", PRICES), 4) == 0.5873
     assert pm.profit("{ lumber = 0.1 }", PRICES) is None   # produces nothing: not checked
 
 

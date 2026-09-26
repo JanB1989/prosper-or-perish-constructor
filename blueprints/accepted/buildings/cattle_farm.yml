@@ -59,7 +59,7 @@ building:
 
     unique_production_methods = {
         pp_cattle_farm_base = {
-            manual_labor_cost = 0.018
+            manual_labor = 0.018
             produced = livestock
             output = 0.06
             category = building_maintenance
@@ -72,7 +72,7 @@ building:
         pp_cattle_farm_open_pasture = {
             salt = 0.003
             tools = 0.006
-            manual_labor_cost = 0.031
+            manual_labor = 0.031
             produced = livestock
             output = 0.082
             debug_max_profit = 0
@@ -81,7 +81,7 @@ building:
         pp_cattle_farm_byres_yards = {
             tools = 0.007
             clay = 0.13
-            manual_labor_cost = 0.018
+            manual_labor = 0.018
             produced = livestock
             output = 0.091
             debug_max_profit = 0

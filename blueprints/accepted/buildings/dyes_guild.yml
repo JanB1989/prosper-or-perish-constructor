@@ -27,7 +27,7 @@ building:
     unique_production_methods = {
         pp_dyes_guild_dyes_guild_maintenance = {
             lumber = 0.38
-            manual_labor_cost = 0.11
+            manual_labor = 0.11
             produced = dyes
             output = 0.2
             debug_max_profit = guild_profit_margin
@@ -36,7 +36,7 @@ building:
         pp_dyes_guild_alum_dyes_guild_maintenance = {
             alum = 0.018
             lumber = 0.54
-            manual_labor_cost = 0.16
+            manual_labor = 0.16
             produced = dyes
             output = 0.3
             debug_max_profit = guild_profit_margin

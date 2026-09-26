@@ -63,7 +63,7 @@ building:
 
     unique_production_methods = {
         pp_legume_farm_base = {
-            manual_labor_cost = 0.012
+            manual_labor = 0.012
             produced = legumes
             output = 0.06
             category = building_maintenance
@@ -76,7 +76,7 @@ building:
         pp_legume_farm_pease_bean_field = {
             tools = 0.016
             livestock = 0.031
-            manual_labor_cost = 0.023
+            manual_labor = 0.023
             produced = legumes
             output = 0.15
             debug_max_profit = 0
@@ -85,7 +85,7 @@ building:
         pp_legume_farm_stubble_sowing = {
             horses = 0.016
             tools = 0.019
-            manual_labor_cost = 0.025
+            manual_labor = 0.025
             produced = legumes
             output = 0.166
             debug_max_profit = 0
@@ -99,7 +99,7 @@ building:
         pp_legume_farm_cottage_hives = {
             furniture = 0
             cloth = 0
-            manual_labor_cost = 0.025
+            manual_labor = 0.025
             produced = beeswax
             output = 0.063
             debug_max_profit = 0

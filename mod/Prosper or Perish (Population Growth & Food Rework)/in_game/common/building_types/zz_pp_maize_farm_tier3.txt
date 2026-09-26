@@ -31,7 +31,7 @@ country_potential = {
 
 unique_production_methods = {
     pp_maize_model_farm_base = {
-        manual_labor_cost = 0.02
+        manual_labor = 0.02
         produced = maize
         output = 0.1
         category = building_maintenance
@@ -46,7 +46,7 @@ unique_production_methods = {
         livestock = 0.26
         lumber = 0.17
         paper = 0.2
-        manual_labor_cost = 0.15
+        manual_labor = 0.15
         produced = maize
         output = 2.1
         debug_max_profit = 0

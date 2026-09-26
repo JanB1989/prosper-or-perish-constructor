@@ -72,7 +72,7 @@ building:
             rice = 1.11
             legumes = 0.95
             pepper = 0.034
-            manual_labor_cost = 0.35
+            manual_labor = 0.35
     			produced = local_food
             output = 24.99
     			debug_max_profit = 0
@@ -82,7 +82,7 @@ building:
             rice = 1.11
             fish = 0.95
             pepper = 0.034
-            manual_labor_cost = 0.35
+            manual_labor = 0.35
     			produced = local_food
             output = 24.99
     			debug_max_profit = 0
@@ -94,7 +94,7 @@ building:
             wheat = 1.08
             livestock = 0.77
             legumes = 0.22
-            manual_labor_cost = 0.4
+            manual_labor = 0.4
     			produced = local_food
             output = 27.57
     			debug_max_profit = 0
@@ -104,7 +104,7 @@ building:
             fish = 1.68
             olives = 0.51
             wine = 0.068
-            manual_labor_cost = 0.37
+            manual_labor = 0.37
     			produced = local_food
             output = 26.07
     			debug_max_profit = 0
@@ -114,7 +114,7 @@ building:
             wool = 0.83
             legumes = 0.4
             salt = 0.045
-            manual_labor_cost = 0.45
+            manual_labor = 0.45
     			produced = local_food
             output = 27.57
     			debug_max_profit = 0
@@ -124,7 +124,7 @@ building:
             fish = 1.73
             millet = 0.18
             salt = 0.18
-            manual_labor_cost = 0.44
+            manual_labor = 0.44
     			produced = local_food
             output = 28.32
     			debug_max_profit = 0
@@ -136,7 +136,7 @@ building:
             maize = 0.69
             wild_game = 0.87
             chili = 0.13
-            manual_labor_cost = 0.39
+            manual_labor = 0.39
     			produced = local_food
             output = 25.2
     			debug_max_profit = 0
@@ -146,7 +146,7 @@ building:
             wild_game = 1.51
             livestock = 0.32
             fruit = 0.34
-            manual_labor_cost = 0.37
+            manual_labor = 0.37
     			produced = local_food
             output = 26.16
     			debug_max_profit = 0
@@ -156,7 +156,7 @@ building:
             potato = 0.32
             fish = 0.51
             livestock = 1
-            manual_labor_cost = 0.37
+            manual_labor = 0.37
     			produced = local_food
             output = 26.19
     			debug_max_profit = 0
@@ -168,7 +168,7 @@ building:
             livestock = 1.18
             fruit = 0.54
             saffron = 0.051
-            manual_labor_cost = 0.42
+            manual_labor = 0.42
     			produced = local_food
             output = 28.68
     			debug_max_profit = 0
@@ -178,7 +178,7 @@ building:
             millet = 0.87
             fish = 1.25
             salt = 0.068
-            manual_labor_cost = 0.41
+            manual_labor = 0.41
     			produced = local_food
             output = 27.72
     			debug_max_profit = 0
@@ -190,7 +190,7 @@ building:
             fish = 1.61
             fruit = 0.84
             salt = 0.034
-            manual_labor_cost = 0.44
+            manual_labor = 0.44
     			produced = local_food
             output = 26.52
     			debug_max_profit = 0
@@ -202,7 +202,7 @@ building:
             rice = 1.11
             sugar = 0.1
             livestock = 0.61
-            manual_labor_cost = 0.37
+            manual_labor = 0.37
     			produced = local_food
             output = 26.07
     			debug_max_profit = 0
@@ -212,7 +212,7 @@ building:
             wheat = 0.8
             fruit = 0.54
             beeswax = 0.61
-            manual_labor_cost = 0.41
+            manual_labor = 0.41
     			produced = local_food
             output = 28.65
     			debug_max_profit = 0
@@ -222,7 +222,7 @@ building:
             fur = 0.77
             millet = 0.67
             salt = 0.068
-            manual_labor_cost = 0.42
+            manual_labor = 0.42
     			produced = local_food
             output = 28.68
     			debug_max_profit = 0
@@ -240,7 +240,7 @@ building:
     		}
     		pp_cookshop_beer = {
     			beer = 0.64
-    			manual_labor_cost = 0.22
+    			manual_labor = 0.22
     			produced = local_food
     			output = 13.89
     			debug_max_profit = 0
@@ -248,7 +248,7 @@ building:
     		}
     		pp_cookshop_wine = {
     			wine = 0.64
-    			manual_labor_cost = 0.22
+    			manual_labor = 0.22
     			produced = local_food
     			output = 14.22
     			debug_max_profit = 0
@@ -256,7 +256,7 @@ building:
     		}
     		pp_cookshop_liquor = {
             liquor = 0.56
-            manual_labor_cost = 0.22
+            manual_labor = 0.22
     			produced = local_food
     			output = 14.7
     			debug_max_profit = 0
@@ -264,7 +264,7 @@ building:
     		}
     		pp_cookshop_chocolate = {
     			cocoa = 0.24
-    			manual_labor_cost = 0.17
+    			manual_labor = 0.17
     			produced = local_food
     			output = 10.8
     			debug_max_profit = 0
@@ -272,7 +272,7 @@ building:
     		}
     		pp_cookshop_coffee = {
     			coffee = 0.36
-    			manual_labor_cost = 0.19
+    			manual_labor = 0.19
     			produced = local_food
     			output = 10.68
     			debug_max_profit = 0
@@ -280,7 +280,7 @@ building:
     		}
     		pp_cookshop_tea = {
     			tea = 0.46
-    			manual_labor_cost = 0.21
+    			manual_labor = 0.21
     			produced = local_food
     			output = 13.71
     			debug_max_profit = 0

@@ -45,7 +45,7 @@ building:
 
     unique_production_methods = {
         pp_clove_grove_base_cloves = {
-            manual_labor_cost = 0.148
+            manual_labor = 0.148
             produced = cloves
             output = 0.148
             category = building_maintenance
@@ -58,7 +58,7 @@ building:
         pp_clove_grove_curing_houses = {
             lumber = 0.52 # curing racks
             coal = 0.172 # drying heat
-            manual_labor_cost = 0.256
+            manual_labor = 0.256
             produced = cloves
             output = 0.504
             category = building_maintenance

@@ -56,7 +56,7 @@ building:
 
     unique_production_methods = {
         pp_terraced_coffee_grove_base_coffee = {
-            manual_labor_cost = 0.18
+            manual_labor = 0.18
             produced = coffee
             output = 0.3
             category = building_maintenance
@@ -70,7 +70,7 @@ building:
             fiber_crops = 0.308 # drying mats and sacks
             pottery = 0.26 # washing and fermentation vessels
             furniture = 0.172 # light pulping and washing frames
-            manual_labor_cost = 0.228
+            manual_labor = 0.228
             produced = coffee
             output = 0.901
             category = building_maintenance
@@ -83,7 +83,7 @@ building:
         pp_terraced_coffee_grove_terraced_shade_gardens = {
             fiber_crops = 0.12 # shade ties and harvest sacks
             furniture = 0.104 # light nursery and shade frames
-            manual_labor_cost = 0.088
+            manual_labor = 0.088
             produced = coffee
             output = 0.356
             category = building_maintenance

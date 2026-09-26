@@ -57,7 +57,7 @@ building:
 
     unique_production_methods = {
         pp_wheat_model_farm_base = {
-            manual_labor_cost = 0.02
+            manual_labor = 0.02
             produced = wheat
             output = 0.1
             category = building_maintenance
@@ -72,7 +72,7 @@ building:
             horses = 0.18
             legumes = 0.23
             paper = 0.12
-            manual_labor_cost = 0.17
+            manual_labor = 0.17
             produced = wheat
             output = 2.12
             debug_max_profit = 0

@@ -56,7 +56,7 @@ building:
 
     unique_production_methods = {
         pp_silver_mine_improved_base_silver = {
-            manual_labor_cost = 0.084
+            manual_labor = 0.084
             produced = silver
             output = 0.07
             category = building_maintenance
@@ -70,7 +70,7 @@ building:
             lumber = 0.21
             tools = 0.22
             beeswax = 0.095
-            manual_labor_cost = 0.21
+            manual_labor = 0.21
             produced = silver
             output = 0.274
             category = building_maintenance
@@ -83,7 +83,7 @@ building:
         pp_silver_mine_improved_lead = {
             lumber = 0.034
             tools = 0.032
-            manual_labor_cost = 0.027
+            manual_labor = 0.027
             produced = lead
             output = 0.102
             category = building_maintenance
@@ -91,7 +91,7 @@ building:
         pp_silver_mine_improved_gold = {
             lumber = 0.034
             tools = 0.034
-            manual_labor_cost = 0.03
+            manual_labor = 0.03
             produced = goods_gold
             output = 0.027
             category = building_maintenance

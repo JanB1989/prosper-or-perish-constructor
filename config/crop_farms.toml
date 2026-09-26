@@ -7,14 +7,14 @@
 # Tier-level numbers are copied from the four current blueprints in blueprints/accepted/buildings/
 # (farming_village.yml, husbandry_farmstead.yml, farming_village_rotations.yml, model_farm.yml).
 # Cultivation method inputs are the derived values that keep today's cost per tier and crop; the labour pass
-# (`ppc labour apply`, [production_labour] in constructor.toml) adds manual_labor_cost from the method's labour class.
+# (`ppc labour apply`, [production_labour] in constructor.toml) adds manual_labor from the method's labour class.
 
 [general]
 tier_advances = { 1 = "pp_manuring_and_seed_stores", 2 = "pp_farming_village_rotations", 3 = "pp_model_farm" }
 tier_suffix = { 0 = "farm", 1 = "farmstead", 2 = "rotations", 3 = "model_farm" }
 tier_labour_class = { 0 = "primary_medieval", 1 = "primary_discovery", 2 = "primary_reformation", 3 = "primary_absolutism" }
 tier_base_output = { 0 = 0.06, 1 = 0.08, 2 = 0.07, 3 = 0.10 }
-# manual_labor_cost of the passive base method (slot 0) for the arable crops; cattle overrides with crops.base_labour
+# manual_labor of the passive base method (slot 0) for the arable crops; cattle overrides with crops.base_labour
 tier_base_labour = { 0 = 0.012, 1 = 0.016, 2 = 0.014, 3 = 0.02 }
 base_labour_class = "base"                  # base methods are tagged `base` in the blueprint labour block
 tier_pop_type = { 0 = "peasants", 1 = "peasants", 2 = "peasants", 3 = "laborers" }
@@ -199,13 +199,13 @@ desc = "Chain pumps and channels bring water to paddies and groves."
 
 # Hive methods of the beekeeping slot (chains with beekeeping = true, tiers 0-2), copied from the current blueprints:
 # tier 0 pp_farming_village_minor_beeswax, tier 1 pp_husbandry_farmstead_yard_hives, tier 2 pp_farming_village_rotations_hedgerow_hives.
-# manual_labor_cost is today's value; labour_class "" = tier class.
+# manual_labor is today's value; labour_class "" = tier class.
 [beekeeping.0]
 key = "cottage_hives"
 name = "Cottage Hives"
 desc = "A few skeps stand by orchards and hedges, tended in spare moments between fieldwork. Beekeeping is a modest household sideline, valued but never the village's main concern."
 inputs = { furniture = 0.0, cloth = 0.0 }
-manual_labor_cost = 0.025
+manual_labor = 0.025
 output = 0.063
 labour_class = "base"
 
@@ -214,7 +214,7 @@ key = "yard_hives"
 name = "Yard Hives"
 desc = ""
 inputs = { fiber_crops = 0.022, pottery = 0.01 }
-manual_labor_cost = 0.008
+manual_labor = 0.008
 output = 0.12
 labour_class = ""
 
@@ -223,7 +223,7 @@ key = "hedgerow_hives"
 name = "Hedgerow Hives"
 desc = "Cottage hives line hedges and orchard edges, adding wax from the same improved field boundaries."
 inputs = { tools = 0.036, lumber = 0.089, fiber_crops = 0.071, pottery = 0.045 }
-manual_labor_cost = 0.055
+manual_labor = 0.055
 output = 0.31
 labour_class = ""
 

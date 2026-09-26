@@ -30,7 +30,7 @@ building:
     unique_production_methods = {
         pp_cloth_workshop_cotton_cloth_workshop_maintenance = {
             cotton = 0.91
-            manual_labor_cost = 0.31
+            manual_labor = 0.31
             produced = cloth
             output = 1.1
             debug_max_profit = workshop_profit_margin
@@ -38,7 +38,7 @@ building:
         }
         pp_cloth_workshop_wool_cloth_workshop_maintenance = {
             wool = 1.09
-            manual_labor_cost = 0.31
+            manual_labor = 0.31
             produced = cloth
             output = 1.1
             debug_max_profit = workshop_profit_margin
@@ -46,7 +46,7 @@ building:
         }
         pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance = {
             fiber_crops = 1.1
-            manual_labor_cost = 0.24
+            manual_labor = 0.24
             produced = cloth
             output = 0.9
             category = workshop_input

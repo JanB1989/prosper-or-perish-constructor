@@ -58,7 +58,7 @@ building:
 
     unique_production_methods = {
         pp_drift_net_fishery_base_catch = {
-            manual_labor_cost = 0.018
+            manual_labor = 0.018
             produced = fish
             output = 0.09
             category = building_maintenance
@@ -73,7 +73,7 @@ building:
             cloth = 0.03 # small sails and net patches
             salt = 0.043 # brine and shore curing
             lumber = 0.047 # floats, cask staves, light repairs
-            manual_labor_cost = 0.1
+            manual_labor = 0.1
             produced = fish
             output = 1.08
             debug_max_profit = 0

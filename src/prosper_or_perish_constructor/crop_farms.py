@@ -56,7 +56,7 @@ TIERS = (0, 1, 2, 3)
 TOMBSTONE = "farming_village"
 RETIRED_BLUEPRINTS = ("husbandry_farmstead", "farming_village_rotations", "model_farm")
 TOMBSTONE_METHOD = "pp_farming_village_retired"
-LABOUR_GOOD = "manual_labor_cost"
+LABOUR_GOOD = "manual_labor"
 CULTIVATION_ADVANCE_HOST = ("wheat", 0)   # the new cultivation advances are rendered once, in wheat_farm.yml
 TIER_ADVANCE_HOST_STEM = "wheat"          # each tier advance is rendered once, in the wheat blueprint of its tier
 
@@ -470,8 +470,8 @@ def _cultivation_method(table: CropTable, crop: Crop, method: CropMethod, buildi
 def _hive_method(table: CropTable, tier: int, building: str) -> RenderedMethod:
     hive = table.raw["beekeeping"][str(tier)]
     inputs = {str(k): float(v) for k, v in dict(hive.get("inputs", {})).items()}
-    if float(hive.get("manual_labor_cost", 0) or 0):
-        inputs[LABOUR_GOOD] = float(hive["manual_labor_cost"])
+    if float(hive.get("manual_labor", 0) or 0):
+        inputs[LABOUR_GOOD] = float(hive["manual_labor"])
     return RenderedMethod(
         name=f"pp_{building}_{hive['key']}",
         inputs=inputs,

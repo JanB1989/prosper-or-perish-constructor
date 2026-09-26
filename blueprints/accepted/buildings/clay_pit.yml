@@ -48,7 +48,7 @@ building:
 
     unique_production_methods = {
         pp_clay_pit_base_clay = {
-            manual_labor_cost = 0.03
+            manual_labor = 0.03
             produced = clay
             output = 0.3
                 category = building_maintenance
@@ -58,7 +58,7 @@ building:
                 output = 1.44
                 lumber = 0.23
                 livestock = 0.098
-                manual_labor_cost = 0.12
+                manual_labor = 0.12
                 category = building_maintenance
             }
         }

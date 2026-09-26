@@ -115,7 +115,7 @@ The legend key `MAPMODE_<ID>` uses the ID in uppercase with underscores.
 | `pp_forest_village_capacity` | `pp_forest_village_capacity.dds` | pp_food_map_modes.txt |
 | `pp_market_food_price` | `pp_market_food_price.dds` | pp_food_map_modes.txt |
 | `pp_victuals_price` | `pp_victuals_price.dds` (copy of `icon_goods_victuals.dds`) | pp_food_map_modes.txt |
-| `pp_manual_labor_market_price` | `pp_manual_labor_market_price.dds` (copy of `icon_goods_manual_labor_cost.dds`) | pp_food_map_modes.txt |
+| `pp_manual_labor_market_price` | `pp_manual_labor_market_price.dds` (copy of `icon_goods_manual_labor.dds`) | pp_food_map_modes.txt |
 | `pp_positive_province_food_growth` | `pp_positive_province_food_growth.dds` | pp_food_map_modes.txt |
 | `pp_pop_delta_location` | `pp_pop_delta_location.dds` | pp_population_delta_map_modes.txt |
 | `pp_pop_delta_province` | `pp_pop_delta_province.dds` | pp_population_delta_map_modes.txt |

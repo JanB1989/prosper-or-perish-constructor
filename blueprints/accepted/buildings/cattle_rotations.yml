@@ -58,7 +58,7 @@ building:
 
     unique_production_methods = {
         pp_cattle_rotations_base = {
-            manual_labor_cost = 0.021
+            manual_labor = 0.021
             produced = livestock
             output = 0.07
             category = building_maintenance
@@ -73,7 +73,7 @@ building:
             horses = 0.089
             legumes = 0.29
             lumber = 0.079
-            manual_labor_cost = 0.16
+            manual_labor = 0.16
             produced = livestock
             output = 0.97
             debug_max_profit = 0
@@ -84,7 +84,7 @@ building:
             salt = 0.053
             tools = 0.089
             livestock = 0.17
-            manual_labor_cost = 0.13
+            manual_labor = 0.13
             produced = livestock
             output = 0.97
             debug_max_profit = 0

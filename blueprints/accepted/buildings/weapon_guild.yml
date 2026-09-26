@@ -29,7 +29,7 @@ building:
         pp_weapon_guild_pre_columbian_weapon_smith_maintenance = {
             lumber = 0.06
             stone = 0.86
-            manual_labor_cost = 0.16
+            manual_labor = 0.16
             produced = weaponry
             output = 0.4
             category = guild_input
@@ -39,7 +39,7 @@ building:
             lumber = 0.25
             coal = 0.3
             tools = 0.5
-            manual_labor_cost = 0.41
+            manual_labor = 0.41
             category = guild_input
             produced = weaponry
             output = 1.0
@@ -49,7 +49,7 @@ building:
             lumber = 0.1
             stone = 0.44
             gems = 0.088
-            manual_labor_cost = 0.16
+            manual_labor = 0.16
             produced = weaponry
             output = 0.4
             category = guild_input

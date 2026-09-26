@@ -57,7 +57,7 @@ building:
 
     unique_production_methods = {
         pp_regulated_sericulture_farm_base_silk = {
-            manual_labor_cost = 0.042
+            manual_labor = 0.042
             produced = silk
             output = 0.052
             category = building_maintenance
@@ -71,7 +71,7 @@ building:
             furniture = 0.06 # light tray stands and hand reeling frames
             fiber_crops = 0.039 # woven cocoon mats and sorting baskets
             pottery = 0.03 # warming basins for reeling water
-            manual_labor_cost = 0.047
+            manual_labor = 0.047
             produced = silk
             output = 0.087
             category = building_maintenance
@@ -85,7 +85,7 @@ building:
             furniture = 0.03 # skein racks and inspection tables
             pottery = 0.034 # heated basins and settling jars
             coal = 0.017 # light fuel for steady reeling heat
-            manual_labor_cost = 0.027
+            manual_labor = 0.027
             produced = silk
             output = 0.060
             category = building_maintenance

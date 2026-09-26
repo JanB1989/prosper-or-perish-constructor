@@ -15,7 +15,7 @@ MAX_COMPONENT = 100
 ENGINE_REQUIRED_PATH_LIMITS = {
     (
         "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/"
-        "icons/trade_goods/illustrations/icon_goods_manual_labor_cost.dds"
+        "icons/trade_goods/illustrations/icon_goods_manual_labor.dds"
     ): 150,
     (
         "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/"

@@ -48,7 +48,7 @@ building:
 
     unique_production_methods = {
         pp_amber_collector_base_amber = {
-            manual_labor_cost = 0.031
+            manual_labor = 0.031
             produced = amber
             output = 0.039
             category = building_maintenance
@@ -61,7 +61,7 @@ building:
         pp_amber_collector_basket_gathering = {
             fiber_crops = 0.069 # baskets, carrying mats
             tools = 0.034 # sorting knives
-            manual_labor_cost = 0.056
+            manual_labor = 0.056
             produced = amber
             output = 0.087
             category = building_maintenance
@@ -73,14 +73,14 @@ building:
         }
         pp_amber_collector_sand_horses = {
             horses = 0.033
-            manual_labor_cost = 0.021
+            manual_labor = 0.021
             produced = sand
             output = 0.288
             category = building_maintenance
         }
         pp_amber_collector_sand_livestock = {
             livestock = 0.066
-            manual_labor_cost = 0.021
+            manual_labor = 0.021
             produced = sand
             output = 0.288
             category = building_maintenance

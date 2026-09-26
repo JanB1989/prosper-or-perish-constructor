@@ -58,7 +58,7 @@ building:
 
     unique_production_methods = {
         pp_millet_rotations_base = {
-            manual_labor_cost = 0.014
+            manual_labor = 0.014
             produced = millet
             output = 0.07
             category = building_maintenance
@@ -73,7 +73,7 @@ building:
             horses = 0.12
             livestock = 0.11
             fiber_crops = 0.067
-            manual_labor_cost = 0.16
+            manual_labor = 0.16
             produced = millet
             output = 1.54
             debug_max_profit = 0
@@ -84,7 +84,7 @@ building:
             horses = 0.11
             legumes = 0.24
             pottery = 0.13
-            manual_labor_cost = 0.15
+            manual_labor = 0.15
             produced = millet
             output = 1.6
             debug_max_profit = 0

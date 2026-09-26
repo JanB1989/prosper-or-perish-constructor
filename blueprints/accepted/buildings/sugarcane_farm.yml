@@ -51,7 +51,7 @@ building:
 
     unique_production_methods = {
         pp_sugarcane_farm_base_sugar = {
-            manual_labor_cost = 0.096
+            manual_labor = 0.096
             produced = sugar
             output = 0.16
             category = building_maintenance
@@ -65,7 +65,7 @@ building:
             lumber = 0.272 # cane press frames
             pottery = 0.328 # sugar molds, syrup jars
             tools = 0.032 # rollers and knives
-            manual_labor_cost = 0.204
+            manual_labor = 0.204
             produced = sugar
             output = 0.618
             category = building_maintenance

@@ -26,7 +26,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_cotton_farm_base_cotton = {
-        manual_labor_cost = 0.096
+        manual_labor = 0.096
         produced = cotton
         output = 0.16
         category = building_maintenance
@@ -40,7 +40,7 @@ unique_production_methods = {
         lumber = 0.304 # drying sheds
         fiber_crops = 0.132 # picking sacks, bale cloth
         tools = 0.036 # ginning rollers
-        manual_labor_cost = 0.2
+        manual_labor = 0.2
         produced = cotton
         output = 0.619
         category = building_maintenance

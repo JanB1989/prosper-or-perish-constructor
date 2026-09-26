@@ -60,7 +60,7 @@ building:
 
     unique_production_methods = {
         pp_clay_washmill_base_clay = {
-            manual_labor_cost = 0.011
+            manual_labor = 0.011
             produced = clay
             output = 0.11
             category = building_maintenance
@@ -74,7 +74,7 @@ building:
             lumber = 0.095
             tools = 0.034
             horses = 0.017
-            manual_labor_cost = 0.055
+            manual_labor = 0.055
             produced = clay
             output = 0.69
             category = building_maintenance
@@ -83,7 +83,7 @@ building:
             lumber = 0.095
             tools = 0.034
             livestock = 0.043
-            manual_labor_cost = 0.056
+            manual_labor = 0.056
             produced = clay
             output = 0.69
             category = building_maintenance
@@ -96,7 +96,7 @@ building:
         pp_clay_washmill_levigation_ponds = {
             lumber = 0.026
             tools = 0.017
-            manual_labor_cost = 0.017
+            manual_labor = 0.017
             produced = clay
             output = 0.23
             category = building_maintenance

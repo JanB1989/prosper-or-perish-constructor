@@ -39,7 +39,7 @@ building:
     }
     unique_production_methods = {
         pp_coastal_saltern_base_salt = {
-            manual_labor_cost = 0.08
+            manual_labor = 0.08
             produced = salt
             output = 0.080
             category = building_maintenance
@@ -52,7 +52,7 @@ building:
         pp_coastal_saltern_lined_evaporation_pans = {
             clay = 1.09 # pan linings
             pottery = 0.31 # settling vessels
-            manual_labor_cost = 0.19
+            manual_labor = 0.19
             produced = salt
             output = 0.240
             category = building_maintenance

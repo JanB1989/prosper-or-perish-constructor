@@ -1,5 +1,5 @@
 ﻿# Market-scope scripted value for the Manual Labour market price map mode.
 # Call as market.pp_manual_labor_market_price_map_value from location scope.
 pp_manual_labor_market_price_map_value = {
-	value = "market_price(goods:manual_labor_cost)"
+	value = "market_price(goods:manual_labor)"
 }

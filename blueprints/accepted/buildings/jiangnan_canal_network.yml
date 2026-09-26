@@ -57,7 +57,7 @@ building:
     construction_demand = village_construction
     unique_production_methods = {
       pp_jiangnan_canal_network_maintenance = {
-        manual_labor_cost = 0.1
+        manual_labor = 0.1
         lumber = 0.025
         category = building_maintenance
       }

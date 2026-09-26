@@ -60,7 +60,7 @@ building:
             coal = 0.37 # coke fuel, furnace heat
             tools = 0.074 # tuyere, bellows upkeep
             lumber = 0.074 # racks, furnace frames
-            manual_labor_cost = 0.09
+            manual_labor = 0.09
             produced = iron
             output = 0.41
             category = building_maintenance
@@ -69,7 +69,7 @@ building:
             coal = 0.41 # coke fuel, hot blast
             tools = 0.092 # blast gear, repairs
             lumber = 0.083 # drying racks, staging
-            manual_labor_cost = 0.12
+            manual_labor = 0.12
             produced = iron
             output = 0.46
             category = building_maintenance

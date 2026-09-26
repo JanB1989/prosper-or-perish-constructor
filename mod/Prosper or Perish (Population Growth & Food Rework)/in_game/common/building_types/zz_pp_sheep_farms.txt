@@ -20,7 +20,7 @@ REPLACE:sheep_farms = {
     }
     unique_production_methods = {
         pp_sheep_farm_base_wool = {
-            manual_labor_cost = 0.03
+            manual_labor = 0.03
             produced = wool
             output = 0.06
             category = building_maintenance
@@ -35,7 +35,7 @@ REPLACE:sheep_farms = {
             output = 0.06
             lumber = 0.041
             tools = 0.008
-            manual_labor_cost = 0.022
+            manual_labor = 0.022
             category = building_maintenance
         }
     }

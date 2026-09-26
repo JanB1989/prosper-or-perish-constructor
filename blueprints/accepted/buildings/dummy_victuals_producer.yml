@@ -35,14 +35,14 @@ building:
         produced = province_food_sales
         victuals = -1.0
         offset = 5
-        manual_labor_cost = 0.5
+        manual_labor = 0.5
         output = 3.0
         category = building_maintenance
       }
       pp_dummy_victuals_import = {
         produced = province_food_purchase
         victuals = 1.0
-        manual_labor_cost = 0.5
+        manual_labor = 0.5
         output = 3.0
         category = building_maintenance
       }

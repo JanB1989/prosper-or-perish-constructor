@@ -45,7 +45,7 @@ building:
 
     unique_production_methods = {
         pp_elephant_kraal_base_elephants = {
-            manual_labor_cost = 0.036
+            manual_labor = 0.036
             produced = elephants
             output = 0.036
             category = building_maintenance
@@ -58,7 +58,7 @@ building:
         pp_elephant_kraal_kheddah_stockades = {
             lumber = 0.084 # stockades, gates
             fruit = 0.14 # fodder, bait
-            manual_labor_cost = 0.064
+            manual_labor = 0.064
             produced = elephants
             output = 0.076
             category = building_maintenance

@@ -67,7 +67,7 @@ building:
 
     unique_production_methods = {
         pp_olive_farmstead_base = {
-            manual_labor_cost = 0.016
+            manual_labor = 0.016
             produced = olives
             output = 0.08
             category = building_maintenance
@@ -82,7 +82,7 @@ building:
             tools = 0.026
             lumber = 0.039
             pottery = 0.076
-            manual_labor_cost = 0.05
+            manual_labor = 0.05
             produced = olives
             output = 0.59
             debug_max_profit = 0
@@ -96,7 +96,7 @@ building:
         pp_olive_farmstead_yard_hives = {
             fiber_crops = 0.022
             pottery = 0.01
-            manual_labor_cost = 0.008
+            manual_labor = 0.008
             produced = beeswax
             output = 0.12
             debug_max_profit = 0

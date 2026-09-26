@@ -63,7 +63,7 @@ building:
 
     unique_production_methods = {
         pp_olive_model_farm_base = {
-            manual_labor_cost = 0.02
+            manual_labor = 0.02
             produced = olives
             output = 0.1
             category = building_maintenance
@@ -78,7 +78,7 @@ building:
             livestock = 0.24
             lumber = 0.17
             pottery = 0.47
-            manual_labor_cost = 0.15
+            manual_labor = 0.15
             produced = olives
             output = 2.09
             debug_max_profit = 0

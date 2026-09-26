@@ -64,7 +64,7 @@ building:
 
     unique_production_methods = {
         pp_rice_rotations_base = {
-            manual_labor_cost = 0.014
+            manual_labor = 0.014
             produced = rice
             output = 0.07
             category = building_maintenance
@@ -79,7 +79,7 @@ building:
             livestock = 0.2
             clay = 0.4
             lumber = 0.11
-            manual_labor_cost = 0.15
+            manual_labor = 0.15
             produced = rice
             output = 1.54
             debug_max_profit = 0
@@ -90,7 +90,7 @@ building:
             livestock = 0.18
             clay = 0.32
             lumber = 0.17
-            manual_labor_cost = 0.15
+            manual_labor = 0.15
             produced = rice
             output = 1.6
             debug_max_profit = 0

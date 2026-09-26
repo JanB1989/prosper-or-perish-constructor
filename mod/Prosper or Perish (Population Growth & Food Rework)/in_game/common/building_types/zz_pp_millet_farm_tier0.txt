@@ -25,7 +25,7 @@ location_potential = {
 
 unique_production_methods = {
     pp_millet_farm_base = {
-        manual_labor_cost = 0.012
+        manual_labor = 0.012
         produced = millet
         output = 0.06
         category = building_maintenance
@@ -37,7 +37,7 @@ unique_production_methods = {
     }
     pp_millet_farm_broadcast_hoe = {
         tools = 0.014
-        manual_labor_cost = 0.036
+        manual_labor = 0.036
         produced = millet
         output = 0.15
         debug_max_profit = 0
@@ -47,7 +47,7 @@ unique_production_methods = {
         legumes = 0.041
         tools = 0.016
         livestock = 0.011
-        manual_labor_cost = 0.026
+        manual_labor = 0.026
         produced = millet
         output = 0.166
         debug_max_profit = 0

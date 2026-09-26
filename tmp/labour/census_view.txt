@@ -699,9 +699,9 @@ slave_center [burghers emp=0.3 REPLACE] 1 pm
 slave_market [burghers emp=0.3 REPLACE] 1 pm
     ~slave_market_maintenance                        slaves_goods out=   2.0 val=  6.00 cost=  6.07 c/o= 1.012 L=  0.0 | leather=0.624 tools=0.567 weaponry=0.499 paper=0.43
 victuals_market_export [nobles emp=0.001 CREATE] 1 pm
-    pp_province_food_to_market                       province_food_sales out= 0.375 val=  1.88 cost= 46.80 c/o= 24.96 L=  0.3 | victuals=-3 offset=11.1 manual_labor_cost=0.3
+    pp_province_food_to_market                       province_food_sales out= 0.375 val=  1.88 cost= 46.80 c/o= 24.96 L=  0.3 | victuals=-3 offset=11.1 manual_labor=0.3
 victuals_market_import [nobles emp=0.001 CREATE] 2 pm
-    pp_province_food_from_market                           offset out=  0.45 val=  2.25 cost=  9.30 c/o=4.1333 L=  0.3 | victuals=3 manual_labor_cost=0.3
+    pp_province_food_from_market                           offset out=  0.45 val=  2.25 cost=  9.30 c/o=4.1333 L=  0.3 | victuals=3 manual_labor=0.3
     pp_province_storage_price                        province_food_purchase out= 0.375 val=  1.88 cost= 15.00 c/o=   8.0 L=  0.0 | offset=3
 
 ##### urban_workshop

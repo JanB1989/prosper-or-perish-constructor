@@ -87,7 +87,7 @@ def test_new_niches_are_complete_buildings_with_upkeep_and_owned_icons(tmp_path)
         data = yaml_io.safe_load((ROOT / b.BLUEPRINTS / f'{key}.yml').read_text())
         assert data['building']['mode'] == 'CREATE'
         assert data['footprint'] == 'capacity_source'
-        assert 'manual_labor_cost = 0.1' in data['building']['body']
+        assert 'manual_labor = 0.1' in data['building']['body']
         assert 'employment_size = 0.075' in data['building']['body']
         assert cfg.niche[key]['strength'] == {'jiangnan_canal_network': 2.5, 'jiangnan_hill_terraces': 3.0}[key]
         assert (ROOT / b.BLUEPRINTS / data['icon']['source_png']).resolve().is_file()

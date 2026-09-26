@@ -46,7 +46,7 @@ building:
 
     unique_production_methods = {
         pp_vineyard_estate_base_wine = {
-            manual_labor_cost = 0.04
+            manual_labor = 0.04
             produced = wine
             output = 0.100
             category = building_maintenance
@@ -57,7 +57,7 @@ building:
             lumber = 0.14 # presses, stakes, and cask staves
             pottery = 0.068 # fermentation jars and storage vessels
             tools = 0.014 # pruning knives and press hardware
-            manual_labor_cost = 0.072
+            manual_labor = 0.072
             produced = wine
             output = 0.222
             category = building_maintenance

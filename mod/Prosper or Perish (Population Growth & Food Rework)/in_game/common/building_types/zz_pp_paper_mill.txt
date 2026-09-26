@@ -16,7 +16,7 @@ unique_production_methods = {
     pp_paper_mill_paper_mill_maintenance = {
         cloth = 0.15
         fiber_crops = 1.55
-        manual_labor_cost = 0.16
+        manual_labor = 0.16
         produced = paper
         output = 2.0
         debug_max_profit = mills_profit_margin
@@ -24,7 +24,7 @@ unique_production_methods = {
     }
     pp_paper_mill_paper_wood_pulp_maintenance = {
         lumber = 4.78
-        manual_labor_cost = 0.34
+        manual_labor = 0.34
         produced = paper
         output = 4.5
         debug_max_profit = mills_profit_margin

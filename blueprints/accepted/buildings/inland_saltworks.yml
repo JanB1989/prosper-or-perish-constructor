@@ -95,7 +95,7 @@ building:
 
     unique_production_methods = {
         pp_inland_saltworks_base_salt = {
-            manual_labor_cost = 0.08
+            manual_labor = 0.08
             produced = salt
             output = 0.080
             category = building_maintenance
@@ -109,7 +109,7 @@ building:
             lumber = 0.38 # pan fuel
             clay = 0.16 # hearth linings
             pottery = 0.22 # brine vessels
-            manual_labor_cost = 0.22
+            manual_labor = 0.22
             produced = salt
             output = 0.233
             category = building_maintenance

@@ -336,15 +336,30 @@ The command parses `.eu5` saves into the raw progression dataset read by the not
 graphs/dataset/
 ```
 
-It also refreshes compact notebook WebP exports under:
+It then builds the run report of the newest playthrough (skip with `--no-report`):
 
 ```text
-graphs/savegame_notebooks/exports/absolute/
+graphs/report/<playthrough>/index.html      the page (open it locally, zip it or publish it)
+graphs/report/<playthrough>/maps/*.mp4      map videos, one frame per save, < 10 MB each (Discord, GitHub)
+graphs/report/<playthrough>/charts/*.png    progression charts
 ```
 
-including `food_price_current.webp`, which colors locations by their current market food price, and
-`political_current.webp`, which colors locations by their current owner country. Both appear in
-`savegame_maps.html`.
+`uv run ppc report` rebuilds it on its own (`--playthrough` for another run, `--fps`, `--width`).
+
+### Sharing a run
+
+The map videos can be dragged into Discord or a GitHub issue as they are (H.264 MP4 under 10 MB). To put
+the whole page online, publish it to the GitHub Pages site (a separate repository that only ever holds one
+commit with the newest runs, so it never grows):
+
+```bash
+uv run ppc report --create-site            # once: creates the public repository and turns on Pages
+uv run ppc report --no-build --publish     # dry run: shows what would go online
+uv run ppc report --no-build --publish --yes
+```
+
+The site repository and how many runs stay online come from `[report] site_repo` / `keep` in
+`constructor.toml` (defaults `JanB1989/prosper-or-perish-runs`, 5).
 
 Useful options:
 

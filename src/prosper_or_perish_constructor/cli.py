@@ -476,6 +476,23 @@ def _build_parser() -> argparse.ArgumentParser:
         "Export the custom Prosper or Perish Europedia into the docs examples.",
         _europedia,
     )
+    report = _add_command(
+        subcommands,
+        "report",
+        "Build the shareable run report (map videos, progression charts, one page) from graphs/dataset.",
+        _report,
+    )
+    report.add_argument("--playthrough", default=None, help="Playthrough id (default: the newest one in the dataset).")
+    report.add_argument("--dataset", type=Path, default=Path("graphs/dataset"), help="Multi-save dataset directory.")
+    report.add_argument("--out", type=Path, default=Path("graphs/report"), help="Report root; the run goes to <out>/<playthrough>.")
+    report.add_argument("--width", type=int, default=1920, help="Video and map width in pixels (default 1920).")
+    report.add_argument("--fps", type=int, default=6, help="Saves shown per second in the map videos (default 6).")
+    report.add_argument("--no-build", action="store_true", help="Reuse the report already in --out instead of building it.")
+    report.add_argument("--publish", action="store_true", help="Stage the report on the GitHub Pages site and show the plan.")
+    report.add_argument("--yes", action="store_true", help="With --publish: push the staged site (the run becomes public).")
+    report.add_argument("--create-site", action="store_true", help="Create the public site repository and enable GitHub Pages.")
+    report.add_argument("--site-repo", default=None, help="owner/name of the site repository (default [report] site_repo).")
+    report.add_argument("--keep", type=int, default=None, help="Runs kept on the site, newest first (default [report] keep, 5).")
     savegame_purge = _add_command(
         subcommands,
         "savegame-purge",
@@ -640,9 +657,9 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Rebuild notebook parquet even when existing output metadata is current.",
     )
     savegame_notebooks_build.add_argument(
-        "--no-webp",
+        "--no-report",
         action="store_true",
-        help="Skip the standard global WebP map animation exports.",
+        help="Skip the run report (map videos, charts, page) for the newest playthrough.",
     )
     return parser
 
@@ -2878,6 +2895,52 @@ def _savegame(args: argparse.Namespace, extra: Sequence[str], repo: Path, projec
     return _publish_graph_examples(repo, [SAVEGAME_EXPLORER.name])
 
 
+def _report(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("report does not accept extra arguments.")
+    from prosper_or_perish_constructor import run_report
+
+    with project.open("rb") as handle:
+        settings = tomllib.load(handle).get("report", {})
+    site_repo = args.site_repo or settings.get("site_repo", "JanB1989/prosper-or-perish-runs")
+    keep = args.keep or int(settings.get("keep", 5))
+    if args.create_site:
+        run_report.create_site_repo(site_repo)
+        owner, name = site_repo.split("/", 1)
+        print(f"created {site_repo}; GitHub Pages will serve https://{owner.lower()}.github.io/{name}/", flush=True)
+        if not args.publish:
+            return 0
+
+    dataset = _repo_path(repo, args.dataset)
+    out_root = _repo_path(repo, args.out)
+    playthrough = args.playthrough or run_report.latest_playthrough(dataset)
+    report_dir = out_root / playthrough
+    if args.no_build:
+        if not (report_dir / "report.json").is_file():
+            raise SystemExit(f"no report in {report_dir}; run `ppc report` first")
+    else:
+        page = run_report.build_report(
+            repo, project, dataset=dataset, out_root=out_root, playthrough=playthrough, width=args.width, fps=args.fps
+        )
+        print(f"open: {page}", flush=True)
+    if not args.publish:
+        return 0
+
+    plan = run_report.prepare_publish(report_dir, site_repo=site_repo, work_root=repo / "artifacts" / "report_site", keep=keep)
+    print(f"site {site_repo} -> {plan.url}", flush=True)
+    for run in plan.runs:
+        marker = "+" if run["playthrough_id"] == plan.added else " "
+        print(f"  {marker} {run['name']} ({run['years'][0]}-{run['years'][1]}, {run['saves']} saves)", flush=True)
+    for dropped in plan.dropped:
+        print(f"  - {dropped} (removed: only the newest {keep} runs stay online)", flush=True)
+    if not args.yes:
+        print("dry run: nothing was pushed. Add --yes to make this public.", flush=True)
+        return 0
+    run_report.push_publish(plan)
+    print(f"published: {plan.url}runs/{plan.added}/ (GitHub Pages may take a minute to update)", flush=True)
+    return 0
+
+
 def _europedia(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     if extra:
         raise SystemExit("europedia does not accept extra arguments.")
@@ -2998,32 +3061,11 @@ def _native_temp_subprocess_env(repo: Path) -> dict[str, str]:
     return env
 
 
-def _export_savegame_notebook_global_webps(
-    *,
-    repo: Path,
-    dataset: Path,
-    load_order: Path,
-    profile: str,
-) -> None:
-    from prosper_or_perish_constructor import savegame_notebook
+def _build_run_report(*, repo: Path, project: Path, dataset: Path) -> None:
+    from prosper_or_perish_constructor.run_report import build_report
 
-    print("global webp exports: rendering", flush=True)
-    started_at = time.perf_counter()
-    output = savegame_notebook.export_global_map_outputs(
-        repo=repo,
-        data_root=dataset,
-        load_order_path=load_order,
-        profile=profile,
-    )
-    elapsed = time.perf_counter() - started_at
-    for export in output.animations:
-        print(
-            f"global webp: {_display_path(repo, export.path)} "
-            f"({_format_file_size(export.path)})",
-            flush=True,
-        )
-    print(f"global viewer: {_display_path(repo, output.viewer.path)}", flush=True)
-    print(f"global webp exports: completed in {_format_elapsed_seconds(elapsed)}", flush=True)
+    page = build_report(repo, project, dataset=dataset, out_root=repo / "graphs" / "report")
+    print(f"run report: {_display_path(repo, page)}", flush=True)
 
 
 def _display_path(repo: Path, path: Path) -> Path:
@@ -3540,14 +3582,9 @@ def _savegame_notebooks_build(
         active_save_dir=active_save_dir,
         require_manifest=args.no_ingest,
     )
-    if not args.no_webp:
+    if not args.no_report:
         if (dataset / "manifest.parquet").is_file():
-            _export_savegame_notebook_global_webps(
-                repo=repo,
-                dataset=dataset,
-                load_order=_repo_path(repo, args.load_order),
-                profile=args.profile,
-            )
+            _build_run_report(repo=repo, project=project, dataset=dataset)
         else:
-            print("global webp exports: skipped (raw dataset manifest missing)", flush=True)
+            print("run report: skipped (raw dataset manifest missing)", flush=True)
     return 0

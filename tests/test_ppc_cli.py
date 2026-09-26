@@ -1018,8 +1018,8 @@ def test_savegame_notebooks_build_ingests_raw_dataset_without_rewrite(
     monkeypatch.setattr(cli, "_run_collecting_output", fake_run_collecting_output)
     monkeypatch.setattr(
         cli,
-        "_export_savegame_notebook_global_webps",
-        lambda *, repo, dataset, load_order, profile: exports.append((repo, dataset)),
+        "_build_run_report",
+        lambda *, repo, project, dataset: exports.append((repo, dataset)),
     )
 
     assert (
@@ -1070,8 +1070,8 @@ def test_savegame_notebooks_build_no_ingest_reports_existing_raw_dataset(
     monkeypatch.setattr(cli, "_run", fake_run)
     monkeypatch.setattr(
         cli,
-        "_export_savegame_notebook_global_webps",
-        lambda *, repo, dataset, load_order, profile: exports.append(dataset),
+        "_build_run_report",
+        lambda *, repo, project, dataset: exports.append(dataset),
     )
 
     assert cli.main(["--repo", str(repo), "savegame-notebooks", "build", "--no-ingest"]) == 0
@@ -1083,7 +1083,7 @@ def test_savegame_notebooks_build_no_ingest_reports_existing_raw_dataset(
     assert exports == [repo / "graphs" / "dataset"]
 
 
-def test_savegame_notebooks_build_no_webp_skips_global_exports(
+def test_savegame_notebooks_build_no_report_skips_the_run_report(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repo = _repo(tmp_path)
@@ -1092,11 +1092,11 @@ def test_savegame_notebooks_build_no_webp_skips_global_exports(
 
     monkeypatch.setattr(
         cli,
-        "_export_savegame_notebook_global_webps",
-        lambda *, repo, dataset, load_order, profile: exports.append(dataset),
+        "_build_run_report",
+        lambda *, repo, project, dataset: exports.append(dataset),
     )
 
-    assert cli.main(["--repo", str(repo), "savegame-notebooks", "build", "--no-ingest", "--no-webp"]) == 0
+    assert cli.main(["--repo", str(repo), "savegame-notebooks", "build", "--no-ingest", "--no-report"]) == 0
 
     assert exports == []
 

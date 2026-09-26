@@ -1,0 +1,19 @@
+﻿# Nobles' "move towards land" agenda: chance 10 -> 3 so the nobles bring it far less often.
+# Each accepted agenda is an uncapped -5 step, which ratcheted almost every country towards land.
+TRY_REPLACE:pa_move_towards_land = {
+	estate = nobles_estate
+
+	potential = {
+		societal_value:land_vs_naval < 0
+		societal_value:land_vs_naval > -90
+	}
+
+	on_accept = {
+		add_navy_tradition = navy_tradition_weak_penalty
+		change_societal_value = {
+			type = land_vs_naval
+			value = societal_value_minor_move_to_left
+		}
+	}
+	chance = 3
+}

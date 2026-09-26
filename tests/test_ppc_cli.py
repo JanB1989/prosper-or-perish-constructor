@@ -1047,8 +1047,6 @@ def test_savegame_notebooks_build_ingests_raw_dataset_without_rewrite(
             "constructor",
             "--load-order",
             str(repo / "constructor.load_order.toml"),
-            "--workers",
-            "4",
         ]
     ]
     assert exports == [(repo, repo / "graphs" / "dataset")]

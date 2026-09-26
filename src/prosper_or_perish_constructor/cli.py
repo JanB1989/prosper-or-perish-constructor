@@ -643,8 +643,8 @@ def _build_parser() -> argparse.ArgumentParser:
     savegame_notebooks_build.add_argument(
         "--workers",
         type=int,
-        default=4,
-        help="Saves the Rust savegame engine parses at once. Defaults to 4.",
+        default=None,
+        help="Saves the Rust savegame engine parses at once. Defaults to the parser's 12 (EU5SAVE_JOBS).",
     )
     savegame_notebooks_build.add_argument(
         "--no-ingest",
@@ -3555,8 +3555,7 @@ def _savegame_notebooks_build(
                 args.profile,
                 "--load-order",
                 _repo_path(repo, args.load_order),
-                "--workers",
-                str(args.workers),
+                *(["--workers", str(args.workers)] if args.workers else []),
             ],
             repo,
             env=_native_temp_subprocess_env(repo),

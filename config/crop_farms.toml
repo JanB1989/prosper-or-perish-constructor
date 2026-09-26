@@ -156,6 +156,7 @@ game_start_desc = "Traditional rice cultivation in regions where the crop is alr
 age = "age_4_reformation"
 requires = "global_trade_advance"
 name = "Maize Cultivation"
+unlock_production_methods = ["pp_victualling_yard_maize_shipment"]   # maize lands get it from the Yard's own advance
 desc = "Adopt maize cultivation through colonial and trade networks."
 game_start_name = "Established Maize Cultivation"
 game_start_desc = "Traditional maize cultivation in regions where the crop is already established."

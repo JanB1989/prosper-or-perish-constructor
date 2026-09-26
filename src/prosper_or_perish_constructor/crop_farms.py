@@ -715,6 +715,8 @@ def _general_advance_body(table: CropTable, crop: Crop, gate: RgoUnlockGate | No
     lines = [
         f"age = {spec['age']}",
         f"requires = {spec['requires']}",
+        # other buildings' methods that come with the crop (the Victualling Yard's maize shipment)
+        *(f"unlock_production_method = {method}" for method in spec.get("unlock_production_methods", ())),
         f"ai_weight = {{ add = {int(table.unlocks.get('ai_weight', 50))} }}",
         "potential = {",
         "    exists = capital",

@@ -2,9 +2,9 @@
 
 # >>> eu5-building-pipeline:victualling_yard:localization
   victualling_yard: "Victualling Yard"
-  victualling_yard_desc: "The merchants' victualling house of a great harbour. It ships in grain from the wider market and packs it, with a little of the province store, into [ShowGoodsName('victuals')|e] for the fleets and the markets beyond. Only good harbours and the great river ports can hold one, and each further level costs much more; elsewhere the Grange sends the surplus overland."
+  victualling_yard_desc: "The merchants' victualling house of a great harbour. It ships in grain, dried pulses and salt fish from the wider market and packs it, with a little of the province store, into [ShowGoodsName('victuals')|e] for the fleets and the markets beyond. Only good harbours and the great river ports can hold one, and each further level costs much more; elsewhere the Grange sends the surplus overland."
   victualling_yard_slot_0: "Provisions"
-  victualling_yard_slot_1: "Grain Shipments"
+  victualling_yard_slot_1: "Food Shipments"
   victuals_trade_construction: "Victuals Trade Construction"
   pp_victualling_yard_river_barges: "River Barges"
   pp_victualling_yard_merchantmen: "Merchantmen"
@@ -14,5 +14,12 @@
   pp_victualling_yard_grain_shipment: "Grain Shipment"
   pp_victualling_yard_rice_shipment: "Rice Shipment"
   pp_victualling_yard_millet_shipment: "Millet Shipment"
+  pp_victualling_yard_maize_shipment: "Maize Shipment"
+  pp_victualling_yard_legumes_shipment: "Pease Shipment"
+  pp_victualling_yard_legumes_shipment_desc: "Dried peas and beans keep for years in the hold and were a fixed part of every ship's rations."
+  pp_victualling_yard_fish_shipment: "Salt Fish Shipment"
+  pp_victualling_yard_fish_shipment_desc: "Barrels of salted herring, stockfish and salt cod come in from the fishing grounds."
+  victualling_yard_maize_shipment_advance: "Maize Shipments"
+  victualling_yard_maize_shipment_advance_desc: "The harbours of the maize lands ship dried maize along the coasts and rivers to the markets beyond."
   pp_victualling_yard_price: "Victualling Yard Price"
 # <<< eu5-building-pipeline:victualling_yard:localization

@@ -125,6 +125,7 @@ advancements:
   body: |-
     age = age_4_reformation
     requires = global_trade_advance
+    unlock_production_method = pp_victualling_yard_maize_shipment
     ai_weight = { add = 50 }
     potential = {
         exists = capital

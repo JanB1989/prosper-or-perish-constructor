@@ -18,6 +18,9 @@ building:
         - pp_victualling_yard_grain_shipment
         - pp_victualling_yard_rice_shipment
         - pp_victualling_yard_millet_shipment
+        - pp_victualling_yard_maize_shipment
+        - pp_victualling_yard_legumes_shipment
+        - pp_victualling_yard_fish_shipment
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -85,7 +88,10 @@ building:
         category = building_maintenance
       }
     }
-    # slot 1: grain shipments, the long-distance grain the harbour receives (already packed, so no packing slot).
+    # slot 1: food shipments, the long-distance staples the harbour receives (already packed, so no packing slot): grain,
+    # dried pulses (ship's pease) and salt fish (market fish is already cured, the fisheries buy the salt). Every staple
+    # costs 1 gold and feeds 12 food in Provisioning, so all shipments share the grain numbers and stay food-neutral.
+    # Maize needs an advance: the maize lands of the Americas have it from the start, everyone else with Maize Cultivation.
     unique_production_methods = {
       pp_victualling_yard_grain_shipment = {
         wheat = 5.83
@@ -101,6 +107,24 @@ building:
       }
       pp_victualling_yard_millet_shipment = {
         millet = 5.83
+        produced = victuals
+        output = 2.33
+        category = building_maintenance
+      }
+      pp_victualling_yard_maize_shipment = {
+        maize = 5.83
+        produced = victuals
+        output = 2.33
+        category = building_maintenance
+      }
+      pp_victualling_yard_legumes_shipment = {
+        legumes = 5.83
+        produced = victuals
+        output = 2.33
+        category = building_maintenance
+      }
+      pp_victualling_yard_fish_shipment = {
+        fish = 5.83
         produced = victuals
         output = 2.33
         category = building_maintenance
@@ -137,12 +161,21 @@ advancements:
       requires = cannon_maker_advance
       icon = hol_maritime_warfare
       ai_weight = { add = 100 }
+  # the maize lands ship maize from the start; everyone else unlocks the method with Maize Cultivation (maize_farm.yml)
+  - key: victualling_yard_maize_shipment_advance
+    body: |2-
+      age = age_1_traditions
+      potential = {
+        pp_maize_native_country = yes
+      }
+      unlock_production_method = pp_victualling_yard_maize_shipment
+      ai_weight = { add = 50 }
 localization:
   entries:
     victualling_yard: Victualling Yard
-    victualling_yard_desc: The merchants' victualling house of a great harbour. It ships in grain from the wider market and packs it, with a little of the province store, into [ShowGoodsName('victuals')|e] for the fleets and the markets beyond. Only good harbours and the great river ports can hold one, and each further level costs much more; elsewhere the Grange sends the surplus overland.
+    victualling_yard_desc: The merchants' victualling house of a great harbour. It ships in grain, dried pulses and salt fish from the wider market and packs it, with a little of the province store, into [ShowGoodsName('victuals')|e] for the fleets and the markets beyond. Only good harbours and the great river ports can hold one, and each further level costs much more; elsewhere the Grange sends the surplus overland.
     victualling_yard_slot_0: Provisions
-    victualling_yard_slot_1: Grain Shipments
+    victualling_yard_slot_1: Food Shipments
     victuals_trade_construction: Victuals Trade Construction
     pp_victualling_yard_river_barges: River Barges
     pp_victualling_yard_merchantmen: Merchantmen
@@ -152,6 +185,13 @@ localization:
     pp_victualling_yard_grain_shipment: Grain Shipment
     pp_victualling_yard_rice_shipment: Rice Shipment
     pp_victualling_yard_millet_shipment: Millet Shipment
+    pp_victualling_yard_maize_shipment: Maize Shipment
+    pp_victualling_yard_legumes_shipment: Pease Shipment
+    pp_victualling_yard_legumes_shipment_desc: Dried peas and beans keep for years in the hold and were a fixed part of every ship's rations.
+    pp_victualling_yard_fish_shipment: Salt Fish Shipment
+    pp_victualling_yard_fish_shipment_desc: Barrels of salted herring, stockfish and salt cod come in from the fishing grounds.
+    victualling_yard_maize_shipment_advance: Maize Shipments
+    victualling_yard_maize_shipment_advance_desc: The harbours of the maize lands ship dried maize along the coasts and rivers to the markets beyond.
     pp_victualling_yard_price: Victualling Yard Price
 icon:
   source_png: ../assets/icons/victualling_yard.png

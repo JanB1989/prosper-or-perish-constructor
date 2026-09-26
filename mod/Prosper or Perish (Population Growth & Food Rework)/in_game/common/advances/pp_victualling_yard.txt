@@ -6,4 +6,13 @@ requires = cannon_maker_advance
 icon = hol_maritime_warfare
 ai_weight = { add = 100 }
 }
+
+victualling_yard_maize_shipment_advance = {
+age = age_1_traditions
+potential = {
+  pp_maize_native_country = yes
+}
+unlock_production_method = pp_victualling_yard_maize_shipment
+ai_weight = { add = 50 }
+}
 # <<< eu5-building-pipeline:victualling_yard:advancement

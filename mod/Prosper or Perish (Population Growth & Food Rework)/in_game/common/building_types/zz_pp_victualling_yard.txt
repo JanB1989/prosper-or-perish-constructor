@@ -65,7 +65,10 @@ unique_production_methods = {
     category = building_maintenance
   }
 }
-# slot 1: grain shipments, the long-distance grain the harbour receives (already packed, so no packing slot).
+# slot 1: food shipments, the long-distance staples the harbour receives (already packed, so no packing slot): grain,
+# dried pulses (ship's pease) and salt fish (market fish is already cured, the fisheries buy the salt). Every staple
+# costs 1 gold and feeds 12 food in Provisioning, so all shipments share the grain numbers and stay food-neutral.
+# Maize needs an advance: the maize lands of the Americas have it from the start, everyone else with Maize Cultivation.
 unique_production_methods = {
   pp_victualling_yard_grain_shipment = {
     wheat = 5.83
@@ -81,6 +84,24 @@ unique_production_methods = {
   }
   pp_victualling_yard_millet_shipment = {
     millet = 5.83
+    produced = victuals
+    output = 2.33
+    category = building_maintenance
+  }
+  pp_victualling_yard_maize_shipment = {
+    maize = 5.83
+    produced = victuals
+    output = 2.33
+    category = building_maintenance
+  }
+  pp_victualling_yard_legumes_shipment = {
+    legumes = 5.83
+    produced = victuals
+    output = 2.33
+    category = building_maintenance
+  }
+  pp_victualling_yard_fish_shipment = {
+    fish = 5.83
     produced = victuals
     output = 2.33
     category = building_maintenance

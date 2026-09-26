@@ -200,7 +200,9 @@ def test_general_crop_advances_have_configured_age_and_non_native_potential(tabl
         potential = _block(body, "potential")
         assert "exists = capital" in potential
         assert "NOT = {" in potential and "original_capital ?= {" in potential
-        assert "unlock_production_method" not in body and "unlock_building" not in body
+        # the farms are gated by country_potential; only other buildings' configured methods are unlocked here
+        assert re.findall(r"(?m)^unlock_production_method = (\S+)$", body) == list(spec.get("unlock_production_methods", ()))
+        assert "unlock_building" not in body
 
 
 def test_native_country_triggers_list_the_derived_gates(table: crop_farms.CropTable) -> None:

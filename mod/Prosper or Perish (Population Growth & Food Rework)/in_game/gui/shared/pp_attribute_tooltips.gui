@@ -926,6 +926,17 @@ types pp_attribute_tooltips
 		layoutpolicy_horizontal = expanding
 		vbox = {
 			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_FLATLAND')), '(int32)1', '(int32)0'))]"
+			item = {
+		TooltipContentSection = {
+			blockoverride "section_content" {
+				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_flatland')]" }
+			}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
 			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_MOUNTAINS')), '(int32)1', '(int32)0'))]"
 			item = {
 		TooltipContentSection = {
@@ -1011,10 +1022,22 @@ types pp_attribute_tooltips
 		}
 		vbox = {
 			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_COASTAL_OCEAN')), '(int32)1', '(int32)0'))]"
+			item = {
+		TooltipContentSection = {
+			blockoverride "section_content" {
+				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_coastal_ocean')]" }
+			}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
 			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_INLAND_SEA')), '(int32)1', '(int32)0'))]"
 			item = {
 		TooltipContentSection = {
 			blockoverride "section_content" {
+				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_inland_sea')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_INLAND_SEA" } }
 			}
 		}
@@ -1052,6 +1075,17 @@ types pp_attribute_tooltips
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_high_lakes')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_HIGH_LAKES" } }
+			}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_SALT_PANS')), '(int32)1', '(int32)0'))]"
+			item = {
+		TooltipContentSection = {
+			blockoverride "section_content" {
+				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_salt_pans')]" }
 			}
 		}
 			}
@@ -1191,6 +1225,7 @@ types pp_attribute_tooltips
 			item = {
 		TooltipContentSection = {
 			blockoverride "section_content" {
+				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_ha1300_topo_floodplains')]" }
 				pp_goods_output_table = { blockoverride "rows" {
 					pp_goods_output_row = { blockoverride "cells" { pp_goods_output_cell = { blockoverride "good_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_cloves.dds" tooltip = "[ShowGoodsName('cloves')]" } blockoverride "good_value" { raw_text = "#P +5%#!" } } pp_goods_output_cell = { blockoverride "good_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_tea.dds" tooltip = "[ShowGoodsName('tea')]" } blockoverride "good_value" { raw_text = "#N -7%#!" } } } }
 				} }

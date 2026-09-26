@@ -339,6 +339,11 @@ pp_tt_vegetation_ha1300_veg_swamp = {
 	local_construction_speed = -0.08
 }
 
+pp_tt_topography_flatland = {
+	game_data = { category = location }
+	local_tribesmen_pop_growth = -1
+}
+
 pp_tt_topography_mountains = {
 	game_data = { category = location }
 	local_frontage_allowed = -4
@@ -351,6 +356,7 @@ pp_tt_topography_mountains = {
 	free_building_levels = -40
 	local_build_buildings_efficiency = -0.35
 	local_construction_speed = -0.35
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_hills = {
@@ -365,6 +371,7 @@ pp_tt_topography_hills = {
 	free_building_levels = -10
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_plateau = {
@@ -378,6 +385,7 @@ pp_tt_topography_plateau = {
 	free_building_levels = -15
 	local_build_buildings_efficiency = -0.15
 	local_construction_speed = -0.15
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_wetlands = {
@@ -390,34 +398,55 @@ pp_tt_topography_wetlands = {
 	free_building_levels = -25
 	local_build_buildings_efficiency = -0.25
 	local_construction_speed = -0.25
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_ocean = {
 	game_data = { category = location }
 	local_navy_attrition = 2
 	max_attrition = 10
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_deep_ocean = {
 	game_data = { category = location }
 	local_navy_attrition = 10
 	max_attrition = 40
+	local_tribesmen_pop_growth = -1
+}
+
+pp_tt_topography_coastal_ocean = {
+	game_data = { category = location }
+	local_tribesmen_pop_growth = -1
+}
+
+pp_tt_topography_inland_sea = {
+	game_data = { category = location }
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_narrows = {
 	game_data = { category = location }
 	local_frontage_allowed = -2
 	blocks_vision_from_sea = yes
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_lakes = {
 	game_data = { category = location }
 	blocks_vision_from_sea = yes
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_high_lakes = {
 	game_data = { category = location }
 	blocks_vision_from_sea = yes
+	local_tribesmen_pop_growth = -1
+}
+
+pp_tt_topography_salt_pans = {
+	game_data = { category = location }
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_atoll = {
@@ -426,42 +455,49 @@ pp_tt_topography_atoll = {
 	free_building_levels = -25
 	local_build_buildings_efficiency = -0.25
 	local_construction_speed = -0.25
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_flatland_wasteland = {
 	game_data = { category = location }
 	blocks_vision_from_sea = yes
 	blocks_vision_from_land = yes
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_hills_wasteland = {
 	game_data = { category = location }
 	blocks_vision_from_sea = yes
 	blocks_vision_from_land = yes
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_plateau_wasteland = {
 	game_data = { category = location }
 	blocks_vision_from_sea = yes
 	blocks_vision_from_land = yes
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_wetlands_wasteland = {
 	game_data = { category = location }
 	blocks_vision_from_sea = yes
 	blocks_vision_from_land = yes
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_dune_wasteland = {
 	game_data = { category = location }
 	blocks_vision_from_sea = yes
 	blocks_vision_from_land = yes
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_mesa_wasteland = {
 	game_data = { category = location }
 	blocks_vision_from_sea = yes
 	blocks_vision_from_land = yes
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_mountain_wasteland = {
@@ -472,22 +508,31 @@ pp_tt_topography_mountain_wasteland = {
 	free_building_levels = -40
 	local_build_buildings_efficiency = -0.35
 	local_construction_speed = -0.35
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_ocean_wasteland = {
 	game_data = { category = location }
 	blocks_vision_from_sea = yes
 	blocks_vision_from_land = yes
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_ha1300_topo_rolling = {
 	game_data = { category = location }
 	local_population_capacity = 0.1
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_ha1300_topo_valleys = {
 	game_data = { category = location }
 	local_population_capacity = 2.5
+	local_tribesmen_pop_growth = -1
+}
+
+pp_tt_topography_ha1300_topo_floodplains = {
+	game_data = { category = location }
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_topography_ha1300_topo_deltas = {
@@ -495,6 +540,7 @@ pp_tt_topography_ha1300_topo_deltas = {
 	free_building_levels = -25
 	local_build_buildings_efficiency = -0.25
 	local_construction_speed = -0.25
+	local_tribesmen_pop_growth = -1
 }
 
 pp_tt_fertility_high = {

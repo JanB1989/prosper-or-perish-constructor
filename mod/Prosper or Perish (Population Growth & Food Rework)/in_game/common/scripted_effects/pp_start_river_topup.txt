@@ -208,6 +208,7 @@ pp_start_river_topup = {
  location:baofeng = { change_building_level_in_location = { building = building_type:rice_farm value = 2 } }
  location:baoji = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:baoning_maozhou = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:baoning_maozhou = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:bar_le_duc = { change_building_level_in_location = { building = building_type:bund value = 1 } }
  location:bar_le_duc = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:bar_sur_aube = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -327,7 +328,6 @@ pp_start_river_topup = {
  location:bonga = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:bongju = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:borac = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
- location:bordowa = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:borobudur = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:borovichi = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:bosa_colombia = { change_building_level_in_location = { building = building_type:bund value = 1 } }
@@ -365,6 +365,7 @@ pp_start_river_topup = {
  location:bugur = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:bugur = { change_building_level_in_location = { building = building_type:irrigation_systems value = 2 } }
  location:bukhara = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:bula_kongo = { change_building_level_in_location = { building = building_type:market_village value = 1 } }
  location:bundi = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:buraydah = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:burchmullo = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -476,16 +477,17 @@ pp_start_river_topup = {
  location:chiang_mai = { change_building_level_in_location = { building = building_type:rice_farm value = 2 } }
  location:chiang_rai = { change_building_level_in_location = { building = building_type:rice_farm value = 2 } }
  location:chiautla = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
- location:chiautla = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:chibvumani = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:chichaoua = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:chichawatni = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:chiisagata = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:chinabajul = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:chinantlan = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:chinantlan = { change_building_level_in_location = { building = building_type:tavern value = 1 } }
  location:chippenham = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:chiquimula = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:chisobibra = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:choapan = { change_building_level_in_location = { building = building_type:tavern value = 1 } }
  location:choconta = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:chodrak = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:chodrak_kham = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -500,9 +502,7 @@ pp_start_river_topup = {
  location:chor = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
  location:chor = { change_building_level_in_location = { building = building_type:irrigation_systems value = 4 } }
  location:chosan = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
- location:chosan = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:chrudim = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
- location:chucutitlan = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:chunan = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
  location:chundzha = { change_building_level_in_location = { building = building_type:irrigation_systems value = 2 } }
  location:chungju = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -513,7 +513,6 @@ pp_start_river_topup = {
  location:churumekua = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
  location:cianjur = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:cili = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
- location:cili = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:cincu = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:cirencester = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:ciudad_real = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -544,6 +543,7 @@ pp_start_river_topup = {
  location:dagana = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:daha = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:dahrur = { change_building_level_in_location = { building = building_type:bund value = 1 } }
+ location:dak_lak = { change_building_level_in_location = { building = building_type:victualling_yard value = 2 } }
  location:dakadjalan = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:dakhkat = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:dalai_nuur = { change_building_level_in_location = { building = building_type:clay_pit value = 1 } }
@@ -558,6 +558,7 @@ pp_start_river_topup = {
  location:darganata = { change_building_level_in_location = { building = building_type:irrigation_systems value = 2 } }
  location:darney = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:daroot_korgon = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:darrehshahr = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:darzanji = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:dasmenda = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:date_loc = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -645,6 +646,7 @@ pp_start_river_topup = {
  location:dubbi = { change_building_level_in_location = { building = building_type:irrigation_systems value = 4 } }
  location:dubna = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:dubrajpur = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
+ location:duitama = { change_building_level_in_location = { building = building_type:tavern value = 1 } }
  location:dullu = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
  location:dunga_bunga = { change_building_level_in_location = { building = building_type:irrigation_systems value = 4 } }
  location:dungarpur = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -688,6 +690,7 @@ pp_start_river_topup = {
  location:este = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:etain = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:etampes = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:etzatlan = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:evreux = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:ewu = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:ewyas = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -805,6 +808,7 @@ pp_start_river_topup = {
  location:goppingen = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:goraghat = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:gori = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:goris = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:gorizia = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:gorizia = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:gorkha = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
@@ -957,6 +961,7 @@ pp_start_river_topup = {
  location:husinec = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:huxian = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:hwangju = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:ia = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:ichagarh = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:icheon = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:ichon = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -1070,6 +1075,7 @@ pp_start_river_topup = {
  location:juxtlahuaca = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:jyekundo = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:jyekundo = { change_building_level_in_location = { building = building_type:irrigation_systems value = 2 } }
+ location:jyekundo = { change_building_level_in_location = { building = building_type:tavern value = 1 } }
  location:jyotipur = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:kabul = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:kabul = { change_building_level_in_location = { building = building_type:irrigation_systems value = 2 } }
@@ -1386,13 +1392,13 @@ pp_start_river_topup = {
  location:liyang_lizhou = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:ljubljana = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:llacsapallanca = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
- location:llacsapallanca = { change_building_level_in_location = { building = building_type:tavern value = 1 } }
  location:lleida = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:logrono = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:lohr = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:lomello = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:london = { change_building_level_in_location = { building = building_type:bridge_infrastructure value = 1 } }
  location:longan = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:longjing = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:longmen = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:longnan = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:longquan = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -1443,6 +1449,7 @@ pp_start_river_topup = {
  location:mae_sot = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:mae_sot = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:maerkang = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:maerkang = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:maheshpur = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:mahoba = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:mahoba = { change_building_level_in_location = { building = building_type:rice_farm value = 1 } }
@@ -1464,6 +1471,7 @@ pp_start_river_topup = {
  location:mandla = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:mandore = { change_building_level_in_location = { building = building_type:irrigation_systems value = 4 } }
  location:mang_viet = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
+ location:mang_viet = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:mangapet = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
  location:mangge = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:mangrol = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
@@ -1546,6 +1554,7 @@ pp_start_river_topup = {
  location:minna = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:minochi = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:minokamo = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:minzhou = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:miory = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:miraj = { change_building_level_in_location = { building = building_type:bund value = 1 } }
  location:miranda_de_ebro = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -1789,6 +1798,7 @@ pp_start_river_topup = {
  location:pagaruyung = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
  location:paikmal = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:paititi = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:paititi = { change_building_level_in_location = { building = building_type:tavern value = 1 } }
  location:pajang = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:pakuan = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:pal_lahara = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
@@ -1855,6 +1865,7 @@ pp_start_river_topup = {
  location:pietrykaw = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:pikillaqta = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:pikillaqta = { change_building_level_in_location = { building = building_type:irrigation_systems value = 2 } }
+ location:pikillaqta = { change_building_level_in_location = { building = building_type:tavern value = 1 } }
  location:pilak = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
  location:pina_de_ebro = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:pindi_gheb = { change_building_level_in_location = { building = building_type:irrigation_systems value = 2 } }
@@ -1883,7 +1894,6 @@ pp_start_river_topup = {
  location:plovdiv = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:pochutla = { change_building_level_in_location = { building = building_type:clay_pit value = 1 } }
  location:pochutla = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
- location:pochutla = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:poctlan = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:podor = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:podor = { change_building_level_in_location = { building = building_type:inland_saltworks value = 1 } }
@@ -1896,7 +1906,7 @@ pp_start_river_topup = {
  location:ponte_sor = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:pop_fargana = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:porahat = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
- location:porahat = { change_building_level_in_location = { building = building_type:victualling_yard value = 2 } }
+ location:porahat = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:pordenone = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:pordenone = { change_building_level_in_location = { building = building_type:rice_farm value = 2 } }
  location:portel = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -2071,6 +2081,7 @@ pp_start_river_topup = {
  location:sagzabad = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:sahagun = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:saharanpur = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:sahrazur = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:saint_gaudens = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:saint_jean_pied_de_port = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:saint_marceilin = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -2130,6 +2141,7 @@ pp_start_river_topup = {
  location:sausaya = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:sauveterre_de_guyenne = { change_building_level_in_location = { building = building_type:bund value = 1 } }
  location:sauveterre_de_guyenne = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:sayula = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:schaffhausen = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:schleiz = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:schleusingen = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -2423,7 +2435,6 @@ pp_start_river_topup = {
  location:teypana = { change_building_level_in_location = { building = building_type:irrigation_systems value = 2 } }
  location:thadij = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:thalisain = { change_building_level_in_location = { building = building_type:rice_farm value = 1 } }
- location:thandaunggyi = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:thanesar = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:thanjavur = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:thiers = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -2514,6 +2525,7 @@ pp_start_river_topup = {
  location:turenne = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:turin = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:tutak = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:tzapotzingo = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:tziuhcoac = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:tzunun_kaab = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:ubeda = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -2541,6 +2553,7 @@ pp_start_river_topup = {
  location:urtsun = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:urupampa = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:urupampa = { change_building_level_in_location = { building = building_type:irrigation_systems value = 2 } }
+ location:urupampa = { change_building_level_in_location = { building = building_type:tavern value = 1 } }
  location:urzedow = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:usak = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:ushachy = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -2616,6 +2629,7 @@ pp_start_river_topup = {
  location:waldeba = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:wallerfangen = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:wanar = { change_building_level_in_location = { building = building_type:clay_pit value = 1 } }
+ location:wandu = { change_building_level_in_location = { building = building_type:tavern value = 1 } }
  location:wangdue = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:wanggika = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:wangung = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -2628,6 +2642,7 @@ pp_start_river_topup = {
  location:warendorf = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:wari_peru = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:wari_peru = { change_building_level_in_location = { building = building_type:irrigation_systems value = 2 } }
+ location:wari_peru = { change_building_level_in_location = { building = building_type:tavern value = 1 } }
  location:wayanad = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:waylula = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
  location:wazirabad = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
@@ -2637,6 +2652,7 @@ pp_start_river_topup = {
  location:weithali = { change_building_level_in_location = { building = building_type:rice_farm value = 1 } }
  location:weixian = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:wej = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:wenchuan = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:wengker = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:wengyuan = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:wenshang = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -2673,6 +2689,7 @@ pp_start_river_topup = {
  location:xihe_huizhou = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:xihua = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:xilotepec = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
+ location:xilotepec = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:xilotlan = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:xinchang_yifeng = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:xinfeng = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
@@ -2803,7 +2820,6 @@ pp_start_river_topup = {
  location:ziyang_xingan = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
  location:ziyang_zizhong = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:zizhou = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
- location:zizhou = { change_building_level_in_location = { building = building_type:victualling_yard value = 2 } }
  location:znobov = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:zompanco = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:zongyang = { change_building_level_in_location = { building = building_type:irrigation_systems value = 2 } }

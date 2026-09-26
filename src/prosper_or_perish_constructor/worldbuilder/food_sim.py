@@ -179,6 +179,7 @@ class Pool:
     attraction_fixed: float = 0.1      # mean fixed migration attraction of its locations (base, development, statics)
     type_shares: dict = field(default_factory=dict)   # non-tribal pops by type, share of pop0 - tribesmen
     religion: str = ""                 # dominant pop religion
+    growth_offset: float = 0.0         # location growth of the pool's class rows (death sources, e.g. disease burden)
 
 
 def overpopulation(pool: Pool, f: float) -> float:
@@ -353,6 +354,7 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
                 g = rules.growth_base + rules.growth_per_year * min(2.0, months_after / 12.0)
             pop = N[i] + T[i]
             g += rules.tribal_growth * (T[i] / pop if pop > 0 else 0.0)
+            g += p.growth_offset
             N[i] *= 1.0 + g / 12.0
             # tribesmen: no starving out-migration; births x the free-land factor, losses unscaled
             gt = g - (rules.starving_migration if starving[i] and not rules.migration else 0.0)

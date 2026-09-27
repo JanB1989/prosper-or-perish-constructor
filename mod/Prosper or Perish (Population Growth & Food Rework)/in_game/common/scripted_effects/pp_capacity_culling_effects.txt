@@ -107,5 +107,8 @@ pp_cull_capacity_building_above_max = {
 			building = building_type:$building$
 			value = -1
 		}
+		# Debug flag: scripted cull, counted per location (save) and logged
+		change_variable = { name = pp_dbg_script_cull add = 1 }
+		error_log = "PPBLD;capacity_cull;$building$"
 	}
 }

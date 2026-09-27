@@ -39,11 +39,11 @@ def write_map_modes(root,state):
     global_refresh.append('}');seed.extend(global_refresh)
     write('in_game/common/scripted_effects/pp_navigation_map.txt','\n'.join(seed))
     categories=[
-      ('maintained','has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4','65 245 170','Maintained waterway','All mapped passable connections at this waterway have the maintained navigation route type.'),
-      ('partial','has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6','170 225 85','Partly maintained waterway','Some mapped connections are maintained; others retain their baseline transport costs. Inspect individual routes for details.'),
-      ('barrier','has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3','225 65 65','River barrier','This converted river zone blocks fleet passage. Navigation works cannot remove this natural barrier.'),
-      ('improvable','has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2','245 180 60','Unimproved waterway','Fleets can pass at high cost. Local navigation works improve the maintained connections.'),
-      ('difficult','has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5','190 115 200','Difficult waterway','Large tropical or strongly seasonal waterway. Baseline movement and market-access costs are higher; navigation works can improve maintained connections.'),
+      ('maintained','has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4','65 245 170','Canal passage','Shallows kept open by a River Navigation Canal on a bank: every connection has the canal route type.'),
+      ('partial','has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6','170 225 85','Partly canal passage','Some connections of this waterway lead through opened shallows; the others keep their own transport costs.'),
+      ('barrier','has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3','225 65 65','Falls','Falls or great rapids that boats cannot pass. No canal can open them.'),
+      ('improvable','has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2','245 180 60','Shallows','Boats pass slowly and at a cost until a River Navigation Canal is built on a bank.'),
+      ('difficult','has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5','190 115 200','Difficult waterway','Large tropical or strongly seasonal waterway. Baseline movement and market-access costs are higher.'),
       ('navigable','has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1','35 180 245','Navigable waterway','Converted river zone open to fleets. Inspect route connections for movement and market-access costs.')]
     colors={1:'130 180 170',2:'100 170 130',3:'65 155 100',4:'35 130 70',5:'20 100 45'}
     for n in range(5,0,-1):

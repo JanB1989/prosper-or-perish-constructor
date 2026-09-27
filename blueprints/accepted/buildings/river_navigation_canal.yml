@@ -1,0 +1,63 @@
+version: 2
+tag: river_navigation_canal
+footprint: infrastructure
+building:
+  key: river_navigation_canal
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_river_navigation_canal_maintenance
+  possible_production_methods: []
+  body: |
+    is_foreign = no
+    max_levels = 1
+    pop_type = laborers
+    employment_size = 0
+    price = pp_river_navigation_canal_price
+    category = infrastructure_category
+    icon = river_navigation_canal
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = 540
+    construction_demand = town_building_construction
+    location_potential = {
+      is_coastal = yes
+      OR = {
+        has_building = building_type:river_navigation_canal
+        any_neighbor_location = { topography = pp_river_shallows NOT = { has_location_modifier = pp_river_canal_open } }
+      }
+    }
+    unique_production_methods = {
+      pp_river_navigation_canal_maintenance = {
+        lumber = 0.04
+        tools = 0.02
+        stone = 0.01
+        category = building_maintenance
+      }
+    }
+    on_built = { custom_tooltip = pp_river_canal_built_tt hidden_effect = { location = { pp_river_canal_built = yes } } }
+    on_destroyed = { custom_tooltip = pp_river_canal_destroyed_tt hidden_effect = { location = { pp_river_canal_destroyed = yes } } }
+    forbidden_for_estates = yes
+    ai_forbid_shutdown = yes
+localization:
+  entries:
+    river_navigation_canal: River Navigation Canal
+    river_navigation_canal_desc: Weirs with flash locks, dredged channels and towpaths carry boats past the shallows next to this location. The waterway stays open while any bank keeps such a canal.
+    river_navigation_canal_slot_0: Maintenance
+    pp_river_navigation_canal_maintenance: Lock and Towpath Keepers
+    pp_river_navigation_canal_price: River Navigation Canal Cost
+prices:
+- key: pp_river_navigation_canal_price
+  body: '{ gold = 500 }'
+icon:
+  source_png: ../assets/icons/river_navigation_canal.png
+  output_dds: river_navigation_canal.dds
+  size: 512
+  drawing: ../../../assets/icon_drawings/river_navigation_canal/draw.py
+evaluation:
+  allow_rules:
+    profit_percent: 'Infrastructure upkeep without output: the canal pays for itself through the opened water roads, not through production.'

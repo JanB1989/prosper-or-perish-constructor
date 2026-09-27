@@ -1672,7 +1672,7 @@ flavor_por.29 = { #The Epistola de Victoria Contra Infideles
 							NOT = { this = root }
 						}
 						dominant_religion = religion:sunni
-						is_coastal = yes
+						pp_is_sea_coast = yes
 						is_discovered_by = root
 					}
 					save_scope_as = escape_target1
@@ -1699,7 +1699,7 @@ flavor_por.29 = { #The Epistola de Victoria Contra Infideles
 							NOT = { this = root }
 						}
 						dominant_religion = religion:sunni
-						is_coastal = yes
+						pp_is_sea_coast = yes
 						is_discovered_by = root
 					}
 					save_scope_as = escape_target2
@@ -1713,7 +1713,7 @@ flavor_por.29 = { #The Epistola de Victoria Contra Infideles
 						NOT = { this = root }
 					}
 					dominant_religion = religion:sunni
-					is_coastal = yes
+					pp_is_sea_coast = yes
 					is_discovered_by = root
 				}
 				save_scope_as = escape_target3
@@ -1726,7 +1726,7 @@ flavor_por.29 = { #The Epistola de Victoria Contra Infideles
 						NOT = { this = root }
 					}
 					dominant_religion = religion:sunni
-					is_coastal = yes
+					pp_is_sea_coast = yes
 					is_discovered_by = root
 				}
 				save_scope_as = escape_target4
@@ -1786,7 +1786,7 @@ flavor_por.29 = { #The Epistola de Victoria Contra Infideles
 			continent:america = {
 				random_location_in_continent = {
 					limit = {
-						is_coastal = yes
+						pp_is_sea_coast = yes
 						any_country = { has_colonial_charter_in = prev.province_definition }
 					}
 					save_scope_as = escape_target7
@@ -1796,7 +1796,7 @@ flavor_por.29 = { #The Epistola de Victoria Contra Infideles
 		continent:america = {
 			random_location_in_continent = {
 				limit = {
-					is_coastal = yes
+					pp_is_sea_coast = yes
 					any_country = { has_colonial_charter_in = prev.province_definition }
 				}
 				save_scope_as = escape_target8
@@ -2164,7 +2164,7 @@ flavor_por.31 = { #The Expulsion of Muslims from Portugal
 						NOT = { this = root }
 					}
 					dominant_religion = religion:sunni
-					is_coastal = yes
+					pp_is_sea_coast = yes
 					is_discovered_by = root
 				}
 				save_scope_as = escape_target1
@@ -2177,7 +2177,7 @@ flavor_por.31 = { #The Expulsion of Muslims from Portugal
 						NOT = { this = root }
 					}
 					dominant_religion = religion:sunni
-					is_coastal = yes
+					pp_is_sea_coast = yes
 					is_discovered_by = root
 				}
 				save_scope_as = escape_target2
@@ -2190,7 +2190,7 @@ flavor_por.31 = { #The Expulsion of Muslims from Portugal
 						NOT = { this = root }
 					}
 					dominant_religion = religion:sunni
-					is_coastal = yes
+					pp_is_sea_coast = yes
 					is_discovered_by = root
 				}
 				save_scope_as = escape_target3
@@ -2203,7 +2203,7 @@ flavor_por.31 = { #The Expulsion of Muslims from Portugal
 						NOT = { this = root }
 					}
 					dominant_religion = religion:sunni
-					is_coastal = yes
+					pp_is_sea_coast = yes
 					is_discovered_by = root
 				}
 				save_scope_as = escape_target4
@@ -2216,7 +2216,7 @@ flavor_por.31 = { #The Expulsion of Muslims from Portugal
 						NOT = { this = root }
 					}
 					dominant_religion = religion:sunni
-					is_coastal = yes
+					pp_is_sea_coast = yes
 					is_discovered_by = root
 				}
 				save_scope_as = escape_target5
@@ -2229,7 +2229,7 @@ flavor_por.31 = { #The Expulsion of Muslims from Portugal
 						NOT = { this = root }
 					}
 					dominant_religion = religion:sunni
-					is_coastal = yes
+					pp_is_sea_coast = yes
 					is_discovered_by = root
 				}
 				save_scope_as = escape_target6
@@ -2242,7 +2242,7 @@ flavor_por.31 = { #The Expulsion of Muslims from Portugal
 						NOT = { this = root }
 					}
 					dominant_religion = religion:sunni
-					is_coastal = yes
+					pp_is_sea_coast = yes
 					is_discovered_by = root
 				}
 				save_scope_as = escape_target7
@@ -2255,7 +2255,7 @@ flavor_por.31 = { #The Expulsion of Muslims from Portugal
 						NOT = { this = root }
 					}
 					dominant_religion = religion:sunni
-					is_coastal = yes
+					pp_is_sea_coast = yes
 					is_discovered_by = root
 				}
 				save_scope_as = escape_target8
@@ -3894,7 +3894,7 @@ flavor_por.52 = { # Navigator Prince
 		any_owned_location = {
 			is_connected_to = root.capital
 			NOT = { is_capital = yes }
-			is_coastal = yes
+			pp_is_sea_coast = yes
 		}
 	}
 
@@ -3914,7 +3914,7 @@ flavor_por.52 = { # Navigator Prince
 			limit = {
 				is_connected_to = root.capital
 				NOT = { is_capital = yes }
-				is_coastal = yes
+				pp_is_sea_coast = yes
 			}
 			save_scope_as = target_location
 		}

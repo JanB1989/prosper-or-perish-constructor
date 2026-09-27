@@ -45,6 +45,21 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     report: dict[str, object] = {"handover": str(contract.root), "version": contract.version, "worldbuilder_commit": contract.meta.get("worldbuilder_commit")}
     if cfg.sync_geography:
         report["geography"] = wb_geography.sync_geography(cfg.geography_export, mod_root, repo, vanilla_root(repo, project))
+    # channel tiles take the topography of their navigation state (Navigable River, Shallows, Falls)
+    if cfg.raw.get("navigation_config"):
+        nav_settings = json.loads((repo / str(cfg.raw["navigation_config"])).read_text(encoding="utf-8"))
+        if nav_settings.get("enabled") and nav_settings.get("topographies"):
+            report["channel_topographies"] = navigation.write_topographies(mod_root, vanilla_root(repo, project), contract, nav_settings)
+    # water access from the mod's own map: the Sea Coast modifier, gates and start model follow the game's sea coast
+    from . import coast
+
+    water = coast.load(repo, mod_root, vanilla_root(repo, project))
+    contract = coast.with_sea_coast(contract, water)
+    import dataclasses
+
+    cfg = dataclasses.replace(cfg, raw={**cfg.raw, "_water_access": water})
+    report["water_access"] = {state: sum(1 for v in water.values() if v == state) for state in ("sea_coast", "waterway")}
+    coast.write_runtime(mod_root)
     report["class_injects"] = wb_modifiers.write_class_injects(contract, cfg.geography_export, mod_root, repo, vanilla_root(repo, project))
     if cfg.compat_files:
         families = wb_compat.load_families(cfg.geography_export)

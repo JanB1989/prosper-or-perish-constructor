@@ -543,6 +543,22 @@ pp_tt_topography_ha1300_topo_deltas = {
 	local_tribesmen_pop_growth = -1
 }
 
+pp_tt_topography_pp_river_channel = {
+	game_data = { category = location }
+	blocks_vision_from_sea = yes
+}
+
+pp_tt_topography_pp_river_shallows = {
+	game_data = { category = location }
+	blocks_vision_from_sea = yes
+}
+
+pp_tt_topography_pp_river_falls = {
+	game_data = { category = location }
+	blocks_vision_from_sea = yes
+	blocks_vision_from_land = yes
+}
+
 pp_tt_fertility_high = {
 	game_data = { category = location }
 	local_population_capacity = 3.8

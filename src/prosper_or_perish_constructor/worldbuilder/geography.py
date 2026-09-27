@@ -308,7 +308,9 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path |
         if rel == LOCATION_WINDOW:
             bonuses = mod_root / RGO_BONUSES
             goods = rgo_bonus_goods(bonuses.read_text(encoding="utf-8-sig")) if bonuses.is_file() else []
-            merged = add_land_potential_chip(add_rgo_chip(merge_population_capacity(merge_location_window(src.read_text(encoding="utf-8-sig"))), goods))
+            from .coast import water_access_chips
+
+            merged = add_land_potential_chip(add_rgo_chip(merge_population_capacity(water_access_chips(merge_location_window(src.read_text(encoding="utf-8-sig")))), goods))
             harvests = location_status.load_harvests(mod_root)
             merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla))
             location_status.write_harvest_files(mod_root, harvests)

@@ -1,13 +1,40 @@
 {
   "enabled": true,
-  "family": "irrigation_systems",
-  "maximum_levels_per_site": 1,
-  "starting_levels_per_site": 1,
-  "construction_days": 540,
-  "upkeep": {
-    "lumber": 0.04,
-    "tools": 0.02,
-    "stone": 0.01
+  "canal": {
+    "key": "river_navigation_canal",
+    "name": "River Navigation Canal",
+    "gold": 500,
+    "construction_days": 540,
+    "advance": "road_building",
+    "upkeep": {
+      "lumber": 0.04,
+      "tools": 0.02,
+      "stone": 0.01
+    },
+    "description": "Weirs with flash locks, dredged channels and towpaths carry boats past the shallows next to this location. The waterway stays open while any bank keeps such a canal."
+  },
+  "topographies": {
+    "navigable": {
+      "key": "pp_river_channel",
+      "name": "Navigable River",
+      "description": "A river reach that boats can use.",
+      "icon": "narrows",
+      "movement_cost": 1.0
+    },
+    "improvable": {
+      "key": "pp_river_shallows",
+      "name": "Shallows",
+      "description": "Shoals and mill weirs: boats pass slowly and at a cost until a River Navigation Canal is built on a bank.",
+      "icon": "narrows",
+      "movement_cost": 1.25
+    },
+    "barrier": {
+      "key": "pp_river_falls",
+      "name": "Falls",
+      "description": "Falls and great rapids that boats cannot pass.",
+      "icon": "ocean_wasteland",
+      "movement_cost": 1.0
+    }
   },
   "road_costs": {
     "navigable": {
@@ -26,75 +53,6 @@
       "market_access": 2.0
     }
   },
-  "building_types": {
-    "river_navigation_works": {
-      "name": "River Navigation Works",
-      "gold": 400,
-      "description": "Maintained channels, towpaths and landing places support navigation and the surrounding cultivated land. Completing the works improves the connected river routes."
-    },
-    "canal_lock_works": {
-      "name": "Canal and Lock Works",
-      "gold": 750,
-      "description": "Locks, sluices and bypass channels improve difficult waterway connections. Completing the works improves the connected river routes."
-    },
-    "caoyun_canal_office": {
-      "name": "Caoyun Canal Office",
-      "gold": 650,
-      "bounds": [
-        105,
-        20,
-        123,
-        41
-      ],
-      "description": "Canal officials, dredging crews and sluice keepers maintain waterways used by the grain transport system. Completing the works improves the connected river routes.",
-      "family": "irrigated_fields",
-      "regions": [
-        "north_china_region",
-        "east_china_region",
-        "south_china_region",
-        "west_china_region"
-      ]
-    },
-    "lowland_sluice_works": {
-      "name": "Lowland Sluice Works",
-      "gold": 550,
-      "bounds": [
-        -1,
-        49,
-        10,
-        55
-      ],
-      "description": "Sluice keepers and water boards coordinate drainage and passage through the lowland waterways. Completing the works improves the connected river routes.",
-      "family": "polders"
-    },
-    "nile_navigation_works": {
-      "name": "Nile Canal and Basin Works",
-      "gold": 500,
-      "bounds": [
-        28,
-        24,
-        34,
-        32
-      ],
-      "description": "Canal keepers maintain the channels connecting the Nile, cultivated basins and river landings. Completing the works improves the connected river routes. Cataracts remain impassable."
-    },
-    "delta_waterway_works": {
-      "name": "Delta Waterway Works",
-      "gold": 500,
-      "bounds": [
-        85,
-        19,
-        108,
-        26
-      ],
-      "description": "Dredged distributaries, landing channels and embankments sustain transport through the delta. Completing the works improves the connected river routes.",
-      "family": "irrigated_fields",
-      "regions": [
-        "bengal_region",
-        "indochina_region"
-      ]
-    }
-  },
   "starting_evidence": [
     {
       "id": "grand_canal_yuan",
@@ -104,10 +62,9 @@
         122,
         40
       ],
-      "building": "caoyun_canal_office",
       "source": "https://whc.unesco.org/en/list/1443",
       "confidence": "regional reconstruction",
-      "note": "Regional allocation of surviving irrigation improvement levels to maintained grain-navigation infrastructure; individual buildings are inferred, not surveyed."
+      "note": "Maintained grain-navigation channels of the Grand Canal: shallows in this envelope start with a canal."
     },
     {
       "id": "nile_basin_channels",
@@ -117,10 +74,9 @@
         32.8,
         31.8
       ],
-      "building": "nile_navigation_works",
       "source": "https://resources.metmuseum.org/resources/metpublications/pdf/An_Egyptian_Bestiary_The_Metropolitan_Museum_of_Art_Bulletin_v_52_no_4_Spring_1995.pdf",
       "confidence": "long-lived system inference",
-      "note": "Basin irrigation and channel maintenance, not modern barrages or an open cataract route."
+      "note": "Basin channels kept open; the cataracts stay Falls."
     },
     {
       "id": "medieval_delfland",
@@ -130,33 +86,26 @@
         4.8,
         52.3
       ],
-      "building": "lowland_sluice_works",
       "source": "https://www.hhdelfland.nl/over-ons/historie-erfgoed/historie/",
       "confidence": "documented institution; inferred local works",
       "note": "Water-board authority documented from 1289. No industrial canals or steam drainage."
     }
   ],
-  "regional_priority": [
-    "caoyun_canal_office",
-    "nile_navigation_works",
-    "lowland_sluice_works",
-    "delta_waterway_works"
-  ],
   "notes": [
-    "Regional variants replace existing Irrigation Systems levels one-for-one; identical capacity per level.",
-    "Only documented regional starting envelopes receive automatic placement, and only if an eligible existing family level is available.",
+    "Channel tiles take the topography of their World Builder state: navigable -> Navigable River, improvable -> Shallows, barrier -> Falls (impassable through the impassable_mountains list).",
+    "One building, the River Navigation Canal, on any bank of a Shallows tile that is not open yet (1 level). A Shallows tile is open while any bank next to it has the canal; its water roads switch between their own cost profile and 'improved' (recomputed on build and destruction, never toggled).",
+    "Shallows in a starting_evidence envelope start with a canal on their best bank.",
     "Physical conversion thresholds and each route cost profile come from the World Builder handover; road_costs here override what each profile costs in game (step = MARKET_SEA_DISTANCE_FACTOR x (1 + market_access))."
   ],
-  "advance_unlocks": {
-    "river_navigation_works": "road_building",
-    "canal_lock_works": "pound_lock_canals_advance"
-  },
-  "existing_building_links": {
-    "jiangnan_canal_network": {
-      "site_buildings": [
-        "caoyun_canal_office"
-      ],
-      "gold": 600
-    }
-  }
+  "retired_buildings": [
+    "river_navigation_works",
+    "canal_lock_works",
+    "caoyun_canal_office",
+    "lowland_sluice_works",
+    "nile_navigation_works",
+    "delta_waterway_works"
+  ],
+  "unlinked_buildings": [
+    "jiangnan_canal_network"
+  ]
 }

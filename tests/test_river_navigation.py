@@ -1,18 +1,62 @@
 from prosper_or_perish_constructor.worldbuilder.navigation import exchange_levels
 
 
-def test_starting_works_transfer_capacity_without_adding_it():
-    levels={'irrigation_systems':(3,5),'other':(2,4)}
-    count=exchange_levels(levels,{'family':'irrigation_systems','building':'canal_lock_works','start_levels':1})
-    assert count==1
-    assert levels=={'irrigation_systems':(2,5),'other':(2,4),'canal_lock_works':(1,1)}
-    assert sum(value[0] for value in levels.values())==5
+def test_starting_canal_is_one_level_outside_the_capacity_families():
+    levels={}
+    assert exchange_levels(levels,{'building':'river_navigation_canal','start_levels':1})==1
+    assert levels=={'river_navigation_canal':(1,1)}
 
 
-def test_no_starting_capacity_means_no_free_navigation_building():
-    levels={'irrigation_systems':(0,5)}
-    assert exchange_levels(levels,{'family':'irrigation_systems','building':'canal_lock_works','start_levels':1})==0
-    assert 'canal_lock_works' not in levels
+def test_no_starting_evidence_means_no_starting_canal():
+    levels={}
+    assert exchange_levels(levels,{'building':'river_navigation_canal','start_levels':0})==0
+    assert exchange_levels(levels,None)==0
+    assert levels=={}
+
+
+def _canal_state():
+    settings={'canal':{'key':'river_navigation_canal'},'topographies':{'improvable':{'key':'pp_river_shallows'}}}
+    tiles={'s1':{'state':'improvable'},'s2':{'state':'improvable'},'n':{'state':'navigable'}}
+    edges=[{'from':'n','to':'s1','state':'improvable','cost_profile':'improvable','shore':False},
+           {'from':'s1','to':'s2','state':'improvable','cost_profile':'improvable','shore':False},
+           {'from':'s1','to':'bank','state':'improvable','cost_profile':'improvable','shore':True}]
+    return {'canal':'river_navigation_canal','shallows':['s1','s2'],'settings':settings,'tiles':tiles,'edges':edges,
+            'sites':{'bank':{'building':'river_navigation_canal'}}}
+
+
+def _edge_line(e,improved=False):
+    kind='improved' if improved else e.get('cost_profile',e['state'])
+    return f" location:{e['from']} = {{ add_road_to = {{ target = location:{e['to']} type = pp_navigation_{kind} }} }}"
+
+
+def test_canal_recomputes_each_shallows_tile_from_the_canals_that_exist():
+    from prosper_or_perish_constructor.worldbuilder.navigation import CANAL_OPEN, canal_effects
+    lines,start=canal_effects(_canal_state(),_edge_line,{})
+    text='\n'.join(lines)
+    tile=text.split('pp_river_canal_tile_s1 = {')[1].split('\n}')[0]
+    # open while any bank has the canal, except the location being destroyed
+    assert 'any_neighbor_location = { has_building = building_type:river_navigation_canal NOT = { this = scope:pp_canal_closing } }' in tile
+    assert f'remove_location_modifier = {CANAL_OPEN}' in tile
+    # a road between two shallows is improved only while both are open; otherwise it keeps its own profile
+    assert (f'limit = {{ location:s1 = {{ has_location_modifier = {CANAL_OPEN} }} location:s2 = {{ has_location_modifier = {CANAL_OPEN} }} }}'
+            ' location:s1 = { add_road_to = { target = location:s2 type = pp_navigation_improved } }') in tile
+    assert 'else = { location:s1 = { add_road_to = { target = location:s2 type = pp_navigation_improvable } } }' in tile
+    # destruction skips the destroyed location (on_destroyed runs while its canal still counts)
+    destroyed=text.split('pp_river_canal_destroyed = {')[1].split('\n}')[0]
+    assert destroyed.index('save_scope_as = pp_canal_closing') < destroyed.index('pp_river_canal_refresh_tile = yes')
+    assert 'limit = { this = location:s2 } pp_river_canal_tile_s2 = yes' in text
+    assert start==[' location:bank = { if = { limit = { has_building = building_type:river_navigation_canal } pp_river_canal_built = yes } }']
+
+
+def test_canal_blueprint_gate_reads_the_map_and_has_one_level():
+    from prosper_or_perish_constructor.worldbuilder.navigation import CANAL_OPEN, canal_body
+    settings={'canal':{'key':'river_navigation_canal','construction_days':540,'upkeep':{'lumber':0.04}},
+              'topographies':{'improvable':{'key':'pp_river_shallows'}}}
+    body=canal_body(settings)
+    assert 'max_levels = 1' in body and 'pp_navigation_site_' not in body
+    assert f'any_neighbor_location = {{ topography = pp_river_shallows NOT = {{ has_location_modifier = {CANAL_OPEN} }} }}' in body
+    assert 'has_building = building_type:river_navigation_canal' in body   # an existing canal never turns invalid
+    assert 'local_population_capacity' not in body
 
 
 def test_native_pixel_preservation_never_stacks_scripted_bonuses(tmp_path):
@@ -24,16 +68,14 @@ def test_native_pixel_preservation_never_stacks_scripted_bonuses(tmp_path):
     assert 'cancel' not in text and 'river_flowing_through_' not in text
 
 
-def test_site_markers_are_defined_and_placed_on_each_site(tmp_path):
-    from prosper_or_perish_constructor.worldbuilder.navigation import site_markers, write_bonus_compensation
+def test_canal_tile_modifier_is_defined_and_no_site_markers_remain(tmp_path):
+    from prosper_or_perish_constructor.worldbuilder.navigation import CANAL_OPEN, site_markers, write_bonus_compensation
     (tmp_path/'main_menu/common/static_modifiers').mkdir(parents=True)
-    (tmp_path/'main_menu/localization/english').mkdir(parents=True)
-    state={'manifest':{'river_preservation':'native_bank_pixel'},'settings':{'building_types':{'river_navigation_works':{'name':'River Works'}}},
-           'sites':{'a':{'building':'river_navigation_works'},'b':{'building':'canal_lock_works'}}}
-    assert site_markers(state)=={'a':['pp_navigation_site_river_navigation_works'],'b':['pp_navigation_site_canal_lock_works']}
+    state={'manifest':{'river_preservation':'native_bank_pixel'},'sites':{'a':{'building':'river_navigation_canal'}}}
+    assert site_markers(state)=={}
     write_bonus_compensation(state,tmp_path,tmp_path)
-    assert 'pp_navigation_site_river_navigation_works = {' in (tmp_path/'main_menu/common/static_modifiers/pp_navigation_preservation.txt').read_text()
-    assert 'STATIC_MODIFIER_NAME_pp_navigation_site_river_navigation_works' in (tmp_path/'main_menu/localization/english/pp_navigation_preservation_l_english.yml').read_text(encoding='utf-8')
+    text=(tmp_path/'main_menu/common/static_modifiers/pp_navigation_preservation.txt').read_text()
+    assert f'{CANAL_OPEN} = {{' in text and 'pp_navigation_site_' not in text
 
 
 def test_legacy_compensation_contract_requires_rebuild(tmp_path):
@@ -70,13 +112,12 @@ def test_regional_envelopes_do_not_leak_into_neighbouring_regions():
     assert not regional_match({'calibrated_lon':106,'calibrated_lat':22},spec)
 
 
-def test_historical_host_preference_requires_the_matching_building():
+def test_historical_evidence_is_any_documented_envelope():
     from prosper_or_perish_constructor.worldbuilder.navigation import historical_evidence
-    entry={'id':'documented','bounds':[0,0,10,10],'building':'sluices'}
+    entry={'id':'documented','bounds':[0,0,10,10]}
     settings={'starting_evidence':[entry]}
-    attrs={'calibrated_lon':5,'calibrated_lat':5}
-    assert historical_evidence(settings,attrs,'locks') is None
-    assert historical_evidence(settings,attrs,'sluices') == entry
+    assert historical_evidence(settings,{'calibrated_lon':5,'calibrated_lat':5}) == entry
+    assert historical_evidence(settings,{'calibrated_lon':15,'calibrated_lat':5}) is None
 
 
 def test_route_validation_rejects_barrier_upgrades_and_duplicate_undirected_edges():

@@ -234,6 +234,9 @@ class Rules:
                 return not any(single(*e) for e in entries(v))
             if key == "always":
                 return bool(v)
+            if key in ctx.get("trigger_values", {}):
+                # scripted triggers the start model knows the answer to (water access, read from the map)
+                return ctx["trigger_values"][key] == (str(v) == "yes" if isinstance(v, str) else bool(v))
             if key in self.triggers:
                 trigger = self.triggers[key]
                 if isinstance(v, CList):

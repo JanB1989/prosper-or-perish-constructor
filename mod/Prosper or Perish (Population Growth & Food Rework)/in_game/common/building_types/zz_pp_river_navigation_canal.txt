@@ -1,0 +1,39 @@
+﻿# >>> eu5-building-pipeline:river_navigation_canal:building
+river_navigation_canal = {
+is_foreign = no
+max_levels = 1
+pop_type = laborers
+employment_size = 0
+price = pp_river_navigation_canal_price
+category = infrastructure_category
+icon = river_navigation_canal
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+build_time = 540
+construction_demand = town_building_construction
+location_potential = {
+  is_coastal = yes
+  OR = {
+    has_building = building_type:river_navigation_canal
+    any_neighbor_location = { topography = pp_river_shallows NOT = { has_location_modifier = pp_river_canal_open } }
+  }
+}
+unique_production_methods = {
+  pp_river_navigation_canal_maintenance = {
+    lumber = 0.04
+    tools = 0.02
+    stone = 0.01
+    category = building_maintenance
+  }
+}
+on_built = { custom_tooltip = pp_river_canal_built_tt hidden_effect = { location = { pp_river_canal_built = yes } } }
+on_destroyed = { custom_tooltip = pp_river_canal_destroyed_tt hidden_effect = { location = { pp_river_canal_destroyed = yes } } }
+forbidden_for_estates = yes
+ai_forbid_shutdown = yes
+	raw_modifier = {
+		local_population_capacity = 0
+	}
+}
+# <<< eu5-building-pipeline:river_navigation_canal:building

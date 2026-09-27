@@ -5571,34 +5571,6 @@ widget = {
         
     }
 widget = {
-        name = "ha1300_native_coast"
-        size = { 30 30 }
-        datacontext = "[LocationView.GetLocation]"
-        tooltipwidget = {
-        ContextualTooltipType = {
-            blockoverride "title_text" { text = "[LocationView.GetLocation.Custom('ha1300_native_coast')]" }
-            blockoverride "concept_link" { visible = yes text = "[coastal|E]" }
-            blockoverride "title_icon" {
-                widget = {
-                    using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
-                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/location_icons/coastal.dds" }
-                }
-            }
-            
-            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_native_coast')]" } }TooltipTextBlock = { blockoverride "text" { text = "HA1300_COAST_HELP" } }TooltipStringPairList = {
-        visible = "[LocationView.GetLocation.IsCoastal]" textcontext = "[ShowModifierEffect('coastal')]"
-    } pp_attribute_view_coast = {} }
-        }
-    }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
-        icon = { size = { 30 30 } texture = "gfx/interface/icons/location_icons/coastal.dds"
-                    visible = "[LocationView.GetLocation.IsCoastal]" }
-                 icon = { size = { 30 30 } texture = "gfx/interface/icons/location_icons/inland.dds"
-                    visible = "[Not(LocationView.GetLocation.IsCoastal)]" }
-        
-    }
-widget = {
         name = "ha1300_native_river"
         size = { 30 30 }
         datacontext = "[LocationView.GetLocation]"
@@ -5660,6 +5632,49 @@ widget = {
                  icon = { size = { 30 30 } texture = "gfx/interface/topography/lakes.dds" alpha = 0.3
                     visible = "[Not(EqualTo_string(LocationView.GetLocation.Custom('ha1300_native_lake'), Localize('HA1300_LAKESIDE')))]" }
         
+    }
+widget = {
+        name = "pp_water_access"
+        size = { 30 30 }
+        datacontext = "[LocationView.GetLocation]"
+        tooltipwidget = {
+        ContextualTooltipType = {
+            blockoverride "title_text" { text = "[LocationView.GetLocation.Custom('pp_water_access')]" }
+            blockoverride "concept_link" { visible = yes text = "[coastal|E]" }
+            blockoverride "title_icon" {
+                widget = { using = tooltip_title_icon_size background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" } icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/location_icons/coastal.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_SEA_COAST'))]" } icon = { using = tooltip_title_icon_size texture = "gfx/interface/topography/pp_river_channel.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_WATERWAY'))]" } icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/location_icons/inland.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_INLAND'))]" } }
+            }
+            blockoverride "tooltip_content" {
+                TooltipTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('pp_water_access_help')]" } }
+                TooltipTextBlock = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access_river_note'), Localize('PP_WATER_ALSO_RIVER'))]" blockoverride "text" { text = "PP_WATER_ALSO_RIVER" } }
+                TooltipStringPairList = { visible = "[LocationView.GetLocation.IsCoastal]" textcontext = "[ShowModifierEffect('coastal')]" }
+                pp_attribute_view_coast = {}
+            }
+        }
+    }
+        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        icon = { size = { 30 30 } texture = "gfx/interface/icons/location_icons/coastal.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_SEA_COAST'))]" } icon = { size = { 30 30 } texture = "gfx/interface/topography/pp_river_channel.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_WATERWAY'))]" } icon = { size = { 30 30 } texture = "gfx/interface/icons/location_icons/inland.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_INLAND'))]" }
+    }
+widget = {
+        name = "pp_port"
+        size = { 30 30 }
+        datacontext = "[LocationView.GetLocation]"
+        tooltipwidget = {
+        ContextualTooltipType = {
+            blockoverride "title_text" { text = "[SelectLocalization(LocationView.GetLocation.HasPort, 'PP_PORT', 'PP_NO_PORT')]" }
+            blockoverride "concept_link" { visible = yes text = "[port|E]" }
+            blockoverride "title_icon" {
+                widget = { using = tooltip_title_icon_size background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" } icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/modifier_types/natural_harbor_suitability.dds" } }
+            }
+            blockoverride "tooltip_content" {
+                TooltipTextBlock = { blockoverride "text" { text = "[SelectLocalization(LocationView.GetLocation.HasPort, 'PP_PORT_HELP', 'PP_NO_PORT_HELP')]" } }
+                TooltipTextBlock = { visible = "[LocationView.GetLocation.HasPort]" blockoverride "text" { text = "[Localize('PP_PORT_HARBOR')] [FixedPointToInt(LocationView.GetLocation.MakeScope.ScriptValue('pp_harbor_suitability_percent'))]%" } }
+            }
+        }
+    }
+        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        icon = { size = { 30 30 } texture = "gfx/interface/icons/modifier_types/natural_harbor_suitability.dds" visible = "[LocationView.GetLocation.HasPort]" }
+        icon = { size = { 30 30 } texture = "gfx/interface/icons/modifier_types/natural_harbor_suitability.dds" alpha = 0.3 visible = "[Not(LocationView.GetLocation.HasPort)]" }
     }
 widget = { name = "ha1300_native_soil" size = { 30 30 }
 widget = {

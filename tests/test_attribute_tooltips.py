@@ -178,7 +178,7 @@ def test_write_builds_views_that_hold_effects_and_goods_apart(trees):
     assert section.index("icon_goods_tea.dds") < section.index("icon_goods_wheat.dds")   # best first
     assert 'raw_text = "#P +18%#!"' in section and 'raw_text = "#N -4%#!"' in section    # 0.1 vanilla - 0.14 fit
     assert "Localize('HA1300_FERTILITY_HIGH')" in gui and "Localize('HA1300_SOIL_LOAM_TITLE')" in gui
-    assert "LocationView.GetLocation.IsCoastal" in gui and "Localize('HA1300_LAKESIDE')" in gui
+    assert "Localize('PP_WATER_SEA_COAST')" in gui and "Localize('HA1300_LAKESIDE')" in gui
 
     custom = (mod / tt.CUSTOM_LOC_PATH).read_text(encoding="utf-8-sig")
     assert "text = { localization_key = PP_TT_KEY_VEGETATION_FOREST trigger = { vegetation = forest } }" in custom

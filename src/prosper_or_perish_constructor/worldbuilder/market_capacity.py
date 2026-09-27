@@ -126,6 +126,7 @@ def write(repo, mod_root):
     trigger = (
         "# Generated from config/victuals_logistics.json (yard_site).\n"
         "pp_victualling_yard_site = {\n"
+        "\tis_port = yes\n"
         f"\tNOR = {{ {cold} }}\n"
         "\tOR = {\n"
         f"\t\tAND = {{ has_location_modifier = pp_wb_coastal modifier:natural_harbor_suitability >= {site['sea_harbor']} }}\n"

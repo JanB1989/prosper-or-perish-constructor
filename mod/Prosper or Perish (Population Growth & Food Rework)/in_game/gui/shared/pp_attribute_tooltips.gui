@@ -1249,6 +1249,41 @@ types pp_attribute_tooltips
 		}
 			}
 		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_PP_RIVER_CHANNEL')), '(int32)1', '(int32)0'))]"
+			item = {
+		TooltipContentSection = {
+			blockoverride "section_content" {
+				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_pp_river_channel')]" }
+				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_PP_RIVER_CHANNEL" } }
+			}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_PP_RIVER_SHALLOWS')), '(int32)1', '(int32)0'))]"
+			item = {
+		TooltipContentSection = {
+			blockoverride "section_content" {
+				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_pp_river_shallows')]" }
+				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_PP_RIVER_SHALLOWS" } }
+			}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_PP_RIVER_FALLS')), '(int32)1', '(int32)0'))]"
+			item = {
+		TooltipContentSection = {
+			blockoverride "section_content" {
+				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_pp_river_falls')]" }
+			}
+		}
+			}
+		}
 	}
 
 	type pp_attribute_view_fertility = vbox {
@@ -1408,7 +1443,7 @@ types pp_attribute_tooltips
 		layoutpolicy_horizontal = expanding
 		vbox = {
 			layoutpolicy_horizontal = expanding
-			datamodel = "[DataModelRepeatedItem(Select_int32(LocationView.GetLocation.IsCoastal, '(int32)1', '(int32)0'))]"
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_SEA_COAST')), '(int32)1', '(int32)0'))]"
 			item = {
 		TooltipContentSection = {
 			blockoverride "section_content" {

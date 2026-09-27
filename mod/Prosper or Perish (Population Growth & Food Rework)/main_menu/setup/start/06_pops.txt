@@ -16982,8 +16982,7 @@ zarnow = {
 	define_pop = {	type = peasants	size = 6.252	culture = lesser_polish	religion = catholic }
 }
 czestochowa = {
-	define_pop = {	type = peasants	size = 14.990	culture = lesser_polish	religion = catholic }
-	define_pop = {	type = laborers	size = 0.553	culture = lesser_polish	religion = catholic }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 15.543	culture = lesser_polish	religion = catholic }
 }
 lelow = {
 	define_pop = {	type = peasants	size = 5.731	culture = lesser_polish	religion = catholic }
@@ -17058,7 +17057,8 @@ debica = {
 	define_pop = {	type = peasants	size = 15.300	culture = lesser_polish	religion = catholic }
 }
 tarnow = {
-	define_pop = {	type = peasants	size = 16.496	culture = lesser_polish	religion = catholic }
+	define_pop = {	type = peasants	size = 16.277	culture = lesser_polish	religion = catholic }
+	define_pop = {	type = laborers	size = 0.219	culture = lesser_polish	religion = catholic }	# pp start: converted from peasants
 }
 wislica = {
 	define_pop = {	type = peasants	size = 9.825	culture = lesser_polish	religion = catholic }
@@ -25508,8 +25508,7 @@ kocevje = {
 }
 metlika = {
 	define_pop = {	type = clergy	size = 0.010	culture = slovene	religion = catholic }
-	define_pop = {	type = peasants	size = 9.205	culture = slovene	religion = catholic }
-	define_pop = {	type = laborers	size = 0.779	culture = slovene	religion = catholic }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 9.984	culture = slovene	religion = catholic }
 }
 postojna = {
 	define_pop = {	type = clergy	size = 0.010	culture = slovene	religion = catholic }
@@ -79839,7 +79838,8 @@ fogo = {
 podor = {
 	define_pop = {	type = clergy	size = 0.016	culture = fulbe	religion = sunni }
 	define_pop = {	type = peasants	size = 2.647	culture = fulbe	religion = sunni }
-	define_pop = {	type = peasants	size = 3.120	culture = fulbe	religion = geno_religion }
+	define_pop = {	type = peasants	size = 2.688	culture = fulbe	religion = geno_religion }
+	define_pop = {	type = laborers	size = 0.432	culture = fulbe	religion = geno_religion }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 4.103	culture = fulbe	religion = geno_religion }
 }
 walalde = {

@@ -68,8 +68,6 @@ building:
     }
     forbidden_for_estates = no
     ai_forbid_shutdown = yes
-    on_built = { hidden_effect = { location = { pp_navigation_refresh_site = yes } } }
-    on_destroyed = { hidden_effect = { location = { pp_navigation_restore_site = yes } } }
 localization:
   entries:
     jiangnan_canal_network: Jiangnan Canal Network

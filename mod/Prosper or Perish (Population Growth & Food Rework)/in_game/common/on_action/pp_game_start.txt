@@ -289,7 +289,7 @@ pp_remove_invalid_buildings = {
 						building_type = building_type:ocean_fishery
 						value > 0
 					}
-					NOT = { is_coastal = yes }
+					NOT = { pp_is_sea_coast = yes }
 				}
 				change_building_level_in_location = {
 					building = building_type:ocean_fishery
@@ -306,7 +306,7 @@ pp_remove_invalid_buildings = {
 						building_type = building_type:offshore_fishery
 						value > 0
 					}
-					NOT = { is_coastal = yes }
+					NOT = { pp_is_sea_coast = yes }
 				}
 				change_building_level_in_location = {
 					building = building_type:offshore_fishery

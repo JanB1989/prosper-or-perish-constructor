@@ -56,7 +56,7 @@ SWAPPED_TEMPLATES = {
 }
 WINTER_LEVELS = ("mild", "normal", "severe")
 # The World Builder static modifiers behind the other chips, and how the location window tells which one applies.
-SHORE_GATES = {"pp_wb_coastal": ("coast", f"{_LOC}.IsCoastal"), "pp_wb_lake": ("lake", f"EqualTo_string({_LOC}.Custom('ha1300_native_lake'), Localize('HA1300_LAKESIDE'))")}
+SHORE_GATES = {"pp_wb_coastal": ("coast", f"EqualTo_string({_LOC}.Custom('pp_water_access'), Localize('PP_WATER_SEA_COAST'))"),"pp_wb_lake": ("lake", f"EqualTo_string({_LOC}.Custom('ha1300_native_lake'), Localize('HA1300_LAKESIDE'))")}
 LAND_ATTRIBUTES = ("climate", "vegetation", "topography", "fertility", "soil", "coast", "lake")
 CELLS_PER_ROW = 5
 ICONS_PER_GROUP_ROW = 12

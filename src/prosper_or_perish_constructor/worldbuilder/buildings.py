@@ -581,12 +581,17 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
             need -= float(caps[key]["unit_people"])
             raised += 1
             filled.add(tag)
-        from .navigation import exchange_levels
-        site = cfg.raw.get("_navigation", {}).get("sites", {}).get(tag)
-        navigation_exchanged += exchange_levels(levels, site)
         for key, (level, _) in levels.items():
             if level > 0:
                 rows.append((key, tag, owner, level))
+    # documented starting navigations: one River Navigation Canal at the bank (no capacity, outside the families)
+    from .navigation import exchange_levels
+    for tag, site in sorted(cfg.raw.get("_navigation", {}).get("sites", {}).items()):
+        owner = owners.get(tag, "")
+        canal: dict[str, tuple[int, int]] = {}
+        if owner and exchange_levels(canal, site):
+            navigation_exchanged += 1
+            rows.extend((key, tag, owner, level) for key, (level, _) in canal.items())
     rows.sort()
     lines = [f"\t{key} = {{ tag = {owner} level = {level} location = {tag} }}" for key, tag, owner, level in rows]
     text = "\n".join([GENERATED, "building_manager = {", *lines, "}", ""])

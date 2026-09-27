@@ -298,6 +298,7 @@ class Simulation:
         self.base = {}
         self.neighbors = defaultdict(list)
         self.navigation = cfg.raw.get("_navigation", {})
+        self.water = cfg.raw.get("_water_access")
         self.refresh_navigation()
         # Engine start state the pops file does not show: setup promotion out of the peasants, the RGO's own
         # workers, and the local food modifier of rank and classes (scales subsistence and building food alike).
@@ -358,7 +359,8 @@ class Simulation:
                 for k, v in summed(rules.statics.get(key)).items():
                     if k != "local_population_capacity":
                         mods[k] += v
-            coastal = bool(loc.get("is_coastal")) or bool(self.neighbors[tag])
+            # engine is_coastal: any passable sea zone next to it, river channels included (coast.py, read from the map)
+            coastal = (tag in self.water) if self.water is not None else (bool(loc.get("is_coastal")) or bool(self.neighbors[tag]))
             if level and coastal:
                 # The engine adds river_flowing_through_coast_N (natural harbour +0.05 per river size) to every coastal
                 # location with a river; river ports count as coastal (checked in game on Samara: 0 + 0.25).
@@ -388,6 +390,14 @@ class Simulation:
                 "is_ownable": True,
                 "has_river": bool(level),
                 "is_coastal": coastal,
+                # the engine's port rule is not in the map files (ports.csv lists every coastal location, 5,701, the
+                # game reports 3,567 ports): the start model lets every coastal location count as a port
+                "is_port": coastal,
+                "trigger_values": {
+                    "pp_is_sea_coast": (self.water or {}).get(tag) == "sea_coast" if self.water is not None
+                    else str(a.get("is_coastal", "")).lower() == "true",
+                    "pp_is_waterway": (self.water or {}).get(tag) == "waterway",
+                },
                 "is_province_capital": tag in self.province_capitals if self.province_capitals is not None else False,
                 "num_roads": 0,   # setup roads are not modelled: a lower bound for road-scaled caps
                 "climate": climate_key(a.get("climate") or loc.get("climate")),

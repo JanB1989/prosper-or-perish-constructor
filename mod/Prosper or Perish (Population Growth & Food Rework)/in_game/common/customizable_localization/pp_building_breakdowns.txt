@@ -9,7 +9,7 @@ pp_fishing_water_breakdown = {
 	text = {
 		localization_key = PP_FISHING_COASTAL_LAKE_RIVER
 		trigger = {
-			is_coastal = yes
+			pp_is_sea_coast = yes
 			is_adjacent_to_lake = yes
 			has_river = yes
 		}
@@ -17,14 +17,14 @@ pp_fishing_water_breakdown = {
 	text = {
 		localization_key = PP_FISHING_COASTAL_LAKE
 		trigger = {
-			is_coastal = yes
+			pp_is_sea_coast = yes
 			is_adjacent_to_lake = yes
 		}
 	}
 	text = {
 		localization_key = PP_FISHING_COASTAL_RIVER
 		trigger = {
-			is_coastal = yes
+			pp_is_sea_coast = yes
 			has_river = yes
 		}
 	}
@@ -37,7 +37,7 @@ pp_fishing_water_breakdown = {
 	}
 	text = {
 		localization_key = PP_FISHING_COASTAL
-		trigger = { is_coastal = yes }
+		trigger = { pp_is_sea_coast = yes }
 	}
 	text = {
 		localization_key = PP_FISHING_LAKE

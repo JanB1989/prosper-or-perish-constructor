@@ -54,7 +54,7 @@ pp_fish_base_capacity_value = {
 		add = 3.00
 	}
 	if = {
-		limit = { is_coastal = yes }
+		limit = { pp_is_sea_coast = yes }
 		add = 4.50
 	}
 	if = {

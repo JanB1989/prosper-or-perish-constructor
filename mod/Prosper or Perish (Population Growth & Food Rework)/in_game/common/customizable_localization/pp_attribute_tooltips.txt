@@ -28,6 +28,9 @@ pp_tt_topography = {
 	text = { localization_key = PP_TT_KEY_TOPOGRAPHY_HA1300_TOPO_VALLEYS trigger = { topography = ha1300_topo_valleys } }
 	text = { localization_key = PP_TT_KEY_TOPOGRAPHY_HA1300_TOPO_FLOODPLAINS trigger = { topography = ha1300_topo_floodplains } }
 	text = { localization_key = PP_TT_KEY_TOPOGRAPHY_HA1300_TOPO_DELTAS trigger = { topography = ha1300_topo_deltas } }
+	text = { localization_key = PP_TT_KEY_TOPOGRAPHY_PP_RIVER_CHANNEL trigger = { topography = pp_river_channel } }
+	text = { localization_key = PP_TT_KEY_TOPOGRAPHY_PP_RIVER_SHALLOWS trigger = { topography = pp_river_shallows } }
+	text = { localization_key = PP_TT_KEY_TOPOGRAPHY_PP_RIVER_FALLS trigger = { topography = pp_river_falls } }
 	text = { localization_key = PP_TT_KEY_NONE fallback = yes }
 }
 

@@ -41,7 +41,7 @@ ROAD_MARKET_ACCESS = {"gravel_road": -0.1, "paved_road": -0.2, "modern_road": -0
                       "pp_navigation_navigable": -0.6, "pp_navigation_improved": -0.8, "pp_navigation_difficult": 0.5,
                       "pp_navigation_improvable": 1.0, "pp_navigation_barrier": 2.0}
 WATER_TOPOGRAPHY = {"coastal_ocean", "inland_sea", "narrows", "ocean", "deep_ocean", "lakes", "high_lakes", "salt_pans",
-                    "ocean_wasteland"}
+                    "ocean_wasteland", "pp_river_channel", "pp_river_shallows", "pp_river_falls"}
 LAKE_TOPOGRAPHY = {"lakes", "high_lakes", "salt_pans"}
 WIDTH = 16384
 CACHE = Path("artifacts/data/markets")

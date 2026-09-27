@@ -104,10 +104,17 @@ def test_event_rgo_adjustments_only_change_worker_thresholds_and_intentional_eve
         assert (EVENT_ROOT / relative_path).read_text(encoding="utf-8-sig") == expected
 
 
+# These hand-authored overrides also carry the water access review: their coast tests mean the open sea (vanilla wrote
+# them before the navigable river channels made river banks is_coastal).
+SEA_COAST_EVENT_FILES = (Path("DHE") / "flavor_OMA.txt", Path("DHE") / "flavor_dan.txt", Path("DHE") / "flavor_por.txt")
+
+
 def _expected_event_override_text(relative_path: Path, vanilla_text: str) -> str:
     expected = vanilla_text
     for old_gate in OLD_WORKER_GATES:
         expected = expected.replace(old_gate, "rgo_workers >= 0")
+    if relative_path in SEA_COAST_EVENT_FILES:
+        expected = expected.replace("is_coastal = yes", "pp_is_sea_coast = yes").replace("is_coastal = no", "NOT = { pp_is_sea_coast = yes }")
     return _apply_intentional_non_rgo_event_fixes(relative_path, expected)
 
 

@@ -179,25 +179,29 @@ vanilla_files = [
 # using these effects is listed here, patched (exact replacements on the current vanilla file, on top of its
 # [worldbuilder.compat] widening) or reviewed with a reason; navigation_scripts.py fails the apply and
 # tests/test_navigation_scripts.py fails on any vanilla file that is in neither list.
+# The same lists carry the water access review: every vanilla file testing is_coastal / is_port is patched to the sea
+# coast (pp_is_sea_coast, vanilla's meaning from before the channels) or reviewed as "any navigable water".
+# Vanilla buildings that belong on the open sea get their location_potential narrowed to the sea coast (TRY_INJECT).
+sea_only_buildings = [
+  "pirate_stronghold", "pirate_haven", "black_market", "smuggler_cove", "brothel", "pirate_tavern",  # pirates
+  "lazaretto",                                                 # quarantine for ships arriving from the sea
+  "trade_company_harbor", "por_feitoria",                      # overseas trade posts
+  "cinque_port", "north_sea_shipyards", "kilwan_shipwrights", "brethren_marsh",   # regional sea institutions
+  "korean_gunnery_coastal_defense", "coastal_settlements",
+]
 [worldbuilder.navigation_scripts.reviewed]
 "in_game/common/customizable_localization/ship_prefixes.txt" = "names ships of the navy categories; places nothing"
 "in_game/common/unit_abilities/convert_galley.txt" = "converts existing ships in place; no route, no new location"
 "in_game/events/debug/qa_debug.txt" = "debug console events"
 "in_game/common/effect_localization/location_effects.txt" = "tooltip text of the effect; places nothing"
-"in_game/events/wokou_events.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
 "in_game/events/government/societal_values.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
 "in_game/events/DHE/flavor_AYD.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
 "in_game/events/DHE/flavor_swe_teu.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
-"in_game/events/DHE/flavor_chi.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
-"in_game/events/DHE/flavor_BYZ.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
-"in_game/events/DHE/flavor_MOS.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
 "in_game/events/DHE/flavor_LOI.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
 "in_game/events/DHE/flavor_ARA.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
 "in_game/events/DHE/flavor_MAM.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
-"in_game/events/DHE/flavor_CAS.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
 "in_game/events/DHE/flavor_pap.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
 "in_game/events/situations/golden_age_of_piracy.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
-"in_game/events/pirate_events.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
 
 [[worldbuilder.navigation_scripts.patches]]
 # Chinese treasure voyage: the fleet starts at a random port of the country and sails over water (find_route,
@@ -208,6 +212,249 @@ replace = [
   { find = "random_port_in_country = {\n\t\t\tlimit = {\n", with = "random_port_in_country = {\n\t\t\tlimit = {\n\t\t\t\tpp_is_sea_coast = yes\n", count = 1 },
   { find = "random_location_in_area = {\n\t\t\t\tlimit = { is_coastal = yes }", with = "random_location_in_area = {\n\t\t\t\tlimit = { is_coastal = yes pp_is_sea_coast = yes }", count = 1 },
 ]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: conquistadors land from the sea
+file = "in_game/common/generic_actions/conquistadors.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 1 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: allied pirate nations sit on the sea coast
+file = "in_game/common/generic_actions/golden_age_of_piracy.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 1 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: fortify a key border location that is not on the sea (vanilla meaning)
+file = "in_game/common/generic_actions/italian_wars.txt"
+replace = [
+  { find = "is_coastal = no", with = "NOT = { pp_is_sea_coast = yes }", count = 1 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: Byzantine 1337 setup hands out the coastal locations of the Aegean provinces; river banks were never part of it
+file = "in_game/common/scripted_effects/on_action_effects.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 7 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: is_coastal_within_range: colonial reach over the sea
+file = "in_game/common/scripted_triggers/building_triggers.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 1 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: coastal weighting of Byzantine targets (vanilla meaning); also creates ships without a route
+file = "in_game/events/DHE/flavor_BYZ.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 1 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: raids and crusade targets on the Maghreb coast; also creates ships without a route
+file = "in_game/events/DHE/flavor_CAS.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 14 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: raids on the French coast, colonies and landings overseas
+file = "in_game/events/DHE/flavor_ENG.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 41 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: raids on the English coast
+file = "in_game/events/DHE/flavor_FRA.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 7 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: wokou pirate havens on the coast
+file = "in_game/events/DHE/flavor_JAP.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 1 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: Muscovy's access to the sea; also creates ships without a route
+file = "in_game/events/DHE/flavor_MOS.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 2 },
+]
+
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: Maghreb corsair coast (the ports stay any water)
+file = "in_game/events/DHE/flavor_TUR.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 3 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: Korean and Taiwanese coasts, maritime trade (the ports stay any water); also creates ships without a route
+file = "in_game/events/DHE/flavor_chi.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 4 },
+]
+
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: overseas trading posts (India, Persia)
+file = "in_game/events/DHE/flavor_eng_diplomacy.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 5 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: Knights' raids on the Anatolian coast
+file = "in_game/events/DHE/flavor_kni.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 3 },
+]
+
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: Ibn Battuta's coastal stops (vanilla meaning)
+file = "in_game/events/character/ibn_battuta_events.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 4 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: Greek maritime trade promotion
+file = "in_game/events/culture/culture_greek.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 2 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: wokou pirate havens on the coast
+file = "in_game/events/culture/culture_japan.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 6 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: inland (not sea coast) locations break away (vanilla meaning)
+file = "in_game/events/disaster/decline_of_empire_events.txt"
+replace = [
+  { find = "is_coastal = no", with = "NOT = { pp_is_sea_coast = yes }", count = 2 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: tsunami damage to the ports next to the quake
+file = "in_game/events/earthquake_events.txt"
+replace = [
+  { find = "is_port = yes", with = "is_port = yes pp_is_sea_coast = yes", count = 2 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: explorers meet coastal peoples from the sea (the port trigger stays any water)
+file = "in_game/events/exploration/exploration_monthly_events.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 11 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: pirates on the coast; also creates ships without a route
+file = "in_game/events/pirate_events.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 1 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: the plague arrives with sea trade
+file = "in_game/events/situations/black_death.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 2 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: naval targets on the sea coast (vanilla meaning)
+file = "in_game/events/situations/rise_of_the_ottomans.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 8 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: wokou pirates raid the sea coast and its ports; also creates ships without a route
+file = "in_game/events/wokou_events.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 6 },
+  { find = "is_port = yes", with = "is_port = yes pp_is_sea_coast = yes", count = 1 },
+]
+
+[worldbuilder.navigation_scripts.water_access_reviewed]
+"in_game/events/DHE/flavor_por.txt" = "hand-authored mod override (event RGO fixes); the file itself tests pp_is_sea_coast (sea coast, vanilla meaning)"
+"in_game/events/DHE/flavor_dan.txt" = "hand-authored mod override (event RGO fixes); the file itself tests pp_is_sea_coast (sea coast, vanilla meaning)"
+"in_game/events/DHE/flavor_OMA.txt" = "hand-authored mod override (event RGO fixes); the file itself tests pp_is_sea_coast (sea coast, vanilla meaning)"
+# Vanilla files that test is_coastal / is_port and keep the engine's meaning (any navigable water: sea coast, river
+# channels, navigable lakes). The sea-only ones are the patches above (pp_is_sea_coast).
+"in_game/common/avatars/hindu.txt" = "Matsya avatar: any port"
+"in_game/common/building_types/capital_buildings.txt" = "buildings: port and shore buildings take any navigable water (river ports built ships, had wharves, fisheries, clay pits); the sea-only ones are restricted in their INJECT blueprints (water_access.sea_only_buildings)"
+"in_game/common/building_types/coastal_forts.txt" = "buildings: port and shore buildings take any navigable water (river ports built ships, had wharves, fisheries, clay pits); the sea-only ones are restricted in their INJECT blueprints (water_access.sea_only_buildings)"
+"in_game/common/building_types/common_buildings.txt" = "buildings: port and shore buildings take any navigable water (river ports built ships, had wharves, fisheries, clay pits); the sea-only ones are restricted in their INJECT blueprints (water_access.sea_only_buildings)"
+"in_game/common/building_types/estate_buildings.txt" = "buildings: port and shore buildings take any navigable water (river ports built ships, had wharves, fisheries, clay pits); the sea-only ones are restricted in their INJECT blueprints (water_access.sea_only_buildings)"
+"in_game/common/building_types/event_only_buildings.txt" = "buildings: port and shore buildings take any navigable water (river ports built ships, had wharves, fisheries, clay pits); the sea-only ones are restricted in their INJECT blueprints (water_access.sea_only_buildings)"
+"in_game/common/building_types/pirate_buildings.txt" = "buildings: port and shore buildings take any navigable water (river ports built ships, had wharves, fisheries, clay pits); the sea-only ones are restricted in their INJECT blueprints (water_access.sea_only_buildings)"
+"in_game/common/building_types/port_buildings.txt" = "buildings: port and shore buildings take any navigable water (river ports built ships, had wharves, fisheries, clay pits); the sea-only ones are restricted in their INJECT blueprints (water_access.sea_only_buildings)"
+"in_game/common/building_types/rural_buildings.txt" = "buildings: port and shore buildings take any navigable water (river ports built ships, had wharves, fisheries, clay pits); the sea-only ones are restricted in their INJECT blueprints (water_access.sea_only_buildings)"
+"in_game/common/building_types/town_buildings.txt" = "buildings: port and shore buildings take any navigable water (river ports built ships, had wharves, fisheries, clay pits); the sea-only ones are restricted in their INJECT blueprints (water_access.sea_only_buildings)"
+"in_game/common/building_types/trade_buildings.txt" = "buildings: port and shore buildings take any navigable water (river ports built ships, had wharves, fisheries, clay pits); the sea-only ones are restricted in their INJECT blueprints (water_access.sea_only_buildings)"
+"in_game/common/building_types/trade_company_buildings.txt" = "buildings: port and shore buildings take any navigable water (river ports built ships, had wharves, fisheries, clay pits); the sea-only ones are restricted in their INJECT blueprints (water_access.sea_only_buildings)"
+"in_game/common/building_types/unique_buildings.txt" = "buildings: port and shore buildings take any navigable water (river ports built ships, had wharves, fisheries, clay pits); the sea-only ones are restricted in their INJECT blueprints (water_access.sea_only_buildings)"
+"in_game/common/cabinet_actions/cab_naval_focus.txt" = "naval focus: any port"
+"in_game/common/death_reason/02_life_expectancy.txt" = "drowning: rivers drown too"
+"in_game/common/diseases/malaria.txt" = "malaria: river banks and wetlands too"
+"in_game/common/government_reforms/common.txt" = "coastal administration and naval infrastructure: any port"
+"in_game/common/government_reforms/country_specific.txt" = "capital must be a port: any port"
+"in_game/common/institution/age_4_reformation_institutions.txt" = "global trade: any port"
+"in_game/common/missions/generic_conquer_province_mission_pack.txt" = "coastal development and conquest targets: any navigable water"
+"in_game/common/missions/generic_trade_mission_pack.txt" = "coastal development and conquest targets: any navigable water"
+"in_game/common/missions/generic_traditional_economy_mission_pack.txt" = "coastal development and conquest targets: any navigable water"
+"in_game/common/parliament_issues/05_burghers_estate_parliament_issues.txt" = "dock and shipyard expansion: any port"
+"in_game/common/script_values/best_capital_for_colony.txt" = "colonial capital prefers a port: any port"
+"in_game/common/scripted_triggers/culture_triggers.txt" = "port requirement: any port"
+"in_game/common/scripted_triggers/institution_triggers.txt" = "port requirement: any port"
+"in_game/common/tests/age_of_discovery_tests.txt" = "QA tests, not played content"
+"in_game/common/town_rights/00_traditions.txt" = "port town rights (staples, fishing privileges): river ports held them too"
+"in_game/common/town_rights/11_scandinavian.txt" = "port town rights (staples, fishing privileges): river ports held them too"
+"in_game/common/town_rights/12_german.txt" = "port town rights (staples, fishing privileges): river ports held them too"
+"in_game/common/trigger_localization/location_triggers.txt" = "trigger names only"
+"in_game/common/unit_abilities/convert_galley.txt" = "converts ships in port"
+"in_game/common/wargoals/00_default.txt" = "port conquest: any port"
+"in_game/events/DHE/flavor_AYD.txt" = "picks an owned or targeted port: any port"
+"in_game/events/DHE/flavor_IRE.txt" = "picks an owned or targeted port: any port"
+"in_game/events/DHE/flavor_LOI.txt" = "picks an owned or targeted port: any port"
+"in_game/events/DHE/flavor_MAM.txt" = "picks an owned or targeted port: any port"
+"in_game/events/DHE/flavor_NOR.txt" = "picks an owned or targeted port: any port"
+"in_game/events/DHE/flavor_PIS.txt" = "picks an owned or targeted port: any port"
+"in_game/events/DHE/flavor_nap.txt" = "picks an owned or targeted port: any port"
+"in_game/events/DHE/flavor_pap.txt" = "picks an owned or targeted port: any port"
+"in_game/events/debug/qa_debug.txt" = "debug console events"
+"in_game/events/disaster/D008_fate_of_the_phoenix.txt" = "capital port: any port"
+"in_game/events/economy/industrialization_events.txt" = "ports in trade and industry: any port"
+"in_game/events/economy/trade.txt" = "ports in trade and industry: any port"
+"in_game/events/exploration/exploration_success_events.txt" = "a core port: any port"
+"in_game/events/government/parliaments.txt" = "ports: any port"
+"in_game/events/government/town_rights_events.txt" = "a coastal town-rights option: any navigable water"
+"in_game/events/institution_events.txt" = "port: any port"
+"in_game/events/religion/propagate_religion_events.txt" = "ports in the market: any port"
+"in_game/events/sailor_event.txt" = "sailors from ports: any port"
+"in_game/events/situations/fall_of_delhi.txt" = "coast or river: already river-inclusive"
+"in_game/gfx/images/00_characters_regular.txt" = "location illustrations: water in view"
+"in_game/gfx/images/00_images_location.txt" = "location illustrations: water in view"
+"in_game/gui/filters/05_location.txt" = "location filter shows the engine's coastal flag"
+"main_menu/common/coat_of_arms/template_lists/colored_emblem_lists.txt" = "maritime emblems for any coastal owner"
+"main_menu/common/static_modifiers/location.txt" = "the is_port static modifier definition"
 
 [worldbuilder.start]
 # Game-start building placement (rural food buildings and the urban food chain) from the capacity model; replaces the

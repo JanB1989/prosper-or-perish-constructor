@@ -15,7 +15,7 @@ megalopolis = yes
 build_time = village_build_time
 
 location_potential = {
-    is_coastal = yes
+    pp_is_sea_coast = yes
 }
 construction_demand = village_construction
 ai_forbid_shutdown = no

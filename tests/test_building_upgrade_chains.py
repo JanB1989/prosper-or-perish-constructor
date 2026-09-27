@@ -781,14 +781,14 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
     drift_body = _load_blueprint("drift_net_fishery")["building"]["body"]
     assert re.search(r"^\s*obsolete\s*=\s*ocean_fishery\s*$", drift_body, flags=re.M)
     assert not re.search(r"^\s*obsolete\s*=\s*net_curing_yard\s*$", drift_body, flags=re.M)
-    assert re.search(r"location_potential\s*=\s*\{\s*is_coastal\s*=\s*yes\s*\}", drift_body)
+    assert re.search(r"location_potential\s*=\s*\{\s*pp_is_sea_coast\s*=\s*yes\s*\}", drift_body)
     drift_block = _advance_block("pp_coastal_drift_nets", advances)
     assert re.search(r"^\s*age\s*=\s*age_3_discovery\s*$", drift_block, flags=re.M)
     assert re.search(r"^\s*requires\s*=\s*maritime_advance_age_3\s*$", drift_block, flags=re.M)
 
     offshore_body = _load_blueprint("offshore_fishery")["building"]["body"]
     assert re.search(r"^\s*obsolete\s*=\s*drift_net_fishery\s*$", offshore_body, flags=re.M)
-    assert re.search(r"location_potential\s*=\s*\{\s*is_coastal\s*=\s*yes\s*\}", offshore_body)
+    assert re.search(r"location_potential\s*=\s*\{\s*pp_is_sea_coast\s*=\s*yes\s*\}", offshore_body)
 
     herring_block = _advance_block("pp_herring_buss", advances)
     assert re.search(r"^\s*age\s*=\s*age_4_reformation\s*$", herring_block, flags=re.M)
@@ -952,13 +952,13 @@ def test_salt_building_location_potentials_are_mutually_exclusive() -> None:
 
     assert "vegetation = desert" not in combined
     assert re.search(
-        r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:salt\s*is_coastal\s*=\s*yes\s*\}",
+        r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:salt\s*pp_is_sea_coast\s*=\s*yes\s*\}",
         bodies["coastal_saltern"],
     )
     for key in ("salt_mine", "salt_mine_improved"):
         body = bodies[key]
         assert "raw_material = goods:salt" in body
-        assert "NOT = { is_coastal = yes }" in body
+        assert "NOT = { pp_is_sea_coast = yes }" in body
         assert "topography = salt_pans" not in body
         for topography in SALT_MINE_TOPOGRAPHIES:
             assert f"topography = {topography}" in body
@@ -975,7 +975,7 @@ def test_salt_building_location_potentials_are_mutually_exclusive() -> None:
 
     for key in ("inland_saltworks", "engineered_brine_saltworks"):
         body = bodies[key]
-        assert "NOT = { is_coastal = yes }" in body
+        assert "NOT = { pp_is_sea_coast = yes }" in body
         assert "raw_material = goods:salt" in body
         assert "topography = salt_pans" not in body
         for modifier in SALT_MINE_MODIFIERS:
@@ -1481,7 +1481,7 @@ def test_game_start_never_places_offshore_fishery_directly_and_culls_invalid_loc
 
     assert "construct_building = {\n\t\t\t\t\t\tbuilding_type = building_type:offshore_fishery" not in text
     assert re.search(
-        r"building_type\s*=\s*building_type:offshore_fishery.*?NOT\s*=\s*\{\s*is_coastal\s*=\s*yes\s*\}.*?"
+        r"building_type\s*=\s*building_type:offshore_fishery.*?NOT\s*=\s*\{\s*pp_is_sea_coast\s*=\s*yes\s*\}.*?"
         r"building\s*=\s*building_type:offshore_fishery",
         text,
         flags=re.S,

@@ -476,7 +476,7 @@ flavor_dan.7 = { #Naval Reforms of John I
 
 	trigger = {
 		any_owned_location = {
-			is_coastal = yes
+			pp_is_sea_coast = yes
 		}
 		any_rival ?= {
 			navy_size >= root.navy_size
@@ -1968,7 +1968,7 @@ flavor_dan.28 = { #The Rediscovery of Vinland
 	trigger = {
 		region:canada_region = {
 			any_location_in_region = {
-				is_coastal = yes
+				pp_is_sea_coast = yes
 				is_discovered_by = root
 			}
 		}
@@ -3715,7 +3715,7 @@ flavor_dan.64 = { #Amazigh Raid on Iceland #DEVASTATION
 		province_definition:west_farthing = {
 			every_location_in_province_definition = {
 				limit = {
-					is_coastal = yes
+					pp_is_sea_coast = yes
 				}
 				every_pop = {
 					add_pop_size = {
@@ -3732,7 +3732,7 @@ flavor_dan.64 = { #Amazigh Raid on Iceland #DEVASTATION
 		province_definition:west_farthing = {
 			every_location_in_province_definition = {
 				limit = {
-					is_coastal = yes
+					pp_is_sea_coast = yes
 				}
 				change_development  = development_severe_penalty
 				change_prosperity = prosperity_mild_penalty

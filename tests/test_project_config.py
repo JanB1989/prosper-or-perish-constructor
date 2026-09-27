@@ -869,7 +869,7 @@ def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
     for snippet in (
         "raw_material = goods:fish",
         "add = 3.00",
-        "is_coastal = yes",
+        "pp_is_sea_coast = yes",   # sea fishing: the open sea coast (river banks count through has_river)
         "add = 4.50",
         "is_adjacent_to_lake = yes",
         "topography = wetlands",
@@ -1498,7 +1498,7 @@ def test_fish_blueprints_use_shared_capacity_pool_and_keep_distinctions() -> Non
         "has_river = yes",
         "is_adjacent_to_lake = yes",
         "topography = wetlands",
-        "is_coastal = yes",
+        "is_coastal = yes",   # river and lake fishing: any navigable water
         "raw_material = goods:fish",
     ):
         assert gate in fishing_village
@@ -1509,7 +1509,7 @@ def test_fish_blueprints_use_shared_capacity_pool_and_keep_distinctions() -> Non
         ]
         assert isinstance(location_potential_block, CList)
         location_potential = json.dumps(normalized_value(location_potential_block), sort_keys=True)
-        assert "is_coastal" in location_potential
+        assert "pp_is_sea_coast" in location_potential   # ocean fishing: the open sea coast only
         assert "has_river" not in location_potential
         assert "is_adjacent_to_lake" not in location_potential
 

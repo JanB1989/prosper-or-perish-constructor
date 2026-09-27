@@ -16,7 +16,7 @@ build_time = workshop_build_time
 
 location_potential = {
     raw_material = goods:salt
-    NOT = { is_coastal = yes }
+    NOT = { pp_is_sea_coast = yes }
     NOT = {
         OR = {
             has_location_modifier = sahara_salt_mines_base

@@ -313,7 +313,9 @@ def model_v2_on_engine_state(repo: Path, rules, cfg, locations: pl.DataFrame, bu
     if not table.is_file():
         return {"skipped": f"no {sp.TABLE_RELATIVE_PATH}: run ppc worldbuilder apply first"}
     capacity = {r["location_tag"]: float(r["capacity_people"] or 0.0) / 1000.0 for r in pl.read_csv(table).iter_rows(named=True)}
-    static_keys = setup_modifier_keys(load_contract(cfg.handover))
+    from .coast import cached, with_sea_coast
+
+    static_keys = setup_modifier_keys(with_sea_coast(load_contract(cfg.handover), cached(repo)))
     # building food of the staffed levels by the methods that actually run
     cache: dict[tuple[str, str], float] = {}
     numbers: dict[str, dict[str, Any] | None] = {}

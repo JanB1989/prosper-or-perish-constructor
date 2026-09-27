@@ -55,7 +55,5 @@ raw_modifier = {
 }
 forbidden_for_estates = no
 ai_forbid_shutdown = yes
-on_built = { hidden_effect = { location = { pp_navigation_refresh_site = yes } } }
-on_destroyed = { hidden_effect = { location = { pp_navigation_restore_site = yes } } }
 }
 # <<< eu5-building-pipeline:jiangnan_canal_network:building

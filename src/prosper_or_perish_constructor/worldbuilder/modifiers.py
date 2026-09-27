@@ -296,6 +296,14 @@ def river_bodies(vanilla_root: Path) -> dict[int, list[str]]:
 # capacity line by the mod's hand-authored pp_location_modifier_adjustments.txt, so no percentage remains.
 
 
+ATTRIBUTE_DESCRIPTION = "Subsistence land and goods output from this attribute, fitted from geography and historical land use."
+# the shore modifiers carry no land; they mark direct access to the water (pp_wb_coastal follows the game's sea coast)
+SHORE_DESCRIPTIONS = {
+    "pp_wb_coastal": "This location borders the open sea. Goods output that sea access brings, fitted from geography and historical land use.",
+    "pp_wb_lake": "This location borders a lake. Goods output that the lake shore brings, fitted from geography and historical land use.",
+}
+
+
 def setup_modifier_keys(contract: Contract, navigation: Mapping[str, object] | None = None) -> dict[str, list[str]]:
     """Location tag -> the attribute modifiers the setup places: fertility, soil, sea coast, lake shore, and the
     navigation site markers when ``navigation`` (the prepared navigation state) is given.
@@ -342,7 +350,7 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
             names[key] = f"{pretty(value)} {'Fertility' if attribute == 'fertility' else 'Soil'}"
             blocks.append(render_block(key, {"game_data": "{ category = location }", **{k: _fmt(v) for k, v in mods.items()}}))
     flavour = cfg.raw.get("flavour") if isinstance(cfg.raw.get("flavour"), dict) else {}
-    for attribute, key, label in (("is_coastal", "pp_wb_coastal", "Coastal Land"), ("is_adjacent_to_lake", "pp_wb_lake", "Lakeside Land")):
+    for attribute, key, label in (("is_coastal", "pp_wb_coastal", "Sea Coast"), ("is_adjacent_to_lake", "pp_wb_lake", "Lakeside")):
         mods = rows.get((attribute, "True"), {})
         # hand-set flavour effects ([worldbuilder.flavour.<key>]) sit next to the fitted rows, never on capacity or goods output
         extra = {str(k): float(v) for k, v in (flavour.get(key) or {}).items()}
@@ -405,7 +413,7 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
     for key, label in names.items():
         loc.append(f'  STATIC_MODIFIER_NAME_{key}: "{label}"')
     for key in names:
-        loc.append(f'  STATIC_MODIFIER_DESC_{key}: "Subsistence land and goods output from this attribute, fitted from geography and historical land use."')
+        loc.append(f'  STATIC_MODIFIER_DESC_{key}: "{SHORE_DESCRIPTIONS.get(key, ATTRIBUTE_DESCRIPTION)}"')
     (mod_root / LOCALIZATION_PATH).parent.mkdir(parents=True, exist_ok=True)
     (mod_root / LOCALIZATION_PATH).write_text("﻿" + "\n".join(loc) + "\n", encoding="utf-8", newline="\n")
 

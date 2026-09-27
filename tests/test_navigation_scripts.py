@@ -61,7 +61,8 @@ def test_built_mod_carries_the_patched_copies_and_the_trigger():
         text = (MOD / rel).read_text(encoding="utf-8-sig")
         assert text.startswith(ns.HEADER), f"{rel} is not the patched copy; run ppc worldbuilder apply"
         for r in replacements:
-            assert text.count(r.replace) == r.count, f"{rel}: patch missing"
+            # >=: one replacement's text may contain another's (is_port = yes pp_is_sea_coast = yes)
+            assert text.count(r.replace) >= r.count, f"{rel}: patch missing"
 
 
 def test_mod_scripts_route_only_to_sea_coasts():

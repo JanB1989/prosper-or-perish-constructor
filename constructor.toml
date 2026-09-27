@@ -336,7 +336,7 @@ yield_rank = { rural_settlement = 1.04, town = 1.019, city = 0.972, megalopolis 
 yield_climate = { arctic = 0.428, arid = 1.013, cold_arid = 0.95, cold_steppe = 0.839, continental = 1.035, continental_monsoon = 0.889, dry_summer_continental = 1.069, highland_monsoon = 0.641, hot_steppe = 1.048, mediterranean = 0.98, oceanic = 1.001, savanna = 1.023, subtropical = 0.964, subtropical_monsoon = 1.082, tropical = 1.056, tropical_monsoon = 1.044 }
 # the overpopulation modifier: local_peasants_food_consumption +0.5 per unit of pop / capacity - 1 (fitted -0.47..-0.51)
 overpopulation_consumption = 0.5
-start_food_share = 0.10            # game rule pp_starting_province_food default (10 % of the province's food capacity)
+start_food_share = 1.0             # the engine fills every province store to capacity at setup; the mod leaves it
 # province food capacity per pool (max_food_value), fitted on nb.eu5 (R2 0.968); buildings' local_food_capacity adds
 capacity = { per_development = 31.97, per_population_k = 3.65, per_location = 99.9, rank = { town = 521.3, city = 815.2, megalopolis = 1240.8 } }
 # placement v2 (start_simulation.place_food_chain)

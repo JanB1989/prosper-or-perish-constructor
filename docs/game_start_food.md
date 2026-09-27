@@ -188,17 +188,10 @@ victuals supply, demand and cover.
 ## Day-0 stores
 
 The setup files have no province food or stockpile field. The engine fills every
-province store to its capacity when the setup loads, then the mod's
-`on_game_start` action `pp_set_starting_province_food` lowers it to the game
-rule's share (default `pp_starting_province_food_010`: 10 % of capacity, 1.5 to
-12.9 months of consumption, median ~3.7). The farms' methods are chosen against
-the full store first, so **every farm starts on Sell for the first month**; they
-switch once the store reads low.
-A months-based start (for example 6 months) is not possible in script: there is
-no trigger or value for a province's food consumption (only `province_food`,
-`province_max_food` and `province_monthly_food_production`). The validator shows
-what a 6-month start would change: collapsing food pools unchanged (99 on the
-third iteration's placement), world +1.0 point; 12 months: 64 pools, +2.0 points.
+province store to its capacity when the setup loads, and the mod leaves it there
+(`start_food_share = 1.0`). The `on_game_start` action
+`pp_set_starting_province_food` and its game rule, which lowered the store to a
+share of capacity (default 10 %), were removed 2026-09-27.
 
 ## Construction materials
 

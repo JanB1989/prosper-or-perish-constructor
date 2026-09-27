@@ -60,7 +60,7 @@ class FoodModelConfig:
     overpopulation_consumption: float = 0.5          # local_peasants_food_consumption per unit of pop / capacity - 1
     overpopulation_pop_types: tuple[str, ...] = ("peasants",)
     capacity: Mapping[str, Any] = field(default_factory=lambda: {k: (dict(v) if isinstance(v, dict) else v) for k, v in DEFAULT_CAPACITY.items()})
-    start_food_share: float = 0.10                   # game rule pp_starting_province_food default: 10 % of capacity
+    start_food_share: float = 1.0                    # engine fills every province store at setup; the mod leaves it
     tribal_share_food: float = 2.0                   # tribesmen pop_percentage_impact local_monthly_food: food of a fully
                                                      # tribal location, scaled by the tribal share (pp_pop_adjustments.txt)
     # placement v2

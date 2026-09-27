@@ -2284,83 +2284,17 @@ def test_setup_estate_building_culling_is_registered_and_internal() -> None:
     assert "estate_setup_culling" not in localization
 
 
-def test_starting_province_food_is_configurable_and_registered() -> None:
+def test_game_start_keeps_vanilla_province_food() -> None:
     game_start_entries = {entry.key: entry.value for entry in parse_file(GAME_START).entries}
     game_start = game_start_entries["on_game_start"]
     assert isinstance(game_start, CList)
     on_actions = _entry_values(game_start)["on_actions"]
     assert isinstance(on_actions, CList)
-    assert "pp_set_starting_province_food" in on_actions.items
+    assert "pp_set_starting_province_food" not in on_actions.items   # stores start full (engine default)
     assert "pp_food_building_startup" not in on_actions.items   # game-start buildings are setup data now
-
-    action_entries = {
-        entry.key: entry.value for entry in parse_file(STARTING_PROVINCE_FOOD_ACTION).entries
-    }
-    assert "pp_set_starting_province_food" in action_entries
-    action_text = STARTING_PROVINCE_FOOD_ACTION.read_text(encoding="utf-8-sig")
-    assert action_text.count("every_location_in_the_world") == 1
-    assert "limit = { is_province_capital = yes }" in action_text
-    assert "every_province" not in action_text
-    assert "has_game_rule = pp_starting_province_food_disabled" in action_text
-    assert re.search(
-        r"change_province_food_percentage\s*=\s*\{"
-        r".*?value\s*=\s*province_food_percentage"
-        r".*?multiply\s*=\s*-1"
-        r".*?add\s*=\s*pp_starting_province_food_percentage",
-        action_text,
-        flags=re.S,
-    )
-
-    value_entries = {
-        entry.key: entry.value for entry in parse_file(STARTING_PROVINCE_FOOD_VALUE).entries
-    }
-    assert "pp_starting_province_food_percentage" in value_entries
-    value_text = STARTING_PROVINCE_FOOD_VALUE.read_text(encoding="utf-8-sig")
-    assert re.search(r"(?m)^\s*value\s*=\s*0\s*$", value_text)
-    for suffix, target in {
-        "005": "0.05",
-        "010": "0.10",
-        "025": "0.25",
-        "050": "0.50",
-        "075": "0.75",
-        "100": "1.00",
-    }.items():
-        assert re.search(
-            rf"has_game_rule\s*=\s*pp_starting_province_food_{suffix}.*?add\s*=\s*{target}",
-            value_text,
-            flags=re.S,
-        )
-
-    rule_entries = {
-        entry.key: entry.value for entry in parse_file(STARTING_PROVINCE_FOOD_RULES).entries
-    }
-    rule = rule_entries["pp_starting_province_food_rule"]
-    assert isinstance(rule, CList)
-    rule_values = _entry_values(rule)
-    assert rule_values["default"] == "pp_starting_province_food_010"
-    settings = {
-        "pp_starting_province_food_disabled",
-        "pp_starting_province_food_000",
-        "pp_starting_province_food_005",
-        "pp_starting_province_food_010",
-        "pp_starting_province_food_025",
-        "pp_starting_province_food_050",
-        "pp_starting_province_food_075",
-        "pp_starting_province_food_100",
-    }
-    assert settings <= rule_values.keys()
-    for setting in settings:
-        setting_block = rule_values[setting]
-        assert isinstance(setting_block, CList)
-        assert _entry_values(setting_block)["flag"] == "general_rule"
-
-    localization = (LOCALIZATION_ROOT / "pp_game_rules_l_english.yml").read_text(
-        encoding="utf-8-sig"
-    )
-    assert "rule_pp_starting_province_food_rule:" in localization
-    for setting in settings:
-        assert f"setting_{setting}:" in localization
-        assert f"setting_{setting}_desc:" in localization
+    assert not STARTING_PROVINCE_FOOD_ACTION.exists()
+    assert not STARTING_PROVINCE_FOOD_VALUE.exists()
+    assert not STARTING_PROVINCE_FOOD_RULES.exists()
 
 
 def test_setup_estate_building_culling_covers_vanilla_estate_buildings() -> None:

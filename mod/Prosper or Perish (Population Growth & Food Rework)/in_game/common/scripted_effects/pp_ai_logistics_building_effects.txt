@@ -136,6 +136,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:river_boatmen_yard }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;river_boatmen_yard"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = river_boatmen_yard }
 					}
@@ -174,6 +176,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:coastal_shipping_office }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;coastal_shipping_office"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = coastal_shipping_office }
 					}
@@ -212,6 +216,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:transport_office }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;transport_office"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = transport_office }
 					}
@@ -250,6 +256,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:carrier_inn }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;carrier_inn"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = carrier_inn }
 					}
@@ -394,6 +402,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:river_boatmen_yard }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;river_boatmen_yard"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = river_boatmen_yard }
 					}
@@ -432,6 +442,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:coastal_shipping_office }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;coastal_shipping_office"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = coastal_shipping_office }
 					}
@@ -470,6 +482,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:transport_office }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;transport_office"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = transport_office }
 					}
@@ -508,6 +522,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:carrier_inn }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;carrier_inn"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = carrier_inn }
 					}
@@ -652,6 +668,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:river_boatmen_yard }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;river_boatmen_yard"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = river_boatmen_yard }
 					}
@@ -690,6 +708,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:coastal_shipping_office }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;coastal_shipping_office"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = coastal_shipping_office }
 					}
@@ -728,6 +748,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:transport_office }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;transport_office"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = transport_office }
 					}
@@ -766,6 +788,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:carrier_inn }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;carrier_inn"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = carrier_inn }
 					}
@@ -910,6 +934,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:river_boatmen_yard }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;river_boatmen_yard"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = river_boatmen_yard }
 					}
@@ -948,6 +974,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:coastal_shipping_office }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;coastal_shipping_office"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = coastal_shipping_office }
 					}
@@ -986,6 +1014,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:transport_office }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;transport_office"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = transport_office }
 					}
@@ -1024,6 +1054,8 @@ pp_ai_logistics_build_unsupported_infrastructure = {
 						}
 					}
 					construct_building = { building_type = building_type:carrier_inn }
+					change_variable = { name = pp_dbg_script_build add = 1 } # debug flag: scripted build
+					error_log = "PPBLD;logistics_build;carrier_inn"
 					scope:pp_ai_logistics_country = {
 						pp_ai_logistics_record_infrastructure_build = { building = carrier_inn }
 					}

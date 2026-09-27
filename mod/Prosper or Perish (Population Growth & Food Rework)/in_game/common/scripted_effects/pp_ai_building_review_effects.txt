@@ -11,6 +11,9 @@ pp_cull_one_closed_building = {
 			NOT = { building_type = building_type:tavern }
 		}
 		change_building_level = -1
+		# Debug flag: scripted cull, counted per location (save) and logged
+		location = { change_variable = { name = pp_dbg_script_cull add = 1 } }
+		error_log = "PPBLD;review_cull_closed"
 	}
 }
 
@@ -39,6 +42,9 @@ pp_build_wanted_taverns = {
 		if = {
 			limit = { local_var:pp_import_budget >= building_type:tavern.building_base_cost_in_gold }
 			construct_building = { building_type = building_type:tavern }
+			# Debug flag: scripted build, counted per location (save) and logged
+			change_variable = { name = pp_dbg_script_build add = 1 }
+			error_log = "PPBLD;review_build;tavern"
 			change_local_variable = {
 				name = pp_import_budget
 				subtract = building_type:tavern.building_base_cost_in_gold

@@ -7,6 +7,7 @@ TRY_INJECT:megalopolis = {
 	rank_modifier = {
 		local_population_capacity = -360   # vanilla 400: net +40 (x1,000 people) of housing for the rank
 		local_population_capacity_modifier = -0.5
+		local_trade_center_power = -0.05   # vanilla 0.05: rank gives no market attraction
 		local_monthly_food_modifier = 0.67
 		local_province_food_sales_output_modifier = 0.10
 		local_offset_output_modifier = 0.10
@@ -28,6 +29,7 @@ TRY_INJECT:city = {
 
 		local_population_capacity = -75   # vanilla 100: net +25 (x1,000 people) of housing for the rank
 		local_population_capacity_modifier = -0.25
+		local_trade_center_power = -0.025   # vanilla 0.025: rank gives no market attraction
 		local_province_food_sales_output_modifier = 0.05
 		local_offset_output_modifier = 0.05
 		local_province_food_purchase_output_modifier = 0.05

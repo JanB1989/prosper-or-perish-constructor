@@ -223,7 +223,7 @@ TRY_REPLACE:development = {
 	local_supply_limit_modifier = 0.02
 	blockade_force_required = 0.01
 	local_migration_attraction = 0.0025
-	local_trade_center_power = 0.001
+	local_trade_center_power = 0.002
 	local_institution_growth_modifier = 0.001
 	local_construction_speed = 0.01
 
@@ -276,6 +276,7 @@ TRY_INJECT:location_template_natural_harbor_suitability_poor = {
 }
 TRY_INJECT:location_template_natural_harbor_suitability_good = {
 	pp_coastal_shipping_office_cap_modifier = 10
+	local_trade_center_power = -0.01   # vanilla 0.01: the harbour already counts through market access
 }
 
 TRY_INJECT:river_flowing_through_1 = {

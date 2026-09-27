@@ -28,7 +28,7 @@ works through access).
 | Term | Value | Source |
 |---|---|---|
 | market access of L to M | 0..1 | section 3 |
-| market attraction of the centre | `local_trade_center_power` of the centre location | development x 0.001 (mod; vanilla 0.002), building levels x 0 (mod since 2026-09-27, measured runs had 0.0004; vanilla 0.0005), rank (city 0.025, megalopolis 0.05), market buildings 0.1 x level, walls 0.1, good natural harbour 0.01, Global Trade birthplace 0.1, uniques |
+| market attraction of the centre | `local_trade_center_power` of the centre location | mod since 2026-09-27: development x 0.002, market buildings (entrepot, trading hub, customs house, stock exchange, clearing house) 0.05 x staffed level, Global Trade birthplace 0.1, uniques. The measured runs had the older values: development x 0.001, building levels x 0.0004, rank (city 0.025, megalopolis 0.05), market buildings 0.1, walls 0.1, good natural harbour 0.01 (vanilla: development 0.002, building levels 0.0005). Building values are `market_center_modifier`, scaled by staffing like every building modifier (walls at 50 % staff gave 0.05) |
 | attraction of the owner | `global_trade_center_power` of M's owner | prestige 0.05 x prestige/100, advances, privileges (the mod removed the trade_vs_tax line) |
 | language power | 0.1 x power of M's market language | `MARKET_LANGUAGE_POWER_ATTRACTION`; power 0..1 relative to the top language (`language_manager`) |
 | geography | +0.2 same province as the centre, else +0.1 same area | smallest shared unit only; region, subcontinent and continent 0 |
@@ -137,6 +137,16 @@ the terms that make markets drift (development, prestige, control) and founds no
 Effect on the 96-month run (2026-09-27 input, start_markets.csv with the river test): starving pools 262 → 280,
 collapsing pools 113 → 124, world population +1.16 % → +1.09 %; the victuals trade now couples the pools the engine
 couples.
+
+Centre power rework (2026-09-27; the table in section 2): `start_markets.csv` is re-predicted from `pp_mkt_0d` with
+each centre's dumped power rebuilt from its parts (fit: median residual −0.0008; negative residuals are overcounted
+building levels and are dropped with that term). First tick: 1,014 locations (15.6M of 380M people) join a different
+market than under the old weights, 222 of 4,015 pools change market; near ties within 0.01 of the runner-up fall
+from 829 locations (15.2M people) to 525 (8.2M), within 0.001 from 84 to 42. Megalopolis and walled centres lose
+(Dadu −3.1M people, Genoa −2.0M, Constantinople −1.6M), unwalled high-development centres gain (Shangyuan +2.7M,
+Venice +1.5M, Pest +0.8M). 96-month food sim: starving pools 280 → 287, collapsing 124 → 126, world population
++1.09 % → +1.07 %. Monthly jitter is not measured yet: the monthly saves of the observer run were deleted; the terms
+that drove it (building levels, staffing of walls, rank changes) are gone, development now moves twice as much.
 
 ## 7. Open
 

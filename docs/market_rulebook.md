@@ -6,6 +6,12 @@ the per-location dump `tools/markets/pp_mk.txt` from month 12 on and at the star
 Code: `src/prosper_or_perish_constructor/worldbuilder/markets.py` (rules), `tools/markets/` (kit),
 `food_sim.py` (`market_assignment = true`).
 
+Toy sheet: [EU5 market attraction toy (mod values)](https://docs.google.com/spreadsheets/d/1d9oY7BfSLBmzzmUjzW9q446aRhj1T-lbK_5ap16swKs/edit)
+(Google Sheet): three markets and eight locations with editable inputs, the attraction terms of section 2, the access
+steps of section 3 as summed route legs, the market each location joins this tick and next month (drifting prestige,
+control, development, building levels), the rules and the factor table. Two near ties show the monthly flipping of
+section 4; the proposal levers (prestige weight, protection per control, flat protection) test jitter fixes.
+
 ## 1. The rule
 
 **A location belongs to the market with the highest market attraction.** The engine recomputes it for every location

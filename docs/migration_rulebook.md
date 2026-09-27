@@ -5,6 +5,10 @@ dumps of `migration_attraction`, its modifiers and probe markers, checked agains
 records. Code: `src/prosper_or_perish_constructor/worldbuilder/migration.py` (engine rules),
 `food_sim.py` (`migration = true` switch). Numbers are thousands of people (k) unless noted.
 
+Toy sheet: [EU5 migration toy (vanilla values)](https://docs.google.com/spreadsheets/d/1GLVtqd_hWFLIkoJR7iXl0PBpvhM9XiQjmezK3GB75AQ/edit)
+(Google Sheet): one market, one monthly tick of section 2 with editable locations, pops and constants, and the rules.
+Its sibling for market membership is linked in `market_rulebook.md`.
+
 ## 1. Channels
 
 | Channel | Size (1345) | Mechanism |

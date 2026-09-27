@@ -392,10 +392,29 @@ replace = [
   { find = "is_port = yes", with = "is_port = yes pp_is_sea_coast = yes", count = 1 },
 ]
 
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: Omani coast versus interior (a hand-authored mod override: the patch goes into that file)
+file = "in_game/events/DHE/flavor_OMA.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 1 },
+  { find = "is_coastal = no", with = "NOT = { pp_is_sea_coast = yes }", count = 4 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: Danish sea coast, Canada and Iceland coasts (a hand-authored mod override: the patch goes into that file)
+file = "in_game/events/DHE/flavor_dan.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 4 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only: Portuguese raids on the Maghreb coast, American colonies (a hand-authored mod override: the patch goes into that file)
+file = "in_game/events/DHE/flavor_por.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 16 },
+]
+
 [worldbuilder.navigation_scripts.water_access_reviewed]
-"in_game/events/DHE/flavor_por.txt" = "hand-authored mod override (event RGO fixes); the file itself tests pp_is_sea_coast (sea coast, vanilla meaning)"
-"in_game/events/DHE/flavor_dan.txt" = "hand-authored mod override (event RGO fixes); the file itself tests pp_is_sea_coast (sea coast, vanilla meaning)"
-"in_game/events/DHE/flavor_OMA.txt" = "hand-authored mod override (event RGO fixes); the file itself tests pp_is_sea_coast (sea coast, vanilla meaning)"
 # Vanilla files that test is_coastal / is_port and keep the engine's meaning (any navigable water: sea coast, river
 # channels, navigable lakes). The sea-only ones are the patches above (pp_is_sea_coast).
 "in_game/common/avatars/hindu.txt" = "Matsya avatar: any port"

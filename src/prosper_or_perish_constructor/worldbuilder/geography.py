@@ -58,6 +58,7 @@ def export_files(export_dir: Path) -> list[str]:
 
 
 LOCATION_WINDOW = "in_game/gui/location_window.gui"
+MAP_MODES = "in_game/gfx/map/map_modes/map_modes.txt"
 _FOOD_PERCENT = 'value = "[FixedPointToFloat(Province.GetFoodCapacityPercent)]"'
 _FOOD_PERCENT_REST = 'value = "[Subtract_float(\'(float)100.0\', FixedPointToFloat(Province.GetFoodCapacityPercent))]"'
 _FOOD_SCOPES = ("LocationView", "LocationViewSelectProvince.Parent")
@@ -314,6 +315,15 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path |
             harvests = location_status.load_harvests(mod_root)
             merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla))
             location_status.write_harvest_files(mod_root, harvests)
+            if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
+                dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")
+                changed += 1
+            copied[rel] = digest
+            continue
+        if rel == MAP_MODES:
+            from .coast import topography_map_mode_without_rivers
+
+            merged = topography_map_mode_without_rivers(src.read_text(encoding="utf-8-sig"))
             if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
                 dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")
                 changed += 1

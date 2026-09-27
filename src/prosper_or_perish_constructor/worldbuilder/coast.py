@@ -241,6 +241,21 @@ widget = {{
 '''
 
 
+_TOPOGRAPHY_MODE = "topography = {\n\tcolor_mode = topography\n"
+
+
+def topography_map_mode_without_rivers(text: str) -> str:
+    """The Topography map mode without the river surfaces.
+
+    The navigable river channels are locations painted along the vanilla river lines, so the engine's river surface is
+    drawn over them and hides their map colour (Navigable River, Shallows, Falls). Without the river surfaces the
+    channels show their own colours; the other rivers stay visible in every other map mode and on the River chip."""
+    text = text.replace("\r\n", "\n")
+    if text.count(_TOPOGRAPHY_MODE) != 1:
+        raise ValueError("map_modes.txt: expected 1 Topography map mode block")
+    return text.replace(_TOPOGRAPHY_MODE, _TOPOGRAPHY_MODE + "\tenable_rivers = no\n")
+
+
 def water_access_chips(text: str) -> str:
     """Replace the World Builder's coast chip (engine is_coastal: Coastal / Inland) by the Water Access chip (Inland /
     Waterway / Sea Coast) and a Port chip; both sit after the river and lake chips. Vanilla's natural harbour pie goes:

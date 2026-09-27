@@ -121,6 +121,21 @@ def test_built_location_window_shows_water_access_and_port():
     assert not (MOD / coast.SCRIPT_VALUES_PATH).exists()
 
 
+def test_river_surfaces_do_not_hide_the_channel_colours():
+    """The vanilla river surface is drawn over the channel locations (they follow the river lines); the map modes that
+    colour the channels by type switch the river surfaces off."""
+    vanilla_block = "topography = {\r\n\tcolor_mode = topography\r\n\tsmall_map_names = topography\r\n}\r\n"
+    out = coast.topography_map_mode_without_rivers(vanilla_block)
+    assert out == "topography = {\n\tcolor_mode = topography\n\tenable_rivers = no\n\tsmall_map_names = topography\n}\n"
+    with pytest.raises(ValueError):
+        coast.topography_map_mode_without_rivers("political = {\n\tcolor_mode = political\n}\n")
+    modes = (MOD / "in_game/gfx/map/map_modes/map_modes.txt").read_text(encoding="utf-8-sig")
+    block = modes[modes.index("topography = {\n\tcolor_mode = topography"):]
+    assert "\tenable_rivers = no\n" in block[:block.index("\n}")]
+    nav = (MOD / "in_game/gfx/map/map_modes/pp_river_navigation.txt").read_text(encoding="utf-8-sig")
+    assert "enable_rivers = no" in nav and "enable_rivers = yes" not in nav
+
+
 def test_channel_topographies_have_their_own_icons_and_map_colours():
     """Navigable River, Shallows and Falls: each its own drawn 64 px icon and a Topography map mode colour that
     differs from the others and from every vanilla sea colour."""

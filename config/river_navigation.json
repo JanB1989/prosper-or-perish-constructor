@@ -21,8 +21,8 @@
       "icon": "assets/icons/topography/pp_river_channel.png",
       "movement_cost": 1.0,
       "map_color": [
-        120,
-        235,
+        0,
+        95,
         255
       ]
     },
@@ -34,8 +34,8 @@
       "movement_cost": 1.25,
       "map_color": [
         255,
-        170,
-        30
+        140,
+        0
       ]
     },
     "barrier": {
@@ -45,9 +45,9 @@
       "icon": "assets/icons/topography/pp_river_falls.png",
       "movement_cost": 1.0,
       "map_color": [
-        210,
-        35,
-        60
+        235,
+        0,
+        110
       ]
     }
   },

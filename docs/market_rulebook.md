@@ -49,18 +49,26 @@ in locations.png:
 
 | Step | Cost |
 |---|---|
-| land → land | K d favg min(road, river); f = 1 + (topography movement_cost − 1)/2 + (vegetation movement_cost − 1)/2, favg the mean of both ends; road = 1 + the road's `market_access` if negative (gravel 0.9, navigable river 0.4, improved 0.2; positive values ignored); river 0.5 downstream / 0.8 upstream (seen from the centre), else 1 |
+| land → land | K d favg min(road, river); f = 1 + (topography movement_cost − 1)/2 + (vegetation movement_cost − 1)/2, favg the mean of both ends; road = 1 + the road's `market_access` if negative (gravel 0.9, navigable river 0.4, improved 0.2; positive values ignored); river 0.5 downstream / 0.8 upstream (seen from the centre), else 1 — see the river test below |
 | water → water | K d favg S road; S = 0.2 (`MARKET_SEA_DISTANCE_FACTOR`), 0.4 if either tile is open sea (no passable land neighbour) or the step joins a lake and a sea tile |
 | land ↔ water | (K d 0.15 + P) road; P = 0.02 x (1 − harbour suitability) if the land location is owned, has a port and the water tile is its port sea zone or a lake, else 0.1 (`MARKET_NO_PORT_EXTRA_DISTANCE`) |
 
+- **River test** (found 2026-09-27 on 10,304 measured land edges): a land step gets the river factor when the river
+  of rivers.png runs from one location into the other (traced from the sources, direction = flow) AND the straight
+  line between the two bounding-box centres, the same line the distance is measured on, touches a river pixel.
+  Traced and touching: 97 % charged; traced but the line misses the river: 2–6 %; line touches a river that does not
+  run between them: 12 %; neither: 0.07 %. Together 97.6 % of edges right. A river along the shared border, or
+  one that clips a corner, gives no factor unless the centre line crosses it. The game uses the mod's rivers.png
+  (vanilla's lines fit worse), so the navigation sea-zone strips do not change it; being split by the river only
+  correlates (a river through a location tends to cross its centre line).
 - `local_market_access` counts only at the end location; impassable locations are no nodes.
 - A location with access 0 to every market keeps the market it had (Lapland, remote lakes; the save omits its access).
 - The save keeps access to the current market and to `second_best_market` (the market with the highest access,
   mostly) and `market_parent`, the previous location on the path to the current market; `road_network` holds every
   road. The saved access lags the live value by the `local_market_access` changes since the last tick.
-- Fit against the saved access (1338.3.19): rules only 65 % within 0.005, 94 % within 0.05; most misses are rivers
-  (a quarter of the rivers.png crossings carry no river factor in the game, unexplained). Calibrated on the save's
-  path tree (river class of each edge on it, effective harbour of each port): 99.0 % within 0.005. The thisted
+- Fit against the saved access (1338.3.19): rules only 80 % within 0.005, 98 % within 0.05 (65 % / 94 % before
+  the river test). Calibrated on the save's path tree (river class of each edge on it, effective harbour of each
+  port): 99.1 % within 0.005. The thisted
   tooltip (Oslo 0.833, Lübeck 0.777, Bruges 0.677, Köln 0.669, London 0.634) is reproduced within 0.003.
 - Remaining misses: long open-ocean crossings (Greenland–Labrador, Galápagos, Madeira, Palau, Tuvalu: 0.07–0.2 per
   region; the game's open-sea set differs for a few tiles), locations whose live access is capped at 1.
@@ -71,11 +79,11 @@ Access for every location and market + the attraction of section 2 + argmax:
 
 | Test | Locations right | Owned | People |
 |---|---|---|---|
-| 1338.3.19, calibrated access | 98.4 % | 98.5 % | 98.6 % |
-| 1338.3.19, access from the rules only | 97.3 % | 97.2 % | 97.4 % |
-| forecast: start save 1337.4.1 → markets after the first tick (1,030 switches, 875 caught) | 98.6 % | 98.6 % | 98.8 % |
-| forecast, rules only | 97.5 % | 97.3 % | 97.9 % |
-| forecast one month ahead, 1339.3 → 1339.4 (52 switches, 47 caught, 126 false alarms) | 99.3 % | 99.4 % | 99.4 % |
+| 1338.3.19, calibrated access | 98.6 % | 98.7 % | 98.7 % |
+| 1338.3.19, access from the rules only | 98.0 % | 98.1 % | 98.1 % |
+| forecast: start save 1337.4.1 -> markets after the first tick (1,030 switches) | 98.7 % | 98.8 % | 99.0 % |
+| forecast, rules only | 98.3 % | 98.3 % | 98.9 % |
+| forecast one month ahead, 1339.3 -> 1339.4 (52 switches) | 99.4 % | 99.6 % | 99.6 % |
 
 Most misses are near-ties (the runner-up is the true market, often within 0.01): the dump is taken days before the
 tick and the drifting terms (development, prestige, control) decide them. Owner/province pools (the food sim's
@@ -126,6 +134,6 @@ Effect on the 96-month run (2026-09-27 input): starving pools 262 → 280, colla
 ## 7. Open
 
 - Treaty flows (per country pair) and the Paris constant (+0.1) in the attraction.
-- Access: which traced river crossings carry a river factor (rules only 65 % within 0.005); open-sea tiles on a few
-  ocean crossings; the 0.4 in K.
+- Access: river edges the tracer misses (12 % of lines touching an untraced river are charged) and the direction of
+  rivers traced both ways; open-sea tiles on a few ocean crossings; the 0.4 in K.
 - Monthly drift inside the food sim (market switches after the first tick, founded markets) is not modelled.

@@ -9,16 +9,17 @@ the bounding-box centres of the two locations in locations.png (horizontal wrap)
 
 * land -> land: K d favg min(road, river); f = 1 + (topography movement_cost - 1)/2 + (vegetation movement_cost - 1)/2,
   favg the mean of both ends; road = 1 + the road type's market_access when negative (gravel 0.9, navigable 0.4,
-  improved 0.2; positive values are ignored); river = 0.5 downstream, 0.8 upstream (rivers.png traced), else 1;
+  improved 0.2; positive values are ignored); river = 0.5 downstream, 0.8 upstream, else 1 (RIVER: the river of
+  rivers.png runs from one location into the other, traced, AND the straight line between the two bounding-box
+  centres touches a river pixel; 97.6 % of 10,304 measured land edges);
 * water -> water: K d favg S road, S = 0.2, or 0.4 when either tile is open sea (no passable land neighbour) or
   the step is between a lake and a sea tile;
 * land <-> water: (K d 0.15 + P) road, P = 0.02 (1 - harbour) when the land location is owned, has a port and the
   water tile is its port sea zone or a lake, else 0.1 (no port);
 * impassable locations are not part of the graph; local_market_access counts at the end location only.
 
-Pure rules (game files + roads, owners and local_market_access of a save) put 65 % of saved accesses within 0.005
-and 94 % within 0.05; most of the rest is rivers (a quarter of the traced river edges carry no river factor in the
-game, unexplained). ``calibrated=True`` reads the river class of every edge on the save's market_parent tree and the
+Pure rules (game files + roads, owners and local_market_access of a save) put 80 % of saved accesses within 0.005
+and 98 % within 0.05. ``calibrated=True`` reads the river class of every edge on the save's market_parent tree and the
 effective harbour of each port off the save: 99 % within 0.005. The saved market_access lags the live value by the
 local_market_access changes since the last tick; ``lma`` picks the live (dumped) or the field value.
 """
@@ -103,10 +104,27 @@ def build_map_cache(map_dir: Path, vanilla_map_dir: Path, out: Path) -> dict[str
     # rivers: walk from every source pixel (0), then from merge pixels (1) that touch walked river, reversed
     riv = np.asarray(Image.open(map_dir / "rivers.png")).astype(np.int16)
     crossings = _trace_rivers(code, riv)
-    pl.DataFrame([(colors.get(a), colors.get(b), n) for (a, b), n in crossings.items()],
-                 schema=["a", "b", "n"], orient="row").drop_nulls().write_parquet(out / "rivers.parquet")
+    centre = {name: (x, y) for name, x, y in boxes}
+    rows = []
+    for (a, b), n in crossings.items():
+        na, nb = colors.get(a), colors.get(b)
+        if na in centre and nb in centre:
+            rows.append((na, nb, n, _line_touches(riv < 254, centre[na], centre[nb])))
+    pl.DataFrame(rows, schema=["a", "b", "n", "line"], orient="row").write_parquet(out / "rivers.parquet")
     (out / "source.txt").write_text(f"{map_dir}\n", encoding="utf-8")
     return {"adjacency": len(adj), "positions": len(boxes), "river_crossings": len(crossings)}
+
+
+def _line_touches(river: np.ndarray, a: tuple[float, float], b: tuple[float, float], step: float = 0.25) -> int:
+    """River pixels on the straight line between two bounding-box centres (the engine's river test, see RIVER)."""
+    (x0, y0), (x1, y1) = a, b
+    if abs(x1 - x0) > WIDTH / 2:
+        x1 = x1 - WIDTH if x1 > x0 else x1 + WIDTH
+    n = int(np.hypot(x1 - x0, y1 - y0) / step) + 1
+    t = np.linspace(0.0, 1.0, n + 1)
+    xs = np.round(x0 + t * (x1 - x0)).astype(int) % WIDTH
+    ys = np.clip(np.round(y0 + t * (y1 - y0)).astype(int), 0, river.shape[0] - 1)
+    return int(river[ys, xs].sum())
 
 
 def _trace_rivers(code: np.ndarray, riv: np.ndarray) -> Counter:
@@ -236,7 +254,11 @@ class Graph:
                         pp.select(pl.col("b").alias("ia"), pl.col("a").alias("ib"))]).unique().with_columns(pl.lit(True).alias("portpair"))
         e = e.join(pp, on=["ia", "ib"], how="left").with_columns(pl.col("portpair").fill_null(False))
         rivers = pl.read_parquet(cache / "rivers.parquet")
-        count = {(a, b): c for a, b, c in rivers.iter_rows()}
+        if "line" in rivers.columns:     # RIVER: only where the centre-to-centre line touches the river
+            touch = {(a, b) for a, b, line in rivers.select("a", "b", "line").iter_rows() if line > 0}
+            rivers = rivers.filter(pl.struct("a", "b").map_elements(
+                lambda s: (s["a"], s["b"]) in touch or (s["b"], s["a"]) in touch, return_dtype=pl.Boolean))
+        count = {(a, b): c for a, b, c in rivers.select("a", "b", "n").iter_rows()}
         down = [(ids.get(a), ids.get(b)) for (a, b), c in count.items() if c >= count.get((b, a), 0)]
         rdf = pl.DataFrame([x for x in down if None not in x], schema=["ia", "ib"], orient="row").with_columns(pl.lit(True).alias("riv_down"))
         e = (e.join(rdf, on=["ia", "ib"], how="left")

@@ -160,6 +160,27 @@ def test_channel_topographies_have_their_own_icons_and_map_colours():
     assert len(icons) == 3
 
 
+def test_only_the_rivers_are_water_coloured_in_the_topography_map_mode():
+    """Floodplains and Deltas came from the World Builder in teal and blue, the river's own colours; they get land
+    colours, and the channel colours keep clear of every land topography colour."""
+    import json
+    import re
+
+    settings = json.loads((REPO / "config/river_navigation.json").read_text(encoding="utf-8"))
+    named = (MOD / "main_menu/common/named_colors/ha1300_topography.txt").read_text(encoding="utf-8-sig")
+    land = {k: tuple(map(int, v)) for k, *v in re.findall(r"(\w+)\s*=\s*rgb\s*\{\s*(\d+)\s+(\d+)\s+(\d+)\s*\}", named)}
+    for name, rgb in settings["land_topography_colors"].items():
+        assert land[name] == tuple(rgb)
+    import colorsys
+
+    for rgb in land.values():
+        hue, _, sat = colorsys.rgb_to_hls(*(c / 255 for c in rgb))
+        assert not (170 <= hue * 360 <= 240 and sat > 0.2), f"land topography colour {rgb} is water blue"
+    for spec in settings["topographies"].values():
+        for rgb in land.values():
+            assert sum(abs(a - b) for a, b in zip(spec["map_color"], rgb)) > 120, (spec["key"], rgb)
+
+
 def test_sea_coast_placement_matches_the_offline_map_state():
     """The Sea Coast modifier sits exactly on the map's sea coast (not on the World Builder's old coastline)."""
     import re

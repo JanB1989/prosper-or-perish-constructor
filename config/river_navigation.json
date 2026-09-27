@@ -21,8 +21,8 @@
       "icon": "assets/icons/topography/pp_river_channel.png",
       "movement_cost": 1.0,
       "map_color": [
-        0,
-        95,
+        70,
+        200,
         255
       ]
     },
@@ -34,8 +34,8 @@
       "movement_cost": 1.25,
       "map_color": [
         255,
-        140,
-        0
+        255,
+        255
       ]
     },
     "barrier": {
@@ -45,11 +45,23 @@
       "icon": "assets/icons/topography/pp_river_falls.png",
       "movement_cost": 1.0,
       "map_color": [
-        235,
-        0,
-        110
+        255,
+        30,
+        30
       ]
     }
+  },
+  "land_topography_colors": {
+    "ha1300_topography_floodplains": [
+      150,
+      120,
+      190
+    ],
+    "ha1300_topography_deltas": [
+      200,
+      120,
+      160
+    ]
   },
   "road_costs": {
     "navigable": {

@@ -277,7 +277,21 @@ def write_topographies(mod_root,vanilla_root,contract,settings,repo=None):
         p=mod_root/rel;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('﻿'+header+body+'\n',encoding='utf-8',newline='\n')
     p=mod_root/'main_menu/localization/english/pp_river_topography_l_english.yml'
     p.write_text('\n'.join(loc)+'\n',encoding='utf-8',newline='\n')
+    recolor_land_topographies(mod_root,settings.get('land_topography_colors',{}))
     return dict(count)
+
+
+def recolor_land_topographies(mod_root,colors):
+    """Land topographies whose World Builder colour is a water blue (Floodplains, Deltas) get a land colour, so the
+    thin river channels are the only water-coloured strips in the Topography map mode."""
+    import re
+    if not colors:return
+    path=mod_root/'main_menu/common/named_colors/ha1300_topography.txt'
+    text=path.read_text(encoding='utf-8-sig')
+    for name,rgb in colors.items():
+        text,n=re.subn(rf'^(\s*{re.escape(name)}\s*=\s*)rgb\s*\{{[^}}]*\}}',lambda m:m.group(1)+'rgb {{ {} {} {} }}'.format(*rgb),text,flags=re.M)
+        if n!=1:raise ValueError(f'{path.name}: expected 1 named colour {name}, found {n}')
+    path.write_text('﻿'+text,encoding='utf-8',newline='\n')
 
 
 def exchange_levels(levels,site):

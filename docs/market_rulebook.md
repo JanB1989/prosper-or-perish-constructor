@@ -128,8 +128,9 @@ dump: population majority of the pool's locations). Pools without market access 
 (Taverns and Granges per catchment) is not changed. The assignment stays fixed for the run: the sim does not move
 the terms that make markets drift (development, prestige, control) and founds no markets.
 
-Effect on the 96-month run (2026-09-27 input): starving pools 262 → 280, collapsing pools 113 → 123, world population
-+1.16 % → +1.10 %; the victuals trade now couples the pools the engine couples.
+Effect on the 96-month run (2026-09-27 input, start_markets.csv with the river test): starving pools 262 → 280,
+collapsing pools 113 → 124, world population +1.16 % → +1.09 %; the victuals trade now couples the pools the engine
+couples.
 
 ## 7. Open
 

@@ -1,0 +1,5 @@
+﻿# Market attraction of a market owner from prestige: vanilla 0.05 per 100 prestige, doubled (2026-09-27).
+# The vanilla auto modifier scales with prestige x 0.01; INJECT adds to its value.
+TRY_INJECT:prestige = {
+	global_trade_center_power = 0.05
+}

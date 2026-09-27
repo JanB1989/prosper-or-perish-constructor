@@ -29,7 +29,7 @@ works through access).
 |---|---|---|
 | market access of L to M | 0..1 | section 3 |
 | market attraction of the centre | `local_trade_center_power` of the centre location | mod since 2026-09-27: development x 0.002, market buildings (entrepot, trading hub, customs house, stock exchange, clearing house) 0.05 x staffed level, Global Trade birthplace 0.1, uniques. The measured runs had the older values: development x 0.001, building levels x 0.0004, rank (city 0.025, megalopolis 0.05), market buildings 0.1, walls 0.1, good natural harbour 0.01 (vanilla: development 0.002, building levels 0.0005). Building values are `market_center_modifier`, scaled by staffing like every building modifier (walls at 50 % staff gave 0.05) |
-| attraction of the owner | `global_trade_center_power` of M's owner | prestige 0.05 x prestige/100, advances, privileges (the mod removed the trade_vs_tax line) |
+| attraction of the owner | `global_trade_center_power` of M's owner | prestige 0.05 x prestige/100 (vanilla auto modifier `prestige`; the mod doubles it to 0.10 since 2026-09-27, `auto_modifiers/pp_prestige_trade_power.txt`), advances, privileges (the mod removed the trade_vs_tax line) |
 | language power | 0.1 x power of M's market language | `MARKET_LANGUAGE_POWER_ATTRACTION`; power 0..1 relative to the top language (`language_manager`) |
 | geography | +0.2 same province as the centre, else +0.1 same area | smallest shared unit only; region, subcontinent and continent 0 |
 | owner's language | +0.05 if M's language is the common language of L's owner (language of its primary culture), else +0.01 same language family | owned locations only |

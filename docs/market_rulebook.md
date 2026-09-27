@@ -28,7 +28,7 @@ works through access).
 | Term | Value | Source |
 |---|---|---|
 | market access of L to M | 0..1 | section 3 |
-| market attraction of the centre | `local_trade_center_power` of the centre location | development x 0.001 (mod; vanilla 0.002), building levels x 0.0004 (mod; vanilla 0.0005), rank (city 0.025, megalopolis 0.05), market buildings 0.1 x level, walls 0.1, good natural harbour 0.01, Global Trade birthplace 0.1, uniques |
+| market attraction of the centre | `local_trade_center_power` of the centre location | development x 0.001 (mod; vanilla 0.002), building levels x 0 (mod since 2026-09-27, measured runs had 0.0004; vanilla 0.0005), rank (city 0.025, megalopolis 0.05), market buildings 0.1 x level, walls 0.1, good natural harbour 0.01, Global Trade birthplace 0.1, uniques |
 | attraction of the owner | `global_trade_center_power` of M's owner | prestige 0.05 x prestige/100, advances, privileges (the mod removed the trade_vs_tax line) |
 | language power | 0.1 x power of M's market language | `MARKET_LANGUAGE_POWER_ATTRACTION`; power 0..1 relative to the top language (`language_manager`) |
 | geography | +0.2 same province as the centre, else +0.1 same area | smallest shared unit only; region, subcontinent and continent 0 |

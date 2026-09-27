@@ -177,8 +177,30 @@ def test_only_the_rivers_are_water_coloured_in_the_topography_map_mode():
         hue, _, sat = colorsys.rgb_to_hls(*(c / 255 for c in rgb))
         assert not (170 <= hue * 360 <= 240 and sat > 0.2), f"land topography colour {rgb} is water blue"
     for spec in settings["topographies"].values():
+        # the terrain shader shows the blank paper map where a colour's red is >= 0.8 near water
+        assert spec["map_color"][0] < 204, spec["key"]
         for rgb in land.values():
             assert sum(abs(a - b) for a, b in zip(spec["map_color"], rgb)) > 120, (spec["key"], rgb)
+
+
+def test_every_country_discovers_the_rivers_along_its_land():
+    """The channels sit in their own region, which no vanilla discovery template lists: without the game-start effect
+    every river is terra incognita. Each channel is discovered with its main bank."""
+    from prosper_or_perish_constructor.worldbuilder import navigation
+
+    tiles = {"pp_nav_1": {}, "pp_nav_2": {}, "pp_nav_3": {}}
+    shores = [{"water_location": "pp_nav_1", "location_tag": "a", "shore_pixels": 5},
+              {"water_location": "pp_nav_1", "location_tag": "b", "shore_pixels": 9},
+              {"water_location": "pp_nav_2", "location_tag": "b", "shore_pixels": 3}]
+    text = navigation.discovery_effect(tiles, shores)
+    assert "location:b = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_1 = { discover_location" in text
+    assert "location:pp_nav_2 = { discover_location" in text and "location:a = " not in text
+    # pp_nav_3 has no bank: it follows a discovered neighbour, checked for itself only
+    assert "location:pp_nav_3 = { if = { limit = { any_neighbor_location = { is_discovered_by = scope:pp_nav_discoverer } }" in text
+    assert "every_location_in_region" not in text
+    built = (MOD / "in_game/common/scripted_effects/pp_navigation_discovery.txt").read_text(encoding="utf-8-sig")
+    assert built.count("discover_location") >= 800
+    assert "pp_navigation_discovery = yes" in (MOD / "in_game/common/on_action/pp_navigation.txt").read_text(encoding="utf-8-sig")
 
 
 def test_sea_coast_placement_matches_the_offline_map_state():

@@ -12,7 +12,7 @@ pp_river_channel = {
 }
 
 pp_river_shallows = {
-	color = rgb { 255 255 255 }
+	color = rgb { 195 70 255 }
 	can_freeze_over = yes
 	can_have_ice = yes
 	movement_cost = 1.25
@@ -24,7 +24,7 @@ pp_river_shallows = {
 }
 
 pp_river_falls = {
-	color = rgb { 255 30 30 }
+	color = rgb { 190 0 40 }
 	movement_cost = 1.0
 	location_modifier = { blocks_vision_from_sea = yes blocks_vision_from_land = yes }
 	audio_tags = { masDataTopologyElevation = 0 masDataTopologyOcean = 1 }

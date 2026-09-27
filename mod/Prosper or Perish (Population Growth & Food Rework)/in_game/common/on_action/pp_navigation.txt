@@ -1,5 +1,6 @@
 ﻿on_game_start = { on_actions = { pp_navigation_start } }
 pp_navigation_start = { effect = {
+ pp_navigation_discovery = yes
  pp_navigation_preserve_rivers = yes
  pp_start_river_topup = yes
  pp_navigation_map_seed = yes

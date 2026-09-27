@@ -33,8 +33,8 @@
       "icon": "assets/icons/topography/pp_river_shallows.png",
       "movement_cost": 1.25,
       "map_color": [
-        255,
-        255,
+        195,
+        70,
         255
       ]
     },
@@ -45,22 +45,22 @@
       "icon": "assets/icons/topography/pp_river_falls.png",
       "movement_cost": 1.0,
       "map_color": [
-        255,
-        30,
-        30
+        190,
+        0,
+        40
       ]
     }
   },
   "land_topography_colors": {
     "ha1300_topography_floodplains": [
-      150,
-      120,
-      190
+      55,
+      115,
+      60
     ],
     "ha1300_topography_deltas": [
-      200,
-      120,
-      160
+      195,
+      125,
+      150
     ]
   },
   "road_costs": {

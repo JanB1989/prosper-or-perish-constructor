@@ -18,22 +18,37 @@
       "key": "pp_river_channel",
       "name": "Navigable River",
       "description": "A river reach that boats can use.",
-      "icon": "narrows",
-      "movement_cost": 1.0
+      "icon": "assets/icons/topography/pp_river_channel.png",
+      "movement_cost": 1.0,
+      "map_color": [
+        120,
+        235,
+        255
+      ]
     },
     "improvable": {
       "key": "pp_river_shallows",
       "name": "Shallows",
       "description": "Shoals and mill weirs: boats pass slowly and at a cost until a River Navigation Canal is built on a bank.",
-      "icon": "narrows",
-      "movement_cost": 1.25
+      "icon": "assets/icons/topography/pp_river_shallows.png",
+      "movement_cost": 1.25,
+      "map_color": [
+        255,
+        170,
+        30
+      ]
     },
     "barrier": {
       "key": "pp_river_falls",
       "name": "Falls",
       "description": "Falls and great rapids that boats cannot pass.",
-      "icon": "ocean_wasteland",
-      "movement_cost": 1.0
+      "icon": "assets/icons/topography/pp_river_falls.png",
+      "movement_cost": 1.0,
+      "map_color": [
+        210,
+        35,
+        60
+      ]
     }
   },
   "road_costs": {

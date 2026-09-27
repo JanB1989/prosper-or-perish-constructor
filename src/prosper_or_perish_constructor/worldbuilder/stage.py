@@ -49,7 +49,7 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     if cfg.raw.get("navigation_config"):
         nav_settings = json.loads((repo / str(cfg.raw["navigation_config"])).read_text(encoding="utf-8"))
         if nav_settings.get("enabled") and nav_settings.get("topographies"):
-            report["channel_topographies"] = navigation.write_topographies(mod_root, vanilla_root(repo, project), contract, nav_settings)
+            report["channel_topographies"] = navigation.write_topographies(mod_root, vanilla_root(repo, project), contract, nav_settings, repo)
     # water access from the mod's own map: the Sea Coast modifier, gates and start model follow the game's sea coast
     from . import coast
 

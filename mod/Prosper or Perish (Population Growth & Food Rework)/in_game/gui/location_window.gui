@@ -5666,9 +5666,22 @@ widget = {
             blockoverride "title_icon" {
                 widget = { using = tooltip_title_icon_size background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" } icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/modifier_types/natural_harbor_suitability.dds" } }
             }
+            blockoverride "title_button" {
+                mapmode_tooltip_button = { datacontext = "[GetMapMode('natural_harbor_suitability')]" }
+            }
             blockoverride "tooltip_content" {
                 TooltipTextBlock = { blockoverride "text" { text = "[SelectLocalization(LocationView.GetLocation.HasPort, 'PP_PORT_HELP', 'PP_NO_PORT_HELP')]" } }
-                TooltipTextBlock = { visible = "[LocationView.GetLocation.HasPort]" blockoverride "text" { text = "[Localize('PP_PORT_HARBOR')] [FixedPointToInt(LocationView.GetLocation.MakeScope.ScriptValue('pp_harbor_suitability_percent'))]%" } }
+                TooltipTextBlock = { visible = "[LocationView.GetLocation.IsCoastal]" blockoverride "text" { text = "PP_PORT_HARBOR" } }
+                TooltipStringPairList = {
+                    visible = "[LocationView.GetLocation.IsCoastal]"
+                    blockoverride "block_title" { text = "HARBOR_SUITABILITY_DESC" }
+                    textcontext = "[Location.GetDescriptionFor('harbor_suitability')]"
+                }
+                TooltipStringPairList = {
+                    visible = "[LocationView.GetLocation.IsCoastal]"
+                    blockoverride "block_title" { text = "HARBOR_SUITABILITY_IMPACT" }
+                    textcontext = "[Location.GetHarborCapacityImpactInfo]"
+                }
             }
         }
     }
@@ -6008,53 +6021,6 @@ pp_land_potential_chip = {}
 							hbox = {
 								margin = { 5 5 }
 								spacing = 7
-								# NATURAL HABOUR
-								widget = {
-									visible = "[LocationView.GetLocation.IsCoastal]"
-									size = {28 28}
-
-									datacontext = "[LocationView.GetLocation]"
-									tooltipwidget = {
-										using = HarborCapacity_tooltip
-									}
-
-									piechart = {
-										using = bg_circle
-										size = { 100% 100% }
-										using = piechart_angles
-										using = bg_circle_piechart
-
-										icon = {
-											texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
-											size = { 97% 97% }
-											parentanchor = center
-											color = { 0 0 0 1 }
-										}
-
-										pieslice_no_highlight = {
-											texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
-											value = "[FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('harbor_suitability'))]"
-											color = { 0.3 0.8 0.3 1 }
-											alpha = 0.8
-										}
-
-										pieslice_no_highlight = {
-											texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
-											value = "[Max_float(Subtract_float('(float)1.0', FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('harbor_suitability'))), '(float)0')]"
-											color = { 0.8 0.3 0.3 1 }
-											alpha = 0.8
-										}
-
-										icon = {
-											size = { 19 19 }
-											parentanchor = center
-											texture = "[GetConceptTexture('harbor_capacity')]"
-										}
-									}
-								}
-
-								
-
 								# SOUND TOLL
 								icon = {
 									size = { 30 30 }

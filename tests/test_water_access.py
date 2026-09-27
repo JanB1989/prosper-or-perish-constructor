@@ -53,12 +53,20 @@ def test_water_access_chip_replaces_the_coast_chip_after_river_and_lake():
     gui = ('widget = {\n        name = "ha1300_native_coast"\n        size = { 30 30 }\n    }\n'
            'widget = {\n        name = "ha1300_native_river"\n    }\n'
            'widget = {\n        name = "ha1300_native_lake"\n    }\n'
-           'widget = { name = "ha1300_native_soil" size = { 30 30 }\n}\n')
+           'widget = { name = "ha1300_native_soil" size = { 30 30 }\n}\n'
+           'hbox = {\n# NATURAL HABOUR\nwidget = {\n tooltipwidget = { using = HarborCapacity_tooltip }\n}\n\n'
+           '# SOUND TOLL\nicon = { size = { 30 30 } }\n}\n')
     out = coast.water_access_chips(gui)
     assert "ha1300_native_coast" not in out
     assert out.index("ha1300_native_lake") < out.index('name = "pp_water_access"') < out.index('name = "pp_port"') < out.index("ha1300_native_soil")
     # the sea-coast effects show only on the sea coast; the engine's coastal effects on both water states
     assert "pp_attribute_view_coast" in out and "ShowModifierEffect('coastal')" in out
+    # one Port attribute: vanilla's natural harbour pie is gone, its harbour capacity breakdown sits in the Port tooltip
+    assert "HarborCapacity_tooltip" not in out and "# SOUND TOLL" in out
+    port = out[out.index('name = "pp_port"'):out.index("ha1300_native_soil")]
+    for text in ("PP_PORT_HARBOR", "GetDescriptionFor('harbor_suitability')", "GetHarborCapacityImpactInfo",
+                 "GetMapMode('natural_harbor_suitability')"):
+        assert text in port
     for tex in (coast.SEA_ICON, coast.WATERWAY_ICON, coast.INLAND_ICON, coast.PORT_ICON):
         assert tex in out
     with pytest.raises(ValueError):
@@ -109,6 +117,32 @@ def test_built_location_window_shows_water_access_and_port():
     gui = (MOD / "in_game/gui/location_window.gui").read_text(encoding="utf-8-sig")
     assert 'name = "pp_water_access"' in gui and 'name = "pp_port"' in gui
     assert 'name = "ha1300_native_coast"' not in gui
+    assert "# NATURAL HABOUR" not in gui and gui.count("GetHarborCapacityImpactInfo") == 1
+    assert not (MOD / coast.SCRIPT_VALUES_PATH).exists()
+
+
+def test_channel_topographies_have_their_own_icons_and_map_colours():
+    """Navigable River, Shallows and Falls: each its own drawn 64 px icon and a Topography map mode colour that
+    differs from the others and from every vanilla sea colour."""
+    import json
+    import re
+
+    settings = json.loads((REPO / "config/river_navigation.json").read_text(encoding="utf-8"))["topographies"]
+    colours = [tuple(spec["map_color"]) for spec in settings.values()]
+    assert len(set(colours)) == 3
+    text = (MOD / "in_game/common/topography/pp_river_topography.txt").read_text(encoding="utf-8-sig")
+    assert "terrain_narrows" not in text and "terrain_ocean_wasteland" not in text
+    from PIL import Image
+
+    icons = set()
+    for spec in settings.values():
+        assert re.search(rf"{spec['key']} = \{{\n\tcolor = rgb \{{ {' '.join(map(str, spec['map_color']))} \}}", text)
+        dds = MOD / "main_menu/gfx/interface/topography" / f"{spec['key']}.dds"
+        with Image.open(dds) as im:
+            assert im.size == (64, 64)
+            icons.add(im.convert("RGBA").tobytes())
+        assert not (MOD / "in_game/gfx/interface/topography" / f"{spec['key']}.dds").exists()
+    assert len(icons) == 3
 
 
 def test_sea_coast_placement_matches_the_offline_map_state():

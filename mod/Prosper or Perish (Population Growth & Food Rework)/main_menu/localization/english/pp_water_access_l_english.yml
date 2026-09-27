@@ -11,4 +11,4 @@
  PP_NO_PORT: "No Port"
  PP_PORT_HELP: "Ships can dock, be built and be repaired here."
  PP_NO_PORT_HELP: "No ship can dock here, even where the location borders navigable water."
- PP_PORT_HARBOR: "Natural harbour suitability:"
+ PP_PORT_HARBOR: "[natural_harbor_suitability_with_icon|e]: [Location.GetModifierValueFixed('natural_harbor_suitability')|0%]"

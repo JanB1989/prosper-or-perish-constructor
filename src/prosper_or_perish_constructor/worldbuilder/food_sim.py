@@ -48,6 +48,10 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   1,000-people sender floor are per location, targets are chosen with the km decay, capped pop types (all but peasants)
   find room while the target pool is below its start size (``migration_room``), and the moved people leave one pool
   and join the other.
+* ``market_assignment = true`` puts every owned pool into the market the engine picks at the first monthly tick
+  (``markets.py``, docs/market_rulebook.md; ``config/start_markets.csv`` predicted from a start save) instead of the
+  start placement's nearest-centre proxy, which agrees with the engine for 67 % of the pools. The placement itself
+  (Taverns, Granges per catchment) keeps the proxy.
 
 ``[worldbuilder.start.food_sim]`` in constructor.toml overrides every rule. The run validates the placement, it does
 not forecast a campaign.
@@ -191,6 +195,9 @@ class SimRules:
     migration_speed_modifier: float = 0.0   # country speed modifiers (1345: mostly -0.1 .. -0.4)
     migration_room: float = 1.0             # capped types (not peasants) find room while the target pool is below
                                             # this x its start size of the type (stand-in for population_ratio)
+    # engine market membership (markets.py, docs/market_rulebook.md): pools join the market the engine picks at the
+    # first tick (config/start_markets.csv, predicted from a start save) instead of the nearest-centre proxy
+    market_assignment: bool = False
     # Tavern (per level; blueprints/accepted/buildings/tavern.yml)
     tavern_income: float = 3.34         # 0.167 offset x (1 + 19)
     tavern_victuals: float = 2.0
@@ -615,6 +622,7 @@ def summarize(rows: list[dict[str, Any]], rules: SimRules) -> dict[str, Any]:
         "owned_tribesmen_change": round(sum(r["tribesmen_end_k"] for r in rows if r["owner"] != UNOWNED)
                                         / max(1e-9, sum(r["tribesmen_start_k"] for r in rows if r["owner"] != UNOWNED)) - 1.0, 4),
         "migration": bool(rules.migration),
+        "market_assignment": bool(rules.market_assignment),
         "migrated_k": round(sum(r.get("migrated_out_k", 0.0) for r in rows), 1),
         "note": "population loop from the planned start (seeded harvest rolls); report only",
     }
@@ -622,6 +630,26 @@ def summarize(rows: list[dict[str, Any]], rules: SimRules) -> dict[str, Any]:
 
 # ---------------------------------------------------------------------------------------------------- I/O
 INPUT_FIELDS = [f.name for f in fields(Pool)]
+START_MARKETS = Path("config/start_markets.csv")
+
+
+def engine_markets(repo: Path, pools: list[Pool]) -> int:
+    """``market_assignment = true``: move every owned pool into the market the engine rule picks at the first tick
+    (``config/start_markets.csv``, tools/markets/save_inputs.py --pool-markets). Pools without a row (no market
+    access) keep the proxy. Returns the number of pools whose market changed."""
+    path = repo / START_MARKETS
+    if not path.is_file():
+        raise FileNotFoundError(f"market_assignment needs {path} (tools/markets/save_inputs.py SAVE --pool-markets)")
+    with path.open(encoding="utf-8") as handle:
+        rows = csv.DictReader(line for line in handle if not line.startswith("#"))
+        market = {(r["owner"], r["province"]): r["market"] for r in rows}
+    changed = 0
+    for p in pools:
+        new = market.get((p.owner, p.province))
+        if p.owner != UNOWNED and new and new != p.catchment:
+            p.catchment = new
+            changed += 1
+    return changed
 
 
 def write_inputs(path: Path, pools: list[Pool]) -> None:
@@ -676,7 +704,10 @@ def run_file(repo: Path, raw: Mapping[str, Any] | None = None, months: int | Non
     rules = SimRules.from_raw(raw)
     if months:
         rules = SimRules(**{**asdict(rules), "months": int(months)})
-    rows = simulate(read_inputs(path), rules)
+    pools = read_inputs(path)
+    if rules.market_assignment:
+        engine_markets(repo, pools)
+    rows = simulate(pools, rules)
     summary = summarize(rows, rules)
     write_outputs(folder, rows, summary)
     return summary
@@ -836,6 +867,8 @@ def write_inputs_and_run(repo: Path, sim, budgets, cfg) -> dict[str, Any]:
     pools = pools_from_simulation(sim, budgets)
     write_inputs(folder / "input.csv", pools)
     rules = SimRules.from_raw((cfg.raw.get("start") or {}).get("food_sim"))
+    if rules.market_assignment:
+        engine_markets(repo, pools)
     rows = simulate(pools, rules)
     summary = summarize(rows, rules)
     write_outputs(folder, rows, summary)

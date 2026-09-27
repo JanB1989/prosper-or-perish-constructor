@@ -1,0 +1,13 @@
+# pp_mk: market attraction inputs as location variables (read from the next save, eu5save location_variables)
+every_country = {
+	limit = { any_owned_location = { always = yes } }
+	save_scope_as = pp_mk_c
+	every_owned_location = {
+		set_variable = { name = pp_mk_ltcp value = modifier:local_trade_center_power }
+		set_variable = { name = pp_mk_ltpf value = modifier:local_trade_protection_factor }
+		set_variable = { name = pp_mk_lma value = modifier:local_market_access }
+		set_variable = { name = pp_mk_gtcp value = scope:pp_mk_c.modifier:global_trade_center_power }
+		set_variable = { name = pp_mk_gtpf value = scope:pp_mk_c.modifier:global_trade_protection_factor }
+		set_variable = { name = pp_mk_acc value = market_access }
+	}
+}

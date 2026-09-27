@@ -242,6 +242,11 @@ def _build_parser() -> argparse.ArgumentParser:
         help="food-sim only: move people between pools with the engine's market migration (docs/migration_rulebook.md) instead of the flat starving out-migration.",
     )
     worldbuilder.add_argument(
+        "--markets",
+        action="store_true",
+        help="food-sim only: put pools into the markets the engine picks at the first tick (docs/market_rulebook.md, config/start_markets.csv) instead of the nearest-centre proxy.",
+    )
+    worldbuilder.add_argument(
         "--save",
         type=Path,
         default=None,
@@ -953,6 +958,8 @@ def _worldbuilder(args: argparse.Namespace, extra: Sequence[str], repo: Path, pr
         raw = dict((load_config(repo, project).raw.get("start") or {}).get("food_sim") or {})
         if args.migration:
             raw["migration"] = True
+        if args.markets:
+            raw["market_assignment"] = True
         summary = food_sim.run_file(repo, raw, args.months)
         print(json.dumps(summary, indent=2))
         print(f"per pool: {food_sim.OUTPUT_RELATIVE_PATH / 'pools.csv'}")

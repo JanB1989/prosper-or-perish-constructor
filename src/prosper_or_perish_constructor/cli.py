@@ -1173,7 +1173,22 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
             f"prices and {len(margins.vanilla_unchanged)} vanilla methods (see profit_margins.py).",
             flush=True,
         )
+        _apply_text_formats(mod_root, vanilla_root(repo, project))
     _ensure_constructor_text_boms(mod_root)
+
+
+def _apply_text_formats(mod_root: Path, vanilla: Path) -> None:
+    from prosper_or_perish_constructor import text_formats
+
+    text_formats.write_aliases(mod_root)
+    unknown = text_formats.check(vanilla / "game", mod_root)
+    for item in unknown:
+        print(f"Unknown formatting tag '#{item.tag}' in {item.path}:{item.line}", flush=True)
+    print(
+        f"Text formats: aliased {', '.join(sorted(text_formats.ALIASES))} for vanilla; "
+        f"{len(unknown)} unknown tags in the mod's GUI and localization.",
+        flush=True,
+    )
 
 
 def _project_mod_root(repo: Path, project: Path) -> Path:

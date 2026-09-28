@@ -27,14 +27,14 @@ Of all building constructions started June 1337 - August 1340 (2,680 distinct on
 | Others (peasants, crown, tribes, ...) | ~0 | - |
 
 Over 100 years the country share rises to 75 % (1,400 of ~1,880 running constructions in 1437); nobles stay at
-~400-450. Roads, rank upgrades and RGO expansions also run through the same queue (see 2.1).
+~400-450. Roads and rank upgrades also run through the same queue (see 2.1). RGO upgrades never appear in it in any PP save checked; PP blocks RGO upgrades for 50 of 52 raw materials (only lumber and salt are open).
 
 ## 2. Country AI
 
 ### 2.1 The queue (verified)
 
 - Every country keeps a **building queue** in its AI memory (`ai_memory.building_candidates`): building type +
-  location (or a road with target, a rank upgrade, an RGO expansion), each with a **utility** score. Typical length:
+  location (or a road with target, a rank upgrade, a town specialisation pair), each with a **utility** score. Typical length:
   5-40 entries; ~4,200 entries world-wide.
 - The queue is **stable**: 93-98 % of entries survive from month to month. At game start queues fill up country by
   country over ~3 weeks (71 countries on day 2, 990 on day 18). Vanilla define `AI_CONSTRUCTION_QUEUE_CLEAR_MONTHS = 60`

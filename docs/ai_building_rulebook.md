@@ -247,6 +247,67 @@ enrichment, Food Utility, location-dependent modifier values) are computed by th
 margin and capital-only probes do not reproduce. The next gain is reconstructing those terms from the decompile and
 checking them against `ai_debug` tooltips, not a better model.
 
+### 2.4f The engine's own breakdown for every candidate (hooked, 2026-09-28)
+
+**Method.** A Frida hook (`~/pp_ai_run/hook/agent_c.js` + `run_hook_c.py`, C callbacks via CModule) sits on the building
+utility function (RVA 0x5116ca0). It hands each call the 16-byte string the `ai_debug` tooltip passes as argument 9,
+with the ai_debug flag (0x83895c3) on. It also sets `GameStateTick.ForceSerial` (0x83895c0): building the breakdown on
+many threads at once deadlocks or crashes the game. Serial ticking made it stable.
+
+The breakdown text carries nested `TOOLTIP:DEBUGRAWTEXT,<base64>` payloads (`decode.py`), streamed into parquet by
+`parse.py`. Run it memory-capped with `~/.local/bin/capped`.
+
+The run: 1339.5.3 → 1339.6.3 in the PP AI Lab game, 161,064 scored candidates, save `pp_ai_lab_h01`. 99.5 % of the
+saved queue entries match a hooked row exactly on the raw utility (`join_queue.py`).
+
+**Exact facts:**
+- **Saved utility = utility × 2^30** (engine fixed point). There is no gold factor on the whole utility.
+- **Every term is a currency change priced on the country's currency curve.** The building's effect becomes a change of
+  a currency (gold, estate enrichment, province food stockpile, conversion, estate power, …). The change is multiplied
+  by a time multiplier and valued by "utility of moving <currency> from A to B".
+- **Gold utility is exactly U(g) = a·ln(g + a·L)**, with L = loan capacity. The per-country fit error is 0.000, and
+  b = a·L holds in almost all countries. So the first gold coin is worth 1/L, and a is about 0.18 (0.08–0.2).
+  Only countries hoarding far above their buffer target (MAL, PAP) deviate.
+- **Time multiplier T = 1/(1 − d), one per country.** d is a discount factor clamped to [23/24, 0.9988], so T lies
+  in [24, 833.33]; costs can reach 2,400. Cost, estate enrichment and all modifier terms use T. Profit to state uses
+  T·√min(T, 833.33) (GLH: T = 24 → 117.58 = 24^1.5), so profit weighs far more in long-horizon countries.
+- **How d is set (from the code).** A horizon H = 240·(cap/240)^r:
+  - gold ≥ 1: cap = 2,400 and r = clamp(gold / max(50·X, 100));
+  - in debt: cap = 24.
+
+  Then d = base·(1 − 1/H). X (country field +0x2ee8) and the base discount (FUN_1451852f0, a budget model) are not
+  identified yet. T is small for large countries and for countries in deficit (FRA 42, HCN 28), median 328.
+- **Cost term ≈ inherent × 1.2 × "affects self" multiplier.**
+- **Gates on all 161k scored candidates:**
+  - "Too low profit margin" multiplies 31.5 % by 0.
+  - 41 % end negative; only 27 % are positive.
+  - Peasant buildings in cities get ×0.9 (8 %).
+  - A "Per capita factor" (×0.3 … ×300) applies to 1.4 %.
+
+**What orders the queue (real buildings, probes excluded, 8,152 entries).** Median utility is 0.8. By share of |terms|:
+
+| Term | Share of \|terms\| | Spearman with utility in the queue |
+|---|---|---|
+| Scaled modifier | 30 % | 0.21 |
+| Unscaled modifier | 27 % | 0.06 |
+| Gold cost | 22 % | −0.07 |
+| Profit to state | 9 % | 0.29 |
+| Other (e.g. "producing goods used in construction") | 8 % | 0.18 |
+| Estate enrichment | 2 % | 0.30 |
+
+Rare large terms decide the top of queues:
+
+| Building | Term | Mean value |
+|---|---|---|
+| Stockade | fort / zone of control | +846 |
+| Castle | fort / zone of control | +111 |
+| Cookshop | scaled modifier | +229 |
+| Victualling yard | scaled modifier | +124 |
+| Mason | producing goods for construction | +71 |
+
+Tables: `~/pp_ai_run/hook/h01/{candidates,terms,queue,queue_terms}.parquet`, `gold_curve_countries.parquet`,
+`time_mult_countries.parquet`.
+
 ### 2.4d Engine structure (from the 1.3.11 executable)
 
 Labels and class names in `eu5.exe` (strings, 2026-09-28) show how the building utility is put together; the debug

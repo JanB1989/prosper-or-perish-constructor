@@ -95,6 +95,17 @@ in consecutive months.
   its price (+0.22 across 51 types; age-1 prices are all similar). It is slightly higher in poorer locations (-0.2 with
   market access and development). The engine's scoring of modifiers is hard-coded; only defines steer it.
 
+### 2.5 Where (verified, queue of 1340.8.14)
+
+Percentile of each queued location inside its own country (0 = the country's top location, 0.5 = middle; countries
+with ≥ 5 locations, 4,000+ candidates):
+
+| Placement | Building types | population / development / market access |
+|---|---|---|
+| Country's top towns | cloth, fine cloth, glass, jewelry, tools guilds, winery, hired labour yard, clay pit, bridge | 0.05-0.2 / 0.05-0.2 / 0.05-0.35 |
+| Populous, any development | rural glassmaker, rural daywork yard, forest/fishing village, irrigation | 0.15-0.3 / 0.3-0.5 |
+| Anywhere | cookshop, tavern, mason, tar kiln, rural clothmaker, market village, field management, land clearance | ~0.5 / ~0.5 / ~0.5 |
+
 ## 3. Estates (verified)
 
 - An estate does **not** use a queue. It keeps **one planned project** (`estate_manager.database.*.building` +

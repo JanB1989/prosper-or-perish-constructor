@@ -387,7 +387,7 @@ def _culling_effects_file() -> str:
             _line("value = -1", 3),
             _line("}", 2),
             _line("# Debug flag: scripted cull, counted per location (save) and logged", 2),
-            _line("change_variable = { name = pp_dbg_script_cull add = 1 }", 2),
+            _line("if = { limit = { has_variable = pp_dbg_script_cull } change_variable = { name = pp_dbg_script_cull add = 1 } } else = { set_variable = { name = pp_dbg_script_cull value = 1 } }", 2),
             _line('error_log = "PPBLD;capacity_cull;$building$"', 2),
             _line("}", 1),
             "}",

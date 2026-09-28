@@ -12,7 +12,7 @@ pp_cull_one_closed_building = {
 		}
 		change_building_level = -1
 		# Debug flag: scripted cull, counted per location (save) and logged
-		location = { change_variable = { name = pp_dbg_script_cull add = 1 } }
+		location = { if = { limit = { has_variable = pp_dbg_script_cull } change_variable = { name = pp_dbg_script_cull add = 1 } } else = { set_variable = { name = pp_dbg_script_cull value = 1 } } }
 		error_log = "PPBLD;review_cull_closed"
 	}
 }
@@ -43,7 +43,7 @@ pp_build_wanted_taverns = {
 			limit = { local_var:pp_import_budget >= building_type:tavern.building_base_cost_in_gold }
 			construct_building = { building_type = building_type:tavern }
 			# Debug flag: scripted build, counted per location (save) and logged
-			change_variable = { name = pp_dbg_script_build add = 1 }
+			if = { limit = { has_variable = pp_dbg_script_build } change_variable = { name = pp_dbg_script_build add = 1 } } else = { set_variable = { name = pp_dbg_script_build value = 1 } }
 			error_log = "PPBLD;review_build;tavern"
 			change_local_variable = {
 				name = pp_import_budget

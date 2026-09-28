@@ -369,8 +369,9 @@ Two currencies carry food:
 - **Losses are valued exactly like gains** (ratio 1.00 in the same location), but only down to L = 0. So
   `FOOD_NEGATIVE_IN_PROV_UTILITY` (PP 0.5) does not act in this term.
 - **L is the location trigger `food_production`.** Checked in game: Bourganeuf 17.00004 logged vs 16.99–17.01 by
-  console trigger; Brosse 36.28324 vs 36.27–36.30. The location trigger `food_consumption` is 0; consumption is booked
-  at the province.
+  console trigger; Brosse 36.28324 vs 36.27–36.30. In the interface it is the location Food tooltip line
+  "Monthly production of +36.28": gross production, before Food Decay and Pop Food Consumption (both shown per
+  location). The location trigger `food_consumption` reads 0, so it does not measure pop consumption.
 - **The on/off switch in game terms** (`food_gate.py`, 10,669 nodes of the 1 June re-score): food counts only while the
   province's monthly Provincial Food change **without Food Decay** is negative (save: `cached_structural_food_change`
   < 0). This is right in 97.3 % of cases, and the misses sit near zero.

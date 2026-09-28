@@ -416,6 +416,14 @@ building:
   **V = `AI_LOCAL_POPULATION_CAPACITY_UTILITY` × T × Δcapacity**. The define is vanilla 0.01; PP does not set it.
   Ratio 0.0100 in 10,836 nodes. There is no gold marginal, food price or country size in it; only T. Negative
   capacity (footprint) costs the same per point.
+  - **Confirmed in the engine** (`re/define_value.py`, `re/c/f_51fee80.ann.c`):
+    - The define's value is stored at .data 0x8386270, found via the RTTI of
+      `CDefineRegistryHelper_NAIAI_LOCAL_POPULATION_CAPACITY_UTILITY`, vtable 0x6669c68.
+    - Its only game reader is FUN_1451fee80. That function takes the location (scope type 7) and computes
+      ratio = pop × 100000 / capacity in 5-decimal fixed point.
+    - It returns 0 if ratio < 0x15f91 (90001), otherwise the define. So the value counts when pop ÷ capacity > 0.90000,
+      or when capacity is 0.
+    - **The 0.9 is hardcoded, not a define.**
 - **Pop < 90 % of capacity:** the define part is 0. The only value comes from the change in the scale of the
   `available_free_land` static modifier (scale ≈ 1 − pop/capacity), valued through that modifier's contents.
   - In PP these are migration attraction, peasant food consumption, tribesmen growth and RGO output +30 %, and most

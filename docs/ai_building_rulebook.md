@@ -459,6 +459,21 @@ parts do not use the same base; how they relate is open. Consequences that hold 
 - The value scales with the good's price and the location's production.
 - The value scales with T^1.5 (the country's horizon) and the country's gold marginal.
 
+**How a food consumption modifier is valued** (`local_clergy_food_consumption`, the only one on candidate buildings in
+the logged month: 197 lines; `consumption_*.py`).
+- It is turned into a change of the **LocationFood** currency, the same one as monthly food:
+  **ΔF = −Δmodifier × pop of that type in the location (k) × that pop type's `pop_food_consumption`**.
+  - Clergy in PP: 10. The fit is ΔF / (Δmod × clergy k) = −9.9999 where the save's pop matches the logged month.
+  - It uses base consumption only: the location's current consumption modifier does not enter.
+- It is then valued exactly like food (value ÷ (T² × food price × ΔF × gold marginal) = 0.999). It gets the same
+  switch: it counts only while the province's food change without Food Decay is negative (26 of 197 lines), and only
+  down to LocationFood = 0.
+- More consumption is a loss. Less consumption would be a gain of the same size.
+- `AI_POP_FOOD_CONSUMPTION_MODIFIER_UTILITY` (vanilla −0.05) does not enter this value; changing it does nothing
+  here.
+- Inferred, not measured: the other `local_<pop type>_food_consumption` modifiers work the same way with their own
+  pop's consumption rate. None were on candidate buildings that month.
+
 **Food price ×10 counterfactual** (`food_price_x10.py`).
 - The lab month ran at market food price 0.0099. `pp_defines_adjustments.txt` now sets FOOD_PRICE = 0.10.
 - The LocationFood part of each breakdown is linear in the price, so it was scaled by 10. Storage, profit and the

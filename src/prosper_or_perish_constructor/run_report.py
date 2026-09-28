@@ -105,7 +105,8 @@ def load_run(dataset: Path, playthrough: str | None = None) -> RunData:
         .unique("snapshot_id")
         .sort("date_sort")
     )
-    name = next((n for n in snapshots["playthrough_name"].to_list() if n), playthrough)
+    # the game writes playthrough_name only for some starts (e.g. "England #7558ddce"); else the id's first block
+    name = next((n for n in snapshots["playthrough_name"].to_list() if n), f"Run {playthrough[:8]}")
     wanted = snapshots["snapshot_id"].to_list()
     loc_columns = [
         "snapshot_id", "slug", "country_tag", "owner", "super_region", "development", "total_population",

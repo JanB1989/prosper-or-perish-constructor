@@ -146,7 +146,33 @@ compared across branches (`~/pp_ai_run/ucompare.py`, `gold_shape.py`, `gold_curv
    then refills completely in one step (FRA, ENG, CAS, HUN cleared 13 Sep, all four 0 for 17 days, then full on
    1 Oct: 43 / 34 / 61 / 47 entries).
 
-### 2.4c Engine structure (from the 1.3.11 executable)
+### 2.4c The engine's own breakdown: console `ai_debug` (verified 2026-09-28)
+
+`ai_debug` is an engine console variable (found in `eu5.exe`: registered next to `GameStateTick.ForceSerial`, read by
+the building-utility function). Typing `ai_debug` in the console answers "Enabled". Then, **playing a country**
+(`tag FRA`), every build button in the Production panel (building → per-location list → hover "+") shows the AI's
+values: *Gold Buffer Target*, *Build Queue Size*, *Available Maintenance*, *Maintenance Leeway*, *Expected profit
+from scale of production*, **AI Utility**; hovering the AI Utility number opens **Reasons**, the term list. The terms
+add up to the utility. France, 2 Oct 1340 (gold buffer target 1,564.6, queue 43):
+
+| Building, location | Costs (gold → term) | Profit to state (→ term) | Estate enrichment | Other terms | AI utility |
+|---|---|---|---|---|---|
+| Cookshop, Paris | 37.23 → -0.2036 | 0.417 → +0.0959 | +0.0234 | Scaled modifier +0.0480, **Unscaled modifier +0.3394**, Food utility 0, multiplier 0.9 "Peasants in city" -0.0295 | +0.2657 |
+| Field Management, Soissons | 229.99 → -1.2766 | -0.0099 → -0.0022 | 0 | Consuming input goods shortage -0.0681, **Unscaled modifier 0.0000** | -1.3470 |
+| Tavern, Paris (1/31) | 15.78 → -0.0861 | 0.082 → +0.0188 | +0.0045 | Nobles ratio 0, Scaled modifier +0.0109, Unscaled modifier +0.0006 | -0.0570 |
+| Sergeantry, Paris | 22.40 → -0.1223 | -0.657 → -0.1510 | 0 | Consuming input goods shortage -0.1029, Unscaled modifier +0.3086, **Capital modifier +31.4558** | +31.3880 |
+
+Read off so far:
+- **Cost term = -0.00546 × gold cost** (all four within 2 %, slightly steeper for the 230-gold building).
+- **Profit term = 0.2299 × monthly profit to state**: one gold of monthly profit is worth ~42 gold of build cost.
+- **Capital modifier** (sergeantry's country modifier when built in the capital) outweighs everything by 100×: why
+  military/government buildings top every queue.
+- **Unscaled modifier** = the valued `raw_modifier` lines. The cookshop's comes from the mod's footprint
+  `local_population_capacity` and is its biggest term; Field Management's capacity effect is valued 0 (AI-blind
+  `pp_wb_levels_*`), so a country never builds it, only estates do.
+- "Peasants in city" = `PEASANT_BUILDING_IN_CITY_UTILITY_MULT` (0.9) applied to peasant buildings in cities.
+
+### 2.4d Engine structure (from the 1.3.11 executable)
 
 Labels and class names in `eu5.exe` (strings, 2026-09-28) show how the building utility is put together; the debug
 tooltip that prints it (`AiUtilityTooltip`, "AI Utility") is only wired up in internal builds.

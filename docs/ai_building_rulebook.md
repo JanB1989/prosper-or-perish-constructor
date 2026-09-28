@@ -95,6 +95,40 @@ in consecutive months.
   its price (+0.22 across 51 types; age-1 prices are all similar). It is slightly higher in poorer locations (-0.2 with
   market access and development). The engine's scoring of modifiers is hard-coded; only defines steer it.
 
+### 2.4b Utility algorithm: what the experiments established (2026-09-28)
+
+Method: 40 peaceful mid-size countries, queues cleared with `building_queue_clear` in branches loaded fresh from one
+save (1340.8.14), one change per branch, one month; the engine re-scores every candidate and the same candidates are
+compared across branches (`~/pp_ai_run/ucompare.py`, `gold_shape.py`, `gold_curve.py`).
+
+1. **Utility is computed once, when the entry enters the queue, and then frozen**: 98.8 % of surviving entries keep
+   exactly the same value month to month (163,183 checks). A queue can hold years-old scores (France's top cookshop
+   kept one value for 3 years). Any model must use the state at insertion time.
+2. **Utility depends on the country's treasury, saturating**: with the treasury set to exactly 30 / 100 / 300 / 1,000 /
+   3,000 / 10,000 gold, each candidate follows **u ≈ A + B · min(gold, K)** (median R² 0.988 over 82 candidates;
+   g/(g+K) 0.966, 1-e^(-g/K) 0.990 median but worse tails, log 0.864). From 100 to 1,000 gold utilities rise ×4.4
+   (median), from 1,000 to 10,000 ×1.03.
+3. **K is a property of the country**, nearly equal for all its candidates (Dughlat 250-266, Qun 1,000-1,097, Denmark
+   310-385), ranging ~250 to ~8,000 gold. It tracks the country's **loan capacity** best (log correlation 0.83; K ≈
+   0.2-1.0 × loan capacity), expense 0.72, income 0.52. Six treasury levels pin K only to the interval between two
+   levels.
+4. **A and B are candidate-specific** and not simply "benefit × (gold − price)": A/B ranges ~24-900 gold. Because the
+   gold term scales candidates differently, the order inside a country changes with the treasury in 85 of 402
+   candidate pairs.
+5. **Across countries, utility falls with country size** (within a building type, correlation -0.5 to -0.7 with owned
+   locations): scores are relative to the country and only comparable inside one queue.
+6. Observable features (building type, location population/development/market access/control, expected profit from
+   the production-method recipes at market prices, level, follow-up iteration, country size and treasury) explain
+   R² ≈ 0.50 of log utility; the rest comes from engine terms the save does not show (per-modifier valuations,
+   goods-shortage bonuses, worker availability).
+
+**Not yet exact.** Still open: the formula of A and B per building (the modifier valuation), the exact K. The fastest
+way to exact coefficients is a define sweep (each `NAI` utility define changes one term: `AI_GLOBAL_BUILDING_COST_UTIL`,
+`AI_DEVELOPMENT_UTILITY`, `AI_PROFIT_MARGIN_TARGET`, `AI_GOLD_COST_UTIL_FROM_LOW_PROFIT_MARGIN`,
+`AI_UTILITY_PER_CAPITA_*`, the shortage factors) with the same clear-and-rescore method; defines hot-reload in debug
+mode but need a mod in the active playset to carry them. Next console experiments: a finer treasury grid around K,
+loan capacity changes, and market prices via `stockpile` per good.
+
 ### 2.5 Where (verified, queue of 1340.8.14)
 
 Percentile of each queued location inside its own country (0 = the country's top location, 0.5 = middle; countries

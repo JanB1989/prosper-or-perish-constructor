@@ -418,6 +418,24 @@ building:
 - Only 15 % of the month's capacity nodes were on the define path: in 1339 most PP locations sit well under capacity
   (median fill 0.4).
 
+**Which modifiers the AI values: the complete list** (`docs/data/ai_modifier_valuation_all.csv`, 260 modifiers).
+The first three groups come from every modifier line of every candidate scored in the logged month; the AI-blind group
+comes from the probe run (2.4c).
+
+| Status | Count | Meaning | Examples |
+|---|---|---|---|
+| always | 33 | valued in ≥ 95 % of candidates | manpower, sailors, development, trade-centre power, institution growth, max literacy, gold to owner, pop growth, fort level, research speed |
+| conditional | 51 | valued only in some situations | population capacity (pop > 90 %), food capacity (stock < ~24 months), monthly food (province losing food), goods output modifiers, max control, garrison size, legitimacy, harbour, estate power |
+| never | 16 | line shown, always 0 | desired pops (all estates), migration attraction, manpower to owner, maritime presence, some output modifiers (legumes, fibre crops, tea, sugar, coffee, horses) |
+| ai_blind | 160 | no line at all | every `farm_capacity_from_*`, every `pp_wb_levels_*`, market access, food decay, free building levels, supply limit, stockpile capacity, merchant power from building, prosperity, life expectancy |
+
+**Goods output modifiers** (`local_<good>_output_modifier`) are valued where the location produces the good:
+- 78–100 % of the time when the location's RGO is that good;
+- about 0–5 % elsewhere, except goods that buildings also make there (wheat 24 %, millet 32 %, livestock 42 %,
+  fish 56 %).
+
+So an output bonus on a building helps the AI only in locations that already make that good.
+
 **Food price ×10 counterfactual** (`food_price_x10.py`).
 - The lab month ran at market food price 0.0099. `pp_defines_adjustments.txt` now sets FOOD_PRICE = 0.10.
 - The LocationFood part of each breakdown is linear in the price, so it was scaled by 10. Storage, profit and the

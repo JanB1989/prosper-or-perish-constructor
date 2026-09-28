@@ -11,6 +11,9 @@ Save engine tables used (eu5-game-parser, added for this study): `building_candi
 Labels: **verified** = seen in the data or caused in an experiment; **inferred** = consistent with the data, not
 tested directly.
 
+This public rulebook holds the game behaviour and what it means for building design. The measurement tooling and
+engine-level notes are kept in a separate private research repository.
+
 ## 1. Who builds
 
 Of all building constructions started June 1337 - August 1340 (2,680 distinct ones):
@@ -148,8 +151,7 @@ compared across branches (`~/pp_ai_run/ucompare.py`, `gold_shape.py`, `gold_curv
 
 ### 2.4c The engine's own breakdown: console `ai_debug` (verified 2026-09-28)
 
-`ai_debug` is an engine console variable (found in `eu5.exe`: registered next to `GameStateTick.ForceSerial`, read by
-the building-utility function). Typing `ai_debug` in the console answers "Enabled". Then, **playing a country**
+`ai_debug` is an engine console variable. Typing `ai_debug` in the console answers "Enabled". Then, **playing a country**
 (`tag FRA`), every build button in the Production panel (building → per-location list → hover "+") shows the AI's
 values: *Gold Buffer Target*, *Build Queue Size*, *Available Maintenance*, *Maintenance Leeway*, *Expected profit
 from scale of production*, **AI Utility**; hovering the AI Utility number opens **Reasons**, the term list. The terms
@@ -244,21 +246,16 @@ curves per modifier (country + capital state → value per unit). They give ever
 
 The shape is right, but its inputs are not observed. The terms that order the queue (profit to state, estate
 enrichment, Food Utility, location-dependent modifier values) are computed by the engine from quantities that a market
-margin and capital-only probes do not reproduce. The next gain is reconstructing those terms from the decompile and
-checking them against `ai_debug` tooltips, not a better model.
+margin and capital-only probes do not reproduce. The next gain is reading those terms from the engine's own
+breakdown (2.4f), not a better model.
 
-### 2.4f The engine's own breakdown for every candidate (hooked, 2026-09-28)
+### 2.4f The engine's own breakdown for every candidate (logged, 2026-09-28)
 
-**Method.** A Frida hook (`~/pp_ai_run/hook/agent_c.js` + `run_hook_c.py`, C callbacks via CModule) sits on the building
-utility function (RVA 0x5116ca0). It hands each call the 16-byte string the `ai_debug` tooltip passes as argument 9,
-with the ai_debug flag (0x83895c3) on. It also sets `GameStateTick.ForceSerial` (0x83895c0): building the breakdown on
-many threads at once deadlocks or crashes the game. Serial ticking made it stable.
-
-The breakdown text carries nested `TOOLTIP:DEBUGRAWTEXT,<base64>` payloads (`decode.py`), streamed into parquet by
-`parse.py`. Run it memory-capped with `~/.local/bin/capped`.
+**Method.** The same term breakdown the `ai_debug` tooltip shows (2.4c) was logged for every candidate the engine
+scored during one month. The tooling is in the private research repository.
 
 The run: 1339.5.3 → 1339.6.3 in the PP AI Lab game, 161,064 scored candidates, save `pp_ai_lab_h01`. 99.5 % of the
-saved queue entries match a hooked row exactly on the raw utility (`join_queue.py`).
+saved queue entries match a logged row exactly on the raw utility.
 
 **Exact facts:**
 - **Saved utility = utility × 2^30** (engine fixed point). There is no gold factor on the whole utility.
@@ -268,15 +265,11 @@ saved queue entries match a hooked row exactly on the raw utility (`join_queue.p
 - **Gold utility is exactly U(g) = a·ln(g + a·L)**, with L = loan capacity. The per-country fit error is 0.000, and
   b = a·L holds in almost all countries. So the first gold coin is worth 1/L, and a is about 0.18 (0.08–0.2).
   Only countries hoarding far above their buffer target (MAL, PAP) deviate.
-- **Time multiplier T = 1/(1 − d), one per country.** d is a discount factor clamped to [23/24, 0.9988], so T lies
-  in [24, 833.33]; costs can reach 2,400. Cost, estate enrichment and all modifier terms use T. Profit to state uses
-  T·√min(T, 833.33) (GLH: T = 24 → 117.58 = 24^1.5), so profit weighs far more in long-horizon countries.
-- **How d is set (from the code).** A horizon H = 240·(cap/240)^r:
-  - gold ≥ 1: cap = 2,400 and r = clamp(gold / max(50·X, 100));
-  - in debt: cap = 24.
-
-  Then d = base·(1 − 1/H). X (country field +0x2ee8) and the base discount (FUN_1451852f0, a budget model) are not
-  identified yet. T is small for large countries and for countries in deficit (FRA 42, HCN 28), median 328.
+- **Time multiplier T, one per country** (the planning horizon in months), observed from 24 to 833.33; costs can
+  reach 2,400. Cost, estate enrichment and all modifier terms use T. Profit to state uses T·√min(T, 833.33)
+  (GLH: T = 24 → 117.58 = 24^1.5), so profit weighs far more in long-horizon countries.
+  - T is longer for countries with gold and much shorter for countries in debt.
+  - It is small for large countries and for countries in deficit (FRA 42, HCN 28), median 328.
 - **Cost term ≈ inherent × 1.2 × "affects self" multiplier.**
 - **Gates on all 161k scored candidates:**
   - "Too low profit margin" multiplies 31.5 % by 0.
@@ -305,8 +298,7 @@ Rare large terms decide the top of queues:
 | Victualling yard | scaled modifier | +124 |
 | Mason | producing goods for construction | +71 |
 
-Tables: `~/pp_ai_run/hook/h01/{candidates,terms,queue,queue_terms}.parquet`, `gold_curve_countries.parquet`,
-`time_mult_countries.parquet`.
+The scripts and tables behind this section are in the private research repository.
 
 **Food is valued by the food situation, not as a flat bonus** (`food_value.py`, `stock_curve.py`, `vy_analysis.py`).
 Province food state comes from the save: the engine's `province_food` table now has `food_current`,
@@ -323,7 +315,7 @@ Two currencies carry food:
   - Within a province the value is linear in the added capacity (no diminishing return); a log form fits no better.
   - The size scales like the food term (T² × market food price × gold marginal value) times a province factor that
     falls with province size (log correlation −0.40 to −0.47 with stock, capacity and consumption). The exact formula
-    is not decoded: it is the currency's value callback, registered in FUN_14515b690.
+    is not decoded yet.
 - **ProvinceFoodStockpile (earlier, blurrier view).** The currency's value is the province's food **capacity**: "from"
   equals `max_food_value`, so +400 is valued as capacity C → C + 400. No food is created. It is valued only while the
   province's **stock** covers less than about **24 months of consumption**:
@@ -344,8 +336,7 @@ Two currencies carry food:
   - +400 on a capacity of 4,000+ is worth 0.001–0.1 per T.
 
   Define `AI_PROVINCE_FOOD_STOCKPILE_UTILITY` (vanilla 0.1, PP 0.50) is "utility for province food stockpile modifier,
-  upper limit based on total province food consumption change". Its code (currency registered in FUN_14515b690, valued
-  in engine callbacks) is not decoded yet.
+  upper limit based on total province food consumption change". How it enters the value is not decoded yet.
 
 - **LocationFood.** Two things move it:
   - the `local_monthly_food` modifier;
@@ -400,8 +391,6 @@ Two currencies carry food:
   | Losing over 50 food/month | 66 % |
   | Balanced or gaining | ≤ 10 % |
 
-- The currency is registered in FUN_145171e70 (value callback 0x5152c00, linked to three modifiers).
-
 **Victualling yard, 273 queue entries:** median utility 10.8, p90 336.
 - `+400 local_food_capacity` explains 70 % of the spread between yards. It is a heavy tail: the median food-capacity
   value is only 1–3, a few yards get several hundred.
@@ -409,21 +398,15 @@ Two currencies carry food:
 
 No random jitter: the terms sum exactly to the saved utility.
 
-**Population capacity (`local_population_capacity`, 70,306 nodes of the hooked month; `popcap_*.py` in the hook kit).**
+**Population capacity (`local_population_capacity`, 70,306 nodes of the logged month).**
 The capacity step is exact (to − from = added, in thousands). Two paths, switched by the location's fill before the
 building:
-- **Pop ≥ 90 % of capacity** (free land 1 − pop/capacity ≤ 0.10, sharp in the hook-time data):
+- **Pop ≥ 90 % of capacity** (free land 1 − pop/capacity ≤ 0.10, sharp in the data):
   **V = `AI_LOCAL_POPULATION_CAPACITY_UTILITY` × T × Δcapacity**. The define is vanilla 0.01; PP does not set it.
   Ratio 0.0100 in 10,836 nodes. There is no gold marginal, food price or country size in it; only T. Negative
   capacity (footprint) costs the same per point.
-  - **Confirmed in the engine** (`re/define_value.py`, `re/c/f_51fee80.ann.c`):
-    - The define's value is stored at .data 0x8386270, found via the RTTI of
-      `CDefineRegistryHelper_NAIAI_LOCAL_POPULATION_CAPACITY_UTILITY`, vtable 0x6669c68.
-    - Its only game reader is FUN_1451fee80. That function takes the location (scope type 7) and computes
-      ratio = pop × 100000 / capacity in 5-decimal fixed point.
-    - It returns 0 if ratio < 0x15f91 (90001), otherwise the define. So the value counts when pop ÷ capacity > 0.90000,
-      or when capacity is 0.
-    - **The 0.9 is hardcoded, not a define.**
+  - **Confirmed:** the define counts when pop ÷ capacity > 0.90000 (5-decimal precision), or when capacity is 0.
+  - **The 0.9 is a fixed engine threshold, not a define:** mods can change the value per point, not the switch.
 - **Pop < 90 % of capacity:** the define part is 0. The only value comes from the change in the scale of the
   `available_free_land` static modifier (scale ≈ 1 − pop/capacity), valued through that modifier's contents.
   - In PP these are migration attraction, peasant food consumption, tribesmen growth and RGO output +30 %, and most
@@ -450,7 +433,7 @@ building:
 - Non-food → food: 99 % go to the higher margin.
 - Food → non-food: only 4 % go to the higher margin. The AI leaves food methods even when they pay more, and these
   switches happen in provinces that are not in food deficit.
-- No production-method code was found in CBuildingAi or CEconomyAi. CCountryEconomyAI is unexplored.
+- The switching rule itself is not decoded yet.
 
 **Fishing villages are not AI-built.**
 - Zero AI constructions in the lab month.
@@ -459,23 +442,16 @@ building:
 - Queue utility median is 0.24. Their +0.5 population capacity is worth about 1.2, but only in locations over 90 %
   full (see above).
 
-### 2.4d Engine structure (from the 1.3.11 executable)
+### 2.4d Utility terms and what the AI cannot value
 
-Labels and class names in `eu5.exe` (strings, 2026-09-28) show how the building utility is put together; the debug
-tooltip that prints it (`AiUtilityTooltip`, "AI Utility") is only wired up in internal builds.
-
-- Class `CBuildingAi`: `CalcCityUpgradeUtility`, `CalcPopNeedsGoodsUtility`, `CalcExplorationMissingGoodsUtil`,
-  `AddModifierBiasFromConstructions`, `HandleBuildForeignBuildings`, `HandleBuildRoads`, `HandleDestroyUnwantedBuildings`,
-  `HandleProximityBuildings`, `HandleSpecializeTowns`.
-- Utility terms (tooltip labels): *Unscaled Modifier* (`raw_modifier`), *Scaled Modifier* (`modifier`, scaled by
+- Utility terms (the `ai_debug` tooltip labels): *Unscaled Modifier* (`raw_modifier`), *Scaled Modifier* (`modifier`, scaled by
   employment), *Capital Modifier*, *Capital Country Modifier*, *Market Center Modifier*, *Profit to state*, *estate
   enrichment*, *Export profit*, *Expected profit from scale of production*, *Food Utility*, *Missing pop need*,
   *Missing military goods need*, *Producing / Consuming Input Goods Shortage*, *No market access*, *Per capita factor*,
   *Peasants in city*, *Location rank modifier*, *Upgrading Building*, *removal of obsolete upkeep*, *loss of
   satisfaction*, *Costs*, *Upgrade Cost*, *Too low profit margin*, *Profit Margin Multi*, *Maintenance Leeway*,
   *Available Maintenance*, *Build Queue Size*, *Gold Buffer Target*, *Proximity Candidate*.
-- Each modifier is valued through the **AI currency** system (`ai_currency_evaluation.cpp`: per-modifier "currency",
-  *Time Multiplier*, *DiscountFactor*, *Scripted Utility*). The value of a modifier depends on the country's own
+- Each modifier is valued through the **AI currency** system (per-modifier "currency", *Time Multiplier*). The value of a modifier depends on the country's own
   state (how much it has and needs), which is why the same building scores so differently per country.
 - **Modifiers the AI cannot value** (`ai_currency_misses` console command → `docs/ai_currency_misses.log`, hits in
   this run): `local_food_decay_modifier` 6,387, `free_building_levels` 5,198, `local_supply_limit_modifier` 3,545,

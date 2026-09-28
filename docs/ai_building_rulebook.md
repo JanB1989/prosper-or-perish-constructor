@@ -54,6 +54,21 @@ Each month the country walks its queue **from the highest utility down** and sta
 2. **Money gate.** It starts an entry only if the treasury covers the price: only 2.8 % of 2,345 starts had gold below
    the price paid (median treasury/price 2.8, 10th percentile 1.08). Age-1 buildings cost ~25-80 gold, and a
    construction takes 365 days.
+   - **It saves up for the top entry instead of taking a cheaper one** (PP AI Lab, 13,880 country-months,
+     `lab/lab_saving.py`):
+
+     | Top entry | Built nothing | Built the top entry | Built a lower entry instead |
+     |---|---|---|---|
+     | Too expensive (gold < price), 8,795 | 97.6 % | 1.9 % | 0.4 % |
+     | Affordable, 5,085 | 81 % | 14 % | 4 % |
+
+   - The 37 "lower instead" cases cost about the same as the top entry (median price ratio 1.0).
+   - Even when it can afford the top entry, it starts it in only about 1 month in 5, which matches the median
+     treasury of 2.8× the price at a start. The exact reserve rule is not decoded.
+   - The price is already a cost inside the utility, so the queue order already weighs price against benefit.
+   - Caveats:
+     - Lab prices are the buildings' recorded prices, so "affordable" is approximate at the edge.
+     - The lab rescores queues every month. In a normal game the entry it saves for can be an old, frozen score.
 3. **Starts per month = floor(1 + owned locations × 0.025)**, max 30 (vanilla `AI_CONSTRUCTION_QUEUE_PARALLEL_BUILD_RATIO`
    / `_MAX`): 98.8 % of country-months stay within it, 92 % hit it exactly. Most countries are small: 1 start a month.
    The 30-cap countries (median treasury ~11,000) go down to queue rank 15-30, which is how villages and clay pits

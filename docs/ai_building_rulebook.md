@@ -27,7 +27,7 @@ Of all building constructions started June 1337 - August 1340 (2,680 distinct on
 | Others (peasants, crown, tribes, ...) | ~0 | - |
 
 Over 100 years the country share rises to 75 % (1,400 of ~1,880 running constructions in 1437); nobles stay at
-~400-450. Roads and rank upgrades also run through the same queue (see 2.1). RGO upgrades never appear in it in any PP save checked; PP blocks RGO upgrades for 50 of 52 raw materials (only lumber and salt are open).
+~400-450. Roads and rank upgrades also run through the same queue (see 2.1). RGO upgrades never appear in it in any PP save checked. PP blocks RGO upgrades for 50 of 52 raw materials (lumber and salt are open), and in Jan's 1337–1398 run not a single existing RGO grew, lumber and salt included (only 293 new RGOs on newly settled land).
 
 ## 2. Country AI
 

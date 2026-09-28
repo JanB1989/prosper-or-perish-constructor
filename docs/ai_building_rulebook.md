@@ -368,7 +368,16 @@ Two currencies carry food:
   No food define appears in this term; the market food price does.
 - **Losses are valued exactly like gains** (ratio 1.00 in the same location), but only down to L = 0. So
   `FOOD_NEGATIVE_IN_PROV_UTILITY` (PP 0.5) does not act in this term.
-- **c = 0 unless the province needs food:**
+- **L is the location trigger `food_production`.** Checked in game: Bourganeuf 17.00004 logged vs 16.99–17.01 by
+  console trigger; Brosse 36.28324 vs 36.27–36.30. The location trigger `food_consumption` is 0; consumption is booked
+  at the province.
+- **The on/off switch in game terms** (`food_gate.py`, 10,669 nodes of the 1 June re-score): food counts only while the
+  province's monthly Provincial Food change **without Food Decay** is negative (save: `cached_structural_food_change`
+  < 0). This is right in 97.3 % of cases, and the misses sit near zero.
+  - The save's `cached_food_change` (what the province tooltip shows as the monthly change) equals the structural
+    change minus Food Decay.
+  - Food Decay is about 1.5 % of the stockpile per month: exactly 0.0150 in full stores, 1.5–2.1 % elsewhere.
+- Earlier empirical view of the same switch (store fill, food change), kept for reference:
 
   | Province state | Food valued |
   |---|---|

@@ -137,7 +137,12 @@ compared across branches (`~/pp_ai_run/ucompare.py`, `gold_shape.py`, `gold_curv
    ocean fishery 0.62 from control and tax; tavern 0.51 from pop-type population; glass guild 0.20).
    A LightGBM on all observable features predicts the within-country order of held-out countries only moderately
    (Spearman 0.57 median, top-1 hit 54 %): the missing part is the country-specific valuation of each modifier.
-9. **Queue refill timing:** after a clear, a queue stays empty until the country's monthly AI construction day and
+9. **Why a country prefers a type** (same type across countries, its utility relative to the country's other
+   candidates): the more levels of that type the country already has, the lower the score (correlation grange -0.79,
+   fine cloth guild -0.61, tar kiln -0.56, Victualling Yard -0.40, cookshop -0.39): the AI saturates on a type.
+   Market margin helps only moderately (+0.2 to +0.4 for glass guild, scriptorium, furniture guild, rural clothmaker,
+   winery, grange; ~0 for tavern, cookshop, Victualling Yard, whose value is not their goods profit).
+10. **Queue refill timing:** after a clear, a queue stays empty until the country's monthly AI construction day and
    then refills completely in one step (FRA, ENG, CAS, HUN cleared 13 Sep, all four 0 for 17 days, then full on
    1 Oct: 43 / 34 / 61 / 47 entries).
 

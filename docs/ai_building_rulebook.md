@@ -574,6 +574,28 @@ Expected from the valuation rules and the farm definitions (inferred, not measur
 - **Cross effects:** the legume and cattle farms' output bonuses for other crops count only where those crops are
   produced.
 
+### 2.4h The AI's food slider (budget; save 1398.3.6, confirmed in the engine)
+
+The food slider (`FoodMaintenance`) is set by the AI's budget routine, which sets all ten sliders. There is **no
+utility valuation**: no currency and no food need enter it. It depends only on the country's saving mode (save:
+`ai_memory.saving_mode`; engine table `country_ai.saving_mode`, `slider_*`).
+
+| Saving mode | Countries | Food slider |
+|---|---|---|
+| none (normal) | 1,688 | always 100 % (fixed) |
+| Low | 576 | 100 % (all but 3) |
+| High | 170 | computed from the budget: 79 % sit at the 10 % floor, 12 % at 100 %, the rest between (mean 24 %) |
+
+High saving mode:
+- Rule: slider = min(1, 0.8 × free monthly money ÷ cost of a budget item at 100 %), at least 10 %, and that spend is
+  taken from the free money before the court slider.
+- The budget item it divides by is the **diplomatic** slider's cost, not the food bill. That looks like an engine
+  quirk.
+- In the same mode the AI sets the colonial, exploration, cultural and diplomatic sliders to 0.
+- Province food shortages never raise the slider.
+- In PP the slider barely matters: markets hold no food (FOOD_CAPACITY_FACTOR 0), and the bill is kept near 0 by
+  `food_purchase_efficiency`.
+
 ### 2.5 Where (verified, queue of 1340.8.14)
 
 Percentile of each queued location inside its own country (0 = the country's top location, 0.5 = middle; countries

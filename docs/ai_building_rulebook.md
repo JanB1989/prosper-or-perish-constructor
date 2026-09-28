@@ -170,7 +170,36 @@ Read off so far:
 - **Unscaled modifier** = the valued `raw_modifier` lines. The cookshop's comes from the mod's footprint
   `local_population_capacity` and is its biggest term; Field Management's capacity effect is valued 0 (AI-blind
   `pp_wb_levels_*`), so a country never builds it, only estates do.
-- "Peasants in city" = `PEASANT_BUILDING_IN_CITY_UTILITY_MULT` (0.9) applied to peasant buildings in cities.
+- "Peasants in city" = `PEASANT_BUILDING_IN_CITY_UTILITY_MULT` (0.9) applied to peasant buildings in cities: it
+  multiplies the whole sum (utility = 0.9 × Σ terms).
+
+**Per-modifier valuation (probe mod, 2026-09-28).** Test mod "PP AI Probe" (playset "PP AI Probe" = main mod + probe,
+`eu5_playset.ps1 -Mode probe`, generator `~/pp_ai_run/probe/gen_pm_probes.py`) adds 71 one-gold-cost probe buildings
+that each carry up to five of the 323 modifiers used by building definitions, one per block (`modifier`,
+`raw_modifier`, `capital_modifier`, `market_center_modifier`, `capital_country_modifier`); each block is one line in
+Reasons. Read for France in Paris (capital + market center), 13 Sep 1340. Table: `docs/data/ai_modifier_valuation_FRA_paris_1340.csv`
+(modifier, block, probe amount, term, per unit, status).
+- The same amount gives the same value in `modifier` (scaled) and `raw_modifier` and `capital_modifier`
+  (`local_manpower` 0.015: 33.65 each; `local_population_capacity` 1: 0.688 each); values are linear in the amount
+  for capacity (1 → 0.688, 10 → 6.884) but saturate for manpower (0.015 → 33.65 = 2,243/unit; 0.1 → 125.4 = 1,254/unit).
+- **81 valued**, largest per probe: `local_manpower` (125 for 0.1), `monthly_legitimacy` 0.35 (36.8),
+  `global_distance_from_capital_speed` 0.1 (34.4), `monthly_diplomats` 0.15 (21.2), `local_sailors` 0.13 (19.3),
+  `monthly_towards_innovative`/`tolerance_own` (17-19), `monthly_towards_humanist` (-17.0 for France), `global_max_literacy`
+  5 (13.8), `global_monthly_development` 0.01 (11.9), `selling_efficiency` 1 (11.1), `global_estate_max_tax` 0.1 (10.2),
+  `monthly_gold_income` 20 (7.8), `local_trade_center_power` 0.05 (7.2), `fort_level` 2 (7.2), `research_speed_modifier`
+  0.05 (6.9), `local_pop_conversion_speed` 0.1 (4.5), `local_monthly_development(_modifier)` (1-3.4), `local_crown_estate_power`
+  0.25 (1.6), `local_production_efficiency` 0.1 (0.88), `local_population_capacity` 0.1 (0.07).
+- **78 zero** (line shown, 0.0000): all `local_<good>_output_modifier` (in Paris), `local_monthly_food(_modifier)`,
+  `local_*_food_consumption`, `local_max_control`, `local_monthly_control`, `local_garrison_size`, literacy caps,
+  `local_migration_attraction`, `local_cultural_tradition`, `manpower_to_building_owner`.
+- **164 no line** (AI-blind): every `farm_capacity_from_*` and `pp_wb_levels_*`, `local_market_access`,
+  `local_food_decay_modifier`, `free_building_levels`, `local_supply_limit_modifier`, `local_build_buildings_efficiency`,
+  `local_defensive`, `local_repair_speed`, `can_recruit_regiment_in_this_location`, `can_build_ships_in_this_location`,
+  `merchant_power_from_building`, `maximum_stockpile_capacity`, `local_monthly_prosperity`, `local_life_expectancy`.
+- `Country.GetAiUtility('<modifier>', '<amount>')` (GUI, shown by the probe mod's replacement of the `ai_currency_viewer`
+  window) is the country-level currency curve and does **not** equal the building term (manpower 0.01 → 0.40 there).
+- Cost term changes with the country's state but not with its treasury (France 13 Sep: 0.00681/gold at 365 and at
+  5,365 gold; 2 Oct: 0.00546/gold) and is slightly convex (10 / 100 / 1,000-gold probes: 0.00681 / 0.00683 / 0.00701 per gold).
 
 ### 2.4d Engine structure (from the 1.3.11 executable)
 

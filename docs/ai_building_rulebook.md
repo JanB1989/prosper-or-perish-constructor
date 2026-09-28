@@ -549,6 +549,31 @@ way to exact coefficients is a define sweep (each `NAI` utility define changes o
 mode but need a mod in the active playset to carry them. Next console experiments: a finer treasury grid around K,
 loan capacity changes, and market prices via `stockpile` per good.
 
+### 2.4g Farms in Jan's game (save 1398.3.6, FOOD_PRICE 0.10; `hook/farms_*.py`)
+
+Measured from the save's queues and running constructions. The save has no term breakdowns.
+- **Only countries build farms**: every crop farm is `forbidden_for_estates`.
+- Running country constructions (started within the last year): horse breeders 43, fruit orchard 31, millet 28,
+  wheat 23, legume 20, cattle 16, rice 8, fibre crops 6, hurdled sheepcotes 6, others 1–2.
+  - Horse breeders stand out: 43 constructions against 508 existing buildings and 58 queue entries.
+- **Farms are average queue entries.** Their median utility equals the country's median entry (relative log10 −0.01
+  to −0.1), and they are rank 1 in only 3–18 % of queues.
+- **The price of the farm's good does not order them.** The correlation of relative utility with price ÷ default price
+  is −0.02.
+- Farm entries in provinces losing food (27 % of provinces) are in the country's top 3 in 45 % of cases, against 29 %
+  elsewhere. Horse breeders, which have no food effect, show the same shift, so this is not clean evidence of food
+  valuation.
+
+Expected from the valuation rules and the farm definitions (inferred, not measured on these farms):
+- **Population capacity.** Crop farms carry `local_population_capacity = -5`; cattle, horse and sheep farms carry −2.
+  In a location over 90 % full that costs 0.01 × T per point: about −15 utility at T 300 for a crop farm, −6 for the
+  others. Below 90 % it costs nothing.
+- **Food.** `local_monthly_food +1.5` and the provision method's local food count only in provinces losing food, with
+  the 10× food price.
+- **AI-blind:** `farm_capacity_from_*`.
+- **Cross effects:** the legume and cattle farms' output bonuses for other crops count only where those crops are
+  produced.
+
 ### 2.5 Where (verified, queue of 1340.8.14)
 
 Percentile of each queued location inside its own country (0 = the country's top location, 0.5 = middle; countries

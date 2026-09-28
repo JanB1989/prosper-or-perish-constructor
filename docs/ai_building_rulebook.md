@@ -438,26 +438,26 @@ So an output bonus on a building helps the AI only in locations that already mak
 
 **How a goods output modifier is valued** (9,394 paired lines of the logged month; `outmod_*.py`). An output modifier
 on a candidate counts twice. Both parts are gold per month, valued like profit (× T^1.5 on the gold curve).
-1. **Extra output value.** ΔV = Δmodifier × market price × base output of that good in the location.
-   - Base output is what the location's RGO and the country's own buildings there make of that good, divided by the
-     current output multiplier (1 + modifier).
-   - So +10 % always adds 10 % of the unmodified output: no diminishing return, and no value where nothing is made.
-2. **Plus the state's share of ΔV**, shown as "X profit to state from <good> output" and added to the total utility.
-   It is the pop-weighted share the state takes from the producing pops.
 
-Measured:
-- Part 1 ÷ (T^1.5 × monthly gold × gold marginal) = 0.999 (median).
-- The implied base output is constant within a location and good to 0.004 %.
-- Part 1 ÷ part 2 is a property of the location and good: about 1.1 for mines (gold, gems, marble, copper, lead) and
-  1.2–2.2 for farm goods (millet 1.38, wheat 1.46, livestock 1.60, maize 1.94, fish 2.24). The state keeps
-  most of mine output and less of peasant output.
-- **Part 1 is taken to be the full value created. That is inferred, not measured:** the ratio fits it, but the base
-  output was not read in game.
+1. **The modifier's own value** (the line under "Scaled/Unscaled Modifier").
+   - Measured: value ÷ (T^1.5 × monthly gold × gold marginal) = 0.999 (median).
+   - Its monthly gold is exactly linear in Δmodifier × price ÷ (1 + current modifier) within a location and good
+     (spread 0.004 %).
+   - **Its base is not decoded**, i.e. which output and which shares it counts.
+2. **"X profit to state from <good> output"** (confirmed in the engine), added straight to the total utility:
+   - Δmodifier × market price × base output of the good in the location. Base output = the location's RGO output of
+     that good plus the output of the country's own buildings there making it, divided by the current output
+     multiplier (1 + modifier).
+   - × the state's cut: summed over the location's pop types, each type's share × the state's cut for that pop type.
+     This is the in-game estate, crown-share and tax split, so it depends on the pops.
+   - 0 where nothing of the good is made.
 
-Together: **V ≈ T^1.5 × gold marginal × Δmod × price × base output × (1 + state share)**.
-
-- An output modifier is worth as much as the extra goods sell for, over the country's horizon.
-- It is worth nothing where the good isn't produced, and more for expensive goods and big producers.
+Part 1 ÷ part 2 differs by location and also between goods in the same location (median spread 37 %). So the two
+parts do not use the same base; how they relate is open. Consequences that hold either way:
+- No value where the good isn't produced.
+- +10 % adds 10 % of the unmodified output, so there is no diminishing return from stacking.
+- The value scales with the good's price and the location's production.
+- The value scales with T^1.5 (the country's horizon) and the country's gold marginal.
 
 **Food price ×10 counterfactual** (`food_price_x10.py`).
 - The lab month ran at market food price 0.0099. `pp_defines_adjustments.txt` now sets FOOD_PRICE = 0.10.

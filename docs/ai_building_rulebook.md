@@ -346,6 +346,32 @@ Two currencies carry food:
   **Victuals have food = 0**, so the victualling yard's output never counts as food. Cookshops, public kitchens,
   forest-village provisioning and fisheries do get Food Utility.
 
+**The LocationFood term as an equation** (`lf_curve.py`, 22,163 monthly-food nodes of the month):
+
+  V_food = T × c × (max(0, L + ΔF) − L)
+
+- L is the location's LocationFood level, never below 0.
+- ΔF is either the `local_monthly_food` amount, or, for the Food Utility term, the building's monthly output of goods
+  with a food value × that food value (cookshop ≈ 19–25).
+- T is the country's time horizon.
+- **The value is linear:** c is constant per (country, location), with a spread of 0.45 %. Median c = 0.0022 per food
+  per horizon month (p25 0.0008, p75 0.0029). c tracks the country's marginal gold value (log correlation 0.88) and
+  is smaller in large-consumption provinces. Its exact formula is not decoded.
+- **Losses are valued exactly like gains** (ratio 1.00 in the same location), but only down to L = 0. So
+  `FOOD_NEGATIVE_IN_PROV_UTILITY` (PP 0.5) does not act in this term.
+- **c = 0 unless the province needs food:**
+
+  | Province state | Food valued |
+  |---|---|
+  | Store fill under 50 % | 63–69 % |
+  | Store fill 50–75 % | 30 % |
+  | Store fill 75–90 % | 7 % |
+  | Store fill over 99 % | 0.4 % |
+  | Losing over 50 food/month | 66 % |
+  | Balanced or gaining | ≤ 10 % |
+
+- The currency is registered in FUN_145171e70 (value callback 0x5152c00, linked to three modifiers).
+
 **Victualling yard, 273 queue entries:** median utility 10.8, p90 336.
 - `+400 local_food_capacity` explains 70 % of the spread between yards. It is a heavy tail: the median food-capacity
   value is only 1–3, a few yards get several hundred.

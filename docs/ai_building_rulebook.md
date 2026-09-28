@@ -63,8 +63,18 @@ Each month the country walks its queue **from the highest utility down** and sta
      | Affordable, 5,085 | 81 % | 14 % | 4 % |
 
    - The 37 "lower instead" cases cost about the same as the top entry (median price ratio 1.0).
-   - Even when it can afford the top entry, it starts it in only about 1 month in 5, which matches the median
-     treasury of 2.8× the price at a start. The exact reserve rule is not decoded.
+   - Even when it can afford the top entry, it starts it in only about 1 month in 5.
+   - **Decoded 2026-09-29:** that is a gold buffer plus the processing interval.
+     - The walk starts only when treasury ≥ the "Gold Buffer Target" = **3 × the country's tax base** (sum of
+       location tax; `AI_BUFFER_TAX_BASE_FACTOR`, doubled in some war state).
+     - Checked: the logged target ÷ (3 × Σ tax) has median 0.99, and 95 % of lab starts had treasury ≥ the target.
+     - After the gate, an entry starts if the treasury covers its price. The first entry it cannot pay stops the walk.
+     - Entries walked past leave the queue.
+     - A country only processes its queue every max(4 − rank, 1) months: counties every 3, duchies every 2,
+       kingdoms and empires monthly (`AI_CONSTRUCTION_DAILY_RANK_BASE_DIVISION`). The lab's gaps between starts
+       are mostly 3, 6, 9 and 12 months.
+   - **For PP:** poor, low-tax countries hit the buffer quickly. Raising a country's tax base raises the gold it
+     keeps idle before it builds anything.
    - The price is already a cost inside the utility, so the queue order already weighs price against benefit.
    - Caveats:
      - Lab prices are the buildings' recorded prices, so "affordable" is approximate at the edge.

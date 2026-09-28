@@ -201,6 +201,39 @@ Reasons. Read for France in Paris (capital + market center), 13 Sep 1340. Table:
 - Cost term changes with the country's state but not with its treasury (France 13 Sep: 0.00681/gold at 365 and at
   5,365 gold; 2 Oct: 0.00546/gold) and is slightly convex (10 / 100 / 1,000-gold probes: 0.00681 / 0.00683 / 0.00701 per gold).
 
+### 2.4e Measured at scale: the PP AI Lab run (2026-09-28)
+
+Test mod "PP AI Lab" = live main mod (constructor 884115fa) + measurement layer (`~/pp_ai_run/lab/gen_lab.py --sync`):
+`AI_CONSTRUCTIONS_CLEAR_QUEUE_MONTHS = 1` (every queue rescored monthly), `AI_EARLY_GAME_MONTHS = 0`, queue size min 120 /
+2 × locations, monthly telemetry of summed country and location modifiers into save variables, 42 carrier-pair probe
+buildings in every capital (scored, never built: 200 gold, allowed only below 40 gold). New game 1337.4 → 1339.5,
+26 monthly saves: 228,000 freshly scored real candidates, 5,500 probe readings per modifier from 753 countries.
+
+**Prediction (LightGBM on building, location, market, country and telemetry features; target = log utility relative to
+the country's queue that month):**
+
+| Test | R² | Spearman in queue | Top candidate right | Starts in the model's top k (true utility) |
+|---|---|---|---|---|
+| unseen months, type mean | 0.23 | 0.43 | 21 % | 30 % (76 %) |
+| **unseen months, LightGBM** | **0.58** | **0.80** | **65 %** | **51 % (76 %)** |
+| unseen countries, LightGBM | 0.36 | 0.75 | 56 % | 47 % (72 %) |
+
+82 % of country building starts come from the previous month's queue. Strongest predictors after building type: output
+price vs default, output value, margin, supply/demand of the output, loan capacity, gold, levels of the type already in
+the country, control. On probe countries, adding the probe-measured value of the candidate's modifiers raises the
+in-queue Spearman from 0.68 to 0.75.
+
+**What the probes say (value of the tested modifier on top of a 0.5 local-manpower building, relative to that
+building; `~/pp_ai_run/lab/lab_probe_summary.csv`):**
+- Valued in (almost) every country-month: local and global development, monthly gold income, trade-centre power, fort
+  level, sailors, local population growth, max literacy, institution growth, estate max tax, research speed, crown
+  power, gold to building owner. Relative value falls with country size (Spearman -0.5 to -0.75 with owned locations).
+- Never valued: `local_market_access`, `local_max_control`, `local_migration_attraction`, and more `local_manpower`
+  beyond 0.5 (saturated).
+- Conditional: `local_monthly_food` 30 % of country-months, `local_food_capacity` 48 % (more in populous capitals,
+  +0.50), `local_population_capacity` 47 % (+0.34 with capital population), `monthly_legitimacy` 47 %, harbour 45 %;
+  rarely: wheat output 22 %, noble power 8 %, food purchase 7 %, monthly literacy 2 %.
+
 ### 2.4d Engine structure (from the 1.3.11 executable)
 
 Labels and class names in `eu5.exe` (strings, 2026-09-28) show how the building utility is put together; the debug

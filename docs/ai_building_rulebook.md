@@ -409,6 +409,24 @@ Two currencies carry food:
 
 No random jitter: the terms sum exactly to the saved utility.
 
+**Population capacity (`local_population_capacity`, 70,306 nodes of the hooked month; `popcap_*.py` in the hook kit).**
+The capacity step is exact (to − from = added, in thousands). Two paths, switched by the location's fill before the
+building:
+- **Pop ≥ 90 % of capacity** (free land 1 − pop/capacity ≤ 0.10, sharp in the hook-time data):
+  **V = `AI_LOCAL_POPULATION_CAPACITY_UTILITY` × T × Δcapacity**. The define is vanilla 0.01; PP does not set it.
+  Ratio 0.0100 in 10,836 nodes. There is no gold marginal, food price or country size in it; only T. Negative
+  capacity (footprint) costs the same per point.
+- **Pop < 90 % of capacity:** the define part is 0. The only value comes from the change in the scale of the
+  `available_free_land` static modifier (scale ≈ 1 − pop/capacity), valued through that modifier's contents.
+  - In PP these are migration attraction, peasant food consumption, tribesmen growth and RGO output +30 %, and most
+    of them are AI-blind.
+  - The result is 30–100× smaller per point (median ratio 0.0001–0.0006). 15 % of these nodes, and most nodes
+    without the child line, are exactly 0.
+- In gold terms: cost is valued at about 1.2 × T × a/(g + a·L) per gold, so 1k capacity at capacity ≈ 0.046 × (g + a·L)
+  gold of build cost. That is a few gold for a poor country and tens of gold for a rich one.
+- Only 15 % of the month's capacity nodes were on the define path: in 1339 most PP locations sit well under capacity
+  (median fill 0.4).
+
 ### 2.4d Engine structure (from the 1.3.11 executable)
 
 Labels and class names in `eu5.exe` (strings, 2026-09-28) show how the building utility is put together; the debug

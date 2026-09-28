@@ -122,6 +122,56 @@ compared across branches (`~/pp_ai_run/ucompare.py`, `gold_shape.py`, `gold_curv
    R² ≈ 0.50 of log utility; the rest comes from engine terms the save does not show (per-modifier valuations,
    goods-shortage bonuses, worker availability).
 
+7. **The gold term is a multiplier, not a cost.** Fitting u = A + B·min(gold, K) per candidate gives B·K ≈ A + B·K:
+   the utility at zero gold is only 1-13 % of the utility at full buffer (tags DGH 4 %, GRA 13 %, HAB 6 %, HOL 13 %,
+   SGN and WAL 1-2 %). So **u ≈ V · (a₀ + (1 − a₀) · min(gold, K) / K)** with a₀ ≈ 0.02-0.13: a
+   poor country scales its whole queue down, the order inside the queue barely moves (90-96 % of candidate pairs keep
+   exactly the same ratio between neighbouring gold levels). K is the engine's "Gold Buffer Target" (label in the
+   executable, see 2.4c).
+8. **Mass re-score (2026-09-28, `pp_ai_U_ALL1`):** all 984 queues cleared on 1340.8.14, one month ticked: 4,297 fresh
+   candidates in 709 countries, all scored on the same day. The engine is deterministic (two identical branches: 99.8 %
+   of candidates identical, within-country spread 0.008 in log10 utility). Variance of log10 utility: country alone
+   63 %, building type alone 33 %, **country × building type 91 %**; the location inside one (country, type) moves
+   utility by a factor ~2 (sd 0.34 log10). So the AI mostly decides *which type* per country; the location rule is
+   type-specific (cloth guild: R² 0.88 from margin, tax, control, rank; Victualling Yard 0.81 from tax/possible tax;
+   ocean fishery 0.62 from control and tax; tavern 0.51 from pop-type population; glass guild 0.20).
+   A LightGBM on all observable features predicts the within-country order of held-out countries only moderately
+   (Spearman 0.57 median, top-1 hit 54 %): the missing part is the country-specific valuation of each modifier.
+9. **Queue refill timing:** after a clear, a queue stays empty until the country's monthly AI construction day and
+   then refills completely in one step (FRA, ENG, CAS, HUN cleared 13 Sep, all four 0 for 17 days, then full on
+   1 Oct: 43 / 34 / 61 / 47 entries).
+
+### 2.4c Engine structure (from the 1.3.11 executable)
+
+Labels and class names in `eu5.exe` (strings, 2026-09-28) show how the building utility is put together; the debug
+tooltip that prints it (`AiUtilityTooltip`, "AI Utility") is only wired up in internal builds.
+
+- Class `CBuildingAi`: `CalcCityUpgradeUtility`, `CalcPopNeedsGoodsUtility`, `CalcExplorationMissingGoodsUtil`,
+  `AddModifierBiasFromConstructions`, `HandleBuildForeignBuildings`, `HandleBuildRoads`, `HandleDestroyUnwantedBuildings`,
+  `HandleProximityBuildings`, `HandleSpecializeTowns`.
+- Utility terms (tooltip labels): *Unscaled Modifier* (`raw_modifier`), *Scaled Modifier* (`modifier`, scaled by
+  employment), *Capital Modifier*, *Capital Country Modifier*, *Market Center Modifier*, *Profit to state*, *estate
+  enrichment*, *Export profit*, *Expected profit from scale of production*, *Food Utility*, *Missing pop need*,
+  *Missing military goods need*, *Producing / Consuming Input Goods Shortage*, *No market access*, *Per capita factor*,
+  *Peasants in city*, *Location rank modifier*, *Upgrading Building*, *removal of obsolete upkeep*, *loss of
+  satisfaction*, *Costs*, *Upgrade Cost*, *Too low profit margin*, *Profit Margin Multi*, *Maintenance Leeway*,
+  *Available Maintenance*, *Build Queue Size*, *Gold Buffer Target*, *Proximity Candidate*.
+- Each modifier is valued through the **AI currency** system (`ai_currency_evaluation.cpp`: per-modifier "currency",
+  *Time Multiplier*, *DiscountFactor*, *Scripted Utility*). The value of a modifier depends on the country's own
+  state (how much it has and needs), which is why the same building scores so differently per country.
+- **Modifiers the AI cannot value** (`ai_currency_misses` console command → `docs/ai_currency_misses.log`, hits in
+  this run): `local_food_decay_modifier` 6,387, `free_building_levels` 5,198, `local_supply_limit_modifier` 3,545,
+  `local_build_buildings_efficiency` 3,440, `local_construction_speed` 3,439, **`pp_wb_levels_irrigation_systems`
+  1,837, `pp_wb_levels_field_management` 1,766, `pp_wb_levels_irrigated_fields` 877, `pp_wb_levels_incamisana` 34,
+  every `farm_capacity_from_*`**, `merchant_power_from_building` 1,093, **`local_market_access` 567**,
+  `local_marketplace_building_levels` 408, `maximum_stockpile_capacity` 73, `local_province_food_sales/purchase_output_modifier`,
+  `pp_land_available`, `pp_province_food_storage_months`, the `local_<good>_output_modifier`s. A building whose point is
+  one of these gets no utility for it; the AI builds it only for its other terms (profit, employment, capacity).
+  `local_population_capacity` is **not** missed (valued).
+- Console: `ai_currency_viewer` opens a window with each currency's utility curve; `dump_data_types` writes the GUI
+  data functions to `logs/data_types/` (`Country.GetAiUtility(Arg0, Arg1)` returns the AI's valuation string of a
+  modifier: the way to read per-country valuations from a test GUI).
+
 **Not yet exact.** Still open: the formula of A and B per building (the modifier valuation), the exact K. The fastest
 way to exact coefficients is a define sweep (each `NAI` utility define changes one term: `AI_GLOBAL_BUILDING_COST_UTIL`,
 `AI_DEVELOPMENT_UTILITY`, `AI_PROFIT_MARGIN_TARGET`, `AI_GOLD_COST_UTIL_FROM_LOW_PROFIT_MARGIN`,
@@ -180,8 +230,10 @@ stays at the money gate for 100 years while the richest tenth hoards.
 
 ## 6. Open
 
-- The engine's modifier scoring behind the utility (why sergeantry beats cookshop) is not readable; a define sweep
-  (e.g. `AI_DEVELOPMENT_UTILITY`, `AI_GLOBAL_BUILDING_COST_UTIL`) in the test mod would measure single terms.
+- The engine's modifier scoring behind the utility (why sergeantry beats cookshop) is not in the save. Two ways to
+  measure it: a test GUI that prints `Country.GetAiUtility(...)` per modifier for chosen countries, and a define sweep
+  (e.g. `AI_DEVELOPMENT_UTILITY`, `AI_GLOBAL_BUILDING_COST_UTIL`) with the clear-and-rescore method. Both need a test
+  mod in the playset.
 - The exact war/deficit budget rule (France builds nothing with 3,300 gold and a surplus while at war).
 - Whether estate plans are chosen by the estate's own profit (nobles pick capacity buildings consistently).
 

@@ -1,6 +1,4 @@
-﻿# Prosper or Perish: experimental, easily removable patch for absolute local food
-# sources missing from the vanilla location food production breakdown.
-
+﻿# Prosper or Perish: location food tooltip whose production rows add up to the headline.
 template location_food_tooltip {
     ContextualTooltipType = {
         blockoverride "title_icon" {
@@ -41,22 +39,69 @@ template location_food_tooltip {
                     text = "LOCATION_FOOD_TT_TEXT"
                 }
             }
-            TooltipStringPairList = {
-                textcontext = "[Location.GetFoodSources]"
-            }
 
+            # Monthly production = (subsistence + flat food modifiers + food goods) x (1 + food productivity).
+            # The engine's own source list (Location.GetFoodSources) is not used: it counts each building's food
+            # modifier for one level only and leaves out modifier-only buildings (tavern, victualling yard) and RGO levels.
             TooltipListBase = {
-                visible = "[Not(EqualTo_CFixedPoint(Location.GetModifierValueFixed('local_monthly_food'), '(CFixedPoint)0'))]"
+                blockoverride "block_title" {
+                    text = "PP_FOOD_TOOLTIP_PRODUCTION_TITLE"
+                }
                 TooltipListRowContent = {
                     TooltipManualTableField = {
                         blockoverride "field_content" {
                             text_single = {
-                                text = "MODIFIER_TYPE_NAME_local_monthly_food"
+                                text = "PP_FOOD_TOOLTIP_SUBSISTENCE"
                                 default_format = "#subtle_name"
                             }
                             expand = {}
                             text_single = {
-                                raw_text = "[Location.GetModifierValue('local_monthly_food')|+=2]@food!"
+                                raw_text = "[Location.MakeScope.ScriptValue('pp_food_tooltip_subsistence')|+=2]@food!"
+                            }
+                        }
+                    }
+                }
+                TooltipListRowContent = {
+                    TooltipManualTableField = {
+                        blockoverride "field_content" {
+                            text_single = {
+                                text = "PP_FOOD_TOOLTIP_MODIFIERS"
+                                default_format = "#subtle_name"
+                                tooltip = "[Location.GetModifierValue('local_monthly_food')]"
+                            }
+                            expand = {}
+                            text_single = {
+                                raw_text = "[Location.MakeScope.ScriptValue('pp_food_tooltip_modifiers')|+=2]@food!"
+                                tooltip = "[Location.GetModifierValue('local_monthly_food')]"
+                            }
+                        }
+                    }
+                }
+                TooltipListRowContent = {
+                    TooltipManualTableField = {
+                        blockoverride "field_content" {
+                            text_single = {
+                                text = "PP_FOOD_TOOLTIP_GOODS"
+                                default_format = "#subtle_name"
+                            }
+                            expand = {}
+                            text_single = {
+                                raw_text = "[Subtract_CFixedPoint(Subtract_CFixedPoint(Divide_CFixedPoint(Location.MakeScope.ScriptValue('pp_food_tooltip_production'), Add_CFixedPoint('(CFixedPoint)1', Location.GetFoodsOutputModifiers)), Location.MakeScope.ScriptValue('pp_food_tooltip_subsistence')), Location.MakeScope.ScriptValue('pp_food_tooltip_modifiers'))|+=2]@food!"
+                            }
+                        }
+                    }
+                }
+                TooltipListRowContent = {
+                    visible = "[Not(EqualTo_CFixedPoint(Location.GetFoodsOutputModifiers, '(CFixedPoint)0'))]"
+                    TooltipManualTableField = {
+                        blockoverride "field_content" {
+                            text_single = {
+                                raw_text = "[food_productivity|E] [Location.GetFoodsOutputModifiers|+=2%]"
+                                default_format = "#subtle_name"
+                            }
+                            expand = {}
+                            text_single = {
+                                raw_text = "[Subtract_CFixedPoint(Location.MakeScope.ScriptValue('pp_food_tooltip_production'), Divide_CFixedPoint(Location.MakeScope.ScriptValue('pp_food_tooltip_production'), Add_CFixedPoint('(CFixedPoint)1', Location.GetFoodsOutputModifiers)))|+=2]@food!"
                             }
                         }
                     }

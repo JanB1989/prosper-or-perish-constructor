@@ -88,7 +88,9 @@ NMarket = {
  	FOOD_CAPACITY_FACTOR = 0 # 1.0; markets hold no food: no province buys it, markets trade none
  	FOOD_PROVINCE_LOCAL_RESERVE_RATIO = 1000 # 0.75; provinces never hand food to the market
  	MONTHLY_PRICE_CHANGE = 0.15 # 0.04
- 	FOOD_PRICE = 0.001
+ 	FOOD_PRICE = 0.10 # 0.001; empty markets sit at max(FOOD_PRICE, 0.01) (0.001 gave 0.0099 in every market, 1339):
+ 	# 0.10 = Province Food at its floor. The AI values location food at this price; the slider bill stays ~0
+ 	# (food_purchase_efficiency 10000 in auto_modifiers/pp_country_base_values.txt).
  	FOOD_PRICE_IMPACT_ON_PRICES = 0.00
  	MARKET_FOOD_STOCKPILE_TRESHOLD_MONTHS = 24.0
 }

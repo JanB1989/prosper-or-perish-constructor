@@ -37,24 +37,28 @@ ADDITIONAL_FOOD_INDICATOR_FILES = (
 )
 
 
-def test_location_food_tooltip_shows_absolute_local_food_sources() -> None:
+def test_location_food_tooltip_rows_add_up_to_food_production() -> None:
+    """The engine's source list (Location.GetFoodSources) counts a building's food modifier for one level only and
+    skips modifier-only buildings and RGO levels; the tooltip rebuilds the production rows from food_production."""
     assert LOCATION_FOOD_TOOLTIP.exists()
-
     text = LOCATION_FOOD_TOOLTIP.read_text(encoding="utf-8-sig")
+    values = (MOD_ROOT / "in_game" / "common" / "script_values" / "pp_food_tooltip_values.txt").read_text(encoding="utf-8-sig")
+    loc = (MOD_ROOT / "main_menu" / "localization" / "english" / "pp_food_tooltip_l_english.yml").read_text(encoding="utf-8-sig")
 
     assert "template location_food_tooltip" in text
-    assert "Location.GetFoodSources" in text
+    assert "[Location.GetFoodSources]" not in text
+    for key in ("pp_food_tooltip_production", "pp_food_tooltip_subsistence", "pp_food_tooltip_modifiers"):
+        assert f"ScriptValue('{key}')" in text or f"ScriptValue('{key}')" in loc
+        assert f"{key} = {{" in values
+    assert "value = food_production" in values
+    assert "unemployed_pops_of_pop_type_in_location(pop_type:peasants)" in values
+    assert "unemployed_pops_of_pop_type_in_location(pop_type:slaves)" in values
+    assert "value = modifier:local_monthly_food" in values
     assert "Location.GetModifierValue('local_monthly_food')" in text
-    assert "MODIFIER_TYPE_NAME_local_monthly_food" in text
-    assert (
-        "Not(EqualTo_CFixedPoint(Location.GetModifierValueFixed('local_monthly_food'), "
-        "'(CFixedPoint)0'))"
-    ) in text
-    assert text.index("Location.GetFoodSources") < text.index(
-        "Location.GetModifierValue('local_monthly_food')"
-    )
-    assert "Location.GetFoodsOutputModifiersTooltip" not in text
-    assert "FOOD_PRODUCTIVITY_LIST_TITLE" not in text
+    assert "Location.GetFoodsOutputModifiers" in text
+    assert "Location.GetFoodDecayInfo" in text
+    for key in ("PP_FOOD_TOOLTIP_PRODUCTION_TITLE", "PP_FOOD_TOOLTIP_SUBSISTENCE", "PP_FOOD_TOOLTIP_MODIFIERS", "PP_FOOD_TOOLTIP_GOODS"):
+        assert key in text and f" {key}:" in loc
 
 
 def test_province_food_indicator_uses_stored_food_months() -> None:

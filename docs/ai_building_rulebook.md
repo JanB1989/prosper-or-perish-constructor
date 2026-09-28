@@ -436,6 +436,29 @@ comes from the probe run (2.4c).
 
 So an output bonus on a building helps the AI only in locations that already make that good.
 
+**How a goods output modifier is valued** (9,394 paired lines of the logged month; `outmod_*.py`). An output modifier
+on a candidate counts twice. Both parts are gold per month, valued like profit (× T^1.5 on the gold curve).
+1. **Extra output value.** ΔV = Δmodifier × market price × base output of that good in the location.
+   - Base output is what the location's RGO and the country's own buildings there make of that good, divided by the
+     current output multiplier (1 + modifier).
+   - So +10 % always adds 10 % of the unmodified output: no diminishing return, and no value where nothing is made.
+2. **Plus the state's share of ΔV**, shown as "X profit to state from <good> output" and added to the total utility.
+   It is the pop-weighted share the state takes from the producing pops.
+
+Measured:
+- Part 1 ÷ (T^1.5 × monthly gold × gold marginal) = 0.999 (median).
+- The implied base output is constant within a location and good to 0.004 %.
+- Part 1 ÷ part 2 is a property of the location and good: about 1.1 for mines (gold, gems, marble, copper, lead) and
+  1.2–2.2 for farm goods (millet 1.38, wheat 1.46, livestock 1.60, maize 1.94, fish 2.24). The state keeps
+  most of mine output and less of peasant output.
+- **Part 1 is taken to be the full value created. That is inferred, not measured:** the ratio fits it, but the base
+  output was not read in game.
+
+Together: **V ≈ T^1.5 × gold marginal × Δmod × price × base output × (1 + state share)**.
+
+- An output modifier is worth as much as the extra goods sell for, over the country's horizon.
+- It is worth nothing where the good isn't produced, and more for expensive goods and big producers.
+
 **Food price ×10 counterfactual** (`food_price_x10.py`).
 - The lab month ran at market food price 0.0099. `pp_defines_adjustments.txt` now sets FOOD_PRICE = 0.10.
 - The LocationFood part of each breakdown is linear in the price, so it was scaled by 10. Storage, profit and the

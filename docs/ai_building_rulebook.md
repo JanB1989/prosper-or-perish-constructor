@@ -271,6 +271,11 @@ saved queue entries match a logged row exactly on the raw utility.
   - T is longer for countries with gold and much shorter for countries in debt.
   - It is small for large countries and for countries in deficit (FRA 42, HCN 28), median 328.
 - **Cost term ≈ inherent × 1.2 × "affects self" multiplier.**
+- **The cost is the real price** (`cost_check.py`). The "Costs X gold" amount equals the gold the construction actually
+  charged, to 0.001 %, for 33 of the 47 country constructions started during the logged month.
+  - So it is the fully modified price, as of the moment of scoring.
+  - The other 14 have no candidate scored at that price. This fits queue scores being frozen at insertion: the
+    utility keeps the old price, while the start pays the current one.
 - **Gates on all 161k scored candidates:**
   - "Too low profit margin" multiplies 31.5 % by 0.
   - 41 % end negative; only 27 % are positive.

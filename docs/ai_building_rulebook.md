@@ -435,6 +435,30 @@ building:
 - Only 15 % of the month's capacity nodes were on the define path: in 1339 most PP locations sit well under capacity
   (median fill 0.4).
 
+**Food price ×10 counterfactual** (`food_price_x10.py`).
+- The lab month ran at market food price 0.0099. `pp_defines_adjustments.txt` now sets FOOD_PRICE = 0.10.
+- The LocationFood part of each breakdown is linear in the price, so it was scaled by 10. Storage, profit and the
+  on/off switch were left as logged.
+- 38 of 576 countries change their top candidate.
+- 872 rejected candidates turn positive.
+- Taverns and cookshops move up. Victualling yards and granges move down relatively, because their value is mostly
+  storage, which does not scale with the price.
+
+**Production method switches** (`pm_switch.py`, consecutive monthly lab saves, margins at the earlier month's prices).
+- About 1.4 % of method slots switch per month.
+- Non-food → non-food: 81 % of switches go to the higher margin.
+- Non-food → food: 99 % go to the higher margin.
+- Food → non-food: only 4 % go to the higher margin. The AI leaves food methods even when they pay more, and these
+  switches happen in provinces that are not in food deficit.
+- No production-method code was found in CBuildingAi or CEconomyAi. CCountryEconomyAI is unexplored.
+
+**Fishing villages are not AI-built.**
+- Zero AI constructions in the lab month.
+- In Jan's game the count is flat from game start: 4,815 at start vs 4,674 buildings (7,615 levels) at 1398.3.6.
+  They come from start placement.
+- Queue utility median is 0.24. Their +0.5 population capacity is worth about 1.2, but only in locations over 90 %
+  full (see above).
+
 ### 2.4d Engine structure (from the 1.3.11 executable)
 
 Labels and class names in `eu5.exe` (strings, 2026-09-28) show how the building utility is put together; the debug

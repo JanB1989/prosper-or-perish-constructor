@@ -313,14 +313,28 @@ Province food state comes from the save: the engine's `province_food` table now 
 `cached_food_change`, `base_food_consumption` and more.
 
 Two currencies carry food:
-- **ProvinceFoodStockpile.** `local_food_capacity` is treated as the same amount of food *in stock*. It is valued only
-  while the province holds less than about **24 months of consumption**:
+- **ProvinceFoodStockpile.** The currency's value is the province's food **capacity**: "from" equals `max_food_value`,
+  so +400 is valued as capacity C → C + 400. No food is created. It is valued only while the province's **stock**
+  covers less than about **24 months of consumption**:
 
-  | Months of consumption in store | Share valued |
+  | Stock in months of consumption | Share valued |
   |---|---|
   | ≤ 20 | 98–100 % |
   | 20–26 | falling |
   | over 30 | 0 % |
+
+  **How full the store is does not matter.** Valued cases are often half-empty stores (log correlation of value with
+  fill −0.17). The AI pays for capacity the province cannot use yet.
+
+  The value per unit of T falls steeply with the province's size: about capacity^−1.3 × consumption^−0.4 ×
+  added^0.5, which explains 54 % of the log value. On top of that sits a per-country factor (about 100× between
+  countries).
+  - +400 on a capacity of 130–500 is worth 1–9 per T, i.e. hundreds to thousands of utility.
+  - +400 on a capacity of 4,000+ is worth 0.001–0.1 per T.
+
+  Define `AI_PROVINCE_FOOD_STOCKPILE_UTILITY` (vanilla 0.1, PP 0.50) is "utility for province food stockpile modifier,
+  upper limit based on total province food consumption change". Its code (currency registered in FUN_14515b690, valued
+  in engine callbacks) is not decoded yet.
 
 - **LocationFood.** Two things move it:
   - the `local_monthly_food` modifier;

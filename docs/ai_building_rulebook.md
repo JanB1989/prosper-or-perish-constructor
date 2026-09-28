@@ -596,6 +596,44 @@ High saving mode:
 - In PP the slider barely matters: markets hold no food (FOOD_CAPACITY_FACTOR 0), and the bill is kept near 0 by
   `food_purchase_efficiency`.
 
+### 2.4i Profit, the profit-margin gate and the whole utility (h02 run, 2026-09-29)
+
+How the AI estimates a building's profit (confirmed against the logged breakdowns):
+- It takes one level of the building. For every production-method group it picks the most profitable method among
+  those allowed in the location whose inputs the market can supply. The groups add up.
+- One method's profit = market access × (output × (1 + output modifiers) × market price − inputs × market price).
+  Market access is clamped to 0..1. A good from another market is priced at its minimum price.
+- A building that already stands in the location is judged by its active methods instead.
+- The profit is split by the location's pops:
+  - the state gets each pop type's share × its estate tax rate (at most 35 %) × a location factor × 0.95;
+  - the estates get the rest ("estate enrichment").
+  - So the state's share is the same for every building in one location. It is not tied to the building's own
+    workers.
+- Profit is valued as gold: √T × monthly profit on the gold curve, weighted by T·√T.
+
+The **"Too low profit margin"** gate (utility × 0) hits about half of all candidates:
+- It applies to buildings that produce goods whose margin is below **AI_BUILDING_PROFIT_THRESHOLD (1.2)**.
+  Margin = revenue ÷ input cost.
+- The margin that counts is that of the **last** method the estimate looks at, not the best one. For PP farms that
+  is `sell_surplus` (no inputs, so the margin is huge): farms are almost never gated.
+- A building never gets gated when its goods include one with `ai_rgo_expansion_priority` (clay, iron, gold, silver,
+  stone, lumber, masonry).
+- This predicts the gate for 90 % of candidates. Taverns are the main exception (half of them are gated and the rule
+  does not tell which).
+
+Horizons:
+- Every currency is valued over T' = min(T, 833).
+- The building cost uses the country's full T, which can reach 2,400.
+- Gold is valued on the log gold curve; every other currency is linear in its amount.
+
+The rebuilt utility (cost + profit + estate enrichment + every modifier's currencies, times the gate, 0.9 for peasant
+buildings in cities and the per-capita factor):
+- On 46k candidates of the h02 run it matches the engine within 5 % for 90 % of them (measured against the size of the
+  candidate's terms).
+- It orders each country's candidates like the engine (rank correlation 0.99).
+- Each country's per-currency rates (manpower, sailors, merchant capacity, estate power, static modifiers, food
+  stockpile) are still read from the run, not computed.
+
 ### 2.5 Where (verified, queue of 1340.8.14)
 
 Percentile of each queued location inside its own country (0 = the country's top location, 0.5 = middle; countries

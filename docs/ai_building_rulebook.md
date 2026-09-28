@@ -354,9 +354,18 @@ Two currencies carry food:
 - ΔF is either the `local_monthly_food` amount, or, for the Food Utility term, the building's monthly output of goods
   with a food value × that food value (cookshop ≈ 19–25).
 - T is the country's time horizon.
-- **The value is linear:** c is constant per (country, location), with a spread of 0.45 %. Median c = 0.0022 per food
-  per horizon month (p25 0.0008, p75 0.0029). c tracks the country's marginal gold value (log correlation 0.88) and
-  is smaller in large-consumption provinces. Its exact formula is not decoded.
+- **The value is linear.** c is one number per country (72 % of countries within 1 % across all their locations and
+  provinces).
+- **Solved** (`lf_exact.py`, 94 % of 904 unrounded rows within 3 %, median ratio 0.99):
+
+    **c = T × P_food × a / (g + a·L)**,  so  **V_food = T² × P_food × ΔF × a / (g + a·L)**
+
+  - P_food is the market food price of the location's market (PP: 0.00987–0.00993, since market food is off).
+  - a / (g + a·L) is the marginal value of gold from the exact gold curve: g is gold at scoring, L is loan capacity.
+
+  So the engine prices a month of food at the market food price, sums it over the horizon (× T), and values it as
+  gold at the current marginal value, over the horizon again (× T). **Food scales with T², profit with T^1.5.**
+  No food define appears in this term; the market food price does.
 - **Losses are valued exactly like gains** (ratio 1.00 in the same location), but only down to L = 0. So
   `FOOD_NEGATIVE_IN_PROV_UTILITY` (PP 0.5) does not act in this term.
 - **c = 0 unless the province needs food:**

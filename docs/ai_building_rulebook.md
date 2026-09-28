@@ -308,6 +308,37 @@ Rare large terms decide the top of queues:
 Tables: `~/pp_ai_run/hook/h01/{candidates,terms,queue,queue_terms}.parquet`, `gold_curve_countries.parquet`,
 `time_mult_countries.parquet`.
 
+**Food is valued by the food situation, not as a flat bonus** (`food_value.py`, `stock_curve.py`, `vy_analysis.py`).
+Province food state comes from the save: the engine's `province_food` table now has `food_current`,
+`cached_food_change`, `base_food_consumption` and more.
+
+Two currencies carry food:
+- **ProvinceFoodStockpile.** `local_food_capacity` is treated as the same amount of food *in stock*. It is valued only
+  while the province holds less than about **24 months of consumption**:
+
+  | Months of consumption in store | Share valued |
+  |---|---|
+  | ≤ 20 | 98–100 % |
+  | 20–26 | falling |
+  | over 30 | 0 % |
+
+- **LocationFood.** Two things move it:
+  - the `local_monthly_food` modifier;
+  - a separate top-level **Food Utility** term: the building's output of goods with a food value (`local_food`
+    food = 1, raw fish/rice), converted to monthly food.
+
+  It is valued in about 42 % of positive changes, mostly where the location's food is low. Negative monthly food is
+  penalised only when the province store is under about 65 % full or losing food fast (32 % of cases, small).
+  **Victuals have food = 0**, so the victualling yard's output never counts as food. Cookshops, public kitchens,
+  forest-village provisioning and fisheries do get Food Utility.
+
+**Victualling yard, 273 queue entries:** median utility 10.8, p90 336.
+- `+400 local_food_capacity` explains 70 % of the spread between yards. It is a heavy tail: the median food-capacity
+  value is only 1–3, a few yards get several hundred.
+- Sailors explain 10 %, profit to state 4 %. The −20 food adds nothing measurable.
+
+No random jitter: the terms sum exactly to the saved utility.
+
 ### 2.4d Engine structure (from the 1.3.11 executable)
 
 Labels and class names in `eu5.exe` (strings, 2026-09-28) show how the building utility is put together; the debug

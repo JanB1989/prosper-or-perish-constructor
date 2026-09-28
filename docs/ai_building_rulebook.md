@@ -234,6 +234,19 @@ building; `~/pp_ai_run/lab/lab_probe_summary.csv`):**
   +0.50), `local_population_capacity` 47 % (+0.34 with capital population), `monthly_legitimacy` 47 %, harbour 45 %;
   rarely: wheat output 22 %, noble power 8 %, food purchase 7 %, monthly literacy 2 %.
 
+**Does the known shape help prediction? (`lab_structured.py`, `lab_formula.py`)** The probe values were turned into value
+curves per modifier (country + capital state → value per unit). They give every candidate a structural modifier value
+Σ amount × value.
+- Added to LightGBM: on unseen months, top candidate right 64.7 → 65.7 % and starts in top k 52.8 → 54.5 %. On unseen
+  countries it adds nothing.
+- The pure formula, 0.9^[peasants in city] × softplus(category + a·margin + b·cost + c·modifier value), reaches only
+  Spearman 0.38–0.48 and top candidate 21–27 %. The fit gives cost a positive sign and the modifier value a weight of about 0.
+
+The shape is right, but its inputs are not observed. The terms that order the queue (profit to state, estate
+enrichment, Food Utility, location-dependent modifier values) are computed by the engine from quantities that a market
+margin and capital-only probes do not reproduce. The next gain is reconstructing those terms from the decompile and
+checking them against `ai_debug` tooltips, not a better model.
+
 ### 2.4d Engine structure (from the 1.3.11 executable)
 
 Labels and class names in `eu5.exe` (strings, 2026-09-28) show how the building utility is put together; the debug

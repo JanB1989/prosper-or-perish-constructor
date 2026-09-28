@@ -313,9 +313,20 @@ Province food state comes from the save: the engine's `province_food` table now 
 `cached_food_change`, `base_food_consumption` and more.
 
 Two currencies carry food:
-- **ProvinceFoodStockpile.** The currency's value is the province's food **capacity**: "from" equals `max_food_value`,
-  so +400 is valued as capacity C → C + 400. No food is created. It is valued only while the province's **stock**
-  covers less than about **24 months of consumption**:
+- **ProvinceFoodStockpile, the storage switch (precise, 2026-09-28, `stock_exact.py`, 1 June re-score rows).**
+  Storage capacity counts only while **Provincial Food stockpile ÷ monthly consumption < about 23 months**; above that
+  it is worth exactly 0. That rule is right in 96.9 % of cases.
+  - Store fill does not matter, and production only matters through the stock.
+  - This matches the design target of 2 years of storage (Jan: "2 × 12 months") and the 24-month define
+    `MARKET_FOOD_STOCKPILE_TRESHOLD_MONTHS = 24.0` (vanilla and PP). The value matches; that the AI reads this define is
+    not proven. Test: change the define in the lab and see whether the switch moves.
+  - Within a province the value is linear in the added capacity (no diminishing return); a log form fits no better.
+  - The size scales like the food term (T² × market food price × gold marginal value) times a province factor that
+    falls with province size (log correlation −0.40 to −0.47 with stock, capacity and consumption). The exact formula
+    is not decoded: it is the currency's value callback, registered in FUN_14515b690.
+- **ProvinceFoodStockpile (earlier, blurrier view).** The currency's value is the province's food **capacity**: "from"
+  equals `max_food_value`, so +400 is valued as capacity C → C + 400. No food is created. It is valued only while the
+  province's **stock** covers less than about **24 months of consumption**:
 
   | Stock in months of consumption | Share valued |
   |---|---|

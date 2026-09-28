@@ -138,6 +138,9 @@ almost all from the AI queue.
 | Country treasury median / 90th pct | 20 / 85 | 28 / 388 | 31 / 659 |
 
 Countries build taverns first in every decade, then libraries, cookshops, granges, horse breeders, field management.
+Taverns spread and stack: 1,335 locations × 1.0 levels (1340) → 4,242 locations × 2.8 levels, max 30 (1437), while
+their `employed` stays ~0.001 (cookshops 1-2): the AI keeps adding levels to a building that is hardly staffed
+(each built level re-queues the next one, section 2.1).
 Nobles build land clearance, field drainage, irrigation, irrigated fields and masons throughout. The median country
 stays at the money gate for 100 years while the richest tenth hoards.
 

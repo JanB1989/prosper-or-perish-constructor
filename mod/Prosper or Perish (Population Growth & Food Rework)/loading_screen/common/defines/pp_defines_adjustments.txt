@@ -13,7 +13,7 @@ NAI = {
 	#   Our markets hold no food, so both sit below zero: market food never steers the AI.
 	AI_MARKET_LOW_FOOD_THRESHOLD = -0.5 # 0.5
 	AI_MARKET_CRITICAL_FOOD_THRESHOLD = -0.5 # 0.1
-	AI_PROVINCE_FOOD_STOCKPILE_UTILITY = 0.50
+	AI_PROVINCE_FOOD_STOCKPILE_UTILITY = 0.15 # 0.1; weights food storage lines, which were 93-98 % of the AI value of Victualling Yards, cookshops and market villages at 0.5 (1398 run)
 	# AI_MAXIMUM_EXPECT_TOWN_RATIO = 0.2
 	# AI_MIN_ALLOWED_URBANIZE_FOOD_LOCATION_RATIO = 0.15
 	# AI_MAX_ALLOWED_URBANIZE_FOOD_LOCATION_RATIO = 0.25
@@ -27,6 +27,10 @@ NAI = {
 	AI_ALLOWED_BUILDING_MAINTENANCE = 0.3
 	AI_DEVELOPMENT_UTILITY = 0.2
 	AI_PROFIT_MARGIN_TARGET = 0.10
+	AI_BUILDING_PROFIT_THRESHOLD = 1.05 # 1.2; minimum revenue/input cost for the AI to build a producing building; many PP methods sit near break-even
+	# Construction queue: an entry keeps the score it got when it was queued, new candidates only enter when the queue is rebuilt.
+	AI_CONSTRUCTIONS_CLEAR_QUEUE_MONTHS = 12 # 60; the AI reacted to food and storage changes years late (taverns queued while starving, built after recovery); 18-24 if tick time suffers
+	AI_CONSTRUCTION_QUEUE_REPEAT_MULT = 0.99 # 0.9; next level re-queued at utility x this^level: more stacking, stacked levels gain production efficiency
 	AI_PROFITABILITY_THRESHOLD_FOR_MISSING_GOODS_UTIL = 1.01
 	# Nudge so eligible AI colonizers start and maintain charters earlier (tax-base gates: scripted_triggers/pp_colonization_triggers.txt).
 	AI_BASE_COLONY_UTILITY = 6 # 3

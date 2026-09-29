@@ -37,10 +37,12 @@ Over 100 years the country share rises to 75 % (1,400 of ~1,880 running construc
   location (or a road with target, a rank upgrade, a town specialisation pair), each with a **utility** score. Typical length:
   5-40 entries; ~4,200 entries world-wide.
 - The queue is **stable**: 93-98 % of entries survive from month to month. At game start queues fill up country by
-  country over ~3 weeks (71 countries on day 2, 990 on day 18). Vanilla define `AI_CONSTRUCTION_QUEUE_CLEAR_MONTHS = 60`
-  purges it every 5 years (inferred from the define; `building_queue_clear <TAG>` does it by console).
+  country over ~3 weeks (71 countries on day 2, 990 on day 18). Define `AI_CONSTRUCTIONS_CLEAR_QUEUE_MONTHS` purges it
+  (vanilla 60 = every 5 years, inferred from the define; PP sets 12 since 2026-09-29 so queued scores are at most a year old;
+  `building_queue_clear <TAG>` does it by console).
 - After a level is built, the AI queues the **next level of the same building** with `iteration = level` (define
-  `AI_CONSTRUCTION_QUEUE_REPEAT_MULT = 0.9`: utility × 0.9^iteration).
+  `AI_CONSTRUCTION_QUEUE_REPEAT_MULT`: utility × mult^iteration; vanilla 0.9; PP sets 0.99 since
+  2026-09-29 so follow-up levels stay near the first level's score and buildings stack more).
 - Console: `building_queue_top/buildings/stats <TAG>` (output also lands in `logs/debug.log` as `console_success`
   lines).
 
@@ -157,7 +159,8 @@ compared across branches (`~/pp_ai_run/ucompare.py`, `gold_shape.py`, `gold_curv
 
 1. **Utility is computed once, when the entry enters the queue, and then frozen**: 98.8 % of surviving entries keep
    exactly the same value month to month (163,183 checks). A queue can hold years-old scores (France's top cookshop
-   kept one value for 3 years). Any model must use the state at insertion time.
+   kept one value for 3 years, at the vanilla 60-month purge; PP now purges every 12 months). Any model must use the
+   state at insertion time.
 2. **Utility depends on the country's treasury, saturating**: with the treasury set to exactly 30 / 100 / 300 / 1,000 /
    3,000 / 10,000 gold, each candidate follows **u ≈ A + B · min(gold, K)** (median R² 0.988 over 82 candidates;
    g/(g+K) 0.966, 1-e^(-g/K) 0.990 median but worse tails, log 0.864). From 100 to 1,000 gold utilities rise ×4.4
@@ -391,8 +394,10 @@ Two currencies carry food:
   - +400 on a capacity of 130–500 is worth 1–9 per T, i.e. hundreds to thousands of utility.
   - +400 on a capacity of 4,000+ is worth 0.001–0.1 per T.
 
-  Define `AI_PROVINCE_FOOD_STOCKPILE_UTILITY` (vanilla 0.1, PP 0.50) is "utility for province food stockpile modifier,
-  upper limit based on total province food consumption change". How it enters the value is not decoded yet.
+  Define `AI_PROVINCE_FOOD_STOCKPILE_UTILITY` (vanilla 0.1; PP 0.50 in these measurements, 0.15 since 2026-09-29) is
+  "utility for province food stockpile modifier, upper limit based on total province food consumption change". It
+  weights this currency: at 0.50 storage lines made up 93-98 % of the AI value of the Victualling Yard, cookshop and
+  market village in the 1337-1398 run, so PP lowered it.
 
 - **LocationFood.** Two things move it:
   - the `local_monthly_food` modifier;
@@ -660,7 +665,8 @@ How the AI estimates a building's profit (confirmed against the logged breakdown
 - Profit is valued as gold: √T × monthly profit on the gold curve, weighted by T·√T.
 
 The **"Too low profit margin"** gate (utility × 0) hits about half of all candidates:
-- It applies to buildings that produce goods whose margin is below **AI_BUILDING_PROFIT_THRESHOLD (1.2)**.
+- It applies to buildings that produce goods whose margin is below **AI_BUILDING_PROFIT_THRESHOLD** (vanilla 1.2,
+  measured here; PP sets 1.05 since 2026-09-29 because many PP methods are tuned near break-even).
   Margin = revenue ÷ input cost.
 - The margin that counts is that of the **last** method the estimate looks at, not the best one. For PP farms that
   is `sell_surplus` (no inputs, so the margin is huge): farms are almost never gated.

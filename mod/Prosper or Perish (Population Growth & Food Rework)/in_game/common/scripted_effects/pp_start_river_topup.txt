@@ -3266,6 +3266,7 @@ pp_start_river_topup = {
  location:vu_ninh = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
  location:vukovar = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
  location:vyadhapura = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
+ location:vyadhapura = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:vyatka = { change_building_level_in_location = { building = building_type:tar_kiln value = 1 } }
  location:vydritsa = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:wad_madani = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }

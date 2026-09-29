@@ -35,6 +35,7 @@ REPLACE:granary = {
 
     modifier = {
         local_food_decay_modifier = -0.0002
+        local_food_capacity = 300
     }
     ai_forbid_shutdown = yes
     forbidden_for_estates = no

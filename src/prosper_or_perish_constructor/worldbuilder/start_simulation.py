@@ -806,7 +806,7 @@ class Simulation:
         return y if y is not None else self.rules.subsistence * self.food_mult.get(tag, 1.0)
 
     def food_capacity_per_level(self):
-        """building -> province food capacity (``local_food_capacity``) one staffed level adds (Victualling Yard: 1,200)."""
+        """building -> province food capacity (``local_food_capacity``) one staffed level adds (Granary: 300)."""
         cached = self.__dict__.get("_food_capacity_per_level")
         if cached is None:
             modifiers = getattr(self.rules, "modifiers", None)

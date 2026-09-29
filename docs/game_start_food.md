@@ -145,7 +145,7 @@ continental monsoon 0.89 to subtropical monsoon 1.08 (the cold ones carry the
 April winter consumption of the reference save). The province food capacity is
 fitted as 32 per development point + 3.65 per 1,000 pops + 100 per location +
 rank (town 521, city 815, megalopolis 1,241), R² 0.968; buildings add their
-`local_food_capacity` (a Victualling Yard level 1,200).
+`local_food_capacity` (a Granary level 300).
 
 ## Placement v2
 

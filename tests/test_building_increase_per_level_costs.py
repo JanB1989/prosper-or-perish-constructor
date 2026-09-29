@@ -22,7 +22,7 @@ PROJECT = ROOT / "constructor.toml"
 INTENTIONAL_SOURCE_COST_OVERRIDES = {
     "saffron_kiln_croft": "successor croft keeps the existing tea/coffee-style crop cadence",
     "shoen": "vanilla inject keeps the existing historical estate cadence",
-    "tavern": "current accepted import market has zero repeat-cost escalation",
+    "tavern": "hefty repeat cost: every Tavern level costs another full base price",
     "grange": "steep repeat cost so only market centres and developed capitals grow large Granges",
     "victualling_yard": "each harbour Yard level costs another full base price, so strong Yards stay rare",
 }
@@ -104,7 +104,9 @@ def _top_level_increase_per_level_cost(building: str, body: str) -> str | None:
     return str(values[-1])
 
 
-def test_import_market_preserves_explicit_zero_repeat_cost():
+def test_tavern_levels_each_cost_another_full_base_price():
     path = accepted_blueprint_paths_by_building(ROOT)['tavern']
     template = load_template(path)
-    assert Decimal(_top_level_increase_per_level_cost(template.key, template.building_body)) == 0
+    source = Decimal(_top_level_increase_per_level_cost(template.key, template.building_body))
+    scaling = load_building_scaling_config(PROJECT)
+    assert scaled_increase_per_level_cost_text(source, scaling.increase_per_level_cost_multiplier) == "1.00"

@@ -52,9 +52,11 @@ ai_forbid_shutdown = "no"
 audio_tier = 1
 startup_ramp_target = "rural_startup_ramp_target"
 
-# Building modifier block per tier (scaled by employment)
+# Building modifier block per tier (scaled by employment). local_food_capacity: every building with a Provisioning
+# slot adds 50 province food capacity per staffed level (the AI values it while the province holds < 24 months).
 [general.tier_modifier.0]
 local_monthly_food = 1.5
+local_food_capacity = 50
 local_peasants_estate_power = 0.040
 local_peasant_enfranchisment = 0.002
 local_laborers_desired_pop = 0
@@ -62,18 +64,21 @@ local_soldiers_desired_pop = 0
 
 [general.tier_modifier.1]
 local_monthly_food = 1.5
+local_food_capacity = 50
 local_peasants_estate_power = 0.030
 local_peasant_enfranchisment = 0.002
 local_laborers_desired_pop = 0
 
 [general.tier_modifier.2]
 local_monthly_food = 1.5
+local_food_capacity = 50
 local_peasants_estate_power = 0.021
 local_peasant_enfranchisment = 0.002
 local_laborers_desired_pop = 0
 
 [general.tier_modifier.3]
 local_monthly_food = 3.0
+local_food_capacity = 50
 local_laborers_desired_pop = 0.002
 
 # Tier advances (unlock the tier's building of every crop chain)

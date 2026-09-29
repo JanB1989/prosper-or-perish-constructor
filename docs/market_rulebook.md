@@ -148,6 +148,81 @@ Venice +1.5M, Pest +0.8M). 96-month food sim: starving pools 280 → 287, collap
 +1.09 % → +1.07 %. Monthly jitter is not measured yet: the monthly saves of the observer run were deleted; the terms
 that drove it (building levels, staffing of walls, rank changes) are gone, development now moves twice as much.
 
+## 6b. When markets are founded and dissolved (2026-09-29, confirmed in the engine and in 4 runs)
+
+**The AI founds a market by a fixed rule, not by utility.** Each AI tick for a country (the trade AI), it founds a
+market in its capital when all of these hold:
+
+1. The country is not at war.
+2. Its rank is kingdom or empire (rank level above 2), or it owns at least 100 locations.
+3. The capital's market access is below 0.55. For a subject it must also be below 0.25.
+4. The capital passes the normal checks of the `create_market` action:
+   - the country owns it;
+   - it is not a market centre already;
+   - no market construction is under way there;
+   - a capital that is not a city (rural settlement) needs market access below 0.25.
+
+Then the country issues `create_market` on its capital. Gold is not checked: one country founded a market with 1.15
+gold. The market appears after `MARKET_CREATION_MONTHS` (3). The AI never founds a market anywhere except its
+capital.
+
+- **Defines that matter:** only `MARKET_CREATION_MONTHS`. The thresholds 0.55, 0.25 and 100 are hardcoded, not
+  defines.
+- **Defines that do not steer founding:** the AI market-value defines `MARKET_ACCESS_IMPORTANCE` (0.15),
+  `MARKET_TAX_BASE_REFERENCE` (100) and `MARKET_OWNING_IMPORTANCE` (0.0005). The engine uses them only in the script
+  values `create_market_utility` / `relocate_market_utility`, which the rule above does not call. Those values show
+  in the create-market tooltip under `ai_debug` and in the actions' `ai_will_do`. `MARKET_FLIPPING_IMPORTANCE` is
+  not used here either.
+- **The value those script values compute:**
+  - Formula: (U(assignment after) − U(now)) × d^`MARKET_CREATION_MONTHS`, where d is the country's monthly AI
+    discount factor.
+  - U sums over all markets: IncomeUtility × [OurTaxBase×Access_m × `MARKET_ACCESS_IMPORTANCE` × Total_m/(Total_m +
+    `MARKET_TAX_BASE_REFERENCE`) + (Total_m × `MARKET_OWNING_IMPORTANCE` if the country owns market m's centre)].
+  - OurTaxBase×Access_m is the country's raw tax base in market m, weighted by each location's access (clamped to
+    0..1). Total_m is market m's raw tax base from all owners.
+  - IncomeUtility is the country's value of one more ducat per month.
+- **`destroy_market_utility` is always 0.** It compares the current assignment with an unchanged copy of it.
+
+**Nothing in the AI code dissolves or relocates markets.** `destroy_market`, `relocate_market` and `create_market` all
+have `ai_tick = never`. Only script removes markets:
+
+- **Withering, checked monthly by the engine.** A market is withering when:
+  - it has at most `MARKET_WITHERING_LOCATION_THRESHOLD` (5) locations;
+  - it has stayed at or below that for at least `MARKET_WITHERING_GRACE_MONTHS` (24) months in a row (the counter
+    resets as soon as it has more);
+  - at least `MARKET_WITHERING_OUTCLASSED_FRACTION` (0.5) of its locations have a second-best market. Any other
+    market in reach counts; it does not have to be more attractive.
+- **The "AI destroy bias" in the define comment is only the event `market_decline.1`.** It fires from the yearly
+  country pulse (0–36 months jitter) once the withering market has been at or below the threshold for more than 36
+  months. AI choices:
+  - dissolve 70;
+  - accept 10;
+  - subsidize 30, but only for its capital's market and with at least 1000 gold.
+- **Nothing else in the engine reads the withering flag.**
+- Colonial new towns found an instant market (`cc_setup_new_town`, when the town's market access ≤ 0). That is the
+  source of most non-capital markets in long runs.
+
+**Runs checked:**
+
+| Run | Markets founded | Of which capitals | Destroyed |
+|---|---|---|---|
+| Lab 1337.5–1340.1, monthly | 7 | 7 | 0 |
+| Observer 1340–1437, yearly | 1 | — | 0 |
+| 1342–1443, 5-yearly | 5 | — | 0 |
+| England 1342–1838, 5-yearly | 70 | 26 (the rest mostly colonial towns and unowned new land) | 0 |
+
+- Every lab founder was a kingdom or empire at start, with capital access 0–0.50. The subjects all had access below
+  0.25.
+- The observer run's countries that met rules 1–3 but never founded (BNL, HSL, CHI, cholistan) all have rural
+  capitals with access 0.26–0.52, which rule 4 blocks.
+- War status is not in the dataset, so rule 1 is checked only in the engine.
+
+**Levers for the mod:**
+- The founding rule cannot be tuned by defines.
+- It reacts to capital market access (roads, harbours, `local_market_access`), to whether the capital is a city,
+  and to country rank.
+- Destruction reacts only to the withering defines and the event's `ai_chance`.
+
 ## 7. Open
 
 - Treaty flows (per country pair) and the Paris constant (+0.1) in the attraction.

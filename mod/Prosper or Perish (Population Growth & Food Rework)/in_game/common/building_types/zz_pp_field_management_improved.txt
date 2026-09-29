@@ -27,22 +27,12 @@ construction_demand = village_construction
 
 unique_production_methods = {
   pp_field_management_improved_four_course = {
-    legumes = 0.04
-    livestock = 0.02
-    tools = 0.015
-    manual_labor = 0.006
-    category = building_maintenance
-  }
-  pp_field_management_improved_drill = {
-    tools = 0.022
-    horses = 0.015
-    manual_labor = 0.006
-    category = building_maintenance
-  }
-  pp_field_management_improved_liming = {
-    stone = 0.06
-    tools = 0.015
-    manual_labor = 0.008
+    legumes = 0.015
+    livestock = 0.01
+    horses = 0.005
+    tools = 0.005
+    stone = 0.015
+    manual_labor = 0.015
     category = building_maintenance
   }
 }

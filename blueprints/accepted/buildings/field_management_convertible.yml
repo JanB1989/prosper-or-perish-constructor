@@ -17,8 +17,6 @@ building:
   - name: slot_0
     methods:
     - pp_field_management_convertible_leys
-    - pp_field_management_convertible_stall_manure
-    - pp_field_management_convertible_marling
   possible_production_methods: []
   body: |-
     # Tier 2 of 3: up-and-down husbandry. Each level built converts one Field Management level and shares its cap.
@@ -47,20 +45,11 @@ building:
 
     unique_production_methods = {
       pp_field_management_convertible_leys = {
-        legumes = 0.04
-        livestock = 0.02
-        manual_labor = 0.012
-        category = building_maintenance
-      }
-      pp_field_management_convertible_stall_manure = {
-        livestock = 0.05
-        manual_labor = 0.01
-        category = building_maintenance
-      }
-      pp_field_management_convertible_marling = {
-        stone = 0.05
-        tools = 0.01
-        manual_labor = 0.01
+        legumes = 0.013
+        livestock = 0.009
+        stone = 0.013
+        tools = 0.004
+        manual_labor = 0.013
         category = building_maintenance
       }
     }
@@ -89,8 +78,6 @@ localization:
     field_management_convertible_desc: Fields alternate between grain and several years of grass and clover leys grazed by stock, so the land rests, is manured where it lies and returns heavier crops. Building it converts a level of Field Management.
     field_management_convertible_slot_0: Maintenance
     pp_field_management_convertible_leys: Clover and Grass Leys
-    pp_field_management_convertible_stall_manure: Stall-Fed Manuring
-    pp_field_management_convertible_marling: Marl Pits
     pp_field_management_convertible_price: Convertible Husbandry Price
     pp_field_management_convertible: Convertible Husbandry
     pp_field_management_convertible_desc: Alternating arable and ley pasture on the same fields keeps the soil in heart and lets more people live from the land already under the plough.
@@ -105,16 +92,6 @@ icon:
 evaluation:
   production_methods:
     pp_field_management_convertible_leys:
-      allow_rules:
-        profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
-        input_throughput: Field crews provide light ongoing maintenance rather than full worked production.
-        output_throughput: Field management provides capacity rather than a directly traded good.
-    pp_field_management_convertible_stall_manure:
-      allow_rules:
-        profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
-        input_throughput: Field crews provide light ongoing maintenance rather than full worked production.
-        output_throughput: Field management provides capacity rather than a directly traded good.
-    pp_field_management_convertible_marling:
       allow_rules:
         profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
         input_throughput: Field crews provide light ongoing maintenance rather than full worked production.

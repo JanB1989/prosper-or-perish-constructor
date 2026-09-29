@@ -17,8 +17,6 @@ building:
   - name: slot_0
     methods:
     - pp_field_management_improved_four_course
-    - pp_field_management_improved_drill
-    - pp_field_management_improved_liming
   possible_production_methods: []
   body: |-
     # Tier 3 of 3: four-course rotation and drill husbandry. Each level built converts one Convertible Husbandry
@@ -48,22 +46,12 @@ building:
 
     unique_production_methods = {
       pp_field_management_improved_four_course = {
-        legumes = 0.04
-        livestock = 0.02
-        tools = 0.015
-        manual_labor = 0.006
-        category = building_maintenance
-      }
-      pp_field_management_improved_drill = {
-        tools = 0.022
-        horses = 0.015
-        manual_labor = 0.006
-        category = building_maintenance
-      }
-      pp_field_management_improved_liming = {
-        stone = 0.06
-        tools = 0.015
-        manual_labor = 0.008
+        legumes = 0.015
+        livestock = 0.01
+        horses = 0.005
+        tools = 0.005
+        stone = 0.015
+        manual_labor = 0.015
         category = building_maintenance
       }
     }
@@ -92,8 +80,6 @@ localization:
     field_management_improved_desc: Turnips and clover take the place of the fallow in a fixed rotation, seed is drilled in rows and hoed by horse, and the stock kept on the fodder manures every field in turn. Building it converts a level of Convertible Husbandry.
     field_management_improved_slot_0: Maintenance
     pp_field_management_improved_four_course: Four-Course Rotation
-    pp_field_management_improved_drill: Drill and Horse-Hoe
-    pp_field_management_improved_liming: Lime Kilns and Marl
     pp_field_management_improved_price: Improved Husbandry Price
     pp_field_management_improved: Improved Husbandry
     pp_field_management_improved_desc: Fodder crops in place of fallow, drilled seed and planned rotations let the same fields feed far more people than the old open-field routine.
@@ -108,16 +94,6 @@ icon:
 evaluation:
   production_methods:
     pp_field_management_improved_four_course:
-      allow_rules:
-        profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
-        input_throughput: Field crews provide light ongoing maintenance rather than full worked production.
-        output_throughput: Field management provides capacity rather than a directly traded good.
-    pp_field_management_improved_drill:
-      allow_rules:
-        profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
-        input_throughput: Field crews provide light ongoing maintenance rather than full worked production.
-        output_throughput: Field management provides capacity rather than a directly traded good.
-    pp_field_management_improved_liming:
       allow_rules:
         profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
         input_throughput: Field crews provide light ongoing maintenance rather than full worked production.

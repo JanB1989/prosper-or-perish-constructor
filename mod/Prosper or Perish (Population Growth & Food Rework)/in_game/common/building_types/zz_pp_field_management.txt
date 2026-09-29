@@ -22,21 +22,12 @@ location_potential = {
 construction_demand = village_construction
 
 # Tier 1 of 3 (field_management_convertible, field_management_improved). Upkeep is kept light so early
-# levels do not eat the treasury; the three methods cost about the same at default prices.
+# levels do not eat the treasury; one method, livestock, stone and labour in about equal cost shares.
 unique_production_methods = {
   pp_field_management_maintenance = {
-    manual_labor = 0.018
-    livestock = 0.005
-    category = building_maintenance
-  }
-  pp_field_management_folding = {
-    livestock = 0.03
+    livestock = 0.007
+    stone = 0.01
     manual_labor = 0.01
-    category = building_maintenance
-  }
-  pp_field_management_marling = {
-    stone = 0.025
-    manual_labor = 0.014
     category = building_maintenance
   }
 }

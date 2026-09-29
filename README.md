@@ -346,6 +346,35 @@ graphs/report/<playthrough>/charts/*.png    progression charts
 
 `uv run ppc report` rebuilds it on its own (`--playthrough` for another run, `--fps`, `--width`).
 
+#### Building investment
+
+The build also keeps the derived table `graphs/dataset/tables/building_investment/playthrough_id=<id>/<snapshot>.parquet`
+up to date (`src/prosper_or_perish_constructor/building_investment.py`): one row per building with its level, location,
+location owner (`country_tag`), building owner, base price, `increase_per_level_cost`, `price_basis`,
+`investment_category` and `investment`, the gold its levels cost at list price:
+
+```text
+investment = base_price x (L + ipl x L x (L - 1) / 2)     level n costs base_price x (1 + ipl x (n - 1))
+```
+
+- `base_price` is the building's gold price from the built mod (its `price` key, or the generic price of the age that
+  unlocks it; `first_age` = no unlocking advance, age 1 price). Buildings priced in something other than gold
+  (religious influence: 7 types) and building types the catalog no longer knows are valued at the age price and
+  flagged in `price_basis`. `ipl` is the built `increase_per_level_cost` (after the constructor scaling); unset = 0.
+- It is list-price investment: the engine also scales a construction's price by the location's cost modifiers, which
+  the save does not keep.
+- Prices come from today's mod build, like the other catalogs, so old snapshots are valued with today's prices. The
+  table remembers the price catalog's fingerprint (`catalog.json`) and rebuilds every snapshot when prices change;
+  otherwise only new snapshots are written.
+- Categories: food production (farms, fisheries, orchards: everything that produces food), food service & trade
+  (tavern, grange, victualling yard, cookshop, public kitchen, granary), land improvements (footprint class
+  `capacity_source`), crafts & workshops, extraction, military, infrastructure & institutions. They come from the
+  blueprint footprint class, then the game building category.
+
+Per location, country, category or world: sum `investment` over the rows of a snapshot. The report shows the world
+by category, what was added since the first save, investment per 1,000 people, a per-location map video (log scale)
+and each leading country's investment.
+
 ### Sharing a run and work-in-progress docs (preview site)
 
 The map videos can be dragged into Discord or a GitHub issue as they are (H.264 MP4 under 10 MB). Whole

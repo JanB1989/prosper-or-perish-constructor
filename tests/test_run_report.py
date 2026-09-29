@@ -84,6 +84,34 @@ def test_wip_replaces_the_root_and_keeps_the_runs(tmp_path: Path) -> None:
     assert sorted(p.name for p in (check / "runs").iterdir() if p.is_dir()) == ["run_a", "run_b"]
 
 
+def test_summary_and_investment_map_read_the_building_investment() -> None:
+    import polars as pl
+
+    snapshots = pl.DataFrame({"snapshot_id": ["s1", "s2"], "date": ["1337.4.1", "1340.4.1"], "year": [1337, 1340],
+                              "date_sort": [13370401, 13400401], "playthrough_name": [None, None]})
+    locations = pl.DataFrame({"snapshot_id": ["s1", "s1", "s2", "s2"], "slug": ["york", "paris"] * 2,
+                              "country_tag": ["ENG", "FRA"] * 2, "owner": [1, 2] * 2,
+                              "total_population": [10.0, 20.0, 12.0, 22.0], "unemployed_total": [0.0] * 4})
+    countries = pl.DataFrame({"snapshot_id": ["s2"] * 3, "country_tag": ["ENG", "FRA", "ENG"],
+                              "country_name": ["England", "France", "Pretender"], "population": [12.0, 22.0, 12.0],
+                              "owned_locations_count": [1, 1, 0], "gold": [5.0, 6.0, 0.0], "is_subject": [False] * 3})
+    run = rr.RunData("run", "Run", snapshots, locations, pl.DataFrame(), pl.DataFrame(), countries, pl.DataFrame())
+    run.investment_by_location = pl.DataFrame({"snapshot_id": ["s1", "s2"], "slug": ["york", "york"],
+                                               "investment": [100.0, 250.0]})
+    run.investment_by_category = pl.DataFrame({"snapshot_id": ["s1", "s2"], "investment_category": ["crafts"] * 2,
+                                               "investment": [100.0, 250.0]})
+    run.investment_by_country = pl.DataFrame({"snapshot_id": ["s2"], "country_tag": ["ENG"], "investment": [250.0]})
+    run.building_levels = pl.DataFrame({"snapshot_id": ["s1"], "slug": ["york"], "levels": [2.0]})
+
+    summary = rr._summary(run)
+    assert (summary["investment_first"], summary["investment_last"]) == (100.0, 250.0)
+    leaders = {r["country_name"]: r["investment"] for r in summary["leaders"]}
+    assert leaders == {"France": None, "England": 250.0}  # the landless pretender is left out
+
+    values = rr._investment_values(run, locations.filter(pl.col("snapshot_id") == "s2"))
+    assert dict(values.iter_rows()) == {"york": 250.0, "paris": 0.0}
+
+
 def test_scales_map_values_into_the_colour_ramp() -> None:
     import numpy as np
 

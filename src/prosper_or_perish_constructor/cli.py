@@ -3197,6 +3197,18 @@ def _native_temp_subprocess_env(repo: Path) -> dict[str, str]:
     return env
 
 
+def _update_building_investment(
+    repo: Path, project: Path, dataset: Path, *, profile: str | None = None, load_order: Path | None = None
+) -> None:
+    """Derived dataset table `building_investment` (list-price investment per building, see building_investment.py)."""
+    from prosper_or_perish_constructor import building_investment
+
+    if not any((dataset / "tables" / "buildings").glob("playthrough_id=*/*.parquet")):
+        return
+    catalog = building_investment.load_price_catalog(repo, project, profile=profile, load_order=load_order)
+    building_investment.update_dataset(dataset, catalog, log=lambda message: print(message, flush=True))
+
+
 def _build_run_report(*, repo: Path, project: Path, dataset: Path) -> None:
     from prosper_or_perish_constructor.run_report import build_report
 
@@ -3717,6 +3729,10 @@ def _savegame_notebooks_build(
         active_save_dir=active_save_dir,
         require_manifest=args.no_ingest,
     )
+    if (dataset / "manifest.parquet").is_file():
+        _update_building_investment(
+            repo, project, dataset, profile=args.profile, load_order=_repo_path(repo, args.load_order)
+        )
     if not args.no_report:
         if (dataset / "manifest.parquet").is_file():
             _build_run_report(repo=repo, project=project, dataset=dataset)

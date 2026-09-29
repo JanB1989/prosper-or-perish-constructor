@@ -4,10 +4,10 @@
 writes `graphs/report/<run>/`:
 
 - `maps/*.mp4` - one H.264 video per map (political, population, population change, development, building
-  levels, unemployment), one frame per save, sized to stay under 10 MB so Discord and GitHub play it inline;
-  `maps/*.png` - the last frame of each (a poster / thumbnail);
-- `charts/*.png` - progression charts (population by pop type and region, employment, buildings, prices,
-  largest countries);
+  levels, building investment, unemployment), one frame per save, sized to stay under 10 MB so Discord and GitHub
+  play it inline; `maps/*.png` - the last frame of each (a poster / thumbnail);
+- `charts/*.png` - progression charts (population by pop type and region, employment, buildings, building
+  investment by category and per capita, prices, largest countries);
 - `index.html` - the page that ties them together; it only references files next to it, so the folder can
   be opened locally, zipped or published as it is.
 
@@ -76,6 +76,10 @@ class RunData:
     buildings_by_category: pl.DataFrame  # snapshot_id, building_category, levels
     countries: pl.DataFrame
     goods: pl.DataFrame  # snapshot_id, good_id, price_index, value
+    # building investment at list price (derived table building_investment); empty when the table is missing
+    investment_by_location: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, slug, investment
+    investment_by_category: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, investment_category, investment
+    investment_by_country: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, country_tag, investment
 
     @property
     def years(self) -> tuple[int, int]:
@@ -138,6 +142,20 @@ def load_run(dataset: Path, playthrough: str | None = None) -> RunData:
         .select("snapshot_id", "country_tag", "country_name", "population", "owned_locations_count", "gold", "is_subject")
         .collect()
     )
+    # the engine leaves countries.population empty: fall back to the population of the owned locations (thousands);
+    # landless countries (pretenders, exiles) can share a tag with a landed one, so they get none
+    owned = locations.filter(pl.col("country_tag").is_not_null()).group_by("snapshot_id", "country_tag").agg(
+        pl.col("total_population").sum().alias("location_population"))
+    countries = (
+        countries.join(owned, on=["snapshot_id", "country_tag"], how="left")
+        .with_columns(
+            pl.coalesce(
+                pl.col("population").cast(pl.Float64),
+                pl.when(pl.col("owned_locations_count").fill_null(0) > 0).then(pl.col("location_population")),
+            ).alias("population")
+        )
+        .drop("location_population")
+    )
     goods = (
         _scan(dataset, "market_goods", playthrough)
         .select("snapshot_id", "good_id", "price", "default_price", "supply", "demand")
@@ -150,7 +168,27 @@ def load_run(dataset: Path, playthrough: str | None = None) -> RunData:
         )
         .collect()
     )
-    return RunData(playthrough, str(name), snapshots, locations, building_levels, buildings_by_category, countries, goods)
+    run = RunData(playthrough, str(name), snapshots, locations, building_levels, buildings_by_category, countries, goods)
+    _load_investment(run, dataset, wanted)
+    return run
+
+
+def _load_investment(run: RunData, dataset: Path, wanted: list[str]) -> None:
+    root = dataset / "tables" / "building_investment" / f"playthrough_id={run.playthrough_id}"
+    files = sorted(root.glob("*.parquet"))
+    if not files:
+        return
+    frame = (
+        pl.scan_parquet([str(f) for f in files], missing_columns="insert", extra_columns="ignore")
+        .select("snapshot_id", "location_slug", "country_tag", "investment_category", "investment", "level")
+        .filter(pl.col("snapshot_id").is_in(wanted))
+        .collect()
+    )
+    run.investment_by_location = frame.group_by("snapshot_id", "location_slug").agg(pl.col("investment").sum()).rename(
+        {"location_slug": "slug"})
+    run.investment_by_category = frame.group_by("snapshot_id", "investment_category").agg(pl.col("investment").sum())
+    run.investment_by_country = frame.filter(pl.col("country_tag").is_not_null()).group_by("snapshot_id", "country_tag").agg(
+        pl.col("investment").sum())
 
 
 # --------------------------------------------------------------------------------------------------------
@@ -393,6 +431,15 @@ def _building_values(run: RunData, locs: pl.DataFrame) -> pl.DataFrame:
     return locs.select("slug").join(levels, on="slug", how="left").with_columns(pl.col("value").fill_null(0.0))
 
 
+def _investment_values(run: RunData, locs: pl.DataFrame) -> pl.DataFrame:
+    snapshot = locs["snapshot_id"][0] if locs.height else None
+    if run.investment_by_location.is_empty():
+        return locs.select("slug", pl.lit(None, dtype=pl.Float64).alias("value"))
+    gold = run.investment_by_location.filter(pl.col("snapshot_id") == snapshot).select(
+        "slug", pl.col("investment").alias("value"))
+    return locs.select("slug").join(gold, on="slug", how="left").with_columns(pl.col("value").fill_null(0.0))
+
+
 def default_maps() -> list[MapSpec]:
     return [
         MapSpec("political", "Political map", "Owner of every location", None, None),
@@ -406,6 +453,8 @@ def default_maps() -> list[MapSpec]:
                                         [(v, f"{v:.0f}") for v in np.linspace(0, max(1.0, float(f["value"].quantile(0.995) or 1.0)), 5)])),
         MapSpec("buildings", "Building levels", "Sum of building levels per location (log scale)", _building_values,
                 lambda f: _log_scale(f)),
+        MapSpec("investment", "Building investment", "Gold the buildings of a location cost at list price (log scale)",
+                _investment_values, lambda f: _log_scale(f)),
         MapSpec("unemployment", "Unemployment", "Unemployed share of the population", _unemployment_values,
                 lambda f: _linear_scale(0.0, 0.5, [(0.0, "0%"), (0.1, "10%"), (0.2, "20%"), (0.3, "30%"), (0.4, "40%"), (0.5, "50%+")])),
     ]
@@ -430,6 +479,8 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
                 specs: list[MapSpec] | None = None, log: Callable[[str], None] = print) -> list[dict[str, str]]:
     out.mkdir(parents=True, exist_ok=True)
     specs = specs or default_maps()
+    if run.investment_by_location.is_empty():
+        specs = [s for s in specs if s.key != "investment"]
     snapshots = run.snapshots.to_dicts()
     by_snapshot = run.locations.partition_by("snapshot_id", as_dict=True)
     first = by_snapshot.get((snapshots[0]["snapshot_id"],), pl.DataFrame())
@@ -594,6 +645,9 @@ def render_charts(run: RunData, out: Path, log: Callable[[str], None] = print) -
     ax.legend(loc="upper left", ncols=4, fontsize=9)
     save(fig, "buildings_by_category", "Building levels by category", "All building levels, grouped by building category.")
 
+    if not run.investment_by_category.is_empty():
+        _investment_charts(run, years, plt, save)
+
     # Prices: price index against base for the eight goods with the most supply value at the end
     goods = run.goods.join(years, on="snapshot_id")
     top_goods = (
@@ -628,6 +682,73 @@ def render_charts(run: RunData, out: Path, log: Callable[[str], None] = print) -
     return charts
 
 
+def _investment_charts(run: RunData, years: pl.DataFrame, plt, save) -> None:
+    from prosper_or_perish_constructor.building_investment import CATEGORIES
+
+    # World building investment by category (stacked; the top edge is the world total)
+    wide = (
+        run.investment_by_category.join(years, on="snapshot_id")
+        .pivot(on="investment_category", index="x", values="investment", aggregate_function="sum")
+        .sort("x").fill_null(0)
+    )
+    keys = [key for key, _ in CATEGORIES if key in wide.columns]
+    labels = dict(CATEGORIES)
+    colours = {key: CATEGORICAL[i] for i, (key, _) in enumerate(CATEGORIES)}
+    fig, ax = plt.subplots(figsize=(9, 4.6))
+    ax.stackplot(wide["x"], *[wide[k] / 1e6 for k in keys], labels=[labels[k] for k in keys],
+                 colors=[colours[k] for k in keys], edgecolor="#fcfcfb", linewidth=0.6)
+    ax.set_ylabel("million gold")
+    ax.set_title("Building investment by category")
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncols=4, fontsize=9)
+    save(fig, "investment_by_category", "Building investment by category",
+         "What the standing buildings cost to build at list price (level n costs price x (1 + increase per level x (n - 1)), "
+         "today's mod prices, no location cost modifiers), summed per save; the top edge is the world total.")
+
+    # What was built (or lost) since the first save, per category
+    fig, ax = plt.subplots(figsize=(9, 4.6))
+    ax.axhline(0.0, color="#8a8a86", linewidth=1)
+    for key in keys:
+        ax.plot(wide["x"], (wide[key] - wide[key][0]) / 1e6, color=colours[key], label=labels[key])
+    total = sum(wide[k] for k in keys)
+    ax.plot(wide["x"], (total - total[0]) / 1e6, color="#1d1d1b", linewidth=2.6, label="World")
+    ax.set_ylabel("million gold since the first save")
+    ax.set_title("Building investment added since the first save")
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncols=4, fontsize=9)
+    save(fig, "investment_added", "Building investment added since the first save",
+         "Change of the list-price investment against the first save of the run, per category and for the world "
+         "(negative: levels lost to destruction, downgrades or obsolete buildings).")
+
+    # Investment per capita: world and the most populous super regions
+    per_location = run.locations.select("snapshot_id", "slug", "super_region", "total_population").join(
+        run.investment_by_location, on=["snapshot_id", "slug"], how="left")
+    world = (
+        per_location.group_by("snapshot_id")
+        .agg(pl.col("investment").sum(), pl.col("total_population").sum())
+        .join(years, on="snapshot_id").sort("x")
+    )
+    regions = per_location.group_by("snapshot_id", "super_region").agg(
+        pl.col("investment").sum(), pl.col("total_population").sum()).join(years, on="snapshot_id")
+    last_snapshot = run.snapshots["snapshot_id"][-1]
+    world_last = float(world.filter(pl.col("snapshot_id") == last_snapshot)["total_population"].sum() or 0.0)
+    top = [
+        r for r in regions.filter((pl.col("snapshot_id") == last_snapshot) & (pl.col("total_population") >= 0.01 * world_last))
+        .sort("total_population", descending=True)["super_region"].to_list() if r
+    ][:7]
+    fig, ax = plt.subplots(figsize=(9, 4.6))
+    # population is in thousands: investment / population = gold per 1,000 people
+    ax.plot(world["x"], world["investment"] / world["total_population"], color="#1d1d1b", linewidth=2.6, label="World")
+    for i, region in enumerate(top):
+        series = regions.filter(pl.col("super_region") == region).sort("x")
+        ax.plot(series["x"], series["investment"] / series["total_population"], color=CATEGORICAL[i], linewidth=1.4,
+                label=str(region).replace("_", " ").title())
+    ax.set_ylabel("gold per 1,000 people")
+    ax.set_title("Building investment per capita")
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncols=4, fontsize=9)
+    save(fig, "investment_per_capita", "Building investment per capita",
+         "List-price building investment per 1,000 people, world and the most populous super regions (1 % of the world "
+         "population or more).")
+
+
 # --------------------------------------------------------------------------------------------------------
 # Page
 
@@ -642,11 +763,25 @@ def _summary(run: RunData) -> dict[str, object]:
     at = {r["snapshot_id"]: r for r in world.to_dicts()}
     levels = run.building_levels.group_by("snapshot_id").agg(pl.col("levels").sum())
     lv = {r["snapshot_id"]: r["levels"] for r in levels.to_dicts()}
+    investment = (
+        run.investment_by_country.filter(pl.col("snapshot_id") == last).select("country_tag", "investment")
+        if not run.investment_by_country.is_empty()
+        else pl.DataFrame(schema={"country_tag": pl.String, "investment": pl.Float64})
+    )
     leaders = (
-        run.countries.filter(pl.col("snapshot_id") == last).sort("population", descending=True).head(10)
-        .select("country_name", "country_tag", "population", "owned_locations_count", "gold", "is_subject").to_dicts()
+        run.countries.filter((pl.col("snapshot_id") == last) & (pl.col("owned_locations_count").fill_null(0) > 0))
+        .join(investment, on="country_tag", how="left")
+        .sort("population", descending=True, nulls_last=True).head(10)
+        .select("country_name", "country_tag", "population", "owned_locations_count", "gold", "investment", "is_subject")
+        .to_dicts()
+    )
+    world_investment = (
+        {r["snapshot_id"]: r["investment"] for r in run.investment_by_category.group_by("snapshot_id").agg(
+            pl.col("investment").sum()).to_dicts()}
+        if not run.investment_by_category.is_empty() else {}
     )
     return {"first": at.get(first, {}), "last": at.get(last, {}), "levels_first": lv.get(first, 0), "levels_last": lv.get(last, 0),
+            "investment_first": world_investment.get(first), "investment_last": world_investment.get(last),
             "leaders": leaders}
 
 
@@ -664,10 +799,14 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], charts: list
         ("Building levels", _format_number(float(summary["levels_last"] or 0)), f"{_format_number(float(summary['levels_first'] or 0))} in {start}"),
         ("Unowned land", f"{float(last.get('unowned_share') or 0) * 100:.0f}%", f"{float(first.get('unowned_share') or 0) * 100:.0f}% in {start}"),  # type: ignore[union-attr]
     ]
+    if summary.get("investment_last") is not None:
+        tiles.insert(4, ("Building investment", f"{_format_number(float(summary['investment_last']))} gold",  # type: ignore[arg-type]
+                         f"{_format_number(float(summary['investment_first'] or 0))} in {start}"))  # type: ignore[arg-type]
     leader_rows = "".join(
         f"<tr><td>{i}</td><td>{esc(str(r['country_name'] or r['country_tag']))}{' <span class=muted>(subject)</span>' if r['is_subject'] else ''}</td>"
         f"<td class=num>{_format_number(float(r['population'] or 0) * 1000)}</td><td class=num>{r['owned_locations_count'] or 0}</td>"
-        f"<td class=num>{_format_number(float(r['gold'] or 0))}</td></tr>"
+        f"<td class=num>{_format_number(float(r['gold'] or 0))}</td>"
+        f"<td class=num>{_format_number(float(r['investment'])) if r.get('investment') is not None else '–'}</td></tr>"
         for i, r in enumerate(summary["leaders"], start=1)  # type: ignore[arg-type]
     )
     videos = "".join(
@@ -709,7 +848,7 @@ th,td{{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left}} th
 <h2>Maps</h2><div class=grid>{videos}</div>
 <h2>Progression</h2><div class=grid>{chart_html}</div>
 <h2>Largest countries in {end}</h2>
-<table><thead><tr><th>#</th><th>Country</th><th class=num>Population</th><th class=num>Locations</th><th class=num>Gold</th></tr></thead><tbody>{leader_rows}</tbody></table>
+<table><thead><tr><th>#</th><th>Country</th><th class=num>Population</th><th class=num>Locations</th><th class=num>Gold</th><th class=num title="Building investment at list price">Investment</th></tr></thead><tbody>{leader_rows}</tbody></table>
 <footer>Generated {datetime.now().strftime('%Y-%m-%d %H:%M')} by <code>ppc report</code> from {run.snapshots.height} autosaves.</footer>
 </main></body></html>
 """
@@ -723,6 +862,10 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
     if shutil.which("ffmpeg") is None:
         raise SystemExit("ffmpeg is required for the map videos (sudo apt install ffmpeg)")
     started = time.perf_counter()
+    from prosper_or_perish_constructor import building_investment
+
+    # the derived table is incremental: a no-op when `ppc savegame-notebooks build` already brought it up to date
+    building_investment.update_dataset(dataset, building_investment.load_price_catalog(repo, project), log=log)
     run = load_run(dataset, playthrough)
     log(f"run {run.name} ({run.playthrough_id}): {run.snapshots.height} saves {run.years[0]}-{run.years[1]}")
     out = out_root / run.playthrough_id

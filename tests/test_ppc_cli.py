@@ -1071,6 +1071,12 @@ def test_savegame_notebooks_build_no_ingest_reports_existing_raw_dataset(
         "_build_run_report",
         lambda *, repo, project, dataset: exports.append(dataset),
     )
+    derived: list[Path] = []
+    monkeypatch.setattr(
+        cli,
+        "_update_building_investment",
+        lambda repo, project, dataset, **kwargs: derived.append(dataset),
+    )
 
     assert cli.main(["--repo", str(repo), "savegame-notebooks", "build", "--no-ingest"]) == 0
     output = capsys.readouterr().out
@@ -1079,6 +1085,8 @@ def test_savegame_notebooks_build_no_ingest_reports_existing_raw_dataset(
 
     assert calls == []
     assert exports == [repo / "graphs" / "dataset"]
+    # the derived building-investment table is kept current before the report reads it
+    assert derived == [repo / "graphs" / "dataset"]
 
 
 def test_savegame_notebooks_build_no_report_skips_the_run_report(

@@ -87,12 +87,13 @@ unique_production_methods = {
     category = building_maintenance
   }
 }
-# slot 2: surplus sales, the storage leg, as on the Victualling Yard (profit = 1.5p - 30.72 + 2.0 x 8y per level at
-# floor prices; break-even near 20 months stored).
+# slot 2: surplus sales, the storage leg and the AI gate method (profit = 1.5p - 28.2 + 2.0 x 8y per level at
+# floor prices; break-even near 18 months stored at victuals 2.7). Offset 28.0: its margin 2.0 x 8y / 28.0 reaches
+# the AI profit threshold 1.05 at ~22 months stored, so the AI builds granges from there.
 unique_production_methods = {
   pp_grange_surplus_sales = {
     produced = province_food_sales
-    offset = 30.52
+    offset = 28.0
     output = 2.0
     category = building_maintenance
   }

@@ -301,7 +301,7 @@ Both move **60 food per fully staffed level** (one noble each). They are
   Provisions* is a real victuals output (1.5 per level, production efficiency
   scales it; no negative input, no pulse script), *Sell the Surplus* is its
   storage leg (2.0 `province_food_sales`, the farms' Surplus Sales good, constant
-  -1, +8 per stored year, offset 30.52), paying above 20 months. Its *Packing*
+  -1, +8 per stored year, offset 28.0), paying above ~18 months, AI-built from ~22 months. Its *Packing*
   slot (pottery jars, coopered barrels, tin cans; each breaks even at default
   prices) adds victuals up to 1:30. Loose stores pack at 1:40, so food that goes
   out through a Yard and back through a Tavern always loses; the 12-20 month dead

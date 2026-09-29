@@ -1982,46 +1982,19 @@ def test_yearly_closed_building_culling_removes_one_level_not_whole_stack() -> N
     assert "change_building_level = -1" in cull
     assert "destroy_building = prev" not in cull
     assert "NOT = { building_type = building_type:tavern }" in cull
-    # the cull and the import review share one pass over the owned locations
+    # one pass over the owned locations, cull only
     review = effects.split("pp_ai_building_review_effect = {", maxsplit=1)[1].split("\n}", maxsplit=1)[0]
     assert review.count("every_owned_location") == 1
     assert "pp_cull_one_closed_building = yes" in review
-    assert "add_to_temporary_list = pp_imports_wanted" in review
 
 
-def test_ai_victuals_import_review_builds_only_where_food_is_very_short_and_affordable() -> None:
-    triggers = VICTUALS_IMPORT_TRIGGERS.read_text(encoding="utf-8-sig")
-    assert "is_province_capital = yes" in triggers
-    assert "modifier:pp_province_food_storage_months < pp_tavern_low_storage_months" in triggers
-    # the storage marker reads 0 in net-producing provinces (tribesmen): require a real shortage too
-    assert "is_starving = yes" in triggers and "province_monthly_food_production < 0" in triggers
-    assert "can_build_building = building_type:tavern" in triggers
-    # a queued first level exists as a building under construction and must block a second one
-    assert "NOT = { any_buildings_in_location = { building_type = building_type:tavern } }" in triggers
-    assert "has_building = building_type:tavern" not in triggers
-    for condition in (
-        "building_can_be_upgraded_by = root",
-        "is_at_max_level = no",
-        "building_levels_under_construction = 0",
-        "is_full_capacity = yes",
-        "is_lacking_goods = no",
-        "building_profit > 0",
-        "building_type = building_type:victualling_yard\n",
-    ):
-        assert condition in triggers
-
+def test_yearly_ai_review_builds_nothing() -> None:
+    # the AI builds taverns on its own; the scripted tavern builds were removed 2026-09-29
     effects = AI_BUILDING_REVIEW_EFFECTS.read_text(encoding="utf-8-sig")
-    build = effects.split("pp_build_wanted_taverns = {", maxsplit=1)[1]
-    assert "value = pp_ai_spare_construction_gold" in build
-    assert "construct_building = { building_type = building_type:tavern }" in build
-    assert "change_building_level" not in build
-
-    values = (SCRIPT_VALUES_ROOT / "pp_ai_building_review.txt").read_text(encoding="utf-8-sig")
-    spare = values.split("pp_ai_spare_construction_gold = {", maxsplit=1)[1].split("\n}", maxsplit=1)[0]
-    assert "subtract = total_debt" in spare
-    assert "monthly_income_total multiply = 6" in spare
-    assert "monthly_balance" not in spare  # stored money decides, not the running balance
-    assert "min = 0" in spare
+    assert "construct_building" not in effects
+    assert "pp_tavern_wanted" not in effects
+    assert not VICTUALS_IMPORT_TRIGGERS.exists()
+    assert not (SCRIPT_VALUES_ROOT / "pp_ai_building_review.txt").exists()
 
 
 def test_only_abundant_free_land_gives_foraging_food() -> None:

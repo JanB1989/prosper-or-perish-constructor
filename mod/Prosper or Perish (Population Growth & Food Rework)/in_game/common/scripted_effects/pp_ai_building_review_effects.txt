@@ -17,67 +17,10 @@ pp_cull_one_closed_building = {
 	}
 }
 
-# Country scope. Culls one closed level per location, then adds one victuals import level to each province capital
-# that wants one (pp_tavern_wanted).
+# Country scope. Culls one closed level per location. The review builds nothing: the AI builds taverns on its own
+# (the scripted tavern builds were removed 2026-09-29).
 pp_ai_building_review_effect = {
 	every_owned_location = {
 		pp_cull_one_closed_building = yes
-		if = {
-			limit = { pp_tavern_wanted = yes }
-			add_to_temporary_list = pp_imports_wanted
-		}
-	}
-	pp_build_wanted_taverns = yes
-}
-
-# Country scope, after the locations were collected in the temporary list pp_imports_wanted: hungriest province
-# first, one level each, while the spare construction gold lasts.
-pp_build_wanted_taverns = {
-	set_local_variable = { name = pp_import_budget value = pp_ai_spare_construction_gold }
-	ordered_in_list = {
-		list = pp_imports_wanted
-		order_by = { value = modifier:pp_province_food_storage_months multiply = -1 }
-		max = 1000
-		check_range_bounds = no
-		if = {
-			limit = { local_var:pp_import_budget >= building_type:tavern.building_base_cost_in_gold }
-			construct_building = { building_type = building_type:tavern }
-			# Debug flag: scripted build, counted per location (save) and logged
-			if = { limit = { has_variable = pp_dbg_script_build } change_variable = { name = pp_dbg_script_build add = 1 } } else = { set_variable = { name = pp_dbg_script_build value = 1 } }
-			error_log = "PPBLD;review_build;tavern"
-			change_local_variable = {
-				name = pp_import_budget
-				subtract = building_type:tavern.building_base_cost_in_gold
-			}
-		}
-	}
-}
-
-# Debug only (pp_ai_building_review_debug.1): country scope, stores what the review sees for the count window.
-pp_ai_building_review_debug_snapshot = {
-	set_variable = { name = pp_debug_gold value = gold }
-	set_variable = { name = pp_debug_debt value = total_debt }
-	set_variable = { name = pp_debug_income value = monthly_income_total }
-	set_variable = { name = pp_debug_spare_gold value = pp_ai_spare_construction_gold }
-	set_variable = { name = pp_debug_import_cost value = building_type:tavern.building_base_cost_in_gold }
-	set_variable = { name = pp_debug_imports_wanted value = 0 }
-	every_owned_location = {
-		limit = { pp_tavern_wanted = yes }
-		root = { change_variable = { name = pp_debug_imports_wanted add = 1 } }
-	}
-}
-
-# Debug only: country scope, counts province capitals with a victuals import under construction.
-pp_ai_building_review_debug_count_queued = {
-	set_variable = { name = pp_debug_imports_queued value = 0 }
-	every_owned_location = {
-		limit = {
-			is_province_capital = yes
-			any_buildings_in_location = {
-				building_type = building_type:tavern
-				building_levels_under_construction > 0
-			}
-		}
-		root = { change_variable = { name = pp_debug_imports_queued add = 1 } }
 	}
 }

@@ -16,7 +16,7 @@
 }
 
 # Yearly AI building review, AI countries only: one pass over the owned locations that culls one closed building level
-# per location and adds victuals import levels where provinces are very short of food (pp_ai_building_review_effects.txt).
+# per location (pp_ai_building_review_effects.txt). It builds nothing.
 pp_yearly_ai_building_review = {
 	effect = {
 		if = {

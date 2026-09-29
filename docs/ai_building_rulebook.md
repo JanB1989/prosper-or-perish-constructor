@@ -84,6 +84,32 @@ Each month the country walks its queue **from the highest utility down** and sta
    The 30-cap countries (median treasury ~11,000) go down to queue rank 15-30, which is how villages and clay pits
    get built (their median queue rank at start is 15-27).
 4. Constructions already running do not block new ones.
+5. **Which month (confirmed in the engine):** a country walks its queue in the months where month index mod k =
+   country id mod k, with k = max(4 − rank, 1). Without any fitting, 88 % of lab starts fall in those months.
+
+### 2.2b Player automation uses the same AI (confirmed in the engine, 2026-09-29)
+
+The automation panel's building systems are not a separate brain:
+- **"Buildings"** (and **"R.G.O."**): a player country with either switched on runs the same building queue as an AI
+  country. It uses the same candidates, the same utility (every term in 2.4), the same gold buffer (3 × tax base),
+  the same starts-per-month cap and the same rank interval.
+  - So everything this rulebook says about what the AI values also holds for an automated player.
+  - A mod change that steers the AI steers automated players too.
+- The other toggles only switch parts of that pipeline on or off:
+  - **"Destroy Buildings"**: acts only if "Buildings" is also on, as the game says.
+  - **"Close and Open Buildings"** and **"Subsidize Buildings"**: use the AI's close/reopen and subsidy routines.
+  - **"Production methods"**: uses the AI's method switcher.
+  - **"Finances"**: uses the AI's budget-slider routine (including the food slider in 2.4h).
+- **"Auto-Expand Buildings"** is separate and has no utility. For each building the player marked, it builds the
+  next level when all of these hold:
+  - the building is below max levels;
+  - it is open and not already expanding;
+  - it is not lacking goods;
+  - it is fully staffed;
+  - it is profitable;
+  - the country passes the same affordability check as the queue.
+- The per-location candidate list and utilities are the AI's. The PP rule "give buildings the AI should want a
+  valued effect" (2.4d) applies to automation as well.
 
 ### 2.3 What makes a country build more or less
 

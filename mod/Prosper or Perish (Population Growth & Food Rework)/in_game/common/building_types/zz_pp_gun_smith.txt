@@ -13,6 +13,26 @@ megalopolis = yes
 obsolete = hand_cannon_guild
 build_time = guild_build_time
 unique_production_methods = {
+    pp_gun_smith_guns_guild_ammunition_lead_maintenance = {
+        lead = 0.095
+        saltpeter = 0.095
+        manual_labor = 0.064
+        produced = firearms
+        output = 0.16
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_gun_smith_guns_guild_ammunition_iron_maintenance = {
+        iron = 0.088
+        saltpeter = 0.088
+        manual_labor = 0.077
+        produced = firearms
+        output = 0.2
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+unique_production_methods = {
     pp_gun_smith_guns_guild_lumber_maintenance = {
         lumber = 0.12
         iron = 0.034
@@ -39,26 +59,6 @@ unique_production_methods = {
         manual_labor = 0.43
         produced = firearms
         output = 1.0
-        debug_max_profit = guild_profit_margin
-        category = guild_input
-    }
-}
-unique_production_methods = {
-    pp_gun_smith_guns_guild_ammunition_lead_maintenance = {
-        lead = 0.095
-        saltpeter = 0.095
-        manual_labor = 0.064
-        produced = firearms
-        output = 0.16
-        debug_max_profit = guild_profit_margin
-        category = guild_input
-    }
-    pp_gun_smith_guns_guild_ammunition_iron_maintenance = {
-        iron = 0.088
-        saltpeter = 0.088
-        manual_labor = 0.077
-        produced = firearms
-        output = 0.2
         debug_max_profit = guild_profit_margin
         category = guild_input
     }

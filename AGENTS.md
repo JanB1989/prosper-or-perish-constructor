@@ -20,6 +20,20 @@
 - Commit reusable config, accepted blueprints, scripts, docs, tests, and repo skills.
 - Avoid reverting existing dirty mod or generated files unless the user explicitly requests it.
 
+## Production Gate
+
+- The AI's "too low profit margin" check reads one margin per building: that of the last production method it looks at
+  that has an output (slots in file order, methods in listed order; `docs/ai_building_rulebook.md` 2.4i).
+- Every enabled blueprint with a producing unique method names that method with a top-level `gate_method:` key. Its slot
+  is the last `unique_production_methods` block and the method is listed last. The rest is ordered by importance:
+  base slots first, storage legs and the Provisioning switch last, other slots and methods by output value,
+  output-less methods first in their slot.
+- `uv run ppc gate apply` flags unflagged blueprints by that rule and rewrites the order (ordering only, amounts never
+  change; slot labels, `production_method_slots` and `# slot N` comments follow). `uv run ppc gate check` must report
+  0 unflagged, 0 out of order, 0 problems; `ppc build` prints it and `tests/test_production_gate.py` enforces it. The
+  crop farm generator renders the same order. Methods never move between slots.
+- A slot's first method is what new and game-start buildings run, so reordering can change defaults.
+
 ## Release Checklist
 
 - Treat an explicit request to create or publish a release as authorization for the one final guarded live sync required by this checklist. Confirm the exact `constructor.local.toml` deploy target before running it.

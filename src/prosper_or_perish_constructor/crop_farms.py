@@ -18,7 +18,11 @@ Per blueprint:
   ``hand_work``); a method that names an advance is unlocked by it (``pp_heavy_plough``, ``pp_improved_rotations``,
   ``pp_water_lifting``, rendered once in ``wheat_farm.yml``);
 - slot 2 (legumes and olives, tiers 0-2): ``pp_<b>_no_beekeeping`` and the tier's hive method;
-- last slot: Provisioning (``provisioning.py``), Provision listed first, then Sell the Surplus.
+- last slot: Provisioning (``provisioning.py``), Sell the Surplus listed first, then Provision.
+
+The slots and methods are then put in the production-gate order (``production_gate.order_mapping``): Provision is the
+``gate_method`` that decides the AI's profit-margin check, so the Provisioning slot comes last and Provision is listed
+last; the other slots follow by importance (base slot first, then beekeeping and cultivation by output value).
 
 Every producing method goes through the production-labour pass (``production_labour.plan_method``) before it is
 written, so ``ppc labour check`` finds nothing to change. Gated crops (rice, maize, potato, olives) carry
@@ -330,6 +334,8 @@ class RenderContext:
     farm_land: dict[str, dict[str, float]]  # class -> {land, reserve}
     farm_classes: dict[str, tuple[str, ...]]  # class -> member buildings
     gates: dict[str, RgoUnlockGate] = field(default_factory=dict)
+    gate_config: Any = None  # production_gate.GateConfig
+    gate_prices: dict[str, float] = field(default_factory=dict)  # base prices with the evaluation overrides
 
     def land_class(self, building: str) -> str:
         """The [worldbuilder.farm_land] class of a farm building, as ``worldbuilder.buildings.farm_constants`` finds it."""
@@ -340,7 +346,7 @@ class RenderContext:
 
 
 def load_context(repo: Path, project: Path, table: CropTable, *, gates: bool = True) -> RenderContext:
-    from prosper_or_perish_constructor import production_labour, provisioning
+    from prosper_or_perish_constructor import production_gate, production_labour, provisioning
     from prosper_or_perish_constructor.goods_categories import load_good_category_costs, load_increase_per_level_cost_band
 
     raw = tomllib.loads(project.read_text(encoding="utf-8-sig"))
@@ -356,6 +362,8 @@ def load_context(repo: Path, project: Path, table: CropTable, *, gates: bool = T
         farm_land={str(k): {"land": float(v["land"]), "reserve": float(v["reserve"])} for k, v in farm_land_section.items()},
         farm_classes=classes,
     )
+    context.gate_config = production_gate.load_config(project)
+    context.gate_prices = production_gate.gate_prices(context.prices, context.gate_config)
     for crop in table.crops:
         for tier in TIERS:
             building = table.building(crop, tier)
@@ -577,7 +585,7 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
     # ---- slot metadata
     provision, sell = provisioning.slot_methods(building)
     slot_methods = [[method.name for method in methods] for _, methods in slots]
-    slot_methods.append([provision, sell])
+    slot_methods.append([sell, provision])
     production_method_slots = [{"name": f"slot_{index}", "methods": methods} for index, methods in enumerate(slot_methods)]
 
     # ---- labour tag: the tier class by default, per-method overrides (base, hand_work, household hives)
@@ -681,6 +689,10 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
     blueprint["localization"] = {"entries": entries}
     blueprint["icon"] = {"source_png": f"../assets/icons/{building}.png", "output_dds": f"{building}.dds", "size": 512}
     blueprint["evaluation"] = {"allow_rules": dict(evaluation.get("allow_rules", {})), "production_methods": per_method}
+    if context.gate_config is not None:
+        from prosper_or_perish_constructor import production_gate
+
+        production_gate.order_mapping(blueprint, context.gate_config, context.gate_prices, gate=provision)
     return blueprint
 
 

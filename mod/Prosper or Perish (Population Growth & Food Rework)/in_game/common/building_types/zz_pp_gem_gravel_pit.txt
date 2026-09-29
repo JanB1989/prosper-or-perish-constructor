@@ -32,20 +32,15 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_gem_gravel_pit_no_primary = {
-        category = building_maintenance
-    }
-    pp_gem_gravel_pit_gems = {
-        lumber = 0.26
-        tools = 0.22
-        manual_labor = 0.27
-        produced = gems
-        output = 0.385
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_gem_gravel_pit_no_secondary = {
+        category = building_maintenance
+    }
+    pp_gem_gravel_pit_sand = {
+        lumber = 0.025
+        tools = 0.008
+        manual_labor = 0.015
+        produced = sand
+        output = 0.192
         category = building_maintenance
     }
     pp_gem_gravel_pit_gold = {
@@ -56,12 +51,17 @@ unique_production_methods = {
         output = 0.026
         category = building_maintenance
     }
-    pp_gem_gravel_pit_sand = {
-        lumber = 0.025
-        tools = 0.008
-        manual_labor = 0.015
-        produced = sand
-        output = 0.192
+}
+unique_production_methods = {
+    pp_gem_gravel_pit_no_primary = {
+        category = building_maintenance
+    }
+    pp_gem_gravel_pit_gems = {
+        lumber = 0.26
+        tools = 0.22
+        manual_labor = 0.27
+        produced = gems
+        output = 0.385
         category = building_maintenance
     }
 }

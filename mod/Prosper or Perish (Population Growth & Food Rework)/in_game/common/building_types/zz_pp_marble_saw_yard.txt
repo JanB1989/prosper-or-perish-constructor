@@ -33,21 +33,15 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_marble_saw_yard_no_primary = {
-        category = building_maintenance
-    }
-    pp_marble_saw_yard_marble = {
-        lumber = 0.21
-        tools = 0.24
-        leather = 0.057
-        manual_labor = 0.27
-        produced = marble
-        output = 0.35
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_marble_saw_yard_no_secondary = {
+        category = building_maintenance
+    }
+    pp_marble_saw_yard_sand = {
+        lumber = 0.025
+        tools = 0.016
+        manual_labor = 0.022
+        produced = sand
+        output = 0.198
         category = building_maintenance
     }
     pp_marble_saw_yard_stone = {
@@ -58,12 +52,18 @@ unique_production_methods = {
         output = 0.144
         category = building_maintenance
     }
-    pp_marble_saw_yard_sand = {
-        lumber = 0.025
-        tools = 0.016
-        manual_labor = 0.022
-        produced = sand
-        output = 0.198
+}
+unique_production_methods = {
+    pp_marble_saw_yard_no_primary = {
+        category = building_maintenance
+    }
+    pp_marble_saw_yard_marble = {
+        lumber = 0.21
+        tools = 0.24
+        leather = 0.057
+        manual_labor = 0.27
+        produced = marble
+        output = 0.35
         category = building_maintenance
     }
 }

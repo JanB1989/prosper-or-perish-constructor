@@ -5,6 +5,7 @@ labour:
   class: primary_discovery
   methods:
     pp_alum_works_base_alum: base
+gate_method: pp_alum_works_alum
 upgrade_chain:
   family: alum_quarry
   tier: 1
@@ -21,13 +22,13 @@ building:
         - pp_alum_works_base_alum
     - name: slot_1
       methods:
-        - pp_alum_works_no_primary
-        - pp_alum_works_alum
+        - pp_alum_works_no_secondary
+        - pp_alum_works_clay
+        - pp_alum_works_stone
     - name: slot_2
       methods:
-        - pp_alum_works_no_secondary
-        - pp_alum_works_stone
-        - pp_alum_works_clay
+        - pp_alum_works_no_primary
+        - pp_alum_works_alum
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -62,21 +63,15 @@ building:
         }
     }
     unique_production_methods = {
-        pp_alum_works_no_primary = {
-            category = building_maintenance
-        }
-        pp_alum_works_alum = {
-            lumber = 0.28
-            tools = 0.3
-            coal = 0.066
-            manual_labor = 0.25
-            produced = alum
-            output = 0.672
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_alum_works_no_secondary = {
+            category = building_maintenance
+        }
+        pp_alum_works_clay = {
+            lumber = 0.026
+            tools = 0.017
+            manual_labor = 0.017
+            produced = clay
+            output = 0.252
             category = building_maintenance
         }
         pp_alum_works_stone = {
@@ -87,12 +82,18 @@ building:
             output = 0.16
             category = building_maintenance
         }
-        pp_alum_works_clay = {
-            lumber = 0.026
-            tools = 0.017
-            manual_labor = 0.017
-            produced = clay
-            output = 0.252
+    }
+    unique_production_methods = {
+        pp_alum_works_no_primary = {
+            category = building_maintenance
+        }
+        pp_alum_works_alum = {
+            lumber = 0.28
+            tools = 0.3
+            coal = 0.066
+            manual_labor = 0.25
+            produced = alum
+            output = 0.672
             category = building_maintenance
         }
     }
@@ -107,8 +108,8 @@ building:
 localization:
   entries:
     alum_works_slot_0: Alum Deposit
-    alum_works_slot_1: Alum Works
-    alum_works_slot_2: Waste Sorting
+    alum_works_slot_1: Waste Sorting
+    alum_works_slot_2: Alum Works
     alum_works: Alum Works
     alum_works_desc: Alum works burn shale in clamps, steep the ash, and boil the liquor into alum crystals. The same yards sort stone and clay waste from the quarry.
     pp_alum_works_base_alum: Surveyed Alum Shale

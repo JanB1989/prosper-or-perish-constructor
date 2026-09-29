@@ -8,6 +8,7 @@ labour:
     pp_wheat_rotations_base: base
     pp_wheat_rotations_provision: keep
     pp_wheat_rotations_sell_surplus: keep
+gate_method: pp_wheat_rotations_provision
 upgrade_chain:
   family: wheat_farm
   tier: 2
@@ -29,8 +30,8 @@ building:
     - pp_wheat_rotations_marled_fields
   - name: slot_2
     methods:
-    - pp_wheat_rotations_provision
     - pp_wheat_rotations_sell_surplus
+    - pp_wheat_rotations_provision
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -91,16 +92,16 @@ building:
         }
     }
     unique_production_methods = {
+        pp_wheat_rotations_sell_surplus = {
+            produced = province_food_sales
+            output = 0.006
+            category = building_maintenance
+        }
         pp_wheat_rotations_provision = {
             wheat = 0.093
             produced = local_food
             output = 1.12
             debug_max_profit = 0
-            category = building_maintenance
-        }
-        pp_wheat_rotations_sell_surplus = {
-            produced = province_food_sales
-            output = 0.006
             category = building_maintenance
         }
     }

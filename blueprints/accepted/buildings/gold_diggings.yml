@@ -6,6 +6,7 @@ labour:
   methods:
     pp_gold_diggings_hand_panning: hand_work
     pp_gold_diggings_base_gold: base
+gate_method: pp_gold_diggings_gold
 upgrade_chain:
   family: gold_mine
   tier: 0
@@ -22,14 +23,14 @@ building:
         - pp_gold_diggings_base_gold
     - name: slot_1
       methods:
-        - pp_gold_diggings_no_primary
-        - pp_gold_diggings_gold
-        - pp_gold_diggings_hand_panning
+        - pp_gold_diggings_no_secondary
+        - pp_gold_diggings_copper
+        - pp_gold_diggings_silver
     - name: slot_2
       methods:
-        - pp_gold_diggings_no_secondary
-        - pp_gold_diggings_silver
-        - pp_gold_diggings_copper
+        - pp_gold_diggings_no_primary
+        - pp_gold_diggings_hand_panning
+        - pp_gold_diggings_gold
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -64,27 +65,15 @@ building:
         }
     }
     unique_production_methods = {
-        pp_gold_diggings_no_primary = {
-            category = building_maintenance
-        }
-        pp_gold_diggings_gold = {
-            lumber = 0.35
-            tools = 0.19
-            manual_labor = 0.27
-            produced = goods_gold
-            output = 0.200
-            category = building_maintenance
-        }
-        pp_gold_diggings_hand_panning = {
-            lumber = 0.39
-            manual_labor = 0.57
-            produced = goods_gold
-            output = 0.16
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_gold_diggings_no_secondary = {
+            category = building_maintenance
+        }
+        pp_gold_diggings_copper = {
+            lumber = 0.033
+            tools = 0.025
+            manual_labor = 0.028
+            produced = copper
+            output = 0.056
             category = building_maintenance
         }
         pp_gold_diggings_silver = {
@@ -95,12 +84,24 @@ building:
             output = 0.04
             category = building_maintenance
         }
-        pp_gold_diggings_copper = {
-            lumber = 0.033
-            tools = 0.025
-            manual_labor = 0.028
-            produced = copper
-            output = 0.056
+    }
+    unique_production_methods = {
+        pp_gold_diggings_no_primary = {
+            category = building_maintenance
+        }
+        pp_gold_diggings_hand_panning = {
+            lumber = 0.39
+            manual_labor = 0.57
+            produced = goods_gold
+            output = 0.16
+            category = building_maintenance
+        }
+        pp_gold_diggings_gold = {
+            lumber = 0.35
+            tools = 0.19
+            manual_labor = 0.27
+            produced = goods_gold
+            output = 0.200
             category = building_maintenance
         }
     }
@@ -116,8 +117,8 @@ building:
 localization:
   entries:
     gold_diggings_slot_0: Gold Deposit
-    gold_diggings_slot_1: Gold Workings
-    gold_diggings_slot_2: Associated Ores
+    gold_diggings_slot_1: Associated Ores
+    gold_diggings_slot_2: Gold Workings
     gold_diggings: Gold Diggings
     gold_diggings_desc: Gold-bearing gravels and shallow lode outcrops are washed by hand. Workers also pick over associated ore for silver-bearing electrum and traces of copper.
     pp_gold_diggings_base_gold: Native Gold Deposit

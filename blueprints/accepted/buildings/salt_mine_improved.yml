@@ -5,6 +5,7 @@ labour:
   class: primary_discovery
   methods:
     pp_salt_mine_improved_base_salt: base
+gate_method: pp_salt_mine_improved_timbered_haulage
 upgrade_chain:
   family: salt_mine
   tier: 1

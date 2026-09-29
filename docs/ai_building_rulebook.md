@@ -668,8 +668,17 @@ The **"Too low profit margin"** gate (utility × 0) hits about half of all candi
 - It applies to buildings that produce goods whose margin is below **AI_BUILDING_PROFIT_THRESHOLD** (vanilla 1.2,
   measured here; PP sets 1.05 since 2026-09-29 because many PP methods are tuned near break-even).
   Margin = revenue ÷ input cost.
-- The margin that counts is that of the **last** method the estimate looks at, not the best one. For PP farms that
-  is `sell_surplus` (no inputs, so the margin is huge): farms are almost never gated.
+- The margin that counts is that of the **last** method the estimate looks at, not the best one. It walks the
+  `possible_production_methods` group, then every `unique_production_methods` block in file order, and inside a block
+  the methods in listed order. A block with one method is always looked at; in a block with more, a method is looked
+  at only if it is allowed and the local market supplies all its inputs. Methods without an output good are skipped.
+- PP builds on this since 2026-09-29: every production blueprint names its gate with `gate_method:`, and
+  `ppc gate apply` puts that method's block last and the method last in it (base blocks first, storage legs and the
+  Provisioning switch last, the rest by output value; `constructor.toml` `[production_gate]`, test
+  `tests/test_production_gate.py`). Farms, fisheries, orchards and forest villages gate on **Provision** (1.2 at base
+  prices, lower when the crop is dear); before, the last method was `sell_surplus` (no inputs, a huge margin once the
+  store held anything, 0 at an empty store). A slot's **first** method is what new and game-start buildings run, so
+  those now start on Sell the Surplus and switch by profit.
 - A building never gets gated when its goods include one with `ai_rgo_expansion_priority` (clay, iron, gold, silver,
   stone, lumber, masonry).
 - This predicts the gate for 90 % of candidates. Taverns are the main exception (half of them are gated and the rule

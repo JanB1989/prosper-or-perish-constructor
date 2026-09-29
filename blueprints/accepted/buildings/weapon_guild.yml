@@ -3,6 +3,7 @@ tag: weapon_guild
 footprint: urban_workshop
 labour:
   class: craft_medieval
+gate_method: pp_weapon_guild_weapon_smith_maintenance
 building:
   key: weapon_guild
   mode: REPLACE
@@ -11,8 +12,8 @@ building:
   - name: slot_0
     methods:
     - pp_weapon_guild_pre_columbian_weapon_smith_maintenance
-    - pp_weapon_guild_weapon_smith_maintenance
     - pp_weapon_guild_weapon_guild_obsidian_maintenance
+    - pp_weapon_guild_weapon_smith_maintenance
   possible_production_methods: []
   body: |
     is_foreign = no
@@ -35,16 +36,6 @@ building:
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
-        pp_weapon_guild_weapon_smith_maintenance = {
-            lumber = 0.25
-            coal = 0.3
-            tools = 0.5
-            manual_labor = 0.41
-            category = guild_input
-            produced = weaponry
-            output = 1.0
-            debug_max_profit = guild_profit_margin
-        }
         pp_weapon_guild_weapon_guild_obsidian_maintenance = {
             lumber = 0.1
             stone = 0.44
@@ -53,6 +44,16 @@ building:
             produced = weaponry
             output = 0.4
             category = guild_input
+            debug_max_profit = guild_profit_margin
+        }
+        pp_weapon_guild_weapon_smith_maintenance = {
+            lumber = 0.25
+            coal = 0.3
+            tools = 0.5
+            manual_labor = 0.41
+            category = guild_input
+            produced = weaponry
+            output = 1.0
             debug_max_profit = guild_profit_margin
         }
     }

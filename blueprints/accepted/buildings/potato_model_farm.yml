@@ -8,6 +8,7 @@ labour:
     pp_potato_model_farm_base: base
     pp_potato_model_farm_provision: keep
     pp_potato_model_farm_sell_surplus: keep
+gate_method: pp_potato_model_farm_provision
 upgrade_chain:
   family: potato_farm
   tier: 3
@@ -28,8 +29,8 @@ building:
     - pp_potato_model_farm_drilled_ridges
   - name: slot_2
     methods:
-    - pp_potato_model_farm_provision
     - pp_potato_model_farm_sell_surplus
+    - pp_potato_model_farm_provision
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -86,16 +87,16 @@ building:
         }
     }
     unique_production_methods = {
+        pp_potato_model_farm_sell_surplus = {
+            produced = province_food_sales
+            output = 0.008
+            category = building_maintenance
+        }
         pp_potato_model_farm_provision = {
             potato = 0.133
             produced = local_food
             output = 1.6
             debug_max_profit = 0
-            category = building_maintenance
-        }
-        pp_potato_model_farm_sell_surplus = {
-            produced = province_food_sales
-            output = 0.008
             category = building_maintenance
         }
     }

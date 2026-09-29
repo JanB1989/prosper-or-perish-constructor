@@ -5,6 +5,7 @@ labour:
   class: primary_discovery
   methods:
     pp_clay_washmill_base_clay: base
+gate_method: pp_clay_washmill_ox_pugging
 upgrade_chain:
   family: clay_pit
   tier: 1
@@ -21,13 +22,13 @@ building:
         - pp_clay_washmill_base_clay
     - name: slot_1
       methods:
+        - pp_clay_washmill_no_refining
+        - pp_clay_washmill_levigation_ponds
+    - name: slot_2
+      methods:
         - pp_clay_washmill_no_preparation
         - pp_clay_washmill_horse_pugging
         - pp_clay_washmill_ox_pugging
-    - name: slot_2
-      methods:
-        - pp_clay_washmill_no_refining
-        - pp_clay_washmill_levigation_ponds
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -67,6 +68,19 @@ building:
         }
     }
     unique_production_methods = {
+        pp_clay_washmill_no_refining = {
+            category = building_maintenance
+        }
+        pp_clay_washmill_levigation_ponds = {
+            lumber = 0.026
+            tools = 0.017
+            manual_labor = 0.017
+            produced = clay
+            output = 0.23
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
         pp_clay_washmill_no_preparation = {
             category = building_maintenance
         }
@@ -89,19 +103,6 @@ building:
             category = building_maintenance
         }
     }
-    unique_production_methods = {
-        pp_clay_washmill_no_refining = {
-            category = building_maintenance
-        }
-        pp_clay_washmill_levigation_ponds = {
-            lumber = 0.026
-            tools = 0.017
-            manual_labor = 0.017
-            produced = clay
-            output = 0.23
-            category = building_maintenance
-        }
-    }
 
     raw_modifier = {
     }
@@ -121,8 +122,8 @@ advancements:
 localization:
   entries:
     clay_washmill_slot_0: Clay Beds
-    clay_washmill_slot_1: Clay Preparation
-    clay_washmill_slot_2: Clay Refining
+    clay_washmill_slot_1: Clay Refining
+    clay_washmill_slot_2: Clay Preparation
     clay_washmill: Clay Washmill
     clay_washmill_desc: Horse- or ox-driven pugmills turn clay inside brick-lined wash pits, mixing dug clay with water before it settles into a more regular body for brick, tile, and pottery work. Levigation ponds skim finer clay from the slurry while coarse grit settles out.
     pp_clay_washmill_base_clay: Surveyed Clay Beds

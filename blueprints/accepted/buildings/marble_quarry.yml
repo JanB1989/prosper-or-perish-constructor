@@ -5,6 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_marble_quarry_base_marble: base
+gate_method: pp_marble_quarry_marble
 upgrade_chain:
   family: marble_quarry
   tier: 0
@@ -21,13 +22,13 @@ building:
         - pp_marble_quarry_base_marble
     - name: slot_1
       methods:
-        - pp_marble_quarry_no_primary
-        - pp_marble_quarry_marble
+        - pp_marble_quarry_no_secondary
+        - pp_marble_quarry_sand
+        - pp_marble_quarry_stone
     - name: slot_2
       methods:
-        - pp_marble_quarry_no_secondary
-        - pp_marble_quarry_stone
-        - pp_marble_quarry_sand
+        - pp_marble_quarry_no_primary
+        - pp_marble_quarry_marble
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -62,21 +63,15 @@ building:
         }
     }
     unique_production_methods = {
-        pp_marble_quarry_no_primary = {
-            category = building_maintenance
-        }
-        pp_marble_quarry_marble = {
-            lumber = 0.18
-            tools = 0.21
-            leather = 0.049
-            manual_labor = 0.23
-            produced = marble
-            output = 0.301
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_marble_quarry_no_secondary = {
+            category = building_maintenance
+        }
+        pp_marble_quarry_sand = {
+            lumber = 0.025
+            tools = 0.008
+            manual_labor = 0.015
+            produced = sand
+            output = 0.192
             category = building_maintenance
         }
         pp_marble_quarry_stone = {
@@ -87,12 +82,18 @@ building:
             output = 0.144
             category = building_maintenance
         }
-        pp_marble_quarry_sand = {
-            lumber = 0.025
-            tools = 0.008
-            manual_labor = 0.015
-            produced = sand
-            output = 0.192
+    }
+    unique_production_methods = {
+        pp_marble_quarry_no_primary = {
+            category = building_maintenance
+        }
+        pp_marble_quarry_marble = {
+            lumber = 0.18
+            tools = 0.21
+            leather = 0.049
+            manual_labor = 0.23
+            produced = marble
+            output = 0.301
             category = building_maintenance
         }
     }
@@ -108,8 +109,8 @@ building:
 localization:
   entries:
     marble_quarry_slot_0: Marble Deposit
-    marble_quarry_slot_1: Marble Face
-    marble_quarry_slot_2: Quarry Waste
+    marble_quarry_slot_1: Quarry Waste
+    marble_quarry_slot_2: Marble Face
     marble_quarry: Marble Quarry
     marble_quarry_desc: Quarrymen cut ornamental marble from exposed faces with drills, wedges, and skids. Rubble and fine stone waste are sorted for lesser uses.
     pp_marble_quarry_base_marble: Exposed Marble Face

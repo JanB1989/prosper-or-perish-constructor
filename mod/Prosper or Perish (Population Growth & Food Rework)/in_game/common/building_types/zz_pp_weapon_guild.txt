@@ -20,16 +20,6 @@ unique_production_methods = {
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
-    pp_weapon_guild_weapon_smith_maintenance = {
-        lumber = 0.25
-        coal = 0.3
-        tools = 0.5
-        manual_labor = 0.41
-        category = guild_input
-        produced = weaponry
-        output = 1.0
-        debug_max_profit = guild_profit_margin
-    }
     pp_weapon_guild_weapon_guild_obsidian_maintenance = {
         lumber = 0.1
         stone = 0.44
@@ -38,6 +28,16 @@ unique_production_methods = {
         produced = weaponry
         output = 0.4
         category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+    pp_weapon_guild_weapon_smith_maintenance = {
+        lumber = 0.25
+        coal = 0.3
+        tools = 0.5
+        manual_labor = 0.41
+        category = guild_input
+        produced = weaponry
+        output = 1.0
         debug_max_profit = guild_profit_margin
     }
 }

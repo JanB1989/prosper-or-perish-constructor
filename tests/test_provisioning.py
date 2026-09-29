@@ -36,21 +36,22 @@ def test_config_is_read_from_constructor_toml() -> None:
     assert pv.load_provisioning_config(PROJECT) == CONFIG
 
 
-def test_render_slot_lists_provision_first_without_labour() -> None:
+def test_render_slot_lists_provision_last_without_labour() -> None:
+    """Provision is the gate method (production_gate.py): listed last, after the Sell the Surplus dummy."""
     amounts = pv.provisioning_amounts("0.05", config=CONFIG)
 
     assert pv.render_slot("fishing_village", "fish", amounts, indent="    ") == (
         "    unique_production_methods = {\n"
+        "        pp_fishing_village_sell_surplus = {\n"
+        "            produced = province_food_sales\n"
+        "            output = 0.004\n"
+        "            category = building_maintenance\n"
+        "        }\n"
         "        pp_fishing_village_provision = {\n"
         "            fish = 0.067\n"
         "            produced = local_food\n"
         "            output = 0.8\n"
         "            debug_max_profit = 0\n"
-        "            category = building_maintenance\n"
-        "        }\n"
-        "        pp_fishing_village_sell_surplus = {\n"
-        "            produced = province_food_sales\n"
-        "            output = 0.004\n"
         "            category = building_maintenance\n"
         "        }\n"
         "    }"

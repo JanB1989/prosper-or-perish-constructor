@@ -8,6 +8,7 @@ labour:
     pp_rice_farmstead_base: base
     pp_rice_farmstead_provision: keep
     pp_rice_farmstead_sell_surplus: keep
+gate_method: pp_rice_farmstead_provision
 upgrade_chain:
   family: rice_farm
   tier: 1
@@ -28,8 +29,8 @@ building:
     - pp_rice_farmstead_bunded_paddies
   - name: slot_2
     methods:
-    - pp_rice_farmstead_provision
     - pp_rice_farmstead_sell_surplus
+    - pp_rice_farmstead_provision
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -86,16 +87,16 @@ building:
         }
     }
     unique_production_methods = {
+        pp_rice_farmstead_sell_surplus = {
+            produced = province_food_sales
+            output = 0.007
+            category = building_maintenance
+        }
         pp_rice_farmstead_provision = {
             rice = 0.107
             produced = local_food
             output = 1.28
             debug_max_profit = 0
-            category = building_maintenance
-        }
-        pp_rice_farmstead_sell_surplus = {
-            produced = province_food_sales
-            output = 0.007
             category = building_maintenance
         }
     }

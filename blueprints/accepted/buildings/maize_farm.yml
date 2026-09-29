@@ -9,6 +9,7 @@ labour:
     pp_maize_farm_hill_planting: hand_work
     pp_maize_farm_provision: keep
     pp_maize_farm_sell_surplus: keep
+gate_method: pp_maize_farm_provision
 upgrade_chain:
   family: maize_farm
   tier: 0
@@ -30,8 +31,8 @@ building:
     - pp_maize_farm_milpa
   - name: slot_2
     methods:
-    - pp_maize_farm_provision
     - pp_maize_farm_sell_surplus
+    - pp_maize_farm_provision
   possible_production_methods: []
   body: |-
     audio_tier = 1
@@ -94,16 +95,16 @@ building:
         }
     }
     unique_production_methods = {
+        pp_maize_farm_sell_surplus = {
+            produced = province_food_sales
+            output = 0.005
+            category = building_maintenance
+        }
         pp_maize_farm_provision = {
             maize = 0.08
             produced = local_food
             output = 0.96
             debug_max_profit = 0
-            category = building_maintenance
-        }
-        pp_maize_farm_sell_surplus = {
-            produced = province_food_sales
-            output = 0.005
             category = building_maintenance
         }
     }

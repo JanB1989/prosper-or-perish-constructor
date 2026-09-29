@@ -3,6 +3,7 @@ tag: fine_cloth_guild
 footprint: urban_workshop
 labour:
   class: craft_medieval
+gate_method: pp_fine_cloth_guild_silk_weavers_maintenance
 building:
   key: fine_cloth_guild
   mode: REPLACE
@@ -10,15 +11,15 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
-    - pp_fine_cloth_guild_fine_cloth_guild_maintenance
-    - pp_fine_cloth_guild_wool_weavers_maintenance
-    - pp_fine_cloth_guild_silk_weavers_maintenance
-    - pp_fine_cloth_guild_spanish_cloth_maintenance
-  - name: slot_1
-    methods:
     - pp_fine_cloth_guild_standard_fine_cloth_guild_maintenance
     - pp_fine_cloth_guild_alum_fine_cloth_guild_maintenance
     - pp_fine_cloth_guild_fur_trim_guild_maintenance
+  - name: slot_1
+    methods:
+    - pp_fine_cloth_guild_fine_cloth_guild_maintenance
+    - pp_fine_cloth_guild_wool_weavers_maintenance
+    - pp_fine_cloth_guild_spanish_cloth_maintenance
+    - pp_fine_cloth_guild_silk_weavers_maintenance
   possible_production_methods: []
   body: |
     is_foreign = no
@@ -31,46 +32,6 @@ building:
     city = yes
     megalopolis = yes
     build_time = guild_build_time
-    unique_production_methods = {
-        pp_fine_cloth_guild_fine_cloth_guild_maintenance = {
-            cloth = 0.85
-            manual_labor = 0.41
-            produced = fine_cloth
-            output = 0.5
-            debug_max_profit = guild_profit_margin
-            category = guild_input
-        }
-        pp_fine_cloth_guild_wool_weavers_maintenance = {
-            wool = 1.02
-            manual_labor = 0.42
-            produced = fine_cloth
-            output = 0.5
-            debug_max_profit = guild_profit_margin
-            category = guild_input
-        }
-        pp_fine_cloth_guild_silk_weavers_maintenance = {
-            silk = 0.9
-            manual_labor = 0.56
-            produced = fine_cloth
-            output = 0.7
-            category = guild_input
-            debug_max_profit = guild_profit_margin
-        }
-        pp_fine_cloth_guild_spanish_cloth_maintenance = {
-            allow = {
-                custom_tooltip = {
-                    text = has_unlocked_spanish_cloth_industry
-                    has_variable = spanish_cloth_industry
-                }
-            }
-            wool = 1.02
-            manual_labor = 0.42
-            produced = fine_cloth
-            output = 0.5
-            category = guild_input
-            debug_max_profit = guild_profit_margin
-        }
-    }
     unique_production_methods = {
         pp_fine_cloth_guild_standard_fine_cloth_guild_maintenance = {
             produced = fine_cloth
@@ -98,6 +59,46 @@ building:
             category = guild_input
         }
     }
+    unique_production_methods = {
+        pp_fine_cloth_guild_fine_cloth_guild_maintenance = {
+            cloth = 0.85
+            manual_labor = 0.41
+            produced = fine_cloth
+            output = 0.5
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_fine_cloth_guild_wool_weavers_maintenance = {
+            wool = 1.02
+            manual_labor = 0.42
+            produced = fine_cloth
+            output = 0.5
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_fine_cloth_guild_spanish_cloth_maintenance = {
+            allow = {
+                custom_tooltip = {
+                    text = has_unlocked_spanish_cloth_industry
+                    has_variable = spanish_cloth_industry
+                }
+            }
+            wool = 1.02
+            manual_labor = 0.42
+            produced = fine_cloth
+            output = 0.5
+            category = guild_input
+            debug_max_profit = guild_profit_margin
+        }
+        pp_fine_cloth_guild_silk_weavers_maintenance = {
+            silk = 0.9
+            manual_labor = 0.56
+            produced = fine_cloth
+            output = 0.7
+            category = guild_input
+            debug_max_profit = guild_profit_margin
+        }
+    }
     custom_tags = {
         guild
     }
@@ -106,11 +107,11 @@ building:
 localization:
   entries:
     fine_cloth_guild_slot_0: Fine Cloth Guild Work
+    fine_cloth_guild_slot_1: Fine Cloth Guild Work
     pp_fine_cloth_guild_fine_cloth_guild_maintenance: Fine Cloth Guild Fine Cloth Guild Maintenance
     pp_fine_cloth_guild_wool_weavers_maintenance: Fine Cloth Guild Wool Weavers Maintenance
     pp_fine_cloth_guild_silk_weavers_maintenance: Fine Cloth Guild Silk Weavers Maintenance
     pp_fine_cloth_guild_spanish_cloth_maintenance: Fine Cloth Guild Spanish Cloth Maintenance
-    fine_cloth_guild_slot_1: Fine Cloth Guild Work
     pp_fine_cloth_guild_standard_fine_cloth_guild_maintenance: Fine Cloth Guild Standard Fine Cloth Guild Maintenance
     pp_fine_cloth_guild_alum_fine_cloth_guild_maintenance: Fine Cloth Guild Alum Fine Cloth Guild Maintenance
     pp_fine_cloth_guild_fur_trim_guild_maintenance: Fine Cloth Guild Fur Trim Guild Maintenance

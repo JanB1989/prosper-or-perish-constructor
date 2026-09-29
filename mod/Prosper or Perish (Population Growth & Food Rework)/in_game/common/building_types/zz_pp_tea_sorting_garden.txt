@@ -34,20 +34,6 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_tea_sorting_garden_no_withering = {
-        category = building_maintenance
-    }
-    pp_tea_sorting_garden_rolling_hearths = {
-        furniture = 0.36 # light tray frames and rolling tables
-        fiber_crops = 0.276 # woven withering mats and baskets
-        pottery = 0.208 # firing hearth pans
-        manual_labor = 0.3
-        produced = tea
-        output = 1.189
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_tea_sorting_garden_no_sorting = {
         category = building_maintenance
     }
@@ -58,6 +44,20 @@ unique_production_methods = {
         manual_labor = 0.176
         produced = tea
         output = 0.701
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_tea_sorting_garden_no_withering = {
+        category = building_maintenance
+    }
+    pp_tea_sorting_garden_rolling_hearths = {
+        furniture = 0.36 # light tray frames and rolling tables
+        fiber_crops = 0.276 # woven withering mats and baskets
+        pottery = 0.208 # firing hearth pans
+        manual_labor = 0.3
+        produced = tea
+        output = 1.189
         category = building_maintenance
     }
 }

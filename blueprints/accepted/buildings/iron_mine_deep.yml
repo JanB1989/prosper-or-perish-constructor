@@ -6,6 +6,7 @@ labour:
   methods:
     pp_iron_mine_deep_base_iron: base
 output_tag: iron_mine_improved_deep
+gate_method: pp_iron_mine_deep_slitting_ore
 upgrade_chain:
   family: iron_mine
   tier: 2
@@ -22,15 +23,15 @@ building:
         - pp_iron_mine_deep_base_iron
     - name: slot_1
       methods:
-        - pp_iron_mine_deep_no_primary
-        - pp_iron_mine_deep_drainage_workings
-        - pp_iron_mine_deep_slitting_ore
-        - pp_iron_mine_deep_horse_whim_haulage
-        - pp_iron_mine_deep_ore_dressing_floors
-    - name: slot_2
-      methods:
         - pp_iron_mine_deep_no_secondary
         - pp_iron_mine_deep_ochre
+    - name: slot_2
+      methods:
+        - pp_iron_mine_deep_no_primary
+        - pp_iron_mine_deep_ore_dressing_floors
+        - pp_iron_mine_deep_horse_whim_haulage
+        - pp_iron_mine_deep_drainage_workings
+        - pp_iron_mine_deep_slitting_ore
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -66,7 +67,38 @@ building:
         }
     }
     unique_production_methods = {
+        pp_iron_mine_deep_no_secondary = {
+            category = building_maintenance
+        }
+        pp_iron_mine_deep_ochre = {
+            lumber = 0.036 # washing troughs, racks
+            tools = 0.018 # sieves, shovels
+            manual_labor = 0.014
+            produced = dyes
+            output = 0.04
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
         pp_iron_mine_deep_no_primary = {
+            category = building_maintenance
+        }
+        pp_iron_mine_deep_ore_dressing_floors = {
+            fiber_crops = 0.2 # sacks, screens
+            cloth = 0.098 # sorting cloths
+            beeswax = 0.053 # candles, seals
+            manual_labor = 0.11
+            produced = iron
+            output = 0.36
+            category = building_maintenance
+        }
+        pp_iron_mine_deep_horse_whim_haulage = {
+            horses = 0.2 # whim draft teams
+            leather = 0.089 # harness, buckets
+            beeswax = 0.053 # mine candles, seals
+            manual_labor = 0.11
+            produced = iron
+            output = 0.442
             category = building_maintenance
         }
         pp_iron_mine_deep_drainage_workings = {
@@ -88,37 +120,6 @@ building:
             output = 0.84
             category = building_maintenance
         }
-        pp_iron_mine_deep_horse_whim_haulage = {
-            horses = 0.2 # whim draft teams
-            leather = 0.089 # harness, buckets
-            beeswax = 0.053 # mine candles, seals
-            manual_labor = 0.11
-            produced = iron
-            output = 0.442
-            category = building_maintenance
-        }
-        pp_iron_mine_deep_ore_dressing_floors = {
-            fiber_crops = 0.2 # sacks, screens
-            cloth = 0.098 # sorting cloths
-            beeswax = 0.053 # candles, seals
-            manual_labor = 0.11
-            produced = iron
-            output = 0.36
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
-        pp_iron_mine_deep_no_secondary = {
-            category = building_maintenance
-        }
-        pp_iron_mine_deep_ochre = {
-            lumber = 0.036 # washing troughs, racks
-            tools = 0.018 # sieves, shovels
-            manual_labor = 0.014
-            produced = dyes
-            output = 0.04
-            category = building_maintenance
-        }
     }
 
     raw_modifier = {
@@ -132,8 +133,8 @@ building:
 localization:
   entries:
     iron_mine_deep_slot_0: Iron Vein
-    iron_mine_deep_slot_1: Deep Workings
-    iron_mine_deep_slot_2: Ochre Recovery
+    iron_mine_deep_slot_1: Ochre Recovery
+    iron_mine_deep_slot_2: Deep Workings
     iron_mine_deep: Deep Iron Mine
     iron_mine_deep_desc: Drained shafts, stronger timbering, and regular ore dressing let iron mines work deeper veins with larger crews.
     pp_iron_mine_deep_base_iron: Surveyed Deep Iron Vein

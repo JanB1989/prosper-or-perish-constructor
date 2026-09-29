@@ -3,6 +3,7 @@ tag: bog_iron_smelter
 footprint: mill_works
 labour:
   class: primary_medieval
+gate_method: pp_bog_iron_maintenance
 upgrade_chain:
   family: bog_iron_smelter
   tier: 0

@@ -32,27 +32,15 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_tin_streamworks_no_primary = {
-        category = building_maintenance
-    }
-    pp_tin_streamworks_tin = {
-        lumber = 0.27
-        tools = 0.16
-        manual_labor = 0.2
-        produced = tin
-        output = 0.631
-        category = building_maintenance
-    }
-    pp_tin_streamworks_hand_streaming = {
-        lumber = 0.32
-        manual_labor = 0.45
-        produced = tin
-        output = 0.505
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_tin_streamworks_no_secondary = {
+        category = building_maintenance
+    }
+    pp_tin_streamworks_lead = {
+        lumber = 0.048
+        tools = 0.025
+        manual_labor = 0.034
+        produced = lead
+        output = 0.1
         category = building_maintenance
     }
     pp_tin_streamworks_copper = {
@@ -63,12 +51,24 @@ unique_production_methods = {
         output = 0.075
         category = building_maintenance
     }
-    pp_tin_streamworks_lead = {
-        lumber = 0.048
-        tools = 0.025
-        manual_labor = 0.034
-        produced = lead
-        output = 0.1
+}
+unique_production_methods = {
+    pp_tin_streamworks_no_primary = {
+        category = building_maintenance
+    }
+    pp_tin_streamworks_hand_streaming = {
+        lumber = 0.32
+        manual_labor = 0.45
+        produced = tin
+        output = 0.505
+        category = building_maintenance
+    }
+    pp_tin_streamworks_tin = {
+        lumber = 0.27
+        tools = 0.16
+        manual_labor = 0.2
+        produced = tin
+        output = 0.631
         category = building_maintenance
     }
 }

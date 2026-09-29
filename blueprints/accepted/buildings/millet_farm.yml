@@ -9,6 +9,7 @@ labour:
     pp_millet_farm_broadcast_hoe: hand_work
     pp_millet_farm_provision: keep
     pp_millet_farm_sell_surplus: keep
+gate_method: pp_millet_farm_provision
 upgrade_chain:
   family: millet_farm
   tier: 0
@@ -30,8 +31,8 @@ building:
     - pp_millet_farm_millet_pulses
   - name: slot_2
     methods:
-    - pp_millet_farm_provision
     - pp_millet_farm_sell_surplus
+    - pp_millet_farm_provision
   possible_production_methods: []
   body: |-
     audio_tier = 1
@@ -89,16 +90,16 @@ building:
         }
     }
     unique_production_methods = {
+        pp_millet_farm_sell_surplus = {
+            produced = province_food_sales
+            output = 0.005
+            category = building_maintenance
+        }
         pp_millet_farm_provision = {
             millet = 0.08
             produced = local_food
             output = 0.96
             debug_max_profit = 0
-            category = building_maintenance
-        }
-        pp_millet_farm_sell_surplus = {
-            produced = province_food_sales
-            output = 0.005
             category = building_maintenance
         }
     }

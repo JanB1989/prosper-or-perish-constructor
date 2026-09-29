@@ -51,16 +51,6 @@ unique_production_methods = {
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
-    pp_brewery_bavarian_brewery_maintenance = {
-        wheat = 1.3
-        lumber = 0.22
-        tools = 0.11
-        manual_labor = 0.32
-        produced = beer
-        output = 1.2
-        category = guild_input
-        debug_max_profit = guild_profit_margin
-    }
     pp_brewery_honey_brewery_maintenance = {
         beeswax = 0.25
         millet = 0.5
@@ -81,6 +71,16 @@ unique_production_methods = {
         output = 1.0
         debug_max_profit = guild_profit_margin
         category = guild_input
+    }
+    pp_brewery_bavarian_brewery_maintenance = {
+        wheat = 1.3
+        lumber = 0.22
+        tools = 0.11
+        manual_labor = 0.32
+        produced = beer
+        output = 1.2
+        category = guild_input
+        debug_max_profit = guild_profit_margin
     }
 }
 custom_tags = {

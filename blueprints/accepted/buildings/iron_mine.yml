@@ -5,6 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_iron_mine_base_iron: base
+gate_method: pp_iron_mine_iron
 upgrade_chain:
   family: iron_mine
   tier: 0
@@ -21,14 +22,14 @@ building:
         - pp_iron_mine_base_iron
     - name: slot_1
       methods:
-        - pp_iron_mine_no_primary
-        - pp_iron_mine_iron
-        - pp_iron_mine_horse_whim_haulage
-        - pp_iron_mine_ore_dressing_floors
-    - name: slot_2
-      methods:
         - pp_iron_mine_no_secondary
         - pp_iron_mine_ochre
+    - name: slot_2
+      methods:
+        - pp_iron_mine_no_primary
+        - pp_iron_mine_ore_dressing_floors
+        - pp_iron_mine_horse_whim_haulage
+        - pp_iron_mine_iron
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -63,25 +64,20 @@ building:
         }
     }
     unique_production_methods = {
+        pp_iron_mine_no_secondary = {
+            category = building_maintenance
+        }
+        pp_iron_mine_ochre = {
+            lumber = 0.033 # washing troughs, racks
+            tools = 0.025 # sieves, shovels
+            manual_labor = 0.028
+            produced = dyes
+            output = 0.042
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
         pp_iron_mine_no_primary = {
-            category = building_maintenance
-        }
-        pp_iron_mine_iron = {
-            lumber = 0.16 # pit props, sorting sheds
-            tools = 0.18 # picks, wedges, hammers
-            beeswax = 0.04 # candles, sealants
-            manual_labor = 0.22
-            produced = iron
-            output = 0.424
-            category = building_maintenance
-        }
-        pp_iron_mine_horse_whim_haulage = {
-            horses = 0.11 # whim draft teams
-            leather = 0.048 # harness, buckets
-            beeswax = 0.024 # mine candles, seals
-            manual_labor = 0.1
-            produced = iron
-            output = 0.251
             category = building_maintenance
         }
         pp_iron_mine_ore_dressing_floors = {
@@ -93,17 +89,22 @@ building:
             output = 0.21
             category = building_maintenance
         }
-    }
-    unique_production_methods = {
-        pp_iron_mine_no_secondary = {
+        pp_iron_mine_horse_whim_haulage = {
+            horses = 0.11 # whim draft teams
+            leather = 0.048 # harness, buckets
+            beeswax = 0.024 # mine candles, seals
+            manual_labor = 0.1
+            produced = iron
+            output = 0.251
             category = building_maintenance
         }
-        pp_iron_mine_ochre = {
-            lumber = 0.033 # washing troughs, racks
-            tools = 0.025 # sieves, shovels
-            manual_labor = 0.028
-            produced = dyes
-            output = 0.042
+        pp_iron_mine_iron = {
+            lumber = 0.16 # pit props, sorting sheds
+            tools = 0.18 # picks, wedges, hammers
+            beeswax = 0.04 # candles, sealants
+            manual_labor = 0.22
+            produced = iron
+            output = 0.424
             category = building_maintenance
         }
     }
@@ -119,8 +120,8 @@ building:
 localization:
   entries:
     iron_mine_slot_0: Iron Deposit
-    iron_mine_slot_1: Ore Workings
-    iron_mine_slot_2: Ochre Recovery
+    iron_mine_slot_1: Ochre Recovery
+    iron_mine_slot_2: Ore Workings
     iron_mine: Iron Ore Pit
     iron_mine_desc: Shallow pits and short adits work exposed iron ores. Ore is broken and washed by hand, with red and yellow ochre saved for pigments.
     pp_iron_mine_base_iron: Exposed Iron Ore

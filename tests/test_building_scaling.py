@@ -140,7 +140,7 @@ def test_provisioning_slots_match_configured_amounts() -> None:
             for slot in template.production_method_slots
             if provision in slot.methods or sell in slot.methods
         ]
-        assert slots == [(provision, sell)], building
+        assert slots == [(sell, provision)], building  # Provision is the gate method: listed last
 
         block = _building_block(template.key, template.building_body)
         amounts = provisioning.provisioning_amounts(

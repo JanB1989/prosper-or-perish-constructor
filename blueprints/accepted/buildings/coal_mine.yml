@@ -6,6 +6,7 @@ labour:
   methods:
     pp_coal_mine_bell_pits: hand_work
     pp_coal_mine_base_coal: base
+gate_method: pp_coal_mine_coal
 upgrade_chain:
   family: coal_mine
   tier: 0
@@ -22,13 +23,13 @@ building:
         - pp_coal_mine_base_coal
     - name: slot_1
       methods:
-        - pp_coal_mine_no_primary
-        - pp_coal_mine_coal
-        - pp_coal_mine_bell_pits
-    - name: slot_2
-      methods:
         - pp_coal_mine_no_secondary
         - pp_coal_mine_fireclay
+    - name: slot_2
+      methods:
+        - pp_coal_mine_no_primary
+        - pp_coal_mine_bell_pits
+        - pp_coal_mine_coal
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -63,17 +64,20 @@ building:
         }
     }
     unique_production_methods = {
-        pp_coal_mine_no_primary = {
+        pp_coal_mine_no_secondary = {
             category = building_maintenance
         }
-        pp_coal_mine_coal = {
-            lumber = 0.2
-            tools = 0.23
-            beeswax = 0.049
-            manual_labor = 0.25
-            produced = coal
-            output = 1.0
-            debug_max_profit = 1
+        pp_coal_mine_fireclay = {
+            lumber = 0.033
+            tools = 0.025
+            manual_labor = 0.028
+            produced = clay
+            output = 0.336
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_coal_mine_no_primary = {
             category = building_maintenance
         }
         pp_coal_mine_bell_pits = {
@@ -84,17 +88,14 @@ building:
             output = 0.8
             category = building_maintenance
         }
-    }
-    unique_production_methods = {
-        pp_coal_mine_no_secondary = {
-            category = building_maintenance
-        }
-        pp_coal_mine_fireclay = {
-            lumber = 0.033
-            tools = 0.025
-            manual_labor = 0.028
-            produced = clay
-            output = 0.336
+        pp_coal_mine_coal = {
+            lumber = 0.2
+            tools = 0.23
+            beeswax = 0.049
+            manual_labor = 0.25
+            produced = coal
+            output = 1.0
+            debug_max_profit = 1
             category = building_maintenance
         }
     }
@@ -110,8 +111,8 @@ building:
 localization:
   entries:
     coal_mine_slot_0: Coal Seam
-    coal_mine_slot_1: Coal Workings
-    coal_mine_slot_2: Clay Recovery
+    coal_mine_slot_1: Clay Recovery
+    coal_mine_slot_2: Coal Workings
     coal_mine: Coal Drift
     coal_mine_desc: Shallow drifts follow exposed coal seams from the surface. Timbering, hand haulage, and simple sorting floors also recover seat-clay from the coal measures.
     pp_coal_mine_base_coal: Outcropping Coal Seam

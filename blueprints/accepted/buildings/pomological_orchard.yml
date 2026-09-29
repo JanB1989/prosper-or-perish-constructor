@@ -7,6 +7,7 @@ labour:
     pp_pomological_orchard_base_fruit: base
     pp_pomological_orchard_provision: keep
     pp_pomological_orchard_sell_surplus: keep
+gate_method: pp_pomological_orchard_provision
 upgrade_chain:
   family: fruit_orchard
   tier: 2
@@ -27,8 +28,8 @@ building:
     - pp_pomological_orchard_grafted_rows
   - name: slot_2
     methods:
-    - pp_pomological_orchard_provision
     - pp_pomological_orchard_sell_surplus
+    - pp_pomological_orchard_provision
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -84,16 +85,16 @@ building:
         }
     }
     unique_production_methods = {
+        pp_pomological_orchard_sell_surplus = {
+            produced = province_food_sales
+            output = 0.008
+            category = building_maintenance
+        }
         pp_pomological_orchard_provision = {
             fruit = 0.133
             produced = local_food
             output = 1.6
             debug_max_profit = 0
-            category = building_maintenance
-        }
-        pp_pomological_orchard_sell_surplus = {
-            produced = province_food_sales
-            output = 0.008
             category = building_maintenance
         }
     }

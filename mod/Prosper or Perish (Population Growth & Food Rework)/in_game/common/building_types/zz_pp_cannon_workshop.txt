@@ -13,27 +13,6 @@ city = yes
 megalopolis = yes
 build_time = workshop_build_time
 unique_production_methods = {
-    pp_cannon_workshop_cannon_workshop_bronze_maintenance = {
-        copper = 0.99
-        tin = 0.25
-        tools = 0.12
-        manual_labor = 0.44
-        produced = cannons
-        output = 1.1
-        debug_max_profit = workshop_profit_margin
-        category = workshop_input
-    }
-    pp_cannon_workshop_cannon_workshop_iron_maintenance = {
-        iron = 1
-        tools = 0.11
-        manual_labor = 0.44
-        produced = cannons
-        output = 1.1
-        debug_max_profit = workshop_profit_margin
-        category = workshop_input
-    }
-}
-unique_production_methods = {
     pp_cannon_workshop_cannon_workshop_ammunition_stone_maintenance = {
         stone = 0.096
         saltpeter = 0.096
@@ -58,6 +37,27 @@ unique_production_methods = {
         manual_labor = 0.088
         produced = cannons
         output = 0.2
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+}
+unique_production_methods = {
+    pp_cannon_workshop_cannon_workshop_bronze_maintenance = {
+        copper = 0.99
+        tin = 0.25
+        tools = 0.12
+        manual_labor = 0.44
+        produced = cannons
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_cannon_workshop_cannon_workshop_iron_maintenance = {
+        iron = 1
+        tools = 0.11
+        manual_labor = 0.44
+        produced = cannons
+        output = 1.1
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }

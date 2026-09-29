@@ -60,16 +60,16 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
+    pp_potato_farm_sell_surplus = {
+        produced = province_food_sales
+        output = 0.005
+        category = building_maintenance
+    }
     pp_potato_farm_provision = {
         potato = 0.08
         produced = local_food
         output = 0.96
         debug_max_profit = 5.000
-        category = building_maintenance
-    }
-    pp_potato_farm_sell_surplus = {
-        produced = province_food_sales
-        output = 0.005
         category = building_maintenance
     }
 }

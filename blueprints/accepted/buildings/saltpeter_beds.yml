@@ -5,6 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_saltpeter_beds_base_saltpeter: base
+gate_method: pp_saltpeter_beds_leaching_vats
 building:
   key: saltpeter_beds
   mode: CREATE

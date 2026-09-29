@@ -773,3 +773,13 @@ craft_discovery = 0.12        # age 3 workshops
 craft_reformation = 0.10      # age 4 workshops
 craft_absolutism = 0.07       # age 5 manufactories, Public Kitchens
 craft_revolutions = 0.04      # age 6 mills and factories
+
+[production_gate]
+# The AI builds a production building only if one margin (revenue / input cost) reaches its threshold, and that margin
+# is the last production method it looks at that has an output (docs/ai_building_rulebook.md 2.4i). Every enabled
+# production blueprint names that method with a top-level gate_method key; ppc gate apply moves its slot to the bottom
+# and lists it last, ordering the rest by importance (base slots top, dynamic slots bottom, else by output value);
+# ppc gate check reports missing flags and bodies out of order (ppc build prints it). Ordering only: amounts never change.
+threshold = 1.2               # fallback only: the gate reads NAI.AI_BUILDING_PROFIT_THRESHOLD from the mod defines (else vanilla)
+# goods whose methods react to the province store or the market (Surplus Sales, Scarcity Premium): their slots go last
+dynamic_goods = ["province_food_sales", "province_food_purchase"]

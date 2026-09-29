@@ -7,6 +7,7 @@ labour:
     pp_net_curing_yard_base_fish: base
     pp_net_curing_yard_provision: keep
     pp_net_curing_yard_sell_surplus: keep
+gate_method: pp_net_curing_yard_provision
 upgrade_chain:
   family: fishing_village
   tier: 1
@@ -23,22 +24,22 @@ building:
         - pp_net_curing_yard_base_fish
     - name: slot_1
       methods:
-        - pp_net_curing_yard_no_primary
-        - pp_net_curing_yard_preserved_catch
-        - pp_arctic_net_curing_yard_preserved_catch
-    - name: slot_2
-      methods:
         - pp_net_curing_yard_strand_line
         - pp_net_curing_yard_clinker_craft
-    - name: slot_3
+    - name: slot_2
       methods:
         - pp_net_curing_yard_no_freshwater_works
-        - pp_net_curing_yard_wattle_weirs
         - pp_net_curing_yard_stew_ponds
+        - pp_net_curing_yard_wattle_weirs
+    - name: slot_3
+      methods:
+        - pp_net_curing_yard_no_primary
+        - pp_arctic_net_curing_yard_preserved_catch
+        - pp_net_curing_yard_preserved_catch
     - name: slot_4
       methods:
-        - pp_net_curing_yard_provision
         - pp_net_curing_yard_sell_surplus
+        - pp_net_curing_yard_provision
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -79,32 +80,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_net_curing_yard_no_primary = {
-            category = building_maintenance
-        }
-        pp_net_curing_yard_preserved_catch = {
-            produced = fish
-            output = 0.43
-            salt = 0.039 # dry salting and brine
-            fiber_crops = 0.048 # hemp and flax nets
-            lumber = 0.028 # racks, tables, barrels, sheds
-            tools = 0.009 # knives, net needles, repairs
-            manual_labor = 0.082
-            debug_max_profit = 0
-            category = building_maintenance
-        }
-        pp_arctic_net_curing_yard_preserved_catch = {
-            produced = fish
-            output = 0.17
-            salt = 0.007 # limited brine and curing
-            fiber_crops = 0.015 # nets and lines
-            ivory = 0.009 # bone hooks and weights
-            manual_labor = 0.025
-            debug_max_profit = 0
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_net_curing_yard_strand_line = {
             category = building_maintenance
         }
@@ -122,15 +97,6 @@ building:
         pp_net_curing_yard_no_freshwater_works = {
             category = building_maintenance
         }
-        pp_net_curing_yard_wattle_weirs = {
-            lumber = 0.016 # weir stakes
-            fiber_crops = 0.015 # netting and wicker ties
-            manual_labor = 0.013
-            produced = fish
-            output = 0.075
-            debug_max_profit = 0
-            category = building_maintenance
-        }
         pp_net_curing_yard_stew_ponds = {
             clay = 0.021 # pond lining
             lumber = 0.013 # sluices
@@ -141,18 +107,53 @@ building:
             debug_max_profit = 0
             category = building_maintenance
         }
+        pp_net_curing_yard_wattle_weirs = {
+            lumber = 0.016 # weir stakes
+            fiber_crops = 0.015 # netting and wicker ties
+            manual_labor = 0.013
+            produced = fish
+            output = 0.075
+            debug_max_profit = 0
+            category = building_maintenance
+        }
     }
     unique_production_methods = {
+        pp_net_curing_yard_no_primary = {
+            category = building_maintenance
+        }
+        pp_arctic_net_curing_yard_preserved_catch = {
+            produced = fish
+            output = 0.17
+            salt = 0.007 # limited brine and curing
+            fiber_crops = 0.015 # nets and lines
+            ivory = 0.009 # bone hooks and weights
+            manual_labor = 0.025
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_net_curing_yard_preserved_catch = {
+            produced = fish
+            output = 0.43
+            salt = 0.039 # dry salting and brine
+            fiber_crops = 0.048 # hemp and flax nets
+            lumber = 0.028 # racks, tables, barrels, sheds
+            tools = 0.009 # knives, net needles, repairs
+            manual_labor = 0.082
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_net_curing_yard_sell_surplus = {
+            produced = province_food_sales
+            output = 0.006
+            category = building_maintenance
+        }
         pp_net_curing_yard_provision = {
             fish = 0.093
             produced = local_food
             output = 1.12
             debug_max_profit = 0
-            category = building_maintenance
-        }
-        pp_net_curing_yard_sell_surplus = {
-            produced = province_food_sales
-            output = 0.006
             category = building_maintenance
         }
     }
@@ -182,9 +183,9 @@ localization:
     net_curing_yard: Net and Curing Yard
     net_curing_yard_desc: Net and curing yards gather hemp nets, salting tables, drying racks, and small stores so village fishers can preserve more catch.
     net_curing_yard_slot_0: Fishing Grounds
-    net_curing_yard_slot_1: Preserved Catch
-    net_curing_yard_slot_2: Fishing Method
-    net_curing_yard_slot_3: Freshwater Works
+    net_curing_yard_slot_1: Fishing Method
+    net_curing_yard_slot_2: Freshwater Works
+    net_curing_yard_slot_3: Preserved Catch
     net_curing_yard_slot_4: Provisioning
     pp_net_curing_yards: Net and Curing Yards
     pp_net_curing_yards_desc: Shared hemp nets, salting tables, drying racks, and packing stores help village fishers preserve more catch before it spoils.

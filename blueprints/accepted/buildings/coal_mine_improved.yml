@@ -5,6 +5,7 @@ labour:
   class: primary_absolutism
   methods:
     pp_coal_mine_improved_base_coal: base
+gate_method: pp_coal_mine_improved_coal
 upgrade_chain:
   family: coal_mine
   tier: 1
@@ -21,12 +22,12 @@ building:
         - pp_coal_mine_improved_base_coal
     - name: slot_1
       methods:
-        - pp_coal_mine_improved_no_primary
-        - pp_coal_mine_improved_coal
-    - name: slot_2
-      methods:
         - pp_coal_mine_improved_no_secondary
         - pp_coal_mine_improved_fireclay
+    - name: slot_2
+      methods:
+        - pp_coal_mine_improved_no_primary
+        - pp_coal_mine_improved_coal
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -62,6 +63,19 @@ building:
         }
     }
     unique_production_methods = {
+        pp_coal_mine_improved_no_secondary = {
+            category = building_maintenance
+        }
+        pp_coal_mine_improved_fireclay = {
+            lumber = 0.037
+            tools = 0.0
+            manual_labor = 0.005
+            produced = clay
+            output = 0.32
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
         pp_coal_mine_improved_no_primary = {
             category = building_maintenance
         }
@@ -72,19 +86,6 @@ building:
             manual_labor = 0.2
             produced = coal
             output = 1.75
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
-        pp_coal_mine_improved_no_secondary = {
-            category = building_maintenance
-        }
-        pp_coal_mine_improved_fireclay = {
-            lumber = 0.037
-            tools = 0.0
-            manual_labor = 0.005
-            produced = clay
-            output = 0.32
             category = building_maintenance
         }
     }
@@ -100,8 +101,8 @@ building:
 localization:
   entries:
     coal_mine_improved_slot_0: Coal Seam
-    coal_mine_improved_slot_1: Colliery Workings
-    coal_mine_improved_slot_2: Clay Recovery
+    coal_mine_improved_slot_1: Clay Recovery
+    coal_mine_improved_slot_2: Colliery Workings
     coal_mine_improved: Colliery
     coal_mine_improved_desc: Timbered colliery galleries use better haulage, drainage, and sorting floors to work deeper seams. Fireclay is recovered from useful seat-clay beds.
     pp_coal_mine_improved_base_coal: Surveyed Coal Seam

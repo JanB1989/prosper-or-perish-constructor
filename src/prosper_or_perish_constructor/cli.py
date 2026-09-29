@@ -56,6 +56,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/goods_categories.py",      # crop_farms (start crop allocation) imports these
     "src/prosper_or_perish_constructor/location_baseline.py",
     "src/prosper_or_perish_constructor/location_status.py",
+    "src/prosper_or_perish_constructor/production_gate.py",
     "src/prosper_or_perish_constructor/production_labour.py",
     "src/prosper_or_perish_constructor/provisioning.py",
     "src/prosper_or_perish_constructor/rural_capacity.py",
@@ -278,6 +279,22 @@ def _build_parser() -> argparse.ArgumentParser:
         "--verbose",
         action="store_true",
         help="check: also list every method apply would change.",
+    )
+    gate = _add_command(
+        subcommands,
+        "gate",
+        "Order each production building so its flagged gate_method decides the AI profit-margin check (slot last, method last).",
+        _gate,
+    )
+    gate.add_argument(
+        "action",
+        choices=("apply", "check"),
+        help="apply flags unflagged production blueprints and rewrites their slot and method order; check lists what apply would change.",
+    )
+    gate.add_argument(
+        "--verbose",
+        action="store_true",
+        help="also list every building with its gate method and base-price margin.",
     )
     clean_game_rule_presets = _add_command(
         subcommands,
@@ -1028,6 +1045,61 @@ def _print_labour_check(repo: Path, project: Path) -> None:
     )
 
 
+def _gate(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("gate does not accept extra arguments.")
+    from prosper_or_perish_constructor import production_gate
+
+    config = production_gate.load_config(project)
+    result = production_gate.apply(repo, project, write=args.action == "apply")
+    for problem in result.problems:
+        print(problem)
+    if args.verbose:
+        for plan in result.plans:
+            margin = "" if plan.gate_margin is None else f"{plan.gate_margin:.2f}"
+            low = " (below threshold)" if plan.gate_margin is not None and plan.gate_margin < config.threshold else ""
+            print(f"{plan.building}: {plan.gate} -> {plan.gate_produced} margin {margin}{low}")
+    unflagged = [p for p in result.plans if not p.flagged]
+    reorders = [p for p in result.plans if p.reorders]
+    if args.action == "check":
+        for plan in result.pending:
+            what = "unflagged" if not plan.flagged else "out of order"
+            print(f"{plan.blueprint.name}: {what} (gate {plan.gate})")
+        print(
+            f"production gate: {len(result.plans)} production buildings, {len(unflagged)} unflagged, "
+            f"{len(reorders)} out of order, {len(result.problems)} problems"
+        )
+        return 1 if result.problems or result.pending else 0
+    if result.problems:
+        print(f"production gate: {len(result.problems)} problems, nothing written")
+        return 1
+    print(
+        f"production gate: {len(unflagged)} blueprints flagged, {len(reorders)} reordered, {result.files_changed} files "
+        f"written; report {production_gate.REPORT_RELATIVE_PATH}."
+    )
+    return 0
+
+
+def _print_gate_check(repo: Path, project: Path) -> None:
+    """Build-time summary; problems are printed, not fatal (flag new production buildings with ppc gate apply)."""
+    from prosper_or_perish_constructor import production_gate
+
+    try:
+        result = production_gate.apply(repo, project, write=False)
+    except Exception as exc:  # noqa: BLE001 - the build must not fail on the advisory check
+        print(f"Production gate check skipped: {exc}", flush=True)
+        return
+    for problem in result.problems:
+        print(f"Production gate: {problem}", flush=True)
+    unflagged = sum(1 for p in result.plans if not p.flagged)
+    reorders = sum(1 for p in result.plans if p.reorders)
+    print(
+        f"Production gate: {len(result.plans)} production buildings, {unflagged} unflagged, {reorders} out of order "
+        f"(run ppc gate apply), {len(result.problems)} problems.",
+        flush=True,
+    )
+
+
 def _apply_building_footprint(repo: Path, project: Path, mod_root: Path) -> None:
     from prosper_or_perish_constructor import building_footprint
     from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
@@ -1058,6 +1130,7 @@ def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: 
         return build_code
     _finalize_constructor_mod(repo, project)
     _print_labour_check(repo, project)
+    _print_gate_check(repo, project)
     _print_food_sim(repo)
     return 0
 

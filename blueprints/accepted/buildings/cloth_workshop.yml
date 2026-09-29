@@ -3,6 +3,7 @@ tag: cloth_workshop
 footprint: urban_workshop
 labour:
   class: craft_reformation
+gate_method: pp_cloth_workshop_wool_cloth_workshop_maintenance
 building:
   key: cloth_workshop
   mode: REPLACE
@@ -10,9 +11,9 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
+    - pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance
     - pp_cloth_workshop_cotton_cloth_workshop_maintenance
     - pp_cloth_workshop_wool_cloth_workshop_maintenance
-    - pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance
   possible_production_methods: []
   body: |
     audio_tier = 2
@@ -28,6 +29,14 @@ building:
     megalopolis = yes
     build_time = workshop_build_time
     unique_production_methods = {
+        pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance = {
+            fiber_crops = 1.1
+            manual_labor = 0.24
+            produced = cloth
+            output = 0.9
+            category = workshop_input
+            debug_max_profit = workshop_profit_margin
+        }
         pp_cloth_workshop_cotton_cloth_workshop_maintenance = {
             cotton = 0.91
             manual_labor = 0.31
@@ -43,14 +52,6 @@ building:
             output = 1.1
             debug_max_profit = workshop_profit_margin
             category = workshop_input
-        }
-        pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance = {
-            fiber_crops = 1.1
-            manual_labor = 0.24
-            produced = cloth
-            output = 0.9
-            category = workshop_input
-            debug_max_profit = workshop_profit_margin
         }
     }
     construction_demand = workshop_construction

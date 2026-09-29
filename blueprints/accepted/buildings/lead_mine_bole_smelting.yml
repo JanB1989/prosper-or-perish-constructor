@@ -5,6 +5,7 @@ labour:
   class: primary_reformation
   methods:
     pp_lead_mine_bole_base_lead: base
+gate_method: pp_lead_mine_bole_lead
 upgrade_chain:
   family: lead_mine
   tier: 1
@@ -21,13 +22,13 @@ building:
         - pp_lead_mine_bole_base_lead
     - name: slot_1
       methods:
-        - pp_lead_mine_bole_no_primary
-        - pp_lead_mine_bole_lead
-    - name: slot_2
-      methods:
         - pp_lead_mine_bole_no_secondary
         - pp_lead_mine_bole_silver
         - pp_lead_mine_bole_gold
+    - name: slot_2
+      methods:
+        - pp_lead_mine_bole_no_primary
+        - pp_lead_mine_bole_lead
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -63,20 +64,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_lead_mine_bole_no_primary = {
-            category = building_maintenance
-        }
-        pp_lead_mine_bole_lead = {
-            lumber = 0.14
-            tools = 0.36
-            beeswax = 0.045
-            manual_labor = 0.21
-            produced = lead
-            output = 0.952
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_lead_mine_bole_no_secondary = {
             category = building_maintenance
         }
@@ -99,6 +86,20 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_lead_mine_bole_no_primary = {
+            category = building_maintenance
+        }
+        pp_lead_mine_bole_lead = {
+            lumber = 0.14
+            tools = 0.36
+            beeswax = 0.045
+            manual_labor = 0.21
+            produced = lead
+            output = 0.952
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -111,8 +112,8 @@ building:
 localization:
   entries:
     lead_mine_bole_smelting_slot_0: Galena Vein
-    lead_mine_bole_smelting_slot_1: Bole-Smelted Workings
-    lead_mine_bole_smelting_slot_2: Precious Metal Recovery
+    lead_mine_bole_smelting_slot_1: Precious Metal Recovery
+    lead_mine_bole_smelting_slot_2: Bole-Smelted Workings
     lead_mine_bole_smelting: Bole Lead Mine
     lead_mine_bole_smelting_desc: Wind-fed bole hearths smelt dressed galena on exposed uplands. Better ore handling lets lead works process more mine output and sort minor precious-metal values.
     pp_lead_mine_bole_base_lead: Open Galena Vein

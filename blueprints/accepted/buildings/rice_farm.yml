@@ -9,6 +9,7 @@ labour:
     pp_rice_farm_wet_paddy: hand_work
     pp_rice_farm_provision: keep
     pp_rice_farm_sell_surplus: keep
+gate_method: pp_rice_farm_provision
 upgrade_chain:
   family: rice_farm
   tier: 0
@@ -30,8 +31,8 @@ building:
     - pp_rice_farm_wet_paddy
   - name: slot_2
     methods:
-    - pp_rice_farm_provision
     - pp_rice_farm_sell_surplus
+    - pp_rice_farm_provision
   possible_production_methods: []
   body: |-
     audio_tier = 1
@@ -95,16 +96,16 @@ building:
         }
     }
     unique_production_methods = {
+        pp_rice_farm_sell_surplus = {
+            produced = province_food_sales
+            output = 0.005
+            category = building_maintenance
+        }
         pp_rice_farm_provision = {
             rice = 0.08
             produced = local_food
             output = 0.96
             debug_max_profit = 0
-            category = building_maintenance
-        }
-        pp_rice_farm_sell_surplus = {
-            produced = province_food_sales
-            output = 0.005
             category = building_maintenance
         }
     }

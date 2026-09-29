@@ -5,6 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_gem_gravel_pit_base_gems: base
+gate_method: pp_gem_gravel_pit_gems
 upgrade_chain:
   family: gem_mine
   tier: 0
@@ -21,13 +22,13 @@ building:
         - pp_gem_gravel_pit_base_gems
     - name: slot_1
       methods:
-        - pp_gem_gravel_pit_no_primary
-        - pp_gem_gravel_pit_gems
+        - pp_gem_gravel_pit_no_secondary
+        - pp_gem_gravel_pit_sand
+        - pp_gem_gravel_pit_gold
     - name: slot_2
       methods:
-        - pp_gem_gravel_pit_no_secondary
-        - pp_gem_gravel_pit_gold
-        - pp_gem_gravel_pit_sand
+        - pp_gem_gravel_pit_no_primary
+        - pp_gem_gravel_pit_gems
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -62,20 +63,15 @@ building:
         }
     }
     unique_production_methods = {
-        pp_gem_gravel_pit_no_primary = {
-            category = building_maintenance
-        }
-        pp_gem_gravel_pit_gems = {
-            lumber = 0.26
-            tools = 0.22
-            manual_labor = 0.27
-            produced = gems
-            output = 0.385
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_gem_gravel_pit_no_secondary = {
+            category = building_maintenance
+        }
+        pp_gem_gravel_pit_sand = {
+            lumber = 0.025
+            tools = 0.008
+            manual_labor = 0.015
+            produced = sand
+            output = 0.192
             category = building_maintenance
         }
         pp_gem_gravel_pit_gold = {
@@ -86,12 +82,17 @@ building:
             output = 0.026
             category = building_maintenance
         }
-        pp_gem_gravel_pit_sand = {
-            lumber = 0.025
-            tools = 0.008
-            manual_labor = 0.015
-            produced = sand
-            output = 0.192
+    }
+    unique_production_methods = {
+        pp_gem_gravel_pit_no_primary = {
+            category = building_maintenance
+        }
+        pp_gem_gravel_pit_gems = {
+            lumber = 0.26
+            tools = 0.22
+            manual_labor = 0.27
+            produced = gems
+            output = 0.385
             category = building_maintenance
         }
     }
@@ -107,8 +108,8 @@ building:
 localization:
   entries:
     gem_gravel_pit_slot_0: Gem Gravel
-    gem_gravel_pit_slot_1: Gem Washing
-    gem_gravel_pit_slot_2: Placer Byproducts
+    gem_gravel_pit_slot_1: Placer Byproducts
+    gem_gravel_pit_slot_2: Gem Washing
     gem_gravel_pit: Gem Gravel Pit
     gem_gravel_pit_desc: Workers dig alluvial gravel from shallow pits and stream beds, then wash it in baskets and pans. Heavy sand may yield gemstones, gold specks, and clean sand.
     pp_gem_gravel_pit_base_gems: Gem Gravel Outcrop

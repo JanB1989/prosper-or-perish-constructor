@@ -26,19 +26,19 @@ unique_production_methods = {
     leather = 0.3
     category = building_maintenance
   }
-  pp_hired_labor_yard_carters = {
-    produced = manual_labor
-    output = 4.1
-    horses = 1.2
-    lumber = 1.6
-    category = building_maintenance
-  }
   pp_hired_labor_yard_labour_exchange = {
     produced = manual_labor
     output = 4
     furniture = 0.8
     paper = 0.6
     liquor = 0.8
+    category = building_maintenance
+  }
+  pp_hired_labor_yard_carters = {
+    produced = manual_labor
+    output = 4.1
+    horses = 1.2
+    lumber = 1.6
     category = building_maintenance
   }
 }

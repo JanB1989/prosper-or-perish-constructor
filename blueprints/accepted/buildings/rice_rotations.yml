@@ -8,6 +8,7 @@ labour:
     pp_rice_rotations_base: base
     pp_rice_rotations_provision: keep
     pp_rice_rotations_sell_surplus: keep
+gate_method: pp_rice_rotations_provision
 upgrade_chain:
   family: rice_farm
   tier: 2
@@ -29,8 +30,8 @@ building:
     - pp_rice_rotations_chain_pump
   - name: slot_2
     methods:
-    - pp_rice_rotations_provision
     - pp_rice_rotations_sell_surplus
+    - pp_rice_rotations_provision
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -98,16 +99,16 @@ building:
         }
     }
     unique_production_methods = {
+        pp_rice_rotations_sell_surplus = {
+            produced = province_food_sales
+            output = 0.006
+            category = building_maintenance
+        }
         pp_rice_rotations_provision = {
             rice = 0.093
             produced = local_food
             output = 1.12
             debug_max_profit = 0
-            category = building_maintenance
-        }
-        pp_rice_rotations_sell_surplus = {
-            produced = province_food_sales
-            output = 0.006
             category = building_maintenance
         }
     }

@@ -5,6 +5,7 @@ labour:
   class: cottage
   methods:
     pp_market_village_rural_blacksmith: keep  # extra labour + output 0.4 so the AI stops making tools from iron
+gate_method: pp_market_village_rural_blacksmith
 building:
   key: market_village
   mode: REPLACE
@@ -12,11 +13,11 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
-    - pp_market_village_rural_blacksmith
-    - pp_market_village_rural_millet_brewery
-    - pp_market_village_rural_weaponmaker
-    - pp_market_village_rural_jewelry_carver
     - pp_market_village_rural_pottery_maker
+    - pp_market_village_rural_jewelry_carver
+    - pp_market_village_rural_weaponmaker
+    - pp_market_village_rural_millet_brewery
+    - pp_market_village_rural_blacksmith
   possible_production_methods: []
   body: |
     audio_tier = 1
@@ -45,11 +46,27 @@ building:
     }
     increase_per_level_cost = 0.21
     unique_production_methods = {
-        pp_market_village_rural_blacksmith = {
-            produced = tools
-            output = 0.4
-            iron = 0.31
-            manual_labor = 0.5
+        pp_market_village_rural_pottery_maker = {
+            produced = pottery
+            output = 0.2
+            clay = 0.25
+            manual_labor = 0.042
+            debug_max_profit = rural_profit_margin
+            category = building_maintenance
+        }
+        pp_market_village_rural_jewelry_carver = {
+            produced = jewelry
+            output = 0.1
+            stone = 0.32
+            manual_labor = 0.11
+            debug_max_profit = rural_profit_margin
+            category = building_maintenance
+        }
+        pp_market_village_rural_weaponmaker = {
+            produced = weaponry
+            output = 0.2
+            lumber = 0.25
+            manual_labor = 0.15
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }
@@ -63,27 +80,11 @@ building:
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }
-        pp_market_village_rural_weaponmaker = {
-            produced = weaponry
-            output = 0.2
-            lumber = 0.25
-            manual_labor = 0.15
-            debug_max_profit = rural_profit_margin
-            category = building_maintenance
-        }
-        pp_market_village_rural_jewelry_carver = {
-            produced = jewelry
-            output = 0.1
-            stone = 0.32
-            manual_labor = 0.11
-            debug_max_profit = rural_profit_margin
-            category = building_maintenance
-        }
-        pp_market_village_rural_pottery_maker = {
-            produced = pottery
-            output = 0.2
-            clay = 0.25
-            manual_labor = 0.042
+        pp_market_village_rural_blacksmith = {
+            produced = tools
+            output = 0.4
+            iron = 0.31
+            manual_labor = 0.5
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }

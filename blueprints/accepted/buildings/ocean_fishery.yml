@@ -7,6 +7,7 @@ labour:
     pp_ocean_fishery_base_catch: base
     pp_ocean_fishery_provision: keep
     pp_ocean_fishery_sell_surplus: keep
+gate_method: pp_ocean_fishery_provision
 upgrade_chain:
   family: ocean_fishery
   tier: 0
@@ -27,8 +28,8 @@ building:
         - pp_ocean_fishery_coastal_boats
     - name: slot_2
       methods:
-        - pp_ocean_fishery_provision
         - pp_ocean_fishery_sell_surplus
+        - pp_ocean_fishery_provision
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -77,16 +78,16 @@ building:
         }
     }
     unique_production_methods = {
+        pp_ocean_fishery_sell_surplus = {
+            produced = province_food_sales
+            output = 0.008
+            category = building_maintenance
+        }
         pp_ocean_fishery_provision = {
             fish = 0.12
             produced = local_food
             output = 1.44
             debug_max_profit = 0
-            category = building_maintenance
-        }
-        pp_ocean_fishery_sell_surplus = {
-            produced = province_food_sales
-            output = 0.008
             category = building_maintenance
         }
     }

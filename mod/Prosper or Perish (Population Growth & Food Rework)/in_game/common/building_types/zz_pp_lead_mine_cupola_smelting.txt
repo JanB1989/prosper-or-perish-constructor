@@ -33,20 +33,6 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_lead_mine_cupola_no_primary = {
-        category = building_maintenance
-    }
-    pp_lead_mine_cupola_lead = {
-        lumber = 0.21
-        tools = 0.5
-        beeswax = 0.057
-        manual_labor = 0.12
-        produced = lead
-        output = 1.22
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_lead_mine_cupola_no_secondary = {
         category = building_maintenance
     }
@@ -66,6 +52,20 @@ unique_production_methods = {
         manual_labor = 0.009
         produced = goods_gold
         output = 0.027
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_lead_mine_cupola_no_primary = {
+        category = building_maintenance
+    }
+    pp_lead_mine_cupola_lead = {
+        lumber = 0.21
+        tools = 0.5
+        beeswax = 0.057
+        manual_labor = 0.12
+        produced = lead
+        output = 1.22
         category = building_maintenance
     }
 }

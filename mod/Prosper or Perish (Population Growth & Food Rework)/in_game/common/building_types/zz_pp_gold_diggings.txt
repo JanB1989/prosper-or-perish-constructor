@@ -32,27 +32,15 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_gold_diggings_no_primary = {
-        category = building_maintenance
-    }
-    pp_gold_diggings_gold = {
-        lumber = 0.35
-        tools = 0.19
-        manual_labor = 0.27
-        produced = goods_gold
-        output = 0.200
-        category = building_maintenance
-    }
-    pp_gold_diggings_hand_panning = {
-        lumber = 0.39
-        manual_labor = 0.57
-        produced = goods_gold
-        output = 0.16
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_gold_diggings_no_secondary = {
+        category = building_maintenance
+    }
+    pp_gold_diggings_copper = {
+        lumber = 0.033
+        tools = 0.025
+        manual_labor = 0.028
+        produced = copper
+        output = 0.056
         category = building_maintenance
     }
     pp_gold_diggings_silver = {
@@ -63,12 +51,24 @@ unique_production_methods = {
         output = 0.04
         category = building_maintenance
     }
-    pp_gold_diggings_copper = {
-        lumber = 0.033
-        tools = 0.025
-        manual_labor = 0.028
-        produced = copper
-        output = 0.056
+}
+unique_production_methods = {
+    pp_gold_diggings_no_primary = {
+        category = building_maintenance
+    }
+    pp_gold_diggings_hand_panning = {
+        lumber = 0.39
+        manual_labor = 0.57
+        produced = goods_gold
+        output = 0.16
+        category = building_maintenance
+    }
+    pp_gold_diggings_gold = {
+        lumber = 0.35
+        tools = 0.19
+        manual_labor = 0.27
+        produced = goods_gold
+        output = 0.200
         category = building_maintenance
     }
 }

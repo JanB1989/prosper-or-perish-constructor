@@ -54,16 +54,16 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
+    pp_rice_farmstead_sell_surplus = {
+        produced = province_food_sales
+        output = 0.007
+        category = building_maintenance
+    }
     pp_rice_farmstead_provision = {
         rice = 0.107
         produced = local_food
         output = 1.28
         debug_max_profit = 4.981
-        category = building_maintenance
-    }
-    pp_rice_farmstead_sell_surplus = {
-        produced = province_food_sales
-        output = 0.007
         category = building_maintenance
     }
 }

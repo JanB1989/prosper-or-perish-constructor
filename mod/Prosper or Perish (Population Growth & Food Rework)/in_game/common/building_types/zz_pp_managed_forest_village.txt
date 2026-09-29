@@ -30,12 +30,6 @@ location_potential = {
     }
 }
 unique_production_methods = {
-    pp_managed_forest_village_base_leather = {
-        manual_labor = 0.06
-        produced = leather
-        output = 0.10
-        category = building_maintenance
-    }
     pp_managed_forest_village_base_wild_game = {
         manual_labor = 0.02
         produced = wild_game
@@ -54,19 +48,25 @@ unique_production_methods = {
         output = 0.10
         category = building_maintenance
     }
+    pp_managed_forest_village_base_leather = {
+        manual_labor = 0.06
+        produced = leather
+        output = 0.10
+        category = building_maintenance
+    }
 }
 unique_production_methods = {
     pp_managed_forest_village_no_primary = {
         category = building_maintenance
     }
-    pp_managed_forest_village_tannery = {
-        produced = leather
-        output = 0.474
-        wild_game = 0.49
-        tools = 0.13
-        horses = 0.054
-        victuals = 0.054
-        manual_labor = 0.14
+    pp_managed_forest_village_apiaries = {
+        produced = beeswax
+        output = 0.675
+        tools = 0.15
+        cloth = 0.09
+        lumber = 0.12
+        victuals = 0.093
+        manual_labor = 0.16
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -92,29 +92,29 @@ unique_production_methods = {
         debug_max_profit = 0
         category = building_maintenance
     }
-    pp_managed_forest_village_apiaries = {
-        produced = beeswax
-        output = 0.675
-        tools = 0.15
-        cloth = 0.09
-        lumber = 0.12
-        victuals = 0.093
-        manual_labor = 0.16
+    pp_managed_forest_village_tannery = {
+        produced = leather
+        output = 0.474
+        wild_game = 0.49
+        tools = 0.13
+        horses = 0.054
+        victuals = 0.054
+        manual_labor = 0.14
         debug_max_profit = 0
         category = building_maintenance
     }
 }
 unique_production_methods = {
+    pp_managed_forest_village_sell_surplus = {
+        produced = province_food_sales
+        output = 0.008
+        category = building_maintenance
+    }
     pp_managed_forest_village_provision = {
         wild_game = 0.133
         produced = local_food
         output = 1.6
         debug_max_profit = 5.015
-        category = building_maintenance
-    }
-    pp_managed_forest_village_sell_surplus = {
-        produced = province_food_sales
-        output = 0.008
         category = building_maintenance
     }
 }

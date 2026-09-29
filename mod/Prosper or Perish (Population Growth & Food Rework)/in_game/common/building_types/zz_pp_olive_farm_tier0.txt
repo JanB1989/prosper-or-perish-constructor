@@ -38,6 +38,20 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
+    pp_olive_farm_no_beekeeping = {
+        category = building_maintenance
+    }
+    pp_olive_farm_cottage_hives = {
+        furniture = 0
+        cloth = 0
+        manual_labor = 0.025
+        produced = beeswax
+        output = 0.063
+        debug_max_profit = 0.008
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
     pp_olive_farm_no_cultivation = {
         category = building_maintenance
     }
@@ -60,30 +74,16 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_olive_farm_no_beekeeping = {
+    pp_olive_farm_sell_surplus = {
+        produced = province_food_sales
+        output = 0.005
         category = building_maintenance
     }
-    pp_olive_farm_cottage_hives = {
-        furniture = 0
-        cloth = 0
-        manual_labor = 0.025
-        produced = beeswax
-        output = 0.063
-        debug_max_profit = 0.008
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_olive_farm_provision = {
         olives = 0.08
         produced = local_food
         output = 0.96
         debug_max_profit = 5.000
-        category = building_maintenance
-    }
-    pp_olive_farm_sell_surplus = {
-        produced = province_food_sales
-        output = 0.005
         category = building_maintenance
     }
 }

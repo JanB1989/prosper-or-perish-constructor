@@ -6,6 +6,7 @@ labour:
   methods:
     pp_lead_mine_hushing: hand_work
     pp_lead_mine_base_lead: base
+gate_method: pp_lead_mine_lead
 upgrade_chain:
   family: lead_mine
   tier: 0
@@ -22,14 +23,14 @@ building:
         - pp_lead_mine_base_lead
     - name: slot_1
       methods:
-        - pp_lead_mine_no_primary
-        - pp_lead_mine_lead
-        - pp_lead_mine_hushing
-    - name: slot_2
-      methods:
         - pp_lead_mine_no_secondary
         - pp_lead_mine_silver
         - pp_lead_mine_gold
+    - name: slot_2
+      methods:
+        - pp_lead_mine_no_primary
+        - pp_lead_mine_hushing
+        - pp_lead_mine_lead
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -64,28 +65,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_lead_mine_no_primary = {
-            category = building_maintenance
-        }
-        pp_lead_mine_lead = {
-            lumber = 0.11
-            tools = 0.21
-            beeswax = 0.033
-            manual_labor = 0.2
-            produced = lead
-            output = 0.63
-            category = building_maintenance
-        }
-        pp_lead_mine_hushing = {
-            lumber = 0.22
-            beeswax = 0.067
-            manual_labor = 0.43
-            produced = lead
-            output = 0.504
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_lead_mine_no_secondary = {
             category = building_maintenance
         }
@@ -108,6 +87,28 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_lead_mine_no_primary = {
+            category = building_maintenance
+        }
+        pp_lead_mine_hushing = {
+            lumber = 0.22
+            beeswax = 0.067
+            manual_labor = 0.43
+            produced = lead
+            output = 0.504
+            category = building_maintenance
+        }
+        pp_lead_mine_lead = {
+            lumber = 0.11
+            tools = 0.21
+            beeswax = 0.033
+            manual_labor = 0.2
+            produced = lead
+            output = 0.63
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -120,8 +121,8 @@ building:
 localization:
   entries:
     lead_mine_slot_0: Galena Vein
-    lead_mine_slot_1: Lead Workings
-    lead_mine_slot_2: Precious Metal Recovery
+    lead_mine_slot_1: Precious Metal Recovery
+    lead_mine_slot_2: Lead Workings
     lead_mine: Lead Mine
     lead_mine_desc: Shallow headings and open cuts work galena veins for lead ore. The ore is broken, washed, and sorted near the mine, with silver- and gold-bearing pieces picked out when found.
     pp_lead_mine_base_lead: Exposed Galena Vein

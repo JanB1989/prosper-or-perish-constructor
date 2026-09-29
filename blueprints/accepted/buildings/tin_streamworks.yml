@@ -6,6 +6,7 @@ labour:
   methods:
     pp_tin_streamworks_hand_streaming: hand_work
     pp_tin_streamworks_base_tin: base
+gate_method: pp_tin_streamworks_tin
 upgrade_chain:
   family: tin_mine
   tier: 0
@@ -22,14 +23,14 @@ building:
         - pp_tin_streamworks_base_tin
     - name: slot_1
       methods:
-        - pp_tin_streamworks_no_primary
-        - pp_tin_streamworks_tin
-        - pp_tin_streamworks_hand_streaming
+        - pp_tin_streamworks_no_secondary
+        - pp_tin_streamworks_lead
+        - pp_tin_streamworks_copper
     - name: slot_2
       methods:
-        - pp_tin_streamworks_no_secondary
-        - pp_tin_streamworks_copper
-        - pp_tin_streamworks_lead
+        - pp_tin_streamworks_no_primary
+        - pp_tin_streamworks_hand_streaming
+        - pp_tin_streamworks_tin
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -64,27 +65,15 @@ building:
         }
     }
     unique_production_methods = {
-        pp_tin_streamworks_no_primary = {
-            category = building_maintenance
-        }
-        pp_tin_streamworks_tin = {
-            lumber = 0.27
-            tools = 0.16
-            manual_labor = 0.2
-            produced = tin
-            output = 0.631
-            category = building_maintenance
-        }
-        pp_tin_streamworks_hand_streaming = {
-            lumber = 0.32
-            manual_labor = 0.45
-            produced = tin
-            output = 0.505
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_tin_streamworks_no_secondary = {
+            category = building_maintenance
+        }
+        pp_tin_streamworks_lead = {
+            lumber = 0.048
+            tools = 0.025
+            manual_labor = 0.034
+            produced = lead
+            output = 0.1
             category = building_maintenance
         }
         pp_tin_streamworks_copper = {
@@ -95,12 +84,24 @@ building:
             output = 0.075
             category = building_maintenance
         }
-        pp_tin_streamworks_lead = {
-            lumber = 0.048
-            tools = 0.025
-            manual_labor = 0.034
-            produced = lead
-            output = 0.1
+    }
+    unique_production_methods = {
+        pp_tin_streamworks_no_primary = {
+            category = building_maintenance
+        }
+        pp_tin_streamworks_hand_streaming = {
+            lumber = 0.32
+            manual_labor = 0.45
+            produced = tin
+            output = 0.505
+            category = building_maintenance
+        }
+        pp_tin_streamworks_tin = {
+            lumber = 0.27
+            tools = 0.16
+            manual_labor = 0.2
+            produced = tin
+            output = 0.631
             category = building_maintenance
         }
     }
@@ -116,8 +117,8 @@ building:
 localization:
   entries:
     tin_streamworks_slot_0: Tin Ground
-    tin_streamworks_slot_1: Tin Streaming
-    tin_streamworks_slot_2: Associated Ore Sorting
+    tin_streamworks_slot_1: Associated Ore Sorting
+    tin_streamworks_slot_2: Tin Streaming
     tin_streamworks: Tin Streamworks
     tin_streamworks_desc: Streamworks wash alluvial gravel for dark cassiterite, the chief tin ore. Workers also sort small lots of copper and lead ore from the same ground.
     pp_tin_streamworks_base_tin: Cassiterite Gravel

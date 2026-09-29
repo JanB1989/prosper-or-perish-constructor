@@ -3,6 +3,7 @@ tag: fine_cloth_manufactory
 footprint: manufactory
 labour:
   class: craft_absolutism
+gate_method: pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance
 building:
   key: fine_cloth_manufactory
   mode: REPLACE
@@ -10,12 +11,12 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
-    - pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance
-    - pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance
-  - name: slot_1
-    methods:
     - pp_fine_cloth_manufactory_standard_cloth_manufactory_maintenance
     - pp_fine_cloth_manufactory_alum_fine_cloth_manufactory_maintenance
+  - name: slot_1
+    methods:
+    - pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance
+    - pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance
   possible_production_methods: []
   body: |
     audio_tier = 3
@@ -30,24 +31,6 @@ building:
     megalopolis = yes
     obsolete = fine_cloth_workshop
     build_time = manufactory_build_time
-    unique_production_methods = {
-        pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance = {
-            silk = 2.76
-            manual_labor = 0.81
-            produced = fine_cloth
-            output = 2.0
-            category = manufactory_input
-            debug_max_profit = manufactory_profit_margin
-        }
-        pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance = {
-            produced = fine_cloth
-            cloth = 3.67
-            manual_labor = 0.84
-            output = 2.0
-            debug_max_profit = manufactory_profit_margin
-            category = manufactory_input
-        }
-    }
     unique_production_methods = {
         pp_fine_cloth_manufactory_standard_cloth_manufactory_maintenance = {
             dyes = 0.24
@@ -67,6 +50,24 @@ building:
             debug_max_profit = manufactory_profit_margin
         }
     }
+    unique_production_methods = {
+        pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance = {
+            silk = 2.76
+            manual_labor = 0.81
+            produced = fine_cloth
+            output = 2.0
+            category = manufactory_input
+            debug_max_profit = manufactory_profit_margin
+        }
+        pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance = {
+            produced = fine_cloth
+            cloth = 3.67
+            manual_labor = 0.84
+            output = 2.0
+            debug_max_profit = manufactory_profit_margin
+            category = manufactory_input
+        }
+    }
     custom_tags = {
         midgame_manufactory
     }
@@ -75,9 +76,9 @@ building:
 localization:
   entries:
     fine_cloth_manufactory_slot_0: Fine Cloth Manufactory Work
+    fine_cloth_manufactory_slot_1: Fine Cloth Manufactory Work
     pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance: Fine Cloth Manufactory Silk Cloth Manufactory Maintenance
     pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance: Fine Cloth Manufactory Fine Cloth Manufactory Maintenance
-    fine_cloth_manufactory_slot_1: Fine Cloth Manufactory Work
     pp_fine_cloth_manufactory_standard_cloth_manufactory_maintenance: Fine Cloth Manufactory Standard Cloth Manufactory Maintenance
     pp_fine_cloth_manufactory_alum_fine_cloth_manufactory_maintenance: Fine Cloth Manufactory Alum Fine Cloth Manufactory Maintenance
 evaluation:

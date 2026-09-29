@@ -6,6 +6,7 @@ labour:
   methods:
     pp_copper_mine_fire_setting: hand_work
     pp_copper_mine_base_copper: base
+gate_method: pp_copper_mine_copper
 upgrade_chain:
   family: copper_mine
   tier: 0
@@ -22,15 +23,15 @@ building:
         - pp_copper_mine_base_copper
     - name: slot_1
       methods:
-        - pp_copper_mine_no_primary
-        - pp_copper_mine_copper
-        - pp_copper_mine_fire_setting
-    - name: slot_2
-      methods:
         - pp_copper_mine_no_secondary
+        - pp_copper_mine_tin
         - pp_copper_mine_silver
         - pp_copper_mine_gold
-        - pp_copper_mine_tin
+    - name: slot_2
+      methods:
+        - pp_copper_mine_no_primary
+        - pp_copper_mine_fire_setting
+        - pp_copper_mine_copper
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -65,29 +66,15 @@ building:
         }
     }
     unique_production_methods = {
-        pp_copper_mine_no_primary = {
-            category = building_maintenance
-        }
-        pp_copper_mine_copper = {
-            lumber = 0.22
-            tools = 0.26
-            beeswax = 0.061
-            manual_labor = 0.31
-            produced = copper
-            output = 0.6
-            category = building_maintenance
-        }
-        pp_copper_mine_fire_setting = {
-            lumber = 0.33
-            beeswax = 0.092
-            manual_labor = 0.63
-            produced = copper
-            output = 0.48
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_copper_mine_no_secondary = {
+            category = building_maintenance
+        }
+        pp_copper_mine_tin = {
+            lumber = 0.025
+            tools = 0.016
+            manual_labor = 0.022
+            produced = tin
+            output = 0.06
             category = building_maintenance
         }
         pp_copper_mine_silver = {
@@ -108,12 +95,26 @@ building:
             output = 0.026
             category = building_maintenance
         }
-        pp_copper_mine_tin = {
-            lumber = 0.025
-            tools = 0.016
-            manual_labor = 0.022
-            produced = tin
-            output = 0.06
+    }
+    unique_production_methods = {
+        pp_copper_mine_no_primary = {
+            category = building_maintenance
+        }
+        pp_copper_mine_fire_setting = {
+            lumber = 0.33
+            beeswax = 0.092
+            manual_labor = 0.63
+            produced = copper
+            output = 0.48
+            category = building_maintenance
+        }
+        pp_copper_mine_copper = {
+            lumber = 0.22
+            tools = 0.26
+            beeswax = 0.061
+            manual_labor = 0.31
+            produced = copper
+            output = 0.6
             category = building_maintenance
         }
     }
@@ -129,8 +130,8 @@ building:
 localization:
   entries:
     copper_mine_slot_0: Copper Lode
-    copper_mine_slot_1: Copper Workings
-    copper_mine_slot_2: Ore Sorting
+    copper_mine_slot_1: Ore Sorting
+    copper_mine_slot_2: Copper Workings
     copper_mine: Copper Mine
     copper_mine_desc: Shallow pits and short headings follow exposed copper lodes. Ore pickers separate copper stone from waste and recover small lots of silver, gold, or tin ore when present.
     pp_copper_mine_base_copper: Copper Outcrop

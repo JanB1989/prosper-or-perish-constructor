@@ -33,7 +33,38 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
+    pp_iron_mine_deep_no_secondary = {
+        category = building_maintenance
+    }
+    pp_iron_mine_deep_ochre = {
+        lumber = 0.036 # washing troughs, racks
+        tools = 0.018 # sieves, shovels
+        manual_labor = 0.014
+        produced = dyes
+        output = 0.04
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
     pp_iron_mine_deep_no_primary = {
+        category = building_maintenance
+    }
+    pp_iron_mine_deep_ore_dressing_floors = {
+        fiber_crops = 0.2 # sacks, screens
+        cloth = 0.098 # sorting cloths
+        beeswax = 0.053 # candles, seals
+        manual_labor = 0.11
+        produced = iron
+        output = 0.36
+        category = building_maintenance
+    }
+    pp_iron_mine_deep_horse_whim_haulage = {
+        horses = 0.2 # whim draft teams
+        leather = 0.089 # harness, buckets
+        beeswax = 0.053 # mine candles, seals
+        manual_labor = 0.11
+        produced = iron
+        output = 0.442
         category = building_maintenance
     }
     pp_iron_mine_deep_drainage_workings = {
@@ -53,37 +84,6 @@ unique_production_methods = {
         manual_labor = 0.27
         produced = iron
         output = 0.84
-        category = building_maintenance
-    }
-    pp_iron_mine_deep_horse_whim_haulage = {
-        horses = 0.2 # whim draft teams
-        leather = 0.089 # harness, buckets
-        beeswax = 0.053 # mine candles, seals
-        manual_labor = 0.11
-        produced = iron
-        output = 0.442
-        category = building_maintenance
-    }
-    pp_iron_mine_deep_ore_dressing_floors = {
-        fiber_crops = 0.2 # sacks, screens
-        cloth = 0.098 # sorting cloths
-        beeswax = 0.053 # candles, seals
-        manual_labor = 0.11
-        produced = iron
-        output = 0.36
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
-    pp_iron_mine_deep_no_secondary = {
-        category = building_maintenance
-    }
-    pp_iron_mine_deep_ochre = {
-        lumber = 0.036 # washing troughs, racks
-        tools = 0.018 # sieves, shovels
-        manual_labor = 0.014
-        produced = dyes
-        output = 0.04
         category = building_maintenance
     }
 }

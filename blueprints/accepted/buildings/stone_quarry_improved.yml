@@ -5,6 +5,7 @@ labour:
   class: primary_discovery
   methods:
     pp_stone_quarry_improved_base_stone: base
+gate_method: pp_stone_quarry_improved_crane_winch_quarrying
 upgrade_chain:
   family: stone_quarry
   tier: 1
@@ -21,13 +22,13 @@ building:
         - pp_stone_quarry_improved_base_stone
     - name: slot_1
       methods:
-        - pp_stone_quarry_improved_no_primary
-        - pp_stone_quarry_improved_crane_winch_quarrying
-        - pp_stone_quarry_improved_ox_haulage
-    - name: slot_2
-      methods:
         - pp_stone_quarry_improved_no_secondary
         - pp_stone_quarry_improved_rubble_breaking
+    - name: slot_2
+      methods:
+        - pp_stone_quarry_improved_no_primary
+        - pp_stone_quarry_improved_ox_haulage
+        - pp_stone_quarry_improved_crane_winch_quarrying
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -75,17 +76,20 @@ building:
         }
     }
     unique_production_methods = {
-        pp_stone_quarry_improved_no_primary = {
+        pp_stone_quarry_improved_no_secondary = {
             category = building_maintenance
         }
-        pp_stone_quarry_improved_crane_winch_quarrying = {
-            lumber = 0.34 # crane frame, skids
-            tools = 0.16 # chisels, wedges, tackle
-            leather = 0.043 # slings and straps
-            horses = 0.043 # hoist and cart teams
-            manual_labor = 0.24
-            produced = stone
-            output = 1.66
+        pp_stone_quarry_improved_rubble_breaking = {
+            lumber = 0.034 # sorting screens, bins
+            tools = 0.026 # hammers and sieves
+            manual_labor = 0.024
+            produced = sand
+            output = 0.30
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_stone_quarry_improved_no_primary = {
             category = building_maintenance
         }
         pp_stone_quarry_improved_ox_haulage = {
@@ -98,17 +102,14 @@ building:
             output = 1.47
             category = building_maintenance
         }
-    }
-    unique_production_methods = {
-        pp_stone_quarry_improved_no_secondary = {
-            category = building_maintenance
-        }
-        pp_stone_quarry_improved_rubble_breaking = {
-            lumber = 0.034 # sorting screens, bins
-            tools = 0.026 # hammers and sieves
-            manual_labor = 0.024
-            produced = sand
-            output = 0.30
+        pp_stone_quarry_improved_crane_winch_quarrying = {
+            lumber = 0.34 # crane frame, skids
+            tools = 0.16 # chisels, wedges, tackle
+            leather = 0.043 # slings and straps
+            horses = 0.043 # hoist and cart teams
+            manual_labor = 0.24
+            produced = stone
+            output = 1.66
             category = building_maintenance
         }
     }
@@ -132,8 +133,8 @@ advancements:
 localization:
   entries:
     stone_quarry_improved_slot_0: Stone Face
-    stone_quarry_improved_slot_1: Block Dressing
-    stone_quarry_improved_slot_2: Quarry Waste
+    stone_quarry_improved_slot_1: Quarry Waste
+    stone_quarry_improved_slot_2: Block Dressing
     stone_quarry_improved: Stone Dressing Yard
     stone_quarry_improved_desc: Dressing yards pair worked quarry faces with hoists, skids, and block benches so crews can square larger stones for transport. Waste rubble is broken and sorted for lesser construction uses.
     pp_stone_quarry_improved_base_stone: Surveyed Stone Face

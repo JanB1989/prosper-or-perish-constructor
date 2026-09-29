@@ -5,6 +5,7 @@ labour:
   class: primary_discovery
   methods:
     pp_silver_mine_improved_base_silver: base
+gate_method: pp_silver_mine_improved_silver
 upgrade_chain:
   family: silver_mine
   tier: 1
@@ -21,13 +22,13 @@ building:
         - pp_silver_mine_improved_base_silver
     - name: slot_1
       methods:
-        - pp_silver_mine_improved_no_primary
-        - pp_silver_mine_improved_silver
-    - name: slot_2
-      methods:
         - pp_silver_mine_improved_no_secondary
         - pp_silver_mine_improved_lead
         - pp_silver_mine_improved_gold
+    - name: slot_2
+      methods:
+        - pp_silver_mine_improved_no_primary
+        - pp_silver_mine_improved_silver
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -63,20 +64,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_silver_mine_improved_no_primary = {
-            category = building_maintenance
-        }
-        pp_silver_mine_improved_silver = {
-            lumber = 0.21
-            tools = 0.22
-            beeswax = 0.095
-            manual_labor = 0.21
-            produced = silver
-            output = 0.274
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_silver_mine_improved_no_secondary = {
             category = building_maintenance
         }
@@ -97,6 +84,20 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_silver_mine_improved_no_primary = {
+            category = building_maintenance
+        }
+        pp_silver_mine_improved_silver = {
+            lumber = 0.21
+            tools = 0.22
+            beeswax = 0.095
+            manual_labor = 0.21
+            produced = silver
+            output = 0.274
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -109,8 +110,8 @@ building:
 localization:
   entries:
     silver_mine_improved_slot_0: Silver Vein
-    silver_mine_improved_slot_1: Saiger Workings
-    silver_mine_improved_slot_2: Associated Ore Recovery
+    silver_mine_improved_slot_1: Associated Ore Recovery
+    silver_mine_improved_slot_2: Saiger Workings
     silver_mine_improved: Saiger Silver Mine
     silver_mine_improved_desc: Better timbering and ore dressing prepare silver-lead ores for saiger and cupellation work. Dressed galena and auriferous pieces remain useful secondary recoveries.
     pp_silver_mine_improved_base_silver: Surveyed Silver Vein

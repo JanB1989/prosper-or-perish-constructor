@@ -1,6 +1,7 @@
 version: 2
 tag: hired_labor_yard
 footprint: trade
+gate_method: pp_hired_labor_yard_carters
 building:
   key: hired_labor_yard
   mode: CREATE
@@ -9,8 +10,8 @@ building:
     - name: slot_0
       methods:
         - pp_hired_labor_yard_sack_porters
-        - pp_hired_labor_yard_carters
         - pp_hired_labor_yard_labour_exchange
+        - pp_hired_labor_yard_carters
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -39,19 +40,19 @@ building:
         leather = 0.3
         category = building_maintenance
       }
-      pp_hired_labor_yard_carters = {
-        produced = manual_labor
-        output = 4.1
-        horses = 1.2
-        lumber = 1.6
-        category = building_maintenance
-      }
       pp_hired_labor_yard_labour_exchange = {
         produced = manual_labor
         output = 4
         furniture = 0.8
         paper = 0.6
         liquor = 0.8
+        category = building_maintenance
+      }
+      pp_hired_labor_yard_carters = {
+        produced = manual_labor
+        output = 4.1
+        horses = 1.2
+        lumber = 1.6
         category = building_maintenance
       }
     }

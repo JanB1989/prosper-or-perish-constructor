@@ -32,6 +32,22 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
+    pp_legume_rotations_no_beekeeping = {
+        category = building_maintenance
+    }
+    pp_legume_rotations_hedgerow_hives = {
+        tools = 0.036
+        lumber = 0.089
+        fiber_crops = 0.071
+        pottery = 0.045
+        manual_labor = 0.055
+        produced = beeswax
+        output = 0.31
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
     pp_legume_rotations_no_cultivation = {
         category = building_maintenance
     }
@@ -59,32 +75,16 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_legume_rotations_no_beekeeping = {
+    pp_legume_rotations_sell_surplus = {
+        produced = province_food_sales
+        output = 0.006
         category = building_maintenance
     }
-    pp_legume_rotations_hedgerow_hives = {
-        tools = 0.036
-        lumber = 0.089
-        fiber_crops = 0.071
-        pottery = 0.045
-        manual_labor = 0.055
-        produced = beeswax
-        output = 0.31
-        debug_max_profit = 0
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_legume_rotations_provision = {
         legumes = 0.093
         produced = local_food
         output = 1.12
         debug_max_profit = 5.022
-        category = building_maintenance
-    }
-    pp_legume_rotations_sell_surplus = {
-        produced = province_food_sales
-        output = 0.006
         category = building_maintenance
     }
 }

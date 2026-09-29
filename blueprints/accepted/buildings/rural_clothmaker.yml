@@ -3,6 +3,7 @@ tag: rural_clothmaker
 footprint: mill_works
 labour:
   class: cottage
+gate_method: pp_rural_clothmaker_rural_cotton_clothmaker
 building:
   key: rural_clothmaker
   mode: REPLACE
@@ -10,9 +11,9 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
+    - pp_rural_clothmaker_rural_fiber_clothmaker
     - pp_rural_clothmaker_rural_wool_clothmaker
     - pp_rural_clothmaker_rural_cotton_clothmaker
-    - pp_rural_clothmaker_rural_fiber_clothmaker
   possible_production_methods: []
   body: |
     audio_tier = 1
@@ -28,6 +29,14 @@ building:
     city = no
     build_time = rural_build_time
     unique_production_methods = {
+        pp_rural_clothmaker_rural_fiber_clothmaker = {
+            fiber_crops = 0.42
+            manual_labor = 0.29
+            produced = cloth
+            output = 0.4
+            debug_max_profit = rural_profit_margin
+            category = guild_input
+        }
         pp_rural_clothmaker_rural_wool_clothmaker = {
             wool = 0.43
             manual_labor = 0.35
@@ -41,14 +50,6 @@ building:
             manual_labor = 0.35
             produced = cloth
             output = 0.5
-            debug_max_profit = rural_profit_margin
-            category = guild_input
-        }
-        pp_rural_clothmaker_rural_fiber_clothmaker = {
-            fiber_crops = 0.42
-            manual_labor = 0.29
-            produced = cloth
-            output = 0.4
             debug_max_profit = rural_profit_margin
             category = guild_input
         }

@@ -6,6 +6,7 @@ labour:
   methods:
     pp_managed_pepper_garden_base_pepper: base
 output_tag: pepper_garden_managed
+gate_method: pp_managed_pepper_garden_bamboo_drying_mats
 upgrade_chain:
   family: pepper_garden
   tier: 1
@@ -22,12 +23,12 @@ building:
     - pp_managed_pepper_garden_base_pepper
   - name: slot_1
     methods:
-    - pp_managed_pepper_garden_no_drying_yard
-    - pp_managed_pepper_garden_bamboo_drying_mats
-  - name: slot_2
-    methods:
     - pp_managed_pepper_garden_unsorted_harvest
     - pp_managed_pepper_garden_garbling_tables
+  - name: slot_2
+    methods:
+    - pp_managed_pepper_garden_no_drying_yard
+    - pp_managed_pepper_garden_bamboo_drying_mats
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -64,19 +65,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_managed_pepper_garden_no_drying_yard = {
-            category = building_maintenance
-        }
-        pp_managed_pepper_garden_bamboo_drying_mats = {
-            fiber_crops = 0.276 # bamboo mats, harvest baskets, and vine ties
-            pottery = 0.172 # blanching pots and storage jars
-            manual_labor = 0.116
-            produced = pepper
-            output = 0.42
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_managed_pepper_garden_unsorted_harvest = {
             category = building_maintenance
         }
@@ -86,6 +74,19 @@ building:
             manual_labor = 0.104
             produced = pepper
             output = 0.24
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_managed_pepper_garden_no_drying_yard = {
+            category = building_maintenance
+        }
+        pp_managed_pepper_garden_bamboo_drying_mats = {
+            fiber_crops = 0.276 # bamboo mats, harvest baskets, and vine ties
+            pottery = 0.172 # blanching pots and storage jars
+            manual_labor = 0.116
+            produced = pepper
+            output = 0.42
             category = building_maintenance
         }
     }
@@ -109,8 +110,8 @@ advancements:
 localization:
   entries:
     managed_pepper_garden_slot_0: Pepper Vines
-    managed_pepper_garden_slot_1: Drying & Blanching
-    managed_pepper_garden_slot_2: Garbling & Sorting
+    managed_pepper_garden_slot_1: Garbling & Sorting
+    managed_pepper_garden_slot_2: Drying & Blanching
     managed_pepper_garden: Managed Pepper Garden
     managed_pepper_garden_desc: Managed pepper gardens train vines on living supports and move the harvest through bamboo drying mats, blanching pots, and sorting yards before it reaches market.
     pp_managed_pepper_garden: Managed Pepper Gardens

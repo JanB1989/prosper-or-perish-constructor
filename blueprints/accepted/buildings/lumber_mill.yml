@@ -5,6 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_lumber_mill_base_lumber: base
+gate_method: pp_lumber_mill_horse_tools
 upgrade_chain:
   family: lumber_mill
   tier: 0
@@ -21,16 +22,16 @@ building:
     - pp_lumber_mill_base_lumber
   - name: slot_1
     methods:
-    - pp_lumber_mill_no_primary
-    - pp_lumber_mill_horse_tools
-    - pp_lumber_mill_horse_victuals
-    - pp_lumber_mill_livestock_tools
-    - pp_lumber_mill_livestock_victuals
+    - pp_lumber_mill_no_extra_rations
+    - pp_lumber_mill_wound_salves
+    - pp_lumber_mill_extra_rations
   - name: slot_2
     methods:
-    - pp_lumber_mill_no_extra_rations
-    - pp_lumber_mill_extra_rations
-    - pp_lumber_mill_wound_salves
+    - pp_lumber_mill_no_primary
+    - pp_lumber_mill_livestock_victuals
+    - pp_lumber_mill_livestock_tools
+    - pp_lumber_mill_horse_victuals
+    - pp_lumber_mill_horse_tools
   possible_production_methods: []
   body: |-
     audio_tier = 1
@@ -71,24 +72,36 @@ building:
             }
         }
         unique_production_methods = {
-            pp_lumber_mill_no_primary = {
+            pp_lumber_mill_no_extra_rations = {
                 category = building_maintenance
             }
-            pp_lumber_mill_horse_tools = {
+            pp_lumber_mill_wound_salves = {
+                medicaments = 0.14 # injury treatment
+                manual_labor = 0.03
                 produced = lumber
-                output = 0.983
-                tools = 0.22 # axes, saw upkeep
-                horses = 0.14 # fast log hauling
-                manual_labor = 0.24
+                output = 0.123
                 debug_max_profit = 0
                 category = building_maintenance
             }
-            pp_lumber_mill_horse_victuals = {
+            pp_lumber_mill_extra_rations = {
+                victuals = 0.35 # crew rations
+                manual_labor = 0.24
                 produced = lumber
-                output = 0.960
-                horses = 0.14 # fast log hauling
-                victuals = 0.25 # provisioned cutting crews
-                manual_labor = 0.26
+                output = 0.796
+                debug_max_profit = 0
+                category = building_maintenance
+            }
+        }
+        unique_production_methods = {
+            pp_lumber_mill_no_primary = {
+                category = building_maintenance
+            }
+            pp_lumber_mill_livestock_victuals = {
+                produced = lumber
+                output = 0.897
+                livestock = 0.28 # ox log hauling
+                victuals = 0.24 # provisioned cutting crews
+                manual_labor = 0.23
                 debug_max_profit = 0
                 category = building_maintenance
             }
@@ -101,33 +114,21 @@ building:
                 debug_max_profit = 0
                 category = building_maintenance
             }
-            pp_lumber_mill_livestock_victuals = {
+            pp_lumber_mill_horse_victuals = {
                 produced = lumber
-                output = 0.897
-                livestock = 0.28 # ox log hauling
-                victuals = 0.24 # provisioned cutting crews
-                manual_labor = 0.23
+                output = 0.960
+                horses = 0.14 # fast log hauling
+                victuals = 0.25 # provisioned cutting crews
+                manual_labor = 0.26
                 debug_max_profit = 0
                 category = building_maintenance
             }
-        }
-        unique_production_methods = {
-            pp_lumber_mill_no_extra_rations = {
-                category = building_maintenance
-            }
-            pp_lumber_mill_extra_rations = {
-                victuals = 0.35 # crew rations
+            pp_lumber_mill_horse_tools = {
+                produced = lumber
+                output = 0.983
+                tools = 0.22 # axes, saw upkeep
+                horses = 0.14 # fast log hauling
                 manual_labor = 0.24
-                produced = lumber
-                output = 0.796
-                debug_max_profit = 0
-                category = building_maintenance
-            }
-            pp_lumber_mill_wound_salves = {
-                medicaments = 0.14 # injury treatment
-                manual_labor = 0.03
-                produced = lumber
-                output = 0.123
                 debug_max_profit = 0
                 category = building_maintenance
             }
@@ -149,8 +150,8 @@ advancements:
 localization:
   entries:
     lumber_mill_slot_0: Woodland Cutting
-    lumber_mill_slot_1: Logging Method
-    lumber_mill_slot_2: Crew Support
+    lumber_mill_slot_1: Crew Support
+    lumber_mill_slot_2: Logging Method
     lumber_improvements_discovery: Dedicated Forestry
     lumber_improvements_discovery_desc: Dedicated woodland management prepares larger forest districts for later sawmill improvements.
     pp_lumber_mill_base_lumber: Woodland Cutting

@@ -48,16 +48,16 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
+    pp_millet_model_farm_sell_surplus = {
+        produced = province_food_sales
+        output = 0.008
+        category = building_maintenance
+    }
     pp_millet_model_farm_provision = {
         millet = 0.133
         produced = local_food
         output = 1.6
         debug_max_profit = 5.015
-        category = building_maintenance
-    }
-    pp_millet_model_farm_sell_surplus = {
-        produced = province_food_sales
-        output = 0.008
         category = building_maintenance
     }
 }

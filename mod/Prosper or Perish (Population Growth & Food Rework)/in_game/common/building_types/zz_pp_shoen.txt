@@ -75,12 +75,12 @@ unique_production_methods = {
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }
-    pp_shoen_shoen_lumbermills_maintenance = {
-        produced = lumber
-        output = 0.6
-        tools = 0.16
-        fiber_crops = 0.17
-        manual_labor = 0.16
+    pp_shoen_shoen_masonry_maintenance = {
+        produced = masonry
+        output = 0.8
+        lumber = 0.25
+        tools = 0.057
+        manual_labor = 0.14
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }
@@ -93,21 +93,21 @@ unique_production_methods = {
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }
+    pp_shoen_shoen_lumbermills_maintenance = {
+        produced = lumber
+        output = 0.6
+        tools = 0.16
+        fiber_crops = 0.17
+        manual_labor = 0.16
+        debug_max_profit = rural_profit_margin
+        category = building_maintenance
+    }
     pp_shoen_shoen_ironsand_maintenance = {
         produced = iron
         output = 0.3
         sand = 0.57
         tools = 0.17
         manual_labor = 0.19
-        debug_max_profit = rural_profit_margin
-        category = building_maintenance
-    }
-    pp_shoen_shoen_masonry_maintenance = {
-        produced = masonry
-        output = 0.8
-        lumber = 0.25
-        tools = 0.057
-        manual_labor = 0.14
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }

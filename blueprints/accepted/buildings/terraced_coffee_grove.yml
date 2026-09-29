@@ -5,6 +5,7 @@ labour:
   class: primary_discovery
   methods:
     pp_terraced_coffee_grove_base_coffee: base
+gate_method: pp_terraced_coffee_grove_washing_frames
 upgrade_chain:
   family: coffee_grove
   tier: 1
@@ -21,12 +22,12 @@ building:
     - pp_terraced_coffee_grove_base_coffee
   - name: slot_1
     methods:
-    - pp_terraced_coffee_grove_no_washing
-    - pp_terraced_coffee_grove_washing_frames
-  - name: slot_2
-    methods:
     - pp_terraced_coffee_grove_open_grove
     - pp_terraced_coffee_grove_terraced_shade_gardens
+  - name: slot_2
+    methods:
+    - pp_terraced_coffee_grove_no_washing
+    - pp_terraced_coffee_grove_washing_frames
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -63,6 +64,19 @@ building:
         }
     }
     unique_production_methods = {
+        pp_terraced_coffee_grove_open_grove = {
+            category = building_maintenance
+        }
+        pp_terraced_coffee_grove_terraced_shade_gardens = {
+            fiber_crops = 0.12 # shade ties and harvest sacks
+            furniture = 0.104 # light nursery and shade frames
+            manual_labor = 0.088
+            produced = coffee
+            output = 0.356
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
         pp_terraced_coffee_grove_no_washing = {
             category = building_maintenance
         }
@@ -73,19 +87,6 @@ building:
             manual_labor = 0.228
             produced = coffee
             output = 0.901
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
-        pp_terraced_coffee_grove_open_grove = {
-            category = building_maintenance
-        }
-        pp_terraced_coffee_grove_terraced_shade_gardens = {
-            fiber_crops = 0.12 # shade ties and harvest sacks
-            furniture = 0.104 # light nursery and shade frames
-            manual_labor = 0.088
-            produced = coffee
-            output = 0.356
             category = building_maintenance
         }
     }
@@ -109,8 +110,8 @@ advancements:
 localization:
   entries:
     terraced_coffee_grove_slot_0: Coffee Trees
-    terraced_coffee_grove_slot_1: Washing & Drying
-    terraced_coffee_grove_slot_2: Terraced Shade Gardens
+    terraced_coffee_grove_slot_1: Terraced Shade Gardens
+    terraced_coffee_grove_slot_2: Washing & Drying
     terraced_coffee_grove: Terraced Coffee Grove
     terraced_coffee_grove_desc: Terraced coffee groves step shaded trees across wet hillsides. Washing frames, pottery vessels, and woven drying mats keep cherries moving from harvest to cured beans.
     pp_terraced_coffee_grove: Terraced Coffee Groves

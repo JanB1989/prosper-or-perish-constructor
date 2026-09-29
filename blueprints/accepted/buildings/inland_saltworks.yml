@@ -5,6 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_inland_saltworks_base_salt: base
+gate_method: pp_inland_saltworks_open_pan_boiling
 upgrade_chain:
   family: inland_saltworks
   tier: 0

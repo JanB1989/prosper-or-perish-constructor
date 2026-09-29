@@ -32,17 +32,20 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_coal_mine_no_primary = {
+    pp_coal_mine_no_secondary = {
         category = building_maintenance
     }
-    pp_coal_mine_coal = {
-        lumber = 0.2
-        tools = 0.23
-        beeswax = 0.049
-        manual_labor = 0.25
-        produced = coal
-        output = 1.0
-        debug_max_profit = 1
+    pp_coal_mine_fireclay = {
+        lumber = 0.033
+        tools = 0.025
+        manual_labor = 0.028
+        produced = clay
+        output = 0.336
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_coal_mine_no_primary = {
         category = building_maintenance
     }
     pp_coal_mine_bell_pits = {
@@ -53,17 +56,14 @@ unique_production_methods = {
         output = 0.8
         category = building_maintenance
     }
-}
-unique_production_methods = {
-    pp_coal_mine_no_secondary = {
-        category = building_maintenance
-    }
-    pp_coal_mine_fireclay = {
-        lumber = 0.033
-        tools = 0.025
-        manual_labor = 0.028
-        produced = clay
-        output = 0.336
+    pp_coal_mine_coal = {
+        lumber = 0.2
+        tools = 0.23
+        beeswax = 0.049
+        manual_labor = 0.25
+        produced = coal
+        output = 1.0
+        debug_max_profit = 1
         category = building_maintenance
     }
 }

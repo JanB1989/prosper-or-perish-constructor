@@ -33,20 +33,6 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_silver_mine_improved_no_primary = {
-        category = building_maintenance
-    }
-    pp_silver_mine_improved_silver = {
-        lumber = 0.21
-        tools = 0.22
-        beeswax = 0.095
-        manual_labor = 0.21
-        produced = silver
-        output = 0.274
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_silver_mine_improved_no_secondary = {
         category = building_maintenance
     }
@@ -64,6 +50,20 @@ unique_production_methods = {
         manual_labor = 0.03
         produced = goods_gold
         output = 0.027
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_silver_mine_improved_no_primary = {
+        category = building_maintenance
+    }
+    pp_silver_mine_improved_silver = {
+        lumber = 0.21
+        tools = 0.22
+        beeswax = 0.095
+        manual_labor = 0.21
+        produced = silver
+        output = 0.274
         category = building_maintenance
     }
 }

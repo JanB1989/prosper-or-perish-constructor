@@ -5,6 +5,7 @@ labour:
   class: primary_reformation
   methods:
     pp_gem_sluice_base_gems: base
+gate_method: pp_gem_sluice_gems
 upgrade_chain:
   family: gem_mine
   tier: 1
@@ -21,13 +22,13 @@ building:
         - pp_gem_sluice_base_gems
     - name: slot_1
       methods:
-        - pp_gem_sluice_no_primary
-        - pp_gem_sluice_gems
+        - pp_gem_sluice_no_secondary
+        - pp_gem_sluice_sand
+        - pp_gem_sluice_gold
     - name: slot_2
       methods:
-        - pp_gem_sluice_no_secondary
-        - pp_gem_sluice_gold
-        - pp_gem_sluice_sand
+        - pp_gem_sluice_no_primary
+        - pp_gem_sluice_gems
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -63,20 +64,15 @@ building:
         }
     }
     unique_production_methods = {
-        pp_gem_sluice_no_primary = {
-            category = building_maintenance
-        }
-        pp_gem_sluice_gems = {
-            lumber = 0.34
-            tools = 0.3
-            manual_labor = 0.2
-            produced = gems
-            output = 0.476
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_gem_sluice_no_secondary = {
+            category = building_maintenance
+        }
+        pp_gem_sluice_sand = {
+            lumber = 0.027
+            tools = 0.018
+            manual_labor = 0.012
+            produced = sand
+            output = 0.198
             category = building_maintenance
         }
         pp_gem_sluice_gold = {
@@ -87,12 +83,17 @@ building:
             output = 0.026
             category = building_maintenance
         }
-        pp_gem_sluice_sand = {
-            lumber = 0.027
-            tools = 0.018
-            manual_labor = 0.012
-            produced = sand
-            output = 0.198
+    }
+    unique_production_methods = {
+        pp_gem_sluice_no_primary = {
+            category = building_maintenance
+        }
+        pp_gem_sluice_gems = {
+            lumber = 0.34
+            tools = 0.3
+            manual_labor = 0.2
+            produced = gems
+            output = 0.476
             category = building_maintenance
         }
     }
@@ -108,8 +109,8 @@ building:
 localization:
   entries:
     gem_sluice_slot_0: Gem Gravel
-    gem_sluice_slot_1: Sluice Washing
-    gem_sluice_slot_2: Placer Byproducts
+    gem_sluice_slot_1: Placer Byproducts
+    gem_sluice_slot_2: Sluice Washing
     gem_sluice: Gem Sluice
     gem_sluice_desc: Timbered sluices and sorting tables wash larger runs of gem-bearing gravel. The same water channels recover gold specks and clean sand.
     pp_gem_sluice_base_gems: Surveyed Gem Gravels

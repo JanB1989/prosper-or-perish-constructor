@@ -3,9 +3,9 @@
 # >>> eu5-building-pipeline:grange:localization
   grange: "Grange"
   grange_desc: "The landowners gather the lasting part of a full province store at the province capital, pack it into [ShowGoodsName('victuals')|e] and send it overland to the regional markets. It pays off when the province store is full; carts and wagons save labour where it is dear, and packing goods waste less of the food."
-  grange_slot_0: "Haulage"
-  grange_slot_1: "Surplus Sales"
-  grange_slot_2: "Packing"
+  grange_slot_0: "Packing"
+  grange_slot_1: "Haulage"
+  grange_slot_2: "Surplus Sales"
   pp_grange_porters: "Porters and Pack Animals"
   pp_grange_ox_carts: "Ox Carts"
   pp_grange_horse_wagons: "Horse Wagons"

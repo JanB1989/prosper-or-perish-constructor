@@ -5,6 +5,7 @@ labour:
   class: primary_discovery
   methods:
     pp_tea_sorting_garden_base_tea: base
+gate_method: pp_tea_sorting_garden_rolling_hearths
 upgrade_chain:
   family: tea_garden
   tier: 1
@@ -21,12 +22,12 @@ building:
     - pp_tea_sorting_garden_base_tea
   - name: slot_1
     methods:
-    - pp_tea_sorting_garden_no_withering
-    - pp_tea_sorting_garden_rolling_hearths
-  - name: slot_2
-    methods:
     - pp_tea_sorting_garden_no_sorting
     - pp_tea_sorting_garden_paper_packing
+  - name: slot_2
+    methods:
+    - pp_tea_sorting_garden_no_withering
+    - pp_tea_sorting_garden_rolling_hearths
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -63,20 +64,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_tea_sorting_garden_no_withering = {
-            category = building_maintenance
-        }
-        pp_tea_sorting_garden_rolling_hearths = {
-            furniture = 0.36 # light tray frames and rolling tables
-            fiber_crops = 0.276 # woven withering mats and baskets
-            pottery = 0.208 # firing hearth pans
-            manual_labor = 0.3
-            produced = tea
-            output = 1.189
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_tea_sorting_garden_no_sorting = {
             category = building_maintenance
         }
@@ -87,6 +74,20 @@ building:
             manual_labor = 0.176
             produced = tea
             output = 0.701
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_tea_sorting_garden_no_withering = {
+            category = building_maintenance
+        }
+        pp_tea_sorting_garden_rolling_hearths = {
+            furniture = 0.36 # light tray frames and rolling tables
+            fiber_crops = 0.276 # woven withering mats and baskets
+            pottery = 0.208 # firing hearth pans
+            manual_labor = 0.3
+            produced = tea
+            output = 1.189
             category = building_maintenance
         }
     }
@@ -110,8 +111,8 @@ advancements:
 localization:
   entries:
     tea_sorting_garden_slot_0: Tea Bushes
-    tea_sorting_garden_slot_1: Withering & Firing
-    tea_sorting_garden_slot_2: Sorting & Packing
+    tea_sorting_garden_slot_1: Sorting & Packing
+    tea_sorting_garden_slot_2: Withering & Firing
     tea_sorting_garden: Tea Sorting Garden
     tea_sorting_garden_desc: Organized tea gardens add rolling tables, firing hearths, sorting trays, and packing sheds so finished leaves reach market in better order.
     pp_tea_sorting_garden: Tea Sorting Gardens

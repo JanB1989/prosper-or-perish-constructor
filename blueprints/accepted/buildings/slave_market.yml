@@ -3,6 +3,7 @@ tag: slave_market
 footprint: trade
 labour:
   class: craft_medieval
+gate_method: pp_slave_market_slave_market_maintenance
 building:
   key: slave_market
   mode: REPLACE

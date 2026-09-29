@@ -32,21 +32,15 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_alum_works_no_primary = {
-        category = building_maintenance
-    }
-    pp_alum_works_alum = {
-        lumber = 0.28
-        tools = 0.3
-        coal = 0.066
-        manual_labor = 0.25
-        produced = alum
-        output = 0.672
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_alum_works_no_secondary = {
+        category = building_maintenance
+    }
+    pp_alum_works_clay = {
+        lumber = 0.026
+        tools = 0.017
+        manual_labor = 0.017
+        produced = clay
+        output = 0.252
         category = building_maintenance
     }
     pp_alum_works_stone = {
@@ -57,12 +51,18 @@ unique_production_methods = {
         output = 0.16
         category = building_maintenance
     }
-    pp_alum_works_clay = {
-        lumber = 0.026
-        tools = 0.017
-        manual_labor = 0.017
-        produced = clay
-        output = 0.252
+}
+unique_production_methods = {
+    pp_alum_works_no_primary = {
+        category = building_maintenance
+    }
+    pp_alum_works_alum = {
+        lumber = 0.28
+        tools = 0.3
+        coal = 0.066
+        manual_labor = 0.25
+        produced = alum
+        output = 0.672
         category = building_maintenance
     }
 }

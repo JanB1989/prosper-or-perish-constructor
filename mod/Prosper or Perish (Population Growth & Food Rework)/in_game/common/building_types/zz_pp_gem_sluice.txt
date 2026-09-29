@@ -33,20 +33,15 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_gem_sluice_no_primary = {
-        category = building_maintenance
-    }
-    pp_gem_sluice_gems = {
-        lumber = 0.34
-        tools = 0.3
-        manual_labor = 0.2
-        produced = gems
-        output = 0.476
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_gem_sluice_no_secondary = {
+        category = building_maintenance
+    }
+    pp_gem_sluice_sand = {
+        lumber = 0.027
+        tools = 0.018
+        manual_labor = 0.012
+        produced = sand
+        output = 0.198
         category = building_maintenance
     }
     pp_gem_sluice_gold = {
@@ -57,12 +52,17 @@ unique_production_methods = {
         output = 0.026
         category = building_maintenance
     }
-    pp_gem_sluice_sand = {
-        lumber = 0.027
-        tools = 0.018
-        manual_labor = 0.012
-        produced = sand
-        output = 0.198
+}
+unique_production_methods = {
+    pp_gem_sluice_no_primary = {
+        category = building_maintenance
+    }
+    pp_gem_sluice_gems = {
+        lumber = 0.34
+        tools = 0.3
+        manual_labor = 0.2
+        produced = gems
+        output = 0.476
         category = building_maintenance
     }
 }

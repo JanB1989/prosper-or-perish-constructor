@@ -3,6 +3,7 @@ tag: cloth_guild
 footprint: urban_workshop
 labour:
   class: craft_medieval
+gate_method: pp_cloth_guild_wool_cloth_guild_maintenance
 building:
   key: cloth_guild
   mode: REPLACE
@@ -10,9 +11,9 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
+    - pp_cloth_guild_fiber_crops_cloth_guild_maintenance
     - pp_cloth_guild_cotton_cloth_guild_maintenance
     - pp_cloth_guild_wool_cloth_guild_maintenance
-    - pp_cloth_guild_fiber_crops_cloth_guild_maintenance
   possible_production_methods: []
   body: |
     is_foreign = no
@@ -26,6 +27,14 @@ building:
     megalopolis = yes
     build_time = guild_build_time
     unique_production_methods = {
+        pp_cloth_guild_fiber_crops_cloth_guild_maintenance = {
+            fiber_crops = 1
+            manual_labor = 0.33
+            produced = cloth
+            output = 0.8
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
         pp_cloth_guild_cotton_cloth_guild_maintenance = {
             cotton = 0.84
             manual_labor = 0.41
@@ -39,14 +48,6 @@ building:
             manual_labor = 0.4
             produced = cloth
             output = 1.0
-            debug_max_profit = guild_profit_margin
-            category = guild_input
-        }
-        pp_cloth_guild_fiber_crops_cloth_guild_maintenance = {
-            fiber_crops = 1
-            manual_labor = 0.33
-            produced = cloth
-            output = 0.8
             debug_max_profit = guild_profit_margin
             category = guild_input
         }

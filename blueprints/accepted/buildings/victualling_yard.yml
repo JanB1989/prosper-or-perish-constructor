@@ -3,6 +3,7 @@ tag: victualling_yard
 footprint: trade
 labour:
   class: keep
+gate_method: pp_victualling_yard_fish_shipment
 building:
   key: victualling_yard
   mode: CREATE

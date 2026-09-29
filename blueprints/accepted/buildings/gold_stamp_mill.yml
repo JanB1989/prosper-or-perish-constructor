@@ -5,6 +5,7 @@ labour:
   class: primary_reformation
   methods:
     pp_gold_stamp_mill_base_gold: base
+gate_method: pp_gold_stamp_mill_gold
 upgrade_chain:
   family: gold_mine
   tier: 1
@@ -21,13 +22,13 @@ building:
         - pp_gold_stamp_mill_base_gold
     - name: slot_1
       methods:
-        - pp_gold_stamp_mill_no_primary
-        - pp_gold_stamp_mill_gold
-    - name: slot_2
-      methods:
         - pp_gold_stamp_mill_no_secondary
         - pp_gold_stamp_mill_silver
         - pp_gold_stamp_mill_copper
+    - name: slot_2
+      methods:
+        - pp_gold_stamp_mill_no_primary
+        - pp_gold_stamp_mill_gold
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -63,20 +64,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_gold_stamp_mill_no_primary = {
-            category = building_maintenance
-        }
-        pp_gold_stamp_mill_gold = {
-            lumber = 0.33
-            tools = 0.28
-            mercury = 0.08
-            manual_labor = 0.19
-            produced = goods_gold
-            output = 0.26
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_gold_stamp_mill_no_secondary = {
             category = building_maintenance
         }
@@ -99,6 +86,20 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_gold_stamp_mill_no_primary = {
+            category = building_maintenance
+        }
+        pp_gold_stamp_mill_gold = {
+            lumber = 0.33
+            tools = 0.28
+            mercury = 0.08
+            manual_labor = 0.19
+            produced = goods_gold
+            output = 0.26
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -111,8 +112,8 @@ building:
 localization:
   entries:
     gold_stamp_mill_slot_0: Gold Deposit
-    gold_stamp_mill_slot_1: Stamp-Mill Recovery
-    gold_stamp_mill_slot_2: Assay Sorting
+    gold_stamp_mill_slot_1: Assay Sorting
+    gold_stamp_mill_slot_2: Stamp-Mill Recovery
     gold_stamp_mill: Gold Stamp Mill
     gold_stamp_mill_desc: Stamp mills crush quartz and lode ore so mercury can collect fine gold. Assayers test the remaining ore for silver and copper values.
     pp_gold_stamp_mill_base_gold: Surveyed Gold Deposit

@@ -3,6 +3,7 @@ tag: weapon_workshop
 footprint: urban_workshop
 labour:
   class: craft_discovery
+gate_method: pp_weapon_workshop_weapon_workshop_maintenance
 building:
   key: weapon_workshop
   mode: REPLACE

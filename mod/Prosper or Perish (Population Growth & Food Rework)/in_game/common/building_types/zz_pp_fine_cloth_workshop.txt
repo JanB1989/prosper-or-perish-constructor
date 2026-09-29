@@ -12,46 +12,6 @@ city = yes
 megalopolis = yes
 build_time = workshop_build_time
 unique_production_methods = {
-    pp_fine_cloth_workshop_fine_cloth_workshop_maintenance = {
-        cloth = 1.04
-        manual_labor = 0.35
-        produced = fine_cloth
-        output = 0.6
-        category = workshop_input
-        debug_max_profit = workshop_profit_margin
-    }
-    pp_fine_cloth_workshop_wool_weavers_workshop_maintenance = {
-        wool = 1.25
-        manual_labor = 0.34
-        produced = fine_cloth
-        output = 0.6
-        category = workshop_input
-        debug_max_profit = workshop_profit_margin
-    }
-    pp_fine_cloth_workshop_silk_weavers_workshop_maintenance = {
-        silk = 1.05
-        manual_labor = 0.47
-        produced = fine_cloth
-        output = 0.8
-        category = workshop_input
-        debug_max_profit = workshop_profit_margin
-    }
-    pp_fine_cloth_workshop_spanish_cloth_workshop_maintenance = {
-        allow = {
-            custom_tooltip = {
-                text = has_unlocked_spanish_cloth_industry
-                has_variable = spanish_cloth_industry
-            }
-        }
-        wool = 1.25
-        manual_labor = 0.34
-        produced = fine_cloth
-        output = 0.6
-        debug_max_profit = workshop_profit_margin
-        category = workshop_input
-    }
-}
-unique_production_methods = {
     pp_fine_cloth_workshop_standard_fine_cloth_workshop_maintenance = {
         produced = fine_cloth
         dyes = 0.13
@@ -76,6 +36,46 @@ unique_production_methods = {
         output = 0.25
         debug_max_profit = workshop_profit_margin
         category = workshop_input
+    }
+}
+unique_production_methods = {
+    pp_fine_cloth_workshop_fine_cloth_workshop_maintenance = {
+        cloth = 1.04
+        manual_labor = 0.35
+        produced = fine_cloth
+        output = 0.6
+        category = workshop_input
+        debug_max_profit = workshop_profit_margin
+    }
+    pp_fine_cloth_workshop_wool_weavers_workshop_maintenance = {
+        wool = 1.25
+        manual_labor = 0.34
+        produced = fine_cloth
+        output = 0.6
+        category = workshop_input
+        debug_max_profit = workshop_profit_margin
+    }
+    pp_fine_cloth_workshop_spanish_cloth_workshop_maintenance = {
+        allow = {
+            custom_tooltip = {
+                text = has_unlocked_spanish_cloth_industry
+                has_variable = spanish_cloth_industry
+            }
+        }
+        wool = 1.25
+        manual_labor = 0.34
+        produced = fine_cloth
+        output = 0.6
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_fine_cloth_workshop_silk_weavers_workshop_maintenance = {
+        silk = 1.05
+        manual_labor = 0.47
+        produced = fine_cloth
+        output = 0.8
+        category = workshop_input
+        debug_max_profit = workshop_profit_margin
     }
 }
 obsolete = fine_cloth_guild

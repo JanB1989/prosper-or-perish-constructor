@@ -33,20 +33,6 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_gold_stamp_mill_no_primary = {
-        category = building_maintenance
-    }
-    pp_gold_stamp_mill_gold = {
-        lumber = 0.33
-        tools = 0.28
-        mercury = 0.08
-        manual_labor = 0.19
-        produced = goods_gold
-        output = 0.26
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_gold_stamp_mill_no_secondary = {
         category = building_maintenance
     }
@@ -66,6 +52,20 @@ unique_production_methods = {
         manual_labor = 0.022
         produced = copper
         output = 0.1
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_gold_stamp_mill_no_primary = {
+        category = building_maintenance
+    }
+    pp_gold_stamp_mill_gold = {
+        lumber = 0.33
+        tools = 0.28
+        mercury = 0.08
+        manual_labor = 0.19
+        produced = goods_gold
+        output = 0.26
         category = building_maintenance
     }
 }

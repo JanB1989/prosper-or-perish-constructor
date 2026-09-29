@@ -3,6 +3,7 @@ tag: cannon_maker
 footprint: urban_workshop
 labour:
   class: craft_medieval
+gate_method: pp_cannon_maker_cannon_maker_iron_maintenance
 building:
   key: cannon_maker
   mode: REPLACE
@@ -10,14 +11,14 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
-    - pp_cannon_maker_cannon_maker_lumber_maintenance
-    - pp_cannon_maker_cannon_maker_bronze_maintenance
-    - pp_cannon_maker_cannon_maker_iron_maintenance
-  - name: slot_1
-    methods:
     - pp_cannon_maker_cannon_maker_ammunition_stone_maintenance
     - pp_cannon_maker_cannon_maker_ammunition_lead_maintenance
     - pp_cannon_maker_cannon_maker_ammunition_iron_maintenance
+  - name: slot_1
+    methods:
+    - pp_cannon_maker_cannon_maker_lumber_maintenance
+    - pp_cannon_maker_cannon_maker_bronze_maintenance
+    - pp_cannon_maker_cannon_maker_iron_maintenance
   possible_production_methods: []
   body: |
     is_foreign = no
@@ -30,6 +31,35 @@ building:
     city = yes
     megalopolis = yes
     build_time = guild_build_time
+    unique_production_methods = {
+        pp_cannon_maker_cannon_maker_ammunition_stone_maintenance = {
+            stone = 0.089
+            saltpeter = 0.089
+            manual_labor = 0.045
+            produced = cannons
+            output = 0.087
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_cannon_maker_cannon_maker_ammunition_lead_maintenance = {
+            lead = 0.095
+            saltpeter = 0.095
+            manual_labor = 0.064
+            produced = cannons
+            output = 0.12
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_cannon_maker_cannon_maker_ammunition_iron_maintenance = {
+            iron = 0.095
+            saltpeter = 0.095
+            manual_labor = 0.083
+            produced = cannons
+            output = 0.16
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+    }
     unique_production_methods = {
         pp_cannon_maker_cannon_maker_lumber_maintenance = {
             lumber = 0.092
@@ -61,44 +91,15 @@ building:
             category = guild_input
         }
     }
-    unique_production_methods = {
-        pp_cannon_maker_cannon_maker_ammunition_stone_maintenance = {
-            stone = 0.089
-            saltpeter = 0.089
-            manual_labor = 0.045
-            produced = cannons
-            output = 0.087
-            debug_max_profit = guild_profit_margin
-            category = guild_input
-        }
-        pp_cannon_maker_cannon_maker_ammunition_lead_maintenance = {
-            lead = 0.095
-            saltpeter = 0.095
-            manual_labor = 0.064
-            produced = cannons
-            output = 0.12
-            debug_max_profit = guild_profit_margin
-            category = guild_input
-        }
-        pp_cannon_maker_cannon_maker_ammunition_iron_maintenance = {
-            iron = 0.095
-            saltpeter = 0.095
-            manual_labor = 0.083
-            produced = cannons
-            output = 0.16
-            debug_max_profit = guild_profit_margin
-            category = guild_input
-        }
-    }
     construction_demand = guild_construction
     increase_per_level_cost = 0.25
 localization:
   entries:
     cannon_maker_slot_0: Cannon Maker Work
+    cannon_maker_slot_1: Cannon Maker Work
     pp_cannon_maker_cannon_maker_lumber_maintenance: Cannon Maker Cannon Maker Lumber Maintenance
     pp_cannon_maker_cannon_maker_bronze_maintenance: Cannon Maker Cannon Maker Bronze Maintenance
     pp_cannon_maker_cannon_maker_iron_maintenance: Cannon Maker Cannon Maker Iron Maintenance
-    cannon_maker_slot_1: Cannon Maker Work
     pp_cannon_maker_cannon_maker_ammunition_stone_maintenance: Cannon Maker Cannon Maker Ammunition Stone Maintenance
     pp_cannon_maker_cannon_maker_ammunition_lead_maintenance: Cannon Maker Cannon Maker Ammunition Lead Maintenance
     pp_cannon_maker_cannon_maker_ammunition_iron_maintenance: Cannon Maker Cannon Maker Ammunition Iron Maintenance

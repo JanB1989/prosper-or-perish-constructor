@@ -3,6 +3,7 @@ tag: brewery_mill
 footprint: mill_works
 labour:
   class: craft_revolutions
+gate_method: pp_brewery_mill_brewery_mill_maintenance
 building:
   key: brewery_mill
   mode: REPLACE

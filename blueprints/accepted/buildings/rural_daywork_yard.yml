@@ -1,6 +1,7 @@
 version: 2
 tag: rural_daywork_yard
 footprint: rural_village
+gate_method: pp_rural_daywork_yard_ox_teams
 building:
   key: rural_daywork_yard
   mode: CREATE
@@ -9,8 +10,8 @@ building:
     - name: slot_0
       methods:
         - pp_rural_daywork_yard_harvest_gangs
-        - pp_rural_daywork_yard_ox_teams
         - pp_rural_daywork_yard_ditch_gangs
+        - pp_rural_daywork_yard_ox_teams
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -39,19 +40,19 @@ building:
         fiber_crops = 0.5
         category = building_maintenance
       }
-      pp_rural_daywork_yard_ox_teams = {
-        produced = manual_labor
-        output = 1.5
-        livestock = 1.0
-        leather = 0.25
-        category = building_maintenance
-      }
       pp_rural_daywork_yard_ditch_gangs = {
         produced = manual_labor
         output = 1.45
         clay = 1.2
         lumber = 0.6
         beer = 0.35
+        category = building_maintenance
+      }
+      pp_rural_daywork_yard_ox_teams = {
+        produced = manual_labor
+        output = 1.5
+        livestock = 1.0
+        leather = 0.25
         category = building_maintenance
       }
     }

@@ -27,11 +27,27 @@ raw_modifier = {
 }
 increase_per_level_cost = 0.16
 unique_production_methods = {
-    pp_market_village_rural_blacksmith = {
-        produced = tools
-        output = 0.4
-        iron = 0.31
-        manual_labor = 0.5
+    pp_market_village_rural_pottery_maker = {
+        produced = pottery
+        output = 0.2
+        clay = 0.25
+        manual_labor = 0.042
+        debug_max_profit = rural_profit_margin
+        category = building_maintenance
+    }
+    pp_market_village_rural_jewelry_carver = {
+        produced = jewelry
+        output = 0.1
+        stone = 0.32
+        manual_labor = 0.11
+        debug_max_profit = rural_profit_margin
+        category = building_maintenance
+    }
+    pp_market_village_rural_weaponmaker = {
+        produced = weaponry
+        output = 0.2
+        lumber = 0.25
+        manual_labor = 0.15
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }
@@ -45,27 +61,11 @@ unique_production_methods = {
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }
-    pp_market_village_rural_weaponmaker = {
-        produced = weaponry
-        output = 0.2
-        lumber = 0.25
-        manual_labor = 0.15
-        debug_max_profit = rural_profit_margin
-        category = building_maintenance
-    }
-    pp_market_village_rural_jewelry_carver = {
-        produced = jewelry
-        output = 0.1
-        stone = 0.32
-        manual_labor = 0.11
-        debug_max_profit = rural_profit_margin
-        category = building_maintenance
-    }
-    pp_market_village_rural_pottery_maker = {
-        produced = pottery
-        output = 0.2
-        clay = 0.25
-        manual_labor = 0.042
+    pp_market_village_rural_blacksmith = {
+        produced = tools
+        output = 0.4
+        iron = 0.31
+        manual_labor = 0.5
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }

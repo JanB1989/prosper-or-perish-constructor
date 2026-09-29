@@ -3,6 +3,7 @@ tag: weapon_factory
 footprint: mill_works
 labour:
   class: craft_revolutions
+gate_method: pp_weapon_factory_weapon_factory_maintenance
 building:
   key: weapon_factory
   mode: REPLACE

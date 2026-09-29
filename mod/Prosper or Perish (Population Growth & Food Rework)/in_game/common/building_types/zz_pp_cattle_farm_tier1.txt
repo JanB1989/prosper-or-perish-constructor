@@ -48,16 +48,16 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
+    pp_cattle_farmstead_sell_surplus = {
+        produced = province_food_sales
+        output = 0.007
+        category = building_maintenance
+    }
     pp_cattle_farmstead_provision = {
         livestock = 0.071
         produced = local_food
         output = 1.28
         debug_max_profit = 5.009
-        category = building_maintenance
-    }
-    pp_cattle_farmstead_sell_surplus = {
-        produced = province_food_sales
-        output = 0.007
         category = building_maintenance
     }
 }

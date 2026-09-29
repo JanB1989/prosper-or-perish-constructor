@@ -3,6 +3,7 @@ tag: cookshop
 footprint: manufactory
 labour:
   class: craft_medieval
+gate_method: pp_cookshop_boreal_hunter_stew_serve
 upgrade_chain:
   family: cookshop
   tier: 0
@@ -16,30 +17,30 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_cookshop_khichdi_serve
-        - pp_cookshop_fish_congee_serve
-        - pp_cookshop_livestock_pottage_serve
-        - pp_cookshop_mediterranean_fish_serve
-        - pp_cookshop_mutton_and_pease_serve
-        - pp_cookshop_surstromming_serve
-        - pp_cookshop_pozole_serve
-        - pp_cookshop_pemmican_serve
-        - pp_cookshop_labskaus_serve
-        - pp_cookshop_meat_tajine_serve
-        - pp_cookshop_saltfish_porridge_serve
-        - pp_cookshop_ika_mata_serve
-        - pp_cookshop_kheer_serve
-        - pp_cookshop_honey_gruel_serve
-        - pp_cookshop_boreal_hunter_stew_serve
-    - name: slot_1
-      methods:
         - pp_cookshop_well_water
+        - pp_cookshop_coffee
+        - pp_cookshop_chocolate
+        - pp_cookshop_tea
         - pp_cookshop_beer
         - pp_cookshop_wine
         - pp_cookshop_liquor
-        - pp_cookshop_chocolate
-        - pp_cookshop_coffee
-        - pp_cookshop_tea
+    - name: slot_1
+      methods:
+        - pp_cookshop_khichdi_serve
+        - pp_cookshop_fish_congee_serve
+        - pp_cookshop_pozole_serve
+        - pp_cookshop_mediterranean_fish_serve
+        - pp_cookshop_kheer_serve
+        - pp_cookshop_pemmican_serve
+        - pp_cookshop_labskaus_serve
+        - pp_cookshop_ika_mata_serve
+        - pp_cookshop_livestock_pottage_serve
+        - pp_cookshop_mutton_and_pease_serve
+        - pp_cookshop_saltfish_porridge_serve
+        - pp_cookshop_surstromming_serve
+        - pp_cookshop_honey_gruel_serve
+        - pp_cookshop_meat_tajine_serve
+        - pp_cookshop_boreal_hunter_stew_serve
   possible_production_methods: []
   body: |2-
     	is_foreign = no
@@ -61,6 +62,64 @@ building:
     	important_for_AI = yes
     	AI_ignore_available_worker_flag = yes
     	can_close = yes
+    	# ==========================================
+    	# 2. TABLE BEVERAGES (pick ONE), served as Province Food
+    	# - Baseline: well water (no trade goods; EU5 has no water good)
+    	# - Upgrades: one drink good each (weights sum prior two-input recipes for similar cost)
+    	# ==========================================
+    	unique_production_methods = {
+    		pp_cookshop_well_water = {
+    			category = building_maintenance
+    		}
+    		pp_cookshop_coffee = {
+    			coffee = 0.36
+    			manual_labor = 0.19
+    			produced = local_food
+    			output = 10.68
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_cookshop_chocolate = {
+    			cocoa = 0.24
+    			manual_labor = 0.17
+    			produced = local_food
+    			output = 10.8
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_cookshop_tea = {
+    			tea = 0.46
+    			manual_labor = 0.21
+    			produced = local_food
+    			output = 13.71
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_cookshop_beer = {
+    			beer = 0.64
+    			manual_labor = 0.22
+    			produced = local_food
+    			output = 13.89
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_cookshop_wine = {
+    			wine = 0.64
+    			manual_labor = 0.22
+    			produced = local_food
+    			output = 14.22
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_cookshop_liquor = {
+            liquor = 0.56
+            manual_labor = 0.22
+    			produced = local_food
+    			output = 14.7
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    	}
     	# ==========================================
     	# 1. MAIN DISH (pick ONE)
     	# - Main food preparations
@@ -89,14 +148,14 @@ building:
     			category = building_maintenance
     		}
 
-    		# --- EUROPE ---
-    		pp_cookshop_livestock_pottage_serve = {
-            wheat = 1.08
-            livestock = 0.77
-            legumes = 0.22
-            manual_labor = 0.4
+    		# --- AMERICA ---
+    		pp_cookshop_pozole_serve = {
+            maize = 0.69
+            wild_game = 0.87
+            chili = 0.13
+            manual_labor = 0.39
     			produced = local_food
-            output = 27.57
+            output = 25.2
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -110,35 +169,14 @@ building:
     			debug_max_profit = 0
     			category = building_maintenance
     		}
-    		pp_cookshop_mutton_and_pease_serve = {
-            wool = 0.83
-            legumes = 0.4
-            salt = 0.045
-            manual_labor = 0.45
+    		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
+    		pp_cookshop_kheer_serve = {
+            rice = 1.11
+            sugar = 0.1
+            livestock = 0.61
+            manual_labor = 0.37
     			produced = local_food
-            output = 27.57
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_cookshop_surstromming_serve = {
-            fish = 1.73
-            millet = 0.18
-            salt = 0.18
-            manual_labor = 0.44
-    			produced = local_food
-            output = 28.32
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-
-    		# --- AMERICA ---
-    		pp_cookshop_pozole_serve = {
-            maize = 0.69
-            wild_game = 0.87
-            chili = 0.13
-            manual_labor = 0.39
-    			produced = local_food
-            output = 25.2
+            output = 26.07
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -152,6 +190,7 @@ building:
     			debug_max_profit = 0
     			category = building_maintenance
     		}
+
     		pp_cookshop_labskaus_serve = {
             potato = 0.32
             fish = 0.51
@@ -162,15 +201,36 @@ building:
     			debug_max_profit = 0
     			category = building_maintenance
     		}
-
-    		# --- AFRICA (NEW) ---
-    		pp_cookshop_meat_tajine_serve = {
-            livestock = 1.18
-            fruit = 0.54
-            saffron = 0.051
-            manual_labor = 0.42
+    		# --- OCEANIA (NEW) ---
+    		pp_cookshop_ika_mata_serve = {
+            fish = 1.61
+            fruit = 0.84
+            salt = 0.034
+            manual_labor = 0.44
     			produced = local_food
-            output = 28.68
+            output = 26.52
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		# --- EUROPE ---
+    		pp_cookshop_livestock_pottage_serve = {
+            wheat = 1.08
+            livestock = 0.77
+            legumes = 0.22
+            manual_labor = 0.4
+    			produced = local_food
+            output = 27.57
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+
+    		pp_cookshop_mutton_and_pease_serve = {
+            wool = 0.83
+            legumes = 0.4
+            salt = 0.045
+            manual_labor = 0.45
+    			produced = local_food
+            output = 27.57
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -185,29 +245,17 @@ building:
     			category = building_maintenance
     		}
 
-    		# --- OCEANIA (NEW) ---
-    		pp_cookshop_ika_mata_serve = {
-            fish = 1.61
-            fruit = 0.84
-            salt = 0.034
+    		pp_cookshop_surstromming_serve = {
+            fish = 1.73
+            millet = 0.18
+            salt = 0.18
             manual_labor = 0.44
     			produced = local_food
-            output = 26.52
+            output = 28.32
     			debug_max_profit = 0
     			category = building_maintenance
     		}
 
-    		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
-    		pp_cookshop_kheer_serve = {
-            rice = 1.11
-            sugar = 0.1
-            livestock = 0.61
-            manual_labor = 0.37
-    			produced = local_food
-            output = 26.07
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
     		pp_cookshop_honey_gruel_serve = {
             wheat = 0.8
             fruit = 0.54
@@ -218,6 +266,17 @@ building:
     			debug_max_profit = 0
     			category = building_maintenance
     		}
+    		# --- AFRICA (NEW) ---
+    		pp_cookshop_meat_tajine_serve = {
+            livestock = 1.18
+            fruit = 0.54
+            saffron = 0.051
+            manual_labor = 0.42
+    			produced = local_food
+            output = 28.68
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
     		pp_cookshop_boreal_hunter_stew_serve = {
             fur = 0.77
             millet = 0.67
@@ -225,64 +284,6 @@ building:
             manual_labor = 0.42
     			produced = local_food
             output = 28.68
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    	}
-    	# ==========================================
-    	# 2. TABLE BEVERAGES (pick ONE), served as Province Food
-    	# - Baseline: well water (no trade goods; EU5 has no water good)
-    	# - Upgrades: one drink good each (weights sum prior two-input recipes for similar cost)
-    	# ==========================================
-    	unique_production_methods = {
-    		pp_cookshop_well_water = {
-    			category = building_maintenance
-    		}
-    		pp_cookshop_beer = {
-    			beer = 0.64
-    			manual_labor = 0.22
-    			produced = local_food
-    			output = 13.89
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_cookshop_wine = {
-    			wine = 0.64
-    			manual_labor = 0.22
-    			produced = local_food
-    			output = 14.22
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_cookshop_liquor = {
-            liquor = 0.56
-            manual_labor = 0.22
-    			produced = local_food
-    			output = 14.7
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_cookshop_chocolate = {
-    			cocoa = 0.24
-    			manual_labor = 0.17
-    			produced = local_food
-    			output = 10.8
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_cookshop_coffee = {
-    			coffee = 0.36
-    			manual_labor = 0.19
-    			produced = local_food
-    			output = 10.68
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_cookshop_tea = {
-    			tea = 0.46
-    			manual_labor = 0.21
-    			produced = local_food
-    			output = 13.71
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -300,8 +301,8 @@ localization:
   entries:
     cookshop: Cookshop
     cookshop_desc: A street kitchen that cooks the market's staples into hot meals for people who have no hearth of their own. Its dishes and drinks feed the province as [ShowGoodsName('local_food')|e].
-    cookshop_slot_0: Main Dish
-    cookshop_slot_1: Drink
+    cookshop_slot_0: Drink
+    cookshop_slot_1: Main Dish
     pp_cookshop_beer: Beer
     pp_cookshop_boreal_hunter_stew_serve: Serve Boreal Hunter's Stew
     pp_cookshop_chocolate: Chocolate

@@ -5,6 +5,7 @@ labour:
   class: primary_revolutions
   methods:
     pp_coal_mine_revolutions_base_coal: base
+gate_method: pp_coal_mine_revolutions_coal
 upgrade_chain:
   family: coal_mine
   tier: 2
@@ -21,12 +22,12 @@ building:
         - pp_coal_mine_revolutions_base_coal
     - name: slot_1
       methods:
-        - pp_coal_mine_revolutions_no_primary
-        - pp_coal_mine_revolutions_coal
-    - name: slot_2
-      methods:
         - pp_coal_mine_revolutions_no_secondary
         - pp_coal_mine_revolutions_fireclay
+    - name: slot_2
+      methods:
+        - pp_coal_mine_revolutions_no_primary
+        - pp_coal_mine_revolutions_coal
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -62,6 +63,19 @@ building:
         }
     }
     unique_production_methods = {
+        pp_coal_mine_revolutions_no_secondary = {
+            category = building_maintenance
+        }
+        pp_coal_mine_revolutions_fireclay = {
+            lumber = 0.038
+            tools = 0.019
+            manual_labor = 0.007
+            produced = clay
+            output = 0.302
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
         pp_coal_mine_revolutions_no_primary = {
             category = building_maintenance
         }
@@ -72,19 +86,6 @@ building:
             manual_labor = 0.15
             produced = coal
             output = 2.25
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
-        pp_coal_mine_revolutions_no_secondary = {
-            category = building_maintenance
-        }
-        pp_coal_mine_revolutions_fireclay = {
-            lumber = 0.038
-            tools = 0.019
-            manual_labor = 0.007
-            produced = clay
-            output = 0.302
             category = building_maintenance
         }
     }
@@ -100,8 +101,8 @@ building:
 localization:
   entries:
     coal_mine_revolutions_slot_0: Coal Seam
-    coal_mine_revolutions_slot_1: Deep Colliery Workings
-    coal_mine_revolutions_slot_2: Clay Recovery
+    coal_mine_revolutions_slot_1: Clay Recovery
+    coal_mine_revolutions_slot_2: Deep Colliery Workings
     coal_mine_revolutions: Deep Colliery
     coal_mine_revolutions_desc: Deep shafts, stronger haulage, better drainage, and systematic sorting let large collieries work coal seams at industrial scale.
     pp_coal_mine_revolutions_base_coal: Deep Coal Seam

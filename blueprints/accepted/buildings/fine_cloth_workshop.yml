@@ -3,6 +3,7 @@ tag: fine_cloth_workshop
 footprint: urban_workshop
 labour:
   class: craft_reformation
+gate_method: pp_fine_cloth_workshop_silk_weavers_workshop_maintenance
 building:
   key: fine_cloth_workshop
   mode: REPLACE
@@ -10,15 +11,15 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
-    - pp_fine_cloth_workshop_fine_cloth_workshop_maintenance
-    - pp_fine_cloth_workshop_wool_weavers_workshop_maintenance
-    - pp_fine_cloth_workshop_silk_weavers_workshop_maintenance
-    - pp_fine_cloth_workshop_spanish_cloth_workshop_maintenance
-  - name: slot_1
-    methods:
     - pp_fine_cloth_workshop_standard_fine_cloth_workshop_maintenance
     - pp_fine_cloth_workshop_alum_fine_cloth_workshop_maintenance
     - pp_fine_cloth_workshop_fur_trim_workshop_maintenance
+  - name: slot_1
+    methods:
+    - pp_fine_cloth_workshop_fine_cloth_workshop_maintenance
+    - pp_fine_cloth_workshop_wool_weavers_workshop_maintenance
+    - pp_fine_cloth_workshop_spanish_cloth_workshop_maintenance
+    - pp_fine_cloth_workshop_silk_weavers_workshop_maintenance
   possible_production_methods: []
   body: |
     audio_tier = 2
@@ -32,46 +33,6 @@ building:
     city = yes
     megalopolis = yes
     build_time = workshop_build_time
-    unique_production_methods = {
-        pp_fine_cloth_workshop_fine_cloth_workshop_maintenance = {
-            cloth = 1.04
-            manual_labor = 0.35
-            produced = fine_cloth
-            output = 0.6
-            category = workshop_input
-            debug_max_profit = workshop_profit_margin
-        }
-        pp_fine_cloth_workshop_wool_weavers_workshop_maintenance = {
-            wool = 1.25
-            manual_labor = 0.34
-            produced = fine_cloth
-            output = 0.6
-            category = workshop_input
-            debug_max_profit = workshop_profit_margin
-        }
-        pp_fine_cloth_workshop_silk_weavers_workshop_maintenance = {
-            silk = 1.05
-            manual_labor = 0.47
-            produced = fine_cloth
-            output = 0.8
-            category = workshop_input
-            debug_max_profit = workshop_profit_margin
-        }
-        pp_fine_cloth_workshop_spanish_cloth_workshop_maintenance = {
-            allow = {
-                custom_tooltip = {
-                    text = has_unlocked_spanish_cloth_industry
-                    has_variable = spanish_cloth_industry
-                }
-            }
-            wool = 1.25
-            manual_labor = 0.34
-            produced = fine_cloth
-            output = 0.6
-            debug_max_profit = workshop_profit_margin
-            category = workshop_input
-        }
-    }
     unique_production_methods = {
         pp_fine_cloth_workshop_standard_fine_cloth_workshop_maintenance = {
             produced = fine_cloth
@@ -99,6 +60,46 @@ building:
             category = workshop_input
         }
     }
+    unique_production_methods = {
+        pp_fine_cloth_workshop_fine_cloth_workshop_maintenance = {
+            cloth = 1.04
+            manual_labor = 0.35
+            produced = fine_cloth
+            output = 0.6
+            category = workshop_input
+            debug_max_profit = workshop_profit_margin
+        }
+        pp_fine_cloth_workshop_wool_weavers_workshop_maintenance = {
+            wool = 1.25
+            manual_labor = 0.34
+            produced = fine_cloth
+            output = 0.6
+            category = workshop_input
+            debug_max_profit = workshop_profit_margin
+        }
+        pp_fine_cloth_workshop_spanish_cloth_workshop_maintenance = {
+            allow = {
+                custom_tooltip = {
+                    text = has_unlocked_spanish_cloth_industry
+                    has_variable = spanish_cloth_industry
+                }
+            }
+            wool = 1.25
+            manual_labor = 0.34
+            produced = fine_cloth
+            output = 0.6
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+        pp_fine_cloth_workshop_silk_weavers_workshop_maintenance = {
+            silk = 1.05
+            manual_labor = 0.47
+            produced = fine_cloth
+            output = 0.8
+            category = workshop_input
+            debug_max_profit = workshop_profit_margin
+        }
+    }
     obsolete = fine_cloth_guild
     custom_tags = {
         workshop
@@ -108,11 +109,11 @@ building:
 localization:
   entries:
     fine_cloth_workshop_slot_0: Fine Cloth Workshop Work
+    fine_cloth_workshop_slot_1: Fine Cloth Workshop Work
     pp_fine_cloth_workshop_fine_cloth_workshop_maintenance: Fine Cloth Workshop Fine Cloth Workshop Maintenance
     pp_fine_cloth_workshop_wool_weavers_workshop_maintenance: Fine Cloth Workshop Wool Weavers Workshop Maintenance
     pp_fine_cloth_workshop_silk_weavers_workshop_maintenance: Fine Cloth Workshop Silk Weavers Workshop Maintenance
     pp_fine_cloth_workshop_spanish_cloth_workshop_maintenance: Fine Cloth Workshop Spanish Cloth Workshop Maintenance
-    fine_cloth_workshop_slot_1: Fine Cloth Workshop Work
     pp_fine_cloth_workshop_standard_fine_cloth_workshop_maintenance: Fine Cloth Workshop Standard Fine Cloth Workshop Maintenance
     pp_fine_cloth_workshop_alum_fine_cloth_workshop_maintenance: Fine Cloth Workshop Alum Fine Cloth Workshop Maintenance
     pp_fine_cloth_workshop_fur_trim_workshop_maintenance: Fine Cloth Workshop Fur Trim Workshop Maintenance

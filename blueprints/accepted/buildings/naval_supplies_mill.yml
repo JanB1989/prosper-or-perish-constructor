@@ -3,6 +3,7 @@ tag: naval_supplies_mill
 footprint: mill_works
 labour:
   class: craft_revolutions
+gate_method: pp_naval_supplies_mill_naval_supplies_mill_maintenance
 building:
   key: naval_supplies_mill
   mode: REPLACE

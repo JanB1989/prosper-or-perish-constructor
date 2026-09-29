@@ -32,25 +32,20 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
+    pp_iron_mine_no_secondary = {
+        category = building_maintenance
+    }
+    pp_iron_mine_ochre = {
+        lumber = 0.033 # washing troughs, racks
+        tools = 0.025 # sieves, shovels
+        manual_labor = 0.028
+        produced = dyes
+        output = 0.042
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
     pp_iron_mine_no_primary = {
-        category = building_maintenance
-    }
-    pp_iron_mine_iron = {
-        lumber = 0.16 # pit props, sorting sheds
-        tools = 0.18 # picks, wedges, hammers
-        beeswax = 0.04 # candles, sealants
-        manual_labor = 0.22
-        produced = iron
-        output = 0.424
-        category = building_maintenance
-    }
-    pp_iron_mine_horse_whim_haulage = {
-        horses = 0.11 # whim draft teams
-        leather = 0.048 # harness, buckets
-        beeswax = 0.024 # mine candles, seals
-        manual_labor = 0.1
-        produced = iron
-        output = 0.251
         category = building_maintenance
     }
     pp_iron_mine_ore_dressing_floors = {
@@ -62,17 +57,22 @@ unique_production_methods = {
         output = 0.21
         category = building_maintenance
     }
-}
-unique_production_methods = {
-    pp_iron_mine_no_secondary = {
+    pp_iron_mine_horse_whim_haulage = {
+        horses = 0.11 # whim draft teams
+        leather = 0.048 # harness, buckets
+        beeswax = 0.024 # mine candles, seals
+        manual_labor = 0.1
+        produced = iron
+        output = 0.251
         category = building_maintenance
     }
-    pp_iron_mine_ochre = {
-        lumber = 0.033 # washing troughs, racks
-        tools = 0.025 # sieves, shovels
-        manual_labor = 0.028
-        produced = dyes
-        output = 0.042
+    pp_iron_mine_iron = {
+        lumber = 0.16 # pit props, sorting sheds
+        tools = 0.18 # picks, wedges, hammers
+        beeswax = 0.04 # candles, sealants
+        manual_labor = 0.22
+        produced = iron
+        output = 0.424
         category = building_maintenance
     }
 }

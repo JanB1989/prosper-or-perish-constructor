@@ -31,19 +31,6 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_amber_collector_no_beach_gathering = {
-        category = building_maintenance
-    }
-    pp_amber_collector_basket_gathering = {
-        fiber_crops = 0.069 # baskets, carrying mats
-        tools = 0.034 # sorting knives
-        manual_labor = 0.056
-        produced = amber
-        output = 0.087
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_amber_collector_no_sand = {
         category = building_maintenance
     }
@@ -59,6 +46,19 @@ unique_production_methods = {
         manual_labor = 0.021
         produced = sand
         output = 0.288
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_amber_collector_no_beach_gathering = {
+        category = building_maintenance
+    }
+    pp_amber_collector_basket_gathering = {
+        fiber_crops = 0.069 # baskets, carrying mats
+        tools = 0.034 # sorting knives
+        manual_labor = 0.056
+        produced = amber
+        output = 0.087
         category = building_maintenance
     }
 }

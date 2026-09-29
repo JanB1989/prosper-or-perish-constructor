@@ -6,6 +6,7 @@ labour:
   methods:
     pp_engineered_brine_saltworks_base_salt: base
 output_tag: inland_saltworks_engineered_brine
+gate_method: pp_engineered_brine_saltworks_mineral_fired_pans
 upgrade_chain:
   family: inland_saltworks
   tier: 1

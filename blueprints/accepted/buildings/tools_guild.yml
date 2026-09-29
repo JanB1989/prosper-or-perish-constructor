@@ -3,6 +3,7 @@ tag: tools_guild
 footprint: urban_workshop
 labour:
   class: craft_medieval
+gate_method: pp_tools_guild_metalwork_guild_maintenance
 building:
   key: tools_guild
   mode: REPLACE
@@ -10,10 +11,10 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
-    - pp_tools_guild_metalwork_guild_maintenance
     - pp_tools_guild_stone_tools_guild_maintenance
-    - pp_tools_guild_bronze_tools_guild_maintenance
     - pp_tools_guild_copper_tools_guild_maintenance
+    - pp_tools_guild_bronze_tools_guild_maintenance
+    - pp_tools_guild_metalwork_guild_maintenance
   possible_production_methods: []
   body: |
     audio_tier = 1
@@ -28,19 +29,19 @@ building:
     megalopolis = yes
     build_time = guild_build_time
     unique_production_methods = {
-        pp_tools_guild_metalwork_guild_maintenance = {
-            iron = 0.72
-            manual_labor = 0.41
-            produced = tools
-            output = 1.0
-            debug_max_profit = guild_profit_margin
-            category = guild_input
-        }
         pp_tools_guild_stone_tools_guild_maintenance = {
             stone = 0.58
             manual_labor = 0.098
             produced = tools
             output = 0.25
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_tools_guild_copper_tools_guild_maintenance = {
+            copper = 0.45
+            manual_labor = 0.23
+            produced = tools
+            output = 0.55
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -53,11 +54,11 @@ building:
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
-        pp_tools_guild_copper_tools_guild_maintenance = {
-            copper = 0.45
-            manual_labor = 0.23
+        pp_tools_guild_metalwork_guild_maintenance = {
+            iron = 0.72
+            manual_labor = 0.41
             produced = tools
-            output = 0.55
+            output = 1.0
             debug_max_profit = guild_profit_margin
             category = guild_input
         }

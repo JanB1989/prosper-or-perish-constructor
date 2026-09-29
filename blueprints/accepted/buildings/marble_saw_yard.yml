@@ -5,6 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_marble_saw_yard_base_marble: base
+gate_method: pp_marble_saw_yard_marble
 upgrade_chain:
   family: marble_quarry
   tier: 1
@@ -21,13 +22,13 @@ building:
         - pp_marble_saw_yard_base_marble
     - name: slot_1
       methods:
-        - pp_marble_saw_yard_no_primary
-        - pp_marble_saw_yard_marble
+        - pp_marble_saw_yard_no_secondary
+        - pp_marble_saw_yard_sand
+        - pp_marble_saw_yard_stone
     - name: slot_2
       methods:
-        - pp_marble_saw_yard_no_secondary
-        - pp_marble_saw_yard_stone
-        - pp_marble_saw_yard_sand
+        - pp_marble_saw_yard_no_primary
+        - pp_marble_saw_yard_marble
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -63,21 +64,15 @@ building:
         }
     }
     unique_production_methods = {
-        pp_marble_saw_yard_no_primary = {
-            category = building_maintenance
-        }
-        pp_marble_saw_yard_marble = {
-            lumber = 0.21
-            tools = 0.24
-            leather = 0.057
-            manual_labor = 0.27
-            produced = marble
-            output = 0.35
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_marble_saw_yard_no_secondary = {
+            category = building_maintenance
+        }
+        pp_marble_saw_yard_sand = {
+            lumber = 0.025
+            tools = 0.016
+            manual_labor = 0.022
+            produced = sand
+            output = 0.198
             category = building_maintenance
         }
         pp_marble_saw_yard_stone = {
@@ -88,12 +83,18 @@ building:
             output = 0.144
             category = building_maintenance
         }
-        pp_marble_saw_yard_sand = {
-            lumber = 0.025
-            tools = 0.016
-            manual_labor = 0.022
-            produced = sand
-            output = 0.198
+    }
+    unique_production_methods = {
+        pp_marble_saw_yard_no_primary = {
+            category = building_maintenance
+        }
+        pp_marble_saw_yard_marble = {
+            lumber = 0.21
+            tools = 0.24
+            leather = 0.057
+            manual_labor = 0.27
+            produced = marble
+            output = 0.35
             category = building_maintenance
         }
     }
@@ -109,8 +110,8 @@ building:
 localization:
   entries:
     marble_saw_yard_slot_0: Marble Deposit
-    marble_saw_yard_slot_1: Sawed Blocks
-    marble_saw_yard_slot_2: Quarry Waste
+    marble_saw_yard_slot_1: Quarry Waste
+    marble_saw_yard_slot_2: Sawed Blocks
     marble_saw_yard: Marble Saw Yard
     marble_saw_yard_desc: Marble yards saw and square larger blocks for transport to builders and sculptors. Rubble and fine stone waste remain useful secondary products.
     pp_marble_saw_yard_base_marble: Surveyed Marble Face

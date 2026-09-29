@@ -5,6 +5,7 @@ labour:
   class: primary_discovery
   methods:
     pp_market_cotton_farm_base_cotton: base
+gate_method: pp_market_cotton_farm_roller_gin_house
 upgrade_chain:
   family: cotton_farm
   tier: 1
@@ -21,12 +22,12 @@ building:
     - pp_market_cotton_farm_base_cotton
   - name: slot_1
     methods:
-    - pp_market_cotton_farm_hand_ginning
-    - pp_market_cotton_farm_roller_gin_house
-  - name: slot_2
-    methods:
     - pp_market_cotton_farm_loose_packing
     - pp_market_cotton_farm_bale_yard
+  - name: slot_2
+    methods:
+    - pp_market_cotton_farm_hand_ginning
+    - pp_market_cotton_farm_roller_gin_house
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -62,19 +63,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_market_cotton_farm_hand_ginning = {
-            category = building_maintenance
-        }
-        pp_market_cotton_farm_roller_gin_house = {
-            furniture = 0.208 # carpentry for roller gin frames
-            tools = 0.02 # metal rollers and adjustment tools
-            manual_labor = 0.108
-            produced = cotton
-            output = 0.443
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_market_cotton_farm_loose_packing = {
             category = building_maintenance
         }
@@ -85,6 +73,19 @@ building:
             manual_labor = 0.096
             produced = cotton
             output = 0.395
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_market_cotton_farm_hand_ginning = {
+            category = building_maintenance
+        }
+        pp_market_cotton_farm_roller_gin_house = {
+            furniture = 0.208 # carpentry for roller gin frames
+            tools = 0.02 # metal rollers and adjustment tools
+            manual_labor = 0.108
+            produced = cotton
+            output = 0.443
             category = building_maintenance
         }
     }
@@ -108,8 +109,8 @@ advancements:
 localization:
   entries:
     market_cotton_farm_slot_0: Cotton Fields
-    market_cotton_farm_slot_1: Ginning
-    market_cotton_farm_slot_2: Packing & Drying
+    market_cotton_farm_slot_1: Packing & Drying
+    market_cotton_farm_slot_2: Ginning
     market_cotton_farm: Market Cotton Farm
     market_cotton_farm_desc: Market cotton farms keep cotton fields, roller gin houses, drying racks, and bale yards close enough for lint to move cleanly into trade.
     pp_market_cotton_farm: Market Cotton Farms

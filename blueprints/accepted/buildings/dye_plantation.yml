@@ -5,6 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_dye_plantation_base_dyes: base
+gate_method: pp_dye_plantation_vat_curing
 building:
   key: dye_plantation
   mode: CREATE

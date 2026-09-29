@@ -9,6 +9,7 @@ labour:
     pp_cattle_farm_open_pasture: hand_work
     pp_cattle_farm_provision: keep
     pp_cattle_farm_sell_surplus: keep
+gate_method: pp_cattle_farm_provision
 upgrade_chain:
   family: cattle_farm
   tier: 0
@@ -30,8 +31,8 @@ building:
     - pp_cattle_farm_byres_yards
   - name: slot_2
     methods:
-    - pp_cattle_farm_provision
     - pp_cattle_farm_sell_surplus
+    - pp_cattle_farm_provision
   possible_production_methods: []
   body: |-
     audio_tier = 1
@@ -89,16 +90,16 @@ building:
         }
     }
     unique_production_methods = {
+        pp_cattle_farm_sell_surplus = {
+            produced = province_food_sales
+            output = 0.005
+            category = building_maintenance
+        }
         pp_cattle_farm_provision = {
             livestock = 0.053
             produced = local_food
             output = 0.96
             debug_max_profit = 0
-            category = building_maintenance
-        }
-        pp_cattle_farm_sell_surplus = {
-            produced = province_food_sales
-            output = 0.005
             category = building_maintenance
         }
     }

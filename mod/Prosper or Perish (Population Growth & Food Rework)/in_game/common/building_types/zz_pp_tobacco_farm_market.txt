@@ -33,19 +33,6 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_market_tobacco_farm_uncured_leaves = {
-        category = building_maintenance
-    }
-    pp_market_tobacco_farm_curing_racks = {
-        furniture = 0.172 # curing racks and hogsheads
-        fiber_crops = 0.088 # leaf ties
-        manual_labor = 0.108
-        produced = tobacco
-        output = 0.445
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_market_tobacco_farm_loose_packing = {
         category = building_maintenance
     }
@@ -56,6 +43,19 @@ unique_production_methods = {
         manual_labor = 0.092
         produced = tobacco
         output = 0.354
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_market_tobacco_farm_uncured_leaves = {
+        category = building_maintenance
+    }
+    pp_market_tobacco_farm_curing_racks = {
+        furniture = 0.172 # curing racks and hogsheads
+        fiber_crops = 0.088 # leaf ties
+        manual_labor = 0.108
+        produced = tobacco
+        output = 0.445
         category = building_maintenance
     }
 }

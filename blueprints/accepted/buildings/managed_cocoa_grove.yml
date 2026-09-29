@@ -5,6 +5,7 @@ labour:
   class: primary_discovery
   methods:
     pp_managed_cocoa_grove_base_cocoa: base
+gate_method: pp_managed_cocoa_grove_managed_shade
 upgrade_chain:
   family: cocoa_grove
   tier: 1

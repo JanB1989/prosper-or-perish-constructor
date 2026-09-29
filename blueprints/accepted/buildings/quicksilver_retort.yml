@@ -5,6 +5,7 @@ labour:
   class: primary_reformation
   methods:
     pp_quicksilver_retort_base_mercury: base
+gate_method: pp_quicksilver_retort_mercury
 upgrade_chain:
   family: mercury_mine
   tier: 1
@@ -21,13 +22,13 @@ building:
         - pp_quicksilver_retort_base_mercury
     - name: slot_1
       methods:
-        - pp_quicksilver_retort_no_primary
-        - pp_quicksilver_retort_mercury
+        - pp_quicksilver_retort_no_secondary
+        - pp_quicksilver_retort_dyes
+        - pp_quicksilver_retort_stone
     - name: slot_2
       methods:
-        - pp_quicksilver_retort_no_secondary
-        - pp_quicksilver_retort_stone
-        - pp_quicksilver_retort_dyes
+        - pp_quicksilver_retort_no_primary
+        - pp_quicksilver_retort_mercury
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -63,21 +64,15 @@ building:
         }
     }
     unique_production_methods = {
-        pp_quicksilver_retort_no_primary = {
-            category = building_maintenance
-        }
-        pp_quicksilver_retort_mercury = {
-            lumber = 0.26
-            tools = 0.26
-            beeswax = 0.093
-            manual_labor = 0.17
-            produced = mercury
-            output = 0.610
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_quicksilver_retort_no_secondary = {
+            category = building_maintenance
+        }
+        pp_quicksilver_retort_dyes = {
+            lumber = 0.027
+            tools = 0.018
+            manual_labor = 0.012
+            produced = dyes
+            output = 0.027
             category = building_maintenance
         }
         pp_quicksilver_retort_stone = {
@@ -88,12 +83,18 @@ building:
             output = 0.14
             category = building_maintenance
         }
-        pp_quicksilver_retort_dyes = {
-            lumber = 0.027
-            tools = 0.018
-            manual_labor = 0.012
-            produced = dyes
-            output = 0.027
+    }
+    unique_production_methods = {
+        pp_quicksilver_retort_no_primary = {
+            category = building_maintenance
+        }
+        pp_quicksilver_retort_mercury = {
+            lumber = 0.26
+            tools = 0.26
+            beeswax = 0.093
+            manual_labor = 0.17
+            produced = mercury
+            output = 0.610
             category = building_maintenance
         }
     }
@@ -109,8 +110,8 @@ building:
 localization:
   entries:
     quicksilver_retort_slot_0: Cinnabar Deposit
-    quicksilver_retort_slot_1: Retort Works
-    quicksilver_retort_slot_2: Gangue Sorting
+    quicksilver_retort_slot_1: Gangue Sorting
+    quicksilver_retort_slot_2: Retort Works
     quicksilver_retort: Quicksilver Retort
     quicksilver_retort_desc: Timbered shafts feed retort furnaces where cinnabar is roasted into quicksilver. The mercury is stored for precious-metal refining and other trades.
     pp_quicksilver_retort_base_mercury: Surveyed Cinnabar Seam

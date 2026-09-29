@@ -33,21 +33,15 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_quicksilver_retort_no_primary = {
-        category = building_maintenance
-    }
-    pp_quicksilver_retort_mercury = {
-        lumber = 0.26
-        tools = 0.26
-        beeswax = 0.093
-        manual_labor = 0.17
-        produced = mercury
-        output = 0.610
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_quicksilver_retort_no_secondary = {
+        category = building_maintenance
+    }
+    pp_quicksilver_retort_dyes = {
+        lumber = 0.027
+        tools = 0.018
+        manual_labor = 0.012
+        produced = dyes
+        output = 0.027
         category = building_maintenance
     }
     pp_quicksilver_retort_stone = {
@@ -58,12 +52,18 @@ unique_production_methods = {
         output = 0.14
         category = building_maintenance
     }
-    pp_quicksilver_retort_dyes = {
-        lumber = 0.027
-        tools = 0.018
-        manual_labor = 0.012
-        produced = dyes
-        output = 0.027
+}
+unique_production_methods = {
+    pp_quicksilver_retort_no_primary = {
+        category = building_maintenance
+    }
+    pp_quicksilver_retort_mercury = {
+        lumber = 0.26
+        tools = 0.26
+        beeswax = 0.093
+        manual_labor = 0.17
+        produced = mercury
+        output = 0.610
         category = building_maintenance
     }
 }

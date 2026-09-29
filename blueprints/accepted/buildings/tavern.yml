@@ -3,6 +3,7 @@ tag: tavern
 footprint: trade
 labour:
   class: keep
+gate_method: pp_tavern_scarcity_premium
 building:
   key: tavern
   mode: CREATE

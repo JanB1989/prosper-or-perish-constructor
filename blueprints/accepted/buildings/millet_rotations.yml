@@ -8,6 +8,7 @@ labour:
     pp_millet_rotations_base: base
     pp_millet_rotations_provision: keep
     pp_millet_rotations_sell_surplus: keep
+gate_method: pp_millet_rotations_provision
 upgrade_chain:
   family: millet_farm
   tier: 2
@@ -29,8 +30,8 @@ building:
     - pp_millet_rotations_sorghum_cowpea
   - name: slot_2
     methods:
-    - pp_millet_rotations_provision
     - pp_millet_rotations_sell_surplus
+    - pp_millet_rotations_provision
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -92,16 +93,16 @@ building:
         }
     }
     unique_production_methods = {
+        pp_millet_rotations_sell_surplus = {
+            produced = province_food_sales
+            output = 0.006
+            category = building_maintenance
+        }
         pp_millet_rotations_provision = {
             millet = 0.093
             produced = local_food
             output = 1.12
             debug_max_profit = 0
-            category = building_maintenance
-        }
-        pp_millet_rotations_sell_surplus = {
-            produced = province_food_sales
-            output = 0.006
             category = building_maintenance
         }
     }

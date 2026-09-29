@@ -3,6 +3,7 @@ tag: bog_iron_smelter_coke_blast_furnace
 footprint: mill_works
 labour:
   class: primary_absolutism
+gate_method: pp_bog_iron_smelter_hot_blast_refining_maintenance
 upgrade_chain:
   family: bog_iron_smelter
   tier: 2

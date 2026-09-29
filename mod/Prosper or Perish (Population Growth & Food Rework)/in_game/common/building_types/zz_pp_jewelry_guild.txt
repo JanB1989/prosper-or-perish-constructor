@@ -12,32 +12,6 @@ city = yes
 megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
-    pp_jewelry_guild_gold_base = {
-        goods_gold = 0.53
-        manual_labor = 0.82
-        produced = jewelry
-        output = 1.0
-        category = guild_input
-        debug_max_profit = guild_profit_margin
-    }
-    pp_jewelry_guild_silver_base = {
-        silver = 0.71
-        manual_labor = 0.7
-        produced = jewelry
-        output = 1.0
-        category = guild_input
-        debug_max_profit = guild_profit_margin
-    }
-    pp_jewelry_guild_copper_base = {
-        copper = 1.42
-        manual_labor = 0.71
-        produced = jewelry
-        output = 1.0
-        category = guild_input
-        debug_max_profit = guild_profit_margin
-    }
-}
-unique_production_methods = {
     pp_jewelry_guild_ivory_enhancement = {
         ivory = 0.1
         manual_labor = 0.064
@@ -67,6 +41,32 @@ unique_production_methods = {
         manual_labor = 0.064
         produced = jewelry
         output = 0.1
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+}
+unique_production_methods = {
+    pp_jewelry_guild_gold_base = {
+        goods_gold = 0.53
+        manual_labor = 0.82
+        produced = jewelry
+        output = 1.0
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+    pp_jewelry_guild_silver_base = {
+        silver = 0.71
+        manual_labor = 0.7
+        produced = jewelry
+        output = 1.0
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+    pp_jewelry_guild_copper_base = {
+        copper = 1.42
+        manual_labor = 0.71
+        produced = jewelry
+        output = 1.0
         category = guild_input
         debug_max_profit = guild_profit_margin
     }

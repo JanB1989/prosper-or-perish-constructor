@@ -9,6 +9,7 @@ labour:
     pp_potato_farm_lazy_beds: hand_work
     pp_potato_farm_provision: keep
     pp_potato_farm_sell_surplus: keep
+gate_method: pp_potato_farm_provision
 upgrade_chain:
   family: potato_farm
   tier: 0
@@ -30,8 +31,8 @@ building:
     - pp_potato_farm_ridged_fields
   - name: slot_2
     methods:
-    - pp_potato_farm_provision
     - pp_potato_farm_sell_surplus
+    - pp_potato_farm_provision
   possible_production_methods: []
   body: |-
     audio_tier = 1
@@ -94,16 +95,16 @@ building:
         }
     }
     unique_production_methods = {
+        pp_potato_farm_sell_surplus = {
+            produced = province_food_sales
+            output = 0.005
+            category = building_maintenance
+        }
         pp_potato_farm_provision = {
             potato = 0.08
             produced = local_food
             output = 0.96
             debug_max_profit = 0
-            category = building_maintenance
-        }
-        pp_potato_farm_sell_surplus = {
-            produced = province_food_sales
-            output = 0.005
             category = building_maintenance
         }
     }

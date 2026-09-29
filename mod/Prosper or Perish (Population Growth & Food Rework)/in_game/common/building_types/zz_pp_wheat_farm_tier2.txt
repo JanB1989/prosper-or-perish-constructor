@@ -58,16 +58,16 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
+    pp_wheat_rotations_sell_surplus = {
+        produced = province_food_sales
+        output = 0.006
+        category = building_maintenance
+    }
     pp_wheat_rotations_provision = {
         wheat = 0.093
         produced = local_food
         output = 1.12
         debug_max_profit = 5.022
-        category = building_maintenance
-    }
-    pp_wheat_rotations_sell_surplus = {
-        produced = province_food_sales
-        output = 0.006
         category = building_maintenance
     }
 }

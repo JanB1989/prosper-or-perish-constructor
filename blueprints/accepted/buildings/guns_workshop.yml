@@ -3,6 +3,7 @@ tag: guns_workshop
 footprint: urban_workshop
 labour:
   class: craft_reformation
+gate_method: pp_guns_workshop_guns_workshop_bronze_maintenance
 building:
   key: guns_workshop
   mode: REPLACE
@@ -10,12 +11,12 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
-    - pp_guns_workshop_guns_workshop_bronze_maintenance
-    - pp_guns_workshop_guns_workshop_iron_maintenance
-  - name: slot_1
-    methods:
     - pp_guns_workshop_guns_workshop_ammunition_lead_maintenance
     - pp_guns_workshop_guns_workshop_ammunition_iron_maintenance
+  - name: slot_1
+    methods:
+    - pp_guns_workshop_guns_workshop_iron_maintenance
+    - pp_guns_workshop_guns_workshop_bronze_maintenance
   possible_production_methods: []
   body: |
     audio_tier = 2
@@ -29,27 +30,6 @@ building:
     city = yes
     megalopolis = yes
     build_time = workshop_build_time
-    unique_production_methods = {
-        pp_guns_workshop_guns_workshop_bronze_maintenance = {
-            copper = 0.54
-            tin = 0.11
-            tools = 0.34
-            manual_labor = 0.32
-            produced = firearms
-            output = 1.1
-            debug_max_profit = workshop_profit_margin
-            category = workshop_input
-        }
-        pp_guns_workshop_guns_workshop_iron_maintenance = {
-            iron = 0.48
-            tools = 0.3
-            manual_labor = 0.3
-            produced = firearms
-            output = 1.0
-            debug_max_profit = workshop_profit_margin
-            category = workshop_input
-        }
-    }
     unique_production_methods = {
         pp_guns_workshop_guns_workshop_ammunition_lead_maintenance = {
             lead = 0.11
@@ -70,6 +50,27 @@ building:
             category = workshop_input
         }
     }
+    unique_production_methods = {
+        pp_guns_workshop_guns_workshop_iron_maintenance = {
+            iron = 0.48
+            tools = 0.3
+            manual_labor = 0.3
+            produced = firearms
+            output = 1.0
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+        pp_guns_workshop_guns_workshop_bronze_maintenance = {
+            copper = 0.54
+            tin = 0.11
+            tools = 0.34
+            manual_labor = 0.32
+            produced = firearms
+            output = 1.1
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+    }
     obsolete = gun_smith
     construction_demand = workshop_construction
     modifier = {}
@@ -80,9 +81,9 @@ building:
 localization:
   entries:
     guns_workshop_slot_0: Guns Workshop Work
+    guns_workshop_slot_1: Guns Workshop Work
     pp_guns_workshop_guns_workshop_bronze_maintenance: Guns Workshop Guns Workshop Bronze Maintenance
     pp_guns_workshop_guns_workshop_iron_maintenance: Guns Workshop Guns Workshop Iron Maintenance
-    guns_workshop_slot_1: Guns Workshop Work
     pp_guns_workshop_guns_workshop_ammunition_lead_maintenance: Guns Workshop Guns Workshop Ammunition Lead Maintenance
     pp_guns_workshop_guns_workshop_ammunition_iron_maintenance: Guns Workshop Guns Workshop Ammunition Iron Maintenance
 evaluation:

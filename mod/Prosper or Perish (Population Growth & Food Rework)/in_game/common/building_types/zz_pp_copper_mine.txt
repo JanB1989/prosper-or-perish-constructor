@@ -32,29 +32,15 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_copper_mine_no_primary = {
-        category = building_maintenance
-    }
-    pp_copper_mine_copper = {
-        lumber = 0.22
-        tools = 0.26
-        beeswax = 0.061
-        manual_labor = 0.31
-        produced = copper
-        output = 0.6
-        category = building_maintenance
-    }
-    pp_copper_mine_fire_setting = {
-        lumber = 0.33
-        beeswax = 0.092
-        manual_labor = 0.63
-        produced = copper
-        output = 0.48
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_copper_mine_no_secondary = {
+        category = building_maintenance
+    }
+    pp_copper_mine_tin = {
+        lumber = 0.025
+        tools = 0.016
+        manual_labor = 0.022
+        produced = tin
+        output = 0.06
         category = building_maintenance
     }
     pp_copper_mine_silver = {
@@ -75,12 +61,26 @@ unique_production_methods = {
         output = 0.026
         category = building_maintenance
     }
-    pp_copper_mine_tin = {
-        lumber = 0.025
-        tools = 0.016
-        manual_labor = 0.022
-        produced = tin
-        output = 0.06
+}
+unique_production_methods = {
+    pp_copper_mine_no_primary = {
+        category = building_maintenance
+    }
+    pp_copper_mine_fire_setting = {
+        lumber = 0.33
+        beeswax = 0.092
+        manual_labor = 0.63
+        produced = copper
+        output = 0.48
+        category = building_maintenance
+    }
+    pp_copper_mine_copper = {
+        lumber = 0.22
+        tools = 0.26
+        beeswax = 0.061
+        manual_labor = 0.31
+        produced = copper
+        output = 0.6
         category = building_maintenance
     }
 }

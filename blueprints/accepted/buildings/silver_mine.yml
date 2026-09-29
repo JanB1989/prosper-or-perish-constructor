@@ -6,6 +6,7 @@ labour:
   methods:
     pp_silver_mine_fire_setting: hand_work
     pp_silver_mine_base_silver: base
+gate_method: pp_silver_mine_silver
 upgrade_chain:
   family: silver_mine
   tier: 0
@@ -22,14 +23,14 @@ building:
         - pp_silver_mine_base_silver
     - name: slot_1
       methods:
-        - pp_silver_mine_no_primary
-        - pp_silver_mine_silver
-        - pp_silver_mine_fire_setting
-    - name: slot_2
-      methods:
         - pp_silver_mine_no_secondary
         - pp_silver_mine_lead
         - pp_silver_mine_gold
+    - name: slot_2
+      methods:
+        - pp_silver_mine_no_primary
+        - pp_silver_mine_fire_setting
+        - pp_silver_mine_silver
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -64,28 +65,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_silver_mine_no_primary = {
-            category = building_maintenance
-        }
-        pp_silver_mine_silver = {
-            lumber = 0.18
-            tools = 0.15
-            beeswax = 0.074
-            manual_labor = 0.2
-            produced = silver
-            output = 0.21
-            category = building_maintenance
-        }
-        pp_silver_mine_fire_setting = {
-            lumber = 0.21
-            beeswax = 0.086
-            manual_labor = 0.43
-            produced = silver
-            output = 0.168
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_silver_mine_no_secondary = {
             category = building_maintenance
         }
@@ -106,6 +85,28 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_silver_mine_no_primary = {
+            category = building_maintenance
+        }
+        pp_silver_mine_fire_setting = {
+            lumber = 0.21
+            beeswax = 0.086
+            manual_labor = 0.43
+            produced = silver
+            output = 0.168
+            category = building_maintenance
+        }
+        pp_silver_mine_silver = {
+            lumber = 0.18
+            tools = 0.15
+            beeswax = 0.074
+            manual_labor = 0.2
+            produced = silver
+            output = 0.21
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -118,8 +119,8 @@ building:
 localization:
   entries:
     silver_mine_slot_0: Silver Vein
-    silver_mine_slot_1: Silver Workings
-    silver_mine_slot_2: Associated Ore Recovery
+    silver_mine_slot_1: Associated Ore Recovery
+    silver_mine_slot_2: Silver Workings
     silver_mine: Silver Mine
     silver_mine_desc: Shallow adits and hand-cut veins work silver-bearing stone from the hillside. Ore is broken, washed, and sorted by hand, with lead-bearing galena and auriferous pieces picked out when found.
     pp_silver_mine_base_silver: Exposed Silver Vein

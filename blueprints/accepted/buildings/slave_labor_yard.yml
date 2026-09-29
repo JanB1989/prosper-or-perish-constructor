@@ -1,6 +1,7 @@
 version: 2
 tag: slave_labor_yard
 footprint: estate_land
+gate_method: pp_slave_labor_yard_grain_rations
 building:
   key: slave_labor_yard
   mode: CREATE
@@ -8,9 +9,9 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_slave_labor_yard_grain_rations
-        - pp_slave_labor_yard_salt_fish_rations
         - pp_slave_labor_yard_provision_grounds
+        - pp_slave_labor_yard_salt_fish_rations
+        - pp_slave_labor_yard_grain_rations
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -47,12 +48,11 @@ building:
     construction_demand = plantation_construction
 
     unique_production_methods = {
-      pp_slave_labor_yard_grain_rations = {
+      pp_slave_labor_yard_provision_grounds = {
         produced = manual_labor
-        output = 2.85
-        slaves_goods = 0.8
-        millet = 0.8
-        cloth = 0.2
+        output = 2.5
+        slaves_goods = 1.0
+        fiber_crops = 0.3
         category = building_maintenance
       }
       pp_slave_labor_yard_salt_fish_rations = {
@@ -63,11 +63,12 @@ building:
         salt = 0.08
         category = building_maintenance
       }
-      pp_slave_labor_yard_provision_grounds = {
+      pp_slave_labor_yard_grain_rations = {
         produced = manual_labor
-        output = 2.5
-        slaves_goods = 1.0
-        fiber_crops = 0.3
+        output = 2.85
+        slaves_goods = 0.8
+        millet = 0.8
+        cloth = 0.2
         category = building_maintenance
       }
     }

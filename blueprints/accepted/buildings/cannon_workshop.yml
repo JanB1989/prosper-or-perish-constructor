@@ -3,6 +3,7 @@ tag: cannon_workshop
 footprint: urban_workshop
 labour:
   class: craft_reformation
+gate_method: pp_cannon_workshop_cannon_workshop_iron_maintenance
 building:
   key: cannon_workshop
   mode: REPLACE
@@ -10,13 +11,13 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
-    - pp_cannon_workshop_cannon_workshop_bronze_maintenance
-    - pp_cannon_workshop_cannon_workshop_iron_maintenance
-  - name: slot_1
-    methods:
     - pp_cannon_workshop_cannon_workshop_ammunition_stone_maintenance
     - pp_cannon_workshop_cannon_workshop_ammunition_lead_maintenance
     - pp_cannon_workshop_cannon_workshop_ammunition_iron_maintenance
+  - name: slot_1
+    methods:
+    - pp_cannon_workshop_cannon_workshop_bronze_maintenance
+    - pp_cannon_workshop_cannon_workshop_iron_maintenance
   possible_production_methods: []
   body: |
     audio_tier = 2
@@ -31,27 +32,6 @@ building:
     city = yes
     megalopolis = yes
     build_time = workshop_build_time
-    unique_production_methods = {
-        pp_cannon_workshop_cannon_workshop_bronze_maintenance = {
-            copper = 0.99
-            tin = 0.25
-            tools = 0.12
-            manual_labor = 0.44
-            produced = cannons
-            output = 1.1
-            debug_max_profit = workshop_profit_margin
-            category = workshop_input
-        }
-        pp_cannon_workshop_cannon_workshop_iron_maintenance = {
-            iron = 1
-            tools = 0.11
-            manual_labor = 0.44
-            produced = cannons
-            output = 1.1
-            debug_max_profit = workshop_profit_margin
-            category = workshop_input
-        }
-    }
     unique_production_methods = {
         pp_cannon_workshop_cannon_workshop_ammunition_stone_maintenance = {
             stone = 0.096
@@ -81,6 +61,27 @@ building:
             category = workshop_input
         }
     }
+    unique_production_methods = {
+        pp_cannon_workshop_cannon_workshop_bronze_maintenance = {
+            copper = 0.99
+            tin = 0.25
+            tools = 0.12
+            manual_labor = 0.44
+            produced = cannons
+            output = 1.1
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+        pp_cannon_workshop_cannon_workshop_iron_maintenance = {
+            iron = 1
+            tools = 0.11
+            manual_labor = 0.44
+            produced = cannons
+            output = 1.1
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+    }
     custom_tags = {
         workshop
     }
@@ -89,9 +90,9 @@ building:
 localization:
   entries:
     cannon_workshop_slot_0: Cannon Workshop Work
+    cannon_workshop_slot_1: Cannon Workshop Work
     pp_cannon_workshop_cannon_workshop_bronze_maintenance: Cannon Workshop Cannon Workshop Bronze Maintenance
     pp_cannon_workshop_cannon_workshop_iron_maintenance: Cannon Workshop Cannon Workshop Iron Maintenance
-    cannon_workshop_slot_1: Cannon Workshop Work
     pp_cannon_workshop_cannon_workshop_ammunition_stone_maintenance: Cannon Workshop Cannon Workshop Ammunition Stone Maintenance
     pp_cannon_workshop_cannon_workshop_ammunition_lead_maintenance: Cannon Workshop Cannon Workshop Ammunition Lead Maintenance
     pp_cannon_workshop_cannon_workshop_ammunition_iron_maintenance: Cannon Workshop Cannon Workshop Ammunition Iron Maintenance

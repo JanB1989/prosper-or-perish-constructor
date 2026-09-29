@@ -6,6 +6,7 @@ labour:
   methods:
     pp_regulated_sericulture_farm_base_silk: base
 output_tag: sericulture_farm_regulated
+gate_method: pp_regulated_sericulture_farm_reeling_house
 upgrade_chain:
   family: sericulture_farm
   tier: 1
@@ -22,12 +23,12 @@ building:
     - pp_regulated_sericulture_farm_base_silk
   - name: slot_1
     methods:
-    - pp_regulated_sericulture_farm_household_reeling
-    - pp_regulated_sericulture_farm_reeling_house
-  - name: slot_2
-    methods:
     - pp_regulated_sericulture_farm_loose_skeins
     - pp_regulated_sericulture_farm_heated_filature
+  - name: slot_2
+    methods:
+    - pp_regulated_sericulture_farm_household_reeling
+    - pp_regulated_sericulture_farm_reeling_house
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -64,20 +65,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_regulated_sericulture_farm_household_reeling = {
-            category = building_maintenance
-        }
-        pp_regulated_sericulture_farm_reeling_house = {
-            furniture = 0.06 # light tray stands and hand reeling frames
-            fiber_crops = 0.039 # woven cocoon mats and sorting baskets
-            pottery = 0.03 # warming basins for reeling water
-            manual_labor = 0.047
-            produced = silk
-            output = 0.087
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_regulated_sericulture_farm_loose_skeins = {
             category = building_maintenance
         }
@@ -88,6 +75,20 @@ building:
             manual_labor = 0.027
             produced = silk
             output = 0.060
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_regulated_sericulture_farm_household_reeling = {
+            category = building_maintenance
+        }
+        pp_regulated_sericulture_farm_reeling_house = {
+            furniture = 0.06 # light tray stands and hand reeling frames
+            fiber_crops = 0.039 # woven cocoon mats and sorting baskets
+            pottery = 0.03 # warming basins for reeling water
+            manual_labor = 0.047
+            produced = silk
+            output = 0.087
             category = building_maintenance
         }
     }
@@ -111,8 +112,8 @@ advancements:
 localization:
   entries:
     regulated_sericulture_farm_slot_0: Mulberry Groves
-    regulated_sericulture_farm_slot_1: Reeling Houses
-    regulated_sericulture_farm_slot_2: Filature Heating
+    regulated_sericulture_farm_slot_1: Filature Heating
+    regulated_sericulture_farm_slot_2: Reeling Houses
     regulated_sericulture_farm: Regulated Sericulture Farm
     regulated_sericulture_farm_desc: Regulated sericulture farms keep mulberry rows, silkworm trays, cocoon sorting, and hand reeling close together so raw silk leaves the farm in cleaner skeins.
     pp_regulated_sericulture_farm: Regulated Sericulture Farms

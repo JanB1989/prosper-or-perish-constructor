@@ -5,6 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_amber_collector_base_amber: base
+gate_method: pp_amber_collector_basket_gathering
 building:
   key: amber_collector
   mode: CREATE
@@ -15,13 +16,13 @@ building:
         - pp_amber_collector_base_amber
     - name: slot_1
       methods:
-        - pp_amber_collector_no_beach_gathering
-        - pp_amber_collector_basket_gathering
-    - name: slot_2
-      methods:
         - pp_amber_collector_no_sand
         - pp_amber_collector_sand_horses
         - pp_amber_collector_sand_livestock
+    - name: slot_2
+      methods:
+        - pp_amber_collector_no_beach_gathering
+        - pp_amber_collector_basket_gathering
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -55,19 +56,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_amber_collector_no_beach_gathering = {
-            category = building_maintenance
-        }
-        pp_amber_collector_basket_gathering = {
-            fiber_crops = 0.069 # baskets, carrying mats
-            tools = 0.034 # sorting knives
-            manual_labor = 0.056
-            produced = amber
-            output = 0.087
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
         pp_amber_collector_no_sand = {
             category = building_maintenance
         }
@@ -86,6 +74,19 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_amber_collector_no_beach_gathering = {
+            category = building_maintenance
+        }
+        pp_amber_collector_basket_gathering = {
+            fiber_crops = 0.069 # baskets, carrying mats
+            tools = 0.034 # sorting knives
+            manual_labor = 0.056
+            produced = amber
+            output = 0.087
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -96,8 +97,8 @@ building:
 localization:
   entries:
     amber_collector_slot_0: Amber Deposit
-    amber_collector_slot_1: Beach Gathering
-    amber_collector_slot_2: Sand Carting
+    amber_collector_slot_1: Sand Carting
+    amber_collector_slot_2: Beach Gathering
     amber_collector: Amber Gatherers
     amber_collector_desc: Coastal crews search beaches and shallow pits for amber washed from older deposits. Baskets and cart teams help sort the amber and carry usable sand from the shore.
     pp_amber_collector_base_amber: Shore Amber

@@ -40,19 +40,19 @@ allow = {
     }
 }
 unique_production_methods = {
-    pp_tatara_tamagahane_blacksmith = {
-        produced = tools
-        output = 0.5
-        iron = 0.31
-        manual_labor = 0.37
-        debug_max_profit = rural_profit_margin
-        category = guild_input
-    }
     pp_tatara_tamagahane_bladesmith = {
         produced = weaponry
         output = 0.2
         iron = 0.13
         manual_labor = 0.13
+        debug_max_profit = rural_profit_margin
+        category = guild_input
+    }
+    pp_tatara_tamagahane_blacksmith = {
+        produced = tools
+        output = 0.5
+        iron = 0.31
+        manual_labor = 0.37
         debug_max_profit = rural_profit_margin
         category = guild_input
     }

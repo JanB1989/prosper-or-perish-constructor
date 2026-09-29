@@ -181,6 +181,13 @@ capital.
   - OurTaxBase×Access_m is the country's raw tax base in market m, weighted by each location's access (clamped to
     0..1). Total_m is market m's raw tax base from all owners.
   - IncomeUtility is the country's value of one more ducat per month.
+- **Measured in game (2026-09-29, main mod, observer, 1337.4.1 → 1337.8.1):**
+  - Call counters sat on the value calculation and on the founding rule.
+  - The founding rule ran once per country per month: 8,613 calls. Countries passed rules 1–3 29 times, and markets
+    were founded (Ankober, Soba).
+  - The value calculation ran 0 times.
+  - One console evaluation of `create_market_utility` ran it at once (control).
+  - So in play these three defines have no effect. They only change the number a script or tooltip reads.
 - **`destroy_market_utility` is always 0.** It compares the current assignment with an unchanged copy of it.
 
 **Nothing in the AI code dissolves or relocates markets.** `destroy_market`, `relocate_market` and `create_market` all

@@ -545,7 +545,19 @@ the logged month: 197 lines; `consumption_*.py`).
 - Non-food → food: 99 % go to the higher margin.
 - Food → non-food: only 4 % go to the higher margin. The AI leaves food methods even when they pay more, and these
   switches happen in provinces that are not in food deficit.
-- The switching rule itself is not decoded yet.
+- Rule (decoded 2026-09-29): once a month, for each building type and market, the AI takes every method group with
+  more than one method and scores each method whose inputs the market can supply as market access × (output value −
+  input cost). It keeps the best; ties go to the method listed later. A random building of that type in that market
+  whose potential/allow accept the pick is moved to it.
+- **Methods without an output all score 0.** Input cost is never looked at. Maintenance-only buildings (field
+  management) therefore always get the LAST listed method whose inputs are all available in the market; when no method has its inputs,
+  a fallback applies (in Tongatapu it gave Field Stewards).
+  - Measured on the observer run 1338-1437 and h02: 99.97 % of about 6,800 field managements run Marling (last
+    listed), although at market prices Field Stewards is about 25 % cheaper for 99 % of them. Folding is never used.
+  - The only switches in 97 years were 2 buildings in Tongatapu (no livestock there), which flip Marling ↔ Stewards
+    as stone comes and goes.
+  - To steer the choice: list order (last wins) or input availability. Gating the last method with potential/allow
+    does not move buildings to the next one; the switch is then just skipped.
 
 **Fishing villages are not AI-built.**
 - Zero AI constructions in the lab month.

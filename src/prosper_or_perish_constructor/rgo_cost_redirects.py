@@ -261,8 +261,13 @@ def write_rgo_cost_redirect_files(
 
     collection_blocks: dict[tuple[str, str], list[str]] = defaultdict(list)
     patch_count = 0
+    mod_replaced: dict[tuple[str, str], set[str]] = {}
     for (scope, collection, top_key), patches_by_path in sorted(grouped.items()):
-        if collection in RGO_COST_REDIRECT_REPLACE_COLLECTIONS:
+        if profile is not None and (scope, collection) not in mod_replaced:
+            mod_replaced[(scope, collection)] = _mod_replaced_keys(profile, scope, collection)
+        # The engine ignores an inject into a block a mod replaced: such entries are rewritten whole, like the
+        # collections that take no nested inject.
+        if collection in RGO_COST_REDIRECT_REPLACE_COLLECTIONS or top_key in mod_replaced.get((scope, collection), ()):
             if profile is None:
                 raise ValueError(
                     f"profile is required to generate {collection} cost redirects"
@@ -275,6 +280,7 @@ def write_rgo_cost_redirect_files(
                     top_key=top_key,
                     patches_by_path=patches_by_path,
                     modifiers_by_method=modifiers_by_method,
+                    compensations=RGO_REDIRECT_COMPENSATIONS.get((scope, collection, top_key, ()), ()),
                 )
             )
             collection_blocks[(scope, collection)].append("")
@@ -328,6 +334,16 @@ def write_rgo_cost_redirect_files(
     return generated_files, patch_count
 
 
+def _mod_replaced_keys(profile: DataProfile, scope: str, collection: str) -> set[str]:
+    """Keys whose effective block comes from a mod's (TRY_)REPLACE other than the generated redirect file."""
+    replaced: set[str] = set()
+    for entry in load_merged_directory(profile, collection, scope=scope).entries:
+        source = _replacement_source_record(entry)
+        if source is not None and source.mod_name is not None and "REPLACE" in source.mode:
+            replaced.add(entry.key)
+    return replaced
+
+
 def _assignment_source_block(entry: MergedEntry) -> CList | None:
     if not isinstance(entry.value, CList):
         return None
@@ -354,6 +370,7 @@ def _render_source_replacement_block(
     top_key: str,
     patches_by_path: Mapping[tuple[str, ...], list[RgoCostAssignment]],
     modifiers_by_method: Mapping[str, tuple[str, ...]],
+    compensations: Iterable[tuple[str, float]] = (),
 ) -> list[str]:
     merged_entry = _merged_entry_for_key(profile, scope, collection, top_key)
     source = _replacement_source_record(merged_entry)
@@ -403,7 +420,8 @@ def _render_source_replacement_block(
             rendered.extend(replacements[index])
         else:
             rendered.append(line)
-    return rendered
+    extra = [f"	{key} = {_format_number(value)}" for key, value in compensations]
+    return [*rendered[:-1], *extra, rendered[-1]] if extra else rendered
 
 
 def _merged_entry_for_key(

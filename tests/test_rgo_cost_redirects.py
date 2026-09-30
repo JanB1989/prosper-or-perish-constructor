@@ -20,6 +20,7 @@ from prosper_or_perish_constructor.rgo_cost_redirects import (
     classify_pop_rgo_building_cost_targets,
     collect_active_rgo_cost_assignments,
     _fallback_rural_efficiency_value,
+    _mod_replaced_keys,
 )
 
 
@@ -101,7 +102,14 @@ def test_active_rgo_cost_assignments_are_generated_redirect_dependencies() -> No
         "gathering": 3,
     }
 
-    for patch, expected_values in _expected_patch_values(assignments, modifiers_by_method).items():
+    # The engine ignores an inject into a block the mod replaces; those entries are rewritten whole (TRY_REPLACE).
+    mod_replaced = {
+        (scope, collection, key)
+        for scope, collection in RGO_COST_REDIRECT_COLLECTIONS
+        for key in _mod_replaced_keys(profile, scope, collection)
+    }
+    assert ("in_game", "advances", "efficient_mining") in mod_replaced
+    for patch, expected_values in _expected_patch_values(assignments, modifiers_by_method, mod_replaced).items():
         scope, collection, top_key, nested_path = patch
         leaf = _generated_leaf(generated, scope, collection, top_key, nested_path)
         actual_values = _numeric_values(leaf)
@@ -234,6 +242,7 @@ def test_rural_efficiency_fallback_is_half_magnitude_rounded_to_two_decimals() -
 def _expected_patch_values(
     assignments,
     modifiers_by_method: dict[str, tuple[str, ...]],
+    mod_replaced: set[tuple[str, str, str]] = frozenset(),
 ) -> dict[tuple[str, str, str, tuple[str, ...]], dict[str, float]]:
     expected: dict[tuple[str, str, str, tuple[str, ...]], dict[str, float]] = defaultdict(
         lambda: defaultdict(float)
@@ -245,7 +254,10 @@ def _expected_patch_values(
             assignment.path[0],
             assignment.path[1:-1],
         )
-        if assignment.collection not in RGO_COST_REDIRECT_REPLACE_COLLECTIONS:
+        if (
+            assignment.collection not in RGO_COST_REDIRECT_REPLACE_COLLECTIONS
+            and patch[:3] not in mod_replaced
+        ):
             expected[patch][RGO_COST_MODIFIERS[assignment.method]] += -assignment.value
         priced = modifiers_by_method[assignment.method]
         if priced:

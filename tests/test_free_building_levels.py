@@ -913,3 +913,57 @@ def _base_locations() -> pl.DataFrame:
             },
         ]
     )
+
+
+def test_building_type_compile_writes_into_the_mod_replacement_not_an_ignored_inject(tmp_path: Path) -> None:
+    # The engine ignores an inject into a block the mod replaces; the compiled value goes into the replacement.
+    from prosper_or_perish_constructor import free_building_levels as fbl
+
+    folder = tmp_path / "building_types"
+    folder.mkdir()
+    inject_path = folder / "pp_governor_building_adjustments.txt"
+    inject_path.write_text(
+        "# header\n"
+        "TRY_INJECT:naval_governor = {\n\tmodifier = {\n\tfree_building_levels = 0\n\t}\n}\n\n"
+        "TRY_INJECT:local_governor = {\n\tmodifier = {\n\tfree_building_levels = 0\n\t}\n}\n",
+        encoding="utf-8",
+    )
+    replacement = folder / "pp_gold_to_jewelry_buildings.txt"
+    replacement_text = (
+        "REPLACE:naval_governor = {\n"
+        "\tallow = { modifier:num_naval_governors > 0 }\n"
+        "\tmodifier = {\n\t\tlocal_proximity_source = 80\n\t}\n"
+        "\traw_modifier = {\n\t\tlocal_population_capacity = -0.01\n\t}\n"
+        "}\n\n"
+        "REPLACE:local_governor = {\n"
+        "\tmax_levels = 1\n"
+        "}\n"
+    )
+    replacement.write_text(replacement_text, encoding="utf-8")
+    weights = pl.DataFrame(
+        {
+            "factor": ["naval_governor", "local_governor"],
+            "value": ["true", "true"],
+            "free_building_levels": [0.0, 0.0],
+            "local_build_buildings_efficiency": [None, None],
+            "local_construction_speed": [None, None],
+        },
+        schema_overrides={"local_build_buildings_efficiency": pl.Float64, "local_construction_speed": pl.Float64},
+    )
+
+    assert fbl._compile_building_type_file(inject_path, weights, baselines=None) == 1
+    assert inject_path.read_text(encoding="utf-8-sig") == "# header\n"
+    assert replacement.read_text(encoding="utf-8-sig") == replacement_text   # zero = no line
+
+    weights = weights.with_columns(pl.Series("free_building_levels", [2.0, 1.0]))
+    assert fbl._compile_building_type_file(inject_path, weights, baselines=None) == 1
+    text = replacement.read_text(encoding="utf-8-sig")
+    assert "\tmodifier = {\n\t\tlocal_proximity_source = 80\n\t\tfree_building_levels = 2\n\t}\n\traw_modifier" in text
+    assert "\tmax_levels = 1\n\tmodifier = {\n\t\tfree_building_levels = 1\n\t}\n}" in text
+    assert "local_population_capacity = -0.01" in text
+    assert inject_path.read_text(encoding="utf-8-sig") == "# header\n"
+
+    inject_path.write_text("TRY_INJECT:naval_governor = {\n\tmodifier = {\n\t\tlocal_proximity_source = 5\n\t}\n}\n",
+                           encoding="utf-8")
+    with pytest.raises(ValueError, match=r"move \['local_proximity_source'\] into the replacement"):
+        fbl._compile_building_type_file(inject_path, weights, baselines=None)

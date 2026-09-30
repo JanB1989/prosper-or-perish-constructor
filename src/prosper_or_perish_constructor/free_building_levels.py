@@ -1441,12 +1441,29 @@ def _compile_building_type_file(
         raise FileNotFoundError(f"Cannot compile building modifiers; missing file: {path}")
     text = _read_compile_text(path)
     changed = False
+    replacements = _mod_replacement_files(path.parent, exclude=path)
+    replacements_changed: set[Path] = set()
 
     for (factor, value), block_name in BUILDING_TYPE_BLOCK_BY_FACTOR.items():
         row = weights.filter(
             (pl.col("factor") == factor) & (pl.col("value") == value)
         )
         if row.is_empty():
+            continue
+        if block_name in replacements:
+            # The engine ignores an inject into a block the mod replaces: the absolute value goes into the replacement.
+            updates = _modifier_updates_from_row(
+                row.to_dicts()[0],
+                baselines=baselines,
+                block_name=block_name,
+                inner_header=BUILDING_TYPE_INNER_HEADER,
+                baseline_source="building_type",
+                compile_mode="replace_absolute",
+            )
+            text, dropped = _drop_compiled_inject_block(text, block_name, set(updates), path)
+            changed = changed or dropped
+            if _compile_into_replacement(replacements[block_name], block_name, updates):
+                replacements_changed.add(replacements[block_name])
             continue
         updates = _modifier_updates_from_row(
             row.to_dicts()[0],
@@ -1479,8 +1496,74 @@ def _compile_building_type_file(
                 changed = True
 
     if changed and _write_compile_text_if_changed(path, text):
-        return 1
-    return 1 if changed else 0
+        return 1 + len(replacements_changed)
+    return (1 if changed else 0) + len(replacements_changed)
+
+
+_REPLACEMENT_HEADER = re.compile(r"^(?:TRY_)?REPLACE(?:_OR_CREATE)?:([A-Za-z0-9_]+)\s*=\s*\{", re.MULTILINE)
+_MODIFIER_INNER_HEADER = re.compile(rf"^\t{BUILDING_TYPE_INNER_HEADER}\s*=\s*\{{", re.MULTILINE)
+
+
+def _mod_replacement_files(folder: Path, *, exclude: Path) -> dict[str, Path]:
+    """Blocks the mod's other files in `folder` replace, by name (the file that sorts last wins, as in the game)."""
+    found: dict[str, Path] = {}
+    for file in sorted(folder.glob("*.txt")):
+        if file == exclude:
+            continue
+        for match in _REPLACEMENT_HEADER.finditer(_read_compile_text(file)):
+            found[match.group(1)] = file
+    return found
+
+
+def _drop_compiled_inject_block(text: str, block_name: str, compiled_keys: set[str], path: Path) -> tuple[str, bool]:
+    """Remove the compiler's own TRY_INJECT of `block_name`; it must hold nothing but compiled keys."""
+    located = _locate_top_level_block(text, block_name)
+    if located is None:
+        return text, False
+    start, end, block_text = located
+    keys = set(re.findall(r"^\s*([A-Za-z0-9_]+)\s*=", block_text[block_text.index("{") + 1 :], re.MULTILINE))
+    extra = keys - compiled_keys - {BUILDING_TYPE_INNER_HEADER}
+    if extra:
+        raise ValueError(
+            f"{path}: TRY_INJECT:{block_name} is ignored by the engine because the mod replaces {block_name}; "
+            f"move {sorted(extra)} into the replacement"
+        )
+    while end < len(text) and text[end] in "\r\n":
+        end += 1
+    return text[:start] + text[end:], True
+
+
+def _compile_into_replacement(path: Path, block_name: str, updates: dict[str, float]) -> bool:
+    """Write absolute values into the `modifier` block of the mod's replacement of `block_name`. A zero is the same as
+    no line, so a missing key with value 0 is not added."""
+    text = _read_compile_text(path)
+    match = next(m for m in _REPLACEMENT_HEADER.finditer(text) if m.group(1) == block_name)
+    _, close = _find_block_bounds(text, match.start())
+    block_text = text[match.start() : close + 1]
+    inner = _MODIFIER_INNER_HEADER.search(block_text)
+    inner_text = ""
+    if inner is not None:
+        inner_start = inner.start() + 1   # after the indent, so the key indent is read from the lines inside
+        _, inner_close = _find_block_bounds(block_text, inner_start)
+        inner_text = block_text[inner_start : inner_close + 1]
+    updates = {
+        key: value
+        for key, value in updates.items()
+        if value != 0 or re.search(rf"^\s*{re.escape(key)}\s*=", inner_text, re.MULTILINE)
+    }
+    if not updates:
+        return False
+    newline = "\r\n" if "\r\n" in text else "\n"
+    if inner is None:
+        lines = "".join(f"\t\t{key} = {_format_modifier_value(value)}{newline}" for key, value in updates.items())
+        new_block = block_text[:-1] + f"\t{BUILDING_TYPE_INNER_HEADER} = {{{newline}{lines}\t}}{newline}}}"
+    else:
+        updated_inner, block_changed = _update_block_keys(inner_text, updates)
+        if not block_changed:
+            return False
+        new_block = block_text[:inner_start] + updated_inner + block_text[inner_start + len(inner_text) :]
+    text = text[: match.start()] + new_block + text[close + 1 :]
+    return _write_compile_text_if_changed(path, text)
 
 
 def _modifier_updates_from_row(

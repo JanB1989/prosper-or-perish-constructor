@@ -241,22 +241,31 @@ def test_local_investment_prices_every_level_at_the_location_factor() -> None:
     assert plain["investment"].to_list() == table["investment"].to_list()
 
 
-def test_a_replaced_block_ignores_later_injects_like_the_engine(tmp_path: Path) -> None:
-    import json
+def _river_profile(tmp_path: Path, key: str, value: str):
+    """Vanilla river block, the World Builder TRY_REPLACE and a later hand-authored TRY_INJECT of the same line."""
+    from eu5gameparser.load_order import DataProfile, GameLayer
 
-    replace = tmp_path / "pp_00_rivers.txt"
-    replace.write_text("TRY_REPLACE:river_flowing_through_1 = {\n\tlocal_build_buildings_efficiency = 0.1\n}\n", encoding="utf-8")
-    history = [
-        {"file": "vanilla/location.txt", "mode": "CREATE"},
-        {"file": str(replace), "mode": "TRY_REPLACE"},
-        {"file": "pp_adjustments.txt", "mode": "TRY_INJECT"},
-    ]
-    value = bi.replaced_block_value(json.dumps(history), "river_flowing_through_1", None, bi.BUILD_EFFICIENCY)
-    assert value == pytest.approx(0.1)  # the parser's merge would give 0.1 + the inject
-    # no inject after the replace, or no replace at all: the parser's merged value stands
-    assert bi.replaced_block_value(json.dumps(history[:2]), "river_flowing_through_1", None, bi.BUILD_EFFICIENCY) is None
-    assert bi.replaced_block_value(json.dumps([history[0], history[2]]), "river_flowing_through_1", None,
-                                   bi.BUILD_EFFICIENCY) is None
+    vanilla = tmp_path / "vanilla/game/main_menu/common/static_modifiers"
+    mod = tmp_path / "mod/main_menu/common/static_modifiers"
+    vanilla.mkdir(parents=True)
+    mod.mkdir(parents=True)
+    block = f"river_flowing_through_1 = {{ {key} = {value} }}\n"
+    (vanilla / "location.txt").write_text(block, encoding="utf-8")
+    (mod / "pp_00_wb_river_modifiers.txt").write_text("TRY_REPLACE:" + block, encoding="utf-8")
+    (mod / "pp_location_modifier_adjustments.txt").write_text("TRY_INJECT:" + block, encoding="utf-8")
+    return DataProfile(name="constructor", layers=(
+        GameLayer(id="vanilla", name="Vanilla", root=tmp_path / "vanilla", kind="vanilla"),
+        GameLayer(id="constructor", name="Mod", root=tmp_path / "mod", kind="mod"),
+    ))
+
+
+def test_a_replaced_block_ignores_later_injects_like_the_engine(tmp_path: Path) -> None:
+    # The cost model reads the river efficiency from the parser's merge, which drops the inject like the engine.
+    from eu5gameparser.domain._modifier_blocks import load_modifier_block_data
+
+    profile = _river_profile(tmp_path, bi.BUILD_EFFICIENCY, "0.1")
+    data = load_modifier_block_data(profile, relative_dir="static_modifiers", scope="main_menu")
+    assert data.modifier_baseline("river_flowing_through_1", None, bi.BUILD_EFFICIENCY) == pytest.approx(0.1)
 
 
 def test_dataset_update_writes_local_investment_and_follows_the_cost_model(tmp_path: Path) -> None:

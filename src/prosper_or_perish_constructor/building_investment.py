@@ -336,41 +336,6 @@ def cost_factor_expr(efficiency: pl.Expr | str = "location_efficiency") -> pl.Ex
     return 1.0 / pl.max_horizontal(pl.lit(MIN_PRICE_DIVISOR), 1.0 + e)
 
 
-def replaced_block_value(source_history: str | None, name: str, header: str | None, key: str) -> float | None:
-    """The value of `key` in the last (TRY_)REPLACE of `name` when an INJECT follows it, else None.
-
-    The engine ignores an INJECT into a block a REPLACE rewrote (pp_00_wb_river_modifiers.txt folds the mod's river
-    injects into its replace for that reason); the parser's merge adds the inject anyway, which would count the river
-    efficiency twice.
-    """
-    from eu5gameparser.clausewitz.parser import parse_file
-    from eu5gameparser.clausewitz.syntax import CList
-
-    try:
-        history = json.loads(source_history or "[]")
-    except ValueError:
-        return None
-    replaces = [i for i, step in enumerate(history) if "REPLACE" in str(step.get("mode", ""))]
-    if not replaces or not any("INJECT" in str(step.get("mode", "")) for step in history[replaces[-1] + 1:]):
-        return None
-    step = history[replaces[-1]]
-    for entry in parse_file(Path(step["file"])).entries:
-        if entry.key != f"{step['mode']}:{name}" or not isinstance(entry.value, CList):
-            continue
-        block = entry.value
-        if header is not None:
-            nested = next((e.value for e in block.entries if e.key == header and isinstance(e.value, CList)), None)
-            if nested is None:
-                return 0.0
-            block = nested
-        values = [e.value for e in block.entries if e.key == key]
-        try:
-            return float(values[-1]) if values else 0.0
-        except (TypeError, ValueError):
-            return None
-    return None
-
-
 def load_location_cost_model(
     repo: Path, project: Path, *, profile: str | None = None, load_order: Path | None = None
 ) -> LocationCostModel:
@@ -389,14 +354,10 @@ def load_location_cost_model(
     profile = profile or str(config.get("profile") or "constructor")
     data_profile = LoadOrderConfig.load(load_order).profile(profile)
 
+    # The parser's merge drops an inject into a replaced block, as the engine does (the river efficiency counts once).
     def efficiencies(relative_dir: str, header: str | None, scope: str = "in_game") -> dict[str, float]:
         data = load_modifier_block_data(data_profile, relative_dir=relative_dir, scope=scope)
-        out = {}
-        for row in data.entries.iter_rows(named=True):
-            name = row["name"]
-            replaced = replaced_block_value(row["source_history"], name, header, BUILD_EFFICIENCY)
-            out[name] = replaced if replaced is not None else data.modifier_baseline(name, header, BUILD_EFFICIENCY)
-        return out
+        return {name: data.modifier_baseline(name, header, BUILD_EFFICIENCY) for name in data.entries["name"]}
 
     locations = load_free_building_level_location_frame(repo, project, profile=profile, load_order_path=load_order)
     return location_cost_model(

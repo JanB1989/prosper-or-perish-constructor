@@ -45,23 +45,33 @@ def test_capitals_and_pop_countries_do_not_own_land(tmp_path):
     assert load_owners(tmp_path / "vanilla", tmp_path / "mod") == {"a1": "AAA", "a2": "AAA"}
 
 
+def _river_profile(tmp_path, key: str, value: str):
+    """Vanilla river block, the World Builder TRY_REPLACE and a later hand-authored TRY_INJECT of the same line."""
+    from eu5gameparser.load_order import DataProfile, GameLayer
+
+    vanilla = tmp_path / "vanilla/game/main_menu/common/static_modifiers"
+    mod = tmp_path / "mod/main_menu/common/static_modifiers"
+    vanilla.mkdir(parents=True)
+    mod.mkdir(parents=True)
+    block = f"river_flowing_through_1 = {{ {key} = {value} }}\n"
+    (vanilla / "location.txt").write_text(block, encoding="utf-8")
+    (mod / "pp_00_wb_river_modifiers.txt").write_text("TRY_REPLACE:" + block, encoding="utf-8")
+    (mod / "pp_location_modifier_adjustments.txt").write_text("TRY_INJECT:" + block, encoding="utf-8")
+    return DataProfile(name="constructor", layers=(
+        GameLayer(id="vanilla", name="Vanilla", root=tmp_path / "vanilla", kind="vanilla"),
+        GameLayer(id="constructor", name="Mod", root=tmp_path / "mod", kind="mod"),
+    ))
+
+
 def test_an_inject_into_a_replaced_block_is_ignored_like_the_engine_does(tmp_path):
     # The generated river REPLACE folds in the hand-authored INJECT; counting both doubled every river's fish
-    # capacity and put 1,900 starting fishing villages one level above the engine's max.
-    from eu5gameparser.clausewitz.parser import parse_file
+    # capacity and put 1,900 starting fishing villages one level above the engine's max. Rules reads the parser's
+    # merge, which drops the inject.
+    from eu5gameparser.load_order import load_merged_directory
 
-    from prosper_or_perish_constructor.worldbuilder.start_rules import engine_value
-
-    path = tmp_path / "pp_00_wb_river_modifiers.txt"
-    path.write_text("TRY_REPLACE:river_flowing_through_1 = {\n\tfish_capacity_from_river_size = 1\n}\n")
-    line = parse_file(path).entries[0].location.line
-    folded = parse_file(path).entries[0].value
-    record = lambda mode, file="", at=0: SimpleNamespace(mode=mode, file=file, line=at)
-    entry = SimpleNamespace(key="river_flowing_through_1", value="merged",
-                            source_history=(record("CREATE"), record("TRY_REPLACE", str(path), line), record("TRY_INJECT")))
-    assert engine_value(entry).values("fish_capacity_from_river_size") == folded.values("fish_capacity_from_river_size")
-    plain = SimpleNamespace(key="k", value="merged", source_history=(record("CREATE"), record("TRY_INJECT")))
-    assert engine_value(plain) == "merged"
+    profile = _river_profile(tmp_path, "fish_capacity_from_river_size", "1")
+    merged = {e.key: e.value for e in load_merged_directory(profile, "static_modifiers", scope="main_menu").entries}
+    assert merged["river_flowing_through_1"].values("fish_capacity_from_river_size") == [1]
 
 
 def test_the_setup_attribute_modifiers_reach_the_start_placement():

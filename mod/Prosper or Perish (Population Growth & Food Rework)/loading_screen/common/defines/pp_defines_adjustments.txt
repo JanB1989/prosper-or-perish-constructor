@@ -41,6 +41,8 @@ NAI = {
 	AI_HIGH_DEBT_RATIO_TO_TAX_BASE = 3					# If debt is x times larger than the tax base of a country, high saving mode is enabled
 	MAX_ALLOWED_INFLATION = 0.02 
 	AI_SAVING_MODE_ALLOWED_INFLATION_MODIFIER_LOW = 2 # Mult max allowed inflation by this much when in low saving mode
+	AI_IMPORT_POP_NEED_SCORE_BONUS = 10 # 5; imports that cover a pop shortage win merchant capacity from luxury arbitrage
+	AI_PERFORMANCE_TRADE_PROFIT_PER_WEIGHT_CUTOFF = 0.15 # 0.25; lets bulk staples (price ~1) through the trade search
 	AI_SAVING_MODE_ALLOWED_INFLATION_MODIFIER_HIGH = 7 # Mult max allowed inflation by this much when in high saving mode
 }
 
@@ -53,6 +55,12 @@ NEconomy = {
  	PROFITABLE_BUILDING_WORKERS_REHIRED_PERCENTAGE = 15 # 5
 	BANKRUPTCY_INFLATION_CHANGE_PERCENT = -0.75
 	ESTABLISHMENT_SYSTEM_ENABLED = no # vanilla building establishment ramp (startup_ramp_target); off in the main mod: it crashed the game, tested in a separate mod
+}
+
+NCountry = {
+	# 0.25; flat gold per traded unit and month. It took 25 % of a wheat unit's value but 5 % of saffron's, so bulk
+	# raw materials never paid to move (2026-10-01, raw-material trade)
+	MERCHANT_MAINTENANCE_COST = 0.10
 }
 
 NLocation = {

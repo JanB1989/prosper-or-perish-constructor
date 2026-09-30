@@ -24,7 +24,8 @@ pp_rgo_bonus_chili = {
 pp_rgo_bonus_cloves = {
 	game_data = { category = location }
 	# Spice monopolies draw foreign traders, who enforce them with extirpation and forced delivery.
-	local_cloves_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world glut in the 1387-1397 test runs
+	local_cloves_output_modifier = 0.10
 	local_merchant_power = 0.25
 	local_unrest = 0.05
 	local_max_control = -0.03
@@ -69,7 +70,8 @@ pp_rgo_bonus_dyes = {
 pp_rgo_bonus_elephants = {
 	game_data = { category = location }
 	# Elephant stables are a royal monopoly; the animals haul timber and stone, and eat the fields bare.
-	local_elephants_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world glut in the 1387-1397 test runs
+	local_elephants_output_modifier = 0.10
 	local_manpower = 0.001
 	local_crown_estate_power = 0.10
 	local_construction_speed = 0.05
@@ -88,7 +90,8 @@ pp_rgo_bonus_fiber_crops = {
 pp_rgo_bonus_fruit = {
 	game_data = { category = location }
 	# Orchards add variety to the diet and slowly make a district comfortable.
-	local_fruit_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world deficit in the 1387-1397 test runs
+	local_fruit_output_modifier = 0.30
 	local_peasants_food_consumption = -0.03
 	local_monthly_prosperity = 0.001
 	local_population_growth = 0.0002
@@ -97,7 +100,8 @@ pp_rgo_bonus_fruit = {
 pp_rgo_bonus_horses = {
 	game_data = { category = location }
 	# Horse country raises riders for the levy and remounts for the army, and horses eat grain too.
-	local_horses_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world deficit in the 1387-1397 test runs
+	local_horses_output_modifier = 0.30
 	local_manpower = 0.001
 	local_levy_size_modifier = 0.05
 	local_supply_limit_modifier = 0.03
@@ -144,7 +148,8 @@ pp_rgo_bonus_maize = {
 pp_rgo_bonus_millet = {
 	game_data = { category = location }
 	# Millet keeps in the granary for years and stocks the marching stores of dry lands.
-	local_millet_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world deficit in the 1387-1397 test runs
+	local_millet_output_modifier = 0.30
 	local_peasants_food_consumption = -0.06
 	local_food_capacity_modifier = 0.10
 	local_supply_limit_modifier = 0.03
@@ -189,7 +194,8 @@ pp_rgo_bonus_rice = {
 pp_rgo_bonus_saffron = {
 	game_data = { category = location }
 	# Each autumn the crocus harvest needs many pickers for a few weeks, and brings good money.
-	local_saffron_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world deficit in the 1387-1397 test runs
+	local_saffron_output_modifier = 0.30
 	local_migration_attraction = 0.05
 	local_monthly_development_modifier = 0.04
 	local_peasants_food_consumption = 0.03
@@ -217,7 +223,8 @@ pp_rgo_bonus_sugar = {
 pp_rgo_bonus_tea = {
 	game_data = { category = location }
 	# Tea gardens are orderly upland estates, planted on land that once grew food.
-	local_tea_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world deficit in the 1387-1397 test runs
+	local_tea_output_modifier = 0.30
 	local_max_control = 0.03
 	local_monthly_development_modifier = 0.03
 	local_peasants_food_consumption = 0.02
@@ -235,7 +242,8 @@ pp_rgo_bonus_tobacco = {
 pp_rgo_bonus_wheat = {
 	game_data = { category = location }
 	# Wheat fields fill the granaries, and full granaries feed the rats that carry the plague.
-	local_wheat_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world deficit in the 1387-1397 test runs
+	local_wheat_output_modifier = 0.30
 	local_peasants_food_consumption = -0.11
 	local_max_rgo_size_modifier = 0.03
 	local_bubonic_plague_resistance_modifier = -0.10
@@ -244,7 +252,8 @@ pp_rgo_bonus_wheat = {
 pp_rgo_bonus_wine = {
 	game_data = { category = location }
 	# Monastic vineyards supply the altar and the cellar, on land that could grow grain.
-	local_wine_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world deficit in the 1387-1397 test runs
+	local_wine_output_modifier = 0.30
 	local_clergy_estate_power = 0.10
 	local_monthly_development_modifier = 0.03
 	local_peasants_food_consumption = 0.03
@@ -271,7 +280,8 @@ pp_rgo_bonus_lumber = {
 pp_rgo_bonus_amber = {
 	game_data = { category = location }
 	# Amber shores are a jealously kept state monopoly, and the beads travel far.
-	local_amber_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world deficit in the 1387-1397 test runs
+	local_amber_output_modifier = 0.30
 	local_crown_estate_power = 0.10
 	local_merchant_power = 0.05
 	local_monthly_development_modifier = 0.02
@@ -298,7 +308,8 @@ pp_rgo_bonus_fish = {
 pp_rgo_bonus_medicaments = {
 	game_data = { category = location }
 	# Herb gardens and apothecaries keep people healthier and let them live a little longer.
-	local_medicaments_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world glut in the 1387-1397 test runs
+	local_medicaments_output_modifier = 0.10
 	local_disease_resistance = 0.05
 	local_population_growth = 0.0003
 	local_life_expectancy = 1
@@ -419,7 +430,8 @@ pp_rgo_bonus_stone = {
 pp_rgo_bonus_tin = {
 	game_data = { category = location }
 	# Tin miners hold ancient privileges and their own courts, and the ore washing fouls the streams.
-	local_tin_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world glut in the 1387-1397 test runs
+	local_tin_output_modifier = 0.10
 	local_max_control = -0.03
 	local_migration_attraction = 0.03
 	local_disease_resistance = -0.02
@@ -428,7 +440,8 @@ pp_rgo_bonus_tin = {
 pp_rgo_bonus_lead = {
 	game_data = { category = location }
 	# Lead makes shot, roofs and pipes, and slowly poisons the people who work it.
-	local_lead_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world glut in the 1387-1397 test runs
+	local_lead_output_modifier = 0.10
 	local_manpower_modifier = 0.001
 	local_disease_resistance = -0.05
 	local_life_expectancy = -1
@@ -446,7 +459,8 @@ pp_rgo_bonus_gems = {
 pp_rgo_bonus_saltpeter = {
 	game_data = { category = location }
 	# Crown saltpeter men dig up barns and cellars for gunpowder, and are hated for it.
-	local_saltpeter_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world glut in the 1387-1397 test runs
+	local_saltpeter_output_modifier = 0.10
 	local_manpower_modifier = 0.002
 	local_crown_estate_power = 0.05
 	local_unrest = 0.03
@@ -456,7 +470,8 @@ pp_rgo_bonus_saltpeter = {
 pp_rgo_bonus_alum = {
 	game_data = { category = location }
 	# Alum fixes dyes and was once a papal monopoly; the leaching pits damage health.
-	local_alum_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world glut in the 1387-1397 test runs
+	local_alum_output_modifier = 0.10
 	local_production_efficiency = 0.02
 	local_clergy_estate_power = 0.10
 	local_disease_resistance = -0.03
@@ -465,7 +480,8 @@ pp_rgo_bonus_alum = {
 pp_rgo_bonus_marble = {
 	game_data = { category = location }
 	# Marble builds monuments whose fame spreads far beyond the quarry.
-	local_marble_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world glut in the 1387-1397 test runs
+	local_marble_output_modifier = 0.10
 	local_build_buildings_efficiency = 0.03
 	local_construction_speed = 0.05
 	local_cultural_influence = 0.05
@@ -474,7 +490,8 @@ pp_rgo_bonus_marble = {
 pp_rgo_bonus_mercury = {
 	game_data = { category = location }
 	# Mercury enables specialized processing, but cinnabar mining and roasting are severely toxic.
-	local_mercury_output_modifier = 0.20
+	# raw-material balance 2026-10-01: 0.20 -> this value, world glut in the 1387-1397 test runs
+	local_mercury_output_modifier = 0.10
 	local_production_efficiency = 0.02
 	local_life_expectancy = -2
 	local_disease_resistance = -0.05

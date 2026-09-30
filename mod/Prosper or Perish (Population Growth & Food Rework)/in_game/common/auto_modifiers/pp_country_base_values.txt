@@ -22,6 +22,11 @@ TRY_INJECT:country_base_values = {
 	ban_imports_of_province_food_purchase = yes
 	ban_exports_of_province_food_sales = yes
 	ban_imports_of_province_food_sales = yes
+	# Merchant capacity (2026-10-01): one traded unit uses one capacity, and the vanilla sources (market centres, market
+	# and trade buildings) gave ~3,400 world capacity against ~50,000 units of raw output a month, all of it taken by
+	# luxuries. Never put local_merchant_capacity in the development static modifier: the AI's valuation of development
+	# then reaches the merchant-capacity currency with a null context and crashes the game.
+	global_merchant_capacity_modifier = 1.5
 	# Exploration. Monthly progress = explorer speed x exploration_mission_speed_modifier, and vanilla's only source of that
 	# modifier is the exploration slider (exploration_maintenance_mod, +100 % x slider). AI saving mode cuts the slider to 0,
 	# which froze explorations for years (autosaves 1462-1482: +0.06 progress in 5 years). Half the speed is now a base

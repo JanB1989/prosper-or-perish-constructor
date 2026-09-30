@@ -36,6 +36,7 @@ TRY_INJECT:millet = {
 TRY_INJECT:legumes = {
 	block_rgo_upgrade = yes
 	food = 0
+	transport_cost = 1.5 # 2; a price-1 staple lost most of a trade's margin to transport (2026-10-01)
 }
 # I need to check what i do with potato RGOs and see how they work out in NA
 TRY_INJECT:potato = {
@@ -53,6 +54,7 @@ TRY_INJECT:olives = {
 TRY_INJECT:fruit = {
 	block_rgo_upgrade = yes
 	food = 0
+	transport_cost = 1.5 # 2; a price-1 staple lost most of a trade's margin to transport (2026-10-01)
 }
 TRY_INJECT:beeswax = {
 	block_rgo_upgrade = yes
@@ -196,6 +198,7 @@ TRY_INJECT:goods_gold = {
 }
 TRY_INJECT:horses = {
 	block_rgo_upgrade = yes
+	transport_cost = 1.5 # 2; horses are short in many markets and barely traded (2026-10-01)
 }
 TRY_INJECT:ivory = {
 	block_rgo_upgrade = yes

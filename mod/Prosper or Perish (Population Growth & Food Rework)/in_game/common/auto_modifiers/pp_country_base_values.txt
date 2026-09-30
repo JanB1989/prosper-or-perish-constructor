@@ -19,4 +19,11 @@ TRY_INJECT:country_base_values = {
 	start_exploration_sea_cost_modifier = -0.25
 	start_exploration_land_cost_modifier = -0.25
 	recruit_explorer_cost_modifier = -0.25
+	# Crash guard (engine bug, vanilla too): the AI values maintenance efficiency through 1 / (1 + x) without the floor
+	# the real upkeep uses, so a country whose total is exactly -1.00000 crashes the game (integer divide by zero; Yuan
+	# 1348: factional strife -1.05 + quality vs quantity +0.05). Script contributions come in 0.001 steps, so this
+	# offset keeps every total off -1 without a visible effect.
+	army_maintenance_efficiency = 0.00001
+	navy_maintenance_efficiency = 0.00001
+	mercenary_maintenance_efficiency = 0.00001
 }

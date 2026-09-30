@@ -2859,6 +2859,18 @@ def test_province_food_market_goods_share_balance_values() -> None:
         assert purchase[key] == sales[key]
 
 
+def test_maintenance_efficiency_totals_never_sit_on_minus_one() -> None:
+    # The AI values maintenance efficiency through 1 / (1 + x) without a floor; a total of exactly -1 crashed the game
+    # (2026-09-30, Yuan). Script steps are 0.001, so a base offset below that keeps every total off -1.
+    text = (MOD_ROOT / "in_game" / "common" / "auto_modifiers" / "pp_country_base_values.txt").read_text(
+        encoding="utf-8-sig"
+    )
+    for key in ("army_maintenance_efficiency", "navy_maintenance_efficiency", "mercenary_maintenance_efficiency"):
+        values = re.findall(rf"^[\t ]*{key}[\t ]*=[\t ]*([^\s#]+)", text, flags=re.MULTILINE)
+        assert len(values) == 1, key
+        assert 0 < float(values[0]) < 0.001, key
+
+
 def test_retained_export_offsets_match_food_sales_values() -> None:
     modifier_sources = (
         (MOD_ROOT / "in_game" / "common" / "auto_modifiers" / "pp_country_base_values.txt", "global"),

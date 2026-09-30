@@ -1,0 +1,4 @@
+﻿l_english:
+ # The unsupported-building-levels penalty counts every building level (unstaffed and worker-less ones included), while
+ # vanilla's line showed only the staffed levels; show the counted levels first (2026-09-30).
+ LOCATION_CURR_LEVELS: "Building Levels: [Location.GetNumBuildingLevels] (fully staffed: [Location.GetNumBuildingLevelsWithEmployment|2])"

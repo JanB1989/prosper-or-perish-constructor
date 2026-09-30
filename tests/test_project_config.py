@@ -2887,6 +2887,18 @@ def test_maintenance_efficiency_totals_never_sit_on_minus_one() -> None:
         assert 0 < float(values[0]) < 0.001, key
 
 
+def test_internal_dummy_goods_are_never_traded() -> None:
+    # Dummy goods carry local price signals (storage legs, labour, logistics wage); trade between markets is banned
+    # for every country so it cannot arbitrage them.
+    text = (MOD_ROOT / "in_game" / "common" / "auto_modifiers" / "pp_country_base_values.txt").read_text(
+        encoding="utf-8-sig"
+    )
+    for good in ("logistics", "manual_labor", "offset", "province_food_purchase", "province_food_sales"):
+        for direction in ("exports", "imports"):
+            key = f"ban_{direction}_of_{good}"
+            assert re.search(rf"^[\t ]*{key}[\t ]*=[\t ]*yes\b", text, flags=re.MULTILINE), key
+
+
 def test_civil_war_surrender_at_max_war_exhaustion() -> None:
     # Vanilla AI only surrenders hopeless civil wars; worn-out ones ran for decades at full war exhaustion
     # (run c5c4, 2026-09-30). The override lets the exhausted side surrender regardless of size, and the AI does.

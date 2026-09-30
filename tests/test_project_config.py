@@ -2005,32 +2005,38 @@ def test_yearly_closed_building_culling_removes_one_level_not_whole_stack() -> N
 
 
 CULL_LOG_FIELDS = (
-    ";[GetDateString];[ROOT.GetCountry.GetTag];[SCOPE.GetBuilding.GetLocation.GetKey];[SCOPE.GetBuilding.GetKey];"
-    "[SCOPE.GetBuilding.GetType.GetName];[SCOPE.GetBuilding.GetLevel]\""
+    ";[GetDateString];[SCOPE.sCountry('pp_cull_country').GetTag];[SCOPE.sLocation('pp_cull_location').GetKey];"
+    "[SCOPE.sBuildingType('pp_cull_type').GetNameWithNoTooltip]\""
 )
+# In game 2026-09-30 the log text could not reach ROOT ("Promote 'ROOT' returned nullptr") nor the building (no promote
+# GetBuilding): it reads saved scopes, which must be saved before the error_log line.
+CULL_LOG_SCOPES = ("save_temporary_scope_as = pp_cull_country", "save_temporary_scope_as = pp_cull_location",
+                   "save_temporary_scope_as = pp_cull_type")
 
 
-def test_scripted_culls_log_date_country_location_building_and_level() -> None:
-    # Every scripted cull writes one error_log line with when, who, where, what and the level before the cull, from
-    # the building's scope and before the level change (removing the last level destroys the building and its scope).
+def test_scripted_culls_log_date_country_location_and_building() -> None:
+    # Every scripted cull writes one error_log line with when, who, where and what, before the level change (removing
+    # the last level destroys the building and its scope).
     review = AI_BUILDING_REVIEW_EFFECTS.read_text(encoding="utf-8-sig")
     cull = review.split("pp_cull_one_closed_building = {", maxsplit=1)[1].split("\n}", maxsplit=1)[0]
     log = f'error_log = "PPBLD;review_cull_closed{CULL_LOG_FIELDS}'
     assert log in cull
+    assert all(cull.index(scope) < cull.index(log) for scope in CULL_LOG_SCOPES)
     assert cull.index(log) < cull.index("change_building_level = -1")
+    assert "building_type = { save_temporary_scope_as = pp_cull_type }" in cull
 
     capacity = CAPACITY_CULLING_EFFECTS.read_text(encoding="utf-8-sig")
     helper = capacity.split("pp_cull_capacity_building_above_max = {\n", maxsplit=1)[1]
     log = f'error_log = "PPBLD;capacity_cull{CULL_LOG_FIELDS}'
     assert helper.count("error_log") == 1
     assert log in helper
-    scope = helper.split("random_buildings_in_location = {", maxsplit=1)[1].split("\n\t\t}", maxsplit=1)[0]
-    assert "limit = { building_type = building_type:$building$ }" in scope
-    assert log in scope
+    assert all(helper.index(scope) < helper.index(log) for scope in CULL_LOG_SCOPES)
+    assert "building_type:$building$ = { save_temporary_scope_as = pp_cull_type }" in helper
     assert helper.index(log) < helper.index("change_building_level_in_location")
     assert helper.index("pp_dbg_script_cull") < helper.index("change_building_level_in_location")
-    # a macro inside the quoted log string lost its separator in game (PPBLD;capacity_cullgrange)
-    assert '$building$"' not in helper
+    # no data functions the log text cannot reach, no macro inside the quoted string (it lost its separator in game)
+    assert "ROOT." not in helper and "GetBuilding" not in helper and '$building$"' not in helper
+    assert "ROOT." not in cull and "GetBuilding" not in cull
 
 
 def test_yearly_ai_review_builds_nothing() -> None:
@@ -2260,14 +2266,6 @@ def test_capacity_culling_v2_avoids_pooled_and_iterative_culling() -> None:
         path.read_text(encoding="utf-8-sig")
         for path in (BUILDING_CAPACITY_CULLING_V2, CAPACITY_CULLING_EFFECTS)
     )
-    # The one building iterator only writes the cull's log line (it changes nothing): drop it before the check.
-    log_scope = re.search(r"\n\t\trandom_buildings_in_location = \{\n(.*?)\n\t\t\}", text, flags=re.S)
-    assert log_scope is not None
-    body = [line.strip() for line in log_scope.group(1).splitlines()]
-    assert body[0] == "limit = { building_type = building_type:$building$ }"
-    assert len(body) == 2 and body[1].startswith('error_log = "PPBLD;capacity_cull;')
-    text = text.replace(log_scope.group(0), "")
-
     forbidden_tokens = (
         "destroy_building",
         "while =",

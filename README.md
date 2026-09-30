@@ -361,18 +361,24 @@ investment = base_price x (L + ipl x L x (L - 1) / 2)     level n costs base_pri
   unlocks it; `first_age` = no unlocking advance, age 1 price). Buildings priced in something other than gold
   (religious influence: 7 types) and building types the catalog no longer knows are valued at the age price and
   flagged in `price_basis`. `ipl` is the built `increase_per_level_cost` (after the constructor scaling); unset = 0.
-- It is list-price investment: the engine also scales a construction's price by the location's cost modifiers, which
-  the save does not keep.
+- `investment_local` prices the same levels at the location: the engine divides a level's price by
+  `max(0.5, 1 + e)`, e = the location's `local_build_buildings_efficiency` (`location_efficiency`, factor in
+  `cost_factor`). e sums what the built mod gives the location's topography, vegetation, climate, river level and port
+  (map data) and, per snapshot, its rank, development and unemployed peasants (from the save). Country-wide efficiency
+  (advances, laws, estates) and timed event modifiers are not in it: the save keeps neither. Run f3368e9e: the median
+  building costs 1.2x its list price, 9 % sit at the 2x ceiling (mountains, deserts), world total +4 % (1342) to
+  +14 % (1423) over list price.
 - Prices come from today's mod build, like the other catalogs, so old snapshots are valued with today's prices. The
-  table remembers the price catalog's fingerprint (`catalog.json`) and rebuilds every snapshot when prices change;
-  otherwise only new snapshots are written.
+  table remembers the fingerprint of the price catalog and the location cost model (`catalog.json`) and rebuilds
+  every snapshot when either changes; otherwise only new snapshots are written.
 - Categories: food production (farms, fisheries, orchards: everything that produces food), food service & trade
   (tavern, grange, victualling yard, cookshop, public kitchen, granary), land improvements (footprint class
   `capacity_source`), crafts & workshops, extraction, military, infrastructure & institutions. They come from the
   blueprint footprint class, then the game building category.
 
-Per location, country, category or world: sum `investment` over the rows of a snapshot. The report shows the world
-by category, what was added since the first save, investment per 1,000 people, a per-location map video (log scale)
+Per location, country, category or world: sum `investment` (or `investment_local`) over the rows of a snapshot. The
+report uses `investment_local` when every snapshot has it and shows the world by category, what was added since the
+first save, investment per 1,000 people, per-location map videos (log scale, and the change against the first save)
 and each leading country's investment.
 
 ### Sharing a run and work-in-progress docs (preview site)

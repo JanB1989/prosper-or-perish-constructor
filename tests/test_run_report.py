@@ -120,3 +120,23 @@ def test_scales_map_values_into_the_colour_ramp() -> None:
     assert positions.tolist() == [0.0, 0.0, 0.5, 1.0, 1.0]
     colours = scale.colours(np.array([np.nan, 0.0]))
     assert tuple(colours[0]) == rr.LAND_NODATA
+
+
+def test_symlog_scale_is_symmetric_and_logarithmic_in_the_absolute_change() -> None:
+    import numpy as np
+    import polars as pl
+    import pytest
+
+    scale = rr.Scale("symlog", 10.0, 10_000.0, rr._ramp(rr.DIVERGING), [])
+    t = scale.position(np.array([-1e6, -10_000.0, -990.0, 0.0, 990.0, 10_000.0, 1e6]))
+    assert t[3] == 0.5 and t[0] == 0.0 and t[-1] == 1.0
+    assert t[1] == pytest.approx(0.0) and t[5] == pytest.approx(1.0)
+    assert t[4] - 0.5 == pytest.approx(0.5 - t[2])  # same distance both ways
+    # 990 gold = 1 + 990/10 = 100 -> 2 of the 3 decades (log10 1001) from the middle
+    assert t[4] == pytest.approx(0.5 + 0.5 * 2 / np.log10(1001))
+
+    frames = pl.DataFrame({"value": [-5_000.0, -50.0, 0.0, 20.0, 200.0, 2_000.0, 20_000.0, None]})
+    built = rr._symlog_scale(frames)
+    assert built.kind == "symlog" and built.low > 0 and built.high > built.low
+    labels = [label for _, label in built.ticks]
+    assert "0" in labels and any(label.startswith("+") for label in labels) and any(label.startswith("-") for label in labels)

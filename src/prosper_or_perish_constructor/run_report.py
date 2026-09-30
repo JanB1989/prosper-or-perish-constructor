@@ -76,10 +76,18 @@ class RunData:
     buildings_by_category: pl.DataFrame  # snapshot_id, building_category, levels
     countries: pl.DataFrame
     goods: pl.DataFrame  # snapshot_id, good_id, price_index, value
-    # building investment at list price (derived table building_investment); empty when the table is missing
+    # building investment (derived table building_investment); empty when the table is missing
     investment_by_location: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, slug, investment
     investment_by_category: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, investment_category, investment
     investment_by_country: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, country_tag, investment
+    investment_basis: str = "list"  # "location": at the location's prices (investment_local), "list": list price
+
+    @property
+    def investment_prices(self) -> str:
+        """How the investment is priced, for captions."""
+        if self.investment_basis == "location":
+            return "at the location's prices (list price divided by max(0.5, 1 + the location's building efficiency))"
+        return "at list price"
 
     @property
     def years(self) -> tuple[int, int]:
@@ -180,10 +188,16 @@ def _load_investment(run: RunData, dataset: Path, wanted: list[str]) -> None:
         return
     frame = (
         pl.scan_parquet([str(f) for f in files], missing_columns="insert", extra_columns="ignore")
-        .select("snapshot_id", "location_slug", "country_tag", "investment_category", "investment", "level")
+        .select("snapshot_id", "location_slug", "country_tag", "investment_category", "investment", "investment_local",
+                "level")
         .filter(pl.col("snapshot_id").is_in(wanted))
         .collect()
     )
+    # gold at the location's prices when every snapshot has it (building_investment.LocationCostModel), else list price
+    if frame.height and frame["investment_local"].null_count() == 0:
+        frame = frame.with_columns(pl.col("investment_local").alias("investment"))
+        run.investment_basis = "location"
+    frame = frame.drop("investment_local")
     run.investment_by_location = frame.group_by("snapshot_id", "location_slug").agg(pl.col("investment").sum()).rename(
         {"location_slug": "slug"})
     run.investment_by_category = frame.group_by("snapshot_id", "investment_category").agg(pl.col("investment").sum())
@@ -237,7 +251,7 @@ def _ramp(stops: tuple[str, ...], n: int = 256) -> np.ndarray:
 
 @dataclass
 class Scale:
-    kind: str  # "log", "linear", "diverging"
+    kind: str  # "log", "linear", "diverging", "symlog" (diverging, log of |value|; low = linear threshold)
     low: float
     high: float
     lut: np.ndarray
@@ -248,6 +262,10 @@ class Scale:
             if self.kind == "log":
                 v = np.log10(np.maximum(values, self.low))
                 t = (v - math.log10(self.low)) / (math.log10(self.high) - math.log10(self.low))
+            elif self.kind == "symlog":
+                span = math.log10(1 + self.high / self.low)
+                v = np.sign(values) * np.log10(1 + np.abs(values) / self.low) / span
+                t = 0.5 + 0.5 * np.clip(v, -1.0, 1.0)
             elif self.kind == "diverging":
                 t = 0.5 + 0.5 * np.clip(values, self.low, self.high) / max(abs(self.low), abs(self.high))
             else:
@@ -403,6 +421,19 @@ def _log_scale(frames: pl.DataFrame, factor: float = 1.0) -> Scale:
     return Scale("log", low, high, _ramp(SEQUENTIAL), [(t, _format_number(t * factor)) for t in ticks])
 
 
+def _symlog_scale(frames: pl.DataFrame) -> Scale:
+    """Diverging scale on log10 of the absolute change, the same length both ways: from +-threshold (a tenth of a
+    typical change, linear below it) to the largest change (99.5th percentile of |value|)."""
+    values = frames["value"].drop_nulls().abs()
+    values = values.filter(values > 0)
+    high = float(values.quantile(0.995)) if values.len() else 1.0
+    low = max(high / 100_000, float(values.quantile(0.5)) / 10 if values.len() else 1.0)
+    decades = [10 ** e for e in range(math.ceil(math.log10(low)), math.floor(math.log10(high)) + 1)]
+    ticks = [(0.0, "0")] + [(sign * d, ("+" if sign > 0 else "-") + _format_number(d)) for d in (decades if len(decades) <= 3 else decades[1::2])
+                            for sign in (-1, 1)]
+    return Scale("symlog", low, high, _ramp(DIVERGING[:3] + (DIVERGING_DARK_MID,) + DIVERGING[4:]), ticks)
+
+
 def _linear_scale(low: float, high: float, labels: list[tuple[float, str]]) -> Scale:
     return Scale("linear", low, high, _ramp(SEQUENTIAL), labels)
 
@@ -453,8 +484,10 @@ def default_maps() -> list[MapSpec]:
                                         [(v, f"{v:.0f}") for v in np.linspace(0, max(1.0, float(f["value"].quantile(0.995) or 1.0)), 5)])),
         MapSpec("buildings", "Building levels", "Sum of building levels per location (log scale)", _building_values,
                 lambda f: _log_scale(f)),
-        MapSpec("investment", "Building investment", "Gold the buildings of a location cost at list price (log scale)",
+        MapSpec("investment", "Building investment", "Gold the buildings of a location cost to build (log scale)",
                 _investment_values, lambda f: _log_scale(f)),
+        MapSpec("investment_change", "Building investment change",
+                "Gold built or lost per location since the first save (log scale both ways)", None, _symlog_scale),
         MapSpec("unemployment", "Unemployment", "Unemployed share of the population", _unemployment_values,
                 lambda f: _linear_scale(0.0, 0.5, [(0.0, "0%"), (0.1, "10%"), (0.2, "20%"), (0.3, "30%"), (0.4, "40%"), (0.5, "50%+")])),
     ]
@@ -480,11 +513,16 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
     out.mkdir(parents=True, exist_ok=True)
     specs = specs or default_maps()
     if run.investment_by_location.is_empty():
-        specs = [s for s in specs if s.key != "investment"]
+        specs = [s for s in specs if s.key not in {"investment", "investment_change"}]
     snapshots = run.snapshots.to_dicts()
     by_snapshot = run.locations.partition_by("snapshot_id", as_dict=True)
     first = by_snapshot.get((snapshots[0]["snapshot_id"],), pl.DataFrame())
     baseline = first.select("slug", pl.col("total_population").alias("base"))
+    investment_base = (
+        run.investment_by_location.filter(pl.col("snapshot_id") == snapshots[0]["snapshot_id"]).select(
+            "slug", pl.col("investment").alias("base"))
+        if not run.investment_by_location.is_empty() else pl.DataFrame(schema={"slug": pl.String, "base": pl.Float64})
+    )
     world = run.locations.group_by("snapshot_id").agg(
         pl.col("total_population").sum().alias("population"),
         pl.col("country_tag").filter(pl.col("owner").is_not_null()).n_unique().alias("countries"),
@@ -503,6 +541,13 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
             if spec.key == "population_change":
                 values = locs.select("slug", "total_population").join(baseline, on="slug", how="left").select(
                     "slug", pl.when(pl.col("base") > 0).then(pl.col("total_population") / pl.col("base") - 1).alias("value"))
+            elif spec.key == "investment_change":
+                # absolute change in gold per location; no data where the location never had a building
+                values = _investment_values(run, locs).join(investment_base, on="slug", how="left").select(
+                    "slug",
+                    pl.when((pl.col("base").fill_null(0.0) > 0) | (pl.col("value").fill_null(0.0) > 0))
+                    .then(pl.col("value").fill_null(0.0) - pl.col("base").fill_null(0.0))
+                    .alias("value"))
             elif spec.values is not None:
                 values = spec.values(run, locs)
             else:
@@ -701,8 +746,9 @@ def _investment_charts(run: RunData, years: pl.DataFrame, plt, save) -> None:
     ax.set_title("Building investment by category")
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncols=4, fontsize=9)
     save(fig, "investment_by_category", "Building investment by category",
-         "What the standing buildings cost to build at list price (level n costs price x (1 + increase per level x (n - 1)), "
-         "today's mod prices, no location cost modifiers), summed per save; the top edge is the world total.")
+         f"What the standing buildings cost to build {run.investment_prices}; level n costs price x (1 + increase per "
+         "level x (n - 1)), today's mod prices, no country-wide cost modifiers. Summed per save; the top edge is the "
+         "world total.")
 
     # What was built (or lost) since the first save, per category
     fig, ax = plt.subplots(figsize=(9, 4.6))
@@ -715,7 +761,8 @@ def _investment_charts(run: RunData, years: pl.DataFrame, plt, save) -> None:
     ax.set_title("Building investment added since the first save")
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncols=4, fontsize=9)
     save(fig, "investment_added", "Building investment added since the first save",
-         "Change of the list-price investment against the first save of the run, per category and for the world "
+         f"Change of the building investment ({run.investment_prices}) against the first save of the run, per "
+         "category and for the world "
          "(negative: levels lost to destruction, downgrades or obsolete buildings).")
 
     # Investment per capita: world and the most populous super regions
@@ -745,7 +792,8 @@ def _investment_charts(run: RunData, years: pl.DataFrame, plt, save) -> None:
     ax.set_title("Building investment per capita")
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncols=4, fontsize=9)
     save(fig, "investment_per_capita", "Building investment per capita",
-         "List-price building investment per 1,000 people, world and the most populous super regions (1 % of the world "
+         f"Building investment {run.investment_prices} per 1,000 people, world and the most populous super regions "
+         "(1 % of the world "
          "population or more).")
 
 
@@ -848,7 +896,7 @@ th,td{{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left}} th
 <h2>Maps</h2><div class=grid>{videos}</div>
 <h2>Progression</h2><div class=grid>{chart_html}</div>
 <h2>Largest countries in {end}</h2>
-<table><thead><tr><th>#</th><th>Country</th><th class=num>Population</th><th class=num>Locations</th><th class=num>Gold</th><th class=num title="Building investment at list price">Investment</th></tr></thead><tbody>{leader_rows}</tbody></table>
+<table><thead><tr><th>#</th><th>Country</th><th class=num>Population</th><th class=num>Locations</th><th class=num>Gold</th><th class=num title="Building investment {html.escape(run.investment_prices)}">Investment</th></tr></thead><tbody>{leader_rows}</tbody></table>
 <footer>Generated {datetime.now().strftime('%Y-%m-%d %H:%M')} by <code>ppc report</code> from {run.snapshots.height} autosaves.</footer>
 </main></body></html>
 """
@@ -865,7 +913,12 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
     from prosper_or_perish_constructor import building_investment
 
     # the derived table is incremental: a no-op when `ppc savegame-notebooks build` already brought it up to date
-    building_investment.update_dataset(dataset, building_investment.load_price_catalog(repo, project), log=log)
+    building_investment.update_dataset(
+        dataset,
+        building_investment.load_price_catalog(repo, project),
+        cost_model=building_investment.load_location_cost_model(repo, project),
+        log=log,
+    )
     run = load_run(dataset, playthrough)
     log(f"run {run.name} ({run.playthrough_id}): {run.snapshots.height} saves {run.years[0]}-{run.years[1]}")
     out = out_root / run.playthrough_id

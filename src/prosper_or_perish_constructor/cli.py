@@ -3295,7 +3295,10 @@ def _update_building_investment(
     if not any((dataset / "tables" / "buildings").glob("playthrough_id=*/*.parquet")):
         return
     catalog = building_investment.load_price_catalog(repo, project, profile=profile, load_order=load_order)
-    building_investment.update_dataset(dataset, catalog, log=lambda message: print(message, flush=True))
+    cost_model = building_investment.load_location_cost_model(repo, project, profile=profile, load_order=load_order)
+    building_investment.update_dataset(
+        dataset, catalog, cost_model=cost_model, log=lambda message: print(message, flush=True)
+    )
 
 
 def _build_run_report(*, repo: Path, project: Path, dataset: Path) -> None:

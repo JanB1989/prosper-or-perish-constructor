@@ -7,8 +7,13 @@ L levels therefore stands for
     price x (L + ipl x L x (L - 1) / 2)
 
 gold. Prices and ipl come from the built mod files through the parser (after the constructor's scaling), so every
-snapshot, old ones included, is valued with today's catalog. The engine also scales a construction's price by the
-location's cost modifiers; the save does not keep those, so this is list-price investment, not gold actually paid.
+snapshot, old ones included, is valued with today's catalog.
+
+The engine divides a level's price by ``max(0.5, 1 + e)``, e = the location's ``local_build_buildings_efficiency``
+(private engine notes, building_limit_ai.md). ``investment_local`` applies that per location: e is summed from the
+built mod's modifiers the location carries through its map attributes (topography, vegetation, climate, river level,
+port) and, per snapshot, its rank, development and unemployed peasants (``LocationCostModel``). Country-wide
+efficiency (advances, laws, estates) and timed event modifiers are not in it: the save keeps neither.
 
 ``update_dataset`` keeps the derived table ``building_investment`` next to the engine tables in the savegame dataset
 (``graphs/dataset/tables/building_investment/playthrough_id=<id>/<snapshot>.parquet``, one row per building). It is
@@ -96,6 +101,9 @@ TABLE_SCHEMA = {
     "price_basis": pl.String,
     "investment_category": pl.String,
     "investment": pl.Float64,
+    "location_efficiency": pl.Float64,
+    "cost_factor": pl.Float64,
+    "investment_local": pl.Float64,
 }
 
 
@@ -235,11 +243,145 @@ def load_price_catalog(
 
 
 # --------------------------------------------------------------------------------------------------------
+# Location prices
+
+BUILD_EFFICIENCY = "local_build_buildings_efficiency"
+MIN_PRICE_DIVISOR = 0.5  # the engine divides a level's price by max(0.5, 1 + efficiency)
+RIVER_LEVELS = range(1, 6)  # static modifiers river_flowing_through_1..5
+
+
+@dataclass(frozen=True)
+class LocationCostModel:
+    """The location building efficiency the engine divides a level's price by.
+
+    ``fixed``: location_slug, fixed_efficiency (topography + vegetation + climate + river level + port, map data of the
+    current mod). The rest changes during a run and is read per snapshot: ``rank`` (location rank -> efficiency),
+    ``per_development`` (per development point) and ``per_unemployed_peasant`` (per unit of unemployed peasants as the
+    save counts them, thousands of people).
+    """
+
+    fixed: pl.DataFrame
+    rank: dict[str, float]
+    per_development: float
+    per_unemployed_peasant: float
+
+    def fingerprint(self) -> str:
+        text = self.fixed.sort("location_slug").write_csv() + json.dumps(
+            [sorted(self.rank.items()), self.per_development, self.per_unemployed_peasant]
+        )
+        return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
+
+
+def location_cost_model(
+    locations: pl.DataFrame,
+    *,
+    topography: dict[str, float],
+    vegetation: dict[str, float],
+    climate: dict[str, float],
+    rank: dict[str, float],
+    static: dict[str, float],
+) -> LocationCostModel:
+    """Build the model from per-attribute efficiencies (attribute value -> modifier) and the static modifiers.
+
+    `locations`: location_tag, topography, vegetation, climate, river_level (0 = no river), is_port.
+    `static`: the efficiency of the static modifiers development (per point), unemployed_peasants (per unit), is_port
+    and river_flowing_through_1..5.
+    """
+    river = {level: static.get(f"river_flowing_through_{level}", 0.0) for level in RIVER_LEVELS}
+
+    def attribute(column: str, values: dict[str, float]) -> pl.Expr:
+        return pl.col(column).replace_strict(values, default=0.0, return_dtype=pl.Float64).fill_null(0.0)
+
+    fixed = locations.select(
+        pl.col("location_tag").alias("location_slug"),
+        (
+            attribute("topography", topography)
+            + attribute("vegetation", vegetation)
+            + attribute("climate", climate)
+            + pl.col("river_level").fill_null(0).replace_strict(river, default=0.0, return_dtype=pl.Float64)
+            + pl.when(pl.col("is_port").fill_null(False)).then(static.get("is_port", 0.0)).otherwise(0.0)
+        ).alias("fixed_efficiency"),
+    ).unique("location_slug")
+    return LocationCostModel(
+        fixed=fixed,
+        rank=dict(rank),
+        per_development=static.get("development", 0.0),
+        per_unemployed_peasant=static.get("unemployed_peasants", 0.0),
+    )
+
+
+def location_efficiency(locations: pl.DataFrame, model: LocationCostModel) -> pl.DataFrame:
+    """location_id, location_efficiency for one snapshot.
+
+    `locations`: location_id, slug, rank, development, unemployed_peasants (missing columns count as 0).
+    """
+    frame = locations
+    for column, dtype in (("rank", pl.String), ("development", pl.Float64), ("unemployed_peasants", pl.Float64)):
+        if column not in frame.columns:
+            frame = frame.with_columns(pl.lit(None, dtype=dtype).alias(column))
+    return frame.join(model.fixed, left_on="slug", right_on="location_slug", how="left").select(
+        "location_id",
+        (
+            pl.col("fixed_efficiency").fill_null(0.0)
+            + pl.col("rank").replace_strict(model.rank, default=0.0, return_dtype=pl.Float64).fill_null(0.0)
+            + pl.col("development").cast(pl.Float64).fill_null(0.0) * model.per_development
+            + pl.col("unemployed_peasants").cast(pl.Float64).fill_null(0.0) * model.per_unemployed_peasant
+        ).alias("location_efficiency"),
+    )
+
+
+def cost_factor_expr(efficiency: pl.Expr | str = "location_efficiency") -> pl.Expr:
+    """1 / max(0.5, 1 + efficiency): what a level costs in the location relative to its list price."""
+    e = pl.col(efficiency) if isinstance(efficiency, str) else efficiency
+    return 1.0 / pl.max_horizontal(pl.lit(MIN_PRICE_DIVISOR), 1.0 + e)
+
+
+def load_location_cost_model(
+    repo: Path, project: Path, *, profile: str | None = None, load_order: Path | None = None
+) -> LocationCostModel:
+    """The model of the current mod build: per-attribute efficiencies from the parser, map attributes of every
+    location from the constructor's location frame (the one the free-building-level statistics use)."""
+    from eu5gameparser.domain._modifier_blocks import load_modifier_block_data
+    from eu5gameparser.load_order import LoadOrderConfig
+
+    from prosper_or_perish_constructor.free_building_levels import (
+        load_free_building_level_location_frame,
+        resolve_parser_config,
+    )
+
+    config = resolve_parser_config(repo, project)
+    load_order = load_order or repo / str(config.get("load_order") or "constructor.load_order.toml")
+    profile = profile or str(config.get("profile") or "constructor")
+    data_profile = LoadOrderConfig.load(load_order).profile(profile)
+
+    def efficiencies(relative_dir: str, header: str | None, scope: str = "in_game") -> dict[str, float]:
+        data = load_modifier_block_data(data_profile, relative_dir=relative_dir, scope=scope)
+        names = data.entries["name"].to_list() if "name" in data.entries.columns else []
+        return {name: data.modifier_baseline(name, header, BUILD_EFFICIENCY) for name in names}
+
+    locations = load_free_building_level_location_frame(repo, project, profile=profile, load_order_path=load_order)
+    return location_cost_model(
+        locations,
+        topography=efficiencies("topography", "location_modifier"),
+        vegetation=efficiencies("vegetation", "location_modifier"),
+        climate=efficiencies("climates", "location_modifier"),
+        rank=efficiencies("location_ranks", "rank_modifier"),
+        static=efficiencies("static_modifiers", None, scope="main_menu"),
+    )
+
+
+# --------------------------------------------------------------------------------------------------------
 # Per-building table
 
 
-def investment_table(buildings: pl.DataFrame, locations: pl.DataFrame, catalog: pl.DataFrame) -> pl.DataFrame:
-    """One row per building: its list-price investment, category and the location owner.
+def investment_table(
+    buildings: pl.DataFrame,
+    locations: pl.DataFrame,
+    catalog: pl.DataFrame,
+    efficiency: pl.DataFrame | None = None,
+) -> pl.DataFrame:
+    """One row per building: its list-price investment, category and the location owner, and with `efficiency`
+    (location_id, location_efficiency) the investment at the location's prices (`investment_local`).
 
     `buildings`: building_id, building_type, location_id, location_slug, owner (country id), level.
     `locations`: location_id, owner (country id), country_tag.
@@ -265,6 +407,13 @@ def investment_table(buildings: pl.DataFrame, locations: pl.DataFrame, catalog: 
         )
         .with_columns(investment_expr().alias("investment"))
     )
+    if efficiency is not None:
+        frame = (
+            frame.join(efficiency.select("location_id", "location_efficiency").unique("location_id"), on="location_id", how="left")
+            .with_columns(pl.col("location_efficiency").fill_null(0.0))
+            .with_columns(cost_factor_expr().alias("cost_factor"))
+            .with_columns((pl.col("investment") * pl.col("cost_factor")).alias("investment_local"))
+        )
     for column, dtype in TABLE_SCHEMA.items():
         if column not in frame.columns:
             frame = frame.with_columns(pl.lit(None, dtype=dtype).alias(column))
@@ -275,6 +424,7 @@ def aggregate(frame: pl.DataFrame | pl.LazyFrame, by: Iterable[str]) -> pl.DataF
     """Investment, levels and building count per group (e.g. snapshot_id + country_tag / location_slug / category)."""
     return frame.group_by(list(by)).agg(
         pl.col("investment").sum(),
+        pl.col("investment_local").sum(),
         pl.col("level").sum().alias("levels"),
         pl.len().alias("buildings"),
     )
@@ -301,15 +451,27 @@ def _snapshot_files(dataset: Path, table: str) -> dict[Path, Path]:
 BUILDING_COLUMNS = ("building_id", "building_type", "location_id", "location_slug", "owner", "level")
 
 
-def snapshot_investment(buildings_file: Path, locations_file: Path | None, catalog: pl.DataFrame) -> pl.DataFrame:
+LOCATION_COLUMNS = ("location_id", "owner", "country_tag", "slug", "rank", "development", "unemployed_peasants")
+
+
+def snapshot_investment(
+    buildings_file: Path,
+    locations_file: Path | None,
+    catalog: pl.DataFrame,
+    cost_model: LocationCostModel | None = None,
+) -> pl.DataFrame:
     schema = pl.read_parquet_schema(buildings_file)
     snap_columns = [c for c in SNAPSHOT_COLUMNS if c in schema]
     buildings = pl.read_parquet(buildings_file, columns=[c for c in (*BUILDING_COLUMNS, *snap_columns) if c in schema])
     if locations_file is not None and locations_file.is_file():
-        locations = pl.read_parquet(locations_file, columns=["location_id", "owner", "country_tag"])
+        location_schema = pl.read_parquet_schema(locations_file)
+        locations = pl.read_parquet(locations_file, columns=[c for c in LOCATION_COLUMNS if c in location_schema])
     else:
         locations = pl.DataFrame(schema={"location_id": pl.Int64, "owner": pl.Int64, "country_tag": pl.String})
-    table = investment_table(buildings, locations, catalog)
+    efficiency = None
+    if cost_model is not None and "slug" in locations.columns:
+        efficiency = location_efficiency(locations, cost_model)
+    table = investment_table(buildings, locations.select("location_id", "owner", "country_tag"), catalog, efficiency)
     if buildings.height and snap_columns:
         first = buildings.select(snap_columns).row(0, named=True)
         table = table.with_columns([pl.lit(first[c]).alias(c) for c in snap_columns])
@@ -320,12 +482,14 @@ def update_dataset(
     dataset: Path,
     catalog: pl.DataFrame,
     *,
+    cost_model: LocationCostModel | None = None,
     force: bool = False,
     log: Callable[[str], None] = print,
 ) -> UpdateResult:
-    """Write `building_investment` for every snapshot that lacks it (all of them when the catalog changed)."""
+    """Write `building_investment` for every snapshot that lacks it (all of them when the catalog or the location
+    cost model changed)."""
     root = dataset / "tables" / TABLE
-    fingerprint = catalog_fingerprint(catalog)
+    fingerprint = catalog_fingerprint(catalog) + ("-" + cost_model.fingerprint() if cost_model is not None else "")
     marker = root / CATALOG_FILE
     try:
         previous = json.loads(marker.read_text(encoding="utf-8")).get("fingerprint")
@@ -344,7 +508,7 @@ def update_dataset(
         if target.is_file() and not rebuild:
             result.kept += 1
             continue
-        table = snapshot_investment(source, dataset / "tables" / "locations" / relative, catalog)
+        table = snapshot_investment(source, dataset / "tables" / "locations" / relative, catalog, cost_model)
         target.parent.mkdir(parents=True, exist_ok=True)
         temporary = target.with_suffix(".tmp")
         table.write_parquet(temporary, compression="zstd", compression_level=1)
@@ -354,7 +518,7 @@ def update_dataset(
     marker.write_text(json.dumps({"fingerprint": fingerprint, "types": catalog.height}, indent=1), encoding="utf-8")
     log(
         f"building investment: {result.written} snapshot(s) written, {result.kept} current, {result.removed} removed"
-        + (" (price catalog changed: all rebuilt)" if result.catalog_changed and rebuild else "")
+        + (" (price catalog or location cost model changed: all rebuilt)" if result.catalog_changed and rebuild else "")
     )
     return result
 

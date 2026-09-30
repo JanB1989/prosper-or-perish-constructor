@@ -160,3 +160,102 @@ def test_dataset_update_is_incremental_and_follows_the_catalog(tmp_path: Path) -
     purged = bi.update_dataset(dataset, cheaper, log=logs.append)
     assert (purged.written, purged.kept, purged.removed) == (0, 1, 1)
     assert not (out / "s2.parquet").exists()
+
+
+def _cost_model() -> bi.LocationCostModel:
+    static_locations = pl.DataFrame(
+        {
+            "location_tag": ["york", "leeds", "paris"],
+            "topography": ["hills", "mountains", "flatland"],
+            "vegetation": ["forest", None, "farmland"],
+            "climate": ["oceanic", "oceanic", "continental"],
+            "river_level": [0, 2, 5],
+            "is_port": [True, False, None],
+        }
+    )
+    return bi.location_cost_model(
+        static_locations,
+        topography={"hills": -0.08, "mountains": -0.35},
+        vegetation={"forest": -0.08},
+        climate={"oceanic": 0.02, "continental": -0.02},
+        rank={"rural_settlement": -0.3, "city": -0.3},
+        static={"development": 0.001, "unemployed_peasants": 0.001, "is_port": 0.15, "river_flowing_through_2": 0.3,
+                "river_flowing_through_5": 0.6},
+    )
+
+
+def _snapshot_locations() -> pl.DataFrame:
+    return pl.DataFrame(
+        {
+            "location_id": [10, 11, 12],
+            "owner": [100, 100, 200],
+            "country_tag": ["ENG", "ENG", "FRA"],
+            "slug": ["york", "leeds", "paris"],
+            "rank": ["rural_settlement", "rural_settlement", "city"],
+            "development": [10.0, 0.0, 50.0],
+            "unemployed_peasants": [20.0, 0.0, None],
+        }
+    )
+
+
+def test_location_efficiency_sums_map_attributes_rank_development_and_unemployed_peasants() -> None:
+    model = _cost_model()
+    fixed = dict(model.fixed.iter_rows())
+    assert fixed["york"] == pytest.approx(-0.08 - 0.08 + 0.02 + 0.15)  # hills, forest, oceanic, port
+    assert fixed["leeds"] == pytest.approx(-0.35 + 0.02 + 0.3)  # unknown vegetation counts 0, river level 2
+    assert fixed["paris"] == pytest.approx(-0.02 + 0.6)  # flatland and farmland carry nothing, river level 5
+
+    efficiency = dict(bi.location_efficiency(_snapshot_locations(), model).iter_rows())
+    assert efficiency[10] == pytest.approx(fixed["york"] - 0.3 + 10 * 0.001 + 20 * 0.001)
+    assert efficiency[11] == pytest.approx(fixed["leeds"] - 0.3)
+    assert efficiency[12] == pytest.approx(fixed["paris"] - 0.3 + 50 * 0.001)
+
+
+def test_cost_factor_divides_by_one_plus_efficiency_with_the_engine_floor() -> None:
+    frame = pl.DataFrame({"location_efficiency": [0.0, 0.25, -0.2, -0.5, -0.9]})
+    factors = frame.select(bi.cost_factor_expr())[:, 0].to_list()
+    assert factors == pytest.approx([1.0, 1 / 1.25, 1 / 0.8, 2.0, 2.0])  # never more than twice the list price
+
+
+def test_local_investment_prices_every_level_at_the_location_factor() -> None:
+    model = _cost_model()
+    efficiency = bi.location_efficiency(_snapshot_locations(), model)
+    table = bi.investment_table(_buildings(), _locations(), _price_catalog(), efficiency)
+    rows = {r["building_id"]: r for r in table.to_dicts()}
+    york = dict(efficiency.iter_rows())[10]
+    # tavern level 3 in york: levels cost 35, 70, 105 (increase per level 1.0), each divided by max(0.5, 1 + e)
+    assert rows[1]["investment_local"] == pytest.approx(sum(35 * n for n in (1, 2, 3)) / max(0.5, 1 + york))
+    assert rows[1]["cost_factor"] == pytest.approx(1 / max(0.5, 1 + york))
+    assert rows[3]["cost_factor"] == pytest.approx(1 / (1 - 0.03 - 0.3))  # leeds: fixed -0.03, rank -0.3
+    floor = bi.investment_table(_buildings(), _locations(), _price_catalog(),
+                                efficiency.with_columns(pl.lit(-0.9).alias("location_efficiency")))
+    assert floor["cost_factor"].to_list() == pytest.approx([2.0] * floor.height)  # the engine floor max(0.5, 1 + e)
+    by_country = bi.aggregate(table, ["country_tag"]).sort("country_tag")
+    assert by_country["investment_local"].to_list() == pytest.approx(
+        [rows[1]["investment_local"] + rows[2]["investment_local"] + rows[3]["investment_local"],
+         rows[4]["investment_local"]]
+    )
+    # without a model the local columns stay empty and the list price is unchanged
+    plain = bi.investment_table(_buildings(), _locations(), _price_catalog())
+    assert plain["investment_local"].null_count() == plain.height
+    assert plain["investment"].to_list() == table["investment"].to_list()
+
+
+def test_dataset_update_writes_local_investment_and_follows_the_cost_model(tmp_path: Path) -> None:
+    dataset = tmp_path / "dataset"
+    _write_snapshot(dataset, "run", "s1", _buildings())
+    target = dataset / "tables" / "locations" / "playthrough_id=run" / "s1.parquet"
+    snapshot = pl.read_parquet(target).drop("location_id", "owner", "country_tag")
+    pl.concat([_snapshot_locations(), snapshot], how="horizontal").write_parquet(target)
+    catalog = _price_catalog()
+    model = _cost_model()
+
+    first = bi.update_dataset(dataset, catalog, cost_model=model, log=lambda _: None)
+    assert first.written == 1
+    out = pl.read_parquet(dataset / "tables" / bi.TABLE / "playthrough_id=run" / "s1.parquet")
+    assert out["investment_local"].null_count() == 0
+    assert bi.update_dataset(dataset, catalog, cost_model=model, log=lambda _: None).written == 0
+    # a changed attribute efficiency rebuilds every snapshot
+    dearer = bi.LocationCostModel(model.fixed, {**model.rank, "rural_settlement": -0.4}, model.per_development,
+                                  model.per_unemployed_peasant)
+    assert bi.update_dataset(dataset, catalog, cost_model=dearer, log=lambda _: None).written == 1

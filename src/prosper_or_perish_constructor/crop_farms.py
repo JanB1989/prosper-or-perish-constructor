@@ -61,8 +61,10 @@ TOMBSTONE = "farming_village"
 RETIRED_BLUEPRINTS = ("husbandry_farmstead", "farming_village_rotations", "model_farm")
 TOMBSTONE_METHOD = "pp_farming_village_retired"
 LABOUR_GOOD = "manual_labor"
-CULTIVATION_ADVANCE_HOST = ("wheat", 0)   # the new cultivation advances are rendered once, in wheat_farm.yml
 TIER_ADVANCE_HOST_STEM = "wheat"          # each tier advance is rendered once, in the wheat blueprint of its tier
+# The cultivation advances are rendered once, in the same wheat blueprints: in the tier whose tier advance they require,
+# tier 0 otherwise. The game resolves `requires` in load order (the files alphabetically), so an advance in
+# pp_wheat_farm_tier0.txt cannot require one defined in pp_wheat_farm_tier2.txt ("Failed to read key reference").
 
 
 # ---------------------------------------------------------------------------------------------------------- table
@@ -639,8 +641,10 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
         advancements.append({"key": key, "body": _general_advance_body(table, crop, context.gates.get(crop.good))})
         entries[key] = str(spec["name"])
         entries[f"{key}_desc"] = str(spec["desc"])
-    if (crop.stem, tier) == CULTIVATION_ADVANCE_HOST:
+    if crop.stem == TIER_ADVANCE_HOST_STEM:
         for key, spec in table.raw.get("advances", {}).items():
+            if cultivation_advance_tier(table, spec) != tier:
+                continue
             advancements.append({"key": key, "body": _cultivation_advance_body(table, key, spec)})
             entries[key] = str(spec["name"])
             entries[f"{key}_desc"] = str(spec["desc"])
@@ -759,6 +763,11 @@ def cultivation_advance_methods(table: CropTable) -> dict[str, list[str]]:
                 if method.advance:
                     methods[method.advance].append(f"pp_{building}_{method.key}")
     return methods
+
+
+def cultivation_advance_tier(table: CropTable, spec: Mapping[str, Any]) -> int:
+    """The tier whose wheat blueprint renders a cultivation advance: the tier of the tier advance it requires, else 0."""
+    return next((tier for tier in TIERS if tier > 0 and table.tier_advance(tier) == str(spec["requires"])), 0)
 
 
 def _cultivation_advance_body(table: CropTable, key: str, spec: Mapping[str, Any]) -> str:

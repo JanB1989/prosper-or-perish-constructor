@@ -10,10 +10,11 @@ pp_cull_one_closed_building = {
 			building_can_be_destroyed_by = root
 			NOT = { building_type = building_type:tavern }
 		}
-		change_building_level = -1
-		# Debug flag: scripted cull, counted per location (save) and logged
+		# Debug flag: scripted cull, counted per location (save) and logged. Both run before the level change: removing
+		# the last level destroys the building, and with it this scope.
 		location = { if = { limit = { has_variable = pp_dbg_script_cull } change_variable = { name = pp_dbg_script_cull add = 1 } } else = { set_variable = { name = pp_dbg_script_cull value = 1 } } }
 		error_log = "PPBLD;review_cull_closed"
+		change_building_level = -1
 	}
 }
 

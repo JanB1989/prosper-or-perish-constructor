@@ -251,7 +251,12 @@ def test_tier_advances_unlock_the_tier_of_every_chain(table: crop_farms.CropTabl
 
 
 def test_cultivation_advances_unlock_exactly_the_methods_that_name_them(table: crop_farms.CropTable) -> None:
-    advancements = {item["key"]: item["body"] for item in _blueprint("wheat_farm")["advancements"]}
+    wheat = table.crop("wheat")
+    advancements = {
+        item["key"]: item["body"]
+        for tier in crop_farms.TIERS
+        for item in _blueprint(table.building(wheat, tier)).get("advancements", [])
+    }
     expected = crop_farms.cultivation_advance_methods(table)
 
     assert set(expected) == {"pp_heavy_plough", "pp_improved_rotations", "pp_water_lifting"}
@@ -262,6 +267,17 @@ def test_cultivation_advances_unlock_exactly_the_methods_that_name_them(table: c
         f"pp_{table.building(crop, m.tier)}_{m.key}" for crop in table.crops for m in crop.methods if m.advance
     }
     assert named == {method for methods in expected.values() for method in methods}
+
+
+def test_cultivation_advances_load_after_the_advance_they_require(table: crop_farms.CropTable) -> None:
+    # the game resolves `requires` in load order (advance files alphabetically, entries in file order)
+    order: list[str] = []
+    for path in sorted(ADVANCES_ROOT.glob("*.txt")):
+        order.extend(re.findall(r"(?m)^(\w+) = \{", path.read_text(encoding="utf-8-sig")))
+    for key, spec in table.raw["advances"].items():
+        required = str(spec["requires"])
+        if required in order:  # constructor advance; vanilla ones load before the mod
+            assert order.index(required) < order.index(key), (key, required)
 
 
 def test_generated_mod_advances_match_the_crop_blueprints(table: crop_farms.CropTable) -> None:

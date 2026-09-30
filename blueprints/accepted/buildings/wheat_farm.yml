@@ -124,23 +124,6 @@ advancements:
     unlock_production_method = pp_wheat_farm_heavy_plough
     unlock_production_method = pp_legume_farm_stubble_sowing
     ai_weight = { add = 50 }
-- key: pp_improved_rotations
-  body: |-
-    age = age_4_reformation
-    requires = pp_farming_village_rotations
-    unlock_production_method = pp_wheat_rotations_marled_fields
-    unlock_production_method = pp_millet_rotations_sorghum_cowpea
-    unlock_production_method = pp_maize_rotations_maize_bean_rotation
-    unlock_production_method = pp_legume_rotations_vetch_lentil
-    unlock_production_method = pp_potato_rotations_seed_selection
-    ai_weight = { add = 50 }
-- key: pp_water_lifting
-  body: |-
-    age = age_4_reformation
-    requires = pp_farming_village_rotations
-    unlock_production_method = pp_rice_rotations_chain_pump
-    unlock_production_method = pp_olive_rotations_irrigated_grove
-    ai_weight = { add = 50 }
 localization:
   entries:
     wheat_farm: Wheat Farm
@@ -160,10 +143,6 @@ localization:
     pp_wheat_farm_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
     pp_heavy_plough: Heavy Plough
     pp_heavy_plough_desc: Mouldboard ploughs pulled by horse teams turn heavy soils.
-    pp_improved_rotations: Improved Rotations
-    pp_improved_rotations_desc: Marl, fodder crops and seed selection lift the yields of village rotations.
-    pp_water_lifting: Water Lifting
-    pp_water_lifting_desc: Chain pumps and channels bring water to paddies and groves.
 icon:
   source_png: ../assets/icons/wheat_farm.png
   output_dds: wheat_farm.dds

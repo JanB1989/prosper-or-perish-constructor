@@ -416,3 +416,16 @@ def test_setup_levels_rise_to_the_cap_where_the_pops_need_the_room(tmp_path):
     assert "land_clearance = { tag = SWE level = 3 location = a }" in text        # a is already at its cap of 3
     assert out["levels_raised_for_pops"] == 3 and out["locations_filled_for_pops"] == 1 and out["locations_still_short"] == 1
 
+
+
+def test_terrain_free_building_levels_come_from_the_weights_sheet() -> None:
+    # 2026-09-30: the legacy class snapshot kept old free building levels (hills -10) after the sheet changed; the sheet wins.
+    from prosper_or_perish_constructor.free_building_levels import read_local_free_building_level_sheet_csv
+    from prosper_or_perish_constructor.worldbuilder.modifiers import with_sheet_free_building_levels
+
+    repo = Path(__file__).resolve().parents[1]
+    sheet = read_local_free_building_level_sheet_csv(repo=repo)
+    hills = sheet.filter((sheet["factor"] == "topography") & (sheet["value"] == "hills"))["free_building_levels"].item()
+    merged = with_sheet_free_building_levels({"hills": {"free_building_levels": "-10", "local_construction_speed": "-0.08"}}, "topography", repo)
+    assert float(merged["hills"]["free_building_levels"]) == hills
+    assert merged["hills"]["local_construction_speed"] == "-0.08"

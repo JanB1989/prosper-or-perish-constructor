@@ -111,6 +111,27 @@ def parse_class_capacity(paths: Iterable[Path]) -> dict[str, dict[str, float]]:
     return found
 
 
+def with_sheet_free_building_levels(legacy: dict[str, dict[str, str]], attribute: str, repo: Path) -> dict[str, dict[str, str]]:
+    """Free building levels per vanilla class come from the weights sheet (graphs/building_capacity/data/
+    free_building_levels_sheet.csv), the single source of truth; the legacy snapshot only keeps the other effects."""
+    from prosper_or_perish_constructor.free_building_levels import (
+        local_free_building_levels_sheet_csv_path,
+        read_local_free_building_level_sheet_csv,
+    )
+
+    if not local_free_building_levels_sheet_csv_path(repo).is_file():
+        return legacy
+    sheet = read_local_free_building_level_sheet_csv(repo=repo).filter(pl.col("factor") == attribute)
+    merged = {key: dict(effects) for key, effects in legacy.items()}
+    for value, levels in sheet.select("value", "free_building_levels").iter_rows():
+        effects = merged.setdefault(str(value), {})
+        if levels is None or abs(float(levels)) < 1e-9:
+            effects.pop("free_building_levels", None)
+        else:
+            effects["free_building_levels"] = _fmt(float(levels))
+    return merged
+
+
 def parse_legacy_effects(path: Path) -> dict[str, dict[str, str]]:
     """{vanilla class: {modifier: value}} from a legacy TRY_INJECT file, capacity and food lines removed."""
     effects: dict[str, dict[str, str]] = {}
@@ -205,6 +226,7 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
         defs = parse_class_capacity(effective_class_files(Path(directory), export_dir, vanilla_root))
         legacy_path = repo / LEGACY_EFFECTS_DIR / f"{directory}.txt"
         legacy = parse_legacy_effects(legacy_path) if legacy_path.is_file() else {}
+        legacy = with_sheet_free_building_levels(legacy, attribute, repo)
         parents = dominant_parents(export_dir, attribute) if legacy else {}
         blocks: list[str] = []
         keys: set[str] = set()

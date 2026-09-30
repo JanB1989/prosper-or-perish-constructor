@@ -34,7 +34,7 @@ TRY_INJECT:arctic = {
 		local_wheat_output_modifier = 0.05
 		local_wine_output_modifier = -0.2
 		free_capacity_attracts_pops = yes
-		free_building_levels = -10
+		free_building_levels = -4
 		local_build_buildings_efficiency = -0.1
 		local_construction_speed = -0.1
 	}
@@ -68,7 +68,7 @@ TRY_INJECT:arid = {
 		local_tobacco_output_modifier = -0.24
 		local_wheat_output_modifier = -0.03
 		local_wine_output_modifier = -0.15
-		free_building_levels = -6
+		free_building_levels = -2
 		local_build_buildings_efficiency = -0.06
 		local_construction_speed = -0.06
 	}
@@ -102,7 +102,7 @@ TRY_INJECT:cold_arid = {
 		local_tobacco_output_modifier = -0.3
 		local_wheat_output_modifier = 0
 		local_wine_output_modifier = -0.09
-		free_building_levels = -8
+		free_building_levels = -3
 		local_build_buildings_efficiency = -0.08
 		local_construction_speed = -0.08
 	}
@@ -136,7 +136,7 @@ TRY_INJECT:ha1300_climate_cold_steppe = {
 		local_tobacco_output_modifier = -0.13
 		local_wheat_output_modifier = 0.1
 		local_wine_output_modifier = 0.05
-		free_building_levels = -8
+		free_building_levels = -3
 		local_build_buildings_efficiency = -0.08
 		local_construction_speed = -0.08
 	}
@@ -171,7 +171,6 @@ TRY_INJECT:continental = {
 		local_tobacco_output_modifier = -0.03
 		local_wheat_output_modifier = 0.05
 		local_wine_output_modifier = 0.05
-		free_building_levels = 0
 		local_build_buildings_efficiency = -0.02
 		local_construction_speed = -0.02
 	}
@@ -206,7 +205,6 @@ TRY_INJECT:ha1300_climate_continental_monsoon = {
 		local_tobacco_output_modifier = 0.04
 		local_wheat_output_modifier = 0.05
 		local_wine_output_modifier = 0.05
-		free_building_levels = 0
 		local_build_buildings_efficiency = -0.02
 		local_construction_speed = -0.02
 	}
@@ -241,7 +239,6 @@ TRY_INJECT:ha1300_climate_dry_summer_continental = {
 		local_tobacco_output_modifier = -0.08
 		local_wheat_output_modifier = 0.05
 		local_wine_output_modifier = 0.13
-		free_building_levels = 0
 		local_build_buildings_efficiency = -0.02
 		local_construction_speed = -0.02
 	}
@@ -275,7 +272,6 @@ TRY_INJECT:ha1300_climate_highland_monsoon = {
 		local_tobacco_output_modifier = -0.13
 		local_wheat_output_modifier = 0.05
 		local_wine_output_modifier = -0.08
-		free_building_levels = 0
 		local_build_buildings_efficiency = -0.02
 		local_construction_speed = -0.02
 	}
@@ -309,7 +305,7 @@ TRY_INJECT:ha1300_climate_hot_steppe = {
 		local_tobacco_output_modifier = -0.14
 		local_wheat_output_modifier = -0.02
 		local_wine_output_modifier = -0.15
-		free_building_levels = -6
+		free_building_levels = -2
 		local_build_buildings_efficiency = -0.06
 		local_construction_speed = -0.06
 	}
@@ -345,7 +341,7 @@ TRY_INJECT:mediterranean = {
 		local_wheat_output_modifier = 0.05
 		local_wine_output_modifier = 0.05
 		local_food_decay = 0.002
-		free_building_levels = 3
+		free_building_levels = 2
 		local_build_buildings_efficiency = 0.03
 		local_construction_speed = 0.03
 	}
@@ -379,7 +375,7 @@ TRY_INJECT:oceanic = {
 		local_tobacco_output_modifier = -0.1
 		local_wheat_output_modifier = 0.05
 		local_wine_output_modifier = 0.05
-		free_building_levels = 2
+		free_building_levels = 1
 		local_build_buildings_efficiency = 0.02
 		local_construction_speed = 0.02
 	}
@@ -416,7 +412,7 @@ TRY_INJECT:ha1300_climate_savanna = {
 		local_wine_output_modifier = -0.33
 		local_monthly_development_modifier = -0.10
 		local_food_decay = 0.004
-		free_building_levels = -5
+		free_building_levels = -2
 		local_build_buildings_efficiency = -0.06
 		local_construction_speed = -0.06
 	}
@@ -452,7 +448,7 @@ TRY_INJECT:ha1300_climate_subarctic = {
 		local_wheat_output_modifier = -0.04
 		local_wine_output_modifier = -0.2
 		free_capacity_attracts_pops = yes
-		free_building_levels = -10
+		free_building_levels = -4
 		local_build_buildings_efficiency = -0.1
 		local_construction_speed = -0.1
 	}
@@ -486,7 +482,7 @@ TRY_INJECT:ha1300_climate_subpolar_oceanic = {
 		local_tobacco_output_modifier = -0.3
 		local_wheat_output_modifier = -0.1
 		local_wine_output_modifier = -0.2
-		free_building_levels = 2
+		free_building_levels = 1
 		local_build_buildings_efficiency = 0.02
 		local_construction_speed = 0.02
 	}
@@ -595,7 +591,7 @@ TRY_INJECT:tropical = {
 		local_wine_output_modifier = -0.2
 		local_monthly_development_modifier = -0.10
 		local_food_decay = 0.004
-		free_building_levels = -5
+		free_building_levels = -2
 		local_build_buildings_efficiency = -0.06
 		local_construction_speed = -0.06
 	}
@@ -632,7 +628,7 @@ TRY_INJECT:ha1300_climate_tropical_monsoon = {
 		local_wine_output_modifier = -0.2
 		local_monthly_development_modifier = -0.10
 		local_food_decay = 0.004
-		free_building_levels = -5
+		free_building_levels = -2
 		local_build_buildings_efficiency = -0.06
 		local_construction_speed = -0.06
 	}

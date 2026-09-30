@@ -9,7 +9,7 @@ pp_tt_climate_tropical = {
 	free_capacity_attracts_pops = yes
 	local_food_decay = 0.006
 	local_population_capacity = 23.9
-	free_building_levels = -5
+	free_building_levels = -2
 	local_build_buildings_efficiency = -0.06
 	local_construction_speed = -0.06
 }
@@ -20,7 +20,7 @@ pp_tt_climate_arid = {
 	free_capacity_attracts_pops = yes
 	local_supply_limit_modifier = -0.1
 	local_population_capacity = 17.8
-	free_building_levels = -6
+	free_building_levels = -2
 	local_build_buildings_efficiency = -0.06
 	local_construction_speed = -0.06
 }
@@ -30,7 +30,7 @@ pp_tt_climate_cold_arid = {
 	free_capacity_attracts_pops = yes
 	local_supply_limit_modifier = -0.05
 	local_population_capacity = 16.3
-	free_building_levels = -8
+	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
 }
@@ -40,7 +40,7 @@ pp_tt_climate_mediterranean = {
 	free_capacity_attracts_pops = yes
 	local_population_capacity = 24.6
 	local_food_decay = 0.002
-	free_building_levels = 3
+	free_building_levels = 2
 	local_build_buildings_efficiency = 0.03
 	local_construction_speed = 0.03
 }
@@ -57,7 +57,7 @@ pp_tt_climate_oceanic = {
 	game_data = { category = location }
 	free_capacity_attracts_pops = yes
 	local_population_capacity = 25.5
-	free_building_levels = 2
+	free_building_levels = 1
 	local_build_buildings_efficiency = 0.02
 	local_construction_speed = 0.02
 }
@@ -77,7 +77,7 @@ pp_tt_climate_arctic = {
 	local_supply_limit_modifier = -0.2
 	local_population_capacity = 13.9
 	free_capacity_attracts_pops = yes
-	free_building_levels = -10
+	free_building_levels = -4
 	local_build_buildings_efficiency = -0.1
 	local_construction_speed = -0.1
 }
@@ -89,7 +89,7 @@ pp_tt_climate_ha1300_climate_tropical_monsoon = {
 	free_capacity_attracts_pops = yes
 	local_food_decay = 0.006
 	local_population_capacity = 23.1
-	free_building_levels = -5
+	free_building_levels = -2
 	local_build_buildings_efficiency = -0.06
 	local_construction_speed = -0.06
 }
@@ -101,7 +101,7 @@ pp_tt_climate_ha1300_climate_savanna = {
 	free_capacity_attracts_pops = yes
 	local_food_decay = 0.006
 	local_population_capacity = 23.1
-	free_building_levels = -5
+	free_building_levels = -2
 	local_build_buildings_efficiency = -0.06
 	local_construction_speed = -0.06
 }
@@ -112,7 +112,7 @@ pp_tt_climate_ha1300_climate_hot_steppe = {
 	free_capacity_attracts_pops = yes
 	local_supply_limit_modifier = -0.1
 	local_population_capacity = 24.9
-	free_building_levels = -6
+	free_building_levels = -2
 	local_build_buildings_efficiency = -0.06
 	local_construction_speed = -0.06
 }
@@ -122,7 +122,7 @@ pp_tt_climate_ha1300_climate_cold_steppe = {
 	free_capacity_attracts_pops = yes
 	local_supply_limit_modifier = -0.05
 	local_population_capacity = 16.6
-	free_building_levels = -8
+	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
 }
@@ -147,7 +147,7 @@ pp_tt_climate_ha1300_climate_subpolar_oceanic = {
 	game_data = { category = location }
 	free_capacity_attracts_pops = yes
 	local_population_capacity = 15
-	free_building_levels = 2
+	free_building_levels = 1
 	local_build_buildings_efficiency = 0.02
 	local_construction_speed = 0.02
 }
@@ -172,7 +172,7 @@ pp_tt_climate_ha1300_climate_subarctic = {
 	game_data = { category = location }
 	free_capacity_attracts_pops = yes
 	local_population_capacity = 12.8
-	free_building_levels = -10
+	free_building_levels = -4
 	local_build_buildings_efficiency = -0.1
 	local_construction_speed = -0.1
 }
@@ -183,7 +183,7 @@ pp_tt_vegetation_desert = {
 	local_road_building_time = 1
 	local_monthly_development_modifier = -0.33
 	supply_limit = -5
-	free_building_levels = -25
+	free_building_levels = -6
 	local_build_buildings_efficiency = -0.2
 	local_construction_speed = -0.2
 }
@@ -191,7 +191,7 @@ pp_tt_vegetation_desert = {
 pp_tt_vegetation_sparse = {
 	game_data = { category = location }
 	local_road_building_time = -0.1
-	free_building_levels = -15
+	free_building_levels = -4
 	local_build_buildings_efficiency = -0.12
 	local_construction_speed = -0.12
 }
@@ -217,7 +217,7 @@ pp_tt_vegetation_woods = {
 	local_monthly_development_modifier = -0.2
 	blocks_vision_from_sea = yes
 	supply_limit = 2
-	free_building_levels = -5
+	free_building_levels = -1
 	local_build_buildings_efficiency = -0.03
 	local_construction_speed = -0.03
 }
@@ -230,7 +230,7 @@ pp_tt_vegetation_forest = {
 	local_monthly_development_modifier = -0.25
 	blocks_vision_from_land = yes
 	blocks_vision_from_sea = yes
-	free_building_levels = -10
+	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
 }
@@ -243,7 +243,7 @@ pp_tt_vegetation_jungle = {
 	local_monthly_development_modifier = -0.45
 	blocks_vision_from_land = yes
 	blocks_vision_from_sea = yes
-	free_building_levels = -25
+	free_building_levels = -6
 	local_build_buildings_efficiency = -0.2
 	local_construction_speed = -0.2
 }
@@ -251,7 +251,7 @@ pp_tt_vegetation_jungle = {
 pp_tt_vegetation_ha1300_veg_scrubland = {
 	game_data = { category = location }
 	local_road_building_time = -0.1
-	free_building_levels = -15
+	free_building_levels = -4
 	local_build_buildings_efficiency = -0.12
 	local_construction_speed = -0.12
 }
@@ -275,7 +275,7 @@ pp_tt_vegetation_ha1300_veg_savanna = {
 pp_tt_vegetation_ha1300_veg_tundra = {
 	game_data = { category = location }
 	local_road_building_time = -0.1
-	free_building_levels = -15
+	free_building_levels = -4
 	local_build_buildings_efficiency = -0.12
 	local_construction_speed = -0.12
 }
@@ -288,7 +288,7 @@ pp_tt_vegetation_ha1300_veg_coniferous_forest = {
 	local_monthly_development_modifier = -0.25
 	blocks_vision_from_land = yes
 	blocks_vision_from_sea = yes
-	free_building_levels = -10
+	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
 }
@@ -301,7 +301,7 @@ pp_tt_vegetation_ha1300_veg_mixed_forest = {
 	local_monthly_development_modifier = -0.25
 	blocks_vision_from_land = yes
 	blocks_vision_from_sea = yes
-	free_building_levels = -10
+	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
 }
@@ -314,7 +314,7 @@ pp_tt_vegetation_ha1300_veg_dry_forest = {
 	local_monthly_development_modifier = -0.2
 	blocks_vision_from_sea = yes
 	supply_limit = 2
-	free_building_levels = -10
+	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
 }
@@ -334,7 +334,7 @@ pp_tt_vegetation_ha1300_veg_swamp = {
 	local_monthly_development_modifier = -0.25
 	blocks_vision_from_land = yes
 	blocks_vision_from_sea = yes
-	free_building_levels = -10
+	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
 }
@@ -353,7 +353,7 @@ pp_tt_topography_mountains = {
 	blocks_vision_from_land = yes
 	blocks_vision_from_sea = yes
 	local_population_capacity = -1.3
-	free_building_levels = -40
+	free_building_levels = -10
 	local_build_buildings_efficiency = -0.35
 	local_construction_speed = -0.35
 	local_tribesmen_pop_growth = -1
@@ -368,7 +368,7 @@ pp_tt_topography_hills = {
 	blocks_vision_from_land = yes
 	blocks_vision_from_sea = yes
 	local_population_capacity = -0.7
-	free_building_levels = -10
+	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
 	local_tribesmen_pop_growth = -1
@@ -382,7 +382,7 @@ pp_tt_topography_plateau = {
 	local_monthly_development_modifier = -0.1
 	blocks_vision_from_sea = yes
 	local_population_capacity = 0.6
-	free_building_levels = -15
+	free_building_levels = -4
 	local_build_buildings_efficiency = -0.15
 	local_construction_speed = -0.15
 	local_tribesmen_pop_growth = -1
@@ -395,7 +395,7 @@ pp_tt_topography_wetlands = {
 	local_road_building_time = 1
 	local_monthly_development_modifier = -0.3
 	local_population_capacity = -0.6
-	free_building_levels = -25
+	free_building_levels = -6
 	local_build_buildings_efficiency = -0.25
 	local_construction_speed = -0.25
 	local_tribesmen_pop_growth = -1
@@ -452,7 +452,7 @@ pp_tt_topography_salt_pans = {
 pp_tt_topography_atoll = {
 	game_data = { category = location }
 	local_population_capacity = -1.3
-	free_building_levels = -25
+	free_building_levels = -6
 	local_build_buildings_efficiency = -0.25
 	local_construction_speed = -0.25
 	local_tribesmen_pop_growth = -1
@@ -505,7 +505,7 @@ pp_tt_topography_mountain_wasteland = {
 	blocks_vision_from_sea = yes
 	blocks_vision_from_land = yes
 	local_population_capacity = -1.2
-	free_building_levels = -40
+	free_building_levels = -10
 	local_build_buildings_efficiency = -0.35
 	local_construction_speed = -0.35
 	local_tribesmen_pop_growth = -1
@@ -537,7 +537,7 @@ pp_tt_topography_ha1300_topo_floodplains = {
 
 pp_tt_topography_ha1300_topo_deltas = {
 	game_data = { category = location }
-	free_building_levels = -25
+	free_building_levels = -6
 	local_build_buildings_efficiency = -0.25
 	local_construction_speed = -0.25
 	local_tribesmen_pop_growth = -1

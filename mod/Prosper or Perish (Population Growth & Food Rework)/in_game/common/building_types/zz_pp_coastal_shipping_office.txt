@@ -4,34 +4,87 @@ is_foreign = no
 max_levels = pp_coastal_shipping_office_max_level
 increase_per_level_cost = 0.15
 pop_type = laborers
-employment_size = 3
+employment_size = 1
 category = infrastructure_category
-custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_coastal_logistics_priority }
+custom_tags = { pp_logistics pp_coastal_logistics_priority }
 icon = coastal_shipping_office
 town = yes
 city = yes
 megalopolis = yes
 can_close = no
 always_add_demands = yes
-forbidden_for_estates = yes
-important_for_AI = no
 ai_forbid_shutdown = yes
 build_time = infrastructure_build_time
 
 location_potential = {
   is_port = yes
 }
+allow = {
+  market_access < 0.85
+  total_building_levels >= 15
+}
 construction_demand = pp_coastal_shipping_office_construction
 
-possible_production_methods = {
-  pp_coastal_shipping_office_maintenance
-  pp_coastal_shipping_office_hand_crews
-  pp_coastal_shipping_office_rigged_coasters
+unique_production_methods = {
+  pp_coastal_shipping_office_maintenance = {
+    naval_supplies = 0.23
+    tar = 0.095
+    lumber = 0.19
+    tools = 0.11
+    victuals = 0.23
+    paper = 0.047
+    manual_labor = 0.65
+    produced = logistics
+    output = 3.63
+    category = building_maintenance
+  }
+  pp_coastal_shipping_office_hand_crews = {
+    naval_supplies = 0.13
+    tar = 0.052
+    lumber = 0.13
+    tools = 0.044
+    victuals = 0.26
+    manual_labor = 1.36
+    produced = logistics
+    output = 3.63
+    category = building_maintenance
+  }
+  pp_coastal_shipping_office_rigged_coasters = {
+    naval_supplies = 0.33
+    tar = 0.055
+    lumber = 0.092
+    tools = 0.16
+    victuals = 0.18
+    paper = 0.037
+    manual_labor = 0.61
+    produced = logistics
+    output = 3.78
+    category = building_maintenance
+  }
 }
 
 raw_modifier = {
-	local_population_capacity = 1.2
-  free_building_levels = 10
+	local_population_capacity = 0.4
+  local_market_access = 0.1
+}
+
+modifier = {
+  local_stone_output_modifier = -0.005
+  local_marble_output_modifier = -0.005
+  local_clay_output_modifier = -0.005
+  local_sand_output_modifier = -0.005
+  local_coal_output_modifier = -0.005
+  local_iron_output_modifier = -0.005
+  local_copper_output_modifier = -0.005
+  local_tin_output_modifier = -0.005
+  local_lead_output_modifier = -0.005
+  local_salt_output_modifier = -0.005
+  local_saltpeter_output_modifier = -0.005
+  local_alum_output_modifier = -0.005
+  local_lumber_output_modifier = -0.0025
+  local_institution_growth_modifier = 0.05
+  local_supply_limit_modifier = 0.05
+  local_disease_resistance = -0.05
 }
 }
 # <<< eu5-building-pipeline:coastal_shipping_office:building

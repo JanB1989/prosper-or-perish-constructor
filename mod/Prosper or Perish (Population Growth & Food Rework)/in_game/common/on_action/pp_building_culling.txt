@@ -25,9 +25,3 @@ pp_yearly_ai_building_review = {
 		}
 	}
 }
-
-pp_ai_logistics_on_unsupported_building_levels = {
-	effect = {
-		pp_ai_logistics_build_unsupported_infrastructure = yes
-	}
-}

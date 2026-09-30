@@ -2,7 +2,12 @@
 tag: transport_office
 footprint: infrastructure
 labour:
-  class: keep
+  class: logistics
+  methods:
+    pp_transport_office_hand_carts: logistics_hand
+logistics:
+  class: urban
+gate_method: pp_transport_office_ledgered_dispatch
 building:
   key: transport_office
   mode: CREATE
@@ -13,75 +18,100 @@ building:
         - pp_transport_office_maintenance
         - pp_transport_office_hand_carts
         - pp_transport_office_ledgered_dispatch
-  possible_production_methods:
-    - pp_transport_office_maintenance
-    - pp_transport_office_hand_carts
-    - pp_transport_office_ledgered_dispatch
+  possible_production_methods: []
   body: |2-
     is_foreign = no
     max_levels = 100
     increase_per_level_cost = 0.30
     pop_type = laborers
-    employment_size = 3
+    employment_size = 1
     category = infrastructure_category
-    custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_city_logistics_priority }
+    custom_tags = { pp_logistics pp_city_logistics_priority }
     icon = transport_office
     town = yes
     city = yes
     megalopolis = yes
     can_close = no
     always_add_demands = yes
-    forbidden_for_estates = yes
-    important_for_AI = no
     ai_forbid_shutdown = yes
     build_time = infrastructure_build_time
 
-    location_potential = {
-      development >= 10
+    # cities and megalopolises always; towns once developed (in allow: location_potential would delete the office when
+    # a town loses development and changes owner)
+    allow = {
+      OR = {
+        NOT = { location_rank = location_rank:town }
+        development >= 10
+      }
+      market_access < 0.85
+      total_building_levels >= 15
     }
     construction_demand = pp_transport_office_construction
 
-    possible_production_methods = {
-      pp_transport_office_maintenance
-      pp_transport_office_hand_carts
-      pp_transport_office_ledgered_dispatch
+    unique_production_methods = {
+      pp_transport_office_maintenance = {
+        victuals = 0.48
+        paper = 0.18
+        tools = 0.12
+        cloth = 0.072
+        manual_labor = 0.59
+        produced = logistics
+        output = 3.45
+        category = building_maintenance
+      }
+      pp_transport_office_hand_carts = {
+        victuals = 0.42
+        paper = 0.083
+        tools = 0.042
+        cloth = 0.031
+        manual_labor = 1.34
+        produced = logistics
+        output = 3.45
+        category = building_maintenance
+      }
+      pp_transport_office_ledgered_dispatch = {
+        victuals = 0.32
+        paper = 0.32
+        tools = 0.22
+        cloth = 0.032
+        manual_labor = 0.59
+        produced = logistics
+        output = 3.6
+        category = building_maintenance
+      }
     }
 
     raw_modifier = {
-      free_building_levels = 10
+      local_market_access = 0.1
     }
-production_methods:
-  - key: pp_transport_office_maintenance
-    body: |2-
-      victuals = 0.60
-      paper = 0.30
-      tools = 0.20
-      cloth = 0.10
-      category = building_maintenance
-  - key: pp_transport_office_hand_carts
-    body: |2-
-      victuals = 0.60
-      paper = 0.15
-      tools = 0.08
-      cloth = 0.05
-      manual_labor = 1.45
-      category = building_maintenance
-  - key: pp_transport_office_ledgered_dispatch
-    body: |2-
-      victuals = 0.40
-      paper = 0.40
-      tools = 0.25
-      cloth = 0.04
-      category = building_maintenance
+
+    modifier = {
+      local_stone_output_modifier = -0.01
+      local_marble_output_modifier = -0.01
+      local_clay_output_modifier = -0.01
+      local_sand_output_modifier = -0.01
+      local_coal_output_modifier = -0.01
+      local_iron_output_modifier = -0.01
+      local_copper_output_modifier = -0.01
+      local_tin_output_modifier = -0.01
+      local_lead_output_modifier = -0.01
+      local_salt_output_modifier = -0.01
+      local_saltpeter_output_modifier = -0.01
+      local_alum_output_modifier = -0.01
+      local_lumber_output_modifier = -0.005
+      local_institution_growth_modifier = 0.05
+      local_supply_limit_modifier = 0.05
+      local_disease_resistance = -0.05
+    }
 localization:
   entries:
     transport_office_slot_0: Freight Crews
     pp_transport_office_construction: Transport Office Construction
-    pp_transport_office_maintenance: Transport Office Maintenance
-    pp_transport_office_hand_carts: Handcart Dispatch
+    pp_transport_office_maintenance: Clerks and Carts
+    pp_transport_office_hand_carts: Hand Carts
     pp_transport_office_ledgered_dispatch: Ledgered Dispatch
     transport_office: Transport Office
-    transport_office_desc: Freight clerks, porters, haulers, and weighmen crowd the transport office. Ledgers, yard gates, and hired hands turn urban bulk into ordered dispatches for the market.
+    transport_office_desc: Freight clerks, porters, haulers and weighmen crowd the transport office. Ledgers, yard gates and hired hands turn a town's bulk into ordered dispatches for the market.
 icon:
   source_png: ../assets/icons/transport_office.png
   output_dds: transport_office.dds
@@ -89,6 +119,6 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for an urban transport office, transparent background. Center a large blocky stone-and-timber freight office with warehouse doors, a ledger counter window, handcarts, oversized crates, sacks, weighing scale, and two or three simplified porters. Make the urban labor sink readable at low resolution; no water, no text, no frame.
 evaluation:
   allow_rules:
-    profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
-    input_throughput: Transport offices are tuned as labor-absorbing urban infrastructure, not as a profitable production method.
-    output_throughput: Transport offices provide supported building levels rather than direct goods output.
+    profit_percent: Logistics buildings earn a thin wage in the floor-priced logistics good; their payoff is market access.
+    input_throughput: Transport offices keep clerks, carts and porters working for every level.
+    output_throughput: The logistics good is a floor-priced wage; the real output is market access.

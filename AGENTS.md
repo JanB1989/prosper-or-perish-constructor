@@ -34,6 +34,23 @@
   crop farm generator renders the same order. Methods never move between slots.
 - A slot's first method is what new and game-start buildings run, so reordering can change defaults.
 
+## Logistics
+
+- The logistics buildings (River Boatmen's Yard, Coastal Shipping Office, Transport Office, Carrier Inn and its regional
+  variants Caravanserai, Oasis Caravan Station, Yam Station, Banjara Tanda, Llama Caravan Post) produce the pinned dummy
+  good `logistics` (1 gold at its floor, like offset) and add `local_market_access` per level (`raw_modifier`).
+- Each carries `logistics: { class: <river|coastal|overland|urban>, bulky_scale: x }`; `[logistics]` in constructor.toml
+  holds the numbers. `uv run ppc logistics apply` rewrites the tagged blueprints (every method costs `input_cost`, output
+  = cost x class output, the last method + `improved_method_bonus`, bulky-goods cut and flavour in `modifier`, the
+  market-access and building-level gates in `allow`, `increase_per_level_cost`, laborers, employment 1).
+  `uv run ppc logistics check` must report 0 off, 0 problems; `ppc build` prints it and `tests/test_logistics.py`
+  enforces it. Order after editing recipes: `ppc labour apply`, `ppc logistics apply`, `ppc gate apply`.
+- The overland variants are gated by the geography-only scripted triggers `pp_logistics_zone_*`
+  (`in_game/common/scripted_triggers/pp_logistics_zone_triggers.txt`); the Carrier Inn uses
+  `NOT = { pp_logistics_zone_any = yes }`. The zones must never overlap (the test evaluates them over every location).
+  Never put market access, owner or culture conditions in `location_potential`: the game re-checks it on owner change
+  and deletes buildings that fail it.
+
 ## Release Checklist
 
 - Treat an explicit request to create or publish a release as authorization for the one final guarded live sync required by this checklist. Confirm the exact `constructor.local.toml` deploy target before running it.

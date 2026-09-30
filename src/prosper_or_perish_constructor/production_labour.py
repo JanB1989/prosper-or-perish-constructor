@@ -11,7 +11,9 @@ Each enabled blueprint with producing methods carries a ``labour`` tag::
 
 - a number: the labour share of the method's total input cost at base prices (labour at its price floor),
 - ``{ output_share = x }``: labour worth ``x`` of the method's output at base prices (methods without goods inputs),
-- ``"keep"``: the method is left as it is (it already carried labour, or it is a technical method).
+- ``"keep"``: the method is left as it is (it already carried labour, or it is a technical method),
+- ``{ share = x, max_goods = n, min_good_share = y }``: a share class with its own goods limits (the logistics
+  buildings keep every good of their recipes).
 
 ``ppc labour apply`` rewrites the method bodies in the accepted blueprints. For a share class the total input cost stays
 the same: goods under ``min_good_share`` of the cost and the cheapest goods beyond ``max_goods`` are dropped, labour
@@ -53,6 +55,8 @@ class LabourClass:
     share: float | None = None  # labour share of the total input cost
     output_share: float | None = None  # labour worth this share of the output
     keep: bool = False
+    max_goods: int | None = None  # overrides the section's max_goods
+    min_good_share: float | None = None  # overrides the section's min_good_share
 
 
 @dataclass(frozen=True)
@@ -115,9 +119,17 @@ def load_config(project: Path) -> LabourConfig:
             classes[name] = LabourClass(name, share=float(value))
         elif isinstance(value, dict) and isinstance(value.get("output_share"), (int, float)):
             classes[name] = LabourClass(name, output_share=float(value["output_share"]))
+        elif isinstance(value, dict) and isinstance(value.get("share"), (int, float)) and 0 <= value["share"] < 1:
+            classes[name] = LabourClass(
+                name,
+                share=float(value["share"]),
+                max_goods=int(value["max_goods"]) if "max_goods" in value else None,
+                min_good_share=float(value["min_good_share"]) if "min_good_share" in value else None,
+            )
         else:
             raise ValueError(
-                f"{project}: {CONFIG_SECTION}.classes.{name} must be a share in [0, 1), {{ output_share = x }} or \"keep\", got {value!r}"
+                f"{project}: {CONFIG_SECTION}.classes.{name} must be a share in [0, 1), "
+                f"{{ share = x, max_goods = n, min_good_share = y }}, {{ output_share = x }} or \"keep\", got {value!r}"
             )
     return LabourConfig(
         good=str(section.get("good", "manual_labor")),
@@ -276,7 +288,7 @@ def plan_method(method: Method, labour_class: LabourClass, config: LabourConfig,
     if cost <= 0:
         plan.problem = f"class {labour_class.name} needs goods inputs (use an output_share class)"
         return plan
-    kept = _kept_goods(goods, prices, config)
+    kept = _kept_goods(goods, prices, config, labour_class)
     dropped = sorted(set(goods) - set(kept))
     if not dropped and _on_target(labour, share * cost / labour_price, config.tolerance * cost / labour_price):
         return plan
@@ -297,13 +309,21 @@ def plan_method(method: Method, labour_class: LabourClass, config: LabourConfig,
     return plan
 
 
-def _kept_goods(goods: dict[str, float], prices: dict[str, float], config: LabourConfig) -> list[str]:
+def _kept_goods(
+    goods: dict[str, float], prices: dict[str, float], config: LabourConfig, labour_class: LabourClass | None = None
+) -> list[str]:
     """Goods that stay: the dearest always, the rest while worth ``min_good_share`` of the goods cost (a ratio that
-    proportional scaling leaves alone, so apply is stable), at most ``max_goods``."""
+    proportional scaling leaves alone, so apply is stable), at most ``max_goods`` (a class may override both)."""
+    min_share = config.min_good_share
+    max_goods = config.max_goods
+    if labour_class is not None and labour_class.min_good_share is not None:
+        min_share = labour_class.min_good_share
+    if labour_class is not None and labour_class.max_goods is not None:
+        max_goods = labour_class.max_goods
     goods_cost = sum(a * prices[g] for g, a in goods.items())
     ranked = sorted(goods, key=lambda g: goods[g] * prices[g], reverse=True)
-    kept = [g for i, g in enumerate(ranked) if i == 0 or goods[g] * prices[g] >= config.min_good_share * goods_cost]
-    return kept[: max(config.max_goods, 1)]
+    kept = [g for i, g in enumerate(ranked) if i == 0 or goods[g] * prices[g] >= min_share * goods_cost]
+    return kept[: max(max_goods, 1)]
 
 
 def plan_all(repo: Path, config: LabourConfig, prices: dict[str, float]) -> LabourResult:

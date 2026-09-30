@@ -1,0 +1,121 @@
+﻿version: 2
+tag: pp_banjara_tanda
+output_tag: logistics_banjara_tanda
+footprint: infrastructure
+labour:
+  class: logistics
+  methods:
+    pp_banjara_tanda_tanda_families: logistics_hand
+logistics:
+  class: overland
+  bulky_scale: 0.5
+gate_method: pp_banjara_tanda_bullock_carts
+building:
+  key: pp_banjara_tanda
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_banjara_tanda_pack_bullocks
+        - pp_banjara_tanda_tanda_families
+        - pp_banjara_tanda_bullock_carts
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = 100
+    increase_per_level_cost = 0.25
+    pop_type = laborers
+    employment_size = 1
+    category = infrastructure_category
+    custom_tags = { pp_logistics pp_rural_logistics_priority }
+    icon = pp_banjara_tanda
+    rural_settlement = yes
+    town = yes
+    can_close = no
+    always_add_demands = yes
+    ai_forbid_shutdown = yes
+    build_time = infrastructure_build_time
+
+    # South Asia (pp_logistics_zone_triggers.txt), geography only
+    location_potential = {
+      pp_logistics_zone_banjara = yes
+    }
+    allow = {
+      market_access < 0.85
+      total_building_levels >= 15
+    }
+    construction_demand = pp_banjara_tanda_construction
+
+    unique_production_methods = {
+      pp_banjara_tanda_pack_bullocks = {
+        livestock = 0.7
+        victuals = 0.35
+        cloth = 0.1
+        manual_labor = 0.6
+        produced = logistics
+        output = 3.54
+        category = building_maintenance
+      }
+      pp_banjara_tanda_tanda_families = {
+        livestock = 0.31
+        victuals = 0.4
+        manual_labor = 1.34
+        produced = logistics
+        output = 3.54
+        category = building_maintenance
+      }
+      pp_banjara_tanda_bullock_carts = {
+        livestock = 0.48
+        victuals = 0.29
+        lumber = 0.19
+        cloth = 0.077
+        tools = 0.077
+        manual_labor = 0.6
+        produced = logistics
+        output = 3.69
+        category = building_maintenance
+      }
+    }
+
+    raw_modifier = {
+      local_market_access = 0.1
+    }
+
+    modifier = {
+      local_stone_output_modifier = -0.005
+      local_marble_output_modifier = -0.005
+      local_clay_output_modifier = -0.005
+      local_sand_output_modifier = -0.005
+      local_coal_output_modifier = -0.005
+      local_iron_output_modifier = -0.005
+      local_copper_output_modifier = -0.005
+      local_tin_output_modifier = -0.005
+      local_lead_output_modifier = -0.005
+      local_salt_output_modifier = -0.005
+      local_saltpeter_output_modifier = -0.005
+      local_alum_output_modifier = -0.005
+      local_lumber_output_modifier = -0.0025
+      local_institution_growth_modifier = 0.05
+      local_supply_limit_modifier = 0.05
+      local_disease_resistance = -0.05
+    }
+localization:
+  entries:
+    pp_banjara_tanda_slot_0: Bullock Trains
+    pp_banjara_tanda: Banjara Tanda
+    pp_banjara_tanda_desc: The camp of a Banjara carrying clan, whose great herds of pack bullocks move grain, salt and cloth between the villages and the markets of the subcontinent. Whole families travel with the tanda and settle it wherever the grazing is good.
+    pp_banjara_tanda_construction: Banjara Tanda Construction
+    pp_banjara_tanda_pack_bullocks: Pack Bullocks
+    pp_banjara_tanda_tanda_families: Tanda Families
+    pp_banjara_tanda_bullock_carts: Bullock Carts
+icon:
+  source_png: ../assets/icons/pp_banjara_tanda.png
+  output_dds: pp_banjara_tanda.dds
+  size: 512
+  drawing: ../../../assets/icon_drawings/pp_banjara_tanda/draw.py
+evaluation:
+  allow_rules:
+    profit_percent: Logistics buildings earn a thin wage in the floor-priced logistics good; their payoff is market access.
+    input_throughput: Banjara tandas keep bullock herds, families and provisions on the road for every level.
+    output_throughput: The logistics good is a floor-priced wage; the real output is market access.

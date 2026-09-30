@@ -1,0 +1,83 @@
+﻿# >>> eu5-building-pipeline:pp_llama_caravan_post:building
+pp_llama_caravan_post = {
+is_foreign = no
+max_levels = 100
+increase_per_level_cost = 0.19
+pop_type = laborers
+employment_size = 1
+category = infrastructure_category
+custom_tags = { pp_logistics pp_rural_logistics_priority }
+icon = pp_llama_caravan_post
+rural_settlement = yes
+town = yes
+can_close = no
+always_add_demands = yes
+ai_forbid_shutdown = yes
+build_time = infrastructure_build_time
+
+# the Andean highlands (pp_logistics_zone_triggers.txt), geography only
+location_potential = {
+  pp_logistics_zone_llama = yes
+}
+allow = {
+  market_access < 0.85
+  total_building_levels >= 15
+}
+construction_demand = pp_llama_caravan_post_construction
+
+unique_production_methods = {
+  pp_llama_caravan_post_llama_trains = {
+    livestock = 0.64
+    victuals = 0.37
+    wool = 0.13
+    manual_labor = 0.61
+    produced = logistics
+    output = 3.54
+    category = building_maintenance
+  }
+  pp_llama_caravan_post_porters = {
+    victuals = 0.48
+    maize = 0.21
+    manual_labor = 1.35
+    produced = logistics
+    output = 3.54
+    category = building_maintenance
+  }
+  pp_llama_caravan_post_storehouse_relays = {
+    livestock = 0.52
+    victuals = 0.31
+    maize = 0.16
+    cloth = 0.084
+    wool = 0.1
+    manual_labor = 0.63
+    produced = logistics
+    output = 3.69
+    category = building_maintenance
+  }
+}
+
+raw_modifier = {
+	local_population_capacity = 0.4
+  local_market_access = 0.1
+}
+
+modifier = {
+  local_stone_output_modifier = -0.015
+  local_marble_output_modifier = -0.015
+  local_clay_output_modifier = -0.015
+  local_sand_output_modifier = -0.015
+  local_coal_output_modifier = -0.015
+  local_iron_output_modifier = -0.015
+  local_copper_output_modifier = -0.015
+  local_tin_output_modifier = -0.015
+  local_lead_output_modifier = -0.015
+  local_salt_output_modifier = -0.015
+  local_saltpeter_output_modifier = -0.015
+  local_alum_output_modifier = -0.015
+  local_lumber_output_modifier = -0.0075
+  local_institution_growth_modifier = 0.05
+  local_supply_limit_modifier = 0.05
+  local_disease_resistance = -0.05
+}
+}
+# <<< eu5-building-pipeline:pp_llama_caravan_post:building

@@ -63,6 +63,9 @@ NLocation = {
 NMarket = {
 	# Order: navigable river > coastal sea > open sea > small native river > land. Navigable rivers are sea zones,
 	# so their step is SEA x (1 + the pp_navigation road's market_access), set in config/river_navigation.json.
+	# Every location starts above full access; distance takes it down and the unsupported building levels
+	# (local_market_access per level over the supported ones) eat into it. Logistics buildings add it back.
+	MARKET_BASE_ACCESS = 1.3 # 1
 	MARKET_BASE_DISTANCE_FACTOR = 0.006 # 0.005; land carries market access poorly
 	MARKET_OPEN_SEA_DISTANCE_FACTOR = 0.4 # 1.5
 	MARKET_SEA_DISTANCE_FACTOR = 0.2 # 0.75

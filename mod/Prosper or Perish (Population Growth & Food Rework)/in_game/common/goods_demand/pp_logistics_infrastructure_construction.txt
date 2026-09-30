@@ -6,6 +6,44 @@
 	category = building_construction
 }
 
+# The regional variants of the Carrier Inn cost about the same, in the materials of their lands.
+pp_caravanserai_construction = {
+	stone = 0.30
+	masonry = 0.20
+	lumber = 0.15
+	livestock = 0.20
+	category = building_construction
+}
+
+pp_oasis_caravan_station_construction = {
+	clay = 0.40
+	stone = 0.20
+	lumber = 0.10
+	livestock = 0.30
+	category = building_construction
+}
+
+pp_yam_station_construction = {
+	lumber = 0.35
+	horses = 0.10
+	livestock = 0.10
+	category = building_construction
+}
+
+pp_banjara_tanda_construction = {
+	livestock = 0.40
+	lumber = 0.20
+	cloth = 0.04
+	category = building_construction
+}
+
+pp_llama_caravan_post_construction = {
+	stone = 0.40
+	livestock = 0.30
+	wool = 0.08
+	category = building_construction
+}
+
 pp_river_boatmen_yard_construction = {
 	lumber = 0.35
 	masonry = 0.15

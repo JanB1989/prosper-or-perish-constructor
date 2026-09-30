@@ -79,6 +79,20 @@ in locations.png:
 - Remaining misses: long open-ocean crossings (Greenland–Labrador, Galápagos, Madeira, Palau, Tuvalu: 0.07–0.2 per
   region; the game's open-sea set differs for a few tiles), locations whose live access is capped at 1.
 
+### 3a. Market access in Prosper or Perish (logistics, 2026-09-30)
+
+- The base is `NMarket.MARKET_BASE_ACCESS` (vanilla 1.0, the mod 1.3): access = 1.3 − transport cost +
+  `local_market_access`, clamped to 0..1. The measurements and the calibration above (and `worldbuilder/market_access.py`,
+  `config/start_markets.csv`) come from saves with base 1.0; re-run `tools/markets/save_inputs.py` on a save made with the
+  new base before trusting `food-sim --markets` for high-access locations.
+- `unsupported_building_levels` (static modifier, scaled by the building levels above the supported ones) carries only
+  `local_market_access = -0.01` per level.
+- The logistics buildings add `local_market_access = +0.10` per level through `raw_modifier` (not scaled by staffing), can
+  be built only while `market_access < 0.85` and `total_building_levels >= 15` (`allow`), and produce the floor-pinned
+  `logistics` good for their wage. Blueprint rule: `ppc logistics apply|check`, `[logistics]` in `constructor.toml`,
+  `src/prosper_or_perish_constructor/logistics.py`. Regional variants of the Carrier Inn follow the geography-only
+  zones in `pp_logistics_zone_triggers.txt`.
+
 ## 3b. Predicting the market
 
 Access for every location and market + the attraction of section 2 + argmax:

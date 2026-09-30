@@ -4,34 +4,85 @@ is_foreign = no
 max_levels = 100
 increase_per_level_cost = 0.23
 pop_type = laborers
-employment_size = 3
+employment_size = 1
 category = infrastructure_category
-custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_city_logistics_priority }
+custom_tags = { pp_logistics pp_city_logistics_priority }
 icon = transport_office
 town = yes
 city = yes
 megalopolis = yes
 can_close = no
 always_add_demands = yes
-forbidden_for_estates = yes
-important_for_AI = no
 ai_forbid_shutdown = yes
 build_time = infrastructure_build_time
 
-location_potential = {
-  development >= 10
+# cities and megalopolises always; towns once developed (in allow: location_potential would delete the office when
+# a town loses development and changes owner)
+allow = {
+  OR = {
+    NOT = { location_rank = location_rank:town }
+    development >= 10
+  }
+  market_access < 0.85
+  total_building_levels >= 15
 }
 construction_demand = pp_transport_office_construction
 
-possible_production_methods = {
-  pp_transport_office_maintenance
-  pp_transport_office_hand_carts
-  pp_transport_office_ledgered_dispatch
+unique_production_methods = {
+  pp_transport_office_maintenance = {
+    victuals = 0.48
+    paper = 0.18
+    tools = 0.12
+    cloth = 0.072
+    manual_labor = 0.59
+    produced = logistics
+    output = 3.45
+    category = building_maintenance
+  }
+  pp_transport_office_hand_carts = {
+    victuals = 0.42
+    paper = 0.083
+    tools = 0.042
+    cloth = 0.031
+    manual_labor = 1.34
+    produced = logistics
+    output = 3.45
+    category = building_maintenance
+  }
+  pp_transport_office_ledgered_dispatch = {
+    victuals = 0.32
+    paper = 0.32
+    tools = 0.22
+    cloth = 0.032
+    manual_labor = 0.59
+    produced = logistics
+    output = 3.6
+    category = building_maintenance
+  }
 }
 
 raw_modifier = {
-	local_population_capacity = 1.2
-  free_building_levels = 10
+	local_population_capacity = 0.4
+  local_market_access = 0.1
+}
+
+modifier = {
+  local_stone_output_modifier = -0.01
+  local_marble_output_modifier = -0.01
+  local_clay_output_modifier = -0.01
+  local_sand_output_modifier = -0.01
+  local_coal_output_modifier = -0.01
+  local_iron_output_modifier = -0.01
+  local_copper_output_modifier = -0.01
+  local_tin_output_modifier = -0.01
+  local_lead_output_modifier = -0.01
+  local_salt_output_modifier = -0.01
+  local_saltpeter_output_modifier = -0.01
+  local_alum_output_modifier = -0.01
+  local_lumber_output_modifier = -0.005
+  local_institution_growth_modifier = 0.05
+  local_supply_limit_modifier = 0.05
+  local_disease_resistance = -0.05
 }
 }
 # <<< eu5-building-pipeline:transport_office:building

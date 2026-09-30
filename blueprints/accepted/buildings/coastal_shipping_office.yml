@@ -2,7 +2,12 @@
 tag: coastal_shipping_office
 footprint: infrastructure
 labour:
-  class: keep
+  class: logistics
+  methods:
+    pp_coastal_shipping_office_hand_crews: logistics_hand
+logistics:
+  class: coastal
+gate_method: pp_coastal_shipping_office_rigged_coasters
 building:
   key: coastal_shipping_office
   mode: CREATE
@@ -13,79 +18,101 @@ building:
         - pp_coastal_shipping_office_maintenance
         - pp_coastal_shipping_office_hand_crews
         - pp_coastal_shipping_office_rigged_coasters
-  possible_production_methods:
-    - pp_coastal_shipping_office_maintenance
-    - pp_coastal_shipping_office_hand_crews
-    - pp_coastal_shipping_office_rigged_coasters
+  possible_production_methods: []
   body: |2-
     is_foreign = no
     max_levels = pp_coastal_shipping_office_max_level
     increase_per_level_cost = 0.20
     pop_type = laborers
-    employment_size = 3
+    employment_size = 1
     category = infrastructure_category
-    custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_coastal_logistics_priority }
+    custom_tags = { pp_logistics pp_coastal_logistics_priority }
     icon = coastal_shipping_office
     town = yes
     city = yes
     megalopolis = yes
     can_close = no
     always_add_demands = yes
-    forbidden_for_estates = yes
-    important_for_AI = no
     ai_forbid_shutdown = yes
     build_time = infrastructure_build_time
 
     location_potential = {
       is_port = yes
     }
+    allow = {
+      market_access < 0.85
+      total_building_levels >= 15
+    }
     construction_demand = pp_coastal_shipping_office_construction
 
-    possible_production_methods = {
-      pp_coastal_shipping_office_maintenance
-      pp_coastal_shipping_office_hand_crews
-      pp_coastal_shipping_office_rigged_coasters
+    unique_production_methods = {
+      pp_coastal_shipping_office_maintenance = {
+        naval_supplies = 0.23
+        tar = 0.095
+        lumber = 0.19
+        tools = 0.11
+        victuals = 0.23
+        paper = 0.047
+        manual_labor = 0.65
+        produced = logistics
+        output = 3.63
+        category = building_maintenance
+      }
+      pp_coastal_shipping_office_hand_crews = {
+        naval_supplies = 0.13
+        tar = 0.052
+        lumber = 0.13
+        tools = 0.044
+        victuals = 0.26
+        manual_labor = 1.36
+        produced = logistics
+        output = 3.63
+        category = building_maintenance
+      }
+      pp_coastal_shipping_office_rigged_coasters = {
+        naval_supplies = 0.33
+        tar = 0.055
+        lumber = 0.092
+        tools = 0.16
+        victuals = 0.18
+        paper = 0.037
+        manual_labor = 0.61
+        produced = logistics
+        output = 3.78
+        category = building_maintenance
+      }
     }
 
     raw_modifier = {
-      free_building_levels = 10
+      local_market_access = 0.1
     }
-production_methods:
-  - key: pp_coastal_shipping_office_maintenance
-    body: |2-
-      naval_supplies = 0.15
-      tar = 0.075
-      lumber = 0.15
-      tools = 0.10
-      victuals = 0.20
-      paper = 0.0625
-      category = building_maintenance
-  - key: pp_coastal_shipping_office_hand_crews
-    body: |2-
-      naval_supplies = 0.10
-      tar = 0.04
-      lumber = 0.10
-      tools = 0.04
-      victuals = 0.20
-      manual_labor = 1.00
-      category = building_maintenance
-  - key: pp_coastal_shipping_office_rigged_coasters
-    body: |2-
-      naval_supplies = 0.22
-      tar = 0.04
-      lumber = 0.07
-      tools = 0.13
-      victuals = 0.12
-      paper = 0.03
-      category = building_maintenance
+
+    modifier = {
+      local_stone_output_modifier = -0.005
+      local_marble_output_modifier = -0.005
+      local_clay_output_modifier = -0.005
+      local_sand_output_modifier = -0.005
+      local_coal_output_modifier = -0.005
+      local_iron_output_modifier = -0.005
+      local_copper_output_modifier = -0.005
+      local_tin_output_modifier = -0.005
+      local_lead_output_modifier = -0.005
+      local_salt_output_modifier = -0.005
+      local_saltpeter_output_modifier = -0.005
+      local_alum_output_modifier = -0.005
+      local_lumber_output_modifier = -0.0025
+      local_institution_growth_modifier = 0.05
+      local_supply_limit_modifier = 0.05
+      local_disease_resistance = -0.05
+    }
 localization:
   entries:
     coastal_shipping_office_slot_0: Coastal Crews
     coastal_shipping_office: Coastal Shipping Office
-    coastal_shipping_office_desc: Coasting masters, freight clerks, and hired hands keep short-sea traffic moving between nearby ports. Their office turns loose cargo, small craft, and quay labor into a steadier coastal trade.
+    coastal_shipping_office_desc: Coasting masters, freight clerks and hired hands keep short-sea traffic moving between nearby ports. Their office turns loose cargo, small craft and quay labour into a steady coastal trade.
     pp_coastal_shipping_office_construction: Coastal Shipping Office Construction
-    pp_coastal_shipping_office_maintenance: Coastal Shipping Office Maintenance
-    pp_coastal_shipping_office_hand_crews: Hand-Loaded Coasters
+    pp_coastal_shipping_office_maintenance: Coasting Crews
+    pp_coastal_shipping_office_hand_crews: Hand Crews
     pp_coastal_shipping_office_rigged_coasters: Rigged Coasters
 icon:
   source_png: ../assets/icons/coastal_shipping_office.png
@@ -94,6 +121,6 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for a coastal shipping office, transparent background. Center a stone-and-timber shipping office on a quay with tar barrels, sailcloth, crates, a short pier, and one simple coasting vessel with a pale sail. Make the coast unmistakable at low resolution with a large blue sea shape and curved tan shoreline in the lower half; no river, no text, no frame.
 evaluation:
   allow_rules:
-    profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
-    input_throughput: Coastal shipping offices intentionally use heavy labor alongside costly coasting, tar, timber, victual, and paper upkeep.
-    output_throughput: Coastal shipping offices provide supported building levels rather than direct goods output.
+    profit_percent: Logistics buildings earn a thin wage in the floor-priced logistics good; their payoff is market access.
+    input_throughput: Coastal shipping offices keep coasters, tar, timber, victuals and quay crews working for every level.
+    output_throughput: The logistics good is a floor-priced wage; the real output is market access.

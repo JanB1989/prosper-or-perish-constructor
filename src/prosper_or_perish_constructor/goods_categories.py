@@ -119,6 +119,7 @@ def building_increase_cost_assignments(
         set(costs_by_good),
     )
     blueprint_paths_by_building = accepted_blueprint_paths_by_building(repo)
+    rule_goods = _rule_owned_goods(project)
 
     assignments: list[BuildingIncreaseCostAssignment] = []
     for building, candidates in sorted(candidates_by_building.items()):
@@ -126,6 +127,8 @@ def building_increase_cost_assignments(
             candidates,
             key=lambda item: (item.output_value, item.output, item.good, item.method),
         )
+        if main.good in rule_goods:
+            continue  # the logistics buildings take their cost from their [logistics] class
         good_cost = costs_by_good[main.good]
         assignments.append(
             BuildingIncreaseCostAssignment(
@@ -140,6 +143,13 @@ def building_increase_cost_assignments(
             )
         )
     return tuple(assignments)
+
+
+def _rule_owned_goods(project: Path) -> frozenset[str]:
+    """Goods whose producers get increase_per_level_cost from another rule (the [logistics] good)."""
+    raw = tomllib.loads(project.read_text(encoding="utf-8-sig"))
+    section = raw.get("logistics")
+    return frozenset({str(section.get("good", "logistics"))}) if isinstance(section, dict) else frozenset()
 
 
 def accepted_blueprint_paths_by_building(repo: Path) -> dict[str, Path]:

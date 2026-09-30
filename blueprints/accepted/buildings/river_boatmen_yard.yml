@@ -2,7 +2,12 @@
 tag: river_boatmen_yard
 footprint: infrastructure
 labour:
-  class: keep
+  class: logistics
+  methods:
+    pp_river_boatmen_yard_towpath_crews: logistics_hand
+logistics:
+  class: river
+gate_method: pp_river_boatmen_yard_fitted_barges
 building:
   key: river_boatmen_yard
   mode: CREATE
@@ -13,18 +18,15 @@ building:
         - pp_river_boatmen_yard_maintenance
         - pp_river_boatmen_yard_towpath_crews
         - pp_river_boatmen_yard_fitted_barges
-  possible_production_methods:
-    - pp_river_boatmen_yard_maintenance
-    - pp_river_boatmen_yard_towpath_crews
-    - pp_river_boatmen_yard_fitted_barges
+  possible_production_methods: []
   body: |2-
     is_foreign = no
     max_levels = pp_river_boatmen_yard_max_level
-    increase_per_level_cost = 0.15
+    increase_per_level_cost = 0.20
     pop_type = laborers
-    employment_size = 3
+    employment_size = 1
     category = infrastructure_category
-    custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_river_logistics_priority }
+    custom_tags = { pp_logistics pp_river_logistics_priority }
     icon = river_boatmen_yard
     rural_settlement = yes
     town = yes
@@ -32,61 +34,86 @@ building:
     megalopolis = yes
     can_close = no
     always_add_demands = yes
-    forbidden_for_estates = yes
     AI_ignore_available_worker_flag = yes
-    important_for_AI = no
     ai_forbid_shutdown = yes
     build_time = infrastructure_build_time
 
     location_potential = {
       has_river = yes
     }
+    allow = {
+      market_access < 0.85
+      total_building_levels >= 15
+    }
     construction_demand = pp_river_boatmen_yard_construction
 
-    possible_production_methods = {
-      pp_river_boatmen_yard_maintenance
-      pp_river_boatmen_yard_towpath_crews
-      pp_river_boatmen_yard_fitted_barges
+    unique_production_methods = {
+      pp_river_boatmen_yard_maintenance = {
+        naval_supplies = 0.2
+        lumber = 0.25
+        tools = 0.15
+        victuals = 0.25
+        tar = 0.05
+        manual_labor = 0.63
+        produced = logistics
+        output = 3.75
+        category = building_maintenance
+      }
+      pp_river_boatmen_yard_towpath_crews = {
+        naval_supplies = 0.11
+        lumber = 0.16
+        tools = 0.063
+        victuals = 0.26
+        tar = 0.032
+        manual_labor = 1.34
+        produced = logistics
+        output = 3.75
+        category = building_maintenance
+      }
+      pp_river_boatmen_yard_fitted_barges = {
+        naval_supplies = 0.29
+        lumber = 0.15
+        tools = 0.19
+        victuals = 0.19
+        tar = 0.029
+        manual_labor = 0.62
+        produced = logistics
+        output = 3.9
+        category = building_maintenance
+      }
     }
 
     raw_modifier = {
-      free_building_levels = 10
+      local_market_access = 0.1
     }
-production_methods:
-  - key: pp_river_boatmen_yard_maintenance
-    body: |2-
-      naval_supplies = 0.10
-      lumber = 0.15
-      tools = 0.10
-      victuals = 0.15
-      tar = 0.025
-      category = building_maintenance
-  - key: pp_river_boatmen_yard_towpath_crews
-    body: |2-
-      naval_supplies = 0.05
-      lumber = 0.10
-      tools = 0.04
-      victuals = 0.12
-      tar = 0.015
-      manual_labor = 0.80
-      category = building_maintenance
-  - key: pp_river_boatmen_yard_fitted_barges
-    body: |2-
-      naval_supplies = 0.15
-      lumber = 0.08
-      tools = 0.12
-      victuals = 0.08
-      tar = 0.015
-      category = building_maintenance
+
+    modifier = {
+      local_stone_output_modifier = -0.005
+      local_marble_output_modifier = -0.005
+      local_clay_output_modifier = -0.005
+      local_sand_output_modifier = -0.005
+      local_coal_output_modifier = -0.005
+      local_iron_output_modifier = -0.005
+      local_copper_output_modifier = -0.005
+      local_tin_output_modifier = -0.005
+      local_lead_output_modifier = -0.005
+      local_salt_output_modifier = -0.005
+      local_saltpeter_output_modifier = -0.005
+      local_alum_output_modifier = -0.005
+      local_lumber_output_modifier = -0.0025
+      local_institution_growth_modifier = 0.05
+      local_supply_limit_modifier = 0.05
+      local_disease_resistance = -0.05
+    }
 localization:
   entries:
     river_boatmen_yard_slot_0: River Crews
     pp_river_boatmen_yard_construction: River Boatmen's Yard Construction
-    pp_river_boatmen_yard_maintenance: River Boatmen's Yard Maintenance
-    pp_river_boatmen_yard_towpath_crews: Towpath Haulage Crews
-    pp_river_boatmen_yard_fitted_barges: Fitted Barges and Winches
+    pp_river_boatmen_yard_maintenance: Boatmen
+    pp_river_boatmen_yard_towpath_crews: Towpath Crews
+    pp_river_boatmen_yard_fitted_barges: Fitted Barges
     river_boatmen_yard: River Boatmen's Yard
-    river_boatmen_yard_desc: Boatmen, barges, rope stores, and timber landings turn a riverbank into a working freight yard. Goods move with the current, against it by labor, and into the market by habit.
+    river_boatmen_yard_desc: Boatmen, barges, rope stores and timber landings turn a riverbank into a working freight yard. Goods go down with the current, come back up by towpath, and reach the market by habit.
 icon:
   source_png: ../assets/icons/river_boatmen_yard.png
   output_dds: river_boatmen_yard.dds
@@ -94,6 +121,6 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for a river boatmen's yard, transparent background. Center a timber river landing with a small shed, cargo crates, rope coils, and two broad shallow cargo barges. Make the river unmistakable at low resolution with a wide bright blue river band curving through the foreground and side of the icon; use strong silhouettes, high contrast, fewer tiny props, no text, no frame.
 evaluation:
   allow_rules:
-    profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
-    input_throughput: River freight yards intentionally use heavy labor alongside costly boat, rope, timber, tar, and naval-supply upkeep.
-    output_throughput: River boatmen's yards provide supported building levels rather than direct goods output.
+    profit_percent: Logistics buildings earn a thin wage in the floor-priced logistics good; their payoff is market access.
+    input_throughput: River freight yards keep boats, rope, timber, tar and crews working for every level.
+    output_throughput: The logistics good is a floor-priced wage; the real output is market access.

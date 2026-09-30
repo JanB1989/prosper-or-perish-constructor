@@ -296,6 +296,23 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="also list every building with its gate method and base-price margin.",
     )
+    logistics = _add_command(
+        subcommands,
+        "logistics",
+        "Set each logistics building's methods, output, market access and gates from its blueprint logistics class.",
+        _logistics,
+    )
+    logistics.add_argument(
+        "action",
+        choices=("apply", "check"),
+        help="apply rewrites the logistics blueprints in blueprints/accepted (after ppc labour apply, before ppc gate "
+        "apply); check lists blueprints apply would change, problems and the zone sizes.",
+    )
+    logistics.add_argument(
+        "--verbose",
+        action="store_true",
+        help="also print every logistics method with its input cost, output and profit per level.",
+    )
     clean_game_rule_presets = _add_command(
         subcommands,
         "clean-game-rule-presets",
@@ -1100,6 +1117,76 @@ def _print_gate_check(repo: Path, project: Path) -> None:
     )
 
 
+def _logistics(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("logistics does not accept extra arguments.")
+    from prosper_or_perish_constructor import logistics
+
+    result = logistics.apply(repo, project, write=args.action == "apply")
+    for problem in result.problems:
+        print(problem)
+    if args.verbose:
+        for plan in result.plans:
+            for method in plan.methods:
+                print(
+                    f"{plan.building} ({plan.tag.cls}): {method.name} input {method.cost:.2f} labour {method.labour:g} "
+                    f"-> {method.output:g} {'(improved)' if method.improved else ''}"
+                )
+    if args.action == "check":
+        for plan in result.changed:
+            print(f"{plan.blueprint.name}: off its logistics class")
+        _print_logistics_zones(repo, project)
+        print(
+            f"logistics: {len(result.plans)} buildings, {len(result.changed)} off their class, "
+            f"{len(result.problems)} problems"
+        )
+        return 1 if result.problems or result.changed else 0
+    if result.problems:
+        print(f"logistics: {len(result.problems)} problems, nothing written")
+        return 1
+    print(
+        f"logistics: {len(result.changed)} blueprints rewritten ({result.files_changed} files); "
+        f"report {logistics.REPORT_RELATIVE_PATH}."
+    )
+    return 0
+
+
+def _print_logistics_zones(repo: Path, project: Path) -> None:
+    from prosper_or_perish_constructor import logistics
+
+    mod_root = _project_mod_root(repo, project)
+    triggers = logistics.load_zone_triggers(mod_root / logistics.ZONE_TRIGGERS_RELATIVE)
+    zones = logistics.zone_membership(logistics.load_locations(repo, project), triggers)
+    print("logistics zones (land locations): " + ", ".join(f"{zone.removeprefix(logistics.ZONE_PREFIX)} {len(tags)}" for zone, tags in zones.items()))
+
+
+def _install_good_icons(repo: Path, project: Path, mod_root: Path) -> None:
+    """DDS icons of the internal goods whose art lives in assets/icons/trade_goods (logistics so far)."""
+    from prosper_or_perish_constructor import good_icons, logistics
+
+    result = good_icons.install(repo, mod_root, [logistics.load_config(project).good])
+    missing = f"; missing art {', '.join(str(p) for p in result.missing)}" if result.missing else ""
+    print(f"Internal good icons: {len(result.written)} DDS written{missing}.", flush=True)
+
+
+def _print_logistics_check(repo: Path, project: Path) -> None:
+    """Build-time summary; problems are printed, not fatal (run ppc logistics apply)."""
+    from prosper_or_perish_constructor import logistics
+
+    try:
+        result = logistics.apply(repo, project, write=False)
+    except Exception as exc:  # noqa: BLE001 - the build must not fail on the advisory check
+        print(f"Logistics check skipped: {exc}", flush=True)
+        return
+    for problem in result.problems:
+        print(f"Logistics: {problem}", flush=True)
+    print(
+        f"Logistics: {len(result.plans)} buildings tagged, {len(result.changed)} off their class "
+        f"(run ppc logistics apply), {len(result.problems)} problems.",
+        flush=True,
+    )
+
+
 def _apply_building_footprint(repo: Path, project: Path, mod_root: Path) -> None:
     from prosper_or_perish_constructor import building_footprint
     from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
@@ -1130,6 +1217,7 @@ def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: 
         return build_code
     _finalize_constructor_mod(repo, project)
     _print_labour_check(repo, project)
+    _print_logistics_check(repo, project)
     _print_gate_check(repo, project)
     _print_food_sim(repo)
     return 0
@@ -1204,6 +1292,7 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
             flush=True,
         )
     _ensure_price_cost_modifier_assets(mod_root)
+    _install_good_icons(repo, project, mod_root)
     from prosper_or_perish_constructor import gui_compat
 
     gui_compat.strip(mod_root)   # the food-storage compile counts its gauge lines per file

@@ -135,13 +135,8 @@ TRY_REPLACE:unsupported_building_levels = {
 	game_data = {
 		category = location
 	}
-	local_build_buildings_efficiency = -0.03
-	local_construction_speed = -0.01
-	local_distance_from_capital_speed_propagation = -0.01
-	local_max_control = -0.005
-	local_province_food_sales_output_modifier = -0.01
-	local_offset_output_modifier = -0.01
-	local_province_food_purchase_output_modifier = -0.01
+	# per building level above the supported levels: goods reach the market worse (logistics buildings add it back)
+	local_market_access = -0.01
 }
 
 TRY_REPLACE:total_population = {

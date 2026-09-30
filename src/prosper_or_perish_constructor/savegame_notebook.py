@@ -68,13 +68,14 @@ POP_TYPE_LABELS = {value: value.replace("_", " ").title() for value in POP_TYPE_
 
 INFRASTRUCTURE_BUILDING_ORDER = (
     "carrier_inn",
+    "pp_caravanserai",
+    "pp_oasis_caravan_station",
+    "pp_yam_station",
+    "pp_banjara_tanda",
+    "pp_llama_caravan_post",
     "coastal_shipping_office",
     "river_boatmen_yard",
     "transport_office",
-    "road_wardens_yard",
-    "paviors_yard",
-    "macadam_works",
-    "permanent_way_depot",
 )
 
 POPULATION_POOL_TABLE = "market_population_pools"
@@ -1355,7 +1356,7 @@ def goods_pressure(
     end_date: int | None = None,
     snapshot_date: int | None = None,
     top_n: int = 12,
-    exclude_goods: Sequence[str] = ("province_food_sales", "province_food_purchase", "offset"),
+    exclude_goods: Sequence[str] = ("province_food_sales", "province_food_purchase", "offset", "logistics"),
     min_global_flow: float = 100.0,
     min_market_flow: float = 1.0,
 ) -> GoodsPressureResult:
@@ -1457,7 +1458,7 @@ def show_goods_pressure(
     end_date: int | None = None,
     snapshot_date: int | None = None,
     top_n: int = 12,
-    exclude_goods: Sequence[str] = ("province_food_sales", "province_food_purchase", "offset"),
+    exclude_goods: Sequence[str] = ("province_food_sales", "province_food_purchase", "offset", "logistics"),
     min_global_flow: float = 100.0,
     min_market_flow: float = 1.0,
     display_tables: bool = True,

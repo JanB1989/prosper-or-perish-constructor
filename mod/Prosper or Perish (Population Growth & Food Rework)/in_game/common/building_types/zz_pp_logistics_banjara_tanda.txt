@@ -1,0 +1,83 @@
+﻿# >>> eu5-building-pipeline:pp_banjara_tanda:building
+pp_banjara_tanda = {
+is_foreign = no
+max_levels = 100
+increase_per_level_cost = 0.19
+pop_type = laborers
+employment_size = 1
+category = infrastructure_category
+custom_tags = { pp_logistics pp_rural_logistics_priority }
+icon = pp_banjara_tanda
+rural_settlement = yes
+town = yes
+can_close = no
+always_add_demands = yes
+ai_forbid_shutdown = yes
+build_time = infrastructure_build_time
+
+# South Asia (pp_logistics_zone_triggers.txt), geography only
+location_potential = {
+  pp_logistics_zone_banjara = yes
+}
+allow = {
+  market_access < 0.85
+  total_building_levels >= 15
+}
+construction_demand = pp_banjara_tanda_construction
+
+unique_production_methods = {
+  pp_banjara_tanda_pack_bullocks = {
+    livestock = 0.7
+    victuals = 0.35
+    cloth = 0.1
+    manual_labor = 0.6
+    produced = logistics
+    output = 3.54
+    category = building_maintenance
+  }
+  pp_banjara_tanda_tanda_families = {
+    livestock = 0.31
+    victuals = 0.4
+    manual_labor = 1.34
+    produced = logistics
+    output = 3.54
+    category = building_maintenance
+  }
+  pp_banjara_tanda_bullock_carts = {
+    livestock = 0.48
+    victuals = 0.29
+    lumber = 0.19
+    cloth = 0.077
+    tools = 0.077
+    manual_labor = 0.6
+    produced = logistics
+    output = 3.69
+    category = building_maintenance
+  }
+}
+
+raw_modifier = {
+	local_population_capacity = 0.4
+  local_market_access = 0.1
+}
+
+modifier = {
+  local_stone_output_modifier = -0.005
+  local_marble_output_modifier = -0.005
+  local_clay_output_modifier = -0.005
+  local_sand_output_modifier = -0.005
+  local_coal_output_modifier = -0.005
+  local_iron_output_modifier = -0.005
+  local_copper_output_modifier = -0.005
+  local_tin_output_modifier = -0.005
+  local_lead_output_modifier = -0.005
+  local_salt_output_modifier = -0.005
+  local_saltpeter_output_modifier = -0.005
+  local_alum_output_modifier = -0.005
+  local_lumber_output_modifier = -0.0025
+  local_institution_growth_modifier = 0.05
+  local_supply_limit_modifier = 0.05
+  local_disease_resistance = -0.05
+}
+}
+# <<< eu5-building-pipeline:pp_banjara_tanda:building

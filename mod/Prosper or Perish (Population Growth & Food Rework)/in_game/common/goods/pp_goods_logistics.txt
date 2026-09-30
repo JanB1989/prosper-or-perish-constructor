@@ -1,0 +1,10 @@
+﻿# Logistics: what the logistics buildings (River Boatmen's Yard, Coastal Shipping Office, Carrier Inn and its regional
+# variants, Transport Office) produce. Pinned at its price floor by the huge base supply, like offset: it pays the
+# buildings a steady wage while their real payoff is market access (constructor.toml [logistics]).
+logistics = {
+	category = produced
+	color = goods_logistics
+	default_market_price = 5
+	transport_cost = 100.0
+	base_production = 1000.0
+}

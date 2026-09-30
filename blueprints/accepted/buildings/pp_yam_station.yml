@@ -1,0 +1,122 @@
+﻿version: 2
+tag: pp_yam_station
+output_tag: logistics_yam_station
+footprint: infrastructure
+labour:
+  class: logistics
+  methods:
+    pp_yam_station_yamshchik_drivers: logistics_hand
+logistics:
+  class: overland
+gate_method: pp_yam_station_sledge_relays
+building:
+  key: pp_yam_station
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_yam_station_post_horses
+        - pp_yam_station_yamshchik_drivers
+        - pp_yam_station_sledge_relays
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = 100
+    increase_per_level_cost = 0.25
+    pop_type = laborers
+    employment_size = 1
+    category = infrastructure_category
+    custom_tags = { pp_logistics pp_rural_logistics_priority }
+    icon = pp_yam_station
+    rural_settlement = yes
+    town = yes
+    can_close = no
+    always_add_demands = yes
+    ai_forbid_shutdown = yes
+    build_time = infrastructure_build_time
+
+    # the steppe, the forests and the taiga of northern and eastern Eurasia (pp_logistics_zone_triggers.txt), geography only
+    location_potential = {
+      pp_logistics_zone_yam = yes
+    }
+    allow = {
+      market_access < 0.85
+      total_building_levels >= 15
+    }
+    construction_demand = pp_yam_station_construction
+
+    unique_production_methods = {
+      pp_yam_station_post_horses = {
+        horses = 0.3
+        victuals = 0.3
+        lumber = 0.25
+        fur = 0.06
+        manual_labor = 0.64
+        produced = logistics
+        output = 3.54
+        category = building_maintenance
+      }
+      pp_yam_station_yamshchik_drivers = {
+        horses = 0.14
+        victuals = 0.33
+        lumber = 0.14
+        manual_labor = 1.35
+        produced = logistics
+        output = 3.54
+        category = building_maintenance
+      }
+      pp_yam_station_sledge_relays = {
+        horses = 0.2
+        livestock = 0.1
+        victuals = 0.3
+        lumber = 0.2
+        tools = 0.12
+        manual_labor = 0.61
+        produced = logistics
+        output = 3.69
+        category = building_maintenance
+      }
+    }
+
+    raw_modifier = {
+      local_market_access = 0.1
+    }
+
+    modifier = {
+      local_stone_output_modifier = -0.01
+      local_marble_output_modifier = -0.01
+      local_clay_output_modifier = -0.01
+      local_sand_output_modifier = -0.01
+      local_coal_output_modifier = -0.01
+      local_iron_output_modifier = -0.01
+      local_copper_output_modifier = -0.01
+      local_tin_output_modifier = -0.01
+      local_lead_output_modifier = -0.01
+      local_salt_output_modifier = -0.01
+      local_saltpeter_output_modifier = -0.01
+      local_alum_output_modifier = -0.01
+      local_lumber_output_modifier = -0.005
+      local_institution_growth_modifier = 0.05
+      local_supply_limit_modifier = 0.05
+      local_disease_resistance = -0.05
+    }
+localization:
+  entries:
+    pp_yam_station_slot_0: Relay Stages
+    pp_yam_station: Yam Station
+    pp_yam_station_desc: A relay post of the great courier network, with fresh horses, sledges and provisions kept ready for the next stage. Officials, envoys and merchants follow its stations across the long distances of the steppe and the northern forests.
+    pp_yam_station_construction: Yam Station Construction
+    pp_yam_station_post_horses: Post Horses
+    pp_yam_station_yamshchik_drivers: Yamshchik Drivers
+    pp_yam_station_sledge_relays: Sledge Relays
+icon:
+  source_png: ../assets/icons/pp_yam_station.png
+  output_dds: pp_yam_station.dds
+  size: 512
+  drawing: ../../../assets/icon_drawings/pp_yam_station/draw.py
+evaluation:
+  allow_rules:
+    profit_percent: Logistics buildings earn a thin wage in the floor-priced logistics good; their payoff is market access.
+    input_throughput: Yam stations keep post horses, drivers and provisions ready for every level.
+    output_throughput: The logistics good is a floor-priced wage; the real output is market access.

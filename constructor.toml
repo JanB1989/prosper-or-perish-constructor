@@ -63,6 +63,7 @@ provisioning_reference_base_output = 0.06
 
 [blueprint_evaluation.price_overrides]
 manual_labor = 1.0   # labour is balanced at its price floor (20 % of 5), see [production_labour]
+logistics = 1.0      # the logistics dummy good sits at its price floor (20 % of 5) by its base supply, see [logistics]
 local_food = 0.1          # Province Food is pinned at its price floor (20 % of 0.5) by its base supply
 
 [blueprint_evaluation.throughput_gold_per_1k]
@@ -774,6 +775,9 @@ craft_discovery = 0.12        # age 3 workshops
 craft_reformation = 0.10      # age 4 workshops
 craft_absolutism = 0.07       # age 5 manufactories, Public Kitchens
 craft_revolutions = 0.04      # age 6 mills and factories
+# logistics buildings (River Boatmen's Yard, Carrier Inn and its regional variants, ...): every good of the recipe stays
+logistics = { share = 0.20, max_goods = 6, min_good_share = 0.0 }       # animals, carts and boats do the carrying
+logistics_hand = { share = 0.45, max_goods = 6, min_good_share = 0.0 }  # porters, towpath and hand crews
 
 [production_gate]
 # The AI builds a production building only if one margin (revenue / input cost) reaches its threshold, and that margin
@@ -784,3 +788,30 @@ craft_revolutions = 0.04      # age 6 mills and factories
 threshold = 1.2               # fallback only: the gate reads NAI.AI_BUILDING_PROFIT_THRESHOLD from the mod defines (else vanilla)
 # goods whose methods react to the province store or the market (Surplus Sales, Scarcity Premium): their slots go last
 dynamic_goods = ["province_food_sales", "province_food_purchase"]
+
+[logistics]
+# Logistics buildings carry goods to the market: they produce the pinned dummy good `logistics` (1 gold at its floor,
+# like offset) and raise market access. Every logistics blueprint carries `logistics: { class: <class>, bulky_scale: x }`.
+# `ppc logistics apply` rewrites them: each method costs input_cost at base prices and produces
+# input_cost x class output (the last, improved method + improved_method_bonus); raw_modifier = local_market_access per
+# level; modifier = the bulky-goods output cut (class cut x bulky_scale, half on bulky_half_goods) and the flavour lines;
+# allow gains the market-access and building-level gates; increase_per_level_cost comes from the class, pop_type and
+# employment_size from here. `ppc logistics check` reports blueprints off their class and prints the zone sizes
+# (ppc build prints it). Order: ppc labour apply, ppc logistics apply, ppc gate apply.
+good = "logistics"
+input_cost = 3.0              # gold per level per method at default prices, manual_labor and floor goods at 1
+market_access = 0.10          # raw_modifier local_market_access per level
+gate_max_market_access = 0.85 # allow: market_access < this
+gate_min_building_levels = 15 # allow: total_building_levels >= this
+improved_method_bonus = 0.05  # extra output share on the improved (third) method
+bulky_goods = ["stone", "marble", "clay", "sand", "coal", "iron", "copper", "tin", "lead", "salt", "saltpeter", "alum"]
+bulky_half_goods = ["lumber"] # get half the class cut
+pop_type = "laborers"
+employment_size = 1
+flavour = { local_institution_growth_modifier = 0.05, local_supply_limit_modifier = 0.05, local_disease_resistance = -0.05 }  # per level, in modifier
+
+[logistics.classes]
+river    = { output = 1.25, bulky_cut = 0.005, increase_per_level_cost = 0.20 }
+coastal  = { output = 1.21, bulky_cut = 0.005, increase_per_level_cost = 0.20 }
+overland = { output = 1.18, bulky_cut = 0.010, increase_per_level_cost = 0.25 }
+urban    = { output = 1.15, bulky_cut = 0.010, increase_per_level_cost = 0.30 }

@@ -1967,9 +1967,7 @@ def test_legacy_capacity_culling_is_removed() -> None:
 
 
 def test_yearly_closed_building_culling_removes_one_level_not_whole_stack() -> None:
-    action_text = BUILDING_CULLING.read_text(encoding="utf-8-sig").split(
-        "pp_ai_logistics_on_unsupported_building_levels", maxsplit=1
-    )[0]
+    action_text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
     assert "pp_yearly_ai_building_review" in action_text
     assert "is_ai = yes" in action_text
     assert "pp_ai_building_review_effect = yes" in action_text
@@ -2030,7 +2028,6 @@ def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -
     assert on_actions.items == [
         "pp_raise_owned_zero_rgo_max_workers",
         "pp_cull_capacity_buildings_over_max_v2",
-        "pp_ai_logistics_on_unsupported_building_levels",
     ]
 
     capacity_action_entries = {
@@ -2045,11 +2042,9 @@ def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -
     legacy_entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}
     assert "pp_cull_over_cap_buildings" not in legacy_entries
 
-    logistics_text = AI_LOGISTICS_BUILDING_EFFECTS.read_text(encoding="utf-8-sig")
-    assert (
-        len(re.findall(r"has_owner\s*=\s*yes\s+owner\s*=\s*scope:pp_ai_logistics_country", logistics_text))
-        == 4
-    )
+    # the scripted logistics builder was removed 2026-09-30: the AI builds logistics buildings for their profit
+    assert not AI_LOGISTICS_BUILDING_EFFECTS.exists()
+    assert "pp_ai_logistics_on_unsupported_building_levels" not in legacy_entries
 
 
 def test_four_yearly_zero_rgo_floor_repairs_owned_locations_for_all_countries() -> None:

@@ -44,6 +44,20 @@ Scripts must stay self-contained: copy helper functions, do not import from othe
 | `vein`, `heap`, `chunk` (also in the kit) | `iron_mine` | ore veins, heaps of lumps |
 | `net`, `fish`, `basket`, water band (also in the kit) | `ocean_fishery` | nets, fish, baskets, water buildings |
 | `leaf`, `plant`, `bundle` (also in the kit) | `tobacco_farm` | broad-leaf crops, hanging bundles |
+| `camel`, `pointed`, `modelled`, `road`, `tube`, `smooth` | `pp_caravanserai` | laden dromedary (bales or salt), pointed arches, rounding an animal mask, dusty ground |
+| `frond`, `palm` | `pp_oasis_caravan_station` | date palms |
+| `horse` (with duga), `logs`, `nalichnik`, `snowfield` | `pp_yam_station` | post horse, log walls, carved windows, snow ground and snow-laden roofs |
+| `zebu`, `tent`, `border` | `pp_banjara_tanda` | humped cattle, camp tents, embroidered bands |
+| `llama`, `fieldstones`, `thatch_cone`, `peak` | `pp_llama_caravan_post` | llamas, dry-stone walling, conical thatch, snow-capped mountain backdrop |
+
+## Goods icons
+
+Custom trade-good icons can be drawn with the same kit. `assets/icons/trade_goods/drawings/<good>.py`
+defines `draw(icon)` plus its own goods finish (vanilla `icons/trade_goods` format: ~121 px content,
+~4 px margins, black outline, warmer and more saturated than building icons) and writes both
+`assets/icons/trade_goods/icon_goods_<good>.png` (128 px) and `illustrations/icon_goods_<good>.png`
+(1080 x 440, icon at 400 px centred); the build turns them into DDS (`good_icons.py`). Run from
+`eu5-building-pipeline`: `uv run python ../ProsperOrPerishConstructor/assets/icons/trade_goods/drawings/logistics.py --preview <dir>`.
 
 ## Families and tiers
 

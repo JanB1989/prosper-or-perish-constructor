@@ -289,25 +289,34 @@ stone or copper.
 
 ## Taverns and Victualling Yards
 
-Both move **60 food per fully staffed level** (one noble each). They are
+Both move **24 food per fully staffed level** (one noble each; 60 before 2026-09-30, when the three victuals
+buildings were scaled x0.4 in inputs, outputs and food modifier together, see below). They are
 **two-legged**:
 
-- The **Tavern** serves bought-in victuals: *Serving* buys 2 victuals and earns a
-  steady 3.34 gold from 0.167 `offset` at 20x; its *Scarcity Premium* leg (0.533
+- The **Tavern** serves bought-in victuals: *Serving* buys 0.8 victuals and earns a
+  steady 1.34 gold from 0.067 `offset` at 20x; its *Scarcity Premium* leg (0.213
   `province_food_purchase`, constant +15, -8 per stored year, +8 while starving)
   pays while the store is below 12 months at the mean victuals price. It keeps the
   former Victualler's behaviour at two thirds of its throughput.
 - The **Victualling Yard** packs the lasting part of a full store: *Pack
-  Provisions* is a real victuals output (1.5 per level, production efficiency
+  Provisions* is a real victuals output (0.6 per level, production efficiency
   scales it; no negative input, no pulse script), *Sell the Surplus* is its
-  storage leg (2.0 `province_food_sales`, the farms' Surplus Sales good, constant
-  -1, +8 per stored year, offset 28.0), paying above ~18 months, AI-built from ~22 months. Its *Packing*
+  storage leg (0.8 `province_food_sales`, the farms' Surplus Sales good, constant
+  -1, +8 per stored year, offset 11.2), paying above ~18 months, AI-built from ~22 months. Its *Packing*
   slot (pottery jars, coopered barrels, tin cans; each breaks even at default
   prices) adds victuals up to 1:30. Loose stores pack at 1:40, so food that goes
   out through a Yard and back through a Tavern always loses; the 12-20 month dead
   band between the two only closes at about +125 % production efficiency.
 
-Each staffed level lowers its own leg by 0.2 so staffing settles.
+Each staffed level lowers its own leg by 0.2 so staffing settles (kept per level through the x0.4 scaling, so the
+same number of levels staffs and the throughput really falls).
+
+**Scaling of 2026-09-30.** The engine hook run on a 1375 test game (h03) showed the AI ranked the Tavern and the
+Victualling Yard 3-4x as often into its top three as ordinary buildings (the Tavern's +60 food, the Yard's sailors and
+food capacity). Tavern, Grange and harbour Yard were scaled x0.4 together (30 food per victual kept, the victuals
+balance between them unchanged), the Yard's sailors went 0.01 -> 0.003 and its food capacity 100 -> 0, and the Cookshop
+(400) and Public Kitchen (800) lost their food capacity: the Granary (300) is the building for food capacity, the
+food producers keep their +50 so the AI still builds them where no province is short.
 
 `config/victuals_logistics.json` generates distinct live script values:
 

@@ -251,7 +251,7 @@ unique_production_methods = {
 
 	modifier = {
 		local_monthly_food = 10.0
-		local_food_capacity = 400
+		# no food capacity (was 400, removed 2026-09-30): the Granary is the capacity building
 		local_migration_attraction = 0.025
 	}
 }

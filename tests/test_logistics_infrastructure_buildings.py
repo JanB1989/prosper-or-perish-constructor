@@ -573,12 +573,12 @@ def test_victuals_trade_templates_split_export_and_import_flows() -> None:
     assert "victualling_yard: Victualling Yard" in yard_texts[0]
     for text in yard_texts:
         assert "pp_victualling_yard_merchantmen" in text
-        assert re.search(r"pp_victualling_yard_merchantmen = \{[^}]*produced = victuals[^}]*output = 0\.67", text, re.S)
-        assert re.search(r"pp_victualling_yard_grain_shipment = \{[^}]*wheat = 5\.83[^}]*output = 2\.33", text, re.S)
+        assert re.search(r"pp_victualling_yard_merchantmen = \{[^}]*produced = victuals[^}]*output = 0\.268", text, re.S)
+        assert re.search(r"pp_victualling_yard_grain_shipment = \{[^}]*wheat = 2\.332[^}]*output = 0\.932", text, re.S)
         # every staple shipment shares the grain numbers (1 gold, 12 food each): food-neutral
         for good in ("rice", "millet", "maize", "legumes", "fish"):
             assert re.search(
-                rf"pp_victualling_yard_{good}_shipment = \{{[^}}]*{good} = 5\.83[^}}]*output = 2\.33", text, re.S
+                rf"pp_victualling_yard_{good}_shipment = \{{[^}}]*{good} = 2\.332[^}}]*output = 0\.932", text, re.S
             )
         assert "surplus_sales" not in text and "province_food_sales" not in text
         assert not re.search(r"\bvictuals = -", text)
@@ -591,21 +591,21 @@ def test_victuals_trade_templates_split_export_and_import_flows() -> None:
     for text in tavern_texts:
         assert "pp_tavern_serve_victuals" in text
         assert "produced = province_food_purchase" in text
-        assert "output = 0.167" in text
-        assert "output = 0.533" in text
-        assert "victuals = 2.0" in text
+        assert "output = 0.067" in text
+        assert "output = 0.213" in text
+        assert "victuals = 0.8" in text
         assert "local_province_food_purchase_output_modifier = -0.2" in text
         assert "pp_victualling_yard_merchantmen" not in text
 
     for text in yard_texts:
-        assert "local_monthly_food = -20.0" in text
+        assert "local_monthly_food = -8.0" in text
         assert "max_levels = victualling_yard_max_level" in text
         assert "local_burghers_estate_power = 0.05" in text
         assert "local_nobles_estate_power" not in text
         assert "local_market_access" not in text
 
     for text in tavern_texts:
-        assert "local_monthly_food = 60.0" in text
+        assert "local_monthly_food = 24.0" in text
         assert "max_levels = tavern_max_level" in text
         assert "local_nobles_estate_power" not in text
         assert "local_peasant_enfranchisment" not in text

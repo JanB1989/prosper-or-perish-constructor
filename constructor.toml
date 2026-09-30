@@ -606,9 +606,10 @@ start_food_share = 1.0             # the engine fills every province store to ca
 # province food capacity per pool (max_food_value), fitted on nb.eu5 (R2 0.968); buildings' local_food_capacity adds
 capacity = { per_development = 31.97, per_population_k = 3.65, per_location = 99.9, rank = { town = 521.3, city = 815.2, megalopolis = 1240.8 } }
 # placement v2 (start_simulation.place_food_chain)
-tavern_victuals_per_level = 2.0    # victuals a staffed Tavern buys per month (60 food, 30 per victual)
-yard_victuals_per_level = 1.5      # victuals a staffed Grange packs per month (60 food, loose stores)
-harbor_yard_victuals_per_level = 3.0   # victuals a staffed harbour Victualling Yard makes (20 food + 5.83 grain)
+# 2026-09-30: the three victuals buildings scaled x0.4 (inputs, outputs and food modifier together)
+tavern_victuals_per_level = 0.8    # victuals a staffed Tavern buys per month (24 food, 30 per victual)
+yard_victuals_per_level = 0.6      # victuals a staffed Grange packs per month (24 food, loose stores)
+harbor_yard_victuals_per_level = 1.2   # victuals a staffed harbour Victualling Yard makes (8 food + 2.33 grain)
 # Cookshops serve every dish as Province Food (no Preserve recipes since 2026-09-25)
 cookshop_serve_share = 1.0
 cookshop_drink_food = 12.0         # drink slot Province Food per level (estimate; refit from a save with food-check)

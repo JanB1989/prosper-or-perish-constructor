@@ -64,9 +64,9 @@ class FoodModelConfig:
     tribal_share_food: float = 2.0                   # tribesmen pop_percentage_impact local_monthly_food: food of a fully
                                                      # tribal location, scaled by the tribal share (pp_pop_adjustments.txt)
     # placement v2
-    tavern_victuals_per_level: float = 2.0           # victuals a staffed Tavern buys per month (60 food)
-    yard_victuals_per_level: float = 1.5             # victuals a staffed Grange packs per month (60 food, loose)
-    harbor_yard_victuals_per_level: float = 3.0      # victuals a staffed harbour Victualling Yard makes (20 food + grain)
+    tavern_victuals_per_level: float = 0.8           # victuals a staffed Tavern buys per month (24 food)
+    yard_victuals_per_level: float = 0.6             # victuals a staffed Grange packs per month (24 food, loose)
+    harbor_yard_victuals_per_level: float = 1.2      # victuals a staffed harbour Victualling Yard makes (8 food + grain)
     cookshop_serve_share: float = 1.0                # share of cookshop levels whose dish slot runs Serve (all: no Preserve)
     cookshop_drink_food: float = 12.0                # Province Food of the drink slot per level (estimate: ~0.4 of the
                                                      # 0.67 victuals drinks + packing made per level on nb.eu5, x30)

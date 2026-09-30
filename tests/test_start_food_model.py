@@ -209,7 +209,7 @@ def test_food_capacity_and_the_cookshop_makes_no_victuals():
     assert fm.food_capacity([(10, 20, "town"), (0, 5, "rural_settlement")], cfg) == 300 + 80 + 100 + 500 + 20 + 100
     # the Cookshop serves everything (no Preserve recipes); victuals come from the Victualling Yard only
     assert cfg.cookshop_serve_share == 1.0 and not hasattr(fm, "cookshop_victuals")
-    assert cfg.tavern_victuals_per_level == 2.0 and cfg.yard_victuals_per_level == 1.5
+    assert cfg.tavern_victuals_per_level == 0.8 and cfg.yard_victuals_per_level == 0.6
 
 
 def test_fit_yields_recovers_rank_and_climate_factors():

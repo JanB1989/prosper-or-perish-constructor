@@ -39,31 +39,33 @@ building:
     build_time = 365
     construction_demand = victuals_trade_construction
 
-    # The Tavern serves bought-in victuals to the province: 2 victuals -> 60 food per staffed level (1 victual =
+    # The Tavern serves bought-in victuals to the province: 0.8 victuals -> 24 food per staffed level (1 victual =
     # 30 food). Its money is set by the province store, not by the victuals price.
+    # 2026-09-30: every input, output and the food modifier scaled x0.4 (was 2 victuals -> 60 food): the AI valued the
+    # +60 food far above any other building (h03 hook run); margins, gates and the per-level droop are unchanged.
     # slot 0: serving. At floor prices (dummy goods = 1 gold, 20 % of default; labour 1 gold) it costs
-    # 2 victuals x p + 0.2 labour and earns 0.167 offset x 20 (country constant +19) = 3.34 gold, so this slot
+    # 0.8 victuals x p + 0.08 labour and earns 0.067 offset x 20 (country constant +19) = 1.34 gold, so this slot
     # alone loses money whenever the victuals price p > 1.57: the Tavern cannot run on the price alone.
     # The x20 constant keeps production efficiency small on this income (+50 % efficiency = +2.5 %).
     unique_production_methods = {
       pp_tavern_serve_victuals = {
         produced = offset
-        victuals = 2.0
-        manual_labor = 0.2
-        output = 0.167
+        victuals = 0.8
+        manual_labor = 0.08
+        output = 0.067
         category = building_maintenance
       }
     }
-    # slot 1: scarcity premium. 0.533 province_food_purchase whose output modifier runs from 16x at an empty store
-    # (8.53 gold) to zero at the 24-month cap (+8 more while starving), minus a fixed 2 offset input (2 gold,
+    # slot 1: scarcity premium. 0.213 province_food_purchase whose output modifier runs from 16x at an empty store
+    # (3.41 gold) to zero at the 24-month cap (+8 more while starving), minus a fixed 0.8 offset input (0.8 gold,
     # inputs ignore production efficiency).
-    # Per level (y = stored years, capped at 2): profit = 3.34 - 2p - 0.2 + 0.533 x (16 - 8y) - 2
-    # -> at p = 2.7: +4.27 gold when empty, 0 at 12 months, -4.27 at the 24-month cap.
+    # Per level (y = stored years, capped at 2): profit = 1.34 - 0.8p - 0.08 + 0.213 x (16 - 8y) - 0.8
+    # -> at p = 2.7: +1.71 gold when empty, 0 at 12 months, -1.71 at the 24-month cap.
     unique_production_methods = {
       pp_tavern_scarcity_premium = {
         produced = province_food_purchase
-        offset = 2.0
-        output = 0.533
+        offset = 0.8
+        output = 0.213
         category = building_maintenance
       }
     }
@@ -72,9 +74,9 @@ building:
     }
 
     modifier = {
-      local_monthly_food = 60.0
+      local_monthly_food = 24.0
       # droop: each staffed level lowers the storage leg a little, so staffing settles instead of flipping
-      # (-0.2 per 60 food = the same droop per unit of food as the former 90-food level's -0.3)
+      # (kept at -0.2 per level when the level shrank to 24 food: the same number of staffed levels, 0.4 x the food)
       local_province_food_purchase_output_modifier = -0.2
       # inns quartered and fed marching troops
       local_supply_limit_modifier = 0.01

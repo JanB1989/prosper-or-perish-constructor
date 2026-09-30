@@ -59,67 +59,68 @@ building:
         category = building_maintenance
       }
       pp_grange_pottery_jars = {
-        pottery = 0.65
-        manual_labor = 0.11
+        pottery = 0.26
+        manual_labor = 0.044
         produced = victuals
-        output = 0.25
+        output = 0.1
         debug_max_profit = 0
         category = building_maintenance
       }
       pp_grange_coopered_barrels = {
-        furniture = 0.30
-        manual_labor = 0.16
+        furniture = 0.12
+        manual_labor = 0.064
         produced = victuals
-        output = 0.35
+        output = 0.14
         debug_max_profit = 0
         category = building_maintenance
       }
       pp_grange_tin_cans = {
-        steel = 0.26
-        manual_labor = 0.22
+        steel = 0.104
+        manual_labor = 0.088
         produced = victuals
-        output = 0.5
+        output = 0.2
         debug_max_profit = 0
         category = building_maintenance
       }
     }
-    # Same food chain as the Victualling Yard: each staffed level takes 60 food (the modifier below) and packs 1.5
-    # victuals, 1:40 against the Tavern's 1:30. slot 1: how the store reaches the market. The three methods pack the
+    # Same food chain as the Victualling Yard: each staffed level takes 24 food (the modifier below) and packs 0.6
+    # victuals, 1:40 against the Tavern's 1:30. 2026-09-30: every input, output and the food modifier scaled x0.4
+    # (was 60 food -> 1.5 victuals), together with the Tavern and the Yard, so the victuals balance stays. slot 1: how the store reaches the market. The three methods pack the
     # same amount; the carts and wagons swap labour for animals and gear, so they pay only where labour is dear
     # (at default goods prices: Porters below labour 1.3, Ox Carts 1.3 to 1.55, Horse Wagons above).
     unique_production_methods = {
       pp_grange_porters = {
         produced = victuals
-        manual_labor = 0.2
-        output = 1.5
+        manual_labor = 0.08
+        output = 0.6
         category = building_maintenance
       }
       pp_grange_ox_carts = {
-        livestock = 0.04
-        lumber = 0.04
-        manual_labor = 0.1
+        livestock = 0.016
+        lumber = 0.016
+        manual_labor = 0.04
         produced = victuals
-        output = 1.5
+        output = 0.6
         category = building_maintenance
       }
       pp_grange_horse_wagons = {
-        horses = 0.03
-        tools = 0.03
-        lumber = 0.02
-        manual_labor = 0.04
+        horses = 0.012
+        tools = 0.012
+        lumber = 0.008
+        manual_labor = 0.016
         produced = victuals
-        output = 1.5
+        output = 0.6
         category = building_maintenance
       }
     }
-    # slot 2: surplus sales, the storage leg and the AI gate method (profit = 1.5p - 28.2 + 2.0 x 8y per level at
-    # floor prices; break-even near 18 months stored at victuals 2.7). Offset 28.0: its margin 2.0 x 8y / 28.0 reaches
+    # slot 2: surplus sales, the storage leg and the AI gate method (profit = 0.6p - 11.28 + 0.8 x 8y per level at
+    # floor prices; break-even near 18 months stored at victuals 2.7). Offset 11.2: its margin 0.8 x 8y / 11.2 reaches
     # the AI profit threshold 1.05 at ~22 months stored, so the AI builds granges from there.
     unique_production_methods = {
       pp_grange_surplus_sales = {
         produced = province_food_sales
-        offset = 28.0
-        output = 2.0
+        offset = 11.2
+        output = 0.8
         category = building_maintenance
       }
     }
@@ -128,7 +129,7 @@ building:
     }
 
     modifier = {
-      local_monthly_food = -60.0
+      local_monthly_food = -24.0
       # droop: each staffed level lowers the storage leg a little, so staffing settles instead of flipping
       local_province_food_sales_output_modifier = -0.2
       local_nobles_estate_power = 0.05

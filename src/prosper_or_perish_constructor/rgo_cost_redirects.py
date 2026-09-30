@@ -39,6 +39,22 @@ RGO_COST_REDIRECT_FILE = "pp_rgo_building_cost_redirects.txt"
 # modifiers are color=bad and efficiency is color=good, so the sign flips.
 RGO_COST_REDIRECT_FALLBACK_MODIFIER = "global_rural_build_buildings_efficiency"
 RGO_COST_REDIRECT_FALLBACK_SCALE = Decimal("0.5")
+# Crafts and cottage crafts (blueprint labour class) carry their own price as a building-price brake; a side method that
+# grows or digs a raw material does not make them RGO buildings, so RGO expansion laws keep reaching them only through
+# the rural fallback, as before they had a price.
+NON_RGO_LABOUR_CLASS = re.compile(r"^labour:\s*\n\s+class:\s*(craft_\w+|cottage)\s*$", re.M)
+
+
+def _non_rgo_priced_buildings(mod_root: Path) -> set[str]:
+    blueprints = mod_root.parent.parent / "blueprints" / "accepted" / "buildings"
+    tags: set[str] = set()
+    if blueprints.is_dir():
+        for path in blueprints.glob("*.yml"):
+            text = path.read_text(encoding="utf-8-sig")
+            tag = re.search(r"^tag:\s*(\S+)", text, re.M)
+            if tag and NON_RGO_LABOUR_CLASS.search(text):
+                tags.add(tag.group(1))
+    return tags
 RGO_COST_REDIRECT_COLLECTIONS: tuple[tuple[str, str], ...] = (
     ("in_game", "advances"),
     ("in_game", "estate_privileges"),
@@ -211,6 +227,7 @@ def classify_pop_rgo_building_cost_targets(
 ) -> RgoBuildingClassification:
     raw_material_methods = _raw_material_methods(profile)
     priced_keys = _pp_price_keys(mod_root)
+    non_rgo = _non_rgo_priced_buildings(mod_root)
     targets: list[RgoBuildingCostTarget] = []
     unpriced: dict[str, tuple[str, ...]] = {}
     unclassified_priced: dict[str, str] = {}
@@ -220,7 +237,7 @@ def classify_pop_rgo_building_cost_targets(
             continue
         methods = _classify_building_methods(entry.key, entry.value, raw_material_methods)
         price_key = _scalar_string(_last_value(entry.value, "price"))
-        if methods and price_key and price_key in priced_keys:
+        if methods and price_key and price_key in priced_keys and entry.key not in non_rgo:
             targets.append(
                 RgoBuildingCostTarget(
                     building=entry.key,
@@ -233,7 +250,7 @@ def classify_pop_rgo_building_cost_targets(
             )
         elif methods:
             unpriced[entry.key] = tuple(sorted(methods))
-        elif price_key and price_key.startswith("pp_"):
+        elif price_key and price_key.startswith("pp_") and entry.key not in non_rgo:
             unclassified_priced[entry.key] = price_key
 
     return RgoBuildingClassification(

@@ -29,7 +29,9 @@ unique_production_methods = {
         category = guild_input
     }
 }
-increase_per_level_cost = 0.14
+# Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
+increase_per_level_cost = 0.41
+price = pp_lucca_silk_production_guild_price
 	raw_modifier = {
 		local_population_capacity = 0.225
 	}

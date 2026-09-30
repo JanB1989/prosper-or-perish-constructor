@@ -44,7 +44,9 @@ building:
   possible_production_methods: []
   body: |2-
     	is_foreign = no
-    increase_per_level_cost = 0.13
+    # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
+    increase_per_level_cost = 0.39
+    price = pp_cookshop_price
     	max_levels = cookshop_max_level
     	pop_type = laborers
     	employment_size = 1
@@ -297,9 +299,14 @@ building:
     		local_migration_attraction = 0.025
     	}
 
+prices:
+  - key: pp_cookshop_price
+    body: |2-
+      {gold = 100}
 localization:
   entries:
     cookshop: Cookshop
+    pp_cookshop_price: Cookshop Price
     cookshop_desc: A street kitchen that cooks the market's staples into hot meals for people who have no hearth of their own. Its dishes and drinks feed the province as [ShowGoodsName('local_food')|e].
     cookshop_slot_0: Drink
     cookshop_slot_1: Main Dish
@@ -333,6 +340,7 @@ icon:
 
 evaluation:
   allow_rules:
+    amortization_months: Non-raw producer under the building price brake (double price, triple level cost, 2026-09-30); slow payback is the point.
     input_throughput: Base dish recipes intentionally received two 10% throughput passes (the second on 2026-09-23 with a 5% output buff); the drink slot remains a partial add-on.
     output_throughput: Base dish recipes intentionally received two 10% throughput passes (the second on 2026-09-23 with a 5% output buff); the drink slot remains a partial add-on.
   production_methods:

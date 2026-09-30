@@ -120,6 +120,7 @@ def building_increase_cost_assignments(
     )
     blueprint_paths_by_building = accepted_blueprint_paths_by_building(repo)
     rule_goods = _rule_owned_goods(project)
+    brake_factor, braked = _price_brake(project, blueprint_paths_by_building)
 
     assignments: list[BuildingIncreaseCostAssignment] = []
     for building, candidates in sorted(candidates_by_building.items()):
@@ -130,6 +131,10 @@ def building_increase_cost_assignments(
         if main.good in rule_goods:
             continue  # the logistics buildings take their cost from their [logistics] class
         good_cost = costs_by_good[main.good]
+        scaled_cost, scaled_cost_text = good_cost.scaled_cost, good_cost.scaled_cost_text
+        if building in braked:  # [building_price_brake]: non-raw producers repeat their levels dearer
+            scaled_cost = (Decimal(scaled_cost_text) * brake_factor).quantize(Decimal("0.01"))
+            scaled_cost_text = format_scaled_cost(scaled_cost)
         assignments.append(
             BuildingIncreaseCostAssignment(
                 building=building,
@@ -137,12 +142,32 @@ def building_increase_cost_assignments(
                 method=main.method,
                 output_value=main.output_value,
                 normalized_cost=good_cost.normalized_cost,
-                scaled_cost=good_cost.scaled_cost,
-                scaled_cost_text=good_cost.scaled_cost_text,
+                scaled_cost=scaled_cost,
+                scaled_cost_text=scaled_cost_text,
                 blueprint_path=blueprint_paths_by_building.get(building),
             )
         )
     return tuple(assignments)
+
+
+def _price_brake(project: Path, blueprint_paths: dict[str, Path]) -> tuple[Decimal, frozenset[str]]:
+    """[building_price_brake]: the increase_per_level_cost factor and the buildings it applies to (blueprint labour
+    class in `labour_classes`, not in `exclude`)."""
+    raw = tomllib.loads(project.read_text(encoding="utf-8-sig"))
+    section = raw.get("building_price_brake")
+    if not isinstance(section, dict):
+        return Decimal(1), frozenset()
+    classes = {str(value) for value in section.get("labour_classes", [])}
+    exclude = {str(value) for value in section.get("exclude", [])}
+    factor = Decimal(str(section.get("increase_per_level_cost_factor", 1)))
+    braked = set()
+    for building, path in blueprint_paths.items():
+        if building in exclude:
+            continue
+        match = re.search(r"^labour:\s*\n\s+class:\s*(\S+)", path.read_text(encoding="utf-8-sig"), re.M)
+        if match and match.group(1) in classes:
+            braked.add(building)
+    return factor, frozenset(braked)
 
 
 def _rule_owned_goods(project: Path) -> frozenset[str]:

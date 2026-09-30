@@ -459,7 +459,8 @@ def test_building_blueprints_do_not_emit_orphaned_optional_comparisons() -> None
 def test_granary_storage_and_startup_placement_are_compatible() -> None:
     granary_text = (BUILDING_BLUEPRINT_ROOT / "granary.yml").read_text(encoding="utf-8-sig")
     assert "local_food_decay_modifier = -0.0002" in granary_text
-    assert "local_food_capacity = 300" in granary_text
+    assert "local_food_capacity = 500" in granary_text
+    assert "local_food_capacity_modifier = 0.10" in granary_text
     assert "is_province_capital = yes" not in granary_text
     for rank in ("rural_settlement", "town", "city", "megalopolis"):
         assert f"location_rank = location_rank:{rank}" in granary_text
@@ -2540,10 +2541,11 @@ def test_cookshop_building_line_has_resolved_prices() -> None:
     annotated = annotate_building_data_availability(data.building_data, data.advancements)
     buildings = {row["name"]: row for row in annotated.buildings.to_dicts()}
 
-    assert buildings["cookshop"]["price"] is None
-    assert buildings["cookshop"]["effective_price"] == "p_building_age_1_traditions"
-    assert buildings["cookshop"]["effective_price_gold"] == 50.0
-    assert buildings["cookshop"]["price_kind"] == "baseline_age"
+    # [building_price_brake] 2026-09-30: the Cookshop pays double the age-1 price through its own price key
+    assert buildings["cookshop"]["price"] == "pp_cookshop_price"
+    assert buildings["cookshop"]["effective_price"] == "pp_cookshop_price"
+    assert buildings["cookshop"]["effective_price_gold"] == 100.0
+    assert buildings["cookshop"]["price_kind"] == "explicit"
 
     assert buildings["public_kitchen"]["price"] is None
     assert buildings["public_kitchen"]["effective_price"] == "p_building_age_5_absolutism"
@@ -2570,10 +2572,19 @@ def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -
     annotated = annotate_building_data_availability(data.building_data, data.advancements)
     buildings = {row["name"]: row for row in annotated.buildings.to_dicts()}
 
+    # [building_price_brake]: non-raw producers carry their own doubled price, every other site the age price
+    from prosper_or_perish_constructor.goods_categories import _price_brake, accepted_blueprint_paths_by_building
+
+    _factor, braked = _price_brake(ROOT / "constructor.toml", accepted_blueprint_paths_by_building(ROOT))
+    assert {"cloth_guild", "cookshop", "tools_guild"} <= braked and "mason" not in braked
     for building in scoped_buildings:
         assert buildings[building]["employment_size"] == 1.0, building
-        assert buildings[building]["price"] is None, building
-        assert buildings[building]["price_kind"] == "baseline_age", building
+        if building in braked:
+            assert buildings[building]["price"] == f"pp_{building}_price", building
+            assert buildings[building]["price_kind"] == "explicit", building
+        else:
+            assert buildings[building]["price"] is None, building
+            assert buildings[building]["price_kind"] == "baseline_age", building
 
     # the Tavern stays a one-pop market; the harbour Yard employs about 200 burghers per level (test value 2026-09-26)
     for building, price, employment in (

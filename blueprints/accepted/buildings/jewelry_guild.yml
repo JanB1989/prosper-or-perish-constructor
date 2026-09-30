@@ -97,9 +97,16 @@ building:
         guild
     }
     construction_demand = guild_construction
-    increase_per_level_cost = 0.25
+    # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
+    increase_per_level_cost = 0.75
+    price = pp_jewelry_guild_price
+prices:
+  - key: pp_jewelry_guild_price
+    body: |2-
+      {gold = 100}
 localization:
   entries:
+    pp_jewelry_guild_price: Jewelry Guild Price
     jewelry_guild_slot_0: Jewelry Guild Work
     jewelry_guild_slot_1: Jewelry Guild Work
     pp_jewelry_guild_gold_base: Jewelry Guild Gold Base
@@ -111,6 +118,7 @@ localization:
     pp_jewelry_guild_pearls_enhancement: Jewelry Guild Pearls Enhancement
 evaluation:
   allow_rules:
+    amortization_months: Non-raw producer under the building price brake (double price, triple level cost, 2026-09-30); slow payback is the point.
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
     input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
     output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

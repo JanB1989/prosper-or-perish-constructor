@@ -40,7 +40,9 @@ unique_production_methods = {
 }
 construction_demand = village_construction
 modifier = {}
-increase_per_level_cost = 0.14
+# Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
+increase_per_level_cost = 0.43
+price = pp_rural_clothmaker_price
 	raw_modifier = {
 		local_population_capacity = 0.4
 	}

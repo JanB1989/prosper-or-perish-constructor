@@ -16,7 +16,9 @@ building:
   body: |2-
     startup_ramp_target = guild_startup_ramp_target
     is_foreign = no
-    increase_per_level_cost = 0.18
+    # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
+    increase_per_level_cost = 0.54
+    price = pp_saltpeter_guild_price
     pop_type = burghers
     max_levels = guild_max_level
     category = basic_industry_category
@@ -48,12 +50,19 @@ building:
     construction_demand = guild_construction
     raw_modifier = {
     }
+prices:
+  - key: pp_saltpeter_guild_price
+    body: |2-
+      {gold = 100}
 localization:
   entries:
+    pp_saltpeter_guild_price: Saltpeter Guild Price
     saltpeter_guild_slot_0: Saltpeter Guild Demands
     pp_saltpeter_guild_demands: Saltpeter Guild Demands
 
 evaluation:
+  allow_rules:
+    amortization_months: Non-raw producer under the building price brake (double price, triple level cost, 2026-09-30); slow payback is the point.
   building:
     employment_size: 0.1
   allow_rules:

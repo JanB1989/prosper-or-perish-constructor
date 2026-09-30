@@ -13,7 +13,7 @@ NAI = {
 	#   Our markets hold no food, so both sit below zero: market food never steers the AI.
 	AI_MARKET_LOW_FOOD_THRESHOLD = -0.5 # 0.5
 	AI_MARKET_CRITICAL_FOOD_THRESHOLD = -0.5 # 0.1
-	AI_PROVINCE_FOOD_STOCKPILE_UTILITY = 0.15 # 0.1; weights food storage lines, which were 93-98 % of the AI value of Victualling Yards, cookshops and market villages at 0.5 (1398 run)
+	AI_PROVINCE_FOOD_STOCKPILE_UTILITY = 1.0 # 0.1; raised 2026-09-30 so large full provinces (Paris) value granaries: their capacity term was 0.06-0.09 against a 0.23-0.48 gold cost
 	# AI_MAXIMUM_EXPECT_TOWN_RATIO = 0.2
 	# AI_MIN_ALLOWED_URBANIZE_FOOD_LOCATION_RATIO = 0.15
 	# AI_MAX_ALLOWED_URBANIZE_FOOD_LOCATION_RATIO = 0.25

@@ -41,13 +41,21 @@ building:
     }
     construction_demand = village_construction
     modifier = {}
-    increase_per_level_cost = 0.15
+    # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
+    increase_per_level_cost = 0.45
+    price = pp_rural_glassmaker_price
+prices:
+  - key: pp_rural_glassmaker_price
+    body: |2-
+      {gold = 100}
 localization:
   entries:
+    pp_rural_glassmaker_price: Rural Glassmaker Price
     rural_glassmaker_slot_0: Rural Glassmaker Work
     pp_rural_glassmaker_rural_glassmaker_maintenance: Rural Glassmaker Rural Glassmaker Maintenance
 evaluation:
   allow_rules:
+    amortization_months: Non-raw producer under the building price brake (double price, triple level cost, 2026-09-30); slow payback is the point.
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
     input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
     output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

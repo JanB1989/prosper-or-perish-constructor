@@ -2,7 +2,9 @@
 REPLACE:saltpeter_guild = {
 startup_ramp_target = guild_startup_ramp_target
 is_foreign = no
-increase_per_level_cost = 0.14
+# Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
+increase_per_level_cost = 0.41
+price = pp_saltpeter_guild_price
 pop_type = burghers
 max_levels = guild_max_level
 category = basic_industry_category

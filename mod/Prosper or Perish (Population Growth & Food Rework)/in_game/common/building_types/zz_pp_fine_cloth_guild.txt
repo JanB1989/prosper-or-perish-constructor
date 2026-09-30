@@ -81,7 +81,9 @@ custom_tags = {
     guild
 }
 construction_demand = guild_construction
-increase_per_level_cost = 0.14
+# Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
+increase_per_level_cost = 0.43
+price = pp_fine_cloth_guild_price
 	raw_modifier = {
 		local_population_capacity = 0.225
 	}

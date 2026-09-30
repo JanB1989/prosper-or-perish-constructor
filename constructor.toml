@@ -756,6 +756,15 @@ tolerance = 0.02              # a method within this share of its class is left 
 min_good_share = 0.05         # goods worth less than this share of a method's input cost are folded into the rest
 max_goods = 4                 # at most this many goods per method besides labour (the cheapest go first)
 
+[building_price_brake]
+# Non-raw producers (blueprint labour class) pay double their age price (an explicit price key in each blueprint:
+# 100 gold, gun smith and cannon maker 200) and three times the goods-derived increase_per_level_cost, 2026-09-30:
+# urbanisation and building-input demand grew far faster than population (run c5c4). The ppc increase-cost rule applies
+# the factor, the blueprint evaluation allows the longer payback. Later-age crafts keep their age prices for now.
+labour_classes = ["craft_medieval", "cottage"]
+increase_per_level_cost_factor = 3
+exclude = ["mason", "slave_market", "slave_center", "market_village"]  # construction goods, slave trade, rural village
+
 [production_labour.classes]
 # Share of the total input cost paid as labour. Later ages mechanise: the later the building, the smaller the share.
 # "primary" = farms, villages, groves, pits, quarries, mines, fisheries, forestry and rural processing;

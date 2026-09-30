@@ -42,7 +42,9 @@ modifier = {}
 custom_tags = {
     guild
 }
-increase_per_level_cost = 0.11
+# Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
+increase_per_level_cost = 0.34
+price = pp_glass_guild_price
 	raw_modifier = {
 		local_population_capacity = 0.225
 	}

@@ -42,7 +42,9 @@ unique_production_methods = {
         debug_max_profit = guild_profit_margin
     }
 }
-increase_per_level_cost = 0.19
+# Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
+increase_per_level_cost = 0.56
+price = pp_winery_price
 	raw_modifier = {
 		local_population_capacity = 0.165
 	}

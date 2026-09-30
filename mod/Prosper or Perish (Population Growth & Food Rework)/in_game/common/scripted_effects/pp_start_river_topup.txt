@@ -2051,6 +2051,7 @@ pp_start_river_topup = {
  location:mysore = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
  location:nachod = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:nadia = { change_building_level_in_location = { building = building_type:fishing_village value = 2 } }
+ location:nadia = { change_building_level_in_location = { building = building_type:victualling_yard value = 1 } }
  location:naga = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:nagahrada = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }
  location:nagarkot = { change_building_level_in_location = { building = building_type:fishing_village value = 1 } }

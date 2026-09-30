@@ -73,14 +73,22 @@ building:
         }
     }
     construction_demand = japanese_clan_building_construction
-    increase_per_level_cost = 0.21
+    # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
+    increase_per_level_cost = 0.63
+    price = pp_tatara_price
+prices:
+  - key: pp_tatara_price
+    body: |2-
+      {gold = 100}
 localization:
   entries:
+    pp_tatara_price: Tatara Price
     tatara_slot_0: Tatara Work
     pp_tatara_tamagahane_blacksmith: Tatara Tamagahane Blacksmith
     pp_tatara_tamagahane_bladesmith: Tatara Tamagahane Bladesmith
 evaluation:
   allow_rules:
+    amortization_months: Non-raw producer under the building price brake (double price, triple level cost, 2026-09-30); slow payback is the point.
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
     input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
     output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

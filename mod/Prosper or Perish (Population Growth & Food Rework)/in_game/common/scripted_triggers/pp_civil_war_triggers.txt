@@ -1,0 +1,24 @@
+﻿# Civil wars end at maximum war exhaustion (used by country_interactions/surrender_civil_war.txt).
+# Vanilla AI only surrenders a civil war when it is hopeless, so wars where both sides are worn out ran for decades
+# at full war exhaustion (run c5c4, 2026-09-30: a Chinese revolt war 1385-1477).
+
+# Country scope: war exhaustion at the country's own maximum (the max_war_exhaustion modifier, base 20).
+pp_at_max_war_exhaustion = {
+	war_exhaustion >= {
+		value = modifier:max_war_exhaustion
+		subtract = 0.1
+	}
+}
+
+# Country scope (the side that would surrender): at maximum war exhaustion while its civil war opponent is not,
+# or while both are and the opponent is at least as populous.
+pp_civil_war_exhausted = {
+	in_civil_war = yes
+	pp_at_max_war_exhaustion = yes
+	civil_war_opponent ?= {
+		OR = {
+			pp_at_max_war_exhaustion = no
+			total_population >= prev.total_population
+		}
+	}
+}

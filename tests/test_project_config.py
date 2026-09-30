@@ -2887,6 +2887,29 @@ def test_maintenance_efficiency_totals_never_sit_on_minus_one() -> None:
         assert 0 < float(values[0]) < 0.001, key
 
 
+def test_civil_war_surrender_at_max_war_exhaustion() -> None:
+    # Vanilla AI only surrenders hopeless civil wars; worn-out ones ran for decades at full war exhaustion
+    # (run c5c4, 2026-09-30). The override lets the exhausted side surrender regardless of size, and the AI does.
+    interaction = parse_file(MOD_ROOT / "in_game" / "common" / "country_interactions" / "surrender_civil_war.txt")
+    text = (MOD_ROOT / "in_game" / "common" / "country_interactions" / "surrender_civil_war.txt").read_text(
+        encoding="utf-8-sig"
+    )
+    assert interaction is not None
+    enabled = text.split("enabled = {", 1)[1].split("ai_will_do", 1)[0]
+    ai_will_do = text.split("ai_will_do = {", 1)[1].split("effect = {", 1)[0]
+    assert "pp_civil_war_exhausted = yes" in enabled
+    assert "pp_civil_war_exhausted = yes" in ai_will_do
+    triggers = (MOD_ROOT / "in_game" / "common" / "scripted_triggers" / "pp_civil_war_triggers.txt").read_text(
+        encoding="utf-8-sig"
+    )
+    assert "modifier:max_war_exhaustion" in triggers
+    assert re.search(r"^pp_civil_war_exhausted = \{", triggers, flags=re.MULTILINE)
+    localization = (MOD_ROOT / "main_menu" / "localization" / "english" / "pp_civil_war_l_english.yml").read_text(
+        encoding="utf-8-sig"
+    )
+    assert "pp_civil_war_exhausted_tt:" in localization
+
+
 def test_retained_export_offsets_match_food_sales_values() -> None:
     modifier_sources = (
         (MOD_ROOT / "in_game" / "common" / "auto_modifiers" / "pp_country_base_values.txt", "global"),

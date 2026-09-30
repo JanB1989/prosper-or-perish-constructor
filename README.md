@@ -365,9 +365,10 @@ investment = base_price x (L + ipl x L x (L - 1) / 2)     level n costs base_pri
   `max(0.5, 1 + e)`, e = the location's `local_build_buildings_efficiency` (`location_efficiency`, factor in
   `cost_factor`). e sums what the built mod gives the location's topography, vegetation, climate, river level and port
   (map data) and, per snapshot, its rank, development and unemployed peasants (from the save). Country-wide efficiency
-  (advances, laws, estates) and timed event modifiers are not in it: the save keeps neither. Run f3368e9e: the median
-  building costs 1.2x its list price, 9 % sit at the 2x ceiling (mountains, deserts), world total +4 % (1342) to
-  +14 % (1423) over list price.
+  (advances, laws, estates) and timed event modifiers are not in it: the save keeps neither. An INJECT into a block a
+  REPLACE rewrote is ignored like the engine does (the river modifiers). Run f3368e9e: the median building costs 1.3x
+  its list price, 11 % sit at the 2x ceiling (mountains, deserts), world total +13 % (1342) to +25 % (1423) over list
+  price.
 - Prices come from today's mod build, like the other catalogs, so old snapshots are valued with today's prices. The
   table remembers the fingerprint of the price catalog and the location cost model (`catalog.json`) and rebuilds
   every snapshot when either changes; otherwise only new snapshots are written.

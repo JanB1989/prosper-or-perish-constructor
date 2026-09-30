@@ -5,7 +5,7 @@ labour:
   class: primary_discovery
   methods:
     pp_salt_mine_improved_base_salt: base
-gate_method: pp_salt_mine_improved_timbered_haulage
+gate_method: pp_salt_mine_improved_market_sales
 upgrade_chain:
   family: salt_mine
   tier: 1
@@ -24,6 +24,9 @@ building:
     methods:
     - pp_salt_mine_improved_no_primary
     - pp_salt_mine_improved_timbered_haulage
+  - name: slot_2
+    methods:
+    - pp_salt_mine_improved_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -117,6 +120,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_salt_mine_improved_market_sales = {
+            offset = 0.01
+            produced = salt
+            output = 0.002
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -135,6 +146,9 @@ localization:
     pp_salt_mine_improved_base_salt: Surveyed Salt Workings
     pp_salt_mine_improved_no_primary: No Improved Haulage
     pp_salt_mine_improved_timbered_haulage: Timbered Galleries and Hoists
+    pp_salt_mine_improved_market_sales: Market Sales
+    pp_salt_mine_improved_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    salt_mine_improved_slot_2: Market
 icon:
   source_png: ../assets/icons/salt_mine_improved.png
   output_dds: salt_mine_improved.dds
@@ -148,3 +162,8 @@ evaluation:
       production_efficiency: 1.0
     pp_salt_mine_improved_timbered_haulage:
       production_efficiency: 1.15
+    pp_salt_mine_improved_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

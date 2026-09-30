@@ -57,6 +57,14 @@ unique_production_methods = {
         category = guild_input
     }
 }
+unique_production_methods = {
+    pp_tatara_market_sales = {
+        offset = 0.013
+        produced = tools
+        output = 0.004
+        category = building_maintenance
+    }
+}
 construction_demand = japanese_clan_building_construction
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.47

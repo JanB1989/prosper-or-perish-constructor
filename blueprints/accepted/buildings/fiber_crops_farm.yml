@@ -5,7 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_fiber_crops_farm_base_fiber_crops: base
-gate_method: pp_fiber_crops_farm_retting_yards
+gate_method: pp_fiber_crops_farm_market_sales
 upgrade_chain:
   family: fiber_crops_farm
   tier: 0
@@ -24,12 +24,15 @@ building:
     methods:
     - pp_fiber_crops_farm_field_harvest
     - pp_fiber_crops_farm_retting_yards
+  - name: slot_2
+    methods:
+    - pp_fiber_crops_farm_market_sales
   possible_production_methods: []
   body: |-
     audio_tier = 1
     startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
-    increase_per_level_cost = 0.18
+    increase_per_level_cost = 0.11
     max_levels = farm_capacity_max_fiber_crops_farm
     pop_type = laborers
     employment_size = 1
@@ -70,6 +73,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_fiber_crops_farm_market_sales = {
+            offset = 0.01
+            produced = fiber_crops
+            output = 0.005
+            category = building_maintenance
+        }
+    }
 
     construction_demand = farm_constructions
     raw_modifier = {
@@ -83,6 +94,9 @@ localization:
     pp_fiber_crops_farm_base_fiber_crops: Fiber Crop Fields
     pp_fiber_crops_farm_field_harvest: Field Harvest
     pp_fiber_crops_farm_retting_yards: Retting Yards
+    pp_fiber_crops_farm_market_sales: Market Sales
+    pp_fiber_crops_farm_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    fiber_crops_farm_slot_2: Market
 evaluation:
   allow_rules:
     input_throughput: Fiber crop processing preserves the current accepted farm throughput below the global laborer input target.
@@ -92,3 +106,8 @@ evaluation:
       production_efficiency: 1.0
     pp_fiber_crops_farm_retting_yards:
       production_efficiency: 1.1
+    pp_fiber_crops_farm_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

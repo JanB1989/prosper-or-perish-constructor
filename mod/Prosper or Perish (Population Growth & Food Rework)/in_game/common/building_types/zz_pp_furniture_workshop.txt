@@ -23,6 +23,14 @@ unique_production_methods = {
         category = workshop_input
     }
 }
+unique_production_methods = {
+    pp_furniture_workshop_market_sales = {
+        offset = 0.012
+        produced = furniture
+        output = 0.004
+        category = building_maintenance
+    }
+}
 obsolete = furniture_guild
 construction_demand = workshop_construction
 increase_per_level_cost = 0.19

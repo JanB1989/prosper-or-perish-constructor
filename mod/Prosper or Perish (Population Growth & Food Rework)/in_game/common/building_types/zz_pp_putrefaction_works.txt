@@ -28,6 +28,14 @@ unique_production_methods = {
         category = manufactory_input
     }
 }
+unique_production_methods = {
+    pp_putrefaction_works_market_sales = {
+        offset = 0.01
+        produced = saltpeter
+        output = 0.005
+        category = building_maintenance
+    }
+}
 
 custom_tags = { midgame_manufactory }
 construction_demand = manufactory_construction

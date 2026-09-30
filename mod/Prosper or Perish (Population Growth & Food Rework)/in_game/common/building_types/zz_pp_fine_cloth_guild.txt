@@ -77,6 +77,14 @@ unique_production_methods = {
         debug_max_profit = guild_profit_margin
     }
 }
+unique_production_methods = {
+    pp_fine_cloth_guild_market_sales = {
+        offset = 0.012
+        produced = fine_cloth
+        output = 0.002
+        category = building_maintenance
+    }
+}
 custom_tags = {
     guild
 }

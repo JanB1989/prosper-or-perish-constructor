@@ -44,6 +44,14 @@ unique_production_methods = {
         debug_max_profit = manufactory_profit_margin
     }
 }
+unique_production_methods = {
+    pp_winery_manufactory_market_sales = {
+        offset = 0.01
+        produced = wine
+        output = 0.005
+        category = building_maintenance
+    }
+}
 construction_demand = manufactory_construction
 increase_per_level_cost = 0.19
 	raw_modifier = {

@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:stud_farm:building
 stud_farm = {
 is_foreign = no
-increase_per_level_cost = 0.12
+increase_per_level_cost = 0.08
 pop_type = laborers
 max_levels = farm_capacity_max_stud_farm
 employment_size = 1
@@ -55,6 +55,14 @@ unique_production_methods = {
         produced = horses
         output = 0.612
         debug_max_profit = 0
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_stud_farm_market_sales = {
+        offset = 0.012
+        produced = horses
+        output = 0.004
         category = building_maintenance
     }
 }

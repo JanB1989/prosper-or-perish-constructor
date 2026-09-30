@@ -49,6 +49,14 @@ unique_production_methods = {
         category = manufactory_input
     }
 }
+unique_production_methods = {
+    pp_fine_cloth_manufactory_market_sales = {
+        offset = 0.012
+        produced = fine_cloth
+        output = 0.002
+        category = building_maintenance
+    }
+}
 custom_tags = {
     midgame_manufactory
 }

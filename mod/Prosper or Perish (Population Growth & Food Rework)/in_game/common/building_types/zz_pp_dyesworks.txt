@@ -22,6 +22,14 @@ unique_production_methods = {
         category = workshop_input
     }
 }
+unique_production_methods = {
+    pp_dyesworks_market_sales = {
+        offset = 0.012
+        produced = dyes
+        output = 0.003
+        category = building_maintenance
+    }
+}
 obsolete = dyes_workshop
 construction_demand = manufactory_construction
 increase_per_level_cost = 0.15

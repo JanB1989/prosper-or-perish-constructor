@@ -5,7 +5,7 @@ labour:
   class: primary_discovery
   methods:
     pp_terraced_coffee_grove_base_coffee: base
-gate_method: pp_terraced_coffee_grove_washing_frames
+gate_method: pp_terraced_coffee_grove_market_sales
 upgrade_chain:
   family: coffee_grove
   tier: 1
@@ -28,10 +28,13 @@ building:
     methods:
     - pp_terraced_coffee_grove_no_washing
     - pp_terraced_coffee_grove_washing_frames
+  - name: slot_3
+    methods:
+    - pp_terraced_coffee_grove_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
-    increase_per_level_cost = 0.23
+    increase_per_level_cost = 0.14
     max_levels = farm_capacity_max_terraced_coffee_grove
     pop_type = laborers
     employment_size = 1
@@ -90,6 +93,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_terraced_coffee_grove_market_sales = {
+            offset = 0.012
+            produced = coffee
+            output = 0.004
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
       farm_capacity_from_terraced_coffee_grove = -1
@@ -121,6 +132,9 @@ localization:
     pp_terraced_coffee_grove_open_grove: Open Groves
     pp_terraced_coffee_grove_terraced_shade_gardens: Terraced Shade Gardens
     pp_terraced_coffee_grove_washing_frames: Pulping & Washing Frames
+    pp_terraced_coffee_grove_market_sales: Market Sales
+    pp_terraced_coffee_grove_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    terraced_coffee_grove_slot_3: Market
 icon:
   source_png: ../assets/icons/terraced_coffee_grove.png
   output_dds: terraced_coffee_grove.dds
@@ -143,3 +157,8 @@ evaluation:
       production_efficiency: 1.05
       allow_rules:
         profit_percent: Cash-crop processing breaks even at 0.6x base so the home market can run a surplus for trade (2026-09-26); the high base-price profit is intended.
+    pp_terraced_coffee_grove_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

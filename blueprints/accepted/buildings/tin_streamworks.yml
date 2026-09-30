@@ -6,7 +6,7 @@ labour:
   methods:
     pp_tin_streamworks_hand_streaming: hand_work
     pp_tin_streamworks_base_tin: base
-gate_method: pp_tin_streamworks_tin
+gate_method: pp_tin_streamworks_market_sales
 upgrade_chain:
   family: tin_mine
   tier: 0
@@ -31,6 +31,9 @@ building:
         - pp_tin_streamworks_no_primary
         - pp_tin_streamworks_hand_streaming
         - pp_tin_streamworks_tin
+    - name: slot_3
+      methods:
+        - pp_tin_streamworks_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -105,6 +108,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_tin_streamworks_market_sales = {
+            offset = 0.01
+            produced = tin
+            output = 0.005
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -128,6 +139,9 @@ localization:
     pp_tin_streamworks_no_secondary: No Associated Ore Sorting
     pp_tin_streamworks_copper: Stannite Sorting
     pp_tin_streamworks_lead: Galena Picking
+    pp_tin_streamworks_market_sales: Market Sales
+    pp_tin_streamworks_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    tin_streamworks_slot_3: Market
 icon:
   source_png: ../assets/icons/tin_streamworks.png
   output_dds: tin_streamworks.dds
@@ -171,3 +185,8 @@ evaluation:
         input_throughput: Galena picking is an ancillary tin-ground byproduct, intentionally less profitable than primary cassiterite streaming.
         output_throughput: Galena picking is an ancillary tin-ground byproduct, intentionally less profitable than primary cassiterite streaming.
         amortization_months: Galena picking is an ancillary tin-ground byproduct, intentionally less profitable than primary cassiterite streaming.
+    pp_tin_streamworks_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

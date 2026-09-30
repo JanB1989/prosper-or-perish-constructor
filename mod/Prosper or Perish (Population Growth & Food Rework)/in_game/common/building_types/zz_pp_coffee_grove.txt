@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:coffee_grove:building
 coffee_grove = {
 is_foreign = no
-increase_per_level_cost = 0.17
+increase_per_level_cost = 0.11
 max_levels = farm_capacity_max_coffee_grove
 pop_type = laborers
 employment_size = 1
@@ -42,6 +42,14 @@ unique_production_methods = {
         manual_labor = 0.188
         produced = coffee
         output = 0.581
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_coffee_grove_market_sales = {
+        offset = 0.012
+        produced = coffee
+        output = 0.004
         category = building_maintenance
     }
 }

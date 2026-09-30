@@ -672,15 +672,29 @@ The **"Too low profit margin"** gate (utility × 0) hits about half of all candi
   `possible_production_methods` group, then every `unique_production_methods` block in file order, and inside a block
   the methods in listed order. A block with one method is always looked at; in a block with more, a method is looked
   at only if it is allowed and the local market supplies all its inputs. Methods without an output good are skipped.
+- A method locked behind an advance that is not researched counts as not allowed. If no method writes a margin the
+  gate reads 0 and closes; a location outside every market prices its goods at 0, so its production buildings are
+  always gated.
+- Method order changes nothing else about the build decision: the profit estimate takes the best method of every block
+  whatever the order.
 - PP builds on this since 2026-09-29: every production blueprint names its gate with `gate_method:`, and
   `ppc gate apply` puts that method's block last and the method last in it (base blocks first, storage legs and the
   Provisioning switch last, the rest by output value; `constructor.toml` `[production_gate]`, test
-  `tests/test_production_gate.py`). Farms, fisheries, orchards and forest villages gate on **Provision** (1.2 at base
-  prices, lower when the crop is dear); before, the last method was `sell_surplus` (no inputs, a huge margin once the
-  store held anything, 0 at an empty store). A slot's **first** method is what new and game-start buildings run, so
-  those now start on Sell the Surplus and switch by profit.
-- A building never gets gated when its goods include one with `ai_rgo_expansion_priority` (clay, iron, gold, silver,
-  stone, lumber, masonry).
+  `tests/test_production_gate.py`). A slot's **first** method is what new and game-start buildings run.
+- **Gate leg (2026-09-30).** From 09-29 to 09-30 farms, fisheries, orchards and forest villages gated on **Provision**,
+  which buys the building's own crop: the dearer the crop, the lower the margin, so the AI stopped building new farms
+  exactly when their crop was short (h03 lab run: new Wheat Farms 0 % gated at wheat 1.05-1.25, 89 % at 1.7-2.2,
+  96 % above; millet 97 % above twice its base price). Since 2026-09-30 every building with a market main good ends
+  in a **Market** slot with one method, **Market Sales**: a little of the main good (worth 0.01-0.02 gold per level)
+  for a floor-pinned dummy, balanced at margin 1.0 at base prices (`[production_gate.leg]`). A one-method block is
+  always read, never skipped for research, triggers or inputs, so this leg alone decides the gate, for new buildings
+  and new levels alike: margin = (1 + output modifiers) x the main good's market price / its base price. The AI builds
+  when the good is dear, first on land with output bonuses, and stops when it is cheap. Buildings without a market
+  good (cookshops, logistics), storage-leg gates (grange, tavern) and goods the gate never applies to keep their own
+  gate. Evaluator check (300 places of h02, wheat price scaled): old gate 7 % gated at 0.6x, 85 % at 2x; leg 73 % at
+  0.6x, 27 % at 1x, 5 % at 2x.
+- A building never gets gated when an output good has `ai_rgo_expansion_priority` (clay, iron, gold, silver, stone,
+  ivory, masonry). Only output goods count, never inputs.
 - This predicts the gate for 90 % of candidates. Taverns are the main exception (half of them are gated and the rule
   does not tell which).
 

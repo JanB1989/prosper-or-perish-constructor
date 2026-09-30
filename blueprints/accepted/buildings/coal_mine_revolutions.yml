@@ -5,7 +5,7 @@ labour:
   class: primary_revolutions
   methods:
     pp_coal_mine_revolutions_base_coal: base
-gate_method: pp_coal_mine_revolutions_coal
+gate_method: pp_coal_mine_revolutions_market_sales
 upgrade_chain:
   family: coal_mine
   tier: 2
@@ -28,6 +28,9 @@ building:
       methods:
         - pp_coal_mine_revolutions_no_primary
         - pp_coal_mine_revolutions_coal
+    - name: slot_3
+      methods:
+        - pp_coal_mine_revolutions_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -89,6 +92,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_coal_mine_revolutions_market_sales = {
+            offset = 0.01
+            produced = coal
+            output = 0.005
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -112,6 +123,9 @@ localization:
     pp_coal_mine_revolutions_fireclay: Deep Fireclay Sorting
     coal_improvements_revolutions: Deep Colliery Improvements
     coal_improvements_revolutions_desc: Late colliery drainage, haulage, and sorting improvements increase output from organized coal mines.
+    pp_coal_mine_revolutions_market_sales: Market Sales
+    pp_coal_mine_revolutions_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    coal_mine_revolutions_slot_3: Market
 icon:
   source_png: ../assets/icons/coal_mine_revolutions.png
   output_dds: coal_mine_revolutions.dds
@@ -145,3 +159,8 @@ evaluation:
         input_throughput: Fireclay is an ancillary coal seam byproduct, intentionally less profitable than primary coal extraction.
         output_throughput: Fireclay is an ancillary coal seam byproduct, intentionally less profitable than primary coal extraction.
         amortization_months: Fireclay is an ancillary coal seam byproduct, intentionally less profitable than primary coal extraction.
+    pp_coal_mine_revolutions_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

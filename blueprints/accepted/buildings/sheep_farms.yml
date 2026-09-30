@@ -5,7 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_sheep_farm_base_wool: base
-gate_method: pp_sheep_farm_maintenance
+gate_method: pp_sheep_farms_market_sales
 upgrade_chain:
   family: sheep_farms
   tier: 0
@@ -24,12 +24,15 @@ building:
     methods:
     - pp_sheep_farm_no_primary
     - pp_sheep_farm_maintenance
+  - name: slot_2
+    methods:
+    - pp_sheep_farms_market_sales
   possible_production_methods: []
   body: |2-
         audio_tier = 1
         startup_ramp_target = rural_startup_ramp_target
         is_foreign = no
-        increase_per_level_cost = 0.16
+        increase_per_level_cost = 0.10
         pop_type = peasants
         max_levels = farm_capacity_max_sheep_farms
         employment_size = 1
@@ -65,6 +68,14 @@ building:
                 category = building_maintenance
             }
         }
+        unique_production_methods = {
+            pp_sheep_farms_market_sales = {
+                offset = 0.01
+                produced = wool
+                output = 0.004
+                category = building_maintenance
+            }
+        }
         raw_modifier = {
           farm_capacity_from_sheep_farms = -1
           local_population_capacity = -2
@@ -88,6 +99,9 @@ localization:
     pp_sheep_farm_base_wool: Wool Pasture
     pp_sheep_farm_maintenance: Sheep Farm Maintenance
     pp_sheep_farm_no_primary: No Sheep Work
+    pp_sheep_farms_market_sales: Market Sales
+    pp_sheep_farms_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    sheep_farms_slot_2: Market
 evaluation:
   allow_rules:
     profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
@@ -102,3 +116,8 @@ evaluation:
       production_efficiency: 1.0
     pp_sheep_farm_maintenance:
       production_efficiency: 1.05
+    pp_sheep_farms_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

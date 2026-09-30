@@ -1,7 +1,7 @@
 version: 2
 tag: hired_labor_yard
 footprint: trade
-gate_method: pp_hired_labor_yard_carters
+gate_method: pp_hired_labor_yard_market_sales
 building:
   key: hired_labor_yard
   mode: CREATE
@@ -12,6 +12,9 @@ building:
         - pp_hired_labor_yard_sack_porters
         - pp_hired_labor_yard_labour_exchange
         - pp_hired_labor_yard_carters
+    - name: slot_1
+      methods:
+        - pp_hired_labor_yard_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -56,6 +59,14 @@ building:
         category = building_maintenance
       }
     }
+    unique_production_methods = {
+      pp_hired_labor_yard_market_sales = {
+        offset = 0.01
+        produced = manual_labor
+        output = 0.01
+        category = building_maintenance
+      }
+    }
     raw_modifier = {
     }
 prices:
@@ -80,6 +91,9 @@ localization:
     pp_hired_labor_yard_carters: Carters' Yard
     pp_hired_labor_yard_labour_exchange: Labour Exchange
     pp_hired_labor_yard_price: Porters' Hall Price
+    pp_hired_labor_yard_market_sales: Market Sales
+    pp_hired_labor_yard_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    hired_labor_yard_slot_1: Market
 icon:
   source_png: ../assets/icons/hired_labor_yard.png
   output_dds: hired_labor_yard.dds
@@ -91,3 +105,9 @@ evaluation:
     input_throughput: Crews are paid in goods (sacks and ale, horses and carts, or benches, tallies and drink) rather than following ordinary trade-building throughput.
     output_throughput: The hall adds labour to the market only when labour is scarce enough to pay for its crews.
     amortization_months: Labour prices above the floor determine whether the hall earns enough to repay its cost.
+  production_methods:
+    pp_hired_labor_yard_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

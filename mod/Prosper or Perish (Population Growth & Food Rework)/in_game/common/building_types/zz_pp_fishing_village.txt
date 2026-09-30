@@ -109,6 +109,14 @@ REPLACE:fishing_village = {
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_fishing_village_market_sales = {
+            offset = 0.01
+            produced = fish
+            output = 0.01
+            category = building_maintenance
+        }
+    }
     construction_demand = village_construction
     raw_modifier = {
       local_population_capacity = 0.5

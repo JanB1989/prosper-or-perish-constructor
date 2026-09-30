@@ -3,7 +3,7 @@ tag: winery
 footprint: manufactory
 labour:
   class: craft_medieval
-gate_method: pp_winery_honey_winery_maintenance
+gate_method: pp_winery_market_sales
 building:
   key: winery
   mode: REPLACE
@@ -11,9 +11,12 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
+    - pp_winery_honey_winery_maintenance
     - pp_winery_fruit_winery_maintenance
     - pp_winery_rice_winery_maintenance
-    - pp_winery_honey_winery_maintenance
+  - name: slot_1
+    methods:
+    - pp_winery_market_sales
   possible_production_methods: []
   body: |
     is_foreign = no
@@ -27,6 +30,16 @@ building:
     megalopolis = yes
     build_time = guild_build_time
     unique_production_methods = {
+        pp_winery_honey_winery_maintenance = {
+            beeswax = 0.54
+            lumber = 0.18
+            tools = 0.09
+            manual_labor = 0.27
+            produced = wine
+            output = 0.97
+            category = guild_input
+            debug_max_profit = guild_profit_margin
+        }
         pp_winery_fruit_winery_maintenance = {
             fruit = 1.12
             lumber = 0.15
@@ -47,15 +60,13 @@ building:
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
-        pp_winery_honey_winery_maintenance = {
-            beeswax = 0.54
-            lumber = 0.18
-            tools = 0.09
-            manual_labor = 0.27
+    }
+    unique_production_methods = {
+        pp_winery_market_sales = {
+            offset = 0.01
             produced = wine
-            output = 0.97
-            category = guild_input
-            debug_max_profit = guild_profit_margin
+            output = 0.005
+            category = building_maintenance
         }
     }
     # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
@@ -72,9 +83,18 @@ localization:
     pp_winery_fruit_winery_maintenance: Winery Fruit Winery Maintenance
     pp_winery_rice_winery_maintenance: Winery Rice Winery Maintenance
     pp_winery_honey_winery_maintenance: Winery Honey Winery Maintenance
+    pp_winery_market_sales: Market Sales
+    pp_winery_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    winery_slot_1: Market
 evaluation:
   allow_rules:
     amortization_months: Non-raw producer under the building price brake (double price, triple level cost, 2026-09-30); slow payback is the point.
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
     input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
     output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+  production_methods:
+    pp_winery_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

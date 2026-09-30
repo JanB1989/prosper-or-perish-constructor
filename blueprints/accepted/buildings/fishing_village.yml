@@ -7,7 +7,7 @@ labour:
     pp_fishing_village_base_fish: base
     pp_fishing_village_provision: keep
     pp_fishing_village_sell_surplus: keep
-gate_method: pp_fishing_village_provision
+gate_method: pp_fishing_village_market_sales
 upgrade_chain:
   family: fishing_village
   tier: 0
@@ -40,6 +40,9 @@ building:
       methods:
         - pp_fishing_village_sell_surplus
         - pp_fishing_village_provision
+    - name: slot_5
+      methods:
+        - pp_fishing_village_market_sales
   possible_production_methods: []
   body: |2-
         audio_tier = 1
@@ -151,6 +154,14 @@ building:
                 category = building_maintenance
             }
         }
+        unique_production_methods = {
+            pp_fishing_village_market_sales = {
+                offset = 0.01
+                produced = fish
+                output = 0.01
+                category = building_maintenance
+            }
+        }
         construction_demand = village_construction
         raw_modifier = {
         }
@@ -233,6 +244,9 @@ localization:
     pp_steam_trawling_desc: Use coal-fired steam trawlers and specialized tools to work deeper fishing grounds at industrial scale.
     pp_wattle_fish_weirs: Wattle Fish Weirs
     pp_wattle_fish_weirs_desc: Build wicker traps, wattle fences, and river weirs that guide local fish into village catches.
+    pp_fishing_village_market_sales: Market Sales
+    pp_fishing_village_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    fishing_village_slot_5: Market
 
 evaluation:
   allow_rules:
@@ -264,3 +278,8 @@ evaluation:
     pp_fishing_village_sell_surplus:
       allow_rules:
         base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
+    pp_fishing_village_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

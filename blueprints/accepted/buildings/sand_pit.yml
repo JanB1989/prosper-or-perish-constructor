@@ -5,7 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_sand_pit_base_sand: base
-gate_method: pp_sand_pit_screened_pits
+gate_method: pp_sand_pit_market_sales
 upgrade_chain:
   family: sand_pit
   tier: 0
@@ -24,6 +24,9 @@ building:
       methods:
         - pp_sand_pit_surface_gathering
         - pp_sand_pit_screened_pits
+    - name: slot_2
+      methods:
+        - pp_sand_pit_market_sales
   possible_production_methods: []
   body: |2-
     audio_tier = 1
@@ -70,6 +73,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_sand_pit_market_sales = {
+            offset = 0.01
+            produced = sand
+            output = 0.02
+            category = building_maintenance
+        }
+    }
 
     construction_demand = basic_construction_needs
     raw_modifier = {
@@ -81,6 +92,9 @@ localization:
     pp_sand_pit_base_sand: Sand Beds
     pp_sand_pit_surface_gathering: Surface Gathering
     pp_sand_pit_screened_pits: Screened Pits
+    pp_sand_pit_market_sales: Market Sales
+    pp_sand_pit_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    sand_pit_slot_2: Market
 
 evaluation:
   allow_rules:
@@ -91,3 +105,8 @@ evaluation:
       production_efficiency: 1.00
     pp_sand_pit_screened_pits:
       production_efficiency: 1.05
+    pp_sand_pit_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

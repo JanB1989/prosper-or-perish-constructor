@@ -24,6 +24,14 @@ unique_production_methods = {
         category = workshop_input
     }
 }
+unique_production_methods = {
+    pp_pottery_workshop_market_sales = {
+        offset = 0.01
+        produced = pottery
+        output = 0.01
+        category = building_maintenance
+    }
+}
 construction_demand = workshop_construction
 increase_per_level_cost = 0.11
 	raw_modifier = {

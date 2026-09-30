@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:cookshop:building
 cookshop = {
 	is_foreign = no
-# Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
+# Non-raw producer: 75-gold price (brake 100, lowered 2026-09-30) and triple level cost (urbanisation brake).
 increase_per_level_cost = 0.29
 price = pp_cookshop_price
 	max_levels = cookshop_max_level

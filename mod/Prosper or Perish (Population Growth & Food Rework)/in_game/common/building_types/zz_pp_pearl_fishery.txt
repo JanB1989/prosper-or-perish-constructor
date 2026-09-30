@@ -43,6 +43,14 @@ unique_production_methods = {
         category = building_maintenance
     }
 }
+unique_production_methods = {
+    pp_pearl_fishery_market_sales = {
+        offset = 0.012
+        produced = pearls
+        output = 0.003
+        category = building_maintenance
+    }
+}
 
 raw_modifier = {
 	local_population_capacity = 0.4

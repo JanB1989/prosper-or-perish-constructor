@@ -23,6 +23,14 @@ unique_production_methods = {
         category = mills_input
     }
 }
+unique_production_methods = {
+    pp_steel_mill_market_sales = {
+        offset = 0.01
+        produced = steel
+        output = 0.002
+        category = building_maintenance
+    }
+}
 construction_demand = mill_construction
 increase_per_level_cost = 0.16
 	raw_modifier = {

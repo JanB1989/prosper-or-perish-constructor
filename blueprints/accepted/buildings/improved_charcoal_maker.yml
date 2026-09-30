@@ -3,7 +3,7 @@ tag: improved_charcoal_maker
 footprint: forestry
 labour:
   class: primary_absolutism
-gate_method: pp_improved_char_coal_maintenance
+gate_method: pp_improved_charcoal_maker_market_sales
 building:
   key: improved_charcoal_maker
   mode: REPLACE
@@ -12,6 +12,9 @@ building:
     - name: slot_0
       methods:
         - pp_improved_char_coal_maintenance
+    - name: slot_1
+      methods:
+        - pp_improved_charcoal_maker_market_sales
   possible_production_methods: []
   body: |2-
         audio_tier = 1
@@ -52,6 +55,14 @@ building:
             }
 
         }
+        unique_production_methods = {
+            pp_improved_charcoal_maker_market_sales = {
+                offset = 0.01
+                produced = coal
+                output = 0.005
+                category = building_maintenance
+            }
+        }
 
         construction_demand = guild_construction
 
@@ -62,6 +73,9 @@ localization:
     improved_charcoal_maker: Charcoal Retort
     improved_charcoal_maker_desc: Sealed kilns and retorts control the charring of coppice wood more closely, using clay linings and sealed burn chambers to raise charcoal yields without competing with true coal seams.
     pp_improved_char_coal_maintenance: Sealed Retort Charring
+    pp_improved_charcoal_maker_market_sales: Market Sales
+    pp_improved_charcoal_maker_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    improved_charcoal_maker_slot_1: Market
 
 evaluation:
   allow_rules:
@@ -71,3 +85,8 @@ evaluation:
   production_methods:
     pp_improved_char_coal_maintenance:
       production_efficiency: 1.05
+    pp_improved_charcoal_maker_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

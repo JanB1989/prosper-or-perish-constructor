@@ -22,6 +22,14 @@ unique_production_methods = {
         category = guild_input
     }
 }
+unique_production_methods = {
+    pp_porcelain_guild_market_sales = {
+        offset = 0.012
+        produced = porcelain
+        output = 0.004
+        category = building_maintenance
+    }
+}
 custom_tags = {
     guild
 }

@@ -5,7 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_saltpeter_beds_base_saltpeter: base
-gate_method: pp_saltpeter_beds_leaching_vats
+gate_method: pp_saltpeter_beds_market_sales
 building:
   key: saltpeter_beds
   mode: CREATE
@@ -18,6 +18,9 @@ building:
       methods:
         - pp_saltpeter_beds_natural_crusts
         - pp_saltpeter_beds_leaching_vats
+    - name: slot_2
+      methods:
+        - pp_saltpeter_beds_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -68,6 +71,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_saltpeter_beds_market_sales = {
+            offset = 0.01
+            produced = saltpeter
+            output = 0.005
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -84,6 +95,9 @@ localization:
     pp_saltpeter_beds_base_saltpeter: Niter Beds
     pp_saltpeter_beds_natural_crusts: Natural Crusts
     pp_saltpeter_beds_leaching_vats: Leaching Vats
+    pp_saltpeter_beds_market_sales: Market Sales
+    pp_saltpeter_beds_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    saltpeter_beds_slot_2: Market
 icon:
   source_png: ../assets/icons/saltpeter_beds.png
   output_dds: saltpeter_beds.dds
@@ -101,3 +115,8 @@ evaluation:
         amortization_months: Raw niter deposits repay faster than the generic amortization window at the standard small raw-site price.
     pp_saltpeter_beds_leaching_vats:
       production_efficiency: 1.05
+    pp_saltpeter_beds_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

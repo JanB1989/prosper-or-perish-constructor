@@ -3,7 +3,7 @@ tag: shoen
 footprint: estate_land
 labour:
   class: primary_medieval
-gate_method: pp_shoen_shoen_ironsand_maintenance
+gate_method: pp_shoen_market_sales
 building:
   key: shoen
   mode: REPLACE
@@ -16,6 +16,9 @@ building:
     - pp_shoen_shoen_fiber_crops_farm_maintenance
     - pp_shoen_shoen_lumbermills_maintenance
     - pp_shoen_shoen_ironsand_maintenance
+  - name: slot_1
+    methods:
+    - pp_shoen_market_sales
   possible_production_methods: []
   body: |
     audio_tier = 2
@@ -130,6 +133,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_shoen_market_sales = {
+            offset = 0.014
+            produced = lumber
+            output = 0.008
+            category = building_maintenance
+        }
+    }
     construction_demand = japanese_clan_building_construction
     increase_per_level_cost = 0.14
 localization:
@@ -140,8 +151,17 @@ localization:
     pp_shoen_shoen_fiber_crops_farm_maintenance: Shoen Shoen Fiber Crops Farm Maintenance
     pp_shoen_shoen_ironsand_maintenance: Shoen Shoen Ironsand Maintenance
     pp_shoen_shoen_masonry_maintenance: Shoen Shoen Masonry Maintenance
+    pp_shoen_market_sales: Market Sales
+    pp_shoen_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    shoen_slot_1: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
     input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
     output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+  production_methods:
+    pp_shoen_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

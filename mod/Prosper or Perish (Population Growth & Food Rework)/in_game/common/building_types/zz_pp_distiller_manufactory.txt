@@ -59,6 +59,14 @@ unique_production_methods = {
         debug_max_profit = manufactory_profit_margin
     }
 }
+unique_production_methods = {
+    pp_distiller_manufactory_market_sales = {
+        offset = 0.01
+        produced = liquor
+        output = 0.004
+        category = building_maintenance
+    }
+}
 custom_tags = {
     midgame_manufactory
 }

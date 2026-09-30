@@ -5,7 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_pearl_fishery_base_pearls: base
-gate_method: pp_pearl_fishery_dhow_diving_crews
+gate_method: pp_pearl_fishery_market_sales
 building:
   key: pearl_fishery
   mode: CREATE
@@ -18,6 +18,9 @@ building:
       methods:
         - pp_pearl_fishery_no_diving
         - pp_pearl_fishery_dhow_diving_crews
+    - name: slot_2
+      methods:
+        - pp_pearl_fishery_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -63,6 +66,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_pearl_fishery_market_sales = {
+            offset = 0.012
+            produced = pearls
+            output = 0.003
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -79,6 +90,9 @@ localization:
     pp_pearl_fishery_base_pearls: Oyster Beds
     pp_pearl_fishery_no_diving: No Diving Crews
     pp_pearl_fishery_dhow_diving_crews: Dhow Diving Crews
+    pp_pearl_fishery_market_sales: Market Sales
+    pp_pearl_fishery_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    pearl_fishery_slot_2: Market
 icon:
   source_png: ../assets/icons/pearl_fishery.png
   output_dds: pearl_fishery.dds
@@ -97,3 +111,8 @@ evaluation:
       production_efficiency: 1.00
     pp_pearl_fishery_dhow_diving_crews:
       production_efficiency: 1.00
+    pp_pearl_fishery_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

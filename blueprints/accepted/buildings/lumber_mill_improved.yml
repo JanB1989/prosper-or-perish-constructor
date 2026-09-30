@@ -5,7 +5,7 @@ labour:
   class: primary_absolutism
   methods:
     pp_lumber_mill_improved_base_lumber: base
-gate_method: pp_lumber_mill_improved_horse_tools
+gate_method: pp_lumber_mill_improved_market_sales
 upgrade_chain:
   family: lumber_mill
   tier: 2
@@ -31,6 +31,9 @@ building:
     - pp_lumber_mill_improved_livestock_tools
     - pp_lumber_mill_improved_horse_victuals
     - pp_lumber_mill_improved_horse_tools
+  - name: slot_3
+    methods:
+    - pp_lumber_mill_improved_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -126,6 +129,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_lumber_mill_improved_market_sales = {
+            offset = 0.014
+            produced = lumber
+            output = 0.008
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -160,6 +171,9 @@ localization:
     pp_lumber_mill_improved_no_crew_support: No Crew Support
     pp_lumber_mill_improved_no_primary: No Planned Saw Works
     pp_lumber_mill_improved_wound_salves: Wound Salves
+    pp_lumber_mill_improved_market_sales: Market Sales
+    pp_lumber_mill_improved_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    lumber_mill_improved_slot_3: Market
 icon:
   source_png: ../assets/icons/lumber_mill_improved.png
   output_dds: lumber_mill_improved.dds
@@ -200,3 +214,8 @@ evaluation:
         input_throughput: Wound salves are an ancillary crew-recovery support method, intentionally smaller than primary saw-works throughput.
         output_throughput: Wound salves are an ancillary crew-recovery support method, intentionally smaller than primary saw-works throughput.
         amortization_months: Wound salves are an ancillary crew-recovery support method, not a standalone payback driver for planned saw works.
+    pp_lumber_mill_improved_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

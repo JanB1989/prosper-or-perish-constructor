@@ -24,6 +24,14 @@ unique_production_methods = {
         category = manufactory_input
     }
 }
+unique_production_methods = {
+    pp_lacquerware_manufactory_market_sales = {
+        offset = 0.01
+        produced = lacquerware
+        output = 0.002
+        category = building_maintenance
+    }
+}
 custom_tags = {
     midgame_manufactory
 }

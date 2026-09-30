@@ -5,7 +5,7 @@ labour:
   class: primary_reformation
   methods:
     pp_lead_mine_bole_base_lead: base
-gate_method: pp_lead_mine_bole_lead
+gate_method: pp_lead_mine_bole_smelting_market_sales
 upgrade_chain:
   family: lead_mine
   tier: 1
@@ -29,6 +29,9 @@ building:
       methods:
         - pp_lead_mine_bole_no_primary
         - pp_lead_mine_bole_lead
+    - name: slot_3
+      methods:
+        - pp_lead_mine_bole_smelting_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -100,6 +103,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_lead_mine_bole_smelting_market_sales = {
+            offset = 0.01
+            produced = lead
+            output = 0.005
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -124,6 +135,9 @@ localization:
     pp_lead_mine_bole_gold: Bole Gold Picking
     bole_smelting: Bole Smelting
     bole_smelting_desc: Wind-fed upland hearths and better galena preparation improve lead smelting at organized lead mines.
+    pp_lead_mine_bole_smelting_market_sales: Market Sales
+    pp_lead_mine_bole_smelting_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    lead_mine_bole_smelting_slot_3: Market
 icon:
   source_png: ../assets/icons/lead_mine_bole_smelting.png
   output_dds: lead_mine_bole_smelting.dds
@@ -159,3 +173,8 @@ evaluation:
         input_throughput: Bole gold picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
         output_throughput: Bole gold picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
         amortization_months: Bole gold picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+    pp_lead_mine_bole_smelting_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

@@ -24,6 +24,14 @@ unique_production_methods = {
         category = manufactory_input
     }
 }
+unique_production_methods = {
+    pp_printing_manufactory_market_sales = {
+        offset = 0.012
+        produced = books
+        output = 0.004
+        category = building_maintenance
+    }
+}
 construction_demand = manufactory_construction
 increase_per_level_cost = 0.16
 	raw_modifier = {

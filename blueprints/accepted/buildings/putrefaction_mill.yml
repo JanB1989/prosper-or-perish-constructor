@@ -3,7 +3,7 @@ tag: putrefaction_mill
 footprint: mill_works
 labour:
   class: craft_revolutions
-gate_method: pp_putrefaction_mill_demands
+gate_method: pp_putrefaction_mill_market_sales
 building:
   key: putrefaction_mill
   mode: REPLACE
@@ -12,6 +12,9 @@ building:
     - name: slot_0
       methods:
         - pp_putrefaction_mill_demands
+    - name: slot_1
+      methods:
+        - pp_putrefaction_mill_market_sales
   possible_production_methods: []
   body: |2-
     audio_tier = 5
@@ -42,6 +45,14 @@ building:
             category = mills_input
         }
     }
+    unique_production_methods = {
+        pp_putrefaction_mill_market_sales = {
+            offset = 0.01
+            produced = saltpeter
+            output = 0.005
+            category = building_maintenance
+        }
+    }
 
     custom_tags = { lategame_manufactory }
     construction_demand = mill_construction
@@ -51,6 +62,9 @@ localization:
   entries:
     putrefaction_mill_slot_0: Putrefaction Mill Demands
     pp_putrefaction_mill_demands: Putrefaction Mill Demands
+    pp_putrefaction_mill_market_sales: Market Sales
+    pp_putrefaction_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    putrefaction_mill_slot_1: Market
 
 evaluation:
   building:
@@ -60,3 +74,9 @@ evaluation:
     input_throughput: Vanilla putrefaction mill economics are preserved; this replacement only adds raw-saltpeter anti-overlap.
     output_throughput: Vanilla putrefaction mill economics are preserved; this replacement only adds raw-saltpeter anti-overlap.
     amortization_months: Vanilla putrefaction mill economics are preserved; this replacement only adds raw-saltpeter anti-overlap.
+  production_methods:
+    pp_putrefaction_mill_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

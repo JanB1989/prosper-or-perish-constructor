@@ -3,7 +3,7 @@ tag: fine_cloth_guild
 footprint: urban_workshop
 labour:
   class: craft_medieval
-gate_method: pp_fine_cloth_guild_silk_weavers_maintenance
+gate_method: pp_fine_cloth_guild_market_sales
 building:
   key: fine_cloth_guild
   mode: REPLACE
@@ -20,6 +20,9 @@ building:
     - pp_fine_cloth_guild_wool_weavers_maintenance
     - pp_fine_cloth_guild_spanish_cloth_maintenance
     - pp_fine_cloth_guild_silk_weavers_maintenance
+  - name: slot_2
+    methods:
+    - pp_fine_cloth_guild_market_sales
   possible_production_methods: []
   body: |
     is_foreign = no
@@ -99,6 +102,14 @@ building:
             debug_max_profit = guild_profit_margin
         }
     }
+    unique_production_methods = {
+        pp_fine_cloth_guild_market_sales = {
+            offset = 0.012
+            produced = fine_cloth
+            output = 0.002
+            category = building_maintenance
+        }
+    }
     custom_tags = {
         guild
     }
@@ -122,9 +133,18 @@ localization:
     pp_fine_cloth_guild_standard_fine_cloth_guild_maintenance: Fine Cloth Guild Standard Fine Cloth Guild Maintenance
     pp_fine_cloth_guild_alum_fine_cloth_guild_maintenance: Fine Cloth Guild Alum Fine Cloth Guild Maintenance
     pp_fine_cloth_guild_fur_trim_guild_maintenance: Fine Cloth Guild Fur Trim Guild Maintenance
+    pp_fine_cloth_guild_market_sales: Market Sales
+    pp_fine_cloth_guild_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    fine_cloth_guild_slot_2: Market
 evaluation:
   allow_rules:
     amortization_months: Non-raw producer under the building price brake (double price, triple level cost, 2026-09-30); slow payback is the point.
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
     input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
     output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+  production_methods:
+    pp_fine_cloth_guild_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

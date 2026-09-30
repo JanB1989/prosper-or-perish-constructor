@@ -93,6 +93,14 @@ unique_production_methods = {
         category = building_maintenance
     }
 }
+unique_production_methods = {
+    pp_lumber_mill_improved_market_sales = {
+        offset = 0.014
+        produced = lumber
+        output = 0.008
+        category = building_maintenance
+    }
+}
 
 raw_modifier = {
 	local_population_capacity = 0.2

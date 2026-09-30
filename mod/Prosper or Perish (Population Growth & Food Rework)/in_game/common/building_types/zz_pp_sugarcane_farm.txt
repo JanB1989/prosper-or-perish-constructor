@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:sugarcane_farm:building
 sugarcane_farm = {
 is_foreign = no
-increase_per_level_cost = 0.19
+increase_per_level_cost = 0.11
 max_levels = farm_capacity_max_sugarcane_farm
 pop_type = laborers
 employment_size = 1
@@ -43,6 +43,14 @@ unique_production_methods = {
         manual_labor = 0.204
         produced = sugar
         output = 0.618
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_sugarcane_farm_market_sales = {
+        offset = 0.012
+        produced = sugar
+        output = 0.004
         category = building_maintenance
     }
 }

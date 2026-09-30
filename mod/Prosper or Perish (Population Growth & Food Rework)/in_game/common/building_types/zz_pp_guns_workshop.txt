@@ -52,6 +52,14 @@ unique_production_methods = {
         category = workshop_input
     }
 }
+unique_production_methods = {
+    pp_guns_workshop_market_sales = {
+        offset = 0.012
+        produced = firearms
+        output = 0.004
+        category = building_maintenance
+    }
+}
 obsolete = gun_smith
 construction_demand = workshop_construction
 modifier = {}

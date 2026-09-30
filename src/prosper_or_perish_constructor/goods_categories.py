@@ -121,6 +121,7 @@ def building_increase_cost_assignments(
     blueprint_paths_by_building = accepted_blueprint_paths_by_building(repo)
     rule_goods = _rule_owned_goods(project)
     brake_factor, braked = _price_brake(project, blueprint_paths_by_building)
+    farm_factor, farms = _farm_level_cost(project, blueprint_paths_by_building)
 
     assignments: list[BuildingIncreaseCostAssignment] = []
     for building, candidates in sorted(candidates_by_building.items()):
@@ -135,6 +136,9 @@ def building_increase_cost_assignments(
         if building in braked:  # [building_price_brake]: non-raw producers repeat their levels dearer
             scaled_cost = (Decimal(scaled_cost_text) * brake_factor).quantize(Decimal("0.01"))
             scaled_cost_text = format_scaled_cost(scaled_cost)
+        if building in farms:  # [farm_level_cost]: farms repeat their levels cheaper
+            scaled_cost_text = farm_level_cost_text(scaled_cost_text, farm_factor)
+            scaled_cost = Decimal(scaled_cost_text)
         assignments.append(
             BuildingIncreaseCostAssignment(
                 building=building,
@@ -168,6 +172,33 @@ def _price_brake(project: Path, blueprint_paths: dict[str, Path]) -> tuple[Decim
         if match and match.group(1) in classes:
             braked.add(building)
     return factor, frozenset(braked)
+
+
+def farm_level_cost_factor(project: Path) -> tuple[Decimal, frozenset[str]]:
+    """[farm_level_cost]: the increase_per_level_cost factor and the blueprint footprints it applies to."""
+    raw = tomllib.loads(project.read_text(encoding="utf-8-sig"))
+    section = raw.get("farm_level_cost")
+    if not isinstance(section, dict):
+        return Decimal(1), frozenset()
+    factor = Decimal(str(section.get("increase_per_level_cost_factor", 1)))
+    return factor, frozenset(str(value) for value in section.get("footprints", []))
+
+
+def farm_level_cost_text(cost_text: str, factor: Decimal) -> str:
+    return format_scaled_cost((Decimal(cost_text) * factor).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+
+
+def _farm_level_cost(project: Path, blueprint_paths: dict[str, Path]) -> tuple[Decimal, frozenset[str]]:
+    """The [farm_level_cost] factor and the buildings whose blueprint footprint is one of its footprints."""
+    factor, footprints = farm_level_cost_factor(project)
+    if not footprints:
+        return factor, frozenset()
+    farms = set()
+    for building, path in blueprint_paths.items():
+        match = re.search(r"^footprint:\s*(\S+)", path.read_text(encoding="utf-8-sig"), re.M)
+        if match and match.group(1) in footprints:
+            farms.add(building)
+    return factor, frozenset(farms)
 
 
 def _rule_owned_goods(project: Path) -> frozenset[str]:

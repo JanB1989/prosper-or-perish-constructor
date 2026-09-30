@@ -3,7 +3,7 @@ REPLACE:horse_breeders = {
 audio_tier = 1
 startup_ramp_target = rural_startup_ramp_target
 is_foreign = no
-increase_per_level_cost = 0.12
+increase_per_level_cost = 0.08
 pop_type = laborers
 max_levels = farm_capacity_max_horse_breeders
 employment_size = 1
@@ -62,6 +62,14 @@ unique_production_methods = {
         produced = horses
         output = 0.289
         debug_max_profit = 0
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_horse_breeders_market_sales = {
+        offset = 0.012
+        produced = horses
+        output = 0.004
         category = building_maintenance
     }
 }

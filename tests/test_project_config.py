@@ -2541,10 +2541,10 @@ def test_cookshop_building_line_has_resolved_prices() -> None:
     annotated = annotate_building_data_availability(data.building_data, data.advancements)
     buildings = {row["name"]: row for row in annotated.buildings.to_dicts()}
 
-    # [building_price_brake] 2026-09-30: the Cookshop pays double the age-1 price through its own price key
+    # [building_price_brake] 2026-09-30: the Cookshop pays its own price key, 75 gold (the brake's 100, lowered the same day)
     assert buildings["cookshop"]["price"] == "pp_cookshop_price"
     assert buildings["cookshop"]["effective_price"] == "pp_cookshop_price"
-    assert buildings["cookshop"]["effective_price_gold"] == 100.0
+    assert buildings["cookshop"]["effective_price_gold"] == 75.0
     assert buildings["cookshop"]["price_kind"] == "explicit"
 
     assert buildings["public_kitchen"]["price"] is None

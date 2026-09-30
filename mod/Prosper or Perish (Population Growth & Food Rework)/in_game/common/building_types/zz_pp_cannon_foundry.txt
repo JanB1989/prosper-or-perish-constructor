@@ -25,6 +25,14 @@ unique_production_methods = {
         category = manufactory_input
     }
 }
+unique_production_methods = {
+    pp_cannon_foundry_market_sales = {
+        offset = 0.012
+        produced = cannons
+        output = 0.003
+        category = building_maintenance
+    }
+}
 custom_tags = {
     midgame_manufactory
 }

@@ -3,7 +3,7 @@ tag: tannery_mill
 footprint: mill_works
 labour:
   class: craft_revolutions
-gate_method: pp_tannery_mill_tannery_mill_maintenance
+gate_method: pp_tannery_mill_market_sales
 building:
   key: tannery_mill
   mode: REPLACE
@@ -13,6 +13,9 @@ building:
     methods:
     - pp_tannery_mill_leather_mill_maintenance
     - pp_tannery_mill_tannery_mill_maintenance
+  - name: slot_1
+    methods:
+    - pp_tannery_mill_market_sales
   possible_production_methods: []
   body: |
     audio_tier = 5
@@ -49,6 +52,14 @@ building:
             category = mills_input
         }
     }
+    unique_production_methods = {
+        pp_tannery_mill_market_sales = {
+            offset = 0.012
+            produced = leather
+            output = 0.004
+            category = building_maintenance
+        }
+    }
     obsolete = tannery_manufactory
     custom_tags = {
         lategame_manufactory
@@ -63,8 +74,17 @@ localization:
     tannery_mill_slot_0: Tannery Mill Work
     pp_tannery_mill_leather_mill_maintenance: Tannery Mill Leather Mill Maintenance
     pp_tannery_mill_tannery_mill_maintenance: Tannery Mill Tannery Mill Maintenance
+    pp_tannery_mill_market_sales: Market Sales
+    pp_tannery_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    tannery_mill_slot_1: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
     input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
     output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+  production_methods:
+    pp_tannery_mill_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

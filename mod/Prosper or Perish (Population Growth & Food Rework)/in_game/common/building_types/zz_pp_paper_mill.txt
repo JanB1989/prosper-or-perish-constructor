@@ -31,6 +31,14 @@ unique_production_methods = {
         category = mills_input
     }
 }
+unique_production_methods = {
+    pp_paper_mill_market_sales = {
+        offset = 0.01
+        produced = paper
+        output = 0.005
+        category = building_maintenance
+    }
+}
 obsolete = paper_manufactory
 custom_tags = {
     lategame_manufactory

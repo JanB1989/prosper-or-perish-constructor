@@ -65,6 +65,7 @@ provisioning_reference_base_output = 0.06
 manual_labor = 1.0   # labour is balanced at its price floor (20 % of 5), see [production_labour]
 logistics = 1.0      # the logistics dummy good sits at its price floor (20 % of 5) by its base supply, see [logistics]
 local_food = 0.1          # Province Food is pinned at its price floor (20 % of 0.5) by its base supply
+offset = 1.0              # the offset dummy good sits at its price floor (20 % of 5) by its base supply
 
 [blueprint_evaluation.throughput_gold_per_1k]
 peasants = 1.0
@@ -756,6 +757,12 @@ tolerance = 0.02              # a method within this share of its class is left 
 min_good_share = 0.05         # goods worth less than this share of a method's input cost are folded into the rest
 max_goods = 4                 # at most this many goods per method besides labour (the cheapest go first)
 
+[farm_level_cost]
+# Farms (footprint farm_land) repeat their levels cheaper: this factor x the goods-derived increase_per_level_cost
+# (2026-09-30, reduce farm scaling). The increase-cost rule and the crop farm generator apply it.
+footprints = ["farm_land"]
+increase_per_level_cost_factor = 0.6
+
 [building_price_brake]
 # Non-raw producers (blueprint labour class) pay double their age price (an explicit price key in each blueprint:
 # 100 gold, gun smith and cannon maker 200) and three times the goods-derived increase_per_level_cost, 2026-09-30:
@@ -797,6 +804,24 @@ logistics_hand = { share = 0.45, max_goods = 6, min_good_share = 0.0 }  # porter
 threshold = 1.2               # fallback only: the gate reads NAI.AI_BUILDING_PROFIT_THRESHOLD from the mod defines (else vanilla)
 # goods whose methods react to the province store or the market (Surplus Sales, Scarcity Premium): their slots go last
 dynamic_goods = ["province_food_sales", "province_food_purchase"]
+# floor-pinned dummy goods: their price never moves, so they are never a building's main (market) good
+pinned_goods = ["local_food", "offset", "logistics"]
+# goods with ai_rgo_expansion_priority > 0 (vanilla goods files): a building that outputs one skips the margin check
+strategic_goods = ["clay", "iron", "goods_gold", "silver", "stone", "ivory", "masonry"]
+
+[production_gate.leg]
+# Gate leg (2026-09-30): every building with a market main good gets a last slot with one method that makes a little of
+# that good for a floor-pinned dummy. The AI always reads a one-method slot (no research, potential, allow or input
+# check) and the last method it reads decides the margin check, for new buildings and new levels alike. The leg's margin
+# is (1 + output modifiers) x the good's market price / base price x margin, so the AI builds when the good is dear and
+# stops when it is cheap: at margin 1.0 and the 1.05 threshold it opens at 1.05x the base price without output bonus,
+# earlier on good land. Storage-leg gates (grange, tavern), services and logistics keep their own gate.
+margin = 1.0
+value = 0.01          # gold of the main good per level at base prices; the cost x market access must stay above 0.001
+input = "offset"
+slot_label = "Market"
+method_name = "Market Sales"
+method_desc = "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
 
 [logistics]
 # Logistics buildings carry goods to the market: they produce the pinned dummy good `logistics` (1 gold at its floor,

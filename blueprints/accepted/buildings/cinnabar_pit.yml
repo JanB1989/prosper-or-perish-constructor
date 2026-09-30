@@ -5,7 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_cinnabar_pit_base_mercury: base
-gate_method: pp_cinnabar_pit_mercury
+gate_method: pp_cinnabar_pit_market_sales
 upgrade_chain:
   family: mercury_mine
   tier: 0
@@ -29,6 +29,9 @@ building:
       methods:
         - pp_cinnabar_pit_no_primary
         - pp_cinnabar_pit_mercury
+    - name: slot_3
+      methods:
+        - pp_cinnabar_pit_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -97,6 +100,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_cinnabar_pit_market_sales = {
+            offset = 0.012
+            produced = mercury
+            output = 0.004
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -119,6 +130,9 @@ localization:
     pp_cinnabar_pit_no_secondary: No Gangue Sorting
     pp_cinnabar_pit_stone: Gangue Stone Sorting
     pp_cinnabar_pit_dyes: Cinnabar Pigment Sorting
+    pp_cinnabar_pit_market_sales: Market Sales
+    pp_cinnabar_pit_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    cinnabar_pit_slot_3: Market
 icon:
   source_png: ../assets/icons/cinnabar_pit.png
   output_dds: cinnabar_pit.dds
@@ -153,3 +167,8 @@ evaluation:
         profit_percent: Cinnabar pigment sorting is an ancillary mercury-ore byproduct, intentionally less profitable than primary mercury extraction.
         input_throughput: Cinnabar pigment sorting is an ancillary mercury-ore byproduct, intentionally less profitable than primary mercury extraction.
         output_throughput: Cinnabar pigment sorting is an ancillary mercury-ore byproduct, intentionally less profitable than primary mercury extraction.
+    pp_cinnabar_pit_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

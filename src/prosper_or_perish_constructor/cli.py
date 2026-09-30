@@ -1078,20 +1078,22 @@ def _gate(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: P
             print(f"{plan.building}: {plan.gate} -> {plan.gate_produced} margin {margin}{low}")
     unflagged = [p for p in result.plans if not p.flagged]
     reorders = [p for p in result.plans if p.reorders]
+    legs = [p for p in result.plans if p.leg_edit]
     if args.action == "check":
         for plan in result.pending:
-            what = "unflagged" if not plan.flagged else "out of order"
+            what = "gate leg missing or stale" if plan.leg_edit else "unflagged" if not plan.flagged else "out of order"
             print(f"{plan.blueprint.name}: {what} (gate {plan.gate})")
         print(
-            f"production gate: {len(result.plans)} production buildings, {len(unflagged)} unflagged, "
-            f"{len(reorders)} out of order, {len(result.problems)} problems"
+            f"production gate: {len(result.plans)} production buildings, "
+            f"{sum(1 for p in result.plans if p.leg is not None)} gate legs, {len(unflagged)} unflagged, "
+            f"{len(reorders)} out of order, {len(legs)} legs to write, {len(result.problems)} problems"
         )
         return 1 if result.problems or result.pending else 0
     if result.problems:
         print(f"production gate: {len(result.problems)} problems, nothing written")
         return 1
     print(
-        f"production gate: {len(unflagged)} blueprints flagged, {len(reorders)} reordered, {result.files_changed} files "
+        f"production gate: {len(unflagged)} blueprints flagged, {len(legs)} gate legs written, {len(reorders)} reordered, {result.files_changed} files "
         f"written; report {production_gate.REPORT_RELATIVE_PATH}."
     )
     return 0
@@ -1110,8 +1112,10 @@ def _print_gate_check(repo: Path, project: Path) -> None:
         print(f"Production gate: {problem}", flush=True)
     unflagged = sum(1 for p in result.plans if not p.flagged)
     reorders = sum(1 for p in result.plans if p.reorders)
+    legs = sum(1 for p in result.plans if p.leg_edit)
     print(
-        f"Production gate: {len(result.plans)} production buildings, {unflagged} unflagged, {reorders} out of order "
+        f"Production gate: {len(result.plans)} production buildings, {unflagged} unflagged, {reorders} out of order, "
+        f"{legs} gate legs missing or stale "
         f"(run ppc gate apply), {len(result.problems)} problems.",
         flush=True,
     )

@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:market_tobacco_farm:building
 market_tobacco_farm = {
 is_foreign = no
-increase_per_level_cost = 0.15
+increase_per_level_cost = 0.09
 max_levels = farm_capacity_max_market_tobacco_farm
 pop_type = laborers
 employment_size = 1
@@ -56,6 +56,14 @@ unique_production_methods = {
         manual_labor = 0.108
         produced = tobacco
         output = 0.445
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_market_tobacco_farm_market_sales = {
+        offset = 0.012
+        produced = tobacco
+        output = 0.004
         category = building_maintenance
     }
 }

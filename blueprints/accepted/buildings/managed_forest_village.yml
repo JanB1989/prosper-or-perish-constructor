@@ -10,7 +10,7 @@ labour:
     pp_managed_forest_village_base_beeswax: base
     pp_managed_forest_village_provision: keep
     pp_managed_forest_village_sell_surplus: keep
-gate_method: pp_managed_forest_village_provision
+gate_method: pp_managed_forest_village_market_sales
 upgrade_chain:
   family: forest_village
   tier: 1
@@ -39,6 +39,9 @@ building:
     methods:
     - pp_managed_forest_village_sell_surplus
     - pp_managed_forest_village_provision
+  - name: slot_3
+    methods:
+    - pp_managed_forest_village_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -159,6 +162,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_managed_forest_village_market_sales = {
+            offset = 0.012
+            produced = leather
+            output = 0.004
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -199,6 +210,9 @@ localization:
     pp_managed_forest_village_sell_surplus: Sell the Surplus
     pp_managed_forest_village_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
     pp_managed_forest_village_tannery: Managed Forest Tannery
+    pp_managed_forest_village_market_sales: Market Sales
+    pp_managed_forest_village_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    managed_forest_village_slot_3: Market
 icon:
   source_png: ../assets/icons/managed_forest_village.png
   output_dds: managed_forest_village.dds
@@ -236,3 +250,8 @@ evaluation:
     pp_managed_forest_village_sell_surplus:
       allow_rules:
         base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
+    pp_managed_forest_village_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

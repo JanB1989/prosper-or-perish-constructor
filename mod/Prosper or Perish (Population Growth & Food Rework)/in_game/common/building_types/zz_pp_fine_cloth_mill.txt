@@ -33,6 +33,14 @@ unique_production_methods = {
         category = mills_input
     }
 }
+unique_production_methods = {
+    pp_fine_cloth_mill_market_sales = {
+        offset = 0.012
+        produced = fine_cloth
+        output = 0.002
+        category = building_maintenance
+    }
+}
 custom_tags = {
     lategame_manufactory
 }

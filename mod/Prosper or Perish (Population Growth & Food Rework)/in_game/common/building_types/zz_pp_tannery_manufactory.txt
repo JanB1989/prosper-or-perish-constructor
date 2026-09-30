@@ -35,6 +35,14 @@ unique_production_methods = {
         category = manufactory_input
     }
 }
+unique_production_methods = {
+    pp_tannery_manufactory_market_sales = {
+        offset = 0.012
+        produced = leather
+        output = 0.004
+        category = building_maintenance
+    }
+}
 obsolete = tanning_workshop
 custom_tags = {
     midgame_manufactory

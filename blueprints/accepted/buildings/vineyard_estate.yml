@@ -5,7 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_vineyard_estate_base_wine: base
-gate_method: pp_vineyard_estate_press_houses
+gate_method: pp_vineyard_estate_market_sales
 building:
   key: vineyard_estate
   mode: CREATE
@@ -17,10 +17,13 @@ building:
   - name: slot_1
     methods:
     - pp_vineyard_estate_press_houses
+  - name: slot_2
+    methods:
+    - pp_vineyard_estate_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
-    increase_per_level_cost = 0.25
+    increase_per_level_cost = 0.15
     max_levels = farm_capacity_max_vineyard_estate
     pop_type = laborers
     employment_size = 1
@@ -64,6 +67,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_vineyard_estate_market_sales = {
+            offset = 0.01
+            produced = wine
+            output = 0.005
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
       farm_capacity_from_vineyard_estate = -1
@@ -81,6 +92,9 @@ localization:
     vineyard_estate_desc: Vineyard estates grow grapes, press them on site, and store the young wine in cellar sheds. Press houses improve the harvest and first pressing.
     pp_vineyard_estate_base_wine: Vineyards
     pp_vineyard_estate_press_houses: Press Houses
+    pp_vineyard_estate_market_sales: Market Sales
+    pp_vineyard_estate_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    vineyard_estate_slot_2: Market
 icon:
   source_png: ../assets/icons/vineyard_estate.png
   output_dds: vineyard_estate.dds
@@ -97,3 +111,8 @@ evaluation:
         amortization_months: Raw vineyard estates repay faster than the generic amortization window at the standard small raw-site price.
     pp_vineyard_estate_press_houses:
       production_efficiency: 1.05
+    pp_vineyard_estate_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

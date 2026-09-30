@@ -6,7 +6,7 @@ labour:
   methods:
     pp_engineered_brine_saltworks_base_salt: base
 output_tag: inland_saltworks_engineered_brine
-gate_method: pp_engineered_brine_saltworks_mineral_fired_pans
+gate_method: pp_engineered_brine_saltworks_market_sales
 upgrade_chain:
   family: inland_saltworks
   tier: 1
@@ -29,6 +29,9 @@ building:
     methods:
     - pp_engineered_brine_saltworks_wood_fired_pans
     - pp_engineered_brine_saltworks_mineral_fired_pans
+  - name: slot_3
+    methods:
+    - pp_engineered_brine_saltworks_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -137,6 +140,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_engineered_brine_saltworks_market_sales = {
+            offset = 0.01
+            produced = salt
+            output = 0.002
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -167,6 +178,9 @@ localization:
     pp_engineered_brine_saltworks_mineral_fired_pans: Mineral-Fired Pans
     pp_engineered_brine_saltworks: Engineered Brine Saltworks
     pp_engineered_brine_saltworks_desc: Manufactories and Enlightenment-era works organization support pumped brine channels, concentration houses, and larger panhouses for inland salt production.
+    pp_engineered_brine_saltworks_market_sales: Market Sales
+    pp_engineered_brine_saltworks_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    engineered_brine_saltworks_slot_3: Market
 icon:
   source_png: ../assets/icons/engineered_brine_saltworks.png
   output_dds: engineered_brine_saltworks.dds
@@ -184,3 +198,8 @@ evaluation:
       production_efficiency: 1.0
     pp_engineered_brine_saltworks_mineral_fired_pans:
       production_efficiency: 1.1
+    pp_engineered_brine_saltworks_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

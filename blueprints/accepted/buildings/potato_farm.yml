@@ -9,7 +9,7 @@ labour:
     pp_potato_farm_lazy_beds: hand_work
     pp_potato_farm_provision: keep
     pp_potato_farm_sell_surplus: keep
-gate_method: pp_potato_farm_provision
+gate_method: pp_potato_farm_market_sales
 upgrade_chain:
   family: potato_farm
   tier: 0
@@ -33,12 +33,15 @@ building:
     methods:
     - pp_potato_farm_sell_surplus
     - pp_potato_farm_provision
+  - name: slot_3
+    methods:
+    - pp_potato_farm_market_sales
   possible_production_methods: []
   body: |-
     audio_tier = 1
     startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
-    increase_per_level_cost = 0.15
+    increase_per_level_cost = 0.09
     max_levels = farm_capacity_max_potato_farm
     pop_type = peasants
     employment_size = 1
@@ -108,6 +111,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_potato_farm_market_sales = {
+            offset = 0.01
+            produced = potato
+            output = 0.01
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
       farm_capacity_from_potato_farm = -1
@@ -146,6 +157,7 @@ localization:
     potato_farm_slot_0: Fields
     potato_farm_slot_1: Cultivation
     potato_farm_slot_2: Provisioning
+    potato_farm_slot_3: Market
     pp_potato_farm_base: Fields
     pp_potato_farm_no_cultivation: No Cultivation
     pp_potato_farm_lazy_beds: Lazy Beds
@@ -158,6 +170,8 @@ localization:
     pp_potato_farm_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
     pp_potato_farm_advance_general: Potato Cultivation
     pp_potato_farm_advance_general_desc: Adopt the potato as a reliable staple crop.
+    pp_potato_farm_market_sales: Market Sales
+    pp_potato_farm_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
 icon:
   source_png: ../assets/icons/potato_farm.png
   output_dds: potato_farm.dds
@@ -186,3 +200,8 @@ evaluation:
     pp_potato_farm_sell_surplus:
       allow_rules:
         base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
+    pp_potato_farm_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

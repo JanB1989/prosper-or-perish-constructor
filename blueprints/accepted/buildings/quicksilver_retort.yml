@@ -5,7 +5,7 @@ labour:
   class: primary_reformation
   methods:
     pp_quicksilver_retort_base_mercury: base
-gate_method: pp_quicksilver_retort_mercury
+gate_method: pp_quicksilver_retort_market_sales
 upgrade_chain:
   family: mercury_mine
   tier: 1
@@ -29,6 +29,9 @@ building:
       methods:
         - pp_quicksilver_retort_no_primary
         - pp_quicksilver_retort_mercury
+    - name: slot_3
+      methods:
+        - pp_quicksilver_retort_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -98,6 +101,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_quicksilver_retort_market_sales = {
+            offset = 0.012
+            produced = mercury
+            output = 0.004
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -120,6 +131,9 @@ localization:
     pp_quicksilver_retort_no_secondary: No Gangue Sorting
     pp_quicksilver_retort_stone: Gangue Stone Sorting
     pp_quicksilver_retort_dyes: Cinnabar Pigment Sorting
+    pp_quicksilver_retort_market_sales: Market Sales
+    pp_quicksilver_retort_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    quicksilver_retort_slot_3: Market
 icon:
   source_png: ../assets/icons/quicksilver_retort.png
   output_dds: quicksilver_retort.dds
@@ -152,3 +166,8 @@ evaluation:
         profit_percent: Cinnabar pigment sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.
         input_throughput: Cinnabar pigment sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.
         output_throughput: Cinnabar pigment sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.
+    pp_quicksilver_retort_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

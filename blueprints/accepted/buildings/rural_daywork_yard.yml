@@ -1,7 +1,7 @@
 version: 2
 tag: rural_daywork_yard
 footprint: rural_village
-gate_method: pp_rural_daywork_yard_ox_teams
+gate_method: pp_rural_daywork_yard_market_sales
 building:
   key: rural_daywork_yard
   mode: CREATE
@@ -12,6 +12,9 @@ building:
         - pp_rural_daywork_yard_harvest_gangs
         - pp_rural_daywork_yard_ditch_gangs
         - pp_rural_daywork_yard_ox_teams
+    - name: slot_1
+      methods:
+        - pp_rural_daywork_yard_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -56,6 +59,14 @@ building:
         category = building_maintenance
       }
     }
+    unique_production_methods = {
+      pp_rural_daywork_yard_market_sales = {
+        offset = 0.01
+        produced = manual_labor
+        output = 0.01
+        category = building_maintenance
+      }
+    }
     raw_modifier = {
     }
 prices:
@@ -70,6 +81,9 @@ localization:
     pp_rural_daywork_yard_ox_teams: Ox-Team Hire
     pp_rural_daywork_yard_ditch_gangs: Ditch-and-Dyke Gangs
     pp_rural_daywork_yard_price: Hiring Fair Price
+    pp_rural_daywork_yard_market_sales: Market Sales
+    pp_rural_daywork_yard_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    rural_daywork_yard_slot_1: Market
 icon:
   source_png: ../assets/icons/rural_daywork_yard.png
   output_dds: rural_daywork_yard.dds
@@ -81,3 +95,9 @@ evaluation:
     input_throughput: Day workers are paid in ale and twine, oxen and harness, or clay and timber for earthworks rather than following normal village manufacturing throughput.
     output_throughput: The fair adds labour to the market only when labour is scarce enough to pay for its workers.
     amortization_months: Labour prices above the floor determine whether the fair earns enough to repay its cost.
+  production_methods:
+    pp_rural_daywork_yard_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

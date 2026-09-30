@@ -25,6 +25,14 @@ unique_production_methods = {
         category = mills_input
     }
 }
+unique_production_methods = {
+    pp_brewery_mill_market_sales = {
+        offset = 0.01
+        produced = beer
+        output = 0.005
+        category = building_maintenance
+    }
+}
 custom_tags = {
     lategame_manufactory
 }

@@ -38,6 +38,7 @@ from typing import Any
 from eu5gameparser.clausewitz.parser import parse_text
 from eu5gameparser.clausewitz.syntax import CList
 from prosper_or_perish_constructor import yaml_io
+from prosper_or_perish_constructor.production_gate import is_leg
 
 CONFIG_SECTION = "production_labour"
 KEEP = "keep"
@@ -331,7 +332,8 @@ def plan_all(repo: Path, config: LabourConfig, prices: dict[str, float]) -> Labo
     for path in enabled_blueprints(repo):
         if not path.is_file():
             continue
-        methods = [m for m in blueprint_methods(path) if is_labour_method(m, config.good)]
+        # the production gate leg is a technical method: its cost is a floor-pinned dummy, never labour
+        methods = [m for m in blueprint_methods(path) if is_labour_method(m, config.good) and not is_leg(m.name)]
         if not methods:
             continue
         try:

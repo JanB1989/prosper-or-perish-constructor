@@ -3,7 +3,7 @@ tag: victualling_yard
 footprint: trade
 labour:
   class: keep
-gate_method: pp_victualling_yard_fish_shipment
+gate_method: pp_victualling_yard_market_sales
 building:
   key: victualling_yard
   mode: CREATE
@@ -22,6 +22,9 @@ building:
         - pp_victualling_yard_maize_shipment
         - pp_victualling_yard_legumes_shipment
         - pp_victualling_yard_fish_shipment
+    - name: slot_2
+      methods:
+        - pp_victualling_yard_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -135,6 +138,14 @@ building:
         category = building_maintenance
       }
     }
+    unique_production_methods = {
+      pp_victualling_yard_market_sales = {
+        offset = 0.012
+        produced = victuals
+        output = 0.004
+        category = building_maintenance
+      }
+    }
     # No storage leg (2026-09-26): the great harbours live on imported grain and are short of food by nature, so the
     # Yard's profit follows only the victuals price against grain and shipping. Per level at base prices (victuals 3,
     # grain 1): about +0.7..+0.9 gold at level 1, falling by the -5 % per level to 0 around level 5.
@@ -213,6 +224,9 @@ localization:
     victualling_yard_maize_shipment_advance: Maize Shipments
     victualling_yard_maize_shipment_advance_desc: The harbours of the maize lands ship dried maize along the coasts and rivers to the markets beyond.
     pp_victualling_yard_price: Victualling Yard Price
+    pp_victualling_yard_market_sales: Market Sales
+    pp_victualling_yard_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    victualling_yard_slot_2: Market
 icon:
   source_png: ../assets/icons/victualling_yard.png
   output_dds: victualling_yard.dds
@@ -226,3 +240,9 @@ evaluation:
     output_throughput: Existing accepted output scale predates the global employment throughput baseline.
     base_output_per_1k: The Yard packs and ships victuals on one burgher per level, not a production line.
     amortization_months: A cheap harbour house (price 50) that pays back fast once the storage leg is gone (2026-09-26); the margin is deliberate.
+  production_methods:
+    pp_victualling_yard_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

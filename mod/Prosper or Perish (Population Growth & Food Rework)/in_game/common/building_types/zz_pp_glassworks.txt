@@ -24,6 +24,14 @@ unique_production_methods = {
         category = workshop_input
     }
 }
+unique_production_methods = {
+    pp_glassworks_market_sales = {
+        offset = 0.012
+        produced = glass
+        output = 0.004
+        category = building_maintenance
+    }
+}
 obsolete = glass_workshop
 custom_tags = {
     midgame_manufactory

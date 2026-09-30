@@ -111,6 +111,14 @@ unique_production_methods = {
     category = building_maintenance
   }
 }
+unique_production_methods = {
+  pp_victualling_yard_market_sales = {
+    offset = 0.012
+    produced = victuals
+    output = 0.004
+    category = building_maintenance
+  }
+}
 # No storage leg (2026-09-26): the great harbours live on imported grain and are short of food by nature, so the
 # Yard's profit follows only the victuals price against grain and shipping. Per level at base prices (victuals 3,
 # grain 1): about +0.7..+0.9 gold at level 1, falling by the -5 % per level to 0 around level 5.

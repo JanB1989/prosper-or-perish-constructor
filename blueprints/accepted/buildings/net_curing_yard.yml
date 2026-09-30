@@ -7,7 +7,7 @@ labour:
     pp_net_curing_yard_base_fish: base
     pp_net_curing_yard_provision: keep
     pp_net_curing_yard_sell_surplus: keep
-gate_method: pp_net_curing_yard_provision
+gate_method: pp_net_curing_yard_market_sales
 upgrade_chain:
   family: fishing_village
   tier: 1
@@ -40,6 +40,9 @@ building:
       methods:
         - pp_net_curing_yard_sell_surplus
         - pp_net_curing_yard_provision
+    - name: slot_5
+      methods:
+        - pp_net_curing_yard_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -157,6 +160,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_net_curing_yard_market_sales = {
+            offset = 0.01
+            produced = fish
+            output = 0.01
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -203,6 +214,9 @@ localization:
     pp_net_curing_yard_provision_desc: The household buys its own catch back and cooks for the province. Worth it while the province store is low and the good is cheap.
     pp_net_curing_yard_sell_surplus: Sell the Surplus
     pp_net_curing_yard_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
+    pp_net_curing_yard_market_sales: Market Sales
+    pp_net_curing_yard_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    net_curing_yard_slot_5: Market
 icon:
   source_png: ../assets/icons/net_curing_yard.png
   output_dds: net_curing_yard.dds
@@ -262,3 +276,8 @@ evaluation:
     pp_net_curing_yard_sell_surplus:
       allow_rules:
         base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
+    pp_net_curing_yard_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

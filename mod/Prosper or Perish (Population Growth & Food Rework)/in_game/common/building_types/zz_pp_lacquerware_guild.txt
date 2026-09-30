@@ -22,6 +22,14 @@ unique_production_methods = {
         debug_max_profit = guild_profit_margin
     }
 }
+unique_production_methods = {
+    pp_lacquerware_guild_market_sales = {
+        offset = 0.01
+        produced = lacquerware
+        output = 0.002
+        category = building_maintenance
+    }
+}
 custom_tags = {
     guild
 }

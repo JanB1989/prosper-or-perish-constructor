@@ -5,7 +5,7 @@ labour:
   class: primary_absolutism
   methods:
     pp_coal_mine_improved_base_coal: base
-gate_method: pp_coal_mine_improved_coal
+gate_method: pp_coal_mine_improved_market_sales
 upgrade_chain:
   family: coal_mine
   tier: 1
@@ -28,6 +28,9 @@ building:
       methods:
         - pp_coal_mine_improved_no_primary
         - pp_coal_mine_improved_coal
+    - name: slot_3
+      methods:
+        - pp_coal_mine_improved_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -89,6 +92,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_coal_mine_improved_market_sales = {
+            offset = 0.01
+            produced = coal
+            output = 0.005
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -112,6 +123,9 @@ localization:
     pp_coal_mine_improved_fireclay: Fireclay Sorting
     coal_improvements_absolutism: Colliery Improvements
     coal_improvements_absolutism_desc: Better surveying, timbering, haulage, and coal sorting let collieries work deeper seams and handle solid fuels more reliably.
+    pp_coal_mine_improved_market_sales: Market Sales
+    pp_coal_mine_improved_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    coal_mine_improved_slot_3: Market
 icon:
   source_png: ../assets/icons/coal_mine_improved.png
   output_dds: coal_mine_improved.dds
@@ -142,3 +156,8 @@ evaluation:
         input_throughput: Fireclay is an ancillary coal seam byproduct, intentionally less profitable than primary coal extraction.
         output_throughput: Fireclay is an ancillary coal seam byproduct, intentionally less profitable than primary coal extraction.
         amortization_months: Fireclay is an ancillary coal seam byproduct, intentionally less profitable than primary coal extraction.
+    pp_coal_mine_improved_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

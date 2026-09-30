@@ -11,7 +11,7 @@ labour:
     pp_hunting_lodges: base
     pp_forest_village_provision: keep
     pp_forest_village_sell_surplus: keep
-gate_method: pp_forest_village_provision
+gate_method: pp_forest_village_market_sales
 upgrade_chain:
   family: forest_village
   tier: 0
@@ -40,6 +40,9 @@ building:
     methods:
     - pp_forest_village_sell_surplus
     - pp_forest_village_provision
+  - name: slot_3
+    methods:
+    - pp_forest_village_market_sales
   possible_production_methods: []
   body: |2-
         audio_tier = 1
@@ -147,6 +150,14 @@ building:
                 category = building_maintenance
             }
         }
+        unique_production_methods = {
+            pp_forest_village_market_sales = {
+                offset = 0.01
+                produced = beeswax
+                output = 0.005
+                category = building_maintenance
+            }
+        }
         construction_demand = village_construction
         raw_modifier = {
         }
@@ -251,6 +262,9 @@ localization:
     pp_fur_trapping_advance_native_desc: Traditional fur harvesting in boreal and northern forests.
     pp_forest_village_no_primary: No Forest Work
     pp_hunting_lodges: Hunting Lodges
+    pp_forest_village_market_sales: Market Sales
+    pp_forest_village_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    forest_village_slot_3: Market
 evaluation:
   allow_rules:
     profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
@@ -291,3 +305,8 @@ evaluation:
     pp_forest_village_sell_surplus:
       allow_rules:
         base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
+    pp_forest_village_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

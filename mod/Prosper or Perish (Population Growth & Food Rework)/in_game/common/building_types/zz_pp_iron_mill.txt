@@ -31,6 +31,14 @@ unique_production_methods = {
         debug_max_profit = mills_profit_margin
     }
 }
+unique_production_methods = {
+    pp_iron_mill_market_sales = {
+        offset = 0.013
+        produced = tools
+        output = 0.004
+        category = building_maintenance
+    }
+}
 obsolete = iron_foundry
 construction_demand = mill_construction
 raw_modifier = {

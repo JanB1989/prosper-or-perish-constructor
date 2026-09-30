@@ -5,7 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_amber_collector_base_amber: base
-gate_method: pp_amber_collector_basket_gathering
+gate_method: pp_amber_collector_market_sales
 building:
   key: amber_collector
   mode: CREATE
@@ -23,6 +23,9 @@ building:
       methods:
         - pp_amber_collector_no_beach_gathering
         - pp_amber_collector_basket_gathering
+    - name: slot_3
+      methods:
+        - pp_amber_collector_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -87,6 +90,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_amber_collector_market_sales = {
+            offset = 0.012
+            produced = amber
+            output = 0.003
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -107,6 +118,9 @@ localization:
     pp_amber_collector_no_sand: No Sand Carting
     pp_amber_collector_sand_horses: Horse-Drawn Sand
     pp_amber_collector_sand_livestock: Ox-Drawn Sand
+    pp_amber_collector_market_sales: Market Sales
+    pp_amber_collector_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    amber_collector_slot_3: Market
 icon:
   source_png: ../assets/icons/amber_collector.png
   output_dds: amber_collector.dds
@@ -129,3 +143,8 @@ evaluation:
       production_efficiency: 1.05
     pp_amber_collector_sand_livestock:
       production_efficiency: 1.05
+    pp_amber_collector_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

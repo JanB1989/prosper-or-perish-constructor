@@ -1,7 +1,7 @@
 version: 2
 tag: slave_labor_yard
 footprint: estate_land
-gate_method: pp_slave_labor_yard_grain_rations
+gate_method: pp_slave_labor_yard_market_sales
 building:
   key: slave_labor_yard
   mode: CREATE
@@ -12,6 +12,9 @@ building:
         - pp_slave_labor_yard_provision_grounds
         - pp_slave_labor_yard_salt_fish_rations
         - pp_slave_labor_yard_grain_rations
+    - name: slot_1
+      methods:
+        - pp_slave_labor_yard_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -72,6 +75,14 @@ building:
         category = building_maintenance
       }
     }
+    unique_production_methods = {
+      pp_slave_labor_yard_market_sales = {
+        offset = 0.01
+        produced = manual_labor
+        output = 0.01
+        category = building_maintenance
+      }
+    }
     raw_modifier = {
     }
     modifier = {
@@ -89,6 +100,9 @@ localization:
     pp_slave_labor_yard_salt_fish_rations: Salt-Fish Gangs
     pp_slave_labor_yard_provision_grounds: Provision-Ground Gangs
     pp_slave_labor_yard_price: Slave Gang Barracks Price
+    pp_slave_labor_yard_market_sales: Market Sales
+    pp_slave_labor_yard_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    slave_labor_yard_slot_1: Market
 icon:
   source_png: ../assets/icons/slave_labor_yard.png
   output_dds: slave_labor_yard.dds
@@ -100,3 +114,9 @@ evaluation:
     input_throughput: Gangs consume enslaved people and their rations rather than following ordinary colonial-building throughput.
     output_throughput: The barracks add labour to the market only when labour is scarce enough to pay for the gangs.
     amortization_months: Labour prices above the floor determine whether the barracks earn enough to repay their cost.
+  production_methods:
+    pp_slave_labor_yard_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

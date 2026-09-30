@@ -232,13 +232,15 @@ def test_every_crop_farm_has_base_cultivation_and_provisioning_slots(table: crop
             building = table.building(crop, tier)
             slots = [slot["methods"] for slot in _blueprint(building)["building"]["production_method_slots"]]
 
-            # production-gate order: base slot first, the Provisioning slot last with Provision (the gate) listed last
+            # production-gate order: base slot first, then cultivation and Provisioning, the Market gate leg last (it
+            # makes a little of the crop, so the AI's margin check follows the crop's price)
             assert slots[0] == [f"pp_{building}_base"]
             cultivation = [f"pp_{building}_no_cultivation", *(f"pp_{building}_{m.key}" for m in crop.tier_methods(tier))]
-            assert sorted(slots[-2]) == sorted(cultivation) and slots[-2][0] == cultivation[0]
-            assert slots[-1] == [f"pp_{building}_sell_surplus", f"pp_{building}_provision"]
-            assert _blueprint(building)["gate_method"] == f"pp_{building}_provision"
-            assert len(slots) == (4 if crop_farms.has_beekeeping(table, crop, tier) else 3)
+            assert sorted(slots[-3]) == sorted(cultivation) and slots[-3][0] == cultivation[0]
+            assert slots[-2] == [f"pp_{building}_sell_surplus", f"pp_{building}_provision"]
+            assert slots[-1] == [f"pp_{building}_market_sales"]
+            assert _blueprint(building)["gate_method"] == f"pp_{building}_market_sales"
+            assert len(slots) == (5 if crop_farms.has_beekeeping(table, crop, tier) else 4)
 
 
 def test_tier_advances_unlock_the_tier_of_every_chain(table: crop_farms.CropTable) -> None:

@@ -3,7 +3,7 @@ tag: brewery
 footprint: manufactory
 labour:
   class: craft_medieval
-gate_method: pp_brewery_bavarian_brewery_maintenance
+gate_method: pp_brewery_market_sales
 building:
   key: brewery
   mode: REPLACE
@@ -18,6 +18,9 @@ building:
     - pp_brewery_honey_brewery_maintenance
     - pp_brewery_rice_brewery_maintenance
     - pp_brewery_bavarian_brewery_maintenance
+  - name: slot_1
+    methods:
+    - pp_brewery_market_sales
   possible_production_methods: []
   body: |
     audio_tier = 1
@@ -103,6 +106,14 @@ building:
             debug_max_profit = guild_profit_margin
         }
     }
+    unique_production_methods = {
+        pp_brewery_market_sales = {
+            offset = 0.01
+            produced = beer
+            output = 0.005
+            category = building_maintenance
+        }
+    }
     custom_tags = {
         guild
     }
@@ -125,9 +136,18 @@ localization:
     pp_brewery_bavarian_brewery_maintenance: Brewery Bavarian Brewery Maintenance
     pp_brewery_honey_brewery_maintenance: Brewery Honey Brewery Maintenance
     pp_brewery_rice_brewery_maintenance: Brewery Rice Brewery Maintenance
+    pp_brewery_market_sales: Market Sales
+    pp_brewery_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    brewery_slot_1: Market
 evaluation:
   allow_rules:
     amortization_months: Non-raw producer under the building price brake (double price, triple level cost, 2026-09-30); slow payback is the point.
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
     input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
     output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+  production_methods:
+    pp_brewery_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

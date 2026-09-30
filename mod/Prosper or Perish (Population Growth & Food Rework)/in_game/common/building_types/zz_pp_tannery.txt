@@ -34,6 +34,14 @@ unique_production_methods = {
         category = guild_input
     }
 }
+unique_production_methods = {
+    pp_tannery_market_sales = {
+        offset = 0.012
+        produced = leather
+        output = 0.004
+        category = building_maintenance
+    }
+}
 custom_tags = {
     guild
 }

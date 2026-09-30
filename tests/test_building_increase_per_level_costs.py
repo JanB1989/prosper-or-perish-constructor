@@ -110,3 +110,19 @@ def test_tavern_levels_each_cost_another_full_base_price():
     source = Decimal(_top_level_increase_per_level_cost(template.key, template.building_body))
     scaling = load_building_scaling_config(PROJECT)
     assert scaled_increase_per_level_cost_text(source, scaling.increase_per_level_cost_multiplier) == "1.00"
+
+
+def test_farms_repeat_their_levels_cheaper() -> None:
+    """[farm_level_cost] 2026-09-30: every farm_land blueprint pays the factor x its main good's category cost."""
+    from prosper_or_perish_constructor.goods_categories import farm_level_cost_factor, load_good_category_costs, load_increase_per_level_cost_band
+
+    factor, footprints = farm_level_cost_factor(PROJECT)
+    assert footprints == frozenset({"farm_land"}) and factor < 1
+    band = load_increase_per_level_cost_band(ROOT / "config/goods_category_scaling.toml")
+    costs = load_good_category_costs(ROOT / "config/goods_categories.csv", band)
+    by_building = {a.building: a for a in building_increase_cost_assignments(ROOT, PROJECT)}
+    for building in ("wheat_farm", "cattle_farmstead", "tea_garden", "sheep_farms"):
+        assignment = by_building[building]
+        expected = (Decimal(costs[assignment.main_good].scaled_cost_text) * factor).quantize(Decimal("0.01"))
+        assert Decimal(assignment.scaled_cost_text) == expected, building
+    assert by_building["tools_guild"].scaled_cost_text != "" and "tools_guild" in by_building  # not a farm: untouched

@@ -8,9 +8,19 @@ output good overwrites one margin (revenue / input cost at market prices); below
 (vanilla 1.2, read from the mod's defines) the building gets no build utility. So exactly one method gates the build: the last one looked at that has an output.
 (docs/ai_building_rulebook.md, section 2.4i.)
 
+A method locked behind an unresearched advance counts as not allowed; with no margin written the gate reads 0.
+Method order changes nothing else about the build decision (the profit estimate takes each slot's best method).
+
 Every enabled blueprint with a producing unique method names that method::
 
-    gate_method: pp_wheat_farm_provision
+    gate_method: pp_wheat_farm_market_sales
+
+Gate leg (``[production_gate.leg]``, 2026-09-30): a building with a market main good (``main_good``) ends in a one-method
+slot ``pp_<building>_market_sales`` that makes a little of that good for a floor-pinned dummy at ``leg.margin``. It is
+always read, so the check follows the main good's market price for new buildings and new levels alike, whatever is
+researched or supplied. ``apply`` adds, updates or drops the leg (body block, slot list, localization, evaluation
+allow rules) and flags it; buildings without a market good, storage-leg gates and ``strategic_goods`` keep the rule
+below. The old Provision gate bought the building's own crop, so the AI stopped building farms when the crop was dear.
 
 ``ppc gate apply`` rewrites the body so the flagged method gates: its slot becomes the last unique block and the method
 is listed last in it. Everything else is ordered by importance, bottom = most important:
@@ -20,7 +30,7 @@ is listed last in it. Everything else is ordered by importance, bottom = most im
   storage legs Surplus Sales and Scarcity Premium, the Provisioning switch) at the bottom, the flagged slot last;
 - methods: output-less methods first (idle choices never gate), then by output value, the flagged method last.
 
-Ties keep the file order. Methods never move between slots, amounts never change. The slot labels
+Ties keep the file order. Methods never move between slots, amounts never change (the leg is written whole). The slot labels
 (``<building>_slot_<n>``), the ``production_method_slots`` list and ``# slot <n>`` comments follow their slot. A
 blueprint without the flag gets the method the same order puts last (``apply`` writes it, ``check`` reports it).
 ``ppc gate check`` reports missing or invalid flags and blueprints whose order differs; ``ppc build`` prints it.
@@ -31,9 +41,11 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 import re
 import tomllib
 from dataclasses import dataclass, field
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -64,11 +76,26 @@ class GateError(ValueError):
 
 
 @dataclass(frozen=True)
+class LegConfig:
+    """[production_gate.leg]: the gate leg, a one-method last slot that makes a little of the building's main good."""
+
+    margin: float = 1.0  # revenue / input cost at base prices
+    value: float = 0.01  # output worth this much gold per level at base prices
+    input: str = "offset"  # a floor-pinned dummy good: the leg's cost never moves
+    slot_label: str = "Market"
+    method_name: str = "Market Sales"
+    method_desc: str = "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+
+
+@dataclass(frozen=True)
 class GateConfig:
     threshold: float = 1.2
     dynamic_goods: frozenset[str] = frozenset({"province_food_sales", "province_food_purchase"})
     base_inputs: frozenset[str] = frozenset({"manual_labor"})
     price_overrides: Mapping[str, float] = field(default_factory=dict)
+    pinned_goods: frozenset[str] = frozenset({"local_food", "offset", "logistics"})
+    strategic_goods: frozenset[str] = frozenset()
+    leg: LegConfig | None = None
 
 
 THRESHOLD_DEFINE = "AI_BUILDING_PROFIT_THRESHOLD"
@@ -103,11 +130,15 @@ def load_config(project: Path) -> GateConfig:
     section = raw.get(CONFIG_SECTION) or {}
     evaluation = raw.get("blueprint_evaluation") or {}
     default = GateConfig()
+    leg = section.get("leg")
     return GateConfig(
         threshold=load_threshold(project, float(section.get("threshold", default.threshold))),
         dynamic_goods=frozenset(str(g) for g in section.get("dynamic_goods", default.dynamic_goods)),
         base_inputs=frozenset(str(g) for g in evaluation.get("base_method_input_goods", default.base_inputs)),
         price_overrides={str(k): float(v) for k, v in dict(evaluation.get("price_overrides") or {}).items()},
+        pinned_goods=frozenset(str(g) for g in section.get("pinned_goods", default.pinned_goods)),
+        strategic_goods=frozenset(str(g) for g in section.get("strategic_goods", default.strategic_goods)),
+        leg=LegConfig(**{k: (float(v) if k in {"margin", "value"} else str(v)) for k, v in dict(leg).items()}) if isinstance(leg, dict) else None,
     )
 
 
@@ -231,6 +262,160 @@ def suggest_gate(slots: Sequence[Slot], config: GateConfig, prices: Mapping[str,
         for i, m in enumerate(slot.methods)
     ]
     return slot.methods[max(ranked)[3]].name
+
+
+# ---------------------------------------------------------------- the gate leg
+
+
+LEG_SUFFIX = "_market_sales"
+
+
+def leg_name(building: str) -> str:
+    return f"pp_{building}{LEG_SUFFIX}"
+
+
+def is_leg(method: str) -> bool:
+    return method.startswith("pp_") and method.endswith(LEG_SUFFIX)
+
+
+def without_legs(slots: Sequence[Slot]) -> list[Slot]:
+    return [slot for slot in slots if not any(is_leg(m.name) for m in slot.methods)]
+
+
+def main_good(slots: Sequence[Slot], config: GateConfig, prices: Mapping[str, float]) -> str | None:
+    """The market good the building exists to make: its base method's good (a one-method slot paying only base inputs),
+    else the good of its most valuable producing method. Floor-pinned dummies and storage-leg goods never count."""
+    def signal(method: Method) -> bool:
+        return (
+            method.has_output
+            and not is_leg(method.name)
+            and method.produced not in config.pinned_goods
+            and method.produced not in config.dynamic_goods
+        )
+
+    base = [
+        m
+        for slot in slots
+        if len(slot.methods) == 1
+        for m in slot.methods
+        if signal(m) and {g for g, a in m.inputs.items() if a > 0} <= config.base_inputs
+    ]
+    pool = base or [m for slot in slots for m in slot.methods if signal(m)]
+    if not pool:
+        return None
+    return max(pool, key=lambda m: m.value(prices)).produced  # ties: the first
+
+
+@dataclass(frozen=True)
+class Leg:
+    name: str
+    good: str
+    output: float
+    input: str
+    amount: float
+
+    def method(self) -> Method:
+        return Method(self.name, self.good, self.output, {self.input: self.amount})
+
+    def body_lines(self, header: str, method: str, inner: str) -> list[str]:
+        return [
+            f"{header}{UNIQUE} = {{",
+            f"{method}{self.name} = {{",
+            f"{inner}{self.input} = {_amount_text(self.amount)}",
+            f"{inner}produced = {self.good}",
+            f"{inner}output = {_amount_text(self.output)}",
+            f"{inner}category = building_maintenance",
+            f"{method}}}",
+            f"{header}}}",
+        ]
+
+
+LEG_STEP = Decimal("0.001")  # method quantities keep at most three decimals
+
+
+def _leg_amounts(value: float, price: float, margin: float, input_price: float) -> tuple[float, float]:
+    """(output, input amount) in steps of 0.001, output worth ``value`` to twice that at base prices, picked so the
+    rounded amounts hold ``margin`` as closely as the step allows."""
+    low = max(1, math.ceil(value / price / float(LEG_STEP) - 1e-9))
+    high = max(low, math.ceil(2 * value / price / float(LEG_STEP) - 1e-9))
+    best: tuple[float, Decimal, Decimal] | None = None
+    for k in range(low, high + 1):
+        output = LEG_STEP * k
+        amount = max((output * Decimal(str(price)) / Decimal(str(margin * input_price))).quantize(LEG_STEP, rounding=ROUND_HALF_UP), LEG_STEP)
+        error = abs(float(output) * price / (float(amount) * input_price) - margin)
+        if best is None or error < best[0] - 1e-12:
+            best = (error, output, amount)
+    return float(best[1]), float(best[2])
+
+
+def _amount_text(value: float) -> str:
+    return format(Decimal(str(value)).normalize(), "f")
+
+
+def plan_leg(building: str, slots: Sequence[Slot], flag: str | None, config: GateConfig, prices: Mapping[str, float]) -> Leg | None:
+    """The gate leg the building should carry, or None.
+
+    The AI's margin check reads the last method it looks at that has an output. A one-method slot is always looked at
+    (no research, potential, allow or input check), so a leg as the last slot decides the check for new buildings and new
+    levels alike: its margin is (1 + output modifiers) x the main good's market price / its base price x ``leg.margin``.
+    None for buildings without a market good (services, floor-pinned dummies), whose main good the AI never gates
+    (``strategic_goods``: ai_rgo_expansion_priority > 0), and deliberate storage gates (a flag on a storage-leg good)."""
+    if config.leg is None:
+        return None
+    real = without_legs(slots)
+    if flag and not is_leg(flag):
+        where = locate(real, flag)
+        if where is not None and real[where[0]].methods[where[1]].produced in config.dynamic_goods:
+            return None
+    good = main_good(real, config, prices)
+    if good is None or good in config.strategic_goods:
+        return None
+    price = float(prices.get(good, 0.0))
+    input_price = float(prices.get(config.leg.input, 0.0))
+    if price <= 0 or input_price <= 0:
+        raise GateError(f"{building}: no base price for {good if price <= 0 else config.leg.input}")
+    output, amount = _leg_amounts(config.leg.value, price, config.leg.margin, input_price)
+    return Leg(leg_name(building), good, output, config.leg.input, amount)
+
+
+def leg_in_place(slots: Sequence[Slot], leg: Leg | None) -> bool:
+    """The body carries exactly this leg (or none when ``leg`` is None) as a one-method slot."""
+    legs = [(i, slot) for i, slot in enumerate(slots) if any(is_leg(m.name) for m in slot.methods)]
+    if leg is None:
+        return not legs
+    return len(legs) == 1 and legs[0][1].methods == (leg.method(),)
+
+
+def slots_with_leg(slots: Sequence[Slot], leg: Leg | None) -> list[Slot]:
+    return without_legs(slots) + ([Slot((leg.method(),))] if leg else [])
+
+
+def edit_leg_body(body: str, leg: Leg | None) -> str:
+    """Drop every leg slot of the body and, with ``leg``, append it after the last unique_production_methods block."""
+    lines = body.split("\n")
+    blocks = _spans(lines)
+    for block in reversed(blocks):
+        names = [_HEADER_RE.match(lines[c.header]).group("key") for c in block.children]
+        if names and all(is_leg(n) for n in names):
+            start = block.start
+            if start > 0 and not lines[start - 1].strip():
+                start -= 1
+            del lines[start : block.end + 1]
+    if leg is None:
+        return "\n".join(lines)
+    blocks = _spans(lines)
+    if not blocks:
+        raise GateError("no unique_production_methods block to put the gate leg after")
+    last = blocks[-1]
+    header = re.match(r"^\s*", lines[last.header]).group(0)
+    child = last.children[0] if last.children else None
+    method = re.match(r"^\s*", lines[child.header]).group(0) if child else header + "    "
+    if child and child.end > child.header and len(re.match(r"^\s*", lines[child.header + 1]).group(0)) > len(method):
+        inner = re.match(r"^\s*", lines[child.header + 1]).group(0)
+    else:
+        inner = method + (method[len(header):] or "    ")
+    lines[last.end + 1 : last.end + 1] = leg.body_lines(header, method, inner)
+    return "\n".join(lines)
 
 
 @dataclass(frozen=True)
@@ -592,6 +777,167 @@ def rewrite_blueprint_text(
     return Rewrite("\n".join(lines), True)
 
 
+def edit_leg_text(text: str, building_key: str, leg: Leg | None, config: GateConfig) -> str:
+    """Put the gate leg into the blueprint text (LF newlines): the body block after the last unique block, its entry at
+    the end of production_method_slots, its slot label and method name/description in localization.entries. Old leg
+    slots are dropped first, so this also updates or removes a leg."""
+    lines = text.split("\n")
+
+    # ---- body
+    first, stop, indent = _body_region(lines)
+    body = [line[indent:] if line.strip() else "" for line in lines[first:stop]]
+    old_count = len(_spans(body))
+    old_legs = {m.name for slot in body_slots("\n".join(body))[0] for m in slot.methods if is_leg(m.name)}
+    new_body = edit_leg_body("\n".join(body), leg).split("\n")
+    lines[first:stop] = [(" " * indent + line) if line else "" for line in new_body]
+    count = len(_spans(new_body))
+
+    # ---- production_method_slots
+    building = _top_key_line(lines, "building")
+    block = _child_block(lines, building) if building is not None else None
+    if block is not None:
+        lo, hi, child = block
+        key = _key_in(lines, lo, hi, child, "production_method_slots")
+        if key is not None and lines[key].split(":", 1)[1].strip() == "":
+            end = _value_end(lines, key, hi, sequence=True)
+            current = lines[key + 1 : end]
+            entries = (yaml_io.safe_load("x:\n" + "\n".join(current)) or {}).get("x") or []
+            kept = [e for e in entries if not any(is_leg(str(m)) for m in (e.get("methods") or []))]
+            if leg is not None:
+                names = [str(e.get("name", "")) for e in kept]
+                numbered = all(name == f"slot_{i}" for i, name in enumerate(names))
+                kept.append({"name": f"slot_{len(kept)}" if numbered else "market", "methods": [leg.name]})
+            dash = next((_indent(l) for l in current if l.lstrip().startswith("- ")), child + 2)
+            methods_indent = next((_indent(l) for l in current if l.strip().startswith("methods:")), dash + 2)
+            item_indent = next((_indent(l) for l in current if l.lstrip().startswith("- ") and _indent(l) > dash), methods_indent)
+            out: list[str] = []
+            for entry in kept:
+                out.append(" " * dash + f"- name: {entry.get('name')}")
+                out.append(" " * methods_indent + "methods:")
+                out.extend(" " * item_indent + f"- {m}" for m in entry.get("methods") or [])
+            lines[key + 1 : end] = out
+
+    # ---- evaluation allow rules
+    _edit_leg_evaluation(lines, sorted(old_legs | {leg_name(building_key)}), leg)
+
+    # ---- localization
+    loc = _top_key_line(lines, "localization")
+    if loc is None:
+        if leg is None:
+            return "\n".join(lines)
+        while lines and not lines[-1].strip():
+            lines.pop()
+        lines += ["localization:", "  entries:"]
+        loc = len(lines) - 2
+    loc_block = _child_block(lines, loc)
+    if loc_block is None:
+        lines.insert(loc + 1, "  entries:")
+        loc_block = _child_block(lines, loc)
+    lo, hi, child = loc_block
+    entries_key = _key_in(lines, lo, hi, child, "entries")
+    if entries_key is None:
+        lines.insert(hi, " " * child + "entries:")
+        entries_key, hi = hi, hi + 1
+    end = _value_end(lines, entries_key, hi)
+    entry_indent = next((_indent(lines[i]) for i in range(entries_key + 1, end) if lines[i].strip()), _indent(lines[entries_key]) + 2)
+    leg_keys = {leg_name(building_key), leg_name(building_key) + "_desc"}
+    label = re.compile(rf"^\s*{re.escape(building_key)}_slot_(\d+):")
+    drop = []
+    for i in range(entries_key + 1, end):
+        m = label.match(lines[i])
+        key_here = lines[i].strip().split(":", 1)[0]
+        if key_here in leg_keys and leg is None:
+            drop.append(i)
+        elif m and old_count > count and int(m.group(1)) >= count:
+            drop.append(i)  # the label of a dropped leg slot
+        elif m and leg is not None and int(m.group(1)) == count - 1:
+            drop.append(i)  # the leg slot's label is written below
+    for i in reversed(drop):
+        del lines[i]
+        end -= 1
+    if leg is not None:
+        present = {lines[i].strip().split(":", 1)[0] for i in range(entries_key + 1, end) if lines[i].strip()}
+        add = [f"{building_key}_slot_{count - 1}: {_yaml_scalar(config.leg.slot_label)}"]
+        if leg.name not in present:
+            add.append(f"{leg.name}: {_yaml_scalar(config.leg.method_name)}")
+        if leg.name + "_desc" not in present:
+            add.append(f"{leg.name}_desc: {_yaml_scalar(config.leg.method_desc)}")
+        lines[end:end] = [" " * entry_indent + line for line in add]
+    return "\n".join(lines)
+
+
+LEG_ALLOW_RULES = {
+    "profit_percent": "The Market Sales gate leg is balanced at its gate margin, not at a profit band.",
+    "input_throughput": "The Market Sales gate leg is a small technical method that only sets the AI margin check.",
+    "output_throughput": "The Market Sales gate leg is a small technical method that only sets the AI margin check.",
+}
+
+
+def _edit_leg_evaluation(lines: list[str], names: Sequence[str], leg: Leg | None) -> None:
+    """Drop the evaluation.production_methods entries of ``names`` and, with ``leg``, add the leg's allow rules."""
+    top = _top_key_line(lines, "evaluation")
+    if top is None:
+        if leg is None:
+            return
+        while lines and not lines[-1].strip():
+            lines.pop()
+        lines += ["evaluation:", "  production_methods:"]
+        top = len(lines) - 2
+    block = _child_block(lines, top)
+    if block is None:
+        lines.insert(top + 1, "  production_methods:")
+        block = _child_block(lines, top)
+    lo, hi, child = block
+    key = _key_in(lines, lo, hi, child, "production_methods")
+    if key is None:
+        if leg is None:
+            return
+        at = _value_end(lines, top, hi)
+        lines.insert(at, " " * child + "production_methods:")
+        key, hi = at, hi + 1
+    end = _value_end(lines, key, hi)
+    step = next((_indent(lines[i]) - child for i in range(key + 1, end) if lines[i].strip()), 2) or 2
+    for name in names:
+        entry = _key_in(lines, key + 1, end, child + step, name)
+        if entry is not None:
+            stop = _value_end(lines, entry, end)
+            del lines[entry:stop]
+            end -= stop - entry
+    if leg is not None:
+        pad = " " * (child + step)
+        out = [f"{pad}{leg.name}:", f"{pad}{' ' * step}allow_rules:"]
+        out += [f"{pad}{' ' * (2 * step)}{rule}: {_yaml_scalar(text)}" for rule, text in LEG_ALLOW_RULES.items()]
+        lines[end:end] = out
+
+
+def _mapping_leg(blueprint: dict[str, Any], leg: Leg | None, config: GateConfig) -> None:
+    """The mapping form of ``edit_leg_text`` (rendered blueprints of the generators)."""
+    building = blueprint["building"]
+    key = str(building["key"])
+    building["body"] = edit_leg_body(str(building["body"]), leg)
+    listed = building.get("production_method_slots")
+    if listed:
+        kept = [e for e in listed if not any(is_leg(str(m)) for m in (e.get("methods") or []))]
+        if leg is not None:
+            numbered = all(str(e.get("name")) == f"slot_{i}" for i, e in enumerate(kept))
+            kept.append({"name": f"slot_{len(kept)}" if numbered else "market", "methods": [leg.name]})
+        building["production_method_slots"] = kept
+    evaluation = blueprint.get("evaluation")
+    per_method = evaluation.get("production_methods") if isinstance(evaluation, dict) else None
+    if isinstance(per_method, dict):
+        for name in [n for n in per_method if is_leg(str(n))]:
+            del per_method[name]
+    if leg is None:
+        return
+    blueprint.setdefault("evaluation", {}).setdefault("production_methods", {})[leg.name] = {"allow_rules": dict(LEG_ALLOW_RULES)}
+    slots, _ = body_slots(str(building["body"]), f"{key}.yml")
+    localization = blueprint.setdefault("localization", {})
+    entries = localization.setdefault("entries", {})
+    entries[f"{key}_slot_{len(slots) - 1}"] = config.leg.slot_label
+    entries.setdefault(leg.name, config.leg.method_name)
+    entries.setdefault(leg.name + "_desc", config.leg.method_desc)
+
+
 # ---------------------------------------------------------------- the mapping form (generators)
 
 
@@ -603,7 +949,13 @@ def order_mapping(blueprint: dict[str, Any], config: GateConfig, prices: Mapping
     slots, has_possible = body_slots(str(building["body"]), f"{key}.yml")
     if not is_production(slots):
         return blueprint
-    gate = gate or blueprint.get(FLAG) or suggest_gate(slots, config, prices)
+    leg = None if has_possible else plan_leg(key, slots, gate or blueprint.get(FLAG), config, prices)
+    if not leg_in_place(slots, leg):
+        _mapping_leg(blueprint, leg, config)
+        slots, has_possible = body_slots(str(building["body"]), f"{key}.yml")
+    if leg is not None:
+        gate = leg.name
+    gate = gate or blueprint.get(FLAG) or suggest_gate(without_legs(slots), config, prices)
     order = plan_order(slots, str(gate), config, prices)
     if has_possible:
         raise GateError(f"{key}: possible and unique production methods together are not supported")
@@ -659,6 +1011,8 @@ class Plan:
     gate_margin: float | None = None
     gate_produced: str | None = None
     problems: list[str] = field(default_factory=list)
+    leg: Leg | None = None
+    leg_edit: bool = False  # the body's leg is missing, stale or unwanted (``slots`` is the body after the edit)
 
     @property
     def reorders(self) -> bool:
@@ -666,7 +1020,7 @@ class Plan:
 
     @property
     def pending(self) -> bool:
-        return not self.flagged or self.reorders
+        return not self.flagged or self.reorders or self.leg_edit
 
 
 @dataclass
@@ -711,6 +1065,16 @@ def structural_problems(repo: Path) -> dict[str, list[str]]:
     return out
 
 
+def _leg_metadata_ok(data: Mapping[str, Any], building: str, leg: Leg | None) -> bool:
+    """The leg's evaluation allow rules and localization are in the blueprint (nothing to check without a leg)."""
+    if leg is None:
+        return True
+    per_method = ((data.get("evaluation") or {}).get("production_methods")) or {}
+    rules = ((per_method.get(leg.name) or {}).get("allow_rules")) or {}
+    entries = ((data.get("localization") or {}).get("entries")) or {}
+    return dict(rules) == LEG_ALLOW_RULES and leg.name in entries and f"{leg.name}_desc" in entries
+
+
 def plan_all(repo: Path, config: GateConfig, prices: Mapping[str, float]) -> GateResult:
     result = GateResult()
     for path in enabled_blueprints(repo):
@@ -722,9 +1086,22 @@ def plan_all(repo: Path, config: GateConfig, prices: Mapping[str, float]) -> Gat
                 result.problems.append(f"{path.name}: {FLAG} on a building without producing unique methods")
             continue
         building = str((data.get("building") or {}).get("key") or data.get("tag") or path.stem)
-        flagged = bool(data.get(FLAG))
-        gate = str(data[FLAG]) if flagged else suggest_gate(slots, config, prices)
-        plan = Plan(path, building, gate, flagged, slots, None)
+        flag = str(data[FLAG]) if data.get(FLAG) else None
+        try:
+            leg = None if has_possible else plan_leg(building, slots, flag, config, prices)
+        except GateError as exc:
+            result.problems.append(f"{path.name}: {exc}")
+            continue
+        leg_edit = not leg_in_place(slots, leg) or not _leg_metadata_ok(data, building, leg)
+        if leg_edit:
+            slots = slots_with_leg(slots, leg)
+        if leg is not None:
+            gate: str | None = leg.name
+        elif flag and not is_leg(flag):
+            gate = flag
+        else:
+            gate = suggest_gate(slots, config, prices)
+        plan = Plan(path, building, gate, flag == gate, slots, None, leg=leg, leg_edit=leg_edit)
         result.plans.append(plan)
         if has_possible:
             plan.problems.append("possible and unique production methods together are not supported")
@@ -750,18 +1127,23 @@ def apply(repo: Path, project: Path, prices: Mapping[str, float] | None = None, 
     if write and not result.problems:
         vanilla = _vanilla_slot_labels(repo, project, [p for p in result.plans if p.reorders])
         for plan in result.pending:
-            _write(plan, vanilla.get(plan.building, {}))
+            _write(plan, vanilla.get(plan.building, {}), config)
             result.files_changed += 1
         write_report(repo / REPORT_RELATIVE_PATH, result, config, prices)
     return result
 
 
-def _write(plan: Plan, vanilla_labels: Mapping[int, str]) -> None:
+def _write(plan: Plan, vanilla_labels: Mapping[int, str], config: GateConfig) -> None:
     raw = plan.blueprint.read_bytes()
     bom = raw.startswith(b"\xef\xbb\xbf")
     original = raw.decode("utf-8-sig")
     crlf = "\r\n" in original
     text = original.replace("\r\n", "\n")
+    if plan.leg_edit:
+        text = edit_leg_text(text, plan.building, plan.leg, config)
+        edited, _ = body_slots(str((yaml_io.safe_load(text) or {})["building"]["body"]), plan.blueprint)
+        if edited != plan.slots:
+            raise GateError(f"{plan.blueprint.name}: the gate leg edit does not read back as planned")
     data = yaml_io.safe_load(text) or {}
     entries = ((data.get("localization") or {}).get("entries")) or {}
     labels = {i: str(entries.get(f"{plan.building}_slot_{i}") or vanilla_labels.get(i) or "") for i in range(len(plan.slots))}

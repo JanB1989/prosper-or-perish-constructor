@@ -31,6 +31,14 @@ unique_production_methods = {
         category = guild_input
     }
 }
+unique_production_methods = {
+    pp_saltpeter_guild_market_sales = {
+        offset = 0.01
+        produced = saltpeter
+        output = 0.005
+        category = building_maintenance
+    }
+}
 
 custom_tags = { guild }
 construction_demand = guild_construction

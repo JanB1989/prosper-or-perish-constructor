@@ -18,11 +18,13 @@ Per blueprint:
   ``hand_work``); a method that names an advance is unlocked by it (``pp_heavy_plough``, ``pp_improved_rotations``,
   ``pp_water_lifting``, rendered once in ``wheat_farm.yml``);
 - slot 2 (legumes and olives, tiers 0-2): ``pp_<b>_no_beekeeping`` and the tier's hive method;
-- last slot: Provisioning (``provisioning.py``), Sell the Surplus listed first, then Provision.
+- Provisioning (``provisioning.py``), Sell the Surplus listed first, then Provision;
+- last slot: the Market gate leg ``pp_<b>_market_sales`` (``production_gate.order_mapping`` adds it).
 
-The slots and methods are then put in the production-gate order (``production_gate.order_mapping``): Provision is the
-``gate_method`` that decides the AI's profit-margin check, so the Provisioning slot comes last and Provision is listed
-last; the other slots follow by importance (base slot first, then beekeeping and cultivation by output value).
+The slots and methods are then put in the production-gate order (``production_gate.order_mapping``): the gate leg is
+the ``gate_method`` that decides the AI's profit-margin check by the crop's price, so it comes last; the other slots
+follow by importance (base slot first, then beekeeping and cultivation by output value, Provisioning last before the
+leg). ``increase_per_level_cost`` takes the ``[farm_level_cost]`` factor (farm_land footprint).
 
 Every producing method goes through the production-labour pass (``production_labour.plan_method``) before it is
 written, so ``ppc labour check`` finds nothing to change. Gated crops (rice, maize, potato, olives) carry
@@ -338,6 +340,7 @@ class RenderContext:
     gates: dict[str, RgoUnlockGate] = field(default_factory=dict)
     gate_config: Any = None  # production_gate.GateConfig
     gate_prices: dict[str, float] = field(default_factory=dict)  # base prices with the evaluation overrides
+    farm_cost_factor: tuple[Any, frozenset[str]] = (1, frozenset())  # [farm_level_cost] factor, footprints
 
     def land_class(self, building: str) -> str:
         """The [worldbuilder.farm_land] class of a farm building, as ``worldbuilder.buildings.farm_constants`` finds it."""
@@ -349,7 +352,12 @@ class RenderContext:
 
 def load_context(repo: Path, project: Path, table: CropTable, *, gates: bool = True) -> RenderContext:
     from prosper_or_perish_constructor import production_gate, production_labour, provisioning
-    from prosper_or_perish_constructor.goods_categories import load_good_category_costs, load_increase_per_level_cost_band
+    from prosper_or_perish_constructor.goods_categories import (
+        farm_level_cost_factor,
+        farm_level_cost_text,
+        load_good_category_costs,
+        load_increase_per_level_cost_band,
+    )
 
     raw = tomllib.loads(project.read_text(encoding="utf-8-sig"))
     farm_land_section = dict(raw.get("worldbuilder", {}).get("farm_land", {}))
@@ -361,6 +369,7 @@ def load_context(repo: Path, project: Path, table: CropTable, *, gates: bool = T
         labour=production_labour.load_config(project),
         provisioning=provisioning.load_provisioning_config(project),
         category_costs={good: cost.scaled_cost_text for good, cost in costs.items()},
+        farm_cost_factor=farm_level_cost_factor(project),
         farm_land={str(k): {"land": float(v["land"]), "reserve": float(v["reserve"])} for k, v in farm_land_section.items()},
         farm_classes=classes,
     )
@@ -530,7 +539,7 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
     if tier == 0:
         body.extend(f"{key} = {_value(value)}" for key, value in dict(general.get("body_tier0", {})).items())
     body.append(f"is_foreign = {_value(shared.get('is_foreign', 'no'))}")
-    body.append(f"increase_per_level_cost = {_increase_cost(crop, slots, context)}")
+    body.append(f"increase_per_level_cost = {_increase_cost(crop, slots, context, str(general.get("footprint", "farm_land")))}")
     body.append(f"max_levels = {str(general.get('max_levels_pattern', 'farm_capacity_max_{building}')).format(building=building)}")
     body.append(f"pop_type = {table.tier_value('tier_pop_type', tier)}")
     body.append(f"employment_size = {_value(shared.get('employment_size', 1))}")
@@ -696,11 +705,11 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
     if context.gate_config is not None:
         from prosper_or_perish_constructor import production_gate
 
-        production_gate.order_mapping(blueprint, context.gate_config, context.gate_prices, gate=provision)
+        production_gate.order_mapping(blueprint, context.gate_config, context.gate_prices)
     return blueprint
 
 
-def _increase_cost(crop: Crop, slots: Sequence[tuple[str, Sequence[RenderedMethod]]], context: RenderContext) -> str:
+def _increase_cost(crop: Crop, slots: Sequence[tuple[str, Sequence[RenderedMethod]]], context: RenderContext, footprint: str) -> str:
     """The goods-category cost of the building's main good: the producing method with the highest output value, as
     ``goods_categories.building_increase_cost_assignments`` picks it (so the cost test holds by construction)."""
     candidates = []
@@ -711,6 +720,11 @@ def _increase_cost(crop: Crop, slots: Sequence[tuple[str, Sequence[RenderedMetho
             value = float(method.output) * float(context.prices.get(method.produced, 0.0))
             candidates.append((value, float(method.output), method.produced, method.name))
     good = max(candidates)[2] if candidates else crop.good
+    from prosper_or_perish_constructor.goods_categories import farm_level_cost_text
+
+    factor, footprints = context.farm_cost_factor
+    if footprint in footprints:  # [farm_level_cost]: farms repeat their levels cheaper
+        return farm_level_cost_text(context.category_costs[good], factor)
     return context.category_costs[good]
 
 

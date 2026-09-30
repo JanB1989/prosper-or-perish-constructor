@@ -78,6 +78,14 @@ unique_production_methods = {
         debug_max_profit = workshop_profit_margin
     }
 }
+unique_production_methods = {
+    pp_fine_cloth_workshop_market_sales = {
+        offset = 0.012
+        produced = fine_cloth
+        output = 0.002
+        category = building_maintenance
+    }
+}
 obsolete = fine_cloth_guild
 custom_tags = {
     workshop

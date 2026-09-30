@@ -70,5 +70,13 @@ unique_production_methods = {
         category = building_maintenance
     }
 }
+unique_production_methods = {
+    pp_market_village_market_sales = {
+        offset = 0.013
+        produced = tools
+        output = 0.004
+        category = building_maintenance
+    }
+}
 }
 # <<< eu5-building-pipeline:market_village:building

@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:terraced_coffee_grove:building
 terraced_coffee_grove = {
 is_foreign = no
-increase_per_level_cost = 0.17
+increase_per_level_cost = 0.11
 max_levels = farm_capacity_max_terraced_coffee_grove
 pop_type = laborers
 employment_size = 1
@@ -57,6 +57,14 @@ unique_production_methods = {
         manual_labor = 0.228
         produced = coffee
         output = 0.901
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_terraced_coffee_grove_market_sales = {
+        offset = 0.012
+        produced = coffee
+        output = 0.004
         category = building_maintenance
     }
 }

@@ -29,6 +29,14 @@ unique_production_methods = {
         category = guild_input
     }
 }
+unique_production_methods = {
+    pp_lucca_silk_production_guild_market_sales = {
+        offset = 0.012
+        produced = silk
+        output = 0.003
+        category = building_maintenance
+    }
+}
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.41
 price = pp_lucca_silk_production_guild_price

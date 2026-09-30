@@ -23,6 +23,14 @@ unique_production_methods = {
         category = guild_input
     }
 }
+unique_production_methods = {
+    pp_dyes_mill_market_sales = {
+        offset = 0.012
+        produced = dyes
+        output = 0.003
+        category = building_maintenance
+    }
+}
 obsolete = dyesworks
 construction_demand = manufactory_construction
 raw_modifier = {

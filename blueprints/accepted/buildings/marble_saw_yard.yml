@@ -5,7 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_marble_saw_yard_base_marble: base
-gate_method: pp_marble_saw_yard_marble
+gate_method: pp_marble_saw_yard_market_sales
 upgrade_chain:
   family: marble_quarry
   tier: 1
@@ -29,6 +29,9 @@ building:
       methods:
         - pp_marble_saw_yard_no_primary
         - pp_marble_saw_yard_marble
+    - name: slot_3
+      methods:
+        - pp_marble_saw_yard_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -98,6 +101,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_marble_saw_yard_market_sales = {
+            offset = 0.01
+            produced = marble
+            output = 0.002
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -121,6 +132,9 @@ localization:
     pp_marble_saw_yard_stone: Quarry Rubble Sorting
     pp_marble_saw_yard_sand: Marble Fines Washing
     renaissance_sculptures_desc: Sculptural patronage raises demand for selected stone and marble. Better block selection and quarry saws improve both ordinary stone and ornamental marble supply.
+    pp_marble_saw_yard_market_sales: Market Sales
+    pp_marble_saw_yard_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    marble_saw_yard_slot_3: Market
 icon:
   source_png: ../assets/icons/marble_saw_yard.png
   output_dds: marble_saw_yard.dds
@@ -157,3 +171,8 @@ evaluation:
         input_throughput: Marble fines washing is an ancillary marble saw-yard byproduct, intentionally less profitable than primary sawed-block quarrying.
         output_throughput: Marble fines washing is an ancillary marble saw-yard byproduct, intentionally less profitable than primary sawed-block quarrying.
         amortization_months: Marble fines washing is an ancillary marble saw-yard byproduct, intentionally less profitable than primary sawed-block quarrying.
+    pp_marble_saw_yard_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

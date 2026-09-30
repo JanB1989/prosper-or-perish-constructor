@@ -38,6 +38,14 @@ increase_per_level_cost = 0.18
         }
 
     }
+    unique_production_methods = {
+        pp_improved_charcoal_maker_market_sales = {
+            offset = 0.01
+            produced = coal
+            output = 0.005
+            category = building_maintenance
+        }
+    }
 
     construction_demand = guild_construction
 

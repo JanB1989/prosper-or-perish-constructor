@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:pepper_garden:building
 pepper_garden = {
 is_foreign = no
-increase_per_level_cost = 0.21
+increase_per_level_cost = 0.13
 max_levels = farm_capacity_max_pepper_garden
 pop_type = laborers
 employment_size = 1
@@ -42,6 +42,14 @@ unique_production_methods = {
         manual_labor = 0.216
         produced = pepper
         output = 0.416
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_pepper_garden_market_sales = {
+        offset = 0.01
+        produced = pepper
+        output = 0.002
         category = building_maintenance
     }
 }

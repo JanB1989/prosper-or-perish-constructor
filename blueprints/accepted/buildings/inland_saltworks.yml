@@ -5,7 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_inland_saltworks_base_salt: base
-gate_method: pp_inland_saltworks_open_pan_boiling
+gate_method: pp_inland_saltworks_market_sales
 upgrade_chain:
   family: inland_saltworks
   tier: 0
@@ -24,6 +24,9 @@ building:
     methods:
     - pp_inland_saltworks_salt_flat_scraping
     - pp_inland_saltworks_open_pan_boiling
+  - name: slot_2
+    methods:
+    - pp_inland_saltworks_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -116,6 +119,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_inland_saltworks_market_sales = {
+            offset = 0.01
+            produced = salt
+            output = 0.002
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -133,6 +144,9 @@ localization:
     pp_inland_saltworks_base_salt: Surveyed Inland Brine
     pp_inland_saltworks_salt_flat_scraping: Salt-Flat Scraping
     pp_inland_saltworks_open_pan_boiling: Open-Pan Brine Boiling
+    pp_inland_saltworks_market_sales: Market Sales
+    pp_inland_saltworks_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    inland_saltworks_slot_2: Market
 icon:
   source_png: ../assets/icons/inland_saltworks.png
   output_dds: inland_saltworks.dds
@@ -148,3 +162,8 @@ evaluation:
         profit_percent: Empty selector method intentionally leaves base inland salt output unchanged.
     pp_inland_saltworks_open_pan_boiling:
       production_efficiency: 1.1
+    pp_inland_saltworks_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

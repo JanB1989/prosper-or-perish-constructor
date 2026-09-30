@@ -60,6 +60,14 @@ unique_production_methods = {
         debug_max_profit = mills_profit_margin
     }
 }
+unique_production_methods = {
+    pp_distiller_mill_market_sales = {
+        offset = 0.01
+        produced = liquor
+        output = 0.004
+        category = building_maintenance
+    }
+}
 custom_tags = {
     lategame_manufactory
 }

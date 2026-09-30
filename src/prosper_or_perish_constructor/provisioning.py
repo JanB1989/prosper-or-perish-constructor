@@ -6,9 +6,9 @@ Every building that grows or catches a calorie good gets one slot with two metho
   output modifier grows with the stored province food (0x while the store is empty). It pays the fuller the store is.
 - ``pp_<b>_provision`` (listed last): buys the building's own good back and turns it into Province Food (``local_food``).
   At the Province Food floor price it earns a thin margin by design; it pays while the province store is low and the good
-  is cheap. It is the building's ``gate_method`` (``production_gate.py``): the slot comes last and Provision is listed
-  last, so its margin (1.2 at base prices) is the one the AI's profit-margin check reads, not the dummy's (0 at an empty
-  store).
+  is cheap. Provision is listed last in the slot. The AI's profit-margin check reads the building's Market gate leg,
+  which comes after this slot (``production_gate.py``): Provision buys the building's own good, so gating on it made the
+  AI stop building exactly when the good was dear.
 
 Amounts scale with the building's size, measured by its base output: ``M = base_output / reference_base_output``,
 where ``base_output`` is the output of the first slot-0 method that produces the building's own good.

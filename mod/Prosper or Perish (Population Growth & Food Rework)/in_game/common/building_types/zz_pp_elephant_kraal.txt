@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:elephant_kraal:building
 elephant_kraal = {
 is_foreign = no
-increase_per_level_cost = 0.12
+increase_per_level_cost = 0.08
 max_levels = farm_capacity_max_elephant_kraal
 pop_type = laborers
 employment_size = 1
@@ -42,6 +42,14 @@ unique_production_methods = {
         manual_labor = 0.064
         produced = elephants
         output = 0.076
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_elephant_kraal_market_sales = {
+        offset = 0.01
+        produced = elephants
+        output = 0.002
         category = building_maintenance
     }
 }

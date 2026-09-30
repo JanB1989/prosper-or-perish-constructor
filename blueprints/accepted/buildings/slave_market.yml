@@ -3,7 +3,7 @@ tag: slave_market
 footprint: trade
 labour:
   class: craft_medieval
-gate_method: pp_slave_market_slave_market_maintenance
+gate_method: pp_slave_market_market_sales
 building:
   key: slave_market
   mode: REPLACE
@@ -12,6 +12,9 @@ building:
   - name: slot_0
     methods:
     - pp_slave_market_slave_market_maintenance
+  - name: slot_1
+    methods:
+    - pp_slave_market_market_sales
   possible_production_methods: []
   body: |
     audio_tier = 2
@@ -54,6 +57,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_slave_market_market_sales = {
+            offset = 0.012
+            produced = slaves_goods
+            output = 0.004
+            category = building_maintenance
+        }
+    }
     modifier = {
         building_enslavement_power = 0.1
         local_slave_pop_satisfaction = -0.025
@@ -64,8 +75,17 @@ localization:
   entries:
     slave_market_slot_0: Slave Market Work
     pp_slave_market_slave_market_maintenance: Slave Market Slave Market Maintenance
+    pp_slave_market_market_sales: Market Sales
+    pp_slave_market_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    slave_market_slot_1: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
     input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
     output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+  production_methods:
+    pp_slave_market_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

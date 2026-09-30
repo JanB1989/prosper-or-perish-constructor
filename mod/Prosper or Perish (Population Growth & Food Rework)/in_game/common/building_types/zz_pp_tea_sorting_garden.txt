@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:tea_sorting_garden:building
 tea_sorting_garden = {
 is_foreign = no
-increase_per_level_cost = 0.17
+increase_per_level_cost = 0.11
 max_levels = farm_capacity_max_tea_sorting_garden
 pop_type = laborers
 employment_size = 1
@@ -58,6 +58,14 @@ unique_production_methods = {
         manual_labor = 0.3
         produced = tea
         output = 1.189
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_tea_sorting_garden_market_sales = {
+        offset = 0.012
+        produced = tea
+        output = 0.004
         category = building_maintenance
     }
 }

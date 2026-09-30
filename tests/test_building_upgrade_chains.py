@@ -9,6 +9,7 @@ import polars as pl
 from eu5gameparser.domain.eu5 import load_eu5_data
 from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5_mod_orchestrator.config import load_project_config
+from prosper_or_perish_constructor.production_gate import is_leg
 from prosper_or_perish_constructor import yaml_io
 from prosper_or_perish_constructor.crop_farms import load_crop_table
 
@@ -1856,7 +1857,10 @@ def test_cash_crop_upgrade_chains_use_dedicated_discovery_advances_and_clean_inp
             assert not re.search(r"^\s*focus\s*=", advancement_body, flags=re.M)
 
             expected_inputs = CASH_CROP_UPGRADE_INPUTS[key]
-            actual_inputs = set().union(*_inline_production_method_inputs(body).values())
+            # the Market gate leg pays a floor-pinned dummy; it is a technical method, not part of the recipe
+            actual_inputs = set().union(
+                *(inputs for method, inputs in _inline_production_method_inputs(body).items() if not is_leg(method))
+            )
             assert actual_inputs <= expected_inputs["allowed"]
             assert expected_inputs["required"] <= actual_inputs
             assert actual_inputs.isdisjoint(FORBIDDEN_CASH_CROP_UPGRADE_INPUT_GOODS)

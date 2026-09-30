@@ -10,7 +10,7 @@ labour:
     pp_olive_farm_cottage_hives: base
     pp_olive_farm_provision: keep
     pp_olive_farm_sell_surplus: keep
-gate_method: pp_olive_farm_provision
+gate_method: pp_olive_farm_market_sales
 upgrade_chain:
   family: olive_farm
   tier: 0
@@ -38,12 +38,15 @@ building:
     methods:
     - pp_olive_farm_sell_surplus
     - pp_olive_farm_provision
+  - name: slot_4
+    methods:
+    - pp_olive_farm_market_sales
   possible_production_methods: []
   body: |-
     audio_tier = 1
     startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
-    increase_per_level_cost = 0.13
+    increase_per_level_cost = 0.08
     max_levels = farm_capacity_max_olive_farm
     pop_type = peasants
     employment_size = 1
@@ -127,6 +130,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_olive_farm_market_sales = {
+            offset = 0.01
+            produced = olives
+            output = 0.01
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
       farm_capacity_from_olive_farm = -1
@@ -170,6 +181,7 @@ localization:
     olive_farm_slot_1: Beekeeping
     olive_farm_slot_2: Cultivation
     olive_farm_slot_3: Provisioning
+    olive_farm_slot_4: Market
     pp_olive_farm_base: Groves
     pp_olive_farm_no_cultivation: No Cultivation
     pp_olive_farm_pruned_grove: Pruned Grove
@@ -185,6 +197,8 @@ localization:
     pp_olive_farm_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
     pp_olives_farm_advance_general: Olive Cultivation
     pp_olives_farm_advance_general_desc: Adopt olive cultivation through trade and regional exchange.
+    pp_olive_farm_market_sales: Market Sales
+    pp_olive_farm_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
 icon:
   source_png: ../assets/icons/olive_farm.png
   output_dds: olive_farm.dds
@@ -217,3 +231,8 @@ evaluation:
     pp_olive_farm_sell_surplus:
       allow_rules:
         base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
+    pp_olive_farm_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

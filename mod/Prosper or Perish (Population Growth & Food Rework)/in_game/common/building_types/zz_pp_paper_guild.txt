@@ -39,6 +39,14 @@ unique_production_methods = {
         category = guild_input
     }
 }
+unique_production_methods = {
+    pp_paper_guild_market_sales = {
+        offset = 0.01
+        produced = paper
+        output = 0.005
+        category = building_maintenance
+    }
+}
 custom_tags = {
     guild
 }

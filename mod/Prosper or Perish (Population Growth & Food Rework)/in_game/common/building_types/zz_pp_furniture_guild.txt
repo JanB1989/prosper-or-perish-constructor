@@ -23,6 +23,14 @@ unique_production_methods = {
         category = guild_input
     }
 }
+unique_production_methods = {
+    pp_furniture_guild_market_sales = {
+        offset = 0.012
+        produced = furniture
+        output = 0.004
+        category = building_maintenance
+    }
+}
 construction_demand = guild_construction
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.56

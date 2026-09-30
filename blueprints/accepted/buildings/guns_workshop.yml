@@ -3,7 +3,7 @@ tag: guns_workshop
 footprint: urban_workshop
 labour:
   class: craft_reformation
-gate_method: pp_guns_workshop_guns_workshop_bronze_maintenance
+gate_method: pp_guns_workshop_market_sales
 building:
   key: guns_workshop
   mode: REPLACE
@@ -17,6 +17,9 @@ building:
     methods:
     - pp_guns_workshop_guns_workshop_iron_maintenance
     - pp_guns_workshop_guns_workshop_bronze_maintenance
+  - name: slot_2
+    methods:
+    - pp_guns_workshop_market_sales
   possible_production_methods: []
   body: |
     audio_tier = 2
@@ -71,6 +74,14 @@ building:
             category = workshop_input
         }
     }
+    unique_production_methods = {
+        pp_guns_workshop_market_sales = {
+            offset = 0.012
+            produced = firearms
+            output = 0.004
+            category = building_maintenance
+        }
+    }
     obsolete = gun_smith
     construction_demand = workshop_construction
     modifier = {}
@@ -86,8 +97,17 @@ localization:
     pp_guns_workshop_guns_workshop_iron_maintenance: Guns Workshop Guns Workshop Iron Maintenance
     pp_guns_workshop_guns_workshop_ammunition_lead_maintenance: Guns Workshop Guns Workshop Ammunition Lead Maintenance
     pp_guns_workshop_guns_workshop_ammunition_iron_maintenance: Guns Workshop Guns Workshop Ammunition Iron Maintenance
+    pp_guns_workshop_market_sales: Market Sales
+    pp_guns_workshop_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    guns_workshop_slot_2: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
     input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
     output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+  production_methods:
+    pp_guns_workshop_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

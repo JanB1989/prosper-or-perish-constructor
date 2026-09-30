@@ -28,10 +28,17 @@
   is the last `unique_production_methods` block and the method is listed last. The rest is ordered by importance:
   base slots first, storage legs and the Provisioning switch last, other slots and methods by output value,
   output-less methods first in their slot.
-- `uv run ppc gate apply` flags unflagged blueprints by that rule and rewrites the order (ordering only, amounts never
-  change; slot labels, `production_method_slots` and `# slot N` comments follow). `uv run ppc gate check` must report
-  0 unflagged, 0 out of order, 0 problems; `ppc build` prints it and `tests/test_production_gate.py` enforces it. The
-  crop farm generator renders the same order. Methods never move between slots.
+- `uv run ppc gate apply` flags unflagged blueprints by that rule and rewrites the order (slot labels,
+  `production_method_slots` and `# slot N` comments follow). `uv run ppc gate check` must report 0 unflagged, 0 out of
+  order, 0 legs to write, 0 problems; `ppc build` prints it and `tests/test_production_gate.py` enforces it. The crop
+  farm generator renders the same order. Methods never move between slots.
+- Gate leg (2026-09-30): every building with a market main good (base method's good, else its most valuable output;
+  never a floor-pinned dummy or storage-leg good) gets a last slot "Market" with one method `pp_<building>_market_sales`
+  that makes a little of that good for `offset`, at margin 1.0 (`[production_gate.leg]`). A one-method slot is always
+  read, so the gate follows the main good's price whatever is researched or in the market. `ppc gate apply` writes and
+  updates the leg (body block, slot list, localization, evaluation allow rules); the labour pass skips it. Buildings
+  without a market good, storage-leg gates (grange, tavern) and `strategic_goods` get none. Never gate on a method that
+  buys the building's own main good (inverts the AI's price response).
 - A slot's first method is what new and game-start buildings run, so reordering can change defaults.
 
 ## Logistics

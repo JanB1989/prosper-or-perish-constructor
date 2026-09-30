@@ -5,7 +5,7 @@ labour:
   class: primary_discovery
   methods:
     pp_alum_works_base_alum: base
-gate_method: pp_alum_works_alum
+gate_method: pp_alum_works_market_sales
 upgrade_chain:
   family: alum_quarry
   tier: 1
@@ -29,6 +29,9 @@ building:
       methods:
         - pp_alum_works_no_primary
         - pp_alum_works_alum
+    - name: slot_3
+      methods:
+        - pp_alum_works_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -97,6 +100,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_alum_works_market_sales = {
+            offset = 0.012
+            produced = alum
+            output = 0.004
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -120,6 +131,9 @@ localization:
     pp_alum_works_clay: Shale Clay Sorting
     green_vitriol: Vitriol and Alum Leaching
     green_vitriol_desc: Vitriol-bearing shale is roasted and leached with the alum liquor, improving yields at alum works.
+    pp_alum_works_market_sales: Market Sales
+    pp_alum_works_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    alum_works_slot_3: Market
 icon:
   source_png: ../assets/icons/alum_works.png
   output_dds: alum_works.dds
@@ -152,3 +166,8 @@ evaluation:
         profit_percent: Shale clay sorting is an ancillary alum works byproduct, intentionally less profitable than primary alum extraction.
         input_throughput: Shale clay sorting is an ancillary alum works byproduct, intentionally less profitable than primary alum extraction.
         output_throughput: Shale clay sorting is an ancillary alum works byproduct, intentionally less profitable than primary alum extraction.
+    pp_alum_works_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

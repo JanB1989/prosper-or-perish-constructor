@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:cattle_model_farm:building
 cattle_model_farm = {
 is_foreign = no
-increase_per_level_cost = 0.12
+increase_per_level_cost = 0.08
 max_levels = farm_capacity_max_cattle_model_farm
 pop_type = laborers
 employment_size = 1
@@ -58,6 +58,14 @@ unique_production_methods = {
         produced = local_food
         output = 1.6
         debug_max_profit = 4.993
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_cattle_model_farm_market_sales = {
+        offset = 0.012
+        produced = livestock
+        output = 0.008
         category = building_maintenance
     }
 }

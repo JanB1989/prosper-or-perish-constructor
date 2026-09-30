@@ -29,6 +29,14 @@ unique_production_methods = {
         debug_max_profit = rural_profit_margin
     }
 }
+unique_production_methods = {
+    pp_tar_kiln_market_sales = {
+        offset = 0.01
+        produced = tar
+        output = 0.005
+        category = building_maintenance
+    }
+}
 build_time = rural_build_time
 construction_demand = guild_construction
 increase_per_level_cost = 0.17

@@ -11,6 +11,16 @@ city = yes
 megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
+    pp_winery_honey_winery_maintenance = {
+        beeswax = 0.54
+        lumber = 0.18
+        tools = 0.09
+        manual_labor = 0.27
+        produced = wine
+        output = 0.97
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
     pp_winery_fruit_winery_maintenance = {
         fruit = 1.12
         lumber = 0.15
@@ -31,15 +41,13 @@ unique_production_methods = {
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
-    pp_winery_honey_winery_maintenance = {
-        beeswax = 0.54
-        lumber = 0.18
-        tools = 0.09
-        manual_labor = 0.27
+}
+unique_production_methods = {
+    pp_winery_market_sales = {
+        offset = 0.01
         produced = wine
-        output = 0.97
-        category = guild_input
-        debug_max_profit = guild_profit_margin
+        output = 0.005
+        category = building_maintenance
     }
 }
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).

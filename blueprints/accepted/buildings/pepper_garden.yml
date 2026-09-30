@@ -5,7 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_pepper_garden_base_pepper: base
-gate_method: pp_pepper_garden_blanched_garbling_yards
+gate_method: pp_pepper_garden_market_sales
 upgrade_chain:
   family: pepper_garden
   tier: 0
@@ -24,10 +24,13 @@ building:
     methods:
     - pp_pepper_garden_no_garbling
     - pp_pepper_garden_blanched_garbling_yards
+  - name: slot_2
+    methods:
+    - pp_pepper_garden_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
-    increase_per_level_cost = 0.28
+    increase_per_level_cost = 0.17
     max_levels = farm_capacity_max_pepper_garden
     pop_type = laborers
     employment_size = 1
@@ -71,6 +74,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_pepper_garden_market_sales = {
+            offset = 0.01
+            produced = pepper
+            output = 0.002
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
       farm_capacity_from_pepper_garden = -1
@@ -89,6 +100,9 @@ localization:
     pp_pepper_garden_base_pepper: Pepper Vines
     pp_pepper_garden_no_garbling: No Sorting Yards
     pp_pepper_garden_blanched_garbling_yards: Pepper Sorting Yards
+    pp_pepper_garden_market_sales: Market Sales
+    pp_pepper_garden_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    pepper_garden_slot_2: Market
 icon:
   source_png: ../assets/icons/pepper_garden.png
   output_dds: pepper_garden.dds
@@ -109,3 +123,8 @@ evaluation:
       allow_rules:
         amortization_months: Existing accepted pepper garden payback is faster than the new amortization minimum; revisit during the pepper garden rebalance.
         profit_percent: Cash-crop processing breaks even at 0.6x base so the home market can run a surplus for trade (2026-09-26); the high base-price profit is intended.
+    pp_pepper_garden_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

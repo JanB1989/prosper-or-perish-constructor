@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:cotton_farm:building
 cotton_farm = {
 is_foreign = no
-increase_per_level_cost = 0.14
+increase_per_level_cost = 0.08
 max_levels = farm_capacity_max_cotton_farm
 pop_type = laborers
 employment_size = 1
@@ -43,6 +43,14 @@ unique_production_methods = {
         manual_labor = 0.2
         produced = cotton
         output = 0.619
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_cotton_farm_market_sales = {
+        offset = 0.012
+        produced = cotton
+        output = 0.004
         category = building_maintenance
     }
 }

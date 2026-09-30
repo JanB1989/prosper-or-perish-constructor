@@ -3,7 +3,7 @@ REPLACE:fruit_orchard = {
     audio_tier = 1
     startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
-    increase_per_level_cost = 0.19
+    increase_per_level_cost = 0.11
     pop_type = peasants
     max_levels = farm_capacity_max_fruit_orchard
     employment_size = 1
@@ -56,6 +56,14 @@ REPLACE:fruit_orchard = {
             produced = local_food
             output = 0.96
             debug_max_profit = 5.000
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_fruit_orchard_market_sales = {
+            offset = 0.01
+            produced = fruit
+            output = 0.01
             category = building_maintenance
         }
     }

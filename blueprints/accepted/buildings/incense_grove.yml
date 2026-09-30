@@ -5,7 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_incense_grove_base_incense: base
-gate_method: pp_incense_grove_tapping_camps
+gate_method: pp_incense_grove_market_sales
 building:
   key: incense_grove
   mode: CREATE
@@ -18,10 +18,13 @@ building:
     methods:
     - pp_incense_grove_wild_resins
     - pp_incense_grove_tapping_camps
+  - name: slot_2
+    methods:
+    - pp_incense_grove_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
-    increase_per_level_cost = 0.20
+    increase_per_level_cost = 0.12
     max_levels = farm_capacity_max_incense_grove
     pop_type = laborers
     employment_size = 1
@@ -67,6 +70,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_incense_grove_market_sales = {
+            offset = 0.01
+            produced = incense
+            output = 0.004
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
       farm_capacity_from_incense_grove = -1
@@ -85,6 +96,9 @@ localization:
     pp_incense_grove_base_incense: Resin Trees
     pp_incense_grove_wild_resins: Wild Resin Gathering
     pp_incense_grove_tapping_camps: Tapping Camps
+    pp_incense_grove_market_sales: Market Sales
+    pp_incense_grove_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    incense_grove_slot_2: Market
 icon:
   source_png: ../assets/icons/incense_grove.png
   output_dds: incense_grove.dds
@@ -101,3 +115,8 @@ evaluation:
         amortization_months: Valuable raw incense deposits repay faster than the generic amortization window at the standard small raw-site price.
     pp_incense_grove_tapping_camps:
       production_efficiency: 1.05
+    pp_incense_grove_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

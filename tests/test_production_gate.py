@@ -185,6 +185,174 @@ unique_production_methods = {
     assert [s.names() for s in pg.ordered_slots(slots, order)][-1] == ["pp_x_sell_surplus", "pp_x_provision"]
 
 
+# ---------------------------------------------------------------- the gate leg
+
+LEG_CONFIG = """
+[production_gate]
+threshold = 1.2
+dynamic_goods = ["province_food_sales", "province_food_purchase"]
+pinned_goods = ["local_food", "offset", "logistics"]
+strategic_goods = ["stone"]
+
+[blueprint_evaluation]
+base_method_input_goods = ["manual_labor"]
+
+[production_gate.leg]
+margin = 1.0
+value = 0.01
+input = "offset"
+slot_label = "Market"
+method_name = "Market Sales"
+method_desc = "A few hands carry a small share of the produce straight to market."
+"""
+
+FARM = """version: 2
+tag: rye_farm
+footprint: farm_land
+labour:
+  class: primary_medieval
+gate_method: pp_rye_farm_provision
+building:
+  key: rye_farm
+  mode: CREATE
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_rye_farm_base
+  - name: slot_1
+    methods:
+    - pp_rye_farm_no_cultivation
+    - pp_rye_farm_plough
+  - name: slot_2
+    methods:
+    - pp_rye_farm_sell_surplus
+    - pp_rye_farm_provision
+  possible_production_methods: []
+  body: |-
+    pop_type = peasants
+    unique_production_methods = {
+        pp_rye_farm_base = {
+            manual_labor = 0.012
+            produced = wheat
+            output = 0.06
+        }
+    }
+    unique_production_methods = {
+        pp_rye_farm_no_cultivation = {
+            category = building_maintenance
+        }
+        pp_rye_farm_plough = {
+            livestock = 0.037
+            manual_labor = 0.022
+            produced = wheat
+            output = 0.15
+        }
+    }
+    unique_production_methods = {
+        pp_rye_farm_sell_surplus = {
+            produced = province_food_sales
+            output = 0.005
+        }
+        pp_rye_farm_provision = {
+            wheat = 0.08
+            produced = local_food
+            output = 0.96
+        }
+    }
+
+    modifier = {
+        local_monthly_food = 1.5
+    }
+localization:
+  entries:
+    rye_farm: Rye Farm
+    rye_farm_slot_0: Fields
+    rye_farm_slot_1: Cultivation
+    rye_farm_slot_2: Provisioning
+evaluation:
+  allow_rules:
+    profit_percent: kept
+"""
+
+LEG_PRICES = {**PRICES, "local_food": 0.1, "province_food_sales": 5.0}
+
+
+@pytest.fixture
+def leg_repo(tmp_path: Path) -> Path:
+    (tmp_path / "constructor.toml").write_text(LEG_CONFIG, encoding="utf-8")
+    folder = tmp_path / pg.BLUEPRINT_ROOT_RELATIVE / "buildings"
+    folder.mkdir(parents=True)
+    (folder / "rye_farm.yml").write_text(FARM, encoding="utf-8")
+    (folder / "grange.yml").write_text(GRANGE.replace("building:\n", "gate_method: pp_grange_surplus_sales\nbuilding:\n", 1), encoding="utf-8")
+    (tmp_path / pg.MANIFEST_RELATIVE).write_text(
+        "enabled:\n  buildings/rye_farm.yml: true\n  buildings/grange.yml: true\n", encoding="utf-8"
+    )
+    return tmp_path
+
+
+def _load(repo: Path, name: str) -> dict:
+    return yaml_io.safe_load((repo / pg.BLUEPRINT_ROOT_RELATIVE / "buildings" / f"{name}.yml").read_text(encoding="utf-8"))
+
+
+def test_a_market_good_building_gets_a_gate_leg_as_its_last_one_method_slot(leg_repo: Path) -> None:
+    pg.apply(leg_repo, leg_repo / "constructor.toml", LEG_PRICES)
+    data = _load(leg_repo, "rye_farm")
+    slots, _ = pg.body_slots(data["building"]["body"])
+    leg = slots[-1].methods
+    assert data["gate_method"] == "pp_rye_farm_market_sales"
+    assert [m.name for m in leg] == ["pp_rye_farm_market_sales"]  # one method: the AI always reads it
+    assert leg[0].produced == "wheat" and leg[0].inputs == {"offset": 0.01} and leg[0].output == 0.01
+    assert leg[0].margin(LEG_PRICES) == pytest.approx(1.0)
+    # the Provision gate that bought the crop is gone; the other slots keep their importance order
+    assert [s.names() for s in slots[:-1]] == [
+        ["pp_rye_farm_base"],
+        ["pp_rye_farm_no_cultivation", "pp_rye_farm_plough"],
+        ["pp_rye_farm_sell_surplus", "pp_rye_farm_provision"],
+    ]
+    assert data["building"]["production_method_slots"][-1] == {"name": "slot_3", "methods": ["pp_rye_farm_market_sales"]}
+    entries = data["localization"]["entries"]
+    assert entries["rye_farm_slot_3"] == "Market" and entries["pp_rye_farm_market_sales"] == "Market Sales"
+    assert entries["rye_farm_slot_2"] == "Provisioning"
+    assert data["evaluation"]["allow_rules"] == {"profit_percent": "kept"}
+    assert data["evaluation"]["production_methods"]["pp_rye_farm_market_sales"]["allow_rules"] == pg.LEG_ALLOW_RULES
+    assert data["building"]["body"].rstrip().endswith("modifier = {\n    local_monthly_food = 1.5\n}")
+    # stable, and a changed price only rewrites the leg's amounts
+    assert not pg.apply(leg_repo, leg_repo / "constructor.toml", LEG_PRICES, write=False).pending
+    pg.apply(leg_repo, leg_repo / "constructor.toml", {**LEG_PRICES, "wheat": 2.0})
+    slots, _ = pg.body_slots(_load(leg_repo, "rye_farm")["building"]["body"])
+    assert len(slots) == 4 and slots[-1].methods[0].output == 0.005 and slots[-1].methods[0].inputs == {"offset": 0.01}
+
+
+def test_a_storage_leg_gate_keeps_its_own_gate(leg_repo: Path) -> None:
+    pg.apply(leg_repo, leg_repo / "constructor.toml", LEG_PRICES)
+    data = _load(leg_repo, "grange")
+    assert data["gate_method"] == "pp_grange_surplus_sales"
+    assert not any(pg.is_leg(m.name) for s in pg.body_slots(data["building"]["body"])[0] for m in s.methods)
+
+
+def test_main_good_is_the_base_good_not_a_dearer_side_good() -> None:
+    body = """unique_production_methods = {
+    pp_x_base = { manual_labor = 0.012 produced = olives output = 0.06 }
+}
+unique_production_methods = {
+    pp_x_no_hives = { category = building_maintenance }
+    pp_x_hives = { manual_labor = 0.01 produced = beeswax output = 0.05 }
+}"""
+    slots, _ = pg.body_slots(body)
+    config = pg.GateConfig(leg=pg.LegConfig())
+    assert pg.main_good(slots, config, {"olives": 1.0, "beeswax": 5.0, "manual_labor": 1.0}) == "olives"
+    leg = pg.plan_leg("x", slots, None, config, {"olives": 1.0, "beeswax": 5.0, "manual_labor": 1.0, "offset": 1.0})
+    assert leg is not None and leg.good == "olives"
+    assert pg.plan_leg("x", slots, None, pg.GateConfig(leg=pg.LegConfig(), strategic_goods=frozenset({"olives"})), {"olives": 1.0, "offset": 1.0}) is None
+
+
+def test_the_gate_leg_is_a_labour_free_technical_method() -> None:
+    from prosper_or_perish_constructor import production_labour
+
+    assert pg.is_leg("pp_wheat_farm_market_sales") and not pg.is_leg("pp_wheat_farm_sell_surplus")
+    assert production_labour.is_leg is pg.is_leg
+
+
 # ---------------------------------------------------------------- the repo
 
 
@@ -198,3 +366,26 @@ def test_every_production_blueprint_is_in_gate_order() -> None:
     result = pg.apply(ROOT, ROOT / "constructor.toml", write=False)
     assert not result.problems
     assert [p.blueprint.name for p in result.pending] == [], "run uv run ppc gate apply"
+
+
+def test_every_market_good_building_gates_on_its_leg_and_no_gate_buys_its_main_good() -> None:
+    """Engine rule (AI rulebook 2.4i): the last method the AI reads decides the margin check, and a one-method slot is
+    always read. So every building with a market main good ends in its gate leg; no remaining gate buys its main good."""
+    config = pg.load_config(ROOT / "constructor.toml")
+    prices = pg.load_prices(ROOT, ROOT / "constructor.toml", config)
+    result = pg.apply(ROOT, ROOT / "constructor.toml", prices, write=False)
+    legs = 0
+    for plan in result.plans:
+        good = pg.main_good(pg.without_legs(plan.slots), config, prices)
+        if plan.leg is not None:
+            legs += 1
+            assert plan.gate == plan.leg.name and plan.slots[-1].methods == (plan.leg.method(),), plan.building
+            assert plan.leg.method().margin(prices) == pytest.approx(config.leg.margin, rel=0.02), plan.building
+        else:
+            where = pg.locate(plan.slots, plan.gate)
+            gate = plan.slots[where[0]].methods[where[1]]
+            assert not (good and gate.inputs.get(good, 0) > 0), plan.building
+    assert legs > 150
+    by_name = {p.building: p for p in result.plans}
+    assert by_name["wheat_farm"].gate == "pp_wheat_farm_market_sales"
+    assert by_name["grange"].gate == "pp_grange_surplus_sales" and by_name["tavern"].leg is None

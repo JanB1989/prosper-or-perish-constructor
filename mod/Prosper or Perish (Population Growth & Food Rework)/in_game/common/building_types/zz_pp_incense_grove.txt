@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:incense_grove:building
 incense_grove = {
 is_foreign = no
-increase_per_level_cost = 0.15
+increase_per_level_cost = 0.09
 max_levels = farm_capacity_max_incense_grove
 pop_type = laborers
 employment_size = 1
@@ -44,6 +44,14 @@ unique_production_methods = {
         manual_labor = 0.092
         produced = incense
         output = 0.222
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_incense_grove_market_sales = {
+        offset = 0.01
+        produced = incense
+        output = 0.004
         category = building_maintenance
     }
 }

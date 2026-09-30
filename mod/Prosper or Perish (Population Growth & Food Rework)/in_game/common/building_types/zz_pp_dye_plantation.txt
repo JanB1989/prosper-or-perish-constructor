@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:dye_plantation:building
 dye_plantation = {
 is_foreign = no
-increase_per_level_cost = 0.15
+increase_per_level_cost = 0.09
 max_levels = farm_capacity_max_dye_plantation
 pop_type = laborers
 employment_size = 1
@@ -42,6 +42,14 @@ unique_production_methods = {
         manual_labor = 0.236
         produced = dyes
         output = 0.563
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_dye_plantation_market_sales = {
+        offset = 0.012
+        produced = dyes
+        output = 0.003
         category = building_maintenance
     }
 }

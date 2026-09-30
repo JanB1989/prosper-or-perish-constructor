@@ -23,6 +23,14 @@ unique_production_methods = {
         category = manufactory_input
     }
 }
+unique_production_methods = {
+    pp_paper_manufactory_market_sales = {
+        offset = 0.01
+        produced = paper
+        output = 0.005
+        category = building_maintenance
+    }
+}
 obsolete = paper_workshop
 custom_tags = {
     midgame_manufactory

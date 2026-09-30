@@ -8,7 +8,7 @@ labour:
     pp_millet_farmstead_base: base
     pp_millet_farmstead_provision: keep
     pp_millet_farmstead_sell_surplus: keep
-gate_method: pp_millet_farmstead_provision
+gate_method: pp_millet_farmstead_market_sales
 upgrade_chain:
   family: millet_farm
   tier: 1
@@ -31,10 +31,13 @@ building:
     methods:
     - pp_millet_farmstead_sell_surplus
     - pp_millet_farmstead_provision
+  - name: slot_3
+    methods:
+    - pp_millet_farmstead_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
-    increase_per_level_cost = 0.15
+    increase_per_level_cost = 0.09
     max_levels = farm_capacity_max_millet_farmstead
     pop_type = peasants
     employment_size = 1
@@ -94,6 +97,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_millet_farmstead_market_sales = {
+            offset = 0.01
+            produced = millet
+            output = 0.01
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
       farm_capacity_from_millet_farmstead = -1
@@ -114,6 +125,7 @@ localization:
     millet_farmstead_slot_0: Fields
     millet_farmstead_slot_1: Cultivation
     millet_farmstead_slot_2: Provisioning
+    millet_farmstead_slot_3: Market
     pp_millet_farmstead_base: Fields
     pp_millet_farmstead_no_cultivation: No Cultivation
     pp_millet_farmstead_manured_hill_plots: Manured Hill Plots
@@ -122,6 +134,8 @@ localization:
     pp_millet_farmstead_provision_desc: The household buys its own crop back and cooks for the province. Worth it while the province store is low and the crop is cheap.
     pp_millet_farmstead_sell_surplus: Sell the Surplus
     pp_millet_farmstead_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
+    pp_millet_farmstead_market_sales: Market Sales
+    pp_millet_farmstead_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
 icon:
   source_png: ../assets/icons/millet_farmstead.png
   output_dds: millet_farmstead.dds
@@ -147,3 +161,8 @@ evaluation:
     pp_millet_farmstead_sell_surplus:
       allow_rules:
         base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
+    pp_millet_farmstead_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

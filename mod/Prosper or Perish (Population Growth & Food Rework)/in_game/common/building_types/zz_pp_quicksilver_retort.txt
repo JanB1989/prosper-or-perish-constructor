@@ -67,6 +67,14 @@ unique_production_methods = {
         category = building_maintenance
     }
 }
+unique_production_methods = {
+    pp_quicksilver_retort_market_sales = {
+        offset = 0.012
+        produced = mercury
+        output = 0.004
+        category = building_maintenance
+    }
+}
 
 raw_modifier = {
 	local_population_capacity = 0.35

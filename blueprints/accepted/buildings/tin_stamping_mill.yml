@@ -6,7 +6,7 @@ labour:
   methods:
     pp_tin_stamping_mill_base_tin: base
 output_tag: tin_streamworks_stamping_mill
-gate_method: pp_tin_stamping_mill_tin
+gate_method: pp_tin_stamping_mill_market_sales
 upgrade_chain:
   family: tin_mine
   tier: 1
@@ -30,6 +30,9 @@ building:
       methods:
         - pp_tin_stamping_mill_no_primary
         - pp_tin_stamping_mill_tin
+    - name: slot_3
+      methods:
+        - pp_tin_stamping_mill_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -98,6 +101,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_tin_stamping_mill_market_sales = {
+            offset = 0.01
+            produced = tin
+            output = 0.005
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -120,6 +131,9 @@ localization:
     pp_tin_stamping_mill_no_secondary: No Sulphide Sorting
     pp_tin_stamping_mill_copper: Copper Sulphide Sorting
     pp_tin_stamping_mill_lead: Lead Ore Picking
+    pp_tin_stamping_mill_market_sales: Market Sales
+    pp_tin_stamping_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    tin_stamping_mill_slot_3: Market
 icon:
   source_png: ../assets/icons/tin_stamping_mill.png
   output_dds: tin_stamping_mill.dds
@@ -154,3 +168,8 @@ evaluation:
         input_throughput: Lead ore picking is an ancillary tin-lode byproduct, intentionally less profitable than primary stamped tin dressing.
         output_throughput: Lead ore picking is an ancillary tin-lode byproduct, intentionally less profitable than primary stamped tin dressing.
         amortization_months: Lead ore picking is an ancillary tin-lode byproduct, intentionally less profitable than primary stamped tin dressing.
+    pp_tin_stamping_mill_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

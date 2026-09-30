@@ -6,7 +6,7 @@ labour:
   methods:
     pp_water_sawmill_base_lumber: base
 output_tag: lumber_mill_hydraulic_sawmill
-gate_method: pp_water_sawmill_horse_tools
+gate_method: pp_water_sawmill_market_sales
 upgrade_chain:
   family: lumber_mill
   tier: 1
@@ -33,6 +33,9 @@ building:
     - pp_water_sawmill_livestock_tools
     - pp_water_sawmill_horse_victuals
     - pp_water_sawmill_horse_tools
+  - name: slot_3
+    methods:
+    - pp_water_sawmill_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -136,6 +139,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_water_sawmill_market_sales = {
+            offset = 0.014
+            produced = lumber
+            output = 0.008
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -171,6 +182,9 @@ localization:
     water_sawmill_slot_0: Woodland Cutting
     water_sawmill_slot_1: Crew Support
     water_sawmill_slot_2: Water Sawing
+    pp_water_sawmill_market_sales: Market Sales
+    pp_water_sawmill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    water_sawmill_slot_3: Market
 icon:
   source_png: ../assets/icons/water_sawmill.png
   output_dds: water_sawmill.dds
@@ -206,3 +220,8 @@ evaluation:
         input_throughput: Wound salves are an ancillary crew-recovery support method, intentionally smaller than primary sawmill throughput.
         output_throughput: Wound salves are an ancillary crew-recovery support method, intentionally smaller than primary sawmill throughput.
         amortization_months: Wound salves are an ancillary crew-recovery support method, not a standalone payback driver for water sawmills.
+    pp_water_sawmill_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

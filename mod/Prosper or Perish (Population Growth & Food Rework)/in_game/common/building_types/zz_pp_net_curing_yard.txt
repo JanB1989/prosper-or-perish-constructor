@@ -115,6 +115,14 @@ unique_production_methods = {
         category = building_maintenance
     }
 }
+unique_production_methods = {
+    pp_net_curing_yard_market_sales = {
+        offset = 0.01
+        produced = fish
+        output = 0.01
+        category = building_maintenance
+    }
+}
 
 raw_modifier = {
 	local_population_capacity = 0.5

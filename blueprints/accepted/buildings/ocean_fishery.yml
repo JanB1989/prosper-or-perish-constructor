@@ -7,7 +7,7 @@ labour:
     pp_ocean_fishery_base_catch: base
     pp_ocean_fishery_provision: keep
     pp_ocean_fishery_sell_surplus: keep
-gate_method: pp_ocean_fishery_provision
+gate_method: pp_ocean_fishery_market_sales
 upgrade_chain:
   family: ocean_fishery
   tier: 0
@@ -30,6 +30,9 @@ building:
       methods:
         - pp_ocean_fishery_sell_surplus
         - pp_ocean_fishery_provision
+    - name: slot_3
+      methods:
+        - pp_ocean_fishery_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -91,6 +94,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_ocean_fishery_market_sales = {
+            offset = 0.01
+            produced = fish
+            output = 0.01
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -118,6 +129,9 @@ localization:
     pp_ocean_fishery_provision_desc: The household buys its own catch back and cooks for the province. Worth it while the province store is low and the good is cheap.
     pp_ocean_fishery_sell_surplus: Sell the Surplus
     pp_ocean_fishery_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
+    pp_ocean_fishery_market_sales: Market Sales
+    pp_ocean_fishery_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    ocean_fishery_slot_3: Market
 icon:
   source_png: ../assets/icons/ocean_fishery.png
   output_dds: ocean_fishery.dds
@@ -145,3 +159,8 @@ evaluation:
     pp_ocean_fishery_sell_surplus:
       allow_rules:
         base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
+    pp_ocean_fishery_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

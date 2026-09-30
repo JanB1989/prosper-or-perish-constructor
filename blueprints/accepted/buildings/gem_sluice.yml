@@ -5,7 +5,7 @@ labour:
   class: primary_reformation
   methods:
     pp_gem_sluice_base_gems: base
-gate_method: pp_gem_sluice_gems
+gate_method: pp_gem_sluice_market_sales
 upgrade_chain:
   family: gem_mine
   tier: 1
@@ -29,6 +29,9 @@ building:
       methods:
         - pp_gem_sluice_no_primary
         - pp_gem_sluice_gems
+    - name: slot_3
+      methods:
+        - pp_gem_sluice_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -97,6 +100,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_gem_sluice_market_sales = {
+            offset = 0.012
+            produced = gems
+            output = 0.003
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -121,6 +132,9 @@ localization:
     pp_gem_sluice_sand: Washed Sand Sorting
     foreign_mining_techniques: Foreign Mining Techniques
     foreign_mining_techniques_desc: Imported timbering, water control, and sluice practice improve gemstone recovery from gravel beds and shallow lodes.
+    pp_gem_sluice_market_sales: Market Sales
+    pp_gem_sluice_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    gem_sluice_slot_3: Market
 icon:
   source_png: ../assets/icons/gem_sluice.png
   output_dds: gem_sluice.dds
@@ -155,3 +169,8 @@ evaluation:
         input_throughput: Washed sand sorting is an ancillary placer byproduct, intentionally less profitable than primary sluice washing.
         output_throughput: Washed sand sorting is an ancillary placer byproduct, intentionally less profitable than primary sluice washing.
         amortization_months: Washed sand sorting is an ancillary placer byproduct, intentionally less profitable than primary sluice washing.
+    pp_gem_sluice_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

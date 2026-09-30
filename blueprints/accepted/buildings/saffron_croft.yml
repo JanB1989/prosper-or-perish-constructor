@@ -5,7 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_saffron_croft_base_saffron: base
-gate_method: pp_saffron_croft_toasting_braziers
+gate_method: pp_saffron_croft_market_sales
 upgrade_chain:
   family: saffron_croft
   tier: 0
@@ -24,10 +24,13 @@ building:
     methods:
     - pp_saffron_croft_no_drying
     - pp_saffron_croft_toasting_braziers
+  - name: slot_2
+    methods:
+    - pp_saffron_croft_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
-    increase_per_level_cost = 0.28
+    increase_per_level_cost = 0.17
     max_levels = farm_capacity_max_saffron_croft
     pop_type = laborers
     employment_size = 1
@@ -71,6 +74,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_saffron_croft_market_sales = {
+            offset = 0.01
+            produced = saffron
+            output = 0.002
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
       farm_capacity_from_saffron_croft = -1
@@ -89,6 +100,9 @@ localization:
     pp_saffron_croft_base_saffron: Crocus Beds
     pp_saffron_croft_no_drying: No Stigma Drying
     pp_saffron_croft_toasting_braziers: Toasting Braziers
+    pp_saffron_croft_market_sales: Market Sales
+    pp_saffron_croft_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    saffron_croft_slot_2: Market
 icon:
   source_png: ../assets/icons/saffron_croft.png
   output_dds: saffron_croft.dds
@@ -107,3 +121,8 @@ evaluation:
       production_efficiency: 1.05
       allow_rules:
         profit_percent: Cash-crop processing breaks even at 0.6x base so the home market can run a surplus for trade (2026-09-26); the high base-price profit is intended.
+    pp_saffron_croft_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

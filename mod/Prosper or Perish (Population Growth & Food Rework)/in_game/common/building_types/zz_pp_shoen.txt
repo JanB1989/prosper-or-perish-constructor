@@ -112,6 +112,14 @@ unique_production_methods = {
         category = building_maintenance
     }
 }
+unique_production_methods = {
+    pp_shoen_market_sales = {
+        offset = 0.014
+        produced = lumber
+        output = 0.008
+        category = building_maintenance
+    }
+}
 construction_demand = japanese_clan_building_construction
 increase_per_level_cost = 0.11
 	raw_modifier = {

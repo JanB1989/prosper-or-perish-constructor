@@ -105,6 +105,14 @@ REPLACE:forest_village = {
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_forest_village_market_sales = {
+            offset = 0.01
+            produced = beeswax
+            output = 0.005
+            category = building_maintenance
+        }
+    }
     construction_demand = village_construction
     raw_modifier = {
       local_population_capacity = 0.5

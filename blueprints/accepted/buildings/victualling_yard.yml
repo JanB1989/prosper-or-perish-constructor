@@ -139,10 +139,10 @@ building:
     # Yard's profit follows only the victuals price against grain and shipping. Per level at base prices (victuals 3,
     # grain 1): about +0.7..+0.9 gold at level 1, falling by the -5 % per level to 0 around level 5.
 
-    # per Yard level, staffed or not: the quays, warehouses and moorings crowd the harbour (fewer free building levels),
-    # and every level ships a little less (-5 % victuals), so a big Yard never makes food and grows with diminishing returns
+    # per Yard level, staffed or not: every level ships a little less (-5 % victuals), so a big Yard never makes food and
+    # grows with diminishing returns (its free-building-level cost was removed 2026-09-30: supported levels come only from
+    # location attributes and rank)
     raw_modifier = {
-      free_building_levels = -5
       local_victuals_output_modifier = -0.05
     }
 

@@ -94,7 +94,7 @@ def test_the_harbour_yard_ships_grain_and_packs_little_of_the_store() -> None:
     assert "local_monthly_food = -8.0" in text and "pop_type = burghers" in text
     assert "local_food_capacity" not in text and "local_sailors = 0.003" in text
     assert "increase_per_level_cost = 1.0" in text and "{gold = 50 sailors = 0.25}" in text
-    assert "free_building_levels = -5" in text
+    assert "free_building_levels" not in text   # supported levels come only from attributes and rank (2026-09-30)
     # 8 food + 2.33 grain (12 food each in the farms' Provisioning) for 1.2 victuals = 30 food per victual (the Tavern's)
     grain = shipments[0]["wheat"]
     assert abs((8.0 + grain * 12.0) / (0.268 + 0.932) - 30.0) < 0.05

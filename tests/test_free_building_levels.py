@@ -157,10 +157,10 @@ def test_committed_local_free_building_levels_copy_loads_via_polars() -> None:
     weights = read_local_free_building_level_sheet_csv(repo=repo)
 
     assert weights.height == 43
-    assert weights.filter(pl.col("factor") == "capital")["free_building_levels"].item() == 15.0
+    assert weights.filter(pl.col("factor") == "capital")["free_building_levels"].item() == 6.0
     assert (
         weights.filter(pl.col("factor") == "location_rank")["free_building_levels"].unique().sort().to_list()
-        == [30.0, 40.0, 50.0, 70.0]
+        == [30.0, 36.0, 42.0, 48.0]
     )
     assert weights.filter(pl.col("factor") == "river_level", pl.col("value") == "0").is_empty()
     worst_static = (
@@ -174,7 +174,7 @@ def test_committed_local_free_building_levels_copy_loads_via_polars() -> None:
             "free_building_levels"
         ].item()
     )
-    assert worst_static == -75.0
+    assert worst_static == -20.0   # 2026-09-30: worst terrain stays above a rural base of 30 (floor ~10)
     best_static = (
         weights.filter(pl.col("factor") == "topography", pl.col("value") == "flatland")[
             "free_building_levels"
@@ -192,7 +192,7 @@ def test_committed_local_free_building_levels_copy_loads_via_polars() -> None:
             "free_building_levels"
         ].item()
     )
-    assert best_static == 48.0
+    assert best_static == 20.0   # 2026-09-30: river 5 + port + mediterranean
     assert weights.filter(pl.col("factor") == "topography").height == 7
     assert weights.filter(pl.col("factor") == "climate").height == 8
     fixed_efficiency = weights.filter(
@@ -634,7 +634,7 @@ def test_river_level_zero_is_baseline_and_positive_levels_match_old_totals() -> 
         pl.lit(0.0).alias("development"),
     )
 
-    expected_capacity = {0: 47.0, 1: 57.0, 5: 77.0}
+    expected_capacity = {0: 37.0, 1: 40.0, 5: 49.0}
     expected_efficiency = {0: -0.13, 1: -0.03, 5: 0.17}
     for river_level, capacity_total in expected_capacity.items():
         frame = location.with_columns(pl.lit(river_level).alias("river_level"))
@@ -721,34 +721,34 @@ def test_compile_free_building_level_modifiers_updates_without_clobbering(tmp_pa
 
     topography_text = topography_path.read_text(encoding="utf-8-sig")
     assert "local_monthly_food_modifier = 0.1" in topography_text
-    assert "free_building_levels = -10" in topography_text
+    assert "free_building_levels = -3" in topography_text
     assert "local_build_buildings_efficiency = -0.08" in topography_text
     assert "local_construction_speed = -0.08" in topography_text
 
     vegetation_text = vegetation_path.read_text(encoding="utf-8-sig")
     assert "local_population_capacity = -10" in vegetation_text
-    assert "free_building_levels = -25" in vegetation_text
+    assert "free_building_levels = -6" in vegetation_text
 
     climate_text = climate_path.read_text(encoding="utf-8-sig")
     assert "local_food_decay = 0.004" in climate_text
-    assert "free_building_levels = -5" in climate_text
+    assert "free_building_levels = -2" in climate_text
     assert "local_build_buildings_efficiency = -0.06" in climate_text
     assert "local_construction_speed = -0.06" in climate_text
     assert "TRY_INJECT:arid" in climate_text
 
     ranks_text = ranks_path.read_text(encoding="utf-8-sig")
-    assert "free_building_levels = -50" in ranks_text
+    assert "free_building_levels = -58" in ranks_text
     assert "local_population_capacity = -100" in ranks_text
     assert "local_build_buildings_efficiency = -0.3" in ranks_text
     assert "local_construction_speed = -0.55" in ranks_text
 
     static_text = static_path.read_text(encoding="utf-8-sig")
     assert "local_monthly_food_modifier = -0.05" in static_text
-    assert "free_building_levels = 10" in static_text
+    assert "free_building_levels = 3" in static_text
     assert "local_build_buildings_efficiency = 0.1" in static_text
     assert "local_construction_speed = 0.1" in static_text
     assert "TRY_REPLACE:development" in static_text
-    assert "free_building_levels = 0.3" in static_text
+    assert "free_building_levels = 0.5" in static_text
     assert "local_food_capacity = 10" in static_text
     assert "TRY_INJECT:is_port" in static_text
     assert "TRY_INJECT:naval_governor" not in static_text
@@ -756,8 +756,9 @@ def test_compile_free_building_level_modifiers_updates_without_clobbering(tmp_pa
 
     building_types_text = building_types_path.read_text(encoding="utf-8-sig")
     assert "local_proximity_source = 80" in building_types_text
-    assert "free_building_levels = 20" in building_types_text
-    assert "free_building_levels = 25" in building_types_text
+    # governors carry no free building levels since 2026-09-30
+    assert "free_building_levels = 20" not in building_types_text
+    assert "free_building_levels = 25" not in building_types_text
     assert "TRY_INJECT:naval_governor" in building_types_text
     assert "TRY_INJECT:local_governor" in building_types_text
 

@@ -11,7 +11,7 @@ TRY_REPLACE:river_flowing_through_1 = {
 	fish_capacity_from_river_size = 1
 	irrigant_cap_modifier = 1
 	pp_river_boatmen_yard_cap_modifier = 3
-	free_building_levels = 10
+	free_building_levels = 3
 	local_build_buildings_efficiency = 0.1
 	local_construction_speed = 0.1
 }
@@ -25,7 +25,7 @@ TRY_REPLACE:river_flowing_through_2 = {
 	fish_capacity_from_river_size = 1
 	irrigant_cap_modifier = 2
 	pp_river_boatmen_yard_cap_modifier = 6
-	free_building_levels = 15
+	free_building_levels = 5
 	local_build_buildings_efficiency = 0.15
 	local_construction_speed = 0.15
 }
@@ -39,7 +39,7 @@ TRY_REPLACE:river_flowing_through_3 = {
 	fish_capacity_from_river_size = 2
 	irrigant_cap_modifier = 3
 	pp_river_boatmen_yard_cap_modifier = 9
-	free_building_levels = 20
+	free_building_levels = 7
 	local_build_buildings_efficiency = 0.2
 	local_construction_speed = 0.2
 }
@@ -53,7 +53,7 @@ TRY_REPLACE:river_flowing_through_4 = {
 	fish_capacity_from_river_size = 3
 	irrigant_cap_modifier = 4
 	pp_river_boatmen_yard_cap_modifier = 12
-	free_building_levels = 25
+	free_building_levels = 9
 	local_build_buildings_efficiency = 0.25
 	local_construction_speed = 0.25
 }
@@ -67,7 +67,7 @@ TRY_REPLACE:river_flowing_through_5 = {
 	fish_capacity_from_river_size = 4
 	irrigant_cap_modifier = 5
 	pp_river_boatmen_yard_cap_modifier = 15
-	free_building_levels = 30
+	free_building_levels = 12
 	local_build_buildings_efficiency = 0.3
 	local_construction_speed = 0.3
 }

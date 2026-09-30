@@ -23,6 +23,8 @@ building:
   - name: slot_1
     methods:
     - pp_horse_breeders_pasture_herds
+    - pp_horse_breeders_fodder_leys
+    - pp_horse_breeders_millet_fodder
     - pp_horse_breeders_stud_yards
     - pp_horse_breeders_selected_stallions
   possible_production_methods: []
@@ -47,9 +49,9 @@ building:
 
     unique_production_methods = {
         pp_horse_breeders_base_horses = {
-            manual_labor = 0.06
+            manual_labor = 0.051
             produced = horses
-            output = 0.100
+            output = 0.085
             category = building_maintenance
         }
     }
@@ -57,21 +59,37 @@ building:
         pp_horse_breeders_pasture_herds = {
             category = building_maintenance
         }
-        pp_horse_breeders_stud_yards = {
-            wheat = 0.36 # fodder grain
-            leather = 0.039 # tack and harness
-            manual_labor = 0.097
+        pp_horse_breeders_fodder_leys = {
+            legumes = 0.29 # clover, vetch and horse gram
+            leather = 0.025 # tack and harness
+            manual_labor = 0.08
             produced = horses
-            output = 0.222
+            output = 0.155
+            category = building_maintenance
+        }
+        pp_horse_breeders_millet_fodder = {
+            millet = 0.26 # millet and sorghum feed
+            leather = 0.025 # tack and harness
+            manual_labor = 0.07
+            produced = horses
+            output = 0.155
+            category = building_maintenance
+        }
+        pp_horse_breeders_stud_yards = {
+            wheat = 0.306 # fodder grain
+            leather = 0.033 # tack and harness
+            manual_labor = 0.082
+            produced = horses
+            output = 0.189
             category = building_maintenance
         }
         pp_horse_breeders_selected_stallions = {
-            wheat = 0.41 # grain and stable feed
-            legumes = 0.16 # hay and fodder leys
-            leather = 0.057 # tack and harness
-            manual_labor = 0.17
+            wheat = 0.349 # grain and stable feed
+            legumes = 0.136 # hay and fodder leys
+            leather = 0.048 # tack and harness
+            manual_labor = 0.145
             produced = horses
-            output = 0.34
+            output = 0.289
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -86,9 +104,13 @@ building:
 localization:
   entries:
     horse_breeders_slot_0: Horse Pastures
-    horse_breeders_slot_1: Stud Yards
+    horse_breeders_slot_1: Feeding and Breeding
     pp_horse_breeders_base_horses: Horse Pastures
     pp_horse_breeders_pasture_herds: Pasture Herds
+    pp_horse_breeders_millet_fodder: Millet and Sorghum Fodder
+    pp_horse_breeders_millet_fodder_desc: Breeders on dry ground feed their mares and colts on millet and sorghum grown for the stable.
+    pp_horse_breeders_fodder_leys: Fodder Leys
+    pp_horse_breeders_fodder_leys_desc: Clover, vetch and horse gram grown on rested fields carry the herd through the lean months instead of bread grain.
     pp_horse_breeders_selected_stallions: Selected Stallions
     pp_horse_breeders_stud_yards: Stud Yards
     pp_selected_stallions: Selected Stallions
@@ -108,6 +130,10 @@ evaluation:
   production_methods:
     pp_horse_breeders_base_horses:
       production_efficiency: 1.0
+    pp_horse_breeders_millet_fodder:
+      production_efficiency: 1.05
+    pp_horse_breeders_fodder_leys:
+      production_efficiency: 1.05
     pp_horse_breeders_stud_yards:
       production_efficiency: 1.05
     pp_horse_breeders_selected_stallions:

@@ -42,12 +42,12 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_rice_farm_dryland_rice = {
-        livestock = 0.014
+        livestock = 0.008
         tools = 0.003
         manual_labor = 0.006
         produced = rice
-        output = 0.1
-        debug_max_profit = 0.646
+        output = 0.11
+        debug_max_profit = 1.126
         category = building_maintenance
     }
     pp_rice_farm_wet_paddy = {

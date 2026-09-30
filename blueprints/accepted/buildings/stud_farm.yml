@@ -52,9 +52,9 @@ building:
 
     unique_production_methods = {
         pp_stud_farm_base_horses = {
-            manual_labor = 0.06
+            manual_labor = 0.051
             produced = horses
-            output = 0.100
+            output = 0.085
             category = building_maintenance
         }
     }
@@ -63,24 +63,24 @@ building:
             category = building_maintenance
         }
         pp_stud_farm_approved_stallions = {
-            wheat = 0.58 # grain and stable feed
-            legumes = 0.31 # hay and fodder leys
-            leather = 0.11 # tack and harness
-            tools = 0.11 # farrier and stable tools
-            manual_labor = 0.17
+            wheat = 0.493 # grain and stable feed
+            legumes = 0.264 # hay and fodder leys
+            leather = 0.094 # tack and harness
+            tools = 0.094 # farrier and stable tools
+            manual_labor = 0.145
             produced = horses
-            output = 0.62
+            output = 0.527
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_stud_farm_stud_books = {
-            wheat = 0.71 # grain and stable feed
-            legumes = 0.4 # hay and fodder leys
-            leather = 0.13 # tack and harness
-            paper = 0.11 # pedigrees and service records
-            manual_labor = 0.22
+            wheat = 0.604 # grain and stable feed
+            legumes = 0.34 # hay and fodder leys
+            leather = 0.111 # tack and harness
+            paper = 0.094 # pedigrees and service records
+            manual_labor = 0.187
             produced = horses
-            output = 0.72
+            output = 0.612
             debug_max_profit = 0
             category = building_maintenance
         }

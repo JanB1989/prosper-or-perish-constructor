@@ -446,7 +446,9 @@ def test_zero_employment_buildings_support_their_own_level() -> None:
         if not on or not path.is_file():
             continue
         body = str((_yaml.safe_load(path.read_text(encoding="utf-8")) or {}).get("building", {}).get("body", ""))
-        if _re.search(r"(?m)^\s*employment_size\s*=\s*0(?:\.0+)?\s*$", body) and "free_building_levels = 1" not in body:
+        zero = _re.search(r"(?m)^\s*employment_size\s*=\s*0(?:\.0+)?\s*$", body)
+        capacity = "max_levels = pp_wb_cap_" in body   # farmland units, not buildings that need logistics
+        if (zero or capacity) and "free_building_levels = 1" not in body:
             missing.append(rel)
     assert missing == []
 

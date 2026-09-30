@@ -24,13 +24,13 @@ MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_VALUES_ROOT = MOD_ROOT / "in_game" / "common" / "script_values"
 CULLING_EFFECTS_PATH = MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_capacity_culling_effects.txt"
-# error_log fields after "PPBLD;<kind>;" for a scripted cull (the yearly review cull in pp_ai_building_review_effects.txt
-# writes the same fields): date;country;location;building. The log text reads the saved scopes pp_cull_country,
-# pp_cull_location and pp_cull_type (SCOPE.sCountry/sLocation/sBuildingType); ROOT and a building are not reachable
-# from it (in game 2026-09-30: "Promote 'ROOT' returned nullptr", no promote GetBuilding).
+# error_log fields after "PPBLD;<kind>;" for a scripted cull, written in the culled building's scope (the yearly review
+# cull in pp_ai_building_review_effects.txt writes the same fields): date;building owner tag;location id;building;level
+# before the cull. Verified in game 2026-09-30: the log text reaches the building through THIS; ROOT and saved scopes
+# (SCOPE.sCountry/sLocation/...) resolve to nothing there.
 CULL_LOG_FIELDS = (
-    "[GetDateString];[SCOPE.sCountry('pp_cull_country').GetTag];[SCOPE.sLocation('pp_cull_location').GetKey];"
-    "[SCOPE.sBuildingType('pp_cull_type').GetNameWithNoTooltip]"
+    "[GetDateString];[THIS.GetBuilding.GetOwner.GetTag];[THIS.GetBuilding.GetLocation.GetKey];"
+    "[THIS.GetBuilding.GetType.GetNameWithNoTooltip];[THIS.GetBuilding.GetLevel]"
 )
 BUILDING_BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted" / "buildings"
 
@@ -390,13 +390,14 @@ def _culling_effects_file() -> str:
             _line("value > $max_level$", 4),
             _line("}", 3),
             _line("}", 2),
-            _line("# Debug flag: scripted cull, counted per location (save) and logged before the level change.", 2),
-            _line("# Log fields: kind;date;country;location;building.", 2),
+            _line("# Debug flag: scripted cull, counted per location (save) and logged from the building's scope before the", 2),
+            _line("# level change (the log text reaches the building through THIS). Log fields: kind;date;owner tag;", 2),
+            _line("# location id;building;level before the cull.", 2),
             _line("if = { limit = { has_variable = pp_dbg_script_cull } change_variable = { name = pp_dbg_script_cull add = 1 } } else = { set_variable = { name = pp_dbg_script_cull value = 1 } }", 2),
-            _line("root = { save_temporary_scope_as = pp_cull_country }", 2),
-            _line("save_temporary_scope_as = pp_cull_location", 2),
-            _line("building_type:$building$ = { save_temporary_scope_as = pp_cull_type }", 2),
-            _line(f'error_log = "PPBLD;capacity_cull;{CULL_LOG_FIELDS}"', 2),
+            _line("random_buildings_in_location = {", 2),
+            _line("limit = { building_type = building_type:$building$ }", 3),
+            _line(f'error_log = "PPBLD;capacity_cull;{CULL_LOG_FIELDS}"', 3),
+            _line("}", 2),
             _line("change_building_level_in_location = {", 2),
             _line("building = building_type:$building$", 3),
             _line("value = -1", 3),

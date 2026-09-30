@@ -731,8 +731,8 @@ builder), 96 capacity culls (81 granges). Small next to the AI: tavern levels we
 almost all from the AI queue.
 
 Since 2026-09-30 each scripted cull logs where, what and when, written from the culled building's scope before the level
-change: `PPBLD;<review_cull_closed|capacity_cull>;<date>;<country tag>;<location key>;<building key>;<building
-name>;<level before the cull>`. The yearly review culls only closed buildings, so it never touches the zero-employment
+change: `PPBLD;<review_cull_closed|capacity_cull>;<date>;<building owner tag>;<location id>;<building name>;<level
+before the cull>` (the log text reaches the building through `THIS`; ROOT and saved scopes print nothing there). The yearly review culls only closed buildings, so it never touches the zero-employment
 land improvements (they are never closed); the capacity cull only touches the farm, fishing, forestry and victuals
 buildings it lists.
 

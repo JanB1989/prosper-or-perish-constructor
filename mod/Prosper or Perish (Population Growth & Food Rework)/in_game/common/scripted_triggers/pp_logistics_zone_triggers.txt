@@ -1,62 +1,45 @@
 ﻿# Prosper or Perish - logistics zones (location scope): which overland logistics building a location can build.
-# Geography only: the triggers sit in location_potential, which the game re-checks on owner change and which deletes
-# buildings that fail it. The zones never overlap (tests/test_logistics.py evaluates them over every location); the
-# Carrier Inn serves every road outside them. "Dry" climates are the Koeppen B group (desert and steppe) plus the
-# dry-summer continental interiors of Anatolia, Iran and Transoxiana.
+# Scoped by the map hierarchy only (sub-continent, region, area; never climate, owner or culture): whole regions split
+# the world into exact, stable zones, and the triggers sit in location_potential, which the game re-checks on owner
+# change. The zones never overlap (tests/test_logistics.py evaluates them over every location); the Carrier Inn serves
+# every road outside them.
 
-# Caravanserai: the dry lands of the caravan roads - Anatolia, Persia, the Levant, Arabia, Central Asia with the Tarim
-# basin, and the Maghreb north of the Sahara.
+# Caravanserai: the khan and caravanserai roads - Anatolia, the Caucasus, Persia, the Fertile Crescent, Arabia, Egypt,
+# the Maghreb north of the Sahara, Khorasan and Transoxiana, and the Tarim basin.
 pp_logistics_zone_caravan = {
 	OR = {
-		climate = arid
-		climate = cold_arid
-		climate = hot_steppe
-		climate = cold_steppe
-		climate = dry_summer_continental
-	}
-	OR = {
-		sub_continent = sub_continent:middle_east
-		AND = {
-			sub_continent = sub_continent:central_asia
-			NOT = { area = area:desht_kipchak_area }
-		}
+		region = region:anatolia_region
+		region = region:caucasus_region
+		region = region:persia_region
+		region = region:crescent_region
+		region = region:arabia_region
+		region = region:egypt_region
 		region = region:xinjiang_region
 		AND = {
 			region = region:maghreb_region
 			NOT = { area = area:desert_area }
 			NOT = { area = area:western_sahara_area }
 		}
+		AND = {
+			region = region:khorasan_region
+			NOT = { area = area:desht_kipchak_area }
+		}
 	}
 }
 
-# Oasis Caravan Station: the desert and savanna of Africa south of the Maghreb - the Sahara, the Sahel, Nubia and Wadai.
+# Oasis Caravan Station: the Sahara, the Sahel, Nubia and the Somali coast.
 pp_logistics_zone_oasis = {
 	OR = {
-		climate = arid
-		climate = hot_steppe
-		climate = savanna
-	}
-	OR = {
 		region = region:sahel_region
-		AND = {
-			region = region:nubia_region
-			NOT = { area = area:equatoria_area }
-		}
-		area = area:desert_area
+		region = region:nubia_region
+		region = region:somalia_region
+		area = area:desert_area   # the Sahara part of the Maghreb region
 		area = area:western_sahara_area
-		area = area:wadai_area
 	}
 }
 
-# Yam Station: the steppe, the forests and the taiga of northern and eastern Eurasia - Russia, the Urals, the Pontic
-# and Kazakh steppe, Siberia and Mongolia (with the Gobi).
+# Yam Station: Russia, the Urals, the Pontic steppe, Siberia, Mongolia and the Kazakh steppe.
 pp_logistics_zone_yam = {
-	OR = {
-		climate = cold_steppe
-		climate = continental
-		climate = subarctic
-		climate = cold_arid
-	}
 	OR = {
 		region = region:russian_region
 		region = region:ural_region
@@ -73,15 +56,9 @@ pp_logistics_zone_banjara = {
 	sub_continent = sub_continent:south_asia
 }
 
-# Llama Caravan Post: the Andean highlands (no llamas in Mesoamerica).
+# Llama Caravan Post: the Andes (no llamas in Mesoamerica).
 pp_logistics_zone_llama = {
 	region = region:andes_region
-	OR = {
-		topography = mountains
-		topography = plateau
-		topography = hills
-		topography = valleys
-	}
 }
 
 # Any regional variant: the Carrier Inn builds outside these.

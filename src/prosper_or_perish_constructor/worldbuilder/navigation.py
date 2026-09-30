@@ -141,6 +141,9 @@ on_built = {{ custom_tooltip = pp_river_canal_built_tt hidden_effect = {{ locati
 on_destroyed = {{ custom_tooltip = pp_river_canal_destroyed_tt hidden_effect = {{ location = {{ pp_river_canal_destroyed = yes }} }} }}
 forbidden_for_estates = yes
 ai_forbid_shutdown = yes
+raw_modifier = {{
+  free_building_levels = 1
+}}
 '''
 
 
@@ -443,7 +446,10 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     triggers=[]
     for n in range(1,6):
         triggers.append(f'pp_navigation_river_level_{n} = {{ has_location_modifier = river_flowing_through_{n} }}')
-    triggers.append('pp_navigation_has_river = { OR = { '+' '.join(f'pp_navigation_river_level_{n} = yes' for n in range(1,6))+' } }')
+    # has_river reads the engine's own river (its river_flowing_through_N static modifier is invisible to
+    # has_location_modifier): without it every river location got its river modifier a second time at game start
+    # (seen 2026-09-30: Anji listed "Stream Flowing Through" twice).
+    triggers.append('pp_navigation_has_river = { OR = { has_river = yes '+' '.join(f'pp_navigation_river_level_{n} = yes' for n in range(1,6))+' } }')
     write('in_game/common/scripted_triggers/pp_navigation_rivers.txt','\n'.join(triggers)+'\n')
     from .navigation_map_modes import write_map_modes
     write_map_modes(mod_root,state)

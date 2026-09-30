@@ -69,6 +69,7 @@ LEVELS_ICONS_PATH = Path("main_menu/common/modifier_icons/pp_wb_building_levels.
 LEVELS_LOC_PATH = Path("main_menu/localization/english/pp_wb_building_levels_l_english.yml")
 _VANILLA_BUILDING_RE = re.compile(r"^(?P<key>[A-Za-z0-9_]+)\s*=\s*\{", re.MULTILINE)
 _CAPACITY_LINE_RE = re.compile(r"^\s*local_population_capacity(?:_modifier)?\s*=", re.MULTILINE)
+ZERO_EMPLOYMENT_RE = re.compile(r"^\s*employment_size\s*=\s*0(?:\.0+)?\s*(?:#.*)?$", re.MULTILINE)
 _RAW_MODIFIER_RE = re.compile(r"(?P<indent>[ \t]*)raw_modifier\s*=\s*\{(?P<body>.*?)\n(?P=indent)\}", re.DOTALL)
 _MAX_LEVELS_RE = re.compile(r"^(?P<indent>[ \t]*)max_levels\s*=\s*\S+[ \t]*$", re.MULTILINE)
 _POTENTIAL_RE = re.compile(r"(?P<indent>[ \t]*)location_potential\s*=\s*\{.*?\n(?P=indent)\}", re.DOTALL)
@@ -395,6 +396,10 @@ def patch_improvement_blueprints(contract: Contract, cfg: WorldBuilderConfig, re
         raw = {"local_population_capacity": _fmt(float(info["unit_units"]))}
         if key in counted:
             raw[LEVELS_MODIFIER.format(key=key)] = "1"
+        if ZERO_EMPLOYMENT_RE.search(body):
+            # the engine's unsupported-level count takes raw levels of every building (employment 0 included), so a
+            # worker-less improvement supports its own level (2026-09-30, decompiled FUN_144612a10)
+            raw["free_building_levels"] = "1"
         body = _replace_raw_modifier(body, raw, drop_prefixes=("farm_capacity_from_", "pp_wb_levels_"))
         lock = [str(l) for l in cfg.niche.get(key, {}).get("lock", [])]
         extra_gate = cfg.niche.get(key, {}).get("gate", [])

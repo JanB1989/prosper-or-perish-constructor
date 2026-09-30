@@ -429,3 +429,30 @@ def test_terrain_free_building_levels_come_from_the_weights_sheet() -> None:
     merged = with_sheet_free_building_levels({"hills": {"free_building_levels": "-10", "local_construction_speed": "-0.08"}}, "topography", repo)
     assert float(merged["hills"]["free_building_levels"]) == hills
     assert merged["hills"]["local_construction_speed"] == "-0.08"
+
+
+def test_zero_employment_buildings_support_their_own_level() -> None:
+    # 2026-09-30: the engine counts raw levels of every building (employment 0 included) against the free building
+    # levels, so a worker-less building gives one free level per level.
+    import re as _re
+
+    import yaml as _yaml
+
+    repo = Path(__file__).resolve().parents[1]
+    manifest = _yaml.safe_load((repo / "blueprints/buildings.manifest.yml").read_text(encoding="utf-8"))["enabled"]
+    missing = []
+    for rel, on in manifest.items():
+        path = repo / "blueprints/accepted" / rel
+        if not on or not path.is_file():
+            continue
+        body = str((_yaml.safe_load(path.read_text(encoding="utf-8")) or {}).get("building", {}).get("body", ""))
+        if _re.search(r"(?m)^\s*employment_size\s*=\s*0(?:\.0+)?\s*$", body) and "free_building_levels = 1" not in body:
+            missing.append(rel)
+    assert missing == []
+
+
+def test_river_restore_sees_the_engine_river() -> None:
+    # the engine's river_flowing_through_N is invisible to has_location_modifier; has_river reads it (no double river)
+    mod = next((Path(__file__).resolve().parents[1] / "mod").glob("Prosper*Rework*"))
+    text = (mod / "in_game/common/scripted_triggers/pp_navigation_rivers.txt").read_text(encoding="utf-8-sig")
+    assert "pp_navigation_has_river = { OR = { has_river = yes" in text

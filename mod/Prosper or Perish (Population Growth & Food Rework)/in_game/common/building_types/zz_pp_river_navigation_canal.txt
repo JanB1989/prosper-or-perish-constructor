@@ -32,8 +32,9 @@ on_built = { custom_tooltip = pp_river_canal_built_tt hidden_effect = { location
 on_destroyed = { custom_tooltip = pp_river_canal_destroyed_tt hidden_effect = { location = { pp_river_canal_destroyed = yes } } }
 forbidden_for_estates = yes
 ai_forbid_shutdown = yes
-	raw_modifier = {
-		local_population_capacity = 0
-	}
+raw_modifier = {
+	local_population_capacity = 0
+  free_building_levels = 1
+}
 }
 # <<< eu5-building-pipeline:river_navigation_canal:building

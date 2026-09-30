@@ -228,7 +228,8 @@ def test_variants_are_gated_by_their_zone_and_the_carrier_inn_by_none() -> None:
 def test_zone_triggers_use_geography_only() -> None:
     text = (MOD_ROOT / lg.ZONE_TRIGGERS_RELATIVE).read_text(encoding="utf-8-sig")
     keys = set(re.findall(r"(?m)^\s*([A-Za-z_]+)\s*=", text))
-    allowed = {"OR", "AND", "NOT", "climate", "topography", "vegetation", "area", "region", "sub_continent", "continent"}
+    # map hierarchy only (2026-09-30): no climate, topography or vegetation, so zones follow whole regions
+    allowed = {"OR", "AND", "NOT", "area", "region", "sub_continent", "continent"}
     assert keys - allowed - {k for k in keys if k.startswith(lg.ZONE_PREFIX)} == set()
 
 

@@ -43,6 +43,9 @@ building:
     on_destroyed = { custom_tooltip = pp_river_canal_destroyed_tt hidden_effect = { location = { pp_river_canal_destroyed = yes } } }
     forbidden_for_estates = yes
     ai_forbid_shutdown = yes
+    raw_modifier = {
+      free_building_levels = 1
+    }
 localization:
   entries:
     river_navigation_canal: River Navigation Canal

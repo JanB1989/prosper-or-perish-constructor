@@ -43,32 +43,33 @@ def write(repo, mod_root):
                 "HARBOR",
                 f"modifier:natural_harbor_suitability max = 3 min = 0 multiply = {spec['harbor']}",
             ),
-            when("is_coastal = yes", "COAST", spec["coast"]),
         ]
-        for level in range(1, 6):
-            body.append(
-                when(
-                    f"has_location_modifier = river_flowing_through_{level}",
-                    "RIVER",
-                    round(level * spec["river_per_level"], 6),
-                )
-            )
-        # Mutually exclusive baseline classes; a maintained reach keeps its better class.
+        # Coast and waterways. Every location next to a navigation reach is coastal (river and channel banks count as
+        # coast; tests/test_victuals_logistics_caps.py), so the three neighbour scans only run on coasts. Navigable and
+        # difficult are mutually exclusive baseline classes; a maintained reach (state 4) is one of the navigable
+        # states, so its scan only runs where a navigable one was found.
         open_water = "any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 1 var:pp_navigation_map_state = 4 var:pp_navigation_map_state = 6 } }"
         hard_water = "any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 2 var:pp_navigation_map_state = 5 } }"
-        body += [
-            when(open_water, "NAVIGABLE", spec["navigable"]),
-            f"else_if = {{ limit = {{ {hard_water} }} {add('DIFFICULT', spec['difficult'])} }}",
-            when(
-                "any_neighbor_location = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 }",
-                "MAINTAINED",
-                spec["maintained"],
-            ),
-            when("is_market_center = yes", "MARKET", spec["market_center"]),
-        ]
-        for rank, n in spec["rank"].items():
-            # ?= : locations without a rank (unsettled) also evaluate these caps.
-            body.append(when(f"location_rank ?= location_rank:{rank}", "RANK", n))
+        maintained = "any_neighbor_location = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 }"
+        body.append(
+            "if = { limit = { is_coastal = yes } "
+            + add("COAST", spec["coast"])
+            + f" if = {{ limit = {{ {open_water} }} {add('NAVIGABLE', spec['navigable'])}"
+            + f" {when(maintained, 'MAINTAINED', spec['maintained'])} }}"
+            + f" else_if = {{ limit = {{ {hard_water} }} {add('DIFFICULT', spec['difficult'])} }} }}"
+        )
+        # A location carries at most one river level: stop at the first match.
+        for level in range(1, 6):
+            keyword = "if" if level == 1 else "else_if"
+            body.append(
+                f"{keyword} = {{ limit = {{ has_location_modifier = river_flowing_through_{level} }} "
+                f"{add('RIVER', round(level * spec['river_per_level'], 6))} }}"
+            )
+        body.append(when("is_market_center = yes", "MARKET", spec["market_center"]))
+        for i, (rank, n) in enumerate(spec["rank"].items()):
+            # ?= : locations without a rank (unsettled) also evaluate these caps. One rank per location.
+            keyword = "if" if i == 0 else "else_if"
+            body.append(f"{keyword} = {{ limit = {{ location_rank ?= location_rank:{rank} }} {add('RANK', n)} }}")
         if spec["food_rgo"]:
             body.append(
                 when(
@@ -81,8 +82,10 @@ def write(repo, mod_root):
             )
         if spec["farmland"]:
             body.append(when("vegetation = farmland", "FARMLAND", spec["farmland"]))
-        for terrain, n in cfg["terrain_penalties"].items():
-            body.append(when("topography = " + terrain, "TERRAIN", n))
+        for i, (terrain, n) in enumerate(cfg["terrain_penalties"].items()):
+            # one topography per location
+            keyword = "if" if i == 0 else "else_if"
+            body.append(f"{keyword} = {{ limit = {{ topography = {terrain} }} {add('TERRAIN', n)} }}")
         body += ["min = 0", f"max = {spec['maximum']}", "floor = yes"]
         lines.append(
             f"{role}_max_level = {{\n " + "\n ".join(body) + "\n}"

@@ -237,22 +237,22 @@ EXCLUDED_FARM_CAP_BUILDINGS = (
 
 FOOD_SECURITY_PRIORITY_GROUPS = {
     "food_storage": (
-        85,
+        85000,
         "Food storage remains a high priority to limit food fluctuations for AI.",
         ("granary",),
     ),
     "direct_food_production": (
-        110,
+        110000,
         "Direct food production needs second highest priority so we do not enter starvation loops.",
         ("cookshop", "public_kitchen"),
     ),
     "food_distribution": (
-        120,
+        120000,
         "Taverns and Victualling Yards receive the highest food-security priority so prepared food is distributed reliably.",
         ("tavern",),
     ),
     "water_control": (
-        95,
+        95000,
         (
             "Irrigation and other water-control buildings need high priority so food production "
             "or capacity are not destroyed through underemployment."
@@ -260,7 +260,7 @@ FOOD_SECURITY_PRIORITY_GROUPS = {
         ("irrigation_systems", "bund", "terraces", "polders", "khmer_baray", "incamisana", "land_clearance", "field_management", "field_management_convertible", "field_management_improved", "field_drainage", "irrigated_fields", "qanats"),
     ),
     "staple_food_production": (
-        90,
+        90000,
         (
             "Staple-food producer buildings need to be manned first to avoid being outcompeted "
             "by non-food-related buildings."
@@ -292,7 +292,7 @@ FOOD_SECURITY_PRIORITY_TAGS_BY_GROUP = {
     "staple_food_production": "pp_staple_food_priority",
 }
 EDUCATION_PRIORITY_TAG = "pp_education_priority"
-EDUCATION_PRIORITY_BONUS = 20000
+EDUCATION_PRIORITY_BONUS = 20000000
 EDUCATION_PRIORITY_BUILDINGS = ("library", "university")
 EDUCATION_POP_TYPES = {
     "library": "clergy",
@@ -545,16 +545,41 @@ def test_local_governor_replacement_keeps_vanilla_non_capital_location_gate() ->
     ) == ("!=", "this")
 
 
+EMPLOYMENT_PRIORITY_BONUS = SCRIPT_VALUES_ROOT / "pp_employment_priority.txt"
+EMPLOYMENT_PRIORITY_TIER_GAP = 1000  # > the systems' own values (building_index 0..~53, monthly profit ~0..40)
+
+
+def test_employment_systems_add_the_shared_priority_bonus_once() -> None:
+    # One bonus for all six systems; the tiers sit far enough apart that the system's own value only orders buildings
+    # within a tier (the engine sorts by priority; only the order and ties count).
+    employment_text = (EMPLOYMENT_SYSTEMS_ROOT / "pp_food_security_priorities.txt").read_text(encoding="utf-8-sig")
+    assert "has_tag" not in employment_text
+    employment_systems = _database_entries(EMPLOYMENT_SYSTEMS_ROOT)
+    for system in EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY:
+        system_block = employment_systems[system]
+        assert isinstance(system_block, CList)
+        priority_block = _entry_values(system_block)["priority"]
+        assert isinstance(priority_block, CList)
+        adds = [entry.value for entry in priority_block.entries if entry.key == "add"]
+        assert adds.count("pp_employment_priority_bonus") == 1, system
+
+    bonus = {entry.key: entry.value for entry in parse_file(EMPLOYMENT_PRIORITY_BONUS).entries}
+    assert "pp_employment_priority_bonus" in bonus
+    bonus_text = EMPLOYMENT_PRIORITY_BONUS.read_text(encoding="utf-8-sig")
+    tiers = sorted({int(value) for value in re.findall(r"add = (\d+)", bonus_text)})
+    assert all(b - a >= EMPLOYMENT_PRIORITY_TIER_GAP for a, b in zip(tiers, tiers[1:]))
+    # the vanilla category bonuses of the capitalism variants are scaled the same way (x1000)
+    category_bonuses = sorted({int(value) for value in re.findall(r"add = (\d+)", employment_text)})
+    assert category_bonuses == [100000, 1000000, 10000000]
+    assert EDUCATION_PRIORITY_BONUS > max(category_bonuses) + max(t for t in tiers if t != EDUCATION_PRIORITY_BONUS)
+
+
 def test_food_security_building_priorities_are_in_employment_systems() -> None:
-    priority_text = (EMPLOYMENT_SYSTEMS_ROOT / "pp_food_security_priorities.txt").read_text(
-        encoding="utf-8-sig"
-    )
+    priority_text = EMPLOYMENT_PRIORITY_BONUS.read_text(encoding="utf-8-sig")
     rendered_buildings = _database_entries(BUILDING_TYPE_ROOT)
 
     assert "pp_food_security_building_priority" not in priority_text
-    assert priority_text.count(f"has_tag = {FOOD_SECURITY_GENERAL_PRIORITY_TAG}") == len(
-        EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY
-    )
+    assert priority_text.count(f"has_tag = {FOOD_SECURITY_GENERAL_PRIORITY_TAG}") == 1
 
     for _group, (priority, comment, buildings) in FOOD_SECURITY_PRIORITY_GROUPS.items():
         tag = FOOD_SECURITY_PRIORITY_TAGS_BY_GROUP[_group]
@@ -576,35 +601,28 @@ def test_food_security_building_priorities_are_in_employment_systems() -> None:
                 tag,
             }
 
-    employment_systems = _database_entries(EMPLOYMENT_SYSTEMS_ROOT)
-    for system in EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY:
-        system_block = employment_systems[system]
-        assert isinstance(system_block, CList)
-        priority_block = _entry_values(system_block)["priority"]
-        assert isinstance(priority_block, CList)
-        assert any(
-            entry.key == "if"
-            and isinstance(entry.value, CList)
-            and _clist_contains(entry.value, "has_tag", FOOD_SECURITY_GENERAL_PRIORITY_TAG)
-            for entry in priority_block.entries
-        )
+    bonus = {entry.key: entry.value for entry in parse_file(EMPLOYMENT_PRIORITY_BONUS).entries}
+    ladder = bonus["pp_employment_priority_bonus"]
+    assert isinstance(ladder, CList)
+    assert any(
+        entry.key == "if"
+        and isinstance(entry.value, CList)
+        and _clist_contains(entry.value, "has_tag", FOOD_SECURITY_GENERAL_PRIORITY_TAG)
+        for entry in ladder.entries
+    )
 
 
 def test_education_building_priorities_are_in_employment_systems() -> None:
-    priority_text = (EMPLOYMENT_SYSTEMS_ROOT / "pp_food_security_priorities.txt").read_text(
-        encoding="utf-8-sig"
-    )
+    priority_text = EMPLOYMENT_PRIORITY_BONUS.read_text(encoding="utf-8-sig")
     rendered_buildings = _database_entries(BUILDING_TYPE_ROOT)
     production_methods = _database_entries(PRODUCTION_METHODS_ROOT)
 
-    assert priority_text.count(f"has_tag = {EDUCATION_PRIORITY_TAG}") == len(
-        EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY
-    )
+    assert priority_text.count(f"has_tag = {EDUCATION_PRIORITY_TAG}") == 1
     pattern = re.compile(
         rf"has_tag\s*=\s*{re.escape(EDUCATION_PRIORITY_TAG)}[\s\S]*?"
         rf"add\s*=\s*{EDUCATION_PRIORITY_BONUS}"
     )
-    assert len(pattern.findall(priority_text)) == len(EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY)
+    assert len(pattern.findall(priority_text)) == 1
 
     for building in EDUCATION_PRIORITY_BUILDINGS:
         rendered = rendered_buildings[building]

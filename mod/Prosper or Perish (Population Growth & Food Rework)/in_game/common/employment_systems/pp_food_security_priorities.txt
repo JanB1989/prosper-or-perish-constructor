@@ -5,66 +5,8 @@
 
 	priority = {
 		value = 1 #all treated equally
-		# Each building carries at most one group tag and one tag within a group; the commonest are tested first.
-		if = {
-			limit = { has_tag = pp_food_security_priority }
-
-			# Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
-			if = {
-				limit = { has_tag = pp_water_control_priority }
-				add = 95
-			}
-			# Staple-food producer buildings need to be manned first to avoid being outcompeted by non-food-related buildings.
-			else_if = {
-				limit = { has_tag = pp_staple_food_priority }
-				add = 90
-			}
-			# Direct food production needs second highest priority so we do not enter starvation loops.
-			else_if = {
-				limit = { has_tag = pp_direct_food_priority }
-				add = 110
-			}
-			# Taverns and Victualling Yards receive the highest food-security priority so prepared food is distributed reliably.
-			else_if = {
-				limit = { has_tag = pp_food_distribution_priority }
-				add = 120
-			}
-			# Food storage remains a high priority to limit food fluctuations for AI.
-			else_if = {
-				limit = { has_tag = pp_food_storage_priority }
-				add = 85
-			}
-		}
-		else_if = {
-			limit = { has_tag = pp_logistics }
-
-			# Logistics support sits below all food-security priorities; river freight is the strongest support option.
-			if = {
-				limit = { has_tag = pp_river_logistics_priority }
-				add = 80
-			}
-			# Coastal logistics support follows river freight.
-			else_if = {
-				limit = { has_tag = pp_coastal_logistics_priority }
-				add = 70
-			}
-			# Urban transport offices support dense city logistics.
-			else_if = {
-				limit = { has_tag = pp_city_logistics_priority }
-				add = 60
-			}
-			# Rural carrier inns support logistics after denser freight options.
-			else_if = {
-				limit = { has_tag = pp_rural_logistics_priority }
-				add = 50
-			}
-		}
-		else_if = {
-			limit = { has_tag = pp_education_priority }
-
-			# Libraries and universities should claim burghers and clergy before ordinary economy jobs.
-			add = 20000
-		}
+		# Prosper or Perish tiers, 1000 apart: the tier decides, this system's own value orders within a tier
+		add = pp_employment_priority_bonus
 	}
 
 	ai_will_do = {
@@ -88,66 +30,8 @@ TRY_REPLACE:first_come_first_serve = {
 	priority = {
 		value = building_index #buildings filled in first built, first filled order
 		multiply = -1
-		# Each building carries at most one group tag and one tag within a group; the commonest are tested first.
-		if = {
-			limit = { has_tag = pp_food_security_priority }
-
-			# Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
-			if = {
-				limit = { has_tag = pp_water_control_priority }
-				add = 95
-			}
-			# Staple-food producer buildings need to be manned first to avoid being outcompeted by non-food-related buildings.
-			else_if = {
-				limit = { has_tag = pp_staple_food_priority }
-				add = 90
-			}
-			# Direct food production needs second highest priority so we do not enter starvation loops.
-			else_if = {
-				limit = { has_tag = pp_direct_food_priority }
-				add = 110
-			}
-			# Taverns and Victualling Yards receive the highest food-security priority so prepared food is distributed reliably.
-			else_if = {
-				limit = { has_tag = pp_food_distribution_priority }
-				add = 120
-			}
-			# Food storage remains a high priority to limit food fluctuations for AI.
-			else_if = {
-				limit = { has_tag = pp_food_storage_priority }
-				add = 85
-			}
-		}
-		else_if = {
-			limit = { has_tag = pp_logistics }
-
-			# Logistics support sits below all food-security priorities; river freight is the strongest support option.
-			if = {
-				limit = { has_tag = pp_river_logistics_priority }
-				add = 80
-			}
-			# Coastal logistics support follows river freight.
-			else_if = {
-				limit = { has_tag = pp_coastal_logistics_priority }
-				add = 70
-			}
-			# Urban transport offices support dense city logistics.
-			else_if = {
-				limit = { has_tag = pp_city_logistics_priority }
-				add = 60
-			}
-			# Rural carrier inns support logistics after denser freight options.
-			else_if = {
-				limit = { has_tag = pp_rural_logistics_priority }
-				add = 50
-			}
-		}
-		else_if = {
-			limit = { has_tag = pp_education_priority }
-
-			# Libraries and universities should claim burghers and clergy before ordinary economy jobs.
-			add = 20000
-		}
+		# Prosper or Perish tiers, 1000 apart: the tier decides, this system's own value orders within a tier
+		add = pp_employment_priority_bonus
 	}
 
 	ai_will_do = {
@@ -170,66 +54,8 @@ TRY_REPLACE:capitalism = {
 
 	priority = {
 		value = building_potential_profit
-		# Each building carries at most one group tag and one tag within a group; the commonest are tested first.
-		if = {
-			limit = { has_tag = pp_food_security_priority }
-
-			# Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
-			if = {
-				limit = { has_tag = pp_water_control_priority }
-				add = 95
-			}
-			# Staple-food producer buildings need to be manned first to avoid being outcompeted by non-food-related buildings.
-			else_if = {
-				limit = { has_tag = pp_staple_food_priority }
-				add = 90
-			}
-			# Direct food production needs second highest priority so we do not enter starvation loops.
-			else_if = {
-				limit = { has_tag = pp_direct_food_priority }
-				add = 110
-			}
-			# Taverns and Victualling Yards receive the highest food-security priority so prepared food is distributed reliably.
-			else_if = {
-				limit = { has_tag = pp_food_distribution_priority }
-				add = 120
-			}
-			# Food storage remains a high priority to limit food fluctuations for AI.
-			else_if = {
-				limit = { has_tag = pp_food_storage_priority }
-				add = 85
-			}
-		}
-		else_if = {
-			limit = { has_tag = pp_logistics }
-
-			# Logistics support sits below all food-security priorities; river freight is the strongest support option.
-			if = {
-				limit = { has_tag = pp_river_logistics_priority }
-				add = 80
-			}
-			# Coastal logistics support follows river freight.
-			else_if = {
-				limit = { has_tag = pp_coastal_logistics_priority }
-				add = 70
-			}
-			# Urban transport offices support dense city logistics.
-			else_if = {
-				limit = { has_tag = pp_city_logistics_priority }
-				add = 60
-			}
-			# Rural carrier inns support logistics after denser freight options.
-			else_if = {
-				limit = { has_tag = pp_rural_logistics_priority }
-				add = 50
-			}
-		}
-		else_if = {
-			limit = { has_tag = pp_education_priority }
-
-			# Libraries and universities should claim burghers and clergy before ordinary economy jobs.
-			add = 20000
-		}
+		# Prosper or Perish tiers, 1000 apart: the tier decides, this system's own value orders within a tier
+		add = pp_employment_priority_bonus
 	}
 
 	ai_will_do = {
@@ -261,68 +87,10 @@ TRY_REPLACE:capitalism_prioritising_infrastructure = {
 					building_category = government_category
 				}
 			}
-			add = 10000
+			add = 10000000
 		}
-		# Each building carries at most one group tag and one tag within a group; the commonest are tested first.
-		if = {
-			limit = { has_tag = pp_food_security_priority }
-
-			# Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
-			if = {
-				limit = { has_tag = pp_water_control_priority }
-				add = 95
-			}
-			# Staple-food producer buildings need to be manned first to avoid being outcompeted by non-food-related buildings.
-			else_if = {
-				limit = { has_tag = pp_staple_food_priority }
-				add = 90
-			}
-			# Direct food production needs second highest priority so we do not enter starvation loops.
-			else_if = {
-				limit = { has_tag = pp_direct_food_priority }
-				add = 110
-			}
-			# Taverns and Victualling Yards receive the highest food-security priority so prepared food is distributed reliably.
-			else_if = {
-				limit = { has_tag = pp_food_distribution_priority }
-				add = 120
-			}
-			# Food storage remains a high priority to limit food fluctuations for AI.
-			else_if = {
-				limit = { has_tag = pp_food_storage_priority }
-				add = 85
-			}
-		}
-		else_if = {
-			limit = { has_tag = pp_logistics }
-
-			# Logistics support sits below all food-security priorities; river freight is the strongest support option.
-			if = {
-				limit = { has_tag = pp_river_logistics_priority }
-				add = 80
-			}
-			# Coastal logistics support follows river freight.
-			else_if = {
-				limit = { has_tag = pp_coastal_logistics_priority }
-				add = 70
-			}
-			# Urban transport offices support dense city logistics.
-			else_if = {
-				limit = { has_tag = pp_city_logistics_priority }
-				add = 60
-			}
-			# Rural carrier inns support logistics after denser freight options.
-			else_if = {
-				limit = { has_tag = pp_rural_logistics_priority }
-				add = 50
-			}
-		}
-		else_if = {
-			limit = { has_tag = pp_education_priority }
-
-			# Libraries and universities should claim burghers and clergy before ordinary economy jobs.
-			add = 20000
-		}
+		# Prosper or Perish tiers, 1000 apart: the tier decides, this system's own value orders within a tier
+		add = pp_employment_priority_bonus
 	}
 
 	ai_will_do = {
@@ -360,7 +128,7 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade = {
 					building_category = government_category
 				}
 			}
-			add = 10000
+			add = 10000000
 		}
 		if = {
 			limit = {
@@ -368,68 +136,10 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade = {
 					building_category = trade_category
 				}
 			}
-			add = 1000
+			add = 1000000
 		}
-		# Each building carries at most one group tag and one tag within a group; the commonest are tested first.
-		if = {
-			limit = { has_tag = pp_food_security_priority }
-
-			# Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
-			if = {
-				limit = { has_tag = pp_water_control_priority }
-				add = 95
-			}
-			# Staple-food producer buildings need to be manned first to avoid being outcompeted by non-food-related buildings.
-			else_if = {
-				limit = { has_tag = pp_staple_food_priority }
-				add = 90
-			}
-			# Direct food production needs second highest priority so we do not enter starvation loops.
-			else_if = {
-				limit = { has_tag = pp_direct_food_priority }
-				add = 110
-			}
-			# Taverns and Victualling Yards receive the highest food-security priority so prepared food is distributed reliably.
-			else_if = {
-				limit = { has_tag = pp_food_distribution_priority }
-				add = 120
-			}
-			# Food storage remains a high priority to limit food fluctuations for AI.
-			else_if = {
-				limit = { has_tag = pp_food_storage_priority }
-				add = 85
-			}
-		}
-		else_if = {
-			limit = { has_tag = pp_logistics }
-
-			# Logistics support sits below all food-security priorities; river freight is the strongest support option.
-			if = {
-				limit = { has_tag = pp_river_logistics_priority }
-				add = 80
-			}
-			# Coastal logistics support follows river freight.
-			else_if = {
-				limit = { has_tag = pp_coastal_logistics_priority }
-				add = 70
-			}
-			# Urban transport offices support dense city logistics.
-			else_if = {
-				limit = { has_tag = pp_city_logistics_priority }
-				add = 60
-			}
-			# Rural carrier inns support logistics after denser freight options.
-			else_if = {
-				limit = { has_tag = pp_rural_logistics_priority }
-				add = 50
-			}
-		}
-		else_if = {
-			limit = { has_tag = pp_education_priority }
-
-			# Libraries and universities should claim burghers and clergy before ordinary economy jobs.
-			add = 20000
-		}
+		# Prosper or Perish tiers, 1000 apart: the tier decides, this system's own value orders within a tier
+		add = pp_employment_priority_bonus
 	}
 
 	ai_will_do = {
@@ -467,7 +177,7 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade_and_culture = {
 					building_category = government_category
 				}
 			}
-			add = 10000
+			add = 10000000
 		}
 		if = {
 			limit = {
@@ -475,7 +185,7 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade_and_culture = {
 					building_category = trade_category
 				}
 			}
-			add = 1000
+			add = 1000000
 		}
 		if = {
 			limit = {
@@ -483,68 +193,10 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade_and_culture = {
 					building_category = cultural_category
 				}
 			}
-			add = 100
+			add = 100000
 		}
-		# Each building carries at most one group tag and one tag within a group; the commonest are tested first.
-		if = {
-			limit = { has_tag = pp_food_security_priority }
-
-			# Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
-			if = {
-				limit = { has_tag = pp_water_control_priority }
-				add = 95
-			}
-			# Staple-food producer buildings need to be manned first to avoid being outcompeted by non-food-related buildings.
-			else_if = {
-				limit = { has_tag = pp_staple_food_priority }
-				add = 90
-			}
-			# Direct food production needs second highest priority so we do not enter starvation loops.
-			else_if = {
-				limit = { has_tag = pp_direct_food_priority }
-				add = 110
-			}
-			# Taverns and Victualling Yards receive the highest food-security priority so prepared food is distributed reliably.
-			else_if = {
-				limit = { has_tag = pp_food_distribution_priority }
-				add = 120
-			}
-			# Food storage remains a high priority to limit food fluctuations for AI.
-			else_if = {
-				limit = { has_tag = pp_food_storage_priority }
-				add = 85
-			}
-		}
-		else_if = {
-			limit = { has_tag = pp_logistics }
-
-			# Logistics support sits below all food-security priorities; river freight is the strongest support option.
-			if = {
-				limit = { has_tag = pp_river_logistics_priority }
-				add = 80
-			}
-			# Coastal logistics support follows river freight.
-			else_if = {
-				limit = { has_tag = pp_coastal_logistics_priority }
-				add = 70
-			}
-			# Urban transport offices support dense city logistics.
-			else_if = {
-				limit = { has_tag = pp_city_logistics_priority }
-				add = 60
-			}
-			# Rural carrier inns support logistics after denser freight options.
-			else_if = {
-				limit = { has_tag = pp_rural_logistics_priority }
-				add = 50
-			}
-		}
-		else_if = {
-			limit = { has_tag = pp_education_priority }
-
-			# Libraries and universities should claim burghers and clergy before ordinary economy jobs.
-			add = 20000
-		}
+		# Prosper or Perish tiers, 1000 apart: the tier decides, this system's own value orders within a tier
+		add = pp_employment_priority_bonus
 	}
 
 	ai_will_do = {

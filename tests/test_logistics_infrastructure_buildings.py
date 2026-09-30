@@ -35,12 +35,12 @@ VICTUALLING_YARD_BLUEPRINT = BLUEPRINTS / "victualling_yard.yml"
 TAVERN_BLUEPRINT = BLUEPRINTS / "tavern.yml"
 VICTUALLING_YARD_RENDERED = MOD_ROOT / "in_game" / "common" / "building_types" / "zz_pp_victualling_yard.txt"
 TAVERN_RENDERED = MOD_ROOT / "in_game" / "common" / "building_types" / "zz_pp_tavern.txt"
-EMPLOYMENT_PRIORITIES = MOD_ROOT / "in_game" / "common" / "employment_systems" / "pp_food_security_priorities.txt"
+EMPLOYMENT_PRIORITIES = MOD_ROOT / "in_game" / "common" / "script_values" / "pp_employment_priority.txt"
 LOGISTICS_PRIORITY_GROUPS = (
-    ("pp_river_logistics_priority", 80),
-    ("pp_coastal_logistics_priority", 70),
-    ("pp_city_logistics_priority", 60),
-    ("pp_rural_logistics_priority", 50),
+    ("pp_river_logistics_priority", 80000),
+    ("pp_coastal_logistics_priority", 70000),
+    ("pp_city_logistics_priority", 60000),
+    ("pp_rural_logistics_priority", 50000),
 )
 PRIORITY_TAG = {
     "river_boatmen_yard": "pp_river_logistics_priority",
@@ -171,8 +171,8 @@ def test_logistics_construction_demands_exist_without_negative_goods() -> None:
 
 def test_logistics_building_priorities_are_below_food_priorities() -> None:
     priority_text = EMPLOYMENT_PRIORITIES.read_text(encoding="utf-8-sig")
-    assert priority_text.count("limit = { has_tag = pp_logistics }") == 6
-    assert max(priority for _tag, priority in LOGISTICS_PRIORITY_GROUPS) < 90
+    assert priority_text.count("limit = { has_tag = pp_logistics }") == 1
+    assert max(priority for _tag, priority in LOGISTICS_PRIORITY_GROUPS) < 85000  # below every food-security tier (storage 85000 is the lowest)
     for tag, priority in LOGISTICS_PRIORITY_GROUPS:
         pattern = re.compile(rf"has_tag\s*=\s*{re.escape(tag)}[\s\S]*?add\s*=\s*{priority}")
         assert pattern.search(priority_text), tag

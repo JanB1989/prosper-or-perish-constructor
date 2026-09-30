@@ -24,6 +24,13 @@ MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_VALUES_ROOT = MOD_ROOT / "in_game" / "common" / "script_values"
 CULLING_EFFECTS_PATH = MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_capacity_culling_effects.txt"
+# error_log fields after "PPBLD;<kind>;" for a scripted cull, evaluated in the culled building's scope (the yearly review
+# cull in pp_ai_building_review_effects.txt writes the same fields): date;country;location;building key;building
+# name;level before the cull.
+CULL_LOG_FIELDS = (
+    "[GetDateString];[ROOT.GetCountry.GetTag];[SCOPE.GetBuilding.GetLocation.GetKey];[SCOPE.GetBuilding.GetKey];"
+    "[SCOPE.GetBuilding.GetType.GetName];[SCOPE.GetBuilding.GetLevel]"
+)
 BUILDING_BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted" / "buildings"
 
 
@@ -382,13 +389,18 @@ def _culling_effects_file() -> str:
             _line("value > $max_level$", 4),
             _line("}", 3),
             _line("}", 2),
+            _line("# Debug flag: scripted cull, counted per location (save) and logged from the building's scope before the", 2),
+            _line("# level change (removing the last level destroys the building). Log fields: kind;date;country;location;", 2),
+            _line("# building key;building name;level before the cull.", 2),
+            _line("if = { limit = { has_variable = pp_dbg_script_cull } change_variable = { name = pp_dbg_script_cull add = 1 } } else = { set_variable = { name = pp_dbg_script_cull value = 1 } }", 2),
+            _line("random_buildings_in_location = {", 2),
+            _line("limit = { building_type = building_type:$building$ }", 3),
+            _line(f'error_log = "PPBLD;capacity_cull;{CULL_LOG_FIELDS}"', 3),
+            _line("}", 2),
             _line("change_building_level_in_location = {", 2),
             _line("building = building_type:$building$", 3),
             _line("value = -1", 3),
             _line("}", 2),
-            _line("# Debug flag: scripted cull, counted per location (save) and logged", 2),
-            _line("if = { limit = { has_variable = pp_dbg_script_cull } change_variable = { name = pp_dbg_script_cull add = 1 } } else = { set_variable = { name = pp_dbg_script_cull value = 1 } }", 2),
-            _line('error_log = "PPBLD;capacity_cull;$building$"', 2),
             _line("}", 1),
             "}",
         ]

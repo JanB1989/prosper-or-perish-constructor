@@ -730,6 +730,12 @@ taverns, 85 river boatmen yards, 27 carrier inns, 18 transport offices, 7 coasta
 builder), 96 capacity culls (81 granges). Small next to the AI: tavern levels went from 1,359 (1340) to 11,779 (1437),
 almost all from the AI queue.
 
+Since 2026-09-30 each scripted cull logs where, what and when, written from the culled building's scope before the level
+change: `PPBLD;<review_cull_closed|capacity_cull>;<date>;<country tag>;<location key>;<building key>;<building
+name>;<level before the cull>`. The yearly review culls only closed buildings, so it never touches the zero-employment
+land improvements (they are never closed); the capacity cull only touches the farm, fishing, forestry and victuals
+buildings it lists.
+
 ## 5. 100 years (1341-1437, natural run)
 
 | | 1341 | 1387 | 1437 |

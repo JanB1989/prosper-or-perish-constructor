@@ -11,9 +11,10 @@ pp_cull_one_closed_building = {
 			NOT = { building_type = building_type:tavern }
 		}
 		# Debug flag: scripted cull, counted per location (save) and logged. Both run before the level change: removing
-		# the last level destroys the building, and with it this scope.
+		# the last level destroys the building, and with it this scope. Log fields: kind;date;country;location;building
+		# key;building name;level before the cull.
 		location = { if = { limit = { has_variable = pp_dbg_script_cull } change_variable = { name = pp_dbg_script_cull add = 1 } } else = { set_variable = { name = pp_dbg_script_cull value = 1 } } }
-		error_log = "PPBLD;review_cull_closed"
+		error_log = "PPBLD;review_cull_closed;[GetDateString];[ROOT.GetCountry.GetTag];[SCOPE.GetBuilding.GetLocation.GetKey];[SCOPE.GetBuilding.GetKey];[SCOPE.GetBuilding.GetType.GetName];[SCOPE.GetBuilding.GetLevel]"
 		change_building_level = -1
 	}
 }

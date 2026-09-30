@@ -736,6 +736,26 @@ name>;<level before the cull>`. The yearly review culls only closed buildings, s
 land improvements (they are never closed); the capacity cull only touches the farm, fishing, forestry and victuals
 buildings it lists.
 
+### Engine paths that remove building levels (verified 2026-09-30)
+
+The AI never demolishes ordinary economic buildings. Levels disappear through these engine paths:
+
+- **Bankruptcy** (gold still negative after the forced estate loans): each building the bankrupt country owns in its
+  own locations has an 11 % chance to be hit, whatever its type, employment or open state (a few types are exempt).
+  A level-1 building is destroyed; a larger one loses a random 1 to L-1 levels, so it never disappears in one
+  bankruptcy. Nobody receives gold. Bankruptcy also cuts control by a third and costs units, stability and credit.
+- **Occupation**: when anyone other than the owner takes control of a location, each `destroyable_building` (Nobles'
+  Mansion, Noble Villa, Festival Grounds, Free Village) burns down completely with 50 % chance; the occupier gets
+  10 % of one level's price per level burned.
+- **Owner change** destroys some buildings tied to the old owner and re-checks `location_potential`.
+- **Events**: earthquakes, volcanoes and a few flavour events cut every building in a location by 10/25/33 % (at
+  least one level).
+
+Run f3368e9e, same-owner locations, per 5 years (1357-1407): bankruptcy 480-1,500 levels (33-64 bankrupt countries per
+window; it hit all the large single-building drops such as field management 30 -> 10), scripted culls 540-850, sacks
+50-70, the rest (~230-490) mostly whole small buildings and earthquakes. The save fields are `country_ai.bankrupt` and
+the `location_war` table (eu5save).
+
 ## 5. 100 years (1341-1437, natural run)
 
 | | 1341 | 1387 | 1437 |

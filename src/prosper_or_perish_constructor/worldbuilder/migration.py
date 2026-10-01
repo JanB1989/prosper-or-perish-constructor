@@ -144,17 +144,17 @@ DYNAMIC_TERMS = {
     "overpopulation": -0.25,
     "surplus_jobs": 2.0,
     "unemployed_peasants_k": -0.001,
-    # stored years of province food, capped at 2: the stored-food tier modifiers (EU5 1.4, stored_food.py, the 1.3
-    # value per stored year), applied in whole months of stores; [stored_food.per_year] local_migration_attraction
+    # stored years of province food, capped at 2: the Stored Food modifier (EU5 1.4, stored_food.py, the 1.3 value
+    # per stored year at size = stored years); [stored_food.per_year] local_migration_attraction
     "food_years": 0.045,
     "prosperity": 0.1,
     "development": 0.0025,
 }
 
 
-def stored_food_tier_years(food_years: float) -> float:
-    """Stored years as the stored-food tier modifiers apply them: whole months, 0 to 24 (two years)."""
-    return min(24.0, math.floor(max(0.0, food_years) * 12.0 + 1e-9)) / 12.0
+def stored_food_years(food_years: float) -> float:
+    """Stored years as the Stored Food modifier applies them: 0 to two years."""
+    return min(2.0, max(0.0, food_years))
 
 
 def dynamic_attraction(*, starving: bool, pop_k: float, capacity_k: float, food_years: float = 0.0,
@@ -165,7 +165,7 @@ def dynamic_attraction(*, starving: bool, pop_k: float, capacity_k: float, food_
     t = DYNAMIC_TERMS
     return (t["starving"] * starving + t["abundant_free_land"] * ab + t["available_free_land"] * av
             + t["overpopulation"] * op + t["surplus_jobs"] * surplus_jobs
-            + t["unemployed_peasants_k"] * unemployed_peasants_k + t["food_years"] * stored_food_tier_years(food_years)
+            + t["unemployed_peasants_k"] * unemployed_peasants_k + t["food_years"] * stored_food_years(food_years)
             + t["prosperity"] * max(0.0, prosperity) + t["development"] * development)
 
 

@@ -1,28 +1,28 @@
-"""Stored-food effect carrier (EU5 1.4): tier modifiers that follow a province's months of stored food.
+"""Stored-food effect carrier (EU5 1.4): one province modifier scaled by the province's stored years of food.
 
 EU5 1.4 deleted the engine-scaled static modifier ``positive_province_food_growth``. All its per-stored-year
 effects, growth included, come back through this carrier; the engine's own storage growth term is off
 (``NPop.FOOD_STORAGE_POP_GROWTH = 0`` in pp_defines_adjustments.txt), so growth from stored food is the
-``local_population_growth`` of the tier modifier:
+``local_population_growth`` of the modifier:
 
-- ``tiers`` province static modifiers ``pp_stored_food_tier_<t>`` (t = 1 .. tiers); tier t stands for
-  t x ``months_per_tier`` whole months of the province's own consumption in store and carries
-  ``per_year`` x t x months_per_tier / 12 of each effect (``[stored_food]`` in constructor.toml). Tier 0 has no
-  modifier.
-- the province-scope script value ``pp_stored_food_tier_target`` = floor(stored months / months_per_tier), capped at
-  ``tiers`` (stored months come from ``pp_stored_food_province_months`` in pp_province_food_storage.txt);
-- the province-scope scripted effect ``pp_refresh_stored_food_tier``: computes the target into a province variable
-  (+100 offset, a variable at 0 counts as unset), compares it with the stored tier through a difference (+100 offset;
-  ``var:x = 5`` would be a scope comparison, so only ``<`` / ``>`` ranges are used) and only when the tier changed
-  removes the old modifier, adds the new one and stores the new tier.
-- display helpers (view only): the location-scope script value ``pp_province_food_storage_growth`` (the growth of
-  the tier the province carries, read from its tier variable) and the location-scope customizable localization
-  ``pp_stored_food_tier`` (the carried tier modifier's name, ``PP_STORED_FOOD_TIER_NONE`` without one), which the
-  location view's Stored Food chip matches to show that tier's effects (location_status.py).
+- the province static modifier ``pp_stored_food`` carries the payload of one stored year (``[stored_food.per_year]``
+  in constructor.toml); it is applied with ``size`` = stored years (stored months / 12, 0 to the 24-month cap of
+  ``pp_stored_food_province_months``), so every effect follows the store continuously, also below one month.
+  The payload is per year because per-month values would need six decimals, which EU5 1.4 rejects.
+- the province-scope scripted effect ``pp_refresh_stored_food``: works out the province's consumption once (the
+  location loop is the expensive part), the stored months from it, and re-applies the modifier only when the months
+  moved by more than ``deadband_months`` since the last refresh or the store emptied. The applied months are kept in
+  a province variable (+100 offset: a variable at 0 counts as unset; locals use the same offset).
+- old saves: the whole-month tier version (2026-10-01) left one ``pp_stored_food_tier_<t>`` modifier and its
+  variables on each province; their names stay defined without effects (``LEGACY_TIERS``) so saves load, and the
+  first refresh removes them.
+- display helpers (view only, location scope): ``pp_stored_food_years`` (the stored years the modifier is applied at)
+  and ``pp_province_food_storage_growth`` (its growth); the location view's Stored Food chip scales each effect by
+  the years (location_status.py).
 
 The refresh runs from ``in_game/common/on_action/pp_stored_food.txt`` (monthly country pulse, staggered over the month)
 and once at game start (pp_game_start.txt). ``ppc build`` / ``ppc sync`` write the generated files in their finalize
-step; ``check`` reports files that differ from the configuration.
+step and delete the tier version's files; ``check`` reports files that differ from the configuration.
 """
 
 from __future__ import annotations
@@ -33,51 +33,63 @@ from pathlib import Path
 import tomllib
 
 CONFIG_SECTION = "stored_food"
-MODIFIER_PREFIX = "pp_stored_food_tier_"
-TARGET_VALUE = "pp_stored_food_tier_target"
+MODIFIER = "pp_stored_food"
+REFRESH_EFFECT = "pp_refresh_stored_food"
 MONTHS_VALUE = "pp_stored_food_province_months"
-REFRESH_EFFECT = "pp_refresh_stored_food_tier"
-TIER_VARIABLE = "pp_stored_food_tier"
-NEXT_VARIABLE = "pp_stored_food_tier_next"
-CHANGE_VARIABLE = "pp_stored_food_tier_change"
+CONSUMPTION_VALUE = "pp_stored_food_province_consumption"
+SIZE_VARIABLE = "pp_stored_food_size"           # applied months + 100
+CONSUMPTION_LOCAL = "pp_stored_food_consumption"
+TARGET_LOCAL = "pp_stored_food_target"
+CHANGE_LOCAL = "pp_stored_food_change"
 VARIABLE_OFFSET = 100
 DECIMALS = 5   # EU5 1.4 rejects six-decimal static-modifier values ("Badly read script value")
 MONTHS_PER_YEAR = 12
+CAP_MONTHS = "{ value = define:NEconomy|GROWTH_FROM_FOOD_MULTIPLIER_MAX multiply = 12 }"
+EPSILON = 0.00001   # the engine's fixed-point step
 
-STATIC_MODIFIERS = Path("in_game/common/static_modifiers/pp_stored_food_tiers.txt")
-SCRIPT_VALUES = Path("in_game/common/script_values/pp_stored_food_tiers.txt")
-SCRIPTED_EFFECTS = Path("in_game/common/scripted_effects/pp_stored_food_tiers.txt")
-LOCALIZATION = Path("main_menu/localization/english/pp_stored_food_tiers_l_english.yml")
-CUSTOM_LOCALIZATION = Path("in_game/common/customizable_localization/pp_stored_food_tiers.txt")
-GENERATED_FILES = (STATIC_MODIFIERS, SCRIPT_VALUES, SCRIPTED_EFFECTS, LOCALIZATION, CUSTOM_LOCALIZATION)
+# The whole-month tier version (2026-10-01): modifier names and variables old saves still carry.
+LEGACY_TIERS = 24
+LEGACY_PREFIX = "pp_stored_food_tier_"
+LEGACY_VARIABLES = ("pp_stored_food_tier", "pp_stored_food_tier_next", "pp_stored_food_tier_change")
+
+STATIC_MODIFIERS = Path("in_game/common/static_modifiers/pp_stored_food.txt")
+SCRIPT_VALUES = Path("in_game/common/script_values/pp_stored_food.txt")
+SCRIPTED_EFFECTS = Path("in_game/common/scripted_effects/pp_stored_food.txt")
+LOCALIZATION = Path("main_menu/localization/english/pp_stored_food_l_english.yml")
+GENERATED_FILES = (STATIC_MODIFIERS, SCRIPT_VALUES, SCRIPTED_EFFECTS, LOCALIZATION)
+LEGACY_FILES = (
+    Path("in_game/common/static_modifiers/pp_stored_food_tiers.txt"),
+    Path("in_game/common/script_values/pp_stored_food_tiers.txt"),
+    Path("in_game/common/scripted_effects/pp_stored_food_tiers.txt"),
+    Path("in_game/common/customizable_localization/pp_stored_food_tiers.txt"),
+    Path("main_menu/localization/english/pp_stored_food_tiers_l_english.yml"),
+)
 
 GROWTH_KEY = "local_population_growth"
 GROWTH_VALUE = "pp_province_food_storage_growth"
-TIER_CUSTOM = "pp_stored_food_tier"
-TIER_NONE = "PP_STORED_FOOD_TIER_NONE"
+YEARS_VALUE = "pp_stored_food_years"
 
 HEADER = "# Generated by ppc build from [stored_food] in constructor.toml (stored_food.py); do not edit by hand.\n"
 
 # Player-facing plain text (generated static-modifier descriptions take no concept links); no balance numbers, the
 # modifier tooltip shows them.
 DESCRIPTION = (
-    "The food this province holds in storage, counted in months of its own consumption. Full stores let its people "
-    "grow faster and its farms and granaries sell their surplus while taverns earn less from scarcity, and they help "
-    "the province recover from devastation, draw settlers and prosper. The effects grow with every stored month up "
-    "to a cap and follow the store from month to month."
+    "The food this province holds in storage, counted in its own consumption. Full stores let its people grow faster "
+    "and its farms and granaries sell their surplus while taverns earn less from scarcity, and they help the province "
+    "recover from devastation, draw settlers and prosper. The effects grow with the store up to a cap and follow it "
+    "from month to month."
 )
+LEGACY_DESCRIPTION = "Replaced by the Stored Food modifier at the province's next monthly update."
 
 
 @dataclass(frozen=True)
 class StoredFoodConfig:
-    tiers: int
-    months_per_tier: int
+    deadband_months: float
     per_year: tuple[tuple[str, float], ...]
 
 
 @dataclass(frozen=True)
 class StoredFoodResult:
-    tiers: int
     files_changed: int
     changed: tuple[Path, ...]
 
@@ -87,31 +99,20 @@ def load_config(project: Path) -> StoredFoodConfig:
     section = raw.get(CONFIG_SECTION)
     if not isinstance(section, dict) or not isinstance(section.get("per_year"), dict):
         raise ValueError(f"{project}: [{CONFIG_SECTION}] with a [{CONFIG_SECTION}.per_year] table is required")
-    tiers = int(section["tiers"])
-    months_per_tier = int(section.get("months_per_tier", 1))
-    if tiers < 1 or months_per_tier < 1:
-        raise ValueError(f"{project}: [{CONFIG_SECTION}] tiers and months_per_tier must be at least 1")
+    deadband = float(section.get("deadband_months", 0.05))
+    if not 0 <= deadband < 1:
+        raise ValueError(f"{project}: [{CONFIG_SECTION}] deadband_months must be in [0, 1)")
     per_year = tuple((str(key), float(value)) for key, value in section["per_year"].items())
     if not per_year:
         raise ValueError(f"{project}: [{CONFIG_SECTION}.per_year] is empty")
-    return StoredFoodConfig(tiers=tiers, months_per_tier=months_per_tier, per_year=per_year)
+    return StoredFoodConfig(deadband_months=deadband, per_year=per_year)
 
 
-def modifier_name(tier: int) -> str:
-    return f"{MODIFIER_PREFIX}{tier}"
-
-
-def tier_months(config: StoredFoodConfig, tier: int) -> int:
-    return tier * config.months_per_tier
-
-
-def tier_values(config: StoredFoodConfig, tier: int) -> dict[str, float]:
-    """Each effect of tier ``tier``: the per-stored-year payload x its months / 12, rounded to five decimals."""
-    months = Decimal(tier_months(config, tier))
+def payload(config: StoredFoodConfig) -> dict[str, float]:
+    """The modifier's effects (one stored year), rounded to five decimals."""
     quantum = Decimal(1).scaleb(-DECIMALS)
     return {
-        key: float((Decimal(repr(value)) * months / MONTHS_PER_YEAR).quantize(quantum, rounding=ROUND_HALF_UP))
-        for key, value in config.per_year
+        key: float(Decimal(repr(value)).quantize(quantum, rounding=ROUND_HALF_UP)) for key, value in config.per_year
     }
 
 
@@ -122,60 +123,8 @@ def format_value(value: float) -> str:
     return "0.0" if text in {"-0.0", "0.0"} else text
 
 
-def _tier_limit(variable: str, tier: int) -> str:
-    stored = VARIABLE_OFFSET + tier
-    return f"var:{variable} > {stored - 0.5} var:{variable} < {stored + 0.5}"
-
-
-def render_static_modifiers(config: StoredFoodConfig) -> str:
-    lines = [
-        HEADER,
-        "# Stored-food tiers (EU5 1.4 carrier of the 1.3 stored-food effects, growth included; the engine's storage",
-        "# growth term is off, NPop.FOOD_STORAGE_POP_GROWTH = 0): tier t = t whole months of the province's consumption",
-        "# in store and carries the per-stored-year payload x months / 12. pp_refresh_stored_food_tier keeps exactly one",
-        "# tier on each province (none below one month).",
-        "",
-    ]
-    for tier in range(1, config.tiers + 1):
-        lines.append(f"{modifier_name(tier)} = {{")
-        lines.append("\tgame_data = { category = province }")
-        for key, value in tier_values(config, tier).items():
-            lines.append(f"\t{key} = {format_value(value)}")
-        lines.append("}")
-    return "\n".join(lines) + "\n"
-
-
-def render_script_values(config: StoredFoodConfig) -> str:
-    divide = "" if config.months_per_tier == 1 else f"\tdivide = {config.months_per_tier}\n"
-    per_tier = "" if config.months_per_tier == 1 else f"\tmultiply = {config.months_per_tier}\n"
-    return (
-        f"{HEADER}\n"
-        "# Province scope: the stored-food tier the province should carry, whole tiers of stored months (0 = none).\n"
-        f"{TARGET_VALUE} = {{\n"
-        f"\tvalue = {MONTHS_VALUE}\n"
-        f"{divide}"
-        "\tfloor = yes\n"
-        "\tmin = 0\n"
-        f"\tmax = {config.tiers}\n"
-        "}\n"
-        "\n"
-        "# Location scope (display only): yearly population growth from the province's stored-food tier, the\n"
-        f"# {GROWTH_KEY} of the tier modifier it carries (read from its tier variable, + {VARIABLE_OFFSET} offset; 0\n"
-        f"# without a tier). It is part of modifier:{GROWTH_KEY}; the engine adds no storage term of its own.\n"
-        f"{GROWTH_VALUE} = {{\n"
-        "\tvalue = 0\n"
-        "\tprovince ?= {\n"
-        "\t\tif = {\n"
-        f"\t\t\tlimit = {{ has_variable = {TIER_VARIABLE} }}\n"
-        f"\t\t\tadd = var:{TIER_VARIABLE}\n"
-        f"\t\t\tsubtract = {VARIABLE_OFFSET}\n"
-        "\t\t}\n"
-        "\t}\n"
-        f"\tmultiply = {format_value(growth_per_year(config))}\n"
-        f"{per_tier}"
-        f"\tdivide = {MONTHS_PER_YEAR}\n"
-        "}\n"
-    )
+def legacy_name(tier: int) -> str:
+    return f"{LEGACY_PREFIX}{tier}"
 
 
 def growth_per_year(config: StoredFoodConfig) -> float:
@@ -183,60 +132,112 @@ def growth_per_year(config: StoredFoodConfig) -> float:
     return dict(config.per_year).get(GROWTH_KEY, 0.0)
 
 
-def render_custom_localization(config: StoredFoodConfig) -> str:
+def render_static_modifiers(config: StoredFoodConfig) -> str:
     lines = [
         HEADER,
-        "# Location scope (display only): the name of the stored-food tier modifier the location's province carries,",
-        f"# {TIER_NONE} without one. The location view's Stored Food chip compares it with each tier's name to show",
-        "# that tier's effects (location_status.py).",
-        f"{TIER_CUSTOM} = {{",
-        "\ttype = location",
+        "# Stored Food (EU5 1.4 carrier of the 1.3 stored-food effects, growth included; the engine's storage growth term",
+        "# is off, NPop.FOOD_STORAGE_POP_GROWTH = 0): the effects of one stored year. pp_refresh_stored_food applies it",
+        "# with size = the province's stored years (0 to the 2-year cap), so the effects follow the store continuously.",
+        f"{MODIFIER} = {{",
+        "\tgame_data = { category = province }",
     ]
-    for tier in range(1, config.tiers + 1):
-        name = modifier_name(tier)
-        lines.append(
-            f"\ttext = {{ localization_key = STATIC_MODIFIER_NAME_{name} "
-            f"trigger = {{ province ?= {{ has_province_modifier = {name} }} }} }}"
-        )
-    lines.append(f"\ttext = {{ localization_key = {TIER_NONE} fallback = yes }}")
-    lines.append("}")
+    lines += [f"\t{key} = {format_value(value)}" for key, value in payload(config).items()]
+    lines += [
+        "}",
+        "",
+        "# Old saves (whole-month tiers, 2026-10-01): the names stay defined, without effects, so those saves load;",
+        "# pp_refresh_stored_food removes them at the province's first refresh.",
+    ]
+    lines += [f"{legacy_name(t)} = {{ game_data = {{ category = province }} }}" for t in range(1, LEGACY_TIERS + 1)]
     return "\n".join(lines) + "\n"
 
 
-def render_scripted_effects(config: StoredFoodConfig) -> str:
-    def chain(variable: str, action: str) -> list[str]:
-        out: list[str] = []
-        for tier in range(1, config.tiers + 1):
-            keyword = "if" if tier == 1 else "else_if"
-            out.append(f"\t{keyword} = {{")
-            out.append(f"\t\tlimit = {{ {_tier_limit(variable, tier)} }}")
-            out.append(f"\t\t{action.format(name=modifier_name(tier))}")
-            out.append("\t}")
-        return out
-
+def render_script_values(config: StoredFoodConfig) -> str:
     offset = VARIABLE_OFFSET
+    return (
+        f"{HEADER}\n"
+        "# Location scope (display only): the stored years the province's Stored Food modifier is applied at (its size;\n"
+        f"# {SIZE_VARIABLE} holds the applied months + {offset}). 0 without the modifier.\n"
+        f"{YEARS_VALUE} = {{\n"
+        "\tvalue = 0\n"
+        "\tprovince ?= {\n"
+        "\t\tif = {\n"
+        f"\t\t\tlimit = {{ has_variable = {SIZE_VARIABLE} }}\n"
+        f"\t\t\tadd = var:{SIZE_VARIABLE}\n"
+        f"\t\t\tsubtract = {offset}\n"
+        "\t\t}\n"
+        "\t}\n"
+        f"\tdivide = {MONTHS_PER_YEAR}\n"
+        "}\n"
+        "\n"
+        f"# Location scope (display only): yearly population growth from the province's Stored Food modifier, its {GROWTH_KEY}\n"
+        f"# at the applied size. It is part of modifier:{GROWTH_KEY}; the engine adds no storage term of its own.\n"
+        f"{GROWTH_VALUE} = {{\n"
+        f"\tvalue = {YEARS_VALUE}\n"
+        f"\tmultiply = {format_value(growth_per_year(config))}\n"
+        "}\n"
+    )
+
+
+def render_scripted_effects(config: StoredFoodConfig) -> str:
+    offset = VARIABLE_OFFSET
+    high = format_value(offset + config.deadband_months)
+    low = format_value(offset - config.deadband_months)
+    zero = format_value(offset + EPSILON)
     lines = [
         HEADER,
-        "# Province scope. Keeps the province's stored-food tier modifier in step with its stored months. Variables hold",
-        f"# the tier + {offset} (a variable at 0 counts as unset); `var:x = n` compares scopes, so tiers are matched by",
-        "# ranges. Only a changed tier touches the modifiers (about one province in six a month).",
+        "# Province scope. Keeps the province's Stored Food modifier at size = its stored years. The consumption (a loop over",
+        "# the province's locations) is worked out once; the modifier is re-applied only when the stored months moved by",
+        f"# more than {format_value(config.deadband_months)} since the last refresh or the store emptied. Variables and locals carry",
+        f"# + {offset} (a variable at 0 counts as unset); `var:x = n` compares scopes, so only < / > ranges are used.",
         f"{REFRESH_EFFECT} = {{",
-        f"\tset_variable = {{ name = {NEXT_VARIABLE} value = {{ value = {TARGET_VALUE} add = {offset} }} }}",
-        f"\tif = {{",
-        f"\t\tlimit = {{ NOT = {{ has_variable = {TIER_VARIABLE} }} }}",
-        f"\t\tset_variable = {{ name = {TIER_VARIABLE} value = {offset} }}",
-        "\t}",
-        f"\tset_variable = {{ name = {CHANGE_VARIABLE} value = {{ value = var:{NEXT_VARIABLE} "
-        f"subtract = var:{TIER_VARIABLE} add = {offset} }} }}",
+        "\t# old saves: drop the whole-month tier modifier and its variables once",
         "\tif = {",
-        f"\t\tlimit = {{ OR = {{ var:{CHANGE_VARIABLE} < {offset - 0.5} var:{CHANGE_VARIABLE} > {offset + 0.5} }} }}",
-        "\t\t# remove the old tier (none at tier 0)",
+        f"\t\tlimit = {{ has_variable = {LEGACY_VARIABLES[0]} }}",
     ]
-    lines += ["\t" + line for line in chain(TIER_VARIABLE, "remove_province_modifier = {name}")]
-    lines.append("\t\t# add the new tier (none at tier 0)")
-    lines += ["\t" + line for line in chain(NEXT_VARIABLE, "add_province_modifier = {{ modifier = {name} }}")]
+    for tier in range(1, LEGACY_TIERS + 1):
+        name = legacy_name(tier)
+        lines.append(f"\t\tif = {{ limit = {{ has_province_modifier = {name} }} remove_province_modifier = {name} }}")
+    for variable in LEGACY_VARIABLES:
+        lines.append(f"\t\tif = {{ limit = {{ has_variable = {variable} }} remove_variable = {variable} }}")
     lines += [
-        f"\t\tset_variable = {{ name = {TIER_VARIABLE} value = var:{NEXT_VARIABLE} }}",
+        "\t}",
+        f"\tset_local_variable = {{ name = {CONSUMPTION_LOCAL} value = {{ value = {CONSUMPTION_VALUE} add = {offset} }} }}",
+        f"\tset_local_variable = {{ name = {TARGET_LOCAL} value = {offset} }}",
+        "\tif = {",
+        f"\t\tlimit = {{ local_var:{CONSUMPTION_LOCAL} > {offset} }}",
+        "\t\tset_local_variable = {",
+        f"\t\t\tname = {TARGET_LOCAL}",
+        "\t\t\tvalue = {",
+        "\t\t\t\tvalue = province_food",
+        f"\t\t\t\tdivide = {{ value = local_var:{CONSUMPTION_LOCAL} subtract = {offset} }}",
+        "\t\t\t\tmin = 0",
+        f"\t\t\t\tmax = {CAP_MONTHS}",
+        f"\t\t\t\tadd = {offset}",
+        "\t\t\t}",
+        "\t\t}",
+        "\t}",
+        "\tif = {",
+        f"\t\tlimit = {{ NOT = {{ has_variable = {SIZE_VARIABLE} }} }}",
+        f"\t\tset_variable = {{ name = {SIZE_VARIABLE} value = {offset} }}",
+        "\t}",
+        f"\tset_local_variable = {{ name = {CHANGE_LOCAL} value = {{ value = local_var:{TARGET_LOCAL} "
+        f"subtract = var:{SIZE_VARIABLE} add = {offset} }} }}",
+        "\tif = {",
+        "\t\tlimit = {",
+        "\t\t\tOR = {",
+        f"\t\t\t\tlocal_var:{CHANGE_LOCAL} > {high}",
+        f"\t\t\t\tlocal_var:{CHANGE_LOCAL} < {low}",
+        f"\t\t\t\tAND = {{ local_var:{TARGET_LOCAL} < {zero} var:{SIZE_VARIABLE} > {zero} }}",
+        "\t\t\t}",
+        "\t\t}",
+        f"\t\tif = {{ limit = {{ has_province_modifier = {MODIFIER} }} remove_province_modifier = {MODIFIER} }}",
+        "\t\tif = {",
+        f"\t\t\tlimit = {{ local_var:{TARGET_LOCAL} > {zero} }}",
+        f"\t\t\tadd_province_modifier = {{ modifier = {MODIFIER} size = {{ value = local_var:{TARGET_LOCAL} "
+        f"subtract = {offset} divide = {MONTHS_PER_YEAR} }} }}",
+        "\t\t}",
+        f"\t\tset_variable = {{ name = {SIZE_VARIABLE} value = local_var:{TARGET_LOCAL} }}",
         "\t}",
         "}",
     ]
@@ -245,13 +246,11 @@ def render_scripted_effects(config: StoredFoodConfig) -> str:
 
 def render_localization(config: StoredFoodConfig) -> str:
     lines = ["l_english:", f"  {HEADER.strip()}"]
-    for tier in range(1, config.tiers + 1):
-        months = tier_months(config, tier)
-        unit = "month" if months == 1 else "months"
-        lines.append(f'  STATIC_MODIFIER_NAME_{modifier_name(tier)}: "Stored Food: {months} {unit}"')
-        lines.append(f'  STATIC_MODIFIER_DESC_{modifier_name(tier)}: "{DESCRIPTION}"')
-    # the customizable localization's answer without a tier; never equal to a tier's name
-    lines.append(f'  {TIER_NONE}: "none"')
+    lines.append(f'  STATIC_MODIFIER_NAME_{MODIFIER}: "Stored Food"')
+    lines.append(f'  STATIC_MODIFIER_DESC_{MODIFIER}: "{DESCRIPTION}"')
+    for tier in range(1, LEGACY_TIERS + 1):
+        lines.append(f'  STATIC_MODIFIER_NAME_{legacy_name(tier)}: "Stored Food"')
+        lines.append(f'  STATIC_MODIFIER_DESC_{legacy_name(tier)}: "{LEGACY_DESCRIPTION}"')
     return "\n".join(lines) + "\n"
 
 
@@ -261,16 +260,15 @@ def render(config: StoredFoodConfig) -> dict[Path, str]:
         SCRIPT_VALUES: render_script_values(config),
         SCRIPTED_EFFECTS: render_scripted_effects(config),
         LOCALIZATION: render_localization(config),
-        CUSTOM_LOCALIZATION: render_custom_localization(config),
     }
 
 
-def configured_tiers(project: Path) -> int:
-    """How many tiers ``project`` configures (0 without a ``[stored_food]`` section); the location view uses it."""
+def configured_payload(project: Path) -> tuple[tuple[str, float], ...]:
+    """The per-stored-year payload ``project`` configures (empty without ``[stored_food]``); the location view uses it."""
     try:
-        return load_config(project).tiers
+        return load_config(project).per_year
     except (OSError, ValueError, KeyError):
-        return 0
+        return ()
 
 
 def _read(path: Path) -> str | None:
@@ -281,7 +279,8 @@ def _read(path: Path) -> str | None:
 
 
 def apply(project: Path, mod_root: Path, *, write: bool = True) -> StoredFoodResult:
-    """Write (or with ``write=False`` only compare) the generated stored-food files; UTF-8 with BOM."""
+    """Write (or with ``write=False`` only compare) the generated stored-food files, UTF-8 with BOM, and delete the
+    tier version's files."""
     config = load_config(project)
     changed: list[Path] = []
     for relative, text in render(config).items():
@@ -293,4 +292,10 @@ def apply(project: Path, mod_root: Path, *, write: bool = True) -> StoredFoodRes
             path.parent.mkdir(parents=True, exist_ok=True)
             with path.open("w", encoding="utf-8-sig", newline="") as handle:
                 handle.write(text)
-    return StoredFoodResult(tiers=config.tiers, files_changed=len(changed), changed=tuple(changed))
+    for relative in LEGACY_FILES:
+        path = mod_root / relative
+        if path.is_file():
+            changed.append(relative)
+            if write:
+                path.unlink()
+    return StoredFoodResult(files_changed=len(changed), changed=tuple(changed))

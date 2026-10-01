@@ -17,12 +17,12 @@ on_game_start = {
 	}
 }
 
-# Stored-food tiers from day one (pp_stored_food.txt refreshes them each month through the country pulse).
+# Stored Food from day one (pp_stored_food.txt refreshes it each month through the country pulse).
 pp_stored_food_game_start = {
 	effect = {
 		every_country = {
 			every_province = {
-				pp_refresh_stored_food_tier = yes
+				pp_refresh_stored_food = yes
 			}
 		}
 	}

@@ -5,10 +5,10 @@ is a set of widgets, one per state, with exclusive visibility tests, like the so
 
 How each state is read:
 - food: the stored months are a script value (`pp_province_food_storage_months` in
-  script_values/pp_province_food_storage.txt); the effects are those of the province's stored-food tier modifier
-  (`pp_stored_food_tier_<t>`, stored_food.py): one `ShowModifierEffect` row per tier, each visible only while the
-  location's customizable localization `pp_stored_food_tier` (the name of the tier modifier its province carries)
-  equals that tier's name, and a "no effects" line without a tier; starvation is the engine's `Province.IsStarving`.
+  script_values/pp_province_food_storage.txt); the effects are those of the province's Stored Food modifier
+  (`pp_stored_food`, stored_food.py), one line per effect at its applied size: the script value `pp_stored_food_years`
+  times the effect's value per stored year, and a "no effects" line without the modifier; starvation is the
+  engine's `Province.IsStarving`.
 - land: the engine applies `abundant_free_land`, `available_free_land` and `overpopulation` itself, and scripts
   cannot see them, so each carries a marker modifier type (`pp_land_*`, in pp_capacity_pressure_effects.txt) that
   the GUI reads through `GetModifierValueFixed`. Its value is the modifier's strength, so the tooltip lists every
@@ -51,10 +51,8 @@ REGION_GOODS = {
     "pacific_islands": "fish",
 }
 LAND_MARKERS = ("pp_land_overpopulation", "pp_land_abundant", "pp_land_available")
-# The stored-food tier modifiers and the customizable localization that names the carried one (stored_food.py).
-STORED_FOOD_TIER_PREFIX = "pp_stored_food_tier_"
-STORED_FOOD_TIER_CUSTOM = "pp_stored_food_tier"
-STORED_FOOD_TIER_NONE = "PP_STORED_FOOD_TIER_NONE"
+# The stored years the province's Stored Food modifier is applied at (location-scope script value, stored_food.py).
+STORED_FOOD_YEARS = "pp_stored_food_years"
 
 _ANCHOR = "\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\t# BOTTOM CONDITIONS\n"
 _SPLIT = len("\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n")   # after the IO/periphora hbox, inside the row widget
@@ -186,18 +184,45 @@ def _text(key: str) -> str:
     return f'TooltipTextBlock = {{ blockoverride "text" {{ text = "{key}" }} }}'
 
 
-def stored_food_tier_gate(tier: int) -> str:
-    """GUI test: the location's province carries stored-food tier ``tier`` (the customizable localization returns the
-    carried tier modifier's display name, stored_food.py)."""
-    return _custom_is(STORED_FOOD_TIER_CUSTOM, f"STATIC_MODIFIER_NAME_{STORED_FOOD_TIER_PREFIX}{tier}")
+def stored_food_years() -> str:
+    """GUI value: the stored years the location's province carries its Stored Food modifier at (0 without it)."""
+    return f"{_LOC}.MakeScope.ScriptValue('{STORED_FOOD_YEARS}')"
 
 
-def stored_food_rows(tiers: int) -> str:
-    """The effects of the province's current stored-food tier, like a modifier tooltip; a plain line without a tier."""
-    rows = [_row(f"{STORED_FOOD_TIER_PREFIX}{tier}", stored_food_tier_gate(tier)) for tier in range(1, tiers + 1)]
-    none = _custom_is(STORED_FOOD_TIER_CUSTOM, STORED_FOOD_TIER_NONE)
-    rows.append(f'TooltipTextBlock = {{ visible = "[{none}]" blockoverride "text" {{ text = "PP_FOOD_CHIP_NO_TIER" }} }}')
+def stored_food_rows(per_year: tuple[tuple[str, float], ...] | list[tuple[str, float]],
+                     types: dict[str, dict[str, str]] | None = None) -> str:
+    """The Stored Food modifier's effects at the province's applied size, like a modifier tooltip: each effect's value
+    per stored year times the stored years, largest first; a plain line without the modifier."""
+    types = types or {}
+    years = stored_food_years()
+    carried = f"GreaterThan_CFixedPoint({years}, '(CFixedPoint)0')"
+    lines: list[tuple[float, str]] = []
+    for key, value in per_year:
+        if value == 0:
+            continue
+        info = types.get(key, {})
+        # decimals for a single stored month, so a small store does not round its effects to zero
+        shown = _scaled_value(years, _fixed(value), info, abs(value) / 12)
+        lines.append((_magnitude(str(value), info), _raw_block(f"[ShowModifierTypeName('{key}')]: {shown}", carried)))
+    lines.sort(key=lambda item: -item[0])
+    rows = [block for _, block in lines]
+    rows.append(f'TooltipTextBlock = {{ visible = "[Not({carried})]" blockoverride "text" {{ text = "PP_FOOD_CHIP_NO_TIER" }} }}')
     return " ".join(rows)
+
+
+def _fixed(value: float) -> str:
+    text = f"{value:.5f}".rstrip("0")
+    return text + "0" if text.endswith(".") else text
+
+
+def load_stored_food_rows(mod_root: Path, vanilla: Path | None,
+                          per_year: tuple[tuple[str, float], ...] | list[tuple[str, float]]) -> str | None:
+    """The chip's effect rows with the display settings of vanilla's and the mod's modifier types."""
+    if not per_year:
+        return None
+    roots = [root for root in ((vanilla / "game") if vanilla else None, mod_root) if root is not None]
+    texts = [p.read_text(encoding="utf-8-sig") for root in roots for p in sorted((root / TYPE_DEFINITIONS).glob("*.txt"))]
+    return stored_food_rows(per_year, modifier_types(texts))
 
 
 def _marker(key: str) -> str:
@@ -234,12 +259,18 @@ def modifier_effects(text: str, name: str) -> list[tuple[str, str]]:
 
 
 def _scaled(marker: str, key: str, base: str, info: dict[str, str]) -> str:
+    return _scaled_value(f"{_LOC}.GetModifierValueFixed('{marker}')", base, info)
+
+
+def _scaled_value(strength: str, base: str, info: dict[str, str], smallest: float | None = None) -> str:
+    """``base`` times the GUI value ``strength``, formatted like the modifier type; ``smallest`` is the smallest
+    applied value the decimals must show (default: ``base``)."""
     percent = info.get("percent") == "yes"
     # Enough decimals that a partly applied small effect does not round to zero (vanilla's setting is for full values).
-    shown = abs(float(base)) * (100 if percent else 1)
+    shown = abs(float(base) if smallest is None else smallest) * (100 if percent else 1)
     decimals = str(max(int(info.get("decimals", 0)), min(4, math.ceil(-math.log10(shown)) + 1 if shown else 1), 1))
     sign = {"bad": "-", "neutral": ""}.get(info.get("color", "good"), "+")
-    value = f"Multiply_CFixedPoint({_LOC}.GetModifierValueFixed('{marker}'), '(CFixedPoint){base}')"
+    value = f"Multiply_CFixedPoint({strength}, '(CFixedPoint){base}')"
     suffix = "%" if info.get("already_percent") == "yes" else ""
     return f"[{value}|{decimals}{'%' if percent else ''}{sign}]{suffix}"
 
@@ -274,8 +305,9 @@ def land_effect_rows(pressure_text: str, types: dict[str, dict[str, str]]) -> di
     return rows
 
 
-def _raw_block(line: str) -> str:
-    return f'TooltipTextBlock = {{ blockoverride "text" {{ raw_text = "{line}" }} }}'
+def _raw_block(line: str, visible: str | None = None) -> str:
+    test = f'visible = "[{visible}]" ' if visible else ""
+    return f'TooltipTextBlock = {{ {test}blockoverride "text" {{ raw_text = "{line}" }} }}'
 
 
 def _goods_block(line: str, goods: list[str]) -> str:
@@ -398,7 +430,7 @@ def harvest_chip(harvests: Harvests) -> str:
 """
 
 
-def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stored_tiers: int = 0) -> str:
+def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stored_rows: str | None = None) -> str:
     # Without the modifier types the land chips fall back to the full-strength effects.
     land_rows = land_rows or {name: _scrolled(_row(name)) for name in LAND_MODIFIERS.values()}
     starving = f"{_LOC}.GetProvince.IsStarving"
@@ -410,7 +442,7 @@ def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stor
             raw_text = "{months}" }}"""
     food = _chip("pp_status_food_stored", f"Not({starving})", f"{_ICONS}/flat_icons/trade_market/food_stockpile.dds",
                  "PP_FOOD_CHIP_TITLE", "pp_food_storage",
-                 _text("PP_FOOD_CHIP_STORED") + " " + stored_food_rows(stored_tiers), overlay)
+                 _text("PP_FOOD_CHIP_STORED") + " " + (stored_rows or stored_food_rows(())), overlay)
     food += _chip("pp_status_food_starving", starving, f"{_ICONS}/alerts_icons/starving_provinces.dds",
                   "PP_FOOD_CHIP_STARVING_TITLE", "pp_starvation",
                   _text("PP_FOOD_CHIP_STARVING") + " " + _row("province_starving"))
@@ -449,12 +481,12 @@ def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stor
 """
 
 
-def add_status_row(text: str, harvests: Harvests, land_rows: dict[str, str] | None = None, stored_tiers: int = 0) -> str:
+def add_status_row(text: str, harvests: Harvests, land_rows: dict[str, str] | None = None, stored_rows: str | None = None) -> str:
     """Anchor the status card to the top-right corner of the scene, beside the IO and periphora buttons' row."""
     found = text.count(_ANCHOR)
     if found != 1:
         raise ValueError(f"location_window.gui: expected 1 top-row anchor for the status chips, found {found}")
-    return text.replace(_ANCHOR, _ANCHOR[:_SPLIT] + status_row(harvests, land_rows, stored_tiers) + _ANCHOR[_SPLIT:])
+    return text.replace(_ANCHOR, _ANCHOR[:_SPLIT] + status_row(harvests, land_rows, stored_rows) + _ANCHOR[_SPLIT:])
 
 
 def write_harvest_files(mod_root: Path, harvests: Harvests) -> int:

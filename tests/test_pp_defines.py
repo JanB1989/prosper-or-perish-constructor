@@ -52,7 +52,7 @@ def _mod_values() -> dict[tuple[str, str], str]:
 
 
 def test_food_growth_terms_are_off() -> None:
-    """Growth from stored food is the Stored Food tier modifier (stored_food.py); the engine's storage and surplus
+    """Growth from stored food is the Stored Food modifier (stored_food.py); the engine's storage and surplus
     terms would add growth on top of it."""
     values = _mod_values()
     assert float(values[("NPop", "FOOD_STORAGE_POP_GROWTH")]) == 0

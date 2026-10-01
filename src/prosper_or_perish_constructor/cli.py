@@ -62,7 +62,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/provisioning.py",
     "src/prosper_or_perish_constructor/rural_capacity.py",
     "src/prosper_or_perish_constructor/setup_layout.py",          # the setup folder every setup writer uses
-    "src/prosper_or_perish_constructor/stored_food.py",           # the location view's Stored Food chip lists its tiers
+    "src/prosper_or_perish_constructor/stored_food.py",           # the location view's Stored Food chip lists its effects
     "src/prosper_or_perish_constructor/vanilla_food_productivity.py",   # script value resolution (EU5 1.4 override rule)
     "src/prosper_or_perish_constructor/yaml_io.py",
     "scripts/generate_rural_capacity_values.py",
@@ -1310,7 +1310,7 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
 
     stored = stored_food.apply(project, mod_root)
     print(
-        f"Stored-food tiers: {stored.tiers} province modifiers, refresh effect, tier value and localization "
+        f"Stored food: scaled province modifier, refresh effect, display values and localization "
         f"({stored.files_changed} files changed).",
         flush=True,
     )
@@ -2059,9 +2059,8 @@ def _load_province_food_sales_check_inputs(
             "province_starving",
         )
     }
-    # EU5 1.4 deleted the engine-scaled positive_province_food_growth modifier; the stored-food tier modifiers carry
-    # its storage legs again (stored_food.py): tier t = the per-stored-year payload x t / 12, so the per-year value is
-    # the payload of [stored_food.per_year].
+    # EU5 1.4 deleted the engine-scaled positive_province_food_growth modifier; the Stored Food modifier carries its
+    # storage legs again (stored_food.py), the payload of [stored_food.per_year] applied at size = stored years.
     static_values["stored_food"] = _province_food_sales_stored_food_per_year(project)
     rank_values = {
         name: rank_data.modifier_baseline(name, "rank_modifier", PROVINCE_FOOD_SALES_MODIFIER_KEY)

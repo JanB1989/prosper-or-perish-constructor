@@ -158,10 +158,10 @@ NPop = {
 	POST_CONQUEST_EMIGRATION_MONTHS = 12 # 12; vanilla
 	DISCRIMINATION_PUSH_FACTOR = 2.0 # 2.0; vanilla: speeds the emigration of discriminated pops, the amount still follows PP's migration speeds
 	# Food growth (EU5 1.4 replaced the scaled static modifier positive_province_food_growth with these terms).
-	# Growth from stored food now comes from the province's Stored Food modifier (pp_stored_food_tier_<t>, one per
-	# whole stored month, local_population_growth from [stored_food.per_year] in constructor.toml: the PP law of
+	# Growth from stored food now comes from the province's Stored Food modifier (pp_stored_food, applied at size =
+	# stored years, local_population_growth from [stored_food.per_year] in constructor.toml: the PP law of
 	# +0.75 % a year per stored year up to 2 years), so the engine's own storage term is off; at 0.015 it gave the
-	# same law continuously. The AI no longer sees storage growth through this define when it rates modifiers.
+	# same law. The AI no longer sees storage growth through this define when it rates modifiers.
 	FOOD_STORAGE_POP_GROWTH = 0 # 0.001
 	FOOD_SURPLUS_POP_GROWTH = 0 # 0.0015; vanilla's monthly-surplus growth is off: growth comes from storage only
 	# Vanilla 1.4 damping: approaching_capacity (-0.5 % growth) scales in from this share of population capacity.

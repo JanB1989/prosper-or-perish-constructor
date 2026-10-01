@@ -136,9 +136,10 @@ linear below it). What remained:
 The deleted modifier's other effects (the storage legs of the Tavern, `province_food_purchase` -8 per stored year, and
 of Surplus Sales / the Victualling Yard, `province_food_sales` +8 per stored year, and per stored year +0.003
 devastation recovery, +0.045 migration attraction and +0.0025 monthly prosperity) are back since 2026-10-01 on the
-stored-food tiers (6.2), and growth joined them the same day (6.3). Displays read script values instead of the
-marker the modifier carried (`in_game/common/script_values/pp_province_food_storage.txt`: months stored, local
-growth for the population growth map mode; `pp_stored_food_tiers.txt`: growth from the carried tier).
+Stored Food modifier (6.2; whole-month tiers that evening, one scaled modifier since 6.4), and growth joined them the
+same day (6.3). Displays read script values instead of the marker the modifier carried
+(`in_game/common/script_values/pp_province_food_storage.txt`: months stored, local growth for the population growth
+map mode; `pp_stored_food.txt`: the applied stored years and their growth).
 
 ### 6.1 Carrier search for the other stored-food effects (2026-10-01)
 
@@ -208,9 +209,9 @@ Options for Jan:
 3. **Country-wide auto modifier** scaled by the country's average stored years: exact for one-province countries,
    wrong inside larger ones (and a uniform migration term moves nobody). Not applied.
 
-### 6.2 Stored-food tiers (2026-10-01, applied)
+### 6.2 Stored-food tiers (2026-10-01, replaced the same night by 6.4)
 
-What the game applies now (behaviour level):
+What the game applied (behaviour level):
 
 - **24 province static modifiers** `pp_stored_food_tier_1` .. `_24`
   (`in_game/common/static_modifiers/pp_stored_food_tiers.txt`). Tier t stands for t whole months of the province's
@@ -256,8 +257,8 @@ unchanged (Jan: "don't change the math yet"), no damping or hysteresis was added
 - `[stored_food.per_year]` carries `local_population_growth = 0.0075`, so tier t gives +0.0075 x t / 12 a year
   (tier 24 = +1.5 %, the old `FOOD_STORAGE_POP_GROWTH` 0.015 at the 2-year cap). `NPop.FOOD_STORAGE_POP_GROWTH` is 0
   (the engine term is off); `NPop.FOOD_SURPLUS_POP_GROWTH` stays 0.
-- Behaviour: growth from stored food is part of the province's Stored Food modifier and of
-  `modifier:local_population_growth` (the population growth map mode reads that alone again). It moves in whole-month
+- Behaviour (until 6.4 made it continuous): growth from stored food is part of the province's Stored Food modifier and
+  of `modifier:local_population_growth` (the population growth map mode reads that alone again). It moved in whole-month
   steps, renewed by the monthly refresh, instead of continuously each month: up to one month of stores below the old
   term (at most 0.0625 %/yr), up to a month of lag after the store crosses a whole month, and a province whose store
   runs empty keeps its tier's growth until its next refresh (the engine term stopped in the starving month itself).
@@ -270,3 +271,36 @@ unchanged (Jan: "don't change the math yet"), no damping or hysteresis was added
   builds food storage and storage-related buildings as before.
 - Tooling: the food simulation counts stored years in whole months for growth (`migration.stored_food_tier_years`;
   its fitted slope 0.0086 is unchanged).
+
+### 6.4 One Stored Food modifier scaled by stored years (2026-10-01, applied)
+
+The tiers made every effect a staircase: inside each month nothing moved, and from 0 to 1 month the Sell the Surplus
+legs and the Grange / Yard gate stayed at 0x and the Tavern leg at the full 16x, so poor provinces (which live in that
+band) looked empty to their buildings. Replaced by the exact form option 1 of 6.1 described:
+
+- **One province static modifier** `pp_stored_food` (`in_game/common/static_modifiers/pp_stored_food.txt`) carries the
+  payload of one stored year (`[stored_food.per_year]`, unchanged). It is applied with `add_province_modifier = {
+  modifier = pp_stored_food size = <stored years> }`, so 0.3 stored months give 0.3/12 of each effect. The payload is
+  per year because per-month values (0.0075 / 12) would need six decimals, which 1.4 rejects.
+- **Refresh** (`pp_refresh_stored_food`, `scripted_effects/pp_stored_food.txt`, same staggered monthly country pulse
+  and game-start call): the consumption (the location loop) is worked out once into a local, months =
+  `province_food` / consumption capped at 24, and the modifier is removed and re-added with the new size only when the
+  months moved by more than `deadband_months` (0.05) since the last refresh, or the store emptied. The applied months
+  sit in the province variable `pp_stored_food_size` (+100 offset). Remove + add, not `change_province_modifier_size`:
+  vanilla uses that as a delta (`value = -1`, then checks the strength), and a set is drift-free.
+- **Old saves**: the 24 tier names stay defined without effects so tier-version saves load; the first refresh removes
+  a province's tier modifier and its three variables. The tier version's files are deleted by `ppc build`.
+- **Displays**: `pp_stored_food_years` (location scope, the applied size) and `pp_province_food_storage_growth` (its
+  growth); the location view's Stored Food chip lists each effect as `pp_stored_food_years` x its per-year value and
+  shows the months with one decimal.
+- **Verified in game** (2026-10-01, Jan's 1462 observer save made with the tiers, temporary probe = a marker type
+  injected into `pp_stored_food`, read back as the engine's applied size): after one month 3,736 of 3,836 provinces
+  carried exactly the size the script applied, 131 of 132 provinces under one stored month got their effects, legacy
+  tiers left only on provinces whose owner had not pulsed yet; after one year 0 legacy modifiers or variables,
+  3,840 of 3,919 exact. Every mismatch carried the modifier with the previous size (e.g. 1.918 instead of 1.888
+  years): locations pick up a re-applied size within a few days. So `size` scales a permanent province modifier,
+  including its location-level `local_*` effects.
+- **Cost** (script profiler, one game year 1462-63, 3,912 provinces): 0.525 s per game year (11 µs per province and
+  month; the tiers: 0.56 s in their test, 13.9 µs in the 1337-1412 profile); the consumption loop 0.25 s. About 2,600
+  re-applies a month (tiers: ~700 changes); the engine's modifier recompute for them does not show in the script
+  profile. `deadband_months` is the lever if a profile shows it.

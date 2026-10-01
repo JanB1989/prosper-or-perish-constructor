@@ -1,5 +1,5 @@
 ﻿# Province food storage. EU5 1.4 dropped the stored-food modifier that carried the months of storage, so the
-# stored-food tiers (pp_stored_food_tiers.txt), the stored-food map mode and the location view read these values.
+# Stored Food modifier (pp_stored_food.txt), the stored-food map mode and the location view read these values.
 # The province-scope values are the source; the location-scope ones (the location's province) delegate to them.
 
 # Province scope: monthly food the province's pops eat, the sum of its locations' consumption. The location value
@@ -13,7 +13,8 @@ pp_stored_food_province_consumption = {
 }
 
 # Province scope: months of the province's consumption in storage, capped where the stored-food effects stop rising
-# (NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX years = 24 months, the last stored-food tier).
+# (NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX years = 24 months). Display, map mode and tooltips read it; the monthly
+# refresh (scripted_effects/pp_stored_food.txt) works the same months out with one consumption pass.
 pp_stored_food_province_months = {
 	value = 0
 	if = {
@@ -44,13 +45,13 @@ pp_province_food_storage_months = {
 	}
 }
 
-# Growth from stored food is the local_population_growth of the province's stored-food tier modifier
-# (pp_stored_food_tiers.txt; the engine's own storage term is off, NPop.FOOD_STORAGE_POP_GROWTH = 0). The
-# display value pp_province_food_storage_growth (that tier's growth) is generated with the tiers
-# (script_values/pp_stored_food_tiers.txt).
+# Growth from stored food is the local_population_growth of the province's Stored Food modifier
+# (static_modifiers/pp_stored_food.txt; the engine's own storage term is off, NPop.FOOD_STORAGE_POP_GROWTH = 0). The
+# display value pp_province_food_storage_growth (its growth at the applied size) is generated with it
+# (script_values/pp_stored_food.txt).
 
 # Local population growth as the engine sums it, without the country-wide part: the local_population_growth
-# modifier, which includes the stored-food tier's growth (read by the population growth map mode).
+# modifier, which includes the Stored Food modifier's growth (read by the population growth map mode).
 pp_population_growth_map_value = {
 	value = modifier:local_population_growth
 }

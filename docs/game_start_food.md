@@ -290,8 +290,8 @@ stone or copper.
 ## Taverns and Victualling Yards
 
 EU5 1.4: the game deleted the stored-food modifier that drove both storage legs (the -8 / +8 per stored year
-below); the stored-food tier modifiers carry them again, in whole months of stores (`pp_stored_food_tier_<t>`,
-refreshed monthly; `docs/historical_growth_calibration.md` section 6.2).
+below); the Stored Food modifier carries them again, scaled by the stored years (`pp_stored_food`, refreshed monthly;
+`docs/historical_growth_calibration.md` sections 6.2 and 6.4).
 
 Both move **24 food per fully staffed level** (one noble each; 60 before 2026-09-30, when the three victuals
 buildings were scaled x0.4 in inputs, outputs and food modifier together, see below). They are

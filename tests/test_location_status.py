@@ -10,6 +10,7 @@ import pytest
 from prosper_or_perish_constructor import location_status, stored_food
 
 MOD_ROOT = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+PROJECT = Path(__file__).resolve().parents[1] / "constructor.toml"
 HARVESTS = location_status.Harvests(
     keys=["pp_harvest_x_abysmal", "pp_harvest_x_very_good", "pp_harvest_y_poor", "pp_harvest_y_bountiful"],
     regions={"western_europe": ["r1", "r2"], "pacific_islands": ["r3"]},
@@ -135,7 +136,7 @@ def test_mod_files_carry_the_markers_types_and_localization():
         block = block[:block.index("\n}\n")]
         assert f"\t{marker} = 1\n" in block
         assert f"\n{marker}={{" in types and f"MODIFIER_TYPE_NAME_{marker}:" in loc
-    gui = location_status.status_row(HARVESTS, stored_tiers=24)
+    gui = location_status.status_row(HARVESTS, stored_rows=location_status.stored_food_rows(stored_food.load_config(PROJECT).per_year))
     used = set(re.findall(r'"(PP_[A-Z_]+)"', gui)) | set(re.findall(r"Localize\('(PP_[A-Z_]+)'\)", gui))
     used |= set(re.findall(r"localization_key = (PP_[A-Z_]+)", location_status.custom_localization(HARVESTS)))
     loc += location_status.harvest_localization(HARVESTS)
@@ -144,30 +145,35 @@ def test_mod_files_carry_the_markers_types_and_localization():
     assert not missing
 
 
-def test_stored_food_chip_lists_the_carried_tier_effects():
-    out = location_status.add_status_row(_window(), HARVESTS, stored_tiers=24)
+def test_stored_food_chip_lists_the_effects_at_the_applied_size():
+    per_year = stored_food.load_config(PROJECT).per_year
+    rows = location_status.load_stored_food_rows(MOD_ROOT, None, per_year)
+    out = location_status.add_status_row(_window(), HARVESTS, stored_rows=rows)
     chip = out[out.index('name = "pp_status_food_stored"'):out.index('name = "pp_status_food_starving"')]
-    # the months, then one modifier-effect row per tier, each shown only while the province carries that tier
-    assert chip.index('text = "PP_FOOD_CHIP_STORED"') < chip.index("ShowModifierEffect('pp_stored_food_tier_1')")
-    for tier in range(1, 25):
-        name = f"pp_stored_food_tier_{tier}"
-        gate = f"EqualTo_string(LocationView.GetLocation.Custom('pp_stored_food_tier'), Localize('STATIC_MODIFIER_NAME_{name}'))"
-        assert location_status.stored_food_tier_gate(tier) == gate
-        row = 'TooltipStringPairList = { visible = "[' + gate + ']" textcontext = "[ShowModifierEffect(' + f"'{name}'" + ')]" }'
-        assert chip.count(row) == 1
-    assert "pp_stored_food_tier_25" not in chip and "pp_stored_food_tier_0'" not in chip
-    # no tier: a plain line instead of effects
-    none = "EqualTo_string(LocationView.GetLocation.Custom('pp_stored_food_tier'), Localize('PP_STORED_FOOD_TIER_NONE'))"
-    assert 'TooltipTextBlock = { visible = "[' + none + ']" blockoverride "text" { text = "PP_FOOD_CHIP_NO_TIER" } }' in chip
-    # the months badge reads the fixed script value
+    years = "LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_years')"
+    assert location_status.stored_food_years() == years
+    carried = f"GreaterThan_CFixedPoint({years}, '(CFixedPoint)0')"
+    # the months, then one line per effect: its value per stored year times the applied stored years
+    assert chip.index('text = "PP_FOOD_CHIP_STORED"') < chip.index("ShowModifierTypeName('local_")
+    for key, value in per_year:
+        line = f"[ShowModifierTypeName('{key}')]: [Multiply_CFixedPoint({years}, '(CFixedPoint){location_status._fixed(value)}')"
+        assert chip.count(line) == 1
+    assert chip.count(f'TooltipTextBlock = {{ visible = "[{carried}]" ') == len(per_year)
+    # without the modifier: a plain line instead of effects
+    assert 'TooltipTextBlock = { visible = "[Not(' + carried + ')]" blockoverride "text" { text = "PP_FOOD_CHIP_NO_TIER" } }' in chip
+    assert "pp_stored_food_tier" not in chip and "ShowModifierEffect" not in chip
+    # a single stored month of growth (0.0625 %) still shows: three decimals for the percent type
+    growth = location_status.stored_food_rows((("local_population_growth", 0.0075),), {"local_population_growth": {"percent": "yes"}})
+    assert "'(CFixedPoint)0.0075')|3%+]" in growth
+    # the months badge reads the fixed script value; the tooltip shows a decimal
     assert "ScriptValue('pp_province_food_storage_months')|0]" in chip
     loc = (MOD_ROOT / "main_menu/localization/english/pp_location_status_l_english.yml").read_text(encoding="utf-8-sig")
     stored = next(line for line in loc.splitlines() if line.startswith("  PP_FOOD_CHIP_STORED:"))
-    assert "ScriptValue('pp_province_food_storage_months')" in stored
-    assert "pp_province_food_storage_growth" not in stored   # the growth is a row of the tier's effects now
-    assert not re.search(r"\d", stored.split(":", 1)[1].replace("|0]", "]"))   # no balance numbers
+    assert "ScriptValue('pp_province_food_storage_months')|1]" in stored
+    assert "pp_province_food_storage_growth" not in stored   # the growth is a row of the modifier's effects
+    assert not re.search(r"\d", stored.split(":", 1)[1].replace("|1]", "]"))   # no balance numbers
     assert "\n  PP_FOOD_CHIP_NO_TIER:" in loc
     # the deployed location view carries the same rows (generated by the geography sync)
     window = (MOD_ROOT / "in_game/gui/location_window.gui").read_text(encoding="utf-8-sig")
-    assert window.count("ShowModifierEffect('pp_stored_food_tier_") == 24
-    assert window.count("Localize('PP_STORED_FOOD_TIER_NONE')") == 1
+    assert window.count(f"Multiply_CFixedPoint({years}, ") == len(per_year)
+    assert "pp_stored_food_tier" not in window

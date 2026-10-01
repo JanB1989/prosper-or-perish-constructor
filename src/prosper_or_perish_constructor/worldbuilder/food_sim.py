@@ -37,8 +37,8 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   60 food (a Tavern buys 2 victuals, a Yard packs 1.5); Taverns only get the victuals their market has (staffed
   Yards and other producers; pops compete); a starving pool loses the noble who staffs its Tavern at 0.09 a year;
 * growth per year on owned land: -0.0048 + 0.0086 x stored years (cap 2) when fed, -0.0048 - 0.04 - 0.012 when
-  starving; stored years count in whole months (EU5 1.4: growth from storage is the stored-food tier modifier,
-  stored_food.py, one tier per whole stored month; ``migration.stored_food_tier_years``);
+  starving (EU5 1.4: growth from storage is the Stored Food modifier, stored_food.py, applied at size = stored
+  years; ``migration.stored_food_years``);
 * each September the harvest rolls like the mod's harvest system (``variable_harvests.toml``): a shock per sub-continent,
   then one severity per region from the profile the shock and the region's last harvest select, for every pool of the
   region (``pp_harvest_*``: peasant food consumption +0.30 .. -0.30); a seeded generator keeps runs reproducible;
@@ -153,8 +153,8 @@ class SimRules:
     # prosperity (0..1 per location; the mod's prosperity inject: every settled pop type +50 % food at 100 %), dynamics
     # fitted on the 100-year run 1342-1437 (saves r7bee, 249k location pairs): dP/yr = +0.0181 x stored years
     # - 0.0025 starving - 0.0747 x P, so ~0.24 at one stored year and ~0.49 at two. EU5 1.3 fit; in 1.4 the
-    # stored-food tier modifiers (stored_food.py) give the same prosperity per stored year again, in whole months of
-    # stores, so the fit stands (a 1.4 run can confirm it).
+    # Stored Food modifier (stored_food.py) gives the same prosperity per stored year again, so the fit stands (a 1.4
+    # run can confirm it).
     prosperity_consumption: float = 0.5
     prosperity_per_year: float = 0.0181
     prosperity_starving: float = -0.0025
@@ -527,7 +527,7 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             if starving[i]:
                 g = rules.growth_base + rules.starving_growth + (0.0 if rules.migration else rules.starving_migration)
             else:
-                g = rules.growth_base + rules.growth_per_year * mig.stored_food_tier_years(months_after / 12.0)
+                g = rules.growth_base + rules.growth_per_year * mig.stored_food_years(months_after / 12.0)
             pop = N[i] + T[i]
             g += rules.tribal_growth * (T[i] / pop if pop > 0 else 0.0)
             g += p.growth_offset

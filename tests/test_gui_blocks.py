@@ -14,10 +14,11 @@ from pathlib import Path
 
 from eu5gameparser.load_order import LoadOrderConfig
 
-from prosper_or_perish_constructor import gui_blocks, location_status
+from prosper_or_perish_constructor import gui_blocks, location_status, stored_food
 
 ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+PROJECT = ROOT / "constructor.toml"
 WINDOW = MOD_ROOT / "in_game/gui/location_window.gui"
 ATTRIBUTE_TOOLTIPS = MOD_ROOT / "in_game/gui/shared/pp_attribute_tooltips.gui"
 STATUS_LOC = MOD_ROOT / "main_menu/localization/english/pp_location_status_l_english.yml"
@@ -97,7 +98,8 @@ def test_status_chips_override_only_blocks_the_game_types_have():
     # the generator itself, with the real land-pressure rows, agrees with the deployed window
     land = location_status.load_land_effect_rows(MOD_ROOT, _vanilla().parent)
     assert land is not None
-    generated = location_status.status_row(location_status.load_harvests(MOD_ROOT), land, stored_tiers=24)
+    stored = location_status.load_stored_food_rows(MOD_ROOT, _vanilla().parent, stored_food.load_config(PROJECT).per_year)
+    generated = location_status.status_row(location_status.load_harvests(MOD_ROOT), land, stored)
     assert not gui_blocks.dead_overrides(generated, _index())
 
 
@@ -135,19 +137,18 @@ def test_chip_data_functions_exist_in_the_game():
 
 
 def test_chip_gates_match_texts_their_customizable_localization_can_return():
-    """Each GUI gate compares a customizable localization with a key that localization returns; the harvest and
-    stored-food keys name static modifiers the mod defines, and the harvest regions exist on the map the game loads."""
+    """Each GUI gate compares a customizable localization with a key that localization returns; the harvest
+    keys name static modifiers the mod defines, and the harvest regions exist on the map the game loads."""
     row = _status_row()
     custom = ""
-    for name in ("pp_location_status.txt", "pp_stored_food_tiers.txt"):
-        custom += (MOD_ROOT / "in_game/common/customizable_localization" / name).read_text(encoding="utf-8-sig")
+    custom += (MOD_ROOT / "in_game/common/customizable_localization/pp_location_status.txt").read_text(encoding="utf-8-sig")
     returns: dict[str, set[str]] = {}
     for block, body in re.findall(r"(?m)^(\w+) = \{(.*?)^\}", custom, flags=re.DOTALL):
         returns[block] = set(re.findall(r"localization_key = (\w+)", body))
     gates = re.findall(r"Custom\('(\w+)'\), Localize\('(\w+)'\)", row)
     assert gates
     attr = ATTRIBUTE_TOOLTIPS.read_text(encoding="utf-8-sig")
-    gates += re.findall(r"Custom\('(pp_harvest_\w+|pp_stored_food_tier)'\), Localize\('(\w+)'\)", attr)
+    gates += re.findall(r"Custom\('(pp_harvest_\w+)'\), Localize\('(\w+)'\)", attr)
     unmatched = sorted({(c, k) for c, k in gates if k not in returns.get(c, set())})
     assert not unmatched
     # every gated harvest has a static modifier; at least one harvest view exists per severity and region
@@ -156,9 +157,6 @@ def test_chip_gates_match_texts_their_customizable_localization_can_return():
     named = {k.removeprefix("STATIC_MODIFIER_NAME_") for k in returns["pp_harvest_state"] if k.startswith("STATIC_MODIFIER_NAME_")}
     assert named == keys and len(keys) > 50
     assert {k.removeprefix("STATIC_MODIFIER_NAME_") for _, k in gates if k.startswith("STATIC_MODIFIER_NAME_pp_harvest_")} <= keys
-    stored = (MOD_ROOT / "in_game/common/static_modifiers/pp_stored_food_tiers.txt").read_text(encoding="utf-8-sig")
-    tiers = {k.removeprefix("STATIC_MODIFIER_NAME_") for k in returns["pp_stored_food_tier"] if k.startswith("STATIC_MODIFIER_NAME_")}
-    assert tiers and all(re.search(rf"(?m)^{t} = \{{", stored) for t in tiers)
     definitions = MOD_ROOT / "in_game/map_data/definitions.txt"
     if not definitions.is_file():
         definitions = _vanilla() / "in_game/map_data/definitions.txt"

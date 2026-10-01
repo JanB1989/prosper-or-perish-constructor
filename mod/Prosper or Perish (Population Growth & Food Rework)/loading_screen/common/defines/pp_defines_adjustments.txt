@@ -36,7 +36,7 @@ NAI = {
 	# amount, at most the building's output, x factor), "Producing input goods shortage" and "Export profit" (goods the country
 	# exports at a profit with no surplus left, x profit per unit) were 0.03-0.06 % of all utility terms (hook run h03):
 	# the AI reacted to a shortage only through the price inside the profit term.
-	POP_MISSING_GOODS_UTILITY_FACTOR = 0.1 # 0.02
+	POP_MISSING_GOODS_UTILITY_FACTOR = 0.25 # 0.02
 	INPUT_GOODS_SHORTAGE_UTILITY_FACTOR = 0.1 # 0.02
 	PROFITABLE_EXPORT_GOODS_UTILITY_FACTOR = 1.0 # 0.5
 	# Nudge so eligible AI colonizers start and maintain charters earlier (tax-base gates: scripted_triggers/pp_colonization_triggers.txt).

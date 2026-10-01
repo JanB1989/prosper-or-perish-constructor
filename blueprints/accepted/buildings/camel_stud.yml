@@ -1,0 +1,152 @@
+version: 2
+tag: camel_stud
+footprint: farm_land
+labour:
+  class: primary_reformation
+  methods:
+    pp_camel_stud_base_camels: base
+gate_method: pp_camel_stud_market_sales
+upgrade_chain:
+  family: camel_herders
+  tier: 1
+  previous: camel_herders
+  next: null
+  unlock_advance: pp_camel_stud
+building:
+  key: camel_stud
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_camel_stud_base_camels
+  - name: slot_1
+    methods:
+    - pp_camel_stud_no_primary
+    - pp_camel_stud_hybrid_crossing
+    - pp_camel_stud_riding_strains
+  - name: slot_2
+    methods:
+    - pp_camel_stud_market_sales
+  possible_production_methods: []
+  body: |-
+    is_foreign = no
+    increase_per_level_cost = 0.10
+    pop_type = laborers
+    max_levels = farm_capacity_max_camel_stud
+    employment_size = 1
+    category = rgo_building_category
+    custom_tags = { farming_capacity }
+    icon = camel_stud
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = camel_herders
+    forbidden_for_estates = yes
+    ai_forbid_shutdown = no
+    can_close = yes
+    build_time = workshop_build_time
+    construction_demand = workshop_construction
+
+    location_potential = {
+        raw_material = goods:camels
+    }
+
+    unique_production_methods = {
+        pp_camel_stud_base_camels = {
+            manual_labor = 0.051
+            produced = camels
+            output = 0.085
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_camel_stud_no_primary = {
+            category = building_maintenance
+        }
+        pp_camel_stud_hybrid_crossing = {
+            wheat = 0.493 # barley and fodder grain
+            legumes = 0.264 # lucerne and vetch hay
+            leather = 0.094 # pack saddles and girths
+            tools = 0.094 # branding irons, shears and well gear
+            manual_labor = 0.145
+            produced = camels
+            output = 0.527
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_camel_stud_riding_strains = {
+            millet = 0.604 # millet and sorghum feed
+            fruit = 0.34 # dates
+            leather = 0.111 # riding saddles and bridles
+            cloth = 0.063 # saddle cloths and girth bands
+            manual_labor = 0.187
+            produced = camels
+            output = 0.612
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_camel_stud_market_sales = {
+            offset = 0.012
+            produced = camels
+            output = 0.004
+            category = building_maintenance
+        }
+    }
+
+    raw_modifier = {
+      farm_capacity_from_camel_stud = -1
+      local_population_capacity = -2
+    }
+advancements:
+- key: pp_camel_stud
+  body: |-
+    icon = camel_stud
+    age = age_4_reformation
+    requires = artillery_institution_advance
+    unlock_building = camel_stud
+    ai_weight = { add = 125 }
+localization:
+  entries:
+    camel_stud: Camel Stud
+    camel_stud_desc: Walled breeding yards with picked sires, fodder stores and trained handlers raise strong baggage camels and swift riding camels for the caravans and the armies.
+    camel_stud_slot_0: Desert Grazing
+    camel_stud_slot_1: Stud Work
+    camel_stud_slot_2: Market
+    pp_camel_stud: Camel Studs
+    pp_camel_stud_desc: Courts and great caravan houses keep picked sires in walled breeding yards, turning the herds of the desert into a steady supply of baggage and riding camels.
+    pp_camel_stud_base_camels: Desert Grazing
+    pp_camel_stud_no_primary: No Stud Work
+    pp_camel_stud_hybrid_crossing: Hybrid Crossing
+    pp_camel_stud_hybrid_crossing_desc: Two-humped sires crossed with dromedary dams give big, hardy baggage camels that carry heavier loads through cold and heat alike.
+    pp_camel_stud_riding_strains: Riding Strains
+    pp_camel_stud_riding_strains_desc: Picked bloodlines of light, swift dromedaries are raised and trained for couriers, raiders and the camel corps.
+    pp_camel_stud_market_sales: Market Sales
+    pp_camel_stud_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+icon:
+  source_png: ../assets/icons/camel_stud.png
+  output_dds: camel_stud.dds
+  size: 512
+evaluation:
+  allow_rules:
+    amortization_months: The camel stud is a land-limited rural specialization and keeps camel margins close to break-even rather than driving fast payback.
+  production_methods:
+    pp_camel_stud_base_camels:
+      production_efficiency: 1.0
+      allow_rules:
+        input_throughput: Passive grazing baseline intentionally stays below the global full-building target.
+        output_throughput: Passive grazing baseline intentionally stays below the global full-building target.
+    pp_camel_stud_no_primary:
+      production_efficiency: 1.0
+    pp_camel_stud_hybrid_crossing:
+      production_efficiency: 1.0
+    pp_camel_stud_riding_strains:
+      production_efficiency: 1.0
+    pp_camel_stud_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

@@ -854,6 +854,40 @@ farm_capacity_max_elephant_kraal = {
 	min = 0
 }
 
+farm_capacity_max_camel_herders = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 1
+		divide = 2
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_CAMEL_HERDERS"
+		value = modifier:farm_capacity_from_camel_herders
+	}
+	min = 0
+}
+
+farm_capacity_max_camel_stud = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 1
+		divide = 2
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_CAMEL_STUD"
+		value = modifier:farm_capacity_from_camel_stud
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_CAMEL_HERDERS"
+		value = modifier:farm_capacity_from_camel_herders
+	}
+	min = 0
+}
+
 farm_capacity_max_fiber_crops_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"

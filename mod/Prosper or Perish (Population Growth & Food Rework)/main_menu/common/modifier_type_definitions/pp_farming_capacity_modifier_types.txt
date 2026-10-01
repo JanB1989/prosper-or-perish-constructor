@@ -365,6 +365,20 @@ farm_capacity_from_elephant_kraal = {
 	}
 }
 
+farm_capacity_from_camel_herders = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
+farm_capacity_from_camel_stud = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
 farm_capacity_from_fiber_crops_farm = {
 	decimals = 2
 	game_data = {

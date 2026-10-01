@@ -712,7 +712,7 @@ plantation = [
     "tea_garden", "tea_sorting_garden", "sugarcane_farm", "trapiche_sugarcane_farm", "cotton_farm", "market_cotton_farm",
     "clove_grove", "pepper_garden", "managed_pepper_garden", "saffron_croft", "saffron_kiln_croft",
 ]
-herd = ["sheep_farms", "hurdled_sheepcotes", "enclosed_sheep_walks", "horse_breeders", "stud_farm", "elephant_kraal", "cattle_farm", "cattle_farmstead", "cattle_rotations", "cattle_model_farm"]
+herd = ["sheep_farms", "hurdled_sheepcotes", "enclosed_sheep_walks", "horse_breeders", "stud_farm", "elephant_kraal", "camel_herders", "camel_stud", "cattle_farm", "cattle_farmstead", "cattle_rotations", "cattle_model_farm"]
 
 [building_footprint]
 # Every accepted blueprint carries `footprint: <class>`. ppc build/sync writes

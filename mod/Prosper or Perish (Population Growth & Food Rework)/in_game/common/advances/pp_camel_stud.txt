@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:camel_stud:advancement
+pp_camel_stud = {
+icon = camel_stud
+age = age_4_reformation
+requires = artillery_institution_advance
+unlock_building = camel_stud
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:camel_stud:advancement

@@ -209,6 +209,7 @@ DEACTIVATED_MINING_VILLAGE_BLUEPRINTS = {
 }
 RAW_MATERIAL_BASE_PRODUCERS = {
     "horse_breeders": ("horses", "pp_horse_breeders_base_horses"),
+    "camel_herders": ("camels", "pp_camel_herders_base_camels"),
     "sand_pit": ("sand", "pp_sand_pit_base_sand"),
     "stone_quarry": ("stone", "pp_stone_quarry_base_stone"),
     "incense_grove": ("incense", "pp_incense_grove_base_incense"),
@@ -1154,6 +1155,10 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
         "horse_breeders": [
             ("horse_breeders", None),
             ("stud_farm", "pp_stud_farm"),
+        ],
+        "camel_herders": [
+            ("camel_herders", None),
+            ("camel_stud", "pp_camel_stud"),
         ],
         "fiber_crops_farm": [
             ("fiber_crops_farm", None),

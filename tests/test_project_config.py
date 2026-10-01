@@ -145,6 +145,8 @@ LAND_FARM_BUILDINGS = (
     "horse_breeders",
     "stud_farm",
     "elephant_kraal",
+    "camel_herders",
+    "camel_stud",
     "fiber_crops_farm",
     "fiber_dressing_yard",
     "cotton_plantation",
@@ -2539,7 +2541,7 @@ def test_cookshop_building_line_has_resolved_prices() -> None:
 
 def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -> None:
     scoped_blueprints = _normalized_production_site_blueprints()
-    assert len(scoped_blueprints) == 130   # 102 before the crop farm split: 4 farm tiers became 32
+    assert len(scoped_blueprints) == 132   # 102 before the crop farm split: 4 farm tiers became 32; +2 camel herders/stud
 
     for building, blueprint in scoped_blueprints:
         blueprint_values = _accepted_blueprint_building_values_from_path(blueprint)

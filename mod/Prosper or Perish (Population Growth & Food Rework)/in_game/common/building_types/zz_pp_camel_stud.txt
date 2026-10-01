@@ -1,0 +1,75 @@
+﻿# >>> eu5-building-pipeline:camel_stud:building
+camel_stud = {
+is_foreign = no
+increase_per_level_cost = 0.08
+pop_type = laborers
+max_levels = farm_capacity_max_camel_stud
+employment_size = 1
+category = rgo_building_category
+custom_tags = { farming_capacity }
+icon = camel_stud
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+obsolete = camel_herders
+forbidden_for_estates = yes
+ai_forbid_shutdown = no
+can_close = yes
+build_time = workshop_build_time
+construction_demand = workshop_construction
+
+location_potential = {
+    raw_material = goods:camels
+}
+
+unique_production_methods = {
+    pp_camel_stud_base_camels = {
+        manual_labor = 0.051
+        produced = camels
+        output = 0.085
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_camel_stud_no_primary = {
+        category = building_maintenance
+    }
+    pp_camel_stud_hybrid_crossing = {
+        wheat = 0.493 # barley and fodder grain
+        legumes = 0.264 # lucerne and vetch hay
+        leather = 0.094 # pack saddles and girths
+        tools = 0.094 # branding irons, shears and well gear
+        manual_labor = 0.145
+        produced = camels
+        output = 0.527
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+    pp_camel_stud_riding_strains = {
+        millet = 0.604 # millet and sorghum feed
+        fruit = 0.34 # dates
+        leather = 0.111 # riding saddles and bridles
+        cloth = 0.063 # saddle cloths and girth bands
+        manual_labor = 0.187
+        produced = camels
+        output = 0.612
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_camel_stud_market_sales = {
+        offset = 0.012
+        produced = camels
+        output = 0.004
+        category = building_maintenance
+    }
+}
+
+raw_modifier = {
+  farm_capacity_from_camel_stud = -1
+  local_population_capacity = -2
+}
+}
+# <<< eu5-building-pipeline:camel_stud:building

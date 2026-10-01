@@ -44,6 +44,8 @@ pp_cull_capacity_buildings_over_max_v2_effect = {
 		pp_cull_capacity_building_above_max = { building = horse_breeders max_level = farm_capacity_max_horse_breeders }
 		pp_cull_capacity_building_above_max = { building = stud_farm max_level = farm_capacity_max_stud_farm }
 		pp_cull_capacity_building_above_max = { building = elephant_kraal max_level = farm_capacity_max_elephant_kraal }
+		pp_cull_capacity_building_above_max = { building = camel_herders max_level = farm_capacity_max_camel_herders }
+		pp_cull_capacity_building_above_max = { building = camel_stud max_level = farm_capacity_max_camel_stud }
 		pp_cull_capacity_building_above_max = { building = fiber_crops_farm max_level = farm_capacity_max_fiber_crops_farm }
 		pp_cull_capacity_building_above_max = { building = fiber_dressing_yard max_level = farm_capacity_max_fiber_dressing_yard }
 		pp_cull_capacity_building_above_max = { building = cotton_plantation max_level = farm_capacity_max_cotton_plantation }

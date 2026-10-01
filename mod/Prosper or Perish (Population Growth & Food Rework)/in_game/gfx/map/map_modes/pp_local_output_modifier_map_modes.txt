@@ -173,6 +173,162 @@ pp_local_beeswax_output_modifier = {
 	}
 }
 
+pp_local_camels_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = no }
+			value = rgb { 128 128 128 }
+		}
+		else_if = {
+			limit = {
+				pp_camels_productivity_map_value < -0.7
+			}
+			value = define:NMapColors|MAP_COLOR_MIN
+		}
+		else_if = {
+			limit = {
+				pp_camels_productivity_map_value < -0.25
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MIN
+				max_color = define:NMapColors|MAP_COLOR_LOW
+				factor = {
+					value = pp_camels_productivity_map_value
+					add = 0.7
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				pp_camels_productivity_map_value < -0.05
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_MID
+				factor = {
+					value = pp_camels_productivity_map_value
+					add = 0.25
+					divide = 0.2
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				pp_camels_productivity_map_value < 0.05
+			}
+			value = define:NMapColors|MAP_COLOR_MID
+		}
+		else_if = {
+			limit = {
+				pp_camels_productivity_map_value < 0.15
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MID
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = pp_camels_productivity_map_value
+					subtract = 0.05
+					divide = 0.1
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				pp_camels_productivity_map_value < 0.3
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_HIGH
+				max_color = define:NMapColors|MAP_COLOR_MAX
+				factor = {
+					value = pp_camels_productivity_map_value
+					subtract = 0.15
+					divide = 0.15
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				pp_camels_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_camels_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else = {
+			value = define:NMapColors|MAP_COLOR_TOP
+		}
+	}
+	secondary_map_color = {
+		if = {
+			limit = {
+				is_ownable = yes
+				raw_material = goods:camels
+			}
+			value = rgb { 246 197 75 }
+		}
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CAMELS_OUTPUT_MODIFIER_EXTREME_DEFICIT" color = define:NMapColors|MAP_COLOR_MIN }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CAMELS_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CAMELS_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CAMELS_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CAMELS_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CAMELS_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CAMELS_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_CAMELS_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
 pp_local_chili_output_modifier = {
 	map_color = {
 		if = {

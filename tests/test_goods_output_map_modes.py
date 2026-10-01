@@ -85,10 +85,11 @@ def _localization_value(text: str, key: str) -> str | None:
 
 @cache
 def _localization_index(text: str) -> dict[str, str]:
-    # One pass over the (large) localization text; later definitions win, as in game.
+    # One pass over the (large) localization text; later definitions win, as in game. A trailing `# comment` after
+    # the closing quote is valid (vanilla 1.4 writes `#todo verify this is correct` after the camels output keys).
     return {
         match.group(1): match.group(2)
-        for match in re.finditer(r"^\s*([^\s:]+):\s*\"(.*)\"\s*$", text, flags=re.MULTILINE)
+        for match in re.finditer(r"^\s*([^\s:]+):\s*\"(.*)\"\s*(?:#.*)?$", text, flags=re.MULTILINE)
     }
 
 

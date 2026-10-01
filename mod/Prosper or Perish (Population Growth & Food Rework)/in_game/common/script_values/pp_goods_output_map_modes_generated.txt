@@ -26,6 +26,11 @@ pp_books_output_raw = {
 	multiply = market_access
 }
 
+pp_camels_output_raw = {
+	value = "goods_output(goods:camels)"
+	multiply = market_access
+}
+
 pp_cannons_output_raw = {
 	value = "goods_output(goods:cannons)"
 	multiply = market_access

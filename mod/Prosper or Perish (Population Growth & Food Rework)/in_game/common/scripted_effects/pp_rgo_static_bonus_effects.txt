@@ -11,6 +11,7 @@ pp_refresh_fruit_orchard_eligibility = {
 
 pp_refresh_rgo_static_bonus = {
 	remove_location_modifier = pp_rgo_bonus_beeswax
+	remove_location_modifier = pp_rgo_bonus_camels
 	remove_location_modifier = pp_rgo_bonus_chili
 	remove_location_modifier = pp_rgo_bonus_cloves
 	remove_location_modifier = pp_rgo_bonus_cocoa
@@ -67,6 +68,14 @@ pp_refresh_rgo_static_bonus = {
 		limit = { raw_material = goods:beeswax }
 		add_location_modifier = {
 			modifier = pp_rgo_bonus_beeswax
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:camels }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_camels
 			months = -1
 			mode = replace
 		}

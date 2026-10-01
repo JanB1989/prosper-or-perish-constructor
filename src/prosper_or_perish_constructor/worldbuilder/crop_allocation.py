@@ -59,7 +59,7 @@ class CropConfig:
     livestock_share_min: float = 0.1
     livestock_share_max: float = 0.7
     livestock_bonus: float = 0.2             # grazing share added on pastoral RGOs and open vegetation
-    livestock_rgos: tuple[str, ...] = ("livestock", "wool", "horses")
+    livestock_rgos: tuple[str, ...] = ("livestock", "wool", "horses", "camels")
     livestock_vegetation: tuple[str, ...] = ("grasslands", "sparse")
     livestock_source: Path | None = None     # EU5WorldBuilder artifacts/locations/locations.csv
     gated_goods: tuple[str, ...] = ("rice", "maize", "potato", "olives")

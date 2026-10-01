@@ -51,6 +51,9 @@
   = cost x class output, the last method + `improved_method_bonus`, bulky-goods cut and flavour in `modifier`, the
   market-access and building-level gates in `allow`, `increase_per_level_cost`, laborers, employment 1).
   Class outputs (2026-10-01): river 1.40, coastal 1.35, overland 1.30, urban 1.25 x the input cost.
+  Pack animals (EU5 1.4): the Caravanserai and the Oasis Caravan Station run on `camels` (their zones hold 59 of the
+  69 vanilla camel RGOs and lie almost wholly in vanilla's camel-demand lands); the Yam Station keeps horses, the
+  Banjara Tanda its bullocks (`livestock`), the Carrier Inn horses and livestock.
 - Network slot (2026-10-01): the engine scales `raw_modifier` by level x input fulfilment, the average over the
   building's slots, and at 0 market access a building buys no inputs, so the market-access bonus fell to 0 and the
   location never recovered. Every logistics building therefore has a slot 0 with one method

@@ -786,6 +786,21 @@
         ],
         "source": "generated_location_modifier_distribution"
       },
+      "camels": {
+        "kind": "signed_centered",
+        "negative_thresholds": [
+          -0.7,
+          -0.25
+        ],
+        "neutral_high": 0.05,
+        "neutral_low": -0.05,
+        "positive_thresholds": [
+          0.15,
+          0.3,
+          0.75
+        ],
+        "source": "fallback_static_modifier_scale"
+      },
       "chili": {
         "kind": "signed_centered",
         "negative_thresholds": [

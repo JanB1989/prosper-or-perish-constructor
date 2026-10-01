@@ -3030,8 +3030,10 @@ def test_salt_rgo_bonus_reduces_food_decay_without_affecting_saltpeter() -> None
     assert isinstance(salt, CList)
     assert isinstance(saltpeter, CList)
 
-    assert _entry_values(salt)["local_food_decay_modifier"] == -0.00070
-    assert "local_food_decay_modifier" not in _entry_values(saltpeter)
+    # EU5 1.4 replaced local_food_decay_modifier with local_food_preservation_efficiency_modifier (positive = good)
+    assert _entry_values(salt)["local_food_preservation_efficiency_modifier"] == 0.0007
+    assert "local_food_decay_modifier" not in _entry_values(salt)
+    assert "local_food_preservation_efficiency_modifier" not in _entry_values(saltpeter)
 
 
 def test_rgo_static_bonus_own_good_outputs_are_twenty_percent() -> None:

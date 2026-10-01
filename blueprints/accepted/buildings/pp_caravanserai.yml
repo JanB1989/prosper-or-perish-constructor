@@ -59,7 +59,7 @@ building:
     }
     unique_production_methods = {
       pp_caravanserai_pack_camels = {
-        livestock = 0.5
+        camels = 0.25
         victuals = 0.35
         leather = 0.12
         wool = 0.1
@@ -69,7 +69,7 @@ building:
         category = building_maintenance
       }
       pp_caravanserai_camel_drivers = {
-        livestock = 0.24
+        camels = 0.12
         victuals = 0.38
         leather = 0.057
         manual_labor = 1.33
@@ -78,7 +78,7 @@ building:
         category = building_maintenance
       }
       pp_caravanserai_escorted_caravans = {
-        livestock = 0.38
+        camels = 0.19
         horses = 0.11
         victuals = 0.33
         leather = 0.13

@@ -33,7 +33,7 @@ LEGACY_FILES = (
 )
 RANK_ORDER = {"megalopolis": 0, "city": 1, "town": 2, "rural_settlement": 3}
 FARMABLE_RGOS = {"livestock", "wheat", "legumes", "fruit", "millet", "wool", "rice", "beeswax", "maize", "olives", "potato"}
-PASTURE_RGOS = {"livestock", "wool", "horses"}
+PASTURE_RGOS = {"livestock", "wool", "horses", "camels"}
 # peasant farms that take farmland: the eight tier-0 crop farms (crop_allocation spreads a location's farm levels over
 # them), orchards and sheep farms
 FARMS = ("wheat_farm", "rice_farm", "millet_farm", "maize_farm", "legume_farm", "potato_farm", "olive_farm", "cattle_farm",

@@ -676,8 +676,9 @@ grain_min_levels_from = 3          # from this many levels on at least one stapl
 livestock_share_default = 0.2      # grazing share where the World Builder table has no value
 livestock_share_min = 0.1
 livestock_share_max = 0.35         # 0.7 -> 49 % cattle, 0.5 -> 43 %, 0.35 -> 28 % of the game-start crop levels (2026-09-25)
-livestock_bonus = 0.1              # added on livestock/wool/horses RGOs and grasslands/sparse vegetation, then clipped
+livestock_bonus = 0.1              # added on livestock_rgos and grasslands/sparse vegetation, then clipped
                                    # (0.2 with max 0.5 still gave cattle 43 %; lowered 2026-09-25)
+livestock_rgos = ["livestock", "wool", "horses", "camels"]   # pastoral RGOs (camels: EU5 1.4)
 livestock_source = "../EU5WorldBuilder/artifacts/locations/locations.csv"
 gated_goods = ["rice", "maize", "potato", "olives"]   # only in their native sub-continents/regions (config/crop_farms.toml [unlocks] gates)
 grains = ["wheat", "millet", "rice", "maize", "legumes", "potato"]

@@ -24,6 +24,26 @@ pp_beeswax_productivity_rgo_bonus_map_value = {
 	}
 }
 
+pp_camels_productivity_map_value = {
+	value = modifier:local_camels_output_modifier
+}
+
+pp_camels_productivity_location_potential_map_value = {
+	value = modifier:local_camels_output_modifier
+	if = {
+		limit = { raw_material = goods:camels }
+		subtract = 0.20
+	}
+}
+
+pp_camels_productivity_rgo_bonus_map_value = {
+	value = 0
+	if = {
+		limit = { raw_material = goods:camels }
+		add = 0.20
+	}
+}
+
 pp_chili_productivity_map_value = {
 	value = modifier:local_chili_output_modifier
 }

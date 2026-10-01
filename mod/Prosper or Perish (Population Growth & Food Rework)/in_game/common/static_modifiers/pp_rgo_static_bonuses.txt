@@ -12,6 +12,15 @@ pp_rgo_bonus_beeswax = {
 	local_cultural_tradition = 0.05
 }
 
+pp_rgo_bonus_camels = {
+	game_data = { category = location }
+	# Caravan herds carry the desert trade, their milk feeds the herders, and the tribes that own them grow strong.
+	local_camels_output_modifier = 0.20
+	local_market_access = 0.10
+	local_peasants_food_consumption = -0.02
+	local_tribes_estate_power = 0.10
+}
+
 pp_rgo_bonus_chili = {
 	game_data = { category = location }
 	# A cheap, fast-spreading garden crop that draws settlers and brightens a poor diet.
@@ -317,7 +326,7 @@ pp_rgo_bonus_salt = {
 	game_data = { category = location }
 	# Salt preserves food and feeds burgher trade, and the crown keeps the salt tax for itself.
 	local_salt_output_modifier = 0.20
-	local_food_decay_modifier = -0.00070
+	local_food_preservation_efficiency_modifier = 0.0007
 	local_peasants_food_consumption = -0.02
 	local_trades_per_burgher = 0.10
 	local_crown_estate_power = 0.10

@@ -604,6 +604,10 @@ subsistence_pop_types = ["peasants", "laborers", "slaves"]
 max_cookshop_levels_per_location = 6
 # Victuals limits come from the live import/export scripted values.
 laborer_conversion_share = 0.5        # share of a location's peasants that may become the Cookshops' laborers
+# Vanilla setup buildings kept where the World Builder geography fails their location_potential (as the World Builder
+# test mod does): pp_wb_setup_<building>_location lists them (pp_wb_setup_buildings.txt) and each building's potential
+# tests it. irrigation_systems is not listed: an improvement building, its start levels come from the capacity model.
+keep_setup_buildings = ["terraces", "fruit_orchard", "tar_kiln", "lumber_mill"]
 [worldbuilder.start.processors]
 # raw material -> building placed at game start (its laborers are converted from local peasants); levels as before
 alum = { building = "alum_quarry", levels = 1 }

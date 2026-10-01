@@ -52,6 +52,7 @@ building:
         ai_forbid_shutdown = no
         location_potential = {
             OR = {
+                pp_wb_setup_fruit_orchard_location = yes   # vanilla setup orchards the geography would reject
                 var:pp_fruit_orchard_eligible > 0
                 AND = {
                     NOT = { has_variable = pp_fruit_orchard_eligible }

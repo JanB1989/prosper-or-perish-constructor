@@ -1,4 +1,4 @@
-﻿lateralview_full = {
+﻿lateralview_full = {	
 	name = "encyclopedia_lateralview"
 
     blockoverride "panel_header" {
@@ -57,6 +57,7 @@
                                 }
                             }
                         }
+                        
 
                         # Prosper or Perish — sibling of scrollbox
                         hbox = {
@@ -149,191 +150,206 @@
                             layoutpolicy_vertical = expanding
                             visible = "[Not(GetVariableSystem.HasValue('pp_encyclopedia_active', 'yes'))]"
 
+                        hbox = {
+                            layoutpolicy_horizontal = expanding
+                            margin = { 10 0 }
+                            spacing = 5
                             hbox = {
+                                name = "search_controls"
                                 layoutpolicy_horizontal = expanding
                                 margin = { 10 0 }
                                 spacing = 5
-                                hbox = {
-                                    name = "search_controls"
-                                    layoutpolicy_horizontal = expanding
-                                    margin = { 10 0 }
-                                    spacing = 5
 
-                                    using = searchbar_background
-                                    using = searchbar_icon
+                                using = searchbar_background
+                                using = searchbar_icon
 
-                                    editbox_search_field =	{
-                                        min_width = 1300
-                                        blockoverride "editbox_properties" {
-                                            name = "search_input" # Do not change name, it is referenced from code
-                                            onreturnpressed = "[EncyclopediaPage.FilterFromText]"
-                                            ontextedited = "[EncyclopediaPage.FilterFromText]"
-                                            maxcharacters = 50
-                                        }
+                                editbox_search_field =	{
+                                    min_width = 1300
+                                    blockoverride "editbox_properties" {
+                                        name = "search_input" # Do not change name, it is referenced from code
+                                        onreturnpressed = "[EncyclopediaPage.FilterFromText]"
+                                        ontextedited = "[EncyclopediaPage.FilterFromText]"
+                                        maxcharacters = 50
                                     }
-
-                                    expand = {}
                                 }
 
+                                expand = {}
+                            }
+
+                            hbox = {
+                                ui_direction_button = {
+                                    size = { 22 22 }
+                                    enabled = "[NotEqualTo_int32(GameEncyclopedia.GetCurrentSubpageNumber, '(int32)1')]"
+                                    action_tooltip = {
+                                    	title = "ENCYCLOPEDIA_GO_TO_PREVIOUS_SUBPAGE"
+                                    	on_action = "[GameEncyclopedia.GoToPreviousSubPage]"
+                                    }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+                                    
+                                    mirror = horizontal
+                                    texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+                                    using = button_regular_icon_color
+                                }
+                                
                                 hbox = {
-                                    ui_direction_button = {
-                                        size = { 22 22 }
-                                        enabled = "[NotEqualTo_int32(GameEncyclopedia.GetCurrentSubpageNumber, '(int32)1')]"
-                                        onclick = "[GameEncyclopedia.GoToPreviousSubPage]"
-                                        tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "ENCYCLOPEDIA_GO_TO_PREVIOUS_SUBPAGE" } } }
-                                        
-                                        mirror = horizontal
-                                        texture = "gfx/interface/buttons/flats/button_simple_right.dds"
-                                        using = button_regular_icon_color
+                                    using = bg_number_container_bckg
+                                    blockoverride "number_container_extra" {
+                                        alpha = 0.4
+                                        margin = {4 4}
                                     }
                                     
                                     hbox = {
-                                        using = bg_number_container_bckg
-                                        blockoverride "number_container_extra" {
-                                            alpha = 0.4
-                                            margin = {4 4}
-                                        }
-                                        
-                                        hbox = {
-                                            name = "search_controls"
-                                            layoutpolicy_horizontal = expanding
-                                            margin = { 10 0 }
-                                            spacing = 5
+                                        name = "search_controls"
+                                        layoutpolicy_horizontal = expanding
+                                        margin = { 10 0 }
+                                        spacing = 5
 
-                                            using = searchbar_background
+                                        using = searchbar_background
 
-                                            editbox_search_field =	{
-                                                min_width = 35
-                                                blockoverride "editbox_standard_size" {
-                                                    size = { 30 30 }
-                                                }
-                                                blockoverride "editbox_properties" {
-                                                    name = "subpage_number" # Do not change name, it is referenced from code
-                                                    onreturnpressed = "[GameEncyclopedia.GoToEditBoxSubPage]"
-                                                    ontextedited = "[GameEncyclopedia.GoToEditBoxSubPage]"
-                                                    maxcharacters = "[GameEncyclopedia.GetCurrentMaxSubpageNumber]"
-                                                    text = "[GameEncyclopedia.GetCurrentSubpageNumber]"
-                                                }
+                                        editbox_search_field =	{
+                                            min_width = 35
+                                            blockoverride "editbox_standard_size" {
+                                                size = { 30 30 }
                                             }
-
-                                            expand = {}
+                                            blockoverride "editbox_properties" {
+                                                name = "subpage_number" # Do not change name, it is referenced from code
+                                                onreturnpressed = "[GameEncyclopedia.GoToEditBoxSubPage]"
+                                                ontextedited = "[GameEncyclopedia.GoToEditBoxSubPage]"
+                                                maxcharacters = "[GameEncyclopedia.GetCurrentMaxSubpageNumber]"
+                                                text = "[GameEncyclopedia.GetCurrentSubpageNumber]"
+                                            }
                                         }
-                                        
-                                        text_single = {
-                                            size = { 30 30 }
-                                            align = center
-                                            using = Font_Type_Headers
-                                            raw_text = "/[GameEncyclopedia.GetCurrentMaxSubpageNumber]"
-                                            autoresize = no
-                                        }
-                                    }
 
-                                    ui_direction_button = {
-                                        size = { 22 22 }
-                                        enabled = "[NotEqualTo_int32(GameEncyclopedia.GetCurrentSubpageNumber, GameEncyclopedia.GetCurrentMaxSubpageNumber)]"
-                                        onclick = "[GameEncyclopedia.GoToNextSubPage]"
-                                        tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "ENCYCLOPEDIA_GO_TO_NEXT_SUBPAGE" } } }
-
-                                        texture = "gfx/interface/buttons/flats/button_simple_right.dds"
-                                        using = button_regular_icon_color
+                                        expand = {}
                                     }
-                                    expand = {}
+                                    
+                                    text_single = {
+                                        size = { 30 30 }
+                                        align = center
+                                        using = Font_Type_Headers
+                                        raw_text = "/[GameEncyclopedia.GetCurrentMaxSubpageNumber]"
+                                        autoresize = no
+                                    }
                                 }
+
+                                ui_direction_button = {
+                                    size = { 22 22 }
+                                    enabled = "[NotEqualTo_int32(GameEncyclopedia.GetCurrentSubpageNumber, GameEncyclopedia.GetCurrentMaxSubpageNumber)]"
+                                    action_tooltip = {
+                                    	title = "ENCYCLOPEDIA_GO_TO_NEXT_SUBPAGE"
+                                    	on_action = "[GameEncyclopedia.GoToNextSubPage]"
+                                    }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+                                    using = button_regular_icon_color
+                                }
+                                expand = {}
                             }
-                            
+                        }
+                        
 
-                            scrollbox = {
-                                layoutpolicy_horizontal = expanding
-                                layoutpolicy_vertical = expanding
+                        scrollbox = {
+                            layoutpolicy_horizontal = expanding
+                            layoutpolicy_vertical = expanding
 
-                                blockoverride "scrollbox_content" {
-                                    dynamicgridbox = {
-                                        name = "entries"
-                                        datamodel = "[GameEncyclopedia.GetCurrentSubPageViewedEntries]"
+                            blockoverride "scrollbox_content" {
+                                dynamicgridbox = {
+                                    name = "entries"
+                                    datamodel = "[GameEncyclopedia.GetCurrentSubPageViewedEntries]"
 
-                                        item = {
-                                            widget = {
+                                    item = {
+                                        widget = {
+                                            vbox = {
+                                                set_parent_size_to_minimum = yes
+                                                margin = { 0 10 }
+
                                                 vbox = {
-                                                    set_parent_size_to_minimum = yes
-                                                    margin = { 0 10 }
+                                                    layoutpolicy_horizontal = expanding
+                                                    datacontext = "[EncyclopediaEntryView.Get]"
+                                                    spacing = 10
+                                                    using = bg_paper_card
 
-                                                    vbox = {
+                                                    blockoverride "card_color" {
+                                                        using = color_intense_bg_blue_texture
+                                                        blend_mode = multiply
+                                                    }
+
+                                                    max_width = 1450
+                                                    min_width = 1450
+
+                                                    icon = {
                                                         layoutpolicy_horizontal = expanding
-                                                        datacontext = "[EncyclopediaEntryView.Get]"
-                                                        spacing = 10
-                                                        using = bg_paper_card
-
-                                                        blockoverride "card_color" {
+                                                        using = button_main_tab_texture
+                                                        frame = 4
+                                            
+                                                        modify_texture = {
                                                             using = color_intense_bg_blue_texture
                                                             blend_mode = multiply
                                                         }
-
-                                                        max_width = 1450
-                                                        min_width = 1450
-
-                                                        icon = {
-                                                            layoutpolicy_horizontal = expanding
-                                                            using = button_main_tab_texture
-                                                            frame = 4
                                                 
-                                                            modify_texture = {
-                                                                using = color_intense_bg_blue_texture
-                                                                blend_mode = multiply
-                                                            }
-                                                    
-                                                            modify_texture = {
-                                                                using = overlay_leather_texture
-                                                                blend_mode = overlay
-                                                                alpha = 0.2
-                                                            }
+                                                        modify_texture = {
+                                                            using = overlay_leather_texture
+                                                            blend_mode = overlay
+                                                            alpha = 0.2
+                                                        }
 
-                                                            hbox = {
-                                                                margin = { 40 0 }
-                                                                margin_top = 8
+                                                        hbox = {
+                                                            margin = { 40 0 }
+                                                            margin_top = 8
 
-                                                                icon = {
-                                                                    name = "image"
-                                                                    texture = "[EncyclopediaEntry.GetImage]"
-                                                                    visible = "[EncyclopediaEntry.HasImage]"
-                                                                    size = { 45 45 }
-                                                                    framesize = "[EncyclopediaEntry.GetFrameSize]"
-                                                                    frame = "[EncyclopediaEntry.GetFrame]"
-                                                                }
-                                                    
-                                                                text_single = {
-                                                                    name = "title"
-                                                                    using = layoutpolicy_expanding
-                                                                    using = Font_Size_Medium
-                                                                    fontsize = 18
-                                                                    autoresize = no
+                                                            icon = {
+                                                                name = "image"
+                                                                texture = "[EncyclopediaEntry.GetImage]"
+                                                                visible = "[EncyclopediaEntry.HasImage]"
+                                                                size = { 45 45 }
+                                                                framesize = "[EncyclopediaEntry.GetFrameSize]"
+                                                                frame = "[EncyclopediaEntry.GetFrame]"
+                                                            }
+                                                
+                                                            # text_single = {
+                                                            #     using = layoutpolicy_expanding
+                                                            #     using = button_common_textobj_font
+                                                            #     fontsize = 18
+                                                            #     autoresize = no
+                                                
+                                                            #     default_format = "yellow_titles"
+                                                            #     text = "[SettingCategory.GetName]"
+                                                            # }
+
+                                                            text_single = {
+                                                                name = "title"
+                                                                using = layoutpolicy_expanding
+                                                                using = Font_Size_Medium
+                                                                fontsize = 18
+                                                                autoresize = no
+                                                                
+                                                                default_format = "yellow_titles"
+                                                                text = "[EncyclopediaEntry.GetTitle]"
+                                                                
+                                                            }
+                                                        }
+                                                    }
+
+                                                    TooltipScrolledContentSection = {
+                                                        blockoverride "section_content" {
+                                                            vbox = {
+                                                                set_parent_dimension_to_minimum = height
+                                                                layoutpolicy_horizontal = expanding
+
+                                                                text_multi = {
+                                                                    name = "body"
+                                                                    max_width = 1450
+                                                                    min_width = 1450
+                                                                    autoresize = yes
                                                                     
-                                                                    default_format = "yellow_titles"
-                                                                    text = "[EncyclopediaEntry.GetTitle]"
-                                                                    
+                                                                    text = "[EncyclopediaEntry.GetBody]"
+                                                                    margin = { 40 10 }
                                                                 }
                                                             }
                                                         }
-
-                                                        TooltipListScrollArea = {
-                                                            blockoverride "scrollarea_content" {
-                                                                vbox = {
-                                                                    set_parent_dimension_to_minimum = height
-                                                                    layoutpolicy_horizontal = expanding
-
-                                                                    text_multi = {
-                                                                        name = "body"
-                                                                        max_width = 1450
-                                                                        min_width = 1450
-                                                                        autoresize = yes
-                                                                        
-                                                                        text = "[EncyclopediaEntry.GetBody]"
-                                                                        margin = { 40 10 }
-                                                                    }
-                                                                }
-                                                            }
-                                                            block "block_scrollarea" {
-                                                                maximumsize = { -1 800 }
-                                                            }
+                                                        block "block_scrollarea" {
+                                                            maximumsize = { -1 800 }
                                                         }
                                                     }
                                                 }
@@ -341,9 +357,10 @@
                                         }
                                     }
                                 }
-
-                                expand = {}
                             }
+
+                            expand = {}
+                        }
                         }
 
                         # Mod Content — filter buttons and cards per Ingame_Documentation_Rules.md

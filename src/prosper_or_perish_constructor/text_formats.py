@@ -4,9 +4,10 @@ A ``#tag ... #!`` in GUI text or localization must name a ``format`` from a ``te
 primitive (``bold``, ``color:{...}``, ...); anything else logs ``Unknown formatting tag`` every time the text is drawn.
 Names are case-sensitive: vanilla defines ``L`` (game link), and ``#l`` is unknown.
 
-Vanilla's army-recruit panel (``recruit_location_lateralview.gui``) prints its gold costs as ``#l ...#!``, which filled
-debug.log with ~13k lines per session. Overriding the GUI file does not help: CMF re-declares those types with the same
-text and loads after the mod. A mod may add its own ``textformatting`` block (other mods do), so ``write_aliases``
+Vanilla's army-recruit panel (``recruit_location_lateralview.gui``) printed its gold costs as ``#l ...#!`` up to EU5 1.3,
+which filled debug.log with ~13k lines per session; 1.4 dropped that, but its market and location views (which the mod
+overrides) set ``default_format = "#l"``. Overriding the GUI file does not help: CMF re-declares those types with the
+same text and loads after the mod. A mod may add its own ``textformatting`` block (other mods do), so ``write_aliases``
 defines each such tag as the widget's default format, which leaves the text looking exactly as before.
 
 ``check`` scans the mod's own GUI and English localization for tags nothing defines (build print and test).
@@ -22,7 +23,7 @@ ALIASES_RELATIVE_PATH = Path("main_menu/gui/pp_text_format_aliases.gui")
 # tag -> (format it stands for, vanilla file that uses it). The format is the widget's default_format
 # (text_single = "#high"), so the aliased text renders as it did while the tag was unknown.
 ALIASES: dict[str, tuple[str, str]] = {
-    "l": ("high", "in_game/gui/recruit_location_lateralview.gui"),
+    "l": ("high", "in_game/gui/selected_market_view.gui"),
 }
 # vanilla files that declare textformatting blocks (read instead of scanning the whole install)
 VANILLA_FORMAT_FILES = (

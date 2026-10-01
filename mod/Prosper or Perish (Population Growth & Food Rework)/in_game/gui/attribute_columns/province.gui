@@ -271,6 +271,28 @@
 		}
 	}
 
+	type province_uncontrolled_wealth = select_cell_default {
+		size = { 100 32 }
+		datacontext = "[InteractionTarget.GetProvince]"
+		hbox = {
+			spacing = 5
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = center
+				raw_text = "[Subtract_CFixedPoint(InteractionTarget.GetProvince.GetTotalTaxPossibleBase, InteractionTarget.GetProvince.GetTotalTaxBase)|2+=]@wealth!"
+			}
+		}
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "province_uncontrolled_wealth"
+		}
+
+		tooltipwidget = {
+			using = province_uncontrolled_wealth_tooltip
+		}
+	}
+
 	type province_food = select_cell_default {
 		size = { -1 32 }
 		datacontext = "[InteractionTarget.GetProvince]"
@@ -676,6 +698,50 @@
 					}	
 					textcontext = "[InteractionTarget.GetProvince.GetCulturePercentageInfo(SelectInteractionTargetView.GetCurrentParams.GetFirstObjectOfType('culture').GetCulture)]"
 				}
+			}
+		}
+	}
+
+	type province_andalusi_population = select_cell_default {
+		size = { 100 32 }
+		datacontext = "[InteractionTarget.GetProvince]"
+
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "province_andalusi_population"
+		}
+
+		hbox = {
+			margin = { 5 0 }
+			margin_right = 10
+			spacing = 5
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = right|nobaseline
+				text = "[InteractionTarget.GetProvince.GetCulturePopulation('andalusi')]"
+			}
+
+			icon = {
+				size = { 25 25 }
+				using = culture_icon
+			}
+		}
+
+		tooltipwidget = {
+			SimpleContextualStringPairTooltipType = {
+				blockoverride "title_icon" {
+					icon = {
+						using = tooltip_title_icon_size
+						using = culture_icon
+					}
+				}
+
+				blockoverride "concept_link" {
+					text = "[culture|e]"
+				}
+				textcontext = "[InteractionTarget.GetProvince.GetCulturePopulationInfo('andalusi')]"
 			}
 		}
 	}

@@ -427,7 +427,7 @@ types FoodProductionTypes {
 									value = "[FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
 									color = { 1 1 1 1 }
 								}
-
+									
 								pieslice_no_highlight = {
 									texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
 									value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
@@ -674,7 +674,7 @@ types FoodProductionTypes {
 									value = "[FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
 									color = { 1 1 1 1 }
 								}
-
+									
 								pieslice_no_highlight = {
 									texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
 									value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
@@ -1076,6 +1076,10 @@ select_menu_left = {
 	}
 
 	blockoverride "close_on_action" { on_action = "[FoodProductionSelectMarket.OnClose]" }
+	blockoverride "select_header_text" {
+		text = "SELECT_MARKET_HEADER"
+	}
+
 	blockoverride "select_content" {
 		select_menu_header = {
 			blockoverride "select_menu_header_extra" {

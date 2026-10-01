@@ -30,10 +30,10 @@ FOOD_STORAGE_LOCALIZATION = (
 )
 ADDITIONAL_FOOD_INDICATOR_FILES = (
     ("attribute_columns/province.gui", 3, 3),
-    ("expansion_lateralview.gui", 2, 2),
     ("food_production_lateralview.gui", 2, 2),
     ("location_production_lateralview.gui", 4, 4),
     ("selected_market_view.gui", 6, 2),
+    ("town_rights.gui", 2, 2),
 )
 
 

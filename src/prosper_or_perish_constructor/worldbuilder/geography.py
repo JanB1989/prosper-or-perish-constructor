@@ -185,57 +185,45 @@ def add_land_potential_chip(text: str) -> str:
     return text.replace(_RGO_ANCHOR, "pp_land_potential_chip = {}\n" + _RGO_ANCHOR)
 
 
-_POP_CELL = "\t\t\t\t\t\tsize = { 120 28 }"
-_POP_CELL_WIDE = "\t\t\t\t\t\tsize = { 139 28 }"
+# EU5 1.4 builds the population cell of `location_card` and of the location view header from one template;
+# the header overrides its size, text format and gauge. The mod changes the location card's cell only, so it
+# draws a pp_ copy of the template (a template another mod re-declares under the vanilla name cannot undo it).
+_POP_TEMPLATE = "location_card_population_button_body"
+PP_POP_TEMPLATE = "pp_" + _POP_TEMPLATE
+_POP_CELL = re.compile(r'(block "location_card_population_size" \{\s*size = \{ )120( 28 \})')
 # Only one of the four gauges is ever visible; the cell is 28px tall and cannot afford to reserve
 # space for the hidden three.
-_POP_VBOX = "\t\t\t\t\t\t\t\tmargin_right = 8\n\t\t\t\t\t\t\t\tmargin_bottom = 3"
-_POP_VBOX_IGNORING = _POP_VBOX + "\n\t\t\t\t\t\t\t\tignoreinvisible = yes"
-_POP_TEXT = """\t\t\t\t\t\t\t\ttext_single = {
-\t\t\t\t\t\t\t\t\tlayoutpolicy_horizontal = expanding
-\t\t\t\t\t\t\t\t\tautoresize = no
-\t\t\t\t\t\t\t\t\talign = center
-\t\t\t\t\t\t\t\t\tsize = { -1 15 }
-\t\t\t\t\t\t\t\t\tvisible = "[HasPopBreakdownIntelOn(Location.Self)]"
-\t\t\t\t\t\t\t\t\traw_text = "[Location.GetTotalPopulation]@population!"
-\t\t\t\t\t\t\t\t\tfontsize = 13
-\t\t\t\t\t\t\t\t\tblock "location_population_sort_highlight" {}
-\t\t\t\t\t\t\t\t}"""
+_POP_VBOX = re.compile(r"(?m)^([ \t]*)margin_right = 8\n[ \t]*margin_bottom = 3\n")
 # raw_text, not a localization key: it is evaluated against the widget's own datacontext, which is
 # how vanilla wrote this cell. A `text = "KEY"` here resolved to nothing in game.
-_POP_TEXT_RATIO = """\t\t\t\t\t\t\t\ttext_single = {
-\t\t\t\t\t\t\t\t\tlayoutpolicy_horizontal = expanding
-\t\t\t\t\t\t\t\t\tautoresize = no
-\t\t\t\t\t\t\t\t\talign = center
-\t\t\t\t\t\t\t\t\tsize = { -1 15 }
-\t\t\t\t\t\t\t\t\tvisible = "[HasPopBreakdownIntelOn(Location.Self)]"
-\t\t\t\t\t\t\t\t\traw_text = "[Location.GetTotalPopulation]/[Location.GetPopulationCapacity] · [Location.GetCapacityPercentage|0]%"
-\t\t\t\t\t\t\t\t\tfontsize = 12
-\t\t\t\t\t\t\t\t\tblock "location_population_sort_highlight" {}
-\t\t\t\t\t\t\t\t}"""
-_CAPACITY_BAR = """\t\t\t\t\t\t\t\tprogressbar = {
-\t\t\t\t\t\t\t\t\tlayoutpolicy_horizontal = expanding
-\t\t\t\t\t\t\t\t\tsize = { -1 5 }
-\t\t\t\t\t\t\t\t\tvisible = "[HasPopBreakdownIntelOn(Location.Self)]"
-\t\t\t\t\t\t\t\t\tusing = progress_bar_green_alt
-\t\t\t\t\t\t\t\t\tvalue = "[Location.GetCapacityPercentage]"
-\t\t\t\t\t\t\t\t\tdirection = horizontal
-\t\t\t\t\t\t\t\t}"""
-_CAPACITY_BAND_BAR = """\t\t\t\t\t\t\t\tprogressbar = {
-\t\t\t\t\t\t\t\t\tname = "pp_pop_capacity_bar___NAME__"
-\t\t\t\t\t\t\t\t\tlayoutpolicy_horizontal = expanding
-\t\t\t\t\t\t\t\t\tsize = { -1 5 }
-\t\t\t\t\t\t\t\t\tvisible = "[__VISIBLE__]"
-\t\t\t\t\t\t\t\t\tprogresstexture = "gfx/interface/progressbars/__TEXTURE__.dds"
-\t\t\t\t\t\t\t\t\tnoprogresstexture = "gfx/interface/progressbars/progress_black.dds"
-\t\t\t\t\t\t\t\t\ttexture_density = 2
-\t\t\t\t\t\t\t\t\tspriteType = Corneredstretched
-\t\t\t\t\t\t\t\t\tspriteborder = { 12 0 }
-\t\t\t\t\t\t\t\t\tmin = 0
-\t\t\t\t\t\t\t\t\tmax = 100
-\t\t\t\t\t\t\t\t\tvalue = "[Location.GetCapacityPercentage]"
-\t\t\t\t\t\t\t\t\tdirection = horizontal
-\t\t\t\t\t\t\t\t}"""
+_POP_TEXT = re.compile(
+    r'(visible = "\[HasPopBreakdownIntelOn\(Location\.Self\)\]"\s*)raw_text = "\[Location\.GetTotalPopulation\]@population!"'
+    r'(\s*block "location_card_population_text_format" \{\}\s*)fontsize = 13'
+)
+_POP_TEXT_RATIO = (
+    r'\g<1>raw_text = "[Location.GetTotalPopulation]/[Location.GetPopulationCapacity] · [Location.GetCapacityPercentage|0]%"'
+    r"\g<2>fontsize = 12"
+)
+_CAPACITY_BAR = re.compile(
+    r'(?m)^([ \t]*)progressbar = \{\s*layoutpolicy_horizontal = expanding\s*size = \{ -1 5 \}\s*'
+    r'visible = "\[HasPopBreakdownIntelOn\(Location\.Self\)\]"\s*using = progress_bar_green_alt\s*'
+    r'value = "\[Location\.GetCapacityPercentage\]"\s*direction = horizontal\s*\}'
+)
+_CAPACITY_BAND_BAR = """progressbar = {
+\tname = "pp_pop_capacity_bar___NAME__"
+\tlayoutpolicy_horizontal = expanding
+\tsize = { -1 5 }
+\tvisible = "[__VISIBLE__]"
+\tprogresstexture = "gfx/interface/progressbars/__TEXTURE__.dds"
+\tnoprogresstexture = "gfx/interface/progressbars/progress_black.dds"
+\ttexture_density = 2
+\tspriteType = Corneredstretched
+\tspriteborder = { 12 0 }
+\tmin = 0
+\tmax = 100
+\tvalue = "[Location.GetCapacityPercentage]"
+\tdirection = horizontal
+}"""
 # GetCapacityPercentage is 0..100, not the 0..1 a progressbar expects. Vanilla feeds it straight to
 # a bar with no min/max, which is why the vanilla gauge sits full at every fill; min/max restate the
 # real range instead of rescaling the value, so no arithmetic is needed.
@@ -252,7 +240,7 @@ _CAPACITY_BANDS = (
 _CAPACITY_PERCENT = "Location.GetCapacityPercentage"
 
 
-def _capacity_band_bar(name: str, texture: str, low: str | None, high: str | None) -> str:
+def _capacity_band_bar(name: str, texture: str, low: str | None, high: str | None, indent: str = "") -> str:
     tests = ["HasPopBreakdownIntelOn(Location.Self)"]
     if low is not None:
         tests.append(f"GreaterThanOrEqualTo_float({_CAPACITY_PERCENT}, '(float){low}')")
@@ -260,34 +248,80 @@ def _capacity_band_bar(name: str, texture: str, low: str | None, high: str | Non
         tests.append(f"LessThan_float({_CAPACITY_PERCENT}, '(float){high}')")
     joined = ", ".join(tests)
     visible = f"And3({joined})" if len(tests) == 3 else f"And({joined})"
-    return (
+    bar = (
         _CAPACITY_BAND_BAR.replace("__NAME__", name)
         .replace("__VISIBLE__", visible)
         .replace("__TEXTURE__", texture)
     )
+    return "\n".join(indent + line for line in bar.splitlines())
+
+
+def _block_end(text: str, open_brace: int) -> int:
+    """Index just past the brace matching ``text[open_brace]``; braces in comments and strings are ignored."""
+    depth = 0
+    quoted = comment = False
+    for i in range(open_brace, len(text)):
+        c = text[i]
+        if comment:
+            comment = c != "\n"
+        elif quoted:
+            quoted = c != '"'
+        elif c == "#":
+            comment = True
+        elif c == '"':
+            quoted = True
+        elif c == "{":
+            depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0:
+                return i + 1
+    raise ValueError("location_window.gui: unbalanced block")
+
+
+def _sub_once(pattern: re.Pattern[str], repl, text: str) -> str:
+    text, found = pattern.subn(repl, text)
+    if found != 1:
+        raise ValueError(f"location_window.gui: expected 1 population-cell anchor, found {found}")
+    return text
 
 
 def merge_population_capacity(text: str) -> str:
-    """Make population capacity readable in the location header.
+    """Make population capacity readable in the location card.
 
     Vanilla shows the population alone above a single green gauge, so a location that is full looks
     like one with room to grow. Capacity is this mod's core constraint, so the cell states population,
     capacity and fill, and the gauge is banded by remaining headroom. The engine clamps the gauge at
     full, which is what we want above capacity: the red band says "over" and the percentage states how
     far over, which a rescaled gauge could only show by giving up resolution below capacity.
+
+    The cell is the template ``location_card_population_button_body`` (EU5 1.4). It is copied as
+    ``pp_location_card_population_button_body``, the copy is changed, and only ``type location_card`` switches
+    to it; the location view header keeps the vanilla cell, as before 1.4.
     """
-    replacements = (
-        (_POP_CELL, _POP_CELL_WIDE),
-        (_POP_VBOX, _POP_VBOX_IGNORING),
-        (_POP_TEXT, _POP_TEXT_RATIO),
-        (_CAPACITY_BAR, "\n\n".join(_capacity_band_bar(*band) for band in _CAPACITY_BANDS)),
+    starts = list(re.finditer(rf"(?m)^template[ \t]+{_POP_TEMPLATE}[ \t]*\{{", text))
+    if len(starts) != 1 or re.search(rf"\btemplate[ \t]+{PP_POP_TEMPLATE}\b", text):
+        hint = "" if starts else " (a window from before EU5 1.4: rebuild the World Builder export, `uv run worldbuilder geography-test --build-only`)"
+        raise ValueError(f"location_window.gui: expected 1 population-cell anchor, found {len(starts)}{hint}")
+    start = starts[0].start()
+    end = _block_end(text, text.index("{", start))
+    cell = text[start:end].replace(f"template {_POP_TEMPLATE}", f"template {PP_POP_TEMPLATE}", 1)
+    cell = _sub_once(_POP_CELL, r"\g<1>139\g<2>", cell)
+    cell = _sub_once(_POP_VBOX, lambda m: m.group(0) + f"{m.group(1)}ignoreinvisible = yes\n", cell)
+    cell = _sub_once(_POP_TEXT, _POP_TEXT_RATIO, cell)
+    cell = _sub_once(
+        _CAPACITY_BAR,
+        lambda m: "\n\n".join(_capacity_band_bar(*band, indent=m.group(1)) for band in _CAPACITY_BANDS),
+        cell,
     )
-    for old, new in replacements:
-        found = text.count(old)
-        if found != 1:
-            raise ValueError(f"location_window.gui: expected 1 population-cell anchor, found {found}")
-        text = text.replace(old, new)
-    return text
+    text = text[:end] + "\n\n" + cell + text[end:]
+
+    card = re.search(r"(?m)^[ \t]*type[ \t]+location_card[ \t]*=[ \t]*\w+[ \t]*\{", text)
+    if not card:
+        raise ValueError("location_window.gui: expected 1 population-cell anchor, found 0")
+    card_end = _block_end(text, text.index("{", card.start()))
+    body = _sub_once(re.compile(rf"using = {_POP_TEMPLATE}\b"), f"using = {PP_POP_TEMPLATE}", text[card.start():card_end])
+    return text[: card.start()] + body + text[card_end:]
 
 
 def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path | None = None) -> dict[str, object]:

@@ -36,12 +36,13 @@ FOOD_STORAGE_MAP_SCALE_RE = re.compile(
 )
 FOOD_STORAGE_GUI_DIVISOR_COUNTS = (
     (Path("in_game/gui/attribute_columns/province.gui"), 3),
-    (Path("in_game/gui/expansion_lateralview.gui"), 2),
     (Path("in_game/gui/food_production_lateralview.gui"), 2),
     (Path("in_game/gui/location_production_lateralview.gui"), 4),
     (Path("in_game/gui/location_window.gui"), 4),
     (Path("in_game/gui/selected_market_view.gui"), 2),
     (Path("in_game/gui/shared/province_tooltips.gui"), 4),
+    # EU5 1.4 moved the province list (with its food pie) from the expansion view to the town rights view
+    (Path("in_game/gui/town_rights.gui"), 2),
 )
 FOOD_STORAGE_GUI_DIVISOR_RE = re.compile(
     rf"(Divide_CFixedPoint\([^\r\n]*GetModifierValueFixed\("

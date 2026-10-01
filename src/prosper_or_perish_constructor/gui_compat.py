@@ -20,7 +20,7 @@ from pathlib import Path
 GUI = Path("in_game/gui")
 # definition file -> {type: files whose instances use the mod's copy}
 PROTECTED: dict[str, dict[str, tuple[str, ...]]] = {
-    "location_window.gui": {"location_card": ("location_window.gui", "location_production_lateralview.gui")},
+    "location_window.gui": {"location_card": ("location_window.gui", "location_production_lateralview.gui", "town_rights.gui")},
     "food_production_lateralview.gui": {"food_production_province": ("food_production_lateralview.gui",)},
 }
 PREFIX = "pp_"

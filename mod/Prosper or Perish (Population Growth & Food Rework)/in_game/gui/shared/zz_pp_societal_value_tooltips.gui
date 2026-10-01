@@ -89,6 +89,7 @@ template SocietalValueCountryLeft_tooltip {
 	using = SocietalValueLeft_tooltip
 	blockoverride "societal_value_left_tooltip_extra" {
 		TooltipScrolledStringPairList = {
+			# visible = "[SocietalValue.ShowLeftHint(Player.Self)]"
 			blockoverride "block_scrollarea" {
 				maximumsize = { -1 160 }
 			}
@@ -100,6 +101,20 @@ template SocietalValueCountryLeft_tooltip {
 
 			textcontext = "[SocietalValue.GetLeftHint(Player.Self)]"
 		}
+
+		TooltipScrolledStringPairList = {
+			visible = "[SocietalValue.ShowLeftLockedHint(Player.Self)]"
+			blockoverride "block_scrollarea" {
+				maximumsize = { -1 160 }
+			}
+
+			blockoverride "block_title" {
+				text = "SV_HINT_NOT_YET_AVAILABLE"
+				default_format = "help"
+			}
+
+			textcontext = "[SocietalValue.GetLeftLockedHint(Player.Self)]"
+		}
 	}
 }
 
@@ -107,6 +122,7 @@ template SocietalValueCountryRight_tooltip {
 	using = SocietalValueRight_tooltip
 	blockoverride "societal_value_right_tooltip_extra" {
 		TooltipScrolledStringPairList = {
+			# visible = "[SocietalValue.ShowRightHint(Player.Self)]"
 			blockoverride "block_scrollarea" {
 				maximumsize = { -1 160 }
 			}
@@ -117,6 +133,20 @@ template SocietalValueCountryRight_tooltip {
 			}
 
 			textcontext = "[SocietalValue.GetRightHint(Player.Self)]"
+		}
+
+		TooltipScrolledStringPairList = {
+			visible = "[SocietalValue.ShowRightLockedHint(Player.Self)]"
+			blockoverride "block_scrollarea" {
+				maximumsize = { -1 160 }
+			}
+
+			blockoverride "block_title" {
+				text = "SV_HINT_NOT_YET_AVAILABLE"
+				default_format = "help"
+			}
+
+			textcontext = "[SocietalValue.GetRightLockedHint(Player.Self)]"
 		}
 	}
 }

@@ -170,7 +170,7 @@
 											value = "[FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
 											color = { 1 1 1 1 }
 										}
-
+	
 										pieslice_no_highlight = {
 											texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
 											value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
@@ -367,7 +367,6 @@
 											click_type = left
 											click_mode = single
 											on_action = "[SearchBar.ToggleFilterByKeyForceExclusive(PopType.GetKey)]"
-											on_action = "[SearchBar.EnableFilterByKey('hide_estate_only_buildings')]"
 											on_action = "[ShowLocationProductionView(Location.GetId, '(bool)no')]"
 											# datacontext = "[PopType]"
 											title = "TOGGLE_BUILDINGS_POP_TYPE"
@@ -403,30 +402,29 @@
 						sort_by_key_button = {
 							name = "name"
 							layoutpolicy_vertical = expanding
-							size = { 210 -1 }
-						}
-		
-						sort_by_key_button = {
-							name = "profit"
-							layoutpolicy_vertical = expanding
-							size = { 50 -1 }
+							size = { 220 -1 }
 						}
 
 						sort_by_key_button = {
-							name = "income"
-							layoutpolicy_vertical = expanding
-							size = { 50 -1 }
-						}
-						
-						sort_by_key_button = {
-							size = { 50 -1 }
+							size = { 110 -1 }
 							name = "production_efficiency"
 							layoutpolicy_vertical = expanding
 							blockoverride "sort_by_key_button_texture" {
 								texture = "gfx/interface/icons/sort/efficiency.dds"
 							}
 						}
-						
+		
+						sort_by_key_button = {
+							name = "profit"
+							layoutpolicy_vertical = expanding
+							size = { 40 -1 }
+						}
+
+						sort_by_key_button = {
+							name = "income"
+							layoutpolicy_vertical = expanding
+							size = { 40 -1 }
+						}
 						
 						sort_by_key_button = {
 							name = "level"
@@ -438,22 +436,23 @@
 						vbox = {
 							fixedgridbox = {
 								visible = "[And( LocationProductionView.Vars.NotExistOrHasValue( 'display', 'lists' ), LocationProductionView.IsLocationFilterEnabled )]"
-								addrow = 60
+								addrow = 65
 								addcolumn = 100%
 								datamodel = "[LocationProductionView.GetBuildingItems]"
+								setitemsizefromcell = yes
 								item = {
 									widget = {
-										size = { 100% 60 }
-										widget = {
-											size = { 97% 55 }
-											parentanchor = bottom|left
+										hbox = {
+											margin_right = 12
 
 											location_filtered_header_with_candidate = {
+												using = layoutpolicy_expanding
 												blockoverride "location_filtered_header_with_candidate_visible" {
 													visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
 												}
 											}
 											location_filtered_header_no_candidate = {
+												using = layoutpolicy_expanding
 												blockoverride "location_filtered_header_no_candidate_visible" {
 													visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
 												}
@@ -489,6 +488,10 @@ select_menu_left = {
 	}
 
 	blockoverride "close_on_action" { on_action = "[LocationProductionSelectLocation.OnClose]" }
+	blockoverride "select_header_text" {
+		text = "SELECT_LOCATION"
+	}
+
 	blockoverride "select_content" {
 		select_menu_header = {
 			blockoverride "select_menu_header_extra" {

@@ -356,7 +356,7 @@
                         blockoverride "unified_icon_bottom_content" { #@ WIP
                             spacing = 5
                             text_single = { ### STOCKPILE BALANCE
-                                raw_text = "[Add_float(FixedPointToFloat(Province.GetFoodFromMarket), FixedPointToFloat(Province.GetMonthlyFood))|+=2]"
+                                raw_text = "[Province.GetLastMonthFoodChange|+=2]"
                                 align = right|nobaseline
                                 minimumsize = { -1 20 }
                                 maximumsize = { 170 20 }
@@ -641,14 +641,6 @@ template province_food_tooltip {
                 }
             }
 
-            TooltipTextBlock = {
-               visible = "[GreaterThan_CFixedPoint(Province.GetFoodUsedByUnits, '(CFixedPoint)0')]"
-
-                blockoverride "text" {
-                    text = "PROVINCE_FOOD_TT_UNIT"
-                }
-            }
-
             hbox = {
                 layoutpolicy_horizontal = expanding
                 spacing = 8
@@ -762,13 +754,36 @@ template province_food_tooltip {
                         TooltipManualTableField = {
                             blockoverride "field_content" {
                                 text_single = {
+                                    visible = "[GreaterThanOrEqualTo_CFixedPoint(Province.GetFoodFromMarket, '(CFixedPoint)0')]"
                                     layoutpolicy_horizontal = expanding
                                     autoresize = no
                                     text = "PROVINCE_FOOD_FROM_MARKET_TT"
                                 }
                                 text_single = {
+                                    visible = "[LessThan_CFixedPoint(Province.GetFoodFromMarket, '(CFixedPoint)0')]"
+                                    layoutpolicy_horizontal = expanding
+                                    autoresize = no
+                                    text = "PROVINCE_FOOD_TO_MARKET_TT"
+                                }
+                                text_single = {
                                     autoresize = yes
                                     raw_text = "[Province.GetFoodFromMarket|+=2W]@food!"
+                                }
+                            }
+                        }
+
+                        TooltipManualTableField = {
+                            visible = "[GreaterThan_CFixedPoint(Province.GetLastMonthFoodUsedByUnits, '(CFixedPoint)0')]"
+
+                            blockoverride "field_content" {
+                                text_single = {
+                                    layoutpolicy_horizontal = expanding
+                                    autoresize = no
+                                    text = "PROVINCE_FOOD_TO_UNITS_TT"
+                                }
+                                text_single = {
+                                    autoresize = yes
+                                    raw_text = "[Multiply_CFixedPoint(Province.GetLastMonthFoodUsedByUnits, '(CFixedPoint)-1')|+=2]@food!"
                                 }
                             }
                         }
@@ -782,7 +797,7 @@ template province_food_tooltip {
                                 }
                                 text_single = {
                                     autoresize = yes
-                                    raw_text = "[Add_float(FixedPointToFloat(Province.GetFoodFromMarket), FixedPointToFloat(Province.GetMonthlyFood))|+=2]@food!"
+                                    raw_text = "[Province.GetLastMonthFoodChange|+=2]@food!"
                                 }
                             }
                         }
@@ -927,7 +942,7 @@ template province_food_tooltip {
                     }
 
                     hbox = { ### COULDN'T BUY ENOUGH FOOD
-                        visible = "[LessThan_float(Add_float(FixedPointToFloat(Province.GetFoodFromMarket), FixedPointToFloat(Province.GetMonthlyFood)), '(float)0')]"
+                        visible = "[LessThan_CFixedPoint(Province.GetLastMonthFoodChange, '(CFixedPoint)0')]"
 
                         layoutpolicy_horizontal = expanding
                         spacing = 5
@@ -1265,6 +1280,39 @@ template province_location_wealth_tooltip {
             TooltipTextBlock = {
                 blockoverride "text" {
                     text = "PROVINCE_LOCATION_WEALTH_TT_TEXT"
+                }
+            }
+
+            TooltipContentSection = {
+                using = ProvinceInfoTable
+            }
+        }
+    }
+}
+
+template province_uncontrolled_wealth_tooltip {
+    ContextualTooltipType = {
+        blockoverride "title_text" {
+            text = "PROVINCE_UNCONTROLLED_WEALTH_TT_TITLE"
+        }
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "[GetConceptTexture('wealth')]"
+            }
+        }
+        blockoverride "title_button" {
+            mapmode_tooltip_button = {
+                datacontext = "[GetMapMode('uncontrolled_wealth')]"
+            }
+        }
+        blockoverride "concept_link" {
+            text = [wealth|e]
+        }
+        blockoverride "tooltip_content" {
+            TooltipTextBlock = {
+                blockoverride "text" {
+                    text = "PROVINCE_UNCONTROLLED_WEALTH_TT_TEXT"
                 }
             }
 

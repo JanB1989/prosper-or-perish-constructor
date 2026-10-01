@@ -349,24 +349,62 @@ def test_expand_attribute_tests_widens_parents_once_and_leaves_the_rest(tmp_path
 def test_population_capacity_cell_bands_the_gauge_and_names_both_sides_of_the_ratio():
     from prosper_or_perish_constructor.worldbuilder import geography as wb_geography
 
-    cell = "\t\t\t\t\t\tsize = { 120 28 }\n"
-    text = "\t\t\t\t\t\tsize = { 90 28 }\n" + cell + wb_geography._POP_VBOX + "\n" + wb_geography._POP_TEXT + "\n" + wb_geography._CAPACITY_BAR + "\n"
-    out = wb_geography.merge_population_capacity(text)
+    # EU5 1.4: one template draws the population cell of the location card and of the location view header
+    template = """template location_card_population_button_body {
+\tblock "location_card_population_size" {
+\t\tsize = { 120 28 }
+\t}
+\thbox = {
+\t\tvbox = {
+\t\t\tlayoutpolicy_horizontal = expanding
+\t\t\tmargin_right = 8
+\t\t\tmargin_bottom = 3
 
-    assert "\t\t\t\t\t\tsize = { 90 28 }\n" in out             # the other header cells keep their width
-    assert "\t\t\t\t\t\tsize = { 139 28 }\n" in out            # only the population cell widens
-    assert "ignoreinvisible = yes" in out                       # the hidden gauges must not reserve rows
-    assert "GetTotalPopulation]@population!" not in out
+\t\t\ttext_single = {
+\t\t\t\tsize = { -1 15 }
+\t\t\t\tvisible = "[HasPopBreakdownIntelOn(Location.Self)]"
+\t\t\t\traw_text = "[Location.GetTotalPopulation]@population!"
+\t\t\t\tblock "location_card_population_text_format" {}
+\t\t\t\tfontsize = 13
+\t\t\t\tblock "location_population_sort_highlight" {}
+\t\t\t}
+
+\t\t\tblock "location_card_population_progressbar" {
+\t\t\t\tprogressbar = {
+\t\t\t\t\tlayoutpolicy_horizontal = expanding
+\t\t\t\t\tsize = { -1 5 }
+\t\t\t\t\tvisible = "[HasPopBreakdownIntelOn(Location.Self)]"
+\t\t\t\t\tusing = progress_bar_green_alt
+\t\t\t\t\tvalue = "[Location.GetCapacityPercentage]"
+\t\t\t\t\tdirection = horizontal
+\t\t\t\t}
+\t\t\t}
+\t\t}
+\t}
+}
+"""
+    card = "types T {\n\ttype location_card = hbox {\n\t\tbutton_regular = {\n\t\t\tusing = location_card_population_button_body\n\t\t}\n\t}\n}\n"
+    header = "window = {\n\tbutton_regular = {\n\t\tusing = location_card_population_button_body\n\t\tblockoverride \"location_card_population_size\" { size = { 90 28 } }\n\t}\n}\n"
+    out = wb_geography.merge_population_capacity(card + header + template)
+
+    assert out.count("template location_card_population_button_body {") == 1   # the vanilla cell stays for the header
+    assert out.count("template pp_location_card_population_button_body {") == 1
+    copy = out[out.index("template pp_location_card_population_button_body"):]
+    assert "using = pp_location_card_population_button_body" in out.split("window = {")[0]   # the location card switches
+    assert "\t\tusing = location_card_population_button_body\n\t\tblockoverride" in out          # the header does not
+    assert "size = { 139 28 }" in copy and "size = { 120 28 }" not in copy   # only the card's cell widens
+    assert "ignoreinvisible = yes" in copy                      # the hidden gauges must not reserve rows
+    assert "GetTotalPopulation]@population!" not in copy
 
     # raw_text, not a loc key: a loc key resolved to an empty cell in game.
-    assert 'raw_text = "[Location.GetTotalPopulation]/[Location.GetPopulationCapacity] · [Location.GetCapacityPercentage|0]%"' in out
-    assert out.count('block "location_population_sort_highlight" {}') == 1
-    assert "using = progress_bar_green_alt" not in out         # replaced by four explicitly textured bars
-    assert out.count('name = "pp_pop_capacity_bar_') == 4
-    assert out.count("gfx/interface/progressbars/progress_bar_red_alt.dds") == 1
+    assert 'raw_text = "[Location.GetTotalPopulation]/[Location.GetPopulationCapacity] · [Location.GetCapacityPercentage|0]%"' in copy
+    assert "fontsize = 12" in copy and copy.count('block "location_population_sort_highlight" {}') == 1
+    assert "using = progress_bar_green_alt" not in copy        # replaced by four explicitly textured bars
+    assert copy.count('name = "pp_pop_capacity_bar_') == 4
+    assert copy.count("gfx/interface/progressbars/progress_bar_red_alt.dds") == 1
 
     # GetCapacityPercentage is 0..100, so the bars restate the range rather than rescaling the value.
-    assert out.count("\t\t\t\t\t\t\t\t\tmin = 0\n\t\t\t\t\t\t\t\t\tmax = 100\n") == 4
+    assert copy.count("\t\t\t\t\tmin = 0\n\t\t\t\t\tmax = 100\n") == 4
 
     # Half-open bands: every fill lights exactly one bar, with no overlap and no gap.
     percent = "Location.GetCapacityPercentage"

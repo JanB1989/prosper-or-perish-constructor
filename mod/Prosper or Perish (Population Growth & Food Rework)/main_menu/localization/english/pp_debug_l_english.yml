@@ -33,6 +33,3 @@
  pp_population_baseline_debug.2.title: "DEBUG: Reload Reference Population Baseline"
  pp_population_baseline_debug.2.desc: "Restores the population baseline of the reference campaign for every location and each parent geographic scope. The Population Delta map modes then measure change from the reference campaign again."
  pp_population_baseline_debug.2.a: "OK"
- pp_ai_building_review_debug.1.title: "DEBUG: AI Building Review"
- pp_ai_building_review_debug.1.desc: "Runs the yearly AI building review now for every AI country: each of their locations loses one closed building level."
- pp_ai_building_review_debug.1.c: "Run for every AI country"

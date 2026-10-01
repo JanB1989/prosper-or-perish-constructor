@@ -745,10 +745,18 @@ builder), 96 capacity culls (81 granges). Small next to the AI: tavern levels we
 almost all from the AI queue.
 
 Since 2026-09-30 each scripted cull logs where, what and when, written from the culled building's scope before the level
-change: `PPBLD;<review_cull_closed|capacity_cull>;<date>;<building owner tag>;<location id>;<building name>;<level
-before the cull>` (the log text reaches the building through `THIS`; ROOT and saved scopes print nothing there). The yearly review culls only closed buildings, so it never touches the zero-employment
-land improvements (they are never closed); the capacity cull only touches the farm, fishing, forestry and victuals
-buildings it lists.
+change: `PPBLD;capacity_cull;<date>;<building owner tag>;<location id>;<building name>;<level before the cull>` (the log
+text reaches the building through `THIS`; ROOT and saved scopes print nothing there). The capacity cull (four-yearly,
+every country) only touches the farm, fishing, forestry and victuals buildings it lists, one level above their cap per
+building per pulse. Saves before 2026-10-01 also carry `review_cull_closed` lines.
+
+**The yearly closed-building review was removed on 2026-10-01.** It culled one closed level per AI location per year
+(taverns exempt). Closed is not dead: the engine closes a producing building after a losing month whose utility without
+the build price is below 0, and non-producing ones (libraries, temples, marketplaces) when building maintenance is over
+36 % of income; it reopens them only by a 25 % lottery per AI pass (every 2-8 months by rank) and only above utility
+0.2. The cull therefore deleted temporarily closed buildings that the AI then rebuilt at full price. Run c5c4d982:
+20.1k review culls 1337-1446 (masons 6.1k, cookshops 2.6k, libraries 1.5k with ~2.7k built to keep 1.15k,
+marketplaces 1.4k); run f3368e9e: culls grew from ~600 to 1,026 levels per 5 years by 1417-1422, more than bankruptcy.
 
 ### Engine paths that remove building levels (verified 2026-09-30)
 

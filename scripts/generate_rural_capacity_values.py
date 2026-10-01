@@ -24,10 +24,9 @@ MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_VALUES_ROOT = MOD_ROOT / "in_game" / "common" / "script_values"
 CULLING_EFFECTS_PATH = MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_capacity_culling_effects.txt"
-# error_log fields after "PPBLD;<kind>;" for a scripted cull, written in the culled building's scope (the yearly review
-# cull in pp_ai_building_review_effects.txt writes the same fields): date;building owner tag;location id;building;level
-# before the cull. Verified in game 2026-09-30: the log text reaches the building through THIS; ROOT and saved scopes
-# (SCOPE.sCountry/sLocation/...) resolve to nothing there.
+# error_log fields after "PPBLD;capacity_cull;", written in the culled building's scope: date;building owner tag;
+# location id;building;level before the cull. Verified in game 2026-09-30: the log text reaches the building through
+# THIS; ROOT and saved scopes (SCOPE.sCountry/sLocation/...) resolve to nothing there.
 CULL_LOG_FIELDS = (
     "[GetDateString];[THIS.GetBuilding.GetOwner.GetTag];[THIS.GetBuilding.GetLocation.GetKey];"
     "[THIS.GetBuilding.GetType.GetNameWithNoTooltip];[THIS.GetBuilding.GetLevel]"

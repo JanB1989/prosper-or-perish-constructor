@@ -1977,7 +1977,6 @@ def test_legacy_capacity_culling_is_removed() -> None:
     text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
     entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}
 
-    assert "pp_yearly_ai_building_review" in entries
     assert "pp_cull_over_cap_buildings" not in entries
     assert "farm_capacity_remaining < 0" not in text
     assert "fish_capacity_remaining < 0" not in text
@@ -1985,24 +1984,24 @@ def test_legacy_capacity_culling_is_removed() -> None:
     assert "value > fruit_orchard_max_level" not in text
 
 
-def test_yearly_closed_building_culling_removes_one_level_not_whole_stack() -> None:
-    action_text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
-    assert "pp_yearly_ai_building_review" in action_text
-    assert "is_ai = yes" in action_text
-    assert "pp_ai_building_review_effect = yes" in action_text
-
-    effects = AI_BUILDING_REVIEW_EFFECTS.read_text(encoding="utf-8-sig")
-    cull = effects.split("pp_cull_one_closed_building = {", maxsplit=1)[1].split("\n}", maxsplit=1)[0]
-    assert "random_buildings_in_location" in cull
-    assert "is_opened = no" in cull
-    assert "building_can_be_destroyed_by = root" in cull
-    assert "change_building_level = -1" in cull
-    assert "destroy_building = prev" not in cull
-    assert "NOT = { building_type = building_type:tavern }" in cull
-    # one pass over the owned locations, cull only
-    review = effects.split("pp_ai_building_review_effect = {", maxsplit=1)[1].split("\n}", maxsplit=1)[0]
-    assert review.count("every_owned_location") == 1
-    assert "pp_cull_one_closed_building = yes" in review
+def test_yearly_closed_building_review_is_removed() -> None:
+    # Removed 2026-10-01: the engine closes buildings after one losing month (producers) or for the country's
+    # maintenance budget (libraries, temples, ...) and reopens them slowly, so the yearly cull of closed levels deleted
+    # temporarily closed buildings that the AI then rebuilt at full price. The four-yearly capacity cull stays.
+    entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}
+    assert "pp_yearly_ai_building_review" not in entries
+    assert not COUNTRY_YEARLY.exists()
+    assert not AI_BUILDING_REVIEW_EFFECTS.exists()
+    assert not (MOD_ROOT / "in_game" / "events" / "debug" / "pp_ai_building_review_debug.txt").exists()
+    assert not (SCRIPT_VALUES_ROOT / "pp_ai_building_review.txt").exists()
+    assert not VICTUALS_IMPORT_TRIGGERS.exists()
+    localization = (LOCALIZATION_ROOT / "pp_debug_l_english.yml").read_text(encoding="utf-8-sig")
+    assert "pp_ai_building_review_debug" not in localization
+    scripts = [*(MOD_ROOT / "in_game" / "common").rglob("*.txt"), *(MOD_ROOT / "in_game" / "events").rglob("*.txt")]
+    for path in scripts:
+        text = path.read_text(encoding="utf-8-sig", errors="replace")
+        assert "pp_ai_building_review" not in text, path
+        assert "is_opened = no" not in text, path
 
 
 CULL_LOG_FIELDS = (
@@ -2015,13 +2014,7 @@ def test_scripted_culls_log_date_owner_location_building_and_level() -> None:
     # Every scripted cull writes one error_log line from the culled building's scope, before the level change (removing
     # the last level destroys the building and its scope). Verified in game 2026-09-30: the log text reaches the
     # building through THIS; ROOT and saved scopes (SCOPE.sCountry/sLocation/...) resolve to nothing there.
-    review = AI_BUILDING_REVIEW_EFFECTS.read_text(encoding="utf-8-sig")
-    cull = review.split("pp_cull_one_closed_building = {", maxsplit=1)[1].split("\n}", maxsplit=1)[0]
-    log = f'error_log = "PPBLD;review_cull_closed{CULL_LOG_FIELDS}'
-    assert log in cull
-    assert cull.index(log) < cull.index("change_building_level = -1")
-
-    capacity = CAPACITY_CULLING_EFFECTS.read_text(encoding="utf-8-sig")
+    capacity =CAPACITY_CULLING_EFFECTS.read_text(encoding="utf-8-sig")
     helper = capacity.split("pp_cull_capacity_building_above_max = {\n", maxsplit=1)[1]
     log = f'error_log = "PPBLD;capacity_cull{CULL_LOG_FIELDS}'
     assert helper.count("error_log") == 1
@@ -2030,19 +2023,9 @@ def test_scripted_culls_log_date_owner_location_building_and_level() -> None:
     assert log in scope
     assert helper.index(log) < helper.index("change_building_level_in_location")
     assert helper.index("pp_dbg_script_cull") < helper.index("change_building_level_in_location")
-    for text in (cull, helper):
-        assert "ROOT." not in text and "SCOPE.s" not in text and "save_temporary_scope_as" not in text
+    assert "ROOT." not in helper and "SCOPE.s" not in helper and "save_temporary_scope_as" not in helper
     # a macro inside the quoted log string lost its separator in game (PPBLD;capacity_cullgrange)
     assert '$building$"' not in helper
-
-
-def test_yearly_ai_review_builds_nothing() -> None:
-    # the AI builds taverns on its own; the scripted tavern builds were removed 2026-09-29
-    effects = AI_BUILDING_REVIEW_EFFECTS.read_text(encoding="utf-8-sig")
-    assert "construct_building" not in effects
-    assert "pp_tavern_wanted" not in effects
-    assert not VICTUALS_IMPORT_TRIGGERS.exists()
-    assert not (SCRIPT_VALUES_ROOT / "pp_ai_building_review.txt").exists()
 
 
 def test_only_abundant_free_land_gives_foraging_food() -> None:
@@ -2100,9 +2083,7 @@ def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -
 def test_four_yearly_zero_rgo_floor_repairs_owned_locations_for_all_countries() -> None:
     text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
     entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}
-    action_text = text.split("pp_raise_owned_zero_rgo_max_workers", maxsplit=1)[1].split(
-        "pp_yearly_ai_building_review", maxsplit=1
-    )[0]
+    action_text = text.split("pp_raise_owned_zero_rgo_max_workers", maxsplit=1)[1]
 
     assert "pp_raise_owned_zero_rgo_max_workers" in entries
     assert "every_owned_location" in action_text
@@ -2146,15 +2127,8 @@ def test_capacity_culling_debug_event_runs_same_global_four_year_action() -> Non
 
 
 def test_monthly_market_food_stockpile_topup_is_defined_but_weather_hook_is_disabled() -> None:
-    pulse_entries = {entry.key: entry.value for entry in parse_file(COUNTRY_YEARLY).entries}
-    assert "yearly_country_pulse" in pulse_entries
-
-    pulse = pulse_entries["yearly_country_pulse"]
-    assert isinstance(pulse, CList)
-    on_actions = _entry_values(pulse)["on_actions"]
-    assert isinstance(on_actions, CList)
-
-    assert on_actions.items == ["pp_yearly_ai_building_review"]
+    # no script rides the yearly country pulse (the closed-building review was removed 2026-10-01)
+    assert not COUNTRY_YEARLY.exists()
 
     global_pulse_entries = {
         entry.key: entry.value for entry in parse_file(MARKET_FOOD_PRICE_EXTREME_ON_ACTION).entries

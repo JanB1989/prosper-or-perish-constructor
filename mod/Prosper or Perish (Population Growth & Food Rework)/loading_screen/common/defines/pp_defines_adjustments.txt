@@ -44,7 +44,11 @@ NAI = {
 	POP_MISSING_GOODS_UTILITY_FACTOR = 0.25 # 0.02
 	INPUT_GOODS_SHORTAGE_UTILITY_FACTOR = 0.1 # 0.02
 	PROFITABLE_EXPORT_GOODS_UTILITY_FACTOR = 1.0 # 0.5
-	# Nudge so eligible AI colonizers start and maintain charters earlier (tax-base gates: scripted_triggers/pp_colonization_triggers.txt).
+	# Nudge so eligible AI colonizers start and maintain charters earlier (exploration gate: scripted_triggers/pp_colonization_triggers.txt).
+	# The mod's economy leaves countries with a smaller tax base than vanilla, so the AI reached vanilla's colonization gate
+	# decades late. EU5 1.4 moved that gate from the scripted ai_country_should_colonize and the create_colonial_charter
+	# action (both removed) into the engine: this define is the AI's tax-base threshold for paying for colonial charters.
+	AI_COLONIZE_TAX_BASE_THRESHOLD = 60 # 100
 	AI_BASE_COLONY_UTILITY = 6 # 3
 	AI_COLONIAL_RANGE_UTILITY = 0.00004
 	AI_GREAT_POWER_COLONIAL_RANGE_UTILITY = 0.0003

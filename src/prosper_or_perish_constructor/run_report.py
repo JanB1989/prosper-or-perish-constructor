@@ -8,7 +8,9 @@ writes `graphs/report/<run>/`:
   under 10 MB so Discord and GitHub play it inline; `maps/*.png` - the last frame of each (a poster / thumbnail);
 - `index.html` - the page: summary tiles, the videos and the interactive charts and tables of
   `run_report_charts` (population, trade, prices, buildings, countries), drawn by Apache ECharts (loaded from
-  jsDelivr) from the JSON embedded in the page. It only references files next to it and the chart library.
+  jsDelivr) from the JSON embedded in the page. It only references files next to it and the chart library;
+- `icons/<good>.png` - the goods icons (the built mod's, else the game's DDS, 40 px): goods appear as icons in
+  heatmap axes, tables and the goods-group legends, with the name on hover.
 
 Before reading the run, the report brings two derived parts of the dataset up to date: the building investment
 table and the engine-only tables (trade routes, merchants, country economy) of snapshots ingested before the
@@ -123,6 +125,7 @@ class RunData:
     investment_by_category: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, investment_category, investment
     investment_by_country: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, country_tag, investment
     investment_basis: str = "list"  # "location": at the location's prices (investment_local), "list": list price
+    good_icons: dict[str, str] = field(default_factory=dict)  # good_id -> page-relative PNG (write_good_icons)
 
     @property
     def investment_prices(self) -> str:
@@ -292,6 +295,48 @@ def load_labels(repo: Path, project: Path) -> Labels:
     load_order = repo / str(config.get("load_order") or "constructor.load_order.toml")
     profile = str(config.get("profile") or "constructor")
     return Labels(NotebookLabelResolver.from_profile(profile=profile, load_order_path=load_order))
+
+
+GOOD_ICON_DIR = Path("main_menu/gfx/interface/icons/trade_goods")
+GOOD_ICON_PX = 40  # drawn at 18 px: sharp on high-density screens, about 2 KB each
+
+
+def good_icon_sources(repo: Path, project: Path) -> list[Path]:
+    """Folders with icon_goods_<good>.dds, first match wins: the built mod (its own goods), then the game."""
+    import tomllib
+
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    roots = []
+    mod_root = tomllib.loads(project.read_text(encoding="utf-8")).get("project", {}).get("mod_root")
+    if isinstance(mod_root, str):
+        roots.append((Path(mod_root) if Path(mod_root).is_absolute() else repo / mod_root) / GOOD_ICON_DIR)
+    try:
+        roots.append(vanilla_root(repo, project) / "game" / GOOD_ICON_DIR)
+    except Exception:  # no load order: the report falls back to good names
+        pass
+    return roots
+
+
+def write_good_icons(goods: list[str], sources: list[Path], out: Path, log: Callable[[str], None] = print) -> dict[str, str]:
+    """icons/<good>.png under out for every good with a game icon; good_id -> page-relative path."""
+    found: dict[str, str] = {}
+    missing = []
+    for good in sorted(set(goods)):
+        dds = next((root / f"icon_goods_{good}.dds" for root in sources if (root / f"icon_goods_{good}.dds").is_file()), None)
+        if dds is None:
+            missing.append(good)
+            continue
+        try:
+            image = Image.open(dds).convert("RGBA").resize((GOOD_ICON_PX, GOOD_ICON_PX), Image.Resampling.LANCZOS)
+        except Exception:  # an undecodable DDS: the page shows the name instead
+            missing.append(good)
+            continue
+        (out / "icons").mkdir(parents=True, exist_ok=True)
+        image.save(out / "icons" / f"{good}.png", optimize=True)
+        found[good] = f"icons/{good}.png"
+    log(f"goods icons: {len(found)}" + (f", no icon for {', '.join(missing)}" if missing else ""))
+    return found
 
 
 # --------------------------------------------------------------------------------------------------------
@@ -971,6 +1016,16 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
 td.wide{min-width:240px;color:var(--muted);font-size:12px} td.pos{color:var(--pos)} td.neg{color:var(--neg)}
 .more{display:block;margin:8px 16px 0;font:inherit;font-size:13px;background:none;border:none;color:var(--accent);cursor:pointer;padding:0}
 a{color:var(--accent)} footer{margin-top:40px;font-size:12px;color:var(--muted)}
+img.gi{width:18px;height:18px;vertical-align:-4px} td.good{white-space:nowrap} td.good img.gi{margin-right:6px}
+td.goods{white-space:nowrap} td.goods .gv{display:inline-block;margin-right:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+td.goods .gv img.gi{margin-right:3px}
+.glegend{display:flex;flex-wrap:wrap;gap:6px 18px;padding:0 16px 14px;font-size:12px;color:var(--muted)}
+.glegend.full{flex-direction:column} .glegend .grp{display:flex;align-items:flex-start;gap:4px 8px}
+.glegend .name{display:inline-flex;align-items:center;gap:6px;color:var(--ink);font-weight:600;line-height:20px}
+.glegend.full .name{flex:0 0 200px} .glegend .icons{display:flex;flex-wrap:wrap;gap:2px 3px}
+@media (max-width:600px){.glegend .grp{flex-direction:column} .glegend.full .name{flex-basis:auto}}
+.glegend .sw{display:inline-block;width:10px;height:10px;border-radius:2px}
+.glegend .txt{padding:0 4px;border:1px solid var(--line);border-radius:4px}
 """
 
 PAGE_JS = r"""
@@ -1001,6 +1056,34 @@ PAGE_JS = r"""
   const fmt = (v, unit) => (v == null || !isFinite(v)) ? '–' : (UNITS[unit] || compact)(v);
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 
+  // goods by id: icon where the game has one, the name in tooltips (and in place of a missing icon)
+  const GOODS = DATA.goods || {};
+  const goodName = id => (GOODS[id] && GOODS[id].name) || String(id).replace(/_/g, ' ');
+  const goodIcon = id => GOODS[id] && GOODS[id].icon;
+  const goodHtml = id => (goodIcon(id) ? `<img class=gi src="${esc(goodIcon(id))}" alt="" style="margin-right:6px">` : '') + esc(goodName(id));
+  const richKey = id => 'g_' + String(id).replace(/\W/g, '_');
+  // charts draw axis icons from loaded images: ECharts does not repaint labels whose image arrives late
+  const ICON_IMG = {};
+  const iconsReady = Promise.all(Object.keys(GOODS).filter(goodIcon).map(id => new Promise(done => {
+    const image = new Image();
+    image.onload = image.onerror = () => done();
+    image.src = goodIcon(id);
+    ICON_IMG[id] = image;
+  })));
+  let RICH = null;
+  const goodRich = () => {
+    if (RICH) return RICH;
+    RICH = {sp: {width: 5}, name: {fontSize: 11}};
+    for (const g of DATA.groups || []) RICH['bar_' + g.key] = {width: 4, height: 18, backgroundColor: g.color, borderRadius: 1};
+    for (const id in ICON_IMG) if (ICON_IMG[id].naturalWidth) RICH[richKey(id)] = {width: 18, height: 18, backgroundColor: {image: ICON_IMG[id]}};
+    return RICH;
+  };
+  const goodLabel = id => {
+    const g = GOODS[id] || {};
+    const drawn = g.icon && ICON_IMG[id] && ICON_IMG[id].naturalWidth;
+    return (g.group ? `{bar_${g.group}| }{sp| }` : '') + (drawn ? `{${richKey(id)}| }` : `{name|${goodName(id).replace(/[{}|]/g, '')}}`);
+  };
+
   const axisTip = unit => params => {
     if (!params || !params.length) return '';
     const year = new Date(params[0].value[0]).getUTCFullYear();
@@ -1010,7 +1093,8 @@ PAGE_JS = r"""
   };
   const heatTip = (view, option) => p => {
     const v = p.value;
-    let s = `<b>${esc(option.yAxis.data[v[1]])}</b> · ${esc(option.xAxis.data[v[0]])}`;
+    const y = option.yAxis.data[v[1]];
+    let s = `<b>${GOODS[y] ? goodHtml(y) : esc(y)}</b> · ${esc(option.xAxis.data[v[0]])}`;
     for (const [label, i, unit] of (view.fields || [])) s += `<br>${esc(label)}: <b>${fmt(v[i], unit)}</b>`;
     return s;
   };
@@ -1026,6 +1110,8 @@ PAGE_JS = r"""
       if (name === 'year') return v => String(new Date(v).getUTCFullYear());
       if (name === 'unit') return v => fmt(v, arg || view.unit);
       if (name === 'pow2') return v => Math.pow(2, v).toFixed(Math.abs(v) > 1.5 ? 1 : 2) + '×';
+      if (name === 'goodlabel') return goodLabel;
+      if (name === 'goodrich') return goodRich();
     }
     return obj;
   };
@@ -1036,6 +1122,9 @@ PAGE_JS = r"""
     el.dataset.ready = '1';
     const spec = specs[el.dataset.key];
     const chart = echarts.init(el, dark ? 'dark' : null);
+    // a good's icon on a heatmap axis names itself on hover
+    chart.on('mouseover', p => { if (p.componentType === 'yAxis' && GOODS[p.value]) el.title = goodName(p.value); });
+    chart.on('mouseout', p => { if (p.componentType === 'yAxis') el.title = ''; });
     const buttons = el.closest('.card').querySelectorAll('.views button');
     const show = i => {
       const view = spec.views[i];
@@ -1049,7 +1138,7 @@ PAGE_JS = r"""
       buttons.forEach((b, j) => b.classList.toggle('active', i === j));
     };
     buttons.forEach((b, j) => b.addEventListener('click', () => show(j)));
-    show(0);
+    iconsReady.then(() => show(0));
     new ResizeObserver(() => chart.resize()).observe(el);
   };
   const io = new IntersectionObserver(entries => entries.forEach(e => {
@@ -1069,6 +1158,15 @@ PAGE_JS = r"""
     setTimeout(next, 1200);
   });
 
+  // table cells of kind good (one id) and goods ([[id, value], ...]): filtered by name, sorted by name / first value
+  const cellText = (v, c) => c.kind === 'good' ? goodName(v)
+    : c.kind === 'goods' ? (v || []).map(([id]) => goodName(id)).join(' ') : (v == null ? '' : String(v));
+  const sortKey = (v, c) => c.kind === 'good' ? goodName(v) : c.kind === 'goods' ? ((v && v.length) ? v[0][1] : null) : v;
+  const numeric = c => c.kind === 'num' || c.kind === 'goods';
+  const goodsCell = (v, c) => (v || []).map(([id, x]) => `<span class=gv title="${esc(goodName(id))}">` +
+    (goodIcon(id) ? `<img class=gi src="${esc(goodIcon(id))}" alt="${esc(goodName(id))}">` : esc(goodName(id)) + ' ') +
+    `${fmt(x, c.unit)}</span>`).join('');
+
   for (const spec of DATA.tables) {
     const root = document.getElementById('table-' + spec.key);
     const card = root.closest('.card');
@@ -1084,13 +1182,13 @@ PAGE_JS = r"""
     const render = () => {
       const q = search.value.trim().toLowerCase();
       let rows = spec.rows[snap] || [];
-      if (q) rows = rows.filter(r => r.some((v, i) => spec.columns[i].kind === 'text' && v && String(v).toLowerCase().includes(q)));
+      if (q) rows = rows.filter(r => r.some((v, i) => spec.columns[i].kind !== 'num' && cellText(v, spec.columns[i]).toLowerCase().includes(q)));
       const col = spec.columns[sortIndex];
       rows = rows.slice().sort((a, b) => {
-        const x = a[sortIndex], y = b[sortIndex];
+        const x = sortKey(a[sortIndex], col), y = sortKey(b[sortIndex], col);
         if (x == null || x === '') return 1;
         if (y == null || y === '') return -1;
-        const c = col.kind === 'num' ? x - y : String(x).localeCompare(String(y));
+        const c = numeric(col) ? x - y : String(x).localeCompare(String(y));
         return desc ? -c : c;
       });
       const total = rows.length;
@@ -1099,6 +1197,8 @@ PAGE_JS = r"""
         `${c.title ? ` title="${esc(c.title)}"` : ''} data-i="${i}">${esc(c.label)}</th>`).join('');
       const body = rows.map(r => '<tr>' + r.map((v, i) => {
         const c = spec.columns[i];
+        if (c.kind === 'good') return `<td class=good>${goodHtml(v)}</td>`;
+        if (c.kind === 'goods') return `<td class=goods>${goodsCell(v, c)}</td>`;
         if (c.kind !== 'num') return `<td${c.wide ? ' class="wide"' : ''}>${v == null ? '' : esc(v)}</td>`;
         const cls = 'num' + (c.signed && v != null ? (v > 0 ? ' pos' : v < 0 ? ' neg' : '') : '');
         return `<td class="${cls}">${(c.signed && v > 0 ? '+' : '') + fmt(v, c.unit)}</td>`;
@@ -1106,7 +1206,7 @@ PAGE_JS = r"""
       root.innerHTML = `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
       root.querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
         const i = Number(th.dataset.i);
-        desc = i === sortIndex ? !desc : spec.columns[i].kind === 'num';
+        desc = i === sortIndex ? !desc : numeric(spec.columns[i]);
         sortIndex = i;
         render();
       }));
@@ -1129,12 +1229,30 @@ def _video_card(m: dict[str, str]) -> str:
             f"<figcaption><b>{esc(m['title'])}</b> · {esc(m['subtitle'])} · <a href='{esc(m['video'])}' download>MP4</a></figcaption></figure>")
 
 
-def _chart_card(c: dict[str, Any]) -> str:
+def _goods_legend(payload: dict[str, Any], full: bool) -> str:
+    """The goods groups with their colour; full: every group's goods (icons, the name on hover), in heatmap order."""
+    esc = html.escape
+    goods = payload.get("goods") or {}
+    rows = []
+    for group in payload.get("groups") or []:
+        members = [info for info in goods.values() if info.get("group") == group["key"]]
+        if not members:
+            continue
+        name = f"<span class=name><i class=sw style='background:{esc(group['color'])}'></i>{esc(group['label'])}</span>"
+        items = "".join(
+            f"<img class=gi src='{esc(m['icon'])}' alt='{esc(m['name'])}' title='{esc(m['name'])}'>" if m.get("icon")
+            else f"<span class=txt>{esc(m['name'])}</span>" for m in members) if full else ""
+        rows.append(f"<div class=grp>{name}<span class=icons>{items}</span></div>" if full else f"<div class=grp>{name}</div>")
+    return f"<div class='glegend{' full' if full else ''}'>{''.join(rows)}</div>" if rows else ""
+
+
+def _chart_card(c: dict[str, Any], payload: dict[str, Any] | None = None) -> str:
     esc = html.escape
     buttons = "".join(f"<button type=button>{esc(v['label'])}</button>" for v in c["views"]) if len(c["views"]) > 1 else ""
+    legend = _goods_legend(payload or {}, c["goods_legend"] == "goods") if c.get("goods_legend") else ""
     return (f"<section class=card><header><h3>{esc(c['title'])}</h3><div class=views>{buttons}</div></header>"
             f"<div class=chart data-key='{esc(c['key'])}' style='height:{int(c['height'])}px'></div>"
-            f"<p class=caption>{esc(c['caption'])}</p></section>")
+            f"<p class=caption>{esc(c['caption'])}</p>{legend}</section>")
 
 
 def _table_card(t: dict[str, Any]) -> str:
@@ -1179,7 +1297,7 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
         if not (charts or tables or videos):
             continue
         nav.append(f"<a href='#{key}'>{esc(title)}</a>")
-        body = (f"<div class=grid>{videos}</div>" if videos else "") + "".join(_chart_card(c) for c in charts) + "".join(
+        body = (f"<div class=grid>{videos}</div>" if videos else "") + "".join(_chart_card(c, payload) for c in charts) + "".join(
             _table_card(t) for t in tables)
         sections.append(f"<h2 id={key}>{esc(title)}</h2><p class=lead>{esc(lead)}</p>{body}")
     data = json.dumps(payload, separators=(",", ":"), allow_nan=False).replace("</", "<\\/")
@@ -1249,6 +1367,8 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
     canvas = build_canvas(repo, project, width)
     maps = render_maps(run, canvas, out / "maps", repo=repo, project=project, fps=fps, log=log)
     maps += render_trade_maps(run, canvas, out / "maps", fps=fps, log=log)
+    run.good_icons = write_good_icons(run.market_goods["good_id"].to_list() if not run.market_goods.is_empty() else [],
+                                      good_icon_sources(repo, project), out, log)
     payload = build_payload(run)
     log(f"charts: {len(payload['charts'])}, tables: {len(payload['tables'])}")
     page = write_page(run, out, maps, payload)

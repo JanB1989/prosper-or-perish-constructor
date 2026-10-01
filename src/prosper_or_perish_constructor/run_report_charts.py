@@ -7,7 +7,11 @@ The page (`run_report.write_page`) renders them with Apache ECharts from one JSO
   functions): ``fn:axis:<unit>`` (axis tooltip), ``fn:heat`` (heatmap tooltip from the view's ``fields``),
   ``fn:year``, ``fn:unit:<unit>``, ``fn:pow2`` (log2 colour scale labels);
 - a table is ``{key, section, title, caption, columns, snapshots, rows, sort}``: ``rows[i]`` are the rows of save
-  ``i`` (one list per row, in column order), the page shows the last save and offers the others.
+  ``i`` (one list per row, in column order), the page shows the last save and offers the others;
+- ``goods`` is ``{good_id: {name, group, icon?}}`` (icon: page-relative PNG) in display order and ``groups`` the goods
+  groups: goods appear by id in heatmap axes (``fn:goodlabel`` / ``fn:goodrich`` draw the icon) and in table columns
+  of kind ``good`` (one id) and ``goods`` (``[[id, value], ...]``), the page shows icons and keeps names in tooltips;
+  a chart with ``goods_legend`` gets the goods groups under its caption ("goods": with every group's goods).
 
 Units are the dataset's: population in thousands (charts show millions), goods in units per month, gold per month
 at base prices (amount x the good's default price, so volumes compare across saves).
@@ -211,14 +215,17 @@ def line_option(xs: list[float], series: list[dict[str, Any]], *, unit: str, sta
 
 
 def heat_option(xlabels: list[str], ylabels: list[str], data: list[list[Any]], *, vmin: float, vmax: float,
-                colors: tuple[list[str], list[str]], scale_label: str) -> dict[str, Any]:
+                colors: tuple[list[str], list[str]], scale_label: str, goods_axis: bool = False) -> dict[str, Any]:
     """data rows are [x index, y index, colour value (clamped to vmin..vmax), tooltip fields...]; colors: the ramp
-    on a light and on a dark page (the page picks one)."""
+    on a light and on a dark page (the page picks one). goods_axis: ylabels are good ids, drawn as group bar + icon."""
+    y_label: dict[str, Any] = {"interval": 0, "fontSize": 11}
+    if goods_axis:
+        y_label.update({"formatter": "fn:goodlabel", "rich": "fn:goodrich"})
     return {
         "tooltip": {"formatter": "fn:heat", "confine": True},
         "grid": {"left": 8, "right": 20, "top": 8, "bottom": 58, "containLabel": True},
         "xAxis": {"type": "category", "data": xlabels, "axisLabel": {"hideOverlap": True}, "splitArea": {"show": False}},
-        "yAxis": {"type": "category", "data": ylabels, "inverse": True, "axisLabel": {"interval": 0, "fontSize": 11}},
+        "yAxis": {"type": "category", "data": ylabels, "inverse": True, "axisLabel": y_label, "triggerEvent": goods_axis},
         "visualMap": {"min": vmin, "max": vmax, "dimension": 2, "calculable": True, "orient": "horizontal",
                       "left": "center", "bottom": 2, "itemWidth": 12, "itemHeight": 280, "inRange": {"color": colors[0]},
                       "darkColors": colors[1],
@@ -228,8 +235,13 @@ def heat_option(xlabels: list[str], ylabels: list[str], data: list[list[Any]], *
     }
 
 
-def chart(key: str, section: str, title: str, caption: str, views: list[dict[str, Any]], height: int = 460) -> dict[str, Any]:
-    return {"key": key, "section": section, "title": title, "caption": caption, "height": height, "views": views}
+def chart(key: str, section: str, title: str, caption: str, views: list[dict[str, Any]], height: int = 460,
+          goods_legend: str | None = None) -> dict[str, Any]:
+    """goods_legend: "goods" lists every group's goods under the caption, "groups" only the group colours."""
+    out = {"key": key, "section": section, "title": title, "caption": caption, "height": height, "views": views}
+    if goods_legend:
+        out["goods_legend"] = goods_legend
+    return out
 
 
 def view(label: str, unit: str, option: dict[str, Any], **extra: Any) -> dict[str, Any]:
@@ -357,6 +369,23 @@ def _goods_world(run: RunData) -> pl.DataFrame:
     )
 
 
+HEAT_ROW = 20  # px per good in the goods heatmaps (fits the 18 px icon)
+
+
+def _heat_height(goods: list[Any]) -> int:
+    return max(420, HEAT_ROW * len(goods) + 120)
+
+
+def goods_info(run: RunData, world: pl.DataFrame, x: pl.DataFrame) -> dict[str, dict[str, Any]]:
+    """{good_id: {name, group, icon?}} in heatmap order (group, then the most produced first)."""
+    out: dict[str, dict[str, Any]] = {}
+    for good, label, group in _goods_rows(world, run, x):
+        out[good] = {"name": label, "group": group}
+        if good in run.good_icons:
+            out[good]["icon"] = run.good_icons[good]
+    return out
+
+
 def _goods_rows(world: pl.DataFrame, run: RunData, x: pl.DataFrame) -> list[tuple[str, str, str]]:
     """[(good_id, label, group)] grouped, the largest production value at the last save first within a group."""
     last = x["snapshot_id"][-1]
@@ -391,26 +420,26 @@ def price_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
     xs = x["x"].to_list()
     labels = x["label"].to_list()
     goods = _goods_rows(world, run, x)
-    ylabels = [label for _, label, _ in goods]
+    ylabels = [good for good, _, _ in goods]
     first = world.join(x.head(1).select("snapshot_id"), on="snapshot_id").select("good_id", pl.col("price_ratio").alias("first_ratio"))
     w = world.join(first, on="good_id", how="left")
     fields = [pl.col("price_ratio"), (pl.col("price_ratio") / pl.col("first_ratio")), pl.col("production"), pl.col("use"),
               pl.col("markets_short")]
     tip = [["Price ÷ base", 3, "ratio"], ["Change since first save", 4, "ratio"], ["World production", 5, "num"],
            ["World use", 6, "num"], ["Markets short", 7, "count"]]
-    height = max(420, 15 * len(goods) + 120)
     price = heat_option(labels, ylabels, _heat_data(w, x, goods, pl.col("price_ratio").log(2), fields, -1.0, 1.0),
-                        vmin=-1.0, vmax=1.0, colors=PRICE_HEAT, scale_label="fn:pow2")
+                        vmin=-1.0, vmax=1.0, colors=PRICE_HEAT, scale_label="fn:pow2", goods_axis=True)
     change = heat_option(labels, ylabels,
                          _heat_data(w, x, goods, (pl.col("price_ratio") / pl.col("first_ratio")).log(2), fields, -1.0, 1.0),
-                         vmin=-1.0, vmax=1.0, colors=PRICE_HEAT, scale_label="fn:pow2")
+                         vmin=-1.0, vmax=1.0, colors=PRICE_HEAT, scale_label="fn:pow2", goods_axis=True)
     charts = [chart(
         "price_heatmap", "prices", "Prices of every good",
         "World price of each good (markets weighted by traded volume) as a multiple of its base price; red = dearer, "
-        "blue = cheaper. Goods grouped (farming, mining, gathering/hunting/forestry, manufactured), the most produced "
-        "first. Mod bookkeeping goods (offset, logistics, province food, labour) are left out.",
+        "blue = cheaper. Goods grouped (the coloured bar: farming, mining, gathering/hunting/forestry, manufactured), "
+        "the most produced first; hover a cell or an icon for the name. Mod bookkeeping goods (offset, logistics, "
+        "province food, labour) are left out.",
         [view("Price ÷ base", "ratio", price, fields=tip), view("Change since first save", "ratio", change, fields=tip)],
-        height=height)]
+        height=_heat_height(goods), goods_legend="groups")]
 
     # price index, use and production by goods group (weights: world use at base price)
     g = world.with_columns((pl.col("use") * pl.col("default_price")).alias("w"),
@@ -433,7 +462,7 @@ def price_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
          view("Use ÷ production", "ratio", line_option(xs, [_series("All goods", _aligned(total, "use_ratio", x), WORLD, width=3)] + [
              _series(label, use[k], colour) for k, label, colour in groups], unit="ratio", y_min=None, reference=1.0)),
          view("Production value", "gold", line_option(xs, [_series(label, pv[k], colour) for k, label, colour in groups],
-                                                      unit="gold", stack=True))]))
+                                                      unit="gold", stack=True))], goods_legend="goods"))
     return charts
 
 
@@ -466,10 +495,10 @@ def trade_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
     charts = [chart(
         "world_trade", "trade", "World trade",
         "Goods imported by markets from other markets, valued at base prices (gold per month), by goods group; the "
-        "imported share is imports ÷ (production + imports) of all markets together.", views)]
+        "imported share is imports ÷ (production + imports) of all markets together.", views, goods_legend="goods")]
 
     goods = _goods_rows(world, run, x)
-    ylabels = [label for _, label, _ in goods]
+    ylabels = [good for good, _, _ in goods]
     w = world.with_columns(
         (pl.col("imports") / (pl.col("production") + pl.col("imports")) * 100).alias("import_share"),
         (pl.col("unmet") / pl.col("demand") * 100).alias("unmet_share"))
@@ -477,7 +506,6 @@ def trade_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
               pl.col("markets_surplus")]
     tip = [["Imported share of supply", 3, "pct"], ["Unmet demand", 4, "pct"], ["Imports", 5, "num"], ["Production", 6, "num"],
            ["Markets short", 7, "count"], ["Markets in surplus", 8, "count"]]
-    height = max(420, 15 * len(goods) + 120)
     charts.append(chart(
         "trade_heatmap", "trade", "What was traded and what was not",
         "Per good and save. Imported share: imports ÷ (production + imports) of all markets. Unmet demand: demand no "
@@ -485,10 +513,12 @@ def trade_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
         "surplus: producing and supply above 110 % of demand. A good with markets short and markets in surplus at the "
         "same time is one trade does not carry.",
         [view("Imported share", "pct", heat_option(labels, ylabels, _heat_data(w, x, goods, pl.col("import_share"), fields, 0.0, 60.0),
-                                                    vmin=0.0, vmax=60.0, colors=SEQUENTIAL_HEAT, scale_label="fn:unit:pct0"), fields=tip),
+                                                    vmin=0.0, vmax=60.0, colors=SEQUENTIAL_HEAT, scale_label="fn:unit:pct0",
+                                                    goods_axis=True), fields=tip),
          view("Unmet demand", "pct", heat_option(labels, ylabels, _heat_data(w, x, goods, pl.col("unmet_share"), fields, 0.0, 40.0),
-                                                 vmin=0.0, vmax=40.0, colors=WARM_HEAT, scale_label="fn:unit:pct0"), fields=tip)],
-        height=height))
+                                                 vmin=0.0, vmax=40.0, colors=WARM_HEAT, scale_label="fn:unit:pct0",
+                                                 goods_axis=True), fields=tip)],
+        height=_heat_height(goods), goods_legend="groups"))
     return charts
 
 
@@ -499,6 +529,18 @@ def _top(frame: pl.DataFrame, keys: list[str], value: str, label: str, n: int = 
         .with_columns((pl.col(label) + " " + pl.col(value).map_elements(_short, return_dtype=pl.String)).alias("_s"))
         .group_by(keys, maintain_order=True).agg(pl.col("_s").str.join(" · ").alias(f"top_{value}"))
     )
+
+
+def _top_goods(frame: pl.DataFrame, keys: list[str], value: str, n: int = 3) -> pl.DataFrame:
+    """keys + a list of {good_id, value} structs: the n largest positive values per group (a `goods` table cell)."""
+    return (
+        frame.filter(pl.col(value) > 0.005).sort(value, descending=True).group_by(keys, maintain_order=True).head(n)
+        .group_by(keys, maintain_order=True).agg(pl.struct("good_id", pl.col(value).alias("v")).alias(f"top_{value}"))
+    )
+
+
+def _goods_cell(items: list[dict[str, Any]] | None) -> list[list[Any]]:
+    return [[item["good_id"], _r(item["v"])] for item in items or []]
 
 
 def _short(value: float) -> str:
@@ -512,9 +554,7 @@ def _short(value: float) -> str:
 def trade_tables(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dict[str, Any]]:
     snapshots = x["snapshot_id"].to_list()
     labels = x["label"].to_list()
-    good_label = pl.col("good_id").replace_strict(run.labels.goods, default=pl.col("good_id"), return_dtype=pl.String)
     mg = run.market_goods.with_columns(
-        good_label.alias("good"),
         (pl.col("production") * pl.col("default_price")).alias("prod_v"),
         (pl.col("imports") * pl.col("default_price")).alias("imp_v"),
         (pl.col("exports") * pl.col("default_price")).alias("exp_v"),
@@ -525,7 +565,7 @@ def trade_tables(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
     markets = mg.group_by(keys).agg(pl.col("prod_v").sum(), pl.col("imp_v").sum(), pl.col("exp_v").sum(),
                                     pl.col("unmet_v").sum(), pl.col("dem_v").sum())
     for value in ("exp_v", "imp_v", "unmet_v"):
-        markets = markets.join(_top(mg, keys, value, "good"), on=keys, how="left")
+        markets = markets.join(_top_goods(mg, keys, value), on=keys, how="left")
     people = run.locations.filter(pl.col("market_id").is_not_null()).group_by(keys).agg(
         pl.col("total_population").sum().alias("population"))
     centres = run.markets.select(*keys, "center_slug")
@@ -542,9 +582,9 @@ def trade_tables(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
         {"key": "net", "label": "Net", "kind": "num", "unit": "gold", "signed": True, "title": "exports − imports"},
         {"key": "import_share", "label": "Imported", "kind": "num", "unit": "pct", "title": "imports ÷ (production + imports)"},
         {"key": "unmet", "label": "Unmet", "kind": "num", "unit": "pct", "title": "demand no supply covered, share of demand (value)"},
-        {"key": "top_exports", "label": "Main exports", "kind": "text", "wide": True},
-        {"key": "top_imports", "label": "Main imports", "kind": "text", "wide": True},
-        {"key": "top_unmet", "label": "Largest shortages", "kind": "text", "wide": True},
+        {"key": "top_exports", "label": "Main exports", "kind": "goods", "unit": "gold"},
+        {"key": "top_imports", "label": "Main imports", "kind": "goods", "unit": "gold"},
+        {"key": "top_unmet", "label": "Largest shortages", "kind": "goods", "unit": "gold"},
     ]
     rows: list[list[list[Any]]] = []
     by_snapshot = markets.partition_by("snapshot_id", as_dict=True)
@@ -559,7 +599,7 @@ def trade_tables(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
                 _r(r["population"]), _r(r["prod_v"]), _r(r["imp_v"]), _r(r["exp_v"]), _r((r["exp_v"] or 0) - (r["imp_v"] or 0)),
                 _r((r["imp_v"] or 0) / supply * 100) if supply else None,
                 _r((r["unmet_v"] or 0) / r["dem_v"] * 100) if r["dem_v"] else None,
-                r["top_exp_v"] or "", r["top_imp_v"] or "", r["top_unmet_v"] or "",
+                _goods_cell(r["top_exp_v"]), _goods_cell(r["top_imp_v"]), _goods_cell(r["top_unmet_v"]),
             ])
         rows.append(out)
     tables = [{
@@ -581,7 +621,7 @@ def trade_tables(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
     top_short = _top(per_market.with_columns((pl.col("demand") - pl.col("supply")).clip(lower_bound=0).alias("sh")), gkeys, "sh", "market")
     goods = world.join(top_exporters, on=gkeys, how="left").join(top_importers, on=gkeys, how="left").join(top_short, on=gkeys, how="left")
     gcolumns = [
-        {"key": "good", "label": "Good", "kind": "text"},
+        {"key": "good", "label": "Good", "kind": "good"},
         {"key": "group", "label": "Group", "kind": "text"},
         {"key": "production", "label": "Production", "kind": "num", "unit": "num", "title": "units per month"},
         {"key": "use", "label": "Use", "kind": "num", "unit": "num", "title": "pops, buildings, construction, armies (no trade)"},
@@ -603,7 +643,7 @@ def trade_tables(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
         for r in frame.filter((pl.col("production") + pl.col("demand")) > 0).sort("production", descending=True).iter_rows(named=True):
             supply = (r["production"] or 0) + (r["imports"] or 0)
             out.append([
-                run.labels.good(r["good_id"]), GROUP_LABELS.get(r["group"], ""), _r(r["production"]), _r(r["use"]),
+                r["good_id"], GROUP_LABELS.get(r["group"], ""), _r(r["production"]), _r(r["use"]),
                 _r(r["price_ratio"]), _r(r["imports"]), _r(r["imports"] / supply * 100) if supply else None,
                 _r(r["unmet"] / r["demand"] * 100) if r["demand"] else None, r["markets_short"], r["markets_surplus"],
                 r["top_ex"] or "", r["top_im"] or "", r["top_sh"] or "",
@@ -619,7 +659,7 @@ def trade_tables(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
 
     if not run.trades.is_empty():
         routes = (
-            run.trades.with_columns(good_label.alias("good"))
+            run.trades
             .join(run.market_goods.select("snapshot_id", "good_id", "default_price").unique(["snapshot_id", "good_id"]),
                   on=["snapshot_id", "good_id"], how="left")
             .with_columns((pl.col("amount") * pl.col("default_price").fill_null(1.0)).alias("value"))
@@ -629,7 +669,7 @@ def trade_tables(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
         rcolumns = [
             {"key": "from", "label": "From (exporter)", "kind": "text"},
             {"key": "to", "label": "To (importer)", "kind": "text"},
-            {"key": "good", "label": "Good", "kind": "text"},
+            {"key": "good", "label": "Good", "kind": "good"},
             {"key": "amount", "label": "Amount", "kind": "num", "unit": "num", "title": "units per month"},
             {"key": "value", "label": "Value", "kind": "num", "unit": "gold", "title": "gold per month at base price"},
             {"key": "trader", "label": "Trader", "kind": "text", "title": "country whose merchants run the route"},
@@ -643,7 +683,7 @@ def trade_tables(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
                 rrows.append([])
                 continue
             frame = frame.sort("value", descending=True).head(150).join(tags, on=["snapshot_id", "country_id"], how="left")
-            rrows.append([[r["from_name"] or "?", r["to_name"] or "?", r["good"], _r(r["amount"]), _r(r["value"]),
+            rrows.append([[r["from_name"] or "?", r["to_name"] or "?", r["good_id"], _r(r["amount"]), _r(r["value"]),
                            run.labels.country(r["country_tag"]) if r["country_tag"] else ""] for r in frame.iter_rows(named=True)])
         tables.append({
             "key": "routes", "section": "trade", "title": "Largest trade routes",
@@ -806,8 +846,10 @@ def build_payload(run: RunData) -> dict[str, Any]:
     x = xaxis(run)
     charts = population_charts(run, x)
     tables: list[dict[str, Any]] = []
+    goods: dict[str, dict[str, Any]] = {}
     if not run.market_goods.is_empty():
         world = _goods_world(run)
+        goods = goods_info(run, world, x)
         charts += trade_charts(run, x, world)
         tables += trade_tables(run, x, world)
         charts += price_charts(run, x, world)
@@ -815,7 +857,8 @@ def build_payload(run: RunData) -> dict[str, Any]:
     country, country_tables = country_charts(run, x)
     charts += country
     tables += country_tables
-    return {"charts": charts, "tables": tables}
+    groups = [{"key": key, "label": label, "color": colour} for key, label, colour, _ in GOODS_GROUPS]
+    return {"charts": charts, "tables": tables, "goods": goods, "groups": groups}
 
 
 def world_trade_share(run: RunData) -> dict[str, float]:

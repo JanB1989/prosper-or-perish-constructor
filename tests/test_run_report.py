@@ -189,7 +189,8 @@ def _trade_run():
     levels = pl.DataFrame({"snapshot_id": ["s1", "s2"], "slug": ["paris", "paris"], "levels": [2.0, 3.0]})
     by_category = pl.DataFrame({"snapshot_id": ["s1", "s2"], "building_category": ["crafts"] * 2, "levels": [2.0, 3.0]})
     return rr.RunData("run", "Run", snapshots, locations, levels, by_category, countries, market_goods, markets,
-                      trades, economy, rr.Labels(goods={"cloth": "Cloth", "wheat": "Wheat"}))
+                      trades, economy, rr.Labels(goods={"cloth": "Cloth", "wheat": "Wheat"}),
+                      good_icons={"cloth": "icons/cloth.png"})
 
 
 def test_payload_splits_peasants_filters_regions_and_ranks_countries() -> None:
@@ -211,7 +212,10 @@ def test_payload_splits_peasants_filters_regions_and_ranks_countries() -> None:
     income = [s["name"] for s in charts["countries_income"]["views"][0]["option"]["series"]]
     assert income == ["Gbr", "Fra"]
     goods = charts["price_heatmap"]["views"][0]["option"]["yAxis"]["data"]
-    assert goods == ["Wheat", "Cloth"]  # farming before manufactured
+    assert goods == ["wheat", "cloth"]  # farming before manufactured, by id (the page draws the icon)
+    assert payload["goods"] == {"wheat": {"name": "Wheat", "group": "farming"},
+                                "cloth": {"name": "Cloth", "group": "produced", "icon": "icons/cloth.png"}}
+    assert charts["price_heatmap"]["goods_legend"] == "groups" and charts["world_trade"]["goods_legend"] == "goods"
 
 
 def test_trade_tables_show_market_flows_and_routes() -> None:
@@ -222,14 +226,14 @@ def test_trade_tables_show_market_flows_and_routes() -> None:
     column = {c["key"]: i for i, c in enumerate(markets["columns"])}
     rows = {r[column["market"]]: r for r in markets["rows"][-1]}
     assert rows["Paris"][column["exports"]] == 12.0 and rows["Paris"][column["net"]] == 12.0
-    assert rows["London"][column["imports"]] == 12.0 and rows["London"][column["top_imports"]] == "Cloth 12"
-    assert rows["London"][column["top_unmet"]] == "Wheat 5.0"
+    assert rows["London"][column["imports"]] == 12.0 and rows["London"][column["top_imports"]] == [["cloth", 12.0]]
+    assert rows["London"][column["top_unmet"]] == [["wheat", 5.0]]
     goods = tables["goods"]
     gcol = {c["key"]: i for i, c in enumerate(goods["columns"])}
-    wheat = next(r for r in goods["rows"][-1] if r[gcol["good"]] == "Wheat")
+    wheat = next(r for r in goods["rows"][-1] if r[gcol["good"]] == "wheat")
     assert wheat[gcol["unmet"]] == 50.0 and wheat[gcol["short"]] == 1 and wheat[gcol["shortages"]] == "London 5.0"
     route = tables["routes"]["rows"][-1][0]
-    assert route[:3] == ["Paris", "London", "Cloth"] and route[4] == 12.0
+    assert route[:3] == ["Paris", "London", "cloth"] and route[4] == 12.0
 
 
 def test_trade_maps_draw_routes_over_market_borders(tmp_path: Path) -> None:
@@ -274,3 +278,20 @@ def test_page_embeds_charts_and_tables(tmp_path: Path) -> None:
     assert "echarts" in page and "id=report-data" in page
     assert "Unemployment" in page and "Imported share" in page and "<h2 id=trade>" in page
     assert "NaN" not in page.split("id=report-data")[1].split("</script>")[0]
+    # goods legend: every group's goods as icons (name on hover), the name where there is no icon
+    assert "<img class=gi src='icons/cloth.png' alt='Cloth' title='Cloth'>" in page
+    assert "<span class=txt>Wheat</span>" in page
+
+
+def test_good_icons_prefer_the_mod_and_skip_goods_without_one(tmp_path: Path) -> None:
+    from PIL import Image
+
+    mod, game = tmp_path / "mod", tmp_path / "game"
+    for root, good, colour in ((mod, "victuals", "red"), (game, "victuals", "blue"), (game, "wheat", "green")):
+        root.mkdir(exist_ok=True)
+        Image.new("RGBA", (128, 128), colour).save(root / f"icon_goods_{good}.dds")
+    out = tmp_path / "report"
+    icons = rr.write_good_icons(["wheat", "victuals", "nothing"], [mod, game], out, log=lambda _: None)
+    assert icons == {"victuals": "icons/victuals.png", "wheat": "icons/wheat.png"}
+    with Image.open(out / "icons" / "victuals.png") as image:
+        assert image.size == (rr.GOOD_ICON_PX, rr.GOOD_ICON_PX) and image.getpixel((5, 5))[:3] == (255, 0, 0)

@@ -301,11 +301,16 @@ def _magnitude(value: str, info: dict[str, str]) -> float:
 
 
 def _scrolled(content: str) -> str:
-    """Vanilla's tooltip scroll section, capped like the mod's population breakdown."""
+    """Vanilla's tooltip scroll section, capped like the mod's population breakdown.
+
+    EU5 1.4 made the section a scroll vbox whose content block is `section_content` (1.3: a scroll area with
+    `scrollarea_content`, which 1.4 drops silently, leaving an empty frame); the content sits in a vbox sized to
+    its rows, as in vanilla's own 1.4 tooltips (gui_blocks.py and its test catch the next rename).
+    """
     return (
         'TooltipScrolledContentSection = { blockoverride "block_scrollarea" { maximumsize = { -1 420 } } '
-        'blockoverride "scrollarea_content" { TooltipContentSection = { set_parent_dimension_to_minimum = height '
-        f'blockoverride "section_content" {{ {content} }} }} }} }}'
+        'blockoverride "section_content" { vbox = { set_parent_dimension_to_minimum = height '
+        f'layoutpolicy_horizontal = expanding spacing = 10 ignoreinvisible = yes {content} }} }} }}'
     )
 
 

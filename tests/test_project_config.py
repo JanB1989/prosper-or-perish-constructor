@@ -1203,7 +1203,7 @@ def test_broad_farm_capacity_buildings_have_static_location_potential_gates() ->
     assert "NOT = {\n\t\t\traw_material = goods:fiber_crops" not in compatibility
     for snippet in (
         "NOT = { climate = arctic }",
-        "NOT = { OR = { climate = cold_arid climate = ha1300_climate_cold_steppe } }",
+        "NOT = { OR = { climate = cold_arid climate = cold_semi_arid } }",
         "topography = flatland",
         "topography = hills",
         "topography = plateau",

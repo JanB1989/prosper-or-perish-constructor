@@ -38,6 +38,15 @@ LEGACY_ATTRIBUTE_FILES = (
     "in_game/common/vegetation/pp_vegetation_changes.txt",
     "in_game/common/topography/pp_topography_changes.txt",
 )
+# Files earlier exports shipped under a name the export no longer uses. The manifest of the last sync removes them too,
+# but it is machine-local (artifacts/ is ignored), so a fresh checkout would keep them: removed whenever the export lacks
+# them. EU5 1.4 renamed vanilla's city locators to generated_locators_city.txt (a stale old-name copy would add a second
+# set of city locators); the World Builder renamed its steppe and subarctic climates to the vanilla 1.4 keys.
+RENAMED_EXPORT_FILES = (
+    "in_game/gfx/map/map_objects/generated_map_object_locators_city.txt",
+    *(f"main_menu/gfx/interface/icons/climate/ha1300_climate_{name}{suffix}.dds"
+      for name in ("hot_steppe", "cold_steppe", "subarctic") for suffix in ("", "_frame")),
+)
 
 
 def _sha(path: Path) -> str:
@@ -369,7 +378,7 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path |
             changed += 1
         copied[rel] = digest
     removed = 0
-    for rel in previous:
+    for rel in (*previous, *RENAMED_EXPORT_FILES):
         if rel not in copied and (mod_root / rel).is_file():
             (mod_root / rel).unlink()
             removed += 1

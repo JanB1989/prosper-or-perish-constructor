@@ -39,21 +39,21 @@ pp_tt_climate = {
 	text = { localization_key = PP_TT_KEY_CLIMATE_TROPICAL trigger = { climate = tropical } }
 	text = { localization_key = PP_TT_KEY_CLIMATE_ARID trigger = { climate = arid } }
 	text = { localization_key = PP_TT_KEY_CLIMATE_COLD_ARID trigger = { climate = cold_arid } }
+	text = { localization_key = PP_TT_KEY_CLIMATE_HOT_SEMI_ARID trigger = { climate = hot_semi_arid } }
+	text = { localization_key = PP_TT_KEY_CLIMATE_COLD_SEMI_ARID trigger = { climate = cold_semi_arid } }
 	text = { localization_key = PP_TT_KEY_CLIMATE_MEDITERRANEAN trigger = { climate = mediterranean } }
 	text = { localization_key = PP_TT_KEY_CLIMATE_SUBTROPICAL trigger = { climate = subtropical } }
 	text = { localization_key = PP_TT_KEY_CLIMATE_OCEANIC trigger = { climate = oceanic } }
 	text = { localization_key = PP_TT_KEY_CLIMATE_CONTINENTAL trigger = { climate = continental } }
+	text = { localization_key = PP_TT_KEY_CLIMATE_SUBPOLAR trigger = { climate = subpolar } }
 	text = { localization_key = PP_TT_KEY_CLIMATE_ARCTIC trigger = { climate = arctic } }
 	text = { localization_key = PP_TT_KEY_CLIMATE_HA1300_CLIMATE_TROPICAL_MONSOON trigger = { climate = ha1300_climate_tropical_monsoon } }
 	text = { localization_key = PP_TT_KEY_CLIMATE_HA1300_CLIMATE_SAVANNA trigger = { climate = ha1300_climate_savanna } }
-	text = { localization_key = PP_TT_KEY_CLIMATE_HA1300_CLIMATE_HOT_STEPPE trigger = { climate = ha1300_climate_hot_steppe } }
-	text = { localization_key = PP_TT_KEY_CLIMATE_HA1300_CLIMATE_COLD_STEPPE trigger = { climate = ha1300_climate_cold_steppe } }
 	text = { localization_key = PP_TT_KEY_CLIMATE_HA1300_CLIMATE_SUBTROPICAL_MONSOON trigger = { climate = ha1300_climate_subtropical_monsoon } }
 	text = { localization_key = PP_TT_KEY_CLIMATE_HA1300_CLIMATE_HIGHLAND_MONSOON trigger = { climate = ha1300_climate_highland_monsoon } }
 	text = { localization_key = PP_TT_KEY_CLIMATE_HA1300_CLIMATE_SUBPOLAR_OCEANIC trigger = { climate = ha1300_climate_subpolar_oceanic } }
 	text = { localization_key = PP_TT_KEY_CLIMATE_HA1300_CLIMATE_DRY_SUMMER_CONTINENTAL trigger = { climate = ha1300_climate_dry_summer_continental } }
 	text = { localization_key = PP_TT_KEY_CLIMATE_HA1300_CLIMATE_CONTINENTAL_MONSOON trigger = { climate = ha1300_climate_continental_monsoon } }
-	text = { localization_key = PP_TT_KEY_CLIMATE_HA1300_CLIMATE_SUBARCTIC trigger = { climate = ha1300_climate_subarctic } }
 	text = { localization_key = PP_TT_KEY_NONE fallback = yes }
 }
 

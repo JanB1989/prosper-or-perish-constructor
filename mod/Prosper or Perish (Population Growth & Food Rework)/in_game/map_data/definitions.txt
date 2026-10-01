@@ -59,13 +59,13 @@
 				}
 			}
 
-			finland_area = {
+			finland_area = { not_eligible_for_dynamic_country_name = yes
 				sodra_osterbotten_province = { korsholm koppo pedersore storkyro karleby kaustby lappo vora }
 				finland_province = { abo nystad poytis sauvo }
 				nyland_province = { helsinge ekenas sjundea porvoo liljendal }
 				satakunta_province = { ikalis raumo bjorneborg hvittis sastmola birkala sastamala orivesi nasisalki }
-				tavastland_province = { hollola lohja tavastehus janakkala forssa itis jyvaskyla jamsa saarijarvi viitasaari laukas sysma paijanne jaasjarvi }
-				savolax_province = { mikkeli olofsborg heinola kangasniemi ristiina joroinen kuopio idensalmi rautavaara savonranta	pihlajavesi haukivesi puula kyyvesi }
+				tavastland_province = { not_eligible_for_dynamic_country_name = yes hollola lohja tavastehus janakkala forssa itis jyvaskyla jamsa saarijarvi viitasaari laukas sysma paijanne jaasjarvi }
+				savolax_province = { not_eligible_for_dynamic_country_name = yes mikkeli olofsborg heinola kangasniemi ristiina joroinen kuopio idensalmi rautavaara savonranta	pihlajavesi haukivesi puula kyyvesi }
 				vyborg_province = { kymi_fi vyborg villmanstrand veckelax elimaki vederlax valkeasaari kyyrola beryozovskoye heinjoki jaskis pyhajarvi puruvesi saima }
 			}
 			syd_norge_area = {
@@ -94,7 +94,7 @@
 				finnmark_province = { kautokeino varanger vardo deatnu porsanger karasjok hammerfest alta kirkenes lebesby }
 
 			}
-			karelia_area = {
+			karelia_area = { not_eligible_for_dynamic_country_name = yes
 				aunus_karelia_province = { olonets kinerma kondpoga ostrechiny pryazha shuya_karelia shyoltozero vazhiny	lake_konchozero lake_lizhmozero lake_onega lake_palvozero lake_sandal lake_shotozero lake_syamozero lake_vedlozero	}
 				inner_aunus_karelia_province = { repola karhumagi kizhi lindjarvi nadvoitsy pieninka puatane sellinkyla semcojarvi lake_gimoly lake_leksozero lake_seletsy lake_tulos lake_zegoserskoje }
 				inner_white_karelia_province = { rukajarvi jyskyjarvi kiestinki ontajarvi paanajarvi suikujarvi tunkuo uhtuo lake_bolshoye_rovkulskoye lake_engozero lake_kamennoye lake_kenozero lake_kovdozero lake_kukkureozero lake_lokhtyarvi lake_notozero lake_nyuk lake_pyaozero lake_sredneye_kuyto lake_tishkeozero lake_topozero lake_tungudskoye lake_verkhneye_kuyto lake_yelmozero lake_maslozero karelia_taiga1 karelia_taiga2 }
@@ -158,7 +158,7 @@
 		}
 
 		north_atlantic_islands_region = {
-			iceland_area = {
+			iceland_area = { not_eligible_for_dynamic_country_name = yes
 				north_farthing = { holar husavik akureyri blonduos torshofn }
 				east_farthing = { vopnafjordur egilsstadir seydisfjordur reydarfjordur holmur kirkjubaejar}
 				west_farthing = { borgarnes olavsvik isafjordur hvamstangi }
@@ -170,7 +170,7 @@
 				}
 			}
 
-			greenland_area = {
+			greenland_area = { not_eligible_for_dynamic_country_name = yes
 				gardr_province = {
 					gardr brattahlid dyrnes hvalsey einarsfjord vatnahverfi
 				}
@@ -231,7 +231,7 @@
 		}
 
 		north_german_region = {
-			brabant_area = {
+			brabant_area = { not_eligible_for_dynamic_country_name = yes 
 				limburg_province = {
 					maastricht venlo weert roermond
 				}
@@ -241,14 +241,14 @@
 				kempenland_province = {
 					helmond cuijk hertogenbosch eindhoven
 				}
-				brabant_province = {
+				brabant_province = { not_eligible_for_dynamic_country_name = yes
 					brussels leuven nivelles
 				}
-				loon_province = {
+				loon_province = { not_eligible_for_dynamic_country_name = yes
 					borgloon hasselt bree
 				}
 			}
-			flanders_area = {
+			flanders_area = { not_eligible_for_dynamic_country_name = yes
 				east_flanders_province = {
 					ghent aalst hulst kortriik oudenaarde sint_niklaas
 				}
@@ -276,7 +276,7 @@
 					zwolle kampen deventer oldenzaal
 				}
 			}
-			holland_area = {
+			holland_area = { not_eligible_for_dynamic_country_name = yes
 				north_holland_province = {
 					amsterdam amersfoort alkmaar hoorn utrecht haarlemmermeer
 				}
@@ -291,13 +291,13 @@
 				east_luxembourg_province = {
 					luxembourg arlon thionville vianden
 				}
-				hainaut_province = {
+				hainaut_province = { not_eligible_for_dynamic_country_name = yes
 					mons ath chimay enghien maubeuge valenciennes
 				}
-				liege_province = {
+				liege_province = { not_eligible_for_dynamic_country_name = yes
 					liege limbourg st_vith stavelot
 				}
-				namur_province = {
+				namur_province = { not_eligible_for_dynamic_country_name = yes
 					namur dinant orchimont walcourt
 				}
 				west_luxembourg_province = {
@@ -306,14 +306,14 @@
 			}
 
 			holstein_area = {
-				lubeck_province = {
+				lubeck_province = { not_eligible_for_dynamic_country_name = yes
 					lubeck heiligenhafen ratzeburg eutin lauenburg
 				}
 				holstein_province = {
 					kiel heide steinburg rendsburg stormarn segeberg pinneberg plon
 				}
 			}
-			brandenburg_area = {
+			brandenburg_area = { not_eligible_for_dynamic_country_name = yes
 				neumark_province = {
 					chojna soltyn gorzow santok torzym
 				}
@@ -359,7 +359,7 @@
 					dusseldorf monchengladbach kleve mors geldern
 				}
 			}
-			hesse_area = {
+			hesse_area = { not_eligible_for_dynamic_country_name = yes
 				hessen_bergland_province = {
 					kassel eschwege rotenburg korbach frankenberg marburg melsungen
 				}
@@ -459,7 +459,7 @@
 					halle_an_der_saale naumburg weissenfels freyburg beichlingen merseburg eisleben
 				}
 			}
-			mecklenburg_area = {
+			mecklenburg_area = { not_eligible_for_dynamic_country_name = yes
 				schwerin_province = {
 					schwerin hagenow grevesmuhlen wismar doberan grabow rostock butzow
 				}
@@ -512,7 +512,7 @@
 					steyr bad_ischl gmunden kirchdorf wels
 				}
 			}
-			salzburg_area = {
+			salzburg_area = { not_eligible_for_dynamic_country_name = yes
 				salzburger_land_province = {
 					salzburg berchtesgaden hallein
 				}
@@ -523,7 +523,7 @@
 					st_johann bischofshofen tamsweg bavarian_alps2
 				}
 			}
-			styria_area = {
+			styria_area = { not_eligible_for_dynamic_country_name = yes
 				middle_styria_province = {
 					graz leibnitz voitsberg
 				}
@@ -537,7 +537,7 @@
 					pitten wiener_neustadt furstenfeld weiz feldbach
 				}
 			}
-			carinthia_area = {
+			carinthia_area = { not_eligible_for_dynamic_country_name = yes
 				lower_carinthia_province = {
 					wolfsberg st_veit friesach volkermarkt klagenfurt feldkirchen
 				}
@@ -562,8 +562,8 @@
 					feldkirch bregenz bludenz
 				}
 			}
-			central_switzerland_area = {
-				bern_province = {
+			central_switzerland_area = { not_eligible_for_dynamic_country_name = yes
+				bern_province = { not_eligible_for_dynamic_country_name = yes
 					bern burgdorf_emmental saanen thun frutigen interlaken
 				}
 				oberwallis_province = {
@@ -585,10 +585,10 @@
 				}
 			}
 			western_switzerland_area = {
-				vaud_province = {
+				vaud_province = { not_eligible_for_dynamic_country_name = yes
 					geneve nyon yverdon_les_bains lausanne montreux fribourg gruyere lake_geneva
 				}
-				neuchatel_province = {
+				neuchatel_province = { not_eligible_for_dynamic_country_name = yes
 					delemont neuchatel solothurn basel bienne lake_neuchatel
 				}
 			}
@@ -675,7 +675,7 @@
 					cham amberg leuchtenberg roding burglengenfeld
 				}
 			}
-			bohemia_area = {
+			bohemia_area = { not_eligible_for_dynamic_country_name = yes
 				bechinsko_province = { bechyne budejovice j_hradec krumlov trebon }
 				boleslavsko_province = { mlada_boleslav frydlant turnov }
 				chebsko_province = { cheb jachymov loket }
@@ -687,7 +687,7 @@
 				prague_province = { prague benesov beroun kourim slany }
 				zatecko_province = { zatec most rakovnik }
 			}
-			moravia_area = {
+			moravia_area = { not_eligible_for_dynamic_country_name = yes
 				znojemsko_province = { znojmo bitov dacice jihlava }
 				brnensko_province = { brno pernstejn hodonin vyskov }
 				olomoucko_province = { olomouc prostejov zabreh sumperk }
@@ -732,10 +732,10 @@
 				north_riding_province = { york scarborough bedale richmond whitby north_york_moors }
 				east_riding_province = { hull bridlington selby norton }
 				west_riding_province = { leeds pontefract skipton wakefield doncaster ripon pennines_04 pennines_05 pennines_06 }
-				northumberland_province = { newcastle hexham alnwick morpeth billingham }
+				northumberland_province = { not_eligible_for_dynamic_country_name = yes newcastle hexham alnwick morpeth billingham }
 				cumberland_province = { carlisle cockermouth penrith egremont derwent_water }
 				westmorland_province = { kendal appleby }
-				durham_province = { durham darlington stockton pennines_03 }
+				durham_province = { not_eligible_for_dynamic_country_name = yes durham darlington stockton pennines_03 }
 				cheshire_province = { chester macclesfield nantwich }
 			}
 			east_anglia_area= {
@@ -747,7 +747,7 @@
 				hertfordshire_province = { hertford st_albans }
 			}
 			west_country_area = {
-				cornwall_province = { launceston truro bodmin scilly_isles }
+				cornwall_province = { not_eligible_for_dynamic_country_name = yes launceston truro bodmin scilly_isles }
 				somerset_province = { wells taunton bath portishead minehead }
 				devon_province = { plymouth exeter barnstaple bideford bampton okehampton dartmoor }
 				dorset_province = { poole weymouth dorchester shaftesbury }
@@ -756,8 +756,8 @@
 			}
 			# Scotland
 			scottish_highlands_area = {
-				moray_province = { inverness urquhart elgin badenoch loch_ness cairngorm }
-				ross_province = { dingwall gairloch ullapool fannichs }
+				moray_province = { not_eligible_for_dynamic_country_name = yes inverness urquhart elgin badenoch loch_ness cairngorm }
+				ross_province = { not_eligible_for_dynamic_country_name = yes dingwall gairloch ullapool fannichs }
 				sutherland_province = { dornoch durness tongue thurso ben_klibreck }
 				argyll_province = { inverary oban cowal lochaber ardtornish kintyre ben_nevis carn_eige }
 			}
@@ -767,7 +767,7 @@
 			}
 			scottish_lowlands_area = {
 				lothian_province = { edinburgh dunbar linlithgow stirling }
-				galloway_province = { stranraer ayr kirkcudbright irvine kenmure dumfries }
+				galloway_province = { not_eligible_for_dynamic_country_name = yes stranraer ayr kirkcudbright irvine kenmure dumfries }
 				strathclyde_province = { glasgow lanark paisley dumbarton loch_lomond }
 				teviotdale_province = { roxburgh selkirk duns berwick }
 				fife_province = { dunfermline st_andrews cupar }
@@ -776,12 +776,12 @@
 				aberdeenshire_province = { aberdeen buchan banff mar inverurie }
 			}
 			# Wales
-			wales_area = {
-				deheubarth_province = { carmarthen pembroke fishguard kidwelly cardigan aberystwyth }
-				gwynedd_province = { carnarvon anglesey conwy harlech flint penllyn denbigh snowdon }
-				powys_province = { montgomery machynlleth llangollen berwyn_range }
+			wales_area = { not_eligible_for_dynamic_country_name = yes
+				deheubarth_province = { not_eligible_for_dynamic_country_name = yes carmarthen pembroke fishguard kidwelly cardigan aberystwyth }
+				gwynedd_province = { not_eligible_for_dynamic_country_name = yes carnarvon anglesey conwy harlech flint penllyn denbigh snowdon }
+				powys_province = { not_eligible_for_dynamic_country_name = yes montgomery machynlleth llangollen berwyn_range }
 				brecon_province = { brecknock builth radnor brecon_beacons cambrian_mountains }
-				glamorgan_province = { cardiff monmouth newport neath swansea caerphilly }
+				glamorgan_province = { not_eligible_for_dynamic_country_name = yes cardiff monmouth newport neath swansea caerphilly }
 			}
 			#Sea
 
@@ -815,30 +815,30 @@
 
 		ireland_region = {
 			# Ireland
-			leinster_area = {
+			leinster_area = { not_eligible_for_dynamic_country_name = yes
 				dublin_province = { dublin fingal wicklow glendalough wicklow_mountains }
-				meath_province = { trim kells mullingar longford ardagh ballymore tullamore navan }
+				meath_province = { not_eligible_for_dynamic_country_name = yes trim kells mullingar longford ardagh ballymore tullamore navan }
 				wexford_province = { wexford new_ross ferns carlow }
-				kildare_province = { kildare naas athy dunamase daingean }
+				kildare_province = { not_eligible_for_dynamic_country_name = yes kildare naas athy dunamase daingean }
 				kilkenny = { kilkenny cullahill }
 			}
-			ulster_area = {
+			ulster_area = { not_eligible_for_dynamic_country_name = yes
 				antrim_province = { carrickfergus belfast ballymena ballycastle dunluce lough_neagh }
 				down_province = { downpatrick iveagh newtownards }
-				tyrone_province = { dungannon strabane clogher enniskillen belcoo lough_erne }
+				tyrone_province = { not_eligible_for_dynamic_country_name = yes dungannon strabane clogher enniskillen belcoo lough_erne }
 				derry_province = { derry coleraine magherafelt }
 				donegal_province = { donegal kilmacrennan inishowen raphoe }
-				oriel_province = { monaghan carrickmacross armagh oriel dundalk drogheda }
+				oriel_province = { not_eligible_for_dynamic_country_name = yes monaghan carrickmacross armagh oriel dundalk drogheda }
 			}
 			connaught_area = {
 				galway_province = { galway clifden athenry tuam kilconnell lough_corrib lough_derg }
 				roscommon_province = { roscommon castlereagh sligo athlone skreen lough_ree }
 				breifne_province = { dromahair leitrim killeshandra cavan killycolly }
-				mayo_province = { castlebar burrishoole erris ballaghaderreen lough_mask lough_conn }
+				mayo_province = { not_eligible_for_dynamic_country_name = yes castlebar burrishoole erris ballaghaderreen lough_mask lough_conn }
 			}
-			munster_area = {
+			munster_area = { not_eligible_for_dynamic_country_name = yes
 				cork_province = { cork fermoy kinsale youghal }
-				desmond_province = { killarney carbery kilbrittain muskerry dunhallow }
+				desmond_province = { not_eligible_for_dynamic_country_name = yes killarney carbery kilbrittain muskerry dunhallow }
 				limerick_province = { tralee dingle limerick killmallock adare castleconnell }
 				clare_province = { ennis bunratty moyarta }
 				tipperary_province = { tipperary nenagh clonmel cashel roscrea moycarn }
@@ -869,20 +869,20 @@
 			}
 		}
 
-		france_region = {
-			anjou_area = {
-				anjou_province = { angers bauge beaupreau chateau_gontier le_lude loudun passavant saumur }
+		france_region = { not_eligible_for_dynamic_country_name = yes
+			anjou_area = { not_eligible_for_dynamic_country_name = yes 
+				anjou_province = { not_eligible_for_dynamic_country_name = yes angers bauge beaupreau chateau_gontier le_lude loudun passavant saumur }
 				lower_maine_province = { mayenne laval sainte_suzanne villaines }
 				upper_maine_province = { le_mans beaumont_au_maine chateau_du_loir sable st_calais }
-				perche_province = { mortagne alluyes belleme senonches }
+				perche_province = { not_eligible_for_dynamic_country_name = yes mortagne alluyes belleme senonches }
 			}
-			auvergne_area = {
+			auvergne_area = { not_eligible_for_dynamic_country_name = yes
 				lower_auvergne_province = { clermont allegre brioude riom thiers vic_le_comte vodable }
-				bourbon_province = { bourbon huriel jaligny molins montlucon st_gerand vichy }
+				bourbon_province = { not_eligible_for_dynamic_country_name = yes bourbon huriel jaligny molins montlucon st_gerand vichy }
 				combraille_province = { chambon herment montaigut tour_auvergne dore_mountains }
 				upper_auvergne_province = { aurillac mauriac saint_flour }
 			}
-			brittany_area = {
+			brittany_area = { not_eligible_for_dynamic_country_name = yes
 				cornouaille_province = { quimper carhaix chateaulin le_faou quimperle }
 				nantais_province = { nantes blain chateaubriant guerande machecoul }
 				ploermel_province = { ploermel josselin monfort_sur_meu rohan }
@@ -890,30 +890,30 @@
 				tregor_province = { saint_brieuc brest chatelaudren st_pol_de_leon treguier }
 				vannetais_province = { vannes hennebont redon }
 			}
-			burgundy_area = {
+			burgundy_area = { not_eligible_for_dynamic_country_name = yes
 				auxerrois_province = { auxerre aignay arnay avallon chatillon_sur_seine semur_en_auxois }
 				autunnais_province = { autun charolles macon montcenis semur_en_brionnais }
 				dijonnais_province = { dijon auxonne beaune chalon_sur_saone louhans }
 				nevernais_province = { nevers cercy chateau_chinon donzy montreuillon st_pierre_de_moutier }
 			}
-			champagne_area = {
+			champagne_area = { not_eligible_for_dynamic_country_name = yes 
 				bassigny_province = { chaumont choiseul grancey la_mothe_en_bassigny langres vaucouleurs }
 				brie_champenois_province = { meaux broyes chateau_thierry nogent_sur_seine provins }
-				champagne_province = { troyes brienne villemaur }
+				champagne_province = { not_eligible_for_dynamic_country_name = yes troyes brienne villemaur }
 				perthois_province = { vitry_en_pertois joinville bar_sur_aube rosnay }
 				remois_province = { reims chalons_champagne epernay menehould vertus }
 				rethelois_province = { rethel chateau_porcien grandpre mouzon }
 				senonais_province = { sens bar_sur_seine joigny saint_florentin tonnerre }
 			}
-			franche_comte_area = {
+			franche_comte_area = { not_eligible_for_dynamic_country_name = yes
 				amont_province = { vesoul baume gray luxeuil montbeliard montbozon }
 				aval_province = { salins_les_bains orgelet poligny pontarlier saint_claude }
 				millieu_province = { besancon dole ornans }
 			}
-			gascony_area = {
-				armagnac_province = { auch lectoure lisle_jourdain mirande nogaro }
+			gascony_area = { not_eligible_for_dynamic_country_name = yes
+				armagnac_province = { not_eligible_for_dynamic_country_name = yes auch lectoure lisle_jourdain mirande nogaro }
 				bearn_bigorre_province = { pau oloron orthez tarbes north_western_pyrenees }
-				comminges_province = { muret aspet saint_lizier saint_gaudens north_eastern_pyrenees1 }
+				comminges_province = { not_eligible_for_dynamic_country_name = yes muret aspet saint_lizier saint_gaudens north_eastern_pyrenees1 }
 				tursan_province = { dax aire labrit mimizan mont_de_marsan tartas tosse lagoon_of_sanguinet }
 				bayonne_province = { bayonne mauleon saint_jean_pied_de_port }
 			}
@@ -921,7 +921,7 @@
 				agenais_province = { agen marmande montflanquin }
 				bazadais_province = { bazas belin condom nerac sauveterre_de_guyenne }
 				bordelais_province = { bordeaux benauges castelnau_de_medoc la_teste_de_buch lesparre_medoc libourne hourtin_carcans_lake }
-				perigord_province = { perigueux bergerac limeuil riberac sarlat }
+				perigord_province = { not_eligible_for_dynamic_country_name = yes perigueux bergerac limeuil riberac sarlat }
 				quercy_province = { cahors figeac gourdon montauban }
 				rouergue_province = { rodez entraigues millau peyrusse st_affrique villefranche }
 			}
@@ -933,7 +933,7 @@
 			}
 			languedoc_area = {
 				castres_province = { castres albi lautrec }
-				foix_province = { foix pamiers mirepoix }
+				foix_province = { not_eligible_for_dynamic_country_name = yes foix pamiers mirepoix }
 				gevaudan_province = { chateauneuf_de_randon florac mende peyre massif_central }
 				narbonnais_province = { narbonne agde beziers lodeve saint_pons lagoon_of_bages_sigean }
 				nimois_province = { nimes french_ales melgueil montpellier st_ambroix uzes }
@@ -943,10 +943,10 @@
 			}
 			limousin_province = {
 				limousin_province = { limoges aixe nontron segur st_leonard thiviers }
-				la_marche_province = { gueret aubusson bellac bourganeuf brosse charroux rochechouart }
+				la_marche_province = { not_eligible_for_dynamic_country_name = yes gueret aubusson bellac bourganeuf brosse charroux rochechouart }
 				turenne_province = { turenne tulle ussel ventadour }
 			}
-			lorraine_area = {
+			lorraine_area = { not_eligible_for_dynamic_country_name = yes
 				barrois_province = { bar_le_duc clermont_en_argonne ligny saint_mihiel }
 				pays_messin_province = { metz morhange saint_avold vic_sur_seille wallerfangen }
 				pays_nancy_province = { nancy luneville salm toul }
@@ -959,7 +959,7 @@
 				beaujolais_province = { beaujeu perreux trevoux villars }
 				lyonnais_province = { lyon feurs montbrison riverie roanne saint_etienne }
 			}
-			normandy_area = {
+			normandy_area = { not_eligible_for_dynamic_country_name = yes
 				caennais_province = { caen bayeux domfront falaise pont_douilly vire }
 				caux_province = { fecamp arques aumale longueville tancarville }
 				cotentin_province = { coutances cherbourg avranches jersey mortain st_sauveur }
@@ -968,13 +968,13 @@
 			}
 			orleanais_area = {
 				lower_berry_province = { chateauroux boussac issoudun lignieres }
-				blois_province = { blois chateaudun romorantin st_aignan vendome }
+				blois_province = { not_eligible_for_dynamic_country_name = yes blois chateaudun romorantin st_aignan vendome }
 				chartrain_province = { chartres auneau dreux etampes }
 				upper_berry_province = { bourges gien sancerre sancoins vierzon }
 				orleanais_province = { orleans beaugency montargis sully vitry_aux_loges }
 				touraine_province = { tours amboise chatillon_sur_indre chinon loches }
 			}
-			picardy_area = {
+			picardy_area = { not_eligible_for_dynamic_country_name = yes
 				amienois_province = { amiens breteuil corbie }
 				lower_artois_province = { arras bapaume cambrai lens }
 				upper_artois_province = { saint_omer bethune hesdin saint_pol }
@@ -982,13 +982,13 @@
 				thierache_province = { guise hirson marle ribemont }
 				vermandois_province = { saint_quentin nesle peronne }
 			}
-			poitou_area = {
-				angouleme_province = { angouleme cognac chabanais }
+			poitou_area = { not_eligible_for_dynamic_country_name = yes
+				angouleme_province = { not_eligible_for_dynamic_country_name = yes angouleme cognac chabanais }
 				lower_poitou_province = { thouars beauvoir fontenay la_roche_sur_yon mauleon_poitou montaigu parthenay talmont }
 				upper_poitou_province = { poitiers aulnay chatellerault lusignan montmorillon niort }
 				saintonge_province = { saintes montendre la_rochelle oleron royan st_jean_dangely rochefort jonzac }
 			}
-			provence_area = {
+			provence_area = { not_eligible_for_dynamic_country_name = yes
 				aquisextain_province = { aix_en_provence arles marseille tarascon lagoon_of_berre lagoon_of_vaccares }
 				avignonnais_province = { avignon apt forcalquier orange }
 				dignois_province = { digne barcelonnette castellane sisteron }
@@ -997,9 +997,9 @@
 			}
 			savoy_area = {
 				gresivaudan_province = { grenoble briancon gap la_mure pragelato cottian_alps1 dauphine_alps1 dauphine_alps2 }
-				savoy_province = { chambery annecy evian faucigny la_roche_sur_foron moutiers saint_jean_de_maurienne sallanches graian_alps1 pennine_alps1 }
-				valentinois_province = { valence condorcet die mevouillon vercors_massif }
-				viennois_province = { vienne romans saint_marceilin la_tour_du_pin }
+				savoy_province = { not_eligible_for_dynamic_country_name = yes chambery annecy evian faucigny la_roche_sur_foron moutiers saint_jean_de_maurienne sallanches graian_alps1 pennine_alps1 }
+				valentinois_province = { not_eligible_for_dynamic_country_name = yes valence condorcet die mevouillon vercors_massif }
+				viennois_province = { not_eligible_for_dynamic_country_name = yes vienne romans saint_marceilin la_tour_du_pin }
 			}
 
 			bay_of_biscay_area = {
@@ -1009,23 +1009,23 @@
 		}
 
 		iberia_region = {
-			galicia_area = {
+			galicia_area = { not_eligible_for_dynamic_country_name = yes
 				coruna_province = { coruna betanzos ferrol mondonedo vivero }
 				lugo_province = { lugo monforte_de_lemos navia_de_suarna sarria villalba }
 				ourense_province = { ourense barco_de_valdeorras ginzo_de_limia monterrey ribadavia viana_bolo }
 				santiago_province = { santiago_compostela finisterre lalin mellid noya pontevedra tuy }
 			}
-			leon_area = {
+			leon_area = { not_eligible_for_dynamic_country_name = yes 
 				astorga_province = { astorga castrocalbon ponferrada villablino villafranca_bierzo ancares_range leon_mountains }
 				benavente_province = { benavente alcanices puebla_de_sanabria villalpando cabrera_range }
 				ciudad_rodrigo_province = { ciudad_rodrigo coria ledesma san_felices yecla_de_yeltes francia_mountains}
 				east_asturias_province = { villaviciosa cangas llanes mieres }
-				leon_province = { leon mansilla riano sahagun east_cantabrian_mountains }
+				leon_province = { not_eligible_for_dynamic_country_name = yes leon mansilla riano sahagun east_cantabrian_mountains }
 				salamanca_province = { salamanca alba_de_tormes bejar matilla_de_canos piedrahita bejar_mountains}
 				west_asturias_province = { oviedo aviles castropol tineo west_cantabrian_mountains }
 				zamora_province = { zamora alba_de_aliste fermoselle toro }
 			}
-			castile_area = {
+			castile_area = { not_eligible_for_dynamic_country_name = yes
 				avila_province = { avila adrada arevalo las_navas oropesa villatoro western_central_system }
 				burgos_province = { burgos briviesca logrono miranda_de_ebro najera villarcayo demanda_range }
 				lerma_province = { lerma aranda_de_duero castrojeriz sto_domingo_silos villadiego }
@@ -1047,9 +1047,9 @@
 				alava_province = { vitoria anana laguardia salvatierra }
 				biscay_province = { bilbao durango valmaseda }
 				gipuzkoa_province = { san_sebastian onate tolosa }
-				navarre_province = { pamplona elizondo estella olite roncesvalles sanguesa tudela viana }
+				navarre_province = { not_eligible_for_dynamic_country_name = yes pamplona elizondo estella olite roncesvalles sanguesa tudela viana }
 			}
-			aragon_area = {
+			aragon_area = { not_eligible_for_dynamic_country_name = yes
 				alcaniz_province = { alcaniz cantavieja caspe montalban valderrobres }
 				barbastro_province = { barbastro ainsa benabarre fraga monzon sarinena south_western_pyrenees2 }
 				calatayud_province = { calatayud ariza carinena daroca }
@@ -1057,7 +1057,7 @@
 				teruel_province = { teruel albarracin alfambra mora_de_rubielos }
 				zaragoza_province = { zaragoza belchite pina_de_ebro tarazona zuera moncayo_range }
 			}
-			catalonia_area = {
+			catalonia_area = { not_eligible_for_dynamic_country_name = yes
 				barcelona_province = { barcelona sitges terrassa villafranca_del_penedes }
 				girona_province = { girona besalu castellon_ampurias ripoll sant_feliu }
 				new_catalonia_province = { tarragona flix lleida montblanc tarrega tortosa }
@@ -1065,14 +1065,14 @@
 				rosello_province = { perpignan prades puigcerda lagoon_of_salses south_eastern_pyrenees }
 				urgell_province = { seu_durgell agramunt andorra_la_vella balaguer talarn vielha central_pyrenees south_western_pyrenees3 }
 			}
-			valencia_area = {
+			valencia_area = { not_eligible_for_dynamic_country_name = yes 
 				castellon_province = { castellon_de_la_plana ares_del_maestre llucena morella peniscola }
 				jativa_province = { jativa alcoy ayora denia gandia }
 				orihuela_province = { orihuela alicante elche }
-				valencia_province = { valencia bunol chelva lliria	}
+				valencia_province = { not_eligible_for_dynamic_country_name = yes valencia bunol chelva lliria	}
 			}
 			balearics_area = {
-				mallorca_province = { palma ciudadela_de_menorca ibiza manacor pollensa }
+				mallorca_province = { not_eligible_for_dynamic_country_name = yes palma ciudadela_de_menorca ibiza manacor pollensa }
 			}
 			north_portugal_area = {
 				beira_alta_province = { viseu besteiros guarda lamego meda pinhel seia trancoso estrela_mountains}
@@ -1082,38 +1082,38 @@
 				tras_os_montes = { braganca aguiar chaves macedo miranda_de_i_douro mirandela moncorvo montalegre vila_real }
 			}
 			south_portugal_area = {
-				algarve_province = { lagos faro silves tavira }
+				algarve_province = { not_eligible_for_dynamic_country_name = yes lagos faro silves tavira }
 				alto_alentejo_province = { evora avis crato elvas estremoz montemor portalegre portel vila_vicosa }
 				baixo_alentejo_province = { beja alvalade alvito mertola moura odemira ourique serpa sines }
 				estremadura_province = { lisbon alcacer_do_sal alcobaca setubal torres_vedras }
 				ribatejo_province = { santarem mora_portugal ponte_sor salvaterra tomar torres_novas }
 			}
-			toledo_area = {
+			toledo_area = { not_eligible_for_dynamic_country_name = yes 
 				alarcon_province = { alarcon belmonte iniesta jorquera moya san_clemente requena}
 				east_mancha_province = { alcaraz lezuza alhambra_location montiel villapalacios villarobledo }
 				guadalajara_province = { guadalajara brihuega buitrago_de_lozoya cobeta siguenza zorita }
 				cuenca_province = {	cuenca beteta canete huete molina_de_aragon pareja torralba iberian_system }
 				madrid_province = {	madrid alcala_de_henares colmenar el_escorial maqueda }
 				ocana_province = { ocana alcazar_de_san_juan chinchon consuegra tomelloso ucles }
-				toledo_province = {	toledo guadalupe illescas los_yebenes navalucillos puebla_de_montalban puente_arzobispo talavera_de_la_reina }
+				toledo_province = { not_eligible_for_dynamic_country_name = yes	toledo guadalupe illescas los_yebenes navalucillos puebla_de_montalban puente_arzobispo talavera_de_la_reina }
 				west_mancha_province = { ciudad_real almaden almodovar_del_campo calatrava malagon manzanares puertollano madrona_range }
 			}
 			andalusia_area = {
 				cadiz_province = { cadiz algeciras arcos_de_la_frontera gibraltar jerez_de_la_frontera medina_sidonia sanlucar tarifa }
-				cordoba_province = { cordoba baena carpio espiel fuenteovejuna lucena palma_del_rio pedroche santa_eufemia }
+				cordoba_province = { not_eligible_for_dynamic_country_name = yes cordoba baena carpio espiel fuenteovejuna lucena palma_del_rio pedroche santa_eufemia }
 				huelva_province = { huelva almonaster_la_real aracena aroche ayamonte niebla puebla_de_guzman }
-				jaen_province = { jaen andujar baeza cazorla jodar martos ubeda }
-				sevilla_province = { sevilla carmona constantina coria_del_rio ecija moron olvera osuna sanlucar_la_mayor }
+				jaen_province = { not_eligible_for_dynamic_country_name = yes jaen andujar baeza cazorla jodar martos ubeda }
+				sevilla_province = { not_eligible_for_dynamic_country_name = yes sevilla carmona constantina coria_del_rio ecija moron olvera osuna sanlucar_la_mayor }
 			}
-			granada_area = {
+			granada_area = { not_eligible_for_dynamic_country_name = yes 
 				almeria_province = { almeria almanzora baza gergal huescar mojacar velez_rubio filambres_range }
-				granada_province = { granada adra almunecar guadix illora loja pinar orgiva nevada_range subbetic_range}
+				granada_province = { not_eligible_for_dynamic_country_name = yes granada adra almunecar guadix illora loja pinar orgiva nevada_range subbetic_range}
 				malaga_province = { malaga antequera marbella ronda velez_malaga }
 			}
-			murcia_area = {
+			murcia_area = { not_eligible_for_dynamic_country_name = yes 
 				albacete_province = { albacete chinchilla jumilla villena }
 				hellin_province = { hellin caravaca cieza segura_de_la_sierra segura_range }
-				murcia_province = {	murcia cartagena lorca mula }
+				murcia_province = { not_eligible_for_dynamic_country_name = yes	murcia cartagena lorca mula }
 			}
 			iberian_west_coast_area = {
 				gulf_cadiz_province = { 
@@ -1154,14 +1154,14 @@
 				principato_ultra_province = { avellino ariano benevento santangelo }
 			}
 			emilia_area = {
-				bologna_province = { bologna medicina vergato }
-				ferrara_province = { ferrara argenta comacchio ficarolo rovigo lagoon_of_comacchio }
-				modena_province = { modena frassinoro nonantola mirandola }
-				parma_province = { parma berceto sandonnino }
-				piacenza_province = { piacenza bardi bobbio fiorenzuola }
+				bologna_province = { not_eligible_for_dynamic_country_name = yes bologna medicina vergato }
+				ferrara_province = { not_eligible_for_dynamic_country_name = yes ferrara argenta comacchio ficarolo rovigo lagoon_of_comacchio }
+				modena_province = { not_eligible_for_dynamic_country_name = yes modena frassinoro nonantola mirandola }
+				parma_province = { not_eligible_for_dynamic_country_name = yes parma berceto sandonnino }
+				piacenza_province = { not_eligible_for_dynamic_country_name = yes piacenza bardi bobbio fiorenzuola }
 				reggioem_province = { reggioem canossa guastalla }
 				romagna_province = { rimini cesena faenza imola modigliana ravenna }
-				urbino_province = { urbino gubbio montefeltro pesaro }
+				urbino_province = { not_eligible_for_dynamic_country_name = yes urbino gubbio montefeltro pesaro }
 			}
 			lazio_area = {
 				campagna_province = { anagni palestrina sabina tivoli }
@@ -1175,57 +1175,57 @@
 				punente_province = { albenga cairo_montenotte finalborgo savona ventimiglia }
 			}
 			lombardy_area = {
-				bergamo_province = { bergamo cortenuova clusone zogno lake_iseo rhaetian_alps6 }
-				brescia_province = { brescia asola palazzolo salo_ita breno nozza lake_garda }
-				cremona_province = { cremona casalmaggiore soncino lodi }
-				mantua_province = { mantova goito ostiglia }
-				milano_province = { milano legnano rho varese }
+				bergamo_province = { not_eligible_for_dynamic_country_name = yes bergamo cortenuova clusone zogno lake_iseo rhaetian_alps6 }
+				brescia_province = { not_eligible_for_dynamic_country_name = yes brescia asola palazzolo salo_ita breno nozza lake_garda }
+				cremona_province = { not_eligible_for_dynamic_country_name = yes cremona casalmaggiore soncino lodi }
+				mantua_province = { not_eligible_for_dynamic_country_name = yes mantova goito ostiglia }
+				milano_province = { not_eligible_for_dynamic_country_name = yes milano legnano rho varese }
 				monza_province = { monza lecco treviglio como lake_como rhaetian_alps5 }
-				pavia_province = { pavia lomello voghera }
+				pavia_province = { not_eligible_for_dynamic_country_name = yes pavia lomello voghera }
 				valtellina_province = { tresivio bormio chiavenna rhaetian_alps2 rhaetian_alps3 }
 				ticino_province = { lugano bellinzona locarno }
 			}
 			marche_area = {
 				marche_province = { ancona ascolipiceno camerino fabriano fermo macerata central_apennines1 }
-				perugia_province = { perugia cittacastello marsciano lake_trasimeno }
-				spoleto_province = { spoleto assisi narni rieti todi }
+				perugia_province = { not_eligible_for_dynamic_country_name = yes perugia cittacastello marsciano lake_trasimeno }
+				spoleto_province = { not_eligible_for_dynamic_country_name = yes spoleto assisi narni rieti todi }
 			}
-			piemonte_area = {
-				alessandria_province = { alessandria novi rovegno tortona }
-				aosta_province = { aosta chatillonaos morgex pennine_alps2 }
-				mondovi_province = { mondovi alba ceva ligurian_alps }
+			piemonte_area = { not_eligible_for_dynamic_country_name = yes
+				alessandria_province = { not_eligible_for_dynamic_country_name = yes alessandria novi rovegno tortona }
+				aosta_province = { not_eligible_for_dynamic_country_name = yes aosta chatillonaos morgex pennine_alps2 }
+				mondovi_province = { not_eligible_for_dynamic_country_name = yes mondovi alba ceva ligurian_alps }
 				monferrato_province = { casale acqui asti }
-				novara_province = { novara arona biella domodossola varallo vercelli lake_maggiore }
+				novara_province = { not_eligible_for_dynamic_country_name = yes novara arona biella domodossola varallo vercelli lake_maggiore }
 				torino_province = { turin ivrea lanzo pinerolo susa graian_alps2 }
-				saluzzo_province = { saluzzo carmagnola chieri cuneo cottian_alps2 cottian_alps3 }
+				saluzzo_province = { not_eligible_for_dynamic_country_name = yes saluzzo carmagnola chieri cuneo cottian_alps2 cottian_alps3 }
 			}
 			sardinia_area = {
-				arborea_province = { oristano ales sorgono terralba }
-				cagliari_province = { cagliari tratalias villa_di_chiesa isili muravera seddori tortoli gennargentu_mountains }
-				gallura_province = { terranova_pausania orosei posada tempiopausania }
+				arborea_province = { not_eligible_for_dynamic_country_name = yes oristano ales sorgono terralba }
+				cagliari_province = { not_eligible_for_dynamic_country_name = yes cagliari tratalias villa_di_chiesa isili muravera seddori tortoli gennargentu_mountains }
+				gallura_province = { not_eligible_for_dynamic_country_name = yes terranova_pausania orosei posada tempiopausania }
 				logudoro_province = { sassari alghero bosa castelsardo macomer bitti ozieri thiesi }
 			}
-			sicily_area = {
+			sicily_area = { not_eligible_for_dynamic_country_name = yes
 				demena_province = { messina catania mistretta nicosiasic patti piazza mount_etna mount_stromboli }
 				girgenti_province = { girgenti bivona caltanisetta cefalu sciacca termini }
 				mazara_province = { palermo corleone mazara salemi trapani pantelleria lampedusa}
 				noto_province = { syracuse caltagirone malta modica noto terranovasic }
 			}
 			tuscany_area = {
-				arezzo_province = { arezzo cortona sansepolcro }
-				florence_province = { florence mangona poggibonsi prato sanlorenzo pistoia }
+				arezzo_province = { not_eligible_for_dynamic_country_name = yes arezzo cortona sansepolcro }
+				florence_province = { not_eligible_for_dynamic_country_name = yes florence mangona poggibonsi prato sanlorenzo pistoia }
 				grosseto_province = { grosseto massamar pitigliano piombino}
-				lucca_province = { lucca massa fosdinovo pescia north_apennines }
-				pisa_province = { pisa livorno pontedera volterra }
-				siena_province = { siena chiusi montalcino }
+				lucca_province = { not_eligible_for_dynamic_country_name = yes lucca massa fosdinovo pescia north_apennines }
+				pisa_province = { not_eligible_for_dynamic_country_name = yes pisa livorno pontedera volterra }
+				siena_province = { not_eligible_for_dynamic_country_name = yes siena chiusi montalcino }
 			}
 			veneto_area = {
 				belluno_province = { belluno pieve feltre dolomite_alps2 dolomite_alps5 dolomite_alps6 dolomite_alps7 }
 				friuli_province = { aquileia cividale gemona tolmezzo pordenone spilimbergo udine }
-				padua_province = { padova este monselice }
-				venice_province = { venice mestre treviso castelfranco ceneda chioggia conegliano }
-				verona_province = { verona legnago peschiera }
-				vicenza_province = { vicenza bassano schio }
+				padua_province = { not_eligible_for_dynamic_country_name = yes padova este monselice }
+				venice_province = { not_eligible_for_dynamic_country_name = yes venice mestre treviso castelfranco ceneda chioggia conegliano }
+				verona_province = { not_eligible_for_dynamic_country_name = yes verona legnago peschiera }
+				vicenza_province = { not_eligible_for_dynamic_country_name = yes vicenza bassano schio }
 			}
 			tyrrhenian_sea = {
 				tyrrhenian_sea_province = {
@@ -1247,7 +1247,7 @@
 			moldavia_area = {
 				bacau_province = { bacau hangu_romania piatra_lui_craciun roman targu_neamt targu_trotus }
 				balti_moldova_province = { balti hotin lipnic soroca viadineti }
-				barlad_province = { barlad adjud cudalbi focsani galati oancea tecuci tulnici }
+				barlad_province = { not_eligible_for_dynamic_country_name = yes barlad adjud cudalbi focsani galati oancea tecuci tulnici }
 				basarabia_province = { cetatea_alba cahul chilia ismail palada reni sarata alibey_lagoon dniester_liman lake_kahul lake_katlabukh lake_kitai lake_yalpuh sasyk_lagoon }
 				dorohei_province = { dorohoi cernauti cetatea_tetina cotnari harlau stefanesti }
 				iasi_province = { iasi husi targul_saratii tutova ungheni vaslui }
@@ -1289,7 +1289,7 @@
 				vas_province = { vasvar kormend olsnica szombathely }
 				zala_province = { zalavar cakovec nagykanizsa zalaegerszeg }
 			}
-			transylvania_area = {
+			transylvania_area = { not_eligible_for_dynamic_country_name = yes
 				doboka_province = { dabaca baita bistrita dej sic eastern_carpathians3 eastern_carpathians4 }
 				feher_province = { alba_iulia aiud cetatea_balta deva felvint hateg hunedoara southern_carpathians4 }
 				kiralyfold_province = { sibiu brasov cincu fagaras medias sebes sighisoara southern_carpathians2 }
@@ -1300,7 +1300,7 @@
 				}
 				torda_province = { turda baia_de_aries cluj huedin reghin inner_carpathians }
 			}
-			wallachia_area = {
+			wallachia_area = { not_eligible_for_dynamic_country_name = yes
 				east_muntenia_province = { buzau braila bukov parscov ramnicu_sarat valenii_de_munte viziru eastern_carpathians9 }
 				north_muntenia_province = { targoviste arges campulung_muscel cetateni pitesti ploesti poenari slanic southern_carpathians1 }
 				north_oltenia_province = { craiova cozia dragasani ramnicu_valcea stramba targu_jiu targu_bengai southern_carpathians3 }
@@ -1312,7 +1312,7 @@
 
 		baltic_region = {
 			baltic_area = {
-				courland_province = { kuldiga dundaga durbe grobina kandava piltene saldus ventspils }
+				courland_province = { not_eligible_for_dynamic_country_name = yes kuldiga dundaga durbe grobina kandava piltene saldus ventspils }
 				estonia_province = { tallinn narva padise paide rakvere rapla toolse vasknarva }
 				inner_livonia_province = { cesis aluksne gulbene rauna valmiera }
 				latgalia_province = { vilaka jekabpils kraslava makonkalns pietalava rezekne lake_lubans lake_razna }
@@ -1326,8 +1326,8 @@
 			central_poland_area = {
 				dobrzyn_province = { dobrzyn lipno rypin }
 				kuyavia_province = { wloclawek bydgoszcz inowroclaw kowal radziejow }
-				leczyca_province = { leczyca lodz orlow zgierz }
-				sieradz_province = { sieradz brzeznica piotrkow_trybunalski radomsko szadek turek tuszyn uniejow }
+				leczyca_province = { not_eligible_for_dynamic_country_name = yes leczyca lodz orlow zgierz }
+				sieradz_province = { not_eligible_for_dynamic_country_name = yes sieradz brzeznica piotrkow_trybunalski radomsko szadek turek tuszyn uniejow }
 				wielun_province = { wielun ostrzeszow wieruszow }
 			}
 			greater_poland_area = {
@@ -1352,7 +1352,7 @@
 				sandomierz_province = { sandomierz kunow opatow rudnik_poland }
 				szczyrzyc_province = { wieliczka myslenice oswiecim zywiec }
 			}
-			lithuania_area = {
+			lithuania_area = { not_eligible_for_dynamic_country_name = yes
 				ashmyany_province = { ashmyany halshany hieraniony kreva }
 				breslauja_province = { braslaw drysvyaty ezerenai miory }
 				kaunas_province = { kaunas alytus punia vilkaviskis }
@@ -1366,38 +1366,38 @@
 			}
 			mazovia_area = {
 				ciechanow_province = { ciechanow przasnysz rozan zakroczym }
-				czersk_province = { czersk garwolin grojec liw }
+				czersk_province = { not_eligible_for_dynamic_country_name = yes czersk garwolin grojec liw }
 				lomza_province = { lomza kolno ostroleka wizna zambrow }
-				plock_province = { plock plonsk sierpc szrensk }
+				plock_province = { not_eligible_for_dynamic_country_name = yes plock plonsk sierpc szrensk }
 				podlasie_province = { drohiczyn bielsk_podlaski goniadz mielnik sokolow suraz tykocin }
-				rawa_province = { rawa biala_rawska gabin gostynin sochaczew }
+				rawa_province = { not_eligible_for_dynamic_country_name = yes rawa biala_rawska gabin gostynin sochaczew }
 				warsaw_province = { warsaw kamieniec nur tarczyn }
 			}
 			prussia_area = {
-				chelmno_province = { chelmno brodnica grudziadz lubawa torun }
+				chelmno_province = { not_eligible_for_dynamic_country_name = yes chelmno brodnica grudziadz lubawa torun }
 				danzig_province = { gdansk gniew koscierzyna mirochowo puck tczew }
 				lithuania_minor_province = { tilsit gumbinnen labiau memel ragnit windenburg curonian_lagoon }
 				lower_prussia_province = { konigsberg balga brandenburg_prussia fischhausen gerdauen insterburg wehlau }
 				masuria_province = { elk barten nibork ostroda ryn_poland szczytno wegorzewo lake_mamry lake_sniardwy }
 				tuchola_province = { tuchola bialobork czluchow nowe swiecie }
 				upper_prussia_province = { malbork dzierzgon elblag kwidzyn morag }
-				warmia_province = { lidzbark frombork olsztyn }
+				warmia_province = { not_eligible_for_dynamic_country_name = yes lidzbark frombork olsztyn }
 			}
-			samogitia_area = {
+			samogitia_area = { not_eligible_for_dynamic_country_name = yes
 				medininkai_province = { medininkai palanga rietavas silale skuodas taurage }
 				raseiniai_province = { raseiniai jurbarkas kedainiai panemune tendziogala }
 				siauliai_province = { siauliai kraziai mazeikiai papile zagare }
 			}
 			silesia_area = {
-				glogow_province = { glogow gora kozuchow szprotawa zielona_gora }
-				legnica_province = { legnica boleslawiec jawor wolow zlotoryja }
-				olesnica_province = { olesnica milicz namyslow sycow trzebnica }
+				glogow_province = { not_eligible_for_dynamic_country_name = yes glogow gora kozuchow szprotawa zielona_gora }
+				legnica_province = { not_eligible_for_dynamic_country_name = yes legnica boleslawiec jawor wolow zlotoryja }
+				olesnica_province = { not_eligible_for_dynamic_country_name = yes olesnica milicz namyslow sycow trzebnica }
 				opavsko_province = { opava fryvaldov glubczyce hlucin krnov }
-				opole_province = { opole kluczbork lubliniec olesno prudnik strzelce_opolskie }
-				swidnica_province = { swidnica kamienna_gora rychbach niemcza ziebice }
+				opole_province = { not_eligible_for_dynamic_country_name = yes opole kluczbork lubliniec olesno prudnik strzelce_opolskie }
+				swidnica_province = { not_eligible_for_dynamic_country_name = yes swidnica kamienna_gora rychbach niemcza ziebice }
 				tesin_province = { tesin bielsko bytom kozle pszczyna raciborz siewierz toszek }
-				wroclaw_province = { wroclaw brzeg grodkow nysa niemodlin olawa sroda_slaska }
-				zagan_province = { zagan krosno_odrzanskie sulechow zary }
+				wroclaw_province = { not_eligible_for_dynamic_country_name = yes wroclaw brzeg grodkow nysa niemodlin olawa sroda_slaska }
+				zagan_province = { not_eligible_for_dynamic_country_name = yes zagan krosno_odrzanskie sulechow zary }
 			}
 			eastern_baltic_sea = {
 				eastern_baltic_sea = { north_central_baltic gulf_of_riga coast_of_osel west_gulf_of_finland east_gulf_of_finland }
@@ -1409,10 +1409,10 @@
 				grodno_province = { grodno bershty grodek masty sokolka }
 				kletsk_province = { kletsk bolshie_krugovichi kapyl lakhva luninets }
 				mazyr_province = { mazyr buinovichi lelchytsy kalinkavichy pietrykaw rudobelka zhytkavichy }
-				novogrudok_province = { novogrudok lyakhavichy lyubcha nyasvizh turets }
+				novogrudok_province = { not_eligible_for_dynamic_country_name = yes novogrudok lyakhavichy lyubcha nyasvizh turets }
 				rechytsa_province = { rechytsa babruysk luchin rahachow streshyn svietlahorsk }
 				slonin_province = { slonim dzyatlava vyada zdzitov }
-				slutsk_province = { slutsk hlusk starobin staryya_darohi }
+				slutsk_province = { not_eligible_for_dynamic_country_name = yes slutsk hlusk starobin staryya_darohi }
 				vawkavysk_province = { vawkavysk porazava vowpa }
 			}
 			left_bank_ukraine_area = {
@@ -1431,8 +1431,8 @@
 			polesia_area = {
 				bresta_province = { brest_litowsk biala_podlaska chernyany malaryta wlodawa }
 				kobryn_province = { kobryn dabuchyn hajnowka kamyenyets }
-				pinsk_province = { pinsk drahichyn liubeshiv motal nobel }
-				turov_province = { turov davyd_haradok dubrovytsia hlynne stolin }
+				pinsk_province = { not_eligible_for_dynamic_country_name = yes pinsk drahichyn liubeshiv motal nobel }
+				turov_province = { not_eligible_for_dynamic_country_name = yes turov davyd_haradok dubrovytsia hlynne stolin }
 			}
 			red_ruthenia_area = {
 				belz_province = { belz busk grabowiec lubaczow sokal }
@@ -1446,15 +1446,15 @@
 				zhydachiv_province = { zhydachiv bolekhiv dolyna }
 			}
 			severia_area = {
-				bryansk_province = { bryansk foshnya knyazhichi pochep revny vshchizh }
-				chernihiv_province = { chernihiv horodnia liubech lutava sosnytsia snovsk }
+				bryansk_province = { not_eligible_for_dynamic_country_name = yes bryansk foshnya knyazhichi pochep revny vshchizh }
+				chernihiv_province = { not_eligible_for_dynamic_country_name = yes chernihiv horodnia liubech lutava sosnytsia snovsk }
 				gomel_province = { gomel chachersk dobrush tereshkovichy volosovichy }
 				nizhyn_province = { nizhyn buryn bakhmach melnya putyvl }
 				novhorod_siverskyi_province = { novhorod_siverskyi hlukhiv verba voronizh_chernihiv znobov }
 				starodub_siverskyi_province = { starodub_siverskyi drokov klintsy mglin popowa_gora ropsk radogosch }
-				trubchevsk_province = { trubchevsk boldyzh dmitriyev rylsk sevsk }
+				trubchevsk_province = { not_eligible_for_dynamic_country_name = yes trubchevsk boldyzh dmitriyev rylsk sevsk }
 			}
-			volhynia_area = {
+			volhynia_area = { not_eligible_for_dynamic_country_name = yes
 				chelm_province = { chelm krasnystaw liuboml ratne shatsk ugrovesk }
 				kremenets_province = { kremenets dubno zbarazh tykhomel }
 				lutsk_province = { lutsk chortoryisk peremyl rozhyshche stepan volodymyrets }
@@ -1466,7 +1466,7 @@
 				porossia_province = { bila_tserkva bohuslav kaharlyk kaniv sherbiv skvyra }
 				cherkasy_province = { cherkasy chyhyryn korsun lebedyn rozkishna smila zvenyhorodka }
 				chornobyl_province = { chornobyl belaya_soroka brahin khoiniki kholmyech }
-				kyiv_province = { kyiv desnyanskyi_horodok dymer fastiv zdvizhen }
+				kyiv_province = { not_eligible_for_dynamic_country_name = yes kyiv desnyanskyi_horodok dymer fastiv zdvizhen }
 				olevsk_province = { olevsk kopyshche viry yemilchyne }
 				ovruch_province = { ovruch bilokorovychi korosten malyn narodychi stodolichi }
 				zhytomyr_province = { zhytomyr berdychiv chudniv chortolisy korostyshiv mychesk }
@@ -1475,61 +1475,61 @@
 				barysaw_province = { barysaw bobr krupki lukolm lyubashany }
 				dzisna_province = { dzisna asvieja nevel nekloch rasony vydritsa }
 				lahoysk_province = { lahoysk begoml byerazino ilya krasnoe smalyavichy }
-				minsk_province = { minsk chervyen koidanova marjina_horka rakau stowbtsy svislach }
+				minsk_province = { not_eligible_for_dynamic_country_name = yes minsk chervyen koidanova marjina_horka rakau stowbtsy svislach }
 				mogilev_province = { mogilev bykhaw chavusy klichaw novy_bykhaw slawharad }
 				mstsislaw_province = { mstsislaw kastsyukovichy khotsimsk krychaw monastyrshchina shumyachi }
 				orsha_province = { orsha drutsk horki kopys rudnya tyatseryn }
-				polotsk_province = { polotsk bocheikovo lyepyel ulla ushachy zabore }
-				vitebsk_province = { vitebsk haradok jeziarysca mikulino syanno usvyaty velizh vydreya }
+				polotsk_province = { not_eligible_for_dynamic_country_name = yes polotsk bocheikovo lyepyel ulla ushachy zabore }
+				vitebsk_province = { not_eligible_for_dynamic_country_name = yes vitebsk haradok jeziarysca mikulino syanno usvyaty velizh vydreya }
 			}
 		}
 
 		caucasus_region = {
 			armenian_highlands_area = {
 				amadiya_province = { amadiya baskale hakkari semdinli zakho east_taurus_4 }
-				bitlis_province = { bitlis bahcesaray catak hizan mus east_taurus_5 east_taurus_7 }
+				bitlis_province = { not_eligible_for_dynamic_country_name = yes bitlis bahcesaray catak hizan mus east_taurus_5 east_taurus_7 }
 				erzurum_province = { erzurum bayburt erzincan ilic kelkit kemah sebinkarahisar siran tercan kose_mountains_2 mescit_mountains otlukbeli_mountains }
 				harput_province = { harput adakli bingol cemisgezek genc keban kuzucan palu pertek sivrice lake_hazar mercan_mountains_1 mercan_mountains_2 }
 				kars_province = { kars kagizman surmali kars_mountains_2 kars_mountains_3 }
 				malazgirt_province = { malazgirt hinis karakilise hasankale tekman tutak varto aladag_mountains karagol_mountains karasu_aras_mountains }
 				van_province = { van ahlat bargiri ercis hosap tatvan lake_van suphan_mountains }
 			}
-			armenia_area = {
+			armenia_area = { not_eligible_for_dynamic_country_name = yes
 				ani_province = { ani amberd artashavan kumayri lesser_caucasus_mountains9}
 				kachen_province = { gandzasar goroz haterk kashatagh shusha }
-				syunik_province = { kapan_armenia gladzor goris julfa nakhchivan tatev lesser_caucasus_mountains8 lesser_caucasus_mountains10 }
+				syunik_province = { not_eligible_for_dynamic_country_name = yes kapan_armenia gladzor goris julfa nakhchivan tatev lesser_caucasus_mountains8 lesser_caucasus_mountains10 }
 				tashir_province = { lori gagi kayen khunani spitak }
 				yerevan_province = { yerevan bjni igdir khor_virap sotk lake_sevan lesser_caucasus_mountains5 lesser_caucasus_mountains7 }
 			}
-			georgia_area = {
+			georgia_area = { not_eligible_for_dynamic_country_name = yes 
 				abkhazia_province = { sukhumi anacopia lata_georgia pitsunda }
 				hereti_province = { hereti balakan bodbe khornabuji qakh }
-				imereti_province = { kutaisi lentekhi skande shorapani tsageri tsesi ushguli vartsikhe greater_caucasus_mountains2 greater_caucasus_mountains3 }
+				imereti_province = { not_eligible_for_dynamic_country_name = yes kutaisi lentekhi skande shorapani tsageri tsesi ushguli vartsikhe greater_caucasus_mountains2 greater_caucasus_mountains3 }
 				kakheti_province = { telavi alaverdi dusheti gremi rustavi shatili greater_caucasus_mountains5 }
 				kartli_province = { tbilisi dmanisi gori kasriskari kldekari kvenipnevi mtskheta tsagvli greater_caucasus_mountains4 }
 				meskheti_province = { artanuji ispir khikhani oltu panaskerti parkhali savsat tortum kars_mountains_1 yalnizcam_mountains }
 				samegrelo_province = { bedia anaklia batumi ozurgeti poti_caucasus tsalenjikha }
-				samtskhe_province = { akhaltsikhe akhalkalaki ardahan tmogvi lake_cildir lesser_caucasus_mountains1 lesser_caucasus_mountains2 lesser_caucasus_mountains3 lesser_caucasus_mountains4 }
+				samtskhe_province = { not_eligible_for_dynamic_country_name = yes akhaltsikhe akhalkalaki ardahan tmogvi lake_cildir lesser_caucasus_mountains1 lesser_caucasus_mountains2 lesser_caucasus_mountains3 lesser_caucasus_mountains4 }
 			}
 			northern_caucasus_area = {
-				alania_province = { dzhulat chegem jariekhi karcha_kala koban tatartup }
-				avaria_province = { khunzakh kumukh omalo tindi greater_caucasus_mountains6 greater_caucasus_mountains7 greater_caucasus_mountains9 }
+				alania_province = { not_eligible_for_dynamic_country_name = yes dzhulat chegem jariekhi karcha_kala koban tatartup }
+				avaria_province = { not_eligible_for_dynamic_country_name = yes khunzakh kumukh omalo tindi greater_caucasus_mountains6 greater_caucasus_mountains7 greater_caucasus_mountains9 }
 				lezgistan_province = { kubachi khuchni kurakh rutul tpig greater_caucasus_mountains8 greater_caucasus_mountains10 }
 				north_caucasus_province = { khumar arkhyz mamiya_kala rim_gora greater_caucasus_mountains1 }
-				simsir_province = { simsir alkhan_kala argun nazran targim tsontaroy_kala }
-				tarki_province = { tarki boynak endirey temirkhan_shura terek }
+				simsir_province = { not_eligible_for_dynamic_country_name = yes simsir alkhan_kala argun nazran targim tsontaroy_kala }
+				tarki_province = { not_eligible_for_dynamic_country_name = yes tarki boynak endirey temirkhan_shura terek }
 			}
-			shirvan_area = {
+			shirvan_area = { not_eligible_for_dynamic_country_name = yes 
 				arran_province = { ganja barda beylagan gardman lemberan shamkir lake_agh_gol lake_sarisu lesser_caucasus_mountains6 }
 				baku_province = { baku javad mahmudabad maraza qobustan shamakhi }
 				mughan_province = { mughan baciravan bilasuvar germi salyan varsan }
-				shaki_province = { shaki agsu aresh goychay qabala vartashen zardab }
-				shirvan_province = { shirvan derbent niyazabad quba shabran }
+				shaki_province = { not_eligible_for_dynamic_country_name = yes shaki agsu aresh goychay qabala vartashen zardab }
+				shirvan_province = { not_eligible_for_dynamic_country_name = yes shirvan derbent niyazabad quba shabran }
 			}
 		}
 
 		steppes_region = {
-			crimea_area = {
+			crimea_area = { not_eligible_for_dynamic_country_name = yes
 				gothia_province = { theodoro qirq_yer lusta qarasuvbazar crimean_mountains }
 				cafa_province = { kaffa soldaia vosporo seyitler solkhat }
 				or_qapi_province = { kalay kezlev aqmecit jurchi or_qapi lake_sasyk_syvash syvash_lagoon syvash_sand_bar}
@@ -1585,8 +1585,8 @@
 				beljamen_province = { mechet stepanevka sarai_al_jadid beljamen zenzevatka nagavskaya aksay }
 				yelan_province = { yelan machekha novonikolayevsky samoylovka rudnya_pontic danilovka kotovo kamyshin goly_karamysh }
 			}
-			astrakhan_area = {
-				astrakhan_province = { astrakhan khosheutovo krasny_yar ganyushkino }
+			astrakhan_area = { not_eligible_for_dynamic_country_name = yes 
+				astrakhan_province = { not_eligible_for_dynamic_country_name = yes astrakhan khosheutovo krasny_yar ganyushkino }
 				pologoye_zaymishche_province = { pologoye_zaymishche srednyaya_akhtuba bykovo elton zolotari berezhnovka }
 				zamyany_province = { zamyany yenotayevka sapara chernyye_zemli ikryanoye }
 				chyorny_yar_province = { chyorny_yar nikolskoye_pontic malye_derbety sadovoye_kalmykia ded_khulsun zavetnoye }
@@ -1613,34 +1613,34 @@
 			moscow_area = {
 				moscow_province = { moscow bronnitsy odintsovo pushkino rogozh vokhna }
 				mozhaysk_province = { mozhaysk borovsk medyn maloyaroslavets vereya vetza }
-				kolomna_province = { kolomna khatun przemysl_moscow serpukhov koshira vysokoye }
+				kolomna_province = { not_eligible_for_dynamic_country_name = yes kolomna khatun przemysl_moscow serpukhov koshira vysokoye }
 				zvenigorod_province = { zvenigorod dmitrov mushkov_pogost rogachevo ruza volok }
 			}
 			oka_area = {
 				odoyev_province = { odoyev belyov rzhavets vorotynsk }
 				masalsk_province = { masalsk fominichi lyubun pogostishche yukhnov }
-				karachev_province = { karachev bolkhov khotiml kromy zvenihorod_siverskyi }
-				kozelsk_province = { kozelsk khvastovichi ktsyn meshchovsk usty }
-				novosil_province = { novosil bogorodskoye kolpny mikhailovka mtsensk plavsk tagin vorotynsk_novosil }
-				tarusa_province = { tarusa kaluga obolensk volkona }
-				tula_russia_province = { tula_russia arkhangelskoye bogoroditsk kurkino }
+				karachev_province = { not_eligible_for_dynamic_country_name = yes karachev bolkhov khotiml kromy zvenihorod_siverskyi }
+				kozelsk_province = { not_eligible_for_dynamic_country_name = yes kozelsk khvastovichi ktsyn meshchovsk usty }
+				novosil_province = { not_eligible_for_dynamic_country_name = yes novosil bogorodskoye kolpny mikhailovka mtsensk plavsk tagin vorotynsk_novosil }
+				tarusa_province = { not_eligible_for_dynamic_country_name = yes tarusa kaluga obolensk volkona }
+				tula_russia_province = { not_eligible_for_dynamic_country_name = yes  tula_russia arkhangelskoye bogoroditsk kurkino }
 			}
-			smolensk_area = {
+			smolensk_area = { not_eligible_for_dynamic_country_name = yes 
 				bely_province = { bely bolshevo fomin_gorodok shoptovo verkhovye yotkino }
 				dorogobuzh_province = { dorogobuzh demensk gorodechnya mozhino shui yartsevo }
 				kozlov_province = { kozlov_vyazma orekhovna pogoreloye trufany zhulino }
 				roslavl_province = { roslavl izyaslavl pustosel rognedino zaroy }
-				smolensk_province = { smolensk belik berezhnyany dukhovshchina krasny yelnya }
-				toropets_province = { toropets andreapol bibirevo dubrovna ilyino nizhelskoe zhizhets lake_dvinye lake_zhizhitskoye }
+				smolensk_province = { not_eligible_for_dynamic_country_name = yes smolensk belik berezhnyany dukhovshchina krasny yelnya }
+				toropets_province = { not_eligible_for_dynamic_country_name = yes toropets andreapol bibirevo dubrovna ilyino nizhelskoe zhizhets lake_dvinye lake_zhizhitskoye }
 				verzhavsk_province = { verzhavsk demidov katyn luchani shchuchye_smolensk vetlitsy }
-				vyazma_province = { vyazma izdeshkovo khlepen kholm_zhirkovsky sychyovka }
+				vyazma_province = { not_eligible_for_dynamic_country_name = yes vyazma izdeshkovo khlepen kholm_zhirkovsky sychyovka }
 			}
-			ryazan_area = {
+			ryazan_area = { not_eligible_for_dynamic_country_name = yes 
 				kasimov_province = { kasimov ardatov azeevo kadom tuma }
-				murom_province = { murom gorbatovo klepiki melenki shatur starodub_votsky }
+				murom_province = { not_eligible_for_dynamic_country_name = yes murom gorbatovo klepiki melenki shatur starodub_votsky }
 				rostislavl_province = { rostislavl_ryazansky lyubichi lopasnya perevitska serebryanye_prudy venyov }
-				ryazan_province = { ryazan kazari koponovo putyatino shilovo staraya_ryazan }
-				pronsk_province = { pronsk dubok karniki knyazhoye mikhaylov skopin ryazhsk }
+				ryazan_province = { not_eligible_for_dynamic_country_name = yes ryazan kazari koponovo putyatino shilovo staraya_ryazan }
+				pronsk_province = { not_eligible_for_dynamic_country_name = yes pronsk dubok karniki knyazhoye mikhaylov skopin ryazhsk }
 				bogdanovo_province = { mokhcha nizhny_lomov zemetchino insar tarbeevka zubova_polyana }
 				sarov_province = { sarov bolshoye_boldino temnikov krasnoslobodsk lukoyanov shatki arzamas pavlovo ruzayevka }
 			}
@@ -1659,41 +1659,41 @@
 				simbirsk_province = { simbirsk pokrovskoye cherdakly melekess staraya_mayna tetyushi atrat batyrevo altyshevo }
 				troitskoye_kuroedovo_province = { troitskoye_kuroedovo bazarny_syzgan staraya_kulatka solovtsovo karsun promsa chamzinka saransk }
 			}
-			nizhny_novgorod_area = {
-				nizhny_novgorod_province = { nizhny_novgorod dalneye_konstantinovo gorokhovets meshchersk pestyaki rastyapino }
+			nizhny_novgorod_area = { not_eligible_for_dynamic_country_name = yes 
+				nizhny_novgorod_province = { not_eligible_for_dynamic_country_name = yes nizhny_novgorod dalneye_konstantinovo gorokhovets meshchersk pestyaki rastyapino }
 				galich_province = { galich chukhloma nikolo_dor parfenyevo sol_galichskaya sudai lake_galichskoye }
-				gorodets_province = { gorodets korenevo lukh vasilyeva_sloboda yuryev_povolzhsk kadyy }
+				gorodets_province = { not_eligible_for_dynamic_country_name = yes gorodets korenevo lukh vasilyeva_sloboda yuryev_povolzhsk kadyy }
 				uren_province = { uren tonshayevo vetluga semyonov kovernino krasnye_baki sharanga varnavino }
 				unzha_province = { unzha kologriv kuzhbal manturovo pyshchug }
 			}
-			suzdal_area = {
+			suzdal_area = { not_eligible_for_dynamic_country_name = yes 
 				shuya_province = { shuya ivanovo lezhnevo vichuga }
-				starodub_province = { starodub_on_the_klyazma palekh rozhdestveno }
-				suzdal_province = { suzdal gavrilovskoye ilyinskoye_khovanskoye yuryev_polsky }
+				starodub_province = { not_eligible_for_dynamic_country_name = yes starodub_on_the_klyazma palekh rozhdestveno }
+				suzdal_province = { not_eligible_for_dynamic_country_name = yes suzdal gavrilovskoye ilyinskoye_khovanskoye yuryev_polsky }
 			}
-			vladimir_area = {
+			vladimir_area = { not_eligible_for_dynamic_country_name = yes 
 				pereyaslavl_province = { pereyaslavl alexandrovskaya_sloboda bogorodskoye_pereyaslavl kirzhach poreevo yanovo lake_pleshcheyevo }
-				rostov_province = { rostov borisogleb petrovsk_rostov lake_nero }
-				uglich_province = { uglich koi rozhalovo }
-				vladimir_province = { vladimir moshok muromtsevo_murom osovets sudogda vlasovo yaropolch zolotkovo }
+				rostov_province = { not_eligible_for_dynamic_country_name = yes rostov borisogleb petrovsk_rostov lake_nero }
+				uglich_province = { not_eligible_for_dynamic_country_name = yes uglich koi rozhalovo }
+				vladimir_province = { not_eligible_for_dynamic_country_name = yes vladimir moshok muromtsevo_murom osovets sudogda vlasovo yaropolch zolotkovo }
 			}
-			tver_area = {
-				kashin_province = { kashin kimra kesova_gora kalyazin }
-				rzhev_province = { rzhev bor_volgo khotoshino molodoi_tud ostashkov lake_volgo }
+			tver_area = { not_eligible_for_dynamic_country_name = yes 
+				kashin_province = { not_eligible_for_dynamic_country_name = yes kashin kimra kesova_gora kalyazin }
+				rzhev_province = { not_eligible_for_dynamic_country_name = yes rzhev bor_volgo khotoshino molodoi_tud ostashkov lake_volgo }
 				torzhok_province = { torzhok bernovo kuvshinovo mednoye }
-				tver_province = { tver brody_tver dubna klin vertyazin }
-				zubtsov_province = { zubtsov gorodok kholm_tver lotoshino mikulino_tver }
+				tver_province = { not_eligible_for_dynamic_country_name = yes tver brody_tver dubna klin vertyazin }
+				zubtsov_province = { not_eligible_for_dynamic_country_name = yes zubtsov gorodok kholm_tver lotoshino mikulino_tver }
 			}
-			yaroslavl_area = {
-				yaroslavl_province = { yaroslavl bolshoye_selo danilov kurba romanov sol_velikaya ust_sheksna }
+			yaroslavl_area = { not_eligible_for_dynamic_country_name = yes 
+				yaroslavl_province = { not_eligible_for_dynamic_country_name = yes yaroslavl bolshoye_selo danilov kurba romanov sol_velikaya ust_sheksna }
 				bezhetsk_province = { gorodetsk ramenki spas_na_kholmu ves_yogonskaya yezsk }
 				buy_province = { buy demyanovo gryazovets lyubim }
-				kostroma_province = { kostroma nerekhta ostrovskoye sudislavl yakovlevskoye_bolshoye }
-				mologa_province = { mologa ilovna prozorovo }
+				kostroma_province = { not_eligible_for_dynamic_country_name = yes kostroma nerekhta ostrovskoye sudislavl yakovlevskoye_bolshoye }
+				mologa_province = { not_eligible_for_dynamic_country_name = yes mologa ilovna prozorovo }
 			}
-			beloozero_area = {
+			beloozero_area = { not_eligible_for_dynamic_country_name = yes 
 				beloe_province = { beloe knyazhich_gorodok lukoves pokrovskoye_yaroslav poshekhonye }
-				beloozero_province = { beloozero badozhsky chuzboy goroditse_megra koloshma lake_beloye lake_kovzhskoye }
+				beloozero_province = { not_eligible_for_dynamic_country_name = yes beloozero badozhsky chuzboy goroditse_megra koloshma lake_beloye lake_kovzhskoye }
 				cherepoves_province = { cherepoves georgievskoye nikolskoye_andoma spasskoye ust_ugla ustyuzhna_zheleznopolskaya yorga }
 				vashki_province = { vashki charonda kirillov nikolskoye_kema svir_beloozero vognema lake_vozhe }
 				vologda_province = { vologda arkhangelskoye_vologda kubenskoye shuyskoye ustye lake_kubenskoye }
@@ -1749,8 +1749,8 @@
 				nema_province = { kilmez stelty falenki uni ural_nema }
 				igra_province = { igra dondykar yakshur_bodya votkings }
 			}
-			vyatka_area = {
-				vyatka_province = { vyatka ust_cheptsa suna nikolsky verkhoshizhemye }
+			vyatka_area = { not_eligible_for_dynamic_country_name = yes 
+				vyatka_province = { not_eligible_for_dynamic_country_name = yes vyatka ust_cheptsa suna nikolsky verkhoshizhemye }
 				omutninsk_province = { omutninsk nagorsk kholunitsky kobra kirs afanasyevo }
 				orlov_province = { orlov belozerye koksharov slobodskoy bolshaya_yakshanga oparino vokhma }
 			}
@@ -1771,8 +1771,8 @@
 				ochyor_province = { ochyor okhannoye chastye debyosy stepanenki }
 				usolye_province = { usolye yusva kelich kosa_perm gayny perm_forest }
 			}
-			perm_area = {
-				perm_province = { perm kungur aspa orda suksun }
+			perm_area = { not_eligible_for_dynamic_country_name = yes 
+				perm_province = { not_eligible_for_dynamic_country_name = yes perm kungur aspa orda suksun }
 				beryozovka_province = { beryozovka lysva ust_kishert kizel gubakha dobryanka solikamsk }
 				bisert_province = { bisert arti archit krasnoufimsk nyazepetrovsk sverdlovsk_forest_1 }
 				ufa_province = { ufa askino baltas burayevo perm_forest_3 }
@@ -1799,31 +1799,31 @@
 		}
 
 		balkan_region = {
-			slovenia_area = {
+			slovenia_area = { not_eligible_for_dynamic_country_name = yes
 				gorizia_province = { gorizia tolmin trieste julian_alps }
 				lower_carniola_province = { novo_mesto ilirska_bistrica kocevje metlika postojna }
 				upper_carniola_province = { ljubljana bled kranj skofja_loka }
 			}
-			slavonia_area = {
+			slavonia_area = { not_eligible_for_dynamic_country_name = yes
 				bjelovar_province = { bjelovar koprivnica kutina pakrac vaska virovitica }
 				vukovar_syrmia_province = { vukovar ilok osijek petrovaradin pozega sremska_mitrovica }
 				zagreb_province = { zagreb karlovac petrinja sisak slunj varazdin }
 			}
-			croatia_area = {
+			croatia_area = { not_eligible_for_dynamic_country_name = yes
 				istria_province = { pola buzet pazin rovinj }
 				lika_province = { senj crikvenica kaseg krk otocac pag rijeka dinaric_alps9 }
 				north_dalmatia_province = { knin novigrad sibenik sinj zadar dinaric_alps1 }
 				south_dalmatia_province = { dubrovnik brac makarska metkovic lastovo_island_wasteland slano split }
 			}
-			bosnia_area = {
+			bosnia_area = { not_eligible_for_dynamic_country_name = yes
 				bosnia_province = { vrhbosna borac konjic olovo srebrenica zenica dinaric_alps2 dinaric_alps3 }
 				donji_kraji_province = { jajce glamoc kljuc livno }
-				hum_province = { trebinje drijeva gacko mostar nevesinje dinaric_alps4 }
+				hum_province = { not_eligible_for_dynamic_country_name = yes trebinje drijeva gacko mostar nevesinje dinaric_alps4 }
 				podrinje_province = { ustikolina pljevlja soko_grad dinaric_alps5 dinaric_alps6 }
 				una_sana_province = { bihac dubica gradiski_brod kozara srb }
 				usora_and_soli_province = { doboj glaz soli srebrenik teocak }
 			}
-			serbia_area = {
+			serbia_area = { not_eligible_for_dynamic_country_name = yes
 				branicevo_province = { branicevo kucevo ravno }
 				kosovo_province = { peja gjakova mitrovica novo_brdo pristina prizren dinaric_alps8 }
 				macva_province = { debrc krupanj sabac valjevo }
@@ -1831,17 +1831,17 @@
 				raska_province = { trgoviste_SER brskovo brvenik budimlja sjenica dinaric_alps7 }
 				sumadija_province = { belgrad smederevo rudnik }
 				toplica_province = { krusevac jagodina stalac zica }
-				zeta_province = { podgorica bar_cg gradina kotor onogost lake_skadar }
+				zeta_province = { not_eligible_for_dynamic_country_name = yes podgorica bar_cg gradina kotor onogost lake_skadar }
 				zlatibor_province = { uzice arilje gradac prijepolje visegrad }
 			}
-			bulgaria_area = {
+			bulgaria_area = { not_eligible_for_dynamic_country_name = yes
 				north_dobruja_province = { babadag cernavoda constanta enisala isaccea tulcea harsova }
 				pleven_province = { pleven bozhenitsa dobrolak gigen hotalich lovech oryahovo balkan_mountains5 balkan_mountains6 }
 				preslav_province = { veliki_preslav ktenia ovech razgrad shumen targoviste_BUL varna }
 				sredets_province = { sredets dupnitsa pirot tsaribrod velbuzd samokov svoge zemlungrad balkan_mountains4 }
 				south_dobruja_province = { karvuna drastar kaliakra kladentsi pangalia tutrakan }
 				tarnovo_province = { tarnovo cherven lyaskovets nikopol ruse tryavna }
-				vidin_province = { vidin archar kozelj kutlovitsa lom svrljig visesav vratsa balkan_mountains1 balkan_mountains2 }
+				vidin_province = { not_eligible_for_dynamic_country_name = yes vidin archar kozelj kutlovitsa lom svrljig visesav vratsa balkan_mountains1 balkan_mountains2 }
 			}
 			macedonia_area = {
 				central_macedonia_province = { edessa giannitsa gynaikokastro hatera kilkis veria }
@@ -1862,8 +1862,8 @@
 				sliven_province = { sliven boruy bukelon constantia_bul elhovo hiambouli }
 				zagore_province = { plovdiv kostenets kran stipon strelcha tsepina }
 			}
-			albania_area = {
-				albania_province = { durres ballsh berat debar devol elbasan kavaje kruje tirana }
+			albania_area = { not_eligible_for_dynamic_country_name = yes 
+				albania_province = { not_eligible_for_dynamic_country_name = yes durres ballsh berat debar devol elbasan kavaje kruje tirana }
 				illyria_province = { shkoder dukagjini has koman lezha }
 				north_epirus_province = { avlonya argyrokastro butrint kleisoura_epirus konitsa pindus_mountains6 }
 			}
@@ -1873,10 +1873,10 @@
 				ionian_islands_province = { corfu cephalonia leukas zakynthos }
 				neopatras_province = { neopatras bodonitsa gravia zetounion }
 				south_epirus_province = { arta ioannina parga preveza pyli pindus_mountains7 }
-				thessaly_province = { larissa demetrias elassona farsala karditsa stomio trikala tyrnavos mount_olympos }
+				thessaly_province = { not_eligible_for_dynamic_country_name = yes larissa demetrias elassona farsala karditsa stomio trikala tyrnavos mount_olympos }
 			}
-			morea_area = {
-				achaea_province = { patras chalandritsa kalavryta vostitsa }
+			morea_area = { not_eligible_for_dynamic_country_name = yes
+				achaea_province = { not_eligible_for_dynamic_country_name = yes patras chalandritsa kalavryta vostitsa }
 				arcadia_province = { tripolitsa karytaina veligosti }
 				argolis_province = { argos astros ermioni nafplio }
 				corinthia_province = { corinth damala xylokastro peloponnesian_mountains1 }
@@ -1889,7 +1889,7 @@
 				crete_province = { candia chania elounda gergeri hagios_pavlos rethymno siteia viannos }
 				euboea_province = { negroponte eretreia karystos kleisoura kymi oreos }
 				lemnos_province = { mitilene molyvos imbros lemnos sporades }
-				naxos_province = { naxos amorgos andros kythnos milos mykonos }
+				naxos_province = { not_eligible_for_dynamic_country_name = yes naxos amorgos andros kythnos milos mykonos }
 				rodos_province = { rodos karpathos kos }
 			}
 			adriatic_sea_area = {
@@ -1979,7 +1979,7 @@ asia = {
 				herat_province = { herat awbeh chishti_sarif firozkoh karokh pushang tulak paropamisus_mountains7 }
 				kunduz_province = { kunduz arkhan ashkamesh baghlan kishim taleqan }
 				maymana_province = { maymana andkhoy chiras dawlat_abad qaisar sangcharak sar_pol sheberghan paropamisus_mountains1 }
-				merv_province = { merv barkdiz pandjih karakum_desert3 karakum_desert4 karakum_desert5 karakum_desert6 }
+				merv_province = { not_eligible_for_dynamic_country_name = yes merv barkdiz pandjih karakum_desert3 karakum_desert4 karakum_desert5 karakum_desert6 }
 			}
 			khwarazm_area = {
 				kath_province = { kath khurgancha pulzhai qonirat shimbay xojeli aral_sea }
@@ -2010,12 +2010,12 @@ asia = {
 			}
 			western_khorasan_area = {
 				bojnurd_province = { bojnord khabushan quchan raz samalqan shirvan_iran }
-				esfarayen_province = { esfarayen agh_qala azadvar bam_esfarayen jajarm meshkan_khorasan shoqan }
+				esfarayen_province = { not_eligible_for_dynamic_country_name = yes esfarayen agh_qala azadvar bam_esfarayen jajarm meshkan_khorasan shoqan }
 				faraveh_province = { faraveh dehistan ganlygala gazanjyk jargalan maraveh sarlawuk small_balkhan }
 				konjikala_province = { konjikala anew dargaz durun karakum_desert2 }
 				mashhad_province = { mashhad farhadgerd mazdaran radkan tus }
 				nishapur_province = { nishapur fadisheh kadkan pivehzhan khorasan_mountains1 khorasan_mountains2	}
-				sabzevar_province = { sabzevar beyarjomand farumad haresabad kharturan meyami }
+				sabzevar_province = { not_eligible_for_dynamic_country_name = yes sabzevar beyarjomand farumad haresabad kharturan meyami }
 				tejend_province = { tejend abiward kalat_nader sarakhs }
 				torbat_e_jam_province = { torbat_e_jam bakharz fariman mashhad_rizeh salehabad }
 			}
@@ -2072,9 +2072,9 @@ asia = {
 				larende_province = { larende eregli_kar eskil hatunsaray karapinar obruk pirloganda middle_taurus_1 }
 				sivrihisar_province = { sivrihisar beypazari bozan kaymaz kibrus kizilca mihaliccik koroglu_mountains_1 koroglu_mountains_2 }
 			}
-			cilicia_area = {
+			cilicia_area = { not_eligible_for_dynamic_country_name = yes
 				adana_province = { adana ayas iskenderun kars_armenia nur_mountains_1 nur_mountains_2 }
-				cyprus_province = { nicosia_cyp famagusta kyrenia larnaca limassol morphou paphos }
+				cyprus_province = { not_eligible_for_dynamic_country_name = yes nicosia_cyp famagusta kyrenia larnaca limassol morphou paphos }
 				icel_province = { silifke anamur ermenek mut west_taurus_2 }
 				malatya_province = { malatya besni gerger kahta kaysun samsat east_taurus_2 east_taurus_8 }
 				marash_province = { marash afsin elbistan enguzud goksun kapan ulnia middle_taurus_8 }
@@ -2095,10 +2095,10 @@ asia = {
 				kastamonu_province = { kastamonu arac devrekani inebolu kure_i_mamure taskopru ilgaz_mountains }
 				safranbolu_province = { safranbolu amasra bartin gerede mengen ulus yenicepazari }
 				sinop_province = { sinop bafra boyabat gerze samsun }
-				trebizond_province = { trebizond gorele gumushane khupati rize surmene east_pontus_mountains_1 east_pontus_mountains_2 east_pontus_mountains_3 }
+				trebizond_province = { not_eligible_for_dynamic_country_name = yes trebizond gorele gumushane khupati rize surmene east_pontus_mountains_1 east_pontus_mountains_2 east_pontus_mountains_3 }
 			}
 			west_anatolia_area = {
-				alaiye_province = { alaiye karahisar_i_teke manavgat selinti west_taurus_3 west_taurus_5 }
+				alaiye_province = { not_eligible_for_dynamic_country_name = yes alaiye karahisar_i_teke manavgat selinti west_taurus_3 west_taurus_5 }
 				antalya_province = { antalya elmali finike kas istanoz }
 				aydin_province = { tire alasehir balat birgi cine guzelhisar milas nazilli lake_bafa }
 				hamid_province = { isparta burdur dinar egirdir stefani uluborlu lake_acigol lake_burdur }
@@ -2202,8 +2202,8 @@ asia = {
 				khaybar_province = { khaybar al_ayn_khaybar al_thamad buwat shajwa }
 				khulays_province = { khulays al_abwa al_juhfah al_muthainiyah ar_rayyan asfan qudayd }
 				madian_province = { aynuna al_bad al_muwaylih haql makna }
-				mecca_province = { mecca al_jumum al_lith dhat_irq ghumayqah jeddah yalamlam }
-				medina_province = { medina al_furaish al_hegrieah as_suwaydirah khalis_medina }
+				mecca_province = { not_eligible_for_dynamic_country_name = yes mecca al_jumum al_lith dhat_irq ghumayqah jeddah yalamlam }
+				medina_province = { not_eligible_for_dynamic_country_name = yes medina al_furaish al_hegrieah as_suwaydirah khalis_medina }
 				qura_province = { al_ula al_bleiteh al_farah_ula al_marwa az_zubayir mughayra }
 				tabuk_province = { tabuk_arabia al_khanbarah al_muazzam al_ukhaydir bajdah bir_ibn_hermas dhat_al_hajj }
 				taif_province = { taif al_hadhah al_kharabah al_mahani as_suwayriqiyah bani_saad sufaynah umm_al_ghiran }
@@ -2225,7 +2225,7 @@ asia = {
 				washm_province = { saqra al_burud al_maghib asila_arabia dhurma }
 				west_qassim_province = { ar_rass al_udhaim an_nabhaniyah at_tarfawi samira thadij }
 			}
-			oman_area = {
+			oman_area = { not_eligible_for_dynamic_country_name = yes
 				batina_province = { suhar al_khaburah khor_fakkan nakhal rustaq saham shinas }
 				julfar_province = { julfar abu_dhabi al_ayn al_dhaid dubai liwa marawah sharjah }
 				masqat_province = { masqat al_kamil_wal_wafi as_sib jalan_buani_buali masirah qalhat sur mirbat_masirah_corridor1 mirbat_masirah_corridor2 mirbat_masirah_corridor3 }
@@ -2316,11 +2316,11 @@ asia = {
 				urmia_province = { urmia khameneh mahabad osnavieh salmas lake_urmia zagros_mountains1 zagros_mountains2 }
 			}
 			baluchistan_area = {
-				bampur_province = { bampur bazman dalgan espakeh fahrej karvandar rameshk hamun_jaz_murian }
+				bampur_province = { not_eligible_for_dynamic_country_name = yes bampur bazman dalgan espakeh fahrej karvandar rameshk hamun_jaz_murian }
 				bannajbur_province = { bannajbur mahgas murt nagh paroom saravan suran }
 				bela_province = { bela hinglaj lakhsar ormara sonamiani wadh }
 				gwadar_province = { gwadar buleda irafshan kuddan pasni tump turbat zik }
-				kharan_province = { kharan besima chagai naalbandin washuk kharan_desert2 kharan_desert3 }
+				kharan_province = { not_eligible_for_dynamic_country_name = yes kharan besima chagai naalbandin washuk kharan_desert2 kharan_desert3 }
 				khash_province = { khash jaleq ladiz mashkel hamun_mashkel kharan_desert1 }
 				qasr_qand_province = { qasr_e_qand gwatar kalmat rask sarbaz }
 				quetta_province = { quetta gulistan kalat mastung nushki shorabak hamun_lora }
@@ -2346,10 +2346,10 @@ asia = {
 			iraq_ajam_area = {
 				ardestan_province = { ardestan anarak aqda nain natanz zavareh }
 				golpayegan_province = { golpayegan delijan khwansar khomeyn mahallat nimvar }
-				hamadan_province = { hamadan karaj_abi_dulaf khondab kurijan qorveh_darjazin saruk tafresh zagros_mountains7 }
+				hamadan_province = { not_eligible_for_dynamic_country_name = yes hamadan karaj_abi_dulaf khondab kurijan qorveh_darjazin saruk tafresh zagros_mountains7 }
 				isfahan_province = { isfahan dehagh dowlatabad komshecheh murcheh_khvort tudeshk zagros_mountains13 zagros_mountains14 }
 				qazvin_province = { qazvin abhar avaj qeydar sagzabad savojbolagh takestan zagros_mountains6 }
-				qom_province = { qom aveh kahak kashan maranjab neyasar saveh lake_hovz_soltan lake_namak zagros_mountains8 }
+				qom_province = { not_eligible_for_dynamic_country_name = yes qom aveh kahak kashan maranjab neyasar saveh lake_hovz_soltan lake_namak zagros_mountains8 }
 				qumisha_province = { qumisha fereydunshahr karkevand ramsheh sohrfiruzan yangabad yazdikhwast }
 				rey_province = { rey damavand eyvanekey karaj khwar rahimabad razeqan varamin }
 				yazd_province = { yazd ardakan meybod nadushan saryazd taft zagros_mountains15 }
@@ -2389,7 +2389,7 @@ asia = {
 				tabaristan_province = { sari ashraf farim_iran firuzkuh lafur elburz_mountains7 elburz_mountains8 }
 				talish_province = { dulab astara bandar_e_anzali lankaran elburz_mountains1 elburz_mountains2 elburz_mountains3 }
 			}
-			quhestan_area = {
+			quhestan_area = { not_eligible_for_dynamic_country_name = yes
 				birjand_province = { birjand deyhuk khusf khvor mazhan nayband qala_zari dasht_lut3 }
 				gonabad_province = { gonabad azghand mahvelat roshtkhar salameh zaveh }
 				qaen_province = { qaen abiz khargerd shahrakht tabas_al_unnab yazduye zohan zozan dasht_khaf1 dasht_khaf2 }
@@ -2462,7 +2462,7 @@ asia = {
 				jing_province = { yongping suining_jing huitong tongdao tianzhu }
 				lizhou_province = { liyang_lizhou anfu_li anxiang cili shimen tianping shixi dayong }
 				shizhou_province = { shizhou datian_shizhou lichuan rongmei wufeng sanmao zhonglu shinan wulingshan }
-				yongshun_province = { yongshun_yongshun guzhang shangxi baojing wuzhai }
+				yongshun_province = { not_eligible_for_dynamic_country_name = yes yongshun_yongshun guzhang shangxi baojing wuzhai }
 				yuanzhou_huguang_province = { luyang qianyang_yuanzhou mayang }
 
 			}
@@ -2496,7 +2496,7 @@ asia = {
 				nanchang_province = { nanchang fengcheng_fengcheng jinxian xinjian }
 				nankang_province = { xingzi duchang anyi jianchang poyang_lake }
 				ningdu_province = { ningdu qianhua shicheng_ningdu ruijin huichang }
-				ningzhou_province = { fenning fengxin jingan wuning tonggu jiulingshan }
+				ningzhou_province = { not_eligible_for_dynamic_country_name = yes fenning fengxin jingan wuning tonggu jiulingshan }
 				taihe_province = { taihe_taihe wanan yongxin yongning_taihe longquan_taihe }
 				raozhou_province = { poyang anren_raozhou dexing fuliang leping shimen_poyang wannian yugan }
 				ruizhou_province = { gaoan shanggao xinchang_yifeng }
@@ -2510,7 +2510,7 @@ asia = {
 				ningguo_province = { ningguo taiping_ningguo jingxian jingde nanling xuancheng nanyi_lake }
 				songjiang_province = { huating nanhui shanghai dianshan_lake }
 				suzhou_province = { wuxian changshu chongming jiading kunshan wujiang yangcheng_lake }
-				taiping_province = { dangtu fanchang wuhu shijiu_lake }
+				taiping_province = { not_eligible_for_dynamic_country_name = yes  dangtu fanchang wuhu shijiu_lake }
 				yingtian_province = { shangyuan jiangning jurong luhe lishui_yingtian wujiang_yingtian }
 				zhenjiang_province = { dantu danyang jintan tao_lake }
 			}
@@ -2578,7 +2578,7 @@ asia = {
 				}
 			}
 		}
-		japan_region = {
+		japan_region = { not_eligible_for_dynamic_country_name = yes
 			ezo_area = {
 				chishima_province = { kunashiri etorofu furubetsu shana shibetoro uruppu shimushiru onnekotan paramushiru shumushu makanru shasukotan rasshua repunmoshiri }
 				hidaka_province = { saru niikappu shizunai urakawa samani }
@@ -2602,13 +2602,13 @@ asia = {
 			}
 			kinai_area = {
 				settsu_province = { osaka kawabe muko izumi }
-				yamashiro_province = { kyoto kuse }
-				yamato_province = { takaichi nara yoshino kii_mountains }
+				yamashiro_province = { not_eligible_for_dynamic_country_name = yes kyoto kuse }
+				yamato_province = { not_eligible_for_dynamic_country_name = yes takaichi nara yoshino kii_mountains }
 			}
 			nankaidou_area = {
 				awa_province = { nakata awa_shikoku awaji naka_shikoku kaifu mima miyoshi_shikoku mount_tsurugi }
 				iyo_province = { ochi iyo nii ukena kita_shikoku uwa }
-				kii_province = { kaisou higashimuro minamimuro nishimuro hidaka naga }
+				kii_province = { not_eligible_for_dynamic_country_name = yes kaisou higashimuro minamimuro nishimuro hidaka naga }
 				sanuki_province = { aya mitoyo miki }
 				tosa_province = { nagaoka tosa aki_shikoku kami_shikoku agawa takaoka hata ishizuchi_mountains }
 			}
@@ -2634,7 +2634,7 @@ asia = {
 				tango_province = { kasa yosa onyuu }
 			}
 			sanyoudou_area = {
-				aki_province = { aki geiyo_islands_wastelands toyota saeki yamagata takata }
+				aki_province = { not_eligible_for_dynamic_country_name = yes aki geiyo_islands_wastelands toyota saeki yamagata takata }
 				bicchuu_province = { kaya asakuchi katou_bicchuu aka }
 				bingo_province = { ashida sera miyoshi eso nuka kameshi }
 				bizen_province = { joutou wake tsudaka }
@@ -2654,7 +2654,7 @@ asia = {
 			}
 			toukaidou_area = {
 				hitachi_province = { ibaraki taga kuji_kanto naka kashima niihari tsukuba kamigaura_bay }
-				ise_province = { suzuka mie ichishi watarai taki iga }
+				ise_province = { not_eligible_for_dynamic_country_name = yes suzuka mie ichishi watarai taki iga }
 				izu_province = { tagata kamo_izu izu_islands }
 				kai_province = { yatsushiro tsuru yamanashi koma_kai okuchichibu_mountains }
 				kazusa_province = { ichihara musa isumi awa makuda }
@@ -2790,7 +2790,7 @@ asia = {
 				naju_province = { naju haenam jindo jangheung yeonggam muan hwasun hekusando yeonggwang }
 				namwon_province = { namwon imsil jeongeup musong }
 				suncheon_province = { suncheon boseong heungyang gokseong }
-				tamna_province = { tamna seongwi }
+				tamna_province = { not_eligible_for_dynamic_country_name = yes tamna seongwi }
 			}
 			haeseo_area = {
 				haeju_province = { haeju ongjin jangyeon baekcheon cheongsong pungcheon jaeryeong }
@@ -2859,7 +2859,7 @@ asia = {
 			}
 			songhua_area = {
 				hulan_province = { hulan bayan_susu hailun hvlan ougen lake_qingken}
-				lalin_province = { shangjing boduna hulawen shulan yushu zhaozhou_jurchen }
+				lalin_province = { not_eligible_for_dynamic_country_name = yes shangjing boduna hulawen shulan yushu zhaozhou_jurchen }
 				middle_songhua_province = { girin_ula changchun gongjiang_jurchen itu_jilin nongan }
 				mudan_province = { ilan_hala hailang malong mudan_ula ningguta odoli lake_jingpo }
 				tangwang_province = { chalin taowen wanhufu wehe }
@@ -2873,12 +2873,12 @@ asia = {
 				upper_non_province = { mergen dobkuri gan kuile menlu non }
 				xiliao_province = { zhengjiatun haihaer kailu linhuang qingzhou_mongol xinkai }
 			}
-			ussuri_area = {
+			ussuri_area = { not_eligible_for_dynamic_country_name = yes
 				greater_ussuri_province = { alchan bikinka imanka katen vaka xunka }
 				muling_province = { juru_hoton dongning jixi mishan mulun }
 				smaller_ussuri_province = { anchun hulin namunka noto_ussuri yiman lake_khanka }
 				sanjiang_province = { lahasusu futi nuoluo shuangyashan tulguur }
-				suifun_province = { kaiyuan_warka anju_nurgan nogule shili yongmingcheng }
+				suifun_province = { not_eligible_for_dynamic_country_name = yes kaiyuan_warka anju_nurgan nogule shili yongmingcheng }
 				tumen_province = { huncun helong kahari longjing tulazi yenji }
 			}
 			manchuria_coastline = {
@@ -2901,7 +2901,7 @@ asia = {
 				}
 			}
 		}
-		mongolia_region = {
+		mongolia_region = { not_eligible_for_dynamic_country_name = yes
 			argun_area = {
 				buir_nuur_province = { buir_nuur barun_xiabaer khalkh tamsabulag lake_buir }
 				dalai_nuur_province = { bars_khot bayan_tumen bayantsagaan dalai_nuur menen lake_hulun }
@@ -2943,7 +2943,7 @@ asia = {
 				eastern_gobi_province = { del_khad galbyn_gobi khatanbulag oiyin_korken ooshiyn_gobi zhavklant_khairkhan }
 				khara_khoto_province = { khara_khoto banzart_khairkhan naraan_chilaun noyon_uul zag_suujiyn_gobi juyan_sea badain_jarain_desert1 badain_jarain_desert2 }
 			}
-			tuva_area = {
+			tuva_area = { not_eligible_for_dynamic_country_name = yes
 				greater_yenisei_province = { bii choigan systyg eastern_sayan_mountains1 }
 				smaller_yenisei_province = { kaa balyktyg buren_khem busiyn lake_dood_tsagaan eastern_sayan_mountains2 tannu_ola_mountains2 }
 				upper_yenisei_province = { den_terek khemchik ulug usun tannu_ola_mountains1 western_sayan_mountains }
@@ -3050,7 +3050,7 @@ asia = {
 				shanzhou_shandong_province = { shansu yutai jinxiang }
 				taian_province = { fengfu yanshen changqing laiwu feicheng xintai }
 				tengzhou_province = { tengxian tengdong shagou yizhou_tengzhou zouxian weishan_lake }
-				wuding_shandong_province = { yanci laoling shanghe yangxin }
+				wuding_shandong_province = { not_eligible_for_dynamic_country_name = yes  yanci laoling shanghe yangxin }
 				yanzhou_shandong_province = { ziyang ningyang qufu sishui }
 				yizhou_shandong_province = { linyi licheng_yizhou feixian lanling tancheng }
 			}
@@ -3072,7 +3072,7 @@ asia = {
 				kelan_province = { kelan lanzhou_kelan hehe loufan xingxian taihangshan7 }
 				liaozhou_province = { liaoshan heshun yushe }
 				luan_province = { shangdang huguan licheng_luan lucheng_luan qingyang_luan tunliu xiangyuan zhangzi }
-				pingding_province = { pingding shouyang taigu leping_pingding yuci yuzhou }
+				pingding_province = { not_eligible_for_dynamic_country_name = yes pingding shouyang taigu leping_pingding yuci yuzhou }
 				pingyang_province = { linfen jishi_anze fushan hongtong yueyang_anze taihangshan5 }
 				puzhou_shanxi_province = { hedong hejin jizhou linjin wanquan xiangning }
 				qinzhou_province = { tongdi qinyuan wuxiang taihangshan4 }
@@ -3104,7 +3104,7 @@ asia = {
 			guangdong_area = {
 				chaozhou_province = { haiyang sanhe_chaozhou pantian chengxiang huilai chaoyang pingyuan_mei puning sanrao jieyang }
 				deqing_province = { duanxi shuangshui ducheng jinkang }
-				dongguan_province = { dongguan baoan_dongguan guanfu }
+				dongguan_province = { not_eligible_for_dynamic_country_name = yes dongguan baoan_dongguan guanfu }
 				guangzhou_province = { guangzhou shunde nanhai huiqi qingyuan panyu }
 				heyuan_province = { heyuan heping lankou lianping }
 				huizhou_guangdong_province = { guishan khuzhupai haifeng lufeng_haifeng boluo pingshan_huiyang qinjiang zuokeng }
@@ -3123,16 +3123,16 @@ asia = {
 				binzhou_guangxi_province = { lingfang shanglin qianjiang_binzhou }
 				guishun_province = { guishun xiaozhenan zhenan_guishun }
 				hengzhou_guangxi_province = { ningpu yongning_hengzhou qianlong }
-				nandan_province = { nandan bama donglan zhishan nadi liuzhai }
+				nandan_province = { not_eligible_for_dynamic_country_name = yes nandan bama donglan zhishan nadi liuzhai }
 				nanning_province = { xuanhua_nanning langning wuyuan_nanning }
-				qingyuan_province = { yishan anhua_huanjiang hechi sien xincheng_xincheng libo }
+				qingyuan_province = { not_eligible_for_dynamic_country_name = yes yishan anhua_huanjiang hechi sien xincheng_xincheng libo }
 				sicheng_province = { sicheng xilin wangmu lucheng luodian tongle duyangshan }
 				siming_province = { siming pingxiang_pingxiang shangsi qianlong_siming }
-				taiping_guangxi_province = { chongshan longzhou_longzhou mingying doukang guwan }
-				tianzhou_province = { laian_tianzhou baise sienzhou tianzhou tangxing }
+				taiping_guangxi_province = { not_eligible_for_dynamic_country_name = yes chongshan longzhou_longzhou mingying doukang guwan }
+				tianzhou_province = { not_eligible_for_dynamic_country_name = yes laian_tianzhou baise sienzhou tianzhou tangxing }
 				xilong_province = { xilong bada ceheng machang zhenfeng }
 			}
-			guangxi_area = {
+			guangxi_area = { not_eligible_for_dynamic_country_name = yes 
 				guilin_province = { lingui lingchuan yining xingan yongfu }
 				hezhou_guangxi_province = { linhe fengcheng guiling fuchuan }
 				liuzhou_province = { maping liucheng wuxian_liuzhou yangshou laibin }
@@ -3147,26 +3147,26 @@ asia = {
 				yulin_guangxi_province = { nanliu bobai shahe_bobai }
 			}
 			guizhou_area = {
-				annan_guizhou_province = { annan xinxing_annan xincheng_annan }
+				annan_guizhou_province = { not_eligible_for_dynamic_country_name = yes annan xinxing_annan xincheng_annan }
 				anshun_province = { puding guangsuoling dingnan_anshun kangzuo xibao zhenning }
-				bozhou_province = { bozhou wujiang_bozhou zizhou renhuai shaxi }
-				duyun_province = { duyun bazhai_duyun dushan pingzhu lantu }
+				bozhou_province = { not_eligible_for_dynamic_country_name = yes bozhou wujiang_bozhou zizhou renhuai shaxi }
+				duyun_province = { not_eligible_for_dynamic_country_name = yes duyun bazhai_duyun dushan pingzhu lantu }
 				guizhou_province = { guizhou_guizhou jinzhu xintian bafan suidong longli weiqing }
-				liping_province = { liping xiajiang guzhou qingjiang_liping tonggu_liping taigong yongcong }
-				pingyue_province = { pingyue kaili maxia }
-				puan_province = { puan_puan huangcaoba anlong lemin }
+				liping_province = { not_eligible_for_dynamic_country_name = yes liping xiajiang guzhou qingjiang_liping tonggu_liping taigong yongcong }
+				pingyue_province = { not_eligible_for_dynamic_country_name = yes pingyue kaili maxia }
+				puan_province = { not_eligible_for_dynamic_country_name = yes puan_puan huangcaoba anlong lemin }
 				sinan_province = { shuitejiang dejiang wuchuan_sinan yanhe longquanping shiqian yinjiang }
-				sizhou_guizhou_province = { taipengruodong qiongshui panqiao zhenyuan_sizhou }
+				sizhou_guizhou_province = { not_eligible_for_dynamic_country_name = yes taipengruodong qiongshui panqiao zhenyuan_sizhou }
 				shunyuan_province = { dizhai caoni cengtai dafang dagu_shunyuan shuixi longchang jinji }
-				tongren_province = { tongren wuluo tixi }
+				tongren_province = { not_eligible_for_dynamic_country_name = yes tongren wuluo tixi }
 				xinzhou_sichuan_province = { huangping baini wengshui rongshan }
 				wusawei_province = { shuicheng pingba zhijin huozhu }
 				zhenan_province = { zhengan zhenzhou suiyang bochuan }
 			}
 			dali_area = {
-				beisheng_province = { beisheng langqu jinshajiang yongning_baisheng ningfan }
+				beisheng_province = { not_eligible_for_dynamic_country_name = yes beisheng langqu jinshajiang yongning_baisheng ningfan }
 				dali_province = { taihe_dali menghua yunlong binchuan yangbei wujing yunnan langqiong erhai_lake qingshuilangshan }
-				heqing_province = { heqing jianchuan qingshuilangshan2 }
+				heqing_province = { not_eligible_for_dynamic_country_name = yes heqing jianchuan qingshuilangshan2 }
 				lanzhou_province = { lanzhou_lanzhou zhiziluo adeqiu zhuluo gongshan luzhang nushan }
 				lijiang_province = { tongan_lijiang linxi dadandang jujin nixi xiaodandang xueshan_yunnan }
 				mangshi_province = { mangshi longchuan luchuan_mangshi namsam_range }
@@ -3174,7 +3174,7 @@ asia = {
 				menglian_province = { mulian matman menglei pangyang musuo yinshaluo shan_hills2 }
 				shunning_province = { shunning midu dingbian_shunning baotong youdian }
 				tengchong_province = { tengchong wadian zhenxi nandan_tengcheng nandian gaoligongshan1 }
-				yaoan_province = { yaozhou dayao juque }
+				yaoan_province = { not_eligible_for_dynamic_country_name = yes yaozhou dayao juque }
 				yongchang_province = { yongchang_yongchang zhenkang shidian kongwei yongping_yongchang rouyuan lujiang }
 
 			}
@@ -3182,20 +3182,20 @@ asia = {
 				cheli_province = { jinglong daolong gengdang mengban_jihong menghai mengla yot_ou }
 				chengjiang_province = { heyang jiangchuan lunan xinxing fuxian_lake }
 				chuxiong_province = { weichu dingyuan_chuxiong zhennan nanan ailaoshan }
-				guangnan_province = { guangnan bangban boai fuzhou_guangnan zhehong }
-				guanxi_province = { guangxi shizong qiubei mile wucao }
+				guangnan_province = { not_eligible_for_dynamic_country_name = yes guangnan bangban boai fuzhou_guangnan zhehong }
+				guanxi_province = { not_eligible_for_dynamic_country_name = yes guangxi shizong qiubei mile wucao }
 				heni_province = { nalou situo luokong muong_te phong_tho fan_si_mountains1 }
 				jindong_province = { kainan baodian zheledian }
 				jinning_province = { kunyang anning chenggong yimen }
 				linan_province = { jianshui ami xisha tonghai shiping }
 				malongtalang_province = { pingdian malongtalang xie }
 				mengzi_province = { mengzi bazhai lihua jiaha mengding_mengzi jiaohua nanlang weimo xisa }
-				qujing_province = { nanning kedu luoxiong zhanyi malong_qujing luoshan_qujing luliang }
+				qujing_province = { not_eligible_for_dynamic_country_name = yes nanning kedu luoxiong zhanyi malong_qujing luoshan_qujing luliang }
 				simao_province = { sime niuwu puri_simao }
-				yuanjiang_province = { yuanjiang_yuanjiang talang tongguan_yuanjiang }
+				yuanjiang_province = { not_eligible_for_dynamic_country_name = yes yuanjiang_yuanjiang talang tongguan_yuanjiang }
 				yunnan_province = { kunming lufeng yiliang songming fumin dian_lake }
 				weiyuan_province = { weiyuan mengtong mengban_weiyuan }
-				wuding_province = { hequ_wuding luquan rende yuanmou }
+				wuding_province = { not_eligible_for_dynamic_country_name = yes hequ_wuding luquan rende yuanmou }
 			}
 			#Sea Zones
 			south_china_coastline = {
@@ -3212,12 +3212,12 @@ asia = {
 				tonkin_gulf_province = { dangzhuo_bay qinzhou_bay qiongzhou_strait tieshan_harbour yingge_cape }
 			}
 		}
-		tibet_region = {
-			amdo_area = {
-				amdo_province = { chabcha buha caka dulan dungkar_amdo guolimu qardam sanjiaocheng kunlun5 qilianshan4 caka_lake qinghai_lake }
-				golog_province = { darlag amnye_machen bayan_har lungkya madoi lab_lake ngoring_lake zhaling_lake }
+		tibet_region = { not_eligible_for_dynamic_country_name = yes
+			amdo_area = { not_eligible_for_dynamic_country_name = yes 
+				amdo_province = { not_eligible_for_dynamic_country_name = yes chabcha buha caka dulan dungkar_amdo guolimu qardam sanjiaocheng kunlun5 qilianshan4 caka_lake qinghai_lake }
+				golog_province = { not_eligible_for_dynamic_country_name = yes darlag amnye_machen bayan_har lungkya madoi lab_lake ngoring_lake zhaling_lake }
 				gyahor_province = { sharu drichu duolundu hoh_xil jilibulake kunlun qumarleb bayan_har_mountains2 dalungsai jurhen_ui kunlun4 tanggula2 dorger_lake hoh_sai_lake hoh_xil_lake lebxewudan_lake ulan_ui_lake xijir_ulan_lake zhognai_lake }
-				nangchen_province = { nangchen chodrak gechak jang_tana pelme zurmang_namgyaltse tanggula1 }
+				nangchen_province = { not_eligible_for_dynamic_country_name = yes nangchen chodrak gechak jang_tana pelme zurmang_namgyaltse tanggula1 }
 				ngapa_province = { dartang droge metsang takden }
 				tsaidam_province = { chogyal_khar balgatai dsun gashun nalinggele temirlik tsaidam yuka altun_shan2 altun_shan3 kunlun6 kunlun7 qilianshan3 tsaidam_dunes dongbabuxun_lake gongtai_ji_naier_lake hala_lake north_hulsan_lake }
 				yushu_province = { jyekundo dzagyal khana lab lungsho serkar bayan_har_mountains1 }
@@ -3231,16 +3231,16 @@ asia = {
 			kham_area = {
 				chamdo_province = { chamdo karma_densa khamgar hengduanshan9 }
 				dartsedo_province = { dartsedo lhagang baurang hengduanshan1 }
-				derge_province = { derge jomda katok kharak sibda tromge wara_kham hengduanshan6 hengduanshan7 }
-				gonjo_province = { gonjo drayab sho tangkya }
-				gyelrong_province = { zhanggu durgyeling geshitsa rahor yungdrung }
+				derge_province = { not_eligible_for_dynamic_country_name = yes derge jomda katok kharak sibda tromge wara_kham hengduanshan6 hengduanshan7 }
+				gonjo_province = { not_eligible_for_dynamic_country_name = yes gonjo drayab sho tangkya }
+				gyelrong_province = { not_eligible_for_dynamic_country_name = yes zhanggu durgyeling geshitsa rahor yungdrung }
 				kyenarong_province = { sampheling dzingcho sangme }
 				ling_province = { longtang gegong mangge sershul hengduanshan8 }
 				lithang_province = { litang daoba kazhi nyachukha hengduanshan5 }
 				muli_province = { muli kheong waerhdje }
 				nakchukha_province = { nakchu barom rongpo }
-				nubhor_province = { biru pembar riwoche samda shopando sok tengchen yangdzong nyainqentanglha5 }
-				nyarong_province = { nyarong chodrak_kham dawu dzogon khordong }
+				nubhor_province = { not_eligible_for_dynamic_country_name = yes biru pembar riwoche samda shopando sok tengchen yangdzong nyainqentanglha5 }
+				nyarong_province = { not_eligible_for_dynamic_country_name = yes nyarong chodrak_kham dawu dzogon khordong }
 				pagsho_province = { lhakhang pasho pema nyainqentanglha6 }
 				poyul_province = { pome chumdo lhari shukden nyainqentanglha4 }
 				sangon_province = { batang markham shar_yelpuk hengduanshan10 }
@@ -3251,11 +3251,11 @@ asia = {
 			}
 			ngari_area = {
 				balti_province = { skardu khaplu shigar karakoram3 }
-				guge_province = { toling dungkar tsaparang himalaya7 }
+				guge_province = { not_eligible_for_dynamic_country_name = yes toling dungkar tsaparang himalaya7 }
 				ladakh_province = { leh charasa kargil karpokhar lamayuru shey himalaya1 himalaya2 himalaya3 }
 				lungkha_province = { mendong samten selephu gangdise2 gangdise7 lunggar1 ang_laren_lake dawa_lake gyesar_lake lake_trati_nam rinchen_lake takkyel_lake taruo_lake zabuye_lake palung_lake }
 				mangyul_province = { dzongkar baryang dargyeling lo_mustang tradun gangdise8 himalaya9 himalaya10 sengli_lake }
-				purang_province = { purang gyanema khyunglung tokchen himalaya8 lake_manasarovar lake_rakshastal }
+				purang_province = { not_eligible_for_dynamic_country_name = yes purang gyanema khyunglung tokchen himalaya8 lake_manasarovar lake_rakshastal }
 				rutok_province = { rutok drangtse gartok hanle ormogang rala tashigang tsherlung gangdise1 himalaya14 pangong_lake spanggur_lake }
 				spiti_province = { nako tabo tsorub himalaya6 }
 				zangskar_province = { padum phuktal zangla himalaya5 }
@@ -3298,13 +3298,13 @@ asia = {
 			}
 			longyou_area = {
 				gongchang_province = { longxi_gongchang dingxi fuqiang huizhou_gongchang ningyuan_gongchang tongwei zhangxian qinlingshan3 }
-				hezhou_province = { hezhou guide jishi dingqiang }
+				hezhou_province = { not_eligible_for_dynamic_country_name = yes  hezhou guide jishi dingqiang }
 				huizhou_shaanxi_province = { huizhou chengzhou xihe_huizhou liangdang lidian }
 				jiezhou_province = { jiezhou baimaguan wenxian_gongchang }
 				lintao_province = { didao kangu lanzhou lutang weiyuan_lintao qinlingshan6 }
-				minzhou_province = { minzhou tanchang xigu }
+				minzhou_province = { not_eligible_for_dynamic_country_name = yes minzhou tanchang xigu }
 				qinzhou_shaanxi_province = { chengji qinan sancha qingshui }
-				taozhou_province = { kedang amchok kuntokling taktsang liulin sangqu tewo tso_gon qinlingshan2 }
+				taozhou_province = { not_eligible_for_dynamic_country_name = yes kedang amchok kuntokling taktsang liulin sangqu tewo tso_gon qinlingshan2 }
 			}
 			shaanxi_area = {
 				binzhou_shaanxi_province = { xinping chunhua yongshou sanshui_binzhou }
@@ -3321,32 +3321,32 @@ asia = {
 				yaozhou_province = { huayuan fuping_xian sanyuan tongguan_tongchuan }
 			}
 			chuandong_area = {
-				changzhou_sichuan_province = { dazu rongchang yongchuan }
+				changzhou_sichuan_province = { not_eligible_for_dynamic_country_name = yes dazu rongchang yongchuan }
 				chongqing_province = { baxian banan bishan qijiang jiangjin nanchuan }
 				dazhou_province = { tongchuan_dazhou xinning_dazhou dongxiang_dazhou mingtong taiping}
 				fuzhou_sichuan_province = { fuzhou_sichuan changshou_changshou wulong }
-				hezhou_sichuan_province = { shizhao tongliang dingyuan }
+				hezhou_sichuan_province = { not_eligible_for_dynamic_country_name = yes shizhao tongliang dingyuan }
 				kuizhou_province = { fengjie daning_kuizhou kaizhou liangshan wanzhou wushan jianshi yunyang dabashan1 wushan_mountains }
 				luzhou_sichuan_province = { luzhou naxi hejiang jiangan }
-				youyang_province = { youyang xiushan pengshui qianjiang_shaoqing}
+				youyang_province = { not_eligible_for_dynamic_country_name = yes youyang xiushan pengshui qianjiang_shaoqing}
 				zhongzhou_province = { linjiang dianjiang fengdu shizhu }
 			}
 			chuannan_area = {
 				baixing_province = { runyan mala pingchuan zuosuo hengduanshan4 }
 				changning_province = { changning_changning luoji yunlian rongxian }
 				dechang_province = { dechang huili huichuan_dechang mingyi hengduanshan2 }
-				dongchuan_province = { dongchuan qiaojia tangdan zhehai }
+				dongchuan_province = { not_eligible_for_dynamic_country_name = yes dongchuan qiaojia tangdan zhehai }
 				jiading_province = { longyou_jiading emei jiajiang rongzhou weiyuan_jiading qianwei }
 				lizhou_sichuan_province = { hanyuan suzhou lugu qiongbu shimian zhenxi_lizhou hengduanshan3 }
-				mahu_province = { mahu lizhou_mahu leibo mabian muchuan }
+				mahu_province = { not_eligible_for_dynamic_country_name = yes mahu lizhou_mahu leibo mabian muchuan }
 				meizhou_province = { meizhou qingshen danleng pengshan }
 				qiongzhou_sichuan_province = { qiongzhou pujiang_qiongzhou dayi }
 				sichuan_province = { jianchang_sichuan kuozhou puge beishe }
-				wusa_province = { wusa zhaoban heizhang }
-				wumeng_province = { wumeng daguan luozuoguan yongshan }
+				wusa_province = { not_eligible_for_dynamic_country_name = yes wusa zhaoban heizhang }
+				wumeng_province = { not_eligible_for_dynamic_country_name = yes wumeng daguan luozuoguan yongshan }
 				xuzhou_sichuan_province = { yibin fushun nanxi qingfu xuanhua }
 				yazhou_province = { yandao rongjing diaomen lushan_yazhou mingshan }
-				yongning_province = { yongning gulin luojiao mangbu guihua }
+				yongning_province = { not_eligible_for_dynamic_country_name = yes yongning gulin luojiao mangbu guihua }
 			}
 			chuanxi_area = {
 				baoning_province = { langzhong cangxi nanbu }
@@ -3362,7 +3362,7 @@ asia = {
 				pengzhou_province = { pengzhou jinyuan guanzhou }
 				suining_province = { xiaoxi pengxi lezhi anyue suining }
 				shunqing_province = { nanchong yingshan_shunqing xichong yilong xiangru }
-				songpan_province = { songzhou_songpan dazhasi gurkyang heishui maerkang hongyuan muge fuzhou_songpan qiongxi rinpung }
+				songpan_province = { not_eligible_for_dynamic_country_name = yes songzhou_songpan dazhasi gurkyang heishui maerkang hongyuan muge fuzhou_songpan qiongxi rinpung }
 				tongchuan_province = { qixian_tongchuan shehong yanting zhongjiang }
 			}
 		}
@@ -3387,7 +3387,7 @@ asia = {
 				kurla_province = { kurla bugur kuerchu }
 				lop_nur_province = { dashahai bailongdui miran loulan lop_lake kumtag1 kumtag2 kumtag3 }
 				taklamakan_province = { mazar_tagh tikenliq taklamakan1 taklamakan2 taklamakan4 }
-				sarikol_province = { sarikol akto kizilsu karakoram1 pamir1 pamir2 }
+				sarikol_province = { not_eligible_for_dynamic_country_name = yes sarikol akto kizilsu karakoram1 pamir1 pamir2 }
 				yarkand_province = { yarkand guma kargilik poskam }
 			}
 		}
@@ -3401,11 +3401,11 @@ asia = {
 			}
 			qashliq_area = {
 				qashliq_province = { qashliq siberia_abalak turtas yukonda tursunt }
-				konda_province = { konda yevra malaya_sosva ess leushinskiy_tuman siberian_wasteland_5 siberian_wasteland_7 andreyevskoye tuman tursunskiy_tuman syrkovoye }
+				konda_province = { not_eligible_for_dynamic_country_name = yes konda yevra malaya_sosva ess leushinskiy_tuman siberian_wasteland_5 siberian_wasteland_7 andreyevskoye tuman tursunskiy_tuman syrkovoye }
 				tobolsk_province = { tobolsk vagay bolshoy_uvat tavdinsky_sloboda yurginskoye vikulovo }
 				yendyr_province = { yendyr bardak kharom_vosh kartauzh lake_yendyr siberian_wasteland_6 chumyak yendra }
-				belogorye_province = { belogorye karymkary nazym sukhorukova landytuv un_zhallor }
-				kazym_province = { kazym sumgut_vosh vezhakary kaltysyany ayyugan }
+				belogorye_province = { not_eligible_for_dynamic_country_name = yes belogorye karymkary nazym sukhorukova landytuv un_zhallor }
+				kazym_province = { not_eligible_for_dynamic_country_name = yes kazym sumgut_vosh vezhakary kaltysyany ayyugan }
 			}
 			irkutsk_area = {
 				irkutsk_province = { irkutsk slyudyanka cheremkhovo zalari }
@@ -3560,7 +3560,7 @@ asia = {
 			}
 			west_stanovoi_area = {
 				barga_province = { onguren ul_kan kichera argada ust_barguzin chitkan bayangol }
-				khamag_province = { karaftit bagdarin bukachacha ziul_zkan telemba isenga narhata ozero_oron ozero_baunt }
+				khamag_province = { not_eligible_for_dynamic_country_name = yes karaftit bagdarin bukachacha ziul_zkan telemba isenga narhata ozero_oron ozero_baunt }
 				konkudera_province = { angoya kutima osenny kamniga konkudera bodaybo kyakhtinskii olyokma_upplands1 olyokma_upplands2 }
 				irakinda_province = { taksimo irakinda kuanda amalyk ikab_ya khani katugino olyokma_upplands3 olyokma_upplands4 }
 				bul_bukhta_province = { yeremeyevka uch_barchik chara bul_bukhta balaganakh molvo olyokma_upplands5 olyokma_upplands6 }
@@ -3702,7 +3702,7 @@ asia = {
 					mirat hapur jansath baran
 					saharanpur piran_i_kaliyar
 				}
-				delhi_province = { #5
+				delhi_province = { not_eligible_for_dynamic_country_name = yes #5
 					delhi gurgaon rohtak panipat jind
 				}
 				puadh_province = { #6
@@ -3723,7 +3723,7 @@ asia = {
 					jalandhar rahon bajwara milwat
 					kapurthala
 				}
-				kangra_province = { #14
+				kangra_province = { not_eligible_for_dynamic_country_name = yes #14
 					pathankot nurpur palampur nagarkot naggar
 					bajaura suket mandi kutlehar kahlur nahan sarahan soonpur
 				}
@@ -3788,13 +3788,13 @@ asia = {
 
 			upper_indus_area = {
 				#Roof of the world, with an independent or near independent state in every valley. No good name for the entire area.
-				chitral_province = { #5
+				chitral_province = { not_eligible_for_dynamic_country_name = yes #5
 					chitral mulkhow mastuj yarkhun urtsun
 				}
 				kafiristan = { #3
 					parun asadabad_kunar hajiabad
 				}
-				swat = { #5 - Swat, Dir and Bajaur
+				swat = { not_eligible_for_dynamic_country_name = yes #5 - Swat, Dir and Bajaur
 					kalam_swat dir timergara
 					bajaur malakand
 				}
@@ -3807,13 +3807,13 @@ asia = {
 
 					hindu_kush9 hindu_kush10
 				}
-				hunza = { #4
+				hunza = { not_eligible_for_dynamic_country_name = yes #4
 					altit nagar misgar passu
 
 					hindu_kush8
 				}
 
-				kashmir_province = { #13 - Kashmir Valley and surroundings
+				kashmir_province = { not_eligible_for_dynamic_country_name = yes #13 - Kashmir Valley and surroundings
 					srinagar pulawama baramulla ganderbal kupwara banihal rasyal rajouri poonch rawalakot udabhanda marwah sharda
 
 					wular_lake
@@ -3825,8 +3825,8 @@ asia = {
 			nepal_area = {
 				bheri_province = { jagatipur chaughera dolpo malneta musikot pyuthan salianah }
 				east_gandak_province = { kathmandu dhading gorkha lamjung nuwakot upardang }
-				garhwal_province = { chandpur_garhi badrinath devprayag gangadvara hanol kalsi srinagar_garhwal thalisain uttarkashi }
-				kumaon_province = { champavati almora askot baijnath dwarahat kashipur nainital rudrapur_kumaon }
+				garhwal_province = { not_eligible_for_dynamic_country_name = yes chandpur_garhi badrinath devprayag gangadvara hanol kalsi srinagar_garhwal thalisain uttarkashi }
+				kumaon_province = { not_eligible_for_dynamic_country_name = yes champavati almora askot baijnath dwarahat kashipur nainital rudrapur_kumaon }
 				lower_ghaghara_province = { dipayal acham ajayameru bajhang kailali kanchapur }
 				lower_kosi_province = { vijayapur chainpur chaudandi phakphok rajanari ranibas taplejung }
 				upper_ghaghara_province = { sinja bajura dullu jumla kharpunath yanal_densa }
@@ -3836,9 +3836,9 @@ asia = {
 		}
 		bengal_region = {
 			assam_area = {
-				ahom_province = { charaideo charagua namrup noadihang }
+				ahom_province = { not_eligible_for_dynamic_country_name = yes charaideo charagua namrup noadihang }
 				baro_bhuyan_province = { tezpur barpeta bijni bordowa dhubri durjaya goalpara guwahati hajo kokrajhar rowta }
-				chutia_province = { bengmara dibrugarh konwargaon lakhimpur ziro }
+				chutia_province = { not_eligible_for_dynamic_country_name = yes bengmara dibrugarh konwargaon lakhimpur ziro }
 				kachari_province = { dimapur daboka dergaon dhansiri diphu lanka maibong morangi }
 				meghalaya_province = { dura chisobibra jaintiapur lyngngam nabagram ruga sohra sutnga }
 			}
@@ -3846,14 +3846,14 @@ asia = {
 				bishnupur_province = { bishnupur bankura barabhum chandrakona hijli madaran raipur_bengal tamluk }
 				bogra_province = { bogra birampur goraghat rangpur_bengal shahjadpur }
 				devkot_province = { devkot barbakaabad pandua_adina siliguri tajpur }
-				gaur_province = { gaur godagari naogaon pabna rampur_boalla }
+				gaur_province = { not_eligible_for_dynamic_country_name = yes gaur godagari naogaon pabna rampur_boalla }
 				jalpaiguri_province = { jalpaiguri birpara kamatapur koch_bihar panchagarh }
 				khalifatabad_province = { khalifatabad barguna chandrawip fathabad kotalipara qasba shahbazpur }
 				khulna_province = { khulna east_sundarban husaynabad jaynagar kulpi west_sundarban }
 				mymensingh_province = { mymensingh atiya belabo kapasia muktagacha tarakanda }
 				nadia_province = { nadia chandrabad jessore jhenaidah maheshpur pipli sreepur }
 				pandua_province = { pandua baragram bardhaman dubrajpur ilambazar satgaon }
-				sonargaon_province = { sonargaon bikrampur chandpur kobirhat kumilla savar }
+				sonargaon_province = { not_eligible_for_dynamic_country_name = yes sonargaon bikrampur chandpur kobirhat kumilla savar }
 				sylhet_province = { sylhet khaliajuri khaspur patharkandi rajnagar shaharpara }
 				tripura_province = { agartala baniachang chandrapur kailashahar laskarpur pilak rangamati }
 			}
@@ -3861,7 +3861,7 @@ asia = {
 				chin_province = { hakha falam lai_lin_pi matupi mon thantlang chin_hills1 chin_hills2 chin_hills3 }
 				kuki_province = { khalangsha lushai mara_india tedim thada }
 				manipur_province = { imphal thoubal loktak_lake naga_hills1 naga_hills2 }
-				naga_province = { dikhu liangmei rongmei_naga viswema }
+				naga_province = { not_eligible_for_dynamic_country_name = yes dikhu liangmei rongmei_naga viswema }
 
 			}
 			jharkhand_area = {
@@ -3873,24 +3873,24 @@ asia = {
 				bhagalpur_province = { bhagalpur gidhaur hajipur khagaria monghyr samastipur }
 				darbhanga_province = { darbhanga janakpur_nepal jhanjharpur madhubani siraha sitamarhi }
 				dumka_province = { dumka deoghar jangipur mandar_parvat rajmahal teliagarhi }
-				patna_province = { patna bihar_sharif deo gaya narhat rajgir roh }
+				patna_province = { not_eligible_for_dynamic_country_name = yes patna bihar_sharif deo gaya narhat rajgir roh }
 				purnia_province = { purnia alamganj bihariganj katihar kosi saharsa }
 			}
 			monyul_area = {
 				sadiya_province = { sadiya dibang gomsi malinithan siang siyom subansiri tengapani }
 				eastern_bhutan_province = { trongsa bumthang lhuntsi tawang trasigang zhemgang zhongkar himalaya22 }
 				itanagar_province = { itanagar bomdila kameng kamla kurung nakshaparvat himalaya23 }
-				sikkim_province = { yuksom dalingkot gangtok phari tsunthang }
+				sikkim_province = { not_eligible_for_dynamic_country_name = yes yuksom dalingkot gangtok phari tsunthang }
 				western_bhutan_province = { paro daga jabar_goemba punakha thimpu wangdue himalaya17 }
 			}
-			orissa_area = {
+			orissa_area = { not_eligible_for_dynamic_country_name = yes
 				rajabandi = { #6
 					puri kataka harishpur jajnagar bhadrak
 					balasore jalesar ratnagiri kanthi chilika_lake
 				}
 				ganjam_garjats = { #5
 					ganjam asika kalingapattanam parlakimidi kalinganagara brahmapur kulada }
-				mayurbhanj = { #4
+				mayurbhanj = { not_eligible_for_dynamic_country_name = yes #4
 					nilagiri baripada chaibasa ghatsila rairangpur simlipal_hills gorumahisani_range
 				}
 				kalahandi_garjat = { #9
@@ -3903,7 +3903,7 @@ asia = {
 					dhenkanal baud khurda narsinghpur bhuban udayagiri_kotagad
 					athmallik angul pal_lahara nayagarh kunjabangarh phulbani
 				}
-				keonjhar_province = { #5
+				keonjhar_province = { not_eligible_for_dynamic_country_name = yes #5
 					keonjhar khiching ghasipura jyotipur ghatgaon garhjat_range
 				}
 				sambalpur_garjats = { #8
@@ -3961,12 +3961,12 @@ asia = {
 				lower_vidarbha = { #9
 					basim kalam kelapur panar amravati akola mahagaon mehkar sindkedh
 				}
-				chanda_province = { #5
+				chanda_province = { not_eligible_for_dynamic_country_name = yes #5
 					ballarpur aheri bhadrachalam gadchiroli bramhapuri
 				}
 			}
 			gondwana_area = {
-				bastar_province = { #8
+				bastar_province = { not_eligible_for_dynamic_country_name = yes #8
 					bastar barasuru sukhma rekapalle kondagaon paralkot kanker dantewada jagdalpur eastern_ghats_south_bastar bastar_impassable
 				}
 				mahadeo = { #5
@@ -4005,7 +4005,7 @@ asia = {
 		}
 		western_india_region = {
 			rajputana_area = {
-				mewar = { #8
+				mewar = { not_eligible_for_dynamic_country_name = yes #8
 					nagahrada chavand salumbar amet chittor
 					bhilwara phulia mandalgarh
 				}
@@ -4018,20 +4018,20 @@ asia = {
 				gird = { #7
 					gwalior bhind datia narwar sipri sheopur sabalgarh khaniadhana
 				}
-				hadoti = { #6
+				hadoti = { not_eligible_for_dynamic_country_name = yes #6
 					kota bundi mangrol gagraun aklera shahabad
 				}
-				dhundhar = { #8
+				dhundhar = { not_eligible_for_dynamic_country_name = yes #8
 					amber_loc sambhar dausa bayana karauli malpura
 					ranthambore ajmer
 				}
 				jangladesh = { #11
 					bhatnir anupgarh suratgarh rawatsar sidhmukh taranagar churu sui pugal udasar sardarshahar
 				}
-				jaisalmer_province = { #4
+				jaisalmer_province = { not_eligible_for_dynamic_country_name = yes #4
 					jaisalmer ludrava ramgar pokhran thar_desert thar_desert_2 thar_desert_bikaner
 				}
-				marwar = { #9
+				marwar = { not_eligible_for_dynamic_country_name = yes #9
 					mandore osian phalvardhika khed pali
 					bahadamer kiradu gudamalani kurki
 				}
@@ -4055,7 +4055,7 @@ asia = {
 				sorath = { #5
 					chhaya junagarh somnath diu amreli
 				}
-				kutch = { #4
+				kutch = { not_eligible_for_dynamic_country_name = yes #4
 					lakhpat kapilkot lakhiyarvira kantha great_rann_of_kutch little_rann_of_kutch
 				}
 			}
@@ -4074,7 +4074,7 @@ asia = {
 					baria champaner mohan astamba_dongar
 				}
 			}
-			sindh_area = {
+			sindh_area = { not_eligible_for_dynamic_country_name = yes
 				upper_sindh_province = { #6
 					kashmore shadodkot shikarpur jhatpat
 					sukkur paat
@@ -4200,7 +4200,7 @@ asia = {
 				malnad = { #3
 					ajara mudhol belgaum londa khanapur gokak raybag
 				}
-				baglana = { #8
+				baglana = { not_eligible_for_dynamic_country_name = yes #8
 					sinnar nasik chandor salagiri mayuragiri dharampur
 					jawhar dang forest_of_dang western_ghats_bombay
 				}
@@ -4256,7 +4256,7 @@ asia = {
 				}
 			}
 			sailan_area = { #Entire Island of Lanka
-				jaffna_province = { #2
+				jaffna_province = { not_eligible_for_dynamic_country_name = yes #2
 					jaffna mullaitivu
 				}
 				vanni = { #4
@@ -4275,11 +4275,11 @@ asia = {
 					galle hambantota badulla devanagara digavapi tissamaharama
 				}
 			}
-			maldives_area = {
+			maldives_area = { not_eligible_for_dynamic_country_name = yes 
 				laccadive_province = {
 					amini_atoll andrott_atoll kavaratti_atoll minicoy_atoll
 				}
-				maldives_province = {
+				maldives_province = { not_eligible_for_dynamic_country_name = yes
 					thiladhunmathi_atoll male_atoll nilandhe_atoll addu_atoll
 				}
 				chagos_province = {
@@ -4338,7 +4338,7 @@ asia = {
 				northern_arakhan_province = { launggyet akyab maungdaw minbya mrauk_u weithali }
 				southern_arakhan_province = { ann gwa ramree talak_burma taungup thandwe arakan_mountains2 }
 			}
-			champa_area = {
+			champa_area = { not_eligible_for_dynamic_country_name = yes
 				hue_province = { amarendrapura phon_nha visnupura vrddha_ratnapura annamese_range5 }
 				indrapura_province = { indrapura dien_ban simhapura }
 				kauthara_province = { kauthara aryaru bang_keng }
@@ -4349,20 +4349,20 @@ asia = {
 			}
 			chao_phraya_area = {
 				ayutthaya_province = { ayodhya dong_lakhon lopburi prachinburi saraburi sankamphaeng_mountains }
-				phetchaburi_province = { phetchaburi chumphon muang_na_rang }
+				phetchaburi_province = { not_eligible_for_dynamic_country_name = yes phetchaburi chumphon muang_na_rang }
 				phraek_province = { phraek chai_nat chakangrao nakhon_sawan phayuhakhiri bueng_boraphet_lake }
 				rayong_province = { rayong dong_si_maha_phot muang_khuan_kra_buri phanat sa_kaeo chanthaburi_jungle }
 				sri_thep_province = { sri_thep mueng_rat phuenchapura }
-				sukhothai_province = { sukhothai mueng_bang_yom nakhon_thai song_khwae sra_luang sri_satchanalai }
-				suphanburi_province = { suphanburi chaisri kanchanaburi ratchaburi wang_pho }
+				sukhothai_province = { not_eligible_for_dynamic_country_name = yes sukhothai mueng_bang_yom nakhon_thai song_khwae sra_luang sri_satchanalai }
+				suphanburi_province = { not_eligible_for_dynamic_country_name = yes suphanburi chaisri kanchanaburi ratchaburi wang_pho }
 				tak_province = { tak ban_pa_la_ta mae_sot nakhon_chum dawna_range1 dawna_range2 }
 			}
 			irrawady_area = {
-				kale_province = { kale htilin kanna mingin pakokku saw pandaung_range }
+				kale_province = { not_eligible_for_dynamic_country_name = yes kale htilin kanna mingin pakokku saw pandaung_range }
 				pagan_province = { pagan magway salay talok taungdwingyi }
-				pinya_province = { pinya kyaukse nyaungyan pindale pinle }
+				pinya_province = { not_eligible_for_dynamic_country_name = yes pinya kyaukse nyaungyan pindale pinle }
 				pyay_province = { pyay mindon myede paungde tharrawaddy thayet pegu_jungle }
-				sagaing_province = { sagaing amyint butalin dhipaesyin moksobo }
+				sagaing_province = { not_eligible_for_dynamic_country_name = yes sagaing amyint butalin dhipaesyin moksobo }
 				salin_province = { salin laungshe ngape sagu arakan_mountains1 }
 				taungoo_province = { taungoo lewe nwamethin pyinmana thandaunggyi }
 			}
@@ -4371,15 +4371,15 @@ asia = {
 				myaungmya_province = { myaungmya dala maubin naungyo ngaputaw twante }
 				pathein_province = { pathein danubyu hinthada ingapu myanaung }
 				pegu_province = { pegu dagon hmawbi kawliya phyu thanlyin }
-				tenasserim_province = { tenasserim kawthaung mergui myitta singkhon tavoy thayetchaung bilauktaung_range2 bilauktaung_range3 }
+				tenasserim_province = { not_eligible_for_dynamic_country_name = yes tenasserim kawthaung mergui myitta singkhon tavoy thayetchaung bilauktaung_range2 bilauktaung_range3 }
 				thaton_province = { thaton donwun kyaukkyi papun sittaung }
 			}
 			kachin_area = {
-				hkamti_province = { hkamti maingkwan hukawng lahe minsin tarung naga_hills3 naga_hills4 sagaing_jungle }
+				hkamti_province = { not_eligible_for_dynamic_country_name = yes hkamti maingkwan hukawng lahe minsin tarung naga_hills3 naga_hills4 sagaing_jungle }
 				htamanthi_province = { htamanthi phakant tamu thaungdut tizu zalon_taung mangin_range1 mangin_range2 }
 				mongkawng_province = { mongkawng mongyang monhyin myitkyina indawgy_lake }
 				putao_province = { putao chibwe injangyang suamprabon waingmaw gaoligongshan2 kumon_range }
-				wuntho_province = { wuntho htigyaing katha myedu }
+				wuntho_province = { not_eligible_for_dynamic_country_name = yes wuntho htigyaing katha myedu }
 			}
 			khorat_plateau_area = {
 				buriram_province = { buriram muang_tam phutthaisong prathai_saman suwannaphum }
@@ -4393,7 +4393,7 @@ asia = {
 				roi_et_province = { roi_et kham_muang khon_kaen muang_khemarat mueng_fa_daet yasothon }
 				savannakhet_province = { savannakhet muang_phalan muang_phin muang_ta_oi sepon thuan_binh nakai_jungle }
 				thakhek_proivnce = { thakhek keutkeut khamkeut mahaxay ngoc_ma nong_bok annamese_range2 annamese_range3 annamese_range4 }
-				vientiane_province = { vientiane ban_khon phon_hong sayniabuli vang_vieng mekong_jungle }
+				vientiane_province = { not_eligible_for_dynamic_country_name = yes vientiane ban_khon phon_hong sayniabuli vang_vieng mekong_jungle }
 			}
 			lower_mekong_area = {
 				angkor_province = { angkor banteay_chhmar damrey_trom phnom_srok sdok_kok_thom }
@@ -4410,9 +4410,9 @@ asia = {
 			malay_peninsula_area = {
 				east_kra_province = { chaiya ko_samui sichon tha_tong wiang_sa }
 				johor_province = { gelanggi johor_lama malacca muar rantau_panjang temasek }
-				kedah_province = { kedah bujang perlis }
+				kedah_province = { not_eligible_for_dynamic_country_name = yes kedah bujang perlis }
 				kelantan_province = { pattani kelantan menara pulai yala sankalakhiri_range}
-				pahang_province = { pahang bera jerantut kuala_lipis kuantan }
+				pahang_province = { not_eligible_for_dynamic_country_name = yes pahang bera jerantut kuala_lipis kuantan }
 				perak_province = { klang beruas gerik manjung kajang titiwangsa_mountains }
 				thammarat_province = { thammarat mardelong satingpura singgora trang songkhla_lake }
 				trengganu_province = { dungun kampung_buloh paka trengganu terengganu_hills }
@@ -4422,7 +4422,7 @@ asia = {
 				chiang_mai_province = { chiang_mai chiang_dao lampang lamphun muang_wang mueng_thoen khun_tan_range thongchai_range }
 				chiang_rai_province = { chiang_rai chiang_khong chiang_saen phayao wiang_fang daen_lao_range }
 				muang_sing_province = { muang_sing chom_khao_maneerat hongsa muang_luang_phukha muang_xay vieng_phouka phou_mountains }
-				muang_sua_province = { muang_sua ban_luang_cheng muang_thaeng nam_xuang phongsali }
+				muang_sua_province = { not_eligible_for_dynamic_country_name = yes muang_sua ban_luang_cheng muang_thaeng nam_xuang phongsali }
 				muang_yuam_province = { muang_yuam hot mae_hong_son muang_jam omkoi sariang karen_jungle }
 				phrae_province = { phrae muang_ngao nan pua thung_yang luang_prabang_range1 luang_prabang_range2 }
 				xam_neua_province = { xam_neua muang_et muang_kham muang_lang muong_luan }
@@ -4444,9 +4444,9 @@ asia = {
 				tru_vien_province = { thuan_chau muong_cha phou_den_din_mountains }
 			}
 			shan_highland_area = {
-				hsenwi_province = { hsenwi lashio muse nam_thing namhsan ta_shwe_htan shan_hills1 }
-				hsipaw_province = { hsipaw kyaukme monglong ngasingu wetwin }
-				kengtung_province = { kengtung mong_hpayak mong_hsat mong_yang mong_yawng mongping }
+				hsenwi_province = { not_eligible_for_dynamic_country_name = yes hsenwi lashio muse nam_thing namhsan ta_shwe_htan shan_hills1 }
+				hsipaw_province = { not_eligible_for_dynamic_country_name = yes hsipaw kyaukme monglong ngasingu wetwin }
+				kengtung_province = { not_eligible_for_dynamic_country_name = yes kengtung mong_hpayak mong_hsat mong_yang mong_yawng mongping }
 				manmaw_province = { manmaw mabein mongmit namhkan shwegu takawng }
 				mongnai_province = { mongnai kengtawng lai_hka mawkmai mongkung mongtung }
 				mongpai_province = { mongpai lawksawk siri_do taunggyi yawnghwe inle_lake karen_hills1 karen_hills2 karen_hills3 nwamethin_jungle shan_hills3 }
@@ -4501,13 +4501,13 @@ asia = {
 		indonesia_region = {
 			south_borneo_area = {
 				banjar_province = { banjar banua_lawas martapura muara_bahan nagara_borneo pelaihari tanjungpuri }
-				kuripan_province = { kuripan hulu_kahayan hulu_kapuas kahayan kapuas rungan }
+				kuripan_province = { not_eligible_for_dynamic_country_name = yes kuripan hulu_kahayan hulu_kapuas kahayan kapuas rungan }
 				lamandau_province = { kotawaringin_lama air_hitam bulik hulu_jelai hulu_lamandau jelai }
 				lower_kapuas_province = { pontianak kubu sanggau sekadau sekayam tayan }
 				melawai_province = { sepauk hulu_melawai kayan_melawai pinoh sintang }
 				mendawai_province = { mendawai hulu_mendawai kahayan_hilir katingan sabangau samba }
 				paser_province = { paser bangkalan_borneo cantung hulu_paser pagatan sigam }
-				sambas_province = { sambas hulu_sambas mandor mempawah monterado ngabang }
+				sambas_province = { not_eligible_for_dynamic_country_name = yes sambas hulu_sambas mandor mempawah monterado ngabang }
 				sampit_province = { sampit arut cempaga hulu_mentaya hulu_seruyan kumai seruyan }
 				sukadana_province = { sukadana hulu_pawan kendawangan pesaguan tanjungpura teluk_melano }
 				upper_barito_province = { karau barito hulu_barito lahei laung teweh }
@@ -4522,7 +4522,7 @@ asia = {
 				kudat_province = { kudat hulu_labuk kota_marudu sandakan sibumbong mapun sugut }
 				lower_mahakam_province = { kutai_lama jembayan julau_kutai kedang_pahu tenggarong tuyuk }
 				lower_rajang_province = { igan julau mukah sarikei tatau }
-				santubong_province = { santubong samarahan saribas sebuyau tandang_sari }
+				santubong_province = { not_eligible_for_dynamic_country_name = yes santubong samarahan saribas sebuyau tandang_sari }
 				tarakan_province = { tarakan hulu_sembakung sebuku sesayap tawau tong_talun }
 				upper_kapuas_province = { silat bunut jongkong ketungau selimbau lake_sentarum }
 				upper_mahakam_province = { muarakaman belayan hulu_mahakam hulu_telen kelinjau mahakam telen lake_melintang }
@@ -4530,12 +4530,12 @@ asia = {
 				borneo_impassable_jungle_province = { borneo_jungle1 borneo_jungle2 borneo_jungle3 borneo_jungle4 borneo_jungle5 borneo_jungle6 borneo_jungle7 borneo_jungle8 borneo_jungle9 borneo_jungle10 borneo_jungle11 borneo_jungle12 borneo_jungle13 borneo_jungle14 }
 			}
 			celebes_area = {
-				banggai_province = { banggai bulakan gori_gori lingketeng tojo una_una }
-				bone_province = { bone bantayan buki tanahjampea cenrana tosora }
+				banggai_province = { not_eligible_for_dynamic_country_name = yes banggai bulakan gori_gori lingketeng tojo una_una }
+				bone_province = { not_eligible_for_dynamic_country_name = yes bone bantayan buki tanahjampea cenrana tosora }
 				bungku_province = { bungku kendari mori_celebes sambandete unaaha }
 				butung_province = { butung tukangbesi_islands andolo kalisusu kolumba kotano_muna taubonto }
 				donggala_province = { donggala kulawi loree parigi pendau poso sigi sulawesi_jungle2 lake_poso }
-				gorontalo_province = { gorontalo atinggola boalemo guamonial paguat toli_toli tomini sulawesi_jungle1 lake_limboto }
+				gorontalo_province = { not_eligible_for_dynamic_country_name = yes gorontalo atinggola boalemo guamonial paguat toli_toli tomini sulawesi_jungle1 lake_limboto }
 				makassar_province = { gowa barru bungi sengkae sidenreng tinco lake_tempe }
 				mamudju_province = { mamudju balanipa kalumpang kurri_kurri managalang toraja sulawesi_jungle3 }
 				manado_province = { manado amurang belang karatung_island karakaralong_islands solimandungan sangihe_islands tabukan lake_tondano }
@@ -4553,18 +4553,18 @@ asia = {
 				trowulan_province = { trowulan bajrajinaparamitapura balambangan lumajang malang pakembangan sadeng javanese_mountains3 }
 			}
 			lesser_sunda_area = {
-				bali_province = { samprangan julah lombok melara sasak }
+				bali_province = { not_eligible_for_dynamic_country_name = yes samprangan julah lombok melara sasak }
 				barat_daya_province = { babar bungabali damar leti sangliat_dol wetar yamdena }
 				flores_province = { larantuka bajo_flores cibal lamakera ngada sikka }
 				sumbawa_province = { bima banta_island_wasteland dompu mamboro sabu sumba sumbawa taliwang waingapo }
 				timor_province = { laran balibo kupang lifau likusaen nunkolo sombai tutuala }
 			}
 			moluccas_area = {
-				aru_province = { banda_island kobroor ohoi_ewur trangan wokam }
+				aru_province = { not_eligible_for_dynamic_country_name = yes banda_island kobroor ohoi_ewur trangan wokam }
 				buru_province = { bara_buru kayeli obi sanana taliabu tifu }
 				seram_province = { bula hitu huamual latu nunusaku sahulau saparua werinama seram_mountains }
-				ternate_province = { ternate daratan jailolo loloda moro wasilei }
-				tidore_province = { tidore amassing gane maba_celebes misool waigeo weda }
+				ternate_province = { not_eligible_for_dynamic_country_name = yes ternate daratan jailolo loloda moro wasilei }
+				tidore_province = { not_eligible_for_dynamic_country_name = yes tidore amassing gane maba_celebes misool waigeo weda }
 			}
 			luzon_area = {
 				cordillera_province = { balbalan mallig tobog kiyyangan cordillera_mountains1 cordillera_mountains2}
@@ -4614,10 +4614,10 @@ asia = {
 			}
 			north_sumatra_area = {
 				andaman_province = { barren_island north_andaman nicobar car_nicobar south_andaman }
-				barus_province = { barus natal panyabungan sibolga sionomhudon sorkam }
+				barus_province = { not_eligible_for_dynamic_country_name = yes barus natal panyabungan sibolga sionomhudon sorkam }
 				deli_province = { deli asahan karo kota_rentang pakpak perbaungan silou }
 				northern_aceh_province = { bandar_aceh linge pasai peureulak semerlanga sigli tamiang north_aceh_jungle lake_laut_tawar }
-				pannai_province = { pannai bahal balige bilah kota_pinang kualuh tanjung_balai lake_toba }
+				pannai_province = { not_eligible_for_dynamic_country_name = yes pannai bahal balige bilah kota_pinang kualuh tanjung_balai lake_toba }
 				riau_rokan_province = { bagansiapipi kubu_rokan kunto rokan tambusai tanah_putih }
 				riau_siak_province = { siak bengkalis buantan dumai sakai_riau senapelan }
 				southern_aceh_province = { daya calang gayo_lues meulaboh singkil susoh tapaktuan south_aceh_jungle }
@@ -4814,8 +4814,8 @@ africa = {
 				}
 			}
 			
-			wadai_area = {
-				wadai_province = { ouara abesehir guereda hadjer_haddid am_dam }
+			wadai_area = { not_eligible_for_dynamic_country_name = yes 
+				wadai_province = { not_eligible_for_dynamic_country_name = yes ouara abesehir guereda hadjer_haddid am_dam }
 				yao_province = { yao mongo oum_hadjer am_djemena djedaa lake_fitri }
 			}
 			adamawa_area = {
@@ -4824,10 +4824,10 @@ africa = {
 				western_adamawa_province = { bauchi wukari kwararafa ibi pankshin nkambe lafia }
 			}
 			logone_area = {
-				sao_province = { gaoui logone_birni moito dourbali bokoro }
+				sao_province = { not_eligible_for_dynamic_country_name = yes gaoui logone_birni moito dourbali bokoro }
 				bagirmi_province = { massenya tele_nugar bousso guelengdeng }
 				masa_province = { lame binder bongor goundi doba }
-				mandara_province = { mora_cam keraoua pouss maroua }
+				mandara_province = { not_eligible_for_dynamic_country_name = yes mora_cam keraoua pouss maroua }
 			}
 			cameroon_highlands_area = {
 				cameroon_ridge_province = { gembu mankon banyo bankim foumban bafoussam cameroon_mountains }
@@ -5009,12 +5009,12 @@ africa = {
 		}
 	}
 	east_africa = {
-		ethiopia_region = {
+		ethiopia_region = { not_eligible_for_dynamic_country_name = yes
 			central_ethiopia_area = {
 				amhara_province = { kubar aheyya_fagg gannata_giyorgis tadbaba north_east_ethiopian_mountains }
 				argobba_province = { ankober gendebelo kombolcha nora_eth }
 				begemder_province = { gonder tsana debre_tabor lake_tana }
-				dobea_province = { manadeley afrera amora_gadal chercher hayq }
+				dobea_province = { not_eligible_for_dynamic_country_name = yes manadeley afrera amora_gadal chercher hayq }
 				lasta_province = { lalibela antalo sokota }
 				mora_province = { asaita killelu mora_eth }
 				semien_province = { waldeba debarq kosoge }
@@ -5024,20 +5024,20 @@ africa = {
 				afar_province = { tadjoura assab balho obock rahayta }
 				akele_guzai_province = { zula debre_bizen dekemhare }
 				balaw_province = { massawa dahlak nafka eritrean_mountains }
-				bazin_province = { tesenei bazin tembesha northern_ethiopian_mountains }
+				bazin_province = { not_eligible_for_dynamic_country_name = yes tesenei bazin tembesha northern_ethiopian_mountains }
 				denkelia_province = { bayul buri dallol edd horn_deserts }
-				enderta_province = { mekele abala adigrat agula }
+				enderta_province = { not_eligible_for_dynamic_country_name = yes mekele abala adigrat agula }
 				hamasien_province = { asmara agordat keren }
 				serae_province = { debarwa mendefera senafe yeha }
 				tigray_province = { axum abiy_addi adwa shire }
 			}
 			southern_ethiopia_area = {
-				damot_province = { maldarede bilo gambo }
-				ennarea_province = { hirmata agaro ilimo lieka saqqa }
-				gojjam_province = { dima bahir_dar dangila debra_warq enjebara ethiopian_mountains }
-				hadiya_province = { hadiya fofa jibat worabe central_west_ethiopian_mountains }
+				damot_province = { not_eligible_for_dynamic_country_name = yes maldarede bilo gambo }
+				ennarea_province = { not_eligible_for_dynamic_country_name = yes hirmata agaro ilimo lieka saqqa }
+				gojjam_province = { not_eligible_for_dynamic_country_name = yes dima bahir_dar dangila debra_warq enjebara ethiopian_mountains }
+				hadiya_province = { not_eligible_for_dynamic_country_name = yes hadiya fofa jibat worabe central_west_ethiopian_mountains }
 				metekel_province = { gilgel_beles chilga guba }
-				shewa_province = { barara sharka ziqwala central_east_ethiopian_mountains }
+				shewa_province = { not_eligible_for_dynamic_country_name = yes barara sharka ziqwala central_east_ethiopian_mountains }
 				sidamo_province = { bonga bossa gamo konso omo soddo south_west_ethiopian_mountains }
 				wellega_province = { fazughli gimbi nekemte }
 			}
@@ -5063,24 +5063,24 @@ africa = {
 			}
 			nubia_proper_area = {
 				bayuda_province = { ed_debba al_jeblien el_metemma korti omdurman shemkhiya }
-				makuria_province = { dongola abu_hamed berber kerma karima }
+				makuria_province = { not_eligible_for_dynamic_country_name = yes dongola abu_hamed berber kerma karima }
 				nobatia_province = { faras daw_sud kalabsha qasr_ibrim sai west_nubian_desert }
-				suakin_province = { suakin aydhab badi deraheib horn_desert_corridor1 horn_desert_corridor2 horn_desert_corridor3 south_eastern_desert east_nubian_desert }
+				suakin_province = { not_eligible_for_dynamic_country_name = yes suakin aydhab badi deraheib horn_desert_corridor1 horn_desert_corridor2 horn_desert_corridor3 south_eastern_desert east_nubian_desert }
 				erg_selima_province = { selima connector_egypt5 connector_egypt13 sahel_corridor26 sahel_corridor27 sahel_corridor28 sahel_corridor29 sahel_corridor30 erg_selima south_western_desert }
 
 			}
 		}
 		somalia_region = {
 			inner_somalia_area = {
-				adal_province = { harar arabi awbare dakkar dire_dawa jeldesa }
-				bale_province = { sheikh_hussein bale goba seru south_east_ethiopian_mountains }
+				adal_province = { not_eligible_for_dynamic_country_name = yes harar arabi awbare dakkar dire_dawa jeldesa }
+				bale_province = { not_eligible_for_dynamic_country_name = yes sheikh_hussein bale goba seru south_east_ethiopian_mountains }
 				haud_province = { kelafo aware buhoodle degehabur el_dhere geledi gode hargaya limey oodweyne }
 				oromia_province = { tulu_walal dolo harro_walabu liban mormor tulu_nama_dun}
 			}
 			northern_somalia_area = {
 				ciid_province = { haylan burao erigavo garoowe maduna qardho somalian_mountains }
 				guban_province = { berbera el_darad fardawsa ruguda siyara xagal }
-				ifat_province = { zeila ali_sabieh amud el_sheikh hargeisa }
+				ifat_province = { not_eligible_for_dynamic_country_name = yes zeila ali_sabieh amud el_sheikh hargeisa }
 				maakhir_province = { bosaso el_ayum las_khorey maydh }
 				majerteen_province = { alula bandarbeyla barbacadle bargaal qandala ras_hafun }
 			}
@@ -5191,9 +5191,9 @@ africa = {
 			}
 		}
 		swahili_coast_region = {
-			mozambique_area = {
+			mozambique_area = { not_eligible_for_dynamic_country_name = yes 
 				liganha_province = {bajone east_lomwe moma tokoto }
-				mozambique_province = { mozambique angoche chakota muhekani sangage }
+				mozambique_province = { not_eligible_for_dynamic_country_name = yes mozambique angoche chakota muhekani sangage }
 				ucungo_province = {quelimane boror macuze tacuane west_lomwe }
 			}
 			rufiji_area = {
@@ -5244,7 +5244,7 @@ africa = {
 				lower_wami_province = { bagamoyo dakawa misasa utondwe }
 				upper_pangani_province = { arusha east_aasax shambala usangi west_aasax }
 				upper_wami_province = { burunge idodomya mpwapwa sandawe }
-				zanzibar_province ={ zanzibar dar_es_salaam ras_mkumbuu }
+				zanzibar_province ={ not_eligible_for_dynamic_country_name = yes zanzibar dar_es_salaam ras_mkumbuu }
 			}
 			swahili_coast_sea_zones_area = {
 				gafana_coast_sea_province = {
@@ -5278,19 +5278,19 @@ africa = {
 		madagascar_region = {
 			east_madagascar_area = {
 				antandroy_province = { andranosoa ambovontany fort_dauphin manambato talaky tsiveri }
-				antemoro_province = { vohipeno ikongo manabondro masindrano rasanga }
+				antemoro_province = { not_eligible_for_dynamic_country_name = yes vohipeno ikongo manabondro masindrano rasanga }
 				north_betsimisaraka_province = { maroantsetra antalaha bemanevika fahambahy fenoarivo_east sandrakatsy tintingue toamasina }
 				south_betsimisaraka_province = { manahoro andevoranto mahaela vatomandry }
 			}
 			malagasy_highlands_area = {
-				betsileo_province = { fianarantsoa ambositra ikalamavony midongy }
-				bezanozano_province = { ambatondrazaka ambohidray moramanga tsilalanarivo }
+				betsileo_province = { not_eligible_for_dynamic_country_name = yes fianarantsoa ambositra ikalamavony midongy }
+				bezanozano_province = { not_eligible_for_dynamic_country_name = yes ambatondrazaka ambohidray moramanga tsilalanarivo }
 				ibara_province = { ihosy betroka ivohibe ranohira teniky }
 				merina_province = { antananarivo ambatomanoina ankazobe antsiroamandidy fenoarivo kavitaha vohimasina }
 			}
 			north_madagascar_area = {
 				ambongo_province = { nosy_bali andranomavo besalampy vilamatsa }
-				antankarana_province = { vohemar ambilobe irodo }
+				antankarana_province = { not_eligible_for_dynamic_country_name = yes vohemar ambilobe irodo }
 				iboina_province = { boeny andranoboka antetikala antsohihy kingany mahilaka mahajanga marovoay nosy_be sada }
 				inner_iboina_province = { maevatanana ambalanjakomby ambolosy ampotaka manoninerina tsarahafatra }
 				tsimihety_province = { manditsara bealanana befandriana bengoala tsaratanana }
@@ -5298,7 +5298,7 @@ africa = {
 			west_madagascar_area = {
 				mailaka_province = { sahadia ankavandra beanka maintirano }
 				maroserana_province = { toliara andasy_merine enijo soalara taolambiby }
-				menabe_province = { maneva bengy mahabo malaimbandy miandrivazo nosy_ampela rezoky tsimanandrafozana }
+				menabe_province = { not_eligible_for_dynamic_country_name = yes maneva bengy mahabo malaimbandy miandrivazo nosy_ampela rezoky tsimanandrafozana }
 			}
 			mascarene_islands_area = {
 				mascarene_islands_province = { mauritius rodrigues reunion }
@@ -5333,7 +5333,7 @@ africa = {
 
 	}
 	north_africa = {
-		egypt_region = {
+		egypt_region = { not_eligible_for_dynamic_country_name = yes
 			lower_egypt_area = {
 				alexandria_province = { alexandria el_alamein matruh sallum lake_maryut }
 				buhayra_province = { damanhur ramsis kharibta rashid tarrana wadi_el_natrun connector_egypt11 nitrian_desert }
@@ -5403,18 +5403,18 @@ africa = {
 				guzzula_province = { tamdoult assa beni_sabih foum_zguid igiliz taghjijt tata_MOR tiout tissint tizounine anti_atlas1 }
 				hascora_province = { ouarzazate agdez ait_benhaddou skoura tagmadert taznakht high_atlas2 }
 				sus_province = { taroudant agadir aouint_yghomane ifni ifrane massa_MOR noul_lamta tafraout tidsi tiznit anti_atlas2 }
-				tafilalt_province = { sijilmasa boumalne_dades er_rich ksar_es_souk tazzarine todgha eastern_anti_atlas eastern_high_atlas1 }
+				tafilalt_province = { not_eligible_for_dynamic_country_name = yes sijilmasa boumalne_dades er_rich ksar_es_souk tazzarine todgha eastern_anti_atlas eastern_high_atlas1 }
 			}
 			morocco_area = {
 				azghar_province = { ksar_el_kebir larache ouezzane }
 				dukkala_province = { asfi aguz boulaouane echemmaia mazaghan miatbir sidi_bennour tit }
 				errif_province = { badis al_mazamma taunat tizgane rif }
-				fez_province = { fez azrou baht la_mamora meknes sale tefelfelt volubilis }
+				fez_province = { not_eligible_for_dynamic_country_name = yes fez azrou baht la_mamora meknes sale tefelfelt volubilis }
 				kert_province = { melilla afso ghassasa temsamane ras_kebdana lake_marchica lower_rif }
 				habat_province = { tangier amergo asilah basra_al_hamra ceuta tazroute tetouan western_rif }
 				haha_province = { tednest ait_daoud chichaoua mogador tafedna western_high_atlas2 }
 				haouz_province = { taza ameskour debdou guercif midelt namalata sefrou tabarida terrest tezerghe east_high_atlas north_middle_atlas south_middle_atlas2 }
-				marrakesh_province = { marrakesh aghmat hanimmei naffis tamdegost tinmel western_high_atlas1 middle_high_atlas }
+				marrakesh_province = { not_eligible_for_dynamic_country_name = yes marrakesh aghmat hanimmei naffis tamdegost tinmel western_high_atlas1 middle_high_atlas }
 				tadla_province = { tadla azilal bzou demnate kalaat_sraghna khenifra high_atlas1 eastern_high_atlas2 south_middle_atlas1 }
 				tamasna_province = { anfa azemmour bejaad mrirah rabat settat tegeget thagia }
 			}
@@ -5431,23 +5431,23 @@ africa = {
 				oran_province = { oran arshgul arzew ksar_ibn_senane nedroma tamazaghrane sebkhat_of_oran }
 				ouarsenis_province = { miliana al_khadra_ALG chlef ksar_el_kaoua mazouna yellel western_tablate_mountain }
 				oujda_province = { oujda jarawah_abu_al_aysh jerada ras_al_ain taourirt }
-				tlemcen_province = { tlemcen madinat_alawiyyin mascara saida tessala }
+				tlemcen_province = { not_eligible_for_dynamic_country_name = yes tlemcen madinat_alawiyyin mascara saida tessala }
 			}
 			tunis_area = {
 				annaba_province = { annaba cheffia collo el_kala el_milia guelma jijel skikda tekouch lake_fetzara skikda_mountain }
 				baghai_province = {baghai dufanat meskiana tebessa tiffech chott_tinsilt sebkhat_guerrah_et_tarf }
 				bizerte_province = { bizerte mateur sejnane tabarka tebourba lake_ichkeul }
 				constantine_province = { constantine_ALG bazer_sakhra ikjan mila ngaous tijis sebkhat_sokhna }
-				djerid_province = { gafsa douz kebili madas nefta tozeur chott_el_djerid chott_el_gharsah }
+				djerid_province = { not_eligible_for_dynamic_country_name = yes gafsa douz kebili madas nefta tozeur chott_el_djerid chott_el_gharsah }
 				kabylia_province = { bejaia azeffoun bordj_bou_arreridj bouira el_kseur kalaa_of_ait_abbas kuku mansouria setif tedelles eastern_tablate_mountain tellatlas stif_mountain }
 				kairouan_province = { kairouan kesra sbikha }
 				medjerda_province = { beja_TUN el_kef el_ksour jama_TUN medjez_el_bab souk_el_arba thagaste }
 				qabisa_province = { gabes bou_hajla madjul mahres sfaqes sidi_fredj sebkhat_el_ghorra }
 				qamuda_province = { feriana kasserine sbiba subaytila thala sebkhat_en_noual sebkhat_kelbia sebkhat_cherita}
 				sahel_TUN_province = { mahdia sousse el_jem monastir chebba sebkhat_sidi_el_hani }
-				tunis_province = { tunis el_fahs hammamet kelibia nabeul zaghouan }
+				tunis_province = { not_eligible_for_dynamic_country_name = yes tunis el_fahs hammamet kelibia nabeul zaghouan }
 			}
-			tripolitania_area = {
+			tripolitania_area = { not_eligible_for_dynamic_country_name = yes
 				djafara_province = { zuwarah ajim chenini matmata medenine tataouine zarzis mellahet_el_brega sebkhat_el_melah }
 				misratah_province = { misratah bani_walid ras_lanuf sirte tarhuna tawurgha }
 				nafusa_province = { nalut ghariyan jadu mizda yafran zintan }
@@ -5458,14 +5458,14 @@ africa = {
 				connector_libya1 connector_libya8 tademait_plateau1 west_grand_erg_oriental1 west_grand_erg_oriental2}
 				east_fezzan_province = { al_jawf tazirbu awjila maradah zella connector_libya11 connector_libya15
 				connector_libya10 connector_libya12 connector_libya3 connector_libya6 connector_libya13 calansho_desert coastal_libyan_desert2 coastal_libyan_desert3 }
-				fezzan_province = { sabha brak ghat murzuk sokna ubari zawila coastal_libyan_desert1 murzuk_desert grand_erg_oriental hamada_el_hamra
+				fezzan_province = { not_eligible_for_dynamic_country_name = yes sabha brak ghat murzuk sokna ubari zawila coastal_libyan_desert1 murzuk_desert grand_erg_oriental hamada_el_hamra
 				connector_libya4 connector_libya2 connector_libya5 connector_libya17 }
 				gourara_province = { timimoun adrar ain_salah charouine ain_salah_el_golea_corridor timimoun_qulaia_corridor tademait_plateau2 }
 				mzab_province = { ghardaia berriane el_guerrara guettara }
-				ouargla_province = { ouargla el_golea ngoussa ghardaia_el_golea_corridor ouargla_el_golea_corridor grand_erg_occidental_east1 }
+				ouargla_province = { not_eligible_for_dynamic_country_name = yes ouargla el_golea ngoussa ghardaia_el_golea_corridor ouargla_el_golea_corridor grand_erg_occidental_east1 }
 				saoura_province = { figuig bechar igli tabelbala taghit beni_sabih_tabelbala_corridor ksar_es_souk_bechar_corridor sahel_corridor08 tabelbala_charouine_corridor tabelbala_taghaza_corridor1 tabelbala_taghaza_corridor2 grand_erg_occidental el_djouf5 el_eglab_masif1
 				el_eglab_masif2 }
-				touggourt_province = { touggourt asuf debila tamacine touggourt_ouargla_corridor grand_erg_occidental_east2 northern_tedemait }
+				touggourt_province = { not_eligible_for_dynamic_country_name = yes touggourt asuf debila tamacine touggourt_ouargla_corridor grand_erg_occidental_east2 northern_tedemait }
 			}
 			western_sahara_area = {
 				oued_edhahab_province = { laayoune smara tantan tindouf sahel_corridor31 sahel_corridor32 sahel_corridor33 el_djouf2 el_djouf4 }
@@ -5608,10 +5608,10 @@ africa = {
 				}
 			}
 		}
-		zimbabwe_region = {
+		zimbabwe_region = { not_eligible_for_dynamic_country_name = yes
 			limpopo_area = {
 				changane_province = {east_shangana north_hlanganu south_hlanganu west_shangana }
-				inhambane_province = {inhambane chibuene chongoene mambone manyikeni }
+				inhambane_province = { not_eligible_for_dynamic_country_name = yes inhambane chibuene chongoene mambone manyikeni }
 				komati_province = {maputo djonga xai_xai }
 				middle_limpopo_province = {mapungubwe dzata nwalungu thulamela }
 				motloutse_province = { bosutswe lotsane leshongwane }
@@ -5632,7 +5632,7 @@ africa = {
 				middle_zambezi_province = { ingombe_ilede abutua dambwe mukariva muyove }
 				ruenya_province = { inyanga matemba mtoko njamara north_manica_highlands }
 				sanyati_province = { sebakwe chedzurgwe nembudziya rimuka }
-				sena_province = { sena cheringoma chiramba mbombona }
+				sena_province = { not_eligible_for_dynamic_country_name = yes sena cheringoma chiramba mbombona }
 				shangani_province = { khami bumbuzi dhlo_dhlo mtoli tora_nju sua_salt_pan }
 				shire_province = { chamo matope mbewe milange nyangu lake_malombe }
 				tete_province = { tete chikowa mutota }
@@ -5662,7 +5662,7 @@ africa = {
 				asante_province = { goaso fomena kumasi akwatia kibi }
 				akan_province = { kumawu yeji dambai }
 			}
-			benin_area = {
+			benin_area = { not_eligible_for_dynamic_country_name = yes
 				north_benin_province = { ado_ekiti ikere akure owo ondo ewu }
 				south_benin_province = { ughoton mahin benin uromi uzea ugbodu ukunzu }
 				niger_delta_province = { cabo_formoso brass nembe warri new_calabar forcados uvwie }
@@ -5672,7 +5672,7 @@ africa = {
 				cape_verde_province = { santo_antao sao_nicolao boa_vista santiago fogo }
 			}
 			futa_tooro_area = {
-				takrur_province = { podor walalde sioure golere salde agnam_civol silla }
+				takrur_province = { not_eligible_for_dynamic_country_name = yes podor walalde sioure golere salde agnam_civol silla }
 				galam_province = { nguidjilone thilogne kanel waounde moudery kaedi matam }
 				bundu_province = { sare_dioulde sutuko }
 				bambouk_province = { diawara ballou saraya }
@@ -5680,7 +5680,7 @@ africa = {
 			gambia_area = {
 				casamance_province = { gambia bintang diaboudior casamance marsassoum geregia tankular }
 				kantor_province = { wassu kabakama kodiam kerbatch }
-				kaabu_province = { cacheu farim bissau kaabu bafata iwol salemata }
+				kaabu_province = { not_eligible_for_dynamic_country_name = yes cacheu farim bissau kaabu bafata iwol salemata }
 			}
 			gold_coast_area = {
 				fante_province = { anomansah cabo_corso winneba mankessim accra akropong }
@@ -5702,22 +5702,22 @@ africa = {
 				}
 			}
 			gur_area = {
-				dagbon_province = { bole yendi nakpa salaga chamba wulensi }
+				dagbon_province = { not_eligible_for_dynamic_country_name = yes bole yendi nakpa salaga chamba wulensi }
 				mamprusi_province = { tirekka djougou bimbilla sokode }
-				borgu_province = { nikki kaiama bussa agbonle }
+				borgu_province = { not_eligible_for_dynamic_country_name = yes nikki kaiama bussa agbonle }
 				kandi_province = { kandi kouande banikoara sori babana segbana }
 			}
-			jolof_area = {
+			jolof_area = { not_eligible_for_dynamic_country_name = yes 
 				waalo_province = { ndar dagana koki }
 				cayor_province = { beer_dun tivaouane ndiaganiao }
 				baol_province = { portudal fandene diourbel }
 				siine_province = { joal tattaguine diakhao }
 				saloum_province = { albreda djilor juffure sine_ngayene kahone wanar sorokogne }
-				jolof_province = { linguere tuubaa mboune }
+				jolof_province = { not_eligible_for_dynamic_country_name = yes linguere tuubaa mboune }
 			}
-			kong_area = {
+			kong_area = { not_eligible_for_dynamic_country_name = yes 
 				senufo_province = { boundiali korhogo katiola morondo }
-				kong_province = { kong bouna }
+				kong_province = { not_eligible_for_dynamic_country_name = yes kong bouna }
 				baoule_province = { bouake ngokro daloa seguela daoukro }
 			}
 			kru_area = {
@@ -5728,7 +5728,7 @@ africa = {
 				nzima_province = { apollonia axim abengourou hemang }
 			}
 			lower_niger_area = {
-				nupe_province = { mokwa bida tada nupeko minna jebba lokoja }
+				nupe_province = { not_eligible_for_dynamic_country_name = yes mokwa bida tada nupeko minna jebba lokoja }
 				south_zazzau_province = { lapai zuba jos kuje }
 				enugu_province = { idah enugu nsukka ugbo ogoja katsina_ala}
 			}
@@ -5746,9 +5746,9 @@ africa = {
 				dan_province = { gbepleu touba koro }
 			}
 			yoruba_area = {
-				ijebu_province = { eko ikorundu ikosi ijebu_ode epe }
-				oyo_province = { oyo_ile kisi ikoyi igboho saki irawo tede ogbomosho }
-				ife_province = { ede ife ilesa iwo }
+				ijebu_province = { not_eligible_for_dynamic_country_name = yes eko ikorundu ikosi ijebu_ode epe }
+				oyo_province = { not_eligible_for_dynamic_country_name = yes oyo_ile kisi ikoyi igboho saki irawo tede ogbomosho }
+				ife_province = { not_eligible_for_dynamic_country_name = yes ede ife ilesa iwo }
 				atakpame_province = { atakpame savalou dassa_zoume sabe }
 				igbomina_province = { ilorin offa oke_ila oshogbo }
 			}
@@ -5807,10 +5807,10 @@ africa = {
 				fika_province = { potiskum daniski damaturu kalam_hill }
 			}
 			east_mossi_area = {
-				liptako_province = { tera sampelga dori kokorou bura }
+				liptako_province = { not_eligible_for_dynamic_country_name = yes tera sampelga dori kokorou bura }
 				nungu_province = { nungu pama tambaga matiakoali }
-				boussouma_province = { boussouma mane boala kougouri bilanga barsalogho }
-				tenkodogo_province = { tenkodogo dourtenga bawku pusiga sansanne_mango }
+				boussouma_province = { not_eligible_for_dynamic_country_name = yes boussouma mane boala kougouri bilanga barsalogho }
+				tenkodogo_province = { not_eligible_for_dynamic_country_name = yes tenkodogo dourtenga bawku pusiga sansanne_mango }
 			}
 			gao_area = {
 				hombori_province = { hombori gossi dorey borenta bourem bamba }
@@ -5818,42 +5818,42 @@ africa = {
 				kissi_province = { kissi_loc deou mondoro aribinda tessit gorouol }
 				namaro_province = { ayerou anzourou dargol gotheye namaro sikieye }
 			}
-			ghana_area = {
-				ghana_province = { koumbi_saleh timbedra nema walata diara balle east_erg_aoukar }
+			ghana_area = { not_eligible_for_dynamic_country_name = yes 
+				ghana_province = { not_eligible_for_dynamic_country_name = yes koumbi_saleh timbedra nema walata diara balle east_erg_aoukar }
 				tagant_province = { tichit aoudaghost tidjikja sahel_corridor06 sahel_corridor05 sahel_corridor04 sahel_corridor02 erg_aoukar south_erg_amatlich south_el_djouf }
 				kaarta_province = { nioro tourougoumbe diangounte_camara dioumara kolokani kourouninkoto }
 				khaaso_province = { kayes maghana bakel sandare diamou }
 				arguin_province = { arguin nouamghar nouakchott akjoujt awlil rosso }
 				adrar_province = { atar azougui chingetti wadan idjil erg_amatlich }
 			}
-			kanem_area = {
-				kanem_province = { njimi manan bodou_sailay nguigmi lake_chad }
+			kanem_area = { not_eligible_for_dynamic_country_name = yes 
+				kanem_province = { not_eligible_for_dynamic_country_name = yes njimi manan bodou_sailay nguigmi lake_chad }
 				kawar_province = { bilma dirkou djado seguedine fachi agadem sahel_corridor14 sahel_corridor20 erg_of_bilma }
 				mser_province = { mser afade goulfey makary }
 				tibesti_province = { sherda zouar ain_galaka ounianga tekro qatrun sahel_corridor03 sahel_corridor13 sahel_corridor19 sahel_corridor17 sahel_corridor15 sahel_corridor16 sahel_corridor18 rabyanah }
 				mondo_province = { mondo cherfe ngousa moussoro }
 			}
-			mali_area = {
+			mali_area = { not_eligible_for_dynamic_country_name = yes
 				old_manding_province = { niani dakadjalan kirina bamako dieribakoro siguiri kaba }
 				sosso_province = { sosso sagala mourdiah guire goumbou banamba }
-				bambara_province = { segou bla koulikoro nyamina sansanding dioila }
+				bambara_province = { not_eligible_for_dynamic_country_name = yes segou bla koulikoro nyamina sansanding dioila }
 				kita_province = { kita bafoulabe diakha niagassola narena tabou_m }
 				tengrela_province = { tengrela niena garalo massigui niantjila koutiala }
 			}
 			north_hausa_area = {
-				zamfara_province = { birnin_zamfara dutsi talata_mafara gusau funtua }
-				gobir_province = { alkalawa birni_lalle maradi birni_nkonni }
-				katsina_province = { katsina tessawa daura gumel }
-				kebbi_province = { birnin_kebbi surame sokoto goronyo takassaba koko anka }
+				zamfara_province = { not_eligible_for_dynamic_country_name = yes birnin_zamfara dutsi talata_mafara gusau funtua }
+				gobir_province = { not_eligible_for_dynamic_country_name = yes alkalawa birni_lalle maradi birni_nkonni }
+				katsina_province = { not_eligible_for_dynamic_country_name = yes katsina tessawa daura gumel }
+				kebbi_province = { not_eligible_for_dynamic_country_name = yes birnin_kebbi surame sokoto goronyo takassaba koko anka }
 			}
 			south_hausa_area = {
-				kano_province = { kano rano gaya_n kazaure }
+				kano_province = { not_eligible_for_dynamic_country_name = yes kano rano gaya_n kazaure }
 				yauri_province = { yauri kontagora zuru kulfo kotonkoro }
-				zazzau_province = { zazzau turunku birnin_gwari lere anchau tegina }
+				zazzau_province = { not_eligible_for_dynamic_country_name = yes zazzau turunku birnin_gwari lere anchau tegina }
 				hadejia_province = { biram auyo dutse shira birnin_kudu gwaram }
 			}
-			timbuktu_area = {
-				timbuktu_province = { timbuktu kabara goundam gourma_rharous tindirma sahel_corridor25 }
+			timbuktu_area = { not_eligible_for_dynamic_country_name = yes 
+				timbuktu_province = { not_eligible_for_dynamic_country_name = yes timbuktu kabara goundam gourma_rharous tindirma sahel_corridor25 }
 				taghaza_province = { taghaza taoudenni araouane sahel_corridor09 sahel_corridor24 sahel_corridor10 sahel_corridor11 tanezrouft east_el_djouf }
 				hayre_province = { douentza bore ngouma arlal bambara_maounde }
 				safare_province = { safare dogo soumpi korientze ras_el_ma gargando }
@@ -5862,10 +5862,10 @@ africa = {
 			}
 			west_mossi_area = {
 				ouagadougou_province = { ouagadougou koudougou leo po zorgho tiebele }
-				gwiriko_province = { sya loropeni banfora sideradougou farakala sanzana }
-				yatenga_province = { yatenga doubare rim djibo zondoma }
+				gwiriko_province = { not_eligible_for_dynamic_country_name = yes sya loropeni banfora sideradougou farakala sanzana }
+				yatenga_province = { not_eligible_for_dynamic_country_name = yes yatenga doubare rim djibo zondoma }
 				mouhoun_province = { kirikongo bankuy faramana hounde boromo }
-				wa_province = { wa daboya paga diebougou gambaga }
+				wa_province = { not_eligible_for_dynamic_country_name = yes wa daboya paga diebougou gambaga }
 			}
 			zarma_area = {
 				dosso_province = { dosso loga koure kaouara dongondoutchi }
@@ -5886,7 +5886,7 @@ america = {
 				}
 				rimouski_province = { rimouski mitis amqui causapscal kakouna molsemtekw temiscouata kamouraska northern_notre_dame_mountains }
 				kikonteku_province = { kikonteku kamitsisit etchemin wachilmezi onkobagag sartigan wolastoq }
-				stadacona_province = { stadacona andawaohie ontaretse ahwendoe ondaonnentakwi aunona taoondewake kouate laurentian_massif }
+				stadacona_province = { not_eligible_for_dynamic_country_name = yes stadacona andawaohie ontaretse ahwendoe ondaonnentakwi aunona taoondewake kouate laurentian_massif }
 				minganie_province = { mingan pigou aguanish natashquan manapakuaniskau uanaman upuahpukau magpie_massif notiskuan anticosti natigostec }
 				mecatina_province = { mecatina kegaska coacoachou napetipi mecatina_hills }
 				uashat_province = { uashat nipisso nipissis caopacho opocopa mistecapiu sainte_marguerite_plateau }
@@ -5910,11 +5910,11 @@ america = {
 				laurentides_province = { kiwetin_sipi mikiwam outaragasipi tremblant_massif }
 				alsigontekw_province = { alsigontekw wolinak wabanaki arthabaska nebesek }
 				megantic_province = { nikitotegwak megantic maskikogamak coaticook memphremagog wigwomadenek wagowategok lake_memphremagog }
-				maisouna_province = { ekwentondie yamachiche shawinigan mekinac matawin lake_saint_pierre}
+				maisouna_province = { not_eligible_for_dynamic_country_name = yes ekwentondie yamachiche shawinigan mekinac matawin lake_saint_pierre}
 				outaouais_province = { nagatinong weskarini okaisipi quyon nichabau }
 			}
 			jamesie_area = {
-				abitibi_province = {
+				abitibi_province = { not_eligible_for_dynamic_country_name = yes
 					malartic_lake malartic wasakin chicobi harricana obaska megiscane matagami_depression }
 				nottaway_province = {
 					matagami_lake waswanipi_lake poncheville_lake
@@ -6187,11 +6187,11 @@ america = {
 			}
 			hispaniola_area = {
 				higuey_province = { bavaro yuma mona_island hicayagua cayacoa yamasa boya}
-				maguana_province = { maguana jarabacoa cibao azua bani banique cordrilla_central}
-				magua_province = { yaqui magorix bohio moca samana cubao ciguayo cotui}
-				marien_province = { marien iguamuco guahaba tortuga baynoa}
-				jaragua_province = { jaragua cayguani baoruco guanabo cahay guacayakima haniguayagua yaquimo yaguana baoruco_mountains neiba_mountains}
-				boriken_province = { guaynabo guaraca guaynia guama arasibo ayamaco}
+				maguana_province = { not_eligible_for_dynamic_country_name = yes maguana jarabacoa cibao azua bani banique cordrilla_central}
+				magua_province = { not_eligible_for_dynamic_country_name = yes yaqui magorix bohio moca samana cubao ciguayo cotui}
+				marien_province = { not_eligible_for_dynamic_country_name = yes marien iguamuco guahaba tortuga baynoa}
+				jaragua_province = { not_eligible_for_dynamic_country_name = yes jaragua cayguani baoruco guanabo cahay guacayakima haniguayagua yaquimo yaguana baoruco_mountains neiba_mountains}
+				boriken_province = { not_eligible_for_dynamic_country_name = yes guaynabo guaraca guaynia guama arasibo ayamaco}
 			}
 
 			gulf_of_mexico_area = {
@@ -6388,7 +6388,7 @@ america = {
 					monadnock sunapee coos ammonoosuc
 				}
 			}
-			maine_area = {
+			maine_area = { not_eligible_for_dynamic_country_name = yes
 				casco_province = {
 					casco kennebunk androscoggin pequawket sebago_lake	ammoscongon anasagunticook
 				}
@@ -6398,13 +6398,13 @@ america = {
 				norridgewock_province = {
 					kineo caratunk kennebango moosehead_lake nanrantsouak mittaywanquam
 				}
-				penobscot_province = {
+				penobscot_province = { not_eligible_for_dynamic_country_name = yes
 					penobscot majabigwaduce piscataquis passagassawkeag pemetic millinocket katahdin
 				}
 				aroostook_province = {
 					aroostook meduxnekeag allagash
 				}
-				passamaquoddy_province = {
+				passamaquoddy_province = { not_eligible_for_dynamic_country_name = yes
 					passamaquoddy machias nicatous maatawamkeag
 				}
 			}
@@ -6440,7 +6440,7 @@ america = {
 				onondagega_province = {
 					tsikahiotsisto oswego otsiningo
 				}
-				gayogohono_province = {
+				gayogohono_province = { not_eligible_for_dynamic_country_name = yes
 					skaniatares assorodus gahato seneca_lake skaneateles_lake caguya_lake
 				}
 				onondowaga_province = {
@@ -6515,7 +6515,7 @@ america = {
 			}
 
 			virginia_area = {
-				tsenacommacah_province = {
+				tsenacommacah_province = { not_eligible_for_dynamic_country_name = yes
 					werowocomoco patawomeck wicocomico nanzatico rappahannock
 				}
 				chesapeake_province = {
@@ -6524,16 +6524,16 @@ america = {
 				powhatan_province = {
 					powhatan appamatuck cheroenhaka waqua pamunkey
 				}
-				doeg_province = {
+				doeg_province = { not_eligible_for_dynamic_country_name = yes
 					doeg manassas tegninateo
 				}
-				monacan_province = {
+				monacan_province = { not_eligible_for_dynamic_country_name = yes
 					rassawek mowhemencho appomattox monahassanugh massinacak monasukapanough
 				}
 				saponi_province = {
 					saponi nessoneick occaneechi pintahae meherrin
 				}
-				tutelo_province = {
+				tutelo_province = { not_eligible_for_dynamic_country_name = yes
 					mahock chiswell
 					tutelo torope mondongachate 
 					cumberland_mountains_6
@@ -6569,7 +6569,7 @@ america = {
 
 					mattamuskeet_lake phelps_lake
 				}
-				pamlico_province = {
+				pamlico_province = { not_eligible_for_dynamic_country_name = yes
 					pamlico coree corani neuse
 				}
 				chicora_province = {
@@ -6584,7 +6584,7 @@ america = {
 				yadkin_province = {
 					saura alamance yadkin keyauwee
 				}
-				joara_province = {
+				joara_province = { not_eligible_for_dynamic_country_name = yes
 					joara iswa guaquili eswawpuddenah
 				}
 				kituwa_province = {
@@ -6595,13 +6595,13 @@ america = {
 				}
 			}
 			south_carolina_area = {
-				waccamaw_province = {
+				waccamaw_province = { not_eligible_for_dynamic_country_name = yes
 					waccamaw winyah winnee peedee pocotaligo
 				}
 				santee_province = {
 					etiwan wando kiawah coosaw combahee wimbee santee
 				}
-				cofitachequi_province = {
+				cofitachequi_province = { not_eligible_for_dynamic_country_name = yes
 					cofitachequi hymahi talimeco ilasi
 				}
 				catawba_province = {
@@ -6614,14 +6614,14 @@ america = {
 					selkehatchie saluda congaree kosalu
 				}
 			}
-			georgia_us_area = {
+			georgia_us_area = { not_eligible_for_dynamic_country_name = yes
 				capachequi_province = {
 					capachequi toa kasihta hitchauta pallachacola eufaula
 				}
-				ocute_province = {
+				ocute_province = { not_eligible_for_dynamic_country_name = yes
 					ocute	ichisi altamaha cofaqui
 				}
-				coosa_province = {
+				coosa_province = { not_eligible_for_dynamic_country_name = yes
 					coosa ulibahali apica talimachusi itaba utsutigway 
 					quanasee chattahoochee_forest
 				}
@@ -6637,10 +6637,10 @@ america = {
 				mocama_province = {
 					mocama tacatacaru tamathli icafui
 				}
-				ossabaw_province = {
+				ossabaw_province = { not_eligible_for_dynamic_country_name = yes
 					tybee ossabaw sapelo canoochee
 				}
-				coweta_province = {
+				coweta_province = { not_eligible_for_dynamic_country_name = yes
 					coweta kealedji pakanahuili tussahaw
 				}
 				tuckabutche_province = {
@@ -6648,7 +6648,7 @@ america = {
 				}
 			}
 			florida_area = {
-				timucua_province = {
+				timucua_province = { not_eligible_for_dynamic_country_name = yes
 					timucua malapaz uriutina napituca
 				}
 				mayaca_province = {
@@ -6672,7 +6672,7 @@ america = {
 				tampa_province = {
 					tocaste guazoco mocozo ozita
 				}
-				apalachee_province = {
+				apalachee_province = { not_eligible_for_dynamic_country_name = yes
 					apalachee anhayca azile uzachile
 				}
 				pensacola_province = {
@@ -6699,7 +6699,7 @@ america = {
 				chucalissa_province = {
 					chucalissa hatchie obion chewalla
 				}
-				kaskinampo_province = {
+				kaskinampo_province = { not_eligible_for_dynamic_country_name = yes
 					tombigby kaskinampo cussate chuwalee tullahoma choate tsoyaha
 					sequatchie
 					bledsoe
@@ -6743,7 +6743,7 @@ america = {
 				wapinippi_province = {
 					oheyandewa aankwaahsakwa wapinippi
 				}
-				piankeshaw_province = {
+				piankeshaw_province = { not_eligible_for_dynamic_country_name = yes
 					agouasaque patoka gichthanne
 				}
 				wea_province = {
@@ -6752,7 +6752,7 @@ america = {
 				kankakee_province = {
 					kankakee pakamik wabash
 				}
-				atchakangouen_province = {
+				atchakangouen_province = { not_eligible_for_dynamic_country_name = yes
 					kociihsasiipi tippecanoe micewehudehik kineepikwameekwa
 				}
 			}
@@ -6789,7 +6789,7 @@ america = {
 				peoria_province = {
 					peoria theakeiki waupecan sangamon matsigame
 				}
-				cahokia_province = {
+				cahokia_province = { not_eligible_for_dynamic_country_name = yes
 					cahokia kaskaskia kaskankaham amonokoa macoupin
 				}
 				mitchigamea_province = {
@@ -6858,7 +6858,7 @@ america = {
 				yazoo_province = {
 					yazoo tiou taposa quigualtam koroa
 				}
-				natchez_province = {
+				natchez_province = { not_eligible_for_dynamic_country_name = yes
 					natchez chittaloosa houma
 				}
 			}
@@ -6908,11 +6908,11 @@ america = {
 				catahoula_province = { catahoula tensas tunica }
 			}
 			arkansas_area = {
-				anilco_province = { anilco guachoyo ayays tutilpinco }
-				pacaha_province = { pacaha quigate casqui }
-				coligua_province = { coligua calpista palisema }
+				anilco_province = { not_eligible_for_dynamic_country_name = yes anilco guachoyo ayays tutilpinco }
+				pacaha_province = { not_eligible_for_dynamic_country_name = yes pacaha quigate casqui }
+				coligua_province = { not_eligible_for_dynamic_country_name = yes coligua calpista palisema }
 				ouachita_province = { nanatsoho naguatex catalte aguacay amaye chaguate ouachita_mts }
-				tanico_province = { tanico quipana tula_ark }
+				tanico_province = { not_eligible_for_dynamic_country_name = yes tanico quipana tula_ark }
 				utiangue_province = { utiangue tutilcoya anoixi }
 				cayas_province = { cayas satsukhdin wahzhazhe unica }
 			}
@@ -7023,24 +7023,24 @@ america = {
 					axochiapan cuauhnahuac quauhquechollan huaxtepec
 					itzocan amaticoztitlan
 				}
-				tlapan_province = {
+				tlapan_province = { not_eligible_for_dynamic_country_name = yes
 					tlapan ometepec oapan jicayan zacatepec
 				}
-				yohualtepec_province = {
+				yohualtepec_province = { not_eligible_for_dynamic_country_name = yes
 					yohualtepec huajuapan silacayoapam chiautla
 					cuauhteopan tlazcozauhtitlan
 				}
-				yopitzinco_province = {
+				yopitzinco_province = { not_eligible_for_dynamic_country_name = yes
 					yopitzinco tixtla chilapa tecoanapa
 				}
-				cihuatlan_province = {
+				cihuatlan_province = { not_eligible_for_dynamic_country_name = yes
 					cihuatlan tecpan ixtapan zacatollan
 					teotepec
 				}
-				tlapacoya_province = {
+				tlapacoya_province = { not_eligible_for_dynamic_country_name = yes
 					tlapacoya pachyohcan atocpan zempoala tollantzinco
 				}
-				axocopan_province = {
+				axocopan_province = { not_eligible_for_dynamic_country_name = yes
 					axocopan zimapan ixmiquilpan cadereyta tecozautla
 				}
 			}
@@ -7050,7 +7050,7 @@ america = {
 					comitlan juchatengo
 					nube_flan
 				}
-				tehuantepec_province = {
+				tehuantepec_province = { not_eligible_for_dynamic_country_name = yes
 					tehuantepec zanatepec
 					chimalapan guiigu_yudxi huamelula
 				}
@@ -7066,30 +7066,30 @@ america = {
 					zaachila miahuatlan totolapan mictlan yautepec tlacolula
 				}
 			}
-			tochtepec_area = {
-				teotitlan_province = {
+			tochtepec_area = { not_eligible_for_dynamic_country_name = yes 
+				teotitlan_province = { not_eligible_for_dynamic_country_name = yes
 					teotitlan ixcatlan oxitlan xicaltepec cuicatlan
 				}
-				tochtepec_province = {
+				tochtepec_province = { not_eligible_for_dynamic_country_name = yes
 					tochtepec mixtlan tozlan tlacotlalpan cosamaloapan iztachacalapan
 					nudo_zempoaltepetl
 				}
-				atepec_province = {
+				atepec_province = { not_eligible_for_dynamic_country_name = yes
 					ozumacin atepec cuauhcuetzpaltepec chinantlan tesechoacan
 				}
-				cuetlaxtlan_province = {
+				cuetlaxtlan_province = { not_eligible_for_dynamic_country_name = yes
 					cuetlaxtlan xamapan nopiloa teutila puctlan otatitlan
 				}
-				coatlicamac_province = {
+				coatlicamac_province = { not_eligible_for_dynamic_country_name = yes
 					coatlicamac suchilapan atitlan choapan xochiapa
 				}
 				coatzacoalco_province = {
 					coatzacoalco atzaccan acayucan texistepec tonala_coatzacoalco
 				}
-				cuauhtochco_province = {
+				cuauhtochco_province = { not_eligible_for_dynamic_country_name = yes
 					cuauhtochco ahuilizapan otlaquiquixtla zongolica
 				}
-				cempohuallan_province = {
+				cempohuallan_province = { not_eligible_for_dynamic_country_name = yes
 					cempoala itzcalpan xicochimalco quiahuiztlan
 				}
 			}
@@ -7099,21 +7099,21 @@ america = {
 					huexotzinco cholollan
 					tepozan_mountains
 				}
-				tetela_province = {
+				tetela_province = { not_eligible_for_dynamic_country_name = yes
 					xicotepec zacatlan tetela ixtacamaxtitlan tepeyahualco
 				}
-				tepeyacac_province = {
+				tepeyacac_province = { not_eligible_for_dynamic_country_name = yes
 					tepeyacac tecalco tecamachalco tehuacan tepexi
 					citlaltepetl_mountains
 				}
-				tlatlauquitepec_province = {
+				tlatlauquitepec_province = { not_eligible_for_dynamic_country_name = yes
 					tlatlauquitepec nauhtlan tuzapan papantla
 					tlapacoyan cuyuxquihui
 				}
 				xalapa_province = {
 					xalapa xalacinco mizantla teziutlan
 				}
-				tuxpan_province = {
+				tuxpan_province = { not_eligible_for_dynamic_country_name = yes
 					tuxpan teayotlan pantepec
 				}
 			}
@@ -7123,7 +7123,7 @@ america = {
 					zinapecuaro guayangareo tiripetio tacambaro tzintzuntzan
 					patzcuaro_lake
 				}
-				cuitzeo_province = {
+				cuitzeo_province = { not_eligible_for_dynamic_country_name = yes
 					cuitzeo churumekua tuzantla caracuaro puruaran
 				}
 				ihuatzio_province = {
@@ -7137,15 +7137,15 @@ america = {
 					xilotlan erongaricuaro patzcuaro aguacana uruapan tinguindin
 					tancitaro
 				}
-				coliman_province = {
+				coliman_province = { not_eligible_for_dynamic_country_name = yes
 					coliman tlacalahuastla caxitlan coahuayana chucutitlan apatzingan
 					colima_mountains
 				}
-				tepecoacuilco_province = {
+				tepecoacuilco_province = { not_eligible_for_dynamic_country_name = yes
 					teloloapan ajuchitlan cutzamala tepecoacuilco
 					tetellan zompanco
 				}
-				temascaltepec_province = {
+				temascaltepec_province = { not_eligible_for_dynamic_country_name = yes
 					oztoman tlachco temascaltepec zacazonapan
 				}
 				matlatzinco_province = {
@@ -7153,15 +7153,15 @@ america = {
 					toluca_mountains
 				}
 			}
-			xilotepec_area = {
-				xilotepec_province = {
+			xilotepec_area = { not_eligible_for_dynamic_country_name = yes 
+				xilotepec_province = { not_eligible_for_dynamic_country_name = yes
 					mixquiahuala tollan cuauhtitlan
 					xilotepec ixtachichimecapan kerhiretarhu
 				}
-				tetzapotitlan_province = {
+				tetzapotitlan_province = { not_eligible_for_dynamic_country_name = yes
 					tetzapotitlan huayacocotla tutotepec
 				}
-				metztitlan_province = {
+				metztitlan_province = { not_eligible_for_dynamic_country_name = yes
 					metztitlan jalpan tziuhcoac oxtlipan
 				}
 				pechichitane_province = {
@@ -7213,11 +7213,11 @@ america = {
 					maya_jungle
 				}
 			}
-			chactemal_area = {
-				chactemal_province = { #Cháak teʼ éemal
+			chactemal_area = { not_eligible_for_dynamic_country_name = yes 
+				chactemal_province = { not_eligible_for_dynamic_country_name = yes #Cháak teʼ éemal
 					chactemal colha nohmul chakanbakan xpuhil dzibanche
 				}
-				uaymil_province = {
+				uaymil_province = { not_eligible_for_dynamic_country_name = yes
 					bakhalal chacchoben tixmul xpaicheil telantunich
 				}
 				ekab_province = {
@@ -7225,33 +7225,33 @@ america = {
 				}
 			}
 			
-			xalisco_area = {
+			xalisco_area = { not_eligible_for_dynamic_country_name = yes
 				tochpan_province = {
 					tlayolan tochpan tlamazolan sayula
 				}
 				cuzalapa_province = {
 					cuzalapa amollan cocollan cutzalan
 				}
-				tomatlan_province = {
+				tomatlan_province = { not_eligible_for_dynamic_country_name = yes
 					tomatlan xihutla zihuatlan melahuacan revillagigedo_islands
 				}
-				cuauhchinanco_province = {
+				cuauhchinanco_province = { not_eligible_for_dynamic_country_name = yes
 					cuauhchinanco tlalpan amaxacotlan cuautla
 				}
-				autlan_province = {
+				autlan_province = { not_eligible_for_dynamic_country_name = yes
 					autlan tenamaxtlan ameca huitzquilic etzatlan tala_mx
 				}
-				ahuacatlan_province = {
+				ahuacatlan_province = { not_eligible_for_dynamic_country_name = yes
 					ahuacatlan tzapotzingo hostoticpac hostotipaquillo
 				}
-				aztatlan_province = {
+				aztatlan_province = { not_eligible_for_dynamic_country_name = yes
 					xalisco magdalenas aztatlan sentispac
 				}
 				tonala_province = {
 					tonala tlaxomulco chapallan acatic ixtlahuacan coinan
 					chapala_lake
 				}
-				tepactitlan_province = {
+				tepactitlan_province = { not_eligible_for_dynamic_country_name = yes
 					mextiacan mitic metzquititlan xalostotitlan tepactitlan yahualican
 				}
 			}
@@ -7287,7 +7287,7 @@ america = {
 				}
 			}
 			tezulutlan_area = {
-				cuauhtemallan_province = {
+				cuauhtemallan_province = { not_eligible_for_dynamic_country_name = yes
 					acasaguastlan chiquimula cuauhtemallan guazacapan itzalku
 					#Wastelands
 					minas_mountains
@@ -7308,11 +7308,11 @@ america = {
 					izabal_lake golfete_lake
 				}
 			}
-			kuskatan_area = {
+			kuskatan_area = { not_eligible_for_dynamic_country_name = yes 
 				maniani_province = {
 					talanga tecohtzincalpan comayagua maniani
 				}
-				chorti_province = {
+				chorti_province = { not_eligible_for_dynamic_country_name = yes
 					tencoa ocotepec opoa cururu shalatenan
 				}
 				naco_province = {
@@ -7324,7 +7324,7 @@ america = {
 				pech_province = {
 					pech sico olanchito ollalko papayeca
 				}
-				kuskatan_province = { #Popocatépet
+				kuskatan_province = { not_eligible_for_dynamic_country_name = yes #Popocatépet
 					usulutan chalchuapa metapan kuskatan cojutepeque nonualco
 					gotera queiquin
 				}
@@ -7361,7 +7361,7 @@ america = {
 				}
 			}
 			panama_area = {
-				tariaca_province = {
+				tariaca_province = { not_eligible_for_dynamic_country_name = yes
 					veragua caribaro terbi dererri tariaca kabeka
 					#Wastelands
 					veragua_jungle
@@ -7428,10 +7428,10 @@ america = {
 					tahejoc comcaac cucurpe xiica_xnaai_iic_coii
 					pitic ures aconchi aritpa
 				}
-				yoreme_province = {
+				yoreme_province = { not_eligible_for_dynamic_country_name = yes
 					yoreme huatabampo chinipas makurawe cosihuiriachi
 				}
-				yaqui_province = {
+				yaqui_province = { not_eligible_for_dynamic_country_name = yes
 					matape guaimas soyopa sahuaripa batuco
 					oposura papigochic babicora corodehuachi
 				}
@@ -7454,12 +7454,12 @@ america = {
 					atanagunypacam tamaulipeco maratine coospacam magueyes
 					hualahuises galeana pilon
 				}
-				tula_province = {
+				tula_province = { not_eligible_for_dynamic_country_name = yes
 					pantlan tula mante ypoa
 				}
 			}
 			guachichil_area = {
-				guachichil_province = {
+				guachichil_province = { not_eligible_for_dynamic_country_name = yes
 					ma_tehua_llan guanchenis mazatlpilli mazatepec guachichil
 					miopacoas
 				}
@@ -7467,7 +7467,7 @@ america = {
 					 coneto papanton cuencame
 					alamamas irritila
 				}
-				tepehuan_province = {
+				tepehuan_province = { not_eligible_for_dynamic_country_name = yes
 					tepehuan inde guanacevi papasquiaro
 				}
 				sisimbles_province = {
@@ -7512,7 +7512,7 @@ america = {
 				waco_province = {
 					melenudo waco nokoni
 				}
-				kitaish_province = {
+				kitaish_province = { not_eligible_for_dynamic_country_name = yes
 					tanimuu kitsai taovaya tawakoni aays yscani
 				}
 				tchokana_province = {
@@ -7546,7 +7546,7 @@ america = {
 				}
 			}
 			shiewhibak_area = {
-				shiewhibak_province = {
+				shiewhibak_province = { not_eligible_for_dynamic_country_name = yes
 					tih_go_tel teypana shiewhibak aaku halona_idiwana
 					tsiya tuf_shur_tia than_u_ge ohkweeo_owingeh ialophaybo
 					dinetah nde_nda_i
@@ -7559,7 +7559,7 @@ america = {
 					kwatsaan halchidoma aha_macav hwalbay havasubaaja
 					tu_dotlizh_ndee grand_canyon
 				}
-				akimel_oodham_province = {
+				akimel_oodham_province = { not_eligible_for_dynamic_country_name = yes
 					piipaash akimel_oodham sobaipuri jocome tsoka_ne_nde
 					bidanku dzil_nchaa_sian tse_binestie totokwan kohatk
 					dzil_ligai_mountains
@@ -7577,7 +7577,7 @@ america = {
 					nochistlan xochipillan teulinchan xochitepec huaxtla
 					fria_mountains
 				}
-				sauzas_province = {
+				sauzas_province = { not_eligible_for_dynamic_country_name = yes
 					sauzas guaxaban xiconaque cuxtaque
 				}
 			}
@@ -7965,7 +7965,7 @@ america = {
 				molalla_province = {
 					 giiwas meli_lema tukspush south_cascade central_cascade
 				}
-				chinook_province = {
+				chinook_province = { not_eligible_for_dynamic_country_name = yes
 					tillamook atfalati chinook multnomah watlala
 				}
 				olympic_province = {
@@ -8001,7 +8001,7 @@ america = {
 				cascadia_province = {
 					puyallup kittikas duwamish snohomish skagit nisqually
 				}
-				halkomelem_province = {
+				halkomelem_province = { not_eligible_for_dynamic_country_name = yes
 					nooksack lhaq_temish sto_lo sts_ailes whonnock katzie
 				}
 				strathcona_province = {
@@ -8143,7 +8143,7 @@ america = {
 					andaki chaira caguan papamane guayupes ariari guaviare mocoa
 					 guacharos_jungle tinigua_jungle
 				}
-				coyaima_province = {
+				coyaima_province = { not_eligible_for_dynamic_country_name = yes
 					pasca timana purace otas coyaima yaporox quicuima
 					leiva_mountains norcacia_jungle
 				}
@@ -8168,7 +8168,7 @@ america = {
 					caly buga caloto micay timbiqui yauto munchique
 					cali_jungle cali_mountain naya_mountains munchique_mountains napiu_jungle
 				}
-				tahami_province = {
+				tahami_province = { not_eligible_for_dynamic_country_name = yes
 					vijes sonso gorrones tahamies cauroma umbra otun tulua
 					cauca_jungle calima_mountains
 				}
@@ -8223,7 +8223,7 @@ america = {
 
 					madeira_amazon_jungle
 				}
-				marajoara_province = {
+				marajoara_province = { not_eligible_for_dynamic_country_name = yes
 					curumu ananatuba anajas arari marajoara pixipixi
 
 					marajoara_jungle
@@ -8587,7 +8587,7 @@ america = {
 		}
 		andes_region = {
 			quitu_area = {
-				guancavilca_province = {
+				guancavilca_province = { not_eligible_for_dynamic_country_name = yes
 					guancavilca manta guayaquil daule yaguachi puna chacayacu machala yazne
 				}
 				atacames_province = {
@@ -8611,7 +8611,7 @@ america = {
 				}
 			}
 			chala_area = {
-				xllang_province = {
+				xllang_province = { not_eligible_for_dynamic_country_name = yes
 					tumbes chira nariguala nunura xllang
 					ayahuacas guayacundo apurlec huancapampa
 				}
@@ -8682,7 +8682,7 @@ america = {
 					chimore_jungle tiraque_jungle altamachi_jungle challana_jungle apolobamba_jungle
 					tunari_mountains
 				}
-				chuwi_province = {
+				chuwi_province = { not_eligible_for_dynamic_country_name = yes
 					pomabamba huacareta tomina takopaya yamparaez samaipata chuwi mizque
 					sachchaa_mukku arque incarraqay
 
@@ -8699,7 +8699,7 @@ america = {
 
 					waqurunchu_mountains
 				}
-				huaylas_province = {
+				huaylas_province = { not_eligible_for_dynamic_country_name = yes
 					andaymarca pashas tumshukaiko waricoto choquerecuay kasha_tampu quillahuaca willcahuain
 
 					yerupaja_mountains pampacancha_mountains quilpa_hirka_mountains quiman_mountains
@@ -8752,7 +8752,7 @@ america = {
 
 					illimani_volcano
 				}
-				sura_province = {
+				sura_province = { not_eligible_for_dynamic_country_name = yes
 					kori_bara_karaa_ancas callapa ayo_ayo sicasica curahuara matarjawira sura
 
 					jaqi_jiwata_mountain
@@ -8763,7 +8763,7 @@ america = {
 					chak_xana_volcano aucanquilcha_volcano
 					poopo_lake coipasa_salt_pan uyuni_salt_pan
 				}
-				charka_province = {
+				charka_province = { not_eligible_for_dynamic_country_name = yes
 					charka colquechaca ccantumarcani thumilki oronckota chake tupiza payacullo
 					camataqui
 
@@ -9297,7 +9297,7 @@ oceania = {
 			}
 			south_island_area = {
 				whakatu_province = { tauihu kahurangi kaikoura whakatu te_tai_aorere}
-				waitaha_province = { timaru puari rakaia kaiapoi akaroa }
+				waitaha_province = { not_eligible_for_dynamic_country_name = yes timaru puari rakaia kaiapoi akaroa }
 				murihiku_province = { otakou rakiura kaitangata otepoti waihopai motupohue macquarie }
 				tai_poutini_province = {
 					okarito hurunui taramakau mahitahi mawhera
@@ -9354,12 +9354,12 @@ oceania = {
 	pacific_islands = {
 		polynesia_region = {
 			hawaii_area = {
-				hawaii_province = {
+				hawaii_province = { not_eligible_for_dynamic_country_name = yes
 					kohala kona ka_u hilo
 
 					mauna_loa
 				}
-				maui_province = {
+				maui_province = { not_eligible_for_dynamic_country_name = yes
 					maui lahaina moloka_i o_ahu kaua_i
 				}
 			}
@@ -9643,7 +9643,7 @@ oceania = {
 				}
 			}
 			#Tonga ---- https://en.wikipedia.org/wiki/Tonga
-			tonga_area = {
+			tonga_area = { not_eligible_for_dynamic_country_name = yes
 				tongatapu_province = {
 					tongatapu tongatapu_atoll eua
 				}
@@ -9683,8 +9683,8 @@ oceania = {
 					olohega nukunonu_atoll atafu_atoll
 				}
 			}
-			samoa_area = {
-				samoa_province = {
+			samoa_area = { not_eligible_for_dynamic_country_name = yes 
+				samoa_province = { not_eligible_for_dynamic_country_name = yes
 					savaii upolu
 				}
 				tutuila_province = {
@@ -9709,7 +9709,7 @@ oceania = {
 				iwo_jima_province = {
 					iwo_jima kita_iwo_jima
 				}
-				ogasawara_province = {
+				ogasawara_province = { not_eligible_for_dynamic_country_name = yes
 					hahajima chichijima
 				}
 			}
@@ -9761,7 +9761,7 @@ oceania = {
 				belau_province = {
 					angaur belau belau_atoll
 				}
-				yap_province = { #https://en.wikipedia.org/wiki/Yap_State
+				yap_province = { not_eligible_for_dynamic_country_name = yes #https://en.wikipedia.org/wiki/Yap_State
 					caroline_atoll piagailoe_atoll lamotrek_atoll faraulep_atoll west_faru_atoll woleai_atoll ulithi_atoll yap ngulu_atoll
 				}
 			}

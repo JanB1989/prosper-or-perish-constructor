@@ -26,11 +26,12 @@ from .start_rules import Rules, Unresolved, first
 from ..setup_layout import SETUP_DIR
 
 
-VANILLA_CLIMATES = {"arctic", "arid", "cold_arid", "continental", "mediterranean", "oceanic", "subtropical", "tropical"}
+VANILLA_CLIMATES = {"arctic", "arid", "cold_arid", "cold_semi_arid", "continental", "hot_semi_arid", "mediterranean", "oceanic",
+                    "subpolar", "subtropical", "tropical"}   # EU5 1.4 keys; the World Builder uses them for its own semi-arid and subpolar
 
 
 def climate_key(name):
-    """The game's climate key for a World Builder class (the handover writes 'subarctic' for ha1300_climate_subarctic)."""
+    """The game's climate key for a World Builder class (the handover writes 'savanna' for ha1300_climate_savanna)."""
     if not name:
         return None
     name = str(name)

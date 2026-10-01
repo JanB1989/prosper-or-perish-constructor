@@ -31,7 +31,7 @@ building:
           NOT = { is_adjacent_to_lake = yes }
         }
         AND = {
-          OR = { climate = ha1300_climate_hot_steppe climate = ha1300_climate_cold_steppe }
+          OR = { climate = hot_semi_arid climate = cold_semi_arid }
           OR = { vegetation = desert vegetation = ha1300_veg_scrubland vegetation = sparse }
           has_river = no
           NOT = { is_adjacent_to_lake = yes }

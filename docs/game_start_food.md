@@ -140,7 +140,7 @@ before). The model now finds 2,847 pools short on day 0 against the engine's
 
 Yield factors (food per 1,000 jobless worker = 1.5 x rank x climate): rural
 1.56, town 1.53, city 1.46, megalopolis 1.39; climates with at least 500k
-jobless workers range from arctic 0.43, highland monsoon 0.64, cold steppe 0.84,
+jobless workers range from arctic 0.43, highland monsoon 0.64, cold semi-arid 0.84,
 continental monsoon 0.89 to subtropical monsoon 1.08 (the cold ones carry the
 April winter consumption of the reference save). The province food capacity is
 fitted as 32 per development point + 3.65 per 1,000 pops + 100 per location +

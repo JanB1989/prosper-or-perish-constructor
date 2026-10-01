@@ -143,7 +143,7 @@ def test_winter_levels_match_the_mod_climates():
         if share:
             block = text.split(f"TRY_INJECT:winter_{level}")[1].split("TRY_INJECT:")[0]
             assert f"local_peasants_food_consumption = {share:g}" in block
-    assert fs.winter_consumption("ha1300_climate_subarctic") == 0.375 and fs.winter_consumption(None) == 0.0
+    assert fs.winter_consumption("subpolar") == 0.375 and fs.winter_consumption(None) == 0.0
 
 
 def test_regional_harvests_follow_the_mod_tables():

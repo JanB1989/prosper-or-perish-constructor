@@ -17,9 +17,9 @@ smallpox = { #https://en.wikipedia.org/wiki/Smallpox
 				#Climate preferences
 				OR = {
 					climate = mediterranean
-					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
+					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon }
 					OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
-					OR = { climate = cold_arid climate = ha1300_climate_cold_steppe }
+					climate = cold_arid
 					OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
 					OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
 				}

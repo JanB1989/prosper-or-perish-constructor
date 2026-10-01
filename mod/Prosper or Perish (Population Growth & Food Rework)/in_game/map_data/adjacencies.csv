@@ -183,6 +183,8 @@ wolgast;swinousjcie;sea;pommeranian_coast;8320;6555;8320;6557;xxx
 swinousjcie;kamien;sea;pommeranian_coast;8359;6549;8361;6549;xxx
 mestre;venice;sea;gulf_venice;8252;5986;8254;5984;xxx
 senja;bardodalen;sea;senja_island;8508;7694;8511;7694;xxx
+bardawil_coast;gulf_suez;canal;suez;9168;5106;9173;5029;Suez Canal - TBD pixel coords from map team
+limon_bay;panama_gulf;canal;panama;4074;3878;4070;3839;Panama Canal - TBD pixel coords from map team
 abdas;al_madar;sea;pp_nav_00538;9837;5134;9839;5134;River navigation crossing
 abrahamtelke;adony;sea;pp_nav_00352;8551;6094;8549;6092;River navigation crossing
 abrahamtelke;fehervar;sea;pp_nav_00337;8553;6102;8551;6100;River navigation crossing
@@ -270,7 +272,7 @@ bikrampur;qasba;sea;pp_nav_00670;11809;4650;11807;4648;River navigation crossing
 bjelovar;sisak;sea;pp_nav_00370;8432;5999;8430;5997;River navigation crossing
 bo_hai_khau;thien_truong;sea;pp_nav_00686;12526;4485;12524;4483;River navigation crossing
 bodrog;mohacs;sea;pp_nav_00365;8546;6018;8544;6016;River navigation crossing
-boguchar;veesky;sea;pp_nav_00276;9554;6271;9556;6269;River navigation crossing
+boguchar;veesky;sea;pp_nav_00276;9553;6270;9555;6268;River navigation crossing
 bolghar;tetyushi;sea;pp_nav_00164;9917;6618;9915;6616;River navigation crossing
 bolshoy_yugan;megion;sea;pp_nav_00048;11141;7060;11139;7058;River navigation crossing
 borgloon;maastricht;sea;pp_nav_00253;7951;6345;7953;6343;River navigation crossing
@@ -371,7 +373,7 @@ drohiczyn;sokolow;sea;pp_nav_00211;8713;6457;8711;6455;River navigation crossing
 duanxi;ducheng;sea;pp_nav_00675;12770;4640;12768;4638;River navigation crossing
 duanxi;jinkang;sea;pp_nav_00677;12789;4636;12787;4634;River navigation crossing
 dubbi;shadodkot;sea;pp_nav_00617;10794;4875;10792;4873;River navigation crossing
-dura;rangpur_bengal;sea;pp_nav_00645;11772;4762;11770;4760;River navigation crossing
+dura;rangpur_bengal;sea;pp_nav_00637;11777;4782;11775;4780;River navigation crossing
 dusseldorf;neuss;sea;pp_nav_00251;7998;6373;7996;6371;River navigation crossing
 einbeck;hoxter;sea;pp_nav_00228;8121;6395;8119;6393;River navigation crossing
 ekwentondie;nebesek;sea;pp_nav_00362;4383;6038;4385;6036;River navigation crossing
@@ -506,7 +508,7 @@ kaltysyany;vezhakary;sea;pp_nav_00022;10660;7225;10662;7223;River navigation cro
 kamach;mocana;sea;pp_nav_00739;4292;3942;4290;3940;River navigation crossing
 kamalia;chichawatni;sea;pp_nav_00565;10998;5069;11000;5067;River navigation crossing
 kamalia;tulamba;sea;pp_nav_00565;10985;5071;10987;5069;River navigation crossing
-kamatapur;dura;sea;pp_nav_00637;11776;4788;11778;4786;River navigation crossing
+kamatapur;dura;sea;pp_nav_00637;11775;4786;11777;4784;River navigation crossing
 kamyshin;berezhnovka;sea;pp_nav_00271;9762;6291;9764;6289;River navigation crossing
 kamyshin;rovnoye;sea;pp_nav_00265;9777;6309;9779;6307;River navigation crossing
 kandiaro;paat;sea;pp_nav_00621;10783;4852;10781;4850;River navigation crossing
@@ -636,7 +638,7 @@ mepenes;qollaxalec;sea;pp_nav_00803;5014;1807;5012;1805;River navigation crossin
 mezhutka;staraya_ladoga;sea;pp_nav_00058;9164;6988;9162;6986;River navigation crossing
 mie;nakajima;sea;pp_nav_00509;13912;5339;13914;5339;River navigation crossing
 minden;detmold;sea;pp_nav_00220;8096;6431;8098;6429;River navigation crossing
-mindon;pyay;sea;pp_nav_00690;12023;4386;12025;4384;River navigation crossing
+mindon;pyay;sea;pp_nav_00690;12019;4401;12021;4401;River navigation crossing
 minxian;changle_fujian;sea;pp_nav_00630;13127;4800;13129;4798;River navigation crossing
 minya;tahna;sea;pp_nav_00607;9089;4935;9091;4933;River navigation crossing
 mitchigamea;charquis;sea;pp_nav_00489;3661;5459;3659;5457;River navigation crossing
@@ -782,7 +784,7 @@ rovigo;comacchio;sea;pp_nav_00391;8240;5954;8242;5954;River navigation crossing
 rovigo;ferrara;sea;pp_nav_00391;8223;5950;8225;5948;River navigation crossing
 sabac;sremska_mitrovica;sea;pp_nav_00398;8588;5946;8590;5944;River navigation crossing
 sagaing;pinya;sea;pp_nav_00683;12054;4566;12052;4564;River navigation crossing
-sagaing;wetwin;sea;pp_nav_00681;12059;4580;12061;4580;River navigation crossing
+sagaing;wetwin;sea;pp_nav_00681;12059;4581;12061;4581;River navigation crossing
 saint_etienne;vienne;sea;pp_nav_00372;7906;5981;7908;5979;River navigation crossing
 salay;salin;sea;pp_nav_00685;12004;4497;12002;4495;River navigation crossing
 salvaterra;santarem;sea;pp_nav_00451;7297;5589;7295;5587;River navigation crossing
@@ -877,7 +879,7 @@ tereshka;baronsk;sea;pp_nav_00230;9824;6405;9826;6403;River navigation crossing
 tereshka;pokrovsk;sea;pp_nav_00239;9799;6401;9801;6399;River navigation crossing
 thanlyin;dala;sea;pp_nav_00694;12071;4275;12069;4273;River navigation crossing
 thatta;muhammad_tur;sea;pp_nav_00657;10784;4725;10786;4723;River navigation crossing
-thayet;pyay;sea;pp_nav_00690;12020;4405;12022;4403;River navigation crossing
+thayet;pyay;sea;pp_nav_00690;12019;4404;12021;4402;River navigation crossing
 tiel;hertogenbosch;sea;pp_nav_00236;7930;6401;7932;6399;River navigation crossing
 titel;sremska_mitrovica;sea;pp_nav_00379;8582;5971;8580;5969;River navigation crossing
 tolna;bodrog;sea;pp_nav_00365;8546;6027;8548;6025;River navigation crossing

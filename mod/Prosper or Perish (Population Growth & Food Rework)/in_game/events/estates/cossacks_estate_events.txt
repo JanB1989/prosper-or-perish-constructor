@@ -10,9 +10,9 @@ scripted_trigger is_steppe_location = {
 		OR = { vegetation = grasslands vegetation = ha1300_veg_savanna vegetation = ha1300_veg_marsh }
 	}
 	OR = {
-		OR = { climate = cold_arid climate = ha1300_climate_cold_steppe }
+		climate = cold_arid
 		AND = {
-			OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
+			OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon }
 			OR = {
 				region = region:steppes_region
 				region = region:mongolia_region

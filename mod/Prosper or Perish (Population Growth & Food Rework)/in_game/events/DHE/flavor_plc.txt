@@ -4,7 +4,7 @@ scripted_trigger plc_cossack_interest_location_trigger = {
 		OR = { vegetation = grasslands vegetation = ha1300_veg_savanna vegetation = ha1300_veg_marsh }
 		OR = { vegetation = sparse vegetation = ha1300_veg_scrubland vegetation = ha1300_veg_tundra }
 	}
-	OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
+	OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon }
 	region = region:steppes_region
 }
 

@@ -52,50 +52,6 @@ ha1300_climate_savanna = {
 	debug_color = rgb { 173 171 74 } # for climate_screenshot mapmode
 }
 
-ha1300_climate_hot_steppe = {
-	winter = none
-	color = ha1300_color_ha1300_climate_hot_steppe
-	has_precipitation = yes
-
-	location_modifier = {
-		local_wheat_output_modifier = -0.1
-		local_life_expectancy = -5
-		
-		free_capacity_attracts_pops = yes
-		
-		local_supply_limit_modifier = -0.10
-	}
-	unit_modifier = {
-	}
-	
-	audio_tags = {
-		masDataClimateZone = 0.65
-	}
-	debug_color = rgb { 211 182 91 } # for climate_screenshot mapmode
-}
-
-ha1300_climate_cold_steppe = {
-	winter = normal
-	color = ha1300_color_ha1300_climate_cold_steppe
-	has_precipitation = yes
-
-	location_modifier = {
-		local_wheat_output_modifier = -0.05
-
-		free_capacity_attracts_pops = yes
-		
-		local_supply_limit_modifier = -0.05
-	}
-	unit_modifier = {
-	}
-	
-	
-	audio_tags = {
-		masDataClimateZone = 0.65
-	}
-	debug_color = rgb { 174 170 112 } # for climate_screenshot mapmode
-}
-
 ha1300_climate_subtropical_monsoon = {
 	winter = mild
 	color = ha1300_color_ha1300_climate_subtropical_monsoon
@@ -185,20 +141,4 @@ ha1300_climate_continental_monsoon = {
 		masDataClimateZone = 0.2
 	}
 	debug_color = rgb { 97 113 187 }  # for climate_screenshot mapmode
-}
-
-ha1300_climate_subarctic = {
-	winter = severe
-	
-	color = ha1300_color_ha1300_climate_subarctic
-	
-	location_modifier = {
-		local_population_capacity_modifier = 0.50
-		free_capacity_attracts_pops = yes
-	}
-	
-	audio_tags = {
-		masDataClimateZone = 0.2
-	}
-	debug_color = rgb { 99 118 151 }  # for climate_screenshot mapmode
 }

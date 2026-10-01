@@ -37,7 +37,7 @@ location_potential = {
                 topography = plateau
             }
             OR = {
-                OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
+                OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
                 OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
                 climate = mediterranean
             }

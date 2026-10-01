@@ -59,9 +59,9 @@ pp_navigation_discovery = {
   location:bhadohi = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00647 = { discover_location = scope:pp_nav_discoverer } } }
   location:bhagalpur = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00654 = { discover_location = scope:pp_nav_discoverer } } }
   location:bihar_sharif = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00644 = { discover_location = scope:pp_nav_discoverer } } }
-  location:bikrampur = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00666 = { discover_location = scope:pp_nav_discoverer } } }
   location:bo_hai_khau = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00688 = { discover_location = scope:pp_nav_discoverer } } }
   location:bodrog = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00365 = { discover_location = scope:pp_nav_discoverer } } }
+  location:bokovskaya = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00285 = { discover_location = scope:pp_nav_discoverer } } }
   location:bol_shaya_martynovka = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00342 = { discover_location = scope:pp_nav_discoverer } } }
   location:bolghar = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00162 = { discover_location = scope:pp_nav_discoverer } location:pp_nav_00164 = { discover_location = scope:pp_nav_discoverer } } }
   location:bolkhuny = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00330 = { discover_location = scope:pp_nav_discoverer } } }
@@ -399,6 +399,7 @@ pp_navigation_discovery = {
   location:orinucu = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00747 = { discover_location = scope:pp_nav_discoverer } location:pp_nav_00750 = { discover_location = scope:pp_nav_discoverer } } }
   location:ostrovskoye = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00115 = { discover_location = scope:pp_nav_discoverer } } }
   location:oudenaarde = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00260 = { discover_location = scope:pp_nav_discoverer } } }
+  location:pabna = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00666 = { discover_location = scope:pp_nav_discoverer } } }
   location:palembang = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00783 = { discover_location = scope:pp_nav_discoverer } } }
   location:palma_del_rio = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00482 = { discover_location = scope:pp_nav_discoverer } } }
   location:pamticough = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00500 = { discover_location = scope:pp_nav_discoverer } } }
@@ -588,7 +589,7 @@ pp_navigation_discovery = {
   location:uzes = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00419 = { discover_location = scope:pp_nav_discoverer } } }
   location:valence = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00383 = { discover_location = scope:pp_nav_discoverer } location:pp_nav_00408 = { discover_location = scope:pp_nav_discoverer } } }
   location:varanasi = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00656 = { discover_location = scope:pp_nav_discoverer } } }
-  location:veesky = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00283 = { discover_location = scope:pp_nav_discoverer } location:pp_nav_00285 = { discover_location = scope:pp_nav_discoverer } } }
+  location:veesky = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00283 = { discover_location = scope:pp_nav_discoverer } } }
   location:vekshenga = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00074 = { discover_location = scope:pp_nav_discoverer } } }
   location:veliky_ustyug = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00037 = { discover_location = scope:pp_nav_discoverer } location:pp_nav_00051 = { discover_location = scope:pp_nav_discoverer } location:pp_nav_00054 = { discover_location = scope:pp_nav_discoverer } } }
   location:velyka_lepetykha = { if = { limit = { is_discovered_by = scope:pp_nav_discoverer } location:pp_nav_00344 = { discover_location = scope:pp_nav_discoverer } } }

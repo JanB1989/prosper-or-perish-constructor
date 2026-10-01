@@ -703,7 +703,7 @@ per_level = {}
 subsistence_pop_types = ["peasants", "slaves"]
 yield_rank = { rural_settlement = 1.04, town = 1.019, city = 0.972, megalopolis = 0.924 }
 # climates with >= 500k jobless workers; the cold ones carry the April winter consumption of the reference save
-yield_climate = { arctic = 0.428, arid = 1.013, cold_arid = 0.95, cold_steppe = 0.839, continental = 1.035, continental_monsoon = 0.889, dry_summer_continental = 1.069, highland_monsoon = 0.641, hot_steppe = 1.048, mediterranean = 0.98, oceanic = 1.001, savanna = 1.023, subtropical = 0.964, subtropical_monsoon = 1.082, tropical = 1.056, tropical_monsoon = 1.044 }
+yield_climate = { arctic = 0.428, arid = 1.013, cold_arid = 0.95, cold_semi_arid = 0.839, continental = 1.035, continental_monsoon = 0.889, dry_summer_continental = 1.069, highland_monsoon = 0.641, hot_semi_arid = 1.048, mediterranean = 0.98, oceanic = 1.001, savanna = 1.023, subtropical = 0.964, subtropical_monsoon = 1.082, tropical = 1.056, tropical_monsoon = 1.044 }
 # the overpopulation modifier: local_peasants_food_consumption +0.5 per unit of pop / capacity - 1 (fitted -0.47..-0.51)
 overpopulation_consumption = 0.5
 start_food_share = 1.0             # the engine fills every province store to capacity at setup; the mod leaves it

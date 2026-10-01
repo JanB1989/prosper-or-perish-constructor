@@ -118,11 +118,12 @@ WINTER_CONSUMPTION = {"none": 0.0, "mild": 0.125, "normal": 0.25, "severe": 0.37
 # the maximum winter level of each climate (in_game/common/climates: vanilla and the World Builder ha1300_climate_*),
 # keyed like the World Builder location attributes (without the ha1300_climate_ prefix)
 CLIMATE_WINTER = {
-    "arctic": "severe", "subarctic": "severe",
-    "continental": "normal", "continental_monsoon": "normal", "dry_summer_continental": "normal", "cold_steppe": "normal",
+    "arctic": "severe", "subpolar": "severe",
+    "continental": "normal", "continental_monsoon": "normal", "dry_summer_continental": "normal",
+    "cold_semi_arid": "normal",   # vanilla 1.4 says mild; the World Builder overrides it to normal (its 1.3 cold steppe)
     "subpolar_oceanic": "normal",
     "oceanic": "mild", "highland_monsoon": "mild", "subtropical_monsoon": "mild", "cold_arid": "mild",
-    "arid": "none", "hot_steppe": "none", "savanna": "none", "mediterranean": "none", "subtropical": "none",
+    "arid": "none", "hot_semi_arid": "none", "savanna": "none", "mediterranean": "none", "subtropical": "none",
     "tropical": "none", "tropical_monsoon": "none",
 }
 

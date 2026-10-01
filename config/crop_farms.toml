@@ -264,7 +264,7 @@ location_rule = '''
 OR = {
 	raw_material = goods:wheat
 	AND = {
-		NOT = { OR = { climate = arctic climate = ha1300_climate_subarctic } }
+		NOT = { OR = { climate = arctic climate = subpolar } }
 		NOT = { OR = { vegetation = jungle vegetation = ha1300_veg_tundra } }
 	}
 }
@@ -445,7 +445,7 @@ location_rule = '''
 OR = {
 	raw_material = goods:millet
 	AND = {
-		NOT = { OR = { climate = arctic climate = ha1300_climate_subarctic climate = ha1300_climate_subpolar_oceanic } }
+		NOT = { OR = { climate = arctic climate = subpolar climate = ha1300_climate_subpolar_oceanic } }
 		NOT = { vegetation = ha1300_veg_tundra }
 	}
 }
@@ -527,7 +527,7 @@ location_rule = '''
 OR = {
 	raw_material = goods:maize
 	AND = {
-		NOT = { OR = { climate = arctic climate = ha1300_climate_subarctic climate = ha1300_climate_subpolar_oceanic climate = cold_arid } }
+		NOT = { OR = { climate = arctic climate = subpolar climate = ha1300_climate_subpolar_oceanic climate = cold_arid } }
 		NOT = { vegetation = ha1300_veg_tundra }
 	}
 }
@@ -694,7 +694,7 @@ OR = {
 	AND = {
 		NOT = { climate = arctic }
 		OR = {
-			NOT = { OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna climate = arid climate = ha1300_climate_hot_steppe } }
+			NOT = { OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna climate = arid climate = hot_semi_arid } }
 			topography = hills
 			topography = mountains
 			topography = plateau

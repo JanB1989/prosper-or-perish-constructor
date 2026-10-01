@@ -3,7 +3,9 @@
 	clamp_to_water_level=no
 	render_under_water=no
 	generated_content=no
-	layer=""
+	disable_transform_packing=no
+	disable_instance_clearing=no
+	layer="unit_layer"
 	instances={
 		{
 			id=stockholm
@@ -160491,7 +160493,7 @@
  { id=pp_nav_00235 position={ 8257.5 0 6406.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00236 position={ 7944.5 0 6402.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00237 position={ 8672.5 0 6394.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
- { id=pp_nav_00238 position={ 9468.5 0 6388.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
+ { id=pp_nav_00238 position={ 9468.5 0 6386.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00239 position={ 9810.5 0 6398.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00240 position={ 8284.5 0 6388.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00241 position={ 8427.5 0 6394.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
@@ -160536,9 +160538,9 @@
  { id=pp_nav_00280 position={ 8073.5 0 6265.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00281 position={ 9752.5 0 6263.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00282 position={ 8002.5 0 6268.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
- { id=pp_nav_00283 position={ 9567.5 0 6261.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
+ { id=pp_nav_00283 position={ 9567.5 0 6260.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00284 position={ 9138.5 0 6255.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
- { id=pp_nav_00285 position={ 9599.5 0 6255.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
+ { id=pp_nav_00285 position={ 9600.5 0 6255.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00286 position={ 9633.5 0 6252.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00287 position={ 7722.5 0 6245.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00288 position={ 7737.5 0 6241.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
@@ -160549,7 +160551,7 @@
  { id=pp_nav_00293 position={ 7706.5 0 6245.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00294 position={ 9738.5 0 6228.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00295 position={ 7810.5 0 6236.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
- { id=pp_nav_00296 position={ 9651.5 0 6239.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
+ { id=pp_nav_00296 position={ 9652.5 0 6238.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00297 position={ 8108.5 0 6228.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00298 position={ 7754.5 0 6222.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00299 position={ 9691.5 0 6220.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
@@ -160703,7 +160705,7 @@
  { id=pp_nav_00447 position={ 13000.5 0 5626.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00448 position={ 13017.5 0 5596.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00449 position={ 3987.5 0 5599.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
- { id=pp_nav_00450 position={ 3449.5 0 5595.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
+ { id=pp_nav_00450 position={ 3450.5 0 5597.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00451 position={ 7295.5 0 5584.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00452 position={ 3423.5 0 5587.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00453 position={ 3968.5 0 5578.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
@@ -160792,7 +160794,7 @@
  { id=pp_nav_00536 position={ 3520.5 0 5140.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00537 position={ 13144.5 0 5145.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00538 position={ 9831.5 0 5144.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
- { id=pp_nav_00539 position={ 13086.5 0 5141.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
+ { id=pp_nav_00539 position={ 13086.5 0 5142.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00540 position={ 13156.5 0 5149.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00541 position={ 12806.5 0 5128.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00542 position={ 13169.5 0 5124.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
@@ -160882,7 +160884,7 @@
  { id=pp_nav_00626 position={ 10783.5 0 4818.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00627 position={ 13087.5 0 4824.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00628 position={ 11319.5 0 4812.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
- { id=pp_nav_00629 position={ 12923.5 0 4803.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
+ { id=pp_nav_00629 position={ 12923.5 0 4804.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00630 position={ 13113.5 0 4807.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00631 position={ 11810.5 0 4811.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00632 position={ 11842.5 0 4811.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
@@ -160890,7 +160892,7 @@
  { id=pp_nav_00634 position={ 9157.5 0 4806.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00635 position={ 11347.5 0 4795.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00636 position={ 10802.5 0 4789.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
- { id=pp_nav_00637 position={ 11783.5 0 4791.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
+ { id=pp_nav_00637 position={ 11783.5 0 4792.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00638 position={ 13131.5 0 4801.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00639 position={ 9175.5 0 4779.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00640 position={ 11374.5 0 4780.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
@@ -160898,7 +160900,7 @@
  { id=pp_nav_00642 position={ 11561.5 0 4783.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00643 position={ 11503.5 0 4774.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00644 position={ 11596.5 0 4770.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
- { id=pp_nav_00645 position={ 11773.5 0 4756.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
+ { id=pp_nav_00645 position={ 11772.5 0 4758.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00646 position={ 10800.5 0 4756.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00647 position={ 11415.5 0 4766.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00648 position={ 11477.5 0 4765.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
@@ -160911,7 +160913,7 @@
  { id=pp_nav_00655 position={ 11690.5 0 4746.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00656 position={ 11460.5 0 4751.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00657 position={ 10787.5 0 4725.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
- { id=pp_nav_00658 position={ 11778.5 0 4721.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
+ { id=pp_nav_00658 position={ 11777.5 0 4722.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00659 position={ 12859.5 0 4720.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00660 position={ 9188.5 0 4713.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00661 position={ 11699.5 0 4714.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
@@ -160919,13 +160921,13 @@
  { id=pp_nav_00663 position={ 12111.5 0 4695.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00664 position={ 12086.5 0 4701.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00665 position={ 12851.5 0 4690.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
- { id=pp_nav_00666 position={ 11774.5 0 4684.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
+ { id=pp_nav_00666 position={ 11774.5 0 4685.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00667 position={ 11706.5 0 4678.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00668 position={ 9187.5 0 4689.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00669 position={ 12068.5 0 4671.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00670 position={ 11815.5 0 4656.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00671 position={ 12833.5 0 4659.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
- { id=pp_nav_00672 position={ 11795.5 0 4659.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
+ { id=pp_nav_00672 position={ 11794.5 0 4659.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00673 position={ 11713.5 0 4648.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00674 position={ 12060.5 0 4631.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }
  { id=pp_nav_00675 position={ 12767.5 0 4645.5 } rotation={ 0 0 0 1 } scale={ 1 1 1 } }

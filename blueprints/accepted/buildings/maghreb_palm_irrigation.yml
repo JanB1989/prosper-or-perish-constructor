@@ -39,7 +39,7 @@ building:
         }
     }
     allow = {
-        OR = { climate = arid climate = ha1300_climate_hot_steppe }
+        OR = { climate = arid climate = hot_semi_arid }
         OR = {
             vegetation = desert
             OR = { vegetation = sparse vegetation = ha1300_veg_scrubland vegetation = ha1300_veg_tundra }

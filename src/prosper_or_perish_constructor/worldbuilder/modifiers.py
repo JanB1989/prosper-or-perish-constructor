@@ -47,6 +47,10 @@ ASSIGNMENT_FILES = {
     "topography": ("topography_assignments.csv", "vanilla_topography", "game_topography"),
 }
 LEGACY_EFFECTS_DIR = Path("data/worldbuilder/legacy_class_effects")
+# EU5 1.4 split these vanilla climates off the 1.3 classes that the legacy effects and the free-building-levels sheet are
+# keyed by; the World Builder renamed its own hot/cold steppe and subarctic to them. They keep the effects of the 1.3
+# class that dominated their locations before (hot steppe -> arid, cold steppe -> cold arid, subarctic -> arctic).
+LEGACY_PARENT_ALIASES = {"climate": {"hot_semi_arid": "arid", "cold_semi_arid": "cold_arid", "subpolar": "arctic"}}
 STATIC_MODIFIERS_PATH = Path("main_menu/common/static_modifiers/pp_wb_attribute_modifiers.txt")
 RIVER_MODIFIERS_PATH = Path("main_menu/common/static_modifiers/pp_00_wb_river_modifiers.txt")   # sorts before the hand-authored injects into the same blocks
 ON_ACTION_PATH = Path("in_game/common/on_action/pp_wb_apply_attribute_modifiers.txt")
@@ -195,7 +199,9 @@ def parse_legacy_effects(path: Path) -> dict[str, dict[str, str]]:
 
 
 def dominant_parents(export_dir: Path, attribute: str) -> dict[str, str]:
-    """World Builder game key -> most common vanilla class among its locations."""
+    """World Builder game key -> most common vanilla class among its locations (EU5 1.4 classes read as their 1.3 parent,
+    ``LEGACY_PARENT_ALIASES``)."""
+    aliases = LEGACY_PARENT_ALIASES.get(attribute, {})
     name, vanilla_col, game_col = ASSIGNMENT_FILES[attribute]
     counts: dict[str, Counter] = defaultdict(Counter)
     with (export_dir / name).open("r", encoding="utf-8-sig", newline="") as handle:
@@ -204,7 +210,8 @@ def dominant_parents(export_dir: Path, attribute: str) -> dict[str, str]:
             vanilla = (row.get(vanilla_col) or "").strip()
             if game and vanilla:
                 counts[game][vanilla] += 1
-    return {game: counter.most_common(1)[0][0] for game, counter in counts.items()}
+    parents = {game: counter.most_common(1)[0][0] for game, counter in counts.items()}
+    return {game: aliases.get(parent, parent) for game, parent in parents.items()}
 
 
 def class_rows(contract: Contract) -> dict[tuple[str, str], dict[str, float]]:

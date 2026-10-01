@@ -152,7 +152,7 @@ TRY_REPLACE:move_nw_good_to_new_location = {
 					OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
 					climate = mediterranean
 					OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
-					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
+					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
 				}
 				NOR = {
 					region = region:scandinavian_region
@@ -260,7 +260,7 @@ TRY_REPLACE:move_nw_good_to_new_location = {
 				OR = {
 					OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
 					OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
-					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
+					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
 					OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
 					climate = mediterranean
 				}
@@ -292,7 +292,7 @@ TRY_REPLACE:move_nw_good_to_new_location = {
 					OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
 					climate = mediterranean
 					OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
-					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
+					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
 				}
 			}
 			#Potato
@@ -309,8 +309,8 @@ TRY_REPLACE:move_nw_good_to_new_location = {
 				}
 				NOR = {
 					OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
-					OR = { climate = arid climate = ha1300_climate_hot_steppe }
-					OR = { climate = cold_arid climate = ha1300_climate_cold_steppe }
+					OR = { climate = arid climate = hot_semi_arid }
+					OR = { climate = cold_arid climate = cold_semi_arid }
 					climate = arctic
 				}
 			}
@@ -547,8 +547,8 @@ TRY_REPLACE:move_ow_good_to_new_location = {
 				OR = {
 					OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
 					OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
-					OR = { climate = arid climate = ha1300_climate_hot_steppe }
-					OR = { climate = cold_arid climate = ha1300_climate_cold_steppe }
+					OR = { climate = arid climate = hot_semi_arid }
+					OR = { climate = cold_arid climate = cold_semi_arid }
 					climate = mediterranean
 				}
 			}
@@ -569,10 +569,10 @@ TRY_REPLACE:move_ow_good_to_new_location = {
 				}
 				OR = {
 					OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
-					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
+					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
 					climate = mediterranean
 					OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
-					OR = { climate = cold_arid climate = ha1300_climate_cold_steppe }
+					OR = { climate = cold_arid climate = cold_semi_arid }
 				}
 			}
 			#millet https://ipad.fas.usda.gov/cropexplorer/cropview/commodityView.aspx?cropid=0410000
@@ -594,11 +594,11 @@ TRY_REPLACE:move_ow_good_to_new_location = {
 				OR = {
 					OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
 					OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
-					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
+					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
 					climate = mediterranean
 					OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
-					OR = { climate = arid climate = ha1300_climate_hot_steppe }
-					OR = { climate = cold_arid climate = ha1300_climate_cold_steppe }
+					OR = { climate = arid climate = hot_semi_arid }
+					OR = { climate = cold_arid climate = cold_semi_arid }
 				}
 			}
 			#olives https://www.reddit.com/r/MapPorn/comments/1bjstdu/major_olive_growing_regions_of_the_world/#lightbox
@@ -619,7 +619,7 @@ TRY_REPLACE:move_ow_good_to_new_location = {
 				}
 				OR = {
 					climate = mediterranean
-					OR = { climate = cold_arid climate = ha1300_climate_cold_steppe }
+					OR = { climate = cold_arid climate = cold_semi_arid }
 				}
 			}
 			#coffee https://www.researchgate.net/profile/Christian-Bunn/publication/269419801/figure/fig1/AS:295281645113350@1447412038471/Global-coffee-location-database-and-major-coffee-growing-regions-Blue-points-represent.png
@@ -712,10 +712,10 @@ TRY_REPLACE:move_ow_good_to_new_location = {
 					topography = mountains
 				}
 				OR = {
-					OR = { climate = cold_arid climate = ha1300_climate_cold_steppe }
+					OR = { climate = cold_arid climate = cold_semi_arid }
 					climate = mediterranean
 					OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
-					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
+					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
 				}
 				NOR = {
 					region = region:great_plains_region
@@ -739,11 +739,11 @@ TRY_REPLACE:move_ow_good_to_new_location = {
 					topography = hills
 				}
 				OR = {
-					OR = { climate = cold_arid climate = ha1300_climate_cold_steppe }
-					OR = { climate = arid climate = ha1300_climate_hot_steppe }
+					OR = { climate = cold_arid climate = cold_semi_arid }
+					OR = { climate = arid climate = hot_semi_arid }
 					climate = mediterranean
 					OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
-					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
+					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
 				}
 			}
 			#livestock https://platform.vox.com/wp-content/uploads/sites/2/chorus/assets/4643285/cattle_distribution.png
@@ -783,8 +783,8 @@ TRY_REPLACE:move_ow_good_to_new_location = {
 					topography = hills
 				}
 				OR = {
-					OR = { climate = arid climate = ha1300_climate_hot_steppe }
-					OR = { climate = cold_arid climate = ha1300_climate_cold_steppe }
+					OR = { climate = arid climate = hot_semi_arid }
+					OR = { climate = cold_arid climate = cold_semi_arid }
 					climate = mediterranean
 				}
 			}

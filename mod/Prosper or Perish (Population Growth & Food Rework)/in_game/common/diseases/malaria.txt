@@ -21,8 +21,8 @@ malaria = {
 		if = {
 			limit = {
 				OR = {
-					OR = { climate = arid climate = ha1300_climate_hot_steppe }
-					OR = { climate = cold_arid climate = ha1300_climate_cold_steppe }
+					climate = arid
+					climate = cold_arid
 					climate = mediterranean
 				}
 			}
@@ -31,7 +31,7 @@ malaria = {
 		else_if = {
 			limit = {
 				OR = {
-					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
+					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon }
 					climate = arctic
 				}
 			}

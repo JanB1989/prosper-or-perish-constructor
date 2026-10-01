@@ -121,7 +121,7 @@ pp_farming_climate_breakdown = {
 	type = location
 	text = {
 		localization_key = PP_FARMING_CONTINENTAL
-		trigger = { OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic } }
+		trigger = { OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar } }
 	}
 	text = {
 		localization_key = PP_FARMING_SUBTROPICAL
@@ -207,7 +207,7 @@ pp_forest_climate_breakdown = {
 	type = location
 	text = {
 		localization_key = PP_FOREST_CONTINENTAL
-		trigger = { OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic } }
+		trigger = { OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar } }
 	}
 	text = {
 		localization_key = PP_EMPTY_LOC

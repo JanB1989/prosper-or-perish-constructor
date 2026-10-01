@@ -8,7 +8,7 @@
 		local_rgo_build_time = 0.5 
 		local_road_building_time = 1.0
 		local_monthly_development_modifier = -0.33
-		local_monthly_food_modifier = -0.33
+		local_monthly_food_modifier = monthly_food_productivity_radical_penalty
 		local_population_capacity = 10
 		supply_limit = -5
 	}
@@ -42,10 +42,10 @@ grasslands = {
 	movement_cost = 1.0
 	location_modifier = { 
 		local_population_capacity = 50
-		local_monthly_food_modifier = 0.1
+		local_monthly_food_modifier = monthly_food_productivity_severe_bonus
 		supply_limit = 2
 	}
-	
+
 	audio_tags = {
 		masDataVegetationDensity = 0.2
 	}
@@ -60,8 +60,8 @@ farmland = {
 		local_road_building_time = 0.20
 		local_population_capacity = 100
 		local_monthly_development_modifier = 0.10
-		local_max_rgo_size_modifier = 0.10		
-		local_monthly_food_modifier = 0.33
+		local_max_rgo_size_modifier = 0.10
+		local_monthly_food_modifier = monthly_food_productivity_unique_bonus
 		supply_limit = 5
 	}
 
@@ -83,7 +83,7 @@ woods = {
 		local_road_building_time = 0.50
 		local_population_capacity = 50
 		local_monthly_development_modifier = -0.20
-		local_monthly_food_modifier = 0.1
+		local_monthly_food_modifier = monthly_food_productivity_severe_bonus
 		blocks_vision_from_sea = yes
 		supply_limit = 2
 	}
@@ -128,7 +128,7 @@ jungle = {
 		local_road_building_time = 3.0
 		local_population_capacity = 50
 		local_monthly_development_modifier = -0.30
-		local_monthly_food_modifier = 0.1
+		local_monthly_food_modifier = monthly_food_productivity_severe_bonus
 		blocks_vision_from_land = yes
 		blocks_vision_from_sea = yes
 	}

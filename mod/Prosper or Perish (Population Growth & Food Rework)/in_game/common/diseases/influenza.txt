@@ -59,8 +59,8 @@ influenza = { #https://en.wikipedia.org/wiki/Influenza
 			limit = {
 				#Climate preferences
 				OR = {
-					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
-					OR = { climate = cold_arid climate = ha1300_climate_cold_steppe }
+					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon }
+					climate = cold_arid
 				}
 			}
 			multiply = 1.2

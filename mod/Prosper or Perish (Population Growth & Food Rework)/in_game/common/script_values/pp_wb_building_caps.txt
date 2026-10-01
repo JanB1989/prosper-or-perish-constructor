@@ -10,9 +10,9 @@ pp_wb_cap_land_clearance = {
 		value = 4
 	}
 	if = {
-		limit = { climate = ha1300_climate_cold_steppe }
+		limit = { climate = cold_semi_arid }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_STEPPE"
+			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_SEMI_ARID"
 			value = 2
 		}
 	}
@@ -31,9 +31,9 @@ pp_wb_cap_land_clearance = {
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_hot_steppe }
+		limit = { climate = hot_semi_arid }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_STEPPE"
+			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_SEMI_ARID"
 			value = 4
 		}
 	}
@@ -84,6 +84,13 @@ pp_wb_cap_land_clearance = {
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAIN_WASTELAND"
 			value = 4
+		}
+	}
+	else_if = {
+		limit = { topography = plateau }
+		add = {
+			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_PLATEAU"
+			value = 2
 		}
 	}
 	else_if = {
@@ -193,9 +200,9 @@ pp_wb_cap_field_management_shared = {
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_cold_steppe }
+		limit = { climate = cold_semi_arid }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_STEPPE"
+			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_SEMI_ARID"
 			value = -12
 		}
 	}
@@ -221,9 +228,9 @@ pp_wb_cap_field_management_shared = {
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_hot_steppe }
+		limit = { climate = hot_semi_arid }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_STEPPE"
+			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_SEMI_ARID"
 			value = -9
 		}
 	}
@@ -235,6 +242,13 @@ pp_wb_cap_field_management_shared = {
 		}
 	}
 	else_if = {
+		limit = { climate = oceanic }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_OCEANIC"
+			value = 3
+		}
+	}
+	else_if = {
 		limit = { climate = ha1300_climate_savanna }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SAVANNA"
@@ -242,9 +256,9 @@ pp_wb_cap_field_management_shared = {
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_subarctic }
+		limit = { climate = subpolar }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBARCTIC"
+			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR"
 			value = -9
 		}
 	}
@@ -291,13 +305,6 @@ pp_wb_cap_field_management_shared = {
 		}
 	}
 	if = {
-		limit = { vegetation = ha1300_veg_coniferous_forest }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_CONIFEROUS_FOREST"
-			value = 3
-		}
-	}
-	else_if = {
 		limit = { vegetation = ha1300_veg_dry_forest }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_DRY_FOREST"
@@ -308,7 +315,7 @@ pp_wb_cap_field_management_shared = {
 		limit = { vegetation = farmland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_FARMLAND"
-			value = 3
+			value = 6
 		}
 	}
 	else_if = {
@@ -463,20 +470,27 @@ pp_wb_cap_irrigation_systems_shared = {
 		limit = { topography = atoll }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ATOLL"
-			value = 2
+			value = 4
 		}
 	}
 	else_if = {
 		limit = { topography = ha1300_topo_deltas }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_DELTAS"
-			value = 2
+			value = 4
 		}
 	}
 	else_if = {
 		limit = { topography = mountain_wasteland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAIN_WASTELAND"
+			value = 4
+		}
+	}
+	if = {
+		limit = { vegetation = ha1300_veg_marsh }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_MARSH"
 			value = 2
 		}
 	}
@@ -538,70 +552,70 @@ pp_wb_cap_irrigated_fields_shared = {
 		limit = { climate = arctic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_ARCTIC"
-			value = 16
+			value = 32
 		}
 	}
 	else_if = {
 		limit = { climate = arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_ARID"
-			value = 16
+			value = 32
 		}
 	}
 	else_if = {
 		limit = { climate = cold_arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_ARID"
-			value = 16
+			value = 32
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_cold_steppe }
+		limit = { climate = cold_semi_arid }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_STEPPE"
-			value = 16
+			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_SEMI_ARID"
+			value = 32
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_dry_summer_continental }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_DRY_SUMMER_CONTINENTAL"
-			value = 16
+			value = 32
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_hot_steppe }
+		limit = { climate = hot_semi_arid }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_STEPPE"
-			value = 16
+			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_SEMI_ARID"
+			value = 32
 		}
 	}
 	else_if = {
 		limit = { climate = mediterranean }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_MEDITERRANEAN"
-			value = 16
+			value = 32
 		}
 	}
 	else_if = {
 		limit = { climate = oceanic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_OCEANIC"
-			value = 16
+			value = 32
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_subarctic }
+		limit = { climate = subpolar }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBARCTIC"
-			value = 16
+			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR"
+			value = 32
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_subpolar_oceanic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR_OCEANIC"
-			value = 16
+			value = 32
 		}
 	}
 	else_if = {
@@ -629,14 +643,14 @@ pp_wb_cap_irrigated_fields_shared = {
 		limit = { topography = atoll }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ATOLL"
-			value = 40
+			value = 48
 		}
 	}
 	else_if = {
 		limit = { topography = ha1300_topo_deltas }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_DELTAS"
-			value = 40
+			value = 48
 		}
 	}
 	else_if = {
@@ -650,14 +664,14 @@ pp_wb_cap_irrigated_fields_shared = {
 		limit = { topography = mountain_wasteland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAIN_WASTELAND"
-			value = 40
+			value = 48
 		}
 	}
 	else_if = {
 		limit = { topography = mountains }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAINS"
-			value = 40
+			value = 48
 		}
 	}
 	else_if = {
@@ -671,7 +685,7 @@ pp_wb_cap_irrigated_fields_shared = {
 		limit = { topography = ha1300_topo_rolling }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ROLLING"
-			value = 40
+			value = 48
 		}
 	}
 	else_if = {
@@ -727,14 +741,14 @@ pp_wb_cap_irrigated_fields_shared = {
 		limit = { vegetation = ha1300_veg_mixed_forest }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_MIXED_FOREST"
-			value = 16
+			value = 8
 		}
 	}
 	else_if = {
 		limit = { vegetation = ha1300_veg_savanna }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_SAVANNA"
-			value = 24
+			value = 16
 		}
 	}
 	else_if = {
@@ -762,7 +776,7 @@ pp_wb_cap_irrigated_fields_shared = {
 		limit = { vegetation = woods }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_WOODS"
-			value = 16
+			value = 8
 		}
 	}
 	if = {
@@ -824,7 +838,7 @@ pp_wb_cap_jiangnan_canal_network = {
 pp_wb_cap_bund = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
-		value = 1
+		value = 2
 	}
 	if = {
 		limit = { climate = arctic }
@@ -848,9 +862,9 @@ pp_wb_cap_bund = {
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_cold_steppe }
+		limit = { climate = cold_semi_arid }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_STEPPE"
+			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_SEMI_ARID"
 			value = -1
 		}
 	}
@@ -876,6 +890,13 @@ pp_wb_cap_bund = {
 		}
 	}
 	else_if = {
+		limit = { climate = hot_semi_arid }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_SEMI_ARID"
+			value = -1
+		}
+	}
+	else_if = {
 		limit = { climate = mediterranean }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_MEDITERRANEAN"
@@ -890,9 +911,9 @@ pp_wb_cap_bund = {
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_subarctic }
+		limit = { climate = subpolar }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBARCTIC"
+			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR"
 			value = -1
 		}
 	}
@@ -949,7 +970,7 @@ pp_wb_cap_bund = {
 		limit = { vegetation = farmland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_FARMLAND"
-			value = 1
+			value = 2
 		}
 	}
 	else_if = {
@@ -1003,9 +1024,9 @@ pp_wb_cap_field_drainage = {
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_cold_steppe }
+		limit = { climate = cold_semi_arid }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_STEPPE"
+			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_SEMI_ARID"
 			value = -3
 		}
 	}
@@ -1031,9 +1052,9 @@ pp_wb_cap_field_drainage = {
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_hot_steppe }
+		limit = { climate = hot_semi_arid }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_STEPPE"
+			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_SEMI_ARID"
 			value = -3
 		}
 	}
@@ -1041,14 +1062,14 @@ pp_wb_cap_field_drainage = {
 		limit = { climate = mediterranean }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_MEDITERRANEAN"
-			value = -4
+			value = -3
 		}
 	}
 	else_if = {
 		limit = { climate = oceanic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_OCEANIC"
-			value = -2
+			value = -1
 		}
 	}
 	else_if = {
@@ -1059,9 +1080,9 @@ pp_wb_cap_field_drainage = {
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_subarctic }
+		limit = { climate = subpolar }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBARCTIC"
+			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR"
 			value = -4
 		}
 	}
@@ -1136,6 +1157,13 @@ pp_wb_cap_field_drainage = {
 		}
 	}
 	else_if = {
+		limit = { topography = ha1300_topo_rolling }
+		add = {
+			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ROLLING"
+			value = -1
+		}
+	}
+	else_if = {
 		limit = { topography = wetlands }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_WETLANDS"
@@ -1153,7 +1181,7 @@ pp_wb_cap_field_drainage = {
 		limit = { vegetation = farmland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_FARMLAND"
-			value = 3
+			value = 4
 		}
 	}
 	else_if = {
@@ -1199,6 +1227,41 @@ pp_wb_cap_polders = {
 		desc = "BUILDING_LEVEL_WB_BASE"
 		value = 1
 	}
+	if = {
+		limit = { topography = atoll }
+		add = {
+			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ATOLL"
+			value = 19
+		}
+	}
+	else_if = {
+		limit = { topography = mountain_wasteland }
+		add = {
+			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAIN_WASTELAND"
+			value = 19
+		}
+	}
+	else_if = {
+		limit = { topography = mountains }
+		add = {
+			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAINS"
+			value = 19
+		}
+	}
+	else_if = {
+		limit = { topography = plateau }
+		add = {
+			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_PLATEAU"
+			value = 19
+		}
+	}
+	else_if = {
+		limit = { topography = ha1300_topo_rolling }
+		add = {
+			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ROLLING"
+			value = 19
+		}
+	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
 		value = development
@@ -1218,6 +1281,13 @@ pp_wb_cap_qanats = {
 		limit = { climate = arctic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_ARCTIC"
+			value = 16
+		}
+	}
+	else_if = {
+		limit = { climate = arid }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_ARID"
 			value = 1
 		}
 	}
@@ -1225,27 +1295,27 @@ pp_wb_cap_qanats = {
 		limit = { climate = ha1300_climate_continental_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_CONTINENTAL_MONSOON"
-			value = 1
+			value = 16
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_dry_summer_continental }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_DRY_SUMMER_CONTINENTAL"
-			value = 1
+			value = 16
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_highland_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_HIGHLAND_MONSOON"
-			value = 1
+			value = 16
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_hot_steppe }
+		limit = { climate = hot_semi_arid }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_STEPPE"
+			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_SEMI_ARID"
 			value = 1
 		}
 	}
@@ -1253,77 +1323,77 @@ pp_wb_cap_qanats = {
 		limit = { climate = mediterranean }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_MEDITERRANEAN"
-			value = 1
+			value = 16
 		}
 	}
 	else_if = {
 		limit = { climate = oceanic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_OCEANIC"
-			value = 1
+			value = 16
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_savanna }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SAVANNA"
-			value = 1
+			value = 16
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_subarctic }
+		limit = { climate = subpolar }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBARCTIC"
-			value = 1
+			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR"
+			value = 16
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_subpolar_oceanic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR_OCEANIC"
-			value = 1
+			value = 16
 		}
 	}
 	else_if = {
 		limit = { climate = subtropical }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL"
-			value = 1
+			value = 16
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_subtropical_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL_MONSOON"
-			value = 1
+			value = 16
 		}
 	}
 	else_if = {
 		limit = { climate = tropical }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL"
-			value = 1
+			value = 16
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_tropical_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL_MONSOON"
-			value = 1
+			value = 16
 		}
 	}
 	if = {
 		limit = { topography = atoll }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ATOLL"
-			value = 1
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { topography = ha1300_topo_deltas }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_DELTAS"
-			value = 1
+			value = 2
 		}
 	}
 	else_if = {
@@ -1337,14 +1407,14 @@ pp_wb_cap_qanats = {
 		limit = { topography = mountain_wasteland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAIN_WASTELAND"
-			value = 1
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { topography = mountains }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAINS"
-			value = 1
+			value = 2
 		}
 	}
 	else_if = {
@@ -1358,14 +1428,14 @@ pp_wb_cap_qanats = {
 		limit = { topography = ha1300_topo_rolling }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ROLLING"
-			value = 1
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { topography = wetlands }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_WETLANDS"
-			value = 1
+			value = 2
 		}
 	}
 	if = {
@@ -1411,24 +1481,10 @@ pp_wb_cap_qanats = {
 		}
 	}
 	else_if = {
-		limit = { vegetation = ha1300_veg_scrubland }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_SCRUBLAND"
-			value = 1
-		}
-	}
-	else_if = {
 		limit = { vegetation = ha1300_veg_swamp }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_SWAMP"
 			value = 2
-		}
-	}
-	else_if = {
-		limit = { vegetation = ha1300_veg_thicket }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_THICKET"
-			value = 1
 		}
 	}
 	else_if = {
@@ -1441,7 +1497,7 @@ pp_wb_cap_qanats = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
 		value = development
-		multiply = 0.05
+		multiply = 0.1
 	}
 	floor = yes
 	min = 0

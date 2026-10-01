@@ -296,6 +296,8 @@ production gate leg (section 2.4i of the AI building rulebook), profit and the s
 - `POP_MISSING_GOODS_UTILITY_FACTOR` 0.02 -> 0.1, `INPUT_GOODS_SHORTAGE_UTILITY_FACTOR` 0.02 -> 0.1,
   `PROFITABLE_EXPORT_GOODS_UTILITY_FACTOR` 0.5 -> 1.0.
 - `AI_IMPORT_POP_NEED_SCORE_BONUS` 5 -> 10; transport cost of fruit, legumes and horses 2 -> 1.5.
+- Long run (8b): `TRADE_IMPACT_ON_SUPPLY_SCALE` 0.75 -> 1.0 and `BURGHER_TRADE_IMPACT_ON_SUPPLY_SCALE` 0.1 -> 1.0
+  (imports count fully in the importer's price); `POP_MISSING_GOODS_UTILITY_FACTOR` 0.1 -> 0.25.
 - Tested and dropped: +150 % merchant capacity for every country, RGO bonus 0.30 / 0.10 for deficit / glut goods (global
   output and capacity buffs), `MERCHANT_MAINTENANCE_COST` 0.10 and profit/weight cutoff 0.15 (the vanilla values did better
   with the shortage terms: cheap trade let low-margin arbitrage keep the capacity). Never put `local_merchant_capacity` into
@@ -330,6 +332,61 @@ local demand); the Chinese and Japanese tea markets export to their short neighb
 to 1.0-1.19x, but tea gardens (and saffron crofts, amber collectors) can only be built on locations whose RGO is that good
 and share farmland with every other farm, so tea supply stayed capped (71 garden levels against 76 in b0). India's tea
 shortage (2.3-3x) is out of reach of the producers' trade.
+
+## 8b. Long run 1407-1830: do specialist raw-material markets form? (2026-10-01)
+
+One observer game from the 1407 save of section 8, checked every 20 years with two yearly saves (Seasonal Harvests move
+farmed RGO output by +-15 % between runs and years, so a single snapshot misleads), until 1830.
+
+**Measures** (raw goods, values at base price): trade share = exports (country + burgher trades) / production; the
+production/consumption gap of a market = half the sum over goods of |share of its production - share of its own
+demand|, weighted by production (0 = every market makes what it uses); exporting market-goods = exporting >= 2 units and
+>= 10 % of production; specialist markets = exporting >= 10 % of their raw production value; neighbour pairs = a market
+>= 1.5x short of a good next to a market <= 0.9x with a surplus of it.
+
+**Why markets were alike.** From 1337 to 1407 raw trade fell from 18.7 % to 9.8 % of output and the gap from 0.40 to
+0.24. Building output per level is the same in every location (location goods output modifiers reach RGOs only: a wheat
+farm makes 0.06 per level on and off wheat land), so outside RGOs and the crop gates no market makes a good more
+cheaply than another. And an importer's price counted 75 % of country-trade and 10 % of burgher-trade imports: burghers
+covered the shortage, the price still showed it, and the importer built its own copy of the supply.
+
+**Changes.**
+- 1407: imports count fully in the importer's price (`TRADE_IMPACT_ON_SUPPLY_SCALE`, `BURGHER_TRADE_IMPACT_ON_SUPPLY_SCALE`
+  1.0). A/B over 20 years (1428, matched harvest): trade share 10.3 -> 13.2 %, exporting market-goods 420 -> 566,
+  short market-goods 173 -> 83, starving provinces 623 -> 535, population 361M -> 374M, pops' unmet demand +13 %.
+  Control from 1688 with the vanilla scales: by 1708 trade share 14.8-15.7 % against 19.9-20.2 %, gap 0.24 against
+  0.27, short market-goods 552-563 against 360-408, starving provinces and population the same.
+- 1528: `POP_MISSING_GOODS_UTILITY_FACTOR` 0.25: staples were short world-wide while RGOs stay fixed; the AI built more
+  staple farms (wheat +221, millet +137, rice +61 levels against the control by 1548), trade unchanged.
+
+| year | trade share | gap | exporting mg | specialist markets | short mg | merchant capacity | population | starving |
+|---|---|---|---|---|---|---|---|---|
+| 1337 | 18.7 % | 0.40 | 442 | 88 | 469 | 3,146 | 355M | 594 |
+| 1407 | 9.8 % | 0.24 | 383 | 60 | 168 | 2,930 | 352M | 619 |
+| 1428 | 13.2 % | 0.24 | 566 | 75 | 83 | 2,984 | 374M | 535 |
+| 1508 | 15.3 % | 0.23 | 650 | 90 | 120 | 3,591 | 451M | 714 |
+| 1588 | 17.4 % | 0.24 | 795 | 97 | 187 | 4,549 | 464M | 749 |
+| 1668 | 18.7 % | 0.27 | 898 | 106 | 370 | 6,001 | 540M | 1,263 |
+| 1708 | 19.9 % | 0.27 | 1,025 | 110 | 360 | 6,894 | 519M | 1,131 |
+| 1748 | 20.6 % | 0.26 | 1,205 | 118 | 357 | 8,016 | 583M | 943 |
+| 1788 | 22.0 % | 0.26 | 1,290 | 130 | 432 | 9,632 | 662M | 1,023 |
+| 1830 | 22.1 % | 0.25 | 1,399 | 134 | 434 | 11,518 | 702M | 853 |
+
+Merchant capacity grew by itself (market and trade buildings, burghers) from ~3,000 to ~11,500. Specialists that formed:
+Riga, Krakow, Stockholm and Venice lumber; Lubeck herring; London wool; Paris wheat, wine and horses; Krakow wine and
+salt; Prague, Pest, Tarnovo, Sofala and Niani gold; Malabar (Kozhikode, Pazhaverkadu, Vijayanagar) pepper; Khambat and
+Kataka iron; Delhi and Kataka cotton; Shangyuan wheat, rice and livestock; Kyoto, Chittagong, Thang Long and Hangzhou tea;
+Ternate, Trowulan and Berune cloves; Jinjiang and Alexandria sugar; Benin cocoa; Varanasi ivory. Short market-goods with a cheap
+neighbour holding a surplus: 10 in the control at 1428, 0-4 from 1428 to 1628, 9 at 1830.
+
+**What stays short is supply, not trade.** At every check-in 60-90 % of the short market-goods were goods short
+world-wide; goods in world surplus that failed to arrive were 20-64 market-goods. World-short in turn: staples 1528-1668
+(wheat 0.69-0.88 of demand in bad years; RGOs fixed by `block_rgo_upgrade`, wheat farm levels grew 6 %, 2 % and 3 % in the
+40-year steps after 1528 while building demand for wheat rose 48 % 1528-1608 (cookshops, horse breeders); Europe's
+staple farms fell from 13,072 to 10,503 levels 1528-1667, mostly bankruptcy cuts and sacks); then the goods that can
+only be grown on their own RGO locations or spread late: tea 0.57-0.84, cocoa 0.50-0.74, amber 0.31-0.53, potato
+0.53-0.98. Starving provinces ran 21 % / 23 % / 27 % in markets importing < 10 % / 10-20 % / >= 20 % of their raw demand
+(1687), and the vanilla control had the same count.
 
 ## 7. Open
 

@@ -63,13 +63,20 @@ REPLACE:chancery = {
 	expensive = yes
 	build_time = large_capital_build_time
 	location_potential = {
+		counts_as_capital = yes
+	}
+
+	allow = {
 		is_capital = yes
+		country_has_no_other_copy_of_building = { type = chancery }
 	}
 	country_potential = {
 		OR = {
 			government_type ?= government_type:monarchy
 			government_type ?= government_type:theocracy
 			government_type ?= government_type:republic
+			government_type ?= government_type:steppe_horde
+			government_type ?= government_type:tribe
 		}
 	}
 	remove_if = {
@@ -79,6 +86,8 @@ REPLACE:chancery = {
 				government_type != government_type:monarchy
 				government_type != government_type:theocracy
 				government_type != government_type:republic
+				government_type != government_type:steppe_horde
+				government_type != government_type:tribe
 			}
 		}
 	}
@@ -88,9 +97,12 @@ REPLACE:chancery = {
 	}
 	capital_country_modifier = {
 		country_cabinet_efficiency = 0.025
+		monthly_political_influence = 0.1
 	}
 	unique_production_methods = {
 		pp_chancery_maintenance = {
+			icon_type = building_type
+			icon = chancery
 			fine_cloth = 0.1
 			books = 0.1
 			paper = 0.5
@@ -152,8 +164,14 @@ REPLACE:house_of_parliament = {
 	expensive = yes
 	build_time = large_capital_build_time
 	location_potential = {
-		is_capital = yes
+		counts_as_capital = yes
 	}
+
+	allow = {
+		is_capital = yes
+		country_has_no_other_copy_of_building = { type = house_of_parliament }
+	}
+
 	country_potential = {
 		modifier:has_a_parliamentary_system = yes
 	}
@@ -171,9 +189,12 @@ REPLACE:house_of_parliament = {
 		permanent_parliament_location = yes
 		global_crown_estate_power = 0.2
 		monthly_towards_liberalism = societal_value_monthly_move
+		monthly_political_influence = 0.25
 	}
 	unique_production_methods = {
 		pp_house_of_parliament_requirements = {
+			icon_type = building_type
+			icon = house_of_parliament
 			fine_cloth = 0.1
 			books = 0.1
 			paper = 0.5
@@ -201,7 +222,12 @@ REPLACE:royal_court = {
 	expensive = yes
 	build_time = large_capital_build_time
 	location_potential = {
+		counts_as_capital = yes
+	}
+
+	allow = {
 		is_capital = yes
+		country_has_no_other_copy_of_building = { type = royal_court }
 	}
 	country_potential = {
 		government_type ?= government_type:monarchy
@@ -219,6 +245,8 @@ REPLACE:royal_court = {
 	}
 	unique_production_methods = {
 		pp_royal_court_maintenance = {
+			icon_type = building_type
+			icon = royal_court
 			furniture = 0.15
 			tools = 0.05
 			glass = 0.1
@@ -250,7 +278,12 @@ REPLACE:royal_garden = {
 	expensive = yes
 	build_time = large_capital_build_time
 	location_potential = {
+		counts_as_capital = yes
+	}
+
+	allow = {
 		is_capital = yes
+		country_has_no_other_copy_of_building = { type = royal_garden }
 	}
 	country_potential = {
 		government_type ?= government_type:monarchy
@@ -258,11 +291,14 @@ REPLACE:royal_garden = {
 	capital_modifier = {
 	}
 	capital_country_modifier = {
-		monthly_diplomats = 0.2
-		monthly_prestige = 0.025
+		diplomatic_capacity_modifier = 0.2
+		cultural_influence_modifier = 0.05
+		monthly_prestige = 0.05
 	}
 	unique_production_methods = {
 		pp_royal_garden_maintenance = {
+			icon_type = building_type
+			icon = royal_garden
 			furniture = 0.1
 			tools = 0.1
 			glass = 0.1
@@ -292,12 +328,29 @@ REPLACE:local_governor = {
 	city = yes
 	megalopolis = yes
 	allow = {
-		custom_tooltip = {
-			text = local_governor_tt
-			scope:actor = {
-				total_building_levels_including_construction:local_governor < {
-					value = modifier:num_local_governors
-					subtract = total_building_levels_including_construction:lieutenancy
+		trigger_if = {
+			limit = { has_dlc = "d009_across_the_pillars" }
+			custom_tooltip = {
+				text = local_governor_dlc_tt
+				scope:actor = {
+					total_building_levels_including_construction:local_governor < {
+						value = effective_num_local_governors
+						subtract = total_building_levels_including_construction:itinerant_court_seat
+						subtract = total_building_levels_including_construction:kings_manor
+					}
+				}
+			}
+		}
+		trigger_else = {
+			custom_tooltip = {
+				text = local_governor_tt
+				scope:actor = {
+					total_building_levels_including_construction:local_governor < {
+						value = effective_num_local_governors
+						subtract = total_building_levels_including_construction:lieutenancy
+						subtract = total_building_levels_including_construction:itinerant_court_seat
+						subtract = total_building_levels_including_construction:kings_manor
+					}
 				}
 			}
 		}
@@ -313,7 +366,9 @@ REPLACE:local_governor = {
 	}
 	location_potential = {
 		has_road_to_capital = yes
-		owner.capital != this
+		is_capital = no
+		NOT = { has_building = building_type:itinerant_court_seat } # Cannot coexist with the Seat of the Itinerant Court (and vice versa)
+		NOT = { has_building = building_type:kings_manor }
 	}
 	remove_if = {
 		location = {
@@ -336,9 +391,13 @@ REPLACE:local_governor = {
 	forbidden_for_estates = yes
 	important_for_AI = yes
 	ai_ignore_maintenance = yes
+	AI_ignore_available_worker_flag = yes
+
 	build_time = government_build_time
 	unique_production_methods = {
 		pp_local_governor_maintenance = {
+			icon_type = building_type
+			icon = local_governor
 			tools = 1
 			masonry = 1
 			weaponry = 0.5
@@ -409,6 +468,8 @@ REPLACE:naval_governor = {
 	build_time = government_build_time
 	unique_production_methods = {
 		pp_naval_governor_maintenance = {
+			icon_type = building_type
+			icon = naval_governor
 			tools = 1
 			masonry = 1
 			weaponry = 0.5
@@ -469,6 +530,8 @@ REPLACE:funduq = {
 	construction_demand = pp_funduq_jewelry_construction
 	unique_production_methods = {
 		pp_funduq_maintenance = {
+			icon_type = building_type
+			icon = funduq
 			books = 0.05
 			paper = 0.2
 			jewelry = 0.01
@@ -494,7 +557,12 @@ REPLACE:republican_assembly = {
 	expensive = yes
 	build_time = large_capital_build_time
 	location_potential = {
+		counts_as_capital = yes
+	}
+
+	allow = {
 		is_capital = yes
+		country_has_no_other_copy_of_building = { type = republican_assembly }
 	}
 	country_potential = {
 		government_type ?= government_type:republic
@@ -513,6 +581,8 @@ REPLACE:republican_assembly = {
 	}
 	unique_production_methods = {
 		pp_republican_assembly_maintenance = {
+			icon_type = building_type
+			icon = republican_assembly
 			furniture = 0.1
 			tools = 0.1
 			glass = 0.5
@@ -570,6 +640,8 @@ REPLACE:caravan_stop = {
 	construction_demand = pp_caravan_stop_jewelry_construction
 	unique_production_methods = {
 		pp_caravan_stop_maintenance = {
+			icon_type = building_type
+			icon = caravan_stop
 			jewelry = 0.004
 			salt = 0.01
 			category = building_maintenance
@@ -577,5 +649,263 @@ REPLACE:caravan_stop = {
 	}
 	raw_modifier = {
 		local_population_capacity = 0.06
+	}
+}
+
+# EU5 1.4 government palaces of tribes, hordes, republics and theocracies (chancery-like capital buildings).
+REPLACE:chieftain_hall = {
+	audio_tier = 2
+	is_foreign = no
+	pop_type = nobles
+	max_levels = 1
+
+	category = government_category
+
+	employment_size = large_noble_employment
+
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+	build_time = large_capital_build_time
+
+	location_potential = {
+		counts_as_capital = yes
+	}
+
+	allow = {
+		is_capital = yes
+		country_has_no_other_copy_of_building = { type = chieftain_hall }
+	}
+
+	country_potential = {
+		government_type ?= government_type:tribe
+	}
+
+	remove_if = {
+		OR = {
+			is_no_longer_capital = yes
+			location.owner ?= { government_type != government_type:tribe }
+		}
+	}
+
+	capital_country_modifier = {
+		monthly_tribal_cohesion = 0.1
+		country_cabinet_efficiency = 0.05
+	}
+
+	unique_production_methods = {
+		pp_chieftain_hall_maintenance = {
+			icon_type = building_type
+			icon = chieftain_hall
+			lumber = 0.3
+			leather = 0.2
+			wool = 0.2
+			wild_game = 0.2
+			beer = 0.1
+
+			category = building_maintenance
+		}
+	}
+
+	construction_demand = pp_early_capital_jewelry_construction
+	raw_modifier = {
+		local_population_capacity = 0.07
+	}
+}
+
+REPLACE:khan_ordu = {
+	audio_tier = 3
+	is_foreign = no
+	pop_type = nobles
+	max_levels = 1
+
+	category = government_category
+
+	employment_size = large_noble_employment
+
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+	build_time = large_capital_build_time
+
+	location_potential = {
+		counts_as_capital = yes
+	}
+
+	allow = {
+		is_capital = yes
+		country_has_no_other_copy_of_building = { type = khan_ordu }
+	}
+
+	country_potential = {
+		government_type ?= government_type:steppe_horde
+	}
+
+	remove_if = {
+		OR = {
+			is_no_longer_capital = yes
+			location.owner ?= { government_type != government_type:steppe_horde }
+		}
+	}
+
+	capital_country_modifier = {
+		monthly_horde_unity = 0.1
+		country_cabinet_efficiency = 0.05
+	}
+
+	unique_production_methods = {
+		pp_khan_ordu_maintenance = {
+			icon_type = building_type
+			icon = khan_ordu
+			leather = 0.4
+			horses = 0.2
+			fine_cloth = 0.2
+			furniture = 0.1
+			wool = 0.2
+			jewelry = 0.02
+
+			category = building_maintenance
+		}
+	}
+
+	construction_demand = pp_early_capital_jewelry_construction
+	raw_modifier = {
+		local_population_capacity = 0.07
+	}
+}
+
+REPLACE:patrician_hall = {
+	audio_tier = 3
+	is_foreign = no
+	pop_type = burghers
+	max_levels = 1
+
+	category = government_category
+
+	employment_size = large_burgher_employment
+
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+	build_time = large_capital_build_time
+
+	location_potential = {
+		counts_as_capital = yes
+	}
+
+	allow = {
+		is_capital = yes
+		country_has_no_other_copy_of_building = { type = patrician_hall }
+	}
+
+	country_potential = {
+		government_type ?= government_type:republic
+	}
+
+	remove_if = {
+		OR = {
+			is_no_longer_capital = yes
+			location.owner ?= { government_type != government_type:republic }
+		}
+	}
+
+	capital_country_modifier = {
+		global_burghers_estate_power = 0.05
+		trade_income = 0.05
+		global_merchant_capacity_modifier = 0.1
+	}
+
+	unique_production_methods = {
+		pp_patrician_hall_maintenance = {
+			icon_type = building_type
+			icon = patrician_hall
+			paper = 0.5
+			fine_cloth = 0.2
+			books = 0.1
+			furniture = 0.1
+			jewelry = 0.02
+
+			category = building_maintenance
+		}
+	}
+
+	graphical_tags = { palace }
+
+	construction_demand = pp_early_capital_jewelry_construction
+	raw_modifier = {
+		local_population_capacity = 0.21
+	}
+}
+
+REPLACE:sacred_council = {
+	audio_tier = 3
+	is_foreign = no
+	pop_type = clergy
+	max_levels = 1
+
+	category = government_category
+
+	employment_size = large_religious_building_employment
+
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+	build_time = large_capital_build_time
+
+	location_potential = {
+		counts_as_capital = yes
+	}
+
+	allow = {
+		is_capital = yes
+		country_has_no_other_copy_of_building = { type = sacred_council }
+	}
+
+	country_potential = {
+		government_type ?= government_type:theocracy
+	}
+
+	remove_if = {
+		OR = {
+			is_no_longer_capital = yes
+			location.owner ?= { government_type != government_type:theocracy }
+		}
+	}
+
+	capital_country_modifier = {
+		monthly_devotion = 0.1
+		country_cabinet_efficiency = 0.05
+	}
+
+	unique_production_methods = {
+		pp_sacred_council_maintenance = {
+			icon_type = building_type
+			icon = sacred_council
+			furniture = 0.1
+			beeswax = 0.1
+			fine_cloth = 0.3
+			books = 0.2
+			paper = 0.3
+			jewelry = 0.02
+
+			category = building_maintenance
+		}
+	}
+
+	graphical_tags = { palace }
+
+	construction_demand = pp_early_capital_jewelry_construction
+	raw_modifier = {
+		local_population_capacity = 0.07
 	}
 }

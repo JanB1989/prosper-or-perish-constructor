@@ -13,6 +13,8 @@ megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
     pp_scriptorium_scriptorium_maintenance = {
+        icon_type = building_type
+        icon = scriptorium
         dyes = 0.046
         paper = 0.18
         lumber = 0.092
@@ -22,9 +24,23 @@ unique_production_methods = {
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
+    pp_scriptorium_scriptorium_leather_maintenance = {
+        icon_type = goods
+        icon = leather
+        dyes = 0.046
+        paper = 0.18
+        leather = 0.046
+        manual_labor = 0.12
+        produced = books
+        output = 0.3
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
 }
 unique_production_methods = {
     pp_scriptorium_market_sales = {
+        icon_type = goods
+        icon = books
         offset = 0.012
         produced = books
         output = 0.004

@@ -530,22 +530,17 @@ def test_local_governor_replacement_keeps_vanilla_non_capital_location_gate() ->
     assert isinstance(vanilla_location_potential, CList)
     assert isinstance(mod_location_potential, CList)
 
-    vanilla_capital_gate = [
-        entry
-        for entry in vanilla_location_potential.entries
-        if entry.key == "owner.capital"
-    ]
-    mod_capital_gate = [
-        entry
-        for entry in mod_location_potential.entries
-        if entry.key == "owner.capital"
-    ]
-    assert len(vanilla_capital_gate) == 1
-    assert len(mod_capital_gate) == 1
-    assert (mod_capital_gate[0].op, mod_capital_gate[0].value) == (
-        vanilla_capital_gate[0].op,
-        vanilla_capital_gate[0].value,
-    ) == ("!=", "this")
+    def canon(value: object) -> object:
+        if isinstance(value, CList):
+            return tuple((entry.key, entry.op, canon(entry.value)) for entry in value.entries)
+        return str(value)
+
+    # EU5 1.4: the non-capital gate is is_capital = no, next to the Seat of the Itinerant Court and King's Manor
+    # exclusions; the mod's replacement keeps every vanilla location gate.
+    vanilla_gates = canon(vanilla_location_potential)
+    mod_gates = canon(mod_location_potential)
+    assert ("is_capital", "=", "False") in vanilla_gates  # the parser reads "no" as False
+    assert [gate for gate in vanilla_gates if gate not in mod_gates] == []
 
 
 EMPLOYMENT_PRIORITY_BONUS = SCRIPT_VALUES_ROOT / "pp_employment_priority.txt"

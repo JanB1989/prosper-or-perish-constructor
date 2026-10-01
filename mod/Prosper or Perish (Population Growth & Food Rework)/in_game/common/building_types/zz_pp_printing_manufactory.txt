@@ -14,6 +14,8 @@ obsolete = printing_press_shop
 build_time = manufactory_build_time
 unique_production_methods = {
     pp_printing_manufactory_printing_manufactory_maintenance = {
+        icon_type = building_type
+        icon = printing_manufactory
         lead = 0.37
         paper = 1.86
         lumber = 0.49
@@ -23,9 +25,23 @@ unique_production_methods = {
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
+    pp_printing_manufactory_printing_manufactory_leather_maintenance = {
+        icon_type = goods
+        icon = leather
+        lead = 0.37
+        paper = 1.86
+        leather = 0.245
+        manual_labor = 0.4
+        produced = books
+        output = 2.0
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
 }
 unique_production_methods = {
     pp_printing_manufactory_market_sales = {
+        icon_type = goods
+        icon = books
         offset = 0.012
         produced = books
         output = 0.004

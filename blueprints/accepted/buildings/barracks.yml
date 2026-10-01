@@ -39,11 +39,11 @@ building:
     	
     	unique_production_methods = {
     		pp_barracks_maintenance = {
-    			firearms = 1.0
-    			leather = 1.0
-    			cloth = 0.20
-    			paper = 0.40
-    			weaponry = 1.0
+    			firearms = 0.75
+    			leather = 0.75
+    			cloth = 0.15
+    			paper = 0.30
+    			weaponry = 0.75
     			victuals = 0.375
     			category = building_maintenance
     		}

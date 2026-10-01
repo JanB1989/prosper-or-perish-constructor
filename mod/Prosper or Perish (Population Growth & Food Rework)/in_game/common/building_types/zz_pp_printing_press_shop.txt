@@ -14,6 +14,8 @@ obsolete = scriptorium
 build_time = workshop_build_time
 unique_production_methods = {
     pp_printing_press_shop_printing_press_maintenance = {
+        icon_type = building_type
+        icon = printing_press_shop
         lead = 0.22
         paper = 0.76
         lumber = 0.27
@@ -23,9 +25,23 @@ unique_production_methods = {
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
+    pp_printing_press_shop_printing_press_leather_maintenance = {
+        icon_type = goods
+        icon = leather
+        lead = 0.22
+        paper = 0.76
+        leather = 0.135
+        manual_labor = 0.33
+        produced = books
+        output = 1.0
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
 }
 unique_production_methods = {
     pp_printing_press_shop_market_sales = {
+        icon_type = goods
+        icon = books
         offset = 0.012
         produced = books
         output = 0.004

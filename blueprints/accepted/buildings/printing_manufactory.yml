@@ -12,6 +12,7 @@ building:
   - name: slot_0
     methods:
     - pp_printing_manufactory_printing_manufactory_maintenance
+    - pp_printing_manufactory_printing_manufactory_leather_maintenance
   - name: slot_1
     methods:
     - pp_printing_manufactory_market_sales
@@ -40,6 +41,16 @@ building:
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
+        pp_printing_manufactory_printing_manufactory_leather_maintenance = {
+            lead = 0.37
+            paper = 1.86
+            leather = 0.245
+            manual_labor = 0.4
+            produced = books
+            output = 2.0
+            debug_max_profit = manufactory_profit_margin
+            category = manufactory_input
+        }
     }
     unique_production_methods = {
         pp_printing_manufactory_market_sales = {
@@ -55,6 +66,7 @@ localization:
   entries:
     printing_manufactory_slot_0: Printing Manufactory Work
     pp_printing_manufactory_printing_manufactory_maintenance: Printing Manufactory Printing Manufactory Maintenance
+    pp_printing_manufactory_printing_manufactory_leather_maintenance: $printing_manufactory_leather_maintenance$
     pp_printing_manufactory_market_sales: Market Sales
     pp_printing_manufactory_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     printing_manufactory_slot_1: Market

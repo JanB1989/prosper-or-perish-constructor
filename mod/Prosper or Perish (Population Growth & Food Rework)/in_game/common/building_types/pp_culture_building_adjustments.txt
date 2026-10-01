@@ -23,6 +23,17 @@ REPLACE:library = {
 
 	build_time = cultural_building_time
 
+	allow = {
+		trigger_if = {
+			limit = {
+				has_dlc = "d009_across_the_pillars"
+				this = location:cordoba
+				has_building = building_type:library_cordoba
+			}
+			NOT = { has_building = building_type:library_cordoba }
+		}
+	}
+
 	modifier = {
 		local_cultural_influence = 0.1
 		local_max_literacy = 5
@@ -87,6 +98,8 @@ REPLACE:university = {
 
 	unique_production_methods = {
 		pp_university_maintenance = {
+			icon_type = building_type
+			icon = university
 			paper = 1.0
 			books = 0.5
 			glass = 0.5
@@ -127,7 +140,12 @@ REPLACE:gymnasium_building = {
 	forbidden_for_estates = yes
 
 	location_potential = {
+		counts_as_capital = yes
+	}
+
+	allow = {
 		is_capital = yes
+		country_has_no_other_copy_of_building = { type = gymnasium_building }
 	}
 
 	remove_if = {

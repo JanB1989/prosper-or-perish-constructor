@@ -19,8 +19,11 @@ country_potential = {
     }
 }
 location_potential = {
-    is_capital = yes
+    counts_as_capital = yes
     this = location:cairo
+}
+allow = {
+    is_capital = yes
 }
 construction_demand = guild_construction
 capital_country_modifier = {
@@ -38,6 +41,8 @@ increase_per_level_cost = 0.41
 price = pp_ablaq_palace_price
 unique_production_methods = {
     pp_ablaq_palace_ablaq_palace_maintenance = {
+        icon_type = building_type
+        icon = ablaq_palace
         lumber = 0.13
         marble = 0.18
         manual_labor = 0.2
@@ -49,6 +54,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_ablaq_palace_market_sales = {
+        icon_type = goods
+        icon = silk
         offset = 0.012
         produced = silk
         output = 0.003

@@ -26,11 +26,13 @@ REPLACE:regimental_camp = {
 	
 	unique_production_methods = {
 		pp_regimental_camp_maintenance = {
-			firearms = 1.0
-			leather = 1.0
-			cloth = 0.20
-			paper = 0.40
-			weaponry = 1.0
+			icon_type = building_type
+			icon = regimental_camp
+			firearms = 1.2
+			leather = 1.2
+			cloth = 0.24
+			paper = 0.48
+			weaponry = 1.2
 			victuals = 0.5
 			category = building_maintenance
 		}

@@ -36,8 +36,11 @@ building:
         }
     }
     location_potential = {
-        is_capital = yes
+        counts_as_capital = yes
         this = location:cairo
+    }
+    allow = {
+        is_capital = yes
     }
     construction_demand = guild_construction
     capital_country_modifier = {

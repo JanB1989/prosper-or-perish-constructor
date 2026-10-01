@@ -71,6 +71,10 @@ month's `A` within 0.05 for 96 % of locations.
   (cameralism +0.1), privileges (free towns +0.05, libro d'argento −0.1, creaghts +1.0), cabinet encourage migration +0.5.
   Most countries in 1345 sit between −0.1 and −0.4.
 - `local_migration_speed_modifier`: expel people +0.5.
+- EU5 1.4 adds conquest and discrimination migration (NPop defines, not yet measured in PP): a settler pull on
+  attraction after a culture-shifting owner change (PP `SETTLER_PULL_BASE` 1.0, peak 2x instead of 3x, fading over 25
+  years), a monthly emigration of discriminated pops (PP `DISCRIMINATED_EMIGRATION_MONTHLY_RATE` 0.001, half of vanilla),
+  and vanilla's post-conquest flight (0.25 % over 12 months) and push factor (2x speed for discriminated pops).
 
 ## 5. Where it is in a save
 

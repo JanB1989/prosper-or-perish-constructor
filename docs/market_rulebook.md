@@ -323,6 +323,13 @@ production gate leg (section 2.4i of the AI building rulebook), profit and the s
   output and capacity buffs), `MERCHANT_MAINTENANCE_COST` 0.10 and profit/weight cutoff 0.15 (the vanilla values did better
   with the shortage terms: cheap trade let low-margin arbitrage keep the capacity). Never put `local_merchant_capacity` into
   the development static modifier: the AI's valuation of development then crashes the game.
+- EU5 1.4 (not yet tested in a run): imports that only cover a pop shortage got their own loss limit
+  (`AI_POP_NEED_IMPORT_PROFIT_CUTOFF`, vanilla -0.1); PP keeps -1.0, the 1.3 limit the runs above were measured with.
+  The new food trade rules (trade orders' food mode, burgher food trade) read the market food stock as a share of
+  market food capacity; PP markets hold none, so the share is 0 everywhere and the thresholds are set so it never holds
+  food trade back (`TRADE_ORDER_FOOD_GROWTH/MAINTAIN_STOCKPILE_FRACTION` 1.0, `TRADE_ORDER_FOOD_EXPORT_SELF_STOP/CANCEL_FRACTION`
+  and `MARKET_MIN_FOOD_STOCKPILE_RATIO_FOR_BURGHER_TRADE` 0). Those rules only apply to goods with a food value, and PP
+  gives every good food = 0. The rest of the trade-order system, trade policies, tariffs and subsidies stay vanilla.
 
 Test runs (fresh game to 1387, then 10 years from the same save; v8 = the list above, continued to 1407; b0 = no change):
 

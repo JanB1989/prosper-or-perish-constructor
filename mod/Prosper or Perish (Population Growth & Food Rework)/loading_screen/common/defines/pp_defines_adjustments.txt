@@ -54,6 +54,18 @@ NAI = {
 	MAX_ALLOWED_INFLATION = 0.02 
 	AI_SAVING_MODE_ALLOWED_INFLATION_MODIFIER_LOW = 2 # Mult max allowed inflation by this much when in low saving mode
 	AI_IMPORT_POP_NEED_SCORE_BONUS = 10 # 5; imports that cover a pop shortage win merchant capacity from luxury arbitrage
+	# EU5 1.4 split the import loss limit: AI_WELFARE_IMPORT_PROFIT_CUTOFF (-1) now covers building inputs and slaves only.
+	AI_POP_NEED_IMPORT_PROFIT_CUTOFF = -1.0 # -0.1; pop shortages are answered by imports from producers even at a loss, as in 1.3 and the raw-material trade runs
+	AI_COUNTRY_POP_NEED_MODIFIER_UTILITY = 0.001 # 0.001; vanilla: value of modifiers that raise pop demand, no PP system leans on it
+	AI_RGO_PRODUCTION_BONUS_MODIFIER_UTIL = 0.25 # 0.25; vanilla: RGOs barely grow in PP, buildings answer shortages, so no extra weight on RGO output
+	AI_UNLOCK_BUILDING_ADVANCE_UTIL_PER_UPGRADE = 200 # 200 (1.3: 50); vanilla 1.4: advances that unlock supply buildings are researched sooner, which helps shortages
+	# EU5 1.4 food trade orders read the market food stock as a share of market food capacity. PP markets hold no food
+	# (NMarket.FOOD_CAPACITY_FACTOR 0), so the share is 0 in every market. These rules only touch goods with a food value
+	# and PP sets food = 0 on every good, so the values only set the direction: food trade is never held back by a market stock.
+	TRADE_ORDER_FOOD_GROWTH_STOCKPILE_FRACTION = 1.0 # 0.4; below it a market may grow its food imports: always (at 0 never)
+	TRADE_ORDER_FOOD_MAINTAIN_STOCKPILE_FRACTION = 1.0 # 0.6; below it a market stays eligible to import food: always (at 0 never)
+	TRADE_ORDER_FOOD_EXPORT_SELF_STOP_FRACTION = 0 # 0.5; a market's own-food exports never stop for a low market stock
+	TRADE_ORDER_FOOD_EXPORT_SELF_CANCEL_FRACTION = 0 # 0.25; a market's own-food exports are never cancelled for a low market stock
 	AI_SAVING_MODE_ALLOWED_INFLATION_MODIFIER_HIGH = 7 # Mult max allowed inflation by this much when in high saving mode
 }
 
@@ -121,9 +133,18 @@ NMarket = {
  	# (food_purchase_efficiency 10000 in auto_modifiers/pp_country_base_values.txt).
  	FOOD_PRICE_IMPACT_ON_PRICES = 0.00
  	MARKET_FOOD_STOCKPILE_TRESHOLD_MONTHS = 24.0
+	MARKET_MIN_FOOD_STOCKPILE_RATIO_FOR_BURGHER_TRADE = 0 # 0.25; EU5 1.4: burghers are never held back from food trade by the (always empty) market food stock
 }
 
 NPop = {
  	GOODS_PRICE_SATISFACTION_SCALE = -0.10 # vanilla -0.05; -0.25 swung slave satisfaction between -0.30 and +0.45 and drove the slave revolts (2026-09-25)
 	POP_JOB_SURPLUS_SCALE_CAP = 1 # vanilla 5
+	# EU5 1.4 migration after conquest and under discrimination. Migration moves people, it is not growth; in PP it
+	# follows land and food (free land, overpopulation, starving provinces, jobs), so the new pushes and pulls stay small.
+	SETTLER_PULL_BASE = 1.0 # 2.0; peak 2x attraction after a culture-shifting conquest instead of 3x, so land and food attraction still decide
+	SETTLER_PULL_RAMP_YEARS = 25 # 25; vanilla: the pull fades over a generation
+	DISCRIMINATED_EMIGRATION_MONTHLY_RATE = 0.001 # 0.002; halved: 2.4 %/yr would outweigh PP's food growth (0.75 %/yr per stored year) in whole regions
+	POST_CONQUEST_EMIGRATION_FRACTION = 0.0025 # 0.0025; vanilla: a one-off 0.25 % flight over a year, small next to PP migration
+	POST_CONQUEST_EMIGRATION_MONTHS = 12 # 12; vanilla
+	DISCRIMINATION_PUSH_FACTOR = 2.0 # 2.0; vanilla: speeds the emigration of discriminated pops, the amount still follows PP's migration speeds
 }

@@ -286,7 +286,9 @@ def test_the_rendered_network_method_has_no_inputs() -> None:
         network = lg.network_method_name(building)
         found = re.findall(rf"(?ms)^\s*{network} = \{{\n(.*?)\n\s*\}}", text)
         assert len(found) == 1, network
-        assert sorted(line.split("=")[0].strip() for line in found[0].split("\n") if line.strip()) == ["category", "output", "produced"]
+        keys = sorted(line.split("=")[0].strip() for line in found[0].split("\n") if line.strip())
+        # EU5 1.4 method icons (icon_type/icon, written by the finalize step) are display keys, not inputs
+        assert [key for key in keys if key not in {"icon_type", "icon"}] == ["category", "output", "produced"]
 
 
 # ---------------------------------------------------------------- zones

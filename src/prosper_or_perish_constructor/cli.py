@@ -1343,6 +1343,14 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
             f"prices and {len(margins.vanilla_unchanged)} vanilla methods (see profit_margins.py).",
             flush=True,
         )
+        from prosper_or_perish_constructor import method_icons
+
+        icons = method_icons.apply(mod_root, vanilla_root(repo, project))
+        print(
+            f"Production method icons (EU5 1.4): icon_type/icon written on {icons.methods_written} mod methods across "
+            f"{icons.files_changed} files ({', '.join(f'{rule} {count}' for rule, count in sorted(icons.by_rule.items())) or 'none'}).",
+            flush=True,
+        )
         _apply_text_formats(mod_root, vanilla_root(repo, project))
     _ensure_constructor_text_boms(mod_root)
 

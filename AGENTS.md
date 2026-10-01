@@ -74,6 +74,14 @@
   Never put market access, owner or culture conditions in `location_potential`: the game re-checks it on owner change
   and deletes buildings that fail it.
 
+## Production Method Icons (EU5 1.4)
+
+- EU5 1.4 gives every production method an `icon_type` (`building_type`, `goods`, ...) and an `icon`. The finalize step of
+  `ppc build` / `ppc sync` (`method_icons.py`) writes them on every mod method that has none: a renamed vanilla method
+  (`pp_<building>_<vanilla method>`, `pp_<vanilla global method>`) keeps vanilla's icon, the Market gate leg shows the
+  good it sells, Provision the good it buys back, other unique methods their building, other global methods their good.
+  A blueprint may set its own pair (the method keeps it); copies of vanilla files are left alone.
+
 ## Release Checklist
 
 - Treat an explicit request to create or publish a release as authorization for the one final guarded live sync required by this checklist. Confirm the exact `constructor.local.toml` deploy target before running it.

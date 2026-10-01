@@ -59,6 +59,21 @@ near-invisible spline style (id 4), so no road texture is drawn on the water and
 wagons, which only use the four vanilla styles, stay off the rivers. The file is regenerated from the
 installed game on every build, so a game patch that changes the vanilla network is picked up by rebuilding.
 
+EU5 1.4 added scalar settings to `definitions.txt` (`not_eligible_for_dynamic_country_name = yes` on 551
+areas and provinces). The first 1.4 build counted each `yes` as a location, so every anchor index after
+the first one was off and the engine found none of the 3,403 navigation strips: about 600 log lines a
+second for the whole session. `location_order` now skips `key = value` settings, and the build checks the
+order against `location_templates.txt` (each location once, nothing else).
+
+Vanilla has a strip for every pair of adjacent land locations (50,754; sea zones, lakes and impassable
+mountains excluded), so a road the player or the AI builds anywhere has one. The World Builder map makes a
+few land locations touch that did not before (gaoyao-nanhai, heidelberg-mosbach); the build gives those a
+straight strip too (`land_pairs`, cached in `artifacts/data/worldbuilder/land_adjacency.json`; listed in
+the report under `land_strips_added`). New connections are merged into the sorted connection list.
+`tests/test_spline_network.py` reads the shipped network back and fails if any road the mod or the 1337
+setup creates (`add_road_to`, `09_roads.txt`) or any land adjacency of the map has no type-0 strip between
+the right anchors.
+
 ## Inspecting results
 
 World Builder writes `artifacts/river_navigation/index.html` (clickable world map), `manifest.json`, `tiles.csv`, `edges.csv`, `shores.csv`, and the river-effect preservation tables. Constructor writes `artifacts/data/worldbuilder/navigation/sites.json`, `report.json`, and a regenerated `building_inventory.csv` containing every site, region, building type, actual starting levels and existing supporting works; starting replacements are counted in `artifacts/data/worldbuilder/apply_report.json`.

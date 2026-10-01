@@ -4,3 +4,4 @@ pp_navigation_river_level_3 = { has_location_modifier = river_flowing_through_3 
 pp_navigation_river_level_4 = { has_location_modifier = river_flowing_through_4 }
 pp_navigation_river_level_5 = { has_location_modifier = river_flowing_through_5 }
 pp_navigation_has_river = { OR = { has_river = yes pp_navigation_river_level_1 = yes pp_navigation_river_level_2 = yes pp_navigation_river_level_3 = yes pp_navigation_river_level_4 = yes pp_navigation_river_level_5 = yes } }
+pp_navigation_river_missing = { OR = { AND = { has_global_variable = pp_navigation_river_sizes_live modifier:irrigant_cap_modifier < 0.5 } AND = { NOT = { has_global_variable = pp_navigation_river_sizes_live } NOT = { pp_navigation_has_river = yes } } } }

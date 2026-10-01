@@ -180,6 +180,7 @@ def ensure_blueprints(repo,settings):
 
 
 CANAL_OPEN='pp_river_canal_open'
+RIVER_SIZES_LIVE='pp_navigation_river_sizes_live'  # set while pp_navigation_preserve_rivers runs, if river sizes read
 
 
 def refreshable_tiles(state):
@@ -400,7 +401,8 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
 }}''')
     write('in_game/common/road_types/pp_navigation.txt','\n'.join(roads)+'\n')
     write('in_game/gfx/map/spline_network/spline_styles/pp_navigation.txt',SPLINE_STYLE)
-    spline_report=spline_network.write(mod_root,vanilla_root,[(e['from'],e['to']) for e in state['edges']])
+    spline_report=spline_network.write(mod_root,vanilla_root,[(e['from'],e['to']) for e in state['edges']],
+                                       land_cache=repo/'artifacts/data/worldbuilder/land_adjacency.json')
     def edge_line(e,improved=False):
         kind='improved' if improved else e.get('cost_profile',e['state'])
         return f" location:{e['from']} = {{ add_road_to = {{ target = location:{e['to']} type = {road_names[kind]} }} }}"
@@ -408,24 +410,32 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     effects,start=canal_effects(state,edge_line,road_names)
     write('in_game/common/scripted_effects/pp_navigation_routes.txt','\n'.join(seed+effects)+'\n')
     lost=list(pl.read_csv(contract.root/'navigation/lost_river_effects.csv').iter_rows(named=True))
-    bonus=['pp_navigation_preserve_rivers = {']
-    for row in lost:
-        tag=row['location_tag'];level=int(row['river_level']);key=f'river_flowing_through_{level}'
-        bonus.append(f' location:{tag} = {{ if = {{ limit = {{ NOT = {{ has_location_modifier = {key} }} }} add_location_modifier = {{ modifier = {key} days = -1 mode = replace }} }} }}')
-        if row['original_coastal']:
-            key=f'river_flowing_through_coast_{level}'
-            bonus.append(f' location:{tag} = {{ if = {{ limit = {{ NOT = {{ has_location_modifier = {key} }} }} add_location_modifier = {{ modifier = {key} days = -1 mode = replace }} }} }}')
-    # The engine traces its river sizes from rivers.png and drops some bank remnants the navigation export keeps
-    # (Hanyang, Mechelen: no river size at all), while the World Builder still gives them a river level. Such a
-    # location gets its level back; one the engine sized differently keeps the engine's (no double bonus).
-    lost_tags={row['location_tag'] for row in lost}
-    for row in contract.location_attributes.select('location_tag','river_level').iter_rows(named=True):
-        level=int(row['river_level'] or 0)
-        if level and row['location_tag'] not in lost_tags:
-            bonus.append(f" location:{row['location_tag']} = {{ if = {{ limit = {{ NOT = {{ pp_navigation_has_river = yes }} }} add_location_modifier = {{ modifier = river_flowing_through_{level} days = -1 mode = replace }} }} }}")
-    bonus.append('}')
-    write('in_game/common/scripted_effects/pp_navigation_river_bonuses.txt','\n'.join(bonus)+'\n')
     shores=list(pl.read_csv(contract.root/'navigation/shores.csv').iter_rows(named=True))
+    river_levels={row['location_tag']:int(row['river_level'] or 0) for row in contract.location_attributes.select('location_tag','river_level').iter_rows(named=True)}
+    # A location gets its river back only where it has no river size at all: modifier:irrigant_cap_modifier is N on
+    # every river_flowing_through_N, the engine's own statics included (has_location_modifier does not see those), so
+    # nothing ever carries two. has_river is no test: banks that keep stray river pixels but get no size from the
+    # engine (Yangtze: Hanyang, Jiangling, Jinhua) have has_river = yes and were left without a river.
+    # Probes: big-river locations away from the channels, where the engine has its river size. If none of them reads a
+    # size at game start, the modifier values are not live yet and the restore falls back to has_river.
+    probes=sorted((t for t,lv in river_levels.items() if lv>=3 and t not in {s['location_tag'] for s in shores}
+                   and t not in {r['location_tag'] for r in lost}),key=lambda t:(-river_levels[t],t))[:8]
+    bonus=['pp_navigation_preserve_rivers = {',
+           ' if = { limit = { OR = { '+' '.join(f'location:{t} = {{ modifier:irrigant_cap_modifier > 0.5 }}' for t in probes)+' } }',
+           f'  set_global_variable = {{ name = {RIVER_SIZES_LIVE} value = yes }}',' }']
+    for row in lost:
+        tag=row['location_tag'];level=int(row['river_level'])
+        coast=f' add_location_modifier = {{ modifier = river_flowing_through_coast_{level} days = -1 mode = replace }}' if row['original_coastal'] else ''
+        bonus.append(f' location:{tag} = {{ if = {{ limit = {{ pp_navigation_river_missing = yes }} add_location_modifier = {{ modifier = river_flowing_through_{level} days = -1 mode = replace }}{coast} }} }}')
+    # The engine traces its river sizes from rivers.png and drops some bank remnants the navigation export keeps
+    # (Hanyang, Mechelen), while the World Builder still gives them a river level. Such a location gets its level
+    # back; one the engine sized differently keeps the engine's (no double bonus).
+    lost_tags={row['location_tag'] for row in lost}
+    for tag,level in river_levels.items():
+        if level and tag not in lost_tags:
+            bonus.append(f" location:{tag} = {{ if = {{ limit = {{ pp_navigation_river_missing = yes }} add_location_modifier = {{ modifier = river_flowing_through_{level} days = -1 mode = replace }} }} }}")
+    bonus+=[f' remove_global_variable = {RIVER_SIZES_LIVE}','}']
+    write('in_game/common/scripted_effects/pp_navigation_river_bonuses.txt','\n'.join(bonus)+'\n')
     write('in_game/common/scripted_effects/pp_navigation_discovery.txt',discovery_effect(state['tiles'],shores))
     # Starting building levels that need the river are added after the rivers are restored (start_simulation).
     write('in_game/common/on_action/pp_navigation.txt','\n'.join([
@@ -454,6 +464,10 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     # has_location_modifier): without it every river location got its river modifier a second time at game start
     # (seen 2026-09-30: Anji listed "Stream Flowing Through" twice).
     triggers.append('pp_navigation_has_river = { OR = { has_river = yes '+' '.join(f'pp_navigation_river_level_{n} = yes' for n in range(1,6))+' } }')
+    # no river size at all (engine or script): irrigant_cap_modifier = N on every river_flowing_through_N
+    triggers.append('pp_navigation_river_missing = { OR = { '
+                    f'AND = {{ has_global_variable = {RIVER_SIZES_LIVE} modifier:irrigant_cap_modifier < 0.5 }} '
+                    f'AND = {{ NOT = {{ has_global_variable = {RIVER_SIZES_LIVE} }} NOT = {{ pp_navigation_has_river = yes }} }} }} }}')
     write('in_game/common/scripted_triggers/pp_navigation_rivers.txt','\n'.join(triggers)+'\n')
     from .navigation_map_modes import write_map_modes
     write_map_modes(mod_root,state)

@@ -2,6 +2,8 @@ import json
 import subprocess
 from pathlib import Path
 
+import polars as pl
+
 from prosper_or_perish_constructor import run_report as rr
 
 
@@ -140,3 +142,135 @@ def test_symlog_scale_is_symmetric_and_logarithmic_in_the_absolute_change() -> N
     assert built.kind == "symlog" and built.low > 0 and built.high > built.low
     labels = [label for _, label in built.ticks]
     assert "0" in labels and any(label.startswith("+") for label in labels) and any(label.startswith("-") for label in labels)
+
+
+def _trade_run():
+    """Two saves, two markets (Paris, London), one ocean pseudo-region location, a landless pretender."""
+    snapshots = pl.DataFrame({"snapshot_id": ["s1", "s2"], "date": ["1337.4.1", "1347.4.1"], "year": [1337, 1347],
+                              "date_sort": [13370401, 13470401], "playthrough_name": [None, None]})
+    loc = {
+        "slug": ["paris", "london", "atlantis"], "country_tag": ["FRA", "ENG", None], "owner": [2, 1, None],
+        "market_id": [1, 2, None], "super_region": ["europe", "europe", "atlantic_ocean_continent"],
+        "macro_region": ["western_europe", "british_isles", "north_atlantic_ocean_sub_continent"],
+        "development": [10.0, 8.0, 0.0], "possible_tax": [5.0, 3.0, 0.0],
+    }
+    rows = []
+    for snapshot, scale in (("s1", 1.0), ("s2", 1.5)):
+        for i in range(3):
+            pop = [100.0, 50.0, 1.0][i] * scale
+            rows.append({"snapshot_id": snapshot, **{k: v[i] for k, v in loc.items()}, "total_population": pop,
+                         "unemployed_total": pop * 0.6, "unemployed_peasants": pop * 0.4,
+                         **{f"population_{p}": (pop * 0.7 if p == "peasants" else pop * 0.3 / 7) for p in rr.POP_TYPES}})
+    locations = pl.DataFrame(rows)
+    countries = pl.DataFrame({
+        "snapshot_id": ["s1", "s1", "s2", "s2", "s2"], "country_id": [1, 2, 1, 2, 3],
+        "country_tag": ["ENG", "FRA", "ENG", "FRA", "FRA"], "country_name": ["ENG", "FRA", "GBR", "FRA", "FRA"],
+        "population": [50.0, 100.0, 75.0, 150.0, None], "owned_locations_count": [1, 1, 1, 1, 0],
+        "gold": [1.0, 2.0, 3.0, 4.0, 0.0], "is_subject": [False] * 5, "overlord_tag": [None] * 5, "overlord_name": [None] * 5,
+    })
+    goods = []
+    for snapshot in ("s1", "s2"):
+        goods += [
+            # Paris makes cloth and sends it to London; London is short of wheat
+            {"snapshot_id": snapshot, "market_id": 1, "good_id": "cloth", "group": "produced", "price": 3.0, "default_price": 3.0,
+             "supply": 10.0, "demand": 10.0, "production": 10.0, "imports": 0.0, "exports": 4.0, "burgher_trade": 0.0},
+            {"snapshot_id": snapshot, "market_id": 2, "good_id": "cloth", "group": "produced", "price": 4.5, "default_price": 3.0,
+             "supply": 4.0, "demand": 4.0, "production": 0.0, "imports": 4.0, "exports": 0.0, "burgher_trade": 0.0},
+            {"snapshot_id": snapshot, "market_id": 2, "good_id": "wheat", "group": "farming", "price": 2.0, "default_price": 1.0,
+             "supply": 5.0, "demand": 10.0, "production": 5.0, "imports": 0.0, "exports": 0.0, "burgher_trade": 0.0},
+        ]
+    market_goods = pl.DataFrame(goods)
+    markets = pl.DataFrame({"snapshot_id": ["s1", "s1", "s2", "s2"], "market_id": [1, 2, 1, 2],
+                            "center_slug": ["paris", "london", "paris", "london"]})
+    trades = pl.DataFrame({"snapshot_id": ["s1", "s2"], "from_market": [1, 1], "to_market": [2, 2], "good_id": ["cloth", "cloth"],
+                           "amount": [4.0, 4.0], "country_id": [2, 2]})
+    economy = pl.DataFrame({"snapshot_id": ["s1", "s1", "s2", "s2"], "country_id": [1, 2, 1, 2],
+                            "income": [10.0, 20.0, 40.0, 30.0], "expense": [5.0, 5.0, 5.0, 5.0]})
+    levels = pl.DataFrame({"snapshot_id": ["s1", "s2"], "slug": ["paris", "paris"], "levels": [2.0, 3.0]})
+    by_category = pl.DataFrame({"snapshot_id": ["s1", "s2"], "building_category": ["crafts"] * 2, "levels": [2.0, 3.0]})
+    return rr.RunData("run", "Run", snapshots, locations, levels, by_category, countries, market_goods, markets,
+                      trades, economy, rr.Labels(goods={"cloth": "Cloth", "wheat": "Wheat"}))
+
+
+def test_payload_splits_peasants_filters_regions_and_ranks_countries() -> None:
+    from prosper_or_perish_constructor.run_report_charts import build_payload
+
+    payload = build_payload(_trade_run())
+    charts = {c["key"]: c for c in payload["charts"]}
+    stack = {s["name"]: s["data"] for s in charts["population_by_type"]["views"][0]["option"]["series"]}
+    # Paris + London + the islet, last save: 226.5k people, 70 % peasants, 40 % of the people without a job
+    assert stack["Subsistence peasants"][-1][1] == round(226.5 * 0.4 / 1000, 6)
+    assert stack["Peasants"][-1][1] == round(226.5 * 0.3 / 1000, 6)
+    assert charts["population_by_type"]["views"][0]["option"]["xAxis"]["type"] == "time"  # stacks along y
+    regions = [s["name"] for s in charts["population_by_region"]["views"][0]["option"]["series"]]
+    assert regions == ["Western Europe", "British Isles"]  # no ocean pseudo-region
+    unemployment = {s["name"]: s["data"] for s in charts["unemployment"]["views"][0]["option"]["series"]}
+    assert unemployment["World"][-1][1] == 40.0
+    countries = [s["name"] for s in charts["countries_population"]["views"][0]["option"]["series"]]
+    assert countries == ["Fra", "Gbr"]  # largest first, the landless pretender never counts
+    income = [s["name"] for s in charts["countries_income"]["views"][0]["option"]["series"]]
+    assert income == ["Gbr", "Fra"]
+    goods = charts["price_heatmap"]["views"][0]["option"]["yAxis"]["data"]
+    assert goods == ["Wheat", "Cloth"]  # farming before manufactured
+
+
+def test_trade_tables_show_market_flows_and_routes() -> None:
+    from prosper_or_perish_constructor.run_report_charts import build_payload
+
+    tables = {t["key"]: t for t in build_payload(_trade_run())["tables"]}
+    markets = tables["markets"]
+    column = {c["key"]: i for i, c in enumerate(markets["columns"])}
+    rows = {r[column["market"]]: r for r in markets["rows"][-1]}
+    assert rows["Paris"][column["exports"]] == 12.0 and rows["Paris"][column["net"]] == 12.0
+    assert rows["London"][column["imports"]] == 12.0 and rows["London"][column["top_imports"]] == "Cloth 12"
+    assert rows["London"][column["top_unmet"]] == "Wheat 5.0"
+    goods = tables["goods"]
+    gcol = {c["key"]: i for i, c in enumerate(goods["columns"])}
+    wheat = next(r for r in goods["rows"][-1] if r[gcol["good"]] == "Wheat")
+    assert wheat[gcol["unmet"]] == 50.0 and wheat[gcol["short"]] == 1 and wheat[gcol["shortages"]] == "London 5.0"
+    route = tables["routes"]["rows"][-1][0]
+    assert route[:3] == ["Paris", "London", "Cloth"] and route[4] == 12.0
+
+
+def test_trade_maps_draw_routes_over_market_borders(tmp_path: Path) -> None:
+    import shutil
+
+    import numpy as np
+    import pytest
+
+    if shutil.which("ffmpeg") is None:
+        pytest.skip("ffmpeg missing")
+    index = np.full((20, 40), -1, dtype=np.int32)
+    index[4:16, 4:18] = 0  # paris
+    index[4:16, 18:30] = 1  # london
+    index[4:16, 30:34] = 2  # atlantis, no market
+    canvas = rr.MapCanvas(index=index, tags=["paris", "london", "atlantis"], width=40, height=20,
+                          tag_index={"paris": 0, "london": 1, "atlantis": 2})
+    run = _trade_run()
+    raster = rr._market_raster(canvas, run.locations.filter(pl.col("snapshot_id") == "s1"))
+    assert raster[5, 5] == 1 and raster[5, 20] == 2 and raster[5, 31] == -1 and raster[0, 0] == -2
+    borders = rr._market_borders(raster)
+    assert borders[5, 18] and not borders[5, 30] and not borders[3, 5]
+    maps = rr.render_trade_maps(run, canvas, tmp_path, fps=2, log=lambda _: None)
+    assert [m["key"] for m in maps] == ["trade_routes", "trade_balance"]
+    assert all((tmp_path / f"{m['key']}.mp4").stat().st_size > 0 for m in maps)
+
+
+def test_routes_over_the_map_edge_take_the_short_way() -> None:
+    import numpy as np
+
+    base = np.zeros((20, 100, 3), dtype=np.uint8)
+    # a thick route from x=95 to x=5 crosses the right edge: nothing in the middle of the map
+    out = rr._draw_trade(base, [(95.0, 10.0, 1.0, 5.0, 10.0, 1.0, 4.0, (255, 255, 255, 255))], [])
+    assert out[:, 40:60].max() == 0
+    assert out[:, 90:].max() > 0 and out[:, :10].max() > 0
+
+
+def test_page_embeds_charts_and_tables(tmp_path: Path) -> None:
+    from prosper_or_perish_constructor.run_report_charts import build_payload
+
+    run = _trade_run()
+    page = rr.write_page(run, tmp_path, [], build_payload(run)).read_text(encoding="utf-8")
+    assert "echarts" in page and "id=report-data" in page
+    assert "Unemployment" in page and "Imported share" in page and "<h2 id=trade>" in page
+    assert "NaN" not in page.split("id=report-data")[1].split("</script>")[0]

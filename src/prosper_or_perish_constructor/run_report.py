@@ -1,18 +1,21 @@
-"""Shareable run report: map videos (MP4), progression charts (PNG) and one static page per playthrough.
+"""Shareable run report: map videos (MP4), interactive charts and tables, one static page per playthrough.
 
 `ppc report` reads the multi-save dataset (`graphs/dataset`, built by `ppc savegame-notebooks build`) and
 writes `graphs/report/<run>/`:
 
-- `maps/*.mp4` - one H.264 video per map (political, population, population change, development, building
-  levels, building investment, unemployment), one frame per save, sized to stay under 10 MB so Discord and GitHub
-  play it inline; `maps/*.png` - the last frame of each (a poster / thumbnail);
-- `charts/*.png` - progression charts (population by pop type and region, employment, buildings, building
-  investment by category and per capita, prices, largest countries);
-- `index.html` - the page that ties them together; it only references files next to it, so the folder can
-  be opened locally, zipped or published as it is.
+- `maps/*.mp4` - one H.264 video per map (political, population, population change, unemployment, development,
+  building levels, building investment, trade routes, market trade balance), one frame per save, sized to stay
+  under 10 MB so Discord and GitHub play it inline; `maps/*.png` - the last frame of each (a poster / thumbnail);
+- `index.html` - the page: summary tiles, the videos and the interactive charts and tables of
+  `run_report_charts` (population, trade, prices, buildings, countries), drawn by Apache ECharts (loaded from
+  jsDelivr) from the JSON embedded in the page. It only references files next to it and the chart library.
+
+Before reading the run, the report brings two derived parts of the dataset up to date: the building investment
+table and the engine-only tables (trade routes, merchants, country economy) of snapshots ingested before the
+dataset kept them, re-read from the saves that are still on disk.
 
 Frames are painted with one NumPy lookup per frame (a location-index raster built once) and streamed to
-ffmpeg, so a whole run renders in well under a minute.
+ffmpeg, so a whole run renders in about a minute.
 """
 
 from __future__ import annotations
@@ -27,11 +30,20 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Callable
+from typing import Any, Callable
 
 import numpy as np
 import polars as pl
 from PIL import Image, ImageDraw, ImageFont
+
+from prosper_or_perish_constructor.run_report_charts import (
+    DUMMY_GOODS,
+    GOODS_GROUPS,
+    build_payload,
+    goods_group_expr,
+    titleize,
+    world_trade_share,
+)
 
 POP_TYPES = ("nobles", "clergy", "burghers", "laborers", "soldiers", "peasants", "slaves", "tribesmen")
 # Categorical order (fixed, never cycled), light and dark chart surfaces.
@@ -67,6 +79,28 @@ MAX_VIDEO_BYTES = 9_500_000
 
 
 @dataclass
+class Labels:
+    """Display names: the game's localization when the report has it, else the key titleized."""
+
+    resolver: Any = None  # eu5gameparser NotebookLabelResolver
+    goods: dict[str, str] = field(default_factory=dict)  # good_id -> name (the dataset's goods catalog)
+
+    def _text(self, key: object) -> str | None:
+        if key and self.resolver is not None and str(key) in self.resolver.localization:
+            return self.resolver.label(str(key)) or None
+        return None
+
+    def country(self, tag: object, name: object = None) -> str:
+        return self._text(name) or self._text(tag) or titleize(name or tag)
+
+    def location(self, slug: object) -> str:
+        return self._text(slug) or titleize(slug)
+
+    def good(self, good_id: object) -> str:
+        return self.goods.get(str(good_id)) or self._text(good_id) or titleize(good_id)
+
+
+@dataclass
 class RunData:
     playthrough_id: str
     name: str
@@ -75,7 +109,15 @@ class RunData:
     building_levels: pl.DataFrame  # snapshot_id, slug, levels
     buildings_by_category: pl.DataFrame  # snapshot_id, building_category, levels
     countries: pl.DataFrame
-    goods: pl.DataFrame  # snapshot_id, good_id, price_index, value
+    # per snapshot, market and good (no mod bookkeeping goods): group, price, default_price, supply, demand,
+    # production (supplied_Production), imports (supplied_Trade), exports (demanded_Trade), burgher_trade
+    market_goods: pl.DataFrame = field(default_factory=pl.DataFrame)
+    markets: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, market_id, center_slug
+    # routes that ran (engine table trades, happened = yes): snapshot_id, from_market (exporter), to_market
+    # (importer), good_id, amount (units per month), country_id (whose merchants)
+    trades: pl.DataFrame = field(default_factory=pl.DataFrame)
+    economy: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, country_id, income, expense
+    labels: Labels = field(default_factory=Labels)
     # building investment (derived table building_investment); empty when the table is missing
     investment_by_location: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, slug, investment
     investment_by_category: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, investment_category, investment
@@ -96,10 +138,17 @@ class RunData:
 
 
 def _scan(dataset: Path, table: str, playthrough: str) -> pl.LazyFrame:
+    scan = _scan_optional(dataset, table, playthrough)
+    if scan is None:
+        raise SystemExit(f"no {table} snapshots for playthrough {playthrough} in {dataset}")
+    return scan
+
+
+def _scan_optional(dataset: Path, table: str, playthrough: str) -> pl.LazyFrame | None:
     root = dataset / "tables" / table / f"playthrough_id={playthrough}"
     files = sorted(root.glob("*.parquet"))
     if not files:
-        raise SystemExit(f"no {table} snapshots for playthrough {playthrough} in {dataset}")
+        return None
     return pl.scan_parquet([str(f) for f in files], missing_columns="insert", extra_columns="ignore")
 
 
@@ -109,7 +158,7 @@ def latest_playthrough(dataset: Path) -> str:
     return str(latest["playthrough_id"])
 
 
-def load_run(dataset: Path, playthrough: str | None = None) -> RunData:
+def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | None = None) -> RunData:
     playthrough = playthrough or latest_playthrough(dataset)
     manifest = pl.read_parquet(dataset / "manifest.parquet").filter(pl.col("playthrough_id") == playthrough)
     snapshots = (
@@ -121,8 +170,8 @@ def load_run(dataset: Path, playthrough: str | None = None) -> RunData:
     name = next((n for n in snapshots["playthrough_name"].to_list() if n), f"Run {playthrough[:8]}")
     wanted = snapshots["snapshot_id"].to_list()
     loc_columns = [
-        "snapshot_id", "slug", "country_tag", "owner", "super_region", "development", "total_population",
-        "unemployed_total", *[f"population_{p}" for p in POP_TYPES], *[f"employed_{p}" for p in POP_TYPES],
+        "snapshot_id", "slug", "country_tag", "owner", "market_id", "super_region", "macro_region", "development",
+        "possible_tax", "total_population", "unemployed_total", "unemployed_peasants", *[f"population_{p}" for p in POP_TYPES],
     ]
     locations = _scan(dataset, "locations", playthrough).select(loc_columns).filter(pl.col("snapshot_id").is_in(wanted)).collect()
     buildings = _scan(dataset, "buildings", playthrough).select("snapshot_id", "building_type", "location_slug", "level")
@@ -147,7 +196,8 @@ def load_run(dataset: Path, playthrough: str | None = None) -> RunData:
     )
     countries = (
         _scan(dataset, "countries", playthrough)
-        .select("snapshot_id", "country_tag", "country_name", "population", "owned_locations_count", "gold", "is_subject")
+        .select("snapshot_id", "country_id", "country_tag", "country_name", "population", "owned_locations_count", "gold",
+                "is_subject", "overlord_tag", "overlord_name")
         .collect()
     )
     # the engine leaves countries.population empty: fall back to the population of the owned locations (thousands);
@@ -164,19 +214,46 @@ def load_run(dataset: Path, playthrough: str | None = None) -> RunData:
         )
         .drop("location_population")
     )
-    goods = (
+    market_goods = (
         _scan(dataset, "market_goods", playthrough)
-        .select("snapshot_id", "good_id", "price", "default_price", "supply", "demand")
-        .filter(pl.col("price").is_not_null() & (pl.col("default_price") > 0))
-        .with_columns((pl.col("supply").fill_null(0) + pl.col("demand").fill_null(0)).alias("volume"))
-        .group_by("snapshot_id", "good_id")
-        .agg(
-            ((pl.col("price") / pl.col("default_price") * pl.col("volume")).sum() / pl.col("volume").sum()).alias("price_index"),
-            (pl.col("supply").fill_null(0) * pl.col("default_price")).sum().alias("value"),
+        .filter(pl.col("snapshot_id").is_in(wanted) & ~pl.col("good_id").is_in(sorted(DUMMY_GOODS))
+                & (pl.col("default_price") > 0))
+        .select(
+            "snapshot_id", "market_id", "good_id", goods_group_expr().alias("group"), "price", "default_price",
+            pl.col("supply").fill_null(0.0), pl.col("demand").fill_null(0.0),
+            pl.col("supplied_Production").fill_null(0.0).alias("production"),
+            pl.col("supplied_Trade").fill_null(0.0).alias("imports"),
+            pl.col("demanded_Trade").fill_null(0.0).alias("exports"),
+            pl.col("demanded_BurgherTrades").fill_null(0.0).alias("burgher_trade"),
         )
         .collect()
     )
-    run = RunData(playthrough, str(name), snapshots, locations, building_levels, buildings_by_category, countries, goods)
+    markets = (
+        _scan(dataset, "markets", playthrough)
+        .filter(pl.col("snapshot_id").is_in(wanted))
+        .select("snapshot_id", "market_id", pl.col("market_center_slug").alias("center_slug"))
+        .collect()
+    )
+    trades_scan = _scan_optional(dataset, "trades", playthrough)
+    trades = (
+        trades_scan.filter(pl.col("snapshot_id").is_in(wanted) & (pl.col("happened") == "yes")
+                           & ~pl.col("good_id").is_in(sorted(DUMMY_GOODS)))
+        .select("snapshot_id", "from_market", "to_market", "good_id", pl.col("cached").fill_null(0.0).alias("amount"), "country_id")
+        .collect()
+        if trades_scan is not None else pl.DataFrame()
+    )
+    economy_scan = _scan_optional(dataset, "country_ai", playthrough)
+    economy = (
+        economy_scan.filter(pl.col("snapshot_id").is_in(wanted)).select("snapshot_id", "country_id", "income", "expense").collect()
+        if economy_scan is not None else pl.DataFrame()
+    )
+    labels = labels or Labels()
+    goods_scan = _scan_optional(dataset, "goods_catalog", playthrough)
+    if goods_scan is not None:
+        names = goods_scan.select("good_id", "good_name").unique("good_id").collect()
+        labels.goods = {**{g: n for g, n in names.iter_rows() if n}, **labels.goods}
+    run = RunData(playthrough, str(name), snapshots, locations, building_levels, buildings_by_category, countries,
+                  market_goods, markets, trades, economy, labels)
     _load_investment(run, dataset, wanted)
     return run
 
@@ -203,6 +280,18 @@ def _load_investment(run: RunData, dataset: Path, wanted: list[str]) -> None:
     run.investment_by_category = frame.group_by("snapshot_id", "investment_category").agg(pl.col("investment").sum())
     run.investment_by_country = frame.filter(pl.col("country_tag").is_not_null()).group_by("snapshot_id", "country_tag").agg(
         pl.col("investment").sum())
+
+
+def load_labels(repo: Path, project: Path) -> Labels:
+    """Localized country, location and good names of the constructor's parser profile."""
+    from eu5gameparser.savegame.notebook_labels import NotebookLabelResolver
+
+    from prosper_or_perish_constructor.free_building_levels import resolve_parser_config
+
+    config = resolve_parser_config(repo, project)
+    load_order = repo / str(config.get("load_order") or "constructor.load_order.toml")
+    profile = str(config.get("profile") or "constructor")
+    return Labels(NotebookLabelResolver.from_profile(profile=profile, load_order_path=load_order))
 
 
 # --------------------------------------------------------------------------------------------------------
@@ -304,8 +393,10 @@ class FrameComposer:
 
     BAR = 120
 
-    def __init__(self, canvas: MapCanvas, title: str, subtitle: str, scale: Scale | None):
+    def __init__(self, canvas: MapCanvas, title: str, subtitle: str, scale: Scale | None,
+                 legend: list[tuple[str, tuple[int, int, int]]] | None = None):
         self.canvas = canvas
+        self.legend = legend or []
         self.width = canvas.width
         self.height = canvas.height + self.BAR
         self.title = title
@@ -332,6 +423,12 @@ class FrameComposer:
             nodata_x = x0 + w + 24
             draw.rectangle([nodata_x, y0, nodata_x + 16, y0 + h], fill=LAND_NODATA)
             draw.text((nodata_x + 24, y0 - 3), "no data", font=self.fonts["small"], fill=TEXT_MUTED)
+        x, y = self.width // 2 - 330, 42
+        for label, rgb in self.legend:
+            draw.rounded_rectangle([x, y + 3, x + 22, y + 13], radius=3, fill=rgb)
+            draw.text((x + 30, y - 2), label, font=self.fonts["small"], fill=TEXT_MUTED)
+            box = draw.textbbox((0, 0), label, font=self.fonts["small"])
+            x += 30 + (box[2] - box[0]) + 28
         return bar
 
     def compose(self, rgb_map: np.ndarray, year: str, stats: list[tuple[str, str]]) -> bytes:
@@ -447,10 +544,11 @@ def _development_values(run: RunData, locs: pl.DataFrame) -> pl.DataFrame:
 
 
 def _unemployment_values(run: RunData, locs: pl.DataFrame) -> pl.DataFrame:
+    # subsistence peasants (peasants without a job) as a share of all people
     return locs.select(
         "slug",
         pl.when(pl.col("total_population") > 0)
-        .then(pl.col("unemployed_total") / pl.col("total_population"))
+        .then(pl.col("unemployed_peasants").fill_null(0.0) / pl.col("total_population"))
         .otherwise(None)
         .alias("value"),
     )
@@ -479,6 +577,8 @@ def default_maps() -> list[MapSpec]:
         MapSpec("population_change", "Population change", "Change against the first save of the run", None,
                 lambda f: Scale("diverging", -1.0, 1.0, _ramp(DIVERGING[:3] + (DIVERGING_DARK_MID,) + DIVERGING[4:]),
                                 [(-1.0, "-100%"), (-0.5, "-50%"), (0.0, "0"), (0.5, "+50%"), (1.0, "+100%")])),
+        MapSpec("unemployment", "Unemployment", "Subsistence peasants as a share of the population", _unemployment_values,
+                lambda f: _linear_scale(0.0, 1.0, [(0.0, "0%"), (0.25, "25%"), (0.5, "50%"), (0.75, "75%"), (1.0, "100%")])),
         MapSpec("development", "Development", "Development of every location", _development_values,
                 lambda f: _linear_scale(0.0, max(1.0, float(f["value"].quantile(0.995) or 1.0)),
                                         [(v, f"{v:.0f}") for v in np.linspace(0, max(1.0, float(f["value"].quantile(0.995) or 1.0)), 5)])),
@@ -488,8 +588,6 @@ def default_maps() -> list[MapSpec]:
                 _investment_values, lambda f: _log_scale(f)),
         MapSpec("investment_change", "Building investment change",
                 "Gold built or lost per location since the first save (log scale both ways)", None, _symlog_scale),
-        MapSpec("unemployment", "Unemployment", "Unemployed share of the population", _unemployment_values,
-                lambda f: _linear_scale(0.0, 0.5, [(0.0, "0%"), (0.1, "10%"), (0.2, "20%"), (0.3, "30%"), (0.4, "40%"), (0.5, "50%+")])),
     ]
 
 
@@ -592,209 +690,202 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
 
 
 # --------------------------------------------------------------------------------------------------------
-# Charts
+# Trade maps
+
+TRADE_LAND = (46, 52, 62)
+NO_MARKET_LAND = (34, 38, 46)
+MARKET_BORDER = (98, 106, 120)
+BALANCE_BORDER = (16, 20, 26)
+TRADE_VIDEOS = ("trade_routes", "trade_balance")
 
 
-def _chart_style():
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    plt.rcParams.update({
-        "figure.dpi": 110, "font.size": 10, "axes.spines.top": False, "axes.spines.right": False,
-        "axes.grid": True, "grid.color": "#d9d9d6", "grid.linewidth": 0.6, "axes.edgecolor": "#8a8a86",
-        "axes.titleweight": "bold", "axes.titlesize": 12, "axes.titlelocation": "left", "legend.frameon": False,
-        "lines.linewidth": 2.0, "savefig.bbox": "tight", "savefig.facecolor": "#fcfcfb", "axes.facecolor": "#fcfcfb",
-    })
-    return plt
+def _location_centroids(canvas: MapCanvas) -> np.ndarray:
+    """(n, 2) pixel centre (x, y) of every location of the canvas; NaN for locations without pixels."""
+    flat = canvas.index.reshape(-1)
+    pixels = np.nonzero(flat >= 0)[0]
+    location = flat[pixels]
+    n = len(canvas.tags)
+    count = np.bincount(location, minlength=n).astype(np.float64)
+    xs = np.bincount(location, weights=(pixels % canvas.width).astype(np.float64), minlength=n)
+    ys = np.bincount(location, weights=(pixels // canvas.width).astype(np.float64), minlength=n)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        return np.stack([xs / count, ys / count], axis=1)
 
 
-def _years(run: RunData) -> pl.DataFrame:
-    return run.snapshots.select("snapshot_id", pl.col("year").cast(pl.Float64) + (pl.col("date_sort") % 10000) / 10000 * 0)
+def _market_raster(canvas: MapCanvas, locs: pl.DataFrame) -> np.ndarray:
+    """H x W market id per pixel: the location's market, -1 land without a market, -2 water."""
+    market_of = np.full(len(canvas.tags), -1, dtype=np.int64)
+    if not locs.is_empty():
+        frame = locs.filter(pl.col("market_id").is_not_null()).select("slug", "market_id")
+        index = frame["slug"].replace_strict(canvas.tag_index, default=-1, return_dtype=pl.Int64).to_numpy()
+        keep = index >= 0
+        market_of[index[keep]] = frame["market_id"].to_numpy()[keep]
+    return np.where(canvas.index >= 0, market_of[np.maximum(canvas.index, 0)], np.where(canvas.index == -1, -2, -1))
 
 
-def render_charts(run: RunData, out: Path, log: Callable[[str], None] = print) -> list[dict[str, str]]:
-    plt = _chart_style()
+def _market_borders(raster: np.ndarray) -> np.ndarray:
+    mask = np.zeros(raster.shape, dtype=bool)
+    edge = (raster[:, 1:] != raster[:, :-1]) & (raster[:, 1:] >= 0) & (raster[:, :-1] >= 0)
+    mask[:, 1:] |= edge
+    edge = (raster[1:, :] != raster[:-1, :]) & (raster[1:, :] >= 0) & (raster[:-1, :] >= 0)
+    mask[1:, :] |= edge
+    return mask
+
+
+def _arc(x0: float, y0: float, x1: float, y1: float, r0: float, r1: float, bend: float = 0.2, steps: int = 24) -> list[tuple[float, float]]:
+    """Quadratic curve from the exporter to the importer, bent to one side of the direction of travel (so the two
+    directions between a pair of markets never overlap), cut where it enters the two market dots."""
+    dx, dy = x1 - x0, y1 - y0
+    length = math.hypot(dx, dy) or 1.0
+    cx, cy = (x0 + x1) / 2 + dy * bend, (y0 + y1) / 2 - dx * bend
+    t0 = min(0.4, (r0 + 1) / (length * 1.1))
+    t1 = max(0.6, 1 - (r1 + 1) / (length * 1.1))
+    out = []
+    for i in range(steps + 1):
+        t = t0 + (t1 - t0) * i / steps
+        out.append(((1 - t) ** 2 * x0 + 2 * (1 - t) * t * cx + t * t * x1, (1 - t) ** 2 * y0 + 2 * (1 - t) * t * cy + t * t * y1))
+    return out
+
+
+def _draw_trade(base: np.ndarray, routes: list[tuple], dots: list[tuple[float, float, float]], scale: int = 2) -> np.ndarray:
+    """Routes (x0, y0, r0, x1, y1, r1, width, rgba), smallest first, and market dots (x, y, r) over the base map;
+    drawn at `scale` x the size and scaled down for smooth lines."""
+    h, w = base.shape[:2]
+    layer = Image.new("RGBA", (w * scale, h * scale), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(layer)
+    full = w * scale
+    for x0, y0, r0, x1, y1, r1, width, rgba in routes:
+        x0, y0, x1, y1, r0, r1 = (v * scale for v in (x0, y0, x1, y1, r0, r1))
+        shifts = [0.0]
+        if abs(x1 - x0) > full / 2:  # the short way runs over the map edge: draw it from both edges
+            step = -full if x1 > x0 else full
+            x1 += step
+            shifts = [0.0, -step]
+        for shift in shifts:
+            points = _arc(x0 + shift, y0, x1 + shift, y1, r0, r1)
+            draw.line(points, fill=rgba, width=max(1, round(width * scale)), joint="curve")
+            (ax, ay), (bx, by) = points[-2], points[-1]
+            norm = math.hypot(bx - ax, by - ay) or 1.0
+            ux, uy = (bx - ax) / norm, (by - ay) / norm
+            head, half = 3.5 * scale + 1.8 * width * scale, 2.2 * scale + 1.1 * width * scale
+            draw.polygon([(bx, by), (bx - ux * head - uy * half, by - uy * head + ux * half),
+                          (bx - ux * head + uy * half, by - uy * head - ux * half)], fill=rgba)
+    for x, y, r in dots:
+        x, y, r = x * scale, y * scale, r * scale
+        draw.ellipse([x - r, y - r, x + r, y + r], fill=(236, 238, 240, 235), outline=(12, 16, 22, 255), width=scale)
+    layer = layer.resize((w, h), Image.Resampling.LANCZOS)
+    out = Image.fromarray(base).convert("RGBA")
+    out.alpha_composite(layer)
+    return np.asarray(out.convert("RGB"))
+
+
+def render_trade_maps(run: RunData, canvas: MapCanvas, out: Path, *, fps: int,
+                      log: Callable[[str], None] = print) -> list[dict[str, str]]:
+    """Two videos: the trade routes between markets, and each market's net trade (exports - imports)."""
+    if run.trades.is_empty() or run.market_goods.is_empty() or run.markets.is_empty():
+        log("trade maps: no trade routes in the dataset; skipped")
+        return []
+    started = time.perf_counter()
     out.mkdir(parents=True, exist_ok=True)
-    years = run.snapshots.select("snapshot_id", pl.col("year").cast(pl.Float64).alias("x"))
-    charts: list[dict[str, str]] = []
-
-    def save(fig, key: str, title: str, caption: str) -> None:
-        fig.savefig(out / f"{key}.png", dpi=120)
-        plt.close(fig)
-        charts.append({"key": key, "title": title, "caption": caption, "image": f"charts/{key}.png"})
-
-    # World population by pop type (stacked, millions)
-    pops = (
-        run.locations.group_by("snapshot_id").agg([pl.col(f"population_{p}").sum() for p in POP_TYPES])
-        .join(years, on="snapshot_id").sort("x")
+    centroids = _location_centroids(canvas)
+    snapshots = run.snapshots.to_dicts()
+    by_snapshot = run.locations.partition_by("snapshot_id", as_dict=True)
+    prices = run.market_goods.group_by("snapshot_id", "good_id").agg(pl.col("default_price").first(), pl.col("group").first())
+    routes = (
+        run.trades.join(prices, on=["snapshot_id", "good_id"], how="left")
+        .with_columns((pl.col("amount") * pl.col("default_price").fill_null(1.0)).alias("value"), pl.col("group").fill_null("produced"))
+        .group_by("snapshot_id", "from_market", "to_market")
+        .agg(pl.col("value").sum(), pl.col("group").sort_by("value").last())
     )
-    fig, ax = plt.subplots(figsize=(9, 4.2))
-    ax.stackplot(pops["x"], *[pops[f"population_{p}"] / 1000 for p in POP_TYPES], labels=[p.title() for p in POP_TYPES],
-                 colors=CATEGORICAL, edgecolor="#fcfcfb", linewidth=0.6)
-    ax.set_ylabel("million people")
-    ax.set_title("World population by pop type")
-    ax.legend(loc="upper left", ncols=4, fontsize=9)
-    save(fig, "population_by_type", "World population by pop type", "Population of every location, summed per save.")
-
-    # Population by super region (top 8, rest as other)
-    regions = (
-        run.locations.group_by("snapshot_id", "super_region").agg(pl.col("total_population").sum())
-        .join(years, on="snapshot_id")
+    totals = run.market_goods.group_by("snapshot_id", "market_id").agg(
+        (pl.col("imports") * pl.col("default_price")).sum().alias("imp_v"),
+        (pl.col("exports") * pl.col("default_price")).sum().alias("exp_v"),
+        (pl.col("production") * pl.col("default_price")).sum().alias("prod_v"),
+    ).with_columns(
+        ((pl.col("exp_v") - pl.col("imp_v")) / (pl.col("prod_v") + pl.col("imp_v"))).alias("net_share"),
+        (pl.col("exp_v") + pl.col("imp_v")).alias("traded"),
     )
-    last_snapshot = run.snapshots["snapshot_id"][-1]
-    order = (
-        regions.filter(pl.col("snapshot_id") == last_snapshot).sort("total_population", descending=True)["super_region"].to_list()
-    )
-    top = [r for r in order if r][:8]
-    fig, ax = plt.subplots(figsize=(9, 4.2))
-    for i, region in enumerate(top):
-        series = regions.filter(pl.col("super_region") == region).sort("x")
-        ax.plot(series["x"], series["total_population"] / 1000, color=CATEGORICAL[i], label=str(region).replace("_", " ").title())
-    ax.set_ylabel("million people")
-    ax.set_title("Population by super region")
-    ax.legend(loc="upper left", ncols=4, fontsize=9)
-    save(fig, "population_by_region", "Population by super region", "The eight most populous super regions at the end of the run.")
-
-    # Employment: unemployed share of the population per pop type (world)
-    jobs = (
-        run.locations.group_by("snapshot_id").agg(
-            pl.col("total_population").sum().alias("population"),
-            pl.col("unemployed_total").sum().alias("unemployed"),
-        ).join(years, on="snapshot_id").sort("x")
-    )
-    fig, ax = plt.subplots(figsize=(9, 3.6))
-    ax.plot(jobs["x"], jobs["unemployed"] / jobs["population"] * 100, color=CATEGORICAL[0])
-    ax.set_ylabel("% of population")
-    ax.set_title("Unemployment")
-    save(fig, "unemployment", "Unemployment", "Unemployed people as a share of the world population.")
-
-    # Buildings by category (stacked levels, top 7 + other)
-    categories = run.buildings_by_category.join(years, on="snapshot_id")
-    order = (
-        categories.filter(pl.col("snapshot_id") == last_snapshot).sort("levels", descending=True)["building_category"].to_list()
-    )
-    top_categories = order[:7]
-    categories = categories.with_columns(
-        pl.when(pl.col("building_category").is_in(top_categories)).then(pl.col("building_category")).otherwise(pl.lit("other")).alias("group")
-    ).group_by("x", "group").agg(pl.col("levels").sum())
-    groups = [*top_categories, "other"]
-    wide = categories.pivot(on="group", index="x", values="levels").sort("x").fill_null(0)
-    fig, ax = plt.subplots(figsize=(9, 4.2))
-    ax.stackplot(wide["x"], *[wide[g] / 1000 if g in wide.columns else np.zeros(wide.height) for g in groups],
-                 labels=[g.replace("_category", "").replace("_", " ").title() for g in groups],
-                 colors=[*CATEGORICAL[:7], OTHER_GREY], edgecolor="#fcfcfb", linewidth=0.6)
-    ax.set_ylabel("thousand levels")
-    ax.set_title("Building levels by category")
-    ax.legend(loc="upper left", ncols=4, fontsize=9)
-    save(fig, "buildings_by_category", "Building levels by category", "All building levels, grouped by building category.")
-
-    if not run.investment_by_category.is_empty():
-        _investment_charts(run, years, plt, save)
-
-    # Prices: price index against base for the eight goods with the most supply value at the end
-    goods = run.goods.join(years, on="snapshot_id")
-    top_goods = (
-        goods.filter(pl.col("snapshot_id") == last_snapshot).sort("value", descending=True)["good_id"].to_list()[:8]
-    )
-    fig, ax = plt.subplots(figsize=(9, 4.2))
-    ax.axhline(1.0, color="#8a8a86", linewidth=1, linestyle="--")
-    for i, good in enumerate(top_goods):
-        series = goods.filter(pl.col("good_id") == good).sort("x")
-        ax.plot(series["x"], series["price_index"], color=CATEGORICAL[i], label=good.replace("_", " ").title(), linewidth=1.6)
-    ax.set_ylabel("price ÷ base (volume-weighted)")
-    ax.set_title("Prices of the most produced goods")
-    ax.legend(loc="upper left", ncols=4, fontsize=9)
-    save(fig, "prices", "Prices of the most produced goods",
-         "World price of each good as a multiple of its base price, weighted by traded volume; dashed line = base.")
-
-    # Largest countries (population, top 8 at the end)
-    countries = run.countries.join(years, on="snapshot_id")
-    leaders = (
-        countries.filter(pl.col("snapshot_id") == last_snapshot).sort("population", descending=True)
-        .select("country_tag", "country_name").head(8).to_dicts()
-    )
-    fig, ax = plt.subplots(figsize=(9, 4.2))
-    for i, leader in enumerate(leaders):
-        series = countries.filter(pl.col("country_tag") == leader["country_tag"]).sort("x")
-        ax.plot(series["x"], series["population"] / 1000, color=CATEGORICAL[i], label=leader["country_name"] or leader["country_tag"])
-    ax.set_ylabel("million people")
-    ax.set_title("Largest countries")
-    ax.legend(loc="upper left", ncols=4, fontsize=9)
-    save(fig, "countries", "Largest countries", "The eight most populous countries at the end of the run.")
-    log(f"charts: {len(charts)} written")
-    return charts
-
-
-def _investment_charts(run: RunData, years: pl.DataFrame, plt, save) -> None:
-    from prosper_or_perish_constructor.building_investment import CATEGORIES
-
-    # World building investment by category (stacked; the top edge is the world total)
-    wide = (
-        run.investment_by_category.join(years, on="snapshot_id")
-        .pivot(on="investment_category", index="x", values="investment", aggregate_function="sum")
-        .sort("x").fill_null(0)
-    )
-    keys = [key for key, _ in CATEGORIES if key in wide.columns]
-    labels = dict(CATEGORIES)
-    colours = {key: CATEGORICAL[i] for i, (key, _) in enumerate(CATEGORIES)}
-    fig, ax = plt.subplots(figsize=(9, 4.6))
-    ax.stackplot(wide["x"], *[wide[k] / 1e6 for k in keys], labels=[labels[k] for k in keys],
-                 colors=[colours[k] for k in keys], edgecolor="#fcfcfb", linewidth=0.6)
-    ax.set_ylabel("million gold")
-    ax.set_title("Building investment by category")
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncols=4, fontsize=9)
-    save(fig, "investment_by_category", "Building investment by category",
-         f"What the standing buildings cost to build {run.investment_prices}; level n costs price x (1 + increase per "
-         "level x (n - 1)), today's mod prices, no country-wide cost modifiers. Summed per save; the top edge is the "
-         "world total.")
-
-    # What was built (or lost) since the first save, per category
-    fig, ax = plt.subplots(figsize=(9, 4.6))
-    ax.axhline(0.0, color="#8a8a86", linewidth=1)
-    for key in keys:
-        ax.plot(wide["x"], (wide[key] - wide[key][0]) / 1e6, color=colours[key], label=labels[key])
-    total = sum(wide[k] for k in keys)
-    ax.plot(wide["x"], (total - total[0]) / 1e6, color="#1d1d1b", linewidth=2.6, label="World")
-    ax.set_ylabel("million gold since the first save")
-    ax.set_title("Building investment added since the first save")
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncols=4, fontsize=9)
-    save(fig, "investment_added", "Building investment added since the first save",
-         f"Change of the building investment ({run.investment_prices}) against the first save of the run, per "
-         "category and for the world "
-         "(negative: levels lost to destruction, downgrades or obsolete buildings).")
-
-    # Investment per capita: world and the most populous super regions
-    per_location = run.locations.select("snapshot_id", "slug", "super_region", "total_population").join(
-        run.investment_by_location, on=["snapshot_id", "slug"], how="left")
-    world = (
-        per_location.group_by("snapshot_id")
-        .agg(pl.col("investment").sum(), pl.col("total_population").sum())
-        .join(years, on="snapshot_id").sort("x")
-    )
-    regions = per_location.group_by("snapshot_id", "super_region").agg(
-        pl.col("investment").sum(), pl.col("total_population").sum()).join(years, on="snapshot_id")
-    last_snapshot = run.snapshots["snapshot_id"][-1]
-    world_last = float(world.filter(pl.col("snapshot_id") == last_snapshot)["total_population"].sum() or 0.0)
-    top = [
-        r for r in regions.filter((pl.col("snapshot_id") == last_snapshot) & (pl.col("total_population") >= 0.01 * world_last))
-        .sort("total_population", descending=True)["super_region"].to_list() if r
-    ][:7]
-    fig, ax = plt.subplots(figsize=(9, 4.6))
-    # population is in thousands: investment / population = gold per 1,000 people
-    ax.plot(world["x"], world["investment"] / world["total_population"], color="#1d1d1b", linewidth=2.6, label="World")
-    for i, region in enumerate(top):
-        series = regions.filter(pl.col("super_region") == region).sort("x")
-        ax.plot(series["x"], series["investment"] / series["total_population"], color=CATEGORICAL[i], linewidth=1.4,
-                label=str(region).replace("_", " ").title())
-    ax.set_ylabel("gold per 1,000 people")
-    ax.set_title("Building investment per capita")
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncols=4, fontsize=9)
-    save(fig, "investment_per_capita", "Building investment per capita",
-         f"Building investment {run.investment_prices} per 1,000 people, world and the most populous super regions "
-         "(1 % of the world "
-         "population or more).")
+    centres = run.markets.with_columns(
+        pl.col("center_slug").replace_strict(canvas.tag_index, default=-1, return_dtype=pl.Int64).alias("tag_index"))
+    route_ref = float(routes["value"].quantile(0.995) or 1.0) or 1.0
+    trade_ref = float(totals["traded"].quantile(0.99) or 1.0) or 1.0
+    group_rgb = {key: _hex(dark) for key, _, _, dark in GOODS_GROUPS}
+    share_by_snapshot = world_trade_share(run)
+    duration = len(snapshots) / fps
+    max_kbps = int(MAX_VIDEO_BYTES * 8 / 1000 / (duration + 2.0))
+    route_composer = FrameComposer(canvas, "Trade routes", "Goods moved between markets each month, at base prices", None,
+                                   legend=[(label, group_rgb[key]) for key, label, _, _ in GOODS_GROUPS])
+    balance_scale = Scale("diverging", -0.3, 0.3, _ramp(DIVERGING[:3] + (DIVERGING_DARK_MID,) + DIVERGING[4:]),
+                          [(-0.3, "-30% importer"), (-0.15, "-15%"), (0.0, "0"), (0.15, "+15%"), (0.3, "+30% exporter")])
+    balance_composer = FrameComposer(canvas, "Market trade balance", "Exports minus imports, share of production + imports",
+                                     balance_scale)
+    writers = {
+        "trade_routes": (route_composer, VideoWriter(out / "trade_routes.mp4", route_composer.width, route_composer.height, fps, max_kbps)),
+        "trade_balance": (balance_composer, VideoWriter(out / "trade_balance.mp4", balance_composer.width, balance_composer.height, fps, max_kbps)),
+    }
+    last: dict[str, bytes] = {}
+    for snap in snapshots:
+        snapshot = snap["snapshot_id"]
+        locs = by_snapshot.get((snapshot,), pl.DataFrame())
+        raster = _market_raster(canvas, locs)
+        borders = _market_borders(raster)
+        year = str(snap.get("year") or snap.get("date") or "")
+        total = totals.filter(pl.col("snapshot_id") == snapshot)
+        # routes over a neutral map with the market borders
+        base = np.empty((canvas.height, canvas.width, 3), dtype=np.uint8)
+        base[:] = SEA
+        base[raster >= 0] = TRADE_LAND
+        base[raster == -1] = NO_MARKET_LAND
+        base[borders] = MARKET_BORDER
+        centre = {}
+        for market_id, tag_index in centres.filter(pl.col("snapshot_id") == snapshot).select("market_id", "tag_index").iter_rows():
+            if tag_index is not None and tag_index >= 0 and np.isfinite(centroids[tag_index]).all():
+                centre[market_id] = tuple(centroids[tag_index])
+        radius = {m: 2.0 + 7.0 * math.sqrt(min(1.0, (t or 0.0) / trade_ref)) for m, t in total.select("market_id", "traded").iter_rows()}
+        lines = []
+        frame_routes = routes.filter(pl.col("snapshot_id") == snapshot).sort("value")
+        for from_market, to_market, value, group in frame_routes.select("from_market", "to_market", "value", "group").iter_rows():
+            a, b = centre.get(from_market), centre.get(to_market)
+            if a is None or b is None or not value or value < route_ref * 0.003:
+                continue
+            t = min(1.0, math.sqrt(value / route_ref))
+            rgb = group_rgb.get(group, group_rgb["produced"])
+            lines.append((a[0], a[1], radius.get(from_market, 2.0), b[0], b[1], radius.get(to_market, 2.0),
+                          0.5 + 6.0 * t, (*rgb, int(80 + 175 * t))))
+        dots = [(centre[m][0], centre[m][1], r) for m, r in radius.items() if m in centre]
+        traded = float(frame_routes["value"].sum() or 0.0)
+        composer = writers["trade_routes"][0]
+        frame = composer.compose(_draw_trade(base, lines, dots), year,
+                                 [("traded per month", f"{_format_number(traded)} gold"), ("market pairs", str(frame_routes.height))])
+        writers["trade_routes"][1].write(frame)
+        last["trade_routes"] = frame
+        # every location in its market's colour: net exporter blue, net importer red
+        values = locs.select("slug", "market_id").join(total.select("market_id", pl.col("net_share").alias("value")), on="market_id",
+                                                       how="left") if not locs.is_empty() else pl.DataFrame(schema={"slug": pl.String, "value": pl.Float64})
+        rgb_map = _paint(canvas, balance_scale.colours(_values_array(canvas, values)))
+        rgb_map[borders] = BALANCE_BORDER
+        share = share_by_snapshot.get(snapshot, 0.0)
+        frame = writers["trade_balance"][0].compose(rgb_map, year, [("imported share", f"{share * 100:.1f}%"),
+                                                                    ("markets", str(total.height))])
+        writers["trade_balance"][1].write(frame)
+        last["trade_balance"] = frame
+    results = []
+    titles = {"trade_routes": ("Trade routes", "Routes between markets: width = value moved per month (base prices), "
+                                               "arrow = importer, colour = main goods group, dot = market (size: trade)"),
+              "trade_balance": ("Market trade balance", "Exports minus imports of each market, as a share of its "
+                                                        "production plus imports (blue: net exporter, red: net importer)")}
+    for key, (composer, writer) in writers.items():
+        if key in last:
+            writer.write(last[key], repeat=2 * fps)
+            Image.frombytes("RGB", (composer.width, composer.height), last[key]).save(out / f"{key}.png", optimize=True)
+        writer.close()
+        size = (out / f"{key}.mp4").stat().st_size
+        title, subtitle = titles[key]
+        results.append({"key": key, "title": title, "subtitle": subtitle, "video": f"maps/{key}.mp4",
+                        "poster": f"maps/{key}.png", "bytes": str(size)})
+        log(f"map {key}: {len(snapshots)} frames, {size / 1e6:.1f} MB")
+    log(f"trade maps: {time.perf_counter() - started:.1f}s")
+    return results
 
 
 # --------------------------------------------------------------------------------------------------------
@@ -803,10 +894,15 @@ def _investment_charts(run: RunData, years: pl.DataFrame, plt, save) -> None:
 
 def _summary(run: RunData) -> dict[str, object]:
     first, last = run.snapshots["snapshot_id"][0], run.snapshots["snapshot_id"][-1]
+    subsistence = (
+        pl.col("unemployed_peasants").sum() / pl.col("total_population").sum()
+        if "unemployed_peasants" in run.locations.columns else pl.lit(None, dtype=pl.Float64)
+    )
     world = run.locations.group_by("snapshot_id").agg(
         pl.col("total_population").sum().alias("population"),
         pl.col("country_tag").filter(pl.col("owner").is_not_null()).n_unique().alias("countries"),
         pl.col("owner").is_null().mean().alias("unowned_share"),
+        subsistence.alias("subsistence_share"),
     )
     at = {r["snapshot_id"]: r for r in world.to_dicts()}
     levels = run.building_levels.group_by("snapshot_id").agg(pl.col("levels").sum())
@@ -828,81 +924,290 @@ def _summary(run: RunData) -> dict[str, object]:
             pl.col("investment").sum()).to_dicts()}
         if not run.investment_by_category.is_empty() else {}
     )
+    trade = world_trade_share(run)
     return {"first": at.get(first, {}), "last": at.get(last, {}), "levels_first": lv.get(first, 0), "levels_last": lv.get(last, 0),
             "investment_first": world_investment.get(first), "investment_last": world_investment.get(last),
-            "leaders": leaders}
+            "trade_first": trade.get(first), "trade_last": trade.get(last), "leaders": leaders}
 
 
-def write_page(run: RunData, out: Path, maps: list[dict[str, str]], charts: list[dict[str, str]]) -> Path:
+SECTIONS = (
+    ("population", "Population", "Who lives where, and how many have work."),
+    ("trade", "Trade", "What moved between markets and what did not: the routes and the trade balance of every market "
+                       "as videos, then trade per goods group, per good and per market."),
+    ("prices", "Prices", "Every good's price against its base price, and whether the world uses more than it makes."),
+    ("buildings", "Buildings", "Building levels and what they cost to build."),
+    ("countries", "Countries", "The largest countries by population and by income."),
+)
+
+ECHARTS_URL = "https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"
+
+PAGE_CSS = """
+:root{--bg:#f6f6f4;--card:#fcfcfb;--ink:#1d1d1b;--muted:#6b6b67;--line:#e2e2de;--accent:#2a78d6;--pos:#1f5fae;--neg:#b23a3a;--chip:#ebebe7}
+@media (prefers-color-scheme: dark){:root{--bg:#121418;--card:#1a1d22;--ink:#eceef0;--muted:#a0a6b0;--line:#2c3038;--accent:#6da7ec;--pos:#8fb8ec;--neg:#e67a73;--chip:#252a31}}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1320px;margin:0 auto;padding:28px 16px 48px} h1{margin:0 0 4px;font-size:28px;line-height:1.2}
+h2{margin:48px 0 4px;font-size:22px} .lead{margin:0 0 16px;color:var(--muted);font-size:14px;max-width:80ch} h3{margin:0;font-size:16px}
+.muted{color:var(--muted)} nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+nav a{padding:4px 12px;border-radius:999px;background:var(--chip);color:var(--ink);text-decoration:none;font-size:13px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:20px}
+.tile,.card{background:var(--card);border:1px solid var(--line);border-radius:10px}
+.tile{padding:14px 16px} .tile .label{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.tile .value{font-size:24px;font-weight:700;margin-top:2px} .tile .sub{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:16px;margin-bottom:16px}
+figure{margin:0;overflow:hidden} video{display:block;width:100%;height:auto;background:#12161c}
+figcaption{padding:10px 14px;font-size:13px;color:var(--muted)}
+.card{margin-bottom:16px;overflow:hidden} .card>header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;padding:14px 16px 6px}
+.chart{width:100%} .caption{margin:0;padding:6px 16px 14px;font-size:13px;color:var(--muted);max-width:110ch}
+.views{display:flex;flex-wrap:wrap;gap:4px}
+.views button{font:inherit;font-size:13px;padding:3px 10px;border-radius:6px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
+.views button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+.controls select,.controls input{font:inherit;font-size:13px;padding:3px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+.table-wrap{overflow-x:auto} table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);cursor:pointer;white-space:nowrap;user-select:none}
+th.sorted{color:var(--ink)} th.sorted::after{content:" \\25BE"} th.sorted.asc::after{content:" \\25B4"}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.wide{min-width:240px;color:var(--muted);font-size:12px} td.pos{color:var(--pos)} td.neg{color:var(--neg)}
+.more{display:block;margin:8px 16px 0;font:inherit;font-size:13px;background:none;border:none;color:var(--accent);cursor:pointer;padding:0}
+a{color:var(--accent)} footer{margin-top:40px;font-size:12px;color:var(--muted)}
+"""
+
+PAGE_JS = r"""
+(() => {
+  const DATA = JSON.parse(document.getElementById('report-data').textContent);
+  const dark = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches;
+  const compact = v => {
+    const a = Math.abs(v);
+    if (a < 0.005) return '0';
+    if (a >= 1e9) return (v / 1e9).toFixed(1) + 'B';
+    if (a >= 1e6) return (v / 1e6).toFixed(1) + 'M';
+    if (a >= 1e3) return (v / 1e3).toFixed(1) + 'k';
+    return a >= 10 ? v.toFixed(0) : a >= 1 ? v.toFixed(1) : v.toFixed(2);
+  };
+  const UNITS = {
+    mpeople: v => v === 0 ? '0' : v.toFixed(Math.abs(v) >= 100 ? 0 : Math.abs(v) >= 10 ? 1 : 2) + 'M',
+    kpeople: v => compact(v * 1000),
+    pct: v => v.toFixed(1) + '%',
+    pct0: v => v.toFixed(0) + '%',
+    pct2: v => (v > 0 ? '+' : '') + v.toFixed(2) + '%',
+    ratio: v => v.toFixed(2) + '×',
+    index: v => v.toFixed(0),
+    gold: v => compact(v),
+    gold2: v => v.toFixed(2),
+    num: v => compact(v),
+    count: v => String(Math.round(v)),
+  };
+  const fmt = (v, unit) => (v == null || !isFinite(v)) ? '–' : (UNITS[unit] || compact)(v);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+
+  const axisTip = unit => params => {
+    if (!params || !params.length) return '';
+    const year = new Date(params[0].value[0]).getUTCFullYear();
+    const rows = params.filter(p => p.value && p.value[1] != null).sort((a, b) => b.value[1] - a.value[1]);
+    return `<div style="font-weight:600;margin-bottom:2px">${year}</div>` + rows.map(p =>
+      `<div style="display:flex;justify-content:space-between;gap:18px"><span>${p.marker}${esc(p.seriesName)}</span><b>${fmt(p.value[1], unit)}</b></div>`).join('');
+  };
+  const heatTip = (view, option) => p => {
+    const v = p.value;
+    let s = `<b>${esc(option.yAxis.data[v[1]])}</b> · ${esc(option.xAxis.data[v[0]])}`;
+    for (const [label, i, unit] of (view.fields || [])) s += `<br>${esc(label)}: <b>${fmt(v[i], unit)}</b>`;
+    return s;
+  };
+  const WORLD = '#1d1d1b', WORLD_DARK = '#eceef0';  // the world line: ink on either page
+  const resolve = (obj, view, root) => {
+    if (Array.isArray(obj)) return obj.map(o => resolve(o, view, root));
+    if (obj && typeof obj === 'object') { const out = {}; for (const k in obj) out[k] = resolve(obj[k], view, root); return out; }
+    if (dark && obj === WORLD) return WORLD_DARK;
+    if (typeof obj === 'string' && obj.startsWith('fn:')) {
+      const [, name, arg] = obj.split(':');
+      if (name === 'axis') return axisTip(arg || view.unit);
+      if (name === 'heat') return heatTip(view, root);
+      if (name === 'year') return v => String(new Date(v).getUTCFullYear());
+      if (name === 'unit') return v => fmt(v, arg || view.unit);
+      if (name === 'pow2') return v => Math.pow(2, v).toFixed(Math.abs(v) > 1.5 ? 1 : 2) + '×';
+    }
+    return obj;
+  };
+
+  const specs = Object.fromEntries(DATA.charts.map(c => [c.key, c]));
+  const init = el => {
+    const spec = specs[el.dataset.key];
+    const chart = echarts.init(el, dark ? 'dark' : null);
+    const buttons = el.closest('.card').querySelectorAll('.views button');
+    const show = i => {
+      const view = spec.views[i];
+      const option = resolve(view.option, view, view.option);
+      option.backgroundColor = 'transparent';
+      if (option.visualMap) {
+        if (dark && option.visualMap.darkColors) option.visualMap.inRange.color = option.visualMap.darkColors;
+        delete option.visualMap.darkColors;
+      }
+      chart.setOption(option, true);
+      buttons.forEach((b, j) => b.classList.toggle('active', i === j));
+    };
+    buttons.forEach((b, j) => b.addEventListener('click', () => show(j)));
+    show(0);
+    new ResizeObserver(() => chart.resize()).observe(el);
+  };
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { io.unobserve(e.target); init(e.target); }
+  }), {rootMargin: '400px'});
+  document.querySelectorAll('.chart[data-key]').forEach(el => io.observe(el));
+
+  for (const spec of DATA.tables) {
+    const root = document.getElementById('table-' + spec.key);
+    const card = root.closest('.card');
+    const select = card.querySelector('select');
+    const search = card.querySelector('input[type=search]');
+    const more = card.querySelector('.more');
+    const limit = spec.limit || 50;
+    spec.snapshots.forEach((label, i) => select.add(new Option(label, i)));
+    let snap = spec.snapshots.length - 1;
+    while (snap > 0 && !(spec.rows[snap] || []).length) snap--;
+    select.value = String(snap);
+    let sortIndex = Math.max(0, spec.columns.findIndex(c => c.key === spec.sort)), desc = true, all = false;
+    const render = () => {
+      const q = search.value.trim().toLowerCase();
+      let rows = spec.rows[snap] || [];
+      if (q) rows = rows.filter(r => r.some((v, i) => spec.columns[i].kind === 'text' && v && String(v).toLowerCase().includes(q)));
+      const col = spec.columns[sortIndex];
+      rows = rows.slice().sort((a, b) => {
+        const x = a[sortIndex], y = b[sortIndex];
+        if (x == null || x === '') return 1;
+        if (y == null || y === '') return -1;
+        const c = col.kind === 'num' ? x - y : String(x).localeCompare(String(y));
+        return desc ? -c : c;
+      });
+      const total = rows.length;
+      if (!all) rows = rows.slice(0, limit);
+      const head = spec.columns.map((c, i) => `<th class="${c.kind === 'num' ? 'num' : ''}${i === sortIndex ? ' sorted' + (desc ? '' : ' asc') : ''}"` +
+        `${c.title ? ` title="${esc(c.title)}"` : ''} data-i="${i}">${esc(c.label)}</th>`).join('');
+      const body = rows.map(r => '<tr>' + r.map((v, i) => {
+        const c = spec.columns[i];
+        if (c.kind !== 'num') return `<td${c.wide ? ' class="wide"' : ''}>${v == null ? '' : esc(v)}</td>`;
+        const cls = 'num' + (c.signed && v != null ? (v > 0 ? ' pos' : v < 0 ? ' neg' : '') : '');
+        return `<td class="${cls}">${(c.signed && v > 0 ? '+' : '') + fmt(v, c.unit)}</td>`;
+      }).join('') + '</tr>').join('');
+      root.innerHTML = `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+      root.querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
+        const i = Number(th.dataset.i);
+        desc = i === sortIndex ? !desc : spec.columns[i].kind === 'num';
+        sortIndex = i;
+        render();
+      }));
+      more.hidden = total <= limit;
+      more.textContent = all ? 'Show fewer' : `Show all ${total}`;
+    };
+    select.addEventListener('change', () => { snap = Number(select.value); render(); });
+    search.addEventListener('input', render);
+    more.addEventListener('click', () => { all = !all; render(); });
+    render();
+  }
+})();
+"""
+
+
+def _video_card(m: dict[str, str]) -> str:
+    esc = html.escape
+    return (f"<figure class=card><video controls loop muted playsinline preload=metadata poster='{esc(m['poster'])}'>"
+            f"<source src='{esc(m['video'])}' type='video/mp4'></video>"
+            f"<figcaption><b>{esc(m['title'])}</b> · {esc(m['subtitle'])} · <a href='{esc(m['video'])}' download>MP4</a></figcaption></figure>")
+
+
+def _chart_card(c: dict[str, Any]) -> str:
+    esc = html.escape
+    buttons = "".join(f"<button type=button>{esc(v['label'])}</button>" for v in c["views"]) if len(c["views"]) > 1 else ""
+    return (f"<section class=card><header><h3>{esc(c['title'])}</h3><div class=views>{buttons}</div></header>"
+            f"<div class=chart data-key='{esc(c['key'])}' style='height:{int(c['height'])}px'></div>"
+            f"<p class=caption>{esc(c['caption'])}</p></section>")
+
+
+def _table_card(t: dict[str, Any]) -> str:
+    esc = html.escape
+    return (f"<section class=card><header><h3>{esc(t['title'])}</h3><div class=controls><label>Save <select></select></label>"
+            f"<input type=search placeholder='Filter' aria-label='Filter rows'></div></header>"
+            f"<div class=table-wrap id='table-{esc(t['key'])}'></div><button type=button class=more hidden></button>"
+            f"<p class=caption>{esc(t['caption'])}</p></section>")
+
+
+def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dict[str, Any]) -> Path:
     start, end = run.years
     summary = _summary(run)
     first, last = summary["first"], summary["last"]  # type: ignore[assignment]
     pop0, pop1 = float(first.get("population") or 0) * 1000, float(last.get("population") or 0) * 1000  # type: ignore[union-attr]
     change = (pop1 / pop0 - 1) * 100 if pop0 else 0.0
     esc = html.escape
+    pct = lambda v: "–" if v is None else f"{float(v) * 100:.0f}%"  # noqa: E731
     tiles = [
         ("Years", f"{start}–{end}", f"{run.snapshots.height} saves"),
         ("Population", _format_number(pop1), f"{change:+.1f}% since {start}"),
+        ("Unemployment", pct(last.get("subsistence_share")), f"{pct(first.get('subsistence_share'))} in {start}"),  # type: ignore[union-attr]
         ("Countries", str(last.get("countries", "–")), f"{first.get('countries', '–')} in {start}"),  # type: ignore[union-attr]
         ("Building levels", _format_number(float(summary["levels_last"] or 0)), f"{_format_number(float(summary['levels_first'] or 0))} in {start}"),
         ("Unowned land", f"{float(last.get('unowned_share') or 0) * 100:.0f}%", f"{float(first.get('unowned_share') or 0) * 100:.0f}% in {start}"),  # type: ignore[union-attr]
     ]
+    if summary.get("trade_last") is not None:
+        tiles.insert(3, ("Imported share", f"{float(summary['trade_last']) * 100:.1f}%",  # type: ignore[arg-type]
+                         f"{float(summary['trade_first'] or 0) * 100:.1f}% in {start}"))  # type: ignore[arg-type]
     if summary.get("investment_last") is not None:
-        tiles.insert(4, ("Building investment", f"{_format_number(float(summary['investment_last']))} gold",  # type: ignore[arg-type]
-                         f"{_format_number(float(summary['investment_first'] or 0))} in {start}"))  # type: ignore[arg-type]
-    leader_rows = "".join(
-        f"<tr><td>{i}</td><td>{esc(str(r['country_name'] or r['country_tag']))}{' <span class=muted>(subject)</span>' if r['is_subject'] else ''}</td>"
-        f"<td class=num>{_format_number(float(r['population'] or 0) * 1000)}</td><td class=num>{r['owned_locations_count'] or 0}</td>"
-        f"<td class=num>{_format_number(float(r['gold'] or 0))}</td>"
-        f"<td class=num>{_format_number(float(r['investment'])) if r.get('investment') is not None else '–'}</td></tr>"
-        for i, r in enumerate(summary["leaders"], start=1)  # type: ignore[arg-type]
-    )
-    videos = "".join(
-        f"<figure class=card><video controls loop muted playsinline preload=metadata poster='{esc(m['poster'])}'>"
-        f"<source src='{esc(m['video'])}' type='video/mp4'></video>"
-        f"<figcaption><b>{esc(m['title'])}</b> · {esc(m['subtitle'])} · <a href='{esc(m['video'])}' download>MP4</a></figcaption></figure>"
-        for m in maps
-    )
-    chart_html = "".join(
-        f"<figure class=card><img loading=lazy src='{esc(c['image'])}' alt='{esc(c['title'])}'>"
-        f"<figcaption>{esc(c['caption'])}</figcaption></figure>"
-        for c in charts
-    )
-    tile_html = "".join(f"<div class=tile><div class=label>{esc(a)}</div><div class=value>{esc(b)}</div><div class=sub>{esc(c)}</div></div>" for a, b, c in tiles)
+        tiles.insert(-1, ("Building investment", f"{_format_number(float(summary['investment_last']))} gold",  # type: ignore[arg-type]
+                          f"{_format_number(float(summary['investment_first'] or 0))} in {start}"))  # type: ignore[arg-type]
+    tile_html = "".join(f"<div class=tile><div class=label>{esc(a)}</div><div class=value>{esc(b)}</div><div class=sub>{esc(c)}</div></div>"
+                        for a, b, c in tiles)
+    world_maps = "".join(_video_card(m) for m in maps if m["key"] not in TRADE_VIDEOS)
+    trade_maps = "".join(_video_card(m) for m in maps if m["key"] in TRADE_VIDEOS)
+    sections, nav = [], ["<a href='#maps'>Maps</a>"]
+    for key, title, lead in SECTIONS:
+        charts = [c for c in payload["charts"] if c["section"] == key]
+        tables = [t for t in payload["tables"] if t["section"] == key]
+        videos = trade_maps if key == "trade" else ""
+        if not (charts or tables or videos):
+            continue
+        nav.append(f"<a href='#{key}'>{esc(title)}</a>")
+        body = (f"<div class=grid>{videos}</div>" if videos else "") + "".join(_chart_card(c) for c in charts) + "".join(
+            _table_card(t) for t in tables)
+        sections.append(f"<h2 id={key}>{esc(title)}</h2><p class=lead>{esc(lead)}</p>{body}")
+    data = json.dumps(payload, separators=(",", ":"), allow_nan=False).replace("</", "<\\/")
     page = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(run.name)} · {start}–{end} · Prosper or Perish</title>
 <meta property="og:title" content="{esc(run.name)} · {start}–{end}">
-<meta property="og:description" content="Prosper or Perish observer run: {run.snapshots.height} saves, maps and progression charts.">
+<meta property="og:description" content="Prosper or Perish observer run: {run.snapshots.height} saves, maps, trade, prices and countries.">
 <meta property="og:image" content="maps/political.png">
-<style>
-:root{{--bg:#f6f6f4;--card:#fcfcfb;--ink:#1d1d1b;--muted:#6b6b67;--line:#e2e2de;--accent:#2a78d6}}
-@media (prefers-color-scheme: dark){{:root{{--bg:#121418;--card:#1a1d22;--ink:#eceef0;--muted:#a0a6b0;--line:#2c3038;--accent:#6da7ec}}}}
-*{{box-sizing:border-box}} body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}}
-main{{max-width:1240px;margin:0 auto;padding:28px 16px 48px}} h1{{margin:0 0 4px;font-size:28px}} h2{{margin:36px 0 12px;font-size:19px}}
-.muted{{color:var(--muted)}} .tiles{{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:20px}}
-.tile,.card{{background:var(--card);border:1px solid var(--line);border-radius:10px}} .tile{{padding:14px 16px}}
-.tile .label{{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}} .tile .value{{font-size:24px;font-weight:700;margin-top:2px}}
-.tile .sub{{font-size:13px;color:var(--muted)}} .grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(520px,1fr));gap:16px}}
-@media (max-width:600px){{.grid{{grid-template-columns:1fr}}}} figure{{margin:0;overflow:hidden}} video,img{{display:block;width:100%;height:auto;background:#12161c}}
-figcaption{{padding:10px 14px;font-size:13px;color:var(--muted)}} a{{color:var(--accent)}}
-table{{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}}
-th,td{{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left}} th{{font-size:12px;text-transform:uppercase;color:var(--muted)}}
-.num{{text-align:right;font-variant-numeric:tabular-nums}} footer{{margin-top:40px;font-size:12px;color:var(--muted)}}
-</style></head><body><main>
+<style>{PAGE_CSS}</style></head><body><main>
 <h1>{esc(run.name)}</h1>
 <div class=muted>Prosper or Perish · observer run {start}–{end} · {run.snapshots.height} saves</div>
 <div class=tiles>{tile_html}</div>
-<h2>Maps</h2><div class=grid>{videos}</div>
-<h2>Progression</h2><div class=grid>{chart_html}</div>
-<h2>Largest countries in {end}</h2>
-<table><thead><tr><th>#</th><th>Country</th><th class=num>Population</th><th class=num>Locations</th><th class=num>Gold</th><th class=num title="Building investment {html.escape(run.investment_prices)}">Investment</th></tr></thead><tbody>{leader_rows}</tbody></table>
-<footer>Generated {datetime.now().strftime('%Y-%m-%d %H:%M')} by <code>ppc report</code> from {run.snapshots.height} autosaves.</footer>
-</main></body></html>
+<nav>{''.join(nav)}</nav>
+<h2 id=maps>Maps</h2><p class=lead>One frame per save.</p><div class=grid>{world_maps}</div>
+{''.join(sections)}
+<footer>Generated {datetime.now().strftime('%Y-%m-%d %H:%M')} by <code>ppc report</code> from {run.snapshots.height} saves. Charts: Apache ECharts.</footer>
+</main>
+<script id=report-data type="application/json">{data}</script>
+<script src="{ECHARTS_URL}"></script>
+<script>{PAGE_JS}</script>
+</body></html>
 """
     path = out / "index.html"
     path.write_text(page, encoding="utf-8")
     return path
+
+
+def _backfill_engine_tables(repo: Path, project: Path, dataset: Path, playthrough: str, log: Callable[[str], None]) -> None:
+    """Trade routes, merchants and country economy for snapshots ingested before the dataset kept them."""
+    from eu5gameparser.savegame.dataset import backfill_engine_tables
+
+    from prosper_or_perish_constructor.free_building_levels import resolve_parser_config
+
+    config = resolve_parser_config(repo, project)
+    manifest = pl.read_parquet(dataset / "manifest.parquet").filter(pl.col("playthrough_id") == playthrough)
+    profiles = manifest["parser_profile"].drop_nulls().to_list() if "parser_profile" in manifest.columns else []
+    profile = profiles[0] if profiles else str(config.get("profile") or "constructor")
+    done = backfill_engine_tables(dataset, playthrough_id=playthrough, profile=profile,
+                                  load_order_path=repo / str(config.get("load_order") or "constructor.load_order.toml"), log=log)
+    if done:
+        log(f"engine tables added to {done} snapshots")
 
 
 def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, playthrough: str | None = None,
@@ -919,7 +1224,9 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
         cost_model=building_investment.load_location_cost_model(repo, project),
         log=log,
     )
-    run = load_run(dataset, playthrough)
+    playthrough = playthrough or latest_playthrough(dataset)
+    _backfill_engine_tables(repo, project, dataset, playthrough, log)
+    run = load_run(dataset, playthrough, labels=load_labels(repo, project))
     log(f"run {run.name} ({run.playthrough_id}): {run.snapshots.height} saves {run.years[0]}-{run.years[1]}")
     out = out_root / run.playthrough_id
     if out.exists():
@@ -927,12 +1234,16 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
     out.mkdir(parents=True)
     canvas = build_canvas(repo, project, width)
     maps = render_maps(run, canvas, out / "maps", repo=repo, project=project, fps=fps, log=log)
-    charts = render_charts(run, out / "charts", log=log)
-    page = write_page(run, out, maps, charts)
-    (out / "report.json").write_text(json.dumps({"playthrough_id": run.playthrough_id, "name": run.name,
-                                                 "years": run.years, "saves": run.snapshots.height,
-                                                 "maps": maps, "charts": charts}, indent=2), encoding="utf-8")
-    log(f"report written to {page} in {time.perf_counter() - started:.1f}s")
+    maps += render_trade_maps(run, canvas, out / "maps", fps=fps, log=log)
+    payload = build_payload(run)
+    log(f"charts: {len(payload['charts'])}, tables: {len(payload['tables'])}")
+    page = write_page(run, out, maps, payload)
+    (out / "report.json").write_text(json.dumps({
+        "playthrough_id": run.playthrough_id, "name": run.name, "years": run.years, "saves": run.snapshots.height,
+        "maps": maps, "charts": [{"key": c["key"], "section": c["section"], "title": c["title"]} for c in payload["charts"]],
+        "tables": [{"key": t["key"], "section": t["section"], "title": t["title"]} for t in payload["tables"]],
+    }, indent=2), encoding="utf-8")
+    log(f"report written to {page} ({page.stat().st_size / 1e6:.1f} MB) in {time.perf_counter() - started:.1f}s")
     return page
 
 

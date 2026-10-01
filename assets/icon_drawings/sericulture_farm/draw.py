@@ -23,7 +23,7 @@ from eu5_building_pipeline.iconkit import Icon
 from eu5_building_pipeline.iconkit.canvas import SIZE, rgb
 
 SEED = 43
-REFS = ("fruit_orchard", "farming_village", "llotja_seda", "lucca_silk_production_guild")
+REFS = ("fruit_orchard", "farming_village", "llotja_seda", "silk_production_guild")
 
 CREAM = ((226, 218, 190), (250, 246, 230), (150, 138, 108))
 IVORY = ((238, 232, 212), (255, 252, 242), (160, 150, 124))

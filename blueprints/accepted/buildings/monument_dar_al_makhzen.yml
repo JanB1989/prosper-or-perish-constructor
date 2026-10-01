@@ -1,0 +1,11 @@
+version: 2
+tag: monument_dar_al_makhzen
+footprint: palace_grounds
+building:
+  key: monument_dar_al_makhzen
+  mode: INJECT
+  source: pp_building_footprint.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |-
+    # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.

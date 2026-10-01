@@ -1,53 +1,53 @@
 version: 2
-tag: lucca_silk_production_guild
+tag: silk_production_guild
 footprint: urban_workshop
 labour:
   class: craft_medieval
-gate_method: pp_lucca_silk_production_guild_market_sales
+gate_method: pp_silk_production_guild_market_sales
 building:
-  key: lucca_silk_production_guild
+  key: silk_production_guild
   mode: REPLACE
   source: pp_building_adjustments.txt
   production_method_slots:
   - name: slot_0
     methods:
-    - pp_lucca_silk_production_guild_fiber_crops_silk_guild_maintenance
+    - pp_silk_production_guild_silk_production_guild_maintenance
   - name: slot_1
     methods:
-    - pp_lucca_silk_production_guild_market_sales
+    - pp_silk_production_guild_market_sales
   possible_production_methods: []
   body: |
-    is_special = yes
-    is_foreign = no
-    pop_type = burghers
+    category = consumer_goods_category
     town = yes
     city = yes
     megalopolis = yes
+    is_foreign = no
+    pop_type = burghers
     max_levels = guild_max_level
-    category = consumer_goods_category
     employment_size = 0.3
     build_time = guild_build_time
     construction_demand = guild_construction
-    country_potential = {
-        always = no
-    }
-    allow = {
-        has_building = building_type:lucca_silk_production_guild
+    location_potential = {
+        NOT = {
+            climate = arctic
+        }
     }
     custom_tags = {
         guild
     }
     unique_production_methods = {
-        pp_lucca_silk_production_guild_fiber_crops_silk_guild_maintenance = {
-            fiber_crops = 1
-            manual_labor = 0.33
+        pp_silk_production_guild_silk_production_guild_maintenance = {
+            icon_type = building_type
+            icon = silk_production_guild
+            fiber_crops = 0.86
+            manual_labor = 0.28
             produced = silk
             output = 0.6
             category = guild_input
         }
     }
     unique_production_methods = {
-        pp_lucca_silk_production_guild_market_sales = {
+        pp_silk_production_guild_market_sales = {
             offset = 0.012
             produced = silk
             output = 0.003
@@ -56,19 +56,19 @@ building:
     }
     # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
     increase_per_level_cost = 0.54
-    price = pp_lucca_silk_production_guild_price
+    price = pp_silk_production_guild_price
 prices:
-  - key: pp_lucca_silk_production_guild_price
+  - key: pp_silk_production_guild_price
     body: |2-
       {gold = 100}
 localization:
   entries:
-    pp_lucca_silk_production_guild_price: Lucca Silk Production Guild Price
-    lucca_silk_production_guild_slot_0: Lucca Silk Production Guild Work
-    pp_lucca_silk_production_guild_fiber_crops_silk_guild_maintenance: Lucca Silk Production Guild Fiber Crops Silk Guild Maintenance
-    pp_lucca_silk_production_guild_market_sales: Market Sales
-    pp_lucca_silk_production_guild_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    lucca_silk_production_guild_slot_1: Market
+    pp_silk_production_guild_price: Silk Production Guild Price
+    silk_production_guild_slot_0: Silk Production Guild Work
+    pp_silk_production_guild_silk_production_guild_maintenance: $silk_production_guild$
+    silk_production_guild_slot_1: Market
+    pp_silk_production_guild_market_sales: Market Sales
+    pp_silk_production_guild_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
 evaluation:
   allow_rules:
     amortization_months: Non-raw producer under the building price brake (double price, triple level cost, 2026-09-30); slow payback is the point.
@@ -76,7 +76,7 @@ evaluation:
     input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
     output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
   production_methods:
-    pp_lucca_silk_production_guild_market_sales:
+    pp_silk_production_guild_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
         input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

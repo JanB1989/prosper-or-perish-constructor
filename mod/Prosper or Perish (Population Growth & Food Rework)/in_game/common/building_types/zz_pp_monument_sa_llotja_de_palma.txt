@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:monument_sa_llotja_de_palma:building
+INJECT:monument_sa_llotja_de_palma = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.06
+	}
+}
+# <<< eu5-building-pipeline:monument_sa_llotja_de_palma:building

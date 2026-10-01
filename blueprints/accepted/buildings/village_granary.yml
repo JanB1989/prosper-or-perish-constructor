@@ -1,0 +1,16 @@
+version: 2
+tag: village_granary
+footprint: rural_processing
+building:
+  key: village_granary
+  mode: INJECT
+  source: pp_building_footprint.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |-
+    # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+    # EU5 1.4 village granary: the mod's Granary already serves rural settlements with its own food capacity and
+    # preservation (food storage design), so the village granary is not built.
+    location_potential = {
+      always = no
+    }

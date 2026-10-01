@@ -1,0 +1,74 @@
+﻿# >>> eu5-building-pipeline:maghreb_palm_irrigation:building
+REPLACE:maghreb_palm_irrigation = {
+audio_tier = 2
+is_special = yes
+is_foreign = no
+pop_type = peasants
+max_levels = 1
+employment_size = 1.0
+category = trade_category
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+country_potential = {
+    OR = {
+        culture = {
+            has_culture_group = culture_group:maghrebi_group
+        }
+        culture = {
+            has_culture_group = culture_group:amazigh_group
+        }
+    }
+}
+allow = {
+    OR = { climate = arid climate = ha1300_climate_hot_steppe }
+    OR = {
+        vegetation = desert
+        OR = { vegetation = sparse vegetation = ha1300_veg_scrubland vegetation = ha1300_veg_tundra }
+    }
+    OR = {
+        region = region:maghreb_region
+        region = region:sahel_region
+    }
+}
+can_destroy = {
+    always = yes
+}
+build_time = trade_post_build_time
+modifier = {
+    local_monthly_development_modifier = 0.2
+    local_life_expectancy = 2
+    supply_limit = 2.5
+}
+construction_demand = maghreb_palm_irrigation_building_construction
+unique_production_methods = {
+    pp_maghreb_palm_irrigation_maghreb_palm_irrigation_maintenance = {
+        icon_type = building_type
+        icon = irrigation_systems
+        produced = fruit
+        output = 0.8
+        lumber = 0.17
+        clay = 0.09
+        tools = 0.082
+        manual_labor = 0.14
+        debug_max_profit = rural_profit_margin
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_maghreb_palm_irrigation_market_sales = {
+        icon_type = goods
+        icon = fruit
+        offset = 0.01
+        produced = fruit
+        output = 0.01
+        category = building_maintenance
+    }
+}
+increase_per_level_cost = 0.19
+	raw_modifier = {
+		local_population_capacity = 0.1
+	}
+}
+# <<< eu5-building-pipeline:maghreb_palm_irrigation:building

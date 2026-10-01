@@ -321,14 +321,6 @@ pp_lacquerware_guild_price_cost_modifier={
 	}
 }
 
-pp_lucca_silk_production_guild_price_cost_modifier={
-	color=bad
-	percent=yes
-	game_data={
-		category=country
-	}
-}
-
 pp_naval_supplies_guild_price_cost_modifier={
 	color=bad
 	percent=yes
@@ -434,6 +426,14 @@ pp_weapon_guild_price_cost_modifier={
 }
 
 pp_winery_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_silk_production_guild_price_cost_modifier={
 	color=bad
 	percent=yes
 	game_data={

@@ -1,36 +1,38 @@
-﻿# >>> eu5-building-pipeline:lucca_silk_production_guild:building
-REPLACE:lucca_silk_production_guild = {
-is_special = yes
-is_foreign = no
-pop_type = burghers
+﻿# >>> eu5-building-pipeline:silk_production_guild:building
+REPLACE:silk_production_guild = {
+category = consumer_goods_category
 town = yes
 city = yes
 megalopolis = yes
+is_foreign = no
+pop_type = burghers
 max_levels = guild_max_level
-category = consumer_goods_category
 employment_size = 0.3
 build_time = guild_build_time
 construction_demand = guild_construction
-country_potential = {
-    always = no
-}
-allow = {
-    has_building = building_type:lucca_silk_production_guild
+location_potential = {
+    NOT = {
+        climate = arctic
+    }
 }
 custom_tags = {
     guild
 }
 unique_production_methods = {
-    pp_lucca_silk_production_guild_fiber_crops_silk_guild_maintenance = {
-        fiber_crops = 1
-        manual_labor = 0.33
+    pp_silk_production_guild_silk_production_guild_maintenance = {
+        icon_type = building_type
+        icon = silk_production_guild
+        fiber_crops = 0.86
+        manual_labor = 0.28
         produced = silk
         output = 0.6
         category = guild_input
     }
 }
 unique_production_methods = {
-    pp_lucca_silk_production_guild_market_sales = {
+    pp_silk_production_guild_market_sales = {
+        icon_type = goods
+        icon = silk
         offset = 0.012
         produced = silk
         output = 0.003
@@ -39,9 +41,9 @@ unique_production_methods = {
 }
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.41
-price = pp_lucca_silk_production_guild_price
+price = pp_silk_production_guild_price
 	raw_modifier = {
 		local_population_capacity = 0.225
 	}
 }
-# <<< eu5-building-pipeline:lucca_silk_production_guild:building
+# <<< eu5-building-pipeline:silk_production_guild:building

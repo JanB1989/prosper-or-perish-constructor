@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:monument_qarawiyyin:building
+INJECT:monument_qarawiyyin = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.006
+	}
+}
+# <<< eu5-building-pipeline:monument_qarawiyyin:building

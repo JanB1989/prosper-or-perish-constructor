@@ -9,3 +9,8 @@ building:
   possible_production_methods: []
   body: |-
     # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+    # Foreign building since EU5 1.4 (is_foreign = yes): its level supports itself, like the other foreign buildings,
+    # so it never counts as an unsupported building level of Nice.
+    raw_modifier = {
+      free_building_levels = 1
+    }

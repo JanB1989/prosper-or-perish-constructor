@@ -606,6 +606,11 @@ def test_foreign_buildings_support_their_own_level() -> None:
         if _re.search(r"(?m)^\s*is_foreign = yes", block.group("body"))
     ]
     assert len(foreign) == 8, foreign
+    # EU5 1.4 made the Rock of Monaco (an event building of Nice) foreign as well.
+    events = (vanilla / "game/in_game/common/building_types/event_only_buildings.txt").read_text(encoding="utf-8-sig")
+    monaco = _re.search(r"(?ms)^rock_of_monaco = \{[^\n]*\n(?P<body>.*?)\n\}", events)
+    assert monaco is not None and _re.search(r"(?m)^\s*is_foreign = yes", monaco.group("body"))
+    foreign.append("rock_of_monaco")
     mod = next((repo / "mod").glob("Prosper*Rework*"))
     owners = building_footprint.owner_blocks(mod, vanilla)
     for key in foreign:

@@ -138,3 +138,71 @@ the Tavern (`province_food_purchase` -8 per stored year) and of Surplus Sales / 
 attraction and +0.0025 monthly prosperity. Displays read script values instead of the marker the modifier carried
 (`in_game/common/script_values/pp_province_food_storage.txt`: months stored, growth from storage, growth incl. the
 storage term for the population growth map mode).
+
+### 6.1 Carrier search for the other stored-food effects (2026-10-01)
+
+Jan's decision: keep all of the 1.3 effects. The 1.3 modifier (`TRY_REPLACE:positive_province_food_growth`, category
+province, scaled by min(stored years, 2)) carried per stored year:
+
+| Effect | Per stored year | Purpose |
+| --- | --- | --- |
+| `local_population_growth` | +0.0075 | growth law; restored on the engine term above |
+| `local_province_food_purchase_output_modifier` | -8.0 | Tavern *Scarcity Premium* leg: with the country constant +15 it pays 16x at an empty store and 0x at 24 months; break-even about 12 months at the mean victuals price |
+| `local_province_food_sales_output_modifier` | +8.0 | *Sell the Surplus* leg of 43 farm and fishery buildings and the Grange (its AI gate): with the constant -1 it pays 0x at an empty store and 16x at 24 months; the Grange breaks even at about 20 months |
+| `local_devastation_recovery` | +0.003 | |
+| `local_migration_attraction` | +0.045 | |
+| `local_monthly_prosperity` | +0.0025 | |
+
+Result: EU5 1.4 offers no engine-applied mechanism that follows a province's stored food for these five, and the
+mod adds no monthly script (Jan's rule). What was checked (engine behaviour in 1.4.0 beta):
+
+- **Hardcoded static modifiers.** None of the province or location modifiers the engine applies by name reads the
+  province store; the stored-food one is gone.
+- **Province refresh.** In 1.3 the engine recomputed a province's modifiers each month its stored years (capped)
+  changed. In 1.4 the monthly province update recomputes them only when the province starts or stops starving, so any
+  province modifier that reads the store through a script would freeze between starving flips.
+- **Auto modifiers** (`scales_with` takes a script value): the engine applies them to countries and international
+  organisations only. A location- or province-typed auto modifier is never applied; a country one can only carry a
+  country-wide average.
+- **Scaled and triggered `province_modifier` / `location_modifier` blocks** of laws, privileges, reforms, cabinet
+  actions, gods and avatars: no such object is held by every country, and they refresh only when the target's
+  modifiers are recomputed for another reason (province: starving flips; location: prosperity, culture, religion or
+  building changes), so they can go stale for years.
+- **Production methods.** `potential` / `allow` are country scope; `location_allow` is location scope, but a running
+  building is not moved off a method that stops being allowed (the method switcher moves one building per building
+  type, market and slot a month, and new buildings take the slot's first method). Tiered leg methods would stick on
+  stale tiers.
+- **Building `allow` / `max_levels`**: construction checks only; levels that exist keep running.
+- **Diseases and movements** scale a location modifier by their presence, which their spread model updates per
+  location. Using one as a storage carrier would be a disguised per-location loop shown to the player as an
+  epidemic; rejected.
+
+Error today against the 1.3 law, both ways (stored years capped at 2, the 1.4 start date has a
+consumption-weighted mean of 0.42 stored years):
+
+| Effect | 1.4 now | Too high | Too low |
+| --- | --- | --- | --- |
+| Tavern leg output | 16x at every store (+8 starving, rank, droop unchanged) | +8x per stored year, up to +16x at 24 months; mean +3.4x | never |
+| Sell the Surplus leg output | about 0x (rank only) | never | -8x per stored year, up to -16x; mean -3.4x. The Grange's gate (0.8 sales vs 11.2 offset) never passes, so the AI does not build Granges; farms gain nothing from the method |
+| Devastation recovery | 0 | never | up to -0.006; mean -0.0013 |
+| Migration attraction | 0 | never | up to -0.09; mean -0.019 (stored food no longer draws migrants) |
+| Monthly prosperity | 0 | never | up to -0.005; mean -0.0011 |
+
+Options for Jan:
+
+1. **Monthly province pulse (exact 1.3 law).** One province static modifier with the five per-year values, added
+   once, and each month `change_province_modifier_size` to min(stored years, 2) on every province with consumption
+   above 0 (4,071 at the start date): about 49,000 cheap effect runs a year (each of the ~40 generic PP building
+   types already costs about 17,500 `location_potential` checks a year) plus one modifier recompute per changed
+   province, which is what the 1.3 engine did itself. Rounding the size to whole months cuts recomputes to provinces
+   whose month count changed, at most 1/24 of each effect's cap below the law. Needs Jan's go-ahead (no pulse
+   scripts otherwise).
+2. **Construction-only gates for the legs** (`allow` on `pp_province_food_storage_months`: Tavern below 12 months,
+   Grange / Yard above about 20): restores where the AI builds, not what running buildings earn or how they staff;
+   Taverns keep paying and serving at a full store. Partial; not applied.
+3. **Country-wide auto modifier** scaled by the country's average stored years: exact for one-province countries,
+   wrong inside larger ones (and a uniform migration term moves nobody). Not applied.
+
+Tooling keeps reading 0 for these terms until a carrier exists: `ppc province-food-sales-check`
+(`PROVINCE_FOOD_SALES_STORED_FOOD_PER_YEAR`) and the migration model's stored-food attraction (`food_years`). The
+food simulation's prosperity fit still has the 1.3 stored-years slope and needs a refit on a 1.4 run.

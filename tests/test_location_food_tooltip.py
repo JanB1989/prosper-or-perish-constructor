@@ -67,12 +67,12 @@ def test_province_food_indicator_uses_stored_food_months() -> None:
     text = LOCATION_WINDOW.read_text(encoding="utf-8-sig")
     location_months = (
         "FixedPointToFloat(Divide_CFixedPoint("
-        "LocationView.GetLocation.GetModifierValueFixed("
+        "LocationView.GetLocation.MakeScope.ScriptValue("
         f"'pp_province_food_storage_months'), {FOOD_STORAGE_DIVISOR}))"
     )
     selection_months = (
         "FixedPointToFloat(Divide_CFixedPoint("
-        "LocationViewSelectProvince.Parent.GetLocation.GetModifierValueFixed("
+        "LocationViewSelectProvince.Parent.GetLocation.MakeScope.ScriptValue("
         f"'pp_province_food_storage_months'), {FOOD_STORAGE_DIVISOR}))"
     )
 
@@ -89,7 +89,7 @@ def test_province_tooltip_food_indicators_use_stored_food_months() -> None:
     text = PROVINCE_TOOLTIPS.read_text(encoding="utf-8-sig")
     stored_months = (
         "FixedPointToFloat(Divide_CFixedPoint("
-        "Province.GetCapital.GetModifierValueFixed("
+        "Province.GetCapital.MakeScope.ScriptValue("
         f"'pp_province_food_storage_months'), {FOOD_STORAGE_DIVISOR}))"
     )
 
@@ -128,7 +128,7 @@ def test_all_remaining_food_indicators_use_stored_food_months() -> None:
     )
     assert (
         "Divide_CFixedPoint("
-        "InteractionTarget.GetProvince.GetCapital.GetModifierValueFixed("
+        "InteractionTarget.GetProvince.GetCapital.MakeScope.ScriptValue("
         f"'pp_province_food_storage_months'), {FOOD_STORAGE_DIVISOR})|2%"
     ) in province_columns
 
@@ -138,6 +138,14 @@ def test_all_remaining_food_indicators_use_stored_food_months() -> None:
         if "GetFoodCapacityPercent" in path.read_text(encoding="utf-8-sig")
     ]
     assert stale_files == []
+
+    # EU5 1.4 dropped the stored-food modifier: the months are a location-scope script value, never a modifier
+    modifier_reads = [
+        path
+        for path in gui_root.rglob("*.gui")
+        if "GetModifierValueFixed('pp_province_food_storage_months')" in path.read_text(encoding="utf-8-sig")
+    ]
+    assert modifier_reads == []
 
 
 def test_food_storage_tooltip_uses_configured_maximum_months() -> None:

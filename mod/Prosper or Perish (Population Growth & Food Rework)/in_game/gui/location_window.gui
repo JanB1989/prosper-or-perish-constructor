@@ -4842,13 +4842,13 @@ lateralview = {
 
 									pieslice_no_highlight = {
 										texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
-										value = "[FixedPointToFloat(Divide_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
+										value = "[FixedPointToFloat(Divide_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
 										color = { 1 1 1 1 }
 									}
 
 									pieslice_no_highlight = {
 										texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
-										value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
+										value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
 										color = { 1 1 1 1 }
 									}
 
@@ -5859,7 +5859,7 @@ widget = {
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
                 }
             }
-            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_FOOD_CHIP_STORED" } } TooltipStringPairList = { textcontext = "[ShowModifierEffect('positive_province_food_growth')]" } }
+            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_FOOD_CHIP_STORED" } } }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -5867,7 +5867,7 @@ widget = {
         text_single = { position = { 13 18 } size = { 17 12 }
             autoresize = no fontsize = 11 align = center
             using = bg_number_container_bckg
-            raw_text = "[FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_province_food_storage_months'))|0]" }
+            raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months')|0]" }
     }
 widget = {
         name = "pp_status_food_starving"
@@ -12115,13 +12115,13 @@ select_menu_left = {
 
 									pieslice_no_highlight = {
 										texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
-										value = "[FixedPointToFloat(Divide_CFixedPoint(LocationViewSelectProvince.Parent.GetLocation.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
+										value = "[FixedPointToFloat(Divide_CFixedPoint(LocationViewSelectProvince.Parent.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
 										color = { 1 1 1 1 }
 									}
 
 									pieslice_no_highlight = {
 										texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
-										value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(LocationViewSelectProvince.Parent.GetLocation.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
+										value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(LocationViewSelectProvince.Parent.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
 										color = { 1 1 1 1 }
 									}
 

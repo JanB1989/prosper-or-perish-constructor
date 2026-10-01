@@ -305,13 +305,13 @@
 
                                 pieslice_no_highlight = {
                                     texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
-                                    value = "[FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
+                                    value = "[FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
                                     color = { 1 1 1 1 }
                                 }
 
                                 pieslice_no_highlight = {
                                     texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
-                                    value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
+                                    value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
                                     color = { 1 1 1 1 }
                                 }
 
@@ -660,7 +660,7 @@ template province_food_tooltip {
 
                         pieslice = {
                             texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
-                            value = "[FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
+                            value = "[FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
                             color = { 1 1 1 1 }
                             modify_texture = {
                                 using = color_white_texture
@@ -671,7 +671,7 @@ template province_food_tooltip {
 
                         pieslice = {
                             texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
-                            value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
+                            value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
                             color = { 1 1 1 1 }
                         }
                     }

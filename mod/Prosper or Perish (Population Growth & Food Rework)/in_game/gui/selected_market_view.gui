@@ -2329,13 +2329,13 @@ template market_food_scroll {
 
 			pieslice_no_highlight = {
 				texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
-				value = "[FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
+				value = "[FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
 				color = { 1 1 1 1 }
 			}
 
 			pieslice_no_highlight = {
 				texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
-				value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
+				value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
 				color = { 1 1 1 1 }
 			}
 
@@ -2345,27 +2345,27 @@ template market_food_scroll {
 				texture = "gfx/interface/icons/location_icons/food.dds"
 
 				modify_texture = {
-					visible = "[And(GreaterThan_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)0'), And(LessThan_float(FixedPointToFloat(Province.GetMonthlyFoodChange), '(float)0'), GreaterThan_float(Abs_float(FixedPointToFloat(Province.GetMonthlyFoodChange)), FixedPointToFloat(Province.GetFoodFromMarket))))]"
+					visible = "[And(GreaterThan_CFixedPoint(Province.GetCapital.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)0'), And(LessThan_float(FixedPointToFloat(Province.GetMonthlyFoodChange), '(float)0'), GreaterThan_float(Abs_float(FixedPointToFloat(Province.GetMonthlyFoodChange)), FixedPointToFloat(Province.GetFoodFromMarket))))]"
 					using = color_black_texture
 					alpha = 0.5
 					blend_mode = multiply
 				}
 
 				modify_texture = {
-					visible = "[And(GreaterThan_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)0'), And(LessThan_float(FixedPointToFloat(Province.GetMonthlyFoodChange), '(float)0'), GreaterThan_float(Abs_float(FixedPointToFloat(Province.GetMonthlyFoodChange)), FixedPointToFloat(Province.GetFoodFromMarket))))]"
+					visible = "[And(GreaterThan_CFixedPoint(Province.GetCapital.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)0'), And(LessThan_float(FixedPointToFloat(Province.GetMonthlyFoodChange), '(float)0'), GreaterThan_float(Abs_float(FixedPointToFloat(Province.GetMonthlyFoodChange)), FixedPointToFloat(Province.GetFoodFromMarket))))]"
 					using = color_yellow_texture
 					alpha = 0.6
 				}
 
 				modify_texture = {
-					visible = "[Not(GreaterThan_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)0'))]"
+					visible = "[Not(GreaterThan_CFixedPoint(Province.GetCapital.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)0'))]"
 					using = color_black_texture
 					alpha = 0.5
 					blend_mode = multiply
 				}
 
 				modify_texture = {
-					visible = "[Not(GreaterThan_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)0'))]"
+					visible = "[Not(GreaterThan_CFixedPoint(Province.GetCapital.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)0'))]"
 					using = color_mid_red_texture
 				}
 			}

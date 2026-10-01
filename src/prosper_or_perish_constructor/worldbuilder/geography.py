@@ -69,8 +69,9 @@ def merge_location_window(text: str) -> str:
 
     The World Builder file is vanilla plus its native geography view; the mod replaces the vanilla
     province food-capacity gauge (two pairs of lines: the location view and the province selector) with
-    the stored-food months from `pp_province_food_storage_months`. The divisor is compiled afterwards by
-    the food-storage GUI step, which expects exactly these four lines.
+    the stored-food months, the location-scope script value `pp_province_food_storage_months` (a CFixedPoint,
+    hence the _CFixedPoint arithmetic). The divisor is compiled afterwards by the food-storage GUI step, which
+    expects exactly these four lines.
     """
     lines = text.splitlines(keepends=True)
     pair = 0
@@ -78,11 +79,11 @@ def merge_location_window(text: str) -> str:
         stripped = line.strip()
         if stripped == _FOOD_PERCENT:
             scope = _FOOD_SCOPES[min(pair // 2, 1)]
-            lines[index] = line.replace(_FOOD_PERCENT, f"value = \"[FixedPointToFloat(Divide_CFixedPoint({scope}.GetLocation.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]\"")
+            lines[index] = line.replace(_FOOD_PERCENT, f"value = \"[FixedPointToFloat(Divide_CFixedPoint({scope}.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)24'))]\"")
             pair += 1
         elif stripped == _FOOD_PERCENT_REST:
             scope = _FOOD_SCOPES[min((pair - 1) // 2, 1)]
-            lines[index] = line.replace(_FOOD_PERCENT_REST, f"value = \"[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint({scope}.GetLocation.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]\"")
+            lines[index] = line.replace(_FOOD_PERCENT_REST, f"value = \"[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint({scope}.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months'), '(CFixedPoint)24')))]\"")
             pair += 1
     if pair != 4:
         raise ValueError(f"location_window.gui: expected 4 vanilla food-capacity gauge lines, found {pair}")

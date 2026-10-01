@@ -2821,10 +2821,10 @@ def test_victuals_pop_demand_modifier_type_is_registered() -> None:
     assert "global_offset_modifier" in modifier_icons
     assert "MODIFIER_TYPE_NAME_global_offset_modifier:" in localization_text
     assert "MODIFIER_TYPE_DESC_global_offset_modifier:" in localization_text
-    assert "pp_province_food_storage_months" in modifier_types
-    assert "pp_province_food_storage_months" in modifier_icons
-    assert "MODIFIER_TYPE_NAME_pp_province_food_storage_months:" in localization_text
-    assert "MODIFIER_TYPE_DESC_pp_province_food_storage_months:" in localization_text
+    # EU5 1.4: the stored food months are a script value (pp_province_food_storage.txt), no modifier type any more
+    assert "pp_province_food_storage_months" not in modifier_types
+    assert "pp_province_food_storage_months" not in modifier_icons
+    assert "MODIFIER_TYPE_NAME_pp_province_food_storage_months:" not in localization_text
 
 
 def test_province_food_market_goods_share_balance_values() -> None:
@@ -2942,7 +2942,6 @@ def test_internal_trade_good_icons_use_game_compatible_dds_layout() -> None:
         icon_root / "modifier_types" / "manual_labor_positive.dds",
         icon_root / "trade_goods" / "icon_goods_offset.dds",
         icon_root / "modifier_types" / "offset_positive.dds",
-        icon_root / "modifier_types" / "pp_province_food_storage_months.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_province_food_sales.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_province_food_purchase.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_manual_labor.dds",

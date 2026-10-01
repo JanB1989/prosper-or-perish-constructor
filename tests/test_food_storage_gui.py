@@ -8,7 +8,7 @@ from prosper_or_perish_constructor import food_storage_gui
 def _write_gui_overrides(mod_root: Path, *, divisor: str = "24") -> None:
     formula = (
         "value = \"[Divide_CFixedPoint("
-        "Province.GetCapital.GetModifierValueFixed("
+        "Province.GetCapital.MakeScope.ScriptValue("
         "'pp_province_food_storage_months'), "
         f"'(CFixedPoint){divisor}')]\""
     )

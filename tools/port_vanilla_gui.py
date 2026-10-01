@@ -1,8 +1,8 @@
 """Rebuild the mod's hand-kept vanilla GUI overrides from the current vanilla files (run after an EU5 update).
 
 Each override is the vanilla file plus the mod's own changes, which are written down here so the next game update
-only needs a rerun: the stored-food gauges (``pp_province_food_storage_months`` instead of the vanilla food-capacity
-percentage) and, for the Europedia, the Prosper or Perish page (its button and its cards, taken from the current mod
+only needs a rerun: the stored-food gauges (the script value ``pp_province_food_storage_months`` instead of the
+vanilla food-capacity percentage) and, for the Europedia, the Prosper or Perish page (its button and its cards, taken from the current mod
 file). Everything else is vanilla, so whatever the game adds to these windows stays visible.
 
 ``location_window.gui`` is not handled here: it is generated from the World Builder export by
@@ -24,7 +24,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 MOD_ROOT = REPO / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 GUI = Path("in_game/gui")
-MONTHS_MODIFIER = "pp_province_food_storage_months"
+MONTHS_VALUE = "pp_province_food_storage_months"   # script value, in_game/common/script_values/pp_province_food_storage.txt
 # divisor placeholder; compile_food_storage_gui writes the configured maximum
 DIVISOR = "24"
 
@@ -43,7 +43,8 @@ EUROPEDIA = "encyclopedia_lateralview.gui"
 
 
 def _months(scope: str) -> str:
-    return f"{scope}.GetCapital.GetModifierValueFixed('{MONTHS_MODIFIER}')"
+    """Stored months of the province: a location-scope script value (CFixedPoint), read on its capital."""
+    return f"{scope}.GetCapital.MakeScope.ScriptValue('{MONTHS_VALUE}')"
 
 
 def _share(scope: str) -> str:

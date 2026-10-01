@@ -37,7 +37,7 @@ every_country = {
 		set_variable = { name = pp_ab value = modifier:pp_land_abundant }
 		set_variable = { name = pp_av value = modifier:pp_land_available }
 		set_variable = { name = pp_op value = modifier:pp_land_overpopulation }
-		set_variable = { name = pp_fs value = modifier:pp_province_food_storage_months }
+		set_variable = { name = pp_fs value = pp_province_food_storage_months }
 		set_variable = { name = pp_pe value = modifier:local_peasant_enfranchisment }
 		set_variable = { name = pp_pc value = modifier:local_population_capacity }
 		set_variable = { name = pp_uj value = province.unfilled_jobs_in_province }

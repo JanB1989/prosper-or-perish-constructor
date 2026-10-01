@@ -13,7 +13,10 @@ CONSTRUCTOR_LOAD_ORDER = Path("constructor.load_order.toml")
 GROWTH_CAP_DEFINE_GROUP = "NEconomy"
 GROWTH_CAP_DEFINE_KEY = "GROWTH_FROM_FOOD_MULTIPLIER_MAX"
 MONTHS_PER_YEAR = 12
-FOOD_STORAGE_MONTHS_MODIFIER = "pp_province_food_storage_months"
+# Location-scope script value (in_game/common/script_values/pp_province_food_storage.txt). EU5 1.4 dropped the
+# stored-food modifier whose marker modifier of this name the GUI read before; the GUI reads the value through
+# `<location>.MakeScope.ScriptValue(...)`, which returns a CFixedPoint.
+FOOD_STORAGE_MONTHS_VALUE = "pp_province_food_storage_months"
 FOOD_STORAGE_LOCALIZATION = Path(
     "main_menu/localization/english/pp_food_storage_l_english.yml"
 )
@@ -45,8 +48,8 @@ FOOD_STORAGE_GUI_DIVISOR_COUNTS = (
     (Path("in_game/gui/town_rights.gui"), 2),
 )
 FOOD_STORAGE_GUI_DIVISOR_RE = re.compile(
-    rf"(Divide_CFixedPoint\([^\r\n]*GetModifierValueFixed\("
-    rf"'{FOOD_STORAGE_MONTHS_MODIFIER}'\), '\(CFixedPoint\))"
+    rf"(Divide_CFixedPoint\([^\r\n]*MakeScope\.ScriptValue\("
+    rf"'{FOOD_STORAGE_MONTHS_VALUE}'\), '\(CFixedPoint\))"
     r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)"
     r"('\))"
 )

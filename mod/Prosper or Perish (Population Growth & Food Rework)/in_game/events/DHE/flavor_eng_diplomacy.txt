@@ -1923,7 +1923,7 @@ flavor_eng_diplomacy.1601 = {
 		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_penalty }
 
 		scope:target_root_country = { trigger_event_silently = { id = flavor_eng_diplomacy.1 days = 0 } }
-		
+
 		custom_tooltip = flavor_eng_diplomacy.1601.tt1
 		custom_tooltip = flavor_eng_diplomacy.1601.tt2
 		custom_tooltip = flavor_eng_diplomacy.1601.tt3
@@ -1936,9 +1936,9 @@ flavor_eng_diplomacy.1601 = {
 		set_variable = { name = treaty_declined value = 1 }
 
 		scope:target_root_country = {
-			remove_trust_equilibrium = { 
-				modifier = trust_treaty_of_stjames 
-				target = c:IRA 
+			remove_trust_equilibrium = {
+				modifier = trust_treaty_of_stjames
+				target = c:IRA
 			}
 			trigger_event_silently = { id = flavor_eng_diplomacy.2 days = 0 }
 		}

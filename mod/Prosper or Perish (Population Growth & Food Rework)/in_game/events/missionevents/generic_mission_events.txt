@@ -1051,6 +1051,7 @@ generic_mission_events.15 = {	#Rural Neglect
 							OR = {
 								location_rank ?= location_rank:town
 								location_rank ?= location_rank:city
+								location_rank ?= location_rank:megalopolis
 							}
 						}
 					}
@@ -2068,14 +2069,15 @@ generic_mission_events.27 = {	#Hostility to Urbanization
 	trigger = {
 		NOT = { has_variable = gme27_cd }
 		num_of_non_rural > 0
+		any_owned_rural_location = { rgo_workers >= 0 }
 	}
 
 	immediate = {
 		set_variable = {
 			name = gme27_cd
-			months = 6
+			days = 180
 		}
-		scope:mission_setup_trade_target_location = { save_scope_as = target_location }
+		scope:mission_setup_trade_target_location ?= { save_scope_as = target_location }
 		ordered_owned_rural_location = {
 			limit = { rgo_workers >= 0 }
 			order_by = {

@@ -190,43 +190,6 @@ flavor_por.3 = { #Missionaries in the Spice Islands
 	historical_info = flavor_por.3.historical_info
 }
 
-flavor_por.4 = { #Founding Casa da India
-	type = country_event
-	title = flavor_por.4.title
-	desc = flavor_por.4.desc
-	outcome = neutral
-	fire_only_once = yes
-	dynamic_historical_event = {
-		tag = POR
-		from = 1480.1.1
-		to = 1700.1.1
-		monthly_chance = 5
-	}
-
-	trigger = {
-		discovered_route_to_india = yes
-		any_owned_non_rural_location = {
-			sub_continent = sub_continent:south_asia
-		}
-	}
-
-	illustration_tags = {
-        10 = regular
-        10 = interior
-    }
-
-	immediate = {
-		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
-	}
-	
-	option = {
-		name = flavor_por.4.a
-		custom_tooltip = flavor_por.4.a.tt
-		set_variable = { name = por_casa_de_india value = 1 }
-
-	}
-}
-
 flavor_por.5 = { #Tower of Belem
 	hide_portraits = yes
 	type = country_event
@@ -767,22 +730,32 @@ flavor_por.17 = {
 
 	trigger = {
 
-		ruler = {
-			AND = {
-				is_female = no
-				age_in_years > 30
-				NOT = {
+		is_subject = no
+
+		OR = {
+			ruler = {
+				AND = {
+					is_female = no
+					age_in_years > 30
+					NOT = {
+						any_child = {
+							is_female = no
+							is_alive = yes
+						}
+					}
 					any_child = {
-						is_female = no
+						is_female = yes
+						is_alive = yes
 					}
 				}
-				any_child = {
-					is_female = yes
-				}
+			}
+			ruler = {
+				is_female = yes
+			}
+			NOT = {
+				has_heir = yes
 			}
 		}
-
-		is_subject = no
 
 	}
 
@@ -797,6 +770,7 @@ flavor_por.17 = {
 			random_child = {
 				limit = {
 					is_female = yes
+					is_alive = yes
 				}
 				save_scope_as = heir
 			}
@@ -878,7 +852,7 @@ flavor_por.17 = {
 
 		custom_tooltip = flavor_por.17.tt1
 
-		add_government_power = government_power_mild_bonus
+		add_political_influence = political_influence_mild_bonus
 
 		custom_tooltip = flavor_por.17.tt2
 
@@ -904,7 +878,20 @@ flavor_por.17 = {
 			value = estate_satisfaction_mild_bonus
 		}
 
-		custom_tooltip = flavor_por.17.tt3
+		if = {
+			limit = {
+				ruler = {
+					any_child = {
+						is_female = yes
+						is_alive = yes
+					}
+				}
+			}
+			custom_tooltip = flavor_por.17.tt3
+		}
+		else = {
+			custom_tooltip = flavor_por.17.tt3_no_heir
+		}
 
 	}
 
@@ -950,24 +937,10 @@ flavor_por.19 = {
 
 	immediate = {
 		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
-		location:beja = {
-			create_dynasty_from_location = braganca_dynasty
-		}
 
 		root = { save_scope_as = target_root_country }
 
-		create_character = {
-			first_name = name_john
-			dynasty = dynasty:braganca_dynasty
-			estate = estate_type:nobles_estate
-			adm = 44
-			dip = 60
-			mil = 25
-			birth_date = 1604.1.1
-			birth_location = location:beja
-			script = por_john_braganza
-			save_scope_as = joao_braganca
-		}
+		select_or_create_braganca_ruler = yes
 
 	}
 
@@ -985,10 +958,10 @@ flavor_por.19 = {
 		custom_tooltip = flavor_por.19.tt1
 
 		set_new_ruler_with_union_if_senior = {
-			character = scope:joao_braganca
+			character = scope:target_character
 		}
 
-		add_government_power = government_power_severe_penalty
+		add_political_influence = political_influence_severe_penalty
 
 	}
 
@@ -996,16 +969,19 @@ flavor_por.19 = {
 		name = flavor_por.19.b
 		trigger = {
 			OR = {
-				is_subject_of = c:SPA
+				AND = {
+					is_subject_of = c:SPA
+					liberty_desire > 50
+				}
 				AND = {
 					in_union_with = c:SPA
 					is_junior_partner = yes
 				}
+
 			}
-			liberty_desire > 50
 		}
 
-		add_government_power = government_power_extreme_penalty
+		add_political_influence = political_influence_extreme_penalty
 
 		if = {
 			limit = {
@@ -1025,12 +1001,14 @@ flavor_por.19 = {
 			modifier = opinion_angry
 		}
 
-		set_new_ruler = scope:joao_braganca
+		set_new_ruler = scope:target_character
 
-		add_government_power = government_power_mild_penalty
+		add_political_influence = political_influence_mild_penalty
 
 		custom_tooltip = flavor_por.19.tt1
 		custom_tooltip = flavor_por.19.tt2
+		
+		set_variable = { name = por_restoration_war value = 1 }
 
 	}
 
@@ -1046,7 +1024,7 @@ flavor_por.19 = {
 			save_scope_as = braganca_supporters
 		}
 
-		scope:joao_braganca = {
+		scope:target_character = {
 			change_character_allegiance = scope:braganca_supporters
 		}
 
@@ -1112,7 +1090,7 @@ flavor_por.19 = {
 			}
 		}
 
-		add_government_power = government_power_severe_penalty
+		add_political_influence = political_influence_severe_penalty
 
 		custom_tooltip = flavor_por.19.tt3
 
@@ -1297,7 +1275,17 @@ flavor_por.23 = { #The Batalha Monastery
 			create_art = {
 				quality = 95
 				type = work_of_art_type:monument
-				key = batalha_monastery
+				key = batalha_monastery_work_of_art
+			}
+		}
+
+		religion:catholic = {
+			create_holy_site = {
+				name = batalha_monastery_holy_site
+				type = christian_holy_site
+				importance = 1
+				location = location:leiria
+				religions = { religion:catholic }
 			}
 		}
 	}
@@ -1371,9 +1359,6 @@ flavor_por.25 = { #The New Seat of the Order of Christ
 	trigger = {
 		owns = location:tavira
 		owns = location:tomar
-		c:POR = {
-			is_human = no
-		}
 	}
 
 	illustration_tags = {
@@ -1387,11 +1372,31 @@ flavor_por.25 = { #The New Seat of the Order of Christ
 			ruler ?= {
 				save_scope_as = target_character
 			}
+			every_religious_order_in_country = {
+				limit = {
+					order_type ?= religious_order_type:iberian_military_order_type
+					order_calling ?= calling:mariners_calling
+				}
+				save_scope_as = order_of_christ
+			}
 		}
 	}
 
 	option = {
 		name = flavor_por.25.a
+		trigger = { exists = scope:order_of_christ }
+		historical_option = yes
+		location:tomar = {
+			attach_to_religious_order = scope:order_of_christ
+		}
+		scope:order_of_christ = {
+			change_religious_order_zeal = 10
+		}
+	}
+
+	option = {
+		name = flavor_por.25.a
+		trigger = { NOT = { exists = scope:order_of_christ } }
 		historical_option = yes
 		location:tomar = {
 			change_building_level_in_location = {
@@ -1820,6 +1825,17 @@ flavor_por.29 = { #The Epistola de Victoria Contra Infideles
 							religion = religion:catholic
 						}
 					}
+					if = {
+						limit = {
+							has_dlc = "d009_across_the_pillars"
+							"religion_population(religion:judaism)" > 0
+						}
+						add_location_modifier = {
+							modifier = crypto_jewish_community
+							years = crypto_community_duration
+							mode = add
+						}
+					}
 				}
 			}
 			area:south_portugal_area = {
@@ -1831,6 +1847,17 @@ flavor_por.29 = { #The Epistola de Victoria Contra Infideles
 						split_pop = {
 							fraction = 0.90
 							religion = religion:catholic
+						}
+					}
+					if = {
+						limit = {
+							has_dlc = "d009_across_the_pillars"
+							"religion_population(religion:judaism)" > 0
+						}
+						add_location_modifier = {
+							modifier = crypto_jewish_community
+							years = crypto_community_duration
+							mode = add
 						}
 					}
 				}
@@ -2535,6 +2562,31 @@ flavor_por.31 = { #The Expulsion of Muslims from Portugal
 					}
 				}
 			}
+
+			if = {
+				limit = {
+					has_dlc = "d009_across_the_pillars"
+				}
+
+				every_owned_location = {
+					limit = {
+						OR = {
+							area = area:north_portugal_area
+							area = area:south_portugal_area
+						}
+
+						"religion_population(religion:sunni)" > 0
+					}
+
+					add_location_modifier = {
+						modifier = crypto_muslim_community
+						years = crypto_community_duration
+						mode = add
+					}
+				}
+
+				set_variable = d009_morisco_conversion_occurred
+			}
 		}
 	}
 
@@ -2983,7 +3035,7 @@ flavor_por.38 = { # Gaspar da India
 		create_character = {
 			estate = estate_type:burghers_estate
 			first_name = name_casper
-			last_name = Gama
+			last_name = da_gama
 			birth_location = location:poznan
 			birth_date = 1444.6.1
 			culture = culture:ashkenazi
@@ -3697,39 +3749,30 @@ flavor_por.50 = { # End of the Orders of Avis, Christ and Santiago in Portugal
 	trigger = {
 		religion = religion:catholic
 		has_ruler = yes
-		any_known_country = {
-			receiving_scripted_relation = {
-				type = relation_type:military_sponsorship
-				target = ROOT
+		OR = {
+			any_religious_order_in_country = {
+				order_type ?= religious_order_type:iberian_military_order_type
+				order_calling ?= calling:mariners_calling
 			}
-			any_owned_foreign_building_location = {
-				percent >= 0.75
-				owner = ROOT
+			AND = {
+				any_religious_order_in_country = {
+					order_type ?= religious_order_type:iberian_military_order_type
+					order_calling ?= calling:mariners_calling
+				}
+				ruler.dynasty ?= {
+					any_character_in_dynasty = {
+						is_head_of_religious_order_type = religious_order_type:iberian_military_order_type
+						religious_order ?= {
+							order_calling ?= calling:mariners_calling
+						}
+					}
+				}
 			}
-			is_ai = yes
 		}
 	}
 
 	immediate = {
 		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
-		religion:catholic = {
-			save_scope_as = target_religion
-		}
-
-		every_known_country = {
-			limit = {
-				receiving_scripted_relation = {
-					type = relation_type:military_sponsorship
-					target = ROOT
-				}
-				any_owned_foreign_building_location = {
-					percent >= 0.75
-					owner = ROOT
-				}
-				is_ai = yes
-			}
-			add_to_list = order_countries
-		}
 		ruler = {
 			save_scope_as = target_character
 		}
@@ -3738,12 +3781,18 @@ flavor_por.50 = { # End of the Orders of Avis, Christ and Santiago in Portugal
 	option = {
 		name = flavor_por.50.a
 
-		every_in_list = {
-			list = order_countries
+		every_religious_order_in_country = {
+			limit = {
+				order_type ?= religious_order_type:iberian_military_order_type
+			}
+		}
+		add_prestige = prestige_severe_bonus
 
-			make_subject_of = {
-				target = ROOT
-				type = subject_type:vassal
+		if = {
+			limit = { has_dlc = "d009_across_the_pillars" }
+			custom_tooltip = {
+				text = por_assumed_grandmastership_of_military_orders_tt
+				set_variable = por_assumed_grandmastership_of_military_orders
 			}
 		}
 	}
@@ -3751,35 +3800,23 @@ flavor_por.50 = { # End of the Orders of Avis, Christ and Santiago in Portugal
 	option = {
 		name = flavor_por.50.b
 
-		every_in_list = {
-			list = order_countries
-
-			ROOT = {
-				add_gold = prev.gold
-				add_manpower = prev.manpower
-				add_sailors = prev.sailors
+		every_religious_order_in_country = {
+			limit = {
+				order_type ?= religious_order_type:iberian_military_order_type
 			}
-			every_owned_foreign_building = {
-				limit = {
-					building_type = building_type:order_commandery
-				}
-				location = {
-					destroy_building = prev
-					if = {
-						limit = {
-							owner ?= ROOT
-							NOT = {
-								has_building = building_type:castle
-							}
-						}
-						change_building_level_in_location = {
-							building = building_type:castle
-							value = 1
-						}
+			save_scope_as = current_order
+			change_religious_order_zeal = -100
+			region:iberia_region = {
+				every_ownable_location_in_region = {
+					limit = {
+						owner = root
 					}
+					remove_religious_order = scope:current_order
 				}
 			}
 		}
+		add_gold = 200
+		add_prestige = prestige_mild_penalty
 	}
 }
 
@@ -3910,13 +3947,34 @@ flavor_por.52 = { # Navigator Prince
 			}
 			save_scope_as = target_character
 		}
-		random_owned_location = {
+		if = {
 			limit = {
-				is_connected_to = root.capital
-				NOT = { is_capital = yes }
-				pp_is_sea_coast = yes
+				any_owned_location = {
+					is_connected_to = root.capital
+					NOT = { is_capital = yes }
+					pp_is_sea_coast = yes
+					province = province:algarve_province
+				}
 			}
-			save_scope_as = target_location
+			random_owned_location = {
+				limit = {
+					is_connected_to = root.capital
+					NOT = { is_capital = yes }
+					pp_is_sea_coast = yes
+					province = province:algarve_province
+				}
+				save_scope_as = target_location
+			}
+		}
+		else = {
+			random_owned_location = {
+				limit = {
+					is_connected_to = root.capital
+					NOT = { is_capital = yes }
+					pp_is_sea_coast = yes
+				}
+				save_scope_as = target_location
+			}
 		}
 	}
 
@@ -4100,6 +4158,7 @@ scripted_effect establish_feitoria_effect = {
 			cost_multiplier = 0.5
 			cost_multiplier_reason = burghers_cheap_sponsorship
 			payer = root
+			owner = root
 		}
 	}
 }
@@ -4127,8 +4186,10 @@ flavor_por.55 = { #Feitoria of Arguin
 
 	trigger = {
 		location:arguin = {
+			has_owner = yes
 			owner != root
 			within_colonial_range_of = root
+			is_discovered_by = root
 			NOT = {
 				has_building = building_type:por_feitoria
 			}
@@ -4186,8 +4247,10 @@ flavor_por.56 = { #Feitoria of Macau
 
 	trigger = {
 		location:xiangshan_xinhui = {
+			has_owner = yes
 			owner != root
 			within_colonial_range_of = root
+			is_discovered_by = root
 			NOT = {
 				has_building = building_type:por_feitoria
 			}
@@ -4253,8 +4316,10 @@ flavor_por.57 = { #Feitoria of Goa
 
 	trigger = {
 		location:goa = {
+			has_owner = yes
 			owner != root
 			within_colonial_range_of = root
+			is_discovered_by = root
 			NOT = {
 				has_building = building_type:por_feitoria
 			}
@@ -4332,8 +4397,10 @@ flavor_por.58 = { #Feitoria of Hormuz
 
 	trigger = {
 		location:hormuz = {
+			has_owner = yes
 			owner != root
 			within_colonial_range_of = root
+			is_discovered_by = root
 			NOT = {
 				has_building = building_type:por_feitoria
 			}
@@ -4410,8 +4477,10 @@ flavor_por.59 = { #Feitoria of Malacca
 
 	trigger = {
 		location:malacca = {
+			has_owner = yes
 			owner != root
 			within_colonial_range_of = root
+			is_discovered_by = root
 			NOT = {
 				has_building = building_type:por_feitoria
 			}
@@ -4558,7 +4627,7 @@ flavor_por.61 = { #Ceuta Crusade
 
 	dynamic_historical_event = {
 		tag = POR
-		from = 1415.1.1
+		from = 1400.1.1
 		to = 1500.1.1
 		monthly_chance = 3
 	}
@@ -4738,8 +4807,10 @@ flavor_por.64 = { #Feitoria in the Gold Coast
 
 	trigger = {
 		location:anomansah = {
+			has_owner = yes
 			owner != root
 			within_colonial_range_of = root
+			is_discovered_by = root
 			NOT = {
 				has_building = building_type:por_feitoria
 			}
@@ -4846,8 +4917,8 @@ flavor_por.65 = { # The House of Mendes
 				hidden_effect = {
 					change_country_flag = MENDES
 					define_unique_country_tag = MNDES
-					change_heir_selection = heir_selection:bank_selection
 					change_government_type = government_type:republic
+					change_heir_selection = heir_selection:bank_selection
 				}
 			}
 			scope:mendes_bank_hq = {
@@ -4927,6 +4998,958 @@ flavor_por.66 = { # Starting Event for The House of Mendes
 		add_gold = local_var:amount_of_gold_for_mendes
 	}
 }
+
+flavor_por.67 = { #	Into the Beyond - Early Game Explo Incentive
+	type = country_event
+	title = flavor_por.67.title
+	desc = flavor_por.67.desc
+	outcome = neutral
+	historical_info = flavor_por.67.historical_info
+
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1400.1.1
+		to = 1450.1.1
+		monthly_chance = 3
+	}
+
+	fire_only_once = yes
+
+	immediate = {
+		create_character = {
+			trait_category = explorer
+			create_in_limbo = yes
+			save_scope_as = random_explorer
+		}
+	}
+
+	option = {
+		name = flavor_por.67.a
+		historical_option = yes
+		change_gold_effect = { scale = -3 }
+		add_country_modifier = {
+			modifier = POR_into_the_beyond
+			years = 100
+			mode = add
+		}
+		scope:random_explorer = { move_country = root }
+		custom_tooltip = flavor_por.67.a.tt
+	}
+	
+	option = {
+		name = flavor_por.67.b
+		add_stability = stability_mild_bonus
+		hidden_effect = { kill_character_silently = scope:random_explorer }
+	}
+}
+
+flavor_por.68 = { #	Into the Beyond - Early Game Explo Incentive
+	type = country_event
+	title = flavor_por.68.title
+	desc = flavor_por.68.desc
+	outcome = neutral
+	historical_info = flavor_por.67.historical_info
+	hide_portraits = yes
+
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+	
+	option = {
+		name = flavor_por.68.a
+		add_country_modifier = {
+			modifier = POR_into_the_beyond
+			years = 10
+			mode = extend
+		}
+	}
+}
+
+flavor_por.69 = { #	Triumph in the Portuguese Restoration War
+	type = country_event
+	title = flavor_por.69.title
+	desc = flavor_por.69.desc
+	outcome = neutral
+	historical_info = flavor_por.69.historical_info
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1624.1.1
+		to = 1680.1.1
+		monthly_chance = 5
+	}
+
+	
+	fire_only_once = yes
+	
+	immediate = {
+		ruler = {
+			save_scope_as = target_ruler
+		}
+	}
+	
+	trigger = {
+		OR = {
+			is_subject = no
+			is_junior_partner = no
+		}
+		government_type = government_type:monarchy
+		custom_tooltip = {
+			text = flavor_por.69.trigger_tt
+			has_variable = por_restoration_war
+		}
+		custom_tooltip = {
+			text = flavor_por.69.john_tt
+			character:por_john_braganza ?= {
+				is_alive = yes
+				is_ruler = yes
+			}
+		}
+		at_war = no
+	}
+	
+	option = {
+		name = flavor_por.69.a
+		add_stability = stability_severe_bonus
+		scope:target_ruler = {
+			add_character_modifier = {
+				modifier = POR_restorer
+				years = -1
+			}
+		}
+	}
+	
+	after = {
+		remove_variable = por_restoration_war
+	}
+}
+
+flavor_por.70 = { #	Battle of Alcacer Quibir
+	type = country_event
+	title = flavor_por.70.title
+	desc = flavor_por.70.desc
+	outcome = neutral
+	historical_info = flavor_por.70.historical_info
+	
+	fire_only_once = yes
+	
+	immediate = {
+		ruler = {
+			save_scope_as = target_ruler
+		}
+		kill_character_silently = scope:target_ruler
+	}
+	
+	trigger = {
+		has_ruler = yes
+		OR = {
+			is_subject = no
+			is_junior_partner = no
+		}
+	}
+	
+	option = {
+		name = flavor_por.70.a
+		add_stability = stability_severe_penalty
+		add_legitimacy = legitimacy_severe_penalty
+		if = {
+			limit = {
+				country_exists = c:CAS
+				c:CAS = {
+					OR = {
+						is_subject = no
+						is_junior_partner = no
+					}
+				}
+			}
+			c:CAS = {
+				trigger_event_non_silently = flavor_por.71
+			}
+		}
+		else_if = {
+			limit = {
+				country_exists = c:SPA
+				c:SPA = {
+					OR = {
+						is_subject = no
+						is_junior_partner = no
+					}
+				}
+			}
+			c:SPA = {
+				trigger_event_non_silently = flavor_por.71
+			}
+		}	
+	}
+}
+
+flavor_por.71 = { #	A Crown in Peril
+	type = country_event
+	title = flavor_por.71.title
+	desc = flavor_por.71.desc
+	outcome = neutral
+	historical_info = flavor_por.71.historical_info
+	
+	fire_only_once = yes
+	
+	option = {
+		name = flavor_por.71.a
+		historical_option = yes
+		add_casus_belli = {
+			target = c:POR
+			type = casus_belli:cb_claim_throne
+		}
+		change_societal_value = {
+			type = belligerent_vs_conciliatory
+			value = societal_value_move_to_left
+		}
+	}
+	
+	option = {
+		name = flavor_por.71.b
+		add_stability = stability_mild_bonus
+		change_societal_value = {
+			type = belligerent_vs_conciliatory
+			value = societal_value_move_to_right
+		}
+	}
+}
+
+flavor_por.72 = { # Precious Metals Discovered in Brazil
+	type = country_event
+	title = flavor_por.72.title
+	desc = flavor_por.72.desc
+	outcome = neutral
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_silver.dds"
+	
+	historical_info = flavor_por.72.historical_info
+
+	fire_only_once = yes
+	
+	dynamic_historical_event = {
+		tag = POR
+		from = 1400.1.1
+		to = 1600.1.1
+		monthly_chance = 10
+	}
+	
+	immediate = {
+		create_character = {
+			create_in_limbo = yes
+			save_scope_as = random_conquistador
+		}
+		if = {
+			limit = {
+				any_subject = {
+					any_owned_location = {
+						region = region:brazil_region
+						OR = {
+							raw_material = goods:goods_gold
+							raw_material = goods:silver
+						}
+					}
+				}
+			}
+			random_subject = {
+				limit = {
+					any_owned_location = {
+						region = region:brazil_region
+						OR = {
+							raw_material = goods:goods_gold
+							raw_material = goods:silver
+						}
+					}
+				}
+				random_owned_location = {
+					limit = {
+						region = region:brazil_region
+						OR = {
+							raw_material = goods:goods_gold
+							raw_material = goods:silver
+						}
+					}
+					save_scope_as = target_location
+				}
+			}
+		}
+		else = {
+			random_owned_location = {
+				limit = {
+					region = region:brazil_region
+					OR = {
+						raw_material = goods:goods_gold
+						raw_material = goods:silver
+					}
+				}
+				save_scope_as = target_location
+			}
+		}
+	}
+
+	trigger = {
+		has_presence_in = region:brazil_region
+		OR = {
+			any_owned_location = {
+				region = region:brazil_region
+				OR = {
+					raw_material = goods:goods_gold
+					raw_material = goods:silver
+				}
+			}
+			any_subject = {
+				any_owned_location = {
+					region = region:brazil_region
+					OR = {
+						raw_material = goods:goods_gold
+						raw_material = goods:silver
+					}
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = flavor_por.72.a
+		historical_option = yes
+		change_gold_effect = { scale = -1 }
+		scope:random_conquistador = { 
+			move_country = root 
+			add_trait = trait:treasure_hunter
+		}
+		scope:target_location = {
+			change_max_raw_material_workers = 3
+		}
+	}
+	
+	option = {
+		name = flavor_por.72.b
+		add_prestige = prestige_mild_bonus
+		hidden_effect = { kill_character_silently = scope:random_conquistador }
+	}
+}
+
+flavor_por.73 = { # Brazilian Gold Rush
+	type = country_event
+	title = flavor_por.73.title
+	desc = flavor_por.73.desc
+	outcome = neutral
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_silver.dds"
+	
+	historical_info = flavor_por.73.historical_info
+
+	fire_only_once = yes
+	
+	dynamic_historical_event = {
+		tag = POR
+		from = 1650.1.1
+		to = 1836.1.1
+		monthly_chance = 1
+	}
+
+	trigger = {
+		has_presence_in = region:brazil_region
+		OR = {
+			any_owned_location = {
+				count >= 10
+				region = region:brazil_region
+				OR = {
+					raw_material = goods:goods_gold
+					raw_material = goods:silver
+				}
+			}
+			any_subject = {
+				any_owned_location = {
+					count >= 10
+					region = region:brazil_region
+					OR = {
+						raw_material = goods:goods_gold
+						raw_material = goods:silver
+					}
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = flavor_por.73.a
+		historical_option = yes
+        add_gold = {
+            value = root.monthly_income_trade_and_tax
+            multiply = 6
+        }
+		add_country_modifier = { modifier = POR_brazilian_gold_rush years = 50 mode = add }
+	}
+}
+
+flavor_por.74 = { #Antonio Raposo Tavares
+	type = country_event
+	title = flavor_por.74.title
+	desc = flavor_por.74.desc
+	outcome = neutral
+	historical_info = flavor_por.74.historical_info
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1628.1.1
+		to = 1650.1.1
+		monthly_chance = 3
+	}
+	
+	fire_only_once = yes
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+	
+	trigger = {
+		has_presence_in = region:brazil_region
+		region:brazil_region = {
+            ROOT = { owns_or_has_subject_in = prev }
+            any_area_in_region = {
+                any_neighbor_area = {
+                    ROOT = { owns_or_has_subject_in = prev }
+                }
+                any_location_in_area = {
+                    NOT = {
+                        ROOT = { has_discovered = PREV }
+                    }
+                }
+            }
+        }
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		create_character = {
+			estate = estate_type:peasants_estate
+			first_name = name_anthony
+			last_name = Tavares
+			adm = { 60 75 }
+			dip = { 50 80 }
+			mil = { 70 90 }
+			birth_date = 1598.1.1
+			birth_location = location:mertola
+			trait_category = explorer
+			female = no
+			save_scope_as = target_character
+			create_in_limbo = yes
+		}
+		region:brazil_region = {
+            ordered_area_in_region = {
+                limit = { 
+                    any_neighbor_area = {
+                        ROOT = { owns_or_has_subject_in = prev }
+                    }
+                }
+                order_by = {
+                    value = 0
+                    every_location_in_area = {
+                        limit = { 
+                            NOT = {
+                                ROOT = { has_discovered = PREV }
+                            }
+                        }
+                        add = 1
+                    }
+                    multiply = {
+                        value = 1
+                        every_neighbor_area = {
+                            every_location_in_area = {
+                                limit = { top_owner ?= ROOT }
+                                add = 1
+                            }
+                        }
+                        multiply = 0.1
+                    }
+                }
+                save_scope_as = target_area
+            }
+        }
+
+	}
+
+	option = {
+		name = flavor_por.74.a
+		historical_option = yes
+		change_gold_effect = { scale = -2 }
+		scope:target_character = {
+			move_country = root
+		}
+		change_societal_value = {
+			type = outward_vs_inward
+			value = societal_value_move_to_left
+		}
+		discover_area = scope:target_area
+	}
+
+	option = {
+		name = flavor_por.74.b
+		change_societal_value = {
+			type = outward_vs_inward
+			value = societal_value_move_to_right
+		}
+		hidden_effect = {
+   			kill_character_silently = scope:target_character
+  		}
+	}
+}
+
+flavor_por.75 = { # Bandeirantes Begin to Exploit the Natives
+	type = country_event
+	title = flavor_por.75.title
+	desc = flavor_por.75.desc
+	outcome = neutral
+	
+	historical_info = flavor_por.75.historical_info
+
+	fire_only_once = yes
+	
+	dynamic_historical_event = {
+		tag = POR
+		from = 1650.1.1
+		to = 1836.1.1
+		monthly_chance = 1
+	}
+	
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:slaves   background = pop_type:slaves }
+	}
+
+	trigger = {
+		has_presence_in = region:brazil_region
+		OR = {
+			any_owned_location = {
+				count >= 5
+				region = region:brazil_region
+				OR = {
+					raw_material = goods:goods_gold
+					raw_material = goods:silver
+				}
+			}
+			any_subject = {
+				any_owned_location = {
+					count >= 5
+					region = region:brazil_region
+					OR = {
+						raw_material = goods:goods_gold
+						raw_material = goods:silver
+					}
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = flavor_por.75.a
+		historical_option = yes
+		add_prestige = prestige_mild_penalty
+		add_country_modifier = { modifier = POR_encourage_brazilian_slavery years = 10 mode = add }
+	}
+	
+	option = {
+		name = flavor_por.75.b
+		random_list = {
+			50 = {
+				add_country_modifier = { modifier = POR_encourage_brazilian_slavery years = 10 mode = add }
+			}
+			50 = {
+				add_country_modifier = { modifier = POR_discourage_brazilian_slavery years = 10 mode = add }
+			}
+		}
+	}
+	
+	option = {
+		name = flavor_por.75.c
+		add_prestige = prestige_mild_bonus
+		add_country_modifier = { modifier = POR_discourage_brazilian_slavery years = 10 mode = add }
+	}
+}
+
+flavor_por.76 = { # The Expedition of Fernao Dias
+	type = country_event
+	title = flavor_por.76.title
+	desc = flavor_por.76.desc
+	outcome = neutral
+	
+	historical_info = flavor_por.76.historical_info
+
+	fire_only_once = yes
+	
+	dynamic_historical_event = {
+		tag = POR
+		from = 1640.1.1
+		to = 1650.1.1
+		monthly_chance = 3
+	}
+	
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		create_character = {
+			estate = estate_type:peasants_estate
+			first_name = name_ferdinand
+			last_name = Dias
+			adm = { 20 70 }
+			dip = { 50 70 }
+			mil = { 55 70 }
+			birth_date = 1608.1.1
+			culture = culture:portuguese
+			religion = religion:catholic
+			birth_location = location:piratininga
+			trait_category = explorer
+			female = no
+			save_scope_as = target_character
+			create_in_limbo = yes
+			script = por_fernao_dias
+		}
+	}
+
+	trigger = {
+		has_presence_in = region:brazil_region
+	}
+	
+	option = {
+		name = flavor_por.76.a
+		historical_option = yes
+		change_gold_effect = { scale = -2 }
+		scope:target_character = {
+			move_country = root
+		}
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_severe_penalty }
+		custom_tooltip = {
+			text = flavor_por.76.a.tt
+			random_list = {
+				50 = {
+					set_variable = por_dias_expedition_success
+				}
+				50 = {
+					set_variable = por_dias_expedition_failure
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = flavor_por.76.b
+		change_gold_effect = { scale = -4 }
+		scope:target_character = {
+			move_country = root
+		}
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_severe_penalty }
+		custom_tooltip = {
+			text = flavor_por.76.a.tt
+			random_list = {
+				66 = {
+					set_variable = por_dias_expedition_success
+				}
+				33 = {
+					set_variable = por_dias_expedition_failure
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = flavor_por.76.c
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_bonus }
+		hidden_effect = {
+   			kill_character_silently = scope:target_character
+  		}
+	}
+}
+
+flavor_por.77 = { # The Expedition of Fernao Dias - Result
+	type = country_event
+	title = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_variable = por_dias_expedition_success
+				}
+				desc = flavor_por.77.title_success
+			}
+			triggered_desc = {
+				trigger = {
+					has_variable = por_dias_expedition_failure
+				}
+				desc = flavor_por.77.title_failure
+			}
+		}
+	}
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_variable = por_dias_expedition_success
+				}
+				desc = flavor_por.77.desc_success
+			}
+			triggered_desc = {
+				trigger = {
+					has_variable = por_dias_expedition_failure
+				}
+				desc = flavor_por.77.desc_failure
+			}
+		}
+	}
+	outcome = neutral
+
+	fire_only_once = yes
+	
+	dynamic_historical_event = {
+		tag = POR
+		from = 1645.1.1
+		to = 1655.1.1
+		monthly_chance = 3
+	}
+	
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		character:por_fernao_dias = {
+			save_scope_as = target_character
+		}
+	}
+
+	trigger = {
+		custom_tooltip = {
+			text = flavor_por.77.expedition_tt
+			OR = {
+				has_variable = por_dias_expedition_success
+				has_variable = por_dias_expedition_failure
+			}
+		}
+		has_presence_in = region:brazil_region
+		custom_tooltip = {
+			text = flavor_por.77.trigger_tt
+			character:por_fernao_dias ?= {
+				is_alive = yes
+				owner ?= ROOT
+			}
+		}
+	}
+	
+	option = {
+		trigger = { has_variable = por_dias_expedition_success }
+		name = flavor_por.77.a_success
+		add_prestige = prestige_severe_bonus
+		change_gold_effect = { scale = 8 }
+		scope:target_character = {
+			add_character_modifier = {
+				modifier = POR_emerald_hunter
+				days = -1
+				mode = add
+			}
+		}
+	}
+	
+	option = {
+		name = flavor_por.77.a_failure
+		trigger = { has_variable = por_dias_expedition_failure }
+		add_prestige = prestige_severe_penalty
+		scope:target_character = {
+			add_adm = -10
+			add_dip = -10
+			add_mil = -10
+		}
+	}
+	
+	after = {
+		remove_variable = por_dias_expedition_success
+		remove_variable = por_dias_expedition_failure
+	}
+}
+
+flavor_por.79 = { #Nuno Alvares Pereira
+	type = country_event
+	title = flavor_por.79.title
+	desc = flavor_por.79.desc
+	outcome = neutral
+	fire_only_once = yes
+	historical_info = flavor_por.79.historical_info
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1380.1.1
+		to = 1400.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		if = {
+			limit = {
+				NOT = {
+					dynasty_exists = alvares_pereira_dynasty
+				}
+			}
+			location:ponte_sor = { create_dynasty_from_location = alvares_pereira_dynasty }
+		}
+		create_character = {
+			first_name = name_nuno
+			dynasty = dynasty:alvares_pereira_dynasty
+			birth_date = 1360.6.24
+			birth_location = location:ponte_sor
+			estate = estate_type:nobles_estate
+			adm = { 20 60 }
+			dip = { 20 60 }
+			mil = { 80 95 }
+			culture = culture:portuguese
+			save_scope_as = target_character
+			create_in_limbo = yes
+		}
+	}
+
+	trigger = {
+		owns = location:ponte_sor
+	}
+
+	option = {
+		name = flavor_por.79.a
+		historical_option = yes
+        scope:target_character = {
+            move_country = root
+		}
+		scope:target_character = {
+			add_random_trait_from_category = general
+		}
+	}
+
+	option = {
+		name = flavor_por.79.b
+		add_army_tradition = army_tradition_mild_bonus
+		hidden_effect = {
+   			kill_character_silently = scope:target_character
+  		}
+	}
+}
+
+flavor_por.80 = { #Expulsion of the Jesuits
+	type = country_event
+	title = flavor_por.80.title
+	desc = flavor_por.80.desc
+	outcome = neutral
+	historical_info = flavor_por.80.historical_info
+	fire_only_once = yes
+	
+	dynamic_historical_event = {
+		tag = POR
+		from = 1750.1.1
+		to = 1800.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+		10 = angry
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+	}
+
+	trigger = {
+		has_policy = jesuits_allowed
+		government_type = government_type:monarchy
+		any_subject = {
+			capital.continent = continent:america
+		}
+	}
+
+	option = {
+		name = flavor_por.80.a
+		historical_option = yes
+		add_stability = stability_severe_penalty
+		add_gold = { value = root.estate_tax_base:clergy_estate multiply = 4 }
+		add_gold_to_estate = {
+			estate_type = estate_type:clergy_estate
+			value = { value = root.estate_tax_base:clergy_estate multiply = -4 }
+		}
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_severe_penalty	}
+		add_policy = policy:jesuits_not_allowed
+	}
+	
+	option = {
+		name = flavor_por.80.b
+		add_stability = stability_mild_bonus
+		add_religious_influence = religious_influence_mild_bonus
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_bonus }
+	}
+}
+
+flavor_por.81 = { #Nuno Goncalves
+	type = country_event
+	title = flavor_por.81.title
+	desc = flavor_por.81.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1450.1.1
+		to = 1480.1.1
+		monthly_chance = 1
+	}
+	
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+	
+	trigger = {
+		owns = location:lisbon
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		create_character = {
+			first_name = name_nuno
+			last_name = Goncalves
+			birth_date = 1425.1.1
+			adm = { 20 70 }
+			dip = { 20 90 }
+			mil = { 10 20 }
+			birth_location = location:lisbon
+			artist = painter
+			artist_skill = 0.90
+			create_in_limbo = yes
+			culture = culture:portuguese
+			religion = religion:catholic
+			estate = estate_type:burghers_estate
+			save_scope_as = target_artist
+		}
+	}
+
+	option = {
+		name = flavor_por.81.a
+		historical_option = yes
+		change_gold_effect = { scale = -2 }
+		scope:target_artist = { move_country = root }
+		location:lisbon = {
+			create_art = {
+				artist = scope:target_artist
+				quality = 85
+				type = work_of_art_type:painting
+				key = saint_vincent_panels
+			}
+		}
+	}
+	
+	option = {
+		name = flavor_por.81.b
+		culture = {
+			add_cultural_influence = cultural_influence_mild_bonus
+		}
+		hidden_effect = {
+   			kill_character_silently = scope:target_artist
+  		}
+	}
+}
+
 
 flavor_por.1000 = { #Capture of the Santa Catarina
 	hide_portraits = yes
@@ -5326,11 +6349,18 @@ flavor_por.2004 = { # Pedro stages a Rebellion
 		clear_saved_scope = target_character
 		create_rebel = {
 			category = pretender
+			rebel_demand = rebel_demand_flavor_por_2004
 			save_scope_as = target_rebel
 		}
 
 		scope:target_character2 = {
 			change_character_allegiance = scope:target_rebel
+		}
+		scope:target_rebel = {
+			set_variable = {
+				name = var_target_character2
+				value = scope:target_character2
+			}
 		}
 
 		ordered_province = {
@@ -5378,9 +6408,7 @@ flavor_por.2004 = { # Pedro stages a Rebellion
 	option = {
 		name = flavor_por.2004.b
 
-		add_prestige = prestige_extreme_penalty
-
-		set_new_ruler = scope:target_character2
+		apply_rebel_demands = scope:target_rebel
 		destroy_rebel = scope:target_rebel
 	}
 }

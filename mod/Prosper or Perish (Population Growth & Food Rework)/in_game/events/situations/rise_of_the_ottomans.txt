@@ -2976,6 +2976,17 @@ rise_of_the_ottomans.217 = {
 				limit = { NOT = { religion.group = religion_group:muslim } }
 				add_liberty_desire = liberty_desire_mild_plus
 			}
+			if = {
+				limit = { culture != ROOT.culture }
+				change_culture = ROOT.culture
+			}
+			if = {
+				limit = {
+					exists = court_language
+					court_language != ROOT.court_language
+				}
+				set_court_language = ROOT.court_dialect
+			}
 		}
 	}
 }

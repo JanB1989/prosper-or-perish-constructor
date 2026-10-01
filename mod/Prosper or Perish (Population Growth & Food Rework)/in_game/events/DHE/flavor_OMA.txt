@@ -398,7 +398,7 @@ flavor_oma.6 = {
 		scope:target_location = {
 			if = {
 				limit = {
-					NOT = { location_rank = location_rank:city }
+					NOT = { OR = { location_rank = location_rank:city  location_rank = location_rank:megalopolis } }
 				}
 				change_location_rank_effect = { location_rank = location_rank:city }
 			}
@@ -1144,7 +1144,7 @@ flavor_oma.16 = {
 
 		any_owned_location = {
 			pp_is_sea_coast = yes
-			NOT = { location_rank = location_rank:city }
+			NOT = { OR = { location_rank = location_rank:city  location_rank = location_rank:megalopolis } }
 			count >= 1
 		}
 

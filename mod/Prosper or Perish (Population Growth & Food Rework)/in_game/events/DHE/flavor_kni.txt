@@ -440,7 +440,10 @@ flavor_kni.12 = { #The Knights of the New World
 	}
 
 	trigger = {
-		has_global_variable = new_world_discovered
+		custom_tooltip = {
+			text = variable_tt_new_world_discovered
+			has_global_variable = new_world_discovered
+		}
 		has_presence_in = region:caribbean_region
 		region:caribbean_region = {
 			any_location_in_region = {
@@ -510,7 +513,10 @@ flavor_kni.13 = { #Philippe de Longvilliers de Poincy
 	}
 
 	trigger = {
-		has_global_variable = new_world_discovered
+		custom_tooltip = {
+			text = variable_tt_new_world_discovered
+			has_global_variable = new_world_discovered
+		}
 		has_presence_in = region:caribbean_region
 		region:caribbean_region = {
 			any_location_in_region = {
@@ -578,7 +584,10 @@ flavor_kni.14 = { #Giovanni Paolo Lascaris
 	}
 
 	trigger = {
-		has_global_variable = new_world_discovered
+		custom_tooltip = {
+			text = variable_tt_new_world_discovered
+			has_global_variable = new_world_discovered
+		}
 		has_presence_in = region:caribbean_region
 		region:caribbean_region = {
 			any_location_in_region = {
@@ -612,7 +621,7 @@ flavor_kni.14 = { #Giovanni Paolo Lascaris
 	option = {
 		name = flavor_kni.14.a
 		historical_option = yes
-		add_government_power = government_power_mild_bonus
+		add_political_influence = political_influence_mild_bonus
 		set_new_ruler = scope:target_character
 	}
 
@@ -1137,7 +1146,7 @@ flavor_kni.110 = {
 	option = {
 		name = flavor_kni.110.c
 		add_stability = stability_mild_bonus
-		add_government_power = government_power_mild_bonus
+		add_political_influence = political_influence_mild_bonus
 	}
 }
 
@@ -1200,7 +1209,7 @@ flavor_kni.111 = {
 				}
 			}
 		}
-		add_government_power = government_power_extreme_bonus
+		add_political_influence = political_influence_extreme_bonus
 	}
 
 	option = {
@@ -1220,7 +1229,7 @@ flavor_kni.111 = {
 			target = c:KNI
 			modifier = denied_petition_for_crusade_modifier
 		}
-		add_government_power = government_power_extreme_penalty
+		add_political_influence = political_influence_extreme_penalty
 	}
 }
 

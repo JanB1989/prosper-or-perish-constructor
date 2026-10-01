@@ -726,7 +726,7 @@ flavor_plc.11 = {
 		name = flavor_plc.11.a
 		historical_option = yes
 
-		add_yearly_gold = -1
+		change_gold_effect = { scale = -4 }
 
 		scope:target_character = {
 			move_country = ROOT
@@ -2156,6 +2156,18 @@ flavor_plc.2004 = {
 		}
 
 		scope:target_country = {
+			every_subject = {
+				limit = {
+					has_limited_diplomacy = yes
+					is_ai = no
+				}
+				prev = {
+					annex_country_diplomatically = {
+						country = prev
+					}
+				}
+			}
+			
 			make_subject_of = {
 				target = ROOT
 				type = subject_type:vassal

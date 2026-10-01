@@ -782,8 +782,11 @@ flavor_dan.12 = { #Hans Tausen start preaching in Denmark
 		religion:lutheran = {
 			is_religion_enabled = yes
 		}
-		character:script_hans_tausen ?= {
-			is_alive = yes
+		custom_tooltip = {
+			text = flavor_dan.12.hans_tausen_alive.tt
+			character:script_hans_tausen ?= {
+				is_alive = yes
+			}
 		}
 	}
 
@@ -884,7 +887,7 @@ flavor_dan.13 = { #Cattle Trade
 	option = {
 		name = flavor_dan.13.b
 
-		add_prestige = prestige_mild_penalty
+		add_political_influence = political_influence_mild_penalty
 		add_estate_satisfaction = { type = estate_type:peasants_estate value = estate_satisfaction_mild_bonus }
 	}
 }
@@ -3569,7 +3572,7 @@ flavor_dan.61 = { #College of Missions
 
 	dynamic_historical_event = {
 		tag = DAN
-		from = 1337.1.1
+		from = 1510.1.1
 		to = 1837.1.1
 		monthly_chance = 1
 	}
@@ -4021,6 +4024,7 @@ flavor_dan.1001 = { #Denmark offers to buy Trade Office Rigts
 	}
 
 	immediate = {
+		religion:hindu = { random_holy_site_in_religion = { limit = { location = location:karaikal } save_scope_as = target_holy_site } }
 		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
 		location:karaikal = {
 			save_scope_as = dansborg

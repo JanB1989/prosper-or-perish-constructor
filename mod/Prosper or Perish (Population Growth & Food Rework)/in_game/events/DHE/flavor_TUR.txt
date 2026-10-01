@@ -212,7 +212,7 @@ flavor_tur.5 = {
 	option = {
 		name = flavor_tur.5.b
 		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
-		add_government_power = government_power_mild_penalty
+		add_political_influence = political_influence_mild_penalty
 	}
 	option = {
 		name = flavor_tur.5.c
@@ -417,128 +417,6 @@ flavor_tur.7 = {
 		name = flavor_tur.7.c
 		change_societal_value = { type = land_vs_naval value = societal_value_move_to_right }
 		add_navy_tradition = navy_tradition_ultimate_bonus
-	}
-}
-
-
-
-flavor_tur.8 = { #The Enderun Academy
-	type = country_event
-	title = flavor_tur.8.title
-	desc = flavor_tur.8.desc
-	outcome = neutral
-
-	fire_only_once = yes
-	dynamic_historical_event = {
-		tag = TUR
-		from = 1437.1.1
-		to = 1537.1.1
-		monthly_chance = 5
-	}
-
-	historical_info = flavor_tur.8.historical_info
-
-
-	trigger = {
-		has_advance = timariots
-		owns = location:constantinople
-
-		has_ruler = yes
-
-	}
-
-	option = {
-		name = flavor_tur.8.a
-		historical_option = yes
-		location:constantinople = {
-			construct_building = {
-				building_type = building_type:enderun_academy
-			}
-		}
-
-	}
-	option = {
-		name = flavor_tur.8.b
-
-		trigger = {
-			NOT = {
-				has_reform = government_reform:expanded_timariot_system
-			}
-		}
-
-		set_variable = { name = expanded_timariot_system value = 1 }
-
-		if = {
-			limit = {
-				has_reform = government_reform:basic_timariot_system
-			}
-			remove_reform = government_reform:basic_timariot_system
-		}
-		add_reform = government_reform:expanded_timariot_system
-	}
-}
-
-flavor_tur.9 = {
-	type = country_event
-	title = flavor_tur.9.title
-	desc = flavor_tur.9.desc
-	outcome = neutral
-
-
-	fire_only_once = yes
-	dynamic_historical_event = {
-		tag = TUR
-		from = 1437.1.1
-		to = 1537.1.1
-		monthly_chance = 5
-	}
-
-	historical_info = flavor_tur.9.historical_info
-
-
-	trigger = {
-
-		religion.group = religion_group:muslim
-
-		has_advance = timariots
-
-		NOT = {
-			has_reform = government_reform:expanded_timariot_system
-		}
-	}
-
-	option = {
-		name = flavor_tur.9.a
-		historical_option = yes
-
-		change_societal_value = { type = centralization_vs_decentralization value = -5 }
-		add_estate_satisfaction = { type = estate_type:clergy_estate value = -0.25 }
-
-		set_variable = { name = expanded_timariot_system value = 1 }
-		if = {
-			limit = {
-				has_reform = government_reform:basic_timariot_system
-			}
-			remove_reform = government_reform:basic_timariot_system
-		}
-		add_reform = government_reform:expanded_timariot_system
-
-		add_stability = -10
-
-		hidden_effect = {
-			root = {
-				trigger_event_silently = {
-					id = flavor_tur.66
-					years = { 1 10 }
-				}
-			}
-		}
-	}
-	option = {
-		name = flavor_tur.9.b
-		change_societal_value = { type = centralization_vs_decentralization value = 5 }
-		add_estate_satisfaction = { type = estate_type:clergy_estate value = 0.10 }
-		change_societal_value = { type = mysticism_vs_jurisprudence value = societal_value_move_to_right }
 	}
 }
 
@@ -754,6 +632,7 @@ flavor_tur.16 = {
 			category = religious
 			religion = religion:shia
 			name = celali_uprising
+			rebel_demand = rebel_demand_flavor_tur_16
 			save_scope_as = celali_uprising
 		}
 
@@ -807,11 +686,8 @@ flavor_tur.16 = {
 		custom_tooltip = celal_available.tt
 
 		name = flavor_tur.16.b
+		apply_rebel_demands = scope:celali_uprising
 		destroy_rebel = scope:celali_uprising
-		add_government_power = government_power_weak_penalty
-		change_societal_value = { type = serfdom_vs_free_subjects value = societal_value_move_to_right }
-		change_societal_value = { type = centralization_vs_decentralization value = societal_value_move_to_right }
-		change_societal_value = { type = belligerent_vs_conciliatory value = societal_value_move_to_right }
 
 	}
 }
@@ -1211,7 +1087,7 @@ flavor_tur.21 = {
 			}
 		}
 
-		add_prestige = prestige_weak_bonus
+		add_political_influence = political_influence_weak_bonus
 
 		trigger_event_non_silently = {
 			id = flavor_tur.139
@@ -2163,8 +2039,8 @@ flavor_tur.35 = {
 	option = {
 		name = flavor_tur.35.a
 		historical_option = yes
-		add_prestige = prestige_mild_penalty
-		add_government_power = government_power_mild_penalty
+		add_political_influence = political_influence_mild_penalty
+		add_political_influence = political_influence_mild_penalty
 		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_extreme_bonus }
 	}
 
@@ -2356,7 +2232,7 @@ flavor_tur.38 = {
 
 		create_character = {
 			first_name = name_khalil
-			nickname = name_khayr.name_al_din
+			nickname = nick_hayreddin
 			adm = { 33 100 }
 			dip = { 33 100 }
 			mil = { 33 100 }
@@ -2901,7 +2777,7 @@ flavor_tur.47 = {
 	option = {
 		name = flavor_tur.47.b
 		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_severe_bonus }
-		add_government_power = government_power_mild_penalty
+		add_political_influence = political_influence_mild_penalty
 
 		hidden_effect = { kill_character_silently = scope:target_character }
 	}
@@ -3324,7 +3200,7 @@ flavor_tur.52 = { #The Anatolian Wheat Ban
 			value = societal_value_move_to_right
 		}
 
-		add_government_power = government_power_mild_penalty
+		add_political_influence = political_influence_mild_penalty
 	}
 }
 
@@ -3408,7 +3284,7 @@ flavor_tur.53 = { #The Wolves of the Aegean
 			}
 		}
 
-		add_government_power = government_power_mild_penalty
+		add_political_influence = political_influence_mild_penalty
 	}
 
 	option = {
@@ -4021,49 +3897,6 @@ flavor_tur.59 = { #Martial Madmen
 
 		add_estate_satisfaction = { type = estate_type:peasants_estate value = 0.10 }
 	}
-}
-
-flavor_tur.60 = { #The Interior Service
-	type = country_event
-	title = flavor_tur.60.title
-	desc = flavor_tur.60.desc
-	outcome = neutral
-
-	fire_only_once = yes
-	dynamic_historical_event = {
-		tag = TUR
-		from = 1437.1.1
-		to = 1537.1.1
-		monthly_chance = 5
-	}
-
-	historical_info = flavor_tur.60.historical_info
-
-
-	trigger = {
-		has_advance = janissaries_advance
-	}
-
-	option = {
-		name = flavor_tur.60.a
-		historical_option = yes
-
-		set_variable = { name = enderun_interior_service value = 1 }
-		add_reform = government_reform:enderun_interior_service
-
-		add_estate_satisfaction = { type = estate_type:nobles_estate value = -0.10 }
-
-	}
-	option = {
-		name = flavor_tur.60.b
-
-		change_societal_value = { type = aristocracy_vs_plutocracy value = -5 }
-
-		add_estate_satisfaction = { type = estate_type:nobles_estate value = 0.10 }
-
-		add_stability = 5
-	}
-
 }
 
 flavor_tur.61 = { #The Silent Service
@@ -4860,7 +4693,10 @@ flavor_tur.72 = { #Piri Reis
 
 	trigger = {
 
-		has_global_variable = new_world_discovered
+		custom_tooltip = {
+			text = variable_tt_new_world_discovered
+			has_global_variable = new_world_discovered
+		}
 
 		navy_size > 50
 
@@ -5363,7 +5199,7 @@ flavor_tur.77 = { #The Words of a Woman
 			add_dip = 5
 		}
 
-		add_prestige = prestige_weak_bonus
+		add_political_influence = political_influence_weak_bonus
 
 		add_government_power = -5.00
 
@@ -5703,7 +5539,7 @@ flavor_tur.81 = {
 
 		add_casus_belli = { target = scope:target_country type = casus_belli:cb_conquer_province province = scope:target_province }
 
-		add_government_power = government_power_mild_bonus
+		add_political_influence = political_influence_mild_bonus
 
 		c:VEN = {
 			add_opinion = { target = root modifier = opinion_diplomatic_move  }
@@ -6093,72 +5929,6 @@ flavor_tur.87 = { #Looking to the Heavens
    			kill_character_silently = scope:ali_qushji
   		}
 	}
-}
-
-flavor_tur.88 = { #The Imperial Harem
-	type = country_event
-	title = flavor_tur.88.title
-	desc = flavor_tur.88.desc
-	outcome = neutral
-
-	fire_only_once = yes
-	dynamic_historical_event = {
-		tag = TUR
-		from = 1437.1.1
-		to = 1637.1.1
-		monthly_chance = 20
-	}
-
-	historical_info = flavor_tur.88.historical_info
-
-
-	trigger = {
-		has_advance = janissaries_advance
-
-		exists = capital
-
-		has_policy = harem_policy
-
-		has_ruler = yes
-
-		country_rank_level >= 3
-
-		government_type = government_type:monarchy
-
-	}
-
-	immediate =  {
-		capital = {
-			save_scope_as = capital_location
-		}
-
-		root.ruler = { save_scope_as = target_ruler }
-	}
-
-	option = {
-		name = flavor_tur.88.a
-		historical_option = yes
-
-		set_variable = { name = ottoman_imperial_harem value = 1 }
-		add_reform = government_reform:ottoman_imperial_harem
-
-		add_estate_satisfaction = { type = estate_type:nobles_estate value = -0.20 }
-
-		add_policy = policy:public_harem_policy
-
-	}
-	option = {
-		name = flavor_tur.88.b
-
-			change_societal_value = { type = centralization_vs_decentralization value = societal_value_minor_move_to_right }
-
-		add_estate_satisfaction = { type = estate_type:nobles_estate value = 0.10 }
-
-		add_stability = 5
-
-		add_policy = policy:dispersed_harem_policy
-	}
-
 }
 
 scripted_trigger is_suitable_rival_for_crimea = {
@@ -8341,77 +8111,6 @@ flavor_tur.111 = { #Shadow Play
 	}
 }
 
-flavor_tur.112 = { #The End of the Timars
-	type = country_event
-	title = flavor_tur.112.title
-	desc = flavor_tur.112.desc
-	outcome = neutral
-
-	historical_info = flavor_tur.112.historical_info
-
-	fire_only_once = yes
-	dynamic_historical_event = {
-		tag = TUR
-		from = 1537.1.1
-		to = 1837.1.1
-		monthly_chance = 5
-	}
-
-	trigger = {
-
- 		OR = {
-			has_reform = government_reform:basic_timariot_system
-			has_reform = government_reform:expanded_timariot_system
-		}
-
- 		has_advance = a_reformation_janissaries_advance
-	}
-
-	option = {
-		name = flavor_tur.112.a
-		historical_option = yes
-
-		set_variable = abolished_timariot_system
-		custom_tooltip = timars_unavailable.tt
-
-		if = {
-			limit = {
-				has_reform = government_reform:basic_timariot_system
-			}
-			remove_reform = government_reform:basic_timariot_system
-		}
-
-		if = {
-			limit = {
-				has_reform = government_reform:expanded_timariot_system
-			}
-			remove_reform = government_reform:expanded_timariot_system
-		}
-
-    	remove_variable = expanded_timariot_system
-
-    	add_reform = government_reform:sekban_system
-
-    	set_variable = tur_sekban_system
-
-    	change_societal_value = { type = serfdom_vs_free_subjects value = societal_value_minor_move_to_right }
-
-    	change_societal_value = { type = traditionalist_vs_innovative value = societal_value_tiny_move_to_right }
-
-    	add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
-	}
-
-	option = {
-		name = flavor_tur.112.b
-
-		add_stability = stability_mild_penalty
-
-		change_societal_value = { type = serfdom_vs_free_subjects value = societal_value_minor_move_to_left }
-
-		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_minor_move_to_left }
-	}
-}
-
 flavor_tur.113 = { #Advice for Kings
 	type = country_event
 	title = flavor_tur.113.title
@@ -8822,7 +8521,7 @@ flavor_tur.116 = { #The [GetCountryAdjective] Faction
 				type = aristocracy_vs_plutocracy
 				value = societal_value_move_to_left
 			}
-			add_government_power = government_power_mild_penalty
+			add_political_influence = political_influence_mild_penalty
 		}
 		else = { add_government_power = government_power_extreme_penalty }
 	}
@@ -9056,150 +8755,6 @@ flavor_tur.118 = { #The Wrath of the Janissaires, triggered by flavor_tur.117
 	}
 }
 
-flavor_tur.119 = { #The Guardians of Felicity
-	hide_portraits = yes
-	type = country_event
-	title = flavor_tur.119.title
-	desc = flavor_tur.119.desc
-	outcome = neutral
-
-	fire_only_once = yes
-	dynamic_historical_event = {
-		tag = TUR
-		from = 1570.1.1
-		to = 1600.1.1
-		monthly_chance = 30
-	}
-
-	historical_info = flavor_tur.119.historical_info
-
-	trigger = {
-
-		has_reform = government_reform:ottoman_imperial_harem
-
-		has_slavery = yes
-	}
-
-
-	immediate =  {
-
-		root.ruler = { save_scope_as = target_ruler }
-
-		create_character = {
-			first_name = name_muhammad
-			nickname = nick_agha
-			adm = 60
-			dip = 85
-			mil = 20
-			fertility = 0
-			culture = culture:turkish_culture
-			ethnicity = ethnicity:african_ethnicity
-			religion = religion:sunni
-			estate = estate_type:burghers_estate
-			birth_location = location:axum
-			birth_date = 1545
-			add_trait = trait:eunuch
-			script = tur_mehmed_agha
-			save_scope_as = mehmed_agha
-			create_in_limbo = yes
-		}
-	}
-
-	option = {
-		name = flavor_tur.119.a
-		historical_option = yes
-
-		scope:mehmed_agha = {
-			move_country = root
-			add_character_modifier = {
-				modifier = kizlar_agha_modifier
-				years = -1
-				mode = add_and_extend
-			}
-		}
-
-		set_variable = { name = eunuch_viziers value = 1 }
-		add_reform = government_reform:ottoman_eunuch_viziers
-
-		if = {
-			limit = {
-				OR = {
-					has_policy = secluded_harem_policy
-					has_policy = dispersed_harem_policy
-				}
-			}
-			add_policy = policy:public_harem_policy
-		}
-
-		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_bonus }
-
-		change_societal_value = {
-    		type = centralization_vs_decentralization
-    		value = societal_value_move_to_right
-    	}
-	}
-
-	option = {
-		name = flavor_tur.119.b
-
-		custom_tooltip = mehmed_agha_fired.tt
-		hidden_effect = {
-   			kill_character_silently = scope:mehmed_agha
-  		}
-
-		set_variable = { name = eunuch_viziers value = 1 }
-		add_reform = government_reform:ottoman_eunuch_viziers
-
-		if = {
-			limit = {
-				has_policy = valide_sultan_court_policy
-			}
-			custom_tooltip = valide_sultan_objects.tt
-			add_stability = stability_weak_penalty
-		}
-
-		if = {
-			limit = {
-				OR = {
-					has_policy = public_harem_policy
-					has_policy = dispersed_harem_policy
-				}
-			}
-			add_policy = policy:secluded_harem_policy
-		}
-
-		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
-
-		change_societal_value = {
-    		type = centralization_vs_decentralization
-    		value = societal_value_move_to_right
-    	}
-	}
-
-	option = {
-		name = flavor_tur.119.c
-
-		if = {
-			limit = {
-				has_policy = valide_sultan_court_policy
-			}
-			custom_tooltip = valide_sultan_objects.tt
-			add_stability = stability_mild_penalty
-		}
-
-   		kill_character_silently = scope:mehmed_agha
-		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
-
-		add_prestige = prestige_mild_bonus
-		add_government_power = government_power_mild_bonus
-
-		change_societal_value = {
-    		type = centralization_vs_decentralization
-    		value = societal_value_move_to_left
-    	}
-	}
-}
-
 flavor_tur.120 = { #The Cannons of [super_sinister_rival.GetName]
 	type = country_event
 	title = flavor_tur.120.title
@@ -9375,7 +8930,7 @@ flavor_tur.121 = { #The Disaster at [reenactment_location.GetName], triggered by
 			reason = stray_fire
 		}
 
-		add_government_power = government_power_mild_penalty
+		add_political_influence = political_influence_mild_penalty
 
 	}
 	option = {
@@ -9425,7 +8980,7 @@ flavor_tur.122 = { #The Triumph at [reenactment_location.GetName], triggered by 
 
 	immediate = {
 
-		add_government_power = government_power_mild_bonus
+		add_political_influence = political_influence_mild_bonus
 	}
 
 	option = {
@@ -10205,6 +9760,7 @@ flavor_tur.128 = { #The Age of the Grand Vizier, associated with flavor_tur.20
 			name = nobles_revolt
 			category = estate
 			estate = nobles_estate
+			rebel_demand = rebel_demand_flavor_tur_128
 			save_scope_as = target_rebel
 		}
 	}
@@ -10259,10 +9815,7 @@ flavor_tur.128 = { #The Age of the Grand Vizier, associated with flavor_tur.20
 	option = {
 		name = flavor_tur.128.b
 
-		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_severe_bonus }
-
-		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_severe_bonus }
-
+		apply_rebel_demands = scope:target_rebel
 		destroy_rebel = scope:target_rebel
 	}
 }
@@ -10584,71 +10137,6 @@ flavor_tur.131 = { #Sheeps among the Wolves
 		change_societal_value = { type = serfdom_vs_free_subjects value = societal_value_minor_move_to_left }
 	}
 }
-
-flavor_tur.132 = { #The Tax Farming Reform
-	type = country_event
-	title = flavor_tur.132.title
-	desc = flavor_tur.132.desc
-	outcome = neutral
-
-	historical_info = flavor_tur.132.historical_info
-
-	fire_only_once = yes
-	dynamic_historical_event = {
-		tag = TUR
-		from = 1637.1.1
-		to = 1837.1.1
-		monthly_chance = 5
-	}
-
-	trigger = {
-
-		has_advance = ottoman_tax_farming
-
-		any_cabinet_character = {
-			has_character_modifier = head_of_the_cabinet_modifier
-			adm >= 50
-		}
-	}
-
-	immediate = {
-
-		random_cabinet_character = {
-			limit = {
-				AND = {
-					has_character_modifier = head_of_the_cabinet_modifier
-					adm >= 60
-				}
-			}
-			save_scope_as = grand_vizier
-		}
-	}
-
-	option = {
-		name = flavor_tur.132.a
-		historical_option = yes
-
-		change_societal_value = { type = capital_economy_vs_traditional_economy value = societal_value_large_move_to_left }
-
-		change_societal_value = { type = centralization_vs_decentralization value = societal_value_large_move_to_right }
-
-		set_variable = { name = tur_malikane value = 1 }
-		custom_tooltip = malikane_available.tt
-
-		add_stability = stability_weak_penalty
-	}
-
-	option = {
-		name = flavor_tur.132.b
-
-		change_gold_effect = { scale = 5 }
-
-		add_stability = stability_weak_bonus
-
-		change_societal_value = { type = capital_economy_vs_traditional_economy value = societal_value_tiny_move_to_right }
-	}
-}
-
 
 flavor_tur.133 = { #The Cost of Science
 	type = country_event
@@ -11034,52 +10522,6 @@ flavor_tur.136 = { #[Ruler] the Extravagant
 		name = flavor_tur.136.b
 
 		change_societal_value = { type = mysticism_vs_jurisprudence value = societal_value_tiny_move_to_right }
-	}
-}
-
-flavor_tur.137 = { #The Judges of the Faithful
-	type = country_event
-	title = flavor_tur.137.title
-	desc = flavor_tur.137.desc
-	outcome = neutral
-
-	historical_info = flavor_tur.137.historical_info
-
-	fire_only_once = yes
-	dynamic_historical_event = {
-		tag = TUR
-		from = 1637.1.1
-		to = 1737.1.1
-		monthly_chance = 5
-	}
-
-	trigger = {
-
-		religion.group = religion_group:muslim
-
-		NOT = {
-			has_estate_privilege = estate_privilege:autonomous_kadiluks
-		}
-	}
-
-	option = {
-		name = flavor_tur.137.a
-		historical_option = yes
-
-		hidden_effect = { set_variable = autonomous_kadiluks_flag }
-		grant_estate_privilege = estate_privilege:autonomous_kadiluks
-
-		change_societal_value = { type =mysticism_vs_jurisprudence value = societal_value_move_to_right }
-
-		change_societal_value = { type = spiritualist_vs_humanist value = societal_value_minor_move_to_left }
-	}
-
-	option = {
-		name = flavor_tur.137.b
-
-		change_societal_value = { type = spiritualist_vs_humanist value = societal_value_minor_move_to_right }
-
-		change_societal_value = { type =mysticism_vs_jurisprudence value = societal_value_tiny_move_to_left }
 	}
 }
 
@@ -12498,7 +11940,7 @@ flavor_tur.151 = { #The Beauty of Letters
 			dip = 70
 			mil = 20
 			artist_skill = 0.90
-			artist = iconographer
+			artist = calligrapher
 			culture = culture:turkish_culture
 			religion = religion:sunni
 			estate = estate_type:clergy_estate
@@ -12961,7 +12403,19 @@ flavor_tur.156 = { #Tulip's End
 			name = janissary_revolt
 			category = estate
 			estate = nobles_estate
+			rebel_demand = rebel_demand_flavor_tur_156
 			save_scope_as = target_rebel
+		}
+
+		scope:target_rebel = {
+			set_variable = {
+				name = var_target_heir
+				value = scope:target_heir
+			}
+			set_variable = {
+				name = var_petrona_halil
+				value = scope:petrona_halil
+			}
 		}
 	}
 
@@ -12970,22 +12424,9 @@ flavor_tur.156 = { #Tulip's End
 		historical_option = yes
 
 		custom_tooltip = tur_abdicate_throne_tt
-
-		set_new_ruler = scope:target_heir
-
-		kill_character = {
-			target = scope:petrona_halil
-			reason = killed_by_janissaries
-		}
-
-		custom_tooltip = {
-			text = janissaries_will_not_revolt_tt
-			destroy_rebel = scope:target_rebel
-		}
-
-		add_government_power = government_power_extreme_penalty
-
-		add_prestige = prestige_extreme_penalty
+		custom_tooltip = janissaries_will_not_revolt_tt
+		apply_rebel_demands = scope:target_rebel
+		hidden_effect = { destroy_rebel = scope:target_rebel }
 	}
 
 	option = {
@@ -13393,7 +12834,7 @@ flavor_tur.160 = { #The Lord of Acre
 			40 = {
 				custom_tooltip = zahir_escapes.tt
 				kill_character_silently = scope:zahir_al_umar
-				add_government_power = government_power_mild_penalty
+				add_political_influence = political_influence_mild_penalty
 			}
 		}
 
@@ -13421,7 +12862,7 @@ flavor_tur.160 = { #The Lord of Acre
 			value = societal_value_minor_move_to_right
 		}
 
-		add_government_power = government_power_mild_penalty
+		add_political_influence = political_influence_mild_penalty
 	}
 }
 
@@ -13500,68 +12941,6 @@ flavor_tur.161 = { #Halva Nights
 		}
 	}
 }
-
-flavor_tur.162 = { #Black as Sin, Sweet as Sedition
-	type = country_event
-	title = flavor_tur.162.title
-	desc = flavor_tur.162.desc
-	outcome = neutral
-
-	historical_info = flavor_tur.162.historical_info
-
-	fire_only_once = yes
-	dynamic_historical_event = {
-		tag = TUR
-		from = 1637.1.1
-		to = 1837.1.1
-		monthly_chance = 5
-	}
-
-	trigger = {
-
-		capital.market = {
-			OR = {
- 				is_produced_in_market = goods:coffee
-				is_traded_in_market = goods:coffee
-			}
-		}
-	}
-
-	option = {
-		name = flavor_tur.162.a
-		historical_option = yes
-
-		set_variable = { name = tur_coffee_house_paranoia value = 1 }
-		custom_tooltip = coffee_house_espionage_available.tt
-
-
-		add_estate_satisfaction = { type = estate_type:burghers_estate value = estate_satisfaction_severe_penalty }
-
-	}
-
-	option = {
-		name = flavor_tur.162.b
-
-		culture = {
-			add_cultural_tradition = cultural_tradition_mild_penalty
-		}
-
-		add_stability = stability_severe_bonus
-
-		add_estate_satisfaction = { type = estate_type:burghers_estate value = estate_satisfaction_extreme_penalty }
-	}
-
-	option = {
-		name = flavor_tur.162.c
-
-		culture = {
-			add_cultural_tradition = cultural_tradition_mild_bonus
-		}
-
-		add_estate_satisfaction = { type = estate_type:burghers_estate value = estate_satisfaction_mild_bonus }
-	}
-}
-
 
 flavor_tur.163 = { #An Insulting Spectacle?
 	hide_portraits = yes
@@ -14095,7 +13474,7 @@ flavor_tur.168 = { #The Grievances of Greece
 			}
 		}
 
-		add_government_power = government_power_mild_penalty
+		add_political_influence = political_influence_mild_penalty
 	}
 }
 
@@ -14220,7 +13599,7 @@ flavor_tur.169 = { #The Constantinople Massacre of 1821
 	option = {
 		name = flavor_tur.169.b
 
-		add_government_power = government_power_severe_penalty
+		add_political_influence = political_influence_severe_penalty
 	}
 }
 
@@ -14487,11 +13866,10 @@ flavor_tur.172 = { #Cutting Corners
 
 		change_societal_value = { type =mysticism_vs_jurisprudence value = societal_value_tiny_move_to_left }
 
-		capital.market = {
-			add_goods_supply = {
-				goods = goods:slaves_goods
-				amount = market_goods_mild_gain
-			}
+		sell_goods_to_market = {
+			market = capital.market
+			goods = goods:slaves_goods
+			amount = market_goods_mild_gain
 		}
 
 		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_severe_bonus }
@@ -14971,77 +14349,6 @@ flavor_tur.178 = { #The Bostancibashi Victorious, triggered by flavor_tur.176
 			add_dip = 3
 			add_mil = 3
 		}
-	}
-}
-
-flavor_tur.179 = { #The New Order Army
-	type = country_event
-	title = flavor_tur.179.title
-	desc = flavor_tur.179.desc
-	outcome = neutral
-
-	historical_info = flavor_tur.179.historical_info
-
-	fire_only_once = yes
-	dynamic_historical_event = {
-		tag = TUR
-		from = 1737.1.1
-		to = 1837.1.1
-		monthly_chance = 5
-	}
-
-	trigger = {
-
-		societal_value:traditionalist_vs_innovative > -25
-
-		societal_value:outward_vs_inward < 25
-
-		has_ruler = yes
-
-		any_owned_location = {
-			has_building_with_at_least_one_level = janissary_barracks
-		}
-
-		any_rival = {
-     		count > 1
-     	}
-	}
-
-	immediate = {
-
-		ruler = {
-			save_scope_as = target_ruler
-		}
-	}
-
-	option = {
-		name = flavor_tur.179.a
-		historical_option = yes
-
-		set_variable = { name = tur_new_order_army value = 1 }
-		custom_tooltip = new_order_army_available.tt
-
-		add_stability = stability_severe_penalty
-
-		change_societal_value = { type = outward_vs_inward value = societal_value_large_move_to_left }
-
-		change_societal_value = { type = quality_vs_quantity value = societal_value_large_move_to_left }
-
-		change_societal_value = { type = land_vs_naval value = societal_value_large_move_to_left }
-
-		trigger_event_silently = {
-			id = flavor_tur.180
-			years = { 5 10 }
-		}
-	}
-
-	option = {
-		name = flavor_tur.179.b
-
-		add_stability = stability_mild_bonus
-
-		change_societal_value = { type = centralization_vs_decentralization value = societal_value_minor_move_to_right }
-
 	}
 }
 
@@ -16704,6 +16011,7 @@ flavor_tur.202 = {
 			category = religious
 			religion = religion:orthodox
 			name = chiprovtsi_uprising
+			rebel_demand = rebel_demand_flavor_tur_202
 			save_scope_as = chiprovtsi_uprising
 		}
 	}
@@ -16727,12 +16035,7 @@ flavor_tur.202 = {
 	option = {
 		name = flavor_tur.202.b
 
-		province:vidin_province = {
-			every_location_in_province = {
-				change_control = control_ultimate_penalty
-			}
-		}
-
+		apply_rebel_demands = scope:chiprovtsi_uprising
 		destroy_rebel = scope:chiprovtsi_uprising
 	}
 }
@@ -17054,70 +16357,6 @@ flavor_tur.207 = {
 	}
 }
 
-#Kanun-i Osmani
-flavor_tur.208 = {
-	type = country_event
-	title = flavor_tur.208.title
-	desc = flavor_tur.208.desc
-	outcome = neutral
-
-	dynamic_historical_event = {
-		tag = TUR
-		from = 1600.1.1
-		to = 1700.1.1
-		monthly_chance = 2
-	}
-
-	fire_only_once = yes
-
-	trigger = {
-		ruler_or_regent ?= {
-			has_trait = lawgiver
-		}
-
-		has_advance = lawcode_of_suleiman
-
-		country_rank = country_rank:rank_empire
-	}
-
-	immediate = {
-		ruler_or_regent ?= {
-			save_scope_as = target_character
-		}
-	}
-
-	option = {
-		name = flavor_tur.208.a
-
-		if = {
-			limit = {
-				NOT = {
-					has_policy = tur_kanum_i_osmani
-				}
-			}
-			add_policy = policy:tur_kanum_i_osmani
-		}
-
-		custom_tooltip = {
-			text = tur_change_tur_kanum_policy_to_give_values_weighted_by_crown_power
-			set_variable = tur_modified_kanum_policy
-		}
-
-		add_stability = stability_mild_penalty
-	}
-
-	option = {
-		name = flavor_tur.208.b
-
-		change_societal_value = {
-			type = outward_vs_inward
-			value = societal_value_minor_move_to_left
-		}
-
-		add_stability = stability_mild_bonus
-	}
-}
-
 #Sulaymaniyya Takiyya
 flavor_tur.209 = {
 	type = country_event
@@ -17319,7 +16558,7 @@ flavor_tur.211 = {
 			owner = {
 				is_at_war_with = root
 			}
-			modifier:fort_level > 0
+			has_fort = yes
 		}
 	}
 
@@ -17367,7 +16606,7 @@ flavor_tur.212 = {
 			}
 			OR = {
 				is_capital = yes
-				modifier:fort_level > 0
+				has_fort = yes
 			}
 		}
 	}
@@ -17421,7 +16660,7 @@ flavor_tur.213 = {
 				religion = root.religion
 			}
 			is_capital = yes
-			modifier:fort_level > 0
+			has_fort = yes
 		}
 	}
 
@@ -17475,7 +16714,7 @@ flavor_tur.214 = {
 				is_at_war_with = root
 				religion.group != root.religion.group
 			}
-			modifier:fort_level > 0
+			has_fort = yes
 		}
 	}
 
@@ -17527,7 +16766,7 @@ flavor_tur.215 = {
 				this = c:KNI
 			}
 			is_capital = yes
-			modifier:fort_level > 0
+			has_fort = yes
 		}
 	}
 
@@ -17577,7 +16816,7 @@ flavor_tur.216 = {
 			owner = {
 				is_at_war_with = root
 			}
-			modifier:fort_level > 0
+			has_fort = yes
 		}
 	}
 
@@ -18251,10 +17490,22 @@ flavor_tur.1003 = {
 
 	trigger = {
 		has_advance = uc_bey_advance
-		character:skanderbeg_kastrioti ?= {
-			is_alive = yes
-			age_in_years >= 25
-			owner ?= root
+
+		trigger_if = {
+			limit = {
+				NOT = { exists = character:skanderbeg_kastrioti }
+			}
+			custom_tooltip = { #For displaying purposes
+				text = tur_skanderbeg_exists
+				always = no
+			}
+		}
+		trigger_else = {
+			character:skanderbeg_kastrioti ?= {
+				is_alive = yes
+				age_in_years >= 25
+				owner ?= root
+			}
 		}
 		province_definition:albania_province = {
 			any_location_in_province_definition = {
@@ -18359,6 +17610,17 @@ flavor_tur.1003 = {
 				make_subject_of = {
 					target = ROOT
 					type = subject_type:uc_bey
+				}
+				if = {
+					limit = { culture != ROOT.culture }
+					change_culture = ROOT.culture
+				}
+				if = {
+					limit = {
+						exists = court_language
+						court_language != ROOT.court_language
+					}
+					set_court_language = ROOT.court_dialect
 				}
 			}
 		}

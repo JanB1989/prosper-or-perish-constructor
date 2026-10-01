@@ -28,14 +28,6 @@ OLD_WORKER_GATES = (
     "rgo_workers > 1",
 )
 ACTIVE_WORKER_GATE_RE = re.compile(r"\brgo_workers\s*(?:>=|>|<=|<|=)\s*-?\d+")
-PORTUGUESE_FEITORIA_LOCATIONS = (
-    "arguin",
-    "xiangshan_xinhui",
-    "goa",
-    "hormuz",
-    "malacca",
-    "anomansah",
-)
 
 
 def test_event_rgo_adjustments_override_vanilla_files_by_exact_path() -> None:
@@ -68,7 +60,8 @@ def test_event_rgo_adjustments_reduce_worker_gates_to_zero() -> None:
         for relative_path in OVERRIDDEN_EVENT_FILES
     )
 
-    assert combined_text.count("rgo_workers >= 0") == 12
+    # 13 vanilla worker gates in EU5 1.4 (1.4 added one to generic_mission_events.27)
+    assert combined_text.count("rgo_workers >= 0") == 13
     for old_gate in OLD_WORKER_GATES:
         assert old_gate not in combined_text
     assert "TRY_REPLACE:" not in combined_text
@@ -119,33 +112,14 @@ def _expected_event_override_text(relative_path: Path, vanilla_text: str) -> str
 
 
 def _apply_intentional_non_rgo_event_fixes(relative_path: Path, text: str) -> str:
+    # Only our own annotation. Until EU5 1.4 this also stripped vanilla's megalopolis rank checks (HAB, OMA, generic
+    # missions), is_alive checks and the feitoria has_owner / is_discovered_by checks (por): vanilla added those in
+    # 1.3.8 after our copies were taken, so they were stale content, not fixes, and are vanilla's again.
     if relative_path == Path("DHE") / "flavor_HAB.txt":
-        text = re.sub(r"\n\t+location_rank = location_rank:megalopolis", "", text)
         text = text.replace(
             "\n\t\t\traw_material = goods:silver\n\t\t\trgo_workers >= 0",
             "\n\t\t\traw_material = goods:silver\n"
             "\t\t\t# Prosper or Perish: keep the Schwaz silver mine event reachable under our RGO setup.\n"
             "\t\t\trgo_workers >= 0",
         )
-    elif relative_path == Path("DHE") / "flavor_OMA.txt":
-        text = text.replace(
-            "NOT = { OR = { location_rank = location_rank:city  location_rank = location_rank:megalopolis } }",
-            "NOT = { location_rank = location_rank:city }",
-        )
-    elif relative_path == Path("DHE") / "flavor_por.txt":
-        text = text.replace("\n\t\t\t\t\t\tis_alive = yes", "", 1)
-        text = text.replace("\n\t\t\t\t\tis_alive = yes", "", 2)
-        for location in PORTUGUESE_FEITORIA_LOCATIONS:
-            text = text.replace(
-                f"\t\tlocation:{location} = {{\n"
-                "\t\t\thas_owner = yes\n"
-                "\t\t\towner != root\n"
-                "\t\t\twithin_colonial_range_of = root\n"
-                "\t\t\tis_discovered_by = root\n",
-                f"\t\tlocation:{location} = {{\n"
-                "\t\t\towner != root\n"
-                "\t\t\twithin_colonial_range_of = root\n",
-            )
-    elif relative_path == Path("missionevents") / "generic_mission_events.txt":
-        text = text.replace("\n\t\t\t\t\t\t\t\tlocation_rank ?= location_rank:megalopolis", "")
     return text

@@ -695,7 +695,14 @@ culture_greek.7 = {
 
 		create_rebel = {
 			category = pretender
+			rebel_demand = rebel_demand_culture_greek_7
 			save_scope_as = target_rebel
+		}
+		scope:target_rebel = {
+			set_variable = {
+				name = var_target_character
+				value = scope:target_character
+			}
 		}
 	}
 
@@ -708,12 +715,8 @@ culture_greek.7 = {
 			}
 		}
 
+		apply_rebel_demands = scope:target_rebel
 		destroy_rebel = scope:target_rebel
-
-		set_new_ruler = scope:target_character
-
-		add_stability = stability_severe_penalty
-		add_legitimacy = legitimacy_mild_penalty
 	}
 
 	option = {

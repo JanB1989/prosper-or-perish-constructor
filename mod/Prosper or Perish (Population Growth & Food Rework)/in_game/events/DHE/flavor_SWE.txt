@@ -1622,50 +1622,6 @@ flavor_swe.32 = {
 	}
 }
 
-flavor_swe.33 = {
-	type = country_event
-	title = flavor_swe.33.title
-	desc = flavor_swe.33.desc
-	outcome = neutral
-	historical_info = flavor_swe.33.historical_info
-
-	fire_only_once = yes
-	dynamic_historical_event = {
-		tag = SWE
-		from = 1700.1.1
-		to = 1770.1.1
-		monthly_chance = 20
-	}
-
-	trigger = {
-		has_or_had_tag = SWE
-		government_type = government_type:monarchy
-		modifier:has_a_parliamentary_system = yes
-		has_regent = yes
-	}
-
-	illustration_tags = {
-        10 = angry
-        10 = interior
-    }
-
-	immediate = {
-		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
-	}
-	
-	option = {
-		name = flavor_swe.33.a
-		historical_option = yes
-		set_variable = { name = swe_age_of_freedom value = 1 }
-		add_stability = stability_severe_bonus
-		add_reform = government_reform:swe_age_of_freedom
-	}
-	option = {
-		name = flavor_swe.33.b
-		add_stability = stability_radical_penalty
-	}
-}
-
 flavor_swe.34 = {
 	type = country_event
 	title = flavor_swe.34.title
@@ -2101,8 +2057,11 @@ flavor_swe.42 = {
 	trigger = {
 		religion = religion:lutheran
 
-		character:swe_mikael_agricola ?= {
-			is_alive = yes
+		custom_tooltip = {
+			text = flavor_swe.42.agricola_alive.tt
+			character:swe_mikael_agricola ?= {
+				is_alive = yes
+			}
 		}
 		own_entire_province = province_definition:sodra_osterbotten_province
 		own_entire_province = province_definition:finland_province
@@ -2116,7 +2075,6 @@ flavor_swe.42 = {
 			"culture_percentage_in_country(culture:tavastian)" > 0.0
 			"culture_percentage_in_country(culture:kvens)" > 0.0
 		}
-		"capital.province.culture_percentage(culture:finnish)" > 0.0
 	}
 
 	illustration_tags = {

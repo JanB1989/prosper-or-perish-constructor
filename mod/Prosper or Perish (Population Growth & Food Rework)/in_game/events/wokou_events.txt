@@ -416,7 +416,7 @@ wokou_events.5 = {
 	}
 
 	illustration_tags = {
-        10 = regular
+        10 = sailors
         10 = exterior
     }
 
@@ -475,7 +475,7 @@ wokou_events.6 = {
 	outcome = neutral
 
 	illustration_tags = {
-        10 = regular
+        10 = sailors
         10 = exterior
     }
 
@@ -558,23 +558,24 @@ scripted_effect set_up_wokou_nation_in_immediate = {
 	scope:target_location = {
 		change_location_owner = ROOT
 		create_country_from_location = {
-			unlock_government_reform_effect = { type = pirate_brethren_reform }
-			reforms = {
-				pirate_brethren_reform
-			}
-			change_heir_selection = heir_selection:pirate_elective
-			change_government_type = government_type:republic
-			change_culture = ROOT.culture
-			change_religion = ROOT.religion
 			save_scope_as = target_country
-			change_religion_for_ruler_and_family = { country = scope:target_country religion = ROOT.religion }
 		}
 		add_core = scope:target_country
 		change_integration_level = core
 		change_max_raw_material_workers = 1
 	}
 
-	scope:target_country = {
+	# Government, reform and heir-selection setup runs on the fully-created country
+	# (outside create_country_from_location) so its data is precomputed before
+	# change_heir_selection / building re-evaluation touch it.
+	scope:target_country ?= {
+		change_culture = ROOT.culture
+		change_religion = ROOT.religion
+		change_government_type = government_type:republic
+		unlock_government_reform_effect = { type = pirate_brethren_reform }
+		add_reform = government_reform:pirate_brethren_reform
+		change_heir_selection = heir_selection:pirate_elective
+		change_religion_for_ruler_and_family = { country = scope:target_country religion = ROOT.religion }
 		create_wokou_nation = yes
 	}
 }

@@ -620,7 +620,7 @@ culture_japan.13 = { #Jōkamachi
 		country_type = location
 		culture = { has_culture_group = culture_group:japanese_group }
 		capital = {
-			modifier:fort_level > 0
+			has_fort = yes
 			location_rank = location_rank:rural_settlement
 		}
 		has_advance = jap_jokamachi
@@ -670,7 +670,7 @@ culture_japan.14 = { #Peasants Migrate to Capital
 		country_type = location
 		culture = { has_culture_group = culture_group:japanese_group }
 		capital = {
-			modifier:fort_level > 0
+			has_fort = yes
 			OR = {
 				location_rank = location_rank:town
 				location_rank = location_rank:city

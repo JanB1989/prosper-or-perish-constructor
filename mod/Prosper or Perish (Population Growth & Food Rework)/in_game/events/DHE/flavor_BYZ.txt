@@ -863,7 +863,7 @@ flavor_byz.12 = { #https://en.wikipedia.org/wiki/El_Greco
 		hidden_effect = {
 			scope:target_artist = { move_country = root }
 		}
-		add_government_power = government_power_severe_bonus
+		add_political_influence = political_influence_severe_bonus
 		add_estate_satisfaction = { type = estate_type:clergy_estate
 			value = estate_satisfaction_extreme_bonus
 		}
@@ -2150,7 +2150,7 @@ flavor_byz.28 = { #New Sparta https://en.wikipedia.org/wiki/Constantine_XI_Palai
 		}
 
 		capital = { save_scope_as = target_location2 }
-		#event_illustration_estate_background_effect = { background = estate_type:crown_estate }
+		#event_illustration_estate_background_effect = { background = estate_type:nobles_estate }
 	}
 
 	option = {
@@ -2387,128 +2387,6 @@ flavor_byz.30 = { #Orthodox Church and Lutherans allying against Catholics
 	}
 }
 
-flavor_byz.31 = { #Alt-history. Byzantium never really reformed their army since they died
-	type = country_event
-	title = flavor_byz.31.title
-	desc = flavor_byz.31.desc
-	outcome = neutral
-
-	fire_only_once = yes
-
-	illustration_tags = {
-		10 = armed
-		10 = exterior
-	}
-
-	dynamic_historical_event = {
-		tag = BYZ
-		from = 1370.1.1
-		to = 1500.1.1
-		monthly_chance = 1
-	}
-
-	trigger = {
-		has_or_had_tag = BYZ
-		has_embraced_institution = institution:professional_armies
-		has_reform = government_reform:theme_system
-		regular_army_size >= 10
-		has_ruler = yes
-		any_cabinet_character = {
-			count > 0
-		}
-		NOT = { has_unlocked_government_reform_trigger = { type = modern_imperial_army } }
-	}
-
-	immediate = {
-		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }		
-		ruler_or_regent ?= {
-			save_scope_as = target_character
-		}
-
-		ordered_cabinet_character = {
-			order_by = total_abilities
-			max = 1
-			check_range_bounds = no
-			save_scope_as = cabinet_character
-		}
-
-		unlock_government_reform_effect = { type = modern_imperial_army }
-	}
-
-	option = {
-		name = flavor_byz.31.a
-
-		change_societal_value = {
-			type = quality_vs_quantity
-			value = societal_value_huge_move_to_left
-		}
-
-		if = {
-			limit = { has_reform = government_reform:theme_system }
-			remove_reform = government_reform:theme_system
-		}
-		add_reform = government_reform:modern_imperial_army
-
-		add_gold = {
-			value = monthly_income_trade_and_tax
-			divide = {
-				value = ruler_or_regent.mil
-				divide = 10
-			}
-			multiply = -3
-		}
-
-		custom_tooltip = BYZ_THE_COST_WILL_SCALE_WITH_RULERS_MIL
-
-		if = {
-			limit = { has_dlc = "d008_fate_of_the_phoenix" }
-			every_current_bureaucracy = {
-				limit = { bureaucracy_type = bureaucracy_type:themata_bureaucracy }
-				root = { remove_bureaucracy = prev }
-			}
-			add_bureaucracy = bureaucracy_type:magister_militum_bureaucracy
-		}
-	}
-
-	option = { #This is Byzantium at the end of the day
-		name = flavor_byz.31.b
-
-
-		unlock_government_reform_effect = { type = modern_imperial_army }
-
-		change_societal_value = {
-			type = quality_vs_quantity
-			value = societal_value_move_to_right
-		}
-
-		add_estate_satisfaction = {
-			type = estate_type:nobles_estate
-			value = estate_satisfaction_mild_bonus
-		}
-
-		custom_tooltip = {
-			text = BYZ_ALL_THEMATA_PROVINCES_GAIN_NOBLE_LOYALTY
-			every_owned_location = {
-				limit = {
-					has_building = building_type:thema_headquarters
-					any_pop = {
-						pop_type = pop_type:nobles
-					}
-				}
-				every_pop = {
-					limit = {
-						owner = root
-						pop_type = pop_type:nobles
-					}
-					add_pop_satisfaction = pop_satisfaction_ultimate_bonus
-				}
-			}
-		}
-
-		custom_tooltip = able_to_add_reform_later_tt
-	}
-}
-
 flavor_byz.32 = { #The Grand Domestic - Trouble on the Horizon
 	type = country_event
 	title = flavor_byz.32.title
@@ -2594,7 +2472,7 @@ flavor_byz.33 = { #Question of Nationality
 	}
 
 	immediate = {
-		#event_illustration_estate_background_effect = { background = estate_type:crown_estate }
+		#event_illustration_estate_background_effect = { background = estate_type:nobles_estate }
 		event_illustration_estate_effect = { foreground = estate_type:peasants_estate background = estate_type:peasants_estate }
 		ruler_or_regent ?= {
 			save_scope_as = target_character
@@ -2852,49 +2730,6 @@ flavor_byz.36 = { #Restoring Control in Anatolia
 	}
 }
 
-scripted_effect construct_latest_fort_building = {
-	if = {
-		limit = {
-			owner ?= { has_advance = fortress_advance }
-		}
-		construct_building = {
-			building_type = building_type:fortress
-			cost_multiplier = 0.6
-			cost_multiplier_reason = "military_cheap_sponsorship"
-		}
-	}
-	else_if = {
-		limit = {
-			owner ?= {  has_advance = star_fort_advance }
-		}
-		construct_building = {
-			building_type = building_type:star_fort
-			cost_multiplier = 0.6
-			cost_multiplier_reason = "military_cheap_sponsorship"
-		}
-	}
-	else_if = {
-		limit = {
-			owner ?= { has_advance = bastion_advance }
-		}
-		construct_building = {
-			building_type = building_type:bastion
-			cost_multiplier = 0.6
-			cost_multiplier_reason = "military_cheap_sponsorship"
-		}
-	}
-	else_if = {
-		limit = {
-			owner ?= { has_advance = castle_advance }
-		}
-		construct_building = {
-			building_type = building_type:castle
-			cost_multiplier = 0.6
-			cost_multiplier_reason = "military_cheap_sponsorship"
-		}
-	}
-}
-
 flavor_byz.37 = { #Landing in Italy
 	type = country_event
 	title = flavor_byz.37.title
@@ -2970,7 +2805,9 @@ flavor_byz.37 = { #Landing in Italy
 						}
 					}
 				}
-				construct_latest_fort_building = yes
+				construct_latest_fort_building = {
+					cost_multiplier = 0.6
+				}
 			}
 		}
 	}
@@ -3093,7 +2930,7 @@ flavor_byz.39 = { #A New Capital
 	}
 
 	immediate = {
-		#event_illustration_estate_background_effect = { background = estate_type:crown_estate }
+		#event_illustration_estate_background_effect = { background = estate_type:nobles_estate }
 		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
 
 		ordered_owned_location = {
@@ -5226,7 +5063,6 @@ flavor_byz.58 = {
 			type = pop_type:peasants
 			amount = local_var:amount_of_migration
 			months = 2
-			keep_nationality = yes
 		}
 	}
 }
@@ -5278,7 +5114,6 @@ flavor_byz.59 = {
 					type = pop_type:peasants
 					amount = local_var:amount_of_migration
 					months = 2
-					keep_nationality = yes
 				}
 			}
 		}
@@ -5302,7 +5137,6 @@ flavor_byz.59 = {
 					type = pop_type:peasants
 					amount = local_var:amount_of_migration
 					months = 2
-					keep_nationality = yes
 				}
 			}
 		}
@@ -6708,6 +6542,7 @@ flavor_byz.1300 = { #Inviting Merchants to Populate Constantinople
 		has_or_had_tag = BYZ
 		country_exists = c:BYZ
 		had_situation_trigger = { situation = black_death }
+		owns = location:constantinople
 		OR = {
 			country_exists = c:VEN
 			country_exists = c:GEN
@@ -7534,8 +7369,9 @@ flavor_byz.1502 = { #Greek Pagan Larper Spreads his Heresy!
 			text = everyone_converts_tt
 			ruler_or_regent ?= {
 				change_character_religion = religion:hellenism_religion
-				every_child = {
+				every_descendant = {
 					limit = {
+						owner = root
 						is_heir = no
 					}
 					change_character_religion = religion:hellenism_religion
@@ -7661,7 +7497,7 @@ flavor_byz.1503 = {
 	}
 
 	immediate = {
-		#event_illustration_estate_background_effect = { background = estate_type:crown_estate AYD}
+		#event_illustration_estate_background_effect = { background = estate_type:nobles_estate AYD}
 		ruler_or_regent = { save_scope_as = target_character1 }
 		c:AYD.ruler_or_regent = { save_scope_as = target_character2 }
 	}

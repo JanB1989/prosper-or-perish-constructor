@@ -72,38 +72,13 @@ scripted_effect ibn_battuta_second_round_travels_effect = {
 						NOT = { root = { has_embraced_institution = prev } }
 					}
 				}
-				NOT = { tag = MOR }
 			}
 			c:CHI ?= {
 				random_institutions_embraced = {
 					limit = {
 						NOT = { root = { has_embraced_institution = prev } }
 					}			
-					scope:target_location_5 = {
-						change_institution_progress = {
-							type = prev
-							value = institution_progress_extreme_bonus
-						}
-					}
-				}
-			}
-		}
-		else_if = {
-			limit = {
-				c:CHI ?= {
-					any_institutions_embraced = {
-						NOT = { root = { has_embraced_institution = prev } }
-					}
-				}
-				exists = scope:target_location_8
-				tag = MOR
-			}
-			c:CHI ?= {
-				random_institutions_embraced = {
-					limit = {
-						NOT = { root = { has_embraced_institution = prev } }
-					}			
-					scope:target_location_8 = {
+					root.capital = {
 						change_institution_progress = {
 							type = prev
 							value = institution_progress_extreme_bonus
@@ -164,6 +139,9 @@ ibn_battuta_events.1 = {	#Ibn Battuta departs for China	~1338
 	option = {	#Make a stop in target_location_1 This is going to be Pasai, which is where he stopped historically.
 		name = ibn_battuta_events.1.a
 
+		trigger = {
+			scope:target_location_1 = { has_owner = yes }
+		}
 
 		historical_option = yes
 
@@ -198,6 +176,10 @@ ibn_battuta_events.1 = {	#Ibn Battuta departs for China	~1338
 	option = {	#Make a stop in target_location_2
 		name = ibn_battuta_events.1.b
 
+		trigger = {
+			scope:target_location_2 = { has_owner = yes }
+		}
+
 		custom_tooltip = {
 			text = next_stop_is_target_location_2_owner_tt
 			scope:target_location_2.owner = {
@@ -228,6 +210,10 @@ ibn_battuta_events.1 = {	#Ibn Battuta departs for China	~1338
 	}
 	option = {	#Make a stop in target_location_3
 		name = ibn_battuta_events.1.c
+
+		trigger = {
+			scope:target_location_3 = { has_owner = yes }
+		}
 
 		custom_tooltip = {
 			text = next_stop_is_target_location_3_owner_tt
@@ -379,9 +365,8 @@ ibn_battuta_events.3 = { #1341 - 1343	He comes to China
 	immediate = {
 		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
 
-		character:mor_ibn_battuta = { 
-			save_scope_as = target_character 
-			owner ?= { save_scope_as = prev_country_owner }
+		character:mor_ibn_battuta = {
+			save_scope_as = target_character
 			move_country = root
 		}
 
@@ -426,12 +411,15 @@ ibn_battuta_events.3 = { #1341 - 1343	He comes to China
 		historical_option = yes
 
 		custom_tooltip = when_ibn_battuta_drafts_rihla_he_will_remember_capital_region_tt
-		custom_tooltip = {
-			text = ibn_battuta_next_destination_target_country_1_tt
-			scope:target_country_1 ?= {
-				trigger_event_silently = {
-					id = ibn_battuta_events.4
-					months = { 16 32 }
+		if = {
+			limit = { exists = scope:target_country_1 }
+			custom_tooltip = {
+				text = ibn_battuta_next_destination_target_country_1_tt
+				scope:target_country_1 = {
+					trigger_event_silently = {
+						id = ibn_battuta_events.4
+						months = { 16 32 }
+					}
 				}
 			}
 		}
@@ -450,12 +438,15 @@ ibn_battuta_events.3 = { #1341 - 1343	He comes to China
 		name = ibn_battuta_events.3.b
 
 		custom_tooltip = when_ibn_battuta_drafts_rihla_he_will_remember_capital_region_tt
-		custom_tooltip = {
-			text = ibn_battuta_next_destination_target_country_1_tt
-			scope:target_country_1 ?= {
-				trigger_event_silently = {
-					id = ibn_battuta_events.4
-					months = { 16 32 }
+		if = {
+			limit = { exists = scope:target_country_1 }
+			custom_tooltip = {
+				text = ibn_battuta_next_destination_target_country_1_tt
+				scope:target_country_1 = {
+					trigger_event_silently = {
+						id = ibn_battuta_events.4
+						months = { 16 32 }
+					}
 				}
 			}
 		}
@@ -475,12 +466,15 @@ ibn_battuta_events.3 = { #1341 - 1343	He comes to China
 
 		custom_tooltip = when_ibn_battuta_drafts_rihla_he_will_remember_capital_region_tt
 
-		custom_tooltip = {
-			text = ibn_battuta_next_destination_target_country_1_tt
-			scope:target_country_1 ?= {
-				trigger_event_non_silently = {
-					id = ibn_battuta_events.4
-					months = { 16 32 }
+		if = {
+			limit = { exists = scope:target_country_1 }
+			custom_tooltip = {
+				text = ibn_battuta_next_destination_target_country_1_tt
+				scope:target_country_1 = {
+					trigger_event_non_silently = {
+						id = ibn_battuta_events.4
+						months = { 16 32 }
+					}
 				}
 			}
 		}
@@ -540,6 +534,12 @@ ibn_battuta_events.4 = {	#From China to Indian Port ~ 1342
 			move_country = root
 		}
 
+		capital.region = {
+			every_area_in_region = {
+				add_to_global_variable_list = { name = ibn_battuta_travels target = this }
+			}
+		}
+
 		region:arabia_region = {
 			ordered_location_in_region = {  
 				limit = {
@@ -574,6 +574,8 @@ ibn_battuta_events.4 = {	#From China to Indian Port ~ 1342
 
 		historical_option = yes
 
+		custom_tooltip = when_ibn_battuta_drafts_rihla_he_will_remember_capital_region_tt
+
 		change_gold_effect = { scale = -4 }
 
 		custom_tooltip = {
@@ -586,12 +588,15 @@ ibn_battuta_events.4 = {	#From China to Indian Port ~ 1342
 			}
 		}
 
-		custom_tooltip = {
-			text = next_stop_is_target_country_2_tt
-			scope:target_country_2 = {
-				trigger_event_non_silently = {
-					id = ibn_battuta_events.5
-					months = { 12 24 }
+		if = {
+			limit = { exists = scope:target_country_2 }
+			custom_tooltip = {
+				text = next_stop_is_target_country_2_tt
+				scope:target_country_2 = {
+					trigger_event_non_silently = {
+						id = ibn_battuta_events.5
+						months = { 12 24 }
+					}
 				}
 			}
 		}
@@ -601,17 +606,22 @@ ibn_battuta_events.4 = {	#From China to Indian Port ~ 1342
 	}
 	option = {
 		name = ibn_battuta_events.4.b
+
+		custom_tooltip = when_ibn_battuta_drafts_rihla_he_will_remember_capital_region_tt
 		
 
 		add_prestige = prestige_extreme_bonus
 		add_legitimacy = legitimacy_extreme_bonus
 
-		custom_tooltip = {
-			text = next_stop_is_target_country_2_tt
-			scope:target_country_2 = {
-				trigger_event_non_silently = {
-					id = ibn_battuta_events.5
-					months = { 12 24 }
+		if = {
+			limit = { exists = scope:target_country_2 }
+			custom_tooltip = {
+				text = next_stop_is_target_country_2_tt
+				scope:target_country_2 = {
+					trigger_event_non_silently = {
+						id = ibn_battuta_events.5
+						months = { 12 24 }
+					}
 				}
 			}
 		}
@@ -671,21 +681,36 @@ ibn_battuta_events.5 = {	#From Indian Port to Arabian Port	~1343
 			save_scope_as = target_character
 		}
 
+		if = {
+			limit = {
+				character:mor_ibn_battuta = { has_variable = gifts_inventory_variable }
+			}
+			character:mor_ibn_battuta = {
+				set_variable = {
+					name = gifts_donation_variable
+					value = var:gifts_inventory_variable
+				}
+				change_variable = {
+					name = gifts_donation_variable
+					multiply = { 0.1 0.33 }
+				}
+			}
+		}
+
 		region:iberia_region = {
 			ordered_location_in_region = {  
 				limit = {
 					has_owner = yes
 					pp_is_sea_coast = yes
 					owner != root
-					owner = { 
-						at_war = no 
+					owner = {
 						is_during_bankruptcy = no
 					}
 				}  
 				order_by = {
 					value = population 
 					if = {
-						limit = { 	#Let's give Adan a chance, since he actually passed through it
+						limit = { 	#Let's give Granada a chance, since he actually passed through it
 							this = location:granada
 							location:granada = { has_owner = yes } 
 						}
@@ -698,12 +723,6 @@ ibn_battuta_events.5 = {	#From Indian Port to Arabian Port	~1343
 				owner = { save_scope_as = target_country_3 }
 			}
 		}
-
-		capital.region = {
-			every_area_in_region = {
-				add_to_global_variable_list = { name = ibn_battuta_travels target = this }
-			}
-		}
 	}
 
 	option = {
@@ -713,12 +732,18 @@ ibn_battuta_events.5 = {	#From Indian Port to Arabian Port	~1343
 		ibn_battuta_second_round_travels_effect = yes
 		if = {
 			limit = {
-				character:mor_ibn_battuta = { has_variable = gifts_inventory_variable }
+				character:mor_ibn_battuta = { has_variable = gifts_donation_variable }
 			}
 			custom_tooltip = mor_ibn_battuta_donates_coin_tt
-			add_gold = {
-				value = character:mor_ibn_battuta.var:gifts_inventory_variable
-				multiply = { 0.1 0.33 }
+			add_gold = character:mor_ibn_battuta.var:gifts_donation_variable
+			hidden_effect = {
+				character:mor_ibn_battuta = {
+					change_variable = {
+						name = gifts_inventory_variable
+						subtract = var:gifts_donation_variable
+					}
+					remove_variable = gifts_donation_variable
+				}
 			}
 		}
 
@@ -727,12 +752,15 @@ ibn_battuta_events.5 = {	#From Indian Port to Arabian Port	~1343
 			add_stability = stability_extreme_penalty
 		}
 
-		custom_tooltip = {
-			text = next_stop_is_target_country_3_tt
-			scope:target_country_3 = {
-				trigger_event_silently = {
-					id = ibn_battuta_events.6
-					months = { 12 24 }
+		if = {
+			limit = { exists = scope:target_country_3 }
+			custom_tooltip = {
+				text = next_stop_is_target_country_3_tt
+				scope:target_country_3 = {
+					trigger_event_silently = {
+						id = ibn_battuta_events.6
+						months = { 12 24 }
+					}
 				}
 			}
 		}
@@ -791,7 +819,7 @@ ibn_battuta_events.6 = {	#Arabian Port to Andalusia ~1350
 				this = scope:target_country_3
 			}
 			AND = {
-				exists = scope:target_country_3
+				exists = scope:target_country_4
 				this = scope:target_country_4
 			}
 		}
@@ -805,14 +833,28 @@ ibn_battuta_events.6 = {	#Arabian Port to Andalusia ~1350
 			save_scope_as = target_character
 		}
 
+		if = {
+			limit = {
+				character:mor_ibn_battuta = { has_variable = gifts_inventory_variable }
+			}
+			character:mor_ibn_battuta = {
+				set_variable = {
+					name = gifts_donation_variable
+					value = var:gifts_inventory_variable
+				}
+				change_variable = {
+					name = gifts_donation_variable
+					multiply = { 0.2 0.5 }
+				}
+			}
+		}
+
 		region:sahel_region = {
 			ordered_location_in_region = {  
 				limit = {
 					has_owner = yes
-					pp_is_sea_coast = yes
 					owner != root
 					owner = { 
-						at_war = no 
 						is_during_bankruptcy = no
 					}
 				}  
@@ -832,12 +874,18 @@ ibn_battuta_events.6 = {	#Arabian Port to Andalusia ~1350
 		ibn_battuta_second_round_travels_effect = yes
 		if = {
 			limit = {
-				character:mor_ibn_battuta = { has_variable = gifts_inventory_variable }
+				character:mor_ibn_battuta = { has_variable = gifts_donation_variable }
 			}
 			custom_tooltip = mor_ibn_battuta_donates_coin_tt
-			add_gold = {
-				value = character:mor_ibn_battuta.var:gifts_inventory_variable
-				multiply = { 0.2 0.5 }
+			add_gold = character:mor_ibn_battuta.var:gifts_donation_variable
+			hidden_effect = {
+				character:mor_ibn_battuta = {
+					change_variable = {
+						name = gifts_inventory_variable
+						subtract = var:gifts_donation_variable
+					}
+					remove_variable = gifts_donation_variable
+				}
 			}
 		}
 
@@ -846,12 +894,15 @@ ibn_battuta_events.6 = {	#Arabian Port to Andalusia ~1350
 			add_stability = stability_extreme_penalty
 		}
 
-		custom_tooltip = {
-			text = next_stop_is_target_country_4_tt
-			scope:target_country_4 = {
-				trigger_event_non_silently = {
-					id = ibn_battuta_events.7
-					months = { 12 24 }
+		if = {
+			limit = { exists = scope:target_country_4 }
+			custom_tooltip = {
+				text = next_stop_is_target_country_4_tt
+				scope:target_country_4 = {
+					trigger_event_non_silently = {
+						id = ibn_battuta_events.7
+						months = { 12 24 }
+					}
 				}
 			}
 		}
@@ -909,6 +960,14 @@ ibn_battuta_events.7 = {	#From Andalusia to Mali	~1352
 				exists = scope:target_country_3
 				this = scope:target_country_3
 			}
+			AND = {
+				exists = scope:target_country_4
+				this = scope:target_country_4
+			}
+			AND = {
+				exists = scope:target_country_5
+				this = scope:target_country_5
+			}
 		}
 	}
 
@@ -919,6 +978,22 @@ ibn_battuta_events.7 = {	#From Andalusia to Mali	~1352
 		character:mor_ibn_battuta = {
 			move_country = root
 			save_scope_as = target_character
+		}
+
+		if = {
+			limit = {
+				character:mor_ibn_battuta = { has_variable = gifts_inventory_variable }
+			}
+			character:mor_ibn_battuta = {
+				set_variable = {
+					name = gifts_donation_variable
+					value = var:gifts_inventory_variable
+				}
+				change_variable = {
+					name = gifts_donation_variable
+					multiply = { 0.25 0.5 }
+				}
+			}
 		}
 
 		if = {
@@ -937,12 +1012,18 @@ ibn_battuta_events.7 = {	#From Andalusia to Mali	~1352
 		ibn_battuta_second_round_travels_effect = yes
 		if = {
 			limit = {
-				character:mor_ibn_battuta = { has_variable = gifts_inventory_variable }
+				character:mor_ibn_battuta = { has_variable = gifts_donation_variable }
 			}
 			custom_tooltip = mor_ibn_battuta_donates_coin_tt
-			add_gold = {
-				value = character:mor_ibn_battuta.var:gifts_inventory_variable
-				multiply = { 0.25 0.5 }
+			add_gold = character:mor_ibn_battuta.var:gifts_donation_variable
+			hidden_effect = {
+				character:mor_ibn_battuta = {
+					change_variable = {
+						name = gifts_inventory_variable
+						subtract = var:gifts_donation_variable
+					}
+					remove_variable = gifts_donation_variable
+				}
 			}
 		}
 
@@ -1031,16 +1112,23 @@ ibn_battuta_events.8 = {	#From Mali to Morocco	~1354
 			}
 			custom_tooltip = mor_ibn_battuta_donates_coin_tt
 			add_gold = character:mor_ibn_battuta.var:gifts_inventory_variable
+			hidden_effect = {
+				character:mor_ibn_battuta = { remove_variable = gifts_inventory_variable }
+			}
 		}
 
-		custom_tooltip = {
-			text = travels_of_ibn_battuta_tt
-			every_in_global_list = {
-				variable = ibn_battuta_travels
-				root = { discover_area = prev }
+		if = {
+			limit = { exists = scope:target_area }
+			custom_tooltip = {
+				text = travels_of_ibn_battuta_tt
+				every_in_global_list = {
+					variable = ibn_battuta_travels
+					root = { discover_area = prev }
+				}
 			}
 		}
 
 		custom_tooltip = ibn_battuta_composes_the_rihla_tt
+		hidden_effect = { clear_global_variable_list = ibn_battuta_travels }
 	}
 }

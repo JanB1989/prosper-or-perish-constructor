@@ -381,106 +381,6 @@ flavor_hab.7 = { #Reichshofrat
 	}
 }
 
-flavor_hab.8 = { #Monastery Reform of Melk
-	type = country_event
-	title = flavor_hab.8.title
-	desc = flavor_hab.8.desc
-	outcome = neutral
-
-	fire_only_once = yes
-
-	dynamic_historical_event = {
-		tag = HAB
-		tag = TIR
-		tag = STY
-		from = 1400.1.1
-		to = 1430.1.1
-		monthly_chance = 1
-	}
-
-	illustration_tags = {
-		10 = regular
-		10 = exterior
-	}
-
-	immediate = {
-		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
-	}
-
-	trigger = {
-		owns = location:melk
-		religion = religion:catholic
-	}
-
-	option = {
-		name = flavor_hab.8.a
-		historical_option = yes
-
-		grant_estate_privilege = estate_privilege:austrian_monastery_reform_melk
-		set_variable = grant_austrian_monastery_reform_melk
-		religion:catholic = {
-			add_reform_desire = reform_desire_weak_decrease
-		}
-	}
-
-	option = {
-		name = flavor_hab.8.b
-
-		religion:catholic = {
-			add_reform_desire = reform_desire_weak_increase
-		}
-	}
-}
-
-flavor_hab.9 = { #Concordat of Vienna
-	type = country_event
-	title = flavor_hab.9.title
-	desc = flavor_hab.9.desc
-	outcome = neutral
-
-	fire_only_once = yes
-
-	dynamic_historical_event = {
-		tag = HAB
-		tag = TIR
-		tag = STY
-		from = 1430.1.1
-		to = 1460.1.1
-		monthly_chance = 1
-	}
-
-	illustration_tags = {
-		10 = regular
-		10 = exterior
-	}
-
-	immediate = {
-		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
-	}
-
-	trigger = {
-		country_exists = c:PAP
-		opinion = { target = c:PAP value >= 0 }
-		is_leader_of_international_organization = international_organization:hre
-	}
-
-	option = {
-		name = flavor_hab.9.a
-		historical_option = yes
-
-		set_variable = vienna_concordat_accepted
-		grant_estate_privilege = estate_privilege:vienna_concordat_privilege
-	}
-
-	option = {
-		name = flavor_hab.9.b
-
-		religion:catholic = {
-			add_reform_desire = reform_desire_weak_increase
-		}
-	}
-}
-
 flavor_hab.10 = { #Cathedral of Graz Fresco
 	hide_portraits = yes
 	type = country_event
@@ -734,55 +634,6 @@ flavor_hab.13 = { #Cameralism in Austria
 			move_country = root
 		}
 		scope:target_character_1 = { banish_character = yes }
-	}
-}
-
-flavor_hab.14 = { #Tractatus de iuribus incorporalibus
-	type = country_event
-	title = flavor_hab.14.title
-	desc = flavor_hab.14.desc
-	outcome = neutral
-	historical_info = flavor_hab.14.historical_info
-
-	fire_only_once = yes
-
-	dynamic_historical_event = {
-		tag = HAB
-		from = 1640.1.1
-		to = 1680.1.1
-		monthly_chance = 1
-	}
-
-	illustration_tags = {
-		10 = regular
-		10 = exterior
-	}
-
-	immediate = {
-		event_illustration_poptype_effect = { foreground = pop_type:burghers   background = pop_type:burghers }
-
-		ruler = { save_scope_as = target_ruler }
-	}
-
-	trigger = {
-		has_ruler = yes
-		months_since_peace >= 48
-	}
-
-	option = {
-		name = flavor_hab.14.a
-		historical_option = yes
-
-		change_societal_value = { type = serfdom_vs_free_subjects value = societal_value_move_to_right }
-		set_variable = hab_tractatus_incorporalibus_granted
-		grant_estate_privilege = estate_privilege:hab_tractatus_incorporalibus
-	}
-
-	option = {
-		name = flavor_hab.14.b
-
-		add_stability = stability_mild_bonus
-		change_societal_value = { type = serfdom_vs_free_subjects value = societal_value_move_to_left }
 	}
 }
 
@@ -1052,46 +903,6 @@ flavor_hab.17 = { #Expulsion of Lutherans in Salzburg
 
 		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_minor_move_to_right }
 		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_extreme_penalty }
-	}
-}
-
-flavor_hab.18 = { #Geheime Kabinettskanzlei
-	type = country_event
-	title = flavor_hab.18.title
-	desc = flavor_hab.18.desc
-	outcome = neutral
-	historical_info = flavor_hab.18.historical_info
-
-	fire_only_once = yes
-
-	dynamic_historical_event = {
-		tag = HAB
-		from = 1690.1.1
-		to = 1740.1.1
-		monthly_chance = 3
-	}
-
-	illustration_tags = {
-		10 = happy
-		10 = interior
-	}
-
-	immediate = {
-		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
-	}
-
-	option = {
-		name = flavor_hab.18.a
-		historical_option = yes
-
-		change_societal_value = { type = belligerent_vs_conciliatory value = societal_value_move_to_left }
-		set_variable = hab_geheime_kabinettskanzlei
-	}
-
-	option = {
-		name = flavor_hab.18.b
-
-		change_societal_value = { type = belligerent_vs_conciliatory value = societal_value_move_to_right }
 	}
 }
 
@@ -1368,7 +1179,7 @@ flavor_hab.23 = { #Klemens von Metternich
 	option = {
 		name = flavor_hab.23.a
 
-		add_government_power = government_power_weak_bonus
+		add_political_influence = political_influence_weak_bonus
 		add_prestige = prestige_mild_bonus
 	}
 }
@@ -1487,10 +1298,11 @@ flavor_hab.25 = { #Schönbrunn Palace
 		has_ruler = yes
 		location:vienna = {
 			is_capital = yes
-			num_civil_constructions < 1
+			num_civil_constructions < 10
 			OR = {
 				location_rank = location_rank:town
 				location_rank = location_rank:city
+				location_rank = location_rank:megalopolis
 			}
 			market = {
 				is_traded_in_market = goods:goods_gold
@@ -2109,24 +1921,14 @@ flavor_hab.35 = { #Peasant Uprising in Salzburg
 			name = hab_salzburger_peasant_revolt
 			category = estate
 			estate = peasants_estate
+			rebel_demand = rebel_demand_flavor_hab_35
 			save_scope_as = salzburger_rebel
 		}
 	}
 
 	option = {
 		name = flavor_hab.35.a
-		change_gold_effect = { scale = -6 }
-		add_estate_satisfaction = { type = estate_type:peasants_estate value = estate_satisfaction_mild_bonus }
-		location:salzburg = {
-			change_control = control_mild_penalty
-			every_pop = {
-				limit = {
-					owner = root
-					pop_type = pop_type:peasants
-				}
-				add_pop_satisfaction = pop_satisfaction_mild_bonus
-			}
-		}
+		apply_rebel_demands = scope:salzburger_rebel
 		destroy_rebel = scope:salzburger_rebel
 	}
 
@@ -3357,6 +3159,7 @@ flavor_hab.57 = { #Peasant Revolt in Tirol
 			name = hab_tirolean_peasant_revolt
 			category = estate
 			estate = peasants_estate
+			rebel_demand = rebel_demand_flavor_hab_57
 			save_scope_as = tirolean_rebel
 		}
 		create_character = {
@@ -3372,6 +3175,12 @@ flavor_hab.57 = { #Peasant Revolt in Tirol
 			script = hab_gaismair
 			save_scope_as = target_character
 			create_in_limbo = yes
+		}
+		scope:tirolean_rebel = {
+			set_variable = {
+				name = var_target_character
+				value = scope:target_character
+			}
 		}
 	}
 
@@ -3419,13 +3228,8 @@ flavor_hab.57 = { #Peasant Revolt in Tirol
 		trigger = {
 			"estate_power(estate_type:peasants_estate)" > 0.7
 		}
-		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_ultimate_penalty }
-		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_ultimate_penalty }
-		add_estate_satisfaction = { type = estate_type:peasants_estate value = estate_satisfaction_ultimate_bonus }
+		apply_rebel_demands = scope:tirolean_rebel
 		destroy_rebel = scope:tirolean_rebel
-		scope:target_character = {
-			move_country = root
-		}
 	}
 }
 
@@ -3710,50 +3514,6 @@ flavor_hab.62 = { #Kaiserkrone
 		add_legitimacy = legitimacy_severe_penalty
 		hidden_effect = {
 			destroy_art = work_of_art:kaiserkrone
-		}
-	}
-}
-
-flavor_hab.64 = { #Institutionalizing the Geheimer Rat
-	type = country_event
-	title = flavor_hab.64.title
-	desc = flavor_hab.64.desc
-	outcome = neutral
-
-	fire_only_once = yes
-
-	illustration_tags = {
-		10 = regular
-		10 = interior
-	}
-
-	immediate = {
-		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
-	}
-
-	dynamic_historical_event = {
-		tag = HAB
-		from = 1600.1.1
-		to = 1700.1.1
-		monthly_chance = 10
-	}
-
-	trigger = {
-		has_advance = geheimrat
-		has_reform = government_reform:privy_council
-	}
-
-	option = {
-		name = flavor_hab.64.a
-		unlock_government_reform_effect = { type = hab_geheimer_rat }
-		custom_tooltip = flavor_hab.64.a.tt
-	}
-
-	option = {
-		name = flavor_hab.64.b
-		change_societal_value = {
-			type = traditionalist_vs_innovative
-			value = societal_value_move_to_left
 		}
 	}
 }
@@ -4645,7 +4405,7 @@ flavor_hab.78 = { #Disempowering the Tirolean Parliament
 
 	option = {
 		name = flavor_hab.78.b
-		add_government_power = government_power_severe_penalty
+		add_political_influence = political_influence_severe_penalty
 		change_societal_value = {
 			type = centralization_vs_decentralization
 			value = societal_value_move_to_right
@@ -4921,13 +4681,13 @@ flavor_hab.82 = { #Johann Anton von Pergen
         scope:target_character = {
             move_country = root
         }
-		add_government_power = government_power_severe_bonus
+		add_political_influence = political_influence_severe_bonus
 		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_move_to_right }
 	}
 
 	option = {
 		name = flavor_hab.82.b
-		add_government_power = government_power_severe_penalty
+		add_political_influence = political_influence_severe_penalty
 		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_move_to_left }
 		hidden_effect = {
    			kill_character_silently = scope:target_character
@@ -5033,6 +4793,7 @@ flavor_hab.84 = { #Bocskais Uprising
 			category = estate
 			estate = nobles_estate
 			name = bocskai_uprising
+			rebel_demand = rebel_demand_flavor_hab_84
 			save_scope_as = bocskai_uprising_scope
 		}
 	}
@@ -5070,17 +4831,7 @@ flavor_hab.84 = { #Bocskais Uprising
 
 	option = {
 		name = flavor_hab.84.b
-		custom_tooltip = {
-			text = flavor_hab.84.b.tt
-			every_owned_location = {
-				limit = {
-					area = area:slovakia_area
-				}
-				change_control = control_severe_penalty
-			}
-		}
-
-		add_legitimacy = legitimacy_severe_penalty
+		apply_rebel_demands = scope:bocskai_uprising_scope
 		destroy_rebel = scope:bocskai_uprising_scope
 	}
 }
@@ -5148,6 +4899,7 @@ flavor_hab.85 = { #Bethlens Uprising
 			category = estate
 			estate = nobles_estate
 			name = bethlen_uprising
+			rebel_demand = rebel_demand_flavor_hab_85
 			save_scope_as = bethlen_uprising_scope
 		}
 	}
@@ -5185,9 +4937,7 @@ flavor_hab.85 = { #Bethlens Uprising
 
 	option = {
 		name = flavor_hab.85.b
-		add_government_power = government_power_severe_penalty
-		add_religious_influence_if_valid = { VALUE = religious_influence_severe_penalty }
-		add_reform = government_reform:religious_tolerance
+		apply_rebel_demands = scope:bethlen_uprising_scope
 		destroy_rebel = scope:bethlen_uprising_scope
 	}
 
@@ -5245,6 +4995,7 @@ flavor_hab.86 = { #Rakoczis Uprising
 			category = estate
 			estate = nobles_estate
 			name = rakoczi_uprising
+			rebel_demand = rebel_demand_flavor_hab_86
 			save_scope_as = rakoczi_uprising_scope
 		}
 	}
@@ -5275,16 +5026,7 @@ flavor_hab.86 = { #Rakoczis Uprising
 
 	option = {
 		name = flavor_hab.85.b
-		add_government_power = government_power_ultimate_penalty
-		custom_tooltip = {
-			text = flavor_hab.85.b.tt
-			every_owned_location = {
-				limit = {
-					area = area:slovakia_area
-				}
-				change_control = control_ultimate_penalty
-			}
-		}
+		apply_rebel_demands = scope:rakoczi_uprising_scope
 		destroy_rebel = scope:rakoczi_uprising_scope
 	}
 
@@ -5321,7 +5063,7 @@ flavor_hab.88 = { #Primož Trubar's Religious Mission
 
 	immediate = {
 		create_character = {
-			first_name = name_primoz
+			first_name = name_primus
 			last_name = Trubar
 			birth_date = 1508.6.8
 			birth_location = location:vienna
@@ -5585,7 +5327,6 @@ flavor_hab.93 = { #Imperial Artillery
 	immediate = {
 		create_character = {
 			first_name = name_joseph.name_wenceslas
-			last_name = von_Liechtenstein
 			dynasty = dynasty:von_Liechtenstein_dynasty
 			birth_date = 1696.8.9
 			birth_location = location:prague
@@ -6222,6 +5963,7 @@ flavor_hab.1000 = { #Forge the Privilegium Maius
 		}
 		root = {
 			save_scope_as = origin_country
+			set_variable = flavor_hab_1000_has_fired
 		}
 	}
 
@@ -6531,65 +6273,6 @@ flavor_hab.1007 = { #Habsburg - Privilege Accepted
 		set_variable = privilegium_maius_accepted
 		add_reform = government_reform:libertas_affectandi
 		change_heir_selection = heir_selection:austrian_cognatic_primogeniture
-	}
-}
-
-flavor_hab.1008 = { #Grant ourselves the Privilegium Maius
-	type = country_event
-	title = flavor_hab.1008.title
-	desc = flavor_hab.1008.desc
-	outcome = neutral
-	#historical_info = flavor_hab.1008.historical_info
-
-	fire_only_once = yes
-
-	dynamic_historical_event = {
-		tag = HAB
-		tag = STY
-		tag = TIR
-		from = 1380.1.1
-		to = 1700.1.1
-		monthly_chance = 50
-	}
-
-	illustration_tags = {
-		10 = happy
-		10 = interior
-	}
-
-	immediate = {
-		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
-
-		ruler ?= {
-			save_scope_as = target_ruler
-		}
-	}
-
-	trigger = {
-		has_ruler = yes
-		is_leader_of_international_organization = international_organization:hre
-		owns = location:vienna
-		ruler = { dynasty = dynasty:habsburg_dynasty }
-		custom_tooltip = {
-			text = flavor_hab.1008.privilegium_not_granted_tt
-			NOT = {
-				has_variable = privilegium_maius_granted
-			}
-		}
-	}
-
-	option = {
-		name = flavor_hab.1008.a
-		historical_option = yes
-
-		set_variable = privilegium_maius_granted
-		unlock_government_reform_effect = { type = austrian_archduchy_reform }
-		add_reform = government_reform:austrian_archduchy_reform
-		hidden_effect = {
-			ruler ?= {
-				reset_ruler_title = {}
-			}
-		}
 	}
 }
 
@@ -7363,6 +7046,7 @@ flavor_hab.1400 = { #Mailberger Bund and Noble resistance
 			create_rebel = {
 				category = estate
 				name = mailberger_noble_rebels
+				rebel_demand = rebel_demand_flavor_hab_1402
 				save_scope_as = target_mailberger_noble_rebels
 				estate = nobles_estate
 			}
@@ -7540,11 +7224,7 @@ flavor_hab.1402 = { #Mailberger Bund Demands Privileges
 		name = flavor_hab.1402.a
 		historical_option = yes
 
-		"estate(estate_type:nobles_estate)" = {
-			random_possible_privilege = {
-				root = { grant_estate_privilege = prev }
-			}
-		}
+		apply_rebel_demands = scope:target_mailberger_noble_rebels
 		destroy_rebel = scope:target_mailberger_noble_rebels
 	}
 
@@ -8210,6 +7890,7 @@ flavor_hab.1604 = { #Jesuit Colleges in Bohemia
 				OR = {
 					location_rank = location_rank:town
 					location_rank = location_rank:city
+					location_rank = location_rank:megalopolis
 				}
 				NOT = {
 					has_building = building_type:jesuit_college
@@ -8226,6 +7907,7 @@ flavor_hab.1604 = { #Jesuit Colleges in Bohemia
 				OR = {
 					location_rank = location_rank:town
 					location_rank = location_rank:city
+					location_rank = location_rank:megalopolis
 				}
 				NOT = {
 					has_building = building_type:jesuit_college
@@ -8455,60 +8137,6 @@ flavor_hab.1606 = { #Pope and Spain is unhappy about Jesuit refusal
 		scope:catholic_strong_country = {
 			add_opinion = { target = root modifier = favors_protestants_catholics }
 		}
-	}
-}
-
-flavor_hab.1607 = { #Monastery Council of Austria
-	hide_portraits = yes
-	type = country_event
-	title = flavor_hab.1607.title
-	desc = flavor_hab.1607.desc
-	outcome = neutral
-	#historical_info = flavor_hab.1607.historical_info
-
-	fire_only_once = yes
-
-	dynamic_historical_event = {
-		tag = HAB
-		from = 1555.1.1
-		to = 1585.1.1
-		monthly_chance = 1
-	}
-
-	illustration_tags = {
-		10 = regular
-		10 = interior
-	}
-
-	immediate = {
-		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:nobles_estate }
-
-		ruler = {
-			save_scope_as = target_ruler
-		}
-	}
-
-	trigger = {
-		religion:lutheran = {
-			is_religion_enabled = yes
-		}
-		has_ruler = yes
-		religion = religion:catholic
-		"religion_percentage_in_country(religion:lutheran)" > 0
-	}
-
-	option = {
-		name = flavor_hab.1607.a
-		historical_option = yes
-
-		custom_tooltip = flavor_hab.1607.a.tt
-		set_variable = hab_monastery_reform_accepted
-	}
-
-	option = {
-		name = flavor_hab.1607.b
-
-		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_penalty }
 	}
 }
 
@@ -9235,7 +8863,7 @@ flavor_hab.1903 = { #The Court Bankers finance in wartime
 		}
 		owns = location:vienna
 		location:vienna = {
-			num_civil_constructions > 4
+			num_civil_constructions > 8
 		}
 	}
 
@@ -9306,7 +8934,7 @@ flavor_hab.2000 = { #Wenzel Anton Kaunitz - Diplomatic Revolution
 	option = {
 		name = flavor_hab.2000.a
 		scope:target_character = { move_country = root }
-		add_government_power = government_power_extreme_bonus
+		add_political_influence = political_influence_extreme_bonus
 		add_prestige = prestige_mild_bonus
 
 		every_rival = {
@@ -9765,6 +9393,7 @@ flavor_hab.2201 = { #Bastion of Wiener Neustadt
 			OR = {
 				location_rank = location_rank:town
 				location_rank = location_rank:city
+				location_rank = location_rank:megalopolis
 			}
 			integration_level = core
 			NOT = { has_building = building_type:bastion }
@@ -9842,6 +9471,7 @@ flavor_hab.2202 = { #Military Academy of Maria Theresia
 			OR = {
 				location_rank = location_rank:town
 				location_rank = location_rank:city
+				location_rank = location_rank:megalopolis
 			}
 			integration_level = core
 		}

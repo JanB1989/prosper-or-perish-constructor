@@ -39,67 +39,6 @@ flavor_jap.1 = { #The Sakoku Law
 	}
 }
 
-flavor_jap.2 = { #Rangaku
-	type = country_event
-	title = flavor_jap.2.title
-	desc = flavor_jap.2.desc
-	outcome = neutral
-
-	fire_only_once = yes
-	dynamic_historical_event = {
-		tag = JAP
-		from = 1630.1.1
-		to = 1800.1.1
-		monthly_chance = 2
-	}
-
-	illustration_tags = {
-		10 = regular
-		10 = exterior
-	}
-
-	trigger = {
-		is_subject = no
-		owns = location:nishisonogi	# nagasaki
-		country_exists = c:NED
-		location:nishisonogi = {
-			has_location_modifier = jap_dejima_island
-		}
-		OR = {
-			NOT = {
-				exists = international_organization:japanese_shogunate
-			}
-			AND = {
-				international_organization:japanese_shogunate = {
-					leader_country ?= root
-					international_organization_has_policy = policy:sakoku_enabled
-				}
-				receiving_scripted_relation = {
-					target = c:NED
-					type = relation_type:exclusive_trade_rights_with_isolated
-				}
-			}
-		}
-	}
-
-	immediate = {
-		c:NED ?= { save_scope_as = target_country }
-		location:nishisonogi = { save_scope_as = target_location }
-		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
-	}
-
-	option = {
-		name = flavor_jap.2.a
-		historical_option = yes
-		custom_tooltip = flavor_jap.2.a.tt
-		set_variable = { name = jap_rangaku value = 1 }
-	}
-	option = {
-		name = flavor_jap.2.b
-		add_stability = stability_mild_bonus
-	}
-}
-
 flavor_jap.3 = { #William Adams #PRISON
 	type = country_event
 	title = flavor_jap.3.title
@@ -172,9 +111,7 @@ flavor_jap.3 = { #William Adams #PRISON
 			scope:target_country = root
 		}
 		add_research_progress = research_progress_mild_bonus
-		capital.market = {
-			add_goods_supply = { goods = goods:firearms amount = market_goods_weak_gain }
-		}
+		sell_goods_to_market = { market = capital.market goods = goods:firearms amount = market_goods_weak_gain }
 		scope:target_character = { move_country = root }
 	}
 	option = {
@@ -214,9 +151,7 @@ flavor_jap.4 = { #William Adams (damiyo)
 	option = {
 		name = flavor_jap.4.a
 		add_research_progress = research_progress_mild_bonus
-		capital.market = {
-			add_goods_supply = { goods = goods:firearms amount = market_goods_weak_gain }
-		}
+		sell_goods_to_market = { market = capital.market goods = goods:firearms amount = market_goods_weak_gain }
 	}
 
 	option = {
@@ -247,9 +182,7 @@ flavor_jap.5 = { #William Adams (sent to shogunate)
 		name = flavor_jap.5.a
 		historical_option = yes
 		add_research_progress = research_progress_mild_bonus
-		capital.market = {
-			add_goods_supply = { goods = goods:firearms amount = market_goods_weak_gain }
-		}
+		sell_goods_to_market = { market = capital.market goods = goods:firearms amount = market_goods_weak_gain }
 		scope:target_character = { move_country = root }
 	}
 
@@ -714,7 +647,7 @@ flavor_jap.102 = { # Appointment of Ko no Moronao as Shitsuji
 			save_scope_as = our_ruler
 		}
 		character:jap_kou_no_moronao ?= { save_scope_as = kou_no_moronao }
-		#event_illustration_estate_background_effect = { background = estate_type:crown_estate }
+		#event_illustration_estate_background_effect = { background = estate_type:nobles_estate }
 		#country_room = JAP
 	}
 

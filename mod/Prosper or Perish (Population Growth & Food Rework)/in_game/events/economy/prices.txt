@@ -724,8 +724,10 @@ prices.30 = {
 	trigger = {
 		has_markets = yes
 		capital_in_old_world_trigger = yes
-		religion.group = religion_group:christian
-		religion.group = religion_group:muslim
+		OR = {
+			religion.group = religion_group:christian
+			religion.group = religion_group:muslim
+		}
 
 		capital.market = {
 			is_traded_in_market = goods:tobacco

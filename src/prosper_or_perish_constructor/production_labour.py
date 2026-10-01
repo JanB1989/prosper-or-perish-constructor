@@ -328,12 +328,19 @@ def _kept_goods(
 
 
 def plan_all(repo: Path, config: LabourConfig, prices: dict[str, float]) -> LabourResult:
+    from prosper_or_perish_constructor.logistics import is_network_method  # logistics imports this module
+
     result = LabourResult()
     for path in enabled_blueprints(repo):
         if not path.is_file():
             continue
-        # the production gate leg is a technical method: its cost is a floor-pinned dummy, never labour
-        methods = [m for m in blueprint_methods(path) if is_labour_method(m, config.good) and not is_leg(m.name)]
+        # the production gate leg is a technical method: its cost is a floor-pinned dummy, never labour; the logistics
+        # network method has no inputs at all, so its slot always counts as supplied (logistics.py)
+        methods = [
+            m
+            for m in blueprint_methods(path)
+            if is_labour_method(m, config.good) and not is_leg(m.name) and not is_network_method(m.name)
+        ]
         if not methods:
             continue
         try:

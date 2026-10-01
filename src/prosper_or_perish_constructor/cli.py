@@ -56,6 +56,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/goods_categories.py",      # crop_farms (start crop allocation) imports these
     "src/prosper_or_perish_constructor/location_baseline.py",
     "src/prosper_or_perish_constructor/location_status.py",
+    "src/prosper_or_perish_constructor/logistics.py",            # production_labour skips its network methods
     "src/prosper_or_perish_constructor/production_gate.py",
     "src/prosper_or_perish_constructor/production_labour.py",
     "src/prosper_or_perish_constructor/provisioning.py",

@@ -15,6 +15,9 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
+        - pp_carrier_inn_logistics_network
+    - name: slot_1
+      methods:
         - pp_carrier_inn_maintenance
         - pp_carrier_inn_hand_porters
         - pp_carrier_inn_waybills_and_fitted_carts
@@ -48,6 +51,13 @@ building:
     construction_demand = pp_carrier_inn_construction
 
     unique_production_methods = {
+      pp_carrier_inn_logistics_network = {
+        produced = logistics
+        output = 0.3
+        category = building_maintenance
+      }
+    }
+    unique_production_methods = {
       pp_carrier_inn_maintenance = {
         victuals = 0.32
         horses = 0.16
@@ -56,7 +66,7 @@ building:
         tools = 0.085
         manual_labor = 0.6
         produced = logistics
-        output = 3.54
+        output = 3.9
         category = building_maintenance
       }
       pp_carrier_inn_hand_porters = {
@@ -65,7 +75,7 @@ building:
         tools = 0.062
         manual_labor = 1.36
         produced = logistics
-        output = 3.54
+        output = 3.9
         category = building_maintenance
       }
       pp_carrier_inn_waybills_and_fitted_carts = {
@@ -77,7 +87,7 @@ building:
         paper = 0.1
         manual_labor = 0.57
         produced = logistics
-        output = 3.69
+        output = 4.05
         category = building_maintenance
       }
     }
@@ -106,13 +116,16 @@ building:
     }
 localization:
   entries:
-    carrier_inn_slot_0: Carrier Crews
+    carrier_inn_slot_0: Road Network
+    carrier_inn_slot_1: Carrier Crews
     carrier_inn: Carrier Inn
     carrier_inn_desc: Packhorses, carts and stable yards gather at the carrier inn before setting out along the roads. Its keepers turn scattered rural loads into regular traffic to the market.
     pp_carrier_inn_construction: Carrier Inn Construction
     pp_carrier_inn_maintenance: Pack Horses
     pp_carrier_inn_hand_porters: Hand Porters
     pp_carrier_inn_waybills_and_fitted_carts: Waybills and Fitted Carts
+    pp_carrier_inn_logistics_network: Carrier Network
+    pp_carrier_inn_logistics_network_desc: Regular carriers call at the inn on fixed days and take on loads, so some traffic keeps moving even when the inn's own stables stand empty.
 icon:
   source_png: ../assets/icons/carrier_inn.png
   output_dds: carrier_inn.dds
@@ -123,3 +136,7 @@ evaluation:
     profit_percent: Logistics buildings earn a thin wage in the floor-priced logistics good; their payoff is market access.
     input_throughput: Carrier inns keep animals, carts and provisions on the road for every level.
     output_throughput: The logistics good is a floor-priced wage; the real output is market access.
+  production_methods:
+    pp_carrier_inn_logistics_network:
+      allow_rules:
+        base_output_per_1k: "The logistics network method has no inputs on purpose: its slot always counts as supplied, so the building keeps part of its market access when it can buy nothing; its output is a floor-priced wage."

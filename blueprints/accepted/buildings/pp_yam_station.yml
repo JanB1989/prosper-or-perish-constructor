@@ -16,6 +16,9 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
+        - pp_yam_station_logistics_network
+    - name: slot_1
+      methods:
         - pp_yam_station_post_horses
         - pp_yam_station_yamshchik_drivers
         - pp_yam_station_sledge_relays
@@ -47,6 +50,13 @@ building:
     construction_demand = pp_yam_station_construction
 
     unique_production_methods = {
+      pp_yam_station_logistics_network = {
+        produced = logistics
+        output = 0.3
+        category = building_maintenance
+      }
+    }
+    unique_production_methods = {
       pp_yam_station_post_horses = {
         horses = 0.3
         victuals = 0.3
@@ -54,7 +64,7 @@ building:
         fur = 0.06
         manual_labor = 0.64
         produced = logistics
-        output = 3.54
+        output = 3.9
         category = building_maintenance
       }
       pp_yam_station_yamshchik_drivers = {
@@ -63,7 +73,7 @@ building:
         lumber = 0.14
         manual_labor = 1.35
         produced = logistics
-        output = 3.54
+        output = 3.9
         category = building_maintenance
       }
       pp_yam_station_sledge_relays = {
@@ -74,7 +84,7 @@ building:
         tools = 0.12
         manual_labor = 0.61
         produced = logistics
-        output = 3.69
+        output = 4.05
         category = building_maintenance
       }
     }
@@ -103,13 +113,16 @@ building:
     }
 localization:
   entries:
-    pp_yam_station_slot_0: Relay Stages
+    pp_yam_station_slot_0: Relay Network
+    pp_yam_station_slot_1: Relay Stages
     pp_yam_station: Yam Station
     pp_yam_station_desc: A relay post of the great courier network, with fresh horses, sledges and provisions kept ready for the next stage. Officials, envoys and merchants follow its stations across the long distances of the steppe and the northern forests.
     pp_yam_station_construction: Yam Station Construction
     pp_yam_station_post_horses: Post Horses
     pp_yam_station_yamshchik_drivers: Yamshchik Drivers
     pp_yam_station_sledge_relays: Sledge Relays
+    pp_yam_station_logistics_network: Relay Post
+    pp_yam_station_logistics_network_desc: The station keeps its place in the courier relay, passing news and small loads from stage to stage even when its own horses and sledges are wanting.
 icon:
   source_png: ../assets/icons/pp_yam_station.png
   output_dds: pp_yam_station.dds
@@ -120,3 +133,7 @@ evaluation:
     profit_percent: Logistics buildings earn a thin wage in the floor-priced logistics good; their payoff is market access.
     input_throughput: Yam stations keep post horses, drivers and provisions ready for every level.
     output_throughput: The logistics good is a floor-priced wage; the real output is market access.
+  production_methods:
+    pp_yam_station_logistics_network:
+      allow_rules:
+        base_output_per_1k: "The logistics network method has no inputs on purpose: its slot always counts as supplied, so the building keeps part of its market access when it can buy nothing; its output is a floor-priced wage."

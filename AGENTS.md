@@ -50,8 +50,21 @@
   holds the numbers. `uv run ppc logistics apply` rewrites the tagged blueprints (every method costs `input_cost`, output
   = cost x class output, the last method + `improved_method_bonus`, bulky-goods cut and flavour in `modifier`, the
   market-access and building-level gates in `allow`, `increase_per_level_cost`, laborers, employment 1).
+  Class outputs (2026-10-01): river 1.40, coastal 1.35, overland 1.30, urban 1.25 x the input cost.
+- Network slot (2026-10-01): the engine scales `raw_modifier` by level x input fulfilment, the average over the
+  building's slots, and at 0 market access a building buys no inputs, so the market-access bonus fell to 0 and the
+  location never recovered. Every logistics building therefore has a slot 0 with one method
+  `pp_<building>_logistics_network` that has no goods inputs at all (no manual_labor) and makes `network_output`
+  logistics; a slot without inputs counts as fully supplied, so half the bonus always stands. `ppc logistics apply`
+  writes it (body, `production_method_slots`, slot labels and names from `[logistics.network]`, evaluation allow rule);
+  the labour pass skips it; the gate stays on the main slot's last method (the network slot is a base slot, so the gate
+  rule puts it first; an input-less gate would read a margin of output / 0.001 and never close).
   `uv run ppc logistics check` must report 0 off, 0 problems; `ppc build` prints it and `tests/test_logistics.py`
   enforces it. Order after editing recipes: `ppc labour apply`, `ppc logistics apply`, `ppc gate apply`.
+- Logistics buildings (custom tag `pp_logistics`) are staffed before every other building in every employment system
+  (`pp_employment_priority.txt`, river > coastal > city > rural, above food security and education). Overbuilt
+  locations (`unsupported_building_levels`) also get `local_logistics_output_modifier` per level. The vanilla foreign
+  buildings (trade office, embassy, ...) carry `raw_modifier free_building_levels = 1`: each level supports itself.
 - The overland variants are gated by the geography-only scripted triggers `pp_logistics_zone_*`
   (`in_game/common/scripted_triggers/pp_logistics_zone_triggers.txt`); the Carrier Inn uses
   `NOT = { pp_logistics_zone_any = yes }`. The zones must never overlap (the test evaluates them over every location).

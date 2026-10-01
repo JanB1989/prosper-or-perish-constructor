@@ -830,14 +830,20 @@ method_desc = "A few hands carry a small share of the produce straight to market
 # input_cost x class output (the last, improved method + improved_method_bonus); raw_modifier = local_market_access per
 # level; modifier = the bulky-goods output cut (class cut x bulky_scale, half on bulky_half_goods) and the flavour lines;
 # allow gains the market-access and building-level gates; increase_per_level_cost comes from the class, pop_type and
-# employment_size from here. `ppc logistics check` reports blueprints off their class and prints the zone sizes
-# (ppc build prints it). Order: ppc labour apply, ppc logistics apply, ppc gate apply.
+# employment_size from here. Every logistics building also gets a network slot (slot 0): one method
+# pp_<building>_logistics_network with no goods inputs at all (no manual_labor) that makes network_output logistics.
+# The engine scales raw_modifier by level x input fulfilment, the average over the building's slots, and a slot without
+# inputs counts as fully supplied: at 0 market access a building buys no inputs, so without it the market access bonus
+# fell to 0 and the location could never recover; with it half the bonus always stands (2026-10-01). Names per building
+# in [logistics.network]. `ppc logistics check` reports blueprints off their class (network slot included) and prints
+# the zone sizes (ppc build prints it). Order: ppc labour apply, ppc logistics apply, ppc gate apply.
 good = "logistics"
 input_cost = 3.0              # gold per level per method at default prices, manual_labor and floor goods at 1
 market_access = 0.10          # raw_modifier local_market_access per level
 gate_max_market_access = 0.85 # allow: market_access < this
 gate_min_building_levels = 15 # allow: total_building_levels >= this
 improved_method_bonus = 0.05  # extra output share on the improved (third) method
+network_output = 0.30         # logistics per level of the input-less network method (pure profit, no input cost)
 bulky_goods = ["stone", "marble", "clay", "sand", "coal", "iron", "copper", "tin", "lead", "salt", "saltpeter", "alum"]
 bulky_half_goods = ["lumber"] # get half the class cut
 pop_type = "laborers"
@@ -845,7 +851,20 @@ employment_size = 1
 flavour = { local_institution_growth_modifier = 0.05, local_supply_limit_modifier = 0.05, local_disease_resistance = -0.05 }  # per level, in modifier
 
 [logistics.classes]
-river    = { output = 1.25, bulky_cut = 0.005, increase_per_level_cost = 0.20 }
-coastal  = { output = 1.21, bulky_cut = 0.005, increase_per_level_cost = 0.20 }
-overland = { output = 1.18, bulky_cut = 0.010, increase_per_level_cost = 0.25 }
-urban    = { output = 1.15, bulky_cut = 0.010, increase_per_level_cost = 0.30 }
+# output = main-slot output as a multiple of the input cost (2026-10-01: more profitable, was 1.25/1.21/1.18/1.15)
+river    = { output = 1.40, bulky_cut = 0.005, increase_per_level_cost = 0.20 }
+coastal  = { output = 1.35, bulky_cut = 0.005, increase_per_level_cost = 0.20 }
+overland = { output = 1.30, bulky_cut = 0.010, increase_per_level_cost = 0.25 }
+urban    = { output = 1.25, bulky_cut = 0.010, increase_per_level_cost = 0.30 }
+
+[logistics.network]
+# Player-facing names of each building's network slot: slot label, method name, method description (no numbers).
+carrier_inn = { slot = "Road Network", method = "Carrier Network", desc = "Regular carriers call at the inn on fixed days and take on loads, so some traffic keeps moving even when the inn's own stables stand empty." }
+transport_office = { slot = "Dispatch", method = "Dispatch Network", desc = "Agents in the neighbouring towns pass consignments along a standing schedule, so some freight keeps moving even when the office's own carts stand idle." }
+river_boatmen_yard = { slot = "River Network", method = "River Pilots", desc = "Pilots who know every shoal, weir and ferry guide passing barges, so some freight keeps moving on the river even when the yard's own boats lie idle." }
+coastal_shipping_office = { slot = "Coastal Network", method = "Coastal Pilots", desc = "Local pilots and harbour masters bring passing coasters in and out, so some trade keeps moving along the coast even when the office's own ships lie idle." }
+pp_caravanserai = { slot = "Caravan Network", method = "Caravan Network", desc = "Merchants' agents arrange loads from one caravanserai to the next, so some caravans keep moving even when the courtyard's own stables stand empty." }
+pp_oasis_caravan_station = { slot = "Desert Network", method = "Well Keepers", desc = "Families who keep the wells clear and the palms watered make the station a sure halt, so some camel trains keep crossing even when its own stores run dry." }
+pp_yam_station = { slot = "Relay Network", method = "Relay Post", desc = "The station keeps its place in the courier relay, passing news and small loads from stage to stage even when its own horses and sledges are wanting." }
+pp_banjara_tanda = { slot = "Clan Network", method = "Tanda Network", desc = "Kinship ties between the camps let loads pass from one tanda to the next along the grazing routes, even when the camp's own herds are thin." }
+pp_llama_caravan_post = { slot = "Mountain Network", method = "Tambo Relay", desc = "Runners and storekeepers of the tambos pass loads along the mountain roads from one post to the next, even when the post's own llama trains are wanting." }

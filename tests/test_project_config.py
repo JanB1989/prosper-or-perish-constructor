@@ -572,7 +572,11 @@ def test_employment_systems_add_the_shared_priority_bonus_once() -> None:
     # the vanilla category bonuses of the capitalism variants are scaled the same way (x1000)
     category_bonuses = sorted({int(value) for value in re.findall(r"add = (\d+)", employment_text)})
     assert category_bonuses == [100000, 1000000, 10000000]
-    assert EDUCATION_PRIORITY_BONUS > max(category_bonuses) + max(t for t in tiers if t != EDUCATION_PRIORITY_BONUS)
+    # logistics rank above everything (tests/test_logistics_infrastructure_buildings.py); education above the rest
+    logistics = set(re.findall(r"(?s)has_tag = pp_logistics \}(.*?)\n\t\}", bonus_text)[0].split("add = ")[1:])
+    logistics_tiers = {int(re.match(r"\d+", value).group(0)) for value in logistics}
+    rest = [t for t in tiers if t != EDUCATION_PRIORITY_BONUS and t not in logistics_tiers]
+    assert EDUCATION_PRIORITY_BONUS > max(category_bonuses) + max(rest)
 
 
 def test_food_security_building_priorities_are_in_employment_systems() -> None:
@@ -606,7 +610,7 @@ def test_food_security_building_priorities_are_in_employment_systems() -> None:
     ladder = bonus["pp_employment_priority_bonus"]
     assert isinstance(ladder, CList)
     assert any(
-        entry.key == "if"
+        entry.key in {"if", "else_if"}  # logistics lead the ladder since 2026-10-01
         and isinstance(entry.value, CList)
         and _clist_contains(entry.value, "has_tag", FOOD_SECURITY_GENERAL_PRIORITY_TAG)
         for entry in ladder.entries

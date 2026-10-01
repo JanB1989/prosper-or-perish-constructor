@@ -15,6 +15,9 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
+        - pp_coastal_shipping_office_logistics_network
+    - name: slot_1
+      methods:
         - pp_coastal_shipping_office_maintenance
         - pp_coastal_shipping_office_hand_crews
         - pp_coastal_shipping_office_rigged_coasters
@@ -46,6 +49,13 @@ building:
     construction_demand = pp_coastal_shipping_office_construction
 
     unique_production_methods = {
+      pp_coastal_shipping_office_logistics_network = {
+        produced = logistics
+        output = 0.3
+        category = building_maintenance
+      }
+    }
+    unique_production_methods = {
       pp_coastal_shipping_office_maintenance = {
         naval_supplies = 0.23
         tar = 0.095
@@ -55,7 +65,7 @@ building:
         paper = 0.047
         manual_labor = 0.65
         produced = logistics
-        output = 3.63
+        output = 4.05
         category = building_maintenance
       }
       pp_coastal_shipping_office_hand_crews = {
@@ -66,7 +76,7 @@ building:
         victuals = 0.26
         manual_labor = 1.36
         produced = logistics
-        output = 3.63
+        output = 4.05
         category = building_maintenance
       }
       pp_coastal_shipping_office_rigged_coasters = {
@@ -78,7 +88,7 @@ building:
         paper = 0.037
         manual_labor = 0.61
         produced = logistics
-        output = 3.78
+        output = 4.2
         category = building_maintenance
       }
     }
@@ -107,13 +117,16 @@ building:
     }
 localization:
   entries:
-    coastal_shipping_office_slot_0: Coastal Crews
+    coastal_shipping_office_slot_0: Coastal Network
+    coastal_shipping_office_slot_1: Coastal Crews
     coastal_shipping_office: Coastal Shipping Office
     coastal_shipping_office_desc: Coasting masters, freight clerks and hired hands keep short-sea traffic moving between nearby ports. Their office turns loose cargo, small craft and quay labour into a steady coastal trade.
     pp_coastal_shipping_office_construction: Coastal Shipping Office Construction
     pp_coastal_shipping_office_maintenance: Coasting Crews
     pp_coastal_shipping_office_hand_crews: Hand Crews
     pp_coastal_shipping_office_rigged_coasters: Rigged Coasters
+    pp_coastal_shipping_office_logistics_network: Coastal Pilots
+    pp_coastal_shipping_office_logistics_network_desc: Local pilots and harbour masters bring passing coasters in and out, so some trade keeps moving along the coast even when the office's own ships lie idle.
 icon:
   source_png: ../assets/icons/coastal_shipping_office.png
   output_dds: coastal_shipping_office.dds
@@ -124,3 +137,7 @@ evaluation:
     profit_percent: Logistics buildings earn a thin wage in the floor-priced logistics good; their payoff is market access.
     input_throughput: Coastal shipping offices keep coasters, tar, timber, victuals and quay crews working for every level.
     output_throughput: The logistics good is a floor-priced wage; the real output is market access.
+  production_methods:
+    pp_coastal_shipping_office_logistics_network:
+      allow_rules:
+        base_output_per_1k: "The logistics network method has no inputs on purpose: its slot always counts as supplied, so the building keeps part of its market access when it can buy nothing; its output is a floor-priced wage."

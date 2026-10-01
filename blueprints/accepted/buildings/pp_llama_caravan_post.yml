@@ -17,6 +17,9 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
+        - pp_llama_caravan_post_logistics_network
+    - name: slot_1
+      methods:
         - pp_llama_caravan_post_llama_trains
         - pp_llama_caravan_post_porters
         - pp_llama_caravan_post_storehouse_relays
@@ -48,13 +51,20 @@ building:
     construction_demand = pp_llama_caravan_post_construction
 
     unique_production_methods = {
+      pp_llama_caravan_post_logistics_network = {
+        produced = logistics
+        output = 0.3
+        category = building_maintenance
+      }
+    }
+    unique_production_methods = {
       pp_llama_caravan_post_llama_trains = {
         livestock = 0.64
         victuals = 0.37
         wool = 0.13
         manual_labor = 0.61
         produced = logistics
-        output = 3.54
+        output = 3.9
         category = building_maintenance
       }
       pp_llama_caravan_post_porters = {
@@ -62,7 +72,7 @@ building:
         maize = 0.21
         manual_labor = 1.35
         produced = logistics
-        output = 3.54
+        output = 3.9
         category = building_maintenance
       }
       pp_llama_caravan_post_storehouse_relays = {
@@ -73,7 +83,7 @@ building:
         wool = 0.1
         manual_labor = 0.63
         produced = logistics
-        output = 3.69
+        output = 4.05
         category = building_maintenance
       }
     }
@@ -102,13 +112,16 @@ building:
     }
 localization:
   entries:
-    pp_llama_caravan_post_slot_0: Mountain Trains
+    pp_llama_caravan_post_slot_0: Mountain Network
+    pp_llama_caravan_post_slot_1: Mountain Trains
     pp_llama_caravan_post: Llama Caravan Post
     pp_llama_caravan_post_desc: Corrals, storehouses and resting places on the mountain roads, where llama trains and porters carry maize, wool and salt between the valleys and the high plateaus of the Andes.
     pp_llama_caravan_post_construction: Llama Caravan Post Construction
     pp_llama_caravan_post_llama_trains: Llama Trains
     pp_llama_caravan_post_porters: Porters
     pp_llama_caravan_post_storehouse_relays: Storehouse Relays
+    pp_llama_caravan_post_logistics_network: Tambo Relay
+    pp_llama_caravan_post_logistics_network_desc: Runners and storekeepers of the tambos pass loads along the mountain roads from one post to the next, even when the post's own llama trains are wanting.
 icon:
   source_png: ../assets/icons/pp_llama_caravan_post.png
   output_dds: pp_llama_caravan_post.dds
@@ -119,3 +132,7 @@ evaluation:
     profit_percent: Logistics buildings earn a thin wage in the floor-priced logistics good; their payoff is market access.
     input_throughput: Llama caravan posts keep llama trains, porters and stores on the road for every level.
     output_throughput: The logistics good is a floor-priced wage; the real output is market access.
+  production_methods:
+    pp_llama_caravan_post_logistics_network:
+      allow_rules:
+        base_output_per_1k: "The logistics network method has no inputs on purpose: its slot always counts as supplied, so the building keeps part of its market access when it can buy nothing; its output is a floor-priced wage."

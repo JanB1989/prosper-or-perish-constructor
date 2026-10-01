@@ -17,6 +17,9 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
+        - pp_oasis_caravan_station_logistics_network
+    - name: slot_1
+      methods:
         - pp_oasis_caravan_station_camel_train
         - pp_oasis_caravan_station_caravan_crews
         - pp_oasis_caravan_station_azalai
@@ -48,13 +51,20 @@ building:
     construction_demand = pp_oasis_caravan_station_construction
 
     unique_production_methods = {
+      pp_oasis_caravan_station_logistics_network = {
+        produced = logistics
+        output = 0.3
+        category = building_maintenance
+      }
+    }
+    unique_production_methods = {
       pp_oasis_caravan_station_camel_train = {
         livestock = 0.53
         victuals = 0.39
         leather = 0.15
         manual_labor = 0.59
         produced = logistics
-        output = 3.54
+        output = 3.9
         category = building_maintenance
       }
       pp_oasis_caravan_station_caravan_crews = {
@@ -63,7 +73,7 @@ building:
         leather = 0.052
         manual_labor = 1.34
         produced = logistics
-        output = 3.54
+        output = 3.9
         category = building_maintenance
       }
       pp_oasis_caravan_station_azalai = {
@@ -73,7 +83,7 @@ building:
         salt = 0.058
         manual_labor = 0.58
         produced = logistics
-        output = 3.69
+        output = 4.05
         category = building_maintenance
       }
     }
@@ -102,13 +112,16 @@ building:
     }
 localization:
   entries:
-    pp_oasis_caravan_station_slot_0: Desert Crossings
+    pp_oasis_caravan_station_slot_0: Desert Network
+    pp_oasis_caravan_station_slot_1: Desert Crossings
     pp_oasis_caravan_station: Oasis Caravan Station
     pp_oasis_caravan_station_desc: Wells, palm groves and store rooms mark the stations of the desert roads. Their keepers water the camel trains and hold provisions for the long crossings between the Saharan oases and the markets of the Sahel.
     pp_oasis_caravan_station_construction: Oasis Caravan Station Construction
     pp_oasis_caravan_station_camel_train: Camel Train
     pp_oasis_caravan_station_caravan_crews: Caravan Crews
     pp_oasis_caravan_station_azalai: Azalai
+    pp_oasis_caravan_station_logistics_network: Well Keepers
+    pp_oasis_caravan_station_logistics_network_desc: Families who keep the wells clear and the palms watered make the station a sure halt, so some camel trains keep crossing even when its own stores run dry.
 icon:
   source_png: ../assets/icons/pp_oasis_caravan_station.png
   output_dds: pp_oasis_caravan_station.dds
@@ -119,3 +132,7 @@ evaluation:
     profit_percent: Logistics buildings earn a thin wage in the floor-priced logistics good; their payoff is market access.
     input_throughput: Oasis caravan stations keep camels, drivers and provisions on the road for every level.
     output_throughput: The logistics good is a floor-priced wage; the real output is market access.
+  production_methods:
+    pp_oasis_caravan_station_logistics_network:
+      allow_rules:
+        base_output_per_1k: "The logistics network method has no inputs on purpose: its slot always counts as supplied, so the building keeps part of its market access when it can buy nothing; its output is a floor-priced wage."

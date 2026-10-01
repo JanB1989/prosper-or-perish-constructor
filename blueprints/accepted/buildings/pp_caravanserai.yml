@@ -17,6 +17,9 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
+        - pp_caravanserai_logistics_network
+    - name: slot_1
+      methods:
         - pp_caravanserai_pack_camels
         - pp_caravanserai_camel_drivers
         - pp_caravanserai_escorted_caravans
@@ -48,6 +51,13 @@ building:
     construction_demand = pp_caravanserai_construction
 
     unique_production_methods = {
+      pp_caravanserai_logistics_network = {
+        produced = logistics
+        output = 0.3
+        category = building_maintenance
+      }
+    }
+    unique_production_methods = {
       pp_caravanserai_pack_camels = {
         livestock = 0.5
         victuals = 0.35
@@ -55,7 +65,7 @@ building:
         wool = 0.1
         manual_labor = 0.59
         produced = logistics
-        output = 3.54
+        output = 3.9
         category = building_maintenance
       }
       pp_caravanserai_camel_drivers = {
@@ -64,7 +74,7 @@ building:
         leather = 0.057
         manual_labor = 1.33
         produced = logistics
-        output = 3.54
+        output = 3.9
         category = building_maintenance
       }
       pp_caravanserai_escorted_caravans = {
@@ -75,7 +85,7 @@ building:
         paper = 0.066
         manual_labor = 0.59
         produced = logistics
-        output = 3.69
+        output = 4.05
         category = building_maintenance
       }
     }
@@ -104,13 +114,16 @@ building:
     }
 localization:
   entries:
-    pp_caravanserai_slot_0: Caravan Crews
+    pp_caravanserai_slot_0: Caravan Network
+    pp_caravanserai_slot_1: Caravan Crews
     pp_caravanserai: Caravanserai
     pp_caravanserai_desc: A walled courtyard of stables, storerooms and lodgings, a day's march from the next along the caravan roads. Camel strings rest and water here, and the merchants' loads move on to the market under one roof.
     pp_caravanserai_construction: Caravanserai Construction
     pp_caravanserai_pack_camels: Pack Camels
     pp_caravanserai_camel_drivers: Camel Drivers
     pp_caravanserai_escorted_caravans: Escorted Caravans
+    pp_caravanserai_logistics_network: Caravan Network
+    pp_caravanserai_logistics_network_desc: Merchants' agents arrange loads from one caravanserai to the next, so some caravans keep moving even when the courtyard's own stables stand empty.
 icon:
   source_png: ../assets/icons/pp_caravanserai.png
   output_dds: pp_caravanserai.dds
@@ -121,3 +134,7 @@ evaluation:
     profit_percent: Logistics buildings earn a thin wage in the floor-priced logistics good; their payoff is market access.
     input_throughput: Caravanserais keep camels, drivers and provisions on the road for every level.
     output_throughput: The logistics good is a floor-priced wage; the real output is market access.
+  production_methods:
+    pp_caravanserai_logistics_network:
+      allow_rules:
+        base_output_per_1k: "The logistics network method has no inputs on purpose: its slot always counts as supplied, so the building keeps part of its market access when it can buy nothing; its output is a floor-priced wage."

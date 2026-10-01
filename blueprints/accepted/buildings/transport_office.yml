@@ -15,6 +15,9 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
+        - pp_transport_office_logistics_network
+    - name: slot_1
+      methods:
         - pp_transport_office_maintenance
         - pp_transport_office_hand_carts
         - pp_transport_office_ledgered_dispatch
@@ -49,6 +52,13 @@ building:
     construction_demand = pp_transport_office_construction
 
     unique_production_methods = {
+      pp_transport_office_logistics_network = {
+        produced = logistics
+        output = 0.3
+        category = building_maintenance
+      }
+    }
+    unique_production_methods = {
       pp_transport_office_maintenance = {
         victuals = 0.48
         paper = 0.18
@@ -56,7 +66,7 @@ building:
         cloth = 0.072
         manual_labor = 0.59
         produced = logistics
-        output = 3.45
+        output = 3.75
         category = building_maintenance
       }
       pp_transport_office_hand_carts = {
@@ -66,7 +76,7 @@ building:
         cloth = 0.031
         manual_labor = 1.34
         produced = logistics
-        output = 3.45
+        output = 3.75
         category = building_maintenance
       }
       pp_transport_office_ledgered_dispatch = {
@@ -76,7 +86,7 @@ building:
         cloth = 0.032
         manual_labor = 0.59
         produced = logistics
-        output = 3.6
+        output = 3.9
         category = building_maintenance
       }
     }
@@ -105,13 +115,16 @@ building:
     }
 localization:
   entries:
-    transport_office_slot_0: Freight Crews
+    transport_office_slot_0: Dispatch
+    transport_office_slot_1: Freight Crews
     pp_transport_office_construction: Transport Office Construction
     pp_transport_office_maintenance: Clerks and Carts
     pp_transport_office_hand_carts: Hand Carts
     pp_transport_office_ledgered_dispatch: Ledgered Dispatch
     transport_office: Transport Office
     transport_office_desc: Freight clerks, porters, haulers and weighmen crowd the transport office. Ledgers, yard gates and hired hands turn a town's bulk into ordered dispatches for the market.
+    pp_transport_office_logistics_network: Dispatch Network
+    pp_transport_office_logistics_network_desc: Agents in the neighbouring towns pass consignments along a standing schedule, so some freight keeps moving even when the office's own carts stand idle.
 icon:
   source_png: ../assets/icons/transport_office.png
   output_dds: transport_office.dds
@@ -122,3 +135,7 @@ evaluation:
     profit_percent: Logistics buildings earn a thin wage in the floor-priced logistics good; their payoff is market access.
     input_throughput: Transport offices keep clerks, carts and porters working for every level.
     output_throughput: The logistics good is a floor-priced wage; the real output is market access.
+  production_methods:
+    pp_transport_office_logistics_network:
+      allow_rules:
+        base_output_per_1k: "The logistics network method has no inputs on purpose: its slot always counts as supplied, so the building keeps part of its market access when it can buy nothing; its output is a floor-priced wage."

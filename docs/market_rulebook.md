@@ -85,13 +85,34 @@ in locations.png:
   `local_market_access`, clamped to 0..1. The measurements and the calibration above (and `worldbuilder/market_access.py`,
   `config/start_markets.csv`) come from saves with base 1.0; re-run `tools/markets/save_inputs.py` on a save made with the
   new base before trusting `food-sim --markets` for high-access locations.
-- `unsupported_building_levels` (static modifier, scaled by the building levels above the supported ones) carries only
-  `local_market_access = -0.01` per level.
-- The logistics buildings add `local_market_access = +0.10` per level through `raw_modifier` (not scaled by staffing), can
-  be built only while `market_access < 0.85` and `total_building_levels >= 15` (`allow`), and produce the floor-pinned
-  `logistics` good for their wage. Blueprint rule: `ppc logistics apply|check`, `[logistics]` in `constructor.toml`,
+- `unsupported_building_levels` (static modifier, scaled by the building levels above the supported ones) carries
+  `local_market_access = -0.01` per level and, since 2026-10-01, `local_logistics_output_modifier = 0.001` per level (a
+  nudge for the AI to build logistics where the location is overbuilt). The vanilla foreign buildings (trade office,
+  embassy, missionary building, slave center, overseas trading post, colonial administration, merchant guild chapel,
+  viceroyalty) carry `raw_modifier free_building_levels = 1`: foreign countries open them with 1 + 0.1 x development +
+  0.05 x population levels each (Mantova: 267 foreign levels of 437), and each level now supports itself.
+- The logistics buildings add `local_market_access = +0.10` per level through `raw_modifier`, can be built only while
+  `market_access < 0.85` and `total_building_levels >= 15` (`allow`), and produce the floor-pinned `logistics` good for
+  their wage. Blueprint rule: `ppc logistics apply|check`, `[logistics]` in `constructor.toml`,
   `src/prosper_or_perish_constructor/logistics.py`. Regional variants of the Carrier Inn follow the geography-only
   zones in `pp_logistics_zone_triggers.txt`.
+- `raw_modifier` is not scaled by staffing but by input fulfilment: the engine applies it x level x the average over the
+  building's production-method slots of each slot's input fulfilment (decompiled FUN_144612a10 / FUN_1443c9470; the save
+  stores it per method as `building_manager.database.*.<method>.input`, eu5q table `building_method_inputs`; not stored =
+  full). Inputs are bought in proportion to market access, so at access 0 a building demands nothing and its fulfilment
+  is 0; `manual_labor` is an input like any other. In run pp_lr_1830, 393 of 1544 logistics buildings (1078 levels) had
+  input 0 while fully staffed, so their locations could never recover. A method without goods inputs counts as fully
+  supplied. Since 2026-10-01 every logistics building has a network slot (slot 0, one method
+  `pp_<building>_logistics_network`, no inputs, 0.30 logistics per level) beside its main slot: at least half the bonus
+  (+0.05 per level) always stands.
+- Main-slot output (input cost 3.0 per level per method): river 1.40, coastal 1.35, overland 1.30, urban 1.25 x the
+  cost, the improved (last, gate) method +0.05. Profit per level at base prices, main slot + network slot: river
+  1.20 + 0.30 (improved 1.35 + 0.30), coastal 1.05 + 0.30 (1.20 + 0.30), overland 0.90 + 0.30 (1.05 + 0.30), urban
+  0.75 + 0.30 (0.90 + 0.30). The AI's margin gate stays on the main slot's last method (an input-less gate reads a
+  margin of output / 0.001 and would never close).
+- Employment: logistics buildings are staffed before every other building in every employment system
+  (`pp_employment_priority.txt`: river 80M > coastal 70M > city 60M > rural 50M, above education 20M plus the largest
+  category bonus 10M).
 
 ## 3b. Predicting the market
 

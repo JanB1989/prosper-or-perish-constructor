@@ -36,12 +36,13 @@ TAVERN_BLUEPRINT = BLUEPRINTS / "tavern.yml"
 VICTUALLING_YARD_RENDERED = MOD_ROOT / "in_game" / "common" / "building_types" / "zz_pp_victualling_yard.txt"
 TAVERN_RENDERED = MOD_ROOT / "in_game" / "common" / "building_types" / "zz_pp_tavern.txt"
 EMPLOYMENT_PRIORITIES = MOD_ROOT / "in_game" / "common" / "script_values" / "pp_employment_priority.txt"
-LOGISTICS_PRIORITY_GROUPS = (
-    ("pp_river_logistics_priority", 80000),
-    ("pp_coastal_logistics_priority", 70000),
-    ("pp_city_logistics_priority", 60000),
-    ("pp_rural_logistics_priority", 50000),
+LOGISTICS_PRIORITY_GROUPS = (  # 2026-10-01: above every other employment priority
+    ("pp_river_logistics_priority", 80000000),
+    ("pp_coastal_logistics_priority", 70000000),
+    ("pp_city_logistics_priority", 60000000),
+    ("pp_rural_logistics_priority", 50000000),
 )
+EMPLOYMENT_SYSTEMS = MOD_ROOT / "in_game" / "common" / "employment_systems" / "pp_food_security_priorities.txt"
 PRIORITY_TAG = {
     "river_boatmen_yard": "pp_river_logistics_priority",
     "coastal_shipping_office": "pp_coastal_logistics_priority",
@@ -169,13 +170,21 @@ def test_logistics_construction_demands_exist_without_negative_goods() -> None:
         assert amounts and min(amounts) > 0, key
 
 
-def test_logistics_building_priorities_are_below_food_priorities() -> None:
+def test_logistics_building_priorities_rank_above_everything() -> None:
+    # 2026-10-01: a short-staffed logistics building loses market access, and at 0 access a location buys no inputs, so
+    # logistics are staffed first in every employment system: river > coastal > city > rural, all above food security,
+    # education and the capitalism variants' category bonuses together.
     priority_text = EMPLOYMENT_PRIORITIES.read_text(encoding="utf-8-sig")
     assert priority_text.count("limit = { has_tag = pp_logistics }") == 1
-    assert max(priority for _tag, priority in LOGISTICS_PRIORITY_GROUPS) < 85000  # below every food-security tier (storage 85000 is the lowest)
     for tag, priority in LOGISTICS_PRIORITY_GROUPS:
-        pattern = re.compile(rf"has_tag\s*=\s*{re.escape(tag)}[\s\S]*?add\s*=\s*{priority}")
+        pattern = re.compile(rf"has_tag\s*=\s*{re.escape(tag)}\s*\}}\s*add\s*=\s*{priority}\s*\}}")
         assert pattern.search(priority_text), tag
+    values = [priority for _tag, priority in LOGISTICS_PRIORITY_GROUPS]
+    assert values == sorted(values, reverse=True)
+    others = {int(v) for v in re.findall(r"add = (\d+)", priority_text)} - set(values)
+    categories = {int(v) for v in re.findall(r"add = (\d+)", EMPLOYMENT_SYSTEMS.read_text(encoding="utf-8-sig"))}
+    # every logistics building is infrastructure_category, so a category bonus lifts all of them alike
+    assert min(values) > max(others) + max(categories) + 1000
 
 
 def test_market_village_market_access_is_neutralized_by_inject_blueprint() -> None:

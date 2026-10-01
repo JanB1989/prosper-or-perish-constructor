@@ -4,10 +4,37 @@
 # order counts (equal values share the workers). The systems' own values are small (building_index 0..~53, monthly
 # building profit ~0..40), so the tiers sit 1000 apart: the tier always decides, the system's own rule only orders
 # buildings within a tier.
-# Each building carries at most one group tag and one tag within a group; the commonest tags are tested first.
+# Each building carries at most one group tag and one tag within a group.
+# Logistics come first of all (2026-10-01): a short-staffed logistics building loses its market access, and without
+# market access the location buys no inputs at all. Their tiers sit above education plus the largest category bonus
+# of the capitalism variants, so no other building outranks them in any employment system.
 pp_employment_priority_bonus = {
 	value = 0
 	if = {
+		limit = { has_tag = pp_logistics }
+
+		# River freight is the strongest logistics option.
+		if = {
+			limit = { has_tag = pp_river_logistics_priority }
+			add = 80000000
+		}
+		# Coastal logistics follow river freight.
+		else_if = {
+			limit = { has_tag = pp_coastal_logistics_priority }
+			add = 70000000
+		}
+		# Urban transport offices serve dense city logistics.
+		else_if = {
+			limit = { has_tag = pp_city_logistics_priority }
+			add = 60000000
+		}
+		# Rural carrier inns and their regional variants come after the denser freight options.
+		else_if = {
+			limit = { has_tag = pp_rural_logistics_priority }
+			add = 50000000
+		}
+	}
+	else_if = {
 		limit = { has_tag = pp_food_security_priority }
 
 		# Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
@@ -34,30 +61,6 @@ pp_employment_priority_bonus = {
 		else_if = {
 			limit = { has_tag = pp_food_distribution_priority }
 			add = 120000
-		}
-	}
-	else_if = {
-		limit = { has_tag = pp_logistics }
-
-		# Logistics support sits below all food-security priorities; river freight is the strongest support option.
-		if = {
-			limit = { has_tag = pp_river_logistics_priority }
-			add = 80000
-		}
-		# Coastal logistics support follows river freight.
-		else_if = {
-			limit = { has_tag = pp_coastal_logistics_priority }
-			add = 70000
-		}
-		# Urban transport offices support dense city logistics.
-		else_if = {
-			limit = { has_tag = pp_city_logistics_priority }
-			add = 60000
-		}
-		# Rural carrier inns support logistics after denser freight options.
-		else_if = {
-			limit = { has_tag = pp_rural_logistics_priority }
-			add = 50000
 		}
 	}
 	else_if = {

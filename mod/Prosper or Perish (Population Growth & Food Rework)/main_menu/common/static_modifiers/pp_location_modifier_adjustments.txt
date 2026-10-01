@@ -137,6 +137,8 @@ TRY_REPLACE:unsupported_building_levels = {
 	}
 	# per building level above the supported levels: goods reach the market worse (logistics buildings add it back)
 	local_market_access = -0.01
+	# and carrying pays a little more, a nudge for the AI to build logistics where the location is overbuilt
+	local_logistics_output_modifier = 0.001
 }
 
 TRY_REPLACE:total_population = {

@@ -1129,6 +1129,9 @@ locations = {
 	azemmour = {
 		rank = town
 	}
+	sale = {
+		rank = town
+	}
 	noul_lamta = {
 		rank = town
 	}
@@ -1571,7 +1574,7 @@ locations = {
 		rank = city
 	}
 	hangzhou = {
-		rank = city
+		rank = megalopolis
 	}
 	jiangdu = {
 		rank = city
@@ -5157,6 +5160,11 @@ building_manager = {
 		level = 1
 		location = viana_do_castelo
 	}
+	monument_torre_de_hercules = {
+		tag = CAS
+		level = 1
+		location = coruna
+	}
 	cathedral = {
 		tag = CAS
 		level = 1
@@ -5200,6 +5208,16 @@ building_manager = {
 	cathedral = {
 		tag = CAS
 		level = 1
+		location = cadiz
+	}
+	cathedral = {
+		tag = CAS
+		level = 1
+		location = calahorra
+	}
+	cathedral = {
+		tag = CAS
+		level = 1
 		location = cartagena
 	}
 	cathedral = {
@@ -5216,6 +5234,11 @@ building_manager = {
 		tag = CAS
 		level = 1
 		location = cordoba
+	}
+	cathedral = {
+		tag = CAS
+		level = 1
+		location = coria
 	}
 	cathedral = {
 		tag = CAS
@@ -5275,17 +5298,17 @@ building_manager = {
 	cathedral = {
 		tag = CAS
 		level = 1
-		location = logrono
-	}
-	cathedral = {
-		tag = CAS
-		level = 1
 		location = lugo
 	}
 	cathedral = {
 		tag = CAS
 		level = 1
 		location = mondonedo
+	}
+	cathedral = {
+		tag = CAS
+		level = 1
+		location = najera
 	}
 	cathedral = {
 		tag = CAS
@@ -5298,6 +5321,11 @@ building_manager = {
 		location = oviedo
 	}
 	cathedral = {
+		tag = CAS
+		level = 1
+		location = palencia
+	}
+	cathedral = {
 		tag = MLL
 		level = 1
 		location = palma
@@ -5306,6 +5334,11 @@ building_manager = {
 		tag = NAV
 		level = 1
 		location = pamplona
+	}
+	cathedral = {
+		tag = CAS
+		level = 1
+		location = plasencia
 	}
 	cathedral = {
 		tag = POR
@@ -5323,9 +5356,19 @@ building_manager = {
 		location = santiago_compostela
 	}
 	cathedral = {
+		tag = CAS
+		level = 1
+		location = segovia
+	}
+	cathedral = {
 		tag = ARA
 		level = 1
 		location = seu_durgell
+	}
+	cathedral = {
+		tag = CAS
+		level = 1
+		location = sevilla
 	}
 	cathedral = {
 		tag = CAS
@@ -5341,6 +5384,11 @@ building_manager = {
 		tag = ARA
 		level = 1
 		location = tarragona
+	}
+	cathedral = {
+		tag = CAS
+		level = 1
+		location = toledo
 	}
 	cathedral = {
 		tag = NAV
@@ -5361,11 +5409,6 @@ building_manager = {
 		tag = POR
 		level = 1
 		location = viseu
-	}
-	cathedral = {
-		tag = CAS
-		level = 1
-		location = vitoria
 	}
 	cathedral = {
 		tag = CAS
@@ -5777,6 +5820,11 @@ building_manager = {
 		level = 1
 		location = valencia
 	}
+	fine_cloth_guild = {
+		tag = FLO
+		level = 3
+		location = florence
+	}
 	tar_kiln = {
 		tag = NAV
 		level = 3
@@ -5821,6 +5869,36 @@ building_manager = {
 		tag = GRA
 		level = 1
 		location = granada
+	}
+	trade_office = {
+		tag = GRA
+		level = 4
+		location = niani
+	}
+	trade_office = {
+		tag = GRA
+		level = 4
+		location = timbuktu
+	}
+	trade_office = {
+		tag = GRA
+		level = 4
+		location = sijilmasa
+	}
+	trade_office = {
+		tag = GRA
+		level = 3
+		location = fez
+	}
+	trade_office = {
+		tag = GRA
+		level = 3
+		location = marrakesh
+	}
+	trade_office = {
+		tag = GRA
+		level = 2
+		location = meknes
 	}
 	brethren_marsh = {
 		tag = CAS
@@ -5906,6 +5984,11 @@ building_manager = {
 		tag = ARA
 		level = 1
 		location = trapani
+	}
+	pirate_haven = {
+		tag = BIJ
+		level = 1
+		location = bejaia
 	}
 	tar_kiln = {
 		tag = HUN
@@ -7286,6 +7369,11 @@ building_manager = {
 		tag = SCL
 		level = 1
 		location = saint_claude
+	}
+	monastery = {
+		tag = ELL
+		level = 1
+		location = ellwangen
 	}
 	madrasa = {
 		tag = MAL
@@ -12802,6 +12890,11 @@ building_manager = {
 		level = 1
 		location = fez
 	}
+	cloth_guild = {
+		tag = MOR
+		level = 5
+		location = fez
+	}
 	castle = {
 		tag = TFL
 		level = 1
@@ -12811,6 +12904,56 @@ building_manager = {
 		tag = TLE
 		level = 1
 		location = tlemcen
+	}
+	local_governor = {
+		tag = MOR
+		level = 1
+		location = marrakesh
+	}
+	wharf = {
+		tag = SLE
+		level = 1
+		location = sale
+	}
+	dock = {
+		tag = SLE
+		level = 1
+		location = sale
+	}
+	monument_dar_al_makhzen = {
+		tag = MOR
+		level = 1
+		location = fez
+	}
+	monument_qarawiyyin = {
+		tag = MOR
+		level = 1
+		location = fez
+	}
+	monument_hassan_tower = {
+		tag = MOR
+		level = 1
+		location = rabat
+	}
+	monument_kasbah_udayas = {
+		tag = MOR
+		level = 1
+		location = rabat
+	}
+	monument_mansourah_tlemcen = {
+		tag = TLE
+		level = 1
+		location = tlemcen
+	}
+	monument_great_mosque_algiers = {
+		tag = TLE
+		level = 1
+		location = algiers
+	}
+	monument_kairouan_mosque = {
+		tag = TUN
+		level = 1
+		location = kairouan
 	}
 	missionary_building = {
 		tag = PAP
@@ -16027,6 +16170,51 @@ building_manager = {
 		level = 1
 		location = pisa
 	}
+	itinerant_court_seat = {
+		tag = SCO
+		level = 1
+		location = dunfermline
+	}
+	itinerant_court_seat = {
+		tag = ARA
+		level = 1
+		location = valencia
+	}
+	itinerant_court_seat = {
+		tag = CAS
+		level = 1
+		location = sevilla
+	}
+	itinerant_court_seat = {
+		tag = POR
+		level = 1
+		location = lisbon
+	}
+	itinerant_court_seat = {
+		tag = ETH
+		level = 1
+		location = ankober
+	}
+	itinerant_court_seat = {
+		tag = UBV
+		level = 1
+		location = munich
+	}
+	itinerant_court_seat = {
+		tag = MOY
+		level = 1
+		location = elgin
+	}
+	itinerant_court_seat = {
+		tag = LOI
+		level = 1
+		location = islay
+	}
+	itinerant_court_seat = {
+		tag = ROS
+		level = 1
+		location = dingwall
+	}
  brewery = { tag = AAC level = 2 location = aachen }
  castle = { tag = AAC level = 1 location = aachen }
  granary = { tag = AAC level = 1 location = aachen }
@@ -16346,14 +16534,16 @@ building_manager = {
  tools_guild = { tag = CHG level = 1 location = almaty }
  brewery = { tag = GRA level = 1 location = almeria }
  castle = { tag = GRA level = 1 location = almeria }
+ fine_cloth_guild = { tag = GRA level = 2 location = almeria }
  granary = { tag = GRA level = 1 location = almeria }
- marketplace = { tag = GRA level = 1 location = almeria }
+ marketplace = { tag = GRA level = 3 location = almeria }
  mason = { tag = GRA level = 1 location = almeria }
+ naval_supplies_guild = { tag = GRA level = 1 location = almeria }
  paper_guild = { tag = GRA level = 1 location = almeria }
- pottery_guild = { tag = GRA level = 1 location = almeria }
+ pottery_guild = { tag = GRA level = 2 location = almeria }
  tannery = { tag = GRA level = 1 location = almeria }
  temple = { tag = GRA level = 1 location = almeria }
- tools_guild = { tag = GRA level = 1 location = almeria }
+ tools_guild = { tag = GRA level = 3 location = almeria }
  weapon_guild = { tag = GRA level = 1 location = almeria }
  wharf = { tag = GRA level = 1 location = almeria }
  castle = { tag = TDJ level = 1 location = amasya }
@@ -16568,26 +16758,26 @@ building_manager = {
  temple = { tag = AHI level = 1 location = ankara }
  tools_guild = { tag = AHI level = 2 location = ankara }
  weapon_guild = { tag = AHI level = 1 location = ankara }
- castle = { tag = TUN level = 1 location = annaba }
- cloth_guild = { tag = TUN level = 1 location = annaba }
- fine_cloth_guild = { tag = TUN level = 2 location = annaba }
- fortress_granary = { tag = TUN level = 1 location = annaba }
- funduq = { tag = TUN level = 1 location = annaba }
- furniture_guild = { tag = TUN level = 1 location = annaba }
- granary = { tag = TUN level = 2 location = annaba }
- jewelry_guild = { tag = TUN level = 1 location = annaba }
- marketplace = { tag = TUN level = 2 location = annaba }
- mason = { tag = TUN level = 2 location = annaba }
- naval_supplies_guild = { tag = TUN level = 2 location = annaba }
- paper_guild = { tag = TUN level = 1 location = annaba }
- pottery_guild = { tag = TUN level = 2 location = annaba }
- scriptorium = { tag = TUN level = 2 location = annaba }
- slave_market = { tag = TUN level = 2 location = annaba }
- tannery = { tag = TUN level = 2 location = annaba }
- temple = { tag = TUN level = 1 location = annaba }
- tools_guild = { tag = TUN level = 2 location = annaba }
- weapon_guild = { tag = TUN level = 1 location = annaba }
- wharf = { tag = TUN level = 1 location = annaba }
+ castle = { tag = BIJ level = 1 location = annaba }
+ cloth_guild = { tag = BIJ level = 1 location = annaba }
+ fine_cloth_guild = { tag = BIJ level = 2 location = annaba }
+ fortress_granary = { tag = BIJ level = 1 location = annaba }
+ funduq = { tag = BIJ level = 1 location = annaba }
+ furniture_guild = { tag = BIJ level = 1 location = annaba }
+ granary = { tag = BIJ level = 2 location = annaba }
+ jewelry_guild = { tag = BIJ level = 1 location = annaba }
+ marketplace = { tag = BIJ level = 2 location = annaba }
+ mason = { tag = BIJ level = 2 location = annaba }
+ naval_supplies_guild = { tag = BIJ level = 2 location = annaba }
+ paper_guild = { tag = BIJ level = 1 location = annaba }
+ pottery_guild = { tag = BIJ level = 2 location = annaba }
+ scriptorium = { tag = BIJ level = 2 location = annaba }
+ slave_market = { tag = BIJ level = 2 location = annaba }
+ tannery = { tag = BIJ level = 2 location = annaba }
+ temple = { tag = BIJ level = 1 location = annaba }
+ tools_guild = { tag = BIJ level = 2 location = annaba }
+ weapon_guild = { tag = BIJ level = 1 location = annaba }
+ wharf = { tag = BIJ level = 1 location = annaba }
  brewery = { tag = CHI level = 1 location = anqiu }
  cloth_guild = { tag = CHI level = 2 location = anqiu }
  dyes_guild = { tag = CHI level = 1 location = anqiu }
@@ -17033,10 +17223,24 @@ building_manager = {
  temple = { tag = BFR level = 1 location = bafra }
  tools_guild = { tag = BFR level = 1 location = bafra }
  weapon_guild = { tag = BFR level = 1 location = bafra }
- glass_guild = { tag = JAL level = 1 location = baghdad }
- marketplace = { tag = JAL level = 2 location = baghdad }
- paper_guild = { tag = JAL level = 2 location = baghdad }
- scriptorium = { tag = JAL level = 1 location = baghdad }
+ castle = { tag = JAL level = 1 location = baghdad }
+ cloth_guild = { tag = JAL level = 1 location = baghdad }
+ dyes_guild = { tag = JAL level = 1 location = baghdad }
+ fine_cloth_guild = { tag = JAL level = 1 location = baghdad }
+ furniture_guild = { tag = JAL level = 1 location = baghdad }
+ glass_guild = { tag = JAL level = 2 location = baghdad }
+ granary = { tag = JAL level = 1 location = baghdad }
+ jewelry_guild = { tag = JAL level = 1 location = baghdad }
+ marketplace = { tag = JAL level = 4 location = baghdad }
+ mason = { tag = JAL level = 1 location = baghdad }
+ paper_guild = { tag = JAL level = 3 location = baghdad }
+ pottery_guild = { tag = JAL level = 1 location = baghdad }
+ scriptorium = { tag = JAL level = 2 location = baghdad }
+ slave_market = { tag = JAL level = 1 location = baghdad }
+ tannery = { tag = JAL level = 1 location = baghdad }
+ temple = { tag = JAL level = 1 location = baghdad }
+ tools_guild = { tag = JAL level = 1 location = baghdad }
+ weapon_guild = { tag = JAL level = 1 location = baghdad }
  brewery = { tag = CHI level = 1 location = baicang }
  cloth_guild = { tag = CHI level = 2 location = baicang }
  dyes_guild = { tag = CHI level = 1 location = baicang }
@@ -17218,9 +17422,24 @@ building_manager = {
  weapon_guild = { tag = CHI level = 1 location = baochang_nanxiong }
  winery = { tag = CHI level = 1 location = baochang_nanxiong }
  zhixian = { tag = CHI level = 1 location = baochang_nanxiong }
- fine_cloth_guild = { tag = ARA level = 1 location = barcelona }
- marketplace = { tag = ARA level = 1 location = barcelona }
- naval_supplies_guild = { tag = ARA level = 1 location = barcelona }
+ castle = { tag = ARA level = 1 location = barcelona }
+ cloth_guild = { tag = ARA level = 1 location = barcelona }
+ fine_cloth_guild = { tag = ARA level = 3 location = barcelona }
+ furniture_guild = { tag = ARA level = 1 location = barcelona }
+ glass_guild = { tag = ARA level = 1 location = barcelona }
+ granary = { tag = ARA level = 3 location = barcelona }
+ jewelry_guild = { tag = ARA level = 1 location = barcelona }
+ marketplace = { tag = ARA level = 3 location = barcelona }
+ mason = { tag = ARA level = 2 location = barcelona }
+ naval_supplies_guild = { tag = ARA level = 2 location = barcelona }
+ paper_guild = { tag = ARA level = 1 location = barcelona }
+ pottery_guild = { tag = ARA level = 2 location = barcelona }
+ scriptorium = { tag = ARA level = 1 location = barcelona }
+ tannery = { tag = ARA level = 2 location = barcelona }
+ temple = { tag = ARA level = 1 location = barcelona }
+ tools_guild = { tag = ARA level = 2 location = barcelona }
+ weapon_guild = { tag = ARA level = 2 location = barcelona }
+ wharf = { tag = ARA level = 1 location = barcelona }
  brewery = { tag = NAP level = 1 location = bari }
  granary = { tag = NAP level = 1 location = bari }
  marketplace = { tag = NAP level = 1 location = bari }
@@ -17327,26 +17546,26 @@ building_manager = {
  temple = { tag = BON level = 1 location = begho }
  tools_guild = { tag = BON level = 1 location = begho }
  weapon_guild = { tag = BON level = 1 location = begho }
- castle = { tag = TUN level = 1 location = bejaia }
- cloth_guild = { tag = TUN level = 1 location = bejaia }
- fine_cloth_guild = { tag = TUN level = 2 location = bejaia }
- fortress_granary = { tag = TUN level = 1 location = bejaia }
- funduq = { tag = TUN level = 1 location = bejaia }
- furniture_guild = { tag = TUN level = 1 location = bejaia }
- granary = { tag = TUN level = 2 location = bejaia }
- jewelry_guild = { tag = TUN level = 1 location = bejaia }
- marketplace = { tag = TUN level = 2 location = bejaia }
- mason = { tag = TUN level = 2 location = bejaia }
- naval_supplies_guild = { tag = TUN level = 2 location = bejaia }
- paper_guild = { tag = TUN level = 1 location = bejaia }
- pottery_guild = { tag = TUN level = 2 location = bejaia }
- scriptorium = { tag = TUN level = 2 location = bejaia }
- slave_market = { tag = TUN level = 2 location = bejaia }
- tannery = { tag = TUN level = 2 location = bejaia }
- temple = { tag = TUN level = 1 location = bejaia }
- tools_guild = { tag = TUN level = 2 location = bejaia }
- weapon_guild = { tag = TUN level = 1 location = bejaia }
- wharf = { tag = TUN level = 1 location = bejaia }
+ castle = { tag = BIJ level = 1 location = bejaia }
+ cloth_guild = { tag = BIJ level = 1 location = bejaia }
+ fine_cloth_guild = { tag = BIJ level = 2 location = bejaia }
+ fortress_granary = { tag = BIJ level = 1 location = bejaia }
+ funduq = { tag = BIJ level = 1 location = bejaia }
+ furniture_guild = { tag = BIJ level = 1 location = bejaia }
+ granary = { tag = BIJ level = 2 location = bejaia }
+ jewelry_guild = { tag = BIJ level = 1 location = bejaia }
+ marketplace = { tag = BIJ level = 2 location = bejaia }
+ mason = { tag = BIJ level = 2 location = bejaia }
+ naval_supplies_guild = { tag = BIJ level = 2 location = bejaia }
+ paper_guild = { tag = BIJ level = 1 location = bejaia }
+ pottery_guild = { tag = BIJ level = 2 location = bejaia }
+ scriptorium = { tag = BIJ level = 2 location = bejaia }
+ slave_market = { tag = BIJ level = 2 location = bejaia }
+ tannery = { tag = BIJ level = 2 location = bejaia }
+ temple = { tag = BIJ level = 1 location = bejaia }
+ tools_guild = { tag = BIJ level = 2 location = bejaia }
+ weapon_guild = { tag = BIJ level = 1 location = bejaia }
+ wharf = { tag = BIJ level = 1 location = bejaia }
  brewery = { tag = HUN level = 1 location = belgrad }
  castle = { tag = HUN level = 1 location = belgrad }
  granary = { tag = HUN level = 1 location = belgrad }
@@ -17662,6 +17881,22 @@ building_manager = {
  temple = { tag = BON level = 1 location = bono_manso }
  tools_guild = { tag = BON level = 1 location = bono_manso }
  weapon_guild = { tag = BON level = 1 location = bono_manso }
+ brewery = { tag = AQN level = 1 location = bordeaux }
+ castle = { tag = AQN level = 1 location = bordeaux }
+ cloth_guild = { tag = AQN level = 1 location = bordeaux }
+ distillers_guild = { tag = AQN level = 1 location = bordeaux }
+ fine_cloth_guild = { tag = AQN level = 1 location = bordeaux }
+ furniture_guild = { tag = AQN level = 1 location = bordeaux }
+ glass_guild = { tag = AQN level = 1 location = bordeaux }
+ granary = { tag = AQN level = 2 location = bordeaux }
+ jewelry_guild = { tag = AQN level = 2 location = bordeaux }
+ marketplace = { tag = AQN level = 2 location = bordeaux }
+ mason = { tag = AQN level = 2 location = bordeaux }
+ paper_guild = { tag = AQN level = 1 location = bordeaux }
+ pottery_guild = { tag = AQN level = 2 location = bordeaux }
+ temple = { tag = AQN level = 1 location = bordeaux }
+ tools_guild = { tag = AQN level = 1 location = bordeaux }
+ weapon_guild = { tag = AQN level = 1 location = bordeaux }
  winery = { tag = AQN level = 3 location = bordeaux }
  brewery = { tag = ENG level = 1 location = boston }
  cloth_guild = { tag = ENG level = 2 location = boston }
@@ -17826,10 +18061,25 @@ building_manager = {
  tools_guild = { tag = DLH level = 4 location = broach }
  weapon_guild = { tag = DLH level = 6 location = broach }
  wharf = { tag = DLH level = 1 location = broach }
- cloth_guild = { tag = FLA level = 1 location = bruges }
- dyes_guild = { tag = FLA level = 2 location = bruges }
- fine_cloth_guild = { tag = FLA level = 2 location = bruges }
- marketplace = { tag = FLA level = 2 location = bruges }
+ brewery = { tag = FLA level = 3 location = bruges }
+ castle = { tag = FLA level = 1 location = bruges }
+ cloth_guild = { tag = FLA level = 7 location = bruges }
+ distillers_guild = { tag = FLA level = 1 location = bruges }
+ dyes_guild = { tag = FLA level = 4 location = bruges }
+ fine_cloth_guild = { tag = FLA level = 5 location = bruges }
+ furniture_guild = { tag = FLA level = 1 location = bruges }
+ glass_guild = { tag = FLA level = 1 location = bruges }
+ granary = { tag = FLA level = 4 location = bruges }
+ jewelry_guild = { tag = FLA level = 2 location = bruges }
+ marketplace = { tag = FLA level = 4 location = bruges }
+ mason = { tag = FLA level = 2 location = bruges }
+ paper_guild = { tag = FLA level = 1 location = bruges }
+ pottery_guild = { tag = FLA level = 2 location = bruges }
+ tannery = { tag = FLA level = 2 location = bruges }
+ temple = { tag = FLA level = 1 location = bruges }
+ tools_guild = { tag = FLA level = 2 location = bruges }
+ weapon_guild = { tag = FLA level = 2 location = bruges }
+ wharf = { tag = FLA level = 1 location = bruges }
  brewery = { tag = BRU level = 2 location = brunswick }
  castle = { tag = BRU level = 1 location = brunswick }
  granary = { tag = BRU level = 1 location = brunswick }
@@ -17921,9 +18171,24 @@ building_manager = {
  temple = { tag = CAS level = 1 location = burgos }
  tools_guild = { tag = CAS level = 1 location = burgos }
  weapon_guild = { tag = CAS level = 1 location = burgos }
- dyes_guild = { tag = TUR level = 2 location = bursa }
- fine_cloth_guild = { tag = TUR level = 5 location = bursa }
- marketplace = { tag = TUR level = 1 location = bursa }
+ castle = { tag = TUR level = 1 location = bursa }
+ cloth_guild = { tag = TUR level = 1 location = bursa }
+ dyes_guild = { tag = TUR level = 3 location = bursa }
+ fine_cloth_guild = { tag = TUR level = 7 location = bursa }
+ furniture_guild = { tag = TUR level = 1 location = bursa }
+ glass_guild = { tag = TUR level = 1 location = bursa }
+ granary = { tag = TUR level = 2 location = bursa }
+ jewelry_guild = { tag = TUR level = 1 location = bursa }
+ marketplace = { tag = TUR level = 3 location = bursa }
+ mason = { tag = TUR level = 2 location = bursa }
+ paper_guild = { tag = TUR level = 1 location = bursa }
+ pottery_guild = { tag = TUR level = 2 location = bursa }
+ scriptorium = { tag = TUR level = 1 location = bursa }
+ slave_market = { tag = TUR level = 2 location = bursa }
+ tannery = { tag = TUR level = 1 location = bursa }
+ temple = { tag = TUR level = 1 location = bursa }
+ tools_guild = { tag = TUR level = 2 location = bursa }
+ weapon_guild = { tag = TUR level = 1 location = bursa }
  brewery = { tag = CAS level = 1 location = caceres }
  castle = { tag = CAS level = 1 location = caceres }
  granary = { tag = CAS level = 1 location = caceres }
@@ -17970,10 +18235,22 @@ building_manager = {
  temple = { tag = FRA level = 1 location = cahors }
  tools_guild = { tag = FRA level = 1 location = cahors }
  weapon_guild = { tag = FRA level = 1 location = cahors }
- fine_cloth_guild = { tag = MAM level = 2 location = cairo }
- jewelry_guild = { tag = MAM level = 2 location = cairo }
- marketplace = { tag = MAM level = 3 location = cairo }
- slave_market = { tag = MAM level = 1 location = cairo }
+ castle = { tag = MAM level = 1 location = cairo }
+ cloth_guild = { tag = MAM level = 1 location = cairo }
+ dyes_guild = { tag = MAM level = 1 location = cairo }
+ fine_cloth_guild = { tag = MAM level = 5 location = cairo }
+ furniture_guild = { tag = MAM level = 1 location = cairo }
+ granary = { tag = MAM level = 5 location = cairo }
+ jewelry_guild = { tag = MAM level = 4 location = cairo }
+ marketplace = { tag = MAM level = 5 location = cairo }
+ mason = { tag = MAM level = 2 location = cairo }
+ paper_guild = { tag = MAM level = 1 location = cairo }
+ pottery_guild = { tag = MAM level = 2 location = cairo }
+ scriptorium = { tag = MAM level = 2 location = cairo }
+ slave_market = { tag = MAM level = 3 location = cairo }
+ temple = { tag = MAM level = 1 location = cairo }
+ tools_guild = { tag = MAM level = 2 location = cairo }
+ weapon_guild = { tag = MAM level = 1 location = cairo }
  brewery = { tag = ARA level = 1 location = calatayud }
  castle = { tag = ARA level = 1 location = calatayud }
  granary = { tag = ARA level = 1 location = calatayud }
@@ -18414,9 +18691,25 @@ building_manager = {
  tools_guild = { tag = VEN level = 1 location = chioggia }
  weapon_guild = { tag = VEN level = 1 location = chioggia }
  wharf = { tag = VEN level = 1 location = chioggia }
- cloth_guild = { tag = ARK level = 1 location = chittagong }
- fine_cloth_guild = { tag = ARK level = 2 location = chittagong }
- marketplace = { tag = ARK level = 2 location = chittagong }
+ brewery = { tag = ARK level = 4 location = chittagong }
+ castle = { tag = ARK level = 1 location = chittagong }
+ cloth_guild = { tag = ARK level = 7 location = chittagong }
+ distillers_guild = { tag = ARK level = 1 location = chittagong }
+ fine_cloth_guild = { tag = ARK level = 6 location = chittagong }
+ glass_guild = { tag = ARK level = 2 location = chittagong }
+ granary = { tag = ARK level = 6 location = chittagong }
+ jewelry_guild = { tag = ARK level = 4 location = chittagong }
+ marketplace = { tag = ARK level = 8 location = chittagong }
+ mason = { tag = ARK level = 5 location = chittagong }
+ naval_supplies_guild = { tag = ARK level = 2 location = chittagong }
+ paper_guild = { tag = ARK level = 2 location = chittagong }
+ pottery_guild = { tag = ARK level = 1 location = chittagong }
+ scriptorium = { tag = ARK level = 2 location = chittagong }
+ tannery = { tag = ARK level = 4 location = chittagong }
+ temple = { tag = ARK level = 1 location = chittagong }
+ tools_guild = { tag = ARK level = 4 location = chittagong }
+ weapon_guild = { tag = ARK level = 6 location = chittagong }
+ wharf = { tag = ARK level = 1 location = chittagong }
  brewery = { tag = MEW level = 2 location = chittor }
  castle = { tag = MEW level = 1 location = chittor }
  cloth_guild = { tag = MEW level = 6 location = chittor }
@@ -18576,8 +18869,25 @@ building_manager = {
  temple = { tag = CFC level = 1 location = colmar }
  tools_guild = { tag = CFC level = 1 location = colmar }
  weapon_guild = { tag = CFC level = 1 location = colmar }
- jewelry_guild = { tag = KOL level = 2 location = cologne }
- marketplace = { tag = KOL level = 1 location = cologne }
+ brewery = { tag = KOL level = 3 location = cologne }
+ castle = { tag = KOL level = 1 location = cologne }
+ cloth_guild = { tag = KOL level = 1 location = cologne }
+ distillers_guild = { tag = KOL level = 1 location = cologne }
+ dyes_guild = { tag = KOL level = 2 location = cologne }
+ fine_cloth_guild = { tag = KOL level = 1 location = cologne }
+ furniture_guild = { tag = KOL level = 1 location = cologne }
+ glass_guild = { tag = KOL level = 1 location = cologne }
+ granary = { tag = KOL level = 2 location = cologne }
+ jewelry_guild = { tag = KOL level = 3 location = cologne }
+ marketplace = { tag = KOL level = 3 location = cologne }
+ mason = { tag = KOL level = 2 location = cologne }
+ paper_guild = { tag = KOL level = 1 location = cologne }
+ pottery_guild = { tag = KOL level = 2 location = cologne }
+ scriptorium = { tag = KOL level = 1 location = cologne }
+ tannery = { tag = KOL level = 1 location = cologne }
+ temple = { tag = KOL level = 1 location = cologne }
+ tools_guild = { tag = KOL level = 2 location = cologne }
+ weapon_guild = { tag = KOL level = 2 location = cologne }
  winery = { tag = KOL level = 2 location = cologne }
  brewery = { tag = CHI level = 1 location = conghua }
  cloth_guild = { tag = CHI level = 2 location = conghua }
@@ -18608,24 +18918,24 @@ building_manager = {
  temple = { tag = BUL level = 1 location = constanta }
  tools_guild = { tag = BUL level = 1 location = constanta }
  weapon_guild = { tag = BUL level = 1 location = constanta }
- castle = { tag = TUN level = 1 location = constantine_ALG }
- cloth_guild = { tag = TUN level = 1 location = constantine_ALG }
- fine_cloth_guild = { tag = TUN level = 2 location = constantine_ALG }
- fortress_granary = { tag = TUN level = 1 location = constantine_ALG }
- funduq = { tag = TUN level = 1 location = constantine_ALG }
- furniture_guild = { tag = TUN level = 1 location = constantine_ALG }
- granary = { tag = TUN level = 2 location = constantine_ALG }
- jewelry_guild = { tag = TUN level = 1 location = constantine_ALG }
- marketplace = { tag = TUN level = 2 location = constantine_ALG }
- mason = { tag = TUN level = 2 location = constantine_ALG }
- paper_guild = { tag = TUN level = 1 location = constantine_ALG }
- pottery_guild = { tag = TUN level = 2 location = constantine_ALG }
- scriptorium = { tag = TUN level = 2 location = constantine_ALG }
- slave_market = { tag = TUN level = 2 location = constantine_ALG }
- tannery = { tag = TUN level = 2 location = constantine_ALG }
- temple = { tag = TUN level = 1 location = constantine_ALG }
- tools_guild = { tag = TUN level = 2 location = constantine_ALG }
- weapon_guild = { tag = TUN level = 1 location = constantine_ALG }
+ castle = { tag = BIJ level = 1 location = constantine_ALG }
+ cloth_guild = { tag = BIJ level = 1 location = constantine_ALG }
+ fine_cloth_guild = { tag = BIJ level = 2 location = constantine_ALG }
+ fortress_granary = { tag = BIJ level = 1 location = constantine_ALG }
+ funduq = { tag = BIJ level = 1 location = constantine_ALG }
+ furniture_guild = { tag = BIJ level = 1 location = constantine_ALG }
+ granary = { tag = BIJ level = 2 location = constantine_ALG }
+ jewelry_guild = { tag = BIJ level = 1 location = constantine_ALG }
+ marketplace = { tag = BIJ level = 2 location = constantine_ALG }
+ mason = { tag = BIJ level = 2 location = constantine_ALG }
+ paper_guild = { tag = BIJ level = 1 location = constantine_ALG }
+ pottery_guild = { tag = BIJ level = 2 location = constantine_ALG }
+ scriptorium = { tag = BIJ level = 2 location = constantine_ALG }
+ slave_market = { tag = BIJ level = 2 location = constantine_ALG }
+ tannery = { tag = BIJ level = 2 location = constantine_ALG }
+ temple = { tag = BIJ level = 1 location = constantine_ALG }
+ tools_guild = { tag = BIJ level = 2 location = constantine_ALG }
+ weapon_guild = { tag = BIJ level = 1 location = constantine_ALG }
  brewery = { tag = BYZ level = 2 location = constantinople }
  castle = { tag = BYZ level = 1 location = constantinople }
  cloth_guild = { tag = BYZ level = 1 location = constantinople }
@@ -18645,9 +18955,24 @@ building_manager = {
  tools_guild = { tag = BYZ level = 2 location = constantinople }
  weapon_guild = { tag = BYZ level = 2 location = constantinople }
  wharf = { tag = BYZ level = 1 location = constantinople }
- fine_cloth_guild = { tag = CAS level = 2 location = cordoba }
- paper_guild = { tag = CAS level = 2 location = cordoba }
- tannery = { tag = CAS level = 3 location = cordoba }
+ brewery = { tag = CAS level = 1 location = cordoba }
+ castle = { tag = CAS level = 1 location = cordoba }
+ cloth_guild = { tag = CAS level = 1 location = cordoba }
+ distillers_guild = { tag = CAS level = 1 location = cordoba }
+ fine_cloth_guild = { tag = CAS level = 4 location = cordoba }
+ furniture_guild = { tag = CAS level = 1 location = cordoba }
+ glass_guild = { tag = CAS level = 1 location = cordoba }
+ granary = { tag = CAS level = 3 location = cordoba }
+ jewelry_guild = { tag = CAS level = 1 location = cordoba }
+ marketplace = { tag = CAS level = 2 location = cordoba }
+ mason = { tag = CAS level = 2 location = cordoba }
+ paper_guild = { tag = CAS level = 3 location = cordoba }
+ pottery_guild = { tag = CAS level = 2 location = cordoba }
+ scriptorium = { tag = CAS level = 1 location = cordoba }
+ tannery = { tag = CAS level = 6 location = cordoba }
+ temple = { tag = CAS level = 1 location = cordoba }
+ tools_guild = { tag = CAS level = 2 location = cordoba }
+ weapon_guild = { tag = CAS level = 2 location = cordoba }
  brewery = { tag = ACH level = 1 location = corinth }
  granary = { tag = ACH level = 1 location = corinth }
  marketplace = { tag = ACH level = 1 location = corinth }
@@ -18779,10 +19104,24 @@ building_manager = {
  pottery_guild = { tag = MAJ level = 1 location = daha }
  tannery = { tag = MAJ level = 1 location = daha }
  tools_guild = { tag = MAJ level = 1 location = daha }
- dyes_guild = { tag = MAM level = 1 location = damascus }
- fine_cloth_guild = { tag = MAM level = 2 location = damascus }
- jewelry_guild = { tag = MAM level = 1 location = damascus }
- weapon_guild = { tag = MAM level = 1 location = damascus }
+ castle = { tag = MAM level = 1 location = damascus }
+ cloth_guild = { tag = MAM level = 1 location = damascus }
+ dyes_guild = { tag = MAM level = 2 location = damascus }
+ fine_cloth_guild = { tag = MAM level = 3 location = damascus }
+ furniture_guild = { tag = MAM level = 1 location = damascus }
+ glass_guild = { tag = MAM level = 1 location = damascus }
+ granary = { tag = MAM level = 1 location = damascus }
+ jewelry_guild = { tag = MAM level = 2 location = damascus }
+ marketplace = { tag = MAM level = 2 location = damascus }
+ mason = { tag = MAM level = 1 location = damascus }
+ paper_guild = { tag = MAM level = 1 location = damascus }
+ pottery_guild = { tag = MAM level = 1 location = damascus }
+ scriptorium = { tag = MAM level = 1 location = damascus }
+ slave_market = { tag = MAM level = 1 location = damascus }
+ tannery = { tag = MAM level = 1 location = damascus }
+ temple = { tag = MAM level = 1 location = damascus }
+ tools_guild = { tag = MAM level = 1 location = damascus }
+ weapon_guild = { tag = MAM level = 2 location = damascus }
  castle = { tag = MAM level = 1 location = damietta }
  cloth_guild = { tag = MAM level = 1 location = damietta }
  dyes_guild = { tag = MAM level = 1 location = damietta }
@@ -19163,9 +19502,17 @@ building_manager = {
  tools_guild = { tag = PLE level = 1 location = dublin }
  weapon_guild = { tag = PLE level = 1 location = dublin }
  wharf = { tag = PLE level = 1 location = dublin }
- marketplace = { tag = RAG level = 3 location = dubrovnik }
+ brewery = { tag = RAG level = 1 location = dubrovnik }
+ castle = { tag = RAG level = 1 location = dubrovnik }
+ granary = { tag = RAG level = 1 location = dubrovnik }
+ marketplace = { tag = RAG level = 4 location = dubrovnik }
+ mason = { tag = RAG level = 1 location = dubrovnik }
  naval_supplies_guild = { tag = RAG level = 3 location = dubrovnik }
- tannery = { tag = RAG level = 1 location = dubrovnik }
+ pottery_guild = { tag = RAG level = 1 location = dubrovnik }
+ tannery = { tag = RAG level = 2 location = dubrovnik }
+ temple = { tag = RAG level = 1 location = dubrovnik }
+ tools_guild = { tag = RAG level = 1 location = dubrovnik }
+ weapon_guild = { tag = RAG level = 1 location = dubrovnik }
  brewery = { tag = CHI level = 1 location = ducheng }
  cloth_guild = { tag = CHI level = 2 location = ducheng }
  dyes_guild = { tag = CHI level = 1 location = ducheng }
@@ -19451,9 +19798,24 @@ building_manager = {
  temple = { tag = FER level = 1 location = ferrara }
  tools_guild = { tag = FER level = 1 location = ferrara }
  weapon_guild = { tag = FER level = 1 location = ferrara }
- fine_cloth_guild = { tag = MOR level = 1 location = fez }
- scriptorium = { tag = MOR level = 1 location = fez }
- tannery = { tag = MOR level = 3 location = fez }
+ castle = { tag = MOR level = 1 location = fez }
+ cloth_guild = { tag = MOR level = 1 location = fez }
+ fine_cloth_guild = { tag = MOR level = 3 location = fez }
+ fortress_granary = { tag = MOR level = 1 location = fez }
+ funduq = { tag = MOR level = 1 location = fez }
+ furniture_guild = { tag = MOR level = 1 location = fez }
+ granary = { tag = MOR level = 2 location = fez }
+ jewelry_guild = { tag = MOR level = 1 location = fez }
+ marketplace = { tag = MOR level = 2 location = fez }
+ mason = { tag = MOR level = 2 location = fez }
+ paper_guild = { tag = MOR level = 1 location = fez }
+ pottery_guild = { tag = MOR level = 2 location = fez }
+ scriptorium = { tag = MOR level = 3 location = fez }
+ slave_market = { tag = MOR level = 2 location = fez }
+ tannery = { tag = MOR level = 5 location = fez }
+ temple = { tag = MOR level = 1 location = fez }
+ tools_guild = { tag = MOR level = 2 location = fez }
+ weapon_guild = { tag = MOR level = 1 location = fez }
  brewery = { tag = SLV level = 2 location = flensburg }
  castle = { tag = SLV level = 1 location = flensburg }
  granary = { tag = SLV level = 1 location = flensburg }
@@ -19468,10 +19830,23 @@ building_manager = {
  tools_guild = { tag = SLV level = 1 location = flensburg }
  weapon_guild = { tag = SLV level = 1 location = flensburg }
  wharf = { tag = SLV level = 1 location = flensburg }
- cloth_guild = { tag = FLO level = 3 location = florence }
- dyes_guild = { tag = FLO level = 1 location = florence }
- fine_cloth_guild = { tag = FLO level = 2 location = florence }
+ brewery = { tag = FLO level = 1 location = florence }
+ castle = { tag = FLO level = 1 location = florence }
+ cloth_guild = { tag = FLO level = 4 location = florence }
+ distillers_guild = { tag = FLO level = 1 location = florence }
+ dyes_guild = { tag = FLO level = 2 location = florence }
+ fine_cloth_guild = { tag = FLO level = 4 location = florence }
+ furniture_guild = { tag = FLO level = 1 location = florence }
+ glass_guild = { tag = FLO level = 3 location = florence }
+ granary = { tag = FLO level = 2 location = florence }
  jewelry_guild = { tag = FLO level = 2 location = florence }
+ marketplace = { tag = FLO level = 2 location = florence }
+ mason = { tag = FLO level = 2 location = florence }
+ paper_guild = { tag = FLO level = 1 location = florence }
+ pottery_guild = { tag = FLO level = 2 location = florence }
+ temple = { tag = FLO level = 1 location = florence }
+ tools_guild = { tag = FLO level = 1 location = florence }
+ weapon_guild = { tag = FLO level = 1 location = florence }
  brewery = { tag = NAP level = 1 location = foggia }
  granary = { tag = NAP level = 1 location = foggia }
  marketplace = { tag = NAP level = 1 location = foggia }
@@ -19552,7 +19927,30 @@ building_manager = {
  weapon_guild = { tag = CHI level = 1 location = fugu }
  winery = { tag = CHI level = 1 location = fugu }
  zhixian = { tag = CHI level = 1 location = fugu }
- porcelain_guild = { tag = CHI level = 5 location = fuliang }
+ brewery = { tag = CHI level = 1 location = fuliang }
+ castle = { tag = CHI level = 1 location = fuliang }
+ cloth_guild = { tag = CHI level = 2 location = fuliang }
+ distillers_guild = { tag = CHI level = 1 location = fuliang }
+ dyes_guild = { tag = CHI level = 2 location = fuliang }
+ fine_cloth_guild = { tag = CHI level = 2 location = fuliang }
+ furniture_guild = { tag = CHI level = 1 location = fuliang }
+ glass_guild = { tag = CHI level = 1 location = fuliang }
+ granary = { tag = CHI level = 2 location = fuliang }
+ jewelry_guild = { tag = CHI level = 1 location = fuliang }
+ lacquerware_guild = { tag = CHI level = 2 location = fuliang }
+ marketplace = { tag = CHI level = 5 location = fuliang }
+ mason = { tag = CHI level = 2 location = fuliang }
+ paper_guild = { tag = CHI level = 1 location = fuliang }
+ porcelain_guild = { tag = CHI level = 6 location = fuliang }
+ pottery_guild = { tag = CHI level = 2 location = fuliang }
+ provincial_garrison = { tag = CHI level = 1 location = fuliang }
+ scriptorium = { tag = CHI level = 2 location = fuliang }
+ tannery = { tag = CHI level = 2 location = fuliang }
+ temple = { tag = CHI level = 1 location = fuliang }
+ tools_guild = { tag = CHI level = 2 location = fuliang }
+ weapon_guild = { tag = CHI level = 2 location = fuliang }
+ winery = { tag = CHI level = 2 location = fuliang }
+ zhixian = { tag = CHI level = 1 location = fuliang }
  brewery = { tag = CHI level = 1 location = funing_huaian }
  cloth_guild = { tag = CHI level = 2 location = funing_huaian }
  dyes_guild = { tag = CHI level = 1 location = funing_huaian }
@@ -19902,9 +20300,25 @@ building_manager = {
  weapon_guild = { tag = MHA level = 2 location = gengma }
  winery = { tag = MHA level = 2 location = gengma }
  zhixian = { tag = MHA level = 1 location = gengma }
- fine_cloth_guild = { tag = GEN level = 1 location = genoa }
- naval_supplies_guild = { tag = GEN level = 2 location = genoa }
+ brewery = { tag = GEN level = 2 location = genoa }
+ castle = { tag = GEN level = 1 location = genoa }
+ cloth_guild = { tag = GEN level = 1 location = genoa }
+ distillers_guild = { tag = GEN level = 2 location = genoa }
+ dyes_guild = { tag = GEN level = 1 location = genoa }
+ fine_cloth_guild = { tag = GEN level = 4 location = genoa }
+ glass_guild = { tag = GEN level = 3 location = genoa }
+ granary = { tag = GEN level = 2 location = genoa }
+ jewelry_guild = { tag = GEN level = 1 location = genoa }
+ marketplace = { tag = GEN level = 5 location = genoa }
+ mason = { tag = GEN level = 2 location = genoa }
+ naval_supplies_guild = { tag = GEN level = 3 location = genoa }
+ paper_guild = { tag = GEN level = 1 location = genoa }
+ pottery_guild = { tag = GEN level = 2 location = genoa }
  tannery = { tag = GEN level = 1 location = genoa }
+ temple = { tag = GEN level = 1 location = genoa }
+ tools_guild = { tag = GEN level = 3 location = genoa }
+ weapon_guild = { tag = GEN level = 1 location = genoa }
+ wharf = { tag = GEN level = 1 location = genoa }
  castle = { tag = NGD level = 1 location = ghazni }
  cloth_guild = { tag = NGD level = 1 location = ghazni }
  dyes_guild = { tag = NGD level = 1 location = ghazni }
@@ -19923,10 +20337,24 @@ building_manager = {
  temple = { tag = NGD level = 1 location = ghazni }
  tools_guild = { tag = NGD level = 1 location = ghazni }
  weapon_guild = { tag = NGD level = 1 location = ghazni }
- brewery = { tag = FLA level = 1 location = ghent }
- cloth_guild = { tag = FLA level = 2 location = ghent }
- marketplace = { tag = FLA level = 1 location = ghent }
- weapon_guild = { tag = FLA level = 1 location = ghent }
+ brewery = { tag = FLA level = 4 location = ghent }
+ castle = { tag = FLA level = 1 location = ghent }
+ cloth_guild = { tag = FLA level = 8 location = ghent }
+ distillers_guild = { tag = FLA level = 1 location = ghent }
+ dyes_guild = { tag = FLA level = 2 location = ghent }
+ fine_cloth_guild = { tag = FLA level = 3 location = ghent }
+ furniture_guild = { tag = FLA level = 1 location = ghent }
+ glass_guild = { tag = FLA level = 1 location = ghent }
+ granary = { tag = FLA level = 4 location = ghent }
+ jewelry_guild = { tag = FLA level = 2 location = ghent }
+ marketplace = { tag = FLA level = 3 location = ghent }
+ mason = { tag = FLA level = 2 location = ghent }
+ paper_guild = { tag = FLA level = 1 location = ghent }
+ pottery_guild = { tag = FLA level = 2 location = ghent }
+ tannery = { tag = FLA level = 1 location = ghent }
+ temple = { tag = FLA level = 1 location = ghent }
+ tools_guild = { tag = FLA level = 1 location = ghent }
+ weapon_guild = { tag = FLA level = 3 location = ghent }
  brewery = { tag = SIC level = 1 location = girgenti }
  granary = { tag = SIC level = 1 location = girgenti }
  marketplace = { tag = SIC level = 1 location = girgenti }
@@ -20047,19 +20475,20 @@ building_manager = {
  castle = { tag = GRA level = 1 location = granada }
  cloth_guild = { tag = GRA level = 1 location = granada }
  distillers_guild = { tag = GRA level = 1 location = granada }
- fine_cloth_guild = { tag = GRA level = 2 location = granada }
+ dyes_guild = { tag = GRA level = 1 location = granada }
+ fine_cloth_guild = { tag = GRA level = 4 location = granada }
  furniture_guild = { tag = GRA level = 1 location = granada }
  glass_guild = { tag = GRA level = 1 location = granada }
  granary = { tag = GRA level = 3 location = granada }
- jewelry_guild = { tag = GRA level = 1 location = granada }
- marketplace = { tag = GRA level = 2 location = granada }
+ jewelry_guild = { tag = GRA level = 2 location = granada }
+ marketplace = { tag = GRA level = 3 location = granada }
  mason = { tag = GRA level = 2 location = granada }
- paper_guild = { tag = GRA level = 1 location = granada }
- pottery_guild = { tag = GRA level = 2 location = granada }
- scriptorium = { tag = GRA level = 1 location = granada }
+ paper_guild = { tag = GRA level = 2 location = granada }
+ pottery_guild = { tag = GRA level = 3 location = granada }
+ scriptorium = { tag = GRA level = 3 location = granada }
  tannery = { tag = GRA level = 3 location = granada }
  temple = { tag = GRA level = 1 location = granada }
- tools_guild = { tag = GRA level = 2 location = granada }
+ tools_guild = { tag = GRA level = 4 location = granada }
  weapon_guild = { tag = GRA level = 2 location = granada }
  brewery = { tag = HAB level = 2 location = graz }
  castle = { tag = HAB level = 1 location = graz }
@@ -20176,8 +20605,31 @@ building_manager = {
  weapon_guild = { tag = CHI level = 1 location = guangping }
  winery = { tag = CHI level = 1 location = guangping }
  zhixian = { tag = CHI level = 1 location = guangping }
- marketplace = { tag = CHI level = 2 location = guangzhou }
+ brewery = { tag = CHI level = 1 location = guangzhou }
+ castle = { tag = CHI level = 1 location = guangzhou }
+ cloth_guild = { tag = CHI level = 2 location = guangzhou }
+ distillers_guild = { tag = CHI level = 1 location = guangzhou }
+ dyes_guild = { tag = CHI level = 2 location = guangzhou }
+ fine_cloth_guild = { tag = CHI level = 2 location = guangzhou }
+ furniture_guild = { tag = CHI level = 1 location = guangzhou }
+ glass_guild = { tag = CHI level = 1 location = guangzhou }
+ granary = { tag = CHI level = 2 location = guangzhou }
+ jewelry_guild = { tag = CHI level = 1 location = guangzhou }
+ lacquerware_guild = { tag = CHI level = 2 location = guangzhou }
+ marketplace = { tag = CHI level = 7 location = guangzhou }
+ mason = { tag = CHI level = 2 location = guangzhou }
  naval_supplies_guild = { tag = CHI level = 1 location = guangzhou }
+ paper_guild = { tag = CHI level = 1 location = guangzhou }
+ porcelain_guild = { tag = CHI level = 1 location = guangzhou }
+ pottery_guild = { tag = CHI level = 2 location = guangzhou }
+ provincial_garrison = { tag = CHI level = 1 location = guangzhou }
+ scriptorium = { tag = CHI level = 2 location = guangzhou }
+ tannery = { tag = CHI level = 2 location = guangzhou }
+ temple = { tag = CHI level = 1 location = guangzhou }
+ tools_guild = { tag = CHI level = 2 location = guangzhou }
+ weapon_guild = { tag = CHI level = 2 location = guangzhou }
+ winery = { tag = CHI level = 2 location = guangzhou }
+ zhixian = { tag = CHI level = 1 location = guangzhou }
  brewery = { tag = DLH level = 2 location = gulbarga }
  castle = { tag = DLH level = 1 location = gulbarga }
  cloth_guild = { tag = DLH level = 6 location = gulbarga }
@@ -20372,8 +20824,27 @@ building_manager = {
  temple = { tag = NOR level = 1 location = hamar }
  tools_guild = { tag = NOR level = 1 location = hamar }
  weapon_guild = { tag = NOR level = 1 location = hamar }
- brewery = { tag = HAM level = 2 location = hamburg }
- marketplace = { tag = HAM level = 1 location = hamburg }
+ brewery = { tag = HAM level = 5 location = hamburg }
+ castle = { tag = HAM level = 1 location = hamburg }
+ cloth_guild = { tag = HAM level = 1 location = hamburg }
+ distillers_guild = { tag = HAM level = 1 location = hamburg }
+ dyes_guild = { tag = HAM level = 1 location = hamburg }
+ fine_cloth_guild = { tag = HAM level = 1 location = hamburg }
+ furniture_guild = { tag = HAM level = 1 location = hamburg }
+ glass_guild = { tag = HAM level = 1 location = hamburg }
+ granary = { tag = HAM level = 2 location = hamburg }
+ jewelry_guild = { tag = HAM level = 1 location = hamburg }
+ marketplace = { tag = HAM level = 3 location = hamburg }
+ mason = { tag = HAM level = 2 location = hamburg }
+ naval_supplies_guild = { tag = HAM level = 2 location = hamburg }
+ paper_guild = { tag = HAM level = 1 location = hamburg }
+ pottery_guild = { tag = HAM level = 2 location = hamburg }
+ scriptorium = { tag = HAM level = 1 location = hamburg }
+ tannery = { tag = HAM level = 1 location = hamburg }
+ temple = { tag = HAM level = 1 location = hamburg }
+ tools_guild = { tag = HAM level = 2 location = hamburg }
+ weapon_guild = { tag = HAM level = 2 location = hamburg }
+ wharf = { tag = HAM level = 1 location = hamburg }
  brewery = { tag = CHI level = 1 location = hancheng }
  cloth_guild = { tag = CHI level = 2 location = hancheng }
  dyes_guild = { tag = CHI level = 1 location = hancheng }
@@ -20436,9 +20907,30 @@ building_manager = {
  weapon_guild = { tag = CHI level = 2 location = handan }
  winery = { tag = CHI level = 2 location = handan }
  zhixian = { tag = CHI level = 1 location = handan }
- fine_cloth_guild = { tag = CHI level = 2 location = hangzhou }
- marketplace = { tag = CHI level = 3 location = hangzhou }
- winery = { tag = CHI level = 1 location = hangzhou }
+ brewery = { tag = CHI level = 1 location = hangzhou }
+ castle = { tag = CHI level = 1 location = hangzhou }
+ cloth_guild = { tag = CHI level = 2 location = hangzhou }
+ distillers_guild = { tag = CHI level = 1 location = hangzhou }
+ dyes_guild = { tag = CHI level = 2 location = hangzhou }
+ fine_cloth_guild = { tag = CHI level = 4 location = hangzhou }
+ furniture_guild = { tag = CHI level = 1 location = hangzhou }
+ glass_guild = { tag = CHI level = 1 location = hangzhou }
+ granary = { tag = CHI level = 2 location = hangzhou }
+ jewelry_guild = { tag = CHI level = 1 location = hangzhou }
+ lacquerware_guild = { tag = CHI level = 2 location = hangzhou }
+ marketplace = { tag = CHI level = 8 location = hangzhou }
+ mason = { tag = CHI level = 2 location = hangzhou }
+ paper_guild = { tag = CHI level = 1 location = hangzhou }
+ porcelain_guild = { tag = CHI level = 1 location = hangzhou }
+ pottery_guild = { tag = CHI level = 2 location = hangzhou }
+ scriptorium = { tag = CHI level = 2 location = hangzhou }
+ tannery = { tag = CHI level = 2 location = hangzhou }
+ temple = { tag = CHI level = 1 location = hangzhou }
+ tools_guild = { tag = CHI level = 2 location = hangzhou }
+ weapon_guild = { tag = CHI level = 2 location = hangzhou }
+ wharf = { tag = CHI level = 1 location = hangzhou }
+ winery = { tag = CHI level = 3 location = hangzhou }
+ zhixian = { tag = CHI level = 1 location = hangzhou }
  brewery = { tag = JAP level = 1 location = hata }
  granary = { tag = JAP level = 1 location = hata }
  marketplace = { tag = JAP level = 1 location = hata }
@@ -20585,9 +21077,24 @@ building_manager = {
  weapon_guild = { tag = CHI level = 1 location = hequ }
  winery = { tag = CHI level = 1 location = hequ }
  zhixian = { tag = CHI level = 1 location = hequ }
- fine_cloth_guild = { tag = KRT level = 2 location = herat }
- jewelry_guild = { tag = KRT level = 1 location = herat }
- paper_guild = { tag = KRT level = 2 location = herat }
+ castle = { tag = KRT level = 1 location = herat }
+ cloth_guild = { tag = KRT level = 1 location = herat }
+ dyes_guild = { tag = KRT level = 1 location = herat }
+ fine_cloth_guild = { tag = KRT level = 3 location = herat }
+ furniture_guild = { tag = KRT level = 1 location = herat }
+ glass_guild = { tag = KRT level = 1 location = herat }
+ granary = { tag = KRT level = 1 location = herat }
+ jewelry_guild = { tag = KRT level = 2 location = herat }
+ marketplace = { tag = KRT level = 2 location = herat }
+ mason = { tag = KRT level = 1 location = herat }
+ paper_guild = { tag = KRT level = 3 location = herat }
+ pottery_guild = { tag = KRT level = 1 location = herat }
+ scriptorium = { tag = KRT level = 1 location = herat }
+ slave_market = { tag = KRT level = 1 location = herat }
+ tannery = { tag = KRT level = 1 location = herat }
+ temple = { tag = KRT level = 1 location = herat }
+ tools_guild = { tag = KRT level = 1 location = herat }
+ weapon_guild = { tag = KRT level = 1 location = herat }
  brewery = { tag = BRB level = 1 location = hertogenbosch }
  castle = { tag = BRB level = 1 location = hertogenbosch }
  cloth_guild = { tag = BRB level = 3 location = hertogenbosch }
@@ -20660,9 +21167,24 @@ building_manager = {
  weapon_guild = { tag = CHI level = 1 location = hongtong }
  winery = { tag = CHI level = 1 location = hongtong }
  zhixian = { tag = CHI level = 1 location = hongtong }
- fine_cloth_guild = { tag = ORM level = 1 location = hormuz }
- jewelry_guild = { tag = ORM level = 2 location = hormuz }
- marketplace = { tag = ORM level = 3 location = hormuz }
+ castle = { tag = ORM level = 1 location = hormuz }
+ cloth_guild = { tag = ORM level = 1 location = hormuz }
+ dyes_guild = { tag = ORM level = 1 location = hormuz }
+ fine_cloth_guild = { tag = ORM level = 2 location = hormuz }
+ furniture_guild = { tag = ORM level = 1 location = hormuz }
+ glass_guild = { tag = ORM level = 1 location = hormuz }
+ granary = { tag = ORM level = 1 location = hormuz }
+ jewelry_guild = { tag = ORM level = 3 location = hormuz }
+ marketplace = { tag = ORM level = 5 location = hormuz }
+ mason = { tag = ORM level = 1 location = hormuz }
+ paper_guild = { tag = ORM level = 1 location = hormuz }
+ pottery_guild = { tag = ORM level = 1 location = hormuz }
+ scriptorium = { tag = ORM level = 1 location = hormuz }
+ slave_market = { tag = ORM level = 1 location = hormuz }
+ tannery = { tag = ORM level = 1 location = hormuz }
+ temple = { tag = ORM level = 1 location = hormuz }
+ tools_guild = { tag = ORM level = 1 location = hormuz }
+ weapon_guild = { tag = ORM level = 1 location = hormuz }
  brewery = { tag = CHI level = 1 location = huaiji }
  cloth_guild = { tag = CHI level = 2 location = huaiji }
  dyes_guild = { tag = CHI level = 1 location = huaiji }
@@ -21600,10 +22122,25 @@ building_manager = {
  tools_guild = { tag = KOR level = 2 location = kaesong }
  weapon_guild = { tag = KOR level = 2 location = kaesong }
  winery = { tag = KOR level = 1 location = kaesong }
- marketplace = { tag = GAZ level = 2 location = kaffa }
+ brewery = { tag = GAZ level = 1 location = kaffa }
+ castle = { tag = GAZ level = 1 location = kaffa }
+ cloth_guild = { tag = GAZ level = 1 location = kaffa }
+ distillers_guild = { tag = GAZ level = 1 location = kaffa }
+ dyes_guild = { tag = GAZ level = 1 location = kaffa }
+ fine_cloth_guild = { tag = GAZ level = 2 location = kaffa }
+ furniture_guild = { tag = GAZ level = 1 location = kaffa }
+ glass_guild = { tag = GAZ level = 3 location = kaffa }
+ granary = { tag = GAZ level = 2 location = kaffa }
+ marketplace = { tag = GAZ level = 4 location = kaffa }
+ mason = { tag = GAZ level = 2 location = kaffa }
  naval_supplies_guild = { tag = GAZ level = 1 location = kaffa }
+ paper_guild = { tag = GAZ level = 1 location = kaffa }
+ pottery_guild = { tag = GAZ level = 2 location = kaffa }
  slave_market = { tag = GAZ level = 3 location = kaffa }
  tannery = { tag = GAZ level = 1 location = kaffa }
+ temple = { tag = GAZ level = 1 location = kaffa }
+ tools_guild = { tag = GAZ level = 1 location = kaffa }
+ weapon_guild = { tag = GAZ level = 1 location = kaffa }
  brewery = { tag = JAP level = 1 location = kagoshima }
  granary = { tag = JAP level = 1 location = kagoshima }
  marketplace = { tag = JAP level = 1 location = kagoshima }
@@ -23131,9 +23668,27 @@ building_manager = {
  weapon_guild = { tag = CHI level = 1 location = luan }
  winery = { tag = CHI level = 1 location = luan }
  zhixian = { tag = CHI level = 1 location = luan }
- brewery = { tag = LUB level = 1 location = lubeck }
- marketplace = { tag = LUB level = 2 location = lubeck }
- naval_supplies_guild = { tag = LUB level = 1 location = lubeck }
+ brewery = { tag = LUB level = 4 location = lubeck }
+ castle = { tag = LUB level = 1 location = lubeck }
+ cloth_guild = { tag = LUB level = 1 location = lubeck }
+ distillers_guild = { tag = LUB level = 1 location = lubeck }
+ dyes_guild = { tag = LUB level = 1 location = lubeck }
+ fine_cloth_guild = { tag = LUB level = 1 location = lubeck }
+ furniture_guild = { tag = LUB level = 1 location = lubeck }
+ glass_guild = { tag = LUB level = 1 location = lubeck }
+ granary = { tag = LUB level = 2 location = lubeck }
+ jewelry_guild = { tag = LUB level = 1 location = lubeck }
+ marketplace = { tag = LUB level = 4 location = lubeck }
+ mason = { tag = LUB level = 2 location = lubeck }
+ naval_supplies_guild = { tag = LUB level = 3 location = lubeck }
+ paper_guild = { tag = LUB level = 1 location = lubeck }
+ pottery_guild = { tag = LUB level = 2 location = lubeck }
+ scriptorium = { tag = LUB level = 1 location = lubeck }
+ tannery = { tag = LUB level = 1 location = lubeck }
+ temple = { tag = LUB level = 1 location = lubeck }
+ tools_guild = { tag = LUB level = 2 location = lubeck }
+ weapon_guild = { tag = LUB level = 2 location = lubeck }
+ wharf = { tag = LUB level = 1 location = lubeck }
  brewery = { tag = LUC level = 1 location = lucca }
  castle = { tag = LUC level = 1 location = lucca }
  cloth_guild = { tag = LUC level = 1 location = lucca }
@@ -23483,22 +24038,23 @@ building_manager = {
  weapon_guild = { tag = MAI level = 2 location = mainz }
  castle = { tag = GRA level = 1 location = malaga }
  cloth_guild = { tag = GRA level = 1 location = malaga }
- fine_cloth_guild = { tag = GRA level = 2 location = malaga }
+ fine_cloth_guild = { tag = GRA level = 3 location = malaga }
  furniture_guild = { tag = GRA level = 1 location = malaga }
- glass_guild = { tag = GRA level = 1 location = malaga }
+ glass_guild = { tag = GRA level = 2 location = malaga }
  granary = { tag = GRA level = 3 location = malaga }
  jewelry_guild = { tag = GRA level = 1 location = malaga }
- marketplace = { tag = GRA level = 2 location = malaga }
+ marketplace = { tag = GRA level = 4 location = malaga }
  mason = { tag = GRA level = 2 location = malaga }
- naval_supplies_guild = { tag = GRA level = 1 location = malaga }
+ naval_supplies_guild = { tag = GRA level = 2 location = malaga }
  paper_guild = { tag = GRA level = 1 location = malaga }
  pottery_guild = { tag = GRA level = 2 location = malaga }
  scriptorium = { tag = GRA level = 1 location = malaga }
- tannery = { tag = GRA level = 2 location = malaga }
+ tannery = { tag = GRA level = 3 location = malaga }
  temple = { tag = GRA level = 1 location = malaga }
- tools_guild = { tag = GRA level = 2 location = malaga }
+ tools_guild = { tag = GRA level = 4 location = malaga }
  weapon_guild = { tag = GRA level = 2 location = malaga }
  wharf = { tag = GRA level = 1 location = malaga }
+ winery = { tag = GRA level = 2 location = malaga }
  castle = { tag = ERE level = 1 location = malatya }
  cloth_guild = { tag = ERE level = 1 location = malatya }
  dyes_guild = { tag = ERE level = 1 location = malatya }
@@ -23930,9 +24486,22 @@ building_manager = {
  local_markets = { tag = ZAN level = 1 location = mikindani }
  market_village = { tag = ZAN level = 1 location = mikindani }
  mason = { tag = ZAN level = 1 location = mikindani }
- fine_cloth_guild = { tag = MLO level = 1 location = milano }
- tools_guild = { tag = MLO level = 1 location = milano }
- weapon_guild = { tag = MLO level = 4 location = milano }
+ brewery = { tag = MLO level = 1 location = milano }
+ castle = { tag = MLO level = 1 location = milano }
+ cloth_guild = { tag = MLO level = 1 location = milano }
+ distillers_guild = { tag = MLO level = 1 location = milano }
+ dyes_guild = { tag = MLO level = 1 location = milano }
+ fine_cloth_guild = { tag = MLO level = 3 location = milano }
+ furniture_guild = { tag = MLO level = 1 location = milano }
+ glass_guild = { tag = MLO level = 3 location = milano }
+ granary = { tag = MLO level = 2 location = milano }
+ marketplace = { tag = MLO level = 2 location = milano }
+ mason = { tag = MLO level = 2 location = milano }
+ paper_guild = { tag = MLO level = 1 location = milano }
+ pottery_guild = { tag = MLO level = 2 location = milano }
+ temple = { tag = MLO level = 1 location = milano }
+ tools_guild = { tag = MLO level = 2 location = milano }
+ weapon_guild = { tag = MLO level = 5 location = milano }
  fine_cloth_guild = { tag = MEN level = 1 location = milas }
  marketplace = { tag = MEN level = 1 location = milas }
  mason = { tag = MEN level = 1 location = milas }
@@ -24696,12 +25265,31 @@ building_manager = {
  temple = { tag = MLO level = 1 location = novara }
  tools_guild = { tag = MLO level = 1 location = novara }
  weapon_guild = { tag = MLO level = 1 location = novara }
- marketplace = { tag = NOV level = 2 location = novgorod }
+ brewery = { tag = NOV level = 1 location = novgorod }
+ castle = { tag = NOV level = 1 location = novgorod }
+ distillers_guild = { tag = NOV level = 1 location = novgorod }
+ furniture_guild = { tag = NOV level = 1 location = novgorod }
+ granary = { tag = NOV level = 2 location = novgorod }
+ marketplace = { tag = NOV level = 4 location = novgorod }
+ mason = { tag = NOV level = 2 location = novgorod }
  naval_supplies_guild = { tag = NOV level = 1 location = novgorod }
- tannery = { tag = NOV level = 3 location = novgorod }
+ pottery_guild = { tag = NOV level = 2 location = novgorod }
+ tannery = { tag = NOV level = 5 location = novgorod }
+ temple = { tag = NOV level = 1 location = novgorod }
+ tools_guild = { tag = NOV level = 1 location = novgorod }
+ weapon_guild = { tag = NOV level = 1 location = novgorod }
+ brewery = { tag = NUR level = 2 location = nuremberg }
+ castle = { tag = NUR level = 1 location = nuremberg }
+ granary = { tag = NUR level = 1 location = nuremberg }
  jewelry_guild = { tag = NUR level = 2 location = nuremberg }
- tools_guild = { tag = NUR level = 2 location = nuremberg }
- weapon_guild = { tag = NUR level = 2 location = nuremberg }
+ marketplace = { tag = NUR level = 2 location = nuremberg }
+ mason = { tag = NUR level = 1 location = nuremberg }
+ paper_guild = { tag = NUR level = 1 location = nuremberg }
+ pottery_guild = { tag = NUR level = 1 location = nuremberg }
+ tannery = { tag = NUR level = 1 location = nuremberg }
+ temple = { tag = NUR level = 1 location = nuremberg }
+ tools_guild = { tag = NUR level = 3 location = nuremberg }
+ weapon_guild = { tag = NUR level = 3 location = nuremberg }
  castle = { tag = ATQ level = 1 location = nusaybin }
  cloth_guild = { tag = ATQ level = 1 location = nusaybin }
  dyes_guild = { tag = ATQ level = 1 location = nusaybin }
@@ -25039,10 +25627,23 @@ building_manager = {
  temple = { tag = STN level = 1 location = pandua }
  tools_guild = { tag = STN level = 4 location = pandua }
  weapon_guild = { tag = STN level = 6 location = pandua }
- fine_cloth_guild = { tag = FRA level = 2 location = paris }
- jewelry_guild = { tag = FRA level = 2 location = paris }
- marketplace = { tag = FRA level = 1 location = paris }
+ brewery = { tag = FRA level = 1 location = paris }
+ castle = { tag = FRA level = 1 location = paris }
+ cloth_guild = { tag = FRA level = 1 location = paris }
+ distillers_guild = { tag = FRA level = 1 location = paris }
+ fine_cloth_guild = { tag = FRA level = 3 location = paris }
+ furniture_guild = { tag = FRA level = 1 location = paris }
+ glass_guild = { tag = FRA level = 1 location = paris }
+ granary = { tag = FRA level = 2 location = paris }
+ jewelry_guild = { tag = FRA level = 4 location = paris }
+ marketplace = { tag = FRA level = 3 location = paris }
+ mason = { tag = FRA level = 2 location = paris }
+ paper_guild = { tag = FRA level = 1 location = paris }
+ pottery_guild = { tag = FRA level = 2 location = paris }
  scriptorium = { tag = FRA level = 2 location = paris }
+ temple = { tag = FRA level = 1 location = paris }
+ tools_guild = { tag = FRA level = 1 location = paris }
+ weapon_guild = { tag = FRA level = 1 location = paris }
  brewery = { tag = PAR level = 1 location = parma }
  castle = { tag = PAR level = 1 location = parma }
  cloth_guild = { tag = PAR level = 1 location = parma }
@@ -25115,8 +25716,25 @@ building_manager = {
  temple = { tag = PAV level = 1 location = pavia }
  tools_guild = { tag = PAV level = 1 location = pavia }
  weapon_guild = { tag = PAV level = 1 location = pavia }
- fine_cloth_guild = { tag = RDY level = 2 location = pazhaverkadu }
- marketplace = { tag = RDY level = 2 location = pazhaverkadu }
+ brewery = { tag = RDY level = 4 location = pazhaverkadu }
+ castle = { tag = RDY level = 1 location = pazhaverkadu }
+ cloth_guild = { tag = RDY level = 6 location = pazhaverkadu }
+ distillers_guild = { tag = RDY level = 1 location = pazhaverkadu }
+ fine_cloth_guild = { tag = RDY level = 6 location = pazhaverkadu }
+ glass_guild = { tag = RDY level = 2 location = pazhaverkadu }
+ granary = { tag = RDY level = 6 location = pazhaverkadu }
+ jewelry_guild = { tag = RDY level = 4 location = pazhaverkadu }
+ marketplace = { tag = RDY level = 8 location = pazhaverkadu }
+ mason = { tag = RDY level = 5 location = pazhaverkadu }
+ naval_supplies_guild = { tag = RDY level = 2 location = pazhaverkadu }
+ paper_guild = { tag = RDY level = 2 location = pazhaverkadu }
+ pottery_guild = { tag = RDY level = 1 location = pazhaverkadu }
+ scriptorium = { tag = RDY level = 2 location = pazhaverkadu }
+ tannery = { tag = RDY level = 4 location = pazhaverkadu }
+ temple = { tag = RDY level = 1 location = pazhaverkadu }
+ tools_guild = { tag = RDY level = 4 location = pazhaverkadu }
+ weapon_guild = { tag = RDY level = 6 location = pazhaverkadu }
+ wharf = { tag = RDY level = 1 location = pazhaverkadu }
  brewery = { tag = HUN level = 1 location = pecs }
  castle = { tag = HUN level = 1 location = pecs }
  granary = { tag = HUN level = 1 location = pecs }
@@ -25508,9 +26126,25 @@ building_manager = {
  temple = { tag = POL level = 1 location = poznan }
  tools_guild = { tag = POL level = 1 location = poznan }
  weapon_guild = { tag = POL level = 1 location = poznan }
- glass_guild = { tag = BOH level = 2 location = prague }
- scriptorium = { tag = BOH level = 1 location = prague }
- tools_guild = { tag = BOH level = 1 location = prague }
+ brewery = { tag = BOH level = 3 location = prague }
+ castle = { tag = BOH level = 1 location = prague }
+ cloth_guild = { tag = BOH level = 1 location = prague }
+ distillers_guild = { tag = BOH level = 1 location = prague }
+ dyes_guild = { tag = BOH level = 2 location = prague }
+ fine_cloth_guild = { tag = BOH level = 1 location = prague }
+ furniture_guild = { tag = BOH level = 1 location = prague }
+ glass_guild = { tag = BOH level = 3 location = prague }
+ granary = { tag = BOH level = 2 location = prague }
+ jewelry_guild = { tag = BOH level = 1 location = prague }
+ marketplace = { tag = BOH level = 2 location = prague }
+ mason = { tag = BOH level = 2 location = prague }
+ paper_guild = { tag = BOH level = 1 location = prague }
+ pottery_guild = { tag = BOH level = 2 location = prague }
+ scriptorium = { tag = BOH level = 2 location = prague }
+ tannery = { tag = BOH level = 1 location = prague }
+ temple = { tag = BOH level = 1 location = prague }
+ tools_guild = { tag = BOH level = 3 location = prague }
+ weapon_guild = { tag = BOH level = 2 location = prague }
  brewery = { tag = PRA level = 1 location = prato }
  granary = { tag = PRA level = 1 location = prato }
  marketplace = { tag = PRA level = 1 location = prato }
@@ -26298,6 +26932,21 @@ building_manager = {
  temple = { tag = CAS level = 1 location = salamanca }
  tools_guild = { tag = CAS level = 1 location = salamanca }
  weapon_guild = { tag = CAS level = 1 location = salamanca }
+ cloth_guild = { tag = MOR level = 1 location = sale }
+ fine_cloth_guild = { tag = MOR level = 1 location = sale }
+ fortress_granary = { tag = MOR level = 1 location = sale }
+ granary = { tag = MOR level = 1 location = sale }
+ marketplace = { tag = MOR level = 1 location = sale }
+ mason = { tag = MOR level = 1 location = sale }
+ naval_supplies_guild = { tag = MOR level = 1 location = sale }
+ paper_guild = { tag = MOR level = 1 location = sale }
+ pottery_guild = { tag = MOR level = 1 location = sale }
+ slave_market = { tag = MOR level = 1 location = sale }
+ tannery = { tag = MOR level = 1 location = sale }
+ temple = { tag = MOR level = 1 location = sale }
+ tools_guild = { tag = MOR level = 1 location = sale }
+ weapon_guild = { tag = MOR level = 1 location = sale }
+ wharf = { tag = MOR level = 1 location = sale }
  brewery = { tag = NAP level = 1 location = salerno }
  granary = { tag = NAP level = 1 location = salerno }
  marketplace = { tag = NAP level = 1 location = salerno }
@@ -26329,10 +26978,23 @@ building_manager = {
  temple = { tag = SLZ level = 1 location = salzburg }
  tools_guild = { tag = SLZ level = 1 location = salzburg }
  weapon_guild = { tag = SLZ level = 1 location = salzburg }
- fine_cloth_guild = { tag = YSU level = 4 location = samarkand }
- jewelry_guild = { tag = YSU level = 2 location = samarkand }
- marketplace = { tag = YSU level = 2 location = samarkand }
- paper_guild = { tag = YSU level = 3 location = samarkand }
+ castle = { tag = YSU level = 1 location = samarkand }
+ cloth_guild = { tag = YSU level = 1 location = samarkand }
+ fine_cloth_guild = { tag = YSU level = 7 location = samarkand }
+ furniture_guild = { tag = YSU level = 1 location = samarkand }
+ glass_guild = { tag = YSU level = 1 location = samarkand }
+ granary = { tag = YSU level = 2 location = samarkand }
+ jewelry_guild = { tag = YSU level = 3 location = samarkand }
+ marketplace = { tag = YSU level = 4 location = samarkand }
+ mason = { tag = YSU level = 2 location = samarkand }
+ paper_guild = { tag = YSU level = 4 location = samarkand }
+ pottery_guild = { tag = YSU level = 2 location = samarkand }
+ scriptorium = { tag = YSU level = 1 location = samarkand }
+ slave_market = { tag = YSU level = 1 location = samarkand }
+ tannery = { tag = YSU level = 1 location = samarkand }
+ temple = { tag = YSU level = 1 location = samarkand }
+ tools_guild = { tag = YSU level = 2 location = samarkand }
+ weapon_guild = { tag = YSU level = 1 location = samarkand }
  brewery = { tag = XLL level = 1 location = sana }
  fine_cloth_guild = { tag = XLL level = 1 location = sana }
  granary = { tag = XLL level = 2 location = sana }
@@ -27556,9 +28218,24 @@ building_manager = {
  temple = { tag = HUN level = 1 location = szeged }
  tools_guild = { tag = HUN level = 1 location = szeged }
  weapon_guild = { tag = HUN level = 1 location = szeged }
- fine_cloth_guild = { tag = JAL level = 3 location = tabriz }
- jewelry_guild = { tag = JAL level = 2 location = tabriz }
- marketplace = { tag = JAL level = 2 location = tabriz }
+ castle = { tag = JAL level = 1 location = tabriz }
+ cloth_guild = { tag = JAL level = 1 location = tabriz }
+ dyes_guild = { tag = JAL level = 1 location = tabriz }
+ fine_cloth_guild = { tag = JAL level = 4 location = tabriz }
+ furniture_guild = { tag = JAL level = 1 location = tabriz }
+ glass_guild = { tag = JAL level = 1 location = tabriz }
+ granary = { tag = JAL level = 1 location = tabriz }
+ jewelry_guild = { tag = JAL level = 3 location = tabriz }
+ marketplace = { tag = JAL level = 4 location = tabriz }
+ mason = { tag = JAL level = 1 location = tabriz }
+ paper_guild = { tag = JAL level = 1 location = tabriz }
+ pottery_guild = { tag = JAL level = 1 location = tabriz }
+ scriptorium = { tag = JAL level = 1 location = tabriz }
+ slave_market = { tag = JAL level = 1 location = tabriz }
+ tannery = { tag = JAL level = 1 location = tabriz }
+ temple = { tag = JAL level = 1 location = tabriz }
+ tools_guild = { tag = JAL level = 1 location = tabriz }
+ weapon_guild = { tag = JAL level = 1 location = tabriz }
  cloth_guild = { tag = TLE level = 1 location = tahert }
  fine_cloth_guild = { tag = TLE level = 1 location = tahert }
  fortress_granary = { tag = TLE level = 1 location = tahert }
@@ -28030,9 +28707,23 @@ building_manager = {
  temple = { tag = MOR level = 1 location = tidsi }
  tools_guild = { tag = MOR level = 1 location = tidsi }
  weapon_guild = { tag = MOR level = 1 location = tidsi }
- jewelry_guild = { tag = GHA level = 2 location = timbuktu }
- marketplace = { tag = GHA level = 2 location = timbuktu }
- scriptorium = { tag = GHA level = 2 location = timbuktu }
+ castle = { tag = GHA level = 1 location = timbuktu }
+ cloth_guild = { tag = GHA level = 1 location = timbuktu }
+ fine_cloth_guild = { tag = GHA level = 2 location = timbuktu }
+ furniture_guild = { tag = GHA level = 1 location = timbuktu }
+ glass_guild = { tag = GHA level = 1 location = timbuktu }
+ granary = { tag = GHA level = 3 location = timbuktu }
+ jewelry_guild = { tag = GHA level = 4 location = timbuktu }
+ marketplace = { tag = GHA level = 4 location = timbuktu }
+ mason = { tag = GHA level = 2 location = timbuktu }
+ paper_guild = { tag = GHA level = 1 location = timbuktu }
+ pottery_guild = { tag = GHA level = 2 location = timbuktu }
+ scriptorium = { tag = GHA level = 3 location = timbuktu }
+ slave_market = { tag = GHA level = 1 location = timbuktu }
+ tannery = { tag = GHA level = 1 location = timbuktu }
+ temple = { tag = GHA level = 1 location = timbuktu }
+ tools_guild = { tag = GHA level = 2 location = timbuktu }
+ weapon_guild = { tag = GHA level = 2 location = timbuktu }
  brewery = { tag = PAP level = 1 location = tivoli }
  granary = { tag = PAP level = 1 location = tivoli }
  marketplace = { tag = PAP level = 1 location = tivoli }
@@ -28070,8 +28761,24 @@ building_manager = {
  temple = { tag = TLE level = 1 location = tlemcen }
  tools_guild = { tag = TLE level = 2 location = tlemcen }
  weapon_guild = { tag = TLE level = 1 location = tlemcen }
- fine_cloth_guild = { tag = CAS level = 2 location = toledo }
- weapon_guild = { tag = CAS level = 2 location = toledo }
+ brewery = { tag = CAS level = 1 location = toledo }
+ castle = { tag = CAS level = 1 location = toledo }
+ cloth_guild = { tag = CAS level = 1 location = toledo }
+ distillers_guild = { tag = CAS level = 1 location = toledo }
+ fine_cloth_guild = { tag = CAS level = 4 location = toledo }
+ furniture_guild = { tag = CAS level = 1 location = toledo }
+ glass_guild = { tag = CAS level = 1 location = toledo }
+ granary = { tag = CAS level = 3 location = toledo }
+ jewelry_guild = { tag = CAS level = 1 location = toledo }
+ marketplace = { tag = CAS level = 2 location = toledo }
+ mason = { tag = CAS level = 2 location = toledo }
+ paper_guild = { tag = CAS level = 1 location = toledo }
+ pottery_guild = { tag = CAS level = 2 location = toledo }
+ scriptorium = { tag = CAS level = 1 location = toledo }
+ tannery = { tag = CAS level = 3 location = toledo }
+ temple = { tag = CAS level = 1 location = toledo }
+ tools_guild = { tag = CAS level = 2 location = toledo }
+ weapon_guild = { tag = CAS level = 4 location = toledo }
  brewery = { tag = CHI level = 1 location = tongshan }
  cloth_guild = { tag = CHI level = 2 location = tongshan }
  dyes_guild = { tag = CHI level = 1 location = tongshan }
@@ -28194,9 +28901,24 @@ building_manager = {
  temple = { tag = SIC level = 1 location = trapani }
  tools_guild = { tag = SIC level = 1 location = trapani }
  weapon_guild = { tag = SIC level = 1 location = trapani }
- fine_cloth_guild = { tag = TRE level = 2 location = trebizond }
- marketplace = { tag = TRE level = 2 location = trebizond }
+ castle = { tag = TRE level = 1 location = trebizond }
+ cloth_guild = { tag = TRE level = 1 location = trebizond }
+ dyes_guild = { tag = TRE level = 1 location = trebizond }
+ fine_cloth_guild = { tag = TRE level = 4 location = trebizond }
+ furniture_guild = { tag = TRE level = 1 location = trebizond }
+ glass_guild = { tag = TRE level = 1 location = trebizond }
+ granary = { tag = TRE level = 2 location = trebizond }
+ jewelry_guild = { tag = TRE level = 1 location = trebizond }
+ marketplace = { tag = TRE level = 4 location = trebizond }
+ mason = { tag = TRE level = 2 location = trebizond }
  naval_supplies_guild = { tag = TRE level = 1 location = trebizond }
+ paper_guild = { tag = TRE level = 1 location = trebizond }
+ pottery_guild = { tag = TRE level = 2 location = trebizond }
+ scriptorium = { tag = TRE level = 1 location = trebizond }
+ tannery = { tag = TRE level = 1 location = trebizond }
+ temple = { tag = TRE level = 1 location = trebizond }
+ tools_guild = { tag = TRE level = 2 location = trebizond }
+ weapon_guild = { tag = TRE level = 1 location = trebizond }
  brewery = { tag = VER level = 1 location = treviso }
  granary = { tag = VER level = 1 location = treviso }
  marketplace = { tag = VER level = 1 location = treviso }
@@ -28260,9 +28982,23 @@ building_manager = {
  tools_guild = { tag = MAJ level = 1 location = trowulan }
  weapon_guild = { tag = MAJ level = 2 location = trowulan }
  wharf = { tag = MAJ level = 1 location = trowulan }
+ brewery = { tag = FRA level = 1 location = troyes }
+ castle = { tag = FRA level = 1 location = troyes }
+ cloth_guild = { tag = FRA level = 1 location = troyes }
+ distillers_guild = { tag = FRA level = 1 location = troyes }
  dyes_guild = { tag = FRA level = 1 location = troyes }
- fine_cloth_guild = { tag = FRA level = 2 location = troyes }
- marketplace = { tag = FRA level = 2 location = troyes }
+ fine_cloth_guild = { tag = FRA level = 3 location = troyes }
+ furniture_guild = { tag = FRA level = 1 location = troyes }
+ glass_guild = { tag = FRA level = 1 location = troyes }
+ granary = { tag = FRA level = 2 location = troyes }
+ jewelry_guild = { tag = FRA level = 2 location = troyes }
+ marketplace = { tag = FRA level = 4 location = troyes }
+ mason = { tag = FRA level = 2 location = troyes }
+ paper_guild = { tag = FRA level = 1 location = troyes }
+ pottery_guild = { tag = FRA level = 2 location = troyes }
+ temple = { tag = FRA level = 1 location = troyes }
+ tools_guild = { tag = FRA level = 1 location = troyes }
+ weapon_guild = { tag = FRA level = 1 location = troyes }
  brewery = { tag = NAV level = 1 location = tudela }
  castle = { tag = NAV level = 1 location = tudela }
  granary = { tag = NAV level = 1 location = tudela }
@@ -28556,10 +29292,24 @@ building_manager = {
  temple = { tag = PAP level = 1 location = velletri }
  tools_guild = { tag = PAP level = 1 location = velletri }
  weapon_guild = { tag = PAP level = 1 location = velletri }
- fine_cloth_guild = { tag = VEN level = 1 location = venice }
- glass_guild = { tag = VEN level = 2 location = venice }
- jewelry_guild = { tag = VEN level = 1 location = venice }
- naval_supplies_guild = { tag = VEN level = 2 location = venice }
+ brewery = { tag = VEN level = 2 location = venice }
+ castle = { tag = VEN level = 1 location = venice }
+ cloth_guild = { tag = VEN level = 1 location = venice }
+ distillers_guild = { tag = VEN level = 2 location = venice }
+ dyes_guild = { tag = VEN level = 1 location = venice }
+ fine_cloth_guild = { tag = VEN level = 4 location = venice }
+ glass_guild = { tag = VEN level = 5 location = venice }
+ granary = { tag = VEN level = 2 location = venice }
+ jewelry_guild = { tag = VEN level = 2 location = venice }
+ marketplace = { tag = VEN level = 5 location = venice }
+ mason = { tag = VEN level = 2 location = venice }
+ naval_supplies_guild = { tag = VEN level = 3 location = venice }
+ paper_guild = { tag = VEN level = 1 location = venice }
+ pottery_guild = { tag = VEN level = 2 location = venice }
+ temple = { tag = VEN level = 1 location = venice }
+ tools_guild = { tag = VEN level = 3 location = venice }
+ weapon_guild = { tag = VEN level = 1 location = venice }
+ wharf = { tag = VEN level = 1 location = venice }
  brewery = { tag = MLO level = 1 location = vercelli }
  granary = { tag = MLO level = 1 location = vercelli }
  marketplace = { tag = MLO level = 1 location = vercelli }
@@ -30045,8 +30795,21 @@ building_manager = {
  weapon_guild = { tag = YYG level = 1 location = youyang }
  winery = { tag = YYG level = 1 location = youyang }
  zhixian = { tag = YYG level = 1 location = youyang }
- cloth_guild = { tag = FLA level = 2 location = ypres }
- fine_cloth_guild = { tag = FLA level = 2 location = ypres }
+ brewery = { tag = FLA level = 1 location = ypres }
+ castle = { tag = FLA level = 1 location = ypres }
+ cloth_guild = { tag = FLA level = 5 location = ypres }
+ dyes_guild = { tag = FLA level = 1 location = ypres }
+ fine_cloth_guild = { tag = FLA level = 3 location = ypres }
+ granary = { tag = FLA level = 3 location = ypres }
+ jewelry_guild = { tag = FLA level = 1 location = ypres }
+ marketplace = { tag = FLA level = 2 location = ypres }
+ mason = { tag = FLA level = 1 location = ypres }
+ paper_guild = { tag = FLA level = 1 location = ypres }
+ pottery_guild = { tag = FLA level = 1 location = ypres }
+ tannery = { tag = FLA level = 1 location = ypres }
+ temple = { tag = FLA level = 1 location = ypres }
+ tools_guild = { tag = FLA level = 1 location = ypres }
+ weapon_guild = { tag = FLA level = 1 location = ypres }
  brewery = { tag = CHI level = 1 location = yuanling }
  cloth_guild = { tag = CHI level = 2 location = yuanling }
  dyes_guild = { tag = CHI level = 1 location = yuanling }

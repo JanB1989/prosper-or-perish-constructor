@@ -50,6 +50,22 @@ def setup_counts(path):
     return result
 
 
+def town_levels(towns, name, stack=()):
+    """Building levels of a town preset: its ``copy_from`` base first, then its own levels added on top (vanilla's
+    40 named-city presets such as florence_city are a base preset plus a few extra guilds)."""
+    levels = Counter()
+    block = towns.get(name)
+    if block is None or name in stack:
+        return levels
+    base = first(block, "copy_from")
+    if base:
+        levels.update(town_levels(towns, str(base), (*stack, name)))
+    for building in block.entries:
+        if isinstance(building.value, (int, float)) and not isinstance(building.value, bool):
+            levels[building.key] += int(building.value)
+    return levels
+
+
 def seed_vanilla(vanilla_root, rules, owners):
     path = vanilla_root / "game" / SETUP_DIR / "07_cities_and_buildings.txt"
     doc = parse_file(path)
@@ -60,9 +76,7 @@ def seed_vanilla(vanilla_root, rules, owners):
                 continue
             town = first(entry.value, "town_setup")
             if town in rules.towns:
-                for building in rules.towns[town].entries:
-                    if isinstance(building.value, (int, float)):
-                        counts[entry.key][building.key] += int(building.value)
+                counts[entry.key].update(town_levels(rules.towns, town))
     return doc, counts
 
 

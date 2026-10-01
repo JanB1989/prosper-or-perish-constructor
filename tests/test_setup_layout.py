@@ -60,3 +60,30 @@ def test_the_first_uncommented_bookmark_names_the_setup_folder(tmp_path: Path) -
         assert "setup/x" in str(error)
     else:
         raise AssertionError("a moved setup folder must fail the check")
+
+
+def test_start_save_development_replaces_the_rule_evaluation() -> None:
+    import polars as pl
+
+    from prosper_or_perish_constructor.worldbuilder.development import with_start_save_development
+
+    evaluated = pl.DataFrame({"location_tag": ["a", "b", "c"], "development": [10.0, 5.5, 0.0]})
+    observed = pl.DataFrame({"location_tag": ["a", "b"], "development": [8.25, 7.0]})
+    merged = with_start_save_development(evaluated, observed)
+    assert dict(merged.iter_rows()) == {"a": 8.25, "b": 7.0, "c": 0.0}
+    assert with_start_save_development(evaluated, None).equals(evaluated)
+
+
+def test_the_start_save_references_come_from_the_same_start() -> None:
+    # config/start_province_capitals.txt and config/start_development.csv are read from one vanilla start save:
+    # every province capital is an owned location, so it has a start development
+    from prosper_or_perish_constructor.worldbuilder.development import load_start_development
+
+    capitals = {
+        line.strip()
+        for line in (ROOT / "config/start_province_capitals.txt").read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.startswith("#")
+    }
+    development = load_start_development(ROOT)
+    assert development is not None and development.height > 10_000
+    assert capitals and not capitals - set(development["location_tag"].to_list())

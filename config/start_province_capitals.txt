@@ -1,7 +1,8 @@
-# Province capitals at game start (1337.4.1), read from the engine save artifacts/data/savegame_base_1337_04_01/baseline/base_1337_04_01.eu5
-# (provinces={ <id>={ capital=<location> } }, one per province and owner). The setup files do not name them, and
-# no rule reproduces the engine choice (rank/market/population picks 81 %). The start planner reads this for
-# is_province_capital (Grange, Public Kitchen). Refresh from a new start save if the map or setup changes.
+# Province capitals at game start (1337.4.1), read from the engine save artifacts/data/savegame_base_1337_04_01/baseline/base_1337_04_01_eu5_1.4.eu5
+# (EU5 1.4.0 beta, vanilla observer start; provinces={ <id>={ capital=<location> } }, one per province and owner; the
+# engine's provinces_raw table). The setup files do not name them, and no rule reproduces the engine choice
+# (rank/market/population picks 81 %). The start planner reads this for is_province_capital (Grange, Public Kitchen).
+# Refresh from a new start save if the map or setup changes.
 aachen
 aaku
 aarau
@@ -1773,7 +1774,6 @@ kolomak
 kolomna
 kolomyia
 kolumba
-koma_kai
 komotini
 konch
 kong
@@ -1919,6 +1919,7 @@ lanzo
 laon
 lapai
 lar
+larache
 laran
 larantuka
 larissa
@@ -2572,7 +2573,6 @@ otatitlan
 ouagadougou
 ouargla
 ouarzazate
-ouezzane
 ougen
 oujda
 ouled_djellal
@@ -3669,6 +3669,7 @@ unaizah
 ung
 ungwana
 uninka
+unju
 upper_gazimur
 uraqai
 urasoe
@@ -3935,6 +3936,7 @@ yaroslavl
 yartsevo
 yasothon
 yatenga
+yatsushiro
 yautepec
 yazd
 yegorlykskaya

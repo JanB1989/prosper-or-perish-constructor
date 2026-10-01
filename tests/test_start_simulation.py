@@ -509,3 +509,33 @@ def test_construction_materials_fill_markets_without_supply():
     assert masonry["zero_before"] == 1 and masonry["levels_added"]["mason"] == sum(sim.counts[t]["mason"] for t in sim.pops)
     assert masonry["supply_after"] == 0.5 * masonry["levels_added"]["mason"] > 0
     assert sim.construction["tools"]["no_inputs"] == 1 and sim.construction["tools"]["levels_added"] == {}
+
+
+def test_town_presets_expand_their_copy_from_base_like_the_game():
+    # vanilla's named-city presets (florence_city = copy_from italian_city + extra guilds) add to their base; the seed
+    # used to count only the extras, so 40 big cities lost their base buildings
+    from prosper_or_perish_constructor.worldbuilder.start_simulation import seed_vanilla, town_levels
+
+    towns = {e.key: e.value for e in parse_text(
+        "italian_city = { temple = 1 cloth_guild = 2 granary = 2 }\n"
+        "florence_city = { copy_from = italian_city cloth_guild = 3 dyes_guild = 1 }\n"
+        "loop_a = { copy_from = loop_b temple = 1 }\nloop_b = { copy_from = loop_a granary = 1 }\n").entries}
+    assert town_levels(towns, "florence_city") == Counter({"cloth_guild": 5, "temple": 1, "granary": 2, "dyes_guild": 1})
+    assert town_levels(towns, "loop_a") == Counter({"temple": 1, "granary": 1})
+    assert town_levels(towns, "missing") == Counter()
+
+
+def test_seed_vanilla_reads_the_bookmark_setup_folder(tmp_path):
+    from prosper_or_perish_constructor.setup_layout import SETUP_DIR
+    from prosper_or_perish_constructor.worldbuilder.start_simulation import seed_vanilla
+
+    setup = tmp_path / "game" / SETUP_DIR
+    setup.mkdir(parents=True)
+    (setup / "07_cities_and_buildings.txt").write_text(
+        "locations = { florence = { rank = city town_setup = florence_city } }\n"
+        "building_manager = { fine_cloth_guild = { tag = FLO level = 3 location = florence } }\n", encoding="utf-8")
+    r = rules()
+    r.towns = {e.key: e.value for e in parse_text(
+        "italian_city = { temple = 1 fine_cloth_guild = 1 }\nflorence_city = { copy_from = italian_city fine_cloth_guild = 2 }\n").entries}
+    _, counts = seed_vanilla(tmp_path, r, {"florence": "FLO"})
+    assert counts["florence"] == Counter({"fine_cloth_guild": 6, "temple": 1})

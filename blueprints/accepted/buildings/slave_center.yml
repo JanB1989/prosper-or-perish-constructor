@@ -79,6 +79,10 @@ building:
         building_enslavement_power = 0.2
         local_slave_pop_satisfaction = -0.05
     }
+    # foreign building (2026-10-01): each level supports itself
+    raw_modifier = {
+        free_building_levels = 1
+    }
     increase_per_level_cost = 0.20
 localization:
   entries:

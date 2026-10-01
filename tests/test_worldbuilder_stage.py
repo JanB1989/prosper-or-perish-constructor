@@ -453,6 +453,35 @@ def test_zero_employment_buildings_support_their_own_level() -> None:
     assert missing == []
 
 
+def test_foreign_buildings_support_their_own_level() -> None:
+    # 2026-10-01: foreign countries open trade offices and the like with 1 + 0.1 x development + 0.05 x population levels
+    # each (Mantova: 267 foreign levels of 437); every level of the vanilla foreign buildings supports itself, and the
+    # line survives the footprint finalize in the compiled mod.
+    import re as _re
+
+    from prosper_or_perish_constructor import building_footprint
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    repo = Path(__file__).resolve().parents[1]
+    vanilla = Path(vanilla_root(repo, repo / "constructor.toml"))
+    text = (vanilla / "game/in_game/common/building_types/foreign_buildings.txt").read_text(encoding="utf-8-sig")
+    foreign = [
+        block.group("key")
+        for block in _re.finditer(r"(?ms)^(?P<key>[a-z_0-9]+) = \{\n(?P<body>.*?)\n\}", text)
+        if _re.search(r"(?m)^\s*is_foreign = yes", block.group("body"))
+    ]
+    assert len(foreign) == 8, foreign
+    mod = next((repo / "mod").glob("Prosper*Rework*"))
+    owners = building_footprint.owner_blocks(mod, vanilla)
+    for key in foreign:
+        owner = owners[key]
+        body = owner.path.read_text(encoding="utf-8-sig")[owner.open + 1 : owner.close]
+        raw = _re.search(r"(?ms)^\s*raw_modifier = \{(?P<inner>.*?)\}", body)
+        assert raw is not None, key
+        assert _re.search(r"(?m)^\s*free_building_levels = 1\s*$", raw.group("inner")), key
+        assert "local_population_capacity" in raw.group("inner"), key  # the footprint lands in the same block
+
+
 def test_river_restore_sees_the_engine_river() -> None:
     # the engine's river_flowing_through_N is invisible to has_location_modifier; has_river reads it (no double river)
     mod = next((Path(__file__).resolve().parents[1] / "mod").glob("Prosper*Rework*"))

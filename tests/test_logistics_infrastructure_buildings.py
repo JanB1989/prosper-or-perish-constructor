@@ -245,8 +245,9 @@ def test_victuals_trade_templates_split_export_and_import_flows() -> None:
     assert "tavern: Tavern" in tavern_texts[0]
     for text in tavern_texts:
         assert "pp_tavern_serve_victuals" in text
+        # 2026-10-01: the Tavern's food is Serve Victuals' Province Food (follows the victuals it bought), no flat food
+        assert re.search(r"pp_tavern_serve_victuals = \{[^}]*produced = local_food[^}]*victuals = 0\.8[^}]*output = 24\.0", text, re.S)
         assert "produced = province_food_purchase" in text
-        assert "output = 0.067" in text
         assert "output = 0.213" in text
         assert "victuals = 0.8" in text
         assert "local_province_food_purchase_output_modifier = -0.2" in text
@@ -260,7 +261,10 @@ def test_victuals_trade_templates_split_export_and_import_flows() -> None:
         assert "local_market_access" not in text
 
     for text in tavern_texts:
-        assert "local_monthly_food = 24.0" in text
+        assert not re.search(r"^\s*local_monthly_food\s*=", text, re.M)   # no flat food line
         assert "max_levels = tavern_max_level" in text
+        # towns and larger that are province capitals only (2026-10-01)
+        assert "rural_settlement = no" in text
+        assert re.search(r"location_potential = \{\s*is_province_capital = yes\s*\}", text)
         assert "local_nobles_estate_power" not in text
         assert "local_peasant_enfranchisment" not in text

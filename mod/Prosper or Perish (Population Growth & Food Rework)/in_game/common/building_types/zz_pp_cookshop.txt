@@ -1,8 +1,10 @@
 ﻿# >>> eu5-building-pipeline:cookshop:building
 cookshop = {
 	is_foreign = no
-# Non-raw producer: 75-gold price (brake 100, lowered 2026-09-30) and triple level cost (urbanisation brake).
-increase_per_level_cost = 0.29
+# Non-raw producer with its own price key: 40 gold and a normal level cost since 2026-10-01 (was 75 gold and the
+# triple urbanisation-brake cost 0.39): the Cookshop is the answer to hunger outside the Tavern's towns, and it
+# pulls staple goods off the market.
+increase_per_level_cost = 0.10
 price = pp_cookshop_price
 	max_levels = cookshop_max_level
 	pop_type = laborers

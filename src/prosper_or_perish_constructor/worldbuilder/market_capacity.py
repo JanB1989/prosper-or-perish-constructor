@@ -91,6 +91,11 @@ def write(repo, mod_root):
             # one topography per location
             keyword = "if" if i == 0 else "else_if"
             body.append(f"{keyword} = {{ limit = {{ topography = {terrain} }} {add('TERRAIN', n)} }}")
+        # Towns and larger that are province capitals only (2026-10-01, as the building's rank flags and potential).
+        # Elsewhere 0, so the four-yearly cull clears Taverns an old save left in villages and non-capitals.
+        body.append(
+            "if = { limit = { OR = { is_province_capital = no location_rank ?= location_rank:rural_settlement } } multiply = 0 }"
+        )
         body += ["min = 0", f"max = {spec['maximum']}", "floor = yes"]
         lines.append(
             f"{role}_max_level = {{\n " + "\n ".join(body) + "\n}"

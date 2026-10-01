@@ -299,10 +299,11 @@ def method_output(body, method, good=PROVINCE_FOOD_GOOD):
 def province_food_per_level(rules, spec):
     """building -> Province Food (``local_food``, 1 food per unit) one staffed level makes on top of its
     ``local_monthly_food``: the Provisioning method's output (``spec["method_pattern"]``, e.g. crop farms 0.96 x M,
-    fishing villages 0.8) and, for the buildings in ``spec["serve"]``, the named Serve method; ``spec["per_level"]``
-    overrides. A configured Serve method that the building does not have is an error, not a silent zero."""
+    fishing villages 0.8), for the buildings in ``spec["serve"]`` the named Serve method and for those in
+    ``spec["unpack"]`` the named method that turns victuals into Province Food (the Tavern); ``spec["per_level"]``
+    overrides. A configured method that the building does not have is an error, not a silent zero."""
     pattern = str(spec.get("method_pattern") or "pp_{building}_provision")
-    serve = dict(spec.get("serve") or {})
+    serve = {**dict(spec.get("serve") or {}), **dict(spec.get("unpack") or {})}
     out = {}
     for key, body in rules.buildings.items():
         if key in serve:
@@ -977,7 +978,7 @@ class Simulation:
                     flat = n * mult * self.numbers.get(k, {}).get("local_monthly_food", 0)
                     if k == self.TAVERN:
                         taverns += n
-                        market_food += flat
+                        market_food += flat + n * float(self.province_food.get(k, 0.0))
                     elif k in self.YARDS:
                         yards += n
                         packers[k] += n
@@ -1188,7 +1189,7 @@ class Simulation:
         level; a packer runs on what the pool's surplus gives, its own food per level at a time (harbour Yard: 20 food,
         with shipped grain, for 3 victuals; Grange: 60 food for 1.5), harbour Yards first."""
         model = self.food_model
-        tavern_rate = self.numbers[self.TAVERN]["local_monthly_food"] / model.tavern_victuals_per_level
+        tavern_rate = self.food_per_level(self.TAVERN) / model.tavern_victuals_per_level
         fed = b["supply"] - b["market_food"]
         gap = b["demand"] - fed
         use = 0.0
@@ -1312,7 +1313,7 @@ class Simulation:
         market's victuals cover the Taverns x ``victuals_target``; Taverns the market cannot supply become Cookshops."""
         model = self.food_model
         target = self.start.food_target_ratio
-        per_tavern = self.numbers[self.TAVERN]["local_monthly_food"]
+        per_tavern = self.food_per_level(self.TAVERN)
         if per_tavern <= 0 or any(self.packer(k)[0] <= 0 for k in self.YARDS if k in self.numbers):
             raise ValueError("Start trade requires positive food transfer units")
         vict = model.tavern_victuals_per_level
@@ -1504,18 +1505,22 @@ class Simulation:
             self.construction[good] = report
 
     def ensure_city_taverns(self, units):
-        """Every city gets a Tavern, even if it initially lies idle.
+        """Every city that is a province capital gets a Tavern, even if it initially lies idle (Taverns stand only in
+        towns and larger that are province capitals since 2026-10-01; other cities are listed under not_capital).
 
         This minimum is independent of deficit and the ordinary one-direction
         trade policy. Do not count extra food without both workers and Victualling Yards.
         """
-        self.city_tavern_minimum = {"cities": 0, "added": 0, "idle": [], "packing": []}
+        self.city_tavern_minimum = {"cities": 0, "added": 0, "idle": [], "packing": [], "not_capital": []}
         key = self.TAVERN
         group_for = {tag: group for group, tags in self.groups.items() for tag in tags}
         for tag in sorted(self.locations):
             if self.base[tag].get("location_rank") not in ("city", "megalopolis"):
                 continue
             self.city_tavern_minimum["cities"] += 1
+            if not self.base[tag].get("is_province_capital"):
+                self.city_tavern_minimum["not_capital"].append(tag)
+                continue
             if self.counts[tag][key] >= 1:
                 continue
             if self.yard_levels(self.groups[group_for[tag]]):
@@ -2040,9 +2045,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
             "market_food": round(sum(b["market_food"] for b in budgets.values())),
             "day0_production": round(sum(b["day0_production"] for b in budgets.values())),
         },
-        "tavern_food": sim.numbers[sim.TAVERN][
-            "local_monthly_food"
-        ],
+        "tavern_food": sim.food_per_level(sim.TAVERN),
         "yard_food": sim.numbers[sim.YARD]["local_monthly_food"],
         "building_rows_audited": audited,
         "over_cap_rows": 0,

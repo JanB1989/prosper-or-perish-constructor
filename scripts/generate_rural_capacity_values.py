@@ -367,13 +367,14 @@ def _culling_effects_file() -> str:
             _line(f"pp_cull_capacity_building_above_max = {{ building = {building} max_level = {prefix}_{building} }}", 2)
             for building in buildings
         )
-    # Victuals packing (caps from worldbuilder/market_capacity.py): the Victualling Yard's cap is 0 off harbour sites
-    # and the Grange's off province capitals, so these also clear buildings in the wrong kind of location.
+    # Victuals packing and serving (caps from worldbuilder/market_capacity.py): the Victualling Yard's cap is 0 off
+    # harbour sites, the Grange's off province capitals and the Tavern's off town-or-larger province capitals
+    # (2026-10-01), so these also clear buildings in the wrong kind of location.
     lines.append("")
-    lines.append(_line("# Victuals packing", 2))
+    lines.append(_line("# Victuals packing and serving", 2))
     lines.extend(
         _line(f"pp_cull_capacity_building_above_max = {{ building = {building} max_level = {building}_max_level }}", 2)
-        for building in ("victualling_yard", "grange")
+        for building in ("victualling_yard", "grange", "tavern")
     )
     lines.extend(
         [

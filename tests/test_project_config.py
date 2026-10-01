@@ -2181,9 +2181,10 @@ def test_capacity_culling_v2_calls_helper_for_each_capacity_building() -> None:
         *((building, f"farm_capacity_max_{building}") for building in LAND_FARM_BUILDINGS),
         *((building, f"fish_capacity_max_{building}") for building in FISH_CAP_BUILDINGS),
         *((building, f"forest_capacity_max_{building}") for building in FOREST_CAP_BUILDINGS),
-        # victuals packing: caps are 0 in the wrong kind of location, so the cull also clears misplaced ones
+        # victuals packing and serving: caps are 0 in the wrong kind of location, so the cull also clears misplaced ones
         ("victualling_yard", "victualling_yard_max_level"),
         ("grange", "grange_max_level"),
+        ("tavern", "tavern_max_level"),   # towns and larger that are province capitals only (2026-10-01)
     ]
 
     effect_entries = {entry.key: entry.value for entry in parse_file(CAPACITY_CULLING_EFFECTS).entries}
@@ -2516,10 +2517,10 @@ def test_cookshop_building_line_has_resolved_prices() -> None:
     annotated = annotate_building_data_availability(data.building_data, data.advancements)
     buildings = {row["name"]: row for row in annotated.buildings.to_dicts()}
 
-    # [building_price_brake] 2026-09-30: the Cookshop pays its own price key, 75 gold (the brake's 100, lowered the same day)
+    # [building_price_brake]: the Cookshop pays its own price key, 40 gold since 2026-10-01 (75 on 2026-09-30, the brake's 100)
     assert buildings["cookshop"]["price"] == "pp_cookshop_price"
     assert buildings["cookshop"]["effective_price"] == "pp_cookshop_price"
-    assert buildings["cookshop"]["effective_price_gold"] == 75.0
+    assert buildings["cookshop"]["effective_price_gold"] == 40.0
     assert buildings["cookshop"]["price_kind"] == "explicit"
 
     assert buildings["public_kitchen"]["price"] is None
@@ -2528,9 +2529,9 @@ def test_cookshop_building_line_has_resolved_prices() -> None:
     assert buildings["public_kitchen"]["price_kind"] == "baseline_age"
 
     assert buildings["tavern"]["price"] == "pp_tavern_price"
-    assert buildings["tavern"]["price_gold"] == 35.0
+    assert buildings["tavern"]["price_gold"] == 70.0  # doubled 2026-10-01: the expensive urban option
     assert buildings["tavern"]["effective_price"] == "pp_tavern_price"
-    assert buildings["tavern"]["effective_price_gold"] == 35.0
+    assert buildings["tavern"]["effective_price_gold"] == 70.0  # doubled 2026-10-01: the expensive urban option
     assert buildings["tavern"]["price_kind"] == "explicit"
 
 

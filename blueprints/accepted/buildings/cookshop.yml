@@ -44,8 +44,10 @@ building:
   possible_production_methods: []
   body: |2-
     	is_foreign = no
-    # Non-raw producer: 75-gold price (brake 100, lowered 2026-09-30) and triple level cost (urbanisation brake).
-    increase_per_level_cost = 0.39
+    # Non-raw producer with its own price key: 40 gold and a normal level cost since 2026-10-01 (was 75 gold and the
+    # triple urbanisation-brake cost 0.39): the Cookshop is the answer to hunger outside the Tavern's towns, and it
+    # pulls staple goods off the market.
+    increase_per_level_cost = 0.13
     price = pp_cookshop_price
     	max_levels = cookshop_max_level
     	pop_type = laborers
@@ -302,7 +304,7 @@ building:
 prices:
   - key: pp_cookshop_price
     body: |2-
-      {gold = 75}
+      {gold = 40}
 localization:
   entries:
     cookshop: Cookshop
@@ -340,7 +342,7 @@ icon:
 
 evaluation:
   allow_rules:
-    amortization_months: Non-raw producer under the building price brake (75-gold price, triple level cost, 2026-09-30); slow payback is the point.
+    amortization_months: Non-raw producer with its own price key (40 gold, normal level cost since 2026-10-01); zero-margin recipes leave little profit, so payback is long.
     input_throughput: Base dish recipes intentionally received two 10% throughput passes (the second on 2026-09-23 with a 5% output buff); the drink slot remains a partial add-on.
     output_throughput: Base dish recipes intentionally received two 10% throughput passes (the second on 2026-09-23 with a 5% output buff); the drink slot remains a partial add-on.
   production_methods:

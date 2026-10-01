@@ -280,9 +280,14 @@ def test_additional_setup_preserves_nonbuilding_sections_and_foreign_owners(tmp_
 
 
 def test_every_city_gets_a_tavern_even_without_workers_or_yards():
+    """Every city that is a province capital (Taverns stand only there since 2026-10-01); other cities are skipped."""
     sim = budget_simulation()
     sim.base["town"]["location_rank"] = "city"
     sim.base["isolated"]["location_rank"] = "megalopolis"
+    sim.base["donor"]["location_rank"] = "city"
+    sim.base["town"]["is_province_capital"] = True
+    sim.base["isolated"]["is_province_capital"] = True
+    sim.base["donor"]["is_province_capital"] = False
     sim.rules.buildings["tavern"] = block(
         "city = yes megalopolis = yes max_levels = 10"
     )
@@ -292,6 +297,7 @@ def test_every_city_gets_a_tavern_even_without_workers_or_yards():
     assert sim.counts["town"]["tavern"] == 1
     assert sim.counts["isolated"]["tavern"] == 1
     assert sim.counts["donor"]["tavern"] == 0
+    assert sim.city_tavern_minimum["not_capital"] == ["donor"]
     assert sim.budgets() == before
     assert sim.city_tavern_minimum["added"] == 2
     sim.ensure_city_taverns({})

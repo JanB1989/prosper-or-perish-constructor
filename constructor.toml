@@ -706,6 +706,8 @@ consumers = { tavern = 1.2, lumber_mill = 0.3 }
 # not scale it by the local food modifier. per_level = { building = value } overrides a derived value.
 method_pattern = "pp_{building}_provision"
 serve = { cookshop = "pp_cookshop_livestock_pottage_serve" }   # 27.57 food per level, the European pottage
+# the Tavern unpacks victuals into Province Food (Serve Victuals, 24 per level since 2026-10-01; was a flat +24)
+unpack = { tavern = "pp_tavern_serve_victuals" }
 per_level = {}
 [worldbuilder.start.food_model]
 # Food model v2 (worldbuilder/start_food_model_v2.py), fitted 2026-09-25 on the day-0 save nb.eu5 (1337.4.1, 4,018

@@ -2,7 +2,7 @@
 
 # >>> eu5-building-pipeline:tavern:localization
   tavern: "Tavern"
-  tavern_desc: "Buys [ShowGoodsName('victuals')|e] from the goods market and serves them to the province. It earns more while the province store is low, and its rooms and stables help armies on the march."
+  tavern_desc: "Buys [ShowGoodsName('victuals')|e] from the goods market and serves them to the province as [ShowGoodsName('local_food')|e]. Only towns and cities that are province capitals keep one. It earns more while the province store is low, and its rooms and stables help armies on the march."
   tavern_slot_0: "Serving"
   tavern_slot_1: "Scarcity Premium"
   pp_tavern_serve_victuals: "Serve Victuals"

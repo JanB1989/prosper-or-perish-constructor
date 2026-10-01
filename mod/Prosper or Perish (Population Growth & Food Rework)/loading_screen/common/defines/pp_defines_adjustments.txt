@@ -32,6 +32,13 @@ NAI = {
 	AI_CONSTRUCTIONS_CLEAR_QUEUE_MONTHS = 12 # 60; the AI reacted to food and storage changes years late (taverns queued while starving, built after recovery); 18-24 if tick time suffers
 	AI_CONSTRUCTION_QUEUE_REPEAT_MULT = 0.99 # 0.9; next level re-queued at utility x this^level: more stacking, stacked levels gain production efficiency
 	AI_PROFITABILITY_THRESHOLD_FOR_MISSING_GOODS_UTIL = 1.01
+	# Shortage and export reaction (raw-material trade, 2026-10-01). In the building utility, "Missing pop need" (pops' missing
+	# amount, at most the building's output, x factor), "Producing input goods shortage" and "Export profit" (goods the country
+	# exports at a profit with no surplus left, x profit per unit) were 0.03-0.06 % of all utility terms (hook run h03):
+	# the AI reacted to a shortage only through the price inside the profit term.
+	POP_MISSING_GOODS_UTILITY_FACTOR = 0.1 # 0.02
+	INPUT_GOODS_SHORTAGE_UTILITY_FACTOR = 0.1 # 0.02
+	PROFITABLE_EXPORT_GOODS_UTILITY_FACTOR = 1.0 # 0.5
 	# Nudge so eligible AI colonizers start and maintain charters earlier (tax-base gates: scripted_triggers/pp_colonization_triggers.txt).
 	AI_BASE_COLONY_UTILITY = 6 # 3
 	AI_COLONIAL_RANGE_UTILITY = 0.00004
@@ -42,7 +49,6 @@ NAI = {
 	MAX_ALLOWED_INFLATION = 0.02 
 	AI_SAVING_MODE_ALLOWED_INFLATION_MODIFIER_LOW = 2 # Mult max allowed inflation by this much when in low saving mode
 	AI_IMPORT_POP_NEED_SCORE_BONUS = 10 # 5; imports that cover a pop shortage win merchant capacity from luxury arbitrage
-	AI_PERFORMANCE_TRADE_PROFIT_PER_WEIGHT_CUTOFF = 0.15 # 0.25; lets bulk staples (price ~1) through the trade search
 	AI_SAVING_MODE_ALLOWED_INFLATION_MODIFIER_HIGH = 7 # Mult max allowed inflation by this much when in high saving mode
 }
 
@@ -55,12 +61,6 @@ NEconomy = {
  	PROFITABLE_BUILDING_WORKERS_REHIRED_PERCENTAGE = 15 # 5
 	BANKRUPTCY_INFLATION_CHANGE_PERCENT = -0.75
 	ESTABLISHMENT_SYSTEM_ENABLED = no # vanilla building establishment ramp (startup_ramp_target); off in the main mod: it crashed the game, tested in a separate mod
-}
-
-NCountry = {
-	# 0.25; flat gold per traded unit and month. It took 25 % of a wheat unit's value but 5 % of saffron's, so bulk
-	# raw materials never paid to move (2026-10-01, raw-material trade)
-	MERCHANT_MAINTENANCE_COST = 0.10
 }
 
 NLocation = {
@@ -83,6 +83,10 @@ NMarket = {
 	MARKET_UPSTREAM_FACTOR = 0.8 # 0.9
 	MARKET_NO_PORT_EXTRA_DISTANCE = 0.1 # 0.1; navigation banks carry river ports
 	MARKET_PORT_EXTRA_DISTANCE = 0.02 # 0.02, scaled by 1 - harbor suitability
+	# Price demand counts a market's exports fully (vanilla: 75 % of trade exports, 25 % of burgher-trade exports), so
+	# a neighbour's shortage that is bought from this market raises its price and reaches its producers.
+	TRADE_IMPACT_ON_DEMAND_SCALE = 1.0 # 0.75
+	BURGHER_TRADE_IMPACT_ON_DEMAND_SCALE = 1.0 # 0.25
 	MIN_PRICE_IMPACT = -0.5
  	MAX_PRICE_IMPACT = 1.5 # 6
 	# Market food (tested 2026-09-24), each month:

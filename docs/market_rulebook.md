@@ -244,62 +244,92 @@ have `ai_tick = never`. Only script removes markets:
   and to country rank.
 - Destruction reacts only to the withering defines and the event's `ai_chance`.
 
-## 8. Trade between markets (2026-10-01, measured in saves and test runs)
+## 8. Trade between markets and the reaction to shortages (2026-10-01, measured in saves and test runs)
 
-How the AI trades goods between markets, and what the raw-material balance of 2026-10-01 changed.
+How the AI trades goods between markets, how trade feeds back into prices, and what the raw-material balance of
+2026-10-01 changed. Rule for this balance: no global output or capacity buff; the AI has to answer a shortage by
+building supply and by trading from producers that can export.
 
 **Capacity.** A country trades from a market with the merchant capacity it has in that market (market centres, market and
 trade buildings, `global_merchant_capacity_modifier`). One traded unit of any good uses one unit of capacity, whatever the
-good's value, transport cost or the distance (the save's `merchant.used` equals the sum of the trade sizes). Before the
-change the world had ~2,800-3,400 capacity, 98 % of it in use, against ~50,000 units of raw output a month: raw goods
-traded ~4 % of their output, and the capacity went to the goods with the most profit per unit (gold, silver, salt,
-sugar, pepper ~0.9 gold per unit) while staples earned 0.02-0.2 per unit (wheat, millet, fruit) and barely moved.
-Capacity did not grow with the economy.
+good's value, transport cost or the distance (the save's `merchant.used` equals the sum of the trade sizes). The world has
+~2,800-3,000 capacity, 98 % of it in use, against ~50,000 units of raw output a month; capacity does not grow with the
+economy. Burghers trade on their own besides (burgher trading: the burghers of a town buy what their market lacks); in 1387
+they moved more raw goods than the countries (1,934 against 1,366 units a month).
 
 **Profit per unit** = destination price x (1 + the trader's selling efficiency) - source price (divided by the market
 owner's modifier when the trader is not the owner, never below half) - a distance cost - `NCountry.MERCHANT_MAINTENANCE_COST`
-per unit (vanilla 0.25, a flat fee that takes a quarter of a wheat unit's value and a twentieth of saffron's). Imports that
-cover a pop shortage or a building input score a bonus per unit (`AI_IMPORT_POP_NEED_SCORE_BONUS`,
-`AI_IMPORT_INPUT_GOODS_SCORE_BONUS`); exporting what local pops lack is penalised (`AI_EXPORT_POP_SHORTAGE_PENALTY`).
-Trades below `AI_PERFORMANCE_TRADE_PROFIT_PER_WEIGHT_CUTOFF` profit per transport weight are skipped.
+per unit (flat, 0.25). Trades below `AI_PERFORMANCE_TRADE_PROFIT_PER_WEIGHT_CUTOFF` profit per transport weight are skipped,
+except imports that cover a pop shortage or a building input: they score a bonus per unit (`AI_IMPORT_POP_NEED_SCORE_BONUS`,
+`AI_IMPORT_INPUT_GOODS_SCORE_BONUS`) and may run at a loss of up to `AI_WELFARE_IMPORT_PROFIT_CUTOFF` (-1 gold) per unit.
+Exporting what local pops lack is penalised (`AI_EXPORT_POP_SHORTAGE_PENALTY`).
 
 **What a market can export** = its surplus (supply - demand) plus a share of its stockpile: a stockpile fuller than half of
 its cap releases up to 5 % of its stock a month (full rate at 75 % fill). In PP stockpiles sit at their cap (10 per
-development point), so every market could export all the time: capacity, not supply, limited trade.
+development point).
 
-**RGOs** hardly grow (0-5 % in 90 years, not with price): the supply answer to a shortage is buildings, and those are
-steered by the production gate leg (section 2.4i of the AI building rulebook) and by profit.
+**Price.** Target price = base price x (D + c S) / (S + c D), clamped to 0.2-3x, with c = 0.2 (fitted on 6,867 market-goods
+of a 1387 save) and S, D the supply and demand plus `SUPPLY_AND_DEMAND_STABILITY_OFFSET_CONSTANT`; the price moves
+`MONTHLY_PRICE_CHANGE` of the way to the target each month. Trade enters S and D only in part: imports count
+`TRADE_IMPACT_ON_SUPPLY_SCALE` (0.75) of country trades and `BURGHER_TRADE_IMPACT_ON_SUPPLY_SCALE` (0.1) of burgher trades;
+exports count `TRADE_IMPACT_ON_DEMAND_SCALE` and `BURGHER_TRADE_IMPACT_ON_DEMAND_SCALE` (vanilla 0.75 and 0.25; a country
+modifier `export_impact_on_demand` scales them, capped at 1). A stockpile drawn down for export does not count as supply
+(`STOCKPILE_TRADE_IMPACT_ON_SUPPLY_SCALE` 0). At vanilla values an exporter's price saw a quarter of its burgher exports, so a
+neighbour's shortage barely reached its producers: their price stayed near the local balance and their buildings
+(production gate at 1.05) were not built for export.
 
-**Balance 2026-10-01** (`pp_country_base_values.txt`, `pp_defines_adjustments.txt`, `pp_goods_adjustments.txt`,
-`pp_rgo_static_bonuses.txt`):
+**The AI's building utility** has its own shortage terms besides the price inside the profit: "Missing pop need" (pops'
+missing amount of the good, at most the building's output, x `POP_MISSING_GOODS_UTILITY_FACTOR`), "Producing input goods
+shortage" (`INPUT_GOODS_SHORTAGE_UTILITY_FACTOR`) and "Export profit" (goods the country exports at a profit from that
+market with no surplus left, x profit per unit x `PROFITABLE_EXPORT_GOODS_UTILITY_FACTOR`; with surplus it falls to
+`PROFITABLE_EXPORT_GOODS_REDUCE_PRICE_UTILITY_FACTOR` over `AI_EXPORT_GOODS_SURPLUS_GRADIENT_CAP`). All need profitability
+above `AI_PROFITABILITY_THRESHOLD_FOR_MISSING_GOODS_UTIL` (PP 1.01). At vanilla factors they were 0.03-0.06 % of all utility
+terms in a logged month (cost 35 %, modifiers 40 %, profit 20 %).
 
-- `global_merchant_capacity_modifier = 1.5` for every country (+150 % capacity). Never put `local_merchant_capacity` into the
-  development static modifier: the AI's valuation of development then crashes the game.
-- `MERCHANT_MAINTENANCE_COST` 0.25 -> 0.10; `AI_PERFORMANCE_TRADE_PROFIT_PER_WEIGHT_CUTOFF` 0.25 -> 0.15;
-  `AI_IMPORT_POP_NEED_SCORE_BONUS` 5 -> 10 (imports that cover a pop shortage win capacity from luxury arbitrage).
-- transport cost of fruit, legumes and horses 2 -> 1.5.
-- RGO raw-material bonus (own good output) 0.20 -> 0.30 for world-deficit goods (tea, amber, millet, wheat, fruit, wine,
-  horses, saffron) and 0.10 for glut goods (lead, alum, medicaments, cloves, tin, marble, elephants, mercury, saltpeter).
+**RGOs** hardly grow (most raw goods have `block_rgo_upgrade`): the supply answer to a shortage is buildings, steered by the
+production gate leg (section 2.4i of the AI building rulebook), profit and the shortage terms above.
 
-Test runs (fresh game to 1387, then 10 and 20 years from the same save; "final" = the whole list above, "final
-minus pop bonus" = without the import score change, the only run taken to 1407):
+**Balance 2026-10-01** (`pp_defines_adjustments.txt`, `pp_goods_adjustments.txt`):
 
-| | baseline 1397 | final 1397 | baseline 1407 | final minus pop bonus 1407 |
-|---|---|---|---|---|
-| merchant capacity | 2,875 | 6,974 | 2,946 | 6,831 |
-| raw goods traded (units/month) | 2,091 | 5,184 | 2,303 | 5,168 |
-| raw market-goods at >= 2x price | 63 | 30 | 45 | 41 |
-| at the 2.5x price cap | 23 | 12 | 12 | 12 |
-| 1387 shortages still >= 1.8x | 68 | 46 | 62 | 44 |
-| price dispersion across markets | 0.242 | 0.196 | 0.224 | 0.198 |
-| pops' unmet raw demand (gold) | 2,238 | 1,557 | 1,955 | 1,940 |
-| starving provinces | 531 | 454 | 599 | 632 |
-| population (k) | 341,354 | 342,974 | 353,721 | 348,866 |
+- `TRADE_IMPACT_ON_DEMAND_SCALE` 0.75 -> 1.0, `BURGHER_TRADE_IMPACT_ON_DEMAND_SCALE` 0.25 -> 1.0: exports count fully in the
+  exporter's price.
+- `POP_MISSING_GOODS_UTILITY_FACTOR` 0.02 -> 0.1, `INPUT_GOODS_SHORTAGE_UTILITY_FACTOR` 0.02 -> 0.1,
+  `PROFITABLE_EXPORT_GOODS_UTILITY_FACTOR` 0.5 -> 1.0.
+- `AI_IMPORT_POP_NEED_SCORE_BONUS` 5 -> 10; transport cost of fruit, legumes and horses 2 -> 1.5.
+- Tested and dropped: +150 % merchant capacity for every country, RGO bonus 0.30 / 0.10 for deficit / glut goods (global
+  output and capacity buffs), `MERCHANT_MAINTENANCE_COST` 0.10 and profit/weight cutoff 0.15 (the vanilla values did better
+  with the shortage terms: cheap trade let low-margin arbitrage keep the capacity). Never put `local_merchant_capacity` into
+  the development static modifier: the AI's valuation of development then crashes the game.
 
-Exports from glutted markets went from none to +560..+830 units, and their production grew with it (the export demand
-reaches the producers). Producers' building output grew +33 % to +53 % where their good sat at 1.5-2.2x of its base price,
-+12 % where it was cheap. Population, starving provinces and country gold stayed within branch noise (Seasonal Harvests
-and wars move regions by +-2 %).
+Test runs (fresh game to 1387, then 10 years from the same save; v8 = the list above, continued to 1407; b0 = no change):
+
+| | b0 1397 | v6 1397 (export impact only) | v8 1397 | b0 1407 | v8 1407 |
+|---|---|---|---|---|---|
+| raw output (units/month) | 53,868 | 54,732 | 56,186 | 57,626 | 57,307 |
+| RGO workers vs b0 | | | +0.1 % | | |
+| merchant capacity | 2,875 | 2,933 | 2,968 | 2,946 | 2,930 |
+| raw goods traded (units/month) | 2,091 | 2,228 | 2,346 | 2,303 | 2,309 |
+| raw market-goods at >= 1.5x | 178 | 173 | 144 | 171 | 168 |
+| raw market-goods at >= 2x | 63 | 51 | 50 | 45 | 51 |
+| pops' unmet raw demand (gold) | 3,032 | 3,009 | 2,141 | 3,047 | 2,465 |
+| producer levels built where the good was >= 1.5x (from 1387) | 199 | 169 | 313 | 414 | 601 |
+| producer levels built where it was 1.05-1.5x | 898 | 961 | 1,152 | 1,987 | 2,319 |
+| producer levels built where it was 0.8-1.05x | 983 | 884 | 732 | 1,860 | 1,641 |
+| exporting market-goods: median price | 0.85x | 0.95x | 0.96x | 0.85x | 0.96x |
+| starving provinces | 531 | 542 | 520 | 599 | 619 |
+| population (k) | 341,354 | 337,352 | 341,359 | 353,721 | 351,619 |
+| countries' gold (k) | 519 | 518 | 504 | 523 | 481 |
+
+Unmet pop demand 1407 (b0 -> v8): millet 204 -> 68, wheat 280 -> 142, fruit 167 -> 108, horses 168 -> 132, wine 38 -> 26;
+tea 90 -> 102 and saffron 23 -> 28 did not improve. RGO output swings by good between branches (rice +30 %, wine -22 % in
+v8 1397) come from Seasonal Harvest rolls, not from the balance: RGO workers are the same.
+
+Case studies. Lumber around Stockholm: lumber is a world glut (production 1.65x local demand, every market below 1x), so
+Sweden has no short neighbour to export to and exports nothing; that is right. Tea: a world deficit (production 0.74-0.84x
+local demand); the Chinese and Japanese tea markets export to their short neighbours and their price rose from 0.75-1.04x
+to 1.0-1.19x, but tea gardens (and saffron crofts, amber collectors) can only be built on locations whose RGO is that good
+and share farmland with every other farm, so tea supply stayed capped (71 garden levels against 76 in b0). India's tea
+shortage (2.3-3x) is out of reach of the producers' trade.
 
 ## 7. Open
 

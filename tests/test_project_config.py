@@ -3056,17 +3056,10 @@ def test_salt_rgo_bonus_reduces_food_decay_without_affecting_saltpeter() -> None
     assert "local_food_decay_modifier" not in _entry_values(saltpeter)
 
 
-# raw-material balance 2026-10-01 (observer tests 1387-1397): +0.10 for world-deficit goods, -0.10 for gluts
-RGO_BONUS_DEFICIT_GOODS = {"tea", "amber", "millet", "wheat", "fruit", "wine", "horses", "saffron"}
-RGO_BONUS_GLUT_GOODS = {"lead", "alum", "medicaments", "cloves", "tin", "marble", "elephants", "mercury", "saltpeter"}
-
-
 def test_rgo_static_bonus_own_good_outputs_are_twenty_percent() -> None:
-    """20 % baseline; world-deficit goods 30 %, glut goods 10 % (at most a tenth of the RGO's output either way)."""
     for good, values in _rgo_bonus_values().items():
         own_output = f"local_{good}_output_modifier"
-        expected = 0.30 if good in RGO_BONUS_DEFICIT_GOODS else 0.10 if good in RGO_BONUS_GLUT_GOODS else 0.20
-        assert values[own_output] == expected, good
+        assert values[own_output] == 0.20, good
 
 
 def test_rgo_static_bonus_manpower_effects_are_toned_down() -> None:

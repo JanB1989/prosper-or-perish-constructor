@@ -12,7 +12,19 @@ on_game_start = {
 		pp_remove_invalid_fiber_and_stud_farms
 		pp_game_start_effect
 		pp_load_base_population_baselines_on_start
+		pp_stored_food_game_start
 		# pp_remove_invalid_buildings # we leave this off as it somehow causes crashes?
+	}
+}
+
+# Stored-food tiers from day one (pp_stored_food.txt refreshes them each month through the country pulse).
+pp_stored_food_game_start = {
+	effect = {
+		every_country = {
+			every_province = {
+				pp_refresh_stored_food_tier = yes
+			}
+		}
 	}
 }
 

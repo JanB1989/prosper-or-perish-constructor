@@ -1,30 +1,46 @@
-﻿# Province food storage, location scope (the location's province). EU5 1.4 dropped the stored-food modifier that
-# carried the months of storage (pp_province_food_storage_months), so the stored-food map mode and the location
-# view read these values instead.
+﻿# Province food storage. EU5 1.4 dropped the stored-food modifier that carried the months of storage, so the
+# stored-food tiers (pp_stored_food_tiers.txt), the stored-food map mode and the location view read these values.
+# The province-scope values are the source; the location-scope ones (the location's province) delegate to them.
 
-# Monthly food the province's pops eat: the sum of its locations' consumption.
-pp_province_monthly_food_consumption = {
+# Province scope: monthly food the province's pops eat, the sum of its locations' consumption. The location value
+# food_consumption is negative (it is the pops' draw on the food balance), hence the sign flip.
+pp_stored_food_province_consumption = {
 	value = 0
-	province ?= {
-		every_location_in_province = {
-			add = food_consumption
-		}
+	every_location_in_province = {
+		add = food_consumption
 	}
+	multiply = -1
 }
 
-# Months of the province's consumption in storage, capped where the growth term stops rising
-# (NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX years).
-pp_province_food_storage_months = {
+# Province scope: months of the province's consumption in storage, capped where the growth term stops rising
+# (NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX years = 24 months, the last stored-food tier).
+pp_stored_food_province_months = {
 	value = 0
 	if = {
-		limit = { pp_province_monthly_food_consumption > 0 }
-		value = province.province_food
-		divide = pp_province_monthly_food_consumption
+		limit = { pp_stored_food_province_consumption > 0 }
+		value = province_food
+		divide = pp_stored_food_province_consumption
 		min = 0
 		max = {
 			value = define:NEconomy|GROWTH_FROM_FOOD_MULTIPLIER_MAX
 			multiply = 12
 		}
+	}
+}
+
+# Location scope: the province's monthly food consumption (positive).
+pp_province_monthly_food_consumption = {
+	value = 0
+	province ?= {
+		add = pp_stored_food_province_consumption
+	}
+}
+
+# Location scope: the province's months of stored food (0 .. the cap).
+pp_province_food_storage_months = {
+	value = 0
+	province ?= {
+		add = pp_stored_food_province_months
 	}
 }
 

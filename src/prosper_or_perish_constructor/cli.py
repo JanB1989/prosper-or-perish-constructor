@@ -147,8 +147,6 @@ PROVINCE_FOOD_SALES_STARVING_TARGET = 0.080
 PROVINCE_FOOD_SALES_TOTAL_MODIFIER_MIN = -0.4
 PROVINCE_FOOD_SALES_TOTAL_MODIFIER_MAX = 0.4
 PROVINCE_FOOD_SALES_GROWTH_CAP_TARGET = 2.0
-# Province food sales output per stored year: 0 since EU5 1.4, which has no modifier scaled by stored food.
-PROVINCE_FOOD_SALES_STORED_FOOD_PER_YEAR = 0.0
 PROVINCE_FOOD_SALES_TOLERANCE = 0.000001
 PROVINCE_FOOD_SALES_PROFITABILITY_BLUEPRINT = Path("buildings/grange.yml")   # the store packer since the harbour Yard split
 PROVINCE_FOOD_SALES_PROFITABILITY_METHOD = "pp_grange_porters"
@@ -1306,6 +1304,14 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         )
     _ensure_price_cost_modifier_assets(mod_root)
     _install_good_icons(repo, project, mod_root)
+    from prosper_or_perish_constructor import stored_food
+
+    stored = stored_food.apply(project, mod_root)
+    print(
+        f"Stored-food tiers: {stored.tiers} province modifiers, refresh effect, tier value and localization "
+        f"({stored.files_changed} files changed).",
+        flush=True,
+    )
     from prosper_or_perish_constructor import gui_compat
 
     gui_compat.strip(mod_root)   # the food-storage compile counts its gauge lines per file
@@ -2042,9 +2048,10 @@ def _load_province_food_sales_check_inputs(
             "province_starving",
         )
     }
-    # EU5 1.4 deleted the engine-scaled positive_province_food_growth modifier: growth from stored food is a define
-    # term (NPop.FOOD_STORAGE_POP_GROWTH) and no modifier scales the storage legs with stored food any more.
-    static_values["stored_food"] = PROVINCE_FOOD_SALES_STORED_FOOD_PER_YEAR
+    # EU5 1.4 deleted the engine-scaled positive_province_food_growth modifier; the stored-food tier modifiers carry
+    # its storage legs again (stored_food.py): tier t = the per-stored-year payload x t / 12, so the per-year value is
+    # the payload of [stored_food.per_year].
+    static_values["stored_food"] = _province_food_sales_stored_food_per_year(project)
     rank_values = {
         name: rank_data.modifier_baseline(name, "rank_modifier", PROVINCE_FOOD_SALES_MODIFIER_KEY)
         for name in PROVINCE_FOOD_SALES_RANK_TARGETS
@@ -2064,6 +2071,12 @@ def _load_province_food_sales_check_inputs(
             *define_data.warnings,
         ],
     }
+
+
+def _province_food_sales_stored_food_per_year(project: Path) -> float:
+    from prosper_or_perish_constructor import stored_food
+
+    return dict(stored_food.load_config(project).per_year).get(PROVINCE_FOOD_SALES_MODIFIER_KEY, 0.0)
 
 
 def _load_province_food_sales_profitability_rows(

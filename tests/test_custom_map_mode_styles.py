@@ -655,10 +655,13 @@ def test_positive_province_food_growth_map_mode_reads_months_from_script_value()
     # EU5 1.4 deleted the engine-scaled positive_province_food_growth modifier that carried the months as a marker;
     # the months are a script value (province food / its monthly consumption, capped at the growth cap in months)
     assert "TRY_REPLACE:positive_province_food_growth" not in static_modifiers
+    # (location scope delegates to the province-scope value the stored-food tiers read; test_stored_food.py pins both)
     months_value = storage_values.split("\npp_province_food_storage_months = {", 1)[1].split("\n}", 1)[0]
-    assert "value = province.province_food" in months_value
-    assert "divide = pp_province_monthly_food_consumption" in months_value
-    assert "value = define:NEconomy|GROWTH_FROM_FOOD_MULTIPLIER_MAX" in months_value
+    assert "add = pp_stored_food_province_months" in months_value
+    province_months = storage_values.split("\npp_stored_food_province_months = {", 1)[1].split("\n}", 1)[0]
+    assert "value = province_food" in province_months
+    assert "divide = pp_stored_food_province_consumption" in province_months
+    assert "value = define:NEconomy|GROWTH_FROM_FOOD_MULTIPLIER_MAX" in province_months
     assert "add = food_consumption" in storage_values
     growth_value = storage_values.split("\npp_province_food_storage_growth = {", 1)[1].split("\n}", 1)[0]
     assert "multiply = define:NPop|FOOD_STORAGE_POP_GROWTH" in growth_value

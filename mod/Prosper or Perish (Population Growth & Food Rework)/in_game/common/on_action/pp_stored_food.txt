@@ -1,0 +1,30 @@
+﻿# Prosper or Perish - stored-food tiers (EU5 1.4).
+# EU5 1.4 deleted the engine-scaled stored-food modifier. Growth from stored food is the engine's define term
+# (NPop.FOOD_STORAGE_POP_GROWTH); the other effects per stored year (Surplus Sales / Tavern storage legs, devastation
+# recovery, migration attraction, prosperity) ride the province static modifiers pp_stored_food_tier_1 .. _24, one
+# per whole month of stored consumption (generated from [stored_food] in constructor.toml).
+#
+# Exception to the mod's "no pulsing scripts" rule, approved by Jan on 2026-10-01 after the in-game cost test: no
+# engine mechanism follows a province's stored food in 1.4, so each country refreshes its provinces' tiers once a
+# month. The vanilla monthly country pulse fires this with a random 0-29 day delay, so the countries spread over the
+# month. Measured over one game year (4,071 provinces): exact tier on 94 % of the provinces (the rest at most a month
+# behind), total effect +0.1 % against the target, about 700 tier changes a month, 0.56 s per game year (about 12 us
+# per province and month, at most 5 ms for one country). Do not add further pulse scripts on this basis.
+# Game start: pp_stored_food_game_start (pp_game_start.txt) sets every province's tier on day one. Old saves: a
+# province without the tier variable gets its tier at its owner's next pulse (within a month).
+
+monthly_country_pulse = {
+	on_actions = {
+		delay = { days = { 0 29 } }
+		pp_stored_food_country_refresh
+	}
+}
+
+# Country scope: every_province = the country's provinces.
+pp_stored_food_country_refresh = {
+	effect = {
+		every_province = {
+			pp_refresh_stored_food_tier = yes
+		}
+	}
+}

@@ -5,8 +5,9 @@ is a set of widgets, one per state, with exclusive visibility tests, like the so
 
 How each state is read:
 - food: the stored months and the growth they give are script values (`pp_province_food_storage_months`,
-  `pp_province_food_storage_growth` in script_values/pp_province_food_storage.txt; EU5 1.4 has no stored-food modifier
-  to read); starvation is the engine's `Province.IsStarving`.
+  `pp_province_food_storage_growth` in script_values/pp_province_food_storage.txt; EU5 1.4 has no engine stored-food
+  modifier, and the mod's monthly stored-food tier modifiers sit on the province, which the location view cannot name
+  dynamically); starvation is the engine's `Province.IsStarving`.
 - land: the engine applies `abundant_free_land`, `available_free_land` and `overpopulation` itself, and scripts
   cannot see them, so each carries a marker modifier type (`pp_land_*`, in pp_capacity_pressure_effects.txt) that
   the GUI reads through `GetModifierValueFixed`. Its value is the modifier's strength, so the tooltip lists every

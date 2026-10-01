@@ -132,14 +132,18 @@ law exactly (same stored-years input, same cap, linear below it). What remains:
 - Starving months: 1.3 applied the storage bonus whenever food was left; 1.4 gives nothing in a month whose deficit
   empties the store. At most 0.0625 %/yr (Y below one month) and only in that month; 0 provinces at the start date.
 
-Gone with the deleted modifier and not replaced (no modifier scales with stored food in 1.4): the storage legs of
-the Tavern (`province_food_purchase` -8 per stored year) and of Surplus Sales / the Victualling Yard
-(`province_food_sales` +8 per stored year), and per stored year +0.003 devastation recovery, +0.045 migration
-attraction and +0.0025 monthly prosperity. Displays read script values instead of the marker the modifier carried
+The deleted modifier's other effects (the storage legs of the Tavern, `province_food_purchase` -8 per stored year, and
+of Surplus Sales / the Victualling Yard, `province_food_sales` +8 per stored year, and per stored year +0.003
+devastation recovery, +0.045 migration attraction and +0.0025 monthly prosperity) are back since 2026-10-01 on the
+stored-food tiers (6.2). Displays read script values instead of the marker the modifier carried
 (`in_game/common/script_values/pp_province_food_storage.txt`: months stored, growth from storage, growth incl. the
 storage term for the population growth map mode).
 
 ### 6.1 Carrier search for the other stored-food effects (2026-10-01)
+
+**Resolved the same day: the effects are back** on 24 stored-food tier modifiers refreshed by a staggered monthly
+country pulse (option 1 below in whole months; section 6.2). The search and the error table below describe the state
+before that.
 
 Jan's decision: keep all of the 1.3 effects. The 1.3 modifier (`TRY_REPLACE:positive_province_food_growth`, category
 province, scaled by min(stored years, 2)) carried per stored year:
@@ -203,6 +207,41 @@ Options for Jan:
 3. **Country-wide auto modifier** scaled by the country's average stored years: exact for one-province countries,
    wrong inside larger ones (and a uniform migration term moves nobody). Not applied.
 
-Tooling keeps reading 0 for these terms until a carrier exists: `ppc province-food-sales-check`
-(`PROVINCE_FOOD_SALES_STORED_FOOD_PER_YEAR`) and the migration model's stored-food attraction (`food_years`). The
-food simulation's prosperity fit still has the 1.3 stored-years slope and needs a refit on a 1.4 run.
+### 6.2 Stored-food tiers (2026-10-01, applied)
+
+What the game applies now (behaviour level):
+
+- **24 province static modifiers** `pp_stored_food_tier_1` .. `_24`
+  (`in_game/common/static_modifiers/pp_stored_food_tiers.txt`). Tier t stands for t whole months of the province's
+  own consumption in store and carries the 1.3 payload per stored year x t / 12: sales leg +8, purchase leg -8,
+  devastation recovery +0.003, migration attraction +0.045, monthly prosperity +0.0025 per stored year (growth is not
+  in it; the define term above carries it). Tier 24 = two stored years = the 1.3 cap. Below one month a province
+  carries no tier. Values are rounded to six decimals. Configured in `[stored_food]` in `constructor.toml`;
+  `stored_food.py` writes the modifiers, their localization ("Stored Food: N months"), the tier script value and the
+  refresh effect in the finalize step of `ppc build` / `ppc sync`.
+- **Months stored** (province scope, `pp_province_food_storage.txt`): consumption = the sum of the locations'
+  `food_consumption` x -1 (the location value is negative, e.g. London -140.37), months = `province_food` /
+  consumption, 0 to 24; tier = whole months (`pp_stored_food_tier_target`). The location-scope values the GUI, map
+  mode and chips read (`pp_province_monthly_food_consumption`, `pp_province_food_storage_months`) delegate to the
+  province ones; before this fix they guarded on consumption > 0 and read 0 everywhere in 1.4.
+- **Refresh** (`pp_refresh_stored_food_tier`, province scope): the new tier goes into a province variable (+100 offset,
+  as a variable at 0 counts as unset), the change is a difference + 100 matched by `<` / `>` ranges (`var:x = n` is a
+  scope comparison in game); only a changed tier removes the old modifier, adds the new one and stores it.
+- **Hook** (`in_game/common/on_action/pp_stored_food.txt`): the vanilla `monthly_country_pulse` runs
+  `pp_stored_food_country_refresh` after a random 0-29 day delay, so the countries spread over the month; each
+  refreshes `every_province` it owns (all 4,071 food provinces at the start date). `pp_stored_food_game_start`
+  (`pp_game_start.txt`) sets every country's provinces on day one. Old saves: a province without the variable gets its
+  tier at its owner's next pulse (within a month).
+- **Exception to the no-pulse rule**, approved by Jan on 2026-10-01 after the in-game test over one game year:
+  exact tier on 94 % of the provinces (the rest at most one month behind), total effect +0.1 % against the target,
+  about 700 tier changes a month, cost 0.56 s per game year (about 12 µs per province and month, at most 5 ms for one
+  country's call). In-game findings that shaped it: static-modifier amounts cannot use scope-dependent script values
+  (they read 0), `add_*_modifier` has no scale, `food_consumption` is location-only and negative, and province scope
+  has `province_food`, `province_food_percentage` and `province_max_food` but no consumption value.
+
+Error against the 1.3 law: at most one month of stores below it (1/24 of each effect's cap), plus up to a month of
+lag after the store crosses a whole month.
+
+Tooling: `ppc province-food-sales-check` reads the sales leg per stored year from `[stored_food.per_year]`; the
+migration model's stored-food attraction (`food_years`) is +0.045 per stored year again, in whole months; the food
+simulation's prosperity fit (1.3 stored-years slope) applies again.

@@ -151,9 +151,9 @@ class SimRules:
     abundant_food: float = 1.0              # abundant_free_land local_monthly_food (foraging)
     # prosperity (0..1 per location; the mod's prosperity inject: every settled pop type +50 % food at 100 %), dynamics
     # fitted on the 100-year run 1342-1437 (saves r7bee, 249k location pairs): dP/yr = +0.0181 x stored years
-    # - 0.0025 starving - 0.0747 x P, so ~0.24 at one stored year and ~0.49 at two. EU5 1.3 fit: the stored-food
-    # modifier that gave prosperity per stored year is gone in 1.4 (only growth remains, as a define term), so the
-    # stored-years slope needs a refit on a 1.4 run.
+    # - 0.0025 starving - 0.0747 x P, so ~0.24 at one stored year and ~0.49 at two. EU5 1.3 fit; in 1.4 the
+    # stored-food tier modifiers (stored_food.py) give the same prosperity per stored year again, in whole months of
+    # stores, so the fit stands (a 1.4 run can confirm it).
     prosperity_consumption: float = 0.5
     prosperity_per_year: float = 0.0181
     prosperity_starving: float = -0.0025

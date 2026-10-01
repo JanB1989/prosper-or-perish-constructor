@@ -25,6 +25,8 @@ build_time = rural_build_time
 
 unique_production_methods = {
     pp_sand_pit_base_sand = {
+        icon_type = building_type
+        icon = sand_pit
         manual_labor = 0.011
         produced = sand
         output = 0.105
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_sand_pit_surface_gathering = {
+        icon_type = building_type
+        icon = sand_pit
         category = building_maintenance
     }
     pp_sand_pit_screened_pits = {
+        icon_type = building_type
+        icon = sand_pit
         lumber = 0.033 # screens and pit shoring
         tools = 0.011 # shovels and sieves
         manual_labor = 0.019
@@ -46,6 +52,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_sand_pit_market_sales = {
+        icon_type = goods
+        icon = sand
         offset = 0.01
         produced = sand
         output = 0.02

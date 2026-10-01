@@ -25,6 +25,8 @@ construction_demand = village_construction
 # levels do not eat the treasury; one method, livestock, stone and labour in about equal cost shares.
 unique_production_methods = {
   pp_field_management_maintenance = {
+    icon_type = building_type
+    icon = field_management
     livestock = 0.007
     stone = 0.01
     manual_labor = 0.01

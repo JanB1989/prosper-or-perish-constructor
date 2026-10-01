@@ -29,6 +29,8 @@ remove_if = {
 build_time = generic_town_build_time
 unique_production_methods = {
     pp_slave_market_slave_market_maintenance = {
+        icon_type = building_type
+        icon = slave_market
         leather = 0.54
         tools = 0.49
         weaponry = 0.43
@@ -42,6 +44,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_slave_market_market_sales = {
+        icon_type = goods
+        icon = slaves_goods
         offset = 0.012
         produced = slaves_goods
         output = 0.004

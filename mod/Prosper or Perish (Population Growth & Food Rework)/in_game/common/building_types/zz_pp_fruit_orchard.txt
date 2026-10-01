@@ -17,6 +17,7 @@ REPLACE:fruit_orchard = {
     ai_forbid_shutdown = no
     location_potential = {
         OR = {
+            pp_wb_setup_fruit_orchard_location = yes   # vanilla setup orchards the geography would reject
             var:pp_fruit_orchard_eligible > 0
             AND = {
                 NOT = { has_variable = pp_fruit_orchard_eligible }
@@ -26,6 +27,8 @@ REPLACE:fruit_orchard = {
     }
     unique_production_methods = {
         pp_fruit_orchard_base_fruit = {
+            icon_type = building_type
+            icon = fruit_orchard
             manual_labor = 0.012
             produced = fruit
             output = 0.06
@@ -34,9 +37,13 @@ REPLACE:fruit_orchard = {
     }
     unique_production_methods = {
         pp_fruit_orchard_no_primary = {
+            icon_type = building_type
+            icon = fruit_orchard
             category = building_maintenance
         }
         pp_fruit_orchard_maintenance = {
+            icon_type = building_type
+            icon = fruit_orchard
             produced = fruit
             output = 0.166
             lumber = 0.086 # stakes, crates, pruning frames
@@ -47,11 +54,15 @@ REPLACE:fruit_orchard = {
     }
     unique_production_methods = {
         pp_fruit_orchard_sell_surplus = {
+            icon_type = building_type
+            icon = fruit_orchard
             produced = province_food_sales
             output = 0.005
             category = building_maintenance
         }
         pp_fruit_orchard_provision = {
+            icon_type = goods
+            icon = fruit
             fruit = 0.08
             produced = local_food
             output = 0.96
@@ -61,6 +72,8 @@ REPLACE:fruit_orchard = {
     }
     unique_production_methods = {
         pp_fruit_orchard_market_sales = {
+            icon_type = goods
+            icon = fruit
             offset = 0.01
             produced = fruit
             output = 0.01

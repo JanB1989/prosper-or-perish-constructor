@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_quicksilver_retort_base_mercury = {
+        icon_type = building_type
+        icon = quicksilver_retort
         manual_labor = 0.054
         produced = mercury
         output = 0.09
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_quicksilver_retort_no_secondary = {
+        icon_type = building_type
+        icon = quicksilver_retort
         category = building_maintenance
     }
     pp_quicksilver_retort_dyes = {
+        icon_type = building_type
+        icon = quicksilver_retort
         lumber = 0.027
         tools = 0.018
         manual_labor = 0.012
@@ -45,6 +51,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_quicksilver_retort_stone = {
+        icon_type = building_type
+        icon = quicksilver_retort
         lumber = 0.027
         tools = 0.018
         manual_labor = 0.012
@@ -55,9 +63,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_quicksilver_retort_no_primary = {
+        icon_type = building_type
+        icon = quicksilver_retort
         category = building_maintenance
     }
     pp_quicksilver_retort_mercury = {
+        icon_type = building_type
+        icon = quicksilver_retort
         lumber = 0.26
         tools = 0.26
         beeswax = 0.093
@@ -69,6 +81,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_quicksilver_retort_market_sales = {
+        icon_type = goods
+        icon = mercury
         offset = 0.012
         produced = mercury
         output = 0.004

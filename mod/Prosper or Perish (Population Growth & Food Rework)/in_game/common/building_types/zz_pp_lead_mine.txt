@@ -25,6 +25,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_lead_mine_base_lead = {
+        icon_type = building_type
+        icon = lead_mine
         manual_labor = 0.036
         produced = lead
         output = 0.09
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_lead_mine_no_secondary = {
+        icon_type = building_type
+        icon = lead_mine
         category = building_maintenance
     }
     pp_lead_mine_silver = {
+        icon_type = building_type
+        icon = lead_mine
         lumber = 0.025
         tools = 0.025
         lead = 0.016
@@ -45,6 +51,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_lead_mine_gold = {
+        icon_type = building_type
+        icon = lead_mine
         lumber = 0.025
         tools = 0.025
         lead = 0.016
@@ -56,9 +64,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_lead_mine_no_primary = {
+        icon_type = building_type
+        icon = lead_mine
         category = building_maintenance
     }
     pp_lead_mine_hushing = {
+        icon_type = building_type
+        icon = lead_mine
         lumber = 0.22
         beeswax = 0.067
         manual_labor = 0.43
@@ -67,6 +79,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_lead_mine_lead = {
+        icon_type = building_type
+        icon = lead_mine
         lumber = 0.11
         tools = 0.21
         beeswax = 0.033
@@ -78,6 +92,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_lead_mine_market_sales = {
+        icon_type = goods
+        icon = lead
         offset = 0.01
         produced = lead
         output = 0.005

@@ -14,6 +14,8 @@ build_time = workshop_build_time
 obsolete = pottery_guild
 unique_production_methods = {
     pp_pottery_workshop_pottery_w_maintenance = {
+        icon_type = building_type
+        icon = pottery_workshop
         clay = 0.99
         lumber = 0.099
         tools = 0.05
@@ -26,6 +28,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_pottery_workshop_market_sales = {
+        icon_type = goods
+        icon = pottery
         offset = 0.01
         produced = pottery
         output = 0.01

@@ -12,6 +12,8 @@ megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
     pp_lacquerware_guild_lacquerware_shop_maintenance = {
+        icon_type = building_type
+        icon = lacquerware_guild
         lumber = 1.14
         dyes = 0.47
         tools = 0.11
@@ -24,6 +26,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_lacquerware_guild_market_sales = {
+        icon_type = goods
+        icon = lacquerware
         offset = 0.01
         produced = lacquerware
         output = 0.002

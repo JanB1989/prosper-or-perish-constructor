@@ -14,6 +14,8 @@ megalopolis = yes
 build_time = workshop_build_time
 unique_production_methods = {
     pp_dyes_workshop_dyes_workshop_maintenance = {
+        icon_type = building_type
+        icon = dyes_workshop
         alum = 0.055
         lumber = 0.66
         manual_labor = 0.14
@@ -25,6 +27,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_dyes_workshop_market_sales = {
+        icon_type = goods
+        icon = dyes
         offset = 0.012
         produced = dyes
         output = 0.003

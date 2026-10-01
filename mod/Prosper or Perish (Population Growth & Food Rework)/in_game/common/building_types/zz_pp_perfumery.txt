@@ -18,6 +18,8 @@ location_potential = {
 build_time = manufactory_build_time
 unique_production_methods = {
     pp_perfumery_blended_incense = {
+        icon_type = building_type
+        icon = perfumery
         liquor = 0.19
         pepper = 0.23
         manual_labor = 0.13
@@ -29,6 +31,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_perfumery_market_sales = {
+        icon_type = goods
+        icon = incense
         offset = 0.01
         produced = incense
         output = 0.004

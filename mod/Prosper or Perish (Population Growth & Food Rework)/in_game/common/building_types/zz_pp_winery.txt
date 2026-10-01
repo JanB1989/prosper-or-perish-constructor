@@ -12,6 +12,8 @@ megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
     pp_winery_honey_winery_maintenance = {
+        icon_type = goods
+        icon = beeswax
         beeswax = 0.54
         lumber = 0.18
         tools = 0.09
@@ -22,6 +24,8 @@ unique_production_methods = {
         debug_max_profit = guild_profit_margin
     }
     pp_winery_fruit_winery_maintenance = {
+        icon_type = goods
+        icon = fruit
         fruit = 1.12
         lumber = 0.15
         tools = 0.089
@@ -32,6 +36,8 @@ unique_production_methods = {
         debug_max_profit = guild_profit_margin
     }
     pp_winery_rice_winery_maintenance = {
+        icon_type = goods
+        icon = rice
         rice = 1.13
         lumber = 0.15
         tools = 0.09
@@ -44,6 +50,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_winery_market_sales = {
+        icon_type = goods
+        icon = wine
         offset = 0.01
         produced = wine
         output = 0.005

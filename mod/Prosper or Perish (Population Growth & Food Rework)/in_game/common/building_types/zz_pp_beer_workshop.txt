@@ -13,6 +13,8 @@ megalopolis = yes
 build_time = workshop_build_time
 unique_production_methods = {
     pp_beer_workshop_wheat_beer_workshop_maintenance = {
+        icon_type = goods
+        icon = wheat
         wheat = 1.01
         lumber = 0.25
         tools = 0.1
@@ -23,6 +25,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_beer_workshop_millet_beer_workshop_maintenance = {
+        icon_type = goods
+        icon = millet
         millet = 1.01
         lumber = 0.25
         tools = 0.1
@@ -33,6 +37,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_beer_workshop_fruit_beer_workshop_maintenance = {
+        icon_type = goods
+        icon = fruit
         fruit = 1.06
         lumber = 0.21
         tools = 0.11
@@ -43,6 +49,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_beer_workshop_maize_beer_workshop_maintenance = {
+        icon_type = goods
+        icon = maize
         maize = 1.42
         pottery = 0.33
         manual_labor = 0.19
@@ -52,6 +60,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_beer_workshop_honey_beer_workshop_maintenance = {
+        icon_type = goods
+        icon = beeswax
         beeswax = 0.26
         millet = 0.53
         lumber = 0.21
@@ -63,6 +73,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_beer_workshop_rice_beer_workshop_maintenance = {
+        icon_type = goods
+        icon = rice
         rice = 1.01
         lumber = 0.25
         tools = 0.1
@@ -73,6 +85,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_beer_workshop_bavarian_beer_workshop_maintenance = {
+        icon_type = goods
+        icon = wheat
         wheat = 1.32
         lumber = 0.24
         tools = 0.12
@@ -85,6 +99,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_beer_workshop_market_sales = {
+        icon_type = goods
+        icon = beer
         offset = 0.01
         produced = beer
         output = 0.005

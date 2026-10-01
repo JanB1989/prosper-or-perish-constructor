@@ -14,6 +14,8 @@ obsolete = guns_workshop
 build_time = manufactory_build_time
 unique_production_methods = {
     pp_firearms_manufactory_firearms_manufactory_maintenance = {
+        icon_type = building_type
+        icon = firearms_manufactory
         lumber = 0.37
         coal = 0.37
         iron = 0.98
@@ -27,6 +29,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_firearms_manufactory_market_sales = {
+        icon_type = goods
+        icon = firearms
         offset = 0.012
         produced = firearms
         output = 0.004

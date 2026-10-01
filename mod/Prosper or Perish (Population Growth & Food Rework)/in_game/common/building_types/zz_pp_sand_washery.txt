@@ -30,6 +30,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_sand_washery_base_sand = {
+        icon_type = building_type
+        icon = sand_washery
         manual_labor = 0.011
         produced = sand
         output = 0.11
@@ -38,9 +40,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_sand_washery_no_screening = {
+        icon_type = building_type
+        icon = sand_washery
         category = building_maintenance
     }
     pp_sand_washery_riddle_screens = {
+        icon_type = building_type
+        icon = sand_washery
         lumber = 0.043
         tools = 0.017
         manual_labor = 0.022
@@ -51,9 +57,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_sand_washery_no_washing = {
+        icon_type = building_type
+        icon = sand_washery
         category = building_maintenance
     }
     pp_sand_washery_glass_sand_washing = {
+        icon_type = building_type
+        icon = sand_washery
         lumber = 0.034
         tools = 0.026
         manual_labor = 0.024
@@ -64,6 +74,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_sand_washery_market_sales = {
+        icon_type = goods
+        icon = sand
         offset = 0.01
         produced = sand
         output = 0.02

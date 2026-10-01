@@ -14,6 +14,8 @@ obsolete = cloth_workshop
 build_time = manufactory_build_time
 unique_production_methods = {
     pp_cloth_manufactory_wool_cloth_manufactory_maintenance = {
+        icon_type = goods
+        icon = wool
         wool = 1.85
         dyes = 0.17
         manual_labor = 0.4
@@ -23,6 +25,8 @@ unique_production_methods = {
         debug_max_profit = manufactory_profit_margin
     }
     pp_cloth_manufactory_cotton_cloth_manufactory_maintenance = {
+        icon_type = goods
+        icon = cotton
         produced = cloth
         output = 2.0
         cotton = 1.54
@@ -32,6 +36,8 @@ unique_production_methods = {
         debug_max_profit = manufactory_profit_margin
     }
     pp_cloth_manufactory_fiber_crops_cloth_manufactory_maintenance = {
+        icon_type = goods
+        icon = fiber_crops
         produced = cloth
         fiber_crops = 2.51
         dyes = 0.07
@@ -43,6 +49,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_cloth_manufactory_market_sales = {
+        icon_type = goods
+        icon = cloth
         offset = 0.012
         produced = cloth
         output = 0.004

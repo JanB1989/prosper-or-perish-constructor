@@ -25,6 +25,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_silver_mine_base_silver = {
+        icon_type = building_type
+        icon = silver_mine
         manual_labor = 0.084
         produced = silver
         output = 0.07
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_silver_mine_no_secondary = {
+        icon_type = building_type
+        icon = silver_mine
         category = building_maintenance
     }
     pp_silver_mine_lead = {
+        icon_type = building_type
+        icon = silver_mine
         lumber = 0.033
         tools = 0.03
         manual_labor = 0.032
@@ -44,6 +50,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_silver_mine_gold = {
+        icon_type = building_type
+        icon = silver_mine
         lumber = 0.033
         tools = 0.025
         manual_labor = 0.028
@@ -54,9 +62,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_silver_mine_no_primary = {
+        icon_type = building_type
+        icon = silver_mine
         category = building_maintenance
     }
     pp_silver_mine_fire_setting = {
+        icon_type = building_type
+        icon = silver_mine
         lumber = 0.21
         beeswax = 0.086
         manual_labor = 0.43
@@ -65,6 +77,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_silver_mine_silver = {
+        icon_type = building_type
+        icon = silver_mine
         lumber = 0.18
         tools = 0.15
         beeswax = 0.074

@@ -13,6 +13,8 @@ megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
     pp_tools_guild_stone_tools_guild_maintenance = {
+        icon_type = goods
+        icon = stone
         stone = 0.58
         manual_labor = 0.098
         produced = tools
@@ -21,6 +23,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_tools_guild_copper_tools_guild_maintenance = {
+        icon_type = goods
+        icon = copper
         copper = 0.45
         manual_labor = 0.23
         produced = tools
@@ -29,6 +33,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_tools_guild_bronze_tools_guild_maintenance = {
+        icon_type = goods
+        icon = tin
         copper = 0.47
         tin = 0.038
         manual_labor = 0.24
@@ -38,6 +44,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_tools_guild_metalwork_guild_maintenance = {
+        icon_type = goods
+        icon = iron
         iron = 0.72
         manual_labor = 0.41
         produced = tools
@@ -48,6 +56,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tools_guild_market_sales = {
+        icon_type = goods
+        icon = tools
         offset = 0.013
         produced = tools
         output = 0.004

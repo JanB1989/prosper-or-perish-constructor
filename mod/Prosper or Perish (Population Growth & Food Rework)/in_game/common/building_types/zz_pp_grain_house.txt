@@ -23,6 +23,8 @@ REPLACE:grain_house = {
 
 	unique_production_methods = {
 		pp_grain_house_maintenance = {
+			icon_type = building_type
+			icon = grain_house
 			stone = 0.02
 			category = building_maintenance
 		}

@@ -25,6 +25,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_wheat_farmstead_base = {
+        icon_type = building_type
+        icon = wheat_farmstead
         manual_labor = 0.016
         produced = wheat
         output = 0.08
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_wheat_farmstead_no_cultivation = {
+        icon_type = building_type
+        icon = wheat_farmstead
         category = building_maintenance
     }
     pp_wheat_farmstead_manured_three_field = {
+        icon_type = building_type
+        icon = wheat_farmstead
         horses = 0.043
         livestock = 0.086
         tools = 0.017
@@ -49,11 +55,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_wheat_farmstead_sell_surplus = {
+        icon_type = building_type
+        icon = wheat_farmstead
         produced = province_food_sales
         output = 0.007
         category = building_maintenance
     }
     pp_wheat_farmstead_provision = {
+        icon_type = goods
+        icon = wheat
         wheat = 0.107
         produced = local_food
         output = 1.28
@@ -63,6 +73,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_wheat_farmstead_market_sales = {
+        icon_type = goods
+        icon = wheat
         offset = 0.01
         produced = wheat
         output = 0.01

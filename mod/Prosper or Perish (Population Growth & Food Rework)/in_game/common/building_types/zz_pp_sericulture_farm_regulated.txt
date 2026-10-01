@@ -27,6 +27,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_regulated_sericulture_farm_base_silk = {
+        icon_type = building_type
+        icon = regulated_sericulture_farm
         manual_labor = 0.042
         produced = silk
         output = 0.052
@@ -35,9 +37,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_regulated_sericulture_farm_loose_skeins = {
+        icon_type = building_type
+        icon = regulated_sericulture_farm
         category = building_maintenance
     }
     pp_regulated_sericulture_farm_heated_filature = {
+        icon_type = building_type
+        icon = regulated_sericulture_farm
         furniture = 0.03 # skein racks and inspection tables
         pottery = 0.034 # heated basins and settling jars
         coal = 0.017 # light fuel for steady reeling heat
@@ -49,9 +55,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_regulated_sericulture_farm_household_reeling = {
+        icon_type = building_type
+        icon = regulated_sericulture_farm
         category = building_maintenance
     }
     pp_regulated_sericulture_farm_reeling_house = {
+        icon_type = building_type
+        icon = regulated_sericulture_farm
         furniture = 0.06 # light tray stands and hand reeling frames
         fiber_crops = 0.039 # woven cocoon mats and sorting baskets
         pottery = 0.03 # warming basins for reeling water
@@ -63,6 +73,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_regulated_sericulture_farm_market_sales = {
+        icon_type = goods
+        icon = silk
         offset = 0.012
         produced = silk
         output = 0.003

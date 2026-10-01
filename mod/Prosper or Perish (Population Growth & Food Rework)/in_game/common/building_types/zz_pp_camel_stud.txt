@@ -25,6 +25,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_camel_stud_base_camels = {
+        icon_type = building_type
+        icon = camel_stud
         manual_labor = 0.051
         produced = camels
         output = 0.085
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_camel_stud_no_primary = {
+        icon_type = building_type
+        icon = camel_stud
         category = building_maintenance
     }
     pp_camel_stud_hybrid_crossing = {
+        icon_type = building_type
+        icon = camel_stud
         wheat = 0.493 # barley and fodder grain
         legumes = 0.264 # lucerne and vetch hay
         leather = 0.094 # pack saddles and girths
@@ -47,6 +53,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_camel_stud_riding_strains = {
+        icon_type = building_type
+        icon = camel_stud
         millet = 0.604 # millet and sorghum feed
         fruit = 0.34 # dates
         leather = 0.111 # riding saddles and bridles
@@ -60,6 +68,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_camel_stud_market_sales = {
+        icon_type = goods
+        icon = camels
         offset = 0.012
         produced = camels
         output = 0.004

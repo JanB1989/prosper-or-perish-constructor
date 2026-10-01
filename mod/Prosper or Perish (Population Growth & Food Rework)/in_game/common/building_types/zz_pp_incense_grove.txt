@@ -27,6 +27,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_incense_grove_base_incense = {
+        icon_type = building_type
+        icon = incense_grove
         manual_labor = 0.05
         produced = incense
         output = 0.100
@@ -35,9 +37,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_incense_grove_wild_resins = {
+        icon_type = building_type
+        icon = incense_grove
         category = building_maintenance
     }
     pp_incense_grove_tapping_camps = {
+        icon_type = building_type
+        icon = incense_grove
         fiber_crops = 0.096 # collection cloth and baskets
         lumber = 0.096 # drying racks and shelters
         tools = 0.019 # tapping knives
@@ -49,6 +55,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_incense_grove_market_sales = {
+        icon_type = goods
+        icon = incense
         offset = 0.01
         produced = incense
         output = 0.004

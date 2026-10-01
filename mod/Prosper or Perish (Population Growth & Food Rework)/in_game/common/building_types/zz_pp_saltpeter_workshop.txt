@@ -18,6 +18,8 @@ location_potential = {
 }
 unique_production_methods = {
     pp_saltpeter_workshop_demands = {
+        icon_type = building_type
+        icon = saltpeter_workshop
         pottery = 0.14
         livestock = 0.81
         manual_labor = 0.15
@@ -29,6 +31,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_saltpeter_workshop_market_sales = {
+        icon_type = goods
+        icon = saltpeter
         offset = 0.01
         produced = saltpeter
         output = 0.005

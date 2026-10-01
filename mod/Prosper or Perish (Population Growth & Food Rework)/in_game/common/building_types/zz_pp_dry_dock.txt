@@ -24,6 +24,8 @@ REPLACE:dry_dock = {
 
     unique_production_methods = {
         pp_dry_dock_maintenance = {
+            icon_type = building_type
+            icon = dry_dock
             tar = 0.4
             naval_supplies = 0.2
             tools = 0.4

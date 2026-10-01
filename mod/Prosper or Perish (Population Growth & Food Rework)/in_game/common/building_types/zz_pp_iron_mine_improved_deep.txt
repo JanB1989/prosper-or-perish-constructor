@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_iron_mine_deep_base_iron = {
+        icon_type = building_type
+        icon = iron_mine_deep
         manual_labor = 0.056
         produced = iron
         output = 0.08
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_iron_mine_deep_no_secondary = {
+        icon_type = building_type
+        icon = iron_mine_deep
         category = building_maintenance
     }
     pp_iron_mine_deep_ochre = {
+        icon_type = building_type
+        icon = iron_mine_deep
         lumber = 0.036 # washing troughs, racks
         tools = 0.018 # sieves, shovels
         manual_labor = 0.014
@@ -47,9 +53,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_iron_mine_deep_no_primary = {
+        icon_type = building_type
+        icon = iron_mine_deep
         category = building_maintenance
     }
     pp_iron_mine_deep_ore_dressing_floors = {
+        icon_type = building_type
+        icon = iron_mine_deep
         fiber_crops = 0.2 # sacks, screens
         cloth = 0.098 # sorting cloths
         beeswax = 0.053 # candles, seals
@@ -59,6 +69,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_iron_mine_deep_horse_whim_haulage = {
+        icon_type = building_type
+        icon = iron_mine_deep
         horses = 0.2 # whim draft teams
         leather = 0.089 # harness, buckets
         beeswax = 0.053 # mine candles, seals
@@ -68,6 +80,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_iron_mine_deep_drainage_workings = {
+        icon_type = building_type
+        icon = iron_mine_deep
         lumber = 0.32 # shaft timbering, headframes
         tools = 0.36 # pumps, picks, haulage
         beeswax = 0.071 # candles, pump seals
@@ -77,6 +91,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_iron_mine_deep_slitting_ore = {
+        icon_type = building_type
+        icon = iron_mine_deep
         lumber = 0.34 # galleries, bar racks
         tools = 0.37 # rolls, stamps, pumps
         beeswax = 0.08 # candles, pump seals

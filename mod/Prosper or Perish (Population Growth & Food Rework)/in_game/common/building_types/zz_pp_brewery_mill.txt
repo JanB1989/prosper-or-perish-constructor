@@ -15,6 +15,8 @@ build_time = mills_build_time
 obsolete = brewery_manufactory
 unique_production_methods = {
     pp_brewery_mill_brewery_mill_maintenance = {
+        icon_type = building_type
+        icon = brewery_mill
         lumber = 0.62
         wheat = 5.4
         tools = 0.31
@@ -27,6 +29,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_brewery_mill_market_sales = {
+        icon_type = goods
+        icon = beer
         offset = 0.01
         produced = beer
         output = 0.005

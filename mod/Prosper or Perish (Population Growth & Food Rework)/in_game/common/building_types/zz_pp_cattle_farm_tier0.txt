@@ -25,6 +25,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_cattle_farm_base = {
+        icon_type = building_type
+        icon = cattle_farm
         manual_labor = 0.018
         produced = livestock
         output = 0.06
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_cattle_farm_no_cultivation = {
+        icon_type = building_type
+        icon = cattle_farm
         category = building_maintenance
     }
     pp_cattle_farm_open_pasture = {
+        icon_type = building_type
+        icon = cattle_farm
         salt = 0.003
         tools = 0.006
         manual_labor = 0.031
@@ -45,6 +51,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_cattle_farm_byres_yards = {
+        icon_type = building_type
+        icon = cattle_farm
         tools = 0.007
         clay = 0.13
         manual_labor = 0.018
@@ -56,11 +64,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_cattle_farm_sell_surplus = {
+        icon_type = building_type
+        icon = cattle_farm
         produced = province_food_sales
         output = 0.005
         category = building_maintenance
     }
     pp_cattle_farm_provision = {
+        icon_type = goods
+        icon = livestock
         livestock = 0.053
         produced = local_food
         output = 0.96
@@ -70,6 +82,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_cattle_farm_market_sales = {
+        icon_type = goods
+        icon = livestock
         offset = 0.012
         produced = livestock
         output = 0.008

@@ -25,6 +25,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_alum_works_base_alum = {
+        icon_type = building_type
+        icon = alum_works
         manual_labor = 0.048
         produced = alum
         output = 0.08
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_alum_works_no_secondary = {
+        icon_type = building_type
+        icon = alum_works
         category = building_maintenance
     }
     pp_alum_works_clay = {
+        icon_type = building_type
+        icon = alum_works
         lumber = 0.026
         tools = 0.017
         manual_labor = 0.017
@@ -44,6 +50,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_alum_works_stone = {
+        icon_type = building_type
+        icon = alum_works
         lumber = 0.034
         tools = 0.026
         manual_labor = 0.024
@@ -54,9 +62,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_alum_works_no_primary = {
+        icon_type = building_type
+        icon = alum_works
         category = building_maintenance
     }
     pp_alum_works_alum = {
+        icon_type = building_type
+        icon = alum_works
         lumber = 0.28
         tools = 0.3
         coal = 0.066
@@ -68,6 +80,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_alum_works_market_sales = {
+        icon_type = goods
+        icon = alum
         offset = 0.012
         produced = alum
         output = 0.004

@@ -14,6 +14,8 @@ build_time = manufactory_build_time
 obsolete = naval_supplies_workshop
 unique_production_methods = {
     pp_naval_supplies_manufactory_naval_supplies_manufactory_maintenance = {
+        icon_type = building_type
+        icon = naval_supplies_manufactory
         lumber = 0.97
         fiber_crops = 0.72
         tar = 0.72
@@ -27,6 +29,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_naval_supplies_manufactory_market_sales = {
+        icon_type = goods
+        icon = naval_supplies
         offset = 0.012
         produced = naval_supplies
         output = 0.004

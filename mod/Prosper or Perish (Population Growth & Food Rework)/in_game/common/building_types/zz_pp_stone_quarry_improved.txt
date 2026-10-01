@@ -38,6 +38,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_stone_quarry_improved_base_stone = {
+        icon_type = building_type
+        icon = stone_quarry_improved
         manual_labor = 0.03
         produced = stone
         output = 0.15
@@ -46,9 +48,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_stone_quarry_improved_no_secondary = {
+        icon_type = building_type
+        icon = stone_quarry_improved
         category = building_maintenance
     }
     pp_stone_quarry_improved_rubble_breaking = {
+        icon_type = building_type
+        icon = stone_quarry_improved
         lumber = 0.034 # sorting screens, bins
         tools = 0.026 # hammers and sieves
         manual_labor = 0.024
@@ -59,9 +65,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_stone_quarry_improved_no_primary = {
+        icon_type = building_type
+        icon = stone_quarry_improved
         category = building_maintenance
     }
     pp_stone_quarry_improved_ox_haulage = {
+        icon_type = building_type
+        icon = stone_quarry_improved
         lumber = 0.33 # skids, block sledges
         tools = 0.15 # picks, wedges, dressing tools
         leather = 0.034 # yokes and straps
@@ -72,6 +82,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_stone_quarry_improved_crane_winch_quarrying = {
+        icon_type = building_type
+        icon = stone_quarry_improved
         lumber = 0.34 # crane frame, skids
         tools = 0.16 # chisels, wedges, tackle
         leather = 0.043 # slings and straps

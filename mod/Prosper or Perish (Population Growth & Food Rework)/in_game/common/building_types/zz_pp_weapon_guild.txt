@@ -12,6 +12,8 @@ megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
     pp_weapon_guild_pre_columbian_weapon_smith_maintenance = {
+        icon_type = goods
+        icon = stone
         lumber = 0.06
         stone = 0.86
         manual_labor = 0.16
@@ -21,6 +23,8 @@ unique_production_methods = {
         debug_max_profit = guild_profit_margin
     }
     pp_weapon_guild_weapon_guild_obsidian_maintenance = {
+        icon_type = goods
+        icon = gems
         lumber = 0.1
         stone = 0.44
         gems = 0.088
@@ -31,6 +35,8 @@ unique_production_methods = {
         debug_max_profit = guild_profit_margin
     }
     pp_weapon_guild_weapon_smith_maintenance = {
+        icon_type = goods
+        icon = weaponry
         lumber = 0.25
         coal = 0.3
         tools = 0.5
@@ -43,6 +49,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_weapon_guild_market_sales = {
+        icon_type = goods
+        icon = weaponry
         offset = 0.012
         produced = weaponry
         output = 0.004

@@ -15,6 +15,8 @@ obsolete = cloth_manufactory
 build_time = mills_build_time
 unique_production_methods = {
     pp_textile_mill_wool_mill_maintenance = {
+        icon_type = goods
+        icon = wool
         wool = 2.28
         dyes = 0.3
         manual_labor = 0.31
@@ -24,6 +26,8 @@ unique_production_methods = {
         category = mills_input
     }
     pp_textile_mill_fiber_crops_mill_maintenance = {
+        icon_type = goods
+        icon = fiber_crops
         fiber_crops = 2.88
         dyes = 0.29
         manual_labor = 0.29
@@ -33,6 +37,8 @@ unique_production_methods = {
         category = mills_input
     }
     pp_textile_mill_cotton_mill_maintenance = {
+        icon_type = goods
+        icon = cotton
         cotton = 2.37
         dyes = 0.32
         manual_labor = 0.32
@@ -44,6 +50,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_textile_mill_market_sales = {
+        icon_type = goods
+        icon = cloth
         offset = 0.012
         produced = cloth
         output = 0.004

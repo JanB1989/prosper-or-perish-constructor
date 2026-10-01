@@ -15,6 +15,8 @@ obsolete = fine_cloth_manufactory
 build_time = mills_build_time
 unique_production_methods = {
     pp_fine_cloth_mill_fine_cloth_mill_maintenance = {
+        icon_type = goods
+        icon = cloth
         cloth = 6.96
         dyes = 0.47
         manual_labor = 0.95
@@ -24,6 +26,8 @@ unique_production_methods = {
         category = mills_input
     }
     pp_fine_cloth_mill_silk_cloth_mill_maintenance = {
+        icon_type = goods
+        icon = silk
         silk = 5.22
         dyes = 0.47
         manual_labor = 0.95
@@ -35,6 +39,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_fine_cloth_mill_market_sales = {
+        icon_type = goods
+        icon = fine_cloth
         offset = 0.012
         produced = fine_cloth
         output = 0.002

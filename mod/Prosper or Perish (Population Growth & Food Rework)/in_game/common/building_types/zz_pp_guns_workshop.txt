@@ -13,6 +13,8 @@ megalopolis = yes
 build_time = workshop_build_time
 unique_production_methods = {
     pp_guns_workshop_guns_workshop_ammunition_lead_maintenance = {
+        icon_type = goods
+        icon = lead
         lead = 0.11
         saltpeter = 0.11
         manual_labor = 0.04
@@ -22,6 +24,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_guns_workshop_guns_workshop_ammunition_iron_maintenance = {
+        icon_type = goods
+        icon = iron
         iron = 0.11
         saltpeter = 0.11
         manual_labor = 0.055
@@ -33,6 +37,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_guns_workshop_guns_workshop_iron_maintenance = {
+        icon_type = goods
+        icon = iron
         iron = 0.48
         tools = 0.3
         manual_labor = 0.3
@@ -42,6 +48,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_guns_workshop_guns_workshop_bronze_maintenance = {
+        icon_type = goods
+        icon = copper
         copper = 0.54
         tin = 0.11
         tools = 0.34
@@ -54,6 +62,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_guns_workshop_market_sales = {
+        icon_type = goods
+        icon = firearms
         offset = 0.012
         produced = firearms
         output = 0.004

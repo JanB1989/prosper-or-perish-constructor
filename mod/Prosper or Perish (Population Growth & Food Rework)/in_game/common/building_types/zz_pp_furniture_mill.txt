@@ -15,6 +15,8 @@ obsolete = furniture_manufactory
 build_time = mills_build_time
 unique_production_methods = {
     pp_furniture_mill_furniture_mill_maintenance = {
+        icon_type = building_type
+        icon = furniture_mill
         lumber = 4.38
         dyes = 0.51
         tools = 0.51
@@ -27,6 +29,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_furniture_mill_market_sales = {
+        icon_type = goods
+        icon = furniture
         offset = 0.012
         produced = furniture
         output = 0.004

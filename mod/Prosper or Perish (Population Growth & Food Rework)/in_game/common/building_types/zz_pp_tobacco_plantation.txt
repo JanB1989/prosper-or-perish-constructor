@@ -27,6 +27,8 @@ build_time = plantation_build_time
 
 unique_production_methods = {
     pp_tobacco_plantation_base_tobacco = {
+        icon_type = building_type
+        icon = tobacco_plantation
         manual_labor = 0.18
         produced = tobacco
         output = 0.300
@@ -35,9 +37,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tobacco_plantation_field_cutting = {
+        icon_type = building_type
+        icon = tobacco_plantation
         category = building_maintenance
     }
     pp_tobacco_plantation_curing_barns = {
+        icon_type = building_type
+        icon = tobacco_plantation
         slaves_goods = 0.3 # plantation gangs
         lumber = 0.33 # curing barns
         pottery = 0.095 # sweating and storage jars
@@ -50,6 +56,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tobacco_plantation_market_sales = {
+        icon_type = goods
+        icon = tobacco
         offset = 0.012
         produced = tobacco
         output = 0.004

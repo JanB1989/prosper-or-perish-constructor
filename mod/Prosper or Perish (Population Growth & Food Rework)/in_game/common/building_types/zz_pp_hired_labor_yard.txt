@@ -19,6 +19,8 @@ construction_demand = workshop_construction
 
 unique_production_methods = {
   pp_hired_labor_yard_sack_porters = {
+    icon_type = building_type
+    icon = hired_labor_yard
     produced = manual_labor
     output = 2.85
     fiber_crops = 1.0
@@ -27,6 +29,8 @@ unique_production_methods = {
     category = building_maintenance
   }
   pp_hired_labor_yard_labour_exchange = {
+    icon_type = building_type
+    icon = hired_labor_yard
     produced = manual_labor
     output = 4
     furniture = 0.8
@@ -35,6 +39,8 @@ unique_production_methods = {
     category = building_maintenance
   }
   pp_hired_labor_yard_carters = {
+    icon_type = building_type
+    icon = hired_labor_yard
     produced = manual_labor
     output = 4.1
     horses = 1.2
@@ -44,6 +50,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
   pp_hired_labor_yard_market_sales = {
+    icon_type = goods
+    icon = manual_labor
     offset = 0.01
     produced = manual_labor
     output = 0.01

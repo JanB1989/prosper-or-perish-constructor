@@ -24,6 +24,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_pearl_fishery_base_pearls = {
+        icon_type = building_type
+        icon = pearl_fishery
         manual_labor = 0.08
         produced = pearls
         output = 0.1
@@ -32,9 +34,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_pearl_fishery_no_diving = {
+        icon_type = building_type
+        icon = pearl_fishery
         category = building_maintenance
     }
     pp_pearl_fishery_dhow_diving_crews = {
+        icon_type = building_type
+        icon = pearl_fishery
         naval_supplies = 0.025
         victuals = 0.049
         manual_labor = 0.048
@@ -45,6 +51,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_pearl_fishery_market_sales = {
+        icon_type = goods
+        icon = pearls
         offset = 0.012
         produced = pearls
         output = 0.003

@@ -13,6 +13,8 @@ megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
     pp_apothecary_natural_medicine_apotechary = {
+        icon_type = goods
+        icon = wild_game
         wild_game = 0.04
         fiber_crops = 0.16
         manual_labor = 0.067
@@ -22,6 +24,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_apothecary_ancient_medicine_apotechary = {
+        icon_type = goods
+        icon = mercury
         mercury = 0.016
         ivory = 0.08
         manual_labor = 0.061
@@ -33,6 +37,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_apothecary_market_sales = {
+        icon_type = goods
+        icon = medicaments
         offset = 0.01
         produced = medicaments
         output = 0.01

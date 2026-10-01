@@ -25,6 +25,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_millet_rotations_base = {
+        icon_type = building_type
+        icon = millet_rotations
         manual_labor = 0.014
         produced = millet
         output = 0.07
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_millet_rotations_no_cultivation = {
+        icon_type = building_type
+        icon = millet_rotations
         category = building_maintenance
     }
     pp_millet_rotations_millet_fallow = {
+        icon_type = building_type
+        icon = millet_rotations
         tools = 0.16
         horses = 0.12
         livestock = 0.11
@@ -47,6 +53,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_millet_rotations_sorghum_cowpea = {
+        icon_type = building_type
+        icon = millet_rotations
         tools = 0.15
         horses = 0.11
         legumes = 0.24
@@ -60,11 +68,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_millet_rotations_sell_surplus = {
+        icon_type = building_type
+        icon = millet_rotations
         produced = province_food_sales
         output = 0.006
         category = building_maintenance
     }
     pp_millet_rotations_provision = {
+        icon_type = goods
+        icon = millet
         millet = 0.093
         produced = local_food
         output = 1.12
@@ -74,6 +86,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_millet_rotations_market_sales = {
+        icon_type = goods
+        icon = millet
         offset = 0.01
         produced = millet
         output = 0.01

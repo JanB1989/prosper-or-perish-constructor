@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_tobacco_farm_base_tobacco = {
+        icon_type = building_type
+        icon = tobacco_farm
         manual_labor = 0.096
         produced = tobacco
         output = 0.16
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tobacco_farm_field_cutting = {
+        icon_type = building_type
+        icon = tobacco_farm
         category = building_maintenance
     }
     pp_tobacco_farm_curing_barns = {
+        icon_type = building_type
+        icon = tobacco_farm
         lumber = 0.384 # curing barns
         fiber_crops = 0.056 # hanging cords, packing twine
         tools = 0.048 # knives and presses
@@ -48,6 +54,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tobacco_farm_market_sales = {
+        icon_type = goods
+        icon = tobacco
         offset = 0.012
         produced = tobacco
         output = 0.004

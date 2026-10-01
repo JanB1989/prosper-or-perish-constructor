@@ -12,6 +12,8 @@ megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
     pp_paper_guild_paper_guild_leather_maintenance = {
+        icon_type = goods
+        icon = leather
         leather = 0.17
         lumber = 0.17
         manual_labor = 0.12
@@ -21,6 +23,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_paper_guild_paper_guild_fiber_pulp_maintenance = {
+        icon_type = goods
+        icon = fiber_crops
         fiber_crops = 0.64
         lumber = 0.21
         manual_labor = 0.28
@@ -30,6 +34,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_paper_guild_paper_guild_cloth_maintenance = {
+        icon_type = goods
+        icon = cloth
         cloth = 0.5
         lumber = 0.099
         manual_labor = 0.26
@@ -41,6 +47,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_paper_guild_market_sales = {
+        icon_type = goods
+        icon = paper
         offset = 0.01
         produced = paper
         output = 0.005

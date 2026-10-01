@@ -14,6 +14,8 @@ megalopolis = yes
 build_time = workshop_build_time
 unique_production_methods = {
     pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance = {
+        icon_type = goods
+        icon = fiber_crops
         fiber_crops = 1.1
         manual_labor = 0.24
         produced = cloth
@@ -22,6 +24,8 @@ unique_production_methods = {
         debug_max_profit = workshop_profit_margin
     }
     pp_cloth_workshop_cotton_cloth_workshop_maintenance = {
+        icon_type = goods
+        icon = cotton
         cotton = 0.91
         manual_labor = 0.31
         produced = cloth
@@ -30,6 +34,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_cloth_workshop_wool_cloth_workshop_maintenance = {
+        icon_type = goods
+        icon = wool
         wool = 1.09
         manual_labor = 0.31
         produced = cloth
@@ -40,6 +46,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_cloth_workshop_market_sales = {
+        icon_type = goods
+        icon = cloth
         offset = 0.012
         produced = cloth
         output = 0.004

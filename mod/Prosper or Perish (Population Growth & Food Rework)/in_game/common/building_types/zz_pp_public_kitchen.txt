@@ -36,9 +36,13 @@ increase_per_level_cost = 0.10
 	# ==========================================
 	unique_production_methods = {
 		pp_public_kitchen_well_water = {
+			icon_type = building_type
+			icon = public_kitchen
 			category = building_maintenance
 		}
 		pp_public_kitchen_coffee = {
+        icon_type = building_type
+        icon = public_kitchen
         coffee = 0.35
         manual_labor = 0.096
 			produced = local_food
@@ -47,6 +51,8 @@ increase_per_level_cost = 0.10
 			category = building_maintenance
 		}
 		pp_public_kitchen_chocolate = {
+        icon_type = building_type
+        icon = public_kitchen
         cocoa = 0.3
         manual_labor = 0.092
 			produced = local_food
@@ -55,6 +61,8 @@ increase_per_level_cost = 0.10
 			category = building_maintenance
 		}
 		pp_public_kitchen_tea = {
+        icon_type = building_type
+        icon = public_kitchen
         tea = 0.46
         manual_labor = 0.096
 			produced = local_food
@@ -63,6 +71,8 @@ increase_per_level_cost = 0.10
 			category = building_maintenance
 		}
 		pp_public_kitchen_beer = {
+        icon_type = building_type
+        icon = public_kitchen
         beer = 0.66
         manual_labor = 0.11
 			produced = local_food
@@ -71,6 +81,8 @@ increase_per_level_cost = 0.10
 			category = building_maintenance
 		}
 		pp_public_kitchen_wine = {
+        icon_type = building_type
+        icon = public_kitchen
         wine = 0.72
         manual_labor = 0.11
 			produced = local_food
@@ -79,6 +91,8 @@ increase_per_level_cost = 0.10
 			category = building_maintenance
 		}
 		pp_public_kitchen_liquor = {
+        icon_type = building_type
+        icon = public_kitchen
         liquor = 0.62
         manual_labor = 0.12
 			produced = local_food
@@ -95,6 +109,8 @@ increase_per_level_cost = 0.10
 unique_production_methods = {
 		# --- ASIA ---
 		pp_public_kitchen_khichdi_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         rice = 1.23
         legumes = 1.06
         pepper = 0.037
@@ -105,6 +121,8 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 		pp_public_kitchen_fish_congee_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         rice = 1.23
         fish = 1.06
         pepper = 0.037
@@ -117,6 +135,8 @@ unique_production_methods = {
 
 		# --- AMERICA ---
 		pp_public_kitchen_pozole_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         maize = 0.77
         wild_game = 0.98
         chili = 0.15
@@ -127,6 +147,8 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 		pp_public_kitchen_mediterranean_fish_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         fish = 1.87
         olives = 0.56
         wine = 0.076
@@ -137,6 +159,8 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 		pp_public_kitchen_pemmican_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         wild_game = 1.68
         livestock = 0.35
         fruit = 0.37
@@ -148,6 +172,8 @@ unique_production_methods = {
 		}
 		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
 		pp_public_kitchen_kheer_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         rice = 1.23
         sugar = 0.11
         livestock = 0.67
@@ -159,6 +185,8 @@ unique_production_methods = {
 		}
 
 		pp_public_kitchen_labskaus_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         potato = 0.35
         fish = 0.56
         livestock = 1.12
@@ -170,6 +198,8 @@ unique_production_methods = {
 		}
 		# --- OCEANIA (NEW) ---
 		pp_public_kitchen_ika_mata_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         fish = 1.79
         fruit = 0.94
         salt = 0.037
@@ -181,6 +211,8 @@ unique_production_methods = {
 		}
 		# --- EUROPE ---
 		pp_public_kitchen_livestock_pottage_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         wheat = 1.2
         livestock = 0.86
         legumes = 0.24
@@ -192,6 +224,8 @@ unique_production_methods = {
 		}
 
 		pp_public_kitchen_mutton_and_pease_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         wool = 0.92
         legumes = 0.44
         salt = 0.053
@@ -202,6 +236,8 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 		pp_public_kitchen_saltfish_porridge_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         millet = 0.98
         fish = 1.4
         salt = 0.076
@@ -213,6 +249,8 @@ unique_production_methods = {
 		}
 
 		pp_public_kitchen_surstromming_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         fish = 1.93
         millet = 0.2
         salt = 0.2
@@ -224,6 +262,8 @@ unique_production_methods = {
 		}
 
 		pp_public_kitchen_honey_gruel_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         wheat = 0.9
         fruit = 0.59
         beeswax = 0.67
@@ -235,6 +275,8 @@ unique_production_methods = {
 		}
 		# --- AFRICA (NEW) ---
 		pp_public_kitchen_meat_tajine_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         livestock = 1.31
         fruit = 0.59
         saffron = 0.056
@@ -245,6 +287,8 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 		pp_public_kitchen_boreal_hunter_stew_serve = {
+        icon_type = building_type
+        icon = public_kitchen
         fur = 0.86
         millet = 0.75
         salt = 0.076

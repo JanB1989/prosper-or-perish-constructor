@@ -13,6 +13,8 @@ megalopolis = yes
 build_time = workshop_build_time
 unique_production_methods = {
     pp_furniture_workshop_furniture_workshop_maintenance = {
+        icon_type = building_type
+        icon = furniture_workshop
         lumber = 1.06
         dyes = 0.13
         tools = 0.13
@@ -25,6 +27,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_furniture_workshop_market_sales = {
+        icon_type = goods
+        icon = furniture
         offset = 0.012
         produced = furniture
         output = 0.004

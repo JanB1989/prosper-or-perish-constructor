@@ -12,6 +12,8 @@ megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
     pp_porcelain_guild_porcelain_guild_maintenance = {
+        icon_type = building_type
+        icon = porcelain_guild
         clay = 2.62
         coal = 0.52
         tools = 0.052
@@ -24,6 +26,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_porcelain_guild_market_sales = {
+        icon_type = goods
+        icon = porcelain
         offset = 0.012
         produced = porcelain
         output = 0.004

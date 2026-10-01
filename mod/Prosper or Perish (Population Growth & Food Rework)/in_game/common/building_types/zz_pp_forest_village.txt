@@ -28,24 +28,32 @@ REPLACE:forest_village = {
     build_time = village_build_time
     unique_production_methods = {
         pp_forest_village_base_fur = {
+            icon_type = building_type
+            icon = forest_village
             manual_labor = 0.011
             produced = fur
             output = 0.027
             category = building_maintenance
         }
         pp_forest_village_base_wild_game = {
+            icon_type = building_type
+            icon = forest_village
             manual_labor = 0.012
             produced = wild_game
             output = 0.06
             category = building_maintenance
         }
         pp_forest_village_base_beeswax = {
+            icon_type = building_type
+            icon = forest_village
             manual_labor = 0.02
             produced = beeswax
             output = 0.05
             category = building_maintenance
         }
         pp_forest_village_base_leather = {
+            icon_type = building_type
+            icon = forest_village
             manual_labor = 0.024
             produced = leather
             output = 0.04
@@ -54,9 +62,13 @@ REPLACE:forest_village = {
     }
     unique_production_methods = {
         pp_forest_village_no_primary = {
+            icon_type = building_type
+            icon = forest_village
             category = building_maintenance
         }
         pp_hunting_lodges = {
+            icon_type = goods
+            icon = wild_game
             produced = wild_game
             output = 0.063
             weaponry = 0.0
@@ -65,6 +77,8 @@ REPLACE:forest_village = {
             category = building_maintenance
         }
         pp_forest_tannery = {
+            icon_type = goods
+            icon = leather
             produced = leather
             output = 0.039
             sand = 0.0
@@ -74,6 +88,8 @@ REPLACE:forest_village = {
             category = building_maintenance
         }
         pp_fur_trapping = {
+            icon_type = building_type
+            icon = forest_village
             produced = fur
             output = 0.064
             tools = 0.011 # traps, knives
@@ -83,6 +99,8 @@ REPLACE:forest_village = {
             category = building_maintenance
         }
         pp_forest_village_forest_apiary = {
+            icon_type = building_type
+            icon = forest_village
             cloth = 0.066
             manual_labor = 0.042
             produced = beeswax
@@ -93,11 +111,15 @@ REPLACE:forest_village = {
     }
     unique_production_methods = {
         pp_forest_village_sell_surplus = {
+            icon_type = building_type
+            icon = forest_village
             produced = province_food_sales
             output = 0.005
             category = building_maintenance
         }
         pp_forest_village_provision = {
+            icon_type = goods
+            icon = wild_game
             wild_game = 0.08
             produced = local_food
             output = 0.96
@@ -107,6 +129,8 @@ REPLACE:forest_village = {
     }
     unique_production_methods = {
         pp_forest_village_market_sales = {
+            icon_type = goods
+            icon = beeswax
             offset = 0.01
             produced = beeswax
             output = 0.005

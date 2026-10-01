@@ -31,6 +31,8 @@ category = rgo_building_category
 
 unique_production_methods = {
     pp_stone_quarry_base_stone = {
+        icon_type = building_type
+        icon = stone_quarry
         manual_labor = 0.021
         produced = stone
         output = 0.105
@@ -39,9 +41,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_stone_quarry_outcrop_gathering = {
+        icon_type = building_type
+        icon = stone_quarry
         category = building_maintenance
     }
     pp_stone_quarry_cut_stone = {
+        icon_type = building_type
+        icon = stone_quarry
         lumber = 0.049 # rollers and shoring
         leather = 0.019 # hoist straps
         tools = 0.011 # picks and wedges

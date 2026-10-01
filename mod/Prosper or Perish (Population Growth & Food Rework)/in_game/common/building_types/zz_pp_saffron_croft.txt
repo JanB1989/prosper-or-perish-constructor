@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_saffron_croft_base_saffron = {
+        icon_type = building_type
+        icon = saffron_croft
         manual_labor = 0.092
         produced = saffron
         output = 0.092
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_saffron_croft_no_drying = {
+        icon_type = building_type
+        icon = saffron_croft
         category = building_maintenance
     }
     pp_saffron_croft_toasting_braziers = {
+        icon_type = building_type
+        icon = saffron_croft
         pottery = 0.344 # warming pans
         coal = 0.172 # brazier fuel
         manual_labor = 0.156
@@ -47,6 +53,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_saffron_croft_market_sales = {
+        icon_type = goods
+        icon = saffron
         offset = 0.01
         produced = saffron
         output = 0.002

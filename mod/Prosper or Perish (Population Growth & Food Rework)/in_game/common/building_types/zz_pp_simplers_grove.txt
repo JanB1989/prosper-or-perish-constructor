@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_simplers_grove_base_medicaments = {
+        icon_type = building_type
+        icon = simplers_grove
         manual_labor = 0.02
         produced = medicaments
         output = 0.1
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_simplers_grove_no_drying = {
+        icon_type = building_type
+        icon = simplers_grove
         category = building_maintenance
     }
     pp_simplers_grove_wicker_drying_racks = {
+        icon_type = building_type
+        icon = simplers_grove
         fiber_crops = 0.029 # baskets, ties, drying screens and mats
         pottery = 0.016 # crocks and dry storage vessels
         manual_labor = 0.016
@@ -47,6 +53,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_simplers_grove_market_sales = {
+        icon_type = goods
+        icon = medicaments
         offset = 0.01
         produced = medicaments
         output = 0.01

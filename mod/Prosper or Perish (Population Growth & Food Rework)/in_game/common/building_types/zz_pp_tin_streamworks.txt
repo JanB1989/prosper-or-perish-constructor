@@ -25,6 +25,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_tin_streamworks_base_tin = {
+        icon_type = building_type
+        icon = tin_streamworks
         manual_labor = 0.04
         produced = tin
         output = 0.1
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tin_streamworks_no_secondary = {
+        icon_type = building_type
+        icon = tin_streamworks
         category = building_maintenance
     }
     pp_tin_streamworks_lead = {
+        icon_type = building_type
+        icon = tin_streamworks
         lumber = 0.048
         tools = 0.025
         manual_labor = 0.034
@@ -44,6 +50,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_tin_streamworks_copper = {
+        icon_type = building_type
+        icon = tin_streamworks
         lumber = 0.048
         tools = 0.025
         manual_labor = 0.034
@@ -54,9 +62,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tin_streamworks_no_primary = {
+        icon_type = building_type
+        icon = tin_streamworks
         category = building_maintenance
     }
     pp_tin_streamworks_hand_streaming = {
+        icon_type = building_type
+        icon = tin_streamworks
         lumber = 0.32
         manual_labor = 0.45
         produced = tin
@@ -64,6 +76,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_tin_streamworks_tin = {
+        icon_type = building_type
+        icon = tin_streamworks
         lumber = 0.27
         tools = 0.16
         manual_labor = 0.2
@@ -74,6 +88,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tin_streamworks_market_sales = {
+        icon_type = goods
+        icon = tin
         offset = 0.01
         produced = tin
         output = 0.005

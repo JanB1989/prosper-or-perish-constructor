@@ -71,6 +71,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_engineered_brine_saltworks_base_salt = {
+        icon_type = building_type
+        icon = engineered_brine_saltworks
         manual_labor = 0.07
         produced = salt
         output = 0.070
@@ -79,9 +81,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_engineered_brine_saltworks_no_concentration = {
+        icon_type = building_type
+        icon = engineered_brine_saltworks
         category = building_maintenance
     }
     pp_engineered_brine_saltworks_pumped_brine_channels = {
+        icon_type = building_type
+        icon = engineered_brine_saltworks
         lumber = 0.37 # brine pipes
         tools = 0.23 # pumps and valves
         pottery = 0.14 # storage jars
@@ -93,9 +99,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_engineered_brine_saltworks_wood_fired_pans = {
+        icon_type = building_type
+        icon = engineered_brine_saltworks
         category = building_maintenance
     }
     pp_engineered_brine_saltworks_mineral_fired_pans = {
+        icon_type = building_type
+        icon = engineered_brine_saltworks
         coal = 0.35 # pan fuel
         clay = 0.23 # furnace linings
         pottery = 0.23 # brine vessels
@@ -108,6 +118,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_engineered_brine_saltworks_market_sales = {
+        icon_type = goods
+        icon = salt
         offset = 0.01
         produced = salt
         output = 0.002

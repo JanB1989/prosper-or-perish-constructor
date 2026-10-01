@@ -31,6 +31,8 @@ country_potential = {
 
 unique_production_methods = {
     pp_olive_farm_base = {
+        icon_type = building_type
+        icon = olive_farm
         manual_labor = 0.012
         produced = olives
         output = 0.06
@@ -39,9 +41,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_olive_farm_no_beekeeping = {
+        icon_type = building_type
+        icon = olive_farm
         category = building_maintenance
     }
     pp_olive_farm_cottage_hives = {
+        icon_type = building_type
+        icon = olive_farm
         furniture = 0
         cloth = 0
         manual_labor = 0.025
@@ -53,9 +59,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_olive_farm_no_cultivation = {
+        icon_type = building_type
+        icon = olive_farm
         category = building_maintenance
     }
     pp_olive_farm_pruned_grove = {
+        icon_type = building_type
+        icon = olive_farm
         tools = 0.004
         manual_labor = 0.01
         produced = olives
@@ -64,6 +74,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_olive_farm_terraced_grove = {
+        icon_type = building_type
+        icon = olive_farm
         livestock = 0.01
         stone = 0.016
         manual_labor = 0.006
@@ -75,11 +87,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_olive_farm_sell_surplus = {
+        icon_type = building_type
+        icon = olive_farm
         produced = province_food_sales
         output = 0.005
         category = building_maintenance
     }
     pp_olive_farm_provision = {
+        icon_type = goods
+        icon = olives
         olives = 0.08
         produced = local_food
         output = 0.96
@@ -89,6 +105,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_olive_farm_market_sales = {
+        icon_type = goods
+        icon = olives
         offset = 0.01
         produced = olives
         output = 0.01

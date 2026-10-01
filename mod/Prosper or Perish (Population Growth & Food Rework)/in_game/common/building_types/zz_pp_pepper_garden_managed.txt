@@ -27,6 +27,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_managed_pepper_garden_base_pepper = {
+        icon_type = building_type
+        icon = managed_pepper_garden
         manual_labor = 0.184
         produced = pepper
         output = 0.184
@@ -35,9 +37,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_managed_pepper_garden_unsorted_harvest = {
+        icon_type = building_type
+        icon = managed_pepper_garden
         category = building_maintenance
     }
     pp_managed_pepper_garden_garbling_tables = {
+        icon_type = building_type
+        icon = managed_pepper_garden
         furniture = 0.136 # light sorting racks and tables
         fiber_crops = 0.104 # sacks, screens, and woven trays
         manual_labor = 0.104
@@ -48,9 +54,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_managed_pepper_garden_no_drying_yard = {
+        icon_type = building_type
+        icon = managed_pepper_garden
         category = building_maintenance
     }
     pp_managed_pepper_garden_bamboo_drying_mats = {
+        icon_type = building_type
+        icon = managed_pepper_garden
         fiber_crops = 0.276 # bamboo mats, harvest baskets, and vine ties
         pottery = 0.172 # blanching pots and storage jars
         manual_labor = 0.116
@@ -61,6 +71,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_managed_pepper_garden_market_sales = {
+        icon_type = goods
+        icon = pepper
         offset = 0.01
         produced = pepper
         output = 0.002

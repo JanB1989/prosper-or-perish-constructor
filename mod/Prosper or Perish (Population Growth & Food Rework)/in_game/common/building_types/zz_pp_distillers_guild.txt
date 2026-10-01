@@ -13,6 +13,8 @@ build_time = guild_build_time
 construction_demand = guild_construction
 unique_production_methods = {
     pp_distillers_guild_sugar_liquor_guild_maintenance = {
+        icon_type = goods
+        icon = sugar
         sugar = 0.61
         glass = 0.082
         manual_labor = 0.35
@@ -22,6 +24,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_distillers_guild_rice_liquor_guild_maintenance = {
+        icon_type = goods
+        icon = rice
         rice = 1.78
         glass = 0.1
         manual_labor = 0.35
@@ -31,6 +35,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_distillers_guild_potato_liquor_guild_maintenance = {
+        icon_type = goods
+        icon = potato
         potato = 1.78
         glass = 0.1
         manual_labor = 0.35
@@ -40,6 +46,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_distillers_guild_wheat_liquor_guild_maintenance = {
+        icon_type = goods
+        icon = wheat
         wheat = 1.78
         glass = 0.1
         manual_labor = 0.35
@@ -49,6 +57,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_distillers_guild_beer_liquor_guild_maintenance = {
+        icon_type = goods
+        icon = beer
         beer = 0.89
         glass = 0.1
         manual_labor = 0.35
@@ -58,6 +68,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_distillers_guild_wine_liquor_guild_maintenance = {
+        icon_type = goods
+        icon = wine
         wine = 0.89
         glass = 0.1
         manual_labor = 0.35
@@ -69,6 +81,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_distillers_guild_market_sales = {
+        icon_type = goods
+        icon = liquor
         offset = 0.01
         produced = liquor
         output = 0.004

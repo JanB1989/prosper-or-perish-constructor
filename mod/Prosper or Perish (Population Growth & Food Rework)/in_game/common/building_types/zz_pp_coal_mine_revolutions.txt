@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_coal_mine_revolutions_base_coal = {
+        icon_type = building_type
+        icon = coal_mine_revolutions
         manual_labor = 0.06
         produced = coal
         output = 0.15
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_coal_mine_revolutions_no_secondary = {
+        icon_type = building_type
+        icon = coal_mine_revolutions
         category = building_maintenance
     }
     pp_coal_mine_revolutions_fireclay = {
+        icon_type = building_type
+        icon = coal_mine_revolutions
         lumber = 0.038
         tools = 0.019
         manual_labor = 0.007
@@ -47,9 +53,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_coal_mine_revolutions_no_primary = {
+        icon_type = building_type
+        icon = coal_mine_revolutions
         category = building_maintenance
     }
     pp_coal_mine_revolutions_coal = {
+        icon_type = building_type
+        icon = coal_mine_revolutions
         lumber = 0.48
         tools = 0.59
         beeswax = 0.12
@@ -61,6 +71,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_coal_mine_revolutions_market_sales = {
+        icon_type = goods
+        icon = coal
         offset = 0.01
         produced = coal
         output = 0.005

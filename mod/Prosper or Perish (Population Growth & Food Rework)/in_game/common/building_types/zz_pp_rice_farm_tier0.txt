@@ -31,6 +31,8 @@ country_potential = {
 
 unique_production_methods = {
     pp_rice_farm_base = {
+        icon_type = building_type
+        icon = rice_farm
         manual_labor = 0.012
         produced = rice
         output = 0.06
@@ -39,9 +41,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_rice_farm_no_cultivation = {
+        icon_type = building_type
+        icon = rice_farm
         category = building_maintenance
     }
     pp_rice_farm_dryland_rice = {
+        icon_type = building_type
+        icon = rice_farm
         livestock = 0.008
         tools = 0.003
         manual_labor = 0.006
@@ -51,6 +57,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_rice_farm_wet_paddy = {
+        icon_type = building_type
+        icon = rice_farm
         livestock = 0.006
         clay = 0.011
         manual_labor = 0.011
@@ -62,11 +70,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_rice_farm_sell_surplus = {
+        icon_type = building_type
+        icon = rice_farm
         produced = province_food_sales
         output = 0.005
         category = building_maintenance
     }
     pp_rice_farm_provision = {
+        icon_type = goods
+        icon = rice
         rice = 0.08
         produced = local_food
         output = 0.96
@@ -76,6 +88,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_rice_farm_market_sales = {
+        icon_type = goods
+        icon = rice
         offset = 0.01
         produced = rice
         output = 0.01

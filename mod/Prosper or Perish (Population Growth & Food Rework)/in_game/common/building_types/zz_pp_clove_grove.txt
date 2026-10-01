@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_clove_grove_base_cloves = {
+        icon_type = building_type
+        icon = clove_grove
         manual_labor = 0.148
         produced = cloves
         output = 0.148
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_clove_grove_no_curing = {
+        icon_type = building_type
+        icon = clove_grove
         category = building_maintenance
     }
     pp_clove_grove_curing_houses = {
+        icon_type = building_type
+        icon = clove_grove
         lumber = 0.52 # curing racks
         coal = 0.172 # drying heat
         manual_labor = 0.256
@@ -47,6 +53,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_clove_grove_market_sales = {
+        icon_type = goods
+        icon = cloves
         offset = 0.01
         produced = cloves
         output = 0.002

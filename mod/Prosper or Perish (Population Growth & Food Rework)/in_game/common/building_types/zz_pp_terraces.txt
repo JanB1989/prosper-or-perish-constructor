@@ -1,6 +1,14 @@
 ﻿# >>> eu5-building-pipeline:terraces:building
 TRY_INJECT:terraces = {
   price = pp_terraces_price
+  location_potential = {
+    OR = {
+      topography = mountains
+      topography = plateau
+      topography = hills
+      pp_wb_setup_terraces_location = yes   # vanilla setup terraces the World Builder topography would reject
+    }
+  }
   increase_per_level_cost = 0.30
   custom_tags = { pp_food_security_priority pp_water_control_priority }
   raw_modifier = {

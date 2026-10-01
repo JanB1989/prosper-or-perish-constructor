@@ -13,6 +13,8 @@ megalopolis = yes
 build_time = manufactory_build_time
 unique_production_methods = {
     pp_iron_foundry_iron_foundry_maintenance = {
+        icon_type = building_type
+        icon = iron_foundry
         iron = 1.33
         coal = 0.33
         manual_labor = 0.39
@@ -24,6 +26,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_iron_foundry_market_sales = {
+        icon_type = goods
+        icon = tools
         offset = 0.013
         produced = tools
         output = 0.004

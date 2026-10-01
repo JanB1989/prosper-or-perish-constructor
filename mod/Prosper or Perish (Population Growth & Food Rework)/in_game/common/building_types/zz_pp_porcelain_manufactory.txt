@@ -13,6 +13,8 @@ megalopolis = yes
 build_time = manufactory_build_time
 unique_production_methods = {
     pp_porcelain_manufactory_porcelain_manufactory_maintenance = {
+        icon_type = building_type
+        icon = porcelain_manufactory
         clay = 5.66
         coal = 0.71
         tools = 0.35
@@ -25,6 +27,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_porcelain_manufactory_market_sales = {
+        icon_type = goods
+        icon = porcelain
         offset = 0.012
         produced = porcelain
         output = 0.004

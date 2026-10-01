@@ -13,6 +13,7 @@ city = yes
 megalopolis = yes
 location_potential = {
     OR = {
+        pp_wb_setup_tar_kiln_location = yes   # vanilla setup kilns on land the World Builder made unwooded
         OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
         OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
         vegetation = jungle
@@ -21,6 +22,8 @@ location_potential = {
 }
 unique_production_methods = {
     pp_tar_kiln_tar_kiln_maintenance = {
+        icon_type = building_type
+        icon = tar_kiln
         produced = tar
         output = 1.0
         lumber = 0.91
@@ -31,6 +34,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tar_kiln_market_sales = {
+        icon_type = goods
+        icon = tar
         offset = 0.01
         produced = tar
         output = 0.005

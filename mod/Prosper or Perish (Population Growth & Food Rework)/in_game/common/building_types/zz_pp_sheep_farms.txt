@@ -20,6 +20,8 @@ REPLACE:sheep_farms = {
     }
     unique_production_methods = {
         pp_sheep_farm_base_wool = {
+            icon_type = building_type
+            icon = sheep_farms
             manual_labor = 0.03
             produced = wool
             output = 0.06
@@ -28,9 +30,13 @@ REPLACE:sheep_farms = {
     }
     unique_production_methods = {
         pp_sheep_farm_no_primary = {
+            icon_type = building_type
+            icon = sheep_farms
             category = building_maintenance
         }
         pp_sheep_farm_maintenance = {
+            icon_type = building_type
+            icon = sheep_farms
             produced = wool
             output = 0.06
             lumber = 0.041
@@ -41,6 +47,8 @@ REPLACE:sheep_farms = {
     }
     unique_production_methods = {
         pp_sheep_farms_market_sales = {
+            icon_type = goods
+            icon = wool
             offset = 0.01
             produced = wool
             output = 0.004

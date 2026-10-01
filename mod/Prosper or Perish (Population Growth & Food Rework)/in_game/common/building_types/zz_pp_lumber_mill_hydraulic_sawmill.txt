@@ -17,6 +17,7 @@ build_time = workshop_build_time
 
 location_potential = {
     OR = {
+        pp_wb_setup_lumber_mill_location = yes   # vanilla setup mills on land the World Builder made unwooded
         OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
         OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
         vegetation = jungle
@@ -33,6 +34,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_water_sawmill_base_lumber = {
+        icon_type = building_type
+        icon = water_sawmill
         manual_labor = 0.028
         produced = lumber
         output = 0.079
@@ -41,9 +44,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_water_sawmill_no_crew_support = {
+        icon_type = building_type
+        icon = water_sawmill
         category = building_maintenance
     }
     pp_water_sawmill_wound_salves = {
+        icon_type = building_type
+        icon = water_sawmill
         medicaments = 0.17 # injury treatment
         manual_labor = 0.02
         produced = lumber
@@ -52,6 +59,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_water_sawmill_extra_rations = {
+        icon_type = building_type
+        icon = water_sawmill
         victuals = 0.63 # crew rations
         manual_labor = 0.22
         produced = lumber
@@ -62,9 +71,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_water_sawmill_no_primary = {
+        icon_type = building_type
+        icon = water_sawmill
         category = building_maintenance
     }
     pp_water_sawmill_livestock_victuals = {
+        icon_type = building_type
+        icon = water_sawmill
         produced = lumber
         output = 1.269
         livestock = 0.23 # ox log hauling
@@ -74,6 +87,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_water_sawmill_livestock_tools = {
+        icon_type = building_type
+        icon = water_sawmill
         produced = lumber
         output = 1.314
         tools = 0.41 # saw frame, gearing
@@ -83,6 +98,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_water_sawmill_horse_victuals = {
+        icon_type = building_type
+        icon = water_sawmill
         produced = lumber
         output = 1.360
         horses = 0.12 # fast log hauling
@@ -92,6 +109,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_water_sawmill_horse_tools = {
+        icon_type = building_type
+        icon = water_sawmill
         produced = lumber
         output = 1.400
         tools = 0.42 # saw frame, gearing
@@ -103,6 +122,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_water_sawmill_market_sales = {
+        icon_type = goods
+        icon = lumber
         offset = 0.014
         produced = lumber
         output = 0.008

@@ -14,6 +14,8 @@ megalopolis = yes
 build_time = mills_build_time
 unique_production_methods = {
     pp_paper_mill_paper_mill_maintenance = {
+        icon_type = goods
+        icon = cloth
         cloth = 0.15
         fiber_crops = 1.55
         manual_labor = 0.16
@@ -23,6 +25,8 @@ unique_production_methods = {
         category = mills_input
     }
     pp_paper_mill_paper_wood_pulp_maintenance = {
+        icon_type = goods
+        icon = paper
         lumber = 4.78
         manual_labor = 0.34
         produced = paper
@@ -33,6 +37,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_paper_mill_market_sales = {
+        icon_type = goods
+        icon = paper
         offset = 0.01
         produced = paper
         output = 0.005

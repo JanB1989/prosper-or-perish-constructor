@@ -13,6 +13,8 @@ megalopolis = yes
 build_time = workshop_build_time
 unique_production_methods = {
     pp_naval_supplies_workshop_naval_supplies_workshop_maintenance = {
+        icon_type = building_type
+        icon = naval_supplies_workshop
         lumber = 0.16
         fiber_crops = 0.44
         tar = 0.6
@@ -26,6 +28,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_naval_supplies_workshop_market_sales = {
+        icon_type = goods
+        icon = naval_supplies
         offset = 0.012
         produced = naval_supplies
         output = 0.004

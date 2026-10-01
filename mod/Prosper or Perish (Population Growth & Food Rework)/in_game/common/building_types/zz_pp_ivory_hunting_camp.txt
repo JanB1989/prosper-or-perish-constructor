@@ -24,6 +24,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_ivory_hunting_camp_base_ivory = {
+        icon_type = building_type
+        icon = ivory_hunting_camp
         manual_labor = 0.08
         produced = ivory
         output = 0.100
@@ -32,9 +34,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_ivory_hunting_camp_scavenged_tusks = {
+        icon_type = building_type
+        icon = ivory_hunting_camp
         category = building_maintenance
     }
     pp_ivory_hunting_camp_caravan_hunts = {
+        icon_type = building_type
+        icon = ivory_hunting_camp
         weaponry = 0.12 # hunting arms
         livestock = 0.11 # pack animals
         tools = 0.026 # tusk extraction gear

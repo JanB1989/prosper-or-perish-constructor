@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_tea_garden_base_tea = {
+        icon_type = building_type
+        icon = tea_garden
         manual_labor = 0.098
         produced = tea
         output = 0.164
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tea_garden_no_withering = {
+        icon_type = building_type
+        icon = tea_garden
         category = building_maintenance
     }
     pp_tea_garden_bamboo_withering_trays = {
+        icon_type = building_type
+        icon = tea_garden
         fiber_crops = 0.32 # bamboo trays
         clay = 0.256 # firing hearths
         manual_labor = 0.172
@@ -47,6 +53,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tea_garden_market_sales = {
+        icon_type = goods
+        icon = tea
         offset = 0.012
         produced = tea
         output = 0.004

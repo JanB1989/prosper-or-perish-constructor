@@ -21,6 +21,8 @@ REPLACE:dock = {
 
     unique_production_methods = {
         pp_dock_maintenance = {
+            icon_type = building_type
+            icon = dock
             tar = 0.2
             naval_supplies = 0.1
             tools = 0.2

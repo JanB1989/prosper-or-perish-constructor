@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_cocoa_grove_base_cocoa = {
+        icon_type = building_type
+        icon = cocoa_grove
         manual_labor = 0.128
         produced = cocoa
         output = 0.16
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_cocoa_grove_no_fermentation = {
+        icon_type = building_type
+        icon = cocoa_grove
         category = building_maintenance
     }
     pp_cocoa_grove_fermentation_houses = {
+        icon_type = building_type
+        icon = cocoa_grove
         furniture = 0.296 # light fermentation boxes and raised trays
         fiber_crops = 0.116 # drying mats, sacks, and ties
         manual_labor = 0.24
@@ -47,6 +53,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_cocoa_grove_market_sales = {
+        icon_type = goods
+        icon = cocoa
         offset = 0.012
         produced = cocoa
         output = 0.003

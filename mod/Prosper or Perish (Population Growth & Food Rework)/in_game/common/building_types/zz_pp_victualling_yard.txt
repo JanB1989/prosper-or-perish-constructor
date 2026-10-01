@@ -42,6 +42,8 @@ location_potential = {
 # 36 food at one level, and every further level loses another 5 %.
 unique_production_methods = {
   pp_victualling_yard_river_barges = {
+    icon_type = building_type
+    icon = victualling_yard
     cloth = 0.02
     lumber = 0.032
     manual_labor = 0.112
@@ -50,6 +52,8 @@ unique_production_methods = {
     category = building_maintenance
   }
   pp_victualling_yard_merchantmen = {
+    icon_type = building_type
+    icon = victualling_yard
     naval_supplies = 0.052
     tar = 0.068
     manual_labor = 0.032
@@ -59,6 +63,8 @@ unique_production_methods = {
   }
   # armed and escorted merchantmen, like the Venetian mude: a surgeon's chest and guns on board (Cannon Maker)
   pp_victualling_yard_armed_convoy = {
+    icon_type = building_type
+    icon = victualling_yard
     naval_supplies = 0.04
     medicaments = 0.1
     cannons = 0.024
@@ -75,36 +81,48 @@ unique_production_methods = {
 # native triggers) have it from the start, everyone else gets it with Rice / Maize Cultivation.
 unique_production_methods = {
   pp_victualling_yard_grain_shipment = {
+    icon_type = building_type
+    icon = victualling_yard
     wheat = 2.332
     produced = victuals
     output = 0.932
     category = building_maintenance
   }
   pp_victualling_yard_rice_shipment = {
+    icon_type = building_type
+    icon = victualling_yard
     rice = 2.332
     produced = victuals
     output = 0.932
     category = building_maintenance
   }
   pp_victualling_yard_millet_shipment = {
+    icon_type = building_type
+    icon = victualling_yard
     millet = 2.332
     produced = victuals
     output = 0.932
     category = building_maintenance
   }
   pp_victualling_yard_maize_shipment = {
+    icon_type = building_type
+    icon = victualling_yard
     maize = 2.332
     produced = victuals
     output = 0.932
     category = building_maintenance
   }
   pp_victualling_yard_legumes_shipment = {
+    icon_type = building_type
+    icon = victualling_yard
     legumes = 2.332
     produced = victuals
     output = 0.932
     category = building_maintenance
   }
   pp_victualling_yard_fish_shipment = {
+    icon_type = building_type
+    icon = victualling_yard
     fish = 2.332
     produced = victuals
     output = 0.932
@@ -113,6 +131,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
   pp_victualling_yard_market_sales = {
+    icon_type = goods
+    icon = victuals
     offset = 0.012
     produced = victuals
     output = 0.004

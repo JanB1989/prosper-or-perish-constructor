@@ -13,6 +13,8 @@ megalopolis = yes
 build_time = manufactory_build_time
 unique_production_methods = {
     pp_glassworks_glassworks_maintenance = {
+        icon_type = building_type
+        icon = glassworks
         lumber = 0.49
         sand = 2.56
         tools = 0.73
@@ -26,6 +28,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_glassworks_market_sales = {
+        icon_type = goods
+        icon = glass
         offset = 0.012
         produced = glass
         output = 0.004

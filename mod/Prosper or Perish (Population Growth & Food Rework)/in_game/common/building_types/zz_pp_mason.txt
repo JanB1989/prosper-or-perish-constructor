@@ -14,6 +14,8 @@ megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
     pp_mason_stone_bricks = {
+        icon_type = goods
+        icon = stone
         stone = 0.32
         manual_labor = 0.11
         produced = masonry
@@ -22,6 +24,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_mason_clay_bricks = {
+        icon_type = goods
+        icon = clay
         clay = 0.64
         manual_labor = 0.11
         produced = masonry

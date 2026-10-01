@@ -31,6 +31,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_net_curing_yard_base_fish = {
+        icon_type = building_type
+        icon = net_curing_yard
         manual_labor = 0.014
         produced = fish
         output = 0.07
@@ -39,9 +41,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_net_curing_yard_strand_line = {
+        icon_type = building_type
+        icon = net_curing_yard
         category = building_maintenance
     }
     pp_net_curing_yard_clinker_craft = {
+        icon_type = building_type
+        icon = net_curing_yard
         lumber = 0.023 # clinker hull repairs
         fiber_crops = 0.008 # lines and patched nets
         manual_labor = 0.013
@@ -53,9 +59,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_net_curing_yard_no_freshwater_works = {
+        icon_type = building_type
+        icon = net_curing_yard
         category = building_maintenance
     }
     pp_net_curing_yard_stew_ponds = {
+        icon_type = building_type
+        icon = net_curing_yard
         clay = 0.021 # pond lining
         lumber = 0.013 # sluices
         pottery = 0.008 # fry pots and weights
@@ -66,6 +76,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_net_curing_yard_wattle_weirs = {
+        icon_type = building_type
+        icon = net_curing_yard
         lumber = 0.016 # weir stakes
         fiber_crops = 0.015 # netting and wicker ties
         manual_labor = 0.013
@@ -77,9 +89,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_net_curing_yard_no_primary = {
+        icon_type = building_type
+        icon = net_curing_yard
         category = building_maintenance
     }
     pp_arctic_net_curing_yard_preserved_catch = {
+        icon_type = building_type
+        icon = net_curing_yard
         produced = fish
         output = 0.17
         salt = 0.007 # limited brine and curing
@@ -90,6 +106,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_net_curing_yard_preserved_catch = {
+        icon_type = building_type
+        icon = net_curing_yard
         produced = fish
         output = 0.43
         salt = 0.039 # dry salting and brine
@@ -103,11 +121,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_net_curing_yard_sell_surplus = {
+        icon_type = building_type
+        icon = net_curing_yard
         produced = province_food_sales
         output = 0.006
         category = building_maintenance
     }
     pp_net_curing_yard_provision = {
+        icon_type = goods
+        icon = fish
         fish = 0.093
         produced = local_food
         output = 1.12
@@ -117,6 +139,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_net_curing_yard_market_sales = {
+        icon_type = goods
+        icon = fish
         offset = 0.01
         produced = fish
         output = 0.01

@@ -25,6 +25,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_camel_herders_base_camels = {
+        icon_type = building_type
+        icon = camel_herders
         manual_labor = 0.051
         produced = camels
         output = 0.085
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_camel_herders_free_range = {
+        icon_type = building_type
+        icon = camel_herders
         category = building_maintenance
     }
     pp_camel_herders_millet_fodder = {
+        icon_type = building_type
+        icon = camel_herders
         millet = 0.26 # millet and sorghum feed
         leather = 0.025 # saddles and girths
         manual_labor = 0.07
@@ -44,6 +50,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_camel_herders_well_circuits = {
+        icon_type = building_type
+        icon = camel_herders
         salt = 0.045 # salt licks on the well round
         leather = 0.04 # water skins and well buckets
         manual_labor = 0.08
@@ -52,6 +60,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_camel_herders_dates_and_fish = {
+        icon_type = building_type
+        icon = camel_herders
         fruit = 0.17 # dates and date stones
         fish = 0.12 # sun-dried sardines
         leather = 0.025 # saddles and girths
@@ -63,6 +73,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_camel_herders_market_sales = {
+        icon_type = goods
+        icon = camels
         offset = 0.012
         produced = camels
         output = 0.004

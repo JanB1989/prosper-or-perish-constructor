@@ -12,6 +12,8 @@ megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
     pp_dyes_guild_dyes_guild_maintenance = {
+        icon_type = goods
+        icon = dyes
         lumber = 0.38
         manual_labor = 0.11
         produced = dyes
@@ -20,6 +22,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_dyes_guild_alum_dyes_guild_maintenance = {
+        icon_type = goods
+        icon = alum
         alum = 0.018
         lumber = 0.54
         manual_labor = 0.16
@@ -31,6 +35,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_dyes_guild_market_sales = {
+        icon_type = goods
+        icon = dyes
         offset = 0.012
         produced = dyes
         output = 0.003

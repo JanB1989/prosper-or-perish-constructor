@@ -27,6 +27,8 @@ build_time = plantation_build_time
 
 unique_production_methods = {
     pp_sugar_plantation_base_sugar = {
+        icon_type = building_type
+        icon = sugar_plantation
         manual_labor = 0.18
         produced = sugar
         output = 0.300
@@ -35,9 +37,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_sugar_plantation_cane_fields = {
+        icon_type = building_type
+        icon = sugar_plantation
         category = building_maintenance
     }
     pp_sugar_plantation_boiling_house = {
+        icon_type = building_type
+        icon = sugar_plantation
         slaves_goods = 0.3 # plantation gangs
         lumber = 0.24 # cane press frames
         coal = 0.14 # boiling-house fuel
@@ -50,6 +56,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_sugar_plantation_market_sales = {
+        icon_type = goods
+        icon = sugar
         offset = 0.012
         produced = sugar
         output = 0.004

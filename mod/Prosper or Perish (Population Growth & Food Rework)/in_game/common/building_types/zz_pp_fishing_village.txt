@@ -28,6 +28,8 @@ REPLACE:fishing_village = {
     # Slot 0 â€” fishery ground / climate (temperate vs arctic)
     unique_production_methods = {
         pp_fishing_village_base_fish = {
+            icon_type = building_type
+            icon = fishing_village
             manual_labor = 0.01
             produced = fish
             output = 0.05
@@ -37,9 +39,13 @@ REPLACE:fishing_village = {
     # Slot 1 - local fishing method (handline / clinker boats)
     unique_production_methods = {
         pp_fishing_village_strand_line = {
+            icon_type = building_type
+            icon = fishing_village
             category = building_maintenance
         }
         pp_fishing_village_clinker_craft = {
+            icon_type = building_type
+            icon = fishing_village
             lumber = 0.022 # clinker hulls
             manual_labor = 0.009
             produced = fish
@@ -51,9 +57,13 @@ REPLACE:fishing_village = {
     # Slot 2 - freshwater and local-water works
     unique_production_methods = {
         pp_fishing_village_no_freshwater_works = {
+            icon_type = building_type
+            icon = fishing_village
             category = building_maintenance
         }
         pp_fishing_village_stew_ponds = {
+            icon_type = building_type
+            icon = fishing_village
             clay = 0.018 # pond lining
             lumber = 0.011 # sluices
             manual_labor = 0.007
@@ -63,6 +73,8 @@ REPLACE:fishing_village = {
             category = building_maintenance
         }
         pp_fishing_village_wattle_weirs = {
+            icon_type = building_type
+            icon = fishing_village
             lumber = 0.015 # weir stakes
             fiber_crops = 0.011 # netting
             manual_labor = 0.011
@@ -74,9 +86,13 @@ REPLACE:fishing_village = {
     }
     unique_production_methods = {
         pp_fishing_village_no_primary = {
+            icon_type = building_type
+            icon = fishing_village
             category = building_maintenance
         }
         pp_arctic_fishing_village_maintenance = {
+            icon_type = goods
+            icon = fish
             produced = fish
             output = 0.085
             salt = 0.004 # curing brine
@@ -86,6 +102,8 @@ REPLACE:fishing_village = {
             category = building_maintenance
         }
         pp_fishing_village_maintenance = {
+            icon_type = goods
+            icon = fish
             produced = fish
             output = 0.279
             salt = 0.012 # curing brine
@@ -97,11 +115,15 @@ REPLACE:fishing_village = {
     }
     unique_production_methods = {
         pp_fishing_village_sell_surplus = {
+            icon_type = building_type
+            icon = fishing_village
             produced = province_food_sales
             output = 0.004
             category = building_maintenance
         }
         pp_fishing_village_provision = {
+            icon_type = goods
+            icon = fish
             fish = 0.067
             produced = local_food
             output = 0.8
@@ -111,6 +133,8 @@ REPLACE:fishing_village = {
     }
     unique_production_methods = {
         pp_fishing_village_market_sales = {
+            icon_type = goods
+            icon = fish
             offset = 0.01
             produced = fish
             output = 0.01

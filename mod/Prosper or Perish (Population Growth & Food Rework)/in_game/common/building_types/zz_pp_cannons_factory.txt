@@ -15,6 +15,8 @@ build_time = mills_build_time
 obsolete = cannon_foundry
 unique_production_methods = {
     pp_cannons_factory_gun_factory_maintenance = {
+        icon_type = building_type
+        icon = cannons_factory
         steel = 2.49
         lead = 0.5
         saltpeter = 0.83
@@ -27,6 +29,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_cannons_factory_market_sales = {
+        icon_type = goods
+        icon = cannons
         offset = 0.012
         produced = cannons
         output = 0.003

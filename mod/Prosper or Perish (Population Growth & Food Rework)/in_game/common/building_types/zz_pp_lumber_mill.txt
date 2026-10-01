@@ -16,6 +16,7 @@ megalopolis = yes
 
     location_potential = {
         OR = {
+            pp_wb_setup_lumber_mill_location = yes   # vanilla setup mills on land the World Builder made unwooded
             OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
             OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
             vegetation = jungle
@@ -31,6 +32,8 @@ build_time = rural_build_time
 
     unique_production_methods = {
         pp_lumber_mill_base_lumber = {
+            icon_type = building_type
+            icon = lumber_mill
             manual_labor = 0.037
             produced = lumber
             output = 0.105
@@ -39,9 +42,13 @@ build_time = rural_build_time
     }
     unique_production_methods = {
         pp_lumber_mill_no_extra_rations = {
+            icon_type = building_type
+            icon = lumber_mill
             category = building_maintenance
         }
         pp_lumber_mill_wound_salves = {
+            icon_type = building_type
+            icon = lumber_mill
             medicaments = 0.14 # injury treatment
             manual_labor = 0.03
             produced = lumber
@@ -50,6 +57,8 @@ build_time = rural_build_time
             category = building_maintenance
         }
         pp_lumber_mill_extra_rations = {
+            icon_type = building_type
+            icon = lumber_mill
             victuals = 0.35 # crew rations
             manual_labor = 0.24
             produced = lumber
@@ -60,9 +69,13 @@ build_time = rural_build_time
     }
     unique_production_methods = {
         pp_lumber_mill_no_primary = {
+            icon_type = building_type
+            icon = lumber_mill
             category = building_maintenance
         }
         pp_lumber_mill_livestock_victuals = {
+            icon_type = building_type
+            icon = lumber_mill
             produced = lumber
             output = 0.897
             livestock = 0.28 # ox log hauling
@@ -72,6 +85,8 @@ build_time = rural_build_time
             category = building_maintenance
         }
         pp_lumber_mill_livestock_tools = {
+            icon_type = building_type
+            icon = lumber_mill
             produced = lumber
             output = 0.926
             tools = 0.21 # axes, saw upkeep
@@ -81,6 +96,8 @@ build_time = rural_build_time
             category = building_maintenance
         }
         pp_lumber_mill_horse_victuals = {
+            icon_type = building_type
+            icon = lumber_mill
             produced = lumber
             output = 0.960
             horses = 0.14 # fast log hauling
@@ -90,6 +107,8 @@ build_time = rural_build_time
             category = building_maintenance
         }
         pp_lumber_mill_horse_tools = {
+            icon_type = building_type
+            icon = lumber_mill
             produced = lumber
             output = 0.983
             tools = 0.22 # axes, saw upkeep
@@ -101,6 +120,8 @@ build_time = rural_build_time
     }
     unique_production_methods = {
         pp_lumber_mill_market_sales = {
+            icon_type = goods
+            icon = lumber
             offset = 0.014
             produced = lumber
             output = 0.008

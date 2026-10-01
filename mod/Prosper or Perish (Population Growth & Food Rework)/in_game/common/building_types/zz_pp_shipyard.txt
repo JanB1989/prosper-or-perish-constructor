@@ -23,6 +23,8 @@ REPLACE:shipyard = {
 
     unique_production_methods = {
         pp_shipyard_maintenance = {
+            icon_type = building_type
+            icon = shipyard
             tar = 0.8
             naval_supplies = 0.4
             tools = 0.8

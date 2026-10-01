@@ -20,6 +20,8 @@ construction_demand = village_construction
 
 unique_production_methods = {
   pp_rural_daywork_yard_harvest_gangs = {
+    icon_type = building_type
+    icon = rural_daywork_yard
     produced = manual_labor
     output = 1.45
     beer = 0.6
@@ -27,6 +29,8 @@ unique_production_methods = {
     category = building_maintenance
   }
   pp_rural_daywork_yard_ditch_gangs = {
+    icon_type = building_type
+    icon = rural_daywork_yard
     produced = manual_labor
     output = 1.45
     clay = 1.2
@@ -35,6 +39,8 @@ unique_production_methods = {
     category = building_maintenance
   }
   pp_rural_daywork_yard_ox_teams = {
+    icon_type = building_type
+    icon = rural_daywork_yard
     produced = manual_labor
     output = 1.5
     livestock = 1.0
@@ -44,6 +50,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
   pp_rural_daywork_yard_market_sales = {
+    icon_type = goods
+    icon = manual_labor
     offset = 0.01
     produced = manual_labor
     output = 0.01

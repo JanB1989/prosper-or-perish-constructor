@@ -30,6 +30,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_clay_washmill_base_clay = {
+        icon_type = building_type
+        icon = clay_washmill
         manual_labor = 0.011
         produced = clay
         output = 0.11
@@ -38,9 +40,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_clay_washmill_no_refining = {
+        icon_type = building_type
+        icon = clay_washmill
         category = building_maintenance
     }
     pp_clay_washmill_levigation_ponds = {
+        icon_type = building_type
+        icon = clay_washmill
         lumber = 0.026
         tools = 0.017
         manual_labor = 0.017
@@ -51,9 +57,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_clay_washmill_no_preparation = {
+        icon_type = building_type
+        icon = clay_washmill
         category = building_maintenance
     }
     pp_clay_washmill_horse_pugging = {
+        icon_type = building_type
+        icon = clay_washmill
         lumber = 0.095
         tools = 0.034
         horses = 0.017
@@ -63,6 +73,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_clay_washmill_ox_pugging = {
+        icon_type = building_type
+        icon = clay_washmill
         lumber = 0.095
         tools = 0.034
         livestock = 0.043

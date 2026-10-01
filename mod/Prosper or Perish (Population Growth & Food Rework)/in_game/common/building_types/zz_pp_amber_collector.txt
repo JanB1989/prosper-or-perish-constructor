@@ -24,6 +24,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_amber_collector_base_amber = {
+        icon_type = building_type
+        icon = amber_collector
         manual_labor = 0.031
         produced = amber
         output = 0.039
@@ -32,9 +34,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_amber_collector_no_sand = {
+        icon_type = building_type
+        icon = amber_collector
         category = building_maintenance
     }
     pp_amber_collector_sand_horses = {
+        icon_type = building_type
+        icon = amber_collector
         horses = 0.033
         manual_labor = 0.021
         produced = sand
@@ -42,6 +48,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_amber_collector_sand_livestock = {
+        icon_type = building_type
+        icon = amber_collector
         livestock = 0.066
         manual_labor = 0.021
         produced = sand
@@ -51,9 +59,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_amber_collector_no_beach_gathering = {
+        icon_type = building_type
+        icon = amber_collector
         category = building_maintenance
     }
     pp_amber_collector_basket_gathering = {
+        icon_type = building_type
+        icon = amber_collector
         fiber_crops = 0.069 # baskets, carrying mats
         tools = 0.034 # sorting knives
         manual_labor = 0.056
@@ -64,6 +76,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_amber_collector_market_sales = {
+        icon_type = goods
+        icon = amber
         offset = 0.012
         produced = amber
         output = 0.003

@@ -12,6 +12,8 @@ megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
     pp_fine_cloth_guild_standard_fine_cloth_guild_maintenance = {
+        icon_type = building_type
+        icon = fine_cloth_guild
         produced = fine_cloth
         dyes = 0.12
         manual_labor = 0.084
@@ -20,6 +22,8 @@ unique_production_methods = {
         debug_max_profit = guild_profit_margin
     }
     pp_fine_cloth_guild_alum_fine_cloth_guild_maintenance = {
+        icon_type = goods
+        icon = alum
         alum = 0.052
         dyes = 0.21
         manual_labor = 0.17
@@ -29,6 +33,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_fine_cloth_guild_fur_trim_guild_maintenance = {
+        icon_type = goods
+        icon = fur
         fur = 0.5
         manual_labor = 0.16
         produced = fine_cloth
@@ -39,6 +45,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_fine_cloth_guild_fine_cloth_guild_maintenance = {
+        icon_type = goods
+        icon = cloth
         cloth = 0.85
         manual_labor = 0.41
         produced = fine_cloth
@@ -47,6 +55,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_fine_cloth_guild_wool_weavers_maintenance = {
+        icon_type = goods
+        icon = wool
         wool = 1.02
         manual_labor = 0.42
         produced = fine_cloth
@@ -55,6 +65,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_fine_cloth_guild_spanish_cloth_maintenance = {
+        icon_type = goods
+        icon = wool
         allow = {
             custom_tooltip = {
                 text = has_unlocked_spanish_cloth_industry
@@ -69,6 +81,8 @@ unique_production_methods = {
         debug_max_profit = guild_profit_margin
     }
     pp_fine_cloth_guild_silk_weavers_maintenance = {
+        icon_type = goods
+        icon = silk
         silk = 0.9
         manual_labor = 0.56
         produced = fine_cloth
@@ -79,6 +93,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_fine_cloth_guild_market_sales = {
+        icon_type = goods
+        icon = fine_cloth
         offset = 0.012
         produced = fine_cloth
         output = 0.002

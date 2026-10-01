@@ -26,12 +26,16 @@ increase_per_level_cost = 0.10
 
 unique_production_methods = {
     pp_clay_pit_base_clay = {
+        icon_type = building_type
+        icon = clay_pit
         manual_labor = 0.03
         produced = clay
         output = 0.3
             category = building_maintenance
         }
         pp_clay_pit_maintenance = {
+            icon_type = building_type
+            icon = clay_pit
             produced = clay
             output = 1.44
             lumber = 0.23

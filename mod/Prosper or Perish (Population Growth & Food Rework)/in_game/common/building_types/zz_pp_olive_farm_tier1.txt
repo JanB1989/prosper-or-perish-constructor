@@ -31,6 +31,8 @@ country_potential = {
 
 unique_production_methods = {
     pp_olive_farmstead_base = {
+        icon_type = building_type
+        icon = olive_farmstead
         manual_labor = 0.016
         produced = olives
         output = 0.08
@@ -39,9 +41,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_olive_farmstead_no_beekeeping = {
+        icon_type = building_type
+        icon = olive_farmstead
         category = building_maintenance
     }
     pp_olive_farmstead_yard_hives = {
+        icon_type = building_type
+        icon = olive_farmstead
         fiber_crops = 0.022
         pottery = 0.01
         manual_labor = 0.008
@@ -53,9 +59,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_olive_farmstead_no_cultivation = {
+        icon_type = building_type
+        icon = olive_farmstead
         category = building_maintenance
     }
     pp_olive_farmstead_manured_grove = {
+        icon_type = building_type
+        icon = olive_farmstead
         livestock = 0.065
         tools = 0.026
         lumber = 0.039
@@ -69,11 +79,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_olive_farmstead_sell_surplus = {
+        icon_type = building_type
+        icon = olive_farmstead
         produced = province_food_sales
         output = 0.007
         category = building_maintenance
     }
     pp_olive_farmstead_provision = {
+        icon_type = goods
+        icon = olives
         olives = 0.107
         produced = local_food
         output = 1.28
@@ -83,6 +97,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_olive_farmstead_market_sales = {
+        icon_type = goods
+        icon = olives
         offset = 0.01
         produced = olives
         output = 0.01

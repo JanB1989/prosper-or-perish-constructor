@@ -14,6 +14,8 @@ obsolete = fine_cloth_workshop
 build_time = manufactory_build_time
 unique_production_methods = {
     pp_fine_cloth_manufactory_standard_cloth_manufactory_maintenance = {
+        icon_type = building_type
+        icon = fine_cloth_manufactory
         dyes = 0.24
         manual_labor = 0.092
         produced = fine_cloth
@@ -22,6 +24,8 @@ unique_production_methods = {
         debug_max_profit = manufactory_profit_margin
     }
     pp_fine_cloth_manufactory_alum_fine_cloth_manufactory_maintenance = {
+        icon_type = goods
+        icon = alum
         produced = fine_cloth
         output = 0.4
         dyes = 0.44
@@ -33,6 +37,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance = {
+        icon_type = goods
+        icon = silk
         silk = 2.76
         manual_labor = 0.81
         produced = fine_cloth
@@ -41,6 +47,8 @@ unique_production_methods = {
         debug_max_profit = manufactory_profit_margin
     }
     pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance = {
+        icon_type = goods
+        icon = cloth
         produced = fine_cloth
         cloth = 3.67
         manual_labor = 0.84
@@ -51,6 +59,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_fine_cloth_manufactory_market_sales = {
+        icon_type = goods
+        icon = fine_cloth
         offset = 0.012
         produced = fine_cloth
         output = 0.002

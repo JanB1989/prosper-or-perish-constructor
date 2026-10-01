@@ -25,6 +25,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_copper_mine_base_copper = {
+        icon_type = building_type
+        icon = copper_mine
         manual_labor = 0.054
         produced = copper
         output = 0.09
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_copper_mine_no_secondary = {
+        icon_type = building_type
+        icon = copper_mine
         category = building_maintenance
     }
     pp_copper_mine_tin = {
+        icon_type = building_type
+        icon = copper_mine
         lumber = 0.025
         tools = 0.016
         manual_labor = 0.022
@@ -44,6 +50,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_copper_mine_silver = {
+        icon_type = building_type
+        icon = copper_mine
         lumber = 0.025
         tools = 0.025
         lead = 0.016
@@ -53,6 +61,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_copper_mine_gold = {
+        icon_type = building_type
+        icon = copper_mine
         lumber = 0.025
         tools = 0.025
         lead = 0.016
@@ -64,9 +74,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_copper_mine_no_primary = {
+        icon_type = building_type
+        icon = copper_mine
         category = building_maintenance
     }
     pp_copper_mine_fire_setting = {
+        icon_type = building_type
+        icon = copper_mine
         lumber = 0.33
         beeswax = 0.092
         manual_labor = 0.63
@@ -75,6 +89,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_copper_mine_copper = {
+        icon_type = building_type
+        icon = copper_mine
         lumber = 0.22
         tools = 0.26
         beeswax = 0.061
@@ -86,6 +102,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_copper_mine_market_sales = {
+        icon_type = goods
+        icon = copper
         offset = 0.012
         produced = copper
         output = 0.004

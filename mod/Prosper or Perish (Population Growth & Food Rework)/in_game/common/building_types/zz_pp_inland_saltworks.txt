@@ -70,6 +70,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_inland_saltworks_base_salt = {
+        icon_type = building_type
+        icon = inland_saltworks
         manual_labor = 0.08
         produced = salt
         output = 0.080
@@ -78,9 +80,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_inland_saltworks_salt_flat_scraping = {
+        icon_type = building_type
+        icon = inland_saltworks
         category = building_maintenance
     }
     pp_inland_saltworks_open_pan_boiling = {
+        icon_type = building_type
+        icon = inland_saltworks
         lumber = 0.38 # pan fuel
         clay = 0.16 # hearth linings
         pottery = 0.22 # brine vessels
@@ -92,6 +98,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_inland_saltworks_market_sales = {
+        icon_type = goods
+        icon = salt
         offset = 0.01
         produced = salt
         output = 0.002

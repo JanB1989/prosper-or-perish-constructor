@@ -25,6 +25,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_marble_quarry_base_marble = {
+        icon_type = building_type
+        icon = marble_quarry
         manual_labor = 0.07
         produced = marble
         output = 0.07
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_marble_quarry_no_secondary = {
+        icon_type = building_type
+        icon = marble_quarry
         category = building_maintenance
     }
     pp_marble_quarry_sand = {
+        icon_type = building_type
+        icon = marble_quarry
         lumber = 0.025
         tools = 0.008
         manual_labor = 0.015
@@ -44,6 +50,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_marble_quarry_stone = {
+        icon_type = building_type
+        icon = marble_quarry
         lumber = 0.033
         tools = 0.016
         manual_labor = 0.025
@@ -54,9 +62,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_marble_quarry_no_primary = {
+        icon_type = building_type
+        icon = marble_quarry
         category = building_maintenance
     }
     pp_marble_quarry_marble = {
+        icon_type = building_type
+        icon = marble_quarry
         lumber = 0.18
         tools = 0.21
         leather = 0.049
@@ -68,6 +80,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_marble_quarry_market_sales = {
+        icon_type = goods
+        icon = marble
         offset = 0.01
         produced = marble
         output = 0.002

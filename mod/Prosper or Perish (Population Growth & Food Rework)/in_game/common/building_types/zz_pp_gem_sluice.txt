@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_gem_sluice_base_gems = {
+        icon_type = building_type
+        icon = gem_sluice
         manual_labor = 0.056
         produced = gems
         output = 0.07
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_gem_sluice_no_secondary = {
+        icon_type = building_type
+        icon = gem_sluice
         category = building_maintenance
     }
     pp_gem_sluice_sand = {
+        icon_type = building_type
+        icon = gem_sluice
         lumber = 0.027
         tools = 0.018
         manual_labor = 0.012
@@ -45,6 +51,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_gem_sluice_gold = {
+        icon_type = building_type
+        icon = gem_sluice
         lumber = 0.045
         tools = 0.036
         manual_labor = 0.022
@@ -55,9 +63,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_gem_sluice_no_primary = {
+        icon_type = building_type
+        icon = gem_sluice
         category = building_maintenance
     }
     pp_gem_sluice_gems = {
+        icon_type = building_type
+        icon = gem_sluice
         lumber = 0.34
         tools = 0.3
         manual_labor = 0.2
@@ -68,6 +80,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_gem_sluice_market_sales = {
+        icon_type = goods
+        icon = gems
         offset = 0.012
         produced = gems
         output = 0.003

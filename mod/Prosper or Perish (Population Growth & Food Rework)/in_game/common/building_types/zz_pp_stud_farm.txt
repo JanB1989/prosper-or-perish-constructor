@@ -25,6 +25,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_stud_farm_base_horses = {
+        icon_type = building_type
+        icon = stud_farm
         manual_labor = 0.051
         produced = horses
         output = 0.085
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_stud_farm_no_primary = {
+        icon_type = building_type
+        icon = stud_farm
         category = building_maintenance
     }
     pp_stud_farm_approved_stallions = {
+        icon_type = building_type
+        icon = stud_farm
         wheat = 0.493 # grain and stable feed
         legumes = 0.264 # hay and fodder leys
         leather = 0.094 # tack and harness
@@ -47,6 +53,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_stud_farm_stud_books = {
+        icon_type = building_type
+        icon = stud_farm
         wheat = 0.604 # grain and stable feed
         legumes = 0.34 # hay and fodder leys
         leather = 0.111 # tack and harness
@@ -60,6 +68,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_stud_farm_market_sales = {
+        icon_type = goods
+        icon = horses
         offset = 0.012
         produced = horses
         output = 0.004

@@ -14,6 +14,8 @@ obsolete = hand_cannon_guild
 build_time = guild_build_time
 unique_production_methods = {
     pp_gun_smith_guns_guild_ammunition_lead_maintenance = {
+        icon_type = goods
+        icon = lead
         lead = 0.095
         saltpeter = 0.095
         manual_labor = 0.064
@@ -23,6 +25,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_gun_smith_guns_guild_ammunition_iron_maintenance = {
+        icon_type = goods
+        icon = iron
         iron = 0.088
         saltpeter = 0.088
         manual_labor = 0.077
@@ -34,6 +38,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_gun_smith_guns_guild_lumber_maintenance = {
+        icon_type = goods
+        icon = lumber
         lumber = 0.12
         iron = 0.034
         tools = 0.015
@@ -44,6 +50,8 @@ unique_production_methods = {
         debug_max_profit = guild_profit_margin
     }
     pp_gun_smith_guns_guild_bronze_maintenance = {
+        icon_type = goods
+        icon = copper
         copper = 0.49
         tin = 0.098
         tools = 0.29
@@ -54,6 +62,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_gun_smith_guns_guild_iron_maintenance = {
+        icon_type = goods
+        icon = iron
         iron = 0.48
         tools = 0.29
         manual_labor = 0.43
@@ -65,6 +75,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_gun_smith_market_sales = {
+        icon_type = goods
+        icon = firearms
         offset = 0.012
         produced = firearms
         output = 0.004

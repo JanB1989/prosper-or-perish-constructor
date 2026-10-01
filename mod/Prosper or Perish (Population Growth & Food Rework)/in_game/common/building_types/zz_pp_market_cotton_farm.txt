@@ -26,6 +26,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_market_cotton_farm_base_cotton = {
+        icon_type = building_type
+        icon = market_cotton_farm
         manual_labor = 0.124
         produced = cotton
         output = 0.208
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_market_cotton_farm_loose_packing = {
+        icon_type = building_type
+        icon = market_cotton_farm
         category = building_maintenance
     }
     pp_market_cotton_farm_bale_yard = {
+        icon_type = building_type
+        icon = market_cotton_farm
         fiber_crops = 0.156 # picking bags and bale cloth
         furniture = 0.088 # drying racks and bale press carpentry
         tools = 0.012 # hand screw press hardware
@@ -48,9 +54,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_market_cotton_farm_hand_ginning = {
+        icon_type = building_type
+        icon = market_cotton_farm
         category = building_maintenance
     }
     pp_market_cotton_farm_roller_gin_house = {
+        icon_type = building_type
+        icon = market_cotton_farm
         furniture = 0.208 # carpentry for roller gin frames
         tools = 0.02 # metal rollers and adjustment tools
         manual_labor = 0.108
@@ -61,6 +71,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_market_cotton_farm_market_sales = {
+        icon_type = goods
+        icon = cotton
         offset = 0.012
         produced = cotton
         output = 0.004

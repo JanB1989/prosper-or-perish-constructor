@@ -13,6 +13,8 @@ megalopolis = yes
 build_time = manufactory_build_time
 unique_production_methods = {
     pp_paper_manufactory_paper_manufactory_maintenance = {
+        icon_type = building_type
+        icon = paper_manufactory
         cloth = 0.27
         fiber_crops = 1.08
         lumber = 0.27
@@ -25,6 +27,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_paper_manufactory_market_sales = {
+        icon_type = goods
+        icon = paper
         offset = 0.01
         produced = paper
         output = 0.005

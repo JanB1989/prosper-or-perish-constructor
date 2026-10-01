@@ -24,6 +24,8 @@ REPLACE:grand_shipyard = {
 
     unique_production_methods = {
         pp_grand_shipyard_maintenance = {
+            icon_type = building_type
+            icon = grand_shipyard
             tar = 1.6
             naval_supplies = 0.8
             tools = 1.6

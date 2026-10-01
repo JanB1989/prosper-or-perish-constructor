@@ -14,6 +14,8 @@ megalopolis = yes
 build_time = mills_build_time
 unique_production_methods = {
     pp_steel_mill_steel_mill_maintenance = {
+        icon_type = building_type
+        icon = steel_mill
         iron = 3.44
         coal = 3.44
         manual_labor = 0.79
@@ -25,6 +27,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_steel_mill_market_sales = {
+        icon_type = goods
+        icon = steel
         offset = 0.01
         produced = steel
         output = 0.002

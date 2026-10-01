@@ -14,6 +14,8 @@ build_time = manufactory_build_time
 obsolete = winery
 unique_production_methods = {
     pp_winery_manufactory_fruit_winery_manufactory_maintenance = {
+        icon_type = goods
+        icon = fruit
         fruit = 2.05
         lumber = 0.43
         tools = 0.21
@@ -24,6 +26,8 @@ unique_production_methods = {
         debug_max_profit = manufactory_profit_margin
     }
     pp_winery_manufactory_rice_winery_manufactory_maintenance = {
+        icon_type = goods
+        icon = rice
         rice = 2.05
         lumber = 0.43
         tools = 0.21
@@ -34,6 +38,8 @@ unique_production_methods = {
         debug_max_profit = manufactory_profit_margin
     }
     pp_winery_manufactory_honey_winery_manufactory_maintenance = {
+        icon_type = goods
+        icon = beeswax
         beeswax = 1.04
         lumber = 0.42
         tools = 0.21
@@ -46,6 +52,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_winery_manufactory_market_sales = {
+        icon_type = goods
+        icon = wine
         offset = 0.01
         produced = wine
         output = 0.005

@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_tin_stamping_mill_base_tin = {
+        icon_type = building_type
+        icon = tin_stamping_mill
         manual_labor = 0.04
         produced = tin
         output = 0.1
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tin_stamping_mill_no_secondary = {
+        icon_type = building_type
+        icon = tin_stamping_mill
         category = building_maintenance
     }
     pp_tin_stamping_mill_lead = {
+        icon_type = building_type
+        icon = tin_stamping_mill
         lumber = 0.046
         tools = 0.026
         manual_labor = 0.025
@@ -45,6 +51,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_tin_stamping_mill_copper = {
+        icon_type = building_type
+        icon = tin_stamping_mill
         lumber = 0.046
         tools = 0.026
         manual_labor = 0.025
@@ -55,9 +63,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tin_stamping_mill_no_primary = {
+        icon_type = building_type
+        icon = tin_stamping_mill
         category = building_maintenance
     }
     pp_tin_stamping_mill_tin = {
+        icon_type = building_type
+        icon = tin_stamping_mill
         lumber = 0.37
         tools = 0.27
         manual_labor = 0.23
@@ -68,6 +80,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tin_stamping_mill_market_sales = {
+        icon_type = goods
+        icon = tin
         offset = 0.01
         produced = tin
         output = 0.005

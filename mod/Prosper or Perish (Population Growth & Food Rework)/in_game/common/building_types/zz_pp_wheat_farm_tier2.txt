@@ -25,6 +25,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_wheat_rotations_base = {
+        icon_type = building_type
+        icon = wheat_rotations
         manual_labor = 0.014
         produced = wheat
         output = 0.07
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_wheat_rotations_no_cultivation = {
+        icon_type = building_type
+        icon = wheat_rotations
         category = building_maintenance
     }
     pp_wheat_rotations_clover_ley = {
+        icon_type = building_type
+        icon = wheat_rotations
         tools = 0.16
         horses = 0.14
         legumes = 0.24
@@ -46,6 +52,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_wheat_rotations_marled_fields = {
+        icon_type = building_type
+        icon = wheat_rotations
         tools = 0.15
         horses = 0.13
         legumes = 0.18
@@ -59,11 +67,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_wheat_rotations_sell_surplus = {
+        icon_type = building_type
+        icon = wheat_rotations
         produced = province_food_sales
         output = 0.006
         category = building_maintenance
     }
     pp_wheat_rotations_provision = {
+        icon_type = goods
+        icon = wheat
         wheat = 0.093
         produced = local_food
         output = 1.12
@@ -73,6 +85,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_wheat_rotations_market_sales = {
+        icon_type = goods
+        icon = wheat
         offset = 0.01
         produced = wheat
         output = 0.01

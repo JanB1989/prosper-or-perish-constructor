@@ -11,6 +11,8 @@ megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
     pp_hand_cannon_guild_hand_cannon_guild_maintenance = {
+        icon_type = building_type
+        icon = hand_cannon_guild
         tools = 0.051
         saltpeter = 0.1
         copper = 0.1
@@ -24,6 +26,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_hand_cannon_guild_market_sales = {
+        icon_type = goods
+        icon = firearms
         offset = 0.012
         produced = firearms
         output = 0.004

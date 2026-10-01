@@ -41,6 +41,8 @@ allow = {
 }
 unique_production_methods = {
     pp_tatara_tamagahane_bladesmith = {
+        icon_type = goods
+        icon = weaponry
         produced = weaponry
         output = 0.2
         iron = 0.13
@@ -49,6 +51,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_tatara_tamagahane_blacksmith = {
+        icon_type = goods
+        icon = tools
         produced = tools
         output = 0.5
         iron = 0.31
@@ -59,6 +63,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tatara_market_sales = {
+        icon_type = goods
+        icon = tools
         offset = 0.013
         produced = tools
         output = 0.004

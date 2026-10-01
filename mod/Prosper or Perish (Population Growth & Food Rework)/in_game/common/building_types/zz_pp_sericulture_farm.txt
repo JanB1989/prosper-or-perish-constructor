@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_sericulture_farm_base_silk = {
+        icon_type = building_type
+        icon = sericulture_farm
         manual_labor = 0.032
         produced = silk
         output = 0.040
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_sericulture_farm_no_reeling = {
+        icon_type = building_type
+        icon = sericulture_farm
         category = building_maintenance
     }
     pp_sericulture_farm_cocoon_reeling = {
+        icon_type = building_type
+        icon = sericulture_farm
         lumber = 0.098 # rearing trays, frames
         tools = 0.033 # knives, reels
         manual_labor = 0.059
@@ -47,6 +53,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_sericulture_farm_market_sales = {
+        icon_type = goods
+        icon = silk
         offset = 0.012
         produced = silk
         output = 0.003

@@ -14,6 +14,8 @@ build_time = manufactory_build_time
 obsolete = pottery_workshop
 unique_production_methods = {
     pp_pottery_manufactory_pottery_manufactory_maintenance = {
+        icon_type = building_type
+        icon = pottery_manufactory
         clay = 1.06
         lumber = 0.16
         tools = 0.11
@@ -26,6 +28,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_pottery_manufactory_market_sales = {
+        icon_type = goods
+        icon = pottery
         offset = 0.01
         produced = pottery
         output = 0.01

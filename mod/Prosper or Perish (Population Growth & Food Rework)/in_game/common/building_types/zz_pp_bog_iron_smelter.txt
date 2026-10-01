@@ -38,6 +38,8 @@ location_potential = {
 }
 unique_production_methods = {
     pp_bog_iron_maintenance = {
+        icon_type = building_type
+        icon = bog_iron_smelter
         coal = 0.37 # charcoal, furnace fuel
         manual_labor = 0.16
         produced = iron

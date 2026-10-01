@@ -31,9 +31,13 @@ location_potential = {
 # slot 0: packing goods, as on the Victualling Yard.
 unique_production_methods = {
   pp_grange_loose_stores = {
+    icon_type = building_type
+    icon = grange
     category = building_maintenance
   }
   pp_grange_pottery_jars = {
+    icon_type = building_type
+    icon = grange
     pottery = 0.26
     manual_labor = 0.044
     produced = victuals
@@ -42,6 +46,8 @@ unique_production_methods = {
     category = building_maintenance
   }
   pp_grange_coopered_barrels = {
+    icon_type = building_type
+    icon = grange
     furniture = 0.12
     manual_labor = 0.064
     produced = victuals
@@ -50,6 +56,8 @@ unique_production_methods = {
     category = building_maintenance
   }
   pp_grange_tin_cans = {
+    icon_type = building_type
+    icon = grange
     steel = 0.104
     manual_labor = 0.088
     produced = victuals
@@ -65,12 +73,16 @@ unique_production_methods = {
 # (at default goods prices: Porters below labour 1.3, Ox Carts 1.3 to 1.55, Horse Wagons above).
 unique_production_methods = {
   pp_grange_porters = {
+    icon_type = building_type
+    icon = grange
     produced = victuals
     manual_labor = 0.08
     output = 0.6
     category = building_maintenance
   }
   pp_grange_ox_carts = {
+    icon_type = building_type
+    icon = grange
     livestock = 0.016
     lumber = 0.016
     manual_labor = 0.04
@@ -79,6 +91,8 @@ unique_production_methods = {
     category = building_maintenance
   }
   pp_grange_horse_wagons = {
+    icon_type = building_type
+    icon = grange
     horses = 0.012
     tools = 0.012
     lumber = 0.008
@@ -93,6 +107,8 @@ unique_production_methods = {
 # the AI profit threshold 1.05 at ~22 months stored, so the AI builds granges from there.
 unique_production_methods = {
   pp_grange_surplus_sales = {
+    icon_type = building_type
+    icon = grange
     produced = province_food_sales
     offset = 11.2
     output = 0.8

@@ -13,6 +13,8 @@ megalopolis = yes
 build_time = workshop_build_time
 unique_production_methods = {
     pp_fine_cloth_workshop_standard_fine_cloth_workshop_maintenance = {
+        icon_type = building_type
+        icon = fine_cloth_workshop
         produced = fine_cloth
         dyes = 0.13
         manual_labor = 0.072
@@ -21,6 +23,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_fine_cloth_workshop_alum_fine_cloth_workshop_maintenance = {
+        icon_type = goods
+        icon = alum
         alum = 0.059
         dyes = 0.26
         manual_labor = 0.15
@@ -30,6 +34,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_fine_cloth_workshop_fur_trim_workshop_maintenance = {
+        icon_type = goods
+        icon = fur
         fur = 0.62
         manual_labor = 0.13
         produced = fine_cloth
@@ -40,6 +46,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_fine_cloth_workshop_fine_cloth_workshop_maintenance = {
+        icon_type = goods
+        icon = cloth
         cloth = 1.04
         manual_labor = 0.35
         produced = fine_cloth
@@ -48,6 +56,8 @@ unique_production_methods = {
         debug_max_profit = workshop_profit_margin
     }
     pp_fine_cloth_workshop_wool_weavers_workshop_maintenance = {
+        icon_type = goods
+        icon = wool
         wool = 1.25
         manual_labor = 0.34
         produced = fine_cloth
@@ -56,6 +66,8 @@ unique_production_methods = {
         debug_max_profit = workshop_profit_margin
     }
     pp_fine_cloth_workshop_spanish_cloth_workshop_maintenance = {
+        icon_type = goods
+        icon = wool
         allow = {
             custom_tooltip = {
                 text = has_unlocked_spanish_cloth_industry
@@ -70,6 +82,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_fine_cloth_workshop_silk_weavers_workshop_maintenance = {
+        icon_type = goods
+        icon = silk
         silk = 1.05
         manual_labor = 0.47
         produced = fine_cloth
@@ -80,6 +94,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_fine_cloth_workshop_market_sales = {
+        icon_type = goods
+        icon = fine_cloth
         offset = 0.012
         produced = fine_cloth
         output = 0.002

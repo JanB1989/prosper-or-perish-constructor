@@ -25,6 +25,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_gold_diggings_base_gold = {
+        icon_type = building_type
+        icon = gold_diggings
         manual_labor = 0.18
         produced = goods_gold
         output = 0.1
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_gold_diggings_no_secondary = {
+        icon_type = building_type
+        icon = gold_diggings
         category = building_maintenance
     }
     pp_gold_diggings_copper = {
+        icon_type = building_type
+        icon = gold_diggings
         lumber = 0.033
         tools = 0.025
         manual_labor = 0.028
@@ -44,6 +50,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_gold_diggings_silver = {
+        icon_type = building_type
+        icon = gold_diggings
         lumber = 0.041
         tools = 0.033
         manual_labor = 0.039
@@ -54,9 +62,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_gold_diggings_no_primary = {
+        icon_type = building_type
+        icon = gold_diggings
         category = building_maintenance
     }
     pp_gold_diggings_hand_panning = {
+        icon_type = building_type
+        icon = gold_diggings
         lumber = 0.39
         manual_labor = 0.57
         produced = goods_gold
@@ -64,6 +76,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_gold_diggings_gold = {
+        icon_type = building_type
+        icon = gold_diggings
         lumber = 0.35
         tools = 0.19
         manual_labor = 0.27

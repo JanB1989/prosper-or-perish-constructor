@@ -13,6 +13,8 @@ megalopolis = yes
 build_time = workshop_build_time
 unique_production_methods = {
     pp_tanning_workshop_leather_livestock_workshop_maintenance = {
+        icon_type = goods
+        icon = livestock
         livestock = 1.25
         sand = 0.48
         tools = 0.21
@@ -23,6 +25,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_tanning_workshop_leather_wildgame_workshop_maintenance = {
+        icon_type = goods
+        icon = wild_game
         wild_game = 1.89
         sand = 0.47
         tools = 0.2
@@ -35,6 +39,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tanning_workshop_market_sales = {
+        icon_type = goods
+        icon = leather
         offset = 0.012
         produced = leather
         output = 0.004

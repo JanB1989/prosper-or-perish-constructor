@@ -25,6 +25,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_ocean_fishery_base_catch = {
+        icon_type = building_type
+        icon = ocean_fishery
         manual_labor = 0.018
         produced = fish
         output = 0.09
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_ocean_fishery_no_coastal_gear = {
+        icon_type = building_type
+        icon = ocean_fishery
         category = building_maintenance
     }
     pp_ocean_fishery_coastal_boats = {
+        icon_type = building_type
+        icon = ocean_fishery
         lumber = 0.36 # boat hulls
         salt = 0.025 # curing barrels
         manual_labor = 0.17
@@ -47,11 +53,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_ocean_fishery_sell_surplus = {
+        icon_type = building_type
+        icon = ocean_fishery
         produced = province_food_sales
         output = 0.008
         category = building_maintenance
     }
     pp_ocean_fishery_provision = {
+        icon_type = goods
+        icon = fish
         fish = 0.12
         produced = local_food
         output = 1.44
@@ -61,6 +71,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_ocean_fishery_market_sales = {
+        icon_type = goods
+        icon = fish
         offset = 0.01
         produced = fish
         output = 0.01

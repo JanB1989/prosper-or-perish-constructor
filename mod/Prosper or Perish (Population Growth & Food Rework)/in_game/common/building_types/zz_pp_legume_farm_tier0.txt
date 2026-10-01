@@ -25,6 +25,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_legume_farm_base = {
+        icon_type = building_type
+        icon = legume_farm
         manual_labor = 0.012
         produced = legumes
         output = 0.06
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_legume_farm_no_beekeeping = {
+        icon_type = building_type
+        icon = legume_farm
         category = building_maintenance
     }
     pp_legume_farm_cottage_hives = {
+        icon_type = building_type
+        icon = legume_farm
         furniture = 0
         cloth = 0
         manual_labor = 0.025
@@ -47,9 +53,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_legume_farm_no_cultivation = {
+        icon_type = building_type
+        icon = legume_farm
         category = building_maintenance
     }
     pp_legume_farm_pease_bean_field = {
+        icon_type = building_type
+        icon = legume_farm
         tools = 0.016
         livestock = 0.031
         manual_labor = 0.023
@@ -59,6 +69,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_legume_farm_stubble_sowing = {
+        icon_type = building_type
+        icon = legume_farm
         horses = 0.016
         tools = 0.019
         manual_labor = 0.025
@@ -70,11 +82,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_legume_farm_sell_surplus = {
+        icon_type = building_type
+        icon = legume_farm
         produced = province_food_sales
         output = 0.005
         category = building_maintenance
     }
     pp_legume_farm_provision = {
+        icon_type = goods
+        icon = legumes
         legumes = 0.08
         produced = local_food
         output = 0.96
@@ -84,6 +100,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_legume_farm_market_sales = {
+        icon_type = goods
+        icon = legumes
         offset = 0.01
         produced = legumes
         output = 0.01

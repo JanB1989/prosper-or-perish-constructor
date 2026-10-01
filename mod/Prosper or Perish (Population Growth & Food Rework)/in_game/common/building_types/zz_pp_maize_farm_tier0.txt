@@ -31,6 +31,8 @@ country_potential = {
 
 unique_production_methods = {
     pp_maize_farm_base = {
+        icon_type = building_type
+        icon = maize_farm
         manual_labor = 0.012
         produced = maize
         output = 0.06
@@ -39,9 +41,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_maize_farm_no_cultivation = {
+        icon_type = building_type
+        icon = maize_farm
         category = building_maintenance
     }
     pp_maize_farm_hill_planting = {
+        icon_type = building_type
+        icon = maize_farm
         tools = 0.004
         manual_labor = 0.01
         produced = maize
@@ -50,6 +56,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_maize_farm_milpa = {
+        icon_type = building_type
+        icon = maize_farm
         legumes = 0.016
         livestock = 0.009
         manual_labor = 0.007
@@ -61,11 +69,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_maize_farm_sell_surplus = {
+        icon_type = building_type
+        icon = maize_farm
         produced = province_food_sales
         output = 0.005
         category = building_maintenance
     }
     pp_maize_farm_provision = {
+        icon_type = goods
+        icon = maize
         maize = 0.08
         produced = local_food
         output = 0.96
@@ -75,6 +87,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_maize_farm_market_sales = {
+        icon_type = goods
+        icon = maize
         offset = 0.01
         produced = maize
         output = 0.01

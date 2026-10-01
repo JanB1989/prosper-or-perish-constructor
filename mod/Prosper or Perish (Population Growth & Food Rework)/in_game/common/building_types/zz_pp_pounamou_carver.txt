@@ -25,6 +25,8 @@ allow = {
 }
 unique_production_methods = {
     pp_pounamou_carver_pounamou_carver_maintenance = {
+        icon_type = building_type
+        icon = pounamou_carver
         gems = 0.2
         manual_labor = 0.13
         produced = jewelry
@@ -35,6 +37,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_pounamou_carver_market_sales = {
+        icon_type = goods
+        icon = jewelry
         offset = 0.01
         produced = jewelry
         output = 0.002

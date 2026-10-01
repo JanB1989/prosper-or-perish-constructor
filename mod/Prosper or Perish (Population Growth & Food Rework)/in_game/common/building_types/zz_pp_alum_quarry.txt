@@ -25,6 +25,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_alum_quarry_base_alum = {
+        icon_type = building_type
+        icon = alum_quarry
         manual_labor = 0.048
         produced = alum
         output = 0.08
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_alum_quarry_no_secondary = {
+        icon_type = building_type
+        icon = alum_quarry
         category = building_maintenance
     }
     pp_alum_quarry_clay = {
+        icon_type = building_type
+        icon = alum_quarry
         lumber = 0.025
         tools = 0.016
         manual_labor = 0.022
@@ -44,6 +50,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_alum_quarry_stone = {
+        icon_type = building_type
+        icon = alum_quarry
         lumber = 0.033
         tools = 0.025
         manual_labor = 0.028
@@ -54,9 +62,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_alum_quarry_no_primary = {
+        icon_type = building_type
+        icon = alum_quarry
         category = building_maintenance
     }
     pp_alum_quarry_alum = {
+        icon_type = building_type
+        icon = alum_quarry
         lumber = 0.16
         tools = 0.21
         manual_labor = 0.21
@@ -67,6 +79,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_alum_quarry_market_sales = {
+        icon_type = goods
+        icon = alum
         offset = 0.012
         produced = alum
         output = 0.004

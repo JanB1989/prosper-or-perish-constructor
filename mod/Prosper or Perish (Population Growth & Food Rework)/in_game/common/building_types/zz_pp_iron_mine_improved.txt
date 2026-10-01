@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_iron_mine_improved_base_iron = {
+        icon_type = building_type
+        icon = iron_mine_improved
         manual_labor = 0.056
         produced = iron
         output = 0.08
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_iron_mine_improved_no_secondary = {
+        icon_type = building_type
+        icon = iron_mine_improved
         category = building_maintenance
     }
     pp_iron_mine_improved_ochre = {
+        icon_type = building_type
+        icon = iron_mine_improved
         lumber = 0.034 # washing troughs, racks
         tools = 0.026 # sieves, shovels
         manual_labor = 0.024
@@ -47,9 +53,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_iron_mine_improved_no_primary = {
+        icon_type = building_type
+        icon = iron_mine_improved
         category = building_maintenance
     }
     pp_iron_mine_improved_ore_dressing_floors = {
+        icon_type = building_type
+        icon = iron_mine_improved
         fiber_crops = 0.17 # sacks, screens
         cloth = 0.086 # sorting cloths
         beeswax = 0.043 # candles, seals
@@ -59,6 +69,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_iron_mine_improved_horse_whim_haulage = {
+        icon_type = building_type
+        icon = iron_mine_improved
         horses = 0.15 # whim draft teams
         leather = 0.077 # harness, buckets
         beeswax = 0.043 # mine candles, seals
@@ -68,6 +80,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_iron_mine_improved_iron = {
+        icon_type = building_type
+        icon = iron_mine_improved
         lumber = 0.28 # timbering, dressing floors
         tools = 0.3 # picks, pumps, stamps
         beeswax = 0.066 # mine candles, seals
@@ -77,6 +91,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_iron_mine_improved_slitting_dressed_ore = {
+        icon_type = building_type
+        icon = iron_mine_improved
         lumber = 0.3 # timbering, bar racks
         tools = 0.33 # slitting rolls, dressing tools
         beeswax = 0.077 # candles, pump seals

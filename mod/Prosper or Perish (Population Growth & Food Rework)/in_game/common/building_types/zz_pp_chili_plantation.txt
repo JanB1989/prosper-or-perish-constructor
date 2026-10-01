@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_chili_plantation_base_chili = {
+        icon_type = building_type
+        icon = chili_plantation
         manual_labor = 0.148
         produced = chili
         output = 0.148
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_chili_plantation_no_drying = {
+        icon_type = building_type
+        icon = chili_plantation
         category = building_maintenance
     }
     pp_chili_plantation_sun_drying_mats = {
+        icon_type = building_type
+        icon = chili_plantation
         fiber_crops = 0.32 # drying mats
         tools = 0.16 # harvest knives
         manual_labor = 0.252
@@ -47,6 +53,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_chili_plantation_market_sales = {
+        icon_type = goods
+        icon = chili
         offset = 0.01
         produced = chili
         output = 0.002

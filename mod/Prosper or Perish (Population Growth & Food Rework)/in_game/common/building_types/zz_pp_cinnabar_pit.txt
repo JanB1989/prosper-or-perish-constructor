@@ -25,6 +25,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_cinnabar_pit_base_mercury = {
+        icon_type = building_type
+        icon = cinnabar_pit
         manual_labor = 0.054
         produced = mercury
         output = 0.09
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_cinnabar_pit_no_secondary = {
+        icon_type = building_type
+        icon = cinnabar_pit
         category = building_maintenance
     }
     pp_cinnabar_pit_dyes = {
+        icon_type = building_type
+        icon = cinnabar_pit
         lumber = 0.025
         tools = 0.016
         manual_labor = 0.022
@@ -44,6 +50,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_cinnabar_pit_stone = {
+        icon_type = building_type
+        icon = cinnabar_pit
         lumber = 0.025
         tools = 0.016
         manual_labor = 0.022
@@ -54,9 +62,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_cinnabar_pit_no_primary = {
+        icon_type = building_type
+        icon = cinnabar_pit
         category = building_maintenance
     }
     pp_cinnabar_pit_mercury = {
+        icon_type = building_type
+        icon = cinnabar_pit
         lumber = 0.18
         tools = 0.15
         beeswax = 0.074
@@ -68,6 +80,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_cinnabar_pit_market_sales = {
+        icon_type = goods
+        icon = mercury
         offset = 0.012
         produced = mercury
         output = 0.004

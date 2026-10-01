@@ -21,6 +21,7 @@ construction_demand = workshop_construction
 
 location_potential = {
     OR = {
+        pp_wb_setup_fruit_orchard_location = yes   # vanilla setup orchards the geography would reject
         var:pp_fruit_orchard_eligible > 0
         AND = {
             NOT = { has_variable = pp_fruit_orchard_eligible }
@@ -31,6 +32,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_nursery_orchard_base_fruit = {
+        icon_type = building_type
+        icon = nursery_orchard
         manual_labor = 0.017
         produced = fruit
         output = 0.085
@@ -39,9 +42,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_nursery_orchard_no_primary = {
+        icon_type = building_type
+        icon = nursery_orchard
         category = building_maintenance
     }
     pp_nursery_orchard_nursery_rows = {
+        icon_type = building_type
+        icon = nursery_orchard
         produced = fruit
         output = 0.55
         fiber_crops = 0.089 # osier baskets, graft ties, harvest mats
@@ -55,11 +62,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_nursery_orchard_sell_surplus = {
+        icon_type = building_type
+        icon = nursery_orchard
         produced = province_food_sales
         output = 0.007
         category = building_maintenance
     }
     pp_nursery_orchard_provision = {
+        icon_type = goods
+        icon = fruit
         fruit = 0.113
         produced = local_food
         output = 1.36
@@ -69,6 +80,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_nursery_orchard_market_sales = {
+        icon_type = goods
+        icon = fruit
         offset = 0.01
         produced = fruit
         output = 0.01

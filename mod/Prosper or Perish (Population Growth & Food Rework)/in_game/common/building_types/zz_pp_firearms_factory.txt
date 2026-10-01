@@ -15,6 +15,8 @@ build_time = mills_build_time
 obsolete = firearms_manufactory
 unique_production_methods = {
     pp_firearms_factory_firearms_factory_maintenance = {
+        icon_type = building_type
+        icon = firearms_factory
         steel = 1.7
         lead = 0.51
         saltpeter = 0.85
@@ -27,6 +29,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_firearms_factory_market_sales = {
+        icon_type = goods
+        icon = firearms
         offset = 0.012
         produced = firearms
         output = 0.004

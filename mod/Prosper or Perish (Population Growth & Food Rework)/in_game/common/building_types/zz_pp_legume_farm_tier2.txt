@@ -25,6 +25,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_legume_rotations_base = {
+        icon_type = building_type
+        icon = legume_rotations
         manual_labor = 0.014
         produced = legumes
         output = 0.07
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_legume_rotations_no_beekeeping = {
+        icon_type = building_type
+        icon = legume_rotations
         category = building_maintenance
     }
     pp_legume_rotations_hedgerow_hives = {
+        icon_type = building_type
+        icon = legume_rotations
         tools = 0.036
         lumber = 0.089
         fiber_crops = 0.071
@@ -49,9 +55,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_legume_rotations_no_cultivation = {
+        icon_type = building_type
+        icon = legume_rotations
         category = building_maintenance
     }
     pp_legume_rotations_pulse_rotation = {
+        icon_type = building_type
+        icon = legume_rotations
         tools = 0.17
         horses = 0.13
         livestock = 0.089
@@ -63,6 +73,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_legume_rotations_vetch_lentil = {
+        icon_type = building_type
+        icon = legume_rotations
         tools = 0.15
         horses = 0.12
         livestock = 0.11
@@ -76,11 +88,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_legume_rotations_sell_surplus = {
+        icon_type = building_type
+        icon = legume_rotations
         produced = province_food_sales
         output = 0.006
         category = building_maintenance
     }
     pp_legume_rotations_provision = {
+        icon_type = goods
+        icon = legumes
         legumes = 0.093
         produced = local_food
         output = 1.12
@@ -90,6 +106,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_legume_rotations_market_sales = {
+        icon_type = goods
+        icon = legumes
         offset = 0.01
         produced = legumes
         output = 0.01

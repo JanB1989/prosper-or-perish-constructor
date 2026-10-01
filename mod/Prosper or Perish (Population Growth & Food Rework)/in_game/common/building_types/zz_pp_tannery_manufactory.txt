@@ -13,6 +13,8 @@ megalopolis = yes
 build_time = manufactory_build_time
 unique_production_methods = {
     pp_tannery_manufactory_leather_manufactory_maintenance = {
+        icon_type = goods
+        icon = livestock
         livestock = 2.38
         sand = 1.11
         tar = 0.15
@@ -24,6 +26,8 @@ unique_production_methods = {
         category = manufactory_input
     }
     pp_tannery_manufactory_tannery_manufactory_maintenance = {
+        icon_type = goods
+        icon = wild_game
         wild_game = 3.51
         sand = 1.15
         tar = 0.15
@@ -37,6 +41,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tannery_manufactory_market_sales = {
+        icon_type = goods
+        icon = leather
         offset = 0.012
         produced = leather
         output = 0.004

@@ -23,6 +23,8 @@ build_time = rural_build_time
 
 unique_production_methods = {
     pp_fiber_crops_farm_base_fiber_crops = {
+        icon_type = building_type
+        icon = fiber_crops_farm
         manual_labor = 0.035
         produced = fiber_crops
         output = 0.088
@@ -31,9 +33,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_fiber_crops_farm_field_harvest = {
+        icon_type = building_type
+        icon = fiber_crops_farm
         category = building_maintenance
     }
     pp_fiber_crops_farm_retting_yards = {
+        icon_type = building_type
+        icon = fiber_crops_farm
         livestock = 0.074 # manure and light draught
         clay = 0.15 # lined retting pits
         coal = 0.025 # controlled drying heat
@@ -46,6 +52,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_fiber_crops_farm_market_sales = {
+        icon_type = goods
+        icon = fiber_crops
         offset = 0.01
         produced = fiber_crops
         output = 0.005

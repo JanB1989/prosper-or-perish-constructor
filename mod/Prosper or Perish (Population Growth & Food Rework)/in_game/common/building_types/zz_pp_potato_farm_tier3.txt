@@ -31,6 +31,8 @@ country_potential = {
 
 unique_production_methods = {
     pp_potato_model_farm_base = {
+        icon_type = building_type
+        icon = potato_model_farm
         manual_labor = 0.02
         produced = potato
         output = 0.1
@@ -39,9 +41,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_potato_model_farm_no_cultivation = {
+        icon_type = building_type
+        icon = potato_model_farm
         category = building_maintenance
     }
     pp_potato_model_farm_drilled_ridges = {
+        icon_type = building_type
+        icon = potato_model_farm
         tools = 0.2
         livestock = 0.27
         clay = 0.34
@@ -55,11 +61,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_potato_model_farm_sell_surplus = {
+        icon_type = building_type
+        icon = potato_model_farm
         produced = province_food_sales
         output = 0.008
         category = building_maintenance
     }
     pp_potato_model_farm_provision = {
+        icon_type = goods
+        icon = potato
         potato = 0.133
         produced = local_food
         output = 1.6
@@ -69,6 +79,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_potato_model_farm_market_sales = {
+        icon_type = goods
+        icon = potato
         offset = 0.01
         produced = potato
         output = 0.01

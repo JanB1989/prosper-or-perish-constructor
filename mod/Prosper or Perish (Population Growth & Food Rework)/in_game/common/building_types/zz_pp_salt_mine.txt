@@ -69,6 +69,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_salt_mine_base_salt = {
+        icon_type = building_type
+        icon = salt_mine
         manual_labor = 0.09
         produced = salt
         output = 0.090
@@ -77,9 +79,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_salt_mine_no_primary = {
+        icon_type = building_type
+        icon = salt_mine
         category = building_maintenance
     }
     pp_salt_mine_hand_cut_galleries = {
+        icon_type = building_type
+        icon = salt_mine
         lumber = 0.27 # pit props
         tools = 0.17 # picks and wedges
         beeswax = 0.084 # mine candles
@@ -91,6 +97,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_salt_mine_market_sales = {
+        icon_type = goods
+        icon = salt
         offset = 0.01
         produced = salt
         output = 0.002

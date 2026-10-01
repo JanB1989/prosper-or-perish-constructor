@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_lead_mine_bole_base_lead = {
+        icon_type = building_type
+        icon = lead_mine_bole_smelting
         manual_labor = 0.036
         produced = lead
         output = 0.09
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_lead_mine_bole_no_secondary = {
+        icon_type = building_type
+        icon = lead_mine_bole_smelting
         category = building_maintenance
     }
     pp_lead_mine_bole_silver = {
+        icon_type = building_type
+        icon = lead_mine_bole_smelting
         lumber = 0.027
         tools = 0.018
         lead = 0.018
@@ -46,6 +52,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_lead_mine_bole_gold = {
+        icon_type = building_type
+        icon = lead_mine_bole_smelting
         lumber = 0.027
         tools = 0.018
         lead = 0.018
@@ -57,9 +65,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_lead_mine_bole_no_primary = {
+        icon_type = building_type
+        icon = lead_mine_bole_smelting
         category = building_maintenance
     }
     pp_lead_mine_bole_lead = {
+        icon_type = building_type
+        icon = lead_mine_bole_smelting
         lumber = 0.14
         tools = 0.36
         beeswax = 0.045
@@ -71,6 +83,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_lead_mine_bole_smelting_market_sales = {
+        icon_type = goods
+        icon = lead
         offset = 0.01
         produced = lead
         output = 0.005

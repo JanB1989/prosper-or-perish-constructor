@@ -31,6 +31,8 @@ REPLACE:armory = {
 		
 	unique_production_methods = {
 		pp_armory_maintenance = {
+			icon_type = building_type
+			icon = armory
 			firearms = 0.5
 			leather = 0.5
 			cloth = 0.10

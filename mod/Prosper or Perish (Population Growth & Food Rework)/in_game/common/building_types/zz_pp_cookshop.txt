@@ -28,9 +28,13 @@ price = pp_cookshop_price
 	# ==========================================
 	unique_production_methods = {
 		pp_cookshop_well_water = {
+			icon_type = building_type
+			icon = cookshop
 			category = building_maintenance
 		}
 		pp_cookshop_coffee = {
+			icon_type = building_type
+			icon = cookshop
 			coffee = 0.36
 			manual_labor = 0.19
 			produced = local_food
@@ -39,6 +43,8 @@ price = pp_cookshop_price
 			category = building_maintenance
 		}
 		pp_cookshop_chocolate = {
+			icon_type = building_type
+			icon = cookshop
 			cocoa = 0.24
 			manual_labor = 0.17
 			produced = local_food
@@ -47,6 +53,8 @@ price = pp_cookshop_price
 			category = building_maintenance
 		}
 		pp_cookshop_tea = {
+			icon_type = building_type
+			icon = cookshop
 			tea = 0.46
 			manual_labor = 0.21
 			produced = local_food
@@ -55,6 +63,8 @@ price = pp_cookshop_price
 			category = building_maintenance
 		}
 		pp_cookshop_beer = {
+			icon_type = building_type
+			icon = cookshop
 			beer = 0.64
 			manual_labor = 0.22
 			produced = local_food
@@ -63,6 +73,8 @@ price = pp_cookshop_price
 			category = building_maintenance
 		}
 		pp_cookshop_wine = {
+			icon_type = building_type
+			icon = cookshop
 			wine = 0.64
 			manual_labor = 0.22
 			produced = local_food
@@ -71,6 +83,8 @@ price = pp_cookshop_price
 			category = building_maintenance
 		}
 		pp_cookshop_liquor = {
+        icon_type = building_type
+        icon = cookshop
         liquor = 0.56
         manual_labor = 0.22
 			produced = local_food
@@ -87,6 +101,8 @@ price = pp_cookshop_price
 unique_production_methods = {
 		# --- ASIA ---
 		pp_cookshop_khichdi_serve = {
+        icon_type = building_type
+        icon = cookshop
         rice = 1.11
         legumes = 0.95
         pepper = 0.034
@@ -97,6 +113,8 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 		pp_cookshop_fish_congee_serve = {
+        icon_type = building_type
+        icon = cookshop
         rice = 1.11
         fish = 0.95
         pepper = 0.034
@@ -109,6 +127,8 @@ unique_production_methods = {
 
 		# --- AMERICA ---
 		pp_cookshop_pozole_serve = {
+        icon_type = building_type
+        icon = cookshop
         maize = 0.69
         wild_game = 0.87
         chili = 0.13
@@ -119,6 +139,8 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 		pp_cookshop_mediterranean_fish_serve = {
+        icon_type = building_type
+        icon = cookshop
         fish = 1.68
         olives = 0.51
         wine = 0.068
@@ -130,6 +152,8 @@ unique_production_methods = {
 		}
 		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
 		pp_cookshop_kheer_serve = {
+        icon_type = building_type
+        icon = cookshop
         rice = 1.11
         sugar = 0.1
         livestock = 0.61
@@ -140,6 +164,8 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 		pp_cookshop_pemmican_serve = {
+        icon_type = building_type
+        icon = cookshop
         wild_game = 1.51
         livestock = 0.32
         fruit = 0.34
@@ -151,6 +177,8 @@ unique_production_methods = {
 		}
 
 		pp_cookshop_labskaus_serve = {
+        icon_type = building_type
+        icon = cookshop
         potato = 0.32
         fish = 0.51
         livestock = 1
@@ -162,6 +190,8 @@ unique_production_methods = {
 		}
 		# --- OCEANIA (NEW) ---
 		pp_cookshop_ika_mata_serve = {
+        icon_type = building_type
+        icon = cookshop
         fish = 1.61
         fruit = 0.84
         salt = 0.034
@@ -173,6 +203,8 @@ unique_production_methods = {
 		}
 		# --- EUROPE ---
 		pp_cookshop_livestock_pottage_serve = {
+        icon_type = building_type
+        icon = cookshop
         wheat = 1.08
         livestock = 0.77
         legumes = 0.22
@@ -184,6 +216,8 @@ unique_production_methods = {
 		}
 
 		pp_cookshop_mutton_and_pease_serve = {
+        icon_type = building_type
+        icon = cookshop
         wool = 0.83
         legumes = 0.4
         salt = 0.045
@@ -194,6 +228,8 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 		pp_cookshop_saltfish_porridge_serve = {
+        icon_type = building_type
+        icon = cookshop
         millet = 0.87
         fish = 1.25
         salt = 0.068
@@ -205,6 +241,8 @@ unique_production_methods = {
 		}
 
 		pp_cookshop_surstromming_serve = {
+        icon_type = building_type
+        icon = cookshop
         fish = 1.73
         millet = 0.18
         salt = 0.18
@@ -216,6 +254,8 @@ unique_production_methods = {
 		}
 
 		pp_cookshop_honey_gruel_serve = {
+        icon_type = building_type
+        icon = cookshop
         wheat = 0.8
         fruit = 0.54
         beeswax = 0.61
@@ -227,6 +267,8 @@ unique_production_methods = {
 		}
 		# --- AFRICA (NEW) ---
 		pp_cookshop_meat_tajine_serve = {
+        icon_type = building_type
+        icon = cookshop
         livestock = 1.18
         fruit = 0.54
         saffron = 0.051
@@ -237,6 +279,8 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 		pp_cookshop_boreal_hunter_stew_serve = {
+        icon_type = building_type
+        icon = cookshop
         fur = 0.77
         millet = 0.67
         salt = 0.068

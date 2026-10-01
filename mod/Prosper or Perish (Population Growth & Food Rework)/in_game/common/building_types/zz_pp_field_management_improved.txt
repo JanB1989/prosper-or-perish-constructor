@@ -27,6 +27,8 @@ construction_demand = village_construction
 
 unique_production_methods = {
   pp_field_management_improved_four_course = {
+    icon_type = building_type
+    icon = field_management_improved
     legumes = 0.015
     livestock = 0.01
     horses = 0.005

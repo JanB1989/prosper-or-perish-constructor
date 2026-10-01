@@ -28,6 +28,8 @@ raw_modifier = {
 increase_per_level_cost = 0.16
 unique_production_methods = {
     pp_market_village_rural_pottery_maker = {
+        icon_type = building_type
+        icon = market_village
         produced = pottery
         output = 0.2
         clay = 0.25
@@ -36,6 +38,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_market_village_rural_jewelry_carver = {
+        icon_type = building_type
+        icon = market_village
         produced = jewelry
         output = 0.1
         stone = 0.32
@@ -44,6 +48,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_market_village_rural_weaponmaker = {
+        icon_type = building_type
+        icon = market_village
         produced = weaponry
         output = 0.2
         lumber = 0.25
@@ -52,6 +58,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_market_village_rural_millet_brewery = {
+        icon_type = building_type
+        icon = market_village
         millet = 0.39
         lumber = 0.079
         tools = 0.056
@@ -62,6 +70,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_market_village_rural_blacksmith = {
+        icon_type = building_type
+        icon = market_village
         produced = tools
         output = 0.4
         iron = 0.31
@@ -72,6 +82,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_market_village_market_sales = {
+        icon_type = goods
+        icon = tools
         offset = 0.013
         produced = tools
         output = 0.004

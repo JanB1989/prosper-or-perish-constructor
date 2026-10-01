@@ -31,24 +31,32 @@ location_potential = {
 }
 unique_production_methods = {
     pp_managed_forest_village_base_wild_game = {
+        icon_type = building_type
+        icon = managed_forest_village
         manual_labor = 0.02
         produced = wild_game
         output = 0.10
         category = building_maintenance
     }
     pp_managed_forest_village_base_fur = {
+        icon_type = building_type
+        icon = managed_forest_village
         manual_labor = 0.04
         produced = fur
         output = 0.10
         category = building_maintenance
     }
     pp_managed_forest_village_base_beeswax = {
+        icon_type = building_type
+        icon = managed_forest_village
         manual_labor = 0.04
         produced = beeswax
         output = 0.10
         category = building_maintenance
     }
     pp_managed_forest_village_base_leather = {
+        icon_type = building_type
+        icon = managed_forest_village
         manual_labor = 0.06
         produced = leather
         output = 0.10
@@ -57,9 +65,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_managed_forest_village_no_primary = {
+        icon_type = building_type
+        icon = managed_forest_village
         category = building_maintenance
     }
     pp_managed_forest_village_apiaries = {
+        icon_type = building_type
+        icon = managed_forest_village
         produced = beeswax
         output = 0.675
         tools = 0.15
@@ -71,6 +83,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_managed_forest_village_gamekeepers = {
+        icon_type = building_type
+        icon = managed_forest_village
         produced = wild_game
         output = 1.367
         tools = 0.16
@@ -82,6 +96,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_managed_forest_village_fur_trappers = {
+        icon_type = building_type
+        icon = managed_forest_village
         produced = fur
         output = 0.685
         tools = 0.16
@@ -93,6 +109,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_managed_forest_village_tannery = {
+        icon_type = building_type
+        icon = managed_forest_village
         produced = leather
         output = 0.474
         wild_game = 0.49
@@ -106,11 +124,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_managed_forest_village_sell_surplus = {
+        icon_type = building_type
+        icon = managed_forest_village
         produced = province_food_sales
         output = 0.008
         category = building_maintenance
     }
     pp_managed_forest_village_provision = {
+        icon_type = goods
+        icon = wild_game
         wild_game = 0.133
         produced = local_food
         output = 1.6
@@ -120,6 +142,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_managed_forest_village_market_sales = {
+        icon_type = goods
+        icon = leather
         offset = 0.012
         produced = leather
         output = 0.004

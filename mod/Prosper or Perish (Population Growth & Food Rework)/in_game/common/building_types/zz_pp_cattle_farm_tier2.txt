@@ -25,6 +25,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_cattle_rotations_base = {
+        icon_type = building_type
+        icon = cattle_rotations
         manual_labor = 0.021
         produced = livestock
         output = 0.07
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_cattle_rotations_no_cultivation = {
+        icon_type = building_type
+        icon = cattle_rotations
         category = building_maintenance
     }
     pp_cattle_rotations_ley_grazing = {
+        icon_type = building_type
+        icon = cattle_rotations
         tools = 0.13
         horses = 0.089
         legumes = 0.29
@@ -47,6 +53,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_cattle_rotations_transhumance = {
+        icon_type = building_type
+        icon = cattle_rotations
         horses = 0.11
         salt = 0.053
         tools = 0.089
@@ -60,11 +68,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_cattle_rotations_sell_surplus = {
+        icon_type = building_type
+        icon = cattle_rotations
         produced = province_food_sales
         output = 0.006
         category = building_maintenance
     }
     pp_cattle_rotations_provision = {
+        icon_type = goods
+        icon = livestock
         livestock = 0.062
         produced = local_food
         output = 1.12
@@ -74,6 +86,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_cattle_rotations_market_sales = {
+        icon_type = goods
+        icon = livestock
         offset = 0.012
         produced = livestock
         output = 0.008

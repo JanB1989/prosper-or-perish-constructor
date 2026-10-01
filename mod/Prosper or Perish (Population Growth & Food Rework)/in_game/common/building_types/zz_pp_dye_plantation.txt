@@ -26,6 +26,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_dye_plantation_base_dyes = {
+        icon_type = building_type
+        icon = dye_plantation
         manual_labor = 0.128
         produced = dyes
         output = 0.16
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_dye_plantation_no_curing = {
+        icon_type = building_type
+        icon = dye_plantation
         category = building_maintenance
     }
     pp_dye_plantation_vat_curing = {
+        icon_type = building_type
+        icon = dye_plantation
         lumber = 0.392 # drying racks, vats
         tools = 0.132 # knives, presses
         manual_labor = 0.236
@@ -47,6 +53,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_dye_plantation_market_sales = {
+        icon_type = goods
+        icon = dyes
         offset = 0.012
         produced = dyes
         output = 0.003

@@ -12,6 +12,8 @@ megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
     pp_tannery_leather_guild_maintenance = {
+        icon_type = goods
+        icon = livestock
         livestock = 1.09
         sand = 0.44
         tar = 0.083
@@ -23,6 +25,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_tannery_tannery_maintenance = {
+        icon_type = goods
+        icon = wild_game
         wild_game = 1.64
         sand = 0.44
         tar = 0.083
@@ -36,6 +40,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tannery_market_sales = {
+        icon_type = goods
+        icon = leather
         offset = 0.012
         produced = leather
         output = 0.004

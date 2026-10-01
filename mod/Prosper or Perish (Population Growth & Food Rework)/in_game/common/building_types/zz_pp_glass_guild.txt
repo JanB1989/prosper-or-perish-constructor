@@ -16,6 +16,8 @@ location_potential = {
 build_time = guild_build_time
 unique_production_methods = {
     pp_glass_guild_glass_guild_maintenance = {
+        icon_type = goods
+        icon = glass
         lumber = 0.19
         sand = 0.94
         tools = 0.36
@@ -26,6 +28,8 @@ unique_production_methods = {
         category = guild_input
     }
     pp_glass_guild_metal_glass_guild_maintenance = {
+        icon_type = goods
+        icon = alum
         lumber = 0.32
         sand = 1.03
         tools = 0.42
@@ -39,6 +43,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_glass_guild_market_sales = {
+        icon_type = goods
+        icon = glass
         offset = 0.012
         produced = glass
         output = 0.004

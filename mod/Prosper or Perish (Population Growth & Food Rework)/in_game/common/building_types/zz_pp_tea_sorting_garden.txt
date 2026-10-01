@@ -27,6 +27,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_tea_sorting_garden_base_tea = {
+        icon_type = building_type
+        icon = tea_sorting_garden
         manual_labor = 0.132
         produced = tea
         output = 0.22
@@ -35,9 +37,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tea_sorting_garden_no_sorting = {
+        icon_type = building_type
+        icon = tea_sorting_garden
         category = building_maintenance
     }
     pp_tea_sorting_garden_paper_packing = {
+        icon_type = building_type
+        icon = tea_sorting_garden
         furniture = 0.156 # sorting trays
         fiber_crops = 0.12 # packing baskets and bale mats
         paper = 0.188 # wrappers and packing slips
@@ -49,9 +55,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tea_sorting_garden_no_withering = {
+        icon_type = building_type
+        icon = tea_sorting_garden
         category = building_maintenance
     }
     pp_tea_sorting_garden_rolling_hearths = {
+        icon_type = building_type
+        icon = tea_sorting_garden
         furniture = 0.36 # light tray frames and rolling tables
         fiber_crops = 0.276 # woven withering mats and baskets
         pottery = 0.208 # firing hearth pans
@@ -63,6 +73,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_tea_sorting_garden_market_sales = {
+        icon_type = goods
+        icon = tea
         offset = 0.012
         produced = tea
         output = 0.004

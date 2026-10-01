@@ -26,6 +26,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_market_tobacco_farm_base_tobacco = {
+        icon_type = building_type
+        icon = market_tobacco_farm
         manual_labor = 0.144
         produced = tobacco
         output = 0.24
@@ -34,9 +36,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_market_tobacco_farm_loose_packing = {
+        icon_type = building_type
+        icon = market_tobacco_farm
         category = building_maintenance
     }
     pp_market_tobacco_farm_sorting_tables = {
+        icon_type = building_type
+        icon = market_tobacco_farm
         furniture = 0.12 # sorting tables and hogsheads
         fiber_crops = 0.052 # bundle ties
         paper = 0.04 # packing marks and sale records
@@ -48,9 +54,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_market_tobacco_farm_uncured_leaves = {
+        icon_type = building_type
+        icon = market_tobacco_farm
         category = building_maintenance
     }
     pp_market_tobacco_farm_curing_racks = {
+        icon_type = building_type
+        icon = market_tobacco_farm
         furniture = 0.172 # curing racks and hogsheads
         fiber_crops = 0.088 # leaf ties
         manual_labor = 0.108
@@ -61,6 +71,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_market_tobacco_farm_market_sales = {
+        icon_type = goods
+        icon = tobacco
         offset = 0.012
         produced = tobacco
         output = 0.004

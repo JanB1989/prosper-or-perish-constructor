@@ -14,6 +14,8 @@ obsolete = lacquerware_guild
 build_time = manufactory_build_time
 unique_production_methods = {
     pp_lacquerware_manufactory_lacquerware_manufactory_maintenance = {
+        icon_type = building_type
+        icon = lacquerware_manufactory
         lumber = 2.47
         dyes = 0.99
         tools = 0.25
@@ -26,6 +28,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_lacquerware_manufactory_market_sales = {
+        icon_type = goods
+        icon = lacquerware
         offset = 0.01
         produced = lacquerware
         output = 0.002

@@ -68,6 +68,8 @@ modifier = {
 }
 unique_production_methods = {
     pp_shoen_shoen_quarries_maintenance = {
+        icon_type = goods
+        icon = stone
         produced = stone
         output = 0.5
         tools = 0.12
@@ -76,6 +78,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_shoen_shoen_masonry_maintenance = {
+        icon_type = goods
+        icon = masonry
         produced = masonry
         output = 0.8
         lumber = 0.25
@@ -85,6 +89,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_shoen_shoen_fiber_crops_farm_maintenance = {
+        icon_type = goods
+        icon = fiber_crops
         produced = fiber_crops
         output = 0.5
         lumber = 0.22
@@ -94,6 +100,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_shoen_shoen_lumbermills_maintenance = {
+        icon_type = goods
+        icon = lumber
         produced = lumber
         output = 0.6
         tools = 0.16
@@ -103,6 +111,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_shoen_shoen_ironsand_maintenance = {
+        icon_type = goods
+        icon = iron
         produced = iron
         output = 0.3
         sand = 0.57
@@ -114,6 +124,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_shoen_market_sales = {
+        icon_type = goods
+        icon = lumber
         offset = 0.014
         produced = lumber
         output = 0.008

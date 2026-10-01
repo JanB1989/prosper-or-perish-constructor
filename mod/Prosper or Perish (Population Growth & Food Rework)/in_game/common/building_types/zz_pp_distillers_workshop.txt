@@ -14,6 +14,8 @@ build_time = workshop_build_time
 construction_demand = workshop_construction
 unique_production_methods = {
     pp_distillers_workshop_sugar_liquor_workshop_maintenance = {
+        icon_type = goods
+        icon = sugar
         sugar = 0.67
         glass = 0.078
         manual_labor = 0.25
@@ -23,6 +25,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_distillers_workshop_rice_liquor_workshop_maintenance = {
+        icon_type = goods
+        icon = rice
         rice = 1.97
         glass = 0.091
         manual_labor = 0.25
@@ -32,6 +36,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_distillers_workshop_potato_liquor_workshop_maintenance = {
+        icon_type = goods
+        icon = potato
         potato = 1.97
         glass = 0.091
         manual_labor = 0.25
@@ -41,6 +47,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_distillers_workshop_wheat_liquor_workshop_maintenance = {
+        icon_type = goods
+        icon = wheat
         wheat = 1.97
         glass = 0.091
         manual_labor = 0.25
@@ -50,6 +58,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_distillers_workshop_beer_liquor_workshop_maintenance = {
+        icon_type = goods
+        icon = beer
         beer = 0.95
         glass = 0.11
         manual_labor = 0.26
@@ -59,6 +69,8 @@ unique_production_methods = {
         category = workshop_input
     }
     pp_distillers_workshop_wine_liquor_workshop_maintenance = {
+        icon_type = goods
+        icon = wine
         wine = 0.95
         glass = 0.11
         manual_labor = 0.26
@@ -70,6 +82,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_distillers_workshop_market_sales = {
+        icon_type = goods
+        icon = liquor
         offset = 0.01
         produced = liquor
         output = 0.004

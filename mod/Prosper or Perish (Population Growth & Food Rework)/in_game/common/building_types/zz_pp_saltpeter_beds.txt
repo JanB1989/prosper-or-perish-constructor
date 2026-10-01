@@ -28,6 +28,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_saltpeter_beds_base_saltpeter = {
+        icon_type = building_type
+        icon = saltpeter_beds
         manual_labor = 0.04
         produced = saltpeter
         output = 0.100
@@ -36,9 +38,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_saltpeter_beds_natural_crusts = {
+        icon_type = building_type
+        icon = saltpeter_beds
         category = building_maintenance
     }
     pp_saltpeter_beds_leaching_vats = {
+        icon_type = building_type
+        icon = saltpeter_beds
         livestock = 0.14 # manure beds
         pottery = 0.068 # leaching vats
         fiber_crops = 0.021 # straw bedding
@@ -50,6 +56,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_saltpeter_beds_market_sales = {
+        icon_type = goods
+        icon = saltpeter
         offset = 0.01
         produced = saltpeter
         output = 0.005

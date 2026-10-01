@@ -17,6 +17,7 @@ build_time = workshop_build_time
 
 location_potential = {
     OR = {
+        pp_wb_setup_lumber_mill_location = yes   # vanilla setup mills on land the World Builder made unwooded
         OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
         OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
         vegetation = jungle
@@ -33,6 +34,8 @@ can_close = yes
 
 unique_production_methods = {
     pp_lumber_mill_improved_base_lumber = {
+        icon_type = building_type
+        icon = lumber_mill_improved
         manual_labor = 0.019
         produced = lumber
         output = 0.053
@@ -41,9 +44,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_lumber_mill_improved_no_crew_support = {
+        icon_type = building_type
+        icon = lumber_mill_improved
         category = building_maintenance
     }
     pp_lumber_mill_improved_wound_salves = {
+        icon_type = building_type
+        icon = lumber_mill_improved
         medicaments = 0.16 # injury treatment
         manual_labor = 0.01
         produced = lumber
@@ -54,9 +61,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_lumber_mill_improved_no_primary = {
+        icon_type = building_type
+        icon = lumber_mill_improved
         category = building_maintenance
     }
     pp_lumber_mill_improved_livestock_victuals = {
+        icon_type = building_type
+        icon = lumber_mill_improved
         produced = lumber
         output = 1.543
         livestock = 0.37 # ox log hauling
@@ -66,6 +77,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_lumber_mill_improved_livestock_tools = {
+        icon_type = building_type
+        icon = lumber_mill_improved
         produced = lumber
         output = 1.589
         tools = 0.5 # saw frames, axes
@@ -75,6 +88,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_lumber_mill_improved_horse_victuals = {
+        icon_type = building_type
+        icon = lumber_mill_improved
         produced = lumber
         output = 1.669
         horses = 0.19 # fast log hauling
@@ -84,6 +99,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_lumber_mill_improved_horse_tools = {
+        icon_type = building_type
+        icon = lumber_mill_improved
         produced = lumber
         output = 1.714
         tools = 0.53 # saw frames, axes
@@ -95,6 +112,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_lumber_mill_improved_market_sales = {
+        icon_type = goods
+        icon = lumber
         offset = 0.014
         produced = lumber
         output = 0.008

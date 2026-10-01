@@ -39,6 +39,8 @@ construction_demand = village_construction
 
 unique_production_methods = {
   pp_irrigation_reservoirs_maintenance = {
+    icon_type = building_type
+    icon = irrigation_reservoirs
     stone = 0.15
     clay = 0.15
     tools = 0.05

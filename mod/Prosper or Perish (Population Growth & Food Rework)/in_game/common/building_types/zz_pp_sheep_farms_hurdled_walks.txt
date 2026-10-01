@@ -25,6 +25,8 @@ location_potential = {
 
 unique_production_methods = {
     pp_enclosed_sheep_walks_base_wool = {
+        icon_type = building_type
+        icon = enclosed_sheep_walks
         manual_labor = 0.05
         produced = wool
         output = 0.10
@@ -33,9 +35,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_enclosed_sheep_walks_no_primary = {
+        icon_type = building_type
+        icon = enclosed_sheep_walks
         category = building_maintenance
     }
     pp_enclosed_sheep_walks_improved_flocks = {
+        icon_type = building_type
+        icon = enclosed_sheep_walks
         produced = wool
         output = 1.44
         tools = 0.24
@@ -49,6 +55,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_enclosed_sheep_walks_market_sales = {
+        icon_type = goods
+        icon = wool
         offset = 0.01
         produced = wool
         output = 0.004

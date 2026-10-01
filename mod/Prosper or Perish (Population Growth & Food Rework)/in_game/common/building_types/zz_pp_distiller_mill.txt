@@ -15,6 +15,8 @@ build_time = mills_build_time
 obsolete = distiller_manufactory
 unique_production_methods = {
     pp_distiller_mill_sugar_distillery_mill_maintenance = {
+        icon_type = goods
+        icon = sugar
         sugar = 2.57
         glass = 0.54
         manual_labor = 0.38
@@ -24,6 +26,8 @@ unique_production_methods = {
         debug_max_profit = mills_profit_margin
     }
     pp_distiller_mill_rice_distillery_mill_maintenance = {
+        icon_type = goods
+        icon = rice
         rice = 7.21
         glass = 0.7
         manual_labor = 0.4
@@ -33,6 +37,8 @@ unique_production_methods = {
         debug_max_profit = mills_profit_margin
     }
     pp_distiller_mill_potato_distillery_mill_maintenance = {
+        icon_type = goods
+        icon = potato
         potato = 7.27
         glass = 0.68
         manual_labor = 0.4
@@ -42,6 +48,8 @@ unique_production_methods = {
         debug_max_profit = mills_profit_margin
     }
     pp_distiller_mill_wheat_distillery_mill_maintenance = {
+        icon_type = goods
+        icon = wheat
         wheat = 7.27
         glass = 0.68
         manual_labor = 0.4
@@ -51,6 +59,8 @@ unique_production_methods = {
         debug_max_profit = mills_profit_margin
     }
     pp_distiller_mill_scottish_whisky_distillery_mill_maintenance = {
+        icon_type = goods
+        icon = millet
         millet = 7.17
         glass = 0.72
         manual_labor = 0.38
@@ -62,6 +72,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_distiller_mill_market_sales = {
+        icon_type = goods
+        icon = liquor
         offset = 0.01
         produced = liquor
         output = 0.004

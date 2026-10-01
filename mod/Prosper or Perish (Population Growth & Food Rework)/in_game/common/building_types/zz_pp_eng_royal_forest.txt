@@ -26,6 +26,8 @@ expensive = yes
 allow_wrong_startup = yes
 unique_production_methods = {
     pp_eng_royal_forest_eng_royal_forest_maintenance = {
+        icon_type = building_type
+        icon = eng_royal_forest
         produced = wild_game
         output = 1.0
         weaponry = 0.095
@@ -38,6 +40,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_eng_royal_forest_market_sales = {
+        icon_type = goods
+        icon = wild_game
         offset = 0.01
         produced = wild_game
         output = 0.01

@@ -31,6 +31,8 @@ country_potential = {
 
 unique_production_methods = {
     pp_olive_rotations_base = {
+        icon_type = building_type
+        icon = olive_rotations
         manual_labor = 0.014
         produced = olives
         output = 0.07
@@ -39,9 +41,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_olive_rotations_no_beekeeping = {
+        icon_type = building_type
+        icon = olive_rotations
         category = building_maintenance
     }
     pp_olive_rotations_hedgerow_hives = {
+        icon_type = building_type
+        icon = olive_rotations
         tools = 0.036
         lumber = 0.089
         fiber_crops = 0.071
@@ -55,9 +61,13 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_olive_rotations_no_cultivation = {
+        icon_type = building_type
+        icon = olive_rotations
         category = building_maintenance
     }
     pp_olive_rotations_grafted_grove = {
+        icon_type = building_type
+        icon = olive_rotations
         tools = 0.17
         livestock = 0.2
         lumber = 0.098
@@ -69,6 +79,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_olive_rotations_irrigated_grove = {
+        icon_type = building_type
+        icon = olive_rotations
         tools = 0.15
         livestock = 0.16
         lumber = 0.16
@@ -82,11 +94,15 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_olive_rotations_sell_surplus = {
+        icon_type = building_type
+        icon = olive_rotations
         produced = province_food_sales
         output = 0.006
         category = building_maintenance
     }
     pp_olive_rotations_provision = {
+        icon_type = goods
+        icon = olives
         olives = 0.093
         produced = local_food
         output = 1.12
@@ -96,6 +112,8 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_olive_rotations_market_sales = {
+        icon_type = goods
+        icon = olives
         offset = 0.01
         produced = olives
         output = 0.01

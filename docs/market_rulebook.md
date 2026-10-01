@@ -416,6 +416,65 @@ only be grown on their own RGO locations or spread late: tea 0.57-0.84, cocoa 0.
 0.53-0.98. Starving provinces ran 21 % / 23 % / 27 % in markets importing < 10 % / 10-20 % / >= 20 % of their raw demand
 (1687), and the vanilla control had the same count.
 
+## 8c. Tariffs and subventions (EU5 1.4 beta, 2026-10-01, engine-confirmed and checked in a 1.4 PP run)
+
+**What a rate is.** A market owner sets one import rate and one export rate per good for all its markets; > 0 is a
+tariff, < 0 a subvention. Every use clamps the rate to `max_tariff` and `max_trade_subventions`, both capped at 100 %.
+Base values are 20 % each (auto modifier `country_base_values`), raised by advances, laws, reforms, parliament issues,
+societal values, estate privileges and subject types.
+
+**What a rate does.**
+- Trade profit: a trade pays the destination owner's import rate x amount x destination price and the source owner's
+  export rate x amount x source price.
+  - This applies only to foreign merchants trading with a foreign market.
+  - A tariff exemption (the `tariff_exemption` relation, subject keys) removes tariffs but keeps subventions.
+  - The owner gets the same amount as income, and pays it when the rate is negative.
+- Price: only the import rate moves the price. The target multiplier gets + import rate x `NMarket.TARIFF_PRICE_IMPACT`
+  (0.25) x (1 + `tariff_impact_on_price`).
+  - This is added after the 0.2-3x clamp.
+  - A 20 % import tariff raises the target by 5 % of the base price.
+  - Export rates have no price effect.
+- Income: `tariff_income` (base 10 %, plus the crown's power share) goes to the treasury; the rest is split among the
+  estates like trade income. `NEconomy.ECONOMICAL_BASE_FROM_TARIFF` adds 0.2 x tariff income to the economic base.
+- Opinion: `opinion_import_tariff` -250, `opinion_export_tariff` -150 and the subvention bonuses towards the countries
+  whose merchants are hit.
+
+**When the AI sets them.** The country AI recomputes the policy for every good on each run of its economy tick, for
+every country that owns at least one market. It sets **export rates only**: no AI ever sets an import tariff or any
+subvention.
+1. Ratio = 12 x domestic demand of its markets (demand minus exports) / the smallest exportable amount among its
+   markets. The ratio is 0 when any of its markets has nothing of the good to export.
+2. Plus `TRADE_POLICY_AUTO_WARTIME_FOOD_EXPORT_TARIFF` (0.40) for a food good while at war.
+3. Otherwise, plus `TRADE_POLICY_SUBSIDY_LIGHT` (-0.10) when its export value (export volume x base price) is at least
+   `TRADE_POLICY_AUTO_EXPORT_VALUE_THRESHOLD` (15).
+4. Times the strategy factor: Mercantilist 1.25, Balanced 1.0, Free Trade 0.5. Every AI country is Balanced.
+5. Floored at 0, then capped by `max_tariff`.
+6. The rate changes only when the new value differs from the current one by at least `TRADE_POLICY_AUTO_HYSTERESIS`
+   (0.05).
+
+So a country taxes the exports of the goods it uses itself, at the cap. A big exporter of a good gets 0.10 off.
+
+**Defines the 1.4 beta does not read.** `TRADE_POLICY_TARIFF_LIGHT/MODERATE/HEAVY`, `TRADE_POLICY_SUBSIDY_MODERATE`,
+`TRADE_POLICY_AUTO_IMPORT_VALUE_THRESHOLD`, `TRADE_POLICY_AUTO_WARTIME_FOOD_SUBSIDY`, `TRADE_POLICY_AUTO_MARGIN_SAFETY`
+and `TRADE_POLICY_EMBARGO_LIMIT_BASE`. `TRADE_POLICY_SUBSIDY_HEAVY` is not even a known define. The import side of the
+automation (and the player's "Tariffs" automation) is apparently not wired up yet in this build.
+
+**In PP (Jan's 1.4 run, save 1387.4.1):**
+- 155 market owners had 7,063 export tariffs, no import tariffs and no negative rate.
+- 62 % sat exactly at the 20 % base cap, 7 % above it (up to 45 %), and the rest below.
+- Tariff income was 79 gold a month world-wide.
+- The most taxed goods were lumber, `manual_labor`, clay, pottery, fish, `offset` and tools; the dummy goods are taxed
+  like any other.
+- For the raw-material trade of section 8 this is a cost on every foreign merchant's export. At 20 % of the source
+  price it is more than the median profit per unit of wheat (0.08) or fruit (0.02) trades measured in 1.3.
+
+**Levers (not applied).**
+- `TRADE_POLICY_SUBSIDY_LIGHT` very negative together with `TRADE_POLICY_AUTO_EXPORT_VALUE_THRESHOLD` 0 turns the AI's
+  export tariffs off. Set `TRADE_POLICY_AUTO_WARTIME_FOOD_EXPORT_TARIFF` to 0 as well; it is moot in PP because its food
+  goods have food 0.
+- Lowering `max_tariff` in `country_base_values` caps them, but advances and laws add their own `max_tariff`.
+- The price effect matters only for player-set import rates.
+
 ## 7. Open
 
 - Treaty flows (per country pair) and the Paris constant (+0.1) in the attraction.

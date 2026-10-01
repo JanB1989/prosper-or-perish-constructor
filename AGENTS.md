@@ -82,6 +82,23 @@
   good it sells, Provision the good it buys back, other unique methods their building, other global methods their good.
   A blueprint may set its own pair (the method keeps it); copies of vanilla files are left alone.
 
+## Script Value Overrides (EU5 1.4)
+
+- A scalar `REPLACE:name = 0` in `common/script_values` does nothing: the game reads the key as the scope link
+  `replace:name` (error.log: "Feeding data into an event target link that doesn't require data. Link replace") and
+  vanilla's value stays. That is why the first 1.4 food-productivity nil left vanilla food percentages in game.
+- The block form `REPLACE:name = { ... }` replaces (the building caps in `pp_building_cap_adjustments.txt`; a 1.3 run
+  had guilds far above vanilla's cap). It must load after the definition (file names sort; mod and vanilla files share
+  one sorted order).
+- A plain redefinition is rejected at load ("Duplicated key ... will not be created"): the first definition wins;
+  a hot reload re-creates the entries in file order, so there the last one wins. Never rely on either.
+- A mod file with the same relative path replaces vanilla's file whatever the rule. The mod's food-productivity nil
+  is a same-name copy of `main_menu/common/script_values/default_values.txt`, written byte for byte from the game
+  files with every `monthly_food_productivity_*` set to 0 by the finalize step of `ppc build`/`sync`
+  (`vanilla_food_productivity.py`). After a game update, rebuild: `tests/test_vanilla_food_productivity.py` fails
+  while the copy differs from vanilla apart from those values, and also pins the net food productivity of every
+  vanilla object (and of the mod's own objects) to 0 under this rule.
+
 ## Release Checklist
 
 - Treat an explicit request to create or publish a release as authorization for the one final guarded live sync required by this checklist. Confirm the exact `constructor.local.toml` deploy target before running it.

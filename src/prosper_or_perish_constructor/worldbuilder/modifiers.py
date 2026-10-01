@@ -35,7 +35,8 @@ FOOD_KEY = "local_monthly_food_modifier"   # the mod has no food production on a
 # EU5 1.4 food productivity: the percentage above plus a multiplier applied after everything else; both cancelled
 FOOD_KEYS = (FOOD_KEY, "local_food_production_mult")
 # EU5 1.4 writes most food percentages as these named script values; the mod sets every one of them to 0
-# (main_menu/common/script_values/pp_food_productivity_nil.txt), so a class carrying one needs no cancelling line
+# (its same-name copy of main_menu/common/script_values/default_values.txt, written at finalize by
+# vanilla_food_productivity.py), so a class carrying one needs no cancelling line
 FOOD_SCRIPT_VALUE_PREFIX = "monthly_food_productivity_"
 CLASS_DIRS = {"climate": "climates", "vegetation": "vegetation", "topography": "topography"}
 # Every location has exactly one topography, owned or not (unowned land gets no rank or country modifiers), so the
@@ -97,18 +98,12 @@ def effective_class_files(directory: Path, export_dir: Path | None, vanilla_root
 
 def numeric_script_values(*roots: Path | None) -> dict[str, float]:
     """{name: value} of the plain-number script values under ``<root>/{main_menu,in_game}/common/script_values``
-    (a vanilla ``game`` folder or a mod root); later roots override earlier ones, ``REPLACE:`` prefixes included."""
-    values: dict[str, float] = {}
-    for root in roots:
-        if root is None:
-            continue
-        for scope in ("main_menu", "in_game"):
-            for path in sorted((Path(root) / scope / "common/script_values").glob("*.txt")):
-                for raw in path.read_text(encoding="utf-8-sig").splitlines():
-                    match = re.match(r"^(?:(?:TRY_)?REPLACE:)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(-?\d+(?:\.\d+)?)\s*(?:#.*)?$", raw.strip())
-                    if match:
-                        values[match.group(1)] = float(match.group(2))
-    return values
+    (a vanilla ``game`` folder, then mod roots), resolved the way EU5 1.4 does: a same-name file replaces the earlier
+    root's file, the first definition wins, only block-form ``REPLACE:`` replaces
+    (``vanilla_food_productivity.script_values``)."""
+    from prosper_or_perish_constructor.vanilla_food_productivity import script_values
+
+    return {name: value for name, value in script_values(*roots).items() if value == value}
 
 
 def resolve_modifier_value(key: str, token: str, script_values: Mapping[str, float] | None = None) -> float | None:

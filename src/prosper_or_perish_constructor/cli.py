@@ -63,6 +63,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/rural_capacity.py",
     "src/prosper_or_perish_constructor/setup_layout.py",          # the setup folder every setup writer uses
     "src/prosper_or_perish_constructor/stored_food.py",           # the location view's Stored Food chip lists its tiers
+    "src/prosper_or_perish_constructor/vanilla_food_productivity.py",   # script value resolution (EU5 1.4 override rule)
     "src/prosper_or_perish_constructor/yaml_io.py",
     "scripts/generate_rural_capacity_values.py",
     "scripts/generate_raw_material_local_map_modes.py",
@@ -1364,6 +1365,15 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
             flush=True,
         )
         _apply_text_formats(mod_root, vanilla_root(repo, project))
+        from prosper_or_perish_constructor import vanilla_food_productivity
+
+        nil = vanilla_food_productivity.write_nil_script_values(mod_root, vanilla_root(repo, project) / "game")
+        print(
+            f"No vanilla food productivity: {nil.zeroed} monthly_food_productivity_* script values set to 0 in the "
+            f"same-name copies of {', '.join(nil.files)} ({nil.files_changed} files changed"
+            f"{'; removed ' + ', '.join(nil.removed) if nil.removed else ''}).",
+            flush=True,
+        )
     _ensure_constructor_text_boms(mod_root)
 
 

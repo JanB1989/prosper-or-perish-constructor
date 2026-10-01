@@ -1,4 +1,4 @@
-"""Game-start development: vanilla's rules as the EU5 1.4 engine applies them, evaluated on the mod's map."""
+"""Game-start development: vanilla's rules as the EU5 1.4 engine applies them, evaluated by the constructor."""
 
 from pathlib import Path
 
@@ -102,6 +102,10 @@ def test_reference_comparison_reports_both_error_sides() -> None:
 def test_the_mod_ships_evaluated_development_not_save_values() -> None:
     text = (MOD_ROOT / dev.SETUP_RELATIVE_PATH).read_text(encoding="utf-8-sig")
     assert text.startswith(dev.GENERATED_MARKER)
+    # the header names the map the configured development_geography evaluates (vanilla since 2026-10-01)
+    geography = dev.configured_geography(ROOT, ROOT / "constructor.toml")
+    assert geography == "vanilla"
+    assert text.splitlines()[0] == f"{dev.GENERATED_MARKER} {dev.MAP_NAMES[geography]}; do not edit by hand."
     assert not (ROOT / "config" / "start_development.csv").exists(), "save development is validation data (config/validation/)"
     assert dev.load_reference(ROOT) is not None
 

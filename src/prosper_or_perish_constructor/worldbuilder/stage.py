@@ -2,7 +2,7 @@
 
 Order: geography sync -> attribute rows (class injects, static modifiers, rivers, goods floor,
 overpopulation, on_action) -> improvement caps and blueprints -> farm blueprints -> game-start setup
-(improvement levels, game-start development: vanilla's rules on the mod's map). Blueprint edits are rendered by the normal ``ppc build``.
+(improvement levels, game-start development: vanilla's rules, development_geography). Blueprint edits are rendered by the normal ``ppc build``.
 """
 
 from __future__ import annotations
@@ -58,7 +58,7 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
 
     water = coast.load(repo, mod_root, vanilla_root(repo, project))
     contract = coast.with_sea_coast(contract, water)
-    # game-start development = vanilla's rules on the mod's map (after the geography sync); every step below (navigation
+    # game-start development = vanilla's rules on the configured map (after the geography sync); every step below (navigation
     # sites, improvement caps at start, start placement) reads it instead of the handover's development
     development = wb_development.compute_start_development(repo, project)
     report["development_vs_handover"] = wb_development.handover_difference(contract, development)
@@ -111,7 +111,7 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     report["setup"] = wb_buildings.write_setup(contract, cfg, caps, wb_start.load_owners(vanilla_root(repo, project), mod_root), mod_root, demand=demand, cultures=cultures)
     report["start_placement"] = wb_start.apply(repo=repo, project=project, mod_root=mod_root, vanilla_root=vanilla_root(repo, project), cfg=cfg, contract=contract, caps=caps, locations=current, development=development)
     report["navigation"] = navigation.write_runtime(repo, cfg, contract, mod_root, vanilla_root(repo, project))
-    (mod_root / wb_development.SETUP_RELATIVE_PATH).write_text("﻿" + wb_development.render_development_setup(development), encoding="utf-8", newline="\n")
+    (mod_root / wb_development.SETUP_RELATIVE_PATH).write_text("﻿" + wb_development.render_development_setup(development, wb_development.configured_geography(repo, project)), encoding="utf-8", newline="\n")
     wb_development.write_development_export(development, repo / wb_development.EXPORT_RELATIVE_PATH)
     report["development"] = {"geography": wb_development.configured_geography(repo, project), "locations": int(development.height), "median": float(development["development"].median() or 0.0), "max": float(development["development"].max() or 0.0)}
     # the setup files are all written to the active setup folder now; a pre-1.4 copy would only be dead weight
@@ -159,7 +159,7 @@ def check(repo: Path, project: Path, mod_root: Path) -> dict[str, object]:
         row = next(r for r in contract.building_types.iter_rows(named=True) if cfg.building_map[str(r["building"])] == spec["family"])
         people[key] = units(float(row["unit_people_per_level"]) / scales[str(row["building"])] * float(spec["strength"])) * 1000
     c = float(contract.meta["attributes"].get("capacity_percent_per_point", 0.0))
-    # the development the game starts with is the one the last apply wrote (vanilla's rules on the mod's map)
+    # the development the game starts with is the one the last apply wrote (vanilla's rules, development_geography)
     shipped = repo / wb_development.EXPORT_RELATIVE_PATH
     if shipped.is_file():
         contract = wb_development.with_development(contract, pl.read_csv(shipped, schema={"location_tag": pl.String, "development": pl.Float64}))

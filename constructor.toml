@@ -91,9 +91,10 @@ handover = "../EU5WorldBuilder/artifacts/handover/latest"
 geography_export = "../EU5WorldBuilder/artifacts/geography_test/EU5 World Builder"
 vanilla_baseline = "data/vanilla/locations_with_raw_material.parquet"
 # Game-start development (main_menu/setup/1337/14_development.txt) = vanilla's rules evaluated by the constructor on
-# "mod": the mod's map (World Builder classes scored like their vanilla parent, its rivers and harbours), or
-# "vanilla": the vanilla map (development as in a vanilla game). Never save values (ppc worldbuilder development-check).
-development_geography = "mod"
+# "vanilla": the vanilla map (development as in a vanilla game; the 1.3.11 behaviour; Jan 2026-10-01: development is
+# vanilla's), or "mod": the mod's map (World Builder classes scored like their vanilla parent, its rivers and harbours).
+# Never save values (ppc worldbuilder development-check).
+development_geography = "vanilla"
 sync_geography = true
 apply_on_build = true
 level_limit = 20

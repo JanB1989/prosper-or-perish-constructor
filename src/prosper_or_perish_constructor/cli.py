@@ -233,7 +233,7 @@ def _build_parser() -> argparse.ArgumentParser:
     worldbuilder.add_argument(
         "action",
         choices=("apply", "export-development", "development-check", "check", "food-check", "food-sim"),
-        help="apply writes the mod inputs; export-development writes the game-start development table (vanilla's rules on the mod's map) for the World Builder; development-check compares the evaluation of vanilla's development rules on the vanilla map with a vanilla start save and sizes the mod's change; check reports the fit of the written setup; food-check compares the start-food model with the exported save; food-sim reruns the start-food validator (population loop per province pool) on the last apply's input.",
+        help="apply writes the mod inputs; export-development writes the game-start development table (vanilla's rules on the configured map) for the World Builder; development-check compares the evaluation of vanilla's development rules on the vanilla map with a vanilla start save and sizes the mod's change; check reports the fit of the written setup; food-check compares the start-food model with the exported save; food-sim reruns the start-food validator (population loop per province pool) on the last apply's input.",
     )
     worldbuilder.add_argument(
         "--months",

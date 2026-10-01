@@ -168,6 +168,14 @@ copies them into the mod with every `attribute = parent` test widened to
 scripts and blueprints were widened once, in place, with the same rule
 (`worldbuilder.compat.expand_attribute_tests`).
 
+Raw-material placement is the mod's (`worldbuilder/raw_material_placement.py`, part of apply). EU5 1.4 gave 21 goods
+a `location_potential`; the mod writes same-name copies of the vanilla goods files without it, so no good carries a
+placement rule and every setup RGO stands, as in 1.3. The Columbian exchange actions (`move_nw_good_to_new_location`,
+`move_ow_good_to_new_location`) are rebuilt from vanilla with `is_goods_valid_for_location` replaced by the mod's rules
+(`pp_<good>_placement_location` in `scripted_triggers/pp_raw_material_placement.txt`: the 1.3 conditions on the World
+Builder classes), the RGO bonus refresh after `change_raw_material`, and the general advance of a gated crop planted
+outside its native lands. `tests/test_raw_material_placement.py` checks the merged result.
+
 ```bash
 uv run ppc worldbuilder apply                # consume ../EU5WorldBuilder/artifacts/handover/latest
 uv run ppc worldbuilder export-development   # game-start development the mod ships, for the World Builder

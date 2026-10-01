@@ -83,12 +83,14 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
 
     current = load_current_location_frame(repo, project)
     cfg = navigation.prepare(repo, cfg, contract, locations=current)
-    setup_rgo_rows = current.select("location_tag", "raw_material", "climate", "vegetation", "topography", "area", "region",
-                                    "macro_region", "super_region").filter(pl.col("raw_material").is_not_null()).iter_rows(named=True)
     report["static_modifiers"] = wb_modifiers.write_static_modifiers(contract, cfg, mod_root, vanilla_root(repo, project))
     # the geography chips' tooltips read back the class injects and static modifiers written above
     report["attribute_tooltips"] = wb_tooltips.write(mod_root, vanilla_root(repo, project))
-    report["setup_rgos_kept"] = wb_modifiers.write_setup_rgo_keepers(mod_root, vanilla_root(repo, project), list(setup_rgo_rows))
+    # raw-material placement is the mod's: the goods lose vanilla's location_potential (EU5 1.4), the Columbian exchange
+    # actions test the mod's placement rules instead
+    from . import raw_material_placement
+
+    report["raw_material_placement"] = raw_material_placement.write(mod_root, vanilla_root(repo, project), repo)
     caps = wb_buildings.write_caps(contract, cfg, mod_root)
     report["improvement_buildings"] = {k: {"unit_units": v["unit_units"], "scale": v["scale"], "limit": v["limit"]} for k, v in caps.items()}
     report["blueprints_patched"] = wb_buildings.patch_improvement_blueprints(contract, cfg, repo, caps)

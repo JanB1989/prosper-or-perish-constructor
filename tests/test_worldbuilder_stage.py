@@ -373,46 +373,6 @@ def test_compat_copy_leaves_replaced_objects_alone_and_never_undoes_earlier_over
     assert report["files"] == 1 and "OR = { vegetation = sparse vegetation = ha1300_veg_scrubland }" in (folder / "unique_buildings.txt").read_text(encoding="utf-8")
 
 
-def test_setup_rgo_keepers_wrap_the_goods_potential_for_failing_setup_rgos(tmp_path):
-    from eu5gameparser.clausewitz.parser import parse_text
-
-    goods = "lumber = {\n\tmethod = forestry\n\tlocation_potential = {\n\t\tOR = {\n\t\t\tvegetation = forest\n\t\t\tvegetation = woods\n\t\t}\n\t}\n}\n\n" \
-            "cocoa = {\n\tlocation_potential = {\n\t\tarea = { is_area_sea = no }\n\t\tclimate = tropical\n\t\tNOR = { region = region:bengal_region }\n\t}\n}\n\nsalt = {\n\tmethod = gathering\n}\n"
-    vanilla = tmp_path / "vanilla"
-    (vanilla / "game/in_game/common/goods").mkdir(parents=True)
-    (vanilla / "game/in_game/common/goods/00_raw_materials.txt").write_text(goods, encoding="utf-8")
-    mod = tmp_path / "mod"
-    (mod / "in_game/common/goods").mkdir(parents=True)
-    (mod / "in_game/common/goods/00_raw_materials.txt").write_text(goods, encoding="utf-8")
-
-    def row(tag, rgo, veg="forest", climate="tropical", region="x_region"):
-        return {"location_tag": tag, "raw_material": rgo, "vegetation": veg, "climate": climate, "topography": "flatland",
-                "area": "a", "region": region, "macro_region": "m", "super_region": "c"}
-
-    rows = [row("ok", "lumber"), row("grass", "lumber", veg="grasslands"), row("bengal", "cocoa", region="bengal_region"),
-            row("fine", "cocoa"), row("none", None)]
-    kept = wb_modifiers.write_setup_rgo_keepers(mod, vanilla, rows)
-    assert kept == {"cocoa": 1, "lumber": 1}
-    text = (mod / "in_game/common/goods/00_raw_materials.txt").read_text(encoding="utf-8-sig")
-    lumber = parse_text(text).entries[0].value.first("location_potential")
-    assert [e.key for e in lumber.entries] == ["OR"] and [e.key for e in lumber.entries[0].value.entries] == ["AND", "AND"]
-    # EU5 1.4 goods potentials take static map tests only: the failing location by its area and classes, inline
-    assert "AND = { area = area:a climate = tropical vegetation = grasslands topography = flatland }" in text
-    assert "this = location" not in text and "pp_wb_setup_lumber_location" not in text
-    assert not (mod / wb_modifiers.SETUP_RGO_TRIGGERS_PATH).exists()
-    keeper = parse_text(text).entries[0].value.first("location_potential")
-    assert wb_modifiers.potential_holds(keeper, rows[1]) and not wb_modifiers.potential_holds(keeper, row("x", "lumber", veg="desert"))
-    # a second run over its own output unwraps first: same file, same lists
-    again = wb_modifiers.write_setup_rgo_keepers(mod, vanilla, rows)
-    assert again == kept and (mod / "in_game/common/goods/00_raw_materials.txt").read_text(encoding="utf-8-sig") == text
-    # nothing failing: the potential goes back to the vanilla one
-    assert wb_modifiers.write_setup_rgo_keepers(mod, vanilla, rows[:1] + rows[3:]) == {}
-    assert "pp_wb_setup" not in (mod / "in_game/common/goods/00_raw_materials.txt").read_text(encoding="utf-8-sig")
-    with pytest.raises(ValueError, match="not supported"):
-        wb_modifiers.potential_holds(parse_text("p = { has_river = yes }").entries[0].value, rows[0])
-
-
-
 def test_population_capacity_cell_bands_the_gauge_and_names_both_sides_of_the_ratio():
     from prosper_or_perish_constructor.worldbuilder import geography as wb_geography
 

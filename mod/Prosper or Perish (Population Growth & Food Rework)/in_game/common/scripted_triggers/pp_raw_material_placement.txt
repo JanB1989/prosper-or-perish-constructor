@@ -1,0 +1,455 @@
+﻿# Prosper or Perish - where a good may become a location's raw material when a script plants it there (the
+# Columbian exchange actions move_nw_good_to_new_location / move_ow_good_to_new_location).
+# EU5 1.4 moved these tests into the goods' own location_potential (is_goods_valid_for_location); the mod removes
+# those potentials and keeps the rules here, as in 1.3: vanilla 1.3's conditions on the World Builder classes.
+# A good without a pp_<good>_placement_location has no rule. Location scope. The actions are generated from vanilla by
+# worldbuilder/raw_material_placement.py and test these by name (pp_columbian_exchange_rgo_refresh.txt).
+
+# Tobacco
+pp_tobacco_placement_location = {
+	NOT = {vegetation = desert }
+	OR = {
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = hills
+	}
+	OR = {
+		OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+		OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+		climate = mediterranean
+		OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
+		OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
+	}
+	NOR = {
+		region = region:scandinavian_region
+		region = region:north_atlantic_islands_region
+		region = region:great_britain_region
+		region = region:ireland_region
+		region = region:ruthenia_region
+		region = region:steppes_region
+		region = region:russian_region
+		region = region:ural_region
+		region = region:mongolia_region
+		region = region:kongo_region
+		region = region:ethiopia_region
+		region = region:nubia_region
+		region = region:somalia_region
+		region = region:madagascar_region
+		region = region:southern_africa_islands_region
+		region = region:sahel_region
+		region = region:canada_region
+		area = area:new_hampshire_area
+		area = area:southern_new_england_area
+		area = area:maine_area
+		area = area:hudson_area
+		area = area:haudenosaunee_area
+		area = area:westsylvania_area
+		area = area:maryland_area
+		area = area:west_virginia_area
+		area = area:ohio_area
+		area = area:indiana_area
+		area = area:michigan_area
+		area = area:illinois_area
+		area = area:wisconsin_area
+		area = area:alabama_area
+		area = area:mississippi_area
+		region = region:west_coast_region
+		region = region:great_plains_region
+		region = region:alaska_region
+		region = region:brazil_region
+		region = region:chaco_region
+		region = region:australia_region
+		region = region:new_zealand_region
+	}
+}
+
+# Cocoa https://www.researchgate.net/profile/Rachel-Friedman-12/publication/269616565/figure/fig1/AS:392096088379400@1470494400663/Map-of-current-global-distribution-of-cocoa-developed-in-ArcGIS-based-on-data-from.png
+pp_cocoa_placement_location = {
+	NOR = {
+		vegetation = desert
+		OR = { vegetation = sparse vegetation = ha1300_veg_scrubland vegetation = ha1300_veg_tundra }
+		OR = { vegetation = grasslands vegetation = ha1300_veg_savanna vegetation = ha1300_veg_marsh }
+	}
+	area = {
+		is_area_sea = no
+	}
+	NOR = {
+		topography = atoll
+		topography = wetlands
+	}
+	OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+	NOR = {
+		region = region:bengal_region
+		region = region:western_india_region
+		area = area:mozambique_area
+		area = area:ruvuma_lurio_area
+		area = area:gondwana_area
+		area = area:andhra_area
+		area = area:telingana_area
+		area = area:vidarbha_area
+		area = area:maharashtra_area
+		area = area:konkan_area
+		area = area:lower_mekong_area
+		area = area:northern_tai_highland_area
+		area = area:champa_area
+		area = area:arakhan_area
+		area = area:irrawady_area
+		area = area:shan_highland_area
+		area = area:kachin_area
+		area = area:mayaab_area
+		area = area:puuk_area
+		area = area:chactemal_area
+	}
+}
+
+# Maize https://ipad.fas.usda.gov/cropexplorer/cropview/commodityView.aspx?cropid=0440000
+pp_maize_placement_location = {
+	OR = {
+		vegetation = farmland
+		OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
+		OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+		OR = { vegetation = grasslands vegetation = ha1300_veg_savanna vegetation = ha1300_veg_marsh }
+	}
+	area = {
+		is_area_sea = no
+	}
+	OR = {
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = hills
+	}
+	OR = {
+		OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+		OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+		OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
+		OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
+		climate = mediterranean
+	}
+}
+
+# Chili https://es.wikipedia.org/wiki/Capsicum
+pp_chili_placement_location = {
+	OR = {
+		vegetation = farmland
+		OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
+		OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+		OR = { vegetation = grasslands vegetation = ha1300_veg_savanna vegetation = ha1300_veg_marsh }
+		OR = { vegetation = sparse vegetation = ha1300_veg_scrubland vegetation = ha1300_veg_tundra }
+	}
+	area = {
+		is_area_sea = no
+	}
+	OR = {
+		topography = wetlands
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = hills
+		topography = plateau
+	}
+	OR = {
+		OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+		OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+		climate = mediterranean
+		OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
+		OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
+	}
+}
+
+# Potato
+pp_potato_placement_location = {
+	NOT = {
+		vegetation = desert
+	}
+	area = {
+		is_area_sea = no
+	}
+	NOR = {
+		OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+		OR = { climate = arid climate = hot_semi_arid }
+		OR = { climate = cold_arid climate = cold_semi_arid }
+		climate = arctic
+	}
+}
+
+# Cotton https://ipad.fas.usda.gov/cropexplorer/cropview/commodityView.aspx?cropid=2631000
+pp_cotton_placement_location = {
+	NOR = {
+		vegetation = desert
+		vegetation = jungle
+		OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
+	}
+	OR = {
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+	}
+	OR = {
+		OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+		OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+		OR = { climate = arid climate = hot_semi_arid }
+		OR = { climate = cold_arid climate = cold_semi_arid }
+		climate = mediterranean
+	}
+}
+
+# wheat https://ipad.fas.usda.gov/cropexplorer/cropview/commodityView.aspx?cropid=0410000
+pp_wheat_placement_location = {
+	NOR = {
+		vegetation = desert
+		vegetation = jungle
+		OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
+	}
+	OR = {
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = plateau
+	}
+	OR = {
+		OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+		OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
+		climate = mediterranean
+		OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
+		OR = { climate = cold_arid climate = cold_semi_arid }
+	}
+}
+
+# millet https://ipad.fas.usda.gov/cropexplorer/cropview/commodityView.aspx?cropid=0410000
+pp_millet_placement_location = {
+	NOR = {
+		vegetation = desert
+		vegetation = jungle
+		OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
+	}
+	OR = {
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = hills
+		topography = plateau
+	}
+	OR = {
+		OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+		OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+		OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
+		climate = mediterranean
+		OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
+		OR = { climate = arid climate = hot_semi_arid }
+		OR = { climate = cold_arid climate = cold_semi_arid }
+	}
+}
+
+# olives https://www.reddit.com/r/MapPorn/comments/1bjstdu/major_olive_growing_regions_of_the_world/#lightbox
+pp_olives_placement_location = {
+	NOR = {
+		vegetation = desert
+		vegetation = jungle
+		OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
+	}
+	OR = {
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = hills
+		topography = plateau
+	}
+	OR = {
+		climate = mediterranean
+		OR = { climate = cold_arid climate = cold_semi_arid }
+	}
+}
+
+# coffee https://www.researchgate.net/profile/Christian-Bunn/publication/269419801/figure/fig1/AS:295281645113350@1447412038471/Global-coffee-location-database-and-major-coffee-growing-regions-Blue-points-represent.png
+pp_coffee_placement_location = {
+	OR = {
+		OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+		vegetation = jungle
+		OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
+	}
+	OR = {
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = hills
+		topography = plateau
+		topography = mountains
+	}
+	OR = {
+		OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+		OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+	}
+	NOR = {
+		region = region:east_coast_region
+		region = region:great_plains_region
+		region = region:caribbean_region
+	}
+}
+
+# rice https://ipad.fas.usda.gov/cropexplorer/cropview/commodityView.aspx?cropid=0422110
+pp_rice_placement_location = {
+	OR = {
+		vegetation = farmland
+		OR = { vegetation = grasslands vegetation = ha1300_veg_savanna vegetation = ha1300_veg_marsh }
+		OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+		vegetation = jungle
+		OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
+	}
+	OR = {
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = wetlands
+	}
+	OR = {
+		OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+		OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+	}
+	NOR = {
+		region = region:east_coast_region
+	}
+}
+
+# sugar https://sugar.ca/sites/default/uploads/images/Geography%20of%20sugar%20graph.png
+pp_sugar_placement_location = {
+	NOR = {
+		vegetation = desert
+		OR = { vegetation = sparse vegetation = ha1300_veg_scrubland vegetation = ha1300_veg_tundra }
+	}
+	OR = {
+		topography = plateau
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = wetlands
+	}
+	OR = {
+		OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+		OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+		climate = mediterranean
+	}
+}
+
+# wine https://www.reddit.com/media?url=https%3A%2F%2Fexternal-preview.redd.it%2FneRHDZFAEL_Mthmtcg1XdV7njNkMfnlsR2KSMdBYLg8.jpg%3Fauto%3Dwebp%26s%3Dd114383394d6b5b719ba097dc6e14c07d8cc82f7
+pp_wine_placement_location = {
+	NOR = {
+		vegetation = jungle
+		OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
+	}
+	OR = {
+		topography = plateau
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = hills
+		topography = mountains
+	}
+	OR = {
+		OR = { climate = cold_arid climate = cold_semi_arid }
+		climate = mediterranean
+		OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
+		OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
+	}
+	NOR = {
+		region = region:great_plains_region
+		region = region:caribbean_region
+	}
+}
+
+# horses https://www.researchgate.net/publication/281822984/figure/fig11/AS:341927150014466@1458533193400/Potential-habitat-suitable-land-cover-for-feral-horses-E-ferus-The-distribution-of.png
+pp_horses_placement_location = {
+	NOR = {
+		vegetation = jungle
+		OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
+		OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+	}
+	OR = {
+		topography = plateau
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = hills
+	}
+	OR = {
+		OR = { climate = cold_arid climate = cold_semi_arid }
+		OR = { climate = arid climate = hot_semi_arid }
+		climate = mediterranean
+		OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
+		OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
+	}
+}
+
+# Wool: vanilla 1.3.11's rule (the mod's 1.3 copy of the action predated it and had none)
+pp_wool_placement_location = {
+	NOR = {
+		vegetation = jungle
+		vegetation = desert
+	}
+	OR = {
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = hills
+		topography = plateau
+	}
+	OR = {
+		OR = { climate = cold_arid climate = cold_semi_arid }
+		OR = { climate = arid climate = hot_semi_arid }
+		climate = mediterranean
+		OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
+		OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = subpolar }
+		OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+	}
+	NOR = {
+		climate = arctic
+		OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+	}
+}
+
+# livestock https://platform.vox.com/wp-content/uploads/sites/2/chorus/assets/4643285/cattle_distribution.png
+pp_livestock_placement_location = {
+	NOR = {
+		vegetation = jungle
+		OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
+		OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+	}
+	OR = {
+		topography = plateau
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = hills
+	}
+	NOR = {
+		climate = arctic
+	}
+}
+
+# Saffron https://es.wikipedia.org/wiki/Crocus_sativus
+pp_saffron_placement_location = {
+	OR = {
+		OR = { vegetation = sparse vegetation = ha1300_veg_scrubland vegetation = ha1300_veg_tundra }
+		OR = { vegetation = grasslands vegetation = ha1300_veg_savanna vegetation = ha1300_veg_marsh }
+		vegetation = farmland
+	}
+	OR = {
+		topography = plateau
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = hills
+	}
+	OR = {
+		OR = { climate = arid climate = hot_semi_arid }
+		OR = { climate = cold_arid climate = cold_semi_arid }
+		climate = mediterranean
+	}
+}
+
+# Pepper https://en.wikipedia.org/wiki/Black_pepper
+pp_pepper_placement_location = {
+	OR = {
+		vegetation = jungle
+		OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+		OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
+	}
+	OR = {
+		topography = plateau
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = hills
+	}
+	OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+}
+
+# Cloves https://en.wikipedia.org/wiki/Clove
+pp_cloves_placement_location = {
+	vegetation = jungle
+	OR = {
+		topography = plateau
+		OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+		topography = hills
+	}
+	OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+}
+
+# Beeswax
+pp_beeswax_placement_location = {
+	NOR = {
+		vegetation = desert
+	}
+	NOR = {
+		climate = arctic
+	}
+}

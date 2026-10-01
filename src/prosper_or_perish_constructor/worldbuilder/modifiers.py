@@ -496,44 +496,158 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
     return {"static_modifiers": len(blocks), "river_levels": len(river_blocks), "locations_with_modifiers": len(per_location)}
 
 
-GOODS_TRIGGERS_PATH = Path("in_game/common/scripted_triggers/goods_triggers.txt")
+GOODS_DIR = Path("in_game/common/goods")
 SETUP_RGO_TRIGGERS_PATH = Path("in_game/common/scripted_triggers/pp_wb_setup_rgos.txt")
-# goods whose RGO potential tests vegetation only: vanilla's setup RGO must survive the World Builder vegetation
-SETUP_RGO_GOODS = {"lumber": "location_wants_lumber_trigger"}
+# location column of each geography scope a goods potential may test (game key -> location frame column)
+_POTENTIAL_SCOPES = {"area": "area", "region": "region", "sub_continent": "macro_region", "continent": "super_region"}
+_POTENTIAL_RE = re.compile(r"^\s*location_potential\s*=\s*\{", re.M)
 
 
-def write_setup_rgo_keepers(mod_root: Path, rgo_by_location: Mapping[str, str]) -> dict[str, int]:
-    """Keep the game's setup RGOs whose goods potential no longer matches the World Builder vegetation.
+def _block_end(text: str, open_brace: int) -> int:
+    """Index of the ``}`` that closes the ``{`` at ``open_brace`` (comments and quoted strings skipped)."""
+    depth = 0
+    i = open_brace
+    while i < len(text):
+        ch = text[i]
+        if ch == "#":
+            nl = text.find("\n", i)
+            i = len(text) if nl < 0 else nl
+            continue
+        if ch == '"':
+            close = text.find('"', i + 1)
+            i = len(text) if close < 0 else close + 1
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return i
+        i += 1
+    raise ValueError("unbalanced braces")
+
+
+def _goods_potentials(text: str) -> dict[str, tuple[int, int]]:
+    """Good -> (start, end) of the inside of its ``location_potential`` block (one level below the good)."""
+    from prosper_or_perish_constructor.worldbuilder.compat import top_level_objects
+
+    out: dict[str, tuple[int, int]] = {}
+    for name, start, end in top_level_objects(text):
+        body_open = text.index("{", start)
+        for match in _POTENTIAL_RE.finditer(text, body_open + 1, end):
+            brace = match.end() - 1
+            # only the good's own key, not a nested block of the same name
+            if text[body_open + 1:match.start()].count("{") != text[body_open + 1:match.start()].count("}"):
+                continue
+            out[name] = (brace + 1, _block_end(text, brace))
+            break
+    return out
+
+
+def _wrapped_original(inner: str, good: str) -> str:
+    """The vanilla potential inside a block this function wrapped before (or ``inner`` unchanged)."""
+    match = re.fullmatch(rf"\s*OR\s*=\s*\{{\s*pp_wb_setup_{good}_location\s*=\s*yes\s*AND\s*=\s*\{{(?P<body>.*)\}}\s*\}}\s*", inner, re.S)
+    if not match:
+        return inner
+    return "\n" + "\n".join(line[2:] if line.startswith("\t\t") else line for line in match["body"].strip("\n").splitlines()) + "\n\t"
+
+
+def _truthy(value: object) -> bool:
+    return value is True or str(value).lower() in {"yes", "true"}
+
+
+def potential_holds(block: object, location: Mapping[str, object]) -> bool:
+    """Evaluate a goods ``location_potential`` (implicit AND) on one location's classes and geography.
+
+    Covers what EU5 1.4 goods use: AND/OR/NOT/NOR, climate/vegetation/topography, area/region/sub_continent/
+    continent, ``area = { is_area_sea = no }`` and ``this = location:x``. Anything else raises, so a new vanilla
+    test fails the apply instead of dropping or keeping RGOs silently.
+    """
+    return all(_potential_entry(entry.key, entry.value, location) for entry in block.entries)
+
+
+def _potential_entry(key: str, value: object, location: Mapping[str, object]) -> bool:
+    from eu5gameparser.clausewitz.syntax import CList
+
+    if key == "AND":
+        return potential_holds(value, location)
+    if key == "OR":
+        return any(_potential_entry(e.key, e.value, location) for e in value.entries)
+    if key == "NOT":
+        return not potential_holds(value, location)
+    if key == "NOR":
+        return not any(_potential_entry(e.key, e.value, location) for e in value.entries)
+    if key in ("climate", "vegetation", "topography"):
+        return str(location.get(key)) == str(value)
+    if key == "this":
+        return str(value) == f"location:{location.get('location_tag')}"
+    if key in _POTENTIAL_SCOPES:
+        if isinstance(value, CList):
+            # a scope change into the location's area: only the sea test is used, and RGO locations are land
+            if key == "area" and [e.key for e in value.entries] == ["is_area_sea"]:
+                return not _truthy(value.entries[0].value)
+            raise ValueError(f"goods location_potential: unsupported {key} scope block")
+        prefix = f"{key}:"
+        text = str(value)
+        if not text.startswith(prefix):
+            raise ValueError(f"goods location_potential: {key} = {text}, expected {prefix}<name>")
+        return str(location.get(_POTENTIAL_SCOPES[key])) == text[len(prefix):]
+    raise ValueError(f"goods location_potential: test {key!r} is not supported by the setup RGO check")
+
+
+def write_setup_rgo_keepers(mod_root: Path, vanilla_root: Path, locations: Iterable[Mapping[str, object]]) -> dict[str, int]:
+    """Keep the game's setup RGOs whose goods potential fails on the World Builder geography.
 
     The game validates each setup RGO against its goods ``location_potential`` and drops the RGO when it fails
-    (``setup to have 'raw_material = lumber' but it failed the 'location_potential' trigger``). The design keeps
-    the game's RGOs, so ``pp_wb_setup_<good>_location`` lists those locations by tag (valid during setup) and is
-    ORed into the goods trigger that the compat patches wrote into goods_triggers.txt.
+    (``setup to have 'raw_material = lumber' but it failed the 'location_potential' trigger``). EU5 1.4 moved these
+    tests from scripted triggers (1.3: ``location_wants_lumber_trigger``, lumber only) into the goods themselves
+    (lumber, wheat, wine, horses, ... 21 goods test climate, vegetation, topography or geography). The design keeps the
+    game's RGOs, so for every good with a failing setup RGO ``pp_wb_setup_<good>_location`` lists those locations by
+    tag (valid during setup) and the good's potential in the mod's copy of the vanilla goods file (written by the
+    compat step, ``[worldbuilder.compat] vanilla_files``, with the tests widened to the World Builder classes) becomes
+    ``OR = { pp_wb_setup_<good>_location = yes AND = { <vanilla potential> } }``.
+
+    ``locations``: rows with location_tag, raw_material, climate, vegetation, topography, area, region,
+    macro_region (sub-continent) and super_region (continent) of the current (World Builder) geography.
     """
-    templates = (mod_root / "in_game/map_data/location_templates.txt").read_text(encoding="utf-8-sig")
-    vegetation = {m[1]: m[2] for m in re.finditer(r"(?m)^(\w+)\s*=\s*\{[^}\n]*?\bvegetation\s*=\s*(\w+)", templates)}
-    triggers_path = mod_root / GOODS_TRIGGERS_PATH
-    goods_triggers = triggers_path.read_text(encoding="utf-8-sig")
+    from eu5gameparser.clausewitz.parser import parse_text
+
+    by_good: dict[str, list[Mapping[str, object]]] = defaultdict(list)
+    for row in locations:
+        if row.get("raw_material"):
+            by_good[str(row["raw_material"])].append(row)
     lines = [GENERATED]
     kept: dict[str, int] = {}
-    for good, trigger in SETUP_RGO_GOODS.items():
-        body = re.search(rf"(?ms)^{trigger}\s*=\s*\{{\s*\n(\s*)OR\s*=\s*\{{\n(.*?)^\}}", goods_triggers)
-        if not body:
-            raise ValueError(f"{GOODS_TRIGGERS_PATH}: {trigger} is not a single top-level OR")
-        branch = f"pp_wb_setup_{good}_location = yes"
-        if branch not in body[2]:
-            goods_triggers = goods_triggers[:body.start(2)] + f"{body[1]}\t{branch}\n" + goods_triggers[body.start(2):]
-        allowed = set(re.findall(r"vegetation\s*=\s*(\w+)", body[2]))
-        tags = sorted(tag for tag, rgo in rgo_by_location.items() if rgo == good and vegetation.get(tag) not in allowed)
-        kept[good] = len(tags)
-        lines.append(f"pp_wb_setup_{good}_location = {{")
-        lines.append("\tOR = { " + " ".join(f"this = location:{t}" for t in tags) + " }" if tags else "\talways = no")
-        lines.append("}")
-    triggers_path.write_text("﻿" + goods_triggers, encoding="utf-8", newline="\n")
+    for vanilla_file in sorted((Path(vanilla_root) / "game" / GOODS_DIR).glob("*.txt")):
+        mod_file = mod_root / GOODS_DIR / vanilla_file.name
+        text = (mod_file if mod_file.is_file() else vanilla_file).read_text(encoding="utf-8-sig")
+        edits: list[tuple[int, int, str]] = []
+        for good, (start, end) in _goods_potentials(text).items():
+            original = _wrapped_original(text[start:end], good)
+            block = parse_text("potential = {" + original + "\n}").entries[0].value
+            tags = sorted(str(row["location_tag"]) for row in by_good.get(good, ()) if not potential_holds(block, row))
+            if text[start:end] != original:
+                edits.append((start, end, original))     # unwrap a previous keeper; re-wrapped below if still needed
+            if not tags:
+                continue
+            if not mod_file.is_file():
+                raise ValueError(f"{GOODS_DIR / vanilla_file.name}: {len(tags)} setup RGOs of {good} fail its vanilla location_potential "
+                                 "but the mod has no copy of the file; add it to [worldbuilder.compat] vanilla_files")
+            kept[good] = len(tags)
+            body = "\n".join("\t\t" + line if line.strip() else line for line in original.rstrip().lstrip("\n").splitlines())
+            wrapped = f"\n\t\tOR = {{\n\t\t\tpp_wb_setup_{good}_location = yes\n\t\t\tAND = {{\n{body}\n\t\t\t}}\n\t\t}}\n\t"
+            edits = [e for e in edits if e[0] != start] + [(start, end, wrapped)]
+            lines.append(f"pp_wb_setup_{good}_location = {{")
+            lines.append("\tOR = { " + " ".join(f"this = location:{t}" for t in tags) + " }")
+            lines.append("}")
+        if edits:
+            for start, end, replacement in sorted(edits, reverse=True):
+                text = text[:start] + replacement + text[end:]
+            mod_file.write_text("﻿" + text, encoding="utf-8", newline="\n")
     path = mod_root / SETUP_RGO_TRIGGERS_PATH
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("﻿" + "\n".join(lines) + "\n", encoding="utf-8", newline="\n")
-    return kept
+    return dict(sorted(kept.items()))
 
 
 def write_setup_modifiers(per_location: Mapping[str, list[str]], mod_root: Path) -> int:

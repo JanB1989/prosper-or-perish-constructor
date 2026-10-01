@@ -146,9 +146,16 @@ gate = [{ culture = ["wu_culture","yue_wu_culture","wuzhou_culture","xuanzhou_cu
 # geography_compatibility.json), regenerated from the current vanilla files on every apply. Whole-file overrides:
 # keep this list to files where the tests matter for gameplay. Vanilla building files are listed only where a widened
 # building is not already a REPLACE blueprint of the mod (sawmill, spiritual retreat, peasants hunting grounds, oma falaj).
+# EU5 1.4 tests the RGO goods' climate/vegetation/topography in the goods' own location_potential (1.3: lumber only, via
+# location_wants_lumber_trigger); the goods files are copied so those tests see the World Builder classes, and the setup
+# RGOs that still fail are kept by tag (write_setup_rgo_keepers, pp_wb_setup_rgos.txt). Objects the mod REPLACEs need no
+# widening in a copy, and a file whose widened objects are all replaced is not copied (unique_buildings.txt in 1.4).
 vanilla_files = [
   "in_game/common/scripted_triggers/location_triggers.txt",
   "in_game/common/scripted_triggers/goods_triggers.txt",
+  "in_game/common/goods/00_raw_materials.txt",
+  "in_game/common/goods/01_plantation_goods.txt",
+  "in_game/common/goods/03_food.txt",
   "in_game/common/building_types/rural_buildings.txt",
   "in_game/common/building_types/unique_buildings.txt",
   "in_game/common/building_types/estate_buildings.txt",

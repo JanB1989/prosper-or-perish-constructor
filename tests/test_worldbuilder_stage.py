@@ -345,6 +345,70 @@ def test_expand_attribute_tests_widens_parents_once_and_leaves_the_rest(tmp_path
     assert (mod / "in_game/common/diseases/malaria.txt").is_file() and not (mod / "in_game/common/diseases/none.txt").exists()
 
 
+def test_compat_copy_leaves_replaced_objects_alone_and_never_undoes_earlier_overrides(tmp_path):
+    from prosper_or_perish_constructor.worldbuilder import compat as wb_compat
+
+    fam = {"vegetation": {"sparse": ["ha1300_veg_scrubland"]}, "climate": {}, "topography": {}}
+    rel = "in_game/common/building_types/unique_buildings.txt"
+    vanilla = tmp_path / "vanilla"
+    (vanilla / "game/in_game/common/building_types").mkdir(parents=True)
+    source = vanilla / "game" / rel
+    source.write_text("palm = {\n\tlocation_potential = { vegetation = sparse }\n}\n# a } in a comment\ngym = {\n\tname = \"a { b\"\n}\n", encoding="utf-8")
+    assert [n for n, _, _ in wb_compat.top_level_objects(source.read_text(encoding="utf-8"))] == ["palm", "gym"]
+    folder = tmp_path / "mod/in_game/common/building_types"
+    folder.mkdir(parents=True)
+    (folder / "zz_pp_palm.txt").write_text("REPLACE:palm = {\n}\n", encoding="utf-8")
+    # a stale copy from an earlier run is removed even when the manifest does not list it
+    (folder / "unique_buildings.txt").write_text(wb_compat.HEADER + "\npalm = {}\n", encoding="utf-8")
+    report = wb_compat.write_compat_patches(vanilla, tmp_path / "mod", tmp_path, fam, [rel])
+    assert report["files"] == 0 and report["unchanged"] == [rel]
+    assert not (folder / "unique_buildings.txt").exists()
+    # an object widened outside the replaced ones needs the copy, which must not load after an earlier REPLACE of gym
+    (folder / "zz_pp_palm.txt").unlink()
+    (folder / "pp_culture.txt").write_text("REPLACE:gym = {\n}\n", encoding="utf-8")
+    with pytest.raises(ValueError, match=r"gym \(REPLACE in pp_culture.txt\)"):
+        wb_compat.write_compat_patches(vanilla, tmp_path / "mod", tmp_path, fam, [rel])
+    (folder / "pp_culture.txt").rename(folder / "zz_pp_culture.txt")
+    report = wb_compat.write_compat_patches(vanilla, tmp_path / "mod", tmp_path, fam, [rel])
+    assert report["files"] == 1 and "OR = { vegetation = sparse vegetation = ha1300_veg_scrubland }" in (folder / "unique_buildings.txt").read_text(encoding="utf-8")
+
+
+def test_setup_rgo_keepers_wrap_the_goods_potential_for_failing_setup_rgos(tmp_path):
+    from eu5gameparser.clausewitz.parser import parse_text
+
+    goods = "lumber = {\n\tmethod = forestry\n\tlocation_potential = {\n\t\tOR = {\n\t\t\tvegetation = forest\n\t\t\tvegetation = woods\n\t\t}\n\t}\n}\n\n" \
+            "cocoa = {\n\tlocation_potential = {\n\t\tarea = { is_area_sea = no }\n\t\tclimate = tropical\n\t\tNOR = { region = region:bengal_region }\n\t}\n}\n\nsalt = {\n\tmethod = gathering\n}\n"
+    vanilla = tmp_path / "vanilla"
+    (vanilla / "game/in_game/common/goods").mkdir(parents=True)
+    (vanilla / "game/in_game/common/goods/00_raw_materials.txt").write_text(goods, encoding="utf-8")
+    mod = tmp_path / "mod"
+    (mod / "in_game/common/goods").mkdir(parents=True)
+    (mod / "in_game/common/goods/00_raw_materials.txt").write_text(goods, encoding="utf-8")
+
+    def row(tag, rgo, veg="forest", climate="tropical", region="x_region"):
+        return {"location_tag": tag, "raw_material": rgo, "vegetation": veg, "climate": climate, "topography": "flatland",
+                "area": "a", "region": region, "macro_region": "m", "super_region": "c"}
+
+    rows = [row("ok", "lumber"), row("grass", "lumber", veg="grasslands"), row("bengal", "cocoa", region="bengal_region"),
+            row("fine", "cocoa"), row("none", None)]
+    kept = wb_modifiers.write_setup_rgo_keepers(mod, vanilla, rows)
+    assert kept == {"cocoa": 1, "lumber": 1}
+    text = (mod / "in_game/common/goods/00_raw_materials.txt").read_text(encoding="utf-8-sig")
+    lumber = parse_text(text).entries[0].value.first("location_potential")
+    assert [e.key for e in lumber.entries] == ["OR"] and lumber.entries[0].value.entries[0].key == "pp_wb_setup_lumber_location"
+    triggers = (mod / wb_modifiers.SETUP_RGO_TRIGGERS_PATH).read_text(encoding="utf-8-sig")
+    assert "pp_wb_setup_lumber_location = {\n\tOR = { this = location:grass }\n}" in triggers
+    assert "this = location:bengal" in triggers and "salt" not in triggers
+    # a second run over its own output unwraps first: same file, same lists
+    again = wb_modifiers.write_setup_rgo_keepers(mod, vanilla, rows)
+    assert again == kept and (mod / "in_game/common/goods/00_raw_materials.txt").read_text(encoding="utf-8-sig") == text
+    # nothing failing: the potential goes back to the vanilla one
+    assert wb_modifiers.write_setup_rgo_keepers(mod, vanilla, rows[:1] + rows[3:]) == {}
+    assert "pp_wb_setup" not in (mod / "in_game/common/goods/00_raw_materials.txt").read_text(encoding="utf-8-sig")
+    with pytest.raises(ValueError, match="not supported"):
+        wb_modifiers.potential_holds(parse_text("p = { has_river = yes }").entries[0].value, rows[0])
+
+
 
 def test_population_capacity_cell_bands_the_gauge_and_names_both_sides_of_the_ratio():
     from prosper_or_perish_constructor.worldbuilder import geography as wb_geography

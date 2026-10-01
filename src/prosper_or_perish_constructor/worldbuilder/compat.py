@@ -65,8 +65,77 @@ def _sha(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
+_OBJECT_KEY_RE = re.compile(r"([A-Za-z0-9_.:\-]+)\s*=\s*\Z")
+
+
+def top_level_objects(text: str) -> list[tuple[str, int, int]]:
+    """``(name, start, end)`` of every top-level ``name = { ... }`` block; comments and quoted strings are skipped."""
+    out: list[tuple[str, int, int]] = []
+    depth = 0
+    i = 0
+    start = -1
+    name = ""
+    n = len(text)
+    while i < n:
+        ch = text[i]
+        if ch == "#":
+            nl = text.find("\n", i)
+            i = n if nl < 0 else nl
+            continue
+        if ch == '"':
+            close = text.find('"', i + 1)
+            i = n if close < 0 else close + 1
+            continue
+        if ch == "{":
+            if depth == 0:
+                window = max(0, i - 200)
+                match = _OBJECT_KEY_RE.search(text, window, i)
+                name, start = (match.group(1), match.start(1)) if match else ("", i)
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0 and name:
+                out.append((name, start, i + 1))
+                name = ""
+        i += 1
+    return out
+
+
+_OVERRIDE_RE = re.compile(r"(?m)^(?P<kind>REPLACE|TRY_REPLACE|REPLACE_OR_CREATE|INJECT|TRY_INJECT|INJECT_OR_CREATE):(?P<name>[A-Za-z0-9_.\-]+)\s*=")
+_REPLACE_KINDS = frozenset({"REPLACE", "TRY_REPLACE", "REPLACE_OR_CREATE"})
+
+
+def mod_overrides(folder: Path, exclude: str) -> dict[str, list[tuple[str, str]]]:
+    """Object name -> ``(kind, file name)`` of every top-level ``REPLACE:``/``INJECT:`` in the mod's files of ``folder``."""
+    out: dict[str, list[tuple[str, str]]] = {}
+    if not folder.is_dir():
+        return out
+    for path in sorted(folder.glob("*.txt")):
+        if path.name == exclude:
+            continue
+        for match in _OVERRIDE_RE.finditer(path.read_text(encoding="utf-8-sig", errors="replace")):
+            out.setdefault(match["name"], []).append((match["kind"], path.name))
+    return out
+
+
+def _is_generated_copy(path: Path) -> bool:
+    try:
+        with path.open(encoding="utf-8-sig") as handle:
+            return handle.readline().rstrip("\n") == HEADER
+    except (OSError, UnicodeDecodeError):
+        return False
+
+
 def write_compat_patches(vanilla_root: Path, mod_root: Path, repo: Path, families: Families, relative_files: list[str]) -> dict[str, object]:
-    """Copy the configured vanilla files into the mod with widened tests; drop copies no longer produced."""
+    """Copy the configured vanilla files into the mod with widened tests; drop copies no longer produced.
+
+    A copy is a whole-file override and becomes a mod file, so it must not undo the mod's own overrides:
+    - tests inside objects the mod ``REPLACE``s elsewhere do not count (the replacement wins and carries its own
+      widened tests); a file whose only widened tests are in such objects is not copied (EU5 1.4: unique_buildings.txt,
+      where only the Maghreb palm irrigation is widened and its blueprint is a REPLACE);
+    - a copy is refused when the mod overrides one of its objects in a file that sorts before it in the same
+      folder: the copy's plain definition would load after that override and replace it.
+    """
     manifest_path = repo / MANIFEST_RELATIVE_PATH
     previous = json.loads(manifest_path.read_text(encoding="utf-8")).get("files", {}) if manifest_path.is_file() else {}
     files: dict[str, dict[str, object]] = {}
@@ -78,11 +147,19 @@ def write_compat_patches(vanilla_root: Path, mod_root: Path, repo: Path, familie
         original = source.read_text(encoding="utf-8-sig")
         expanded, widened = expand_attribute_tests(original, families)
         target = mod_root / rel
+        overrides = mod_overrides(target.parent, target.name)
+        objects = top_level_objects(original)
+        replaced = {name for name, uses in overrides.items() if any(kind in _REPLACE_KINDS for kind, _ in uses)}
+        widened -= sum(expand_attribute_tests(original[a:b], families)[1] for name, a, b in objects if name in replaced)
         if widened == 0:
             unchanged.append(rel)
-            if target.is_file() and rel in previous:
+            if target.is_file() and (rel in previous or _is_generated_copy(target)):
                 target.unlink()
             continue
+        clobbered = sorted(f"{name} ({kind} in {file})" for name, _, _ in objects for kind, file in overrides.get(name, ()) if file < target.name)
+        if clobbered:
+            raise ValueError(f"[worldbuilder.compat] {rel}: the copy would load after and undo the mod's overrides of "
+                             + ", ".join(clobbered) + "; move them to a file that sorts after it (zz_pp_*) or drop the file from the list")
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text("﻿" + HEADER + "\n" + expanded, encoding="utf-8", newline="\n")
         files[rel] = {"vanilla_sha256": _sha(original), "tests_widened": widened}

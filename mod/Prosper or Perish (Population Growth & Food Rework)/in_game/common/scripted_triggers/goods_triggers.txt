@@ -27,15 +27,6 @@ produces_construction_material = {
 }
 
 
-location_wants_lumber_trigger = {
-	OR = {
-		pp_wb_setup_lumber_location = yes
-		OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
-		OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
-		vegetation = jungle
-	}
-}
-
 is_construction_material = {
 	custom_description = {
 		text = is_construction_material_text
@@ -45,5 +36,20 @@ is_construction_material = {
 			this = goods:sand
 			this = goods:clay
 		}
+	}
+}
+
+location_wants_camels_trigger = {
+	OR = {
+		continent = continent:africa
+		continent = continent:asia
+	}
+	OR = {
+		OR = { vegetation = sparse vegetation = ha1300_veg_scrubland vegetation = ha1300_veg_tundra }
+		vegetation = desert
+	}
+	OR = {
+		climate = arid
+		climate = cold_arid
 	}
 }

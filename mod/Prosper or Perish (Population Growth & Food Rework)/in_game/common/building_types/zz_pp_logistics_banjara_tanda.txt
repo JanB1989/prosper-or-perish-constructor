@@ -26,24 +26,39 @@ allow = {
 construction_demand = pp_banjara_tanda_construction
 
 unique_production_methods = {
+  pp_banjara_tanda_logistics_network = {
+    icon_type = building_type
+    icon = pp_banjara_tanda
+    produced = logistics
+    output = 0.3
+    category = building_maintenance
+  }
+}
+unique_production_methods = {
   pp_banjara_tanda_pack_bullocks = {
+    icon_type = building_type
+    icon = pp_banjara_tanda
     livestock = 0.7
     victuals = 0.35
     cloth = 0.1
     manual_labor = 0.6
     produced = logistics
-    output = 3.54
+    output = 3.9
     category = building_maintenance
   }
   pp_banjara_tanda_tanda_families = {
+    icon_type = building_type
+    icon = pp_banjara_tanda
     livestock = 0.31
     victuals = 0.4
     manual_labor = 1.34
     produced = logistics
-    output = 3.54
+    output = 3.9
     category = building_maintenance
   }
   pp_banjara_tanda_bullock_carts = {
+    icon_type = building_type
+    icon = pp_banjara_tanda
     livestock = 0.48
     victuals = 0.29
     lumber = 0.19
@@ -51,7 +66,7 @@ unique_production_methods = {
     tools = 0.077
     manual_labor = 0.6
     produced = logistics
-    output = 3.69
+    output = 4.05
     category = building_maintenance
   }
 }

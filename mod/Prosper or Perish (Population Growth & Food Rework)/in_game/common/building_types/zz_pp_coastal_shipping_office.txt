@@ -26,7 +26,18 @@ allow = {
 construction_demand = pp_coastal_shipping_office_construction
 
 unique_production_methods = {
+  pp_coastal_shipping_office_logistics_network = {
+    icon_type = building_type
+    icon = coastal_shipping_office
+    produced = logistics
+    output = 0.3
+    category = building_maintenance
+  }
+}
+unique_production_methods = {
   pp_coastal_shipping_office_maintenance = {
+    icon_type = building_type
+    icon = coastal_shipping_office
     naval_supplies = 0.23
     tar = 0.095
     lumber = 0.19
@@ -35,10 +46,12 @@ unique_production_methods = {
     paper = 0.047
     manual_labor = 0.65
     produced = logistics
-    output = 3.63
+    output = 4.05
     category = building_maintenance
   }
   pp_coastal_shipping_office_hand_crews = {
+    icon_type = building_type
+    icon = coastal_shipping_office
     naval_supplies = 0.13
     tar = 0.052
     lumber = 0.13
@@ -46,10 +59,12 @@ unique_production_methods = {
     victuals = 0.26
     manual_labor = 1.36
     produced = logistics
-    output = 3.63
+    output = 4.05
     category = building_maintenance
   }
   pp_coastal_shipping_office_rigged_coasters = {
+    icon_type = building_type
+    icon = coastal_shipping_office
     naval_supplies = 0.33
     tar = 0.055
     lumber = 0.092
@@ -58,7 +73,7 @@ unique_production_methods = {
     paper = 0.037
     manual_labor = 0.61
     produced = logistics
-    output = 3.78
+    output = 4.2
     category = building_maintenance
   }
 }

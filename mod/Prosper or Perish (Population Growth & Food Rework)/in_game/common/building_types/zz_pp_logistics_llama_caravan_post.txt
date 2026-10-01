@@ -26,24 +26,39 @@ allow = {
 construction_demand = pp_llama_caravan_post_construction
 
 unique_production_methods = {
+  pp_llama_caravan_post_logistics_network = {
+    icon_type = building_type
+    icon = pp_llama_caravan_post
+    produced = logistics
+    output = 0.3
+    category = building_maintenance
+  }
+}
+unique_production_methods = {
   pp_llama_caravan_post_llama_trains = {
+    icon_type = building_type
+    icon = pp_llama_caravan_post
     livestock = 0.64
     victuals = 0.37
     wool = 0.13
     manual_labor = 0.61
     produced = logistics
-    output = 3.54
+    output = 3.9
     category = building_maintenance
   }
   pp_llama_caravan_post_porters = {
+    icon_type = building_type
+    icon = pp_llama_caravan_post
     victuals = 0.48
     maize = 0.21
     manual_labor = 1.35
     produced = logistics
-    output = 3.54
+    output = 3.9
     category = building_maintenance
   }
   pp_llama_caravan_post_storehouse_relays = {
+    icon_type = building_type
+    icon = pp_llama_caravan_post
     livestock = 0.52
     victuals = 0.31
     maize = 0.16
@@ -51,7 +66,7 @@ unique_production_methods = {
     wool = 0.1
     manual_labor = 0.63
     produced = logistics
-    output = 3.69
+    output = 4.05
     category = building_maintenance
   }
 }

@@ -26,34 +26,49 @@ allow = {
 construction_demand = pp_caravanserai_construction
 
 unique_production_methods = {
+  pp_caravanserai_logistics_network = {
+    icon_type = building_type
+    icon = pp_caravanserai
+    produced = logistics
+    output = 0.3
+    category = building_maintenance
+  }
+}
+unique_production_methods = {
   pp_caravanserai_pack_camels = {
-    livestock = 0.5
+    icon_type = building_type
+    icon = pp_caravanserai
+    camels = 0.25
     victuals = 0.35
     leather = 0.12
     wool = 0.1
     manual_labor = 0.59
     produced = logistics
-    output = 3.54
+    output = 3.9
     category = building_maintenance
   }
   pp_caravanserai_camel_drivers = {
-    livestock = 0.24
+    icon_type = building_type
+    icon = pp_caravanserai
+    camels = 0.12
     victuals = 0.38
     leather = 0.057
     manual_labor = 1.33
     produced = logistics
-    output = 3.54
+    output = 3.9
     category = building_maintenance
   }
   pp_caravanserai_escorted_caravans = {
-    livestock = 0.38
+    icon_type = building_type
+    icon = pp_caravanserai
+    camels = 0.19
     horses = 0.11
     victuals = 0.33
     leather = 0.13
     paper = 0.066
     manual_labor = 0.59
     produced = logistics
-    output = 3.69
+    output = 4.05
     category = building_maintenance
   }
 }

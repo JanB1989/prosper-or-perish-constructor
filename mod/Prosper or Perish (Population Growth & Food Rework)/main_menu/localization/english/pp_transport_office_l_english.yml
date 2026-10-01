@@ -1,11 +1,14 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:transport_office:localization
-  transport_office_slot_0: "Freight Crews"
+  transport_office_slot_0: "Dispatch"
+  transport_office_slot_1: "Freight Crews"
   pp_transport_office_construction: "Transport Office Construction"
   pp_transport_office_maintenance: "Clerks and Carts"
   pp_transport_office_hand_carts: "Hand Carts"
   pp_transport_office_ledgered_dispatch: "Ledgered Dispatch"
   transport_office: "Transport Office"
   transport_office_desc: "Freight clerks, porters, haulers and weighmen crowd the transport office. Ledgers, yard gates and hired hands turn a town's bulk into ordered dispatches for the market."
+  pp_transport_office_logistics_network: "Dispatch Network"
+  pp_transport_office_logistics_network_desc: "Agents in the neighbouring towns pass consignments along a standing schedule, so some freight keeps moving even when the office's own carts stand idle."
 # <<< eu5-building-pipeline:transport_office:localization

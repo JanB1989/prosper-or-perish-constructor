@@ -29,34 +29,49 @@ allow = {
 construction_demand = pp_transport_office_construction
 
 unique_production_methods = {
+  pp_transport_office_logistics_network = {
+    icon_type = building_type
+    icon = transport_office
+    produced = logistics
+    output = 0.3
+    category = building_maintenance
+  }
+}
+unique_production_methods = {
   pp_transport_office_maintenance = {
+    icon_type = building_type
+    icon = transport_office
     victuals = 0.48
     paper = 0.18
     tools = 0.12
     cloth = 0.072
     manual_labor = 0.59
     produced = logistics
-    output = 3.45
+    output = 3.75
     category = building_maintenance
   }
   pp_transport_office_hand_carts = {
+    icon_type = building_type
+    icon = transport_office
     victuals = 0.42
     paper = 0.083
     tools = 0.042
     cloth = 0.031
     manual_labor = 1.34
     produced = logistics
-    output = 3.45
+    output = 3.75
     category = building_maintenance
   }
   pp_transport_office_ledgered_dispatch = {
+    icon_type = building_type
+    icon = transport_office
     victuals = 0.32
     paper = 0.32
     tools = 0.22
     cloth = 0.032
     manual_labor = 0.59
     produced = logistics
-    output = 3.6
+    output = 3.9
     category = building_maintenance
   }
 }

@@ -28,7 +28,18 @@ allow = {
 construction_demand = pp_river_boatmen_yard_construction
 
 unique_production_methods = {
+  pp_river_boatmen_yard_logistics_network = {
+    icon_type = building_type
+    icon = river_boatmen_yard
+    produced = logistics
+    output = 0.3
+    category = building_maintenance
+  }
+}
+unique_production_methods = {
   pp_river_boatmen_yard_maintenance = {
+    icon_type = building_type
+    icon = river_boatmen_yard
     naval_supplies = 0.2
     lumber = 0.25
     tools = 0.15
@@ -36,10 +47,12 @@ unique_production_methods = {
     tar = 0.05
     manual_labor = 0.63
     produced = logistics
-    output = 3.75
+    output = 4.2
     category = building_maintenance
   }
   pp_river_boatmen_yard_towpath_crews = {
+    icon_type = building_type
+    icon = river_boatmen_yard
     naval_supplies = 0.11
     lumber = 0.16
     tools = 0.063
@@ -47,10 +60,12 @@ unique_production_methods = {
     tar = 0.032
     manual_labor = 1.34
     produced = logistics
-    output = 3.75
+    output = 4.2
     category = building_maintenance
   }
   pp_river_boatmen_yard_fitted_barges = {
+    icon_type = building_type
+    icon = river_boatmen_yard
     naval_supplies = 0.29
     lumber = 0.15
     tools = 0.19
@@ -58,7 +73,7 @@ unique_production_methods = {
     tar = 0.029
     manual_labor = 0.62
     produced = logistics
-    output = 3.9
+    output = 4.35
     category = building_maintenance
   }
 }

@@ -1,11 +1,14 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:carrier_inn:localization
-  carrier_inn_slot_0: "Carrier Crews"
+  carrier_inn_slot_0: "Road Network"
+  carrier_inn_slot_1: "Carrier Crews"
   carrier_inn: "Carrier Inn"
   carrier_inn_desc: "Packhorses, carts and stable yards gather at the carrier inn before setting out along the roads. Its keepers turn scattered rural loads into regular traffic to the market."
   pp_carrier_inn_construction: "Carrier Inn Construction"
   pp_carrier_inn_maintenance: "Pack Horses"
   pp_carrier_inn_hand_porters: "Hand Porters"
   pp_carrier_inn_waybills_and_fitted_carts: "Waybills and Fitted Carts"
+  pp_carrier_inn_logistics_network: "Carrier Network"
+  pp_carrier_inn_logistics_network_desc: "Regular carriers call at the inn on fixed days and take on loads, so some traffic keeps moving even when the inn's own stables stand empty."
 # <<< eu5-building-pipeline:carrier_inn:localization

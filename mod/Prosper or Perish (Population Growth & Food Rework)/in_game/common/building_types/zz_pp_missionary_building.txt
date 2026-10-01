@@ -1,8 +1,11 @@
 ﻿# >>> eu5-building-pipeline:missionary_building:building
 INJECT:missionary_building = {
 # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
-	raw_modifier = {
-		local_population_capacity = 0.03
-	}
+# Foreign building (2026-10-01): each level supports itself, so the levels foreign countries open never count as
+# unsupported building levels of the location.
+raw_modifier = {
+	local_population_capacity = 0.03
+  free_building_levels = 1
+}
 }
 # <<< eu5-building-pipeline:missionary_building:building

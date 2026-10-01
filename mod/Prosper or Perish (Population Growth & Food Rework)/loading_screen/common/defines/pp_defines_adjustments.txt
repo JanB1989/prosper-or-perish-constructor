@@ -27,7 +27,12 @@ NAI = {
 	AI_ALLOWED_BUILDING_MAINTENANCE = 0.3
 	AI_DEVELOPMENT_UTILITY = 0.2
 	AI_PROFIT_MARGIN_TARGET = 0.10
-	AI_BUILDING_PROFIT_THRESHOLD = 1.05 # 1.2; minimum revenue/input cost for the AI to build a producing building; many PP methods sit near break-even
+	AI_BUILDING_PROFIT_MARGIN_THRESHOLD = 1.05 # 1.2; minimum revenue/input cost (the gate method's) for the AI to build a new producing building; many PP methods sit near break-even
+	# EU5 1.4: AI_BUILDING_PROFIT_THRESHOLD (vanilla 0.25) is a second gate, the summed monthly profit of one level (best
+	# method per slot x market access) in gold. PP pays labour in its methods and keeps per-level profits small (median
+	# ~0.27 gold at base prices, vanilla ~0.66): at 0.25 it would close about half of the mod's producing buildings at
+	# base prices, at 1.05 nearly all. Switched off so the margin and the gate legs steer alone, as in 1.3.
+	AI_BUILDING_PROFIT_THRESHOLD = -1000
 	# Construction queue: an entry keeps the score it got when it was queued, new candidates only enter when the queue is rebuilt.
 	AI_CONSTRUCTIONS_CLEAR_QUEUE_MONTHS = 12 # 60; the AI reacted to food and storage changes years late (taverns queued while starving, built after recovery); 18-24 if tick time suffers
 	AI_CONSTRUCTION_QUEUE_REPEAT_MULT = 0.99 # 0.9; next level re-queued at utility x this^level: more stacking, stacked levels gain production efficiency

@@ -665,9 +665,19 @@ How the AI estimates a building's profit (confirmed against the logged breakdown
 - Profit is valued as gold: √T × monthly profit on the gold curve, weighted by T·√T.
 
 The **"Too low profit margin"** gate (utility × 0) hits about half of all candidates:
-- It applies to buildings that produce goods whose margin is below **AI_BUILDING_PROFIT_THRESHOLD** (vanilla 1.2,
-  measured here; PP sets 1.05 since 2026-09-29 because many PP methods are tuned near break-even).
-  Margin = revenue ÷ input cost.
+- It applies to buildings that produce goods whose margin is below **AI_BUILDING_PROFIT_MARGIN_THRESHOLD** (vanilla
+  1.2, measured here; PP sets 1.05 since 2026-09-29 because many PP methods are tuned near break-even; EU5 1.3 called
+  this define AI_BUILDING_PROFIT_THRESHOLD). Margin = revenue ÷ input cost.
+- **EU5 1.4 (checked 2026-10-01 in the 1.4.0 beta):**
+  - The define was renamed. The old name, **AI_BUILDING_PROFIT_THRESHOLD** (vanilla 0.25), is now a second gate on the
+    **raw profit**: the profit estimate below (best method per block, × market access, summed over the blocks, one level,
+    gold per month, before taxes and control). A building is gated when the margin OR the raw profit is too low.
+  - Both checks skip a building type that already stands in the location: **expansions are never gated**. They get
+    AI_UPGRADE_BUILDING_UTILITY (0.001) on top instead. In 1.3 expansions were already almost never gated in practice.
+  - PP's per-level profits are small (labour is paid in the methods): median about 0.27 gold at base prices against
+    about 0.66 in vanilla. A raw minimum of 0.25 would close about half of PP's producing buildings at base prices
+    (vanilla: a fifth of its own), the old 1.05 line nearly all (178 of 200). PP therefore sets the margin define to
+    1.05 and switches the raw-profit gate off (-1000), so 1.4 gates like 1.3.
 - The margin that counts is that of the **last** method the estimate looks at, not the best one. It walks the
   `possible_production_methods` group, then every `unique_production_methods` block in file order, and inside a block
   the methods in listed order. A block with one method is always looked at; in a block with more, a method is looked
@@ -687,8 +697,8 @@ The **"Too low profit margin"** gate (utility × 0) hits about half of all candi
   96 % above; millet 97 % above twice its base price). Since 2026-09-30 every building with a market main good ends
   in a **Market** slot with one method, **Market Sales**: a little of the main good (worth 0.01-0.02 gold per level)
   for a floor-pinned dummy, balanced at margin 1.0 at base prices (`[production_gate.leg]`). A one-method block is
-  always read, never skipped for research, triggers or inputs, so this leg alone decides the gate, for new buildings
-  and new levels alike: margin = (1 + output modifiers) x the main good's market price / its base price. The AI builds
+  always read, never skipped for research, triggers or inputs, so this leg alone decides the gate for new buildings
+  (expansions are not gated, see above): margin = (1 + output modifiers) x the main good's market price / its base price. The AI builds
   when the good is dear, first on land with output bonuses, and stops when it is cheap. Buildings without a market
   good (cookshops, logistics), storage-leg gates (grange, tavern) and goods the gate never applies to keep their own
   gate. Evaluator check (300 places of h02, wheat price scaled): old gate 7 % gated at 0.6x, 85 % at 2x; leg 73 % at

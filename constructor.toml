@@ -797,12 +797,12 @@ logistics = { share = 0.20, max_goods = 6, min_good_share = 0.0 }       # animal
 logistics_hand = { share = 0.45, max_goods = 6, min_good_share = 0.0 }  # porters, towpath and hand crews
 
 [production_gate]
-# The AI builds a production building only if one margin (revenue / input cost) reaches its threshold, and that margin
+# The AI builds a NEW production building only if one margin (revenue / input cost) reaches its threshold, and that margin
 # is the last production method it looks at that has an output (docs/ai_building_rulebook.md 2.4i). Every enabled
 # production blueprint names that method with a top-level gate_method key; ppc gate apply moves its slot to the bottom
 # and lists it last, ordering the rest by importance (base slots top, dynamic slots bottom, else by output value);
 # ppc gate check reports missing flags and bodies out of order (ppc build prints it). Ordering only: amounts never change.
-threshold = 1.2               # fallback only: the gate reads NAI.AI_BUILDING_PROFIT_THRESHOLD from the mod defines (else vanilla)
+threshold = 1.2               # fallback only: the gate reads NAI.AI_BUILDING_PROFIT_MARGIN_THRESHOLD (EU5 1.4 name) from the mod defines (else vanilla)
 # goods whose methods react to the province store or the market (Surplus Sales, Scarcity Premium): their slots go last
 dynamic_goods = ["province_food_sales", "province_food_purchase"]
 # floor-pinned dummy goods: their price never moves, so they are never a building's main (market) good
@@ -813,7 +813,7 @@ strategic_goods = ["clay", "iron", "goods_gold", "silver", "stone", "ivory", "ma
 [production_gate.leg]
 # Gate leg (2026-09-30): every building with a market main good gets a last slot with one method that makes a little of
 # that good for a floor-pinned dummy. The AI always reads a one-method slot (no research, potential, allow or input
-# check) and the last method it reads decides the margin check, for new buildings and new levels alike. The leg's margin
+# check) and the last method it reads decides the margin check for new buildings (1.4: expansions skip it). The leg's margin
 # is (1 + output modifiers) x the good's market price / base price x margin, so the AI builds when the good is dear and
 # stops when it is cheap: at margin 1.0 and the 1.05 threshold it opens at 1.05x the base price without output bonus,
 # earlier on good land. Storage-leg gates (grange, tavern), services and logistics keep their own gate.

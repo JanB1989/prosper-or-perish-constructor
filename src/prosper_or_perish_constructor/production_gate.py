@@ -4,8 +4,10 @@ When the AI weighs building a production building it walks the building's produc
 ``possible_production_methods`` group first, then every ``unique_production_methods`` block in file order) and, inside
 a slot, the methods in listed order. A slot with one method is always looked at; in a slot with more, a method is
 looked at only while it is allowed and the local market supplies all its inputs. Every method it looks at that has an
-output good overwrites one margin (revenue / input cost at market prices); below ``NAI.AI_BUILDING_PROFIT_THRESHOLD``
+output good overwrites one margin (revenue / input cost at market prices); below ``NAI.AI_BUILDING_PROFIT_MARGIN_THRESHOLD``
 (vanilla 1.2, read from the mod's defines) the building gets no build utility. So exactly one method gates the build: the last one looked at that has an output.
+Since EU5 1.4 the check skips a building type that already stands in the location (expansions), and
+``NAI.AI_BUILDING_PROFIT_THRESHOLD`` is a second, raw-profit minimum that the mod switches off.
 (docs/ai_building_rulebook.md, section 2.4i.)
 
 A method locked behind an unresearched advance counts as not allowed; with no margin written the gate reads 0.
@@ -17,7 +19,7 @@ Every enabled blueprint with a producing unique method names that method::
 
 Gate leg (``[production_gate.leg]``, 2026-09-30): a building with a market main good (``main_good``) ends in a one-method
 slot ``pp_<building>_market_sales`` that makes a little of that good for a floor-pinned dummy at ``leg.margin``. It is
-always read, so the check follows the main good's market price for new buildings and new levels alike, whatever is
+always read, so the check follows the main good's market price for new buildings, whatever is
 researched or supplied. ``apply`` adds, updates or drops the leg (body block, slot list, localization, evaluation
 allow rules) and flags it; buildings without a market good, storage-leg gates and ``strategic_goods`` keep the rule
 below. The old Provision gate bought the building's own crop, so the AI stopped building farms when the crop was dear.
@@ -98,12 +100,12 @@ class GateConfig:
     leg: LegConfig | None = None
 
 
-THRESHOLD_DEFINE = "AI_BUILDING_PROFIT_THRESHOLD"
+THRESHOLD_DEFINE = "AI_BUILDING_PROFIT_MARGIN_THRESHOLD"  # EU5 1.4 name; 1.3 called it AI_BUILDING_PROFIT_THRESHOLD
 DEFINES_RELATIVE = Path("loading_screen/common/defines")
 
 
 def load_threshold(project: Path, fallback: float = 1.2) -> float:
-    """``NAI.AI_BUILDING_PROFIT_THRESHOLD`` as the game loads it: the compiled mod's defines, else vanilla's, else
+    """``NAI.AI_BUILDING_PROFIT_MARGIN_THRESHOLD`` as the game loads it: the compiled mod's defines, else vanilla's, else
     ``fallback`` (the [production_gate] threshold)."""
     raw = tomllib.loads(project.read_text(encoding="utf-8-sig"))
     repo = project.parent

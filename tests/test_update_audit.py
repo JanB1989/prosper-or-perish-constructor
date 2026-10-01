@@ -4,6 +4,8 @@ import re
 import subprocess
 from pathlib import Path
 
+from eu5gameparser.load_order import LoadOrderConfig
+
 from prosper_or_perish_constructor import cli
 from prosper_or_perish_constructor.update_audit import run_update_audit
 
@@ -133,6 +135,33 @@ def test_update_audit_cli_writes_report(tmp_path: Path, capsys) -> None:
     assert "changed_csv=" in output
     assert (repo / "reports" / "cli-audit" / "index.html").is_file()
     assert (repo / "reports" / "cli-audit" / "changed_dependencies.csv").is_file()
+
+
+def test_update_audit_reads_history_from_the_install_behind_a_vanilla_mirror(tmp_path: Path) -> None:
+    repo, vanilla = _write_update_audit_fixture(tmp_path)
+    copy = tmp_path / "eu5-vanilla"
+    (copy / "game").mkdir(parents=True)
+    manifest = tmp_path / "appmanifest_1.acf"
+    manifest.write_text('"AppState"\n{\n\t"buildid"\t\t"7"\n}\n', encoding="utf-8")
+    (repo / "constructor.load_order.local.toml").write_text(
+        f'[paths]\nvanilla_root = "{copy.as_posix()}"\n\n'
+        f'[vanilla_mirror]\nsource = "{vanilla.as_posix()}"\n'
+        f'steam_manifest = "{manifest.as_posix()}"\nbuildid = "7"\n',
+        encoding="utf-8",
+    )
+    assert LoadOrderConfig.load(repo / "constructor.load_order.toml").vanilla_root == copy
+
+    summary = run_update_audit(
+        repo=repo,
+        project=repo / "constructor.toml",
+        load_order_path=repo / "constructor.load_order.toml",
+        old_ref="eu5-old",
+        new_ref="eu5-new",
+        output_dir=repo / "reports" / "audit",
+    )
+
+    assert summary.added_count == 3
+    assert summary.removed_count == 2
 
 
 def _write_update_audit_fixture(tmp_path: Path) -> tuple[Path, Path]:

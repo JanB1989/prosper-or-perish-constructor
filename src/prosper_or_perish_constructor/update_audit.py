@@ -19,7 +19,7 @@ from typing import Any, Iterable
 from eu5gameparser.clausewitz.parser import parse_file, parse_text
 from eu5gameparser.clausewitz.serializer import normalized_value
 from eu5gameparser.clausewitz.syntax import CEntry, CList, Value
-from eu5gameparser.load_order import LoadOrderConfig
+from eu5gameparser.load_order import LoadOrderConfig, local_load_order_path
 
 
 COMMON_SCOPES = ("in_game", "main_menu")
@@ -159,7 +159,7 @@ def run_update_audit(
     """Run the EU5 update audit and write HTML, CSV, and JSON outputs."""
 
     load_order = LoadOrderConfig.load(load_order_path)
-    vanilla_root = load_order.vanilla_root
+    vanilla_root = _vanilla_git_root(load_order_path, load_order.vanilla_root)
     mod_root = _project_mod_root(repo, project)
     _require_git_ref(vanilla_root, old_ref)
     _require_git_ref(vanilla_root, new_ref)
@@ -217,6 +217,21 @@ def run_update_audit(
         missing_both_count=counts.get("missing_both", 0),
         warning_count=len(warnings),
     )
+
+
+def _vanilla_git_root(load_order_path: Path, vanilla_root: Path) -> Path:
+    """The game install that holds the vanilla Git history.
+
+    ``ppc vanilla-mirror`` points ``vanilla_root`` at a copy of the game folder without the history; the copy's
+    local override names the install it was made from in ``[vanilla_mirror].source``.
+    """
+    local = local_load_order_path(load_order_path)
+    if local.is_file():
+        mirror = tomllib.loads(local.read_text(encoding="utf-8")).get("vanilla_mirror")
+        source = mirror.get("source") if isinstance(mirror, dict) else None
+        if isinstance(source, str) and source:
+            return Path(source)
+    return vanilla_root
 
 
 def _project_mod_root(repo: Path, project: Path) -> Path:

@@ -1,25 +1,27 @@
 ﻿# I want prosperity and devastation to be more sticky in general
 # ADVANCES
+# EU5 1.4 halved these advances to +0.0025 devastation recovery; the injects keep the mod's net at
+# +0.00025 (recovery_efforts) and +0.001 (the others), as under 1.3 (+0.005 - 0.00475 / - 0.004).
 TRY_INJECT:recovery_efforts = {
-	global_devastation_recovery = -0.00475
+	global_devastation_recovery = -0.00225
 }
 TRY_INJECT:mother_of_russian_cities = {
-	global_devastation_recovery = -0.004
+	global_devastation_recovery = -0.0015
 }
 TRY_INJECT:wake_of_the_mongol_horde = {
-	global_devastation_recovery = -0.004
+	global_devastation_recovery = -0.0015
 }
 TRY_INJECT:hidden_cities = {
-	global_devastation_recovery = -0.004
+	global_devastation_recovery = -0.0015
 }
 TRY_INJECT:four_noble_truths = {
-	global_devastation_recovery = -0.004
+	global_devastation_recovery = -0.0015
 }
 TRY_INJECT:thrive_under_persecution = {
-	global_devastation_recovery = -0.004
+	global_devastation_recovery = -0.0015
 }
 TRY_INJECT:paschal_cycle = {
-	global_devastation_recovery = -0.004
+	global_devastation_recovery = -0.0015
 }
 TRY_INJECT:fertile_lands = {
 	global_population_capacity_modifier = 0.05

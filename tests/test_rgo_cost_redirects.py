@@ -93,13 +93,14 @@ def test_active_rgo_cost_assignments_are_generated_redirect_dependencies() -> No
     modifiers_by_method = classification.modifiers_by_method()
     generated = _generated_redirect_blocks()
 
-    assert len(assignments) == 58
+    # EU5 1.4 added 15 country/culture advances and two static modifiers that cut RGO expansion cost.
+    assert len(assignments) == 75
     assert Counter(assignment.method for assignment in assignments) == {
-        "farming": 26,
-        "mining": 18,
+        "farming": 36,
+        "mining": 24,
         "forestry": 6,
         "hunting": 5,
-        "gathering": 3,
+        "gathering": 4,
     }
 
     # The engine ignores an inject into a block the mod replaces; those entries are rewritten whole (TRY_REPLACE).

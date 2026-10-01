@@ -99,7 +99,7 @@ RAW_MATERIAL_OUTPUT_TO_RGO_ADVANCES = {
     "sba_multiple_shugo": 0.10,
     "cultivate_the_land": 0.05,
     "llama_michis": 0.10,
-    "por_estimulate_rural_areas": 0.10,
+    "por_estimulate_rural_areas": 0.20,   # EU5 1.4 raised it from +10 % to +20 % raw-material output
     "hyanyak_system": 0.10,
     "wealth_of_mesoamerica": 0.10,
     "free_subjects": 0.10,

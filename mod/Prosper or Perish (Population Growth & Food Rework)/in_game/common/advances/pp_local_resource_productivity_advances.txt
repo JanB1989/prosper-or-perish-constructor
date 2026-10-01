@@ -66,6 +66,17 @@ REPLACE:blast_furnace = {
 REPLACE:pan_amalgamation_advance = {
 	age = age_4_reformation
 	mercury_patio_max_level = 1
+	ai_weight = {
+		if = {
+			limit = {
+				OR = {
+					produced_in_country:goods_gold > 0
+					produced_in_country:silver > 0
+				}
+			}
+			add = 200
+		}
+	}
 	requires = confessional_court
 }
 
@@ -111,7 +122,7 @@ REPLACE:hot_blast_furnace = {
 REPLACE:coal_improvements_absolutism = {
 	age = age_5_absolutism
 	requires = rgo_size_advance_absolutism
-	global_coal_output_modifier = 0.33
+	global_coal_output_modifier = 0.75
 	unlock_building = improved_charcoal_maker
 	unlock_building = coal_mine_improved
 	unlock_production_method = pp_engineered_brine_saltworks_mineral_fired_pans
@@ -177,8 +188,8 @@ TRY_INJECT:llama_michis = {
 }
 
 TRY_INJECT:por_estimulate_rural_areas = {
-	global_raw_material_output = -0.10
-	global_max_rgo_size_modifier = 0.10
+	global_raw_material_output = -0.20
+	global_max_rgo_size_modifier = 0.20
 }
 
 TRY_INJECT:hyanyak_system = {

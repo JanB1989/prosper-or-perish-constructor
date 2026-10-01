@@ -29,7 +29,6 @@ TRY_REPLACE:legal_code_law = {
 		}
 	}
 
-
 	court_of_appeals = {
 		unique = yes
 		potential = {
@@ -122,6 +121,7 @@ TRY_REPLACE:legal_code_law = {
 			tolerance_heathen = -1
 			court_language_is_liturgical_language_importance_modifier = 3.0
 			disallows_female_rulers = yes
+			global_max_bureaucracy_slots = 1
 		}
 		estate_preferences = {
 			clergy_estate
@@ -491,6 +491,23 @@ TRY_REPLACE:legal_code_law = {
 			}
 			tax_income_efficiency = large_tax_income_efficiency_bonus 
 			nobles_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+		}
+		estate_preferences = {
+			crown_estate
+		}
+		years = 2
+	}
+
+	mll_leges_palatinae = { 
+		unique = yes
+		potential = {
+			has_or_had_tag = MLL
+			has_unlocked_policy_trigger = { type = mll_leges_palatinae }
+		}
+		country_modifier = {
+			global_crown_estate_power = 0.10
+			monthly_legitimacy = 0.1
+			country_cabinet_efficiency = 0.20
 		}
 		estate_preferences = {
 			crown_estate
@@ -979,7 +996,10 @@ TRY_REPLACE:mining_law = {
 	zimbabwe_mining_law = {
 		unique = yes
 		potential = {
-			culture = culture:shona_culture
+			OR = {
+				culture = culture:shona_culture
+				has_or_had_tag = ZMW
+			}
 		}
 		country_modifier = {
 			global_rural_build_buildings_efficiency = 0.1

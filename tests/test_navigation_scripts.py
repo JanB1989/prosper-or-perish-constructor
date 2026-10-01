@@ -75,8 +75,27 @@ def test_mod_scripts_route_only_to_sea_coasts():
         if rel in cfg.patches:
             continue
         code = "\n".join(line.split("#", 1)[0] for line in path.read_text(encoding="utf-8-sig", errors="replace").splitlines())
-        if re.search(r"\bfind_route\b", code):
+        if re.search(r"\b(find_route|create_route)\b", code):
             assert "pp_is_sea_coast" in code, f"{rel} routes fleets without pp_is_sea_coast"
+
+
+def test_sea_expedition_waypoints_reach_the_open_sea(vanilla):
+    """EU5 1.4 expeditions with travel_mode = sea path every leg over open water (the leg's end may be a port). Their
+    named waypoints must be sea tiles or sea-coast land on the mod map; a waypoint that is coastal only through a river
+    channel or lake, or inland, has no sea path ("failed expedition path")."""
+    from prosper_or_perish_constructor.worldbuilder import coast
+
+    state = coast.cached(REPO)
+    if state is None:
+        pytest.skip("no water access cache; run ppc worldbuilder apply")
+    default_map = (MOD / coast.MAP_DIR / "default.map").read_text(encoding="utf-8-sig", errors="replace")
+    topography = coast._topographies(MOD / coast.MAP_DIR / "location_templates.txt")
+    sea = {t for t in coast._block_tokens(default_map, "sea_zones")
+           if not t.startswith(coast.NAVIGATION_PREFIX) and topography.get(t) not in coast.LAKE_TOPOGRAPHIES + coast.IMPASSABLE_WATER}
+    waypoints = ns.sea_expedition_waypoints(vanilla)
+    assert len(waypoints) > 20, "no sea expedition waypoints found; did vanilla rename travel_mode or waypoints?"
+    bad = {name: files for name, files in waypoints.items() if name not in sea and state.get(name) != "sea_coast"}
+    assert bad == {}, "sea expedition waypoints off the open sea (patch the expedition or review the map)"
 
 
 def test_navigation_channels_sit_in_the_trigger_region():

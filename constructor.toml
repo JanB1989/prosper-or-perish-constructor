@@ -174,7 +174,8 @@ vanilla_files = [
 ]
 
 [worldbuilder.navigation_scripts]
-# Vanilla scripts that route fleets over water (find_route) or put ships on the map. The navigable river channels
+# Vanilla scripts that route fleets over water (find_route, create_route from 1.4), put ships on the map or send an
+# expedition along waypoints (add_new_waypoint, EU5 1.4: travel_mode = sea legs cross open water only). The navigable river channels
 # are sea zones, so a river-bank location is is_coastal and can hold a port although most channel groups never
 # reach the open sea; a route to such a location does not exist and the script fails at run time. Every vanilla file
 # using these effects is listed here, patched (exact replacements on the current vanilla file, on top of its
@@ -203,15 +204,105 @@ sea_only_buildings = [
 "in_game/events/DHE/flavor_MAM.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
 "in_game/events/DHE/flavor_pap.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
 "in_game/events/situations/golden_age_of_piracy.txt" = "creates ships without a route (checked: no find_route); a navy placed at a river port stays on the channel, possibly landlocked; placement not audited per event"
+# EU5 1.4
+"in_game/common/decisions/flavor_decisions_rus.txt" = "counts the country's heavy ships for a decision; places nothing"
+"in_game/common/effect_localization/province_effects.txt" = "tooltip text of the effect; places nothing"
+"in_game/common/effect_localization/expedition_effects.txt" = "tooltip text of the effect; places nothing"
+"in_game/common/expedition_types/cartographic_survey.txt" = "travel_mode both: legs may cross land, so a river port or channel waypoint is reachable; surveying river banks is harmless"
+"in_game/common/expedition_types/grand_embassy.txt" = "travel_mode both: capitals reached over land and sea; a river port is reachable"
+"in_game/common/expedition_types/grand_tour.txt" = "travel_mode both: an overland tour; any location is reachable"
+"in_game/common/expedition_types/hajj_caravan.txt" = "travel_mode both: an overland caravan; any location is reachable"
+"in_game/common/expedition_types/holy_site_pilgrimage.txt" = "travel_mode both: an overland pilgrimage; any location is reachable"
+"in_game/common/expedition_types/mining_survey.txt" = "travel_mode both: an overland survey; any location is reachable"
+"in_game/common/expedition_types/pilgrimage_expedition.txt" = "travel_mode both: an overland pilgrimage; any location is reachable"
+"in_game/common/expedition_types/relic_expedition.txt" = "travel_mode both: leads anywhere over land and sea; any location is reachable"
+"in_game/events/expeditions/grand_embassy_events.txt" = "travel_mode both (grand_embassy): capitals reached over land and sea"
+"in_game/events/expeditions/grand_tour_events.txt" = "travel_mode both (grand_tour): an overland tour"
+"in_game/events/expeditions/relic_expedition_events.txt" = "travel_mode both (relic_expedition): leads anywhere over land and sea"
+"in_game/common/expedition_types/cape_route_to_india.txt" = "travel_mode sea along named waypoints that are sea tiles or sea-coast land (test_sea_expedition_waypoints_reach_the_open_sea); the remembered departure port is no waypoint; origin (closest_non_rural_port) and the last leg to the capital are engine/vanilla choices"
+"in_game/common/expedition_types/western_ocean_voyage.txt" = "travel_mode sea along named waypoints that are sea tiles or sea-coast land (test_sea_expedition_waypoints_reach_the_open_sea); origin (closest_non_rural_port) is chosen by the engine, not script"
+"in_game/events/expeditions/pacific_crossing_events.txt" = "travel_mode sea (pacific_crossing): named waypoints are sea tiles or sea-coast land (test_sea_expedition_waypoints_reach_the_open_sea); home_port is the departure port, patched to the sea coast in pacific_crossing.txt"
 
 [[worldbuilder.navigation_scripts.patches]]
-# Chinese treasure voyage: the fleet starts at a random port of the country and sails over water (find_route,
-# is_land = no) to a random coastal location of the target area and back. A river port or river-bank target has no
-# sea route ("Failed to fetch variable for 'chinese_treasure_next_location' due to not being set").
-file = "in_game/events/DHE/flavor_chi_treasure_expedition.txt"
+# Chinese treasure voyage (EU5 1.4: an expedition, moved from in_game/events/DHE/flavor_chi_treasure_expedition.txt):
+# the fleet departs from the country's most developed port and create_route builds its waypoints over water
+# (is_land = no) to a coastal location of the target sea area; travel_mode = sea. A river port has no sea route, and
+# the route must not run up the channels: departure on the sea coast, target on the sea coast, route off the channels.
+file = "in_game/common/expedition_types/treasure_fleet.txt"
 replace = [
-  { find = "random_port_in_country = {\n\t\t\tlimit = {\n", with = "random_port_in_country = {\n\t\t\tlimit = {\n\t\t\t\tpp_is_sea_coast = yes\n", count = 1 },
+  { find = "ordered_owned_non_rural_location = {\n\t\t\tlimit = { is_port = yes }", with = "ordered_owned_non_rural_location = {\n\t\t\tlimit = { is_port = yes pp_is_sea_coast = yes }", count = 1 },
   { find = "random_location_in_area = {\n\t\t\t\tlimit = { is_coastal = yes }", with = "random_location_in_area = {\n\t\t\t\tlimit = { is_coastal = yes pp_is_sea_coast = yes }", count = 1 },
+  { find = "limit = { is_land = no }", with = "limit = { is_land = no NOT = { region = region:pp_navigation_region } }", count = 1 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# EU5 1.4 circumnavigation (travel_mode sea): it may start only with a sea-coast core port and departs from one
+file = "in_game/common/expedition_types/circumnavigation_expedition.txt"
+replace = [
+  { find = "is_port = yes", with = "is_port = yes pp_is_sea_coast = yes", count = 2 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# EU5 1.4 Pacific crossing (travel_mode sea): it may start only with a sea-coast Pacific port and departs from one
+file = "in_game/common/expedition_types/pacific_crossing.txt"
+replace = [
+  { find = "is_port = yes", with = "is_port = yes pp_is_sea_coast = yes", count = 2 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only (EU5 1.4): thalassocracy needs a capital on the sea
+file = "in_game/common/decisions/generic_age_decisions.txt"
+replace = [
+  { find = "capital = { is_coastal = yes }", with = "capital = { pp_is_sea_coast = yes }", count = 3 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only (EU5 1.4): the Manila galleon charter needs a Pacific sea port
+file = "in_game/common/decisions/manila_galleon_charter.txt"
+replace = [
+  { find = "is_port = yes", with = "is_port = yes pp_is_sea_coast = yes", count = 1 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only (EU5 1.4): the mariners' calling settles on the sea coast
+file = "in_game/common/religious_order_callings/00_iberian_military.txt"
+replace = [
+  { find = "is_coastal = no", with = "NOT = { pp_is_sea_coast = yes }", count = 1 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only (EU5 1.4): mariners' zeal from sea ports
+file = "in_game/common/religious_order_zeal_modifiers/00_catholic.txt"
+replace = [
+  { find = "is_port = yes", with = "is_port = yes pp_is_sea_coast = yes", count = 1 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only (EU5 1.4): a jihad target is reachable from the sea (or a Muslim neighbour)
+file = "in_game/common/scripted_triggers/religion_triggers.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 1 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only (EU5 1.4): the mining charter takes salt that is not sea salt (sea-salt pans sit at sea ports)
+file = "in_game/common/town_rights/13_serbian.txt"
+replace = [
+  { find = "is_port = no", with = "NOT = { is_port = yes pp_is_sea_coast = yes }", count = 1 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only (EU5 1.4): sea fishermen's brotherhoods on the Iberian coast
+file = "in_game/events/culture/culture_iberian.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 2 },
+]
+
+[[worldbuilder.navigation_scripts.patches]]
+# water access, sea only (EU5 1.4): Mediterranean presence and corsairs count the Maghreb sea coast
+file = "in_game/events/culture/culture_maghrebi.txt"
+replace = [
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 2 },
 ]
 
 [[worldbuilder.navigation_scripts.patches]]
@@ -257,10 +348,11 @@ replace = [
 ]
 
 [[worldbuilder.navigation_scripts.patches]]
-# water access, sea only: raids and crusade targets on the Maghreb coast; also creates ships without a route
+# water access, sea only: raids and crusade targets on the Maghreb coast, Cortes lands from the sea (1.4); also creates ships without a route
 file = "in_game/events/DHE/flavor_CAS.txt"
 replace = [
   { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 14 },
+  { find = "is_port = yes", with = "is_port = yes pp_is_sea_coast = yes", count = 1 },
 ]
 
 [[worldbuilder.navigation_scripts.patches]]
@@ -326,7 +418,7 @@ replace = [
 # water access, sea only: Ibn Battuta's coastal stops (vanilla meaning)
 file = "in_game/events/character/ibn_battuta_events.txt"
 replace = [
-  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 4 },
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 3 },
 ]
 
 [[worldbuilder.navigation_scripts.patches]]
@@ -409,10 +501,10 @@ replace = [
 ]
 
 [[worldbuilder.navigation_scripts.patches]]
-# water access, sea only: Portuguese raids on the Maghreb coast, American colonies (a hand-authored mod override: the patch goes into that file)
+# water access, sea only: Portuguese raids on the Maghreb coast, American colonies, the Algarve sea school (1.4) (a hand-authored mod override: the patch goes into that file)
 file = "in_game/events/DHE/flavor_por.txt"
 replace = [
-  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 16 },
+  { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 18 },
 ]
 
 [worldbuilder.navigation_scripts.water_access_reviewed]
@@ -475,6 +567,17 @@ replace = [
 "in_game/gui/filters/05_location.txt" = "location filter shows the engine's coastal flag"
 "main_menu/common/coat_of_arms/template_lists/colored_emblem_lists.txt" = "maritime emblems for any coastal owner"
 "main_menu/common/static_modifiers/location.txt" = "the is_port static modifier definition"
+# EU5 1.4
+"in_game/common/expedition_types/cape_route_to_india.txt" = "the remembered departure port is no waypoint (flavour only); the route is fixed named waypoints"
+"in_game/common/expedition_types/cartographic_survey.txt" = "home coast survey, travel_mode both: river ports and their channels are reachable and may be surveyed"
+"in_game/common/expedition_types/grand_embassy.txt" = "a flag that the embassy stopped at a port: any port"
+"in_game/common/expedition_types/relic_expedition.txt" = "flavour event while the expedition stands in a port: any port"
+"in_game/common/script_values/migrations.txt" = "migration pull of coastal locations: river towns drew settlers too (any navigable water)"
+"in_game/common/scripted_triggers/location_triggers.txt" = "is_port_valid_for_stay: a port next to the treasure fleet's current sea tile, which is never a channel (its route is patched off them)"
+"in_game/events/expeditions/cape_route_to_india_events.txt" = "a port next to the fleet's current sea tile: a sea-coast port"
+"in_game/events/expeditions/circumnavigation_expedition_events.txt" = "a port next to the fleet's current sea tile: a sea-coast port"
+"in_game/events/expeditions/grand_embassy_events.txt" = "event text for a host capital that is a port: any port"
+"in_game/events/expeditions/pacific_crossing_events.txt" = "reward event after the voyage (the voyage itself starts from a sea-coast port, patched): any port"
 
 [worldbuilder.start]
 # Game-start building placement (rural food buildings and the urban food chain) from the capacity model; replaces the

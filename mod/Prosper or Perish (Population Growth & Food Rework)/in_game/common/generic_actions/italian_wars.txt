@@ -3,7 +3,7 @@ join_a_league = {
 	type = situation
 
 	ai_tick = monthly
-	ai_tick_frequency = 1
+	ai_tick_frequency = 6
 
 	automation_tick = never
 	automation_tick_frequency = 12
@@ -103,14 +103,28 @@ join_a_league = {
 		}
 		if = {
 			limit = { exists = scope:target }
+			
+			add = {
+				value = "scope:actor.object_bias(scope:target)"
+			}
+
 			#Kindly ask the AI to try and avoid foreign leagues
 			if = {
 				limit = {
 					scope:target = {
 						OR = {
-							this = international_organization:foreign_league_france
-							this = international_organization:foreign_league_iberia
-							this = international_organization:foreign_league_hre
+							AND = {
+								exists = international_organization:foreign_league_france
+								this = international_organization:foreign_league_france
+							}
+							AND = {
+								exists = international_organization:foreign_league_iberia
+								this = international_organization:foreign_league_iberia
+							}
+							AND = {
+								exists = international_organization:foreign_league_hre
+								this = international_organization:foreign_league_hre
+							}
 						}
 					}
 				}
@@ -156,31 +170,34 @@ join_a_league = {
 					}
 				}
 			}
-			scope:target.leader_country = { save_temporary_scope_as = league_leader_to_join }
+			if = {
+				limit = { country_exists = scope:target.leader_country }
+				scope:target.leader_country = { save_temporary_scope_as = league_leader_to_join }
 
-			#Calculations for our 
-			add = {															#Trust is a factor that includes diplomatic reputation
-				scope:league_leader_to_join = {
-					scope:actor = { 
-						value = this_trust_of_prev 
-						multiply = 0.25
+				#Calculations for our
+				add = {															#Trust is a factor that includes diplomatic reputation
+					scope:league_leader_to_join = {
+						scope:actor = {
+							value = this_trust_of_prev
+							multiply = 0.25
+						}
 					}
+					desc = "target leader trust"
 				}
-				desc = "target leader trust"
-			}
-			add = {																	#Up to +25 if scope actor is 100% stronger than current leader
-				value = 25
-				multiply = "scope:actor.relative_strength(scope:league_leader_to_join)"
-				desc = "target leader relative strength"
-			}
-			add = {																	#From +30 to -30 based on member's opinion of Leader
-				scope:league_leader_to_join = {
-					scope:actor = {
-						value = this_opinion_of_prev
-						multiply = 0.15
+				add = {																	#Up to +25 if scope actor is 100% stronger than current leader
+					value = 25
+					multiply = "scope:actor.relative_strength(scope:league_leader_to_join)"
+					desc = "target leader relative strength"
+				}
+				add = {																	#From +30 to -30 based on member's opinion of Leader
+					scope:league_leader_to_join = {
+						scope:actor = {
+							value = this_opinion_of_prev
+							multiply = 0.15
+						}
 					}
+					desc = "target leader opinion"
 				}
-				desc = "target leader opinion"
 			}
 		}
 	}
@@ -656,6 +673,23 @@ plan_campaign_in_italy = {
 		add = {
 			value = 10
 			desc = BASE_VALUE
+		}
+		if = {
+			limit = { exists = scope:actor }
+			scope:actor = {
+				if = {
+					limit = { is_during_bankruptcy = yes }
+					subtract = {
+						desc = IS_BANKRUPT_TOOLTIP
+						value = 1000
+					}
+				}
+				subtract = {
+					desc = DIPLOREASON_NUM_OF_LOANS
+					value = num_loans
+					multiply = 100
+				}
+			}
 		}
 		if = {
 			limit = { exists = scope:target }
@@ -1196,9 +1230,18 @@ expel_league_member = {
 		}
 		visible = {
 			OR = {
-				this = international_organization:italian_league_1
-				this = international_organization:italian_league_2
-				this = international_organization:italian_league_3
+				AND = {
+					exists = international_organization:italian_league_1
+					this = international_organization:italian_league_1
+				}
+				AND = {
+					exists = international_organization:italian_league_2
+					this = international_organization:italian_league_2
+				}
+				AND = {
+					exists = international_organization:italian_league_3
+					this = international_organization:italian_league_3
+				}
 			}
 			leader_country ?= scope:actor
 		}
@@ -1330,9 +1373,18 @@ challenge_league_leadership = {
 		}
 		visible = {
 			OR = {
-				this = international_organization:italian_league_1
-				this = international_organization:italian_league_2
-				this = international_organization:italian_league_3
+				AND = {
+					exists = international_organization:italian_league_1
+					this = international_organization:italian_league_1
+				}
+				AND = {
+					exists = international_organization:italian_league_2
+					this = international_organization:italian_league_2
+				}
+				AND = {
+					exists = international_organization:italian_league_3
+					this = international_organization:italian_league_3
+				}
 			}
 			scope:actor = {
 				is_member_of_international_organization = root

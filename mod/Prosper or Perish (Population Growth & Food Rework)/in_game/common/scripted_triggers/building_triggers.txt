@@ -71,6 +71,16 @@ owner_owns_no_copies_of_building = {
 	}
 }
 
+country_has_no_other_copy_of_building = {
+	custom_tooltip = {
+		text = country_has_no_other_copy_of_building_tt
+		OR = {
+			has_building = building_type:$type$
+			owner ?= { total_building_levels_including_construction:$type$ < 1 }
+		}
+	}
+}
+
 is_historical_route_of_great_wall = {
 	custom_tooltip = {
 		text = is_historical_route_of_great_wall_tt
@@ -179,6 +189,13 @@ show_production_building_trigger = {
 }
 
 is_no_longer_capital = {
+	location ?= {
+		counts_as_capital = no
+		owner ?= { in_civil_war = no }
+	}
+}
+
+is_no_longer_current_capital = {
 	location ?= {
 		is_capital = no
 		owner ?= { in_civil_war = no }

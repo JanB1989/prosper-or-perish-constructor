@@ -2295,7 +2295,7 @@ flavor_cas.36 = { #Hernán Cortés
 			area:tlaxcala_area = {
 				random_location_in_area = {
 					limit = {
-						is_port = yes
+						is_port = yes pp_is_sea_coast = yes
 					}
 					save_scope_as = target_location
 				}

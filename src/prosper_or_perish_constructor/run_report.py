@@ -1032,6 +1032,8 @@ PAGE_JS = r"""
 
   const specs = Object.fromEntries(DATA.charts.map(c => [c.key, c]));
   const init = el => {
+    if (el.dataset.ready) return;
+    el.dataset.ready = '1';
     const spec = specs[el.dataset.key];
     const chart = echarts.init(el, dark ? 'dark' : null);
     const buttons = el.closest('.card').querySelectorAll('.views button');
@@ -1053,7 +1055,19 @@ PAGE_JS = r"""
   const io = new IntersectionObserver(entries => entries.forEach(e => {
     if (e.isIntersecting) { io.unobserve(e.target); init(e.target); }
   }), {rootMargin: '400px'});
-  document.querySelectorAll('.chart[data-key]').forEach(el => io.observe(el));
+  const all = [...document.querySelectorAll('.chart[data-key]')];
+  all.forEach(el => io.observe(el));
+  // charts not scrolled to yet are drawn in the background, one at a time, so every chart is ready
+  window.addEventListener('load', () => {
+    const next = () => {
+      const el = all.find(e => !e.dataset.ready);
+      if (!el) return;
+      io.unobserve(el);
+      init(el);
+      setTimeout(next, 60);
+    };
+    setTimeout(next, 1200);
+  });
 
   for (const spec of DATA.tables) {
     const root = document.getElementById('table-' + spec.key);

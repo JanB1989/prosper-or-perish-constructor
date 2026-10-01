@@ -13,6 +13,7 @@ from pathlib import Path
 import polars as pl
 
 from prosper_or_perish_constructor.location_baseline import resolve_load_order_path
+from prosper_or_perish_constructor.setup_layout import LEGACY_SETUP_DIR, check_setup_folder
 from prosper_or_perish_constructor.worldbuilder import attribute_tooltips as wb_tooltips
 from prosper_or_perish_constructor.worldbuilder import buildings as wb_buildings
 from prosper_or_perish_constructor.worldbuilder import compat as wb_compat
@@ -42,6 +43,8 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     cfg: WorldBuilderConfig = load_config(repo, project)
     contract: Contract = load_contract(contract_root or cfg.handover)
     from . import navigation
+    # every setup file below goes into the active bookmark's setup folder; the pre-1.4 folder is no longer read
+    check_setup_folder(vanilla_root(repo, project) / "game", mod_root)
     report: dict[str, object] = {"handover": str(contract.root), "version": contract.version, "worldbuilder_commit": contract.meta.get("worldbuilder_commit")}
     if cfg.sync_geography:
         report["geography"] = wb_geography.sync_geography(cfg.geography_export, mod_root, repo, vanilla_root(repo, project))
@@ -106,6 +109,11 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     (mod_root / wb_development.SETUP_RELATIVE_PATH).write_text("﻿" + wb_development.render_development_setup(development), encoding="utf-8", newline="\n")
     wb_development.write_development_export(development, repo / wb_development.EXPORT_RELATIVE_PATH)
     report["development"] = {"locations": int(development.height), "median": float(development["development"].median() or 0.0), "max": float(development["development"].max() or 0.0)}
+    # the setup files are all written to the active setup folder now; a pre-1.4 copy would only be dead weight
+    if (mod_root / LEGACY_SETUP_DIR).is_dir():
+        import shutil
+
+        shutil.rmtree(mod_root / LEGACY_SETUP_DIR)
     out = repo / REPORT_RELATIVE_PATH
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

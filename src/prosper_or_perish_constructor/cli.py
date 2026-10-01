@@ -61,6 +61,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/production_labour.py",
     "src/prosper_or_perish_constructor/provisioning.py",
     "src/prosper_or_perish_constructor/rural_capacity.py",
+    "src/prosper_or_perish_constructor/setup_layout.py",          # the setup folder every setup writer uses
     "src/prosper_or_perish_constructor/yaml_io.py",
     "scripts/generate_rural_capacity_values.py",
     "scripts/generate_raw_material_local_map_modes.py",
@@ -1788,10 +1789,9 @@ def _is_setup_start_file(mod_root: Path, path: Path) -> bool:
     except ValueError:
         return False
     parts = relative.parts
-    return len(parts) >= 4 and parts[0] in GAME_LOADED_TEXT_ROOTS and parts[1:3] == (
-        "setup",
-        "start",
-    )
+    from prosper_or_perish_constructor.setup_layout import SETUP_DIR
+
+    return len(parts) > len(SETUP_DIR.parts) and parts[: len(SETUP_DIR.parts)] == SETUP_DIR.parts
 
 
 def _iter_game_loaded_text_files(mod_root: Path) -> list[Path]:

@@ -1529,7 +1529,7 @@ def test_game_start_places_no_buildings_at_runtime() -> None:
     assert "num_pop_type" not in game_start
     assert "location_building_level" not in game_start
     assert "NOT = { has_building" not in game_start
-    start_setup = GAME_START_PATH.parents[3] / "main_menu" / "setup" / "start" / "14_pp_start_buildings.txt"
+    start_setup = GAME_START_PATH.parents[3] / "main_menu" / "setup" / "1337" / "14_pp_start_buildings.txt"
     assert "building_manager = {" in start_setup.read_text(encoding="utf-8-sig")
 
 

@@ -34,7 +34,7 @@ def test_geography_sync_ships_the_map_ports_and_adjacencies(tmp_path):
 
 
 def test_capitals_and_pop_countries_do_not_own_land(tmp_path):
-    start = tmp_path / "mod/main_menu/setup/start"
+    start = tmp_path / "mod/main_menu/setup/1337"
     start.mkdir(parents=True)
     (start / "10_countries.txt").write_text(
         "countries = { countries = {\n"

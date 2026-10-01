@@ -209,7 +209,7 @@ def test_sea_coast_placement_matches_the_offline_map_state():
     state = coast.cached(REPO)
     if state is None:
         pytest.skip("run ppc worldbuilder apply first")
-    setup = (MOD / "main_menu/setup/start/21_pp_wb_attribute_modifiers.txt").read_text(encoding="utf-8-sig")
+    setup = (MOD / "main_menu/setup/1337/21_pp_wb_attribute_modifiers.txt").read_text(encoding="utf-8-sig")
     placed = set()
     for match in re.finditer(r"(?ms)^\t(\w+) = \{(.*?)^\t\}", setup):
         if 'modifier = "pp_wb_coastal"' in match[2]:

@@ -23,6 +23,7 @@ from . import start_placement as sp
 from .market_capacity import write as write_market_caps
 from .modifiers import setup_modifier_keys
 from .start_rules import Rules, Unresolved, first
+from ..setup_layout import SETUP_DIR
 
 
 VANILLA_CLIMATES = {"arctic", "arid", "cold_arid", "continental", "mediterranean", "oceanic", "subtropical", "tropical"}
@@ -50,7 +51,7 @@ def setup_counts(path):
 
 
 def seed_vanilla(vanilla_root, rules, owners):
-    path = vanilla_root / "game/main_menu/setup/start/07_cities_and_buildings.txt"
+    path = vanilla_root / "game" / SETUP_DIR / "07_cities_and_buildings.txt"
     doc = parse_file(path)
     counts = setup_counts(path)
     for block in doc.values("locations"):
@@ -120,15 +121,15 @@ def write_vanilla(doc, counts, owners, mod_root):
         doc,
         counts,
         owners,
-        mod_root / "main_menu/setup/start/07_cities_and_buildings.txt",
+        mod_root / SETUP_DIR / "07_cities_and_buildings.txt",
         expand_presets=True,
     )
 
 
 def additional_setups(vanilla_root, mod_root):
     """Find building managers outside the town and generated placement files."""
-    base = vanilla_root / "game/main_menu/setup/start"
-    target = mod_root / "main_menu/setup/start"
+    base = vanilla_root / "game" / SETUP_DIR
+    target = mod_root / SETUP_DIR
     paths = {p.name: p for root in (base, target) for p in root.glob("*.txt")}
     excluded = {
         "07_cities_and_buildings.txt",
@@ -1553,7 +1554,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
             for key, n in local.items():
                 kept[tag][key] = min(n, kept_vanilla[tag][key])
                 kept_vanilla[tag][key] -= kept[tag][key]
-        write_setup(extra_doc, kept, owners, mod_root / "main_menu/setup/start" / name)
+        write_setup(extra_doc, kept, owners, mod_root / SETUP_DIR / name)
     write_vanilla(doc, kept_vanilla, owners, mod_root)
     rows = [
         f" {key} = {{ tag = {owners[tag]} level = {n} location = {tag} }}"

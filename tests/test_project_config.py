@@ -3199,7 +3199,7 @@ def _vanilla_start_estate_locations_by_building() -> dict[str, set[str]]:
     estate_buildings = set(_vanilla_estate_buildings())
 
     setup = parse_setup_model(
-        (vanilla_root / "main_menu" / "setup" / "start" / "07_cities_and_buildings.txt").read_text(
+        (vanilla_root / "main_menu" / "setup" / "1337" / "07_cities_and_buildings.txt").read_text(
             encoding="utf-8-sig"
         )
     )

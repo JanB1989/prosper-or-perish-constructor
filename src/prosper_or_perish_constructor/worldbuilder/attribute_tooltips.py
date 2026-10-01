@@ -34,6 +34,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from prosper_or_perish_constructor import location_status
+from prosper_or_perish_constructor.setup_layout import SETUP_DIR
 
 from .modifiers import CLASS_DIRS
 
@@ -63,7 +64,7 @@ ICONS_PER_GROUP_ROW = 12
 # composed by tools/build_land_potential_icon.py
 LAND_POTENTIAL_ICON = "gfx/interface/icons/location_icons/pp_land_potential.dds"
 LOCATION_TEMPLATES = Path("in_game/map_data/location_templates.txt")
-SETUP_MODIFIERS = Path("main_menu/setup/start/21_pp_wb_attribute_modifiers.txt")
+SETUP_MODIFIERS = SETUP_DIR / "21_pp_wb_attribute_modifiers.txt"
 
 
 @dataclass(frozen=True)

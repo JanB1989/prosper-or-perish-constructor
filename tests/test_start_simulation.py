@@ -106,7 +106,7 @@ def test_conversion_spanning_identical_pop_rows_preserves_total():
 
 
 def test_multiline_setup_counts_and_ranks_are_not_lost(tmp_path):
-    root = tmp_path / "game/main_menu/setup/start"
+    root = tmp_path / "game/main_menu/setup/1337"
     root.mkdir(parents=True)
     p = root / "07_cities_and_buildings.txt"
     p.write_text(
@@ -135,19 +135,19 @@ def test_sanitized_setup_preserves_foreign_building_owner(tmp_path):
     doc = parse_text(
         "locations = { port = { rank = town town_setup = old } } building_manager = { trade_office = { location = port tag = HSA level = 3 } }"
     )
-    (tmp_path / "main_menu/setup/start").mkdir(parents=True)
+    (tmp_path / "main_menu/setup/1337").mkdir(parents=True)
     write_vanilla(
         doc,
         {"port": Counter({"trade_office": 2, "temple": 1})},
         {"port": "DAN"},
         tmp_path,
     )
-    output = (tmp_path / "main_menu/setup/start/07_cities_and_buildings.txt").read_text(
+    output = (tmp_path / "main_menu/setup/1337/07_cities_and_buildings.txt").read_text(
         encoding="utf-8-sig"
     )
     assert "tag = HSA" in output and "town_setup" not in output
     assert (
-        setup_counts(tmp_path / "main_menu/setup/start/07_cities_and_buildings.txt")[
+        setup_counts(tmp_path / "main_menu/setup/1337/07_cities_and_buildings.txt")[
             "port"
         ]["trade_office"]
         == 2

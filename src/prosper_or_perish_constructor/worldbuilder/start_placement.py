@@ -21,15 +21,16 @@ import polars as pl
 from prosper_or_perish_constructor.worldbuilder.buildings import BLUEPRINTS, GENERATED, SETUP_PATH as IMPROVEMENT_SETUP_PATH, farm_constants
 from prosper_or_perish_constructor.worldbuilder.contract import WorldBuilderConfig
 from prosper_or_perish_constructor import yaml_io
+from prosper_or_perish_constructor.setup_layout import LEGACY_SETUP_DIR, SETUP_DIR
 
-START_SETUP_PATH = Path("main_menu/setup/start/14_pp_start_buildings.txt")
-POPS_SETUP_PATH = Path("main_menu/setup/start/06_pops.txt")
+START_SETUP_PATH = SETUP_DIR / "14_pp_start_buildings.txt"
+POPS_SETUP_PATH = SETUP_DIR / "06_pops.txt"
 REPORT_RELATIVE_PATH = Path("artifacts/data/worldbuilder/start_placement.json")
 TABLE_RELATIVE_PATH = Path("artifacts/data/worldbuilder/start_placement.csv")
 LEGACY_FILES = (
     "in_game/common/on_action/pp_food_building_startup_generated.txt",
     "in_game/common/town_setups/zz_pp_sanitized_start_town_setups.txt",
-    "main_menu/setup/start/07_cities_and_buildings.txt",
+    str(LEGACY_SETUP_DIR / "07_cities_and_buildings.txt"),
 )
 RANK_ORDER = {"megalopolis": 0, "city": 1, "town": 2, "rural_settlement": 3}
 FARMABLE_RGOS = {"livestock", "wheat", "legumes", "fruit", "millet", "wool", "rice", "beeswax", "maize", "olives", "potato"}
@@ -188,7 +189,7 @@ class Pop:
 def setup_files(vanilla_root: Path, mod_root: Path, name: str) -> list[Path]:
     """The setup file the game loads for ``name``: the mod's copy if it has one, else vanilla's."""
     for root in (mod_root, Path(vanilla_root) / "game"):
-        path = root / "main_menu/setup/start" / name
+        path = root / SETUP_DIR / name
         if path.is_file():
             return [path]
     return []

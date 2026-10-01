@@ -91,7 +91,7 @@ def test_start_setup_rows_use_the_building_manager_format(tmp_path):
 
 
 def test_ranks_and_existing_buildings_come_from_the_vanilla_cities_setup(tmp_path):
-    setup = tmp_path / "game/main_menu/setup/start"
+    setup = tmp_path / "game/main_menu/setup/1337"
     setup.mkdir(parents=True)
     (setup / "07_cities_and_buildings.txt").write_text(
         "locations={\n\t#egypt\n\tcairo = { rank = megalopolis \t\ttown_setup = cairo_city }\n"

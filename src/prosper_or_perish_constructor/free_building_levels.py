@@ -30,6 +30,7 @@ from eu5gameparser.load_order import DataProfile, GameLayer, LoadOrderConfig
 from PIL import Image
 
 from prosper_or_perish_constructor.location_baseline import build_location_geometry_frame, load_current_location_frame
+from prosper_or_perish_constructor.setup_layout import SETUP_DIR
 
 
 SPREADSHEET_ID = "1d_zH-wxb9ufW6RgVZgJdGqToJ-VZP_XPS7WhhUAa18U"
@@ -2321,9 +2322,9 @@ def _natural_sort_key(value: str) -> tuple[int, int | str]:
 
 
 def _setup_start_dir(layer: GameLayer) -> Path:
-    relative = Path("game") / "main_menu" / "setup" / "start"
+    relative = Path("game") / SETUP_DIR
     if layer.kind != "vanilla":
-        relative = Path("main_menu") / "setup" / "start"
+        relative = SETUP_DIR
     return layer.root / relative
 
 

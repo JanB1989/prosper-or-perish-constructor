@@ -158,7 +158,7 @@ def test_finalize_command_runs_constructor_finalizer(
 def test_constructor_text_bom_finalizer_scans_game_loaded_files(tmp_path: Path) -> None:
     mod_root = tmp_path / "mod" / "test-mod"
     scripted_trigger = mod_root / "in_game" / "common" / "scripted_triggers" / "pp_test.txt"
-    setup_start = mod_root / "main_menu" / "setup" / "start" / "07_test.txt"
+    setup_start = mod_root / "main_menu" / "setup" / "1337" / "07_test.txt"
     setup_country = mod_root / "main_menu" / "setup" / "countries" / "pp_test.txt"
     metadata = mod_root / ".metadata" / "metadata.json"
     scripted_trigger.parent.mkdir(parents=True)
@@ -285,7 +285,7 @@ def test_smart_sync_reruns_world_builder_only_when_its_inputs_change(
     (repo / "blueprints" / "buildings.manifest.yml").write_text("enabled: {}\n", encoding="utf-8")
     farm = repo / "blueprints" / "accepted" / "buildings" / "farm.yml"
     farm.write_text("max_levels: 3\n", encoding="utf-8")
-    setup = repo / "mod" / "test-mod" / "main_menu" / "setup" / "start" / "05_hand_written.txt"
+    setup = repo / "mod" / "test-mod" / "main_menu" / "setup" / "1337" / "05_hand_written.txt"
     setup.parent.mkdir(parents=True)
     setup.write_text("locations = {}\n", encoding="utf-8")
     runs: list[str] = []

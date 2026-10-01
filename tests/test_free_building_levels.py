@@ -270,7 +270,7 @@ def test_round_numeric_columns_keeps_notebook_tables_to_two_decimals() -> None:
 
 def test_setup_start_parsers_read_game_start_sources(tmp_path: Path) -> None:
     profile = _fixture_profile(tmp_path)
-    start = tmp_path / "game" / "main_menu" / "setup" / "start"
+    start = tmp_path / "game" / "main_menu" / "setup" / "1337"
     start.mkdir(parents=True)
     (start / "07_cities_and_buildings.txt").write_text(
         "locations={ alpha={ rank=city } beta={ rank=town } }",
@@ -570,7 +570,7 @@ def test_development_contribution_uses_effective_zero_to_hundred_cap() -> None:
 
 def test_build_game_start_location_frame_smoke_with_fixture_maps(tmp_path: Path) -> None:
     profile = _fixture_profile(tmp_path)
-    start = tmp_path / "game" / "main_menu" / "setup" / "start"
+    start = tmp_path / "game" / "main_menu" / "setup" / "1337"
     start.mkdir(parents=True)
     (start / "07_cities_and_buildings.txt").write_text("locations={ alpha={ rank=city } }", encoding="utf-8")
     (start / "03_markets.txt").write_text("market_manager={ add_market=alpha }", encoding="utf-8")

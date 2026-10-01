@@ -172,7 +172,7 @@ def _farm_source_rows(
     omitted = list(dict.fromkeys([*([omit_building] if omit_building is not None else []), *omit_buildings]))
     if not omitted:
         land, reserve = default
-        return _free_land_rows(land, reserve, "BUILDING_LEVEL_WB_FREE_FARMLAND") + [_line("min = 0", 1)]
+        return _free_land_rows(land, reserve, "BUILDING_LEVEL_WB_FREE_FARMLAND") + [_line('min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }', 1)]
     target = omitted[0]
     land, reserve = per_building.get(target, default)
     rows = _free_land_rows(land, reserve, "BUILDING_LEVEL_WB_FREE_FARMLAND")
@@ -185,7 +185,7 @@ def _farm_source_rows(
                 _line("}", 1),
             ]
         )
-    rows.append(_line("min = 0", 1))
+    rows.append(_line('min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }', 1))
     return rows
 
 

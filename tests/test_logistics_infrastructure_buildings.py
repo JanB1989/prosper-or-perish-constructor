@@ -82,7 +82,7 @@ def test_river_boatmen_yard_cap_scales_with_river_level() -> None:
     cap_value = LOGISTICS_CAPS.read_text(encoding="utf-8")
     assert 'desc = "BUILDING_LEVEL_RIVER_FREIGHT_CAPACITY"' in cap_value
     assert "value = modifier:pp_river_boatmen_yard_cap_modifier" in cap_value
-    assert "min = 0" in cap_value
+    assert 'min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }' in cap_value
 
     modifiers = LOCATION_MODIFIERS.read_text(encoding="utf-8-sig")
     for river_level in range(1, 6):
@@ -113,7 +113,7 @@ def test_coastal_shipping_office_cap_scales_with_natural_harbor() -> None:
     assert "value = 10" in cap_value
     assert 'desc = "BUILDING_LEVEL_NATURAL_HARBOR_SUITABILITY"' in cap_value
     assert "value = modifier:pp_coastal_shipping_office_cap_modifier" in cap_value
-    assert "min = 0" in cap_value
+    assert 'min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }' in cap_value
 
     modifiers = LOCATION_MODIFIERS.read_text(encoding="utf-8-sig")
     poor = re.search(r"TRY_INJECT:location_template_natural_harbor_suitability_poor = \{(?P<body>.*?)\n\}", modifiers, flags=re.S)

@@ -192,8 +192,15 @@ def cap_script_value(contract: Contract, key: str, equation: Mapping[str, object
     gamma = float(equation["levels_per_development_point"]) * scale
     if gamma:
         lines.extend(["\tadd = {", '\t\tdesc = "BUILDING_LEVEL_WB_DEVELOPMENT"', "\t\tvalue = development", f"\t\tmultiply = {gamma:.4f}".rstrip("0").rstrip("."), "\t}"])
-    lines.extend(["\tfloor = yes", "\tmin = 0", f"\tmax = {int(round(level_limit * scale))}", "}"])
+    # Every operation needs a desc, or the breakdown tooltip shows a "missing key" line; no floor = yes, the engine
+    # floors max_levels to whole levels itself (2026-10-01).
+    lines.extend([_clamp("min", "MINIMUM", 0), _clamp("max", "MAXIMUM", int(round(level_limit * scale))), "}"])
     return "\n".join(lines)
+
+
+def _clamp(op: str, label: str, value: object) -> str:
+    """A described min/max line of a cap script value (BUILDING_LEVEL_WB_MINIMUM / _MAXIMUM)."""
+    return f'\t{op} = {{ desc = "BUILDING_LEVEL_WB_{label}" value = {value} }}'
 
 
 def families(cfg: WorldBuilderConfig) -> dict[str, list[str]]:
@@ -216,10 +223,10 @@ def lower_tiers(cfg: WorldBuilderConfig, key: str) -> list[str]:
 
 def shared_cap_value(name: str, source: str, siblings: list[str]) -> str:
     """``name`` = the family's cap equation minus the levels already used by the other family members."""
-    lines = [f"{name} = {{", f"\tvalue = {source}"]
+    lines = [f"{name} = {{", "\tadd = {", '\t\tdesc = "BUILDING_LEVEL_WB_FAMILY"', f"\t\tvalue = {source}", "\t}"]
     for sibling in siblings:
         lines.extend(["\tsubtract = {", f'\t\tdesc = "BUILDING_LEVEL_WB_SHARED_{sibling.upper()}"', f"\t\tvalue = modifier:{LEVELS_MODIFIER.format(key=sibling)}", "\t}"])
-    lines.extend(["\tmin = 0", "}"])
+    lines.extend([_clamp("min", "MINIMUM", 0), "}"])
     return "\n".join(lines)
 
 
@@ -273,7 +280,7 @@ def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> d
             siblings = [m for m in (key, *members) if m != niche and m not in lower]
             block = shared_cap_value(f"pp_wb_cap_{niche}", source, siblings)
             if cfg.niche[niche].get("maximum_levels"):
-                block = block[:-1] + f"\tmax = {int(cfg.niche[niche]['maximum_levels'])}\n}}"
+                block = block[:-1] + _clamp("max", "MAXIMUM", int(cfg.niche[niche]["maximum_levels"])) + "\n}"
             blocks.append(block)
             info[niche] = {"kind": kind, "unit_people": niche_people, "unit_units": units(niche_people), "scale": scale, "limit": int(round(limit * scale)), "family": key, "strength": strength, "niche": True}
     missing = [n for n, spec in cfg.niche.items() if spec["family"] not in info]
@@ -289,9 +296,12 @@ def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> d
     # tooltip rows for the cap values and the farm values
     keys = sorted(set(re.findall(r'desc = "(BUILDING_LEVEL_WB_[A-Z0-9_]+)"', text)))
     loc = ["l_english:", '  BUILDING_LEVEL_WB_BASE: "Base levels"', '  BUILDING_LEVEL_WB_DEVELOPMENT: "From [development|e]"',
-           '  BUILDING_LEVEL_WB_FREE_FARMLAND: "Available Subsistence Land"']
+           '  BUILDING_LEVEL_WB_FREE_FARMLAND: "Available Subsistence Land"', '  BUILDING_LEVEL_WB_MINIMUM: "Minimum"',
+           '  BUILDING_LEVEL_WB_MAXIMUM: "Upper limit"', '  BUILDING_LEVEL_WB_FAMILY: "Capacity shared with related buildings"']
+    fixed = ("BUILDING_LEVEL_WB_BASE", "BUILDING_LEVEL_WB_DEVELOPMENT", "BUILDING_LEVEL_WB_FREE_FARMLAND",
+             "BUILDING_LEVEL_WB_MINIMUM", "BUILDING_LEVEL_WB_MAXIMUM", "BUILDING_LEVEL_WB_FAMILY")
     for key in keys:
-        if key in ("BUILDING_LEVEL_WB_BASE", "BUILDING_LEVEL_WB_DEVELOPMENT"):
+        if key in fixed:
             continue
         rest = key.removeprefix("BUILDING_LEVEL_WB_")
         if rest.startswith("SHARED_"):

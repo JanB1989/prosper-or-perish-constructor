@@ -26,6 +26,13 @@ def write(repo, mod_root):
         "ROADS": "Roads",
         "HARBOR_CAPACITY": "Harbor capacity",
         "THRESHOLD": "Established harbor trade",
+        # Every operation of a cap that shows a breakdown needs a desc, or the tooltip shows a "missing key" line
+        # (2026-10-01). No floor = yes: the engine floors max_levels to whole levels itself.
+        "MINIMUM": "Minimum",
+        "MAXIMUM": "Upper limit",
+        "SITE_TAVERN": "Not a town or city that is a province capital",
+        "SITE_YARD": "Not a Victualling Yard site",
+        "SITE_GRANGE": "Not a province capital, or a Victualling Yard site",
     }
 
     def add(label, value):
@@ -33,6 +40,12 @@ def write(repo, mod_root):
 
     def when(condition, label, value):
         return f"if = {{ limit = {{ {condition} }} {add(label, value)} }}"
+
+    def clamp(op, label, value):
+        return f"{op} = {{ desc = PP_VM_CAP_{label} value = {value} }}"
+
+    def zero_unless(condition, label):
+        return f"if = {{ limit = {{ {condition} }} multiply = {{ desc = PP_VM_CAP_{label} value = 0 }} }}"
 
     lines = [
         "# Generated from config/victuals_logistics.json. Both the planner and game use these values."
@@ -93,10 +106,8 @@ def write(repo, mod_root):
             body.append(f"{keyword} = {{ limit = {{ topography = {terrain} }} {add('TERRAIN', n)} }}")
         # Towns and larger that are province capitals only (2026-10-01, as the building's rank flags and potential).
         # Elsewhere 0, so the four-yearly cull clears Taverns an old save left in villages and non-capitals.
-        body.append(
-            "if = { limit = { OR = { is_province_capital = no location_rank ?= location_rank:rural_settlement } } multiply = 0 }"
-        )
-        body += ["min = 0", f"max = {spec['maximum']}", "floor = yes"]
+        body.append(zero_unless("OR = { is_province_capital = no location_rank ?= location_rank:rural_settlement }", "SITE_TAVERN"))
+        body += [clamp("min", "MINIMUM", 0), clamp("max", "MAXIMUM", spec["maximum"])]
         lines.append(
             f"{role}_max_level = {{\n " + "\n ".join(body) + "\n}"
         )
@@ -109,10 +120,9 @@ def write(repo, mod_root):
         when("is_market_center = yes", "MARKET", y["market_center"]),
         add("DEVELOPMENT", f"development multiply = {y['development']}"),
         add("THRESHOLD", y["threshold"]),
-        "floor = yes",
-        f"min = {y['minimum']}",
-        f"max = {y['maximum']}",
-        "if = { limit = { NOT = { pp_victualling_yard_site = yes } } multiply = 0 }",
+        clamp("min", "MINIMUM", y["minimum"]),
+        clamp("max", "MAXIMUM", y["maximum"]),
+        zero_unless("NOT = { pp_victualling_yard_site = yes }", "SITE_YARD"),
     ]
     lines.append("victualling_yard_max_level = {\n " + "\n ".join(body) + "\n}")
     # The Grange, the Yard's overland twin at province capitals: base, roads, market centre, development.
@@ -123,10 +133,9 @@ def write(repo, mod_root):
     body += [
         when("is_market_center = yes", "MARKET", g["market_center"]),
         add("DEVELOPMENT", f"development multiply = {g['development']}"),
-        "if = { limit = { OR = { is_province_capital = no pp_victualling_yard_site = yes } } multiply = 0 }",
-        "min = 0",
-        f"max = {g['maximum']}",
-        "floor = yes",
+        zero_unless("OR = { is_province_capital = no pp_victualling_yard_site = yes }", "SITE_GRANGE"),
+        clamp("min", "MINIMUM", 0),
+        clamp("max", "MAXIMUM", g["maximum"]),
     ]
     lines.append("grange_max_level = {\n " + "\n ".join(body) + "\n}")
     path = mod_root / "in_game/common/script_values/pp_victuals_logistics.txt"

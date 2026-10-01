@@ -56,7 +56,7 @@ def test_cap_script_value_and_gate_use_game_keys(tmp_path):
     eq = json.loads(c.building_types["cap_equation_json"][0])
     text = wb_buildings.cap_script_value(c, "land_clearance", eq, 1.0, 20)
     assert "limit = { climate = arid }" in text and "limit = { has_location_modifier = pp_wb_fertility_high }" in text
-    assert "value = development" in text and "multiply = 0.03" in text and "max = 20" in text
+    assert "value = development" in text and "multiply = 0.03" in text and 'max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 }' in text
     assert wb_buildings.gate_trigger(c, [{"climate": ["arid", "continental"]}]) == ["OR = { climate = arid climate = continental }"]
     assert wb_buildings.gate_trigger(c, []) == ["always = yes"]
     assert wb_buildings.trigger_for(c, "river_level", "0") == "has_river = no"
@@ -129,8 +129,8 @@ def test_niche_buildings_share_the_family_cap_and_are_stronger(tmp_path):
     caps = wb_buildings.write_caps(c, cfg, tmp_path)
     text = (tmp_path / wb_buildings.CAPS_PATH).read_text(encoding="utf-8-sig")
     assert "pp_wb_cap_land_clearance_shared = {" in text
-    assert "pp_wb_cap_land_clearance = {\n\tvalue = pp_wb_cap_land_clearance_shared\n\tsubtract = {\n\t\tdesc = \"BUILDING_LEVEL_WB_SHARED_TERRACES_X\"\n\t\tvalue = modifier:pp_wb_levels_terraces_x" in text
-    assert "pp_wb_cap_terraces_x = {\n\tvalue = pp_wb_cap_land_clearance_shared\n\tsubtract = {\n\t\tdesc = \"BUILDING_LEVEL_WB_SHARED_LAND_CLEARANCE\"\n\t\tvalue = modifier:pp_wb_levels_land_clearance" in text
+    assert "pp_wb_cap_land_clearance = {\n\tadd = {\n\t\tdesc = \"BUILDING_LEVEL_WB_FAMILY\"\n\t\tvalue = pp_wb_cap_land_clearance_shared\n\t}\n\tsubtract = {\n\t\tdesc = \"BUILDING_LEVEL_WB_SHARED_TERRACES_X\"\n\t\tvalue = modifier:pp_wb_levels_terraces_x" in text
+    assert "pp_wb_cap_terraces_x = {\n\tadd = {\n\t\tdesc = \"BUILDING_LEVEL_WB_FAMILY\"\n\t\tvalue = pp_wb_cap_land_clearance_shared\n\t}\n\tsubtract = {\n\t\tdesc = \"BUILDING_LEVEL_WB_SHARED_LAND_CLEARANCE\"\n\t\tvalue = modifier:pp_wb_levels_land_clearance" in text
     assert caps["terraces_x"]["unit_units"] == round(5.2 * 1.5, 2) and caps["terraces_x"]["niche"] and caps["terraces_x"]["family"] == "land_clearance"
     types = (tmp_path / wb_buildings.LEVELS_TYPES_PATH).read_text(encoding="utf-8-sig")
     assert "pp_wb_levels_land_clearance = {" in types and "pp_wb_levels_terraces_x = {" in types

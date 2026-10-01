@@ -984,7 +984,7 @@ def test_urban_industry_cap_adjustments_double_growth_factors() -> None:
             block,
         )
         assert "BUILDING_LEVEL_LOW_MARKET_ACCESS_PENALTY" in block
-        assert re.search(r"^\tmin = 1$", block, flags=re.M)
+        assert re.search(r'^\tmin = \{ desc = "BUILDING_LEVEL_WB_MINIMUM" value = 1 \}$', block, flags=re.M)
 
 
 def test_irrigation_cap_scales_with_river_static_modifier_level() -> None:

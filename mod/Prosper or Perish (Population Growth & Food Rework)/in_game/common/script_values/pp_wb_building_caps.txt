@@ -168,9 +168,8 @@ pp_wb_cap_land_clearance = {
 		value = development
 		multiply = 0.03
 	}
-	floor = yes
-	min = 0
-	max = 40
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 40 }
 }
 
 pp_wb_cap_field_management_shared = {
@@ -393,13 +392,15 @@ pp_wb_cap_field_management_shared = {
 		value = development
 		multiply = 0.09
 	}
-	floor = yes
-	min = 0
-	max = 60
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 60 }
 }
 
 pp_wb_cap_field_management = {
-	value = pp_wb_cap_field_management_shared
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = pp_wb_cap_field_management_shared
+	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_CONVERTIBLE"
 		value = modifier:pp_wb_levels_field_management_convertible
@@ -412,11 +413,14 @@ pp_wb_cap_field_management = {
 		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_HILL_TERRACES"
 		value = modifier:pp_wb_levels_jiangnan_hill_terraces
 	}
-	min = 0
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 pp_wb_cap_field_management_convertible = {
-	value = pp_wb_cap_field_management_shared
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = pp_wb_cap_field_management_shared
+	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_IMPROVED"
 		value = modifier:pp_wb_levels_field_management_improved
@@ -425,20 +429,26 @@ pp_wb_cap_field_management_convertible = {
 		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_HILL_TERRACES"
 		value = modifier:pp_wb_levels_jiangnan_hill_terraces
 	}
-	min = 0
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 pp_wb_cap_field_management_improved = {
-	value = pp_wb_cap_field_management_shared
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = pp_wb_cap_field_management_shared
+	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_HILL_TERRACES"
 		value = modifier:pp_wb_levels_jiangnan_hill_terraces
 	}
-	min = 0
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 pp_wb_cap_jiangnan_hill_terraces = {
-	value = pp_wb_cap_field_management_shared
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = pp_wb_cap_field_management_shared
+	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT"
 		value = modifier:pp_wb_levels_field_management
@@ -451,7 +461,7 @@ pp_wb_cap_jiangnan_hill_terraces = {
 		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_IMPROVED"
 		value = modifier:pp_wb_levels_field_management_improved
 	}
-	min = 0
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 pp_wb_cap_irrigation_systems_shared = {
@@ -499,13 +509,15 @@ pp_wb_cap_irrigation_systems_shared = {
 		value = development
 		multiply = 0.03
 	}
-	floor = yes
-	min = 0
-	max = 40
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 40 }
 }
 
 pp_wb_cap_irrigation_systems = {
-	value = pp_wb_cap_irrigation_systems_shared
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = pp_wb_cap_irrigation_systems_shared
+	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
 		value = modifier:pp_wb_levels_khmer_baray
@@ -514,11 +526,14 @@ pp_wb_cap_irrigation_systems = {
 		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
 		value = modifier:pp_wb_levels_incamisana
 	}
-	min = 0
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 pp_wb_cap_khmer_baray = {
-	value = pp_wb_cap_irrigation_systems_shared
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = pp_wb_cap_irrigation_systems_shared
+	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
 		value = modifier:pp_wb_levels_irrigation_systems
@@ -527,11 +542,14 @@ pp_wb_cap_khmer_baray = {
 		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
 		value = modifier:pp_wb_levels_incamisana
 	}
-	min = 0
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 pp_wb_cap_incamisana = {
-	value = pp_wb_cap_irrigation_systems_shared
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = pp_wb_cap_irrigation_systems_shared
+	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
 		value = modifier:pp_wb_levels_irrigation_systems
@@ -540,7 +558,7 @@ pp_wb_cap_incamisana = {
 		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
 		value = modifier:pp_wb_levels_khmer_baray
 	}
-	min = 0
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 pp_wb_cap_irrigated_fields_shared = {
@@ -812,27 +830,32 @@ pp_wb_cap_irrigated_fields_shared = {
 		value = development
 		multiply = 0.24
 	}
-	floor = yes
-	min = 0
-	max = 160
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 160 }
 }
 
 pp_wb_cap_irrigated_fields = {
-	value = pp_wb_cap_irrigated_fields_shared
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = pp_wb_cap_irrigated_fields_shared
+	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_CANAL_NETWORK"
 		value = modifier:pp_wb_levels_jiangnan_canal_network
 	}
-	min = 0
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 pp_wb_cap_jiangnan_canal_network = {
-	value = pp_wb_cap_irrigated_fields_shared
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = pp_wb_cap_irrigated_fields_shared
+	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATED_FIELDS"
 		value = modifier:pp_wb_levels_irrigated_fields
 	}
-	min = 0
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 pp_wb_cap_bund = {
@@ -992,9 +1015,8 @@ pp_wb_cap_bund = {
 		value = development
 		multiply = 0.02
 	}
-	floor = yes
-	min = 0
-	max = 20
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 }
 }
 
 pp_wb_cap_field_drainage = {
@@ -1217,9 +1239,8 @@ pp_wb_cap_field_drainage = {
 		value = development
 		multiply = 0.03
 	}
-	floor = yes
-	min = 0
-	max = 20
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 }
 }
 
 pp_wb_cap_polders = {
@@ -1267,9 +1288,8 @@ pp_wb_cap_polders = {
 		value = development
 		multiply = 0.01
 	}
-	floor = yes
-	min = 0
-	max = 20
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 }
 }
 
 pp_wb_cap_qanats = {
@@ -1499,7 +1519,6 @@ pp_wb_cap_qanats = {
 		value = development
 		multiply = 0.1
 	}
-	floor = yes
-	min = 0
-	max = 20
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 }
 }

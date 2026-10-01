@@ -17,10 +17,9 @@ tavern_max_level = {
  else_if = { limit = { location_rank ?= location_rank:megalopolis } add = { desc = PP_VM_CAP_RANK value = 6 } }
  if = { limit = { topography = mountains } add = { desc = PP_VM_CAP_TERRAIN value = -2 } }
  else_if = { limit = { topography = hills } add = { desc = PP_VM_CAP_TERRAIN value = -1 } }
- if = { limit = { OR = { is_province_capital = no location_rank ?= location_rank:rural_settlement } } multiply = 0 }
- min = 0
- max = 36
- floor = yes
+ if = { limit = { OR = { is_province_capital = no location_rank ?= location_rank:rural_settlement } } multiply = { desc = PP_VM_CAP_SITE_TAVERN value = 0 } }
+ min = { desc = PP_VM_CAP_MINIMUM value = 0 }
+ max = { desc = PP_VM_CAP_MAXIMUM value = 36 }
 }
 
 victualling_yard_max_level = {
@@ -28,10 +27,9 @@ victualling_yard_max_level = {
  if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_MARKET value = 3 } }
  add = { desc = PP_VM_CAP_DEVELOPMENT value = development multiply = 0.05 }
  add = { desc = PP_VM_CAP_THRESHOLD value = -2 }
- floor = yes
- min = 1
- max = 10
- if = { limit = { NOT = { pp_victualling_yard_site = yes } } multiply = 0 }
+ min = { desc = PP_VM_CAP_MINIMUM value = 1 }
+ max = { desc = PP_VM_CAP_MAXIMUM value = 10 }
+ if = { limit = { NOT = { pp_victualling_yard_site = yes } } multiply = { desc = PP_VM_CAP_SITE_YARD value = 0 } }
 }
 
 grange_max_level = {
@@ -44,8 +42,7 @@ grange_max_level = {
  if = { limit = { num_roads >= 6 } add = { desc = PP_VM_CAP_ROADS value = 0.5 } }
  if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_MARKET value = 4 } }
  add = { desc = PP_VM_CAP_DEVELOPMENT value = development multiply = 0.08 }
- if = { limit = { OR = { is_province_capital = no pp_victualling_yard_site = yes } } multiply = 0 }
- min = 0
- max = 12
- floor = yes
+ if = { limit = { OR = { is_province_capital = no pp_victualling_yard_site = yes } } multiply = { desc = PP_VM_CAP_SITE_GRANGE value = 0 } }
+ min = { desc = PP_VM_CAP_MINIMUM value = 0 }
+ max = { desc = PP_VM_CAP_MAXIMUM value = 12 }
 }

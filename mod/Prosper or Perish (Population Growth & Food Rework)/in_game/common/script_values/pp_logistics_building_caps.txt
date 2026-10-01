@@ -3,7 +3,7 @@
 		desc = "BUILDING_LEVEL_RIVER_FREIGHT_CAPACITY"
 		value = modifier:pp_river_boatmen_yard_cap_modifier
 	}
-	min = 0
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 pp_coastal_shipping_office_max_level = {
@@ -15,5 +15,5 @@ pp_coastal_shipping_office_max_level = {
 		desc = "BUILDING_LEVEL_NATURAL_HARBOR_SUITABILITY"
 		value = modifier:pp_coastal_shipping_office_cap_modifier
 	}
-	min = 0
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }

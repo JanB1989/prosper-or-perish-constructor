@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import csv
 import re
+import warnings
 from collections import Counter, defaultdict
 from collections.abc import Iterable, Mapping
 from pathlib import Path
@@ -30,6 +31,11 @@ from prosper_or_perish_constructor.worldbuilder.contract import Contract, WorldB
 
 CAPACITY_KEYS = ("local_population_capacity", "local_population_capacity_modifier")
 FOOD_KEY = "local_monthly_food_modifier"   # the mod has no food production on attributes: cancelled exactly, never inherited
+# EU5 1.4 food productivity: the percentage above plus a multiplier applied after everything else; both cancelled
+FOOD_KEYS = (FOOD_KEY, "local_food_production_mult")
+# EU5 1.4 writes most food percentages as these named script values; the mod sets every one of them to 0
+# (main_menu/common/script_values/pp_food_productivity_nil.txt), so a class carrying one needs no cancelling line
+FOOD_SCRIPT_VALUE_PREFIX = "monthly_food_productivity_"
 CLASS_DIRS = {"climate": "climates", "vegetation": "vegetation", "topography": "topography"}
 # Every location has exactly one topography, owned or not (unowned land gets no rank or country modifiers), so the
 # tribesmen birth brake rides on it: -100 % births, the free-land modifiers give a little back (2026-09-26).
@@ -84,11 +90,43 @@ def effective_class_files(directory: Path, export_dir: Path | None, vanilla_root
     return [files[name] for name in sorted(files)]
 
 
-def parse_class_capacity(paths: Iterable[Path]) -> dict[str, dict[str, float]]:
+def numeric_script_values(*roots: Path | None) -> dict[str, float]:
+    """{name: value} of the plain-number script values under ``<root>/{main_menu,in_game}/common/script_values``
+    (a vanilla ``game`` folder or a mod root); later roots override earlier ones, ``REPLACE:`` prefixes included."""
+    values: dict[str, float] = {}
+    for root in roots:
+        if root is None:
+            continue
+        for scope in ("main_menu", "in_game"):
+            for path in sorted((Path(root) / scope / "common/script_values").glob("*.txt")):
+                for raw in path.read_text(encoding="utf-8-sig").splitlines():
+                    match = re.match(r"^(?:(?:TRY_)?REPLACE:)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(-?\d+(?:\.\d+)?)\s*(?:#.*)?$", raw.strip())
+                    if match:
+                        values[match.group(1)] = float(match.group(2))
+    return values
+
+
+def resolve_modifier_value(key: str, token: str, script_values: Mapping[str, float] | None = None) -> float | None:
+    """A modifier value as a number: a plain number, a named script value (EU5 1.4 writes most food percentages as
+    ``monthly_food_productivity_<tier>``; the mod zeroes all of them), or None when the name is unknown."""
+    try:
+        return float(token)
+    except ValueError:
+        pass
+    if token.startswith(FOOD_SCRIPT_VALUE_PREFIX):
+        return 0.0
+    if script_values and token in script_values:
+        return float(script_values[token])
+    warnings.warn(f"{key} = {token}: unknown script value, not cancelled", stacklevel=2)
+    return None
+
+
+def parse_class_capacity(paths: Iterable[Path], script_values: Mapping[str, float] | None = None) -> dict[str, dict[str, float]]:
     """{class key: {capacity key: value}} for every top-level block in the given definition files.
 
     Files are read in the given order and a later file's definition of a class replaces an earlier one (the game's
-    override rule); inside one definition the first value of a key wins."""
+    override rule); inside one definition the first value of a key wins. Values may be named script values
+    (``resolve_modifier_value``): a zeroed food script value reads 0, so no stale cancellation is written."""
     found: dict[str, dict[str, float]] = {}
     for path in paths:
         current: str | None = None
@@ -101,9 +139,11 @@ def parse_class_capacity(paths: Iterable[Path]) -> dict[str, dict[str, float]]:
                     current = match.group("key")
                     found[current] = {}
             if current is not None and depth >= 1:
-                for key, value in re.findall(r"\b(local_population_capacity(?:_modifier)?|local_[a-z_]+_output_modifier|local_monthly_food_modifier)\s*=\s*(-?\d+(?:\.\d+)?)", line):
+                for key, token in re.findall(r"\b(local_population_capacity(?:_modifier)?|local_[a-z_]+_output_modifier|local_monthly_food_modifier|local_food_production_mult)\s*=\s*(-?\d+(?:\.\d+)?|[A-Za-z_][A-Za-z0-9_]*)", line):
                     if key not in found[current]:
-                        found[current][key] = float(value)
+                        value = resolve_modifier_value(key, token, script_values)
+                        if value is not None:
+                            found[current][key] = value
             depth += line.count("{") - line.count("}")
             if depth <= 0:
                 depth = 0
@@ -146,7 +186,7 @@ def parse_legacy_effects(path: Path) -> dict[str, dict[str, str]]:
         if current and "=" in line and not line.endswith("{") and line != "}":
             key, _, value = line.partition("=")
             key, value = key.strip(), value.strip()
-            if key and value and key not in CAPACITY_KEYS and key != FOOD_KEY:
+            if key and value and key not in CAPACITY_KEYS and key not in FOOD_KEYS:
                 effects[current][key] = value
         if line == "}" and current and raw.startswith("}"):
             current = None
@@ -222,8 +262,9 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
     """One inject file per class directory, cancelling the effective vanilla capacity and food values and adding the rows."""
     rows = class_rows(contract)
     written: dict[str, int] = {}
+    script_values = numeric_script_values(Path(vanilla_root) / "game" if vanilla_root is not None else None, mod_root)
     for attribute, directory in CLASS_DIRS.items():
-        defs = parse_class_capacity(effective_class_files(Path(directory), export_dir, vanilla_root))
+        defs = parse_class_capacity(effective_class_files(Path(directory), export_dir, vanilla_root), script_values)
         legacy_path = repo / LEGACY_EFFECTS_DIR / f"{directory}.txt"
         legacy = parse_legacy_effects(legacy_path) if legacy_path.is_file() else {}
         legacy = with_sheet_free_building_levels(legacy, attribute, repo)
@@ -248,7 +289,7 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
                 if name != "local_population_capacity":
                     lines[name] = _fmt(v - vanilla.get(name, 0.0))
             for name, v in vanilla.items():
-                if (name.endswith("_output_modifier") or name == FOOD_KEY) and name not in lines and abs(v) >= 0.005:
+                if (name.endswith("_output_modifier") or name in FOOD_KEYS) and name not in lines and abs(v) >= 0.005:
                     lines[name] = _fmt(-v)
             for name, v in legacy.get(parents.get(key, key), {}).items():
                 lines.setdefault(name, v)
@@ -265,8 +306,9 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
                 lines["local_population_capacity"] = _fmt(-vanilla["local_population_capacity"])
             if vanilla.get("local_population_capacity_modifier"):
                 lines["local_population_capacity_modifier"] = _fmt(-vanilla["local_population_capacity_modifier"])
-            if vanilla.get(FOOD_KEY):
-                lines[FOOD_KEY] = _fmt(-vanilla[FOOD_KEY])
+            for food_key in FOOD_KEYS:
+                if abs(vanilla.get(food_key, 0.0)) >= 0.005:
+                    lines[food_key] = _fmt(-vanilla[food_key])
             for name, v in legacy.get(parents.get(key, key), {}).items():
                 lines.setdefault(name, v)
             if attribute == "topography":
@@ -304,7 +346,7 @@ def static_modifier_bodies(vanilla_root: Path, pattern: str) -> dict[str, list[s
                 current = None
                 depth = 0
                 continue
-            if stripped and "local_population_capacity" not in stripped and FOOD_KEY not in stripped:
+            if stripped and "local_population_capacity" not in stripped and not any(key in stripped for key in FOOD_KEYS):
                 bodies[current].append(stripped)
     return bodies
 
@@ -550,7 +592,7 @@ def legacy_river_lines(mod_root: Path) -> dict[int, list[str]]:
             if not line or "=" not in line:
                 continue
             key = line.split("=", 1)[0].strip()
-            if key in CAPACITY_KEYS or key == FOOD_KEY:
+            if key in CAPACITY_KEYS or key in FOOD_KEYS:
                 continue
             lines.append(line)
         out[int(match.group(1))] = lines

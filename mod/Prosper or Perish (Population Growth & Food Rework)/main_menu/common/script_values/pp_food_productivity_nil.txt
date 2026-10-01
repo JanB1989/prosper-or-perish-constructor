@@ -1,0 +1,26 @@
+﻿# Prosper or Perish has no vanilla food productivity: food comes from farms, crops and storage only.
+# EU5 1.4 routes almost every vanilla food percentage (advances, laws, estates, privileges, reforms, religions,
+# traits, town rights, static modifiers, buildings, vegetation, topography, location ranks, societal values)
+# through these script values, and nothing else reads them, so zeroing them nils all of those at once.
+# Plain-number food modifiers that remain in vanilla are cancelled where they are defined
+# (tests/test_vanilla_food_productivity.py pins the net result to 0 for every vanilla object).
+
+REPLACE:monthly_food_productivity_tiny_bonus = 0
+REPLACE:monthly_food_productivity_weak_bonus = 0
+REPLACE:monthly_food_productivity_mild_bonus = 0
+REPLACE:monthly_food_productivity_severe_bonus = 0
+REPLACE:monthly_food_productivity_extreme_bonus = 0
+REPLACE:monthly_food_productivity_ultimate_bonus = 0
+REPLACE:monthly_food_productivity_radical_bonus = 0
+REPLACE:monthly_food_productivity_unique_bonus = 0
+
+REPLACE:monthly_food_productivity_weak_penalty = 0
+REPLACE:monthly_food_productivity_mild_penalty = 0
+REPLACE:monthly_food_productivity_severe_penalty = 0
+REPLACE:monthly_food_productivity_extreme_penalty = 0
+REPLACE:monthly_food_productivity_ultimate_penalty = 0
+REPLACE:monthly_food_productivity_radical_penalty = 0
+REPLACE:monthly_food_productivity_unique_penalty = 0
+REPLACE:monthly_food_productivity_catastrophic_penalty = 0
+REPLACE:monthly_food_productivity_apocalyptic_penalty = 0
+REPLACE:monthly_food_productivity_extinction_penalty = 0

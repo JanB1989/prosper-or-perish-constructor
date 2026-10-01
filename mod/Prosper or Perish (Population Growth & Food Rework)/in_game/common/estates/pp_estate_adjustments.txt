@@ -11,7 +11,6 @@ TRY_INJECT:crown_estate = {
 # Peasants estate: replace global_monthly_food_modifier with per-good output bonuses in satisfaction
 TRY_INJECT:peasants_estate = {
 	satisfaction = {
-		global_monthly_food_modifier = -0.25
 		global_wheat_output_modifier = 0.25
 		global_rice_output_modifier = 0.25
 		global_millet_output_modifier = 0.25
@@ -40,17 +39,5 @@ TRY_INJECT:peasants_estate = {
 		global_fish_output_modifier = 0.25
 		global_wild_game_output_modifier = 0.25
 		global_fur_output_modifier = 0.25
-	}
-}
-
-# Tribes, Cossacks: replace global_monthly_food_modifier with per-good output bonuses (0.10)
-TRY_INJECT:tribes_estate = {
-	satisfaction = {
-		global_monthly_food_modifier = -0.10
-	}
-}
-TRY_INJECT:cossacks_estate = {
-	satisfaction = {
-		global_monthly_food_modifier = -0.10
 	}
 }

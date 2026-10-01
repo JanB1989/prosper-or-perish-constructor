@@ -1,5 +1,4 @@
 ﻿TRY_INJECT:refused_food_import = {
-	local_monthly_food_modifier = -0.05 # vanilla 0.05
 	local_wheat_output_modifier = -0.05
 	local_rice_output_modifier = -0.05
 	local_millet_output_modifier = -0.05
@@ -10,7 +9,6 @@
 }
 
 TRY_INJECT:bountiful_harvest = {
-	local_monthly_food_modifier = -0.25 # vanilla 0.25
 	local_wheat_output_modifier = 0.15
 	local_rice_output_modifier = 0.15
 	local_maize_output_modifier = 0.15
@@ -39,7 +37,6 @@ TRY_INJECT:bountiful_harvest = {
 }
 
 TRY_INJECT:russian_famine = {
-	local_monthly_food_modifier = 0.75 # vanilla -0.75
 	local_wheat_output_modifier = -0.5
 	local_millet_output_modifier = -0.5
 	local_legumes_output_modifier = -0.45
@@ -50,7 +47,6 @@ TRY_INJECT:russian_famine = {
 }
 
 TRY_INJECT:short_harvest_modifier = {
-	local_monthly_food_modifier = 0.5 # vanilla -0.5
 	local_wheat_output_modifier = -0.25
 	local_rice_output_modifier = -0.25
 	local_maize_output_modifier = -0.25
@@ -61,7 +57,6 @@ TRY_INJECT:short_harvest_modifier = {
 }
 
 TRY_INJECT:recent_white_storm_modifier = {
-	local_monthly_food_modifier = 0.5 # vanilla -0.5
 	local_wheat_output_modifier = -0.3
 	local_millet_output_modifier = -0.25
 	local_fiber_crops_output_modifier = -0.0625
@@ -70,8 +65,12 @@ TRY_INJECT:recent_white_storm_modifier = {
 	local_olives_output_modifier = -0.15
 }
 
+# EU5 1.4 keeps a plain number here (every other vanilla food percentage is a zeroed script value)
+TRY_INJECT:murrain_modifier = {
+	local_monthly_food_modifier = 0.15 # vanilla -0.15
+}
+
 TRY_INJECT:expanded_food_production_modifier = {
-	local_monthly_food_modifier = -0.25 # vanilla 0.25
 	local_wheat_output_modifier = 0.1
 	local_rice_output_modifier = 0.1
 	local_maize_output_modifier = 0.08

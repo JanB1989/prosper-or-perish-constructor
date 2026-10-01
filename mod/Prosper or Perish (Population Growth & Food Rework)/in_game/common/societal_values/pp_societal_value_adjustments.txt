@@ -1,7 +1,6 @@
 ﻿# Capital vs Traditional: replace global_monthly_food_modifier with per-good output modifiers
 TRY_INJECT:capital_economy_vs_traditional_economy = {
 	left_modifier = {
-		global_monthly_food_modifier = 0.2
 		global_wheat_output_modifier = -0.3
 		global_rice_output_modifier = -0.3
 		global_millet_output_modifier = -0.3
@@ -36,7 +35,6 @@ TRY_INJECT:capital_economy_vs_traditional_economy = {
 	right_modifier = {
 		global_raw_material_output = -0.2
 		global_max_rgo_size_modifier = 0.2
-		global_monthly_food_modifier = -0.2
 		global_population_capacity_modifier = -0.25
 		global_local_food_output_modifier = 0.05 # feeds itself locally; no victuals
 	}

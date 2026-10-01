@@ -22,19 +22,16 @@ TRY_INJECT:paschal_cycle = {
 	global_devastation_recovery = -0.004
 }
 TRY_INJECT:fertile_lands = {
-	global_monthly_food_modifier = -0.05
 	global_population_capacity_modifier = 0.05
 }
 # Serfdom: keep the food-pressure change without broad per-good output bonuses
 TRY_INJECT:serfdom = {
-	global_monthly_food_modifier = -0.05
 	ai_weight = { add = 15 }
 }
 # Food advances: keep storage/capacity effects without broad per-good output bonuses
 # food_advance_renaissance: Herring Buss (c.1415), cookshop-aligned goods
 TRY_INJECT:food_advance_renaissance = {
 	global_food_capacity_modifier = 0.06
-	global_monthly_food_modifier = -0.10
 	ai_weight = { add = 15 }
 	global_population_capacity_modifier = 0.05
 }
@@ -42,28 +39,24 @@ TRY_INJECT:food_advance_renaissance = {
 TRY_INJECT:new_world_crops = {
 	global_food_capacity_modifier = 0.08
 	global_food_capacity = 20
-	global_monthly_food_modifier = -0.10
 	ai_weight = { add = 15 }
 	global_population_capacity_modifier = 0.06
 }
 # food_advance_reformation: Grand Banks Cod, early Columbian adoption
 TRY_INJECT:food_advance_reformation = {
 	global_food_capacity_modifier = 0.10
-	global_monthly_food_modifier = -0.15
 	ai_weight = { add = 15 }
 	global_population_capacity_modifier = 0.07
 }
 # food_advance_absolutism: Norfolk Four-Course, Seed Drill, Scientific Animal Husbandry
 TRY_INJECT:food_advance_absolutism = {
 	global_food_capacity_modifier = 0.12
-	global_monthly_food_modifier = -0.20
 	ai_weight = { add = 15 }
 	global_population_capacity_modifier = 0.08
 }
 # rotherham_plough: Reaper, Steel Plow, Guano, Steam Trawling (fish 50% – pp_steam_trawling adds 100%)
 TRY_INJECT:rotherham_plough = {
 	global_food_capacity_modifier = 0.12
-	global_monthly_food_modifier = -0.25
 	ai_weight = { add = 15 }
 	global_population_capacity_modifier = 0.09
 }

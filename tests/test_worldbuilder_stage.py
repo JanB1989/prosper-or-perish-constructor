@@ -271,6 +271,39 @@ def test_class_injects_cancel_vanilla_food_exactly_and_rivers_drop_food(tmp_path
     assert wb_modifiers.river_bodies(vanilla)[2] == ["game_data = {", "category = location", "}", "local_supply_limit_modifier = 0.10"]
 
 
+def test_class_injects_resolve_named_script_values_without_stale_food_negatives(tmp_path):
+    """EU5 1.4 writes class food percentages as monthly_food_productivity_* script values, which the mod zeroes:
+    nothing to cancel there, while plain numbers, the food multiplier and other script values still cancel exactly."""
+    c = _contract(tmp_path)
+    vanilla = tmp_path / "vanilla"
+    export = tmp_path / "export"
+    (vanilla / "game/main_menu/common/script_values").mkdir(parents=True)
+    (vanilla / "game/main_menu/common/script_values/default_values.txt").write_text("monthly_food_productivity_mild_penalty = -0.10\nsome_capacity_value = 0.25\n", encoding="utf-8")
+    (vanilla / "game/in_game/common/topography").mkdir(parents=True)
+    (vanilla / "game/in_game/common/topography/00_default.txt").write_text(
+        "hills = {\n\tlocation_modifier = {\n\t\tlocal_monthly_food_modifier = monthly_food_productivity_mild_penalty\n\t\tlocal_population_capacity_modifier = some_capacity_value\n\t}\n}\n"
+        "wetlands = {\n\tlocation_modifier = {\n\t\tlocal_food_production_mult = -0.2\n\t\tlocal_population_capacity_modifier = unknown_value\n\t}\n}\n",
+        encoding="utf-8",
+    )
+    for d in ("climates", "vegetation", "topography"):
+        (export / "in_game/common" / d).mkdir(parents=True, exist_ok=True)
+    values = wb_modifiers.numeric_script_values(vanilla / "game")
+    with pytest.warns(UserWarning, match="unknown_value"):
+        defs = wb_modifiers.parse_class_capacity(wb_modifiers.effective_class_files(Path("topography"), export, vanilla), values)
+    assert defs["hills"] == {"local_monthly_food_modifier": 0.0, "local_population_capacity_modifier": 0.25}
+    assert defs["wetlands"] == {"local_food_production_mult": -0.2}
+    with pytest.warns(UserWarning, match="unknown_value"):
+        wb_modifiers.write_class_injects(c, export, tmp_path, repo=tmp_path, vanilla_root=vanilla)
+    text = (tmp_path / "in_game/common/topography/pp_wb_attribute_rows.txt").read_text(encoding="utf-8-sig")
+    hills = text[text.index("TRY_INJECT:hills"):]
+    hills = hills[: hills.index("\n}") + 2]
+    wetlands = text[text.index("TRY_INJECT:wetlands"):]
+    wetlands = wetlands[: wetlands.index("\n}") + 2]
+    assert "local_monthly_food_modifier" not in hills                   # zeroed script value: no stale negative
+    assert "local_population_capacity_modifier = -0.25" in hills         # other script values still cancel
+    assert "local_food_production_mult = 0.2" in wetlands                # the 1.4 food multiplier cancels too
+
+
 def test_effective_class_files_keep_vanilla_definitions_the_export_does_not_replace(tmp_path):
     vanilla = tmp_path / "vanilla"
     export = tmp_path / "export"

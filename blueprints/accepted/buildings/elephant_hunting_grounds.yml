@@ -54,9 +54,6 @@ building:
             category = guild_input
         }
     }
-    modifier = {
-        local_monthly_food_modifier = -0.05
-    }
     raw_modifier = {
         local_nobles_desired_pop = 0.01
     }

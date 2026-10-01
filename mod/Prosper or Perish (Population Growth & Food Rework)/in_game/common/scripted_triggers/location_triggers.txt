@@ -168,7 +168,9 @@ is_garrison_strong_enough_to_come_out = {
 teu_event_6_trigger = {
 	any_pop = {
 		religion = religion:romuva
-		owner = ROOT
+		hidden_trigger = {
+			owner = ROOT
+		}
 	}
 	province = {
 		religion_percentage = {
@@ -177,8 +179,14 @@ teu_event_6_trigger = {
 		}
 		NOT = {
 			any_location_in_province = {
-				has_building = building_type:order_stronghold
-				has_building = building_type:castle
+				OR = {
+					has_building = building_type:stockade
+					has_building = building_type:castle
+					has_building = building_type:bastion
+					has_building = building_type:star_fort
+					has_building = building_type:fortress
+					has_building = building_type:order_stronghold
+				}
 			}
 		}
 	}
@@ -282,5 +290,36 @@ is_pentarchy_seat = {
 		this = location:jerusalem
 		this = location:antioch
 		this = location:alexandria
+	}
+}
+
+is_port_valid_for_stay = {
+	is_port = yes
+	has_owner = yes
+	owner ?= {
+		NOT = { has_variable = visited_by_expedition }
+		NOR = {
+			this = ROOT
+			is_subject_or_below_of = ROOT
+		}
+		in_civil_war = no
+	}
+	NOT = {
+		province_definition = {
+			any_location_in_province_definition = {
+				ROOT = {
+					is_target_in_variable_list = {
+						name = visited_ports
+						target = PREV
+					}
+				}
+			}
+		}
+	}
+	OR = {
+		is_capital = yes
+		location_rank = location_rank:town
+		location_rank = location_rank:city
+		location_rank = location_rank:megalopolis
 	}
 }

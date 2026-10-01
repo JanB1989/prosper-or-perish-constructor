@@ -2,7 +2,7 @@
 
 Order: geography sync -> attribute rows (class injects, static modifiers, rivers, goods floor,
 overpopulation, on_action) -> improvement caps and blueprints -> farm blueprints -> game-start setup
-(improvement levels, vanilla development). Blueprint edits are rendered by the normal ``ppc build``.
+(improvement levels, game-start development: vanilla's rules on the mod's map). Blueprint edits are rendered by the normal ``ppc build``.
 """
 
 from __future__ import annotations
@@ -58,6 +58,11 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
 
     water = coast.load(repo, mod_root, vanilla_root(repo, project))
     contract = coast.with_sea_coast(contract, water)
+    # game-start development = vanilla's rules on the mod's map (after the geography sync); every step below (navigation
+    # sites, improvement caps at start, start placement) reads it instead of the handover's development
+    development = wb_development.compute_start_development(repo, project)
+    report["development_vs_handover"] = wb_development.handover_difference(contract, development)
+    contract = wb_development.with_development(contract, development)
     import dataclasses
 
     cfg = dataclasses.replace(cfg, raw={**cfg.raw, "_water_access": water})
@@ -104,12 +109,11 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     demand = wb_start.improvement_demand(contract, start_cfg, vanilla_root(repo, project), mod_root) if start_cfg.fill_improvements_to_pops else None
     cultures = wb_start.dominant_cultures(wb_start.load_pops(vanilla_root(repo, project)))
     report["setup"] = wb_buildings.write_setup(contract, cfg, caps, wb_start.load_owners(vanilla_root(repo, project), mod_root), mod_root, demand=demand, cultures=cultures)
-    development = wb_development.compute_vanilla_development(repo, project)
     report["start_placement"] = wb_start.apply(repo=repo, project=project, mod_root=mod_root, vanilla_root=vanilla_root(repo, project), cfg=cfg, contract=contract, caps=caps, locations=current, development=development)
     report["navigation"] = navigation.write_runtime(repo, cfg, contract, mod_root, vanilla_root(repo, project))
     (mod_root / wb_development.SETUP_RELATIVE_PATH).write_text("﻿" + wb_development.render_development_setup(development), encoding="utf-8", newline="\n")
     wb_development.write_development_export(development, repo / wb_development.EXPORT_RELATIVE_PATH)
-    report["development"] = {"locations": int(development.height), "median": float(development["development"].median() or 0.0), "max": float(development["development"].max() or 0.0)}
+    report["development"] = {"geography": wb_development.configured_geography(repo, project), "locations": int(development.height), "median": float(development["development"].median() or 0.0), "max": float(development["development"].max() or 0.0)}
     # the setup files are all written to the active setup folder now; a pre-1.4 copy would only be dead weight
     if (mod_root / LEGACY_SETUP_DIR).is_dir():
         import shutil
@@ -122,7 +126,7 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
 
 
 def export_development(repo: Path, project: Path) -> dict[str, object]:
-    development = wb_development.compute_vanilla_development(repo, project)
+    development = wb_development.compute_start_development(repo, project)
     path = repo / wb_development.EXPORT_RELATIVE_PATH
     wb_development.write_development_export(development, path)
     return {"path": str(path), "locations": int(development.height), "median": float(development["development"].median() or 0.0), "max": float(development["development"].max() or 0.0)}
@@ -155,6 +159,10 @@ def check(repo: Path, project: Path, mod_root: Path) -> dict[str, object]:
         row = next(r for r in contract.building_types.iter_rows(named=True) if cfg.building_map[str(r["building"])] == spec["family"])
         people[key] = units(float(row["unit_people_per_level"]) / scales[str(row["building"])] * float(spec["strength"])) * 1000
     c = float(contract.meta["attributes"].get("capacity_percent_per_point", 0.0))
+    # the development the game starts with is the one the last apply wrote (vanilla's rules on the mod's map)
+    shipped = repo / wb_development.EXPORT_RELATIVE_PATH
+    if shipped.is_file():
+        contract = wb_development.with_development(contract, pl.read_csv(shipped, schema={"location_tag": pl.String, "development": pl.Float64}))
     targets = contract.location_targets
     start = levels.group_by("location_tag").agg((pl.col("starting_levels") * pl.col("building").replace_strict(people, default=0.0)).sum().alias("start_people"))
     joined = targets.join(start, on="location_tag", how="left").with_columns(pl.col("start_people").fill_null(0.0))

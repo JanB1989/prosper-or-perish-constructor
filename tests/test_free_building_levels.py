@@ -423,6 +423,7 @@ def test_enrich_locations_and_compute_free_building_levels() -> None:
         capitals={"alpha"},
         ports={"alpha"},
         river_levels={"alpha": 5, "beta": 0},
+        development_river_sizes={"alpha": 6.0},
         development_weights={
             "base": -2,
             "coastal": 5,
@@ -446,7 +447,8 @@ def test_enrich_locations_and_compute_free_building_levels() -> None:
     assert alpha["is_port"] is True
     assert alpha["province_capital"] is True
     assert alpha["road_level"] == 1
-    assert alpha["development"] == 26
+    # own terms 21 (city, terrain, climate, region, area) - base 2 + coast 2.5 + river 0.5 x 6; no road term at start
+    assert alpha["development"] == 24.5
 
     development_components = explain_development_components(
         enriched,
@@ -465,8 +467,8 @@ def test_enrich_locations_and_compute_free_building_levels() -> None:
     )
     alpha_development = development_components.filter(pl.col("location_tag") == "alpha").to_dicts()[0]
     assert alpha_development["base_development"] == -2
-    assert alpha_development["river_development"] == 2.5
-    assert alpha_development["road_development"] == 2
+    assert alpha_development["river_development"] == 3.0
+    assert alpha_development["road_development"] == 0
 
     weights = parse_free_building_level_sheet(
         [
@@ -502,14 +504,14 @@ def test_enrich_locations_and_compute_free_building_levels() -> None:
     result = compute_free_building_levels(enriched, weights)
 
     scored_alpha = result.frame.filter(pl.col("location_tag") == "alpha").to_dicts()[0]
-    assert scored_alpha["free_building_levels"] == 62
+    assert scored_alpha["free_building_levels"] == 61.25
     assert scored_alpha["climate_free_building_levels"] == 4
     assert "free_building_levels" in result.frame.columns
     assert "location_value_missing_weight" in set(result.diagnostics["diagnostic"].to_list())
 
     categories = contribution_category_summary(result.frame)
     category_rows = {row["factor"]: row for row in categories.to_dicts()}
-    assert category_rows["development"]["total_contribution"] == 18.5
+    assert category_rows["development"]["total_contribution"] == 17.75
     assert category_rows["development"]["nonzero_locations"] == 2
     assert category_rows["climate"]["total_contribution"] == 3
     assert sum(row["total_contribution"] for row in categories.to_dicts()) == result.frame["free_building_levels"].sum()
@@ -517,7 +519,7 @@ def test_enrich_locations_and_compute_free_building_levels() -> None:
     groups = contribution_factor_group_summary(result.frame)
     group_rows = {row["factor_group"]: row for row in groups.to_dicts()}
     assert group_rows["fixed"]["total_contribution"] == 14
-    assert group_rows["dynamic"]["total_contribution"] == 52.5
+    assert group_rows["dynamic"]["total_contribution"] == 51.75
 
     splits = contribution_value_summary(result.frame)
     split_rows = {
@@ -529,7 +531,7 @@ def test_enrich_locations_and_compute_free_building_levels() -> None:
     assert split_rows[("climate", "oceanic")]["total_contribution"] == 4
     assert split_rows[("climate", "continental")]["total_contribution"] == -1
     assert split_rows[("is_port", "true")]["share_of_factor_total_pct"] == 100
-    assert split_rows[("development", "per_point")]["total_contribution"] == 18.5
+    assert split_rows[("development", "per_point")]["total_contribution"] == 17.75
 
 
 def test_development_contribution_uses_effective_zero_to_hundred_cap() -> None:

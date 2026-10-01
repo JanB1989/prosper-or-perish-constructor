@@ -1,7 +1,8 @@
-# Development of every owned location at game start (1337.4.1), read from the engine save
-# artifacts/data/savegame_base_1337_04_01/baseline/base_1337_04_01_eu5_1.4.eu5 (EU5 1.4.0 beta, vanilla observer start;
-# the save leaves out a development of 0). worldbuilder/development.py prefers these over its evaluation of the vanilla
-# rules. Refresh from a new start save after a patch.
+# VALIDATION DATA ONLY - never written into the mod. Development of every owned location at game start (1337.4.1) of a
+# vanilla EU5 1.4.0 beta observer start, read with the eu5save engine from the save archived as
+# artifacts/data/savegame_base_1337_04_01/baseline/base_1337_04_01_eu5_1.4.eu5 (the save leaves out a development of 0,
+# kept here as 0). `ppc worldbuilder development-check` compares the constructor's evaluation of vanilla's development rules
+# on the vanilla map with it. Refresh from a new vanilla start save after a patch.
 location_tag,development
 aabenraa,16.000
 aachen,29.000

@@ -1503,9 +1503,9 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         for manager in parse_file(path).values("market_manager"):
             centres.update(str(v) for v in manager.values("add_market"))
     if development is None:
-        from .development import compute_vanilla_development
+        from .development import compute_start_development
 
-        development = compute_vanilla_development(repo, project)
+        development = compute_start_development(repo, project)
     targets = (
         contract.location_targets.drop("development")
         .join(development, on="location_tag", how="left")

@@ -232,8 +232,8 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     worldbuilder.add_argument(
         "action",
-        choices=("apply", "export-development", "check", "food-check", "food-sim"),
-        help="apply writes the mod inputs; export-development writes the vanilla development table; check reports the fit of the written setup; food-check compares the start-food model with the exported save; food-sim reruns the start-food validator (population loop per province pool) on the last apply's input.",
+        choices=("apply", "export-development", "development-check", "check", "food-check", "food-sim"),
+        help="apply writes the mod inputs; export-development writes the game-start development table (vanilla's rules on the mod's map) for the World Builder; development-check compares the evaluation of vanilla's development rules on the vanilla map with a vanilla start save and sizes the mod's change; check reports the fit of the written setup; food-check compares the start-food model with the exported save; food-sim reruns the start-food validator (population loop per province pool) on the last apply's input.",
     )
     worldbuilder.add_argument(
         "--months",
@@ -976,6 +976,11 @@ def _worldbuilder(args: argparse.Namespace, extra: Sequence[str], repo: Path, pr
         return 0
     if args.action == "export-development":
         print(json.dumps(stage.export_development(repo, project), indent=2))
+        return 0
+    if args.action == "development-check":
+        from prosper_or_perish_constructor.worldbuilder import development
+
+        print(json.dumps(development.check(repo, project), indent=2, default=str))
         return 0
     if args.action == "check":
         print(json.dumps(stage.check(repo, project, _project_mod_root(repo, project)), indent=2))

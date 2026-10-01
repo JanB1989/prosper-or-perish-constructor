@@ -126,6 +126,16 @@ RIVER_INDEX_LEVELS = {
     15: 1,
 }
 
+# Game-start development (vanilla ``14_development.txt``: ``river = 0.5 # multiplies by river size``). The engine's river
+# size, fitted on a vanilla EU5 1.4 start save (ppc worldbuilder development-check): the rivers.png width index gives the
+# engine river level (the river_flowing_through_<level> modifiers; same table as the World Builder's verified levels)
+# and the size is level + 1, so level 1 adds 1, level 3 adds 2, level 5 adds 3. A location holding a junction pixel
+# (index 1 tributary merge, 2 split) gets the largest size, 6. Vanilla 1.4 draws only levels 1, 3 and 5; levels 2 and 4
+# (indices 6-8, 12-14, used by the World Builder rivers) follow the same rule unverified.
+DEVELOPMENT_RIVER_PALETTE_LEVELS = {3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5}
+DEVELOPMENT_RIVER_JUNCTION_INDICES = (1, 2)
+DEVELOPMENT_RIVER_JUNCTION_SIZE = 6
+
 
 @dataclass(frozen=True)
 class FreeBuildingLevelResult:
@@ -604,8 +614,15 @@ def load_game_start_development_weights(
     return load_development_weights(data_profile)
 
 
-def build_game_start_location_frame(locations: pl.DataFrame, *, profile: DataProfile) -> pl.DataFrame:
-    """Add game-start ranks, markets, roads, capitals, ports, river levels, and development."""
+def build_game_start_location_frame(
+    locations: pl.DataFrame, *, profile: DataProfile, development_weights: Mapping[str, float] | None = None
+) -> pl.DataFrame:
+    """Add game-start ranks, markets, roads, capitals, ports, river levels, and development.
+
+    Map data, ranks and ports come from ``profile``; the development rules from ``development_weights`` (default: the
+    profile's own ``14_development.txt``), so a mod profile that writes per-location development can still be
+    evaluated with vanilla's rules.
+    """
     _require_columns(
         locations,
         {
@@ -628,12 +645,12 @@ def build_game_start_location_frame(locations: pl.DataFrame, *, profile: DataPro
     road_locations = load_road_locations(profile)
     capitals = load_country_capitals(profile)
     ports = load_port_locations(profile)
-    river_levels = extract_river_levels_from_maps(
-        locations,
-        locations_png_path=resolve_map_data_file(profile, "locations.png"),
-        rivers_png_path=resolve_map_data_file(profile, "rivers.png"),
-    )
-    development_weights = load_development_weights(profile)
+    locations_png = resolve_map_data_file(profile, "locations.png")
+    rivers_png = resolve_map_data_file(profile, "rivers.png")
+    river_levels = extract_river_levels_from_maps(locations, locations_png_path=locations_png, rivers_png_path=rivers_png)
+    river_sizes = extract_development_river_sizes(locations, locations_png_path=locations_png, rivers_png_path=rivers_png)
+    if development_weights is None:
+        development_weights = load_development_weights(profile)
 
     enriched = enrich_locations_with_game_start_data(
         locations,
@@ -644,6 +661,7 @@ def build_game_start_location_frame(locations: pl.DataFrame, *, profile: DataPro
         ports=ports,
         river_levels=river_levels,
         development_weights=development_weights,
+        development_river_sizes=river_sizes,
     )
     return enriched
 
@@ -658,6 +676,7 @@ def enrich_locations_with_game_start_data(
     ports: Iterable[str],
     river_levels: Mapping[str, int] | pl.DataFrame,
     development_weights: Mapping[str, float],
+    development_river_sizes: Mapping[str, float] | pl.DataFrame | None = None,
 ) -> pl.DataFrame:
     market_set = set(market_centers)
     road_set = set(road_locations)
@@ -665,9 +684,18 @@ def enrich_locations_with_game_start_data(
     port_set = set(ports)
     province_capitals = set(_province_capitals(locations))
     river_frame = _river_level_frame(river_levels)
+    if isinstance(development_river_sizes, pl.DataFrame):
+        size_frame = development_river_sizes.select("location_tag", pl.col("development_river_size").cast(pl.Float64))
+    else:
+        size_frame = pl.DataFrame(
+            [{"location_tag": str(tag), "development_river_size": float(size)} for tag, size in (development_river_sizes or {}).items()],
+            schema={"location_tag": pl.String, "development_river_size": pl.Float64},
+        )
 
     enriched = (
         locations.join(river_frame, on="location_tag", how="left")
+        .join(size_frame, on="location_tag", how="left")
+        .with_columns(pl.col("development_river_size").fill_null(0.0))
         .with_columns(
             pl.col("location_tag")
             .map_elements(lambda value: ranks.get(str(value), "rural_settlement"), return_dtype=pl.String)
@@ -711,6 +739,7 @@ def explain_development_components(
             "province",
             "natural_harbor_suitability",
             "river_level",
+            "development_river_size",
             "road_level",
         },
     )
@@ -725,6 +754,7 @@ def explain_development_components(
             "climate",
             "location_rank",
             "river_level",
+            "development_river_size",
             "road_level",
             pl.lit(float(development_weights.get("base", 0.0))).alias("base_development"),
             _lookup_development_expr("topography", development_weights).alias("topography_development"),
@@ -741,14 +771,9 @@ def explain_development_components(
                 .cast(pl.Float64)
                 * pl.lit(float(development_weights.get("coastal", 0.0)))
             ).alias("coastal_development"),
-            (
-                pl.col("river_level").fill_null(0).cast(pl.Float64)
-                * pl.lit(float(development_weights.get("river", 0.0)))
-            ).alias("river_development"),
-            (
-                pl.col("road_level").fill_null(0).cast(pl.Float64)
-                * pl.lit(float(development_weights.get("road", 0.0)))
-            ).alias("road_development"),
+            _river_development_expr(development_weights).alias("river_development"),
+            # the engine adds no road term at game start (EU5 1.4 start save: 0 of 1,613 road locations got it)
+            pl.lit(0.0).alias("road_development"),
             pl.col("development"),
             _effective_development_expr().alias("effective_development"),
         )
@@ -1975,11 +2000,15 @@ def load_country_capitals(profile: DataProfile) -> set[str]:
 
 
 def load_development_weights(profile: DataProfile) -> dict[str, float]:
+    """The game-start development rules of the active ``14_development.txt`` (a later layer's file replaces the
+    earlier one). "All valid values are added together": a key listed twice counts twice (vanilla lists
+    ``wexford_province = 2`` twice and the engine gives its locations +4)."""
     weights: dict[str, float] = {}
-    for path in _setup_start_files(profile, "14_development.txt"):
+    paths = _setup_start_files(profile, "14_development.txt")
+    for path in paths[-1:]:
         for entry in _entries_under_key(path, "development"):
-            if isinstance(entry.value, int | float):
-                weights[entry.key] = float(entry.value)
+            if isinstance(entry.value, int | float) and not isinstance(entry.value, bool):
+                weights[entry.key] = weights.get(entry.key, 0.0) + float(entry.value)
     return weights
 
 
@@ -2066,6 +2095,56 @@ def extract_river_levels_from_maps(
     return pl.DataFrame(rows, schema={"location_tag": pl.String, "river_level": pl.Int64})
 
 
+def extract_development_river_sizes(
+    locations: pl.DataFrame,
+    *,
+    locations_png_path: str | Path,
+    rivers_png_path: str | Path,
+    chunk_rows: int = 512,
+) -> pl.DataFrame:
+    """location_tag, development_river_size: the engine's river size for the game-start development rule.
+
+    Read from the rivers.png pixels inside each location (not clamped to ``has_river``): the largest width level + 1,
+    or ``DEVELOPMENT_RIVER_JUNCTION_SIZE`` where the location holds a merge/split marker. 0 without river pixels."""
+    _require_columns(locations, {"location_tag", "named_location_hex"})
+    if chunk_rows <= 0:
+        raise ValueError("chunk_rows must be positive")
+    pairs = locations.select("location_tag", "named_location_hex").drop_nulls("named_location_hex").unique("location_tag")
+    tags = [str(tag) for tag in pairs["location_tag"].to_list()]
+    colors = np.array([_hex_to_rgb_int(str(value)) for value in pairs["named_location_hex"].to_list()], dtype=np.int64)
+    order = np.argsort(colors, kind="stable")
+    sorted_colors = colors[order]
+    size_of_index = np.zeros(256, dtype=np.float64)
+    for index, level in DEVELOPMENT_RIVER_PALETTE_LEVELS.items():
+        size_of_index[index] = level + 1
+    for index in DEVELOPMENT_RIVER_JUNCTION_INDICES:
+        size_of_index[index] = DEVELOPMENT_RIVER_JUNCTION_SIZE
+    sizes = np.zeros(len(tags), dtype=np.float64)
+
+    Image.MAX_IMAGE_PIXELS = None
+    with Image.open(locations_png_path) as location_image, Image.open(rivers_png_path) as river_image:
+        location_image = location_image.convert("RGB")
+        if location_image.size != river_image.size:
+            raise ValueError(f"locations/rivers map sizes differ: {location_image.size} != {river_image.size}")
+        width, height = location_image.size
+        for y0 in range(0, height, chunk_rows):
+            y1 = min(height, y0 + chunk_rows)
+            river_chunk = np.asarray(river_image.crop((0, y0, width, y1)), dtype=np.uint8).reshape(-1)
+            pixel_sizes = size_of_index[river_chunk]
+            mask = pixel_sizes > 0
+            if not bool(mask.any()):
+                continue
+            rgb = np.asarray(location_image.crop((0, y0, width, y1)), dtype=np.int64).reshape(-1, 3)[mask]
+            packed = (rgb[:, 0] << 16) | (rgb[:, 1] << 8) | rgb[:, 2]
+            position = np.clip(np.searchsorted(sorted_colors, packed), 0, max(len(sorted_colors) - 1, 0))
+            known = sorted_colors[position] == packed if len(sorted_colors) else np.zeros(len(packed), dtype=bool)
+            np.maximum.at(sizes, order[position[known]], pixel_sizes[mask][known])
+    return pl.DataFrame(
+        {"location_tag": tags, "development_river_size": sizes},
+        schema={"location_tag": pl.String, "development_river_size": pl.Float64},
+    )
+
+
 def resolve_map_data_file(profile: DataProfile, filename: str) -> Path:
     paths = _map_data_files(profile, filename)
     if not paths:
@@ -2148,25 +2227,23 @@ def _development_expr(weights: Mapping[str, float]) -> pl.Expr:
         "province",
         "location_tag",
     )
-    expr = pl.lit(float(weights.get("base", 0.0)))
+    """Game-start development as the EU5 1.4 engine places it (fitted on a vanilla start save, 99.9 % exact):
+    the location's own terms (rank, terrain, climate, region/area/province/location) are summed and floored at 0, then
+    base, coastal (x natural harbour suitability) and river (x river size) are added and the total is floored at 0.
+    Roads add nothing at game start."""
+    own = pl.lit(0.0)
     for column in additive_keys:
-        expr += pl.col(column).map_elements(
+        own += pl.col(column).map_elements(
             lambda value, weights=weights: float(weights.get(str(value), 0.0)),
             return_dtype=pl.Float64,
         )
-    expr += (
-        pl.col("natural_harbor_suitability")
-        .fill_null(0.0)
-        .cast(pl.Float64)
-        * pl.lit(float(weights.get("coastal", 0.0)))
-    )
-    expr += pl.col("river_level").fill_null(0).cast(pl.Float64) * pl.lit(
-        float(weights.get("river", 0.0))
-    )
-    expr += pl.col("road_level").fill_null(0).cast(pl.Float64) * pl.lit(
-        float(weights.get("road", 0.0))
-    )
-    return expr
+    coastal = pl.col("natural_harbor_suitability").fill_null(0.0).cast(pl.Float64) * pl.lit(float(weights.get("coastal", 0.0)))
+    total = own.clip(0.0, None) + pl.lit(float(weights.get("base", 0.0))) + coastal + _river_development_expr(weights)
+    return total.clip(0.0, None)
+
+
+def _river_development_expr(weights: Mapping[str, float]) -> pl.Expr:
+    return pl.col("development_river_size").fill_null(0.0).cast(pl.Float64) * pl.lit(float(weights.get("river", 0.0)))
 
 
 def _effective_development_expr() -> pl.Expr:

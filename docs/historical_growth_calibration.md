@@ -117,15 +117,16 @@ PP settings (`pp_defines_adjustments.txt`, `pp_capacity_pressure_effects.txt`):
 
 | Setting | Vanilla 1.4 | PP | Why |
 | --- | --- | --- | --- |
-| `NPop.FOOD_STORAGE_POP_GROWTH` | 0.001 | 0.015 | 0.0075 per stored year x the 2-year cap: the 1.3 law |
-| `NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX` | 2 | 2 | the 24-month cap of the 1.3 law |
+| `NPop.FOOD_STORAGE_POP_GROWTH` | 0.001 | 0 (0.015 until the evening of 2026-10-01) | growth from storage rides the stored-food tiers since then (6.3); 0.015 = 0.0075 per stored year x the 2-year cap was the 1.3 law on the engine term |
+| `NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX` | 2 | 2 | the 24-month cap of the 1.3 law (the stored-months value and the tiers stop there) |
 | `NPop.FOOD_SURPLUS_POP_GROWTH` | 0.0015 | 0 | growth from storage only |
 | `NEconomy.GROWTH_FROM_FOOD_SURPLUS_THRESHOLD` | 1.25 | 1 | surplus factor always 0 (the AI sees no surplus value either) |
 | `NPop.GROWTH_DAMPING_START` | 0.6 | 1 | `approaching_capacity` never applies |
 | `approaching_capacity`, `overpopulation_growth` | -0.5 % each | empty `TRY_REPLACE` | food-only growth |
 
-Calibration against the 1.3 law on a fresh vanilla 1.4 start save (4,071 provinces): the engine term is the 1.3
-law exactly (same stored-years input, same cap, linear below it). What remains:
+Calibration of the engine term (in force until 6.3 moved growth onto the tiers) against the 1.3 law on a fresh
+vanilla 1.4 start save (4,071 provinces): the engine term is the 1.3 law exactly (same stored-years input, same cap,
+linear below it). What remained:
 
 - Fixed-point rounding (1/100,000): the 1.4 term is never higher; it is lower by up to 0.001 %/yr (mean 0.0005
   %/yr, consumption-weighted mean storage growth 0.3153 %/yr under the 1.3 law vs 0.3148 %/yr).
@@ -135,9 +136,9 @@ law exactly (same stored-years input, same cap, linear below it). What remains:
 The deleted modifier's other effects (the storage legs of the Tavern, `province_food_purchase` -8 per stored year, and
 of Surplus Sales / the Victualling Yard, `province_food_sales` +8 per stored year, and per stored year +0.003
 devastation recovery, +0.045 migration attraction and +0.0025 monthly prosperity) are back since 2026-10-01 on the
-stored-food tiers (6.2). Displays read script values instead of the marker the modifier carried
-(`in_game/common/script_values/pp_province_food_storage.txt`: months stored, growth from storage, growth incl. the
-storage term for the population growth map mode).
+stored-food tiers (6.2), and growth joined them the same day (6.3). Displays read script values instead of the
+marker the modifier carried (`in_game/common/script_values/pp_province_food_storage.txt`: months stored, local
+growth for the population growth map mode; `pp_stored_food_tiers.txt`: growth from the carried tier).
 
 ### 6.1 Carrier search for the other stored-food effects (2026-10-01)
 
@@ -214,11 +215,12 @@ What the game applies now (behaviour level):
 - **24 province static modifiers** `pp_stored_food_tier_1` .. `_24`
   (`in_game/common/static_modifiers/pp_stored_food_tiers.txt`). Tier t stands for t whole months of the province's
   own consumption in store and carries the 1.3 payload per stored year x t / 12: sales leg +8, purchase leg -8,
-  devastation recovery +0.003, migration attraction +0.045, monthly prosperity +0.0025 per stored year (growth is not
-  in it; the define term above carries it). Tier 24 = two stored years = the 1.3 cap. Below one month a province
-  carries no tier. Values are rounded to six decimals. Configured in `[stored_food]` in `constructor.toml`;
-  `stored_food.py` writes the modifiers, their localization ("Stored Food: N months"), the tier script value and the
-  refresh effect in the finalize step of `ppc build` / `ppc sync`.
+  devastation recovery +0.003, migration attraction +0.045, monthly prosperity +0.0025 per stored year, and since
+  6.3 population growth +0.0075 per stored year. Tier 24 = two stored years = the 1.3 cap. Below one month a province
+  carries no tier. Values are rounded to five decimals (EU5 1.4 rejects six-decimal values as badly read).
+  Configured in `[stored_food]` in `constructor.toml`; `stored_food.py` writes the modifiers, their localization
+  ("Stored Food: N months"), the tier script value, the growth display value, the customizable localization that
+  names the carried tier and the refresh effect in the finalize step of `ppc build` / `ppc sync`.
 - **Months stored** (province scope, `pp_province_food_storage.txt`): consumption = the sum of the locations'
   `food_consumption` x -1 (the location value is negative, e.g. London -140.37), months = `province_food` /
   consumption, 0 to 24; tier = whole months (`pp_stored_food_tier_target`). The location-scope values the GUI, map
@@ -245,3 +247,26 @@ lag after the store crosses a whole month.
 Tooling: `ppc province-food-sales-check` reads the sales leg per stored year from `[stored_food.per_year]`; the
 migration model's stored-food attraction (`food_years`) is +0.045 per stored year again, in whole months; the food
 simulation's prosperity fit (1.3 stored-years slope) applies again.
+
+### 6.3 Growth on the stored-food tiers (2026-10-01, applied)
+
+Growth from stored food moved from the engine term onto the tier modifiers, with the same numbers; the formula is
+unchanged (Jan: "don't change the math yet"), no damping or hysteresis was added.
+
+- `[stored_food.per_year]` carries `local_population_growth = 0.0075`, so tier t gives +0.0075 x t / 12 a year
+  (tier 24 = +1.5 %, the old `FOOD_STORAGE_POP_GROWTH` 0.015 at the 2-year cap). `NPop.FOOD_STORAGE_POP_GROWTH` is 0
+  (the engine term is off); `NPop.FOOD_SURPLUS_POP_GROWTH` stays 0.
+- Behaviour: growth from stored food is part of the province's Stored Food modifier and of
+  `modifier:local_population_growth` (the population growth map mode reads that alone again). It moves in whole-month
+  steps, renewed by the monthly refresh, instead of continuously each month: up to one month of stores below the old
+  term (at most 0.0625 %/yr), up to a month of lag after the store crosses a whole month, and a province whose store
+  runs empty keeps its tier's growth until its next refresh (the engine term stopped in the starving month itself).
+- Displays: the location view's Stored Food chip lists the carried tier's effects (location_status.py, the
+  customizable localization `pp_stored_food_tier` names the carried modifier); `pp_province_food_storage_growth` is
+  generated with the tiers and reads the carried tier from the province variable.
+- **To watch in a run:** the AI no longer sees storage growth through the define. It valued stored food through
+  `FOOD_STORAGE_POP_GROWTH` when it rated modifiers; with the define at 0 that part of its valuation is gone (the
+  tier modifier's growth is applied by script, not something the AI anticipates). Check in a run whether the AI still
+  builds food storage and storage-related buildings as before.
+- Tooling: the food simulation counts stored years in whole months for growth (`migration.stored_food_tier_years`;
+  its fitted slope 0.0086 is unchanged).

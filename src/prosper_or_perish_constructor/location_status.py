@@ -4,10 +4,11 @@ The geography chips at the bottom of the scene show what a location is; these sh
 is a set of widgets, one per state, with exclusive visibility tests, like the soil and fertility chips.
 
 How each state is read:
-- food: the stored months and the growth they give are script values (`pp_province_food_storage_months`,
-  `pp_province_food_storage_growth` in script_values/pp_province_food_storage.txt; EU5 1.4 has no engine stored-food
-  modifier, and the mod's monthly stored-food tier modifiers sit on the province, which the location view cannot name
-  dynamically); starvation is the engine's `Province.IsStarving`.
+- food: the stored months are a script value (`pp_province_food_storage_months` in
+  script_values/pp_province_food_storage.txt); the effects are those of the province's stored-food tier modifier
+  (`pp_stored_food_tier_<t>`, stored_food.py): one `ShowModifierEffect` row per tier, each visible only while the
+  location's customizable localization `pp_stored_food_tier` (the name of the tier modifier its province carries)
+  equals that tier's name, and a "no effects" line without a tier; starvation is the engine's `Province.IsStarving`.
 - land: the engine applies `abundant_free_land`, `available_free_land` and `overpopulation` itself, and scripts
   cannot see them, so each carries a marker modifier type (`pp_land_*`, in pp_capacity_pressure_effects.txt) that
   the GUI reads through `GetModifierValueFixed`. Its value is the modifier's strength, so the tooltip lists every
@@ -50,6 +51,10 @@ REGION_GOODS = {
     "pacific_islands": "fish",
 }
 LAND_MARKERS = ("pp_land_overpopulation", "pp_land_abundant", "pp_land_available")
+# The stored-food tier modifiers and the customizable localization that names the carried one (stored_food.py).
+STORED_FOOD_TIER_PREFIX = "pp_stored_food_tier_"
+STORED_FOOD_TIER_CUSTOM = "pp_stored_food_tier"
+STORED_FOOD_TIER_NONE = "PP_STORED_FOOD_TIER_NONE"
 
 _ANCHOR = "\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\t# BOTTOM CONDITIONS\n"
 _SPLIT = len("\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n")   # after the IO/periphora hbox, inside the row widget
@@ -179,6 +184,20 @@ def _chip(name: str, visible: str, icon: str, title: str, concept: str, content:
 
 def _text(key: str) -> str:
     return f'TooltipTextBlock = {{ blockoverride "text" {{ text = "{key}" }} }}'
+
+
+def stored_food_tier_gate(tier: int) -> str:
+    """GUI test: the location's province carries stored-food tier ``tier`` (the customizable localization returns the
+    carried tier modifier's display name, stored_food.py)."""
+    return _custom_is(STORED_FOOD_TIER_CUSTOM, f"STATIC_MODIFIER_NAME_{STORED_FOOD_TIER_PREFIX}{tier}")
+
+
+def stored_food_rows(tiers: int) -> str:
+    """The effects of the province's current stored-food tier, like a modifier tooltip; a plain line without a tier."""
+    rows = [_row(f"{STORED_FOOD_TIER_PREFIX}{tier}", stored_food_tier_gate(tier)) for tier in range(1, tiers + 1)]
+    none = _custom_is(STORED_FOOD_TIER_CUSTOM, STORED_FOOD_TIER_NONE)
+    rows.append(f'TooltipTextBlock = {{ visible = "[{none}]" blockoverride "text" {{ text = "PP_FOOD_CHIP_NO_TIER" }} }}')
+    return " ".join(rows)
 
 
 def _marker(key: str) -> str:
@@ -374,7 +393,7 @@ def harvest_chip(harvests: Harvests) -> str:
 """
 
 
-def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None) -> str:
+def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stored_tiers: int = 0) -> str:
     # Without the modifier types the land chips fall back to the full-strength effects.
     land_rows = land_rows or {name: _scrolled(_row(name)) for name in LAND_MODIFIERS.values()}
     starving = f"{_LOC}.GetProvince.IsStarving"
@@ -386,7 +405,7 @@ def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None) -> s
             raw_text = "{months}" }}"""
     food = _chip("pp_status_food_stored", f"Not({starving})", f"{_ICONS}/flat_icons/trade_market/food_stockpile.dds",
                  "PP_FOOD_CHIP_TITLE", "pp_food_storage",
-                 _text("PP_FOOD_CHIP_STORED"), overlay)
+                 _text("PP_FOOD_CHIP_STORED") + " " + stored_food_rows(stored_tiers), overlay)
     food += _chip("pp_status_food_starving", starving, f"{_ICONS}/alerts_icons/starving_provinces.dds",
                   "PP_FOOD_CHIP_STARVING_TITLE", "pp_starvation",
                   _text("PP_FOOD_CHIP_STARVING") + " " + _row("province_starving"))
@@ -425,12 +444,12 @@ def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None) -> s
 """
 
 
-def add_status_row(text: str, harvests: Harvests, land_rows: dict[str, str] | None = None) -> str:
+def add_status_row(text: str, harvests: Harvests, land_rows: dict[str, str] | None = None, stored_tiers: int = 0) -> str:
     """Anchor the status card to the top-right corner of the scene, beside the IO and periphora buttons' row."""
     found = text.count(_ANCHOR)
     if found != 1:
         raise ValueError(f"location_window.gui: expected 1 top-row anchor for the status chips, found {found}")
-    return text.replace(_ANCHOR, _ANCHOR[:_SPLIT] + status_row(harvests, land_rows) + _ANCHOR[_SPLIT:])
+    return text.replace(_ANCHOR, _ANCHOR[:_SPLIT] + status_row(harvests, land_rows, stored_tiers) + _ANCHOR[_SPLIT:])
 
 
 def write_harvest_files(mod_root: Path, harvests: Harvests) -> int:

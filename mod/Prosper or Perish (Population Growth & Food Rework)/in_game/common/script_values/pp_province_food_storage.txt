@@ -12,7 +12,7 @@ pp_stored_food_province_consumption = {
 	multiply = -1
 }
 
-# Province scope: months of the province's consumption in storage, capped where the growth term stops rising
+# Province scope: months of the province's consumption in storage, capped where the stored-food effects stop rising
 # (NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX years = 24 months, the last stored-food tier).
 pp_stored_food_province_months = {
 	value = 0
@@ -44,27 +44,13 @@ pp_province_food_storage_months = {
 	}
 }
 
-# Yearly population growth from stored food (the engine's storage term): NPop.FOOD_STORAGE_POP_GROWTH at the cap,
-# linear below it, nothing while the province is starving.
-pp_province_food_storage_growth = {
-	value = 0
-	if = {
-		limit = {
-			pp_province_food_storage_months > 0
-			province = { is_starving = no }
-		}
-		value = pp_province_food_storage_months
-		divide = {
-			value = define:NEconomy|GROWTH_FROM_FOOD_MULTIPLIER_MAX
-			multiply = 12
-		}
-		multiply = define:NPop|FOOD_STORAGE_POP_GROWTH
-	}
-}
+# Growth from stored food is the local_population_growth of the province's stored-food tier modifier
+# (pp_stored_food_tiers.txt; the engine's own storage term is off, NPop.FOOD_STORAGE_POP_GROWTH = 0). The
+# display value pp_province_food_storage_growth (that tier's growth) is generated with the tiers
+# (script_values/pp_stored_food_tiers.txt).
 
 # Local population growth as the engine sums it, without the country-wide part: the local_population_growth
-# modifier plus the stored-food term (read by the population growth map mode).
+# modifier, which includes the stored-food tier's growth (read by the population growth map mode).
 pp_population_growth_map_value = {
 	value = modifier:local_population_growth
-	add = pp_province_food_storage_growth
 }

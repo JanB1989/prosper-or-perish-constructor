@@ -1030,7 +1030,7 @@
   MAPMODE_PP_POPULATION_GROWTH_EXCEPTIONAL: "Exceptional growth"
   MAPMODE_PP_POPULATION_GROWTH_STARVING: "Starving"
   MAPMODE_PP_POPULATION_GROWTH_STRIPE: "At growth cap"
-  MAPMODE_PP_POPULATION_GROWTH_TT_LAND: "[ROOT.GetLocation.GetName] has a local [population_growth|e] of [ROOT.GetLocation.MakeScope.ScriptValue('pp_population_growth_map_value')|2%+]: modifier [ROOT.GetLocation.GetModifierValue('local_population_growth')|2%+], stored food [ROOT.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_growth')|2%+]."
+  MAPMODE_PP_POPULATION_GROWTH_TT_LAND: "[ROOT.GetLocation.GetName] has a local [population_growth|e] of [ROOT.GetLocation.MakeScope.ScriptValue('pp_population_growth_map_value')|2%+], including [ROOT.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_growth')|2%+] from its province's Stored Food."
   MAPMODE_PP_POPULATION_GROWTH_TT_WATER: "Sea/Lake [location|e] (no local [population_growth|e] modifier)"
 
   # Population Delta debug map modes (vs snapshotted baseline; event pp_population_baseline_debug.1)

@@ -334,8 +334,13 @@ def merge_population_capacity(text: str) -> str:
     return text[: card.start()] + body + text[card_end:]
 
 
-def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path | None = None) -> dict[str, object]:
-    """Copy the export into the mod, remove stale copies from a previous sync and the legacy attribute injects."""
+def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path | None = None,
+                   stored_tiers: int = 0) -> dict[str, object]:
+    """Copy the export into the mod, remove stale copies from a previous sync and the legacy attribute injects.
+
+    ``stored_tiers`` is the number of stored-food tier modifiers (``[stored_food]``), whose effects the location view's
+    Stored Food chip lists.
+    """
     export_dir = Path(export_dir)
     if not (export_dir / EXPORT_BUILD_FILE).is_file():
         raise FileNotFoundError(f"World Builder geography export not found: {export_dir / EXPORT_BUILD_FILE}")
@@ -357,7 +362,8 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path |
 
             merged = add_land_potential_chip(add_rgo_chip(merge_population_capacity(water_access_chips(merge_location_window(src.read_text(encoding="utf-8-sig")))), goods))
             harvests = location_status.load_harvests(mod_root)
-            merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla))
+            merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla),
+                                                    stored_tiers)
             location_status.write_harvest_files(mod_root, harvests)
             if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
                 dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")

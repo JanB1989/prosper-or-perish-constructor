@@ -62,6 +62,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/provisioning.py",
     "src/prosper_or_perish_constructor/rural_capacity.py",
     "src/prosper_or_perish_constructor/setup_layout.py",          # the setup folder every setup writer uses
+    "src/prosper_or_perish_constructor/stored_food.py",           # the location view's Stored Food chip lists its tiers
     "src/prosper_or_perish_constructor/yaml_io.py",
     "scripts/generate_rural_capacity_values.py",
     "scripts/generate_raw_material_local_map_modes.py",

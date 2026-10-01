@@ -42,6 +42,23 @@ def test_every_define_the_mod_sets_exists_in_vanilla() -> None:
     assert not unknown, "defines vanilla does not know (renamed or removed in a game update?):\n" + "\n".join(unknown)
 
 
+def _mod_values() -> dict[tuple[str, str], str]:
+    values = {}
+    for path in sorted(DEFINES.glob("*.txt")):
+        for entry in parse_file(path).entries:
+            if isinstance(entry.value, CList):
+                values.update({(entry.key, child.key): str(child.value) for child in entry.value.entries})
+    return values
+
+
+def test_food_growth_terms_are_off() -> None:
+    """Growth from stored food is the Stored Food tier modifier (stored_food.py); the engine's storage and surplus
+    terms would add growth on top of it."""
+    values = _mod_values()
+    assert float(values[("NPop", "FOOD_STORAGE_POP_GROWTH")]) == 0
+    assert float(values[("NPop", "FOOD_SURPLUS_POP_GROWTH")]) == 0
+
+
 def test_building_profit_gates_use_the_1_4_names() -> None:
     """1.4: the margin gate is AI_BUILDING_PROFIT_MARGIN_THRESHOLD; AI_BUILDING_PROFIT_THRESHOLD is a raw-profit floor."""
     set_keys = {(group, key) for _, group, key in _mod_keys()}

@@ -341,8 +341,8 @@ pp_population_capacity_density = {
 	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }
 }
 
-# Map mode for local population growth per location: the local_population_growth modifier plus the engine's
-# stored-food term (EU5 1.4 adds it outside the modifier; script value pp_population_growth_map_value).
+# Map mode for local population growth per location: the local_population_growth modifier, which includes the
+# stored-food tier growth (script value pp_population_growth_map_value).
 # Diverging traffic-light heatmap for local population growth: red = negative, yellow = near zero, green = positive.
 # Stripes (secondary): local modifier at or above the display cap first, then starving locations.
 

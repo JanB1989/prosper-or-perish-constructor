@@ -64,11 +64,11 @@ TRY_REPLACE:expensive_food_in_location = {
 	# local_monthly_prosperity = -0.010
 	# local_population_growth = -0.007
 }
-# Stored-food growth: EU5 1.4 deleted the engine-scaled positive_province_food_growth modifier. Growth from stored
-# food is now an engine term set by defines (pp_defines_adjustments.txt: NPop.FOOD_STORAGE_POP_GROWTH,
-# NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX), the PP law of +0.75 % a year per stored year up to two years. Its
-# other effects (the storage legs of the Tavern and Surplus Sales, devastation recovery, migration attraction,
-# prosperity) ride the stored-food tiers (in_game/common/static_modifiers/pp_stored_food_tiers.txt).
+# Stored-food growth: EU5 1.4 deleted the engine-scaled positive_province_food_growth modifier. All its effects
+# (growth, the PP law of +0.75 % a year per stored year up to two years; the storage legs of the Tavern and Surplus
+# Sales, devastation recovery, migration attraction, prosperity) ride the stored-food tiers
+# (in_game/common/static_modifiers/pp_stored_food_tiers.txt); the engine's storage growth term is off
+# (pp_defines_adjustments.txt: NPop.FOOD_STORAGE_POP_GROWTH = 0).
 
 TRY_INJECT:surplus_jobs = {
 	game_data = {

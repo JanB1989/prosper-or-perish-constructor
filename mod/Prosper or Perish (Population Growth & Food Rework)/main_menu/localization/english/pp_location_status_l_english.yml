@@ -1,7 +1,8 @@
 ﻿l_english:
   # Status chips at the top of the location view (location_status.py in the constructor).
   PP_FOOD_CHIP_TITLE: "Stored Food"
-  PP_FOOD_CHIP_STORED: "This [province|e] has #V [Location.MakeScope.ScriptValue('pp_province_food_storage_months')|0]#! months of food in storage. [population_growth|e] rises with every stored month, up to a cap; from stored food now: #V [Location.MakeScope.ScriptValue('pp_province_food_storage_growth')|2%+]#!. Its other effects are the province's Stored Food modifier, renewed each month."
+  PP_FOOD_CHIP_STORED: "This [province|e] has #V [Location.MakeScope.ScriptValue('pp_province_food_storage_months')|0]#! months of food in storage. Every whole stored month raises its Stored Food modifier, up to a cap; renewed each month, it gives:"
+  PP_FOOD_CHIP_NO_TIER: "No stored food effects: the store holds too little to count."
   PP_FOOD_CHIP_STARVING_TITLE: "Starving"
   PP_FOOD_CHIP_STARVING: "This [province|e] has run out of stored food and cannot feed its people. Until food comes back:"
   PP_LAND_CHIP_OVERPOPULATION_TITLE: "Overpopulation"

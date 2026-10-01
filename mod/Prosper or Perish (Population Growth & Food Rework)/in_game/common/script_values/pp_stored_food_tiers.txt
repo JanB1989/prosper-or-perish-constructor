@@ -7,3 +7,19 @@ pp_stored_food_tier_target = {
 	min = 0
 	max = 24
 }
+
+# Location scope (display only): yearly population growth from the province's stored-food tier, the
+# local_population_growth of the tier modifier it carries (read from its tier variable, + 100 offset; 0
+# without a tier). It is part of modifier:local_population_growth; the engine adds no storage term of its own.
+pp_province_food_storage_growth = {
+	value = 0
+	province ?= {
+		if = {
+			limit = { has_variable = pp_stored_food_tier }
+			add = var:pp_stored_food_tier
+			subtract = 100
+		}
+	}
+	multiply = 0.0075
+	divide = 12
+}

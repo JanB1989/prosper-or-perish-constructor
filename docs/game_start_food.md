@@ -232,7 +232,7 @@ below 12 stored months, the Yard above 20; each moves 60 food), Taverns limited 
 their market's victuals (the Yards' 1.5 per staffed level and other producers), a
 starving pool losing its Tavern's noble at 0.09 a year, a yearly
 seeded harvest roll (peasant consumption +0.30..-0.30), growth -0.0048 + 0.0086
-x stored years (starving: -0.056). Tribesmen (engine rules verified 2026-09-25):
+x stored years in whole months (the stored-food tiers; starving: -0.056). Tribesmen (engine rules verified 2026-09-25):
 the food of their pop type (-1 per 1k: they feed the province) enters the
 province consumption, every pop gets +0.012 x the tribal share, tribesmen are
 born at the positive location growth x 0.19 x the free-land factor 1 - 0.75 x pop /

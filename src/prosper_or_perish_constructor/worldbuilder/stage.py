@@ -14,6 +14,7 @@ import polars as pl
 
 from prosper_or_perish_constructor.location_baseline import resolve_load_order_path
 from prosper_or_perish_constructor.setup_layout import LEGACY_SETUP_DIR, check_setup_folder
+from prosper_or_perish_constructor import stored_food
 from prosper_or_perish_constructor.worldbuilder import attribute_tooltips as wb_tooltips
 from prosper_or_perish_constructor.worldbuilder import buildings as wb_buildings
 from prosper_or_perish_constructor.worldbuilder import compat as wb_compat
@@ -47,7 +48,8 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     check_setup_folder(vanilla_root(repo, project) / "game", mod_root)
     report: dict[str, object] = {"handover": str(contract.root), "version": contract.version, "worldbuilder_commit": contract.meta.get("worldbuilder_commit")}
     if cfg.sync_geography:
-        report["geography"] = wb_geography.sync_geography(cfg.geography_export, mod_root, repo, vanilla_root(repo, project))
+        report["geography"] = wb_geography.sync_geography(cfg.geography_export, mod_root, repo, vanilla_root(repo, project),
+                                                         stored_food.configured_tiers(project))
     # channel tiles take the topography of their navigation state (Navigable River, Shallows, Falls)
     if cfg.raw.get("navigation_config"):
         nav_settings = json.loads((repo / str(cfg.raw["navigation_config"])).read_text(encoding="utf-8"))

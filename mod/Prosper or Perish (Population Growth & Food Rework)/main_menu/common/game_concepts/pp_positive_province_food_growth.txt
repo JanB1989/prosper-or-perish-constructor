@@ -1,4 +1,4 @@
-﻿# Prosper or Perish — Province Food Growth from Storage support concept (the engine storage term, NPop.FOOD_STORAGE_POP_GROWTH)
+﻿# Prosper or Perish — Province Food Growth from Storage support concept (growth from the stored-food tier modifiers pp_stored_food_tier_<t>)
 pp_positive_province_food_growth = {
 	family = food
 	texture = "flat_icons/trade_market/food_stockpile"

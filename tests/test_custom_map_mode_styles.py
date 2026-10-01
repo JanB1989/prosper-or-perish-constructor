@@ -663,9 +663,9 @@ def test_positive_province_food_growth_map_mode_reads_months_from_script_value()
     assert "divide = pp_stored_food_province_consumption" in province_months
     assert "value = define:NEconomy|GROWTH_FROM_FOOD_MULTIPLIER_MAX" in province_months
     assert "add = food_consumption" in storage_values
-    growth_value = storage_values.split("\npp_province_food_storage_growth = {", 1)[1].split("\n}", 1)[0]
-    assert "multiply = define:NPop|FOOD_STORAGE_POP_GROWTH" in growth_value
-    assert "province = { is_starving = no }" in growth_value
+    # growth from stored food is the stored-food tier modifier's; its display value is generated with the tiers
+    # (test_stored_food.py pins it)
+    assert "\npp_province_food_storage_growth = {" not in storage_values
     assert not (
         MOD_ROOT
         / "in_game"

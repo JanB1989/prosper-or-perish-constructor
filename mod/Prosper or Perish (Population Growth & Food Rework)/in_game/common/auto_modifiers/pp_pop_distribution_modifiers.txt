@@ -7,6 +7,8 @@ TRY_INJECT:burghers_percentage_in_country = {
 TRY_INJECT:peasants_percentage_in_country = {
     global_institution_growth_modifier = -0.00350
 }
+# EU5 1.4 scales this modifier by 20 x the soldier share (capped at 1, reached at 5 % soldiers); 0.05 keeps the
+# 1.3 effect of +1.00 x the share up to that cap
 TRY_INJECT:soldier_percentage_in_country = {
-    global_max_control = 1.00
+    global_max_control = 0.05
 }

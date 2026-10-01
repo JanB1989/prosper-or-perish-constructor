@@ -174,7 +174,7 @@ TRY_INJECT:winter_severe = {
 	local_horses_output_modifier = -0.05
 }
 TRY_INJECT:location_base_values = {
-	local_devastation_recovery = -0.004
+	local_devastation_recovery = -0.0015 # EU5 1.4 vanilla 0.0025 (1.3: 0.005): the mod's net stays +0.001
 	local_monthly_prosperity = -0.0024
 }
 

@@ -6915,18 +6915,20 @@ pp_land_potential_chip = {}
 								# Province timed modifiers
 								widget = {
 									size = { 45 26 }
-									visible = "[GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers), '(int32)0')]"
+									visible = "[GreaterThan_int32(Subtract_int32(GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers), Select_int32(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_years'), '(CFixedPoint)0'), '(int32)1', '(int32)0')), '(int32)0')]"
 
 									# RIGHT DIVISION
 									flowcontainer = {
-										visible = "[Not(GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers), '(int32)1'))]"
+										visible = "[Not(GreaterThan_int32(Subtract_int32(GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers), Select_int32(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_years'), '(CFixedPoint)0'), '(int32)1', '(int32)0')), '(int32)1'))]"
 
 										layoutpolicy_horizontal = expanding
 
 										datamodel = "[LocationView.GetLocation.GetProvince.GetTimedModifiers]"
+										ignoreinvisible = yes
 										item = {
 											timed_modifier_icon = {
 												datacontext = "[TimedModifier]"
+												visible = "[Not(EqualTo_string(TimedModifier.GetModifier.GetName, Localize('STATIC_MODIFIER_NAME_pp_stored_food')))]"
 												tooltipwidget = {
 													using = timed_modifier_tooltip
 													blockoverride "concept_link" {
@@ -6940,12 +6942,12 @@ pp_land_potential_chip = {}
 									}
 
 									flowcontainer = {
-										visible = "[GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers), '(int32)1')]"
+										visible = "[GreaterThan_int32(Subtract_int32(GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers), Select_int32(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_years'), '(CFixedPoint)0'), '(int32)1', '(int32)0')), '(int32)1')]"
 
 										text_single = {
 											minimumsize = { -1 26 }
 											align = nobaseline|hcenter
-											text = "[GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers)]"
+											text = "[Subtract_int32(GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers), Select_int32(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_years'), '(CFixedPoint)0'), '(int32)1', '(int32)0'))]"
 										}
 										icon = {
 											size = { 26 26 }
@@ -6972,7 +6974,8 @@ pp_land_potential_chip = {}
 															blockoverride "block_title" { visible = no }
 															blockoverride "rowlist_datamodel_is_empty" { visible = "[IsDataModelEmpty(LocationView.GetLocation.GetProvince.GetTimedModifiers)]"}
 															blockoverride "rowlist_datamodel_has_items" { visible = "[DataModelHasItems(LocationView.GetLocation.GetProvince.GetTimedModifiers)]"}
-															blockoverride "rowlist_datamodel" { datamodel = "[LocationView.GetLocation.GetProvince.GetTimedModifiers]" }
+															blockoverride "rowlist_datamodel" { datamodel = "[LocationView.GetLocation.GetProvince.GetTimedModifiers]" ignoreinvisible = yes }
+															blockoverride "visibility" { visible = "[Not(EqualTo_string(TimedModifier.GetModifier.GetName, Localize('STATIC_MODIFIER_NAME_pp_stored_food')))]" }
 															blockoverride "rowlist_content" {
 																hbox = {
 																	layoutpolicy_horizontal = expanding

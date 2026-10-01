@@ -364,6 +364,7 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path |
             harvests = location_status.load_harvests(mod_root)
             merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla),
                                                     location_status.load_stored_food_rows(mod_root, vanilla, stored_food))
+            merged = location_status.hide_stored_food_modifier(merged)
             location_status.write_harvest_files(mod_root, harvests)
             if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
                 dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")

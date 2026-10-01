@@ -179,17 +179,92 @@ def without_river(ctx, rules):
     return {**ctx, "modifiers": mods, "static_modifiers": set(ctx["static_modifiers"]) - statics, "has_river": False}
 
 
-def write_topup(topup, owners, mod_root):
-    """``pp_start_river_topup``: the river share of the starting buildings (called by pp_navigation_start)."""
+TOPUP_POTENTIALS_PATH = Path("in_game/common/scripted_triggers/pp_start_river_topup_potentials.txt")
+
+
+def topup_potential_trigger(key):
+    """The scripted trigger holding a copy of ``key``'s location_potential (the topup's validity guard)."""
+    return f"pp_start_topup_{key}_potential"
+
+
+def _render_scalar(value):
+    if value is True:
+        return "yes"
+    if value is False:
+        return "no"
+    text = str(value)
+    return f'"{text}"' if not text or any(c in text for c in ' \t"{}=<>#') else text
+
+
+def render_trigger(node, depth=1):
+    """A parsed trigger block back as script text, one entry per line (the parser keeps ``a ?= b`` as an anonymous
+    entry whose left side sits in the block's items; quoted strings come back quoted)."""
+    pad = "\t" * depth
+    items = list(node.items)
+    lines = []
+    for entry in node.entries:
+        if entry.key == "?":
+            key, op = items.pop(0), "?="
+        else:
+            key, op = entry.key, entry.op
+        value = entry.value
+        if isinstance(value, CList):
+            lines.append(f"{pad}{key} {op} {{\n{render_trigger(value, depth + 1)}\n{pad}}}")
+        else:
+            lines.append(f"{pad}{key} {op} {_render_scalar(value)}")
+    lines[:0] = [f"{pad}{_render_scalar(item)}" for item in items]
+    return "\n".join(lines)
+
+
+def write_topup(topup, owners, mod_root, *, base=None, potentials=None):
+    """``pp_start_river_topup``: the river share of the starting buildings (called by pp_navigation_start).
+
+    Whether the engine traces a location's river, and at which size, cannot be told offline: it keeps stray river
+    pixels as ``has_river`` without a size, and some World Builder rivers are none to it (EU5 1.4 start: nine inland
+    fishing villages invalid, irrigated fields and Taverns above max where this effect added levels unconditionally).
+    So every level is added only where the engine allows it at game start, which is also when it validates the
+    start buildings: the building's own location_potential (``pp_start_topup_<key>_potential``, a copy of it) and its
+    live max level (``building_type_max_level`` at least the level the step reaches). ``base``: (location, building)
+    -> levels the setup already places; ``potentials``: building -> its location_potential block (None: no gate)."""
+    from eu5gameparser.clausewitz.parser import parse_text
+    from eu5gameparser.clausewitz.serializer import normalized_value
+
+    base = base or {}
+    potentials = potentials or {}
     lines = [SETUP_MARKER.replace("cap-checked starting buildings", "river share of the starting buildings (start_simulation.river_topup)"),
+             "# Each level only where the engine allows it: the building's location_potential and its live max level.",
              "pp_start_river_topup = {"]
+    guarded = set()
     for (tag, key), n in sorted(topup.items()):
-        if n > 0 and tag in owners:
-            lines.append(f" location:{tag} = {{ change_building_level_in_location = {{ building = building_type:{key} value = {n} }} }}")
+        if n <= 0 or tag not in owners:
+            continue
+        have = int(base.get((tag, key), 0))
+        steps = " ".join(
+            f"if = {{ limit = {{ building_type_max_level = {{ building_type = building_type:{key} value >= {have + k} }} }} "
+            f"change_building_level_in_location = {{ building = building_type:{key} value = 1 }} }}"
+            for k in range(1, n + 1)
+        )
+        guarded.add(key)
+        lines.append(f" location:{tag} = {{ if = {{ limit = {{ {topup_potential_trigger(key)} = yes }} {steps} }} }}")
     lines.append("}")
     path = mod_root / TOPUP_PATH
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("﻿" + "\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    triggers = [SETUP_MARKER.replace("cap-checked starting buildings", "copies of the location_potential the river topup tests (start_simulation.write_topup)")]
+    for key in sorted(guarded):
+        potential = potentials.get(key)
+        if not isinstance(potential, CList):
+            triggers.append(f"{topup_potential_trigger(key)} = {{\n\talways = yes\n}}")   # the building has no potential
+            continue
+        body = render_trigger(potential)
+        # the copy must be the potential the engine reads: a rendering the parser does not read back identically fails
+        again = parse_text(f"t = {{\n{body}\n}}").entries[0].value
+        if normalized_value(again) != normalized_value(potential):
+            raise ValueError(f"location_potential of {key} does not render back identically for the river topup guard")
+        triggers.append(f"{topup_potential_trigger(key)} = {{\n{body}\n}}")
+    target = mod_root / TOPUP_POTENTIALS_PATH
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("﻿" + "\n\n".join(triggers) + "\n", encoding="utf-8", newline="\n")
 
 
 def sim_converted(sim):
@@ -425,6 +500,9 @@ class Simulation:
                 "initializing": True,
                 "variables": {},
                 "static_modifiers": static,
+                # the engine applies the river statics itself: has_location_modifier does not see them (only their
+                # values count), unlike the setup-placed attribute modifiers
+                "engine_modifiers": frozenset(k for k in static if k.startswith("river_flowing_through_")),
                 "neighbors": self.neighbors[tag],
                 "modifiers": dict(mods),
                 "buildings": {},
@@ -517,13 +595,16 @@ class Simulation:
         for tag, ctx in self.base.items():
             ctx["neighbors"] = self.neighbors[tag]
 
-    def ctx(self, tag):
+    def ctx(self, tag, counts=None):
+        """The location's rule context with its building levels (``counts``: other levels than the plan's, e.g. the
+        ones the setup files place)."""
         base = self.base[tag]
+        levels = self.counts[tag] if counts is None else counts
         mods = defaultdict(float, base["modifiers"])
-        for key, n in self.counts[tag].items():
+        for key, n in levels.items():
             for k, v in self.raw.get(key, {}).items():
                 mods[k] += v * n
-        return {**base, "buildings": self.counts[tag], "modifiers": dict(mods)}
+        return {**base, "buildings": levels, "modifiers": dict(mods)}
 
     def food_per_level(self, key, mult=1.0):
         """Province food one staffed level makes: ``local_monthly_food`` scaled by the local food modifier ``mult``,
@@ -663,7 +744,8 @@ class Simulation:
         The engine validates setup buildings against the river sizes it traces from rivers.png, and drops some
         bank remnants of the navigable rivers the World Builder still counts (Mechelen, Hanyang). Which ones
         cannot be told offline, so the setup carries only the levels that hold without any river (gate and cap);
-        pp_start_river_topup adds the rest at game start, after pp_navigation_preserve_rivers."""
+        pp_start_river_topup adds the rest at game start, after pp_navigation_preserve_rivers, each level only where
+        the engine's own potential and max level allow it (write_topup)."""
         topup = {}
         for tag in sorted(self.locations):
             ctx = self.ctx(tag)
@@ -1476,6 +1558,151 @@ class Simulation:
         return len(self.audit)
 
 
+SETUP_AUDIT_RELATIVE_PATH = Path("artifacts/data/worldbuilder/setup_validation.csv")
+
+
+def setup_levels(vanilla_root, mod_root, towns=None):
+    """location -> building -> levels the game places from the active setup folder: every file in it (a mod file
+    replaces the vanilla file of the same name), all ``building_manager`` rows summed, plus the preset buildings of
+    any ``town_setup`` a location still names (``towns``: the town setup definitions)."""
+    roots = (Path(vanilla_root) / "game" / SETUP_DIR, Path(mod_root) / SETUP_DIR)
+    names = sorted({p.name for root in roots if root.is_dir() for p in root.glob("*.txt")})
+    levels = defaultdict(Counter)
+    for name in names:
+        path = roots[1] / name if (roots[1] / name).is_file() else roots[0] / name
+        text = path.read_text(encoding="utf-8-sig")
+        if "building_manager" not in text and "town_setup" not in text:
+            continue
+        for tag, local in setup_counts(path).items():
+            levels[tag].update(local)
+        if towns and "town_setup" in text:
+            for block in parse_file(path).values("locations"):
+                for entry in block.entries:
+                    town = first(entry.value, "town_setup")
+                    if town:
+                        levels[entry.key].update(town_levels(towns, str(town)))
+    return levels
+
+
+def audit_setup(sim, levels, cultures=None):
+    """Every setup building against the start placement's model of the engine when it validates the start (after
+    on_game_start): the location must be owned, the building allowed at the location's rank, its location_potential
+    must hold and its level must not exceed its max level. Whether the engine traces a World Builder river cannot be
+    told offline, so river locations are checked as if it traced none (``without_river``: the setup carries only what
+    holds without the river; pp_start_river_topup adds the rest under the engine's own checks). Returns one row per
+    (location, building) with ``problem`` empty, ``unresolved`` (a rule the evaluator cannot read: the engine decides)
+    or the error the engine would log. ``cultures``: location -> dominant culture of its setup pops (the culture-locked
+    potentials of niche buildings test it)."""
+    rows = []
+    cultures = cultures or {}
+    for tag, local in sorted(levels.items()):
+        local = Counter({k: n for k, n in local.items() if n > 0})
+        for key, n in sorted(local.items()):
+            body = sim.rules.buildings.get(key)
+            problem, cap, detail = "", None, ""
+            if tag not in sim.locations:
+                problem = "unowned location"
+            elif body is None:
+                problem = "unknown building"
+            else:
+                ctx = sim.ctx(tag, local)
+                if ctx.get("has_river"):
+                    ctx = without_river(ctx, sim.rules)
+                if cultures.get(tag):
+                    ctx = {**ctx, "dominant_culture": cultures[tag]}
+                rank = ctx.get("location_rank", "rural_settlement")
+                # rank, potential and max level are checked independently: a rule the evaluator cannot read in one
+                # (a culture-locked potential) leaves the others checked
+                unresolved = []
+                if first(body, rank, False) not in (True, "setup_only"):
+                    problem = "invalid building (rank)"
+                try:
+                    if not problem and not sim.rules.test(first(body, "location_potential"), ctx):
+                        problem = "invalid building (location_potential)"
+                except Unresolved as exc:
+                    unresolved.append(f"location_potential: {exc}")
+                before = Counter(sim.rules.unsupported)
+                value = sim.rules.cap(key, ctx, gates=False)
+                if sim.rules.unsupported != before:
+                    unresolved.extend(k for k in sim.rules.unsupported if sim.rules.unsupported[k] != before.get(k))
+                else:
+                    cap = value
+                    if not problem and n > cap:
+                        problem = "above max level"
+                sim.rules.unsupported = before
+                if not problem and unresolved:
+                    problem, detail = "unresolved", "; ".join(unresolved)
+            rows.append({"location": tag, "building": key, "levels": int(n), "cap": cap, "problem": problem, "detail": detail})
+    return rows
+
+
+def unguarded_topup_rows(path):
+    """(location, building) of every level ``pp_start_river_topup`` adds without both engine checks around it: the
+    building's potential copy (``pp_start_topup_<key>_potential``) and its live max level (``building_type_max_level``)."""
+    bad = []
+
+    def walk(node, tag, potential, maxed):
+        for entry in node.entries:
+            value = entry.value
+            if entry.key == "change_building_level_in_location":
+                key = str(first(value, "building", "")).split(":")[-1]
+                if key not in potential or key not in maxed:
+                    bad.append((tag, key))
+            elif not isinstance(value, CList):
+                continue
+            elif entry.key == "if":
+                limit = first(value, "limit")
+                here_potential, here_max = set(potential), set(maxed)
+                for k, _, v in entries(limit) if isinstance(limit, CList) else ():
+                    if k == "building_type_max_level" and isinstance(v, CList):
+                        here_max.add(str(first(v, "building_type", "")).split(":")[-1])
+                    elif k.startswith("pp_start_topup_") and k.endswith("_potential") and v is True:
+                        here_potential.add(k.removeprefix("pp_start_topup_").removesuffix("_potential"))
+                walk(value, tag, here_potential, here_max)
+            else:
+                walk(value, entry.key.split(":")[-1] if entry.key.startswith("location:") else tag, potential, maxed)
+
+    for block in parse_file(path).values("pp_start_river_topup"):
+        walk(block, None, set(), set())
+    return bad
+
+
+def validate_setup(sim, repo, vanilla_root, mod_root):
+    """Audit the setup files as written (``audit_setup``) and the topup's guards; any error the engine would log at
+    the start fails the build. Writes every audited row to ``SETUP_AUDIT_RELATIVE_PATH``."""
+    rows = audit_setup(sim, setup_levels(vanilla_root, mod_root, sim.rules.towns), sp.dominant_cultures(sim.pops))
+    unguarded = unguarded_topup_rows(Path(mod_root) / TOPUP_PATH)
+    path = Path(repo) / SETUP_AUDIT_RELATIVE_PATH
+    path.parent.mkdir(parents=True, exist_ok=True)
+    schema = {"location": pl.String, "building": pl.String, "levels": pl.Int64, "cap": pl.Int64, "problem": pl.String, "detail": pl.String}
+    pl.DataFrame(rows, schema=schema).write_csv(path)
+    problems = Counter(r["problem"] for r in rows if r["problem"])
+    errors = [r for r in rows if r["problem"] not in ("", "unresolved")]
+    if errors or unguarded:
+        raise ValueError(
+            f"Setup buildings the engine would reject at game start: {dict(problems)}; first rows {errors[:10]}; "
+            f"topup levels without the engine checks: {unguarded[:10]}"
+        )
+    return {"rows": len(rows), "levels": sum(r["levels"] for r in rows), "problems": dict(problems),
+            "unguarded_topup_rows": len(unguarded), "table": str(SETUP_AUDIT_RELATIVE_PATH)}
+
+
+def check_river_size_modifier(rules):
+    """The caps read the river size as ``modifier:irrigant_cap_modifier`` (buildings.river_size_trigger): each
+    river_flowing_through_N must carry exactly N and no other static modifier any."""
+    from .buildings import RIVER_SIZE_MODIFIER
+
+    wrong = {}
+    for key, block in rules.statics.items():
+        level = key.removeprefix("river_flowing_through_")
+        want = float(level) if level.isdigit() else 0.0
+        got = summed(block).get(RIVER_SIZE_MODIFIER, 0.0)
+        if got != want:
+            wrong[key] = got
+    if wrong:
+        raise ValueError(f"{RIVER_SIZE_MODIFIER} must equal the river size on river_flowing_through_N only: {wrong}")
+
+
 SETUP_BUILDING_TRIGGERS_PATH = Path("in_game/common/scripted_triggers/pp_wb_setup_buildings.txt")
 SETUP_BUILDING_HEADER = ("# Generated by ppc worldbuilder: game-start buildings of the vanilla setup kept where the World Builder "
                          "geography fails their location_potential; do not edit by hand.")
@@ -1541,6 +1768,7 @@ def keep_setup_buildings(sim, keys, mod_root):
 def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations, development=None):
     write_market_caps(repo, mod_root)
     rules = Rules(repo, project)
+    check_river_size_modifier(rules)
     start = sp.StartConfig.from_raw(cfg.raw.get("start"))
     owners = sp.load_owners(vanilla_root, mod_root)
     # Always derive ranks/presets from vanilla, not last build's sanitized copy.
@@ -1626,7 +1854,14 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
             take = min(n, source[tag][key])
             source[tag][key] -= take
             n -= take
-    write_topup(topup, owners, mod_root)
+    # each topup level is added under the engine's own potential and max-level checks, from the level the setup places
+    write_topup(
+        topup,
+        owners,
+        mod_root,
+        base={(tag, key): counts[tag][key] + kept_vanilla[tag][key] + kept_improvements[tag][key] for tag, key in topup},
+        potentials={key: first(rules.buildings.get(key), "location_potential") for _, key in topup},
+    )
     for name, (extra_doc, counts_extra) in extra.items():
         kept = defaultdict(Counter)
         for tag, local in counts_extra.items():
@@ -1656,6 +1891,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         if n
     ]
     sp.write_start_setup(placements, mod_root)
+    setup_validation = validate_setup(sim, repo, vanilla_root, mod_root)
     pop_report = sp.write_pops(vanilla_root, mod_root, sim.conversions)
     for rel in sp.LEGACY_FILES:
         if rel.endswith("07_cities_and_buildings.txt"):
@@ -1810,6 +2046,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         "yard_food": sim.numbers[sim.YARD]["local_monthly_food"],
         "building_rows_audited": audited,
         "over_cap_rows": 0,
+        "setup_validation": setup_validation,
         "setup_buildings_kept": {k: len(v) for k, v in setup_buildings_kept.items()},
         "setup_building_keepers_unreferenced": setup_keepers_unreferenced,
         "clamped_rows": len(sim.trimmed),

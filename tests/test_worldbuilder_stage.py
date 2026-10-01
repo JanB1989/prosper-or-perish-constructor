@@ -60,7 +60,8 @@ def test_cap_script_value_and_gate_use_game_keys(tmp_path):
     assert wb_buildings.gate_trigger(c, [{"climate": ["arid", "continental"]}]) == ["OR = { climate = arid climate = continental }"]
     assert wb_buildings.gate_trigger(c, []) == ["always = yes"]
     assert wb_buildings.trigger_for(c, "river_level", "0") == "has_river = no"
-    assert wb_buildings.trigger_for(c, "river_level", "3") == "has_location_modifier = river_flowing_through_3"
+    # river size as a modifier value: has_location_modifier does not see the engine's own river statics
+    assert wb_buildings.trigger_for(c, "river_level", "3") == "pp_wb_river_size_3 = yes"
 
 
 def test_cap_terms_of_one_exclusive_attribute_chain_with_else_if(tmp_path):

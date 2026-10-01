@@ -1,0 +1,323 @@
+﻿# Generated: copies of the location_potential the river topup tests (start_simulation.write_topup).
+
+pp_start_topup_bund_potential = {
+	OR = {
+		has_river = yes
+		OR = {
+			topography = ha1300_topo_floodplains
+			topography = wetlands
+			topography = ha1300_topo_deltas
+		}
+		OR = {
+			vegetation = ha1300_veg_marsh
+			vegetation = ha1300_veg_swamp
+		}
+		AND = {
+			OR = {
+				climate = continental
+				climate = ha1300_climate_continental_monsoon
+				climate = ha1300_climate_dry_summer_continental
+				climate = oceanic
+				climate = ha1300_climate_subpolar_oceanic
+				climate = mediterranean
+				climate = subtropical
+				climate = ha1300_climate_subtropical_monsoon
+				climate = tropical
+				climate = ha1300_climate_tropical_monsoon
+				climate = ha1300_climate_highland_monsoon
+				climate = ha1300_climate_savanna
+				climate = hot_semi_arid
+				climate = cold_semi_arid
+			}
+			OR = {
+				topography = flatland
+				topography = ha1300_topo_valleys
+				topography = hills
+			}
+		}
+	}
+}
+
+pp_start_topup_clay_pit_potential = {
+	OR = {
+		is_coastal = yes
+		has_river = yes
+		is_adjacent_to_lake = yes
+		raw_material = goods:clay
+	}
+}
+
+pp_start_topup_fishing_village_potential = {
+	OR = {
+		has_river = yes
+		is_adjacent_to_lake = yes
+		topography = wetlands
+		is_coastal = yes
+		raw_material = goods:fish
+	}
+}
+
+pp_start_topup_inland_saltworks_potential = {
+	raw_material = goods:salt
+	NOT = {
+		pp_is_sea_coast = yes
+	}
+	NOT = {
+		OR = {
+			has_location_modifier = sahara_salt_mines_base
+			has_location_modifier = turda_salt_mines_base
+			this = location:wieliczka
+			this = location:khewra
+			this = location:dina
+			this = location:khushab
+			this = location:dinkot
+			this = location:cardona
+			this = location:hallein
+			this = location:salzburg
+			this = location:chicaquicha
+			AND = {
+				OR = {
+					topography = hills
+					topography = mountains
+					topography = plateau
+				}
+				OR = {
+					OR = {
+						climate = continental
+						climate = ha1300_climate_dry_summer_continental
+						climate = ha1300_climate_continental_monsoon
+						climate = subpolar
+					}
+					OR = {
+						climate = oceanic
+						climate = ha1300_climate_highland_monsoon
+						climate = ha1300_climate_subpolar_oceanic
+					}
+					climate = mediterranean
+				}
+				OR = {
+					OR = {
+						vegetation = forest
+						vegetation = ha1300_veg_coniferous_forest
+						vegetation = ha1300_veg_mixed_forest
+						vegetation = ha1300_veg_swamp
+					}
+					OR = {
+						vegetation = woods
+						vegetation = ha1300_veg_thicket
+						vegetation = ha1300_veg_dry_forest
+					}
+					OR = {
+						vegetation = grasslands
+						vegetation = ha1300_veg_savanna
+						vegetation = ha1300_veg_marsh
+					}
+					vegetation = farmland
+				}
+				NOT = {
+					OR = {
+						this = location:salins_les_bains
+						this = location:moutiers
+						this = location:anana
+						this = location:hall
+						region = region:south_china_region
+						region = region:west_china_region
+						region = region:tibet_region
+						region = region:xinjiang_region
+					}
+				}
+			}
+		}
+	}
+}
+
+pp_start_topup_iron_mine_potential = {
+	raw_material = goods:iron
+}
+
+pp_start_topup_irrigated_fields_potential = {
+	OR = {
+		climate = subtropical
+		climate = ha1300_climate_subtropical_monsoon
+		climate = tropical
+		climate = ha1300_climate_tropical_monsoon
+		climate = ha1300_climate_highland_monsoon
+		climate = ha1300_climate_continental_monsoon
+		climate = ha1300_climate_savanna
+	}
+	OR = {
+		topography = flatland
+		topography = ha1300_topo_floodplains
+		topography = wetlands
+		topography = ha1300_topo_deltas
+		topography = ha1300_topo_valleys
+		topography = hills
+		topography = plateau
+	}
+}
+
+pp_start_topup_irrigation_systems_potential = {
+	OR = {
+		has_river = yes
+		is_adjacent_to_lake = yes
+		OR = {
+			topography = ha1300_topo_deltas
+			topography = ha1300_topo_floodplains
+			topography = ha1300_topo_valleys
+		}
+		AND = {
+			has_location_modifier = pp_wb_coastal
+			OR = {
+				topography = flatland
+				topography = wetlands
+			}
+		}
+	}
+}
+
+pp_start_topup_jiangnan_canal_network_potential = {
+	OR = {
+		climate = subtropical
+		climate = ha1300_climate_subtropical_monsoon
+		climate = tropical
+		climate = ha1300_climate_tropical_monsoon
+		climate = ha1300_climate_highland_monsoon
+		climate = ha1300_climate_continental_monsoon
+		climate = ha1300_climate_savanna
+	}
+	OR = {
+		topography = flatland
+		topography = ha1300_topo_floodplains
+		topography = wetlands
+		topography = ha1300_topo_deltas
+		topography = ha1300_topo_valleys
+		topography = hills
+		topography = plateau
+	}
+	OR = {
+		AND = {
+			OR = {
+				dominant_culture ?= culture:wu_culture
+				dominant_culture ?= culture:yue_wu_culture
+				dominant_culture ?= culture:wuzhou_culture
+				dominant_culture ?= culture:xuanzhou_culture
+				dominant_culture ?= culture:jixi_culture
+			}
+			OR = {
+				province_definition = province_definition:suzhou_province
+				province_definition = province_definition:songjiang_province
+				province_definition = province_definition:jiaxing_province
+				province_definition = province_definition:huzhou_province
+				province_definition = province_definition:hangzhou_province
+				province_definition = province_definition:changzhou_province
+				province_definition = province_definition:zhenjiang_province
+			}
+			OR = {
+				climate = subtropical
+				climate = ha1300_climate_subtropical_monsoon
+			}
+			OR = {
+				topography = ha1300_topo_deltas
+				topography = wetlands
+				topography = ha1300_topo_floodplains
+			}
+			has_river = yes
+		}
+		AND = {
+			OR = {
+				dominant_culture ?= culture:wu_culture
+				dominant_culture ?= culture:yue_wu_culture
+				dominant_culture ?= culture:wuzhou_culture
+				dominant_culture ?= culture:xuanzhou_culture
+				dominant_culture ?= culture:jixi_culture
+			}
+			OR = {
+				province_definition = province_definition:suzhou_province
+				province_definition = province_definition:songjiang_province
+				province_definition = province_definition:jiaxing_province
+				province_definition = province_definition:huzhou_province
+				province_definition = province_definition:hangzhou_province
+				province_definition = province_definition:changzhou_province
+				province_definition = province_definition:zhenjiang_province
+			}
+			OR = {
+				climate = subtropical
+				climate = ha1300_climate_subtropical_monsoon
+			}
+			OR = {
+				topography = ha1300_topo_deltas
+				topography = wetlands
+				topography = ha1300_topo_floodplains
+			}
+			is_adjacent_to_lake = yes
+		}
+		AND = {
+			OR = {
+				dominant_culture ?= culture:wu_culture
+				dominant_culture ?= culture:yue_wu_culture
+				dominant_culture ?= culture:wuzhou_culture
+				dominant_culture ?= culture:xuanzhou_culture
+				dominant_culture ?= culture:jixi_culture
+			}
+			OR = {
+				province_definition = province_definition:suzhou_province
+				province_definition = province_definition:songjiang_province
+				province_definition = province_definition:jiaxing_province
+				province_definition = province_definition:huzhou_province
+				province_definition = province_definition:hangzhou_province
+				province_definition = province_definition:changzhou_province
+				province_definition = province_definition:zhenjiang_province
+			}
+			OR = {
+				climate = subtropical
+				climate = ha1300_climate_subtropical_monsoon
+			}
+			OR = {
+				topography = ha1300_topo_deltas
+				topography = wetlands
+				topography = ha1300_topo_floodplains
+			}
+			has_location_modifier = pp_wb_coastal
+		}
+	}
+}
+
+pp_start_topup_market_village_potential = {
+	always = yes
+}
+
+pp_start_topup_rice_farm_potential = {
+	pp_rice_farm_location_potential = yes
+}
+
+pp_start_topup_salt_collector_potential = {
+	raw_material = goods:salt
+	pp_is_sea_coast = yes
+}
+
+pp_start_topup_tar_kiln_potential = {
+	OR = {
+		pp_wb_setup_tar_kiln_location = yes
+		OR = {
+			vegetation = woods
+			vegetation = ha1300_veg_thicket
+			vegetation = ha1300_veg_dry_forest
+		}
+		OR = {
+			vegetation = forest
+			vegetation = ha1300_veg_coniferous_forest
+			vegetation = ha1300_veg_mixed_forest
+			vegetation = ha1300_veg_swamp
+		}
+		vegetation = jungle
+		raw_material = goods:lumber
+	}
+}
+
+pp_start_topup_tavern_potential = {
+	always = yes
+}
+
+pp_start_topup_victualling_yard_potential = {
+	pp_victualling_yard_site = yes
+}

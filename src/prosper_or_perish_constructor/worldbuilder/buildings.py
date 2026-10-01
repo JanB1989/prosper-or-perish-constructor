@@ -75,6 +75,33 @@ _MAX_LEVELS_RE = re.compile(r"^(?P<indent>[ \t]*)max_levels\s*=\s*\S+[ \t]*$", r
 _POTENTIAL_RE = re.compile(r"(?P<indent>[ \t]*)location_potential\s*=\s*\{.*?\n(?P=indent)\}", re.DOTALL)
 
 
+# River size as the caps read it. The engine's own river_flowing_through_N static modifier is invisible to
+# has_location_modifier (only the ones pp_navigation_preserve_rivers adds where the engine traces no river are
+# visible), so a cap row tested that way was missing in game wherever the engine traced the river itself (EU5 1.4
+# start: irrigated fields on the Yangtze banks 8 levels and Taverns 1 level above max). Modifier values add up over
+# static and script-added modifiers alike, and each river_flowing_through_N carries irrigant_cap_modifier = N
+# (pp_location_modifier_adjustments.txt; start_simulation.run checks it).
+RIVER_SIZE_MODIFIER = "irrigant_cap_modifier"
+RIVER_SIZE_TRIGGERS_PATH = Path("in_game/common/scripted_triggers/pp_wb_river_size.txt")
+
+
+def river_size_trigger(level: int | str) -> str:
+    """The trigger a cap row uses for "the location's river has size ``level``" (1-5)."""
+    return f"pp_wb_river_size_{int(level)} = yes"
+
+
+def write_river_size_triggers(mod_root: Path) -> Path:
+    """``pp_wb_river_size_1`` .. ``_5``: the river size read from ``modifier:irrigant_cap_modifier`` (see above)."""
+    lines = [GENERATED, "# River size N <=> modifier:irrigant_cap_modifier = N (every river_flowing_through_N carries it). Read as a",
+             "# modifier value, the engine's own river statics count too (has_location_modifier does not see them)."]
+    for n in range(1, 6):
+        lines.append(f"pp_wb_river_size_{n} = {{ modifier:{RIVER_SIZE_MODIFIER} > {n - 0.5} modifier:{RIVER_SIZE_MODIFIER} < {n + 0.5} }}")
+    path = mod_root / RIVER_SIZE_TRIGGERS_PATH
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("﻿" + "\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    return path
+
+
 def _fmt(value: float) -> str:
     text = f"{value:.2f}".rstrip("0").rstrip(".")
     return text if text not in ("", "-0") else "0"
@@ -92,8 +119,11 @@ def trigger_for(contract: Contract, attribute: str, value: str, *, gate: bool = 
         # modifiers, so it uses the map-native trigger. The World Builder gates only ever ask for "any river"
         # (levels 1-5) or "no river"; the caps' per-size class terms keep the size modifiers below.
         return "has_river = no" if str(value) == "0" else "has_river = yes"
+    if attribute == "river_level" and str(value) != "0":
+        # cap rows read the river size as a modifier value (river_size_trigger): the engine's own river statics count
+        return river_size_trigger(value)
     if attribute == "river_level" and navigation:
-        return "pp_navigation_has_river = no" if str(value) == "0" else f"pp_navigation_river_level_{value} = yes"
+        return "pp_navigation_has_river = no"
     if attribute == "is_coastal" and navigation:
         # river banks next to navigable water are coastal to the engine; the sea coast is the setup-placed modifier
         trigger = "has_location_modifier = pp_wb_coastal"
@@ -255,6 +285,7 @@ def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> d
                           "# Families with niche members: <key>_shared is the equation; each member's cap subtracts the other members' levels.", *blocks]) + "\n"
     (mod_root / CAPS_PATH).parent.mkdir(parents=True, exist_ok=True)
     (mod_root / CAPS_PATH).write_text("﻿" + text, encoding="utf-8", newline="\n")
+    write_river_size_triggers(mod_root)
     # tooltip rows for the cap values and the farm values
     keys = sorted(set(re.findall(r'desc = "(BUILDING_LEVEL_WB_[A-Z0-9_]+)"', text)))
     loc = ["l_english:", '  BUILDING_LEVEL_WB_BASE: "Base levels"', '  BUILDING_LEVEL_WB_DEVELOPMENT: "From [development|e]"',

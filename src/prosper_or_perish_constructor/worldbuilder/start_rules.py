@@ -230,7 +230,9 @@ class Rules:
             if key == "has_building":
                 return ctx.get("buildings", {}).get(str(v).split(":")[-1], 0) > 0
             if key == "has_location_modifier":
-                return str(v) in ctx.get("static_modifiers", set())
+                # the engine's own statics (river_flowing_through_N) are invisible to has_location_modifier; their
+                # values still count in modifier:<key> (ctx["modifiers"])
+                return str(v) in ctx.get("static_modifiers", set()) and str(v) not in ctx.get("engine_modifiers", ())
             if key == "has_town_rights":
                 return str(v).split(":")[-1] in ctx.get("town_rights", set())
             if key == "exists":

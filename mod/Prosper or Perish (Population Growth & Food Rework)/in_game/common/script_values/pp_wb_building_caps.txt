@@ -794,7 +794,7 @@ pp_wb_cap_irrigated_fields_shared = {
 		}
 	}
 	if = {
-		limit = { pp_navigation_river_level_5 = yes }
+		limit = { pp_wb_river_size_5 = yes }
 		add = {
 			desc = "BUILDING_LEVEL_WB_RIVER_LEVEL_5"
 			value = 8

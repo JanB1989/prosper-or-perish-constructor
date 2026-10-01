@@ -2,9 +2,12 @@
 
 import json
 
+from .buildings import river_size_trigger, write_river_size_triggers
+
 
 def write(repo, mod_root):
     cfg = json.loads((repo / "config/victuals_logistics.json").read_text())
+    write_river_size_triggers(mod_root)
     labels = {
         "BASE": "Local distribution",
         "DEVELOPMENT": "Development",
@@ -58,11 +61,13 @@ def write(repo, mod_root):
             + f" {when(maintained, 'MAINTAINED', spec['maintained'])} }}"
             + f" else_if = {{ limit = {{ {hard_water} }} {add('DIFFICULT', spec['difficult'])} }} }}"
         )
-        # A location carries at most one river level: stop at the first match.
+        # A location carries at most one river level: stop at the first match. The size is read as a modifier value
+        # (buildings.river_size_trigger): has_location_modifier does not see the engine's own river statics, so this row
+        # was missing in game wherever the engine traced the river (EU5 1.4 start: 14 Taverns one level above max).
         for level in range(1, 6):
             keyword = "if" if level == 1 else "else_if"
             body.append(
-                f"{keyword} = {{ limit = {{ has_location_modifier = river_flowing_through_{level} }} "
+                f"{keyword} = {{ limit = {{ {river_size_trigger(level)} }} "
                 f"{add('RIVER', round(level * spec['river_per_level'], 6))} }}"
             )
         body.append(when("is_market_center = yes", "MARKET", spec["market_center"]))

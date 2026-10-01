@@ -6,11 +6,11 @@ tavern_max_level = {
  add = { desc = PP_VM_CAP_POPULATION value = population multiply = 0.0375 }
  add = { desc = PP_VM_CAP_HARBOR value = modifier:natural_harbor_suitability max = 3 min = 0 multiply = 2.25 }
  if = { limit = { is_coastal = yes } add = { desc = PP_VM_CAP_COAST value = 1.5 } if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 1 var:pp_navigation_map_state = 4 var:pp_navigation_map_state = 6 } } } add = { desc = PP_VM_CAP_NAVIGABLE value = 3 } if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 } } add = { desc = PP_VM_CAP_MAINTAINED value = 1.5 } } } else_if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 2 var:pp_navigation_map_state = 5 } } } add = { desc = PP_VM_CAP_DIFFICULT value = 0.75 } } }
- if = { limit = { has_location_modifier = river_flowing_through_1 } add = { desc = PP_VM_CAP_RIVER value = 0.45 } }
- else_if = { limit = { has_location_modifier = river_flowing_through_2 } add = { desc = PP_VM_CAP_RIVER value = 0.9 } }
- else_if = { limit = { has_location_modifier = river_flowing_through_3 } add = { desc = PP_VM_CAP_RIVER value = 1.35 } }
- else_if = { limit = { has_location_modifier = river_flowing_through_4 } add = { desc = PP_VM_CAP_RIVER value = 1.8 } }
- else_if = { limit = { has_location_modifier = river_flowing_through_5 } add = { desc = PP_VM_CAP_RIVER value = 2.25 } }
+ if = { limit = { pp_wb_river_size_1 = yes } add = { desc = PP_VM_CAP_RIVER value = 0.45 } }
+ else_if = { limit = { pp_wb_river_size_2 = yes } add = { desc = PP_VM_CAP_RIVER value = 0.9 } }
+ else_if = { limit = { pp_wb_river_size_3 = yes } add = { desc = PP_VM_CAP_RIVER value = 1.35 } }
+ else_if = { limit = { pp_wb_river_size_4 = yes } add = { desc = PP_VM_CAP_RIVER value = 1.8 } }
+ else_if = { limit = { pp_wb_river_size_5 = yes } add = { desc = PP_VM_CAP_RIVER value = 2.25 } }
  if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_MARKET value = 3 } }
  if = { limit = { location_rank ?= location_rank:town } add = { desc = PP_VM_CAP_RANK value = 1.5 } }
  else_if = { limit = { location_rank ?= location_rank:city } add = { desc = PP_VM_CAP_RANK value = 3 } }

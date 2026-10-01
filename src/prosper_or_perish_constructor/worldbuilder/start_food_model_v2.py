@@ -57,7 +57,7 @@ class FoodModelConfig:
     subsistence_pop_types: tuple[str, ...] = ("peasants", "slaves")
     yield_rank: Mapping[str, float] = field(default_factory=lambda: dict(DEFAULT_YIELD_RANK))
     yield_climate: Mapping[str, float] = field(default_factory=lambda: dict(DEFAULT_YIELD_CLIMATE))
-    overpopulation_consumption: float = 0.5          # local_peasants_food_consumption per unit of pop / capacity - 1
+    overpopulation_consumption: float = 0.25         # local_peasants_food_consumption per unit of pop / capacity - 1
     overpopulation_pop_types: tuple[str, ...] = ("peasants",)
     capacity: Mapping[str, Any] = field(default_factory=lambda: {k: (dict(v) if isinstance(v, dict) else v) for k, v in DEFAULT_CAPACITY.items()})
     start_food_share: float = 1.0                    # engine fills every province store at setup; the mod leaves it
@@ -181,7 +181,7 @@ def fit_yields(
     production: np.ndarray,
     *,
     define: float,
-    overpopulation_consumption: float = 0.5,
+    overpopulation_consumption: float = 0.25,
     min_weight_k: float = 500.0,
     iterations: int = 40,
 ) -> dict[str, Any]:

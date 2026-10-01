@@ -114,7 +114,9 @@ TRY_REPLACE:overpopulation = {
 	local_migration_attraction = -0.25
 	local_migration_speed = 0.0025
 	local_disease_resistance = -0.03
-	local_peasants_food_consumption = 0.5
+	# Scaled by the share over capacity: 0.25 (was 0.5) so far-over-capacity outliers are not starved out by a linear
+	# penalty; the food sim (2026-10-01) kept every band near capacity unchanged.
+	local_peasants_food_consumption = 0.25
 	# local_population_growth = -0.0015
 	local_mercenaries_modifier = 0.5
 }

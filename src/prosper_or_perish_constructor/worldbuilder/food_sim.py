@@ -8,7 +8,7 @@ quarter of their people, the pools pinned at the storage cap (over-supplied) and
 Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1345.3):
 
 * jobs = jobs0 x (N / N0) ^ 0.5; jobless = peasants and slaves - jobs; subsistence = jobless x yield;
-* consumption = demand0 x N / N0 + overpopulation (+0.5 peasant food per unit of pop / capacity - 1, location by
+* consumption = demand0 x N / N0 + overpopulation (+0.25 peasant food per unit of pop / capacity - 1, location by
   location) + the free-land modifiers (peasants -50 % on abundant land, below 10 % of capacity and 10k people,
   else -32 % on available land, each x 1 - pop / capacity per location; abundant land also forages +1 food; the
   fitted stand-in ``free_land`` of -0.4 x the drop below the start size is 0 since 2026-09-26), less the share the
@@ -282,7 +282,7 @@ class Pool:
     victuals_other_supply: float = 0.0
     harbor_yards: float = 0.0          # staffed harbour Victualling Yard levels (``yards`` counts the Granges)
     overpop: list = field(default_factory=list)   # [(peasants k, pop / capacity)] per location
-    overpop_consumption: float = 0.5
+    overpop_consumption: float = 0.25
     peasant_share: float = 0.6         # share of the demand the peasants eat (the harvest roll moves it)
     tribesmen_food: float = 0.0        # food per 1,000 tribesmen (pop type pop_food_consumption; negative = produce)
     tribal_fed_share: float = 0.0      # settled demand x tribal share of its location, over the settled demand

@@ -193,11 +193,11 @@ def test_static_food_modifier_sums_rank_classes_and_setup_statics():
     assert abs(fm.static_food_modifier(r, "rural_settlement", {"vegetation": "desert"}, ["volcanic_soil", "pp_wb_coastal", "absent"]) - 0.17) < 1e-9
 
 
-def test_overpopulation_adds_half_the_peasant_food_per_unit_over_capacity():
+def test_overpopulation_adds_a_quarter_of_the_peasant_food_per_unit_over_capacity():
     from prosper_or_perish_constructor.worldbuilder import start_food_model_v2 as fm
 
     cfg = fm.FoodModelConfig()
-    assert fm.overpopulation_food(80, 100, 50, cfg) == 0.5 * 80 * 1.0            # twice the capacity: +50 %
+    assert fm.overpopulation_food(80, 100, 50, cfg) == 0.25 * 80 * 1.0           # twice the capacity: +25 %
     assert fm.overpopulation_food(80, 40, 50, cfg) == 0.0
     assert fm.overpopulation_food(80, 40, 0, cfg) == 0.0                          # no capacity known: no term
 
@@ -268,7 +268,7 @@ def test_budget_v2_jobless_laborers_do_not_farm_and_cookshops_serve_their_share(
     jobless = 100 - 3 - 2.0                                  # peasants minus farm staff minus RGO workers
     assert abs(b["subsistence"] - 1.4 * jobless) < 1e-9 and b["subsistence_workers_k"] == jobless
     assert abs(b["demand_base"] - 130) < 1e-9
-    assert abs(b["overpopulation"] - 0.5 * 100 * (120 / 60 - 1)) < 1e-9     # twice the capacity
+    assert abs(b["overpopulation"] - 0.25 * 100 * (120 / 60 - 1)) < 1e-9    # twice the capacity
     assert abs(b["serve_food"] - 2 * (0.5 * 27.57 + 12.0)) < 1e-9          # Serve share + the drink slot
     assert abs(b["building_food"] - 3 * (1.5 + 0.96)) < 1e-9
     assert abs(b["day0_production"] - (1.4 * jobless + 3 * 1.5 - b["overpopulation"])) < 1e-9   # no Provisioning, no Serve yet

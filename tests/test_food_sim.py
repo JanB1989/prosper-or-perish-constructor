@@ -55,7 +55,7 @@ def test_inputs_round_trip_and_run_file(tmp_path):
     assert back[0].overpop == [(10.0, 1.5), (5.0, 0.5)] and back[1].province == "fed" and back[2].yield_ == 2.0
     summary = fs.run_file(tmp_path, {"harvest": False}, months=24)
     assert summary["months"] == 24 and (folder / "pools.csv").is_file() and (folder / "summary.json").is_file()
-    assert fs.overpopulation(back[0], 1.0) == 0.5 * 10.0 * 0.5
+    assert fs.overpopulation(back[0], 1.0) == 0.25 * 10.0 * 0.5
 
 
 def tribal_pool(**kw):
@@ -243,6 +243,20 @@ def test_free_land_values_match_the_mod():
     assert f"local_peasants_food_consumption = {rules.abundant_peasant_food}" in abundant
     assert f"local_peasants_food_consumption = {rules.available_peasant_food}" in available
     assert f"local_monthly_food = {rules.abundant_food:g}" in abundant
+
+
+def test_overpopulation_value_matches_the_mod():
+    import tomllib
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    mod = root / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    text = (mod / "main_menu/common/static_modifiers/pp_capacity_pressure_effects.txt").read_text(encoding="utf-8-sig")
+    over = text.split("TRY_REPLACE:overpopulation = {")[1].split("\n}")[0]
+    cfg = tomllib.loads((root / "constructor.toml").read_text(encoding="utf-8"))
+    value = cfg["worldbuilder"]["start"]["food_model"]["overpopulation_consumption"]
+    assert f"\tlocal_peasants_food_consumption = {value:g}\n" in over
+    assert fs.Pool.__dataclass_fields__["overpop_consumption"].default == value
 
 
 def test_the_tribesmen_birth_brake_is_on_every_topography_not_a_rank_or_country():

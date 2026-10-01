@@ -83,10 +83,14 @@ NMarket = {
 	MARKET_UPSTREAM_FACTOR = 0.8 # 0.9
 	MARKET_NO_PORT_EXTRA_DISTANCE = 0.1 # 0.1; navigation banks carry river ports
 	MARKET_PORT_EXTRA_DISTANCE = 0.02 # 0.02, scaled by 1 - harbor suitability
-	# Price demand counts a market's exports fully (vanilla: 75 % of trade exports, 25 % of burgher-trade exports), so
-	# a neighbour's shortage that is bought from this market raises its price and reaches its producers.
+	# Prices count trade fully on both sides (vanilla: 75 % of trade and 25 % / 10 % of burgher-trade exports / imports).
+	# Exports: a neighbour's shortage bought from this market raises its price and reaches its producers.
+	# Imports: a market whose need is covered by imports sees it in its price and stops building its own copy of the
+	# supply, so production concentrates in the exporting markets (specialisation, long run 2026-10-01).
 	TRADE_IMPACT_ON_DEMAND_SCALE = 1.0 # 0.75
 	BURGHER_TRADE_IMPACT_ON_DEMAND_SCALE = 1.0 # 0.25
+	TRADE_IMPACT_ON_SUPPLY_SCALE = 1.0 # 0.75
+	BURGHER_TRADE_IMPACT_ON_SUPPLY_SCALE = 1.0 # 0.1
 	MIN_PRICE_IMPACT = -0.5
  	MAX_PRICE_IMPACT = 1.5 # 6
 	# Market food (tested 2026-09-24), each month:

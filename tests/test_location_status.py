@@ -84,7 +84,9 @@ def test_status_row_sits_after_the_top_row_spacer_with_exclusive_states():
                      "pp_status_land_available", "pp_status_land_settled", "pp_status_harvest"]
     # each harvest view is gated on its own modifier's name
     assert location_status.harvest_gate("pp_harvest_y_bountiful") == "EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_y_bountiful'))"
-    for key in ("positive_province_food_growth", "province_starving", "overpopulation", "abundant_free_land", "available_free_land"):
+    assert "positive_province_food_growth" not in out   # EU5 1.4: no stored-food modifier, the chip reads script values
+    assert "ScriptValue('pp_province_food_storage_months')" in out
+    for key in ("province_starving", "overpopulation", "abundant_free_land", "available_free_land"):
         assert f"ShowModifierEffect('{key}')" in out
     with pytest.raises(ValueError, match="status chips"):
         location_status.add_status_row(_window() + _window(), HARVESTS)

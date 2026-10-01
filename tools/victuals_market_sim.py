@@ -88,7 +88,7 @@ class Scenario:
     efficiency: float = 1.0
     additive_efficiency: bool = False
     prosperity: bool = False
-    prosperity_gain: float = 0.0025   # local_monthly_prosperity per stored year (positive_province_food_growth)
+    prosperity_gain: float = 0.0025   # local_monthly_prosperity per stored year (EU5 1.3 stored-food modifier; none in 1.4)
     prosperity_decay: float = 0.005   # local_prosperity_decay in the prosperity modifier (scaled by prosperity)
     prosperity_consumption: float = 0.5  # +50 % pop food consumption at full prosperity (mod inject)
     pop_growth: bool = False          # growth gate: +0.75 %/yr per stored year, -0.5 %/yr from rank

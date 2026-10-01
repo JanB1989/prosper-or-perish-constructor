@@ -341,7 +341,8 @@ pp_population_capacity_density = {
 	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }
 }
 
-# Map mode for local population growth modifier per location.
+# Map mode for local population growth per location: the local_population_growth modifier plus the engine's
+# stored-food term (EU5 1.4 adds it outside the modifier; script value pp_population_growth_map_value).
 # Diverging traffic-light heatmap for local population growth: red = negative, yellow = near zero, green = positive.
 # Stripes (secondary): local modifier at or above the display cap first, then starving locations.
 
@@ -354,16 +355,16 @@ pp_population_growth = {
 		else_if = {
 			limit = { has_owner = yes }
 			if = {
-				limit = { modifier:local_population_growth < @pp_population_growth_negative_cap }
+				limit = { pp_population_growth_map_value < @pp_population_growth_negative_cap }
 				value = define:NMapColors|MAP_COLOR_MIN
 			}
 			else_if = {
-				limit = { modifier:local_population_growth < @pp_population_growth_negative_mid }
+				limit = { pp_population_growth_map_value < @pp_population_growth_negative_mid }
 				lerp = {
 					min_color = define:NMapColors|MAP_COLOR_MIN
 					max_color = define:NMapColors|MAP_COLOR_LOW
 					factor = {
-						value = modifier:local_population_growth
+						value = pp_population_growth_map_value
 						add = 0.007
 						divide = 0.005
 						max = 1
@@ -372,12 +373,12 @@ pp_population_growth = {
 				}
 			}
 			else_if = {
-				limit = { modifier:local_population_growth < @pp_population_growth_neutral_low }
+				limit = { pp_population_growth_map_value < @pp_population_growth_neutral_low }
 				lerp = {
 					min_color = define:NMapColors|MAP_COLOR_LOW
 					max_color = define:NMapColors|MAP_COLOR_MID
 					factor = {
-						value = modifier:local_population_growth
+						value = pp_population_growth_map_value
 						add = 0.002
 						divide = 0.0015
 						max = 1
@@ -386,16 +387,16 @@ pp_population_growth = {
 				}
 			}
 			else_if = {
-				limit = { modifier:local_population_growth < @pp_population_growth_neutral_high }
+				limit = { pp_population_growth_map_value < @pp_population_growth_neutral_high }
 				value = define:NMapColors|MAP_COLOR_MID
 			}
 			else_if = {
-				limit = { modifier:local_population_growth < @pp_population_growth_positive_mid }
+				limit = { pp_population_growth_map_value < @pp_population_growth_positive_mid }
 				lerp = {
 					min_color = define:NMapColors|MAP_COLOR_MID
 					max_color = define:NMapColors|MAP_COLOR_HIGH
 					factor = {
-						value = modifier:local_population_growth
+						value = pp_population_growth_map_value
 						subtract = 0.0005
 						divide = 0.00325
 						max = 1
@@ -404,12 +405,12 @@ pp_population_growth = {
 				}
 			}
 			else_if = {
-				limit = { modifier:local_population_growth < @pp_population_growth_cap_stripe }
+				limit = { pp_population_growth_map_value < @pp_population_growth_cap_stripe }
 				lerp = {
 					min_color = define:NMapColors|MAP_COLOR_HIGH
 					max_color = define:NMapColors|MAP_COLOR_MAX
 					factor = {
-						value = modifier:local_population_growth
+						value = pp_population_growth_map_value
 						subtract = @pp_population_growth_positive_mid
 						divide = 0.00525
 						max = 1
@@ -429,7 +430,7 @@ pp_population_growth = {
 		if = {
 			limit = {
 				has_owner = yes
-				modifier:local_population_growth >= @pp_population_growth_cap_stripe
+				pp_population_growth_map_value >= @pp_population_growth_cap_stripe
 			}
 			value = rgb { 35 35 42 }
 		}

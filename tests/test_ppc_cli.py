@@ -535,7 +535,7 @@ def test_province_food_sales_check_prints_parsed_price_and_rank_edges(
             "static": {
                 "cheap_food_in_location": -0.900,
                 "expensive_food_in_location": 0.248,
-                "positive_province_food_growth": -0.043,
+                "stored_food": -0.043,
                 "province_starving": 0.080,
             },
             "ranks": {
@@ -736,7 +736,7 @@ def test_province_food_sales_check_fails_when_matrix_total_leaves_band(
             "static": {
                 "cheap_food_in_location": -1.4,
                 "expensive_food_in_location": 1.4,
-                "positive_province_food_growth": -0.15,
+                "stored_food": -0.15,
                 "province_starving": 0.1,
             },
             "ranks": {

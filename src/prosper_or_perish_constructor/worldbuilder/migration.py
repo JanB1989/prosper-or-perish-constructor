@@ -144,7 +144,9 @@ DYNAMIC_TERMS = {
     "overpopulation": -0.25,
     "surplus_jobs": 2.0,
     "unemployed_peasants_k": -0.001,
-    "food_years": 0.045,
+    # stored years of province food (EU5 1.3: the stored-food static modifier, +0.045 per year; EU5 1.4 has no
+    # modifier scaled by stored food, so the term is 0 until a replacement exists)
+    "food_years": 0.0,
     "prosperity": 0.1,
     "development": 0.0025,
 }

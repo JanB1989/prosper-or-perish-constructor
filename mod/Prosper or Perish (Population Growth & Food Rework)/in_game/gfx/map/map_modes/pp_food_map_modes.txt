@@ -366,13 +366,13 @@ pp_positive_province_food_growth = {
 			limit = { has_owner = yes }
 			if = {
 				limit = {
-					modifier:pp_province_food_storage_months < @pp_province_food_storage_months_low
+					pp_province_food_storage_months < @pp_province_food_storage_months_low
 				}
 				lerp = {
 					min_color = define:NMapColors|MAP_COLOR_MIN
 					max_color = define:NMapColors|MAP_COLOR_LOW
 					factor = {
-						value = modifier:pp_province_food_storage_months
+						value = pp_province_food_storage_months
 						divide = @pp_province_food_storage_months_step
 						max = 1
 						min = 0
@@ -381,13 +381,13 @@ pp_positive_province_food_growth = {
 			}
 			else_if = {
 				limit = {
-					modifier:pp_province_food_storage_months < @pp_province_food_storage_months_moderate
+					pp_province_food_storage_months < @pp_province_food_storage_months_moderate
 				}
 				lerp = {
 					min_color = define:NMapColors|MAP_COLOR_LOW
 					max_color = define:NMapColors|MAP_COLOR_MID
 					factor = {
-						value = modifier:pp_province_food_storage_months
+						value = pp_province_food_storage_months
 						subtract = @pp_province_food_storage_months_low
 						divide = @pp_province_food_storage_months_step
 						max = 1
@@ -397,13 +397,13 @@ pp_positive_province_food_growth = {
 			}
 			else_if = {
 				limit = {
-					modifier:pp_province_food_storage_months < @pp_province_food_storage_months_high
+					pp_province_food_storage_months < @pp_province_food_storage_months_high
 				}
 				lerp = {
 					min_color = define:NMapColors|MAP_COLOR_MID
 					max_color = define:NMapColors|MAP_COLOR_HIGH
 					factor = {
-						value = modifier:pp_province_food_storage_months
+						value = pp_province_food_storage_months
 						subtract = @pp_province_food_storage_months_moderate
 						divide = @pp_province_food_storage_months_step
 						max = 1
@@ -413,13 +413,13 @@ pp_positive_province_food_growth = {
 			}
 			else_if = {
 				limit = {
-					modifier:pp_province_food_storage_months < @pp_province_food_storage_months_max
+					pp_province_food_storage_months < @pp_province_food_storage_months_max
 				}
 				lerp = {
 					min_color = define:NMapColors|MAP_COLOR_HIGH
 					max_color = define:NMapColors|MAP_COLOR_MAX
 					factor = {
-						value = modifier:pp_province_food_storage_months
+						value = pp_province_food_storage_months
 						subtract = @pp_province_food_storage_months_high
 						divide = @pp_province_food_storage_months_step
 						max = 1
@@ -447,7 +447,7 @@ pp_positive_province_food_growth = {
 		else_if = {
 			limit = {
 				has_owner = yes
-				modifier:pp_province_food_storage_months >= @pp_province_food_storage_months_max
+				pp_province_food_storage_months >= @pp_province_food_storage_months_max
 			}
 			value = rgb { 35 35 42 }
 		}

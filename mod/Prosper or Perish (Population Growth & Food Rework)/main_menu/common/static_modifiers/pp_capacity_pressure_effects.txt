@@ -118,3 +118,17 @@ TRY_REPLACE:overpopulation = {
 	# local_population_growth = -0.0015
 	local_mercenaries_modifier = 0.5
 }
+
+# EU5 1.4 added two engine-applied growth brakes near and over population capacity. PP grows from food only, so
+# both are empty: approaching_capacity is also switched off by NPop.GROWTH_DAMPING_START = 1, and
+# overpopulation_growth (applied with overpopulation, strength 1 + the share over capacity) has no define.
+TRY_REPLACE:overpopulation_growth = {
+	game_data = {
+		category = location
+	}
+}
+TRY_REPLACE:approaching_capacity = {
+	game_data = {
+		category = location
+	}
+}

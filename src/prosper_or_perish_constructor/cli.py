@@ -147,6 +147,8 @@ PROVINCE_FOOD_SALES_STARVING_TARGET = 0.080
 PROVINCE_FOOD_SALES_TOTAL_MODIFIER_MIN = -0.4
 PROVINCE_FOOD_SALES_TOTAL_MODIFIER_MAX = 0.4
 PROVINCE_FOOD_SALES_GROWTH_CAP_TARGET = 2.0
+# Province food sales output per stored year: 0 since EU5 1.4, which has no modifier scaled by stored food.
+PROVINCE_FOOD_SALES_STORED_FOOD_PER_YEAR = 0.0
 PROVINCE_FOOD_SALES_TOLERANCE = 0.000001
 PROVINCE_FOOD_SALES_PROFITABILITY_BLUEPRINT = Path("buildings/grange.yml")   # the store packer since the harbour Yard split
 PROVINCE_FOOD_SALES_PROFITABILITY_METHOD = "pp_grange_porters"
@@ -2024,10 +2026,12 @@ def _load_province_food_sales_check_inputs(
         for name in (
             "cheap_food_in_location",
             "expensive_food_in_location",
-            "positive_province_food_growth",
             "province_starving",
         )
     }
+    # EU5 1.4 deleted the engine-scaled positive_province_food_growth modifier: growth from stored food is a define
+    # term (NPop.FOOD_STORAGE_POP_GROWTH) and no modifier scales the storage legs with stored food any more.
+    static_values["stored_food"] = PROVINCE_FOOD_SALES_STORED_FOOD_PER_YEAR
     rank_values = {
         name: rank_data.modifier_baseline(name, "rank_modifier", PROVINCE_FOOD_SALES_MODIFIER_KEY)
         for name in PROVINCE_FOOD_SALES_RANK_TARGETS
@@ -2265,7 +2269,7 @@ def _province_food_sales_check_report(
     static_values = dict(inputs.get("static") or {})
     rank_values = dict(inputs.get("ranks") or {})
     growth_cap = _province_food_sales_float(inputs.get("growth_cap"))
-    storage_raw = _province_food_sales_float(static_values.get("positive_province_food_growth"))
+    storage_raw = _province_food_sales_float(static_values.get("stored_food"))
     cheap_raw = _province_food_sales_float(static_values.get("cheap_food_in_location"))
     expensive_raw = _province_food_sales_float(static_values.get("expensive_food_in_location"))
     starving = _province_food_sales_float(static_values.get("province_starving"))

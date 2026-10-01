@@ -47,7 +47,7 @@ Its sibling for market membership is linked in `market_rulebook.md`.
 | `available_free_land` | +1.0 | ≈ 1 − pop/capacity otherwise, while below capacity |
 | `overpopulation` | −0.25 | max(0, pop/capacity − 1) |
 | `province_starving` | −7.5 | province starving |
-| `positive_province_food_growth` | +0.045 | stored food in years (marker `pp_province_food_storage_months` = 12 × scale) |
+| `positive_province_food_growth` (EU5 1.3 only; deleted in 1.4, no replacement: 0) | +0.045 | stored food in years (cap 2) |
 | `capital` / `province_capital` / `market_center` | +0.025 / +0.01 / +0.025 | 1 |
 | RGO bonus `pp_rgo_bonus_<good>` | −0.05 … +0.1 | 1 |
 | `pp_wb_lake` | +0.3 | 1 |

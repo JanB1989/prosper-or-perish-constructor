@@ -54,7 +54,7 @@ VALUE_SOURCE_MODES = {
     "pp_pop_delta_region": "pp_pop_delta_region_pct",
     "pp_pop_delta_macro_region": "pp_pop_delta_macro_region_pct",
     "pp_pop_delta_super_region": "pp_pop_delta_super_region_pct",
-    "pp_positive_province_food_growth": "modifier:pp_province_food_storage_months",
+    "pp_positive_province_food_growth": "pp_province_food_storage_months",
     "pp_fishing_village_capacity": "fish_capacity",
     "pp_farming_village_capacity": "farm_capacity",
     "pp_forest_village_capacity": "forest_capacity",
@@ -154,7 +154,7 @@ STRUCTURE_SNIPPETS = {
         "category = population",
         "index = 1",
         "secondary_map_color = {",
-        "modifier:local_population_growth >= @pp_population_growth_cap_stripe",
+        "pp_population_growth_map_value >= @pp_population_growth_cap_stripe",
         "province = { is_starving = yes }",
         "define:NMapColors|POPULATION_STARVING_COLOR_STRIPE",
         "MAPMODE_PP_POPULATION_GROWTH_STARVING",
@@ -197,11 +197,11 @@ STRUCTURE_SNIPPETS = {
         "index = 3",
         "small_map_names = province",
         "small_tooltip_context = location",
-        "modifier:pp_province_food_storage_months",
+        "pp_province_food_storage_months",
         "secondary_map_color = {",
         "province = { is_starving = yes }",
         "define:NMapColors|POPULATION_STARVING_COLOR_STRIPE",
-        "modifier:pp_province_food_storage_months >= @pp_province_food_storage_months_max",
+        "pp_province_food_storage_months >= @pp_province_food_storage_months_max",
         "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STRIPED",
         "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STARVING",
         "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_TT_LAND",
@@ -579,23 +579,23 @@ def test_population_growth_preserves_working_gradient_and_stripes() -> None:
 
     assert block.count("lerp = {") == 4
     assert "limit = { has_owner = yes }" in block
-    assert "value = modifier:local_population_growth" in block
-    assert "modifier:local_population_growth < @pp_population_growth_negative_cap" in block
-    assert "modifier:local_population_growth < @pp_population_growth_neutral_low" in block
-    assert "modifier:local_population_growth < @pp_population_growth_neutral_high" in block
-    assert "modifier:local_population_growth < @pp_population_growth_cap_stripe" in block
+    assert "value = pp_population_growth_map_value" in block
+    assert "pp_population_growth_map_value < @pp_population_growth_negative_cap" in block
+    assert "pp_population_growth_map_value < @pp_population_growth_neutral_low" in block
+    assert "pp_population_growth_map_value < @pp_population_growth_neutral_high" in block
+    assert "pp_population_growth_map_value < @pp_population_growth_cap_stripe" in block
     assert "secondary_map_color = {" in block
     assert "province = { is_starving = yes }" in block
     assert "define:NMapColors|POPULATION_STARVING_COLOR_STRIPE" in block
-    assert "modifier:local_population_growth >= @pp_population_growth_cap_stripe" in block
-    assert block.index("modifier:local_population_growth >= @pp_population_growth_cap_stripe") < block.index(
+    assert "pp_population_growth_map_value >= @pp_population_growth_cap_stripe" in block
+    assert block.index("pp_population_growth_map_value >= @pp_population_growth_cap_stripe") < block.index(
         "province = { is_starving = yes }"
     )
     assert "MAPMODE_PP_POPULATION_GROWTH_STARVING" in block
     assert "MAPMODE_PP_POPULATION_GROWTH_STRIPE" in block
 
 
-def test_positive_province_food_growth_map_mode_reads_months_from_modifier() -> None:
+def test_positive_province_food_growth_map_mode_reads_months_from_script_value() -> None:
     block = _all_blocks()["pp_positive_province_food_growth"]
     localization = LOCALIZATION.read_text(encoding="utf-8-sig")
     food_storage_localization = FOOD_STORAGE_LOCALIZATION.read_text(encoding="utf-8-sig")
@@ -606,12 +606,8 @@ def test_positive_province_food_growth_map_mode_reads_months_from_modifier() -> 
         / "static_modifiers"
         / "pp_location_modifier_adjustments.txt"
     ).read_text(encoding="utf-8-sig")
-    modifier_types = (
-        MOD_ROOT
-        / "main_menu"
-        / "common"
-        / "modifier_type_definitions"
-        / "pp_modifier_types.txt"
+    storage_values = (
+        MOD_ROOT / "in_game" / "common" / "script_values" / "pp_province_food_storage.txt"
     ).read_text(encoding="utf-8-sig")
     icon = (
         MOD_ROOT
@@ -628,7 +624,7 @@ def test_positive_province_food_growth_map_mode_reads_months_from_modifier() -> 
         load_order_path=ROOT / "constructor.load_order.toml",
     )
     step = max_months / 4
-    assert _thresholds(block, "modifier:pp_province_food_storage_months") == [
+    assert _thresholds(block, "pp_province_food_storage_months") == [
         step,
         step * 2,
         step * 3,
@@ -639,11 +635,12 @@ def test_positive_province_food_growth_map_mode_reads_months_from_modifier() -> 
     assert block.count("map_names = province") == 3
     assert block.count("tooltip_context = location") == 3
     assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_HIGH" in block
-    assert block.count("modifier:pp_province_food_storage_months") == 9
+    assert len(re.findall(r"(?<![@:\w])pp_province_food_storage_months\b", block)) == 9
+    assert "modifier:" not in block
     assert block.count("divide = @pp_province_food_storage_months_step") == 4
     assert "secondary_map_color = {" in block
     assert (
-        "modifier:pp_province_food_storage_months "
+        "pp_province_food_storage_months "
         ">= @pp_province_food_storage_months_max"
     ) in block
     assert "value = rgb { 35 35 42 }" in block
@@ -652,21 +649,20 @@ def test_positive_province_food_growth_map_mode_reads_months_from_modifier() -> 
     assert "define:NMapColors|POPULATION_STARVING_COLOR_STRIPE" in block
     assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STARVING" in block
     assert block.index("province = { is_starving = yes }") < block.index(
-        "modifier:pp_province_food_storage_months "
+        "pp_province_food_storage_months "
         ">= @pp_province_food_storage_months_max"
     )
-    growth_modifier = static_modifiers.split(
-        "TRY_REPLACE:positive_province_food_growth = {", 1
-    )[1].split(
-        "\nTRY_", 1
-    )[0]
-    assert "pp_province_food_storage_months = 12" in growth_modifier
-    assert re.search(
-        r"pp_province_food_storage_months\s*=\s*\{"
-        r"[\s\S]*?decimals\s*=\s*0"
-        r"[\s\S]*?category\s*=\s*location",
-        modifier_types,
-    )
+    # EU5 1.4 deleted the engine-scaled positive_province_food_growth modifier that carried the months as a marker;
+    # the months are a script value (province food / its monthly consumption, capped at the growth cap in months)
+    assert "TRY_REPLACE:positive_province_food_growth" not in static_modifiers
+    months_value = storage_values.split("\npp_province_food_storage_months = {", 1)[1].split("\n}", 1)[0]
+    assert "value = province.province_food" in months_value
+    assert "divide = pp_province_monthly_food_consumption" in months_value
+    assert "value = define:NEconomy|GROWTH_FROM_FOOD_MULTIPLIER_MAX" in months_value
+    assert "add = food_consumption" in storage_values
+    growth_value = storage_values.split("\npp_province_food_storage_growth = {", 1)[1].split("\n}", 1)[0]
+    assert "multiply = define:NPop|FOOD_STORAGE_POP_GROWTH" in growth_value
+    assert "province = { is_starving = no }" in growth_value
     assert not (
         MOD_ROOT
         / "in_game"
@@ -674,8 +670,10 @@ def test_positive_province_food_growth_map_mode_reads_months_from_modifier() -> 
         / "script_values"
         / "pp_positive_province_food_growth_map_mode.txt"
     ).exists()
-    assert "GetModifierValueFixed('pp_province_food_storage_months')|0" in localization
-    assert "ScriptValue('pp_province_food_storage_months')" not in localization
+    assert "GetModifierValueFixed('pp_province_food_storage_months')" not in localization
+    assert "MakeScope.ScriptValue('pp_province_food_storage_months')|0" in localization
+    assert "MakeScope.ScriptValue('pp_province_food_storage_growth')" in localization
+    assert "positive_province_food_growth')" not in localization
     assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_NONE" not in localization
     assert (
         f'MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_MAX: '

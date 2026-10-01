@@ -1,0 +1,54 @@
+﻿# Province food storage, location scope (the location's province). EU5 1.4 dropped the stored-food modifier that
+# carried the months of storage (pp_province_food_storage_months), so the stored-food map mode and the location
+# view read these values instead.
+
+# Monthly food the province's pops eat: the sum of its locations' consumption.
+pp_province_monthly_food_consumption = {
+	value = 0
+	province ?= {
+		every_location_in_province = {
+			add = food_consumption
+		}
+	}
+}
+
+# Months of the province's consumption in storage, capped where the growth term stops rising
+# (NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX years).
+pp_province_food_storage_months = {
+	value = 0
+	if = {
+		limit = { pp_province_monthly_food_consumption > 0 }
+		value = province.province_food
+		divide = pp_province_monthly_food_consumption
+		min = 0
+		max = {
+			value = define:NEconomy|GROWTH_FROM_FOOD_MULTIPLIER_MAX
+			multiply = 12
+		}
+	}
+}
+
+# Yearly population growth from stored food (the engine's storage term): NPop.FOOD_STORAGE_POP_GROWTH at the cap,
+# linear below it, nothing while the province is starving.
+pp_province_food_storage_growth = {
+	value = 0
+	if = {
+		limit = {
+			pp_province_food_storage_months > 0
+			province = { is_starving = no }
+		}
+		value = pp_province_food_storage_months
+		divide = {
+			value = define:NEconomy|GROWTH_FROM_FOOD_MULTIPLIER_MAX
+			multiply = 12
+		}
+		multiply = define:NPop|FOOD_STORAGE_POP_GROWTH
+	}
+}
+
+# Local population growth as the engine sums it, without the country-wide part: the local_population_growth
+# modifier plus the stored-food term (read by the population growth map mode).
+pp_population_growth_map_value = {
+	value = modifier:local_population_growth
+	add = pp_province_food_storage_growth
+}

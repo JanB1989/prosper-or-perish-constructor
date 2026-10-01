@@ -646,7 +646,7 @@ PRE_CALIBRATION_CASES = ("saratov", "hanyang", "wielun", "lutsk")
 class PopRules:
     subsistence: float = 1.5          # NLocation SUBSISTENCE_AGRICULTURE; sub_yield scales with subsistence / 1.5
     growth_base: float = -0.0048      # yearly (location rank term); pre-plague fit -0.0048..-0.0049
-    growth_per_year: float = 0.0086   # positive_province_food_growth per stored year (cap 2 years); pre-plague fit
+    growth_per_year: float = 0.0086   # storage growth per stored year (cap 2 years; EU5 1.4: NPop.FOOD_STORAGE_POP_GROWTH / 2); pre-plague fit
     starving_growth: float = -0.04    # province_starving local_population_growth
     starving_migration: float = -0.012  # yearly net out-migration while starving (pre-plague median -0.012 / -0.008)
     noble_hazard: float = 0.09        # chance per starving year that the pool loses its last noble (pre-plague fit)

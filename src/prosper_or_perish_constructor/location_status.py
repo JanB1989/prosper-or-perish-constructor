@@ -4,8 +4,9 @@ The geography chips at the bottom of the scene show what a location is; these sh
 is a set of widgets, one per state, with exclusive visibility tests, like the soil and fertility chips.
 
 How each state is read:
-- food: the stored months come from `pp_province_food_storage_months`, which `positive_province_food_growth` carries;
-  starvation is the engine's `Province.IsStarving`.
+- food: the stored months and the growth they give are script values (`pp_province_food_storage_months`,
+  `pp_province_food_storage_growth` in script_values/pp_province_food_storage.txt; EU5 1.4 has no stored-food modifier
+  to read); starvation is the engine's `Province.IsStarving`.
 - land: the engine applies `abundant_free_land`, `available_free_land` and `overpopulation` itself, and scripts
   cannot see them, so each carries a marker modifier type (`pp_land_*`, in pp_capacity_pressure_effects.txt) that
   the GUI reads through `GetModifierValueFixed`. Its value is the modifier's strength, so the tooltip lists every
@@ -376,7 +377,7 @@ def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None) -> s
     # Without the modifier types the land chips fall back to the full-strength effects.
     land_rows = land_rows or {name: _scrolled(_row(name)) for name in LAND_MODIFIERS.values()}
     starving = f"{_LOC}.GetProvince.IsStarving"
-    months = f"[FixedPointToFloat({_LOC}.GetModifierValueFixed('pp_province_food_storage_months'))|0]"
+    months = f"[{_LOC}.MakeScope.ScriptValue('pp_province_food_storage_months')|0]"
     overlay = f"""
         text_single = {{ position = {{ 13 18 }} size = {{ 17 12 }}
             autoresize = no fontsize = 11 align = center
@@ -384,7 +385,7 @@ def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None) -> s
             raw_text = "{months}" }}"""
     food = _chip("pp_status_food_stored", f"Not({starving})", f"{_ICONS}/flat_icons/trade_market/food_stockpile.dds",
                  "PP_FOOD_CHIP_TITLE", "pp_food_storage",
-                 _text("PP_FOOD_CHIP_STORED") + " " + _row("positive_province_food_growth"), overlay)
+                 _text("PP_FOOD_CHIP_STORED"), overlay)
     food += _chip("pp_status_food_starving", starving, f"{_ICONS}/alerts_icons/starving_provinces.dds",
                   "PP_FOOD_CHIP_STARVING_TITLE", "pp_starvation",
                   _text("PP_FOOD_CHIP_STARVING") + " " + _row("province_starving"))

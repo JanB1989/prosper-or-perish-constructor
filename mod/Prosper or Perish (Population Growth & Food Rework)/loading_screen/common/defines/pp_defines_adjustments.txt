@@ -72,7 +72,12 @@ NAI = {
 NEconomy = {
  	SUPPLY_AND_DEMAND_STABILITY_OFFSET_CONSTANT = 0.5
  	PRODUCTION_EFFIENCY_BONUS_PER_LEVEL = 0.012
- 	GROWTH_FROM_FOOD_MULTIPLIER_MAX = 2
+ 	# Stored-food growth (EU5 1.4): the storage term grows linearly with stored years and is full at this many years
+ 	# of the province's consumption (24 months); NPop.FOOD_STORAGE_POP_GROWTH is the growth at that cap.
+ 	GROWTH_FROM_FOOD_MULTIPLIER_MAX = 2 # 2 (1.3.11: 10)
+ 	# Vanilla 1.4's food-surplus growth term is off: at 1 the surplus share never counts (vanilla 1.25: full at a
+ 	# monthly surplus of 25 % of consumption), and NPop.FOOD_SURPLUS_POP_GROWTH is 0 as well.
+ 	GROWTH_FROM_FOOD_SURPLUS_THRESHOLD = 1 # 1.25
  	ESTATE_MAX_PRICE_MULTIPLIER = 1.2 # 4
  	UNPROFITABLE_BUILDING_WORKERS_LAID_OFF_PERCENTAGE = 15 # 5; 15 settles Tavern and Victualling Yard staffing faster (food sim 2026-09-26)
  	PROFITABLE_BUILDING_WORKERS_REHIRED_PERCENTAGE = 15 # 5
@@ -147,4 +152,13 @@ NPop = {
 	POST_CONQUEST_EMIGRATION_FRACTION = 0.0025 # 0.0025; vanilla: a one-off 0.25 % flight over a year, small next to PP migration
 	POST_CONQUEST_EMIGRATION_MONTHS = 12 # 12; vanilla
 	DISCRIMINATION_PUSH_FACTOR = 2.0 # 2.0; vanilla: speeds the emigration of discriminated pops, the amount still follows PP's migration speeds
+	# Food growth (EU5 1.4 replaced the scaled static modifier positive_province_food_growth with these terms).
+	# PP law, unchanged from 1.3: +0.75 % a year per stored year of the province's consumption, up to 2 years, while
+	# the province is not starving. The engine gives FOOD_STORAGE_POP_GROWTH x min(stored years, cap) / cap
+	# (cap = NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX = 2), so 0.015 is 0.0075 per stored year.
+	FOOD_STORAGE_POP_GROWTH = 0.015 # 0.001
+	FOOD_SURPLUS_POP_GROWTH = 0 # 0.0015; vanilla's monthly-surplus growth is off: growth comes from storage only
+	# Vanilla 1.4 damping: approaching_capacity (-0.5 % growth) scales in from this share of population capacity.
+	# At 1 it never applies (PP keeps capacity pressure in its own overpopulation modifiers).
+	GROWTH_DAMPING_START = 1 # 0.6
 }

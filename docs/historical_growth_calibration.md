@@ -89,3 +89,52 @@ macro regions +0.04 (East / South Asia) to +0.26 %/yr (North Asia), sparse land 
 - Only the pre-plague decade was run in game with the new law; the plague and recovery are simulator estimates.
 - Test saves: `pp_tr0` (1337.5 base of this build), `pp_b1346` (old law), `pp_i2_1346` (new law). 114 old or
   incompatible saves (54.7 GB) were moved to the Recycle Bin; empty it to free the space.
+
+## 6. EU5 1.4 port (2026-10-01)
+
+The law in force at the port is the restored one (rank gate -0.004, storage +0.0075 per stored year up to two years,
+`province_starving` -0.04); section 3's cut was rejected.
+
+EU5 1.4 deleted the engine-scaled static modifier `positive_province_food_growth` that carried the storage bonus
+(the mod's `TRY_REPLACE` of it is gone) and added two food growth terms of its own. Engine behaviour (1.4.0 beta):
+
+- Each month a province gets two factors from 0 to 1. Storage: stored years Y = stored food / (12 x its monthly
+  consumption), factor min(Y, `NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX`) / that cap. Surplus: the monthly food
+  balance / monthly consumption, divided by (`NEconomy.GROWTH_FROM_FOOD_SURPLUS_THRESHOLD` - 1), clamped to 0..1
+  (0 when the threshold is 1 or below).
+- Every location of a province whose consumption is above 0 and that is not starving adds
+  `NPop.FOOD_SURPLUS_POP_GROWTH` x surplus factor + `NPop.FOOD_STORAGE_POP_GROWTH` x storage factor to its yearly
+  growth, on top of the summed `local_population_growth` and `global_population_growth` modifiers (it is not part of
+  the `local_population_growth` modifier, so `modifier:local_population_growth` misses it). "Starving" is the same
+  test that applies `province_starving`: the store is empty, or this month's deficit empties it.
+- `cap_maximum_population_growth_at_zero` still caps the total at 0.
+- New brakes near capacity: `approaching_capacity` (-0.5 % growth, scaled from `NPop.GROWTH_DAMPING_START` x
+  capacity up to capacity) and `overpopulation_growth` (-0.5 %, applied with `overpopulation`, strength 1 + the
+  share over capacity).
+- The AI values stored food and food surplus through the same two defines when it rates modifiers.
+
+PP settings (`pp_defines_adjustments.txt`, `pp_capacity_pressure_effects.txt`):
+
+| Setting | Vanilla 1.4 | PP | Why |
+| --- | --- | --- | --- |
+| `NPop.FOOD_STORAGE_POP_GROWTH` | 0.001 | 0.015 | 0.0075 per stored year x the 2-year cap: the 1.3 law |
+| `NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX` | 2 | 2 | the 24-month cap of the 1.3 law |
+| `NPop.FOOD_SURPLUS_POP_GROWTH` | 0.0015 | 0 | growth from storage only |
+| `NEconomy.GROWTH_FROM_FOOD_SURPLUS_THRESHOLD` | 1.25 | 1 | surplus factor always 0 (the AI sees no surplus value either) |
+| `NPop.GROWTH_DAMPING_START` | 0.6 | 1 | `approaching_capacity` never applies |
+| `approaching_capacity`, `overpopulation_growth` | -0.5 % each | empty `TRY_REPLACE` | food-only growth |
+
+Calibration against the 1.3 law on a fresh vanilla 1.4 start save (4,071 provinces): the engine term is the 1.3
+law exactly (same stored-years input, same cap, linear below it). What remains:
+
+- Fixed-point rounding (1/100,000): the 1.4 term is never higher; it is lower by up to 0.001 %/yr (mean 0.0005
+  %/yr, consumption-weighted mean storage growth 0.3153 %/yr under the 1.3 law vs 0.3148 %/yr).
+- Starving months: 1.3 applied the storage bonus whenever food was left; 1.4 gives nothing in a month whose deficit
+  empties the store. At most 0.0625 %/yr (Y below one month) and only in that month; 0 provinces at the start date.
+
+Gone with the deleted modifier and not replaced (no modifier scales with stored food in 1.4): the storage legs of
+the Tavern (`province_food_purchase` -8 per stored year) and of Surplus Sales / the Victualling Yard
+(`province_food_sales` +8 per stored year), and per stored year +0.003 devastation recovery, +0.045 migration
+attraction and +0.0025 monthly prosperity. Displays read script values instead of the marker the modifier carried
+(`in_game/common/script_values/pp_province_food_storage.txt`: months stored, growth from storage, growth incl. the
+storage term for the population growth map mode).

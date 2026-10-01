@@ -150,7 +150,9 @@ class SimRules:
     abundant_food: float = 1.0              # abundant_free_land local_monthly_food (foraging)
     # prosperity (0..1 per location; the mod's prosperity inject: every settled pop type +50 % food at 100 %), dynamics
     # fitted on the 100-year run 1342-1437 (saves r7bee, 249k location pairs): dP/yr = +0.0181 x stored years
-    # - 0.0025 starving - 0.0747 x P, so ~0.24 at one stored year and ~0.49 at two
+    # - 0.0025 starving - 0.0747 x P, so ~0.24 at one stored year and ~0.49 at two. EU5 1.3 fit: the stored-food
+    # modifier that gave prosperity per stored year is gone in 1.4 (only growth remains, as a define term), so the
+    # stored-years slope needs a refit on a 1.4 run.
     prosperity_consumption: float = 0.5
     prosperity_per_year: float = 0.0181
     prosperity_starving: float = -0.0025
@@ -357,8 +359,8 @@ def migration_month(pools: list[Pool], N: list[float], base: list[float], starvi
 
 
 def stored_months(food: float, consumption: float) -> float:
-    """Months of stored food; zero or negative consumption gives the storage signal nothing (engine: no
-    positive_province_food_growth scale, verified 2026-09-25)."""
+    """Months of stored food; zero or negative consumption gives the storage signal nothing (engine: the stored-food
+    growth term needs a province consumption above 0; 1.3 verified 2026-09-25, same condition in the EU5 1.4 term)."""
     return food / consumption if consumption > 1e-9 else 0.0
 
 

@@ -23,16 +23,10 @@ REPLACE:library = {
 
 	build_time = cultural_building_time
 
-	allow = {
-		trigger_if = {
-			limit = {
-				has_dlc = "d009_across_the_pillars"
-				this = location:cordoba
-				has_building = building_type:library_cordoba
-			}
-			NOT = { has_building = building_type:library_cordoba }
-		}
-	}
+	# No allow: vanilla 1.4's only allow forbids a library in Cordoba next to library_cordoba, a building of the
+	# unreleased DLC d009_across_the_pillars. Without the DLC the building does not exist, the link fails at load
+	# ("Failed to find 'library_cordoba' ... for link 'building_type'") even inside the has_dlc limit, and the gate can
+	# never apply. tests/test_building_type_references.py keeps DLC-only links out of the mod.
 
 	modifier = {
 		local_cultural_influence = 0.1

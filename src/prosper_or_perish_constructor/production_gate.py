@@ -7,7 +7,9 @@ looked at only while it is allowed and the local market supplies all its inputs.
 output good overwrites one margin (revenue / input cost at market prices); below ``NAI.AI_BUILDING_PROFIT_MARGIN_THRESHOLD``
 (vanilla 1.2, read from the mod's defines) the building gets no build utility. So exactly one method gates the build: the last one looked at that has an output.
 Since EU5 1.4 the check skips a building type that already stands in the location (expansions), and
-``NAI.AI_BUILDING_PROFIT_THRESHOLD`` is a second, raw-profit minimum that the mod switches off.
+``NAI.AI_BUILDING_PROFIT_THRESHOLD`` is a second, raw-profit minimum that the mod switches off. Inside a slot with
+several methods 1.4 writes only the best-profit method's margin instead of every one in turn; the last slot that writes
+still decides, so a gate method alone in the last slot (the gate leg) works as before.
 (docs/ai_building_rulebook.md, section 2.4i.)
 
 A method locked behind an unresearched advance counts as not allowed; with no margin written the gate reads 0.

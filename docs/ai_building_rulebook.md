@@ -554,7 +554,7 @@ the logged month: 197 lines; `consumption_*.py`).
   more than one method and scores each method whose inputs the market can supply as market access × (output value −
   input cost). It keeps the best; ties go to the method listed later. A random building of that type in that market
   whose potential/allow accept the pick is moved to it.
-- **Methods without an output all score 0.** Input cost is never looked at. Maintenance-only buildings (field
+- **Methods without an output all score 0** (still so in EU5 1.4.0: same switcher, same scoring). Input cost is never looked at. Maintenance-only buildings (field
   management) therefore always get the LAST listed method whose inputs are all available in the market; when no method has its inputs,
   a fallback applies (in Tongatapu it gave Field Stewards).
   - Measured on the observer run 1338-1437 and h02: 99.97 % of about 6,800 field managements run Marling (last
@@ -678,6 +678,13 @@ The **"Too low profit margin"** gate (utility × 0) hits about half of all candi
     about 0.66 in vanilla. A raw minimum of 0.25 would close about half of PP's producing buildings at base prices
     (vanilla: a fifth of its own), the old 1.05 line nearly all (178 of 200). PP therefore sets the margin define to
     1.05 and switches the raw-profit gate off (-1000), so 1.4 gates like 1.3.
+  - **Which method decides (rechecked 2026-10-01):** still the last block that writes a margin, and a one-method block is
+    still always read, so PP's gate legs decide exactly as before. Inside a block with several methods, 1.4 no longer
+    takes the last listed method but the block's **best** one (highest profit, ties to the later; an output-less best
+    writes 0). Which methods are looked at is unchanged (allowed, researched, inputs on the local market; no market:
+    one-method blocks only), and so is the profit sum. At base prices this changes the gate method of 2 of 203 PP
+    producing buildings (Cookshop, Public Kitchen: regional dishes in one block, same margin), the margin of none.
+  - The method switcher (below) is unchanged: output-less methods still score 0 and the last listed available one wins.
 - The margin that counts is that of the **last** method the estimate looks at, not the best one. It walks the
   `possible_production_methods` group, then every `unique_production_methods` block in file order, and inside a block
   the methods in listed order. A block with one method is always looked at; in a block with more, a method is looked

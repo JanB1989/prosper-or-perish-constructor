@@ -909,3 +909,75 @@ REPLACE:sacred_council = {
 		local_population_capacity = 0.07
 	}
 }
+
+REPLACE:itinerant_court_seat = {
+	audio_tier = 2
+	is_special = yes
+	is_foreign = no
+	pop_type = nobles
+	max_levels = 1
+	forbidden_for_estates = yes
+
+	category = government_category
+
+	employment_size = normal_noble_employment
+
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	country_potential = {
+		always = no
+	}
+	allow = {
+		always = no
+	}
+
+	can_destroy = {
+		always = no
+	}
+	can_close = no
+
+	remove_if = {
+		owner = {
+			OR = {
+				NOT = {
+					has_policy = itinerant_court_policy
+				}
+				total_building_levels_including_construction:itinerant_court_seat > 1
+			}
+		}
+	}
+
+	automation_build_allowed = no
+	ai_forbid_shutdown = yes
+	important_for_AI = yes
+
+	build_time = government_build_time
+
+	modifier = {
+		local_proximity_source = 75
+		pure_tooltip_entry = pte_itinerant_court_seat
+		pure_tooltip_entry = itinerant_court_policy_at_risk_tt
+	}
+
+	# Vanilla runs the shared capital_administration_maintenance (gold 0.1); the mod pays jewelry in a method of its own.
+	unique_production_methods = {
+		pp_itinerant_court_seat_maintenance = {
+			icon_type = building_type
+			icon = camara_comptos
+			tools = 0.1
+			fine_cloth = 0.25
+			paper = 0.5
+			furniture = 0.1
+			jewelry = 0.04
+
+			category = building_maintenance
+		}
+	}
+	construction_demand = pp_early_capital_jewelry_construction
+	raw_modifier = {
+		local_population_capacity = 0.035
+	}
+}

@@ -4,8 +4,9 @@ footprint: administration
 building:
   key: itinerant_court_seat
   mode: INJECT
-  source: pp_building_footprint.txt
+  source: pp_gold_to_jewelry_buildings.txt
   production_method_slots: []
   possible_production_methods: []
   body: |-
-    # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+    # The mod replaces this building by hand in in_game/common/building_types/pp_gold_to_jewelry_buildings.txt.
+    # This blueprint stays disabled and only carries the footprint class; ppc build writes the capacity there.

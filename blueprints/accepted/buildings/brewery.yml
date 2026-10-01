@@ -125,6 +125,10 @@ prices:
   - key: pp_brewery_price
     body: |2-
       {gold = 100}
+advancements:
+- key: TRY_INJECT:bavarian_brewing_expertise
+  body: |-
+    unlock_production_method = pp_brewery_bavarian_brewery_maintenance
 localization:
   entries:
     pp_brewery_price: Brewery Price

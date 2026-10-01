@@ -66,6 +66,10 @@ building:
         local_burghers_desired_pop = 0.05
     }
     increase_per_level_cost = 0.21
+advancements:
+- key: TRY_INJECT:paper_guild_wood_pulp_maintenance_advance
+  body: |-
+    unlock_production_method = pp_paper_mill_paper_wood_pulp_maintenance
 localization:
   entries:
     paper_mill_slot_0: Paper Mill Work

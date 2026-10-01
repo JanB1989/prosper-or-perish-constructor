@@ -231,13 +231,18 @@ def _institution_free_unlock_offenders(
     constructor_items: set[str],
 ) -> list[str]:
     source = _source_location(row)
+    unlocks = row.get(unlock_column) or []
+    # A `pp_<building>_<vanilla method>` copy of a vanilla method follows the vanilla advance that unlocks the
+    # original (e.g. bavarian_brewing_expertise, refined_obsidian_weaponry): vanilla's gate, not a mod unlock.
+    vanilla_originals = [unlock for unlock in unlocks if not unlock.startswith("pp_")]
     return [
         (
             f"{item_kind} {item} is unlocked by institution-free age {row.get('age')} "
             f"advance {row['name']} at {source}"
         )
-        for item in row.get(unlock_column) or []
+        for item in unlocks
         if item in constructor_items
+        and not any(item.endswith(f"_{original}") for original in vanilla_originals)
     ]
 
 

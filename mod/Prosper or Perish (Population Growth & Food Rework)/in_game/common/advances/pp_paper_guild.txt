@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:paper_guild:advancement
+TRY_INJECT:paper_guild_fiber_pulp_maintenance_advance = {
+unlock_production_method = pp_paper_guild_paper_guild_fiber_pulp_maintenance
+}
+
+TRY_INJECT:paper_guild_cloth_maintenance_advance = {
+unlock_production_method = pp_paper_guild_paper_guild_cloth_maintenance
+}
+# <<< eu5-building-pipeline:paper_guild:advancement

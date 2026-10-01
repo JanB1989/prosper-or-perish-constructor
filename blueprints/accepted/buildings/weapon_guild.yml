@@ -79,6 +79,10 @@ prices:
   - key: pp_weapon_guild_price
     body: |2-
       {gold = 100}
+advancements:
+- key: TRY_INJECT:refined_obsidian_weaponry
+  body: |-
+    unlock_production_method = pp_weapon_guild_weapon_guild_obsidian_maintenance
 localization:
   entries:
     pp_weapon_guild_price: Weapon Guild Price

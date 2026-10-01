@@ -93,6 +93,10 @@ building:
     }
     construction_demand = manufactory_construction
     increase_per_level_cost = 0.15
+advancements:
+- key: TRY_INJECT:scottish_whisky
+  body: |-
+    unlock_production_method = pp_distiller_manufactory_scottish_whisky_distillery_maintenance
 localization:
   entries:
     distiller_manufactory_slot_0: Distiller Manufactory Work

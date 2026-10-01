@@ -115,6 +115,10 @@ prices:
   - key: pp_jewelry_guild_price
     body: |2-
       {gold = 100}
+advancements:
+- key: TRY_INJECT:copperworking
+  body: |-
+    unlock_production_method = pp_jewelry_guild_copper_base
 localization:
   entries:
     pp_jewelry_guild_price: Jewelry Guild Price

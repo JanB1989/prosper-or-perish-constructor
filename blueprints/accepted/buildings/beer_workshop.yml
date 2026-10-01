@@ -120,6 +120,10 @@ building:
     }
     construction_demand = workshop_construction
     increase_per_level_cost = 0.15
+advancements:
+- key: TRY_INJECT:bavarian_brewing_expertise
+  body: |-
+    unlock_production_method = pp_beer_workshop_bavarian_beer_workshop_maintenance
 localization:
   entries:
     beer_workshop_slot_0: Beer Workshop Work

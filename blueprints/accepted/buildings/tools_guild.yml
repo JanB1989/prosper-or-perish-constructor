@@ -82,6 +82,10 @@ prices:
   - key: pp_tools_guild_price
     body: |2-
       {gold = 100}
+advancements:
+- key: TRY_INJECT:copperworking
+  body: |-
+    unlock_production_method = pp_tools_guild_copper_tools_guild_maintenance
 localization:
   entries:
     pp_tools_guild_price: Tools Guild Price

@@ -46,21 +46,10 @@ SINGLE_KEYS = {
     "age", "icon", "for", "research_cost", "depth", "potential", "allow", "ai_weight", "starting_technology_level",
     "in_tree_of", "government", "country_type", "content_priority", "allow_children",
 }
-# Vanilla advances that unlock a vanilla production method of a building the mod replaces with its own `pp_*`
-# methods (EU5 1.3 and 1.4 alike). The unlock no longer reaches anything and the `pp_*` copy is ungated; the building
-# side decides whether to gate the copy. Nothing may join this list.
-KNOWN_ORPHANED_VANILLA_METHOD_UNLOCKS = {
-    ("bavarian_brewing_expertise", "bavarian_beer_workshop_maintenance"),
-    ("bavarian_brewing_expertise", "bavarian_brewery_maintenance"),
-    ("copperworking", "copper_base"),
-    ("copperworking", "copper_tools_guild_maintenance"),
-    ("paper_guild_cloth_maintenance_advance", "paper_guild_cloth_maintenance"),
-    ("paper_guild_fiber_pulp_maintenance_advance", "paper_guild_fiber_pulp_maintenance"),
-    ("paper_guild_wood_pulp_maintenance_advance", "paper_wood_pulp_maintenance"),
-    ("refined_obsidian_weaponry", "weapon_guild_obsidian_maintenance"),
-    ("scottish_whisky", "scottish_whisky_distillery_maintenance"),
-    ("scottish_whisky", "scottish_whisky_distillery_mill_maintenance"),
-}
+# A vanilla advance may unlock a vanilla production method of a building the mod replaces with its own `pp_*`
+# methods (paper guild, paper mill, Scottish whisky, Bavarian beer, Mesoamerican copper and obsidian). That vanilla
+# line no longer reaches anything, so the same advance must unlock the mod's copy (`pp_<building>_<vanilla method>`,
+# a TRY_INJECT advancement in the building's blueprint); otherwise the copy is available without the research.
 # unlock_* key -> collection holding its targets (checked for advances the mod touches).
 UNLOCK_COLLECTIONS = {
     "unlock_building": "building_types",
@@ -112,9 +101,11 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
         {"global_iron_output_modifier = 0.5"},
         {"unlock_production_method = pp_bog_iron_smelter_hot_blast_refining_maintenance"},
     ),
+    # The mod keeps the 1.3 coal output (+0.33); EU5 1.4 raised vanilla's to +0.75.
     "coal_improvements_absolutism": (
-        set(),
+        {"global_coal_output_modifier = 0.75"},
         {
+            "global_coal_output_modifier = 0.33",
             "unlock_building = coal_mine_improved",
             "unlock_production_method = pp_engineered_brine_saltworks_mineral_fired_pans",
         },
@@ -287,23 +278,39 @@ def test_advance_unlocks_reach_existing_buildings_and_methods() -> None:
     advances = _advances()
     buildings = _merged("building_types")
     methods = _production_methods()
-    orphaned_methods: set[tuple[str, str]] = set()
+    vanilla = _merged("advances", profile="vanilla")
     offenders: list[str] = []
     for key, entry in advances.items():
+        unlocked_methods = {_scalar(item.value) for item in entry.value.entries if item.key == "unlock_production_method"}
+        vanilla_entry = vanilla.get(key)
+        vanilla_methods = {
+            _scalar(item.value)
+            for item in (vanilla_entry.value.entries if vanilla_entry is not None else [])
+            if item.key == "unlock_production_method"
+        }
         for item in entry.value.entries:
             target = _scalar(item.value)
             if item.key == "unlock_building" and target not in buildings:
                 offenders.append(f"{key}: unlock_building = {target} does not exist")
             elif item.key == "unlock_production_method" and target not in methods:
-                if _mod_touched(entry):
-                    offenders.append(f"{key}: unlock_production_method = {target} does not exist")
+                copies = {
+                    method
+                    for method in unlocked_methods & methods
+                    if method.startswith("pp_") and method.endswith(f"_{target}")
+                }
+                if target in vanilla_methods and copies:
+                    continue  # vanilla's line for a method the mod renamed; the same advance gates the pp_* copy
+                if target in vanilla_methods:
+                    offenders.append(
+                        f"{key}: vanilla unlock_production_method = {target} reaches no method and no pp_* copy is "
+                        "gated by the same advance"
+                    )
                 else:
-                    orphaned_methods.add((key, target))
+                    offenders.append(f"{key}: unlock_production_method = {target} does not exist")
             elif item.key in UNLOCK_COLLECTIONS and _mod_touched(entry):
                 if target not in _merged(UNLOCK_COLLECTIONS[item.key]):
                     offenders.append(f"{key}: {item.key} = {target} does not exist")
     assert not offenders, "\n".join(offenders)
-    assert orphaned_methods == KNOWN_ORPHANED_VANILLA_METHOD_UNLOCKS
 
 
 def test_advance_modifier_keys_are_defined_modifier_types() -> None:

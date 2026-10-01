@@ -97,6 +97,10 @@ building:
         local_burghers_desired_pop = 0.05
     }
     increase_per_level_cost = 0.15
+advancements:
+- key: TRY_INJECT:scottish_whisky
+  body: |-
+    unlock_production_method = pp_distiller_mill_scottish_whisky_distillery_mill_maintenance
 localization:
   entries:
     distiller_mill_slot_0: Distiller Mill Work

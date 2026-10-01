@@ -249,7 +249,7 @@ Reasons. Read for France in Paris (capital + market center), 13 Sep 1340. Table:
   `local_*_food_consumption`, `local_max_control`, `local_monthly_control`, `local_garrison_size`, literacy caps,
   `local_migration_attraction`, `local_cultural_tradition`, `manpower_to_building_owner`.
 - **164 no line** (AI-blind): every `farm_capacity_from_*` and `pp_wb_levels_*`, `local_market_access`,
-  `local_food_decay_modifier`, `free_building_levels`, `local_supply_limit_modifier`, `local_build_buildings_efficiency`,
+  `local_food_decay_modifier` (1.3.11; EU5 1.4 replaced it with `local_food_preservation_efficiency_modifier`, not yet probed), `free_building_levels`, `local_supply_limit_modifier`, `local_build_buildings_efficiency`,
   `local_defensive`, `local_repair_speed`, `can_recruit_regiment_in_this_location`, `can_build_ships_in_this_location`,
   `merchant_power_from_building`, `maximum_stockpile_capacity`, `local_monthly_prosperity`, `local_life_expectancy`.
 - `Country.GetAiUtility('<modifier>', '<amount>')` (GUI, shown by the probe mod's replacement of the `ai_currency_viewer`

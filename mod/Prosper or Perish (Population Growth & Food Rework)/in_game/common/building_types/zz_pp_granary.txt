@@ -34,7 +34,7 @@ REPLACE:granary = {
     }
 
     modifier = {
-        local_food_decay_modifier = -0.0002
+        local_food_preservation_efficiency_modifier = 0.0002
         local_food_capacity = 500
         local_food_capacity_modifier = 0.10
     }

@@ -8,6 +8,7 @@ inland (the frozen Arctic sea gives no access; Ob moved to the waterway with tha
 """
 from __future__ import annotations
 
+import re
 import tomllib
 from pathlib import Path
 
@@ -108,9 +109,23 @@ def test_built_mod_restricts_the_sea_only_buildings():
     cfg = _config()
     text = (MOD / ns.SEA_BUILDINGS_RELATIVE_PATH).read_text(encoding="utf-8-sig")
     for key in cfg.sea_only_buildings:
-        block = text[text.index(f"TRY_INJECT:{key} = {{"):]
+        block = text[text.index(f"REPLACE:{key} = {{"):]
         block = block[:block.index("\n}")]
-        assert "pp_is_sea_coast = yes" in block and "is_coastal" not in block, key
+        assert block.count("location_potential") == 1, key
+        open_, close = ns._block(block, block.index("location_potential"))
+        potential = block[open_:close]
+        assert "pp_is_sea_coast = yes" in potential and not re.search(r"\bis_coastal\b", potential), key
+
+
+def test_sea_only_building_replaces_potential_and_renames_methods():
+    body = ("\n\tprice = p\n\tlocation_potential = {\n\t\tis_coastal = yes\n\t}\n"
+            "\tunique_production_methods = {\n\t\tx_maintenance = {\n\t\t\tgold = 1\n\t\t}\n\t}\n")
+    block, renamed = ns.sea_only_building("x", body)
+    assert block.startswith("REPLACE:x = {") and block.count("location_potential") == 1
+    assert "pp_is_sea_coast = yes" in block and "is_coastal" not in block
+    assert renamed == {"pp_x_x_maintenance": "x_maintenance"} and "pp_x_x_maintenance = {" in block
+    block, _ = ns.sea_only_building("y", "\n\tprice = p\n")
+    assert "location_potential = {\n\t\tpp_is_sea_coast = yes\n\t}" in block
 
 
 def test_built_location_window_shows_water_access_and_port():

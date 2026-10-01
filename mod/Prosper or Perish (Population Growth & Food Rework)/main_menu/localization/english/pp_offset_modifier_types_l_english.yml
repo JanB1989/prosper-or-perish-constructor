@@ -17,3 +17,7 @@
   MODIFIER_TYPE_DESC_offset_impacts_inflation: "Offset impacts inflation"
   MODIFIER_TYPE_NAME_offset_used_for_minting: "Offset used for minting"
   MODIFIER_TYPE_DESC_offset_used_for_minting: "Offset used for minting"
+  MODIFIER_TYPE_NAME_local_offset_establishment_speed: "Local $offset$ Establishment Speed"
+  MODIFIER_TYPE_DESC_local_offset_establishment_speed: "How quickly newly constructed [buildings|e] producing [ShowGoodsName('offset')] in this [location|e] reach their full [production_efficiency|e]."
+  MODIFIER_TYPE_NAME_global_offset_establishment_speed: "$offset$ Establishment Speed"
+  MODIFIER_TYPE_DESC_global_offset_establishment_speed: "How quickly newly constructed [buildings|e] producing [ShowGoodsName('offset')] in the entire [country|e] reach their full [production_efficiency|e]."

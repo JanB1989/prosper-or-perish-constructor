@@ -3,11 +3,35 @@ tag: terraces
 footprint: capacity_source
 building:
   key: terraces
-  mode: TRY_INJECT
+  mode: REPLACE
   source: pp_building_adjustments.txt
-  production_method_slots: []
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_terraces_terraces_maintenance
   possible_production_methods: []
   body: |2-
+      audio_tier = 2
+      is_special = yes
+      is_foreign = no
+      pop_type = laborers
+      max_levels = 1
+      category = infrastructure_category
+      employment_size = granary_employment
+      rural_settlement = yes
+      town = yes
+      city = yes
+      megalopolis = yes
+      build_time = infrastructure_build_time
+      construction_demand = terraces_construction
+      unique_production_methods = {
+        pp_terraces_terraces_maintenance = {
+          icon_type = building_type
+          icon = terraces
+          salt = 0.1
+          category = building_maintenance
+        }
+      }
       price = pp_terraces_price
       location_potential = {
         OR = {
@@ -45,4 +69,13 @@ prices:
   body: '{gold = 100}'
 localization:
   entries:
+    terraces_slot_0: Upkeep
+    pp_terraces_terraces_maintenance: Terraces Maintenance
     pp_terraces_price: Terraces Price
+evaluation:
+  production_methods:
+    pp_terraces_terraces_maintenance:
+      allow_rules:
+        profit_percent: Vanilla upkeep of a land improvement (salt for the walls); it produces nothing, the building pays off in farm capacity.
+        input_throughput: Vanilla upkeep of a land improvement; no output to measure the input against.
+        output_throughput: Vanilla upkeep of a land improvement; no output by design.

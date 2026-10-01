@@ -45,6 +45,14 @@ raw_modifier = {
   free_building_levels = 1
 }
 
+unique_production_methods = {
+    pp_incamisana_upkeep = {
+        icon_type = building_type
+        icon = incamisana
+        category = building_maintenance
+    }
+}
+
 modifier = {
 }
 

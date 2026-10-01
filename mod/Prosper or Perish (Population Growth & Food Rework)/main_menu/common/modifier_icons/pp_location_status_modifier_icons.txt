@@ -1,0 +1,14 @@
+﻿# Icons for the location-status marker modifiers (pp_location_status_modifier_types.txt) and the capacity-density
+# map value (pp_modifier_types.txt); without one the engine logs "Missing Icon for Modifier".
+pp_land_abundant = {
+	positive = "gfx/interface/icons/modifier_types/global_population_capacity_modifier.dds"
+}
+pp_land_available = {
+	positive = "gfx/interface/icons/modifier_types/global_population_capacity_modifier.dds"
+}
+pp_land_overpopulation = {
+	positive = "gfx/interface/icons/modifier_types/global_population_capacity_modifier.dds"
+}
+pp_population_capacity_density = {
+	positive = "gfx/interface/icons/modifier_types/global_population_capacity_modifier.dds"
+}

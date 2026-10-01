@@ -5,7 +5,10 @@ building:
   key: irrigation_systems
   mode: REPLACE
   source: pp_building_adjustments.txt
-  production_method_slots: []
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_irrigation_systems_upkeep
   possible_production_methods: []
   body: |2-
       audio_tier = 1
@@ -40,6 +43,12 @@ building:
         free_building_levels = 1
       }
 
+      unique_production_methods = {
+          pp_irrigation_systems_upkeep = {
+              category = building_maintenance
+          }
+      }
+
       modifier = {
       }
 
@@ -47,6 +56,8 @@ building:
       ai_forbid_shutdown = yes
 localization:
   entries:
+    irrigation_systems_slot_0: Upkeep
+    pp_irrigation_systems_upkeep: Village Upkeep
     pp_irrigation_systems_price: Irrigation Systems Price
 prices:
 - key: pp_irrigation_systems_price

@@ -5,7 +5,10 @@ building:
   key: land_clearance
   mode: CREATE
   source: pp_new_buildings.txt
-  production_method_slots: []
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_land_clearance_upkeep
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -34,6 +37,12 @@ building:
       free_building_levels = 1
     }
 
+    unique_production_methods = {
+        pp_land_clearance_upkeep = {
+            category = building_maintenance
+        }
+    }
+
     modifier = {
     }
 
@@ -41,6 +50,8 @@ building:
     ai_forbid_shutdown = yes
 localization:
   entries:
+    land_clearance_slot_0: Upkeep
+    pp_land_clearance_upkeep: Village Upkeep
     land_clearance: Land Clearance
     land_clearance_desc: Felling, grubbing, burning, stone removal, and continued control of regrowth turn wooded ground into maintained farmland.
     pp_land_clearance_price: Land Clearance Price

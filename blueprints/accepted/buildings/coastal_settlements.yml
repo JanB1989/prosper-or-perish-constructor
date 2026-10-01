@@ -8,4 +8,6 @@ building:
   production_method_slots: []
   possible_production_methods: []
   body: |-
-    # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+    # The mod replaces this building in in_game/common/building_types/zzzz_pp_water_access_buildings.txt (sea-only
+    # location_potential, worldbuilder/navigation_scripts.py). This blueprint stays disabled and only carries the footprint
+    # class; ppc build writes the capacity there.

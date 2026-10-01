@@ -28,6 +28,14 @@ raw_modifier = {
   free_building_levels = 1
 }
 
+unique_production_methods = {
+    pp_irrigated_fields_upkeep = {
+        icon_type = building_type
+        icon = irrigated_fields
+        category = building_maintenance
+    }
+}
+
 modifier = {
 }
 

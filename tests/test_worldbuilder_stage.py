@@ -395,10 +395,13 @@ def test_setup_rgo_keepers_wrap_the_goods_potential_for_failing_setup_rgos(tmp_p
     assert kept == {"cocoa": 1, "lumber": 1}
     text = (mod / "in_game/common/goods/00_raw_materials.txt").read_text(encoding="utf-8-sig")
     lumber = parse_text(text).entries[0].value.first("location_potential")
-    assert [e.key for e in lumber.entries] == ["OR"] and lumber.entries[0].value.entries[0].key == "pp_wb_setup_lumber_location"
-    triggers = (mod / wb_modifiers.SETUP_RGO_TRIGGERS_PATH).read_text(encoding="utf-8-sig")
-    assert "pp_wb_setup_lumber_location = {\n\tOR = { this = location:grass }\n}" in triggers
-    assert "this = location:bengal" in triggers and "salt" not in triggers
+    assert [e.key for e in lumber.entries] == ["OR"] and [e.key for e in lumber.entries[0].value.entries] == ["AND", "AND"]
+    # EU5 1.4 goods potentials take static map tests only: the failing location by its area and classes, inline
+    assert "AND = { area = area:a climate = tropical vegetation = grasslands topography = flatland }" in text
+    assert "this = location" not in text and "pp_wb_setup_lumber_location" not in text
+    assert not (mod / wb_modifiers.SETUP_RGO_TRIGGERS_PATH).exists()
+    keeper = parse_text(text).entries[0].value.first("location_potential")
+    assert wb_modifiers.potential_holds(keeper, rows[1]) and not wb_modifiers.potential_holds(keeper, row("x", "lumber", veg="desert"))
     # a second run over its own output unwraps first: same file, same lists
     again = wb_modifiers.write_setup_rgo_keepers(mod, vanilla, rows)
     assert again == kept and (mod / "in_game/common/goods/00_raw_materials.txt").read_text(encoding="utf-8-sig") == text

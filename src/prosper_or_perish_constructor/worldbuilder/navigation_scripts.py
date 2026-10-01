@@ -207,14 +207,52 @@ def sea_only_potential(body: str) -> str:
     return narrowed.strip()
 
 
+SEA_BUILDINGS_LOCALIZATION_RELATIVE_PATH = Path("main_menu/localization/english/pp_water_access_buildings_l_english.yml")
+
+
+def sea_only_building(key: str, body: str) -> tuple[str, dict[str, str]]:
+    """``REPLACE:<key>`` of a vanilla building body with its location_potential narrowed to the sea coast (added when it
+    has none) and its unique methods renamed ``pp_<key>_<method>`` (a REPLACE leaves the vanilla methods registered, so
+    the old names would be duplicates). Returns the block and new method name -> vanilla method name."""
+    code = _code(body)
+    potential = sea_only_potential(code).replace("\n", "\n\t")
+    m = re.search(r"(?m)^\s*location_potential\s*=\s*\{", code)
+    if m:
+        open_, close = _block(code, m.start())
+        code = code[:open_ + 1] + "\n\t\t" + potential + "\n\t" + code[close:]
+    else:
+        code = code.rstrip() + "\n\tlocation_potential = {\n\t\t" + potential + "\n\t}\n"
+    renamed: dict[str, str] = {}
+    for m in reversed(list(re.finditer(r"\bunique_production_methods\s*=\s*\{", code))):
+        open_, close = _block(code, m.start())
+        inner, depth, out, i = code[open_ + 1:close], 0, [], 0
+        for tm in re.finditer(r"[{}]|\b([A-Za-z_][A-Za-z_0-9]*)(\s*=\s*\{)", inner):
+            if tm.group(0) == "{":
+                depth += 1
+            elif tm.group(0) == "}":
+                depth -= 1
+            elif tm.group(1) and depth == 0:
+                new = f"pp_{key}_{tm.group(1)}"
+                renamed[new] = tm.group(1)
+                out.append(inner[i:tm.start()] + new + tm.group(2))
+                i = tm.end()
+                depth += 1
+        code = code[:open_ + 1] + "".join(out) + inner[i:] + code[close:]
+    return f"REPLACE:{key} = {{{code.rstrip()}\n}}", renamed
+
+
 def write_sea_only_buildings(vanilla_root: Path, mod_root: Path, keys: list[str]) -> list[str]:
-    """TRY_INJECT the location_potential of vanilla buildings that belong on the open sea (pirates, sea salt, overseas
-    trade, regional sea institutions): their vanilla conditions with is_coastal / is_port narrowed to the sea coast.
-    The whole condition block is written, so the result is the same whether the engine merges or replaces it."""
+    """REPLACE vanilla buildings that belong on the open sea (pirates, sea salt, overseas trade, regional sea
+    institutions) with their own definition whose is_coastal / is_port tests are narrowed to the sea coast. EU5 1.4
+    reads a building's location_potential once: a second one in an INJECT is dropped ("Trigger section already read
+    earlier"), so the whole building is replaced. The body comes from the mod's copy of the vanilla file when the
+    compat step wrote one (widened class tests), else from vanilla; the file loads after the buildings' footprint
+    INJECTs and is their footprint owner (building_footprint.owner_blocks)."""
     folder = Path(vanilla_root) / "game/in_game/common/building_types"
     found: dict[str, str] = {}
     for path in sorted(folder.glob("*.txt")):
-        text = path.read_text(encoding="utf-8-sig", errors="replace")
+        copy = Path(mod_root) / "in_game/common/building_types" / path.name
+        text = (copy if copy.is_file() else path).read_text(encoding="utf-8-sig", errors="replace")
         for key in keys:
             m = re.search(rf"(?m)^{re.escape(key)}\s*=\s*\{{", text)
             if m and key not in found:
@@ -223,13 +261,19 @@ def write_sea_only_buildings(vanilla_root: Path, mod_root: Path, keys: list[str]
     missing = sorted(set(keys) - set(found))
     if missing:
         raise ValueError(f"[worldbuilder.navigation_scripts] sea_only_buildings not in vanilla: {missing}")
-    blocks = [f"TRY_INJECT:{key} = {{\n\tlocation_potential = {{\n\t\t" + sea_only_potential(found[key]).replace("\n", "\n\t") + "\n\t}\n}"
-              for key in keys]
+    blocks, loc = [], ["﻿l_english:"]
+    for key in keys:
+        block, renamed = sea_only_building(key, found[key])
+        blocks.append(block)
+        loc += [f' {new}: "${old}$"' for new, old in renamed.items()]
     target = Path(mod_root) / SEA_BUILDINGS_RELATIVE_PATH
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text("﻿" + HEADER.replace("fleets sent over the open sea never target a river channel",
                                                  "these buildings stay on the open sea coast") + "\n" + "\n\n".join(blocks) + "\n",
                       encoding="utf-8", newline="\n")
+    path = Path(mod_root) / SEA_BUILDINGS_LOCALIZATION_RELATIVE_PATH
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(loc) + "\n", encoding="utf-8", newline="\n")
     return keys
 
 

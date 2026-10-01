@@ -546,7 +546,9 @@ def _goods_potentials(text: str) -> dict[str, tuple[int, int]]:
 
 def _wrapped_original(inner: str, good: str) -> str:
     """The vanilla potential inside a block this function wrapped before (or ``inner`` unchanged)."""
-    match = re.fullmatch(rf"\s*OR\s*=\s*\{{\s*pp_wb_setup_{good}_location\s*=\s*yes\s*AND\s*=\s*\{{(?P<body>.*)\}}\s*\}}\s*", inner, re.S)
+    match = (re.fullmatch(rf"\s*OR\s*=\s*\{{\s*AND\s*=\s*\{{(?P<body>.*?)\n\t\t\t\}}\n\t\t\t# pp_wb_setup_{good}:.*\}}\s*", inner, re.S)
+             # before EU5 1.4 rejected the non-static scripted trigger
+             or re.fullmatch(rf"\s*OR\s*=\s*\{{\s*pp_wb_setup_{good}_location\s*=\s*yes\s*AND\s*=\s*\{{(?P<body>.*)\}}\s*\}}\s*", inner, re.S))
     if not match:
         return inner
     return "\n" + "\n".join(line[2:] if line.startswith("\t\t") else line for line in match["body"].strip("\n").splitlines()) + "\n\t"
@@ -602,10 +604,13 @@ def write_setup_rgo_keepers(mod_root: Path, vanilla_root: Path, locations: Itera
     (``setup to have 'raw_material = lumber' but it failed the 'location_potential' trigger``). EU5 1.4 moved these
     tests from scripted triggers (1.3: ``location_wants_lumber_trigger``, lumber only) into the goods themselves
     (lumber, wheat, wine, horses, ... 21 goods test climate, vegetation, topography or geography). The design keeps the
-    game's RGOs, so for every good with a failing setup RGO ``pp_wb_setup_<good>_location`` lists those locations by
-    tag (valid during setup) and the good's potential in the mod's copy of the vanilla goods file (written by the
-    compat step, ``[worldbuilder.compat] vanilla_files``, with the tests widened to the World Builder classes) becomes
-    ``OR = { pp_wb_setup_<good>_location = yes AND = { <vanilla potential> } }``.
+    game's RGOs, so for every good with a failing setup RGO the good's potential in the mod's copy of the vanilla goods
+    file (written by the compat step, ``[worldbuilder.compat] vanilla_files``, with the tests widened to the World
+    Builder classes) becomes ``OR = { AND = { <vanilla potential> } AND = { area = area:<a> climate = <c> vegetation =
+    <v> topography = <t> } ... }``, one AND per failing location's area and classes. EU5 1.4 evaluates a goods potential
+    once at load and accepts static map tests only ("Unexpected non-static trigger" for a scripted trigger listing
+    locations by tag), so a location is named by its area and classes: other locations of that area with the same
+    climate, vegetation and topography may take the good too.
 
     ``locations``: rows with location_tag, raw_material, climate, vegetation, topography, area, region,
     macro_region (sub-continent) and super_region (continent) of the current (World Builder) geography.
@@ -616,7 +621,6 @@ def write_setup_rgo_keepers(mod_root: Path, vanilla_root: Path, locations: Itera
     for row in locations:
         if row.get("raw_material"):
             by_good[str(row["raw_material"])].append(row)
-    lines = [GENERATED]
     kept: dict[str, int] = {}
     for vanilla_file in sorted((Path(vanilla_root) / "game" / GOODS_DIR).glob("*.txt")):
         mod_file = mod_root / GOODS_DIR / vanilla_file.name
@@ -625,28 +629,28 @@ def write_setup_rgo_keepers(mod_root: Path, vanilla_root: Path, locations: Itera
         for good, (start, end) in _goods_potentials(text).items():
             original = _wrapped_original(text[start:end], good)
             block = parse_text("potential = {" + original + "\n}").entries[0].value
-            tags = sorted(str(row["location_tag"]) for row in by_good.get(good, ()) if not potential_holds(block, row))
+            failing = [row for row in by_good.get(good, ()) if not potential_holds(block, row)]
             if text[start:end] != original:
                 edits.append((start, end, original))     # unwrap a previous keeper; re-wrapped below if still needed
-            if not tags:
+            if not failing:
                 continue
             if not mod_file.is_file():
-                raise ValueError(f"{GOODS_DIR / vanilla_file.name}: {len(tags)} setup RGOs of {good} fail its vanilla location_potential "
+                raise ValueError(f"{GOODS_DIR / vanilla_file.name}: {len(failing)} setup RGOs of {good} fail its vanilla location_potential "
                                  "but the mod has no copy of the file; add it to [worldbuilder.compat] vanilla_files")
-            kept[good] = len(tags)
+            kept[good] = len(failing)
             body = "\n".join("\t\t" + line if line.strip() else line for line in original.rstrip().lstrip("\n").splitlines())
-            wrapped = f"\n\t\tOR = {{\n\t\t\tpp_wb_setup_{good}_location = yes\n\t\t\tAND = {{\n{body}\n\t\t\t}}\n\t\t}}\n\t"
+            places = sorted({tuple(str(row[k]) for k in ("area", "climate", "vegetation", "topography")) for row in failing})
+            keepers = "".join(f"\t\t\tAND = {{ area = area:{a} climate = {c} vegetation = {v} topography = {t} }}\n" for a, c, v, t in places)
+            wrapped = (f"\n\t\tOR = {{\n\t\t\tAND = {{\n{body}\n\t\t\t}}\n"
+                       f"\t\t\t# pp_wb_setup_{good}: setup RGOs the World Builder geography would reject (area and classes; static tests only)\n"
+                       f"{keepers}\t\t}}\n\t")
             edits = [e for e in edits if e[0] != start] + [(start, end, wrapped)]
-            lines.append(f"pp_wb_setup_{good}_location = {{")
-            lines.append("\tOR = { " + " ".join(f"this = location:{t}" for t in tags) + " }")
-            lines.append("}")
         if edits:
             for start, end, replacement in sorted(edits, reverse=True):
                 text = text[:start] + replacement + text[end:]
             mod_file.write_text("﻿" + text, encoding="utf-8", newline="\n")
-    path = mod_root / SETUP_RGO_TRIGGERS_PATH
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("﻿" + "\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    # the scripted-trigger keepers of earlier builds (EU5 1.4 rejects them in goods)
+    (mod_root / SETUP_RGO_TRIGGERS_PATH).unlink(missing_ok=True)
     return dict(sorted(kept.items()))
 
 

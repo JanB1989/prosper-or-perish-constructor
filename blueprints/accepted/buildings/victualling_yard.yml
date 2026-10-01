@@ -162,7 +162,7 @@ building:
       local_burghers_estate_power = 0.05
       # yards provisioned and refitted the fleets
       local_repair_speed = 0.01
-      local_sailors = 0.003
+      local_sailors = 0.002   # engine cap: 0.0125 sailors per employed (0.2) = 0.0025, three decimals
     }
 prices:
   - key: pp_victualling_yard_price

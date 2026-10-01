@@ -1,5 +1,26 @@
 ﻿# >>> eu5-building-pipeline:terraces:building
-TRY_INJECT:terraces = {
+REPLACE:terraces = {
+  audio_tier = 2
+  is_special = yes
+  is_foreign = no
+  pop_type = laborers
+  max_levels = 1
+  category = infrastructure_category
+  employment_size = granary_employment
+  rural_settlement = yes
+  town = yes
+  city = yes
+  megalopolis = yes
+  build_time = infrastructure_build_time
+  construction_demand = terraces_construction
+  unique_production_methods = {
+    pp_terraces_terraces_maintenance = {
+      icon_type = building_type
+      icon = terraces
+      salt = 0.1
+      category = building_maintenance
+    }
+  }
   price = pp_terraces_price
   location_potential = {
     OR = {

@@ -31,7 +31,7 @@ GOODS_OUTPUT_LEGEND_SUFFIXES = (
     "RANGE_60_100",
     "RANGE_100_150",
     "RANGE_150_300",
-    "CAPPED",
+    "RANGE_300_PLUS",
 )
 GOODS_WITHOUT_OUTPUT_MAP_MODES = {
     "province_food_sales",

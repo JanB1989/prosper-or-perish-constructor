@@ -301,12 +301,12 @@ enabled:
   buildings/berlin_palace.yml: true
   buildings/bey_fortress.yml: true
   buildings/bibliotheca_corviniana.yml: true
-  buildings/black_market.yml: true
+  buildings/black_market.yml: false
   buildings/bodrum_castle.yml: true
   buildings/bolshoi_theater.yml: true
-  buildings/brethren_marsh.yml: true
+  buildings/brethren_marsh.yml: false
   buildings/bridge_infrastructure.yml: true
-  buildings/brothel.yml: true
+  buildings/brothel.yml: false
   buildings/bubu_building.yml: true
   buildings/bulgarian_administration_center.yml: true
   buildings/burgher_mansion.yml: true
@@ -325,7 +325,7 @@ enabled:
   buildings/charite_of_berlin.yml: true
   buildings/chi_macau_port.yml: true
   buildings/chi_missionary_building.yml: true
-  buildings/cinque_port.yml: true
+  buildings/cinque_port.yml: false
   buildings/city_guard.yml: true
   buildings/city_of_victory.yml: true
   buildings/city_walls.yml: true
@@ -334,7 +334,7 @@ enabled:
   buildings/clearing_house.yml: true
   buildings/clerical_archives.yml: true
   buildings/coastal_fort.yml: true
-  buildings/coastal_settlements.yml: true
+  buildings/coastal_settlements.yml: false
   buildings/college_of_poets.yml: true
   buildings/colonial_administration.yml: true
   buildings/commerce_center.yml: true
@@ -418,17 +418,17 @@ enabled:
   buildings/jurchen_barracks.yml: true
   buildings/kalari.yml: true
   buildings/kastellet.yml: true
-  buildings/kilwan_shipwrights.yml: true
+  buildings/kilwan_shipwrights.yml: false
   buildings/kings_manor.yml: true
   buildings/kokufu.yml: true
   buildings/korean_barracks.yml: true
-  buildings/korean_gunnery_coastal_defense.yml: true
+  buildings/korean_gunnery_coastal_defense.yml: false
   buildings/korean_gunnery_land_defense.yml: true
   buildings/kremlin.yml: true
   buildings/kronborg.yml: true
   buildings/kurmina_headquarter.yml: true
   buildings/kurultai.yml: true
-  buildings/lazaretto.yml: true
+  buildings/lazaretto.yml: false
   buildings/library.yml: false
   buildings/library_of_vijayanagar.yml: true
   buildings/lieutenancy.yml: true
@@ -474,7 +474,7 @@ enabled:
   buildings/nobled_sponsored_temple.yml: true
   buildings/nobles_mansion.yml: true
   buildings/nobles_recruitment_center.yml: true
-  buildings/north_sea_shipyards.yml: true
+  buildings/north_sea_shipyards.yml: false
   buildings/novodevichy_convent.yml: true
   buildings/oma_falaj.yml: true
   buildings/oma_nizwa_fort.yml: true
@@ -495,11 +495,11 @@ enabled:
   buildings/pest_house.yml: true
   buildings/phanariot_district.yml: true
   buildings/piazza_san_marco.yml: true
-  buildings/pirate_haven.yml: true
-  buildings/pirate_stronghold.yml: true
-  buildings/pirate_tavern.yml: true
+  buildings/pirate_haven.yml: false
+  buildings/pirate_stronghold.yml: false
+  buildings/pirate_tavern.yml: false
   buildings/pomor_outpost.yml: true
-  buildings/por_feitoria.yml: true
+  buildings/por_feitoria.yml: false
   buildings/port_authority.yml: true
   buildings/porto_pisano.yml: true
   buildings/protected_harbor.yml: true
@@ -538,7 +538,7 @@ enabled:
   buildings/settlement_building.yml: true
   buildings/sevilla_bullfighting_school.yml: true
   buildings/sie_sienese_port.yml: true
-  buildings/smuggler_cove.yml: true
+  buildings/smuggler_cove.yml: false
   buildings/sofa_barracks.yml: true
   buildings/sofa_stockade.yml: true
   buildings/spiritual_retreat.yml: true
@@ -568,7 +568,7 @@ enabled:
   buildings/trade_company_foreign_influence.yml: true
   buildings/trade_company_garrison.yml: true
   buildings/trade_company_governance.yml: true
-  buildings/trade_company_harbor.yml: true
+  buildings/trade_company_harbor.yml: false
   buildings/trade_company_headquarters.yml: true
   buildings/trade_company_local_venture.yml: true
   buildings/trade_office.yml: true

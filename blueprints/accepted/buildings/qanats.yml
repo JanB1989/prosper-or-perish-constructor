@@ -5,7 +5,10 @@ building:
   key: qanats
   mode: CREATE
   source: pp_new_buildings.txt
-  production_method_slots: []
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_qanats_upkeep
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -46,6 +49,12 @@ building:
       free_building_levels = 1
     }
 
+    unique_production_methods = {
+        pp_qanats_upkeep = {
+            category = building_maintenance
+        }
+    }
+
     modifier = {
     }
 
@@ -53,6 +62,8 @@ building:
     ai_forbid_shutdown = yes
 localization:
   entries:
+    qanats_slot_0: Upkeep
+    pp_qanats_upkeep: Village Upkeep
     qanats: Qanats
     qanats_desc: Gently sloping underground galleries tap groundwater and convey it to fields by gravity while limiting evaporation in an arid climate.
     pp_qanats_price: Qanats Price

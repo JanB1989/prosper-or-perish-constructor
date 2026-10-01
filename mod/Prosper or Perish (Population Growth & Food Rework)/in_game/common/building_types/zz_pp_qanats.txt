@@ -38,6 +38,14 @@ raw_modifier = {
   free_building_levels = 1
 }
 
+unique_production_methods = {
+    pp_qanats_upkeep = {
+        icon_type = building_type
+        icon = qanats
+        category = building_maintenance
+    }
+}
+
 modifier = {
 }
 

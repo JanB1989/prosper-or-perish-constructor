@@ -33,6 +33,14 @@ raw_modifier = {
   free_building_levels = 1
 }
 
+unique_production_methods = {
+    pp_field_drainage_upkeep = {
+        icon_type = building_type
+        icon = field_drainage
+        category = building_maintenance
+    }
+}
+
 modifier = {
 }
 

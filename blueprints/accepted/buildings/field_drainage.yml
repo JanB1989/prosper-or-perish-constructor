@@ -5,7 +5,10 @@ building:
   key: field_drainage
   mode: CREATE
   source: pp_new_buildings.txt
-  production_method_slots: []
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_field_drainage_upkeep
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -41,6 +44,12 @@ building:
       free_building_levels = 1
     }
 
+    unique_production_methods = {
+        pp_field_drainage_upkeep = {
+            category = building_maintenance
+        }
+    }
+
     modifier = {
     }
 
@@ -48,6 +57,8 @@ building:
     ai_forbid_shutdown = yes
 localization:
   entries:
+    field_drainage_slot_0: Upkeep
+    pp_field_drainage_upkeep: Village Upkeep
     field_drainage: Drainage Ditches
     field_drainage_desc: Open ditches, raised cultivation ridges, and collector drains remove excess water from inland wet ground and keep crop roots aerated.
     pp_field_drainage_price: Drainage Ditches Price

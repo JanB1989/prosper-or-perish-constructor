@@ -5,7 +5,10 @@ building:
   key: khmer_baray
   mode: REPLACE
   source: pp_building_adjustments.txt
-  production_method_slots: []
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_khmer_baray_upkeep
   possible_production_methods: []
   body: |-
     audio_tier = 4
@@ -57,6 +60,12 @@ building:
       free_building_levels = 1
     }
 
+    unique_production_methods = {
+        pp_khmer_baray_upkeep = {
+            category = building_maintenance
+        }
+    }
+
     modifier = {
     }
 
@@ -67,5 +76,7 @@ prices:
   body: '{gold = 50}'
 localization:
   entries:
+    khmer_baray_slot_0: Upkeep
+    pp_khmer_baray_upkeep: Village Upkeep
     pp_khmer_baray_price: Khmer Baray Price
     khmer_baray_desc: A large reservoir of water. Each baray stores the monsoon for the dry season and feeds the fields below it, so Khmer lands can sustain far more people per channel than ordinary irrigation. Barays and irrigation systems share the same water, so their levels count against one cap.

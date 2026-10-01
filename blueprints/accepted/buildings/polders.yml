@@ -5,7 +5,10 @@ building:
   key: polders
   mode: REPLACE
   source: pp_building_adjustments.txt
-  production_method_slots: []
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_polders_upkeep
   possible_production_methods: []
   body: |2-
         audio_tier = 3
@@ -47,6 +50,12 @@ building:
           free_building_levels = 1
         }
 
+      unique_production_methods = {
+          pp_polders_upkeep = {
+              category = building_maintenance
+          }
+      }
+
       modifier = {
       }
 
@@ -59,4 +68,6 @@ prices:
   body: '{gold = 50}'
 localization:
   entries:
+    polders_slot_0: Upkeep
+    pp_polders_upkeep: Village Upkeep
     pp_polders_price: Polders Price

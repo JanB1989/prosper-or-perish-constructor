@@ -60,6 +60,14 @@ raw_modifier = {
   free_building_levels = 1
 }
 
+unique_production_methods = {
+    pp_bund_upkeep = {
+        icon_type = building_type
+        icon = bund
+        category = building_maintenance
+    }
+}
+
 modifier = {
 }
 

@@ -32,6 +32,14 @@ REPLACE:irrigation_systems = {
     free_building_levels = 1
   }
 
+  unique_production_methods = {
+      pp_irrigation_systems_upkeep = {
+          icon_type = building_type
+          icon = irrigation_systems
+          category = building_maintenance
+      }
+  }
+
   modifier = {
   }
 

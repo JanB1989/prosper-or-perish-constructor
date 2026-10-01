@@ -17,3 +17,7 @@
   MODIFIER_TYPE_DESC_logistics_impacts_inflation: "Logistics impacts inflation"
   MODIFIER_TYPE_NAME_logistics_used_for_minting: "Logistics used for minting"
   MODIFIER_TYPE_DESC_logistics_used_for_minting: "Logistics used for minting"
+  MODIFIER_TYPE_NAME_local_logistics_establishment_speed: "Local $logistics$ Establishment Speed"
+  MODIFIER_TYPE_DESC_local_logistics_establishment_speed: "How quickly newly constructed [buildings|e] producing [ShowGoodsName('logistics')] in this [location|e] reach their full [production_efficiency|e]."
+  MODIFIER_TYPE_NAME_global_logistics_establishment_speed: "$logistics$ Establishment Speed"
+  MODIFIER_TYPE_DESC_global_logistics_establishment_speed: "How quickly newly constructed [buildings|e] producing [ShowGoodsName('logistics')] in the entire [country|e] reach their full [production_efficiency|e]."

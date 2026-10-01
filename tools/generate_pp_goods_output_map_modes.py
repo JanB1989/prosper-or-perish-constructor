@@ -223,7 +223,8 @@ def _goods_output_legend_keys(prefix: str) -> str:
     lines.extend(
         [
             "\tlegend_key = {",
-            f'\t\tdesc = "{prefix}_CAPPED"',
+            # not "_CAPPED": MAPMODE_PP_IRON_OUTPUT_CAPPED shares its localization hash with pp_nav_00452
+            f'\t\tdesc = "{prefix}_RANGE_300_PLUS"',
             f"\t\tcolor = {GOODS_OUTPUT_OVERFLOW_COLOR}",
             "\t}",
         ]
@@ -267,7 +268,7 @@ def _localization_file(goods: Iterable[str]) -> str:
                 f'  MAPMODE_PP_{upper}_OUTPUT_RANGE_60_100: "60-100 output"',
                 f'  MAPMODE_PP_{upper}_OUTPUT_RANGE_100_150: "100-150 output"',
                 f'  MAPMODE_PP_{upper}_OUTPUT_RANGE_150_300: "150-300 output"',
-                f'  MAPMODE_PP_{upper}_OUTPUT_CAPPED: "300+ output"',
+                f'  MAPMODE_PP_{upper}_OUTPUT_RANGE_300_PLUS: "300+ output"',
                 f'  MAPMODE_PP_{upper}_OUTPUT_TT_LAND: "{_land_tooltip_text(good)}"',
                 f'  MAPMODE_PP_{upper}_OUTPUT_TT_WATER: "$MAPMODE_PP_LOCAL_OUTPUT_TT_WATER$"',
             ]

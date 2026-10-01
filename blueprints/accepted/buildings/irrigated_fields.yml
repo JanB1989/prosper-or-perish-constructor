@@ -5,7 +5,10 @@ building:
   key: irrigated_fields
   mode: CREATE
   source: pp_new_buildings.txt
-  production_method_slots: []
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_irrigated_fields_upkeep
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -36,6 +39,12 @@ building:
       free_building_levels = 1
     }
 
+    unique_production_methods = {
+        pp_irrigated_fields_upkeep = {
+            category = building_maintenance
+        }
+    }
+
     modifier = {
     }
 
@@ -43,6 +52,8 @@ building:
     ai_forbid_shutdown = yes
 localization:
   entries:
+    irrigated_fields_slot_0: Upkeep
+    pp_irrigated_fields_upkeep: Village Upkeep
     irrigated_fields: Irrigated Fields
     irrigated_fields_desc: Leveled fields, low earthen bunds, feeder channels and small sluices retain and control water throughout the crop cycle, whether the crop is rice, wheat or vegetables.
     pp_irrigated_fields_price: Irrigated Fields Price

@@ -110,3 +110,27 @@ province_food_purchase_used_for_minting={
 		category=country
 	}
 }
+local_province_food_purchase_establishment_speed={
+	percent=yes
+	game_data={
+		category=location
+	}
+}
+global_province_food_purchase_establishment_speed={
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+local_province_food_sales_establishment_speed={
+	percent=yes
+	game_data={
+		category=location
+	}
+}
+global_province_food_sales_establishment_speed={
+	percent=yes
+	game_data={
+		category=country
+	}
+}

@@ -15,3 +15,7 @@
   MODIFIER_TYPE_DESC_local_food_impacts_inflation: "$local_food$ impacts inflation"
   MODIFIER_TYPE_NAME_local_food_used_for_minting: "$local_food$ used for minting"
   MODIFIER_TYPE_DESC_local_food_used_for_minting: "$local_food$ used for minting"
+  MODIFIER_TYPE_NAME_local_local_food_establishment_speed: "Local $local_food$ Establishment Speed"
+  MODIFIER_TYPE_DESC_local_local_food_establishment_speed: "How quickly newly constructed [buildings|e] producing [ShowGoodsName('local_food')] in this [location|e] reach their full [production_efficiency|e]."
+  MODIFIER_TYPE_NAME_global_local_food_establishment_speed: "$local_food$ Establishment Speed"
+  MODIFIER_TYPE_DESC_global_local_food_establishment_speed: "How quickly newly constructed [buildings|e] producing [ShowGoodsName('local_food')] in the entire [country|e] reach their full [production_efficiency|e]."

@@ -15,3 +15,7 @@
   MODIFIER_TYPE_DESC_manual_labor_impacts_inflation: "Manual Labor impacts inflation"
   MODIFIER_TYPE_NAME_manual_labor_used_for_minting: "Manual Labor used for minting"
   MODIFIER_TYPE_DESC_manual_labor_used_for_minting: "Manual Labor used for minting"
+  MODIFIER_TYPE_NAME_local_manual_labor_establishment_speed: "Local $manual_labor$ Establishment Speed"
+  MODIFIER_TYPE_DESC_local_manual_labor_establishment_speed: "How quickly newly constructed [buildings|e] producing [ShowGoodsName('manual_labor')] in this [location|e] reach their full [production_efficiency|e]."
+  MODIFIER_TYPE_NAME_global_manual_labor_establishment_speed: "$manual_labor$ Establishment Speed"
+  MODIFIER_TYPE_DESC_global_manual_labor_establishment_speed: "How quickly newly constructed [buildings|e] producing [ShowGoodsName('manual_labor')] in the entire [country|e] reach their full [production_efficiency|e]."

@@ -17,7 +17,7 @@ Per blueprint:
 - slot 1: ``pp_<b>_no_cultivation`` and the tier's cultivation methods of the crop (labour class of the tier, or
   ``hand_work``); a method that names an advance is unlocked by it (``pp_heavy_plough``, ``pp_improved_rotations``,
   ``pp_water_lifting``, rendered once in ``wheat_farm.yml``);
-- slot 2 (legumes and olives, tiers 0-2): ``pp_<b>_no_beekeeping`` and the tier's hive method;
+- slot 2 (legumes, tiers 0-2; the fruit orchards carry the same hives by hand): ``pp_<b>_no_beekeeping`` and the tier's hive method;
 - last slot: Provisioning (``provisioning.py``), the one Provision method: a token of the crop in, a fixed Province
   Food amount per level out (farm v3, 2026-10-02).
 

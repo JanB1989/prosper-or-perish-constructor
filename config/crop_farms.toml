@@ -214,13 +214,16 @@ requires = "pp_farming_village_rotations"
 name = "Water Lifting"
 desc = "Chain pumps and channels bring water to paddies and groves."
 
-# Hive methods of the beekeeping slot (chains with beekeeping = true, tiers 0-2), copied from the current blueprints:
+# Hive methods of the beekeeping slot (chains with beekeeping = true, tiers 0-2: the legume chain; the fruit orchard
+# blueprints carry the same three methods by hand), copied from the former blueprints:
 # tier 0 pp_farming_village_minor_beeswax, tier 1 pp_husbandry_farmstead_yard_hives, tier 2 pp_farming_village_rotations_hedgerow_hives.
 # manual_labor is today's value; labour_class "" = tier class.
 [beekeeping.0]
 key = "cottage_hives"
 name = "Cottage Hives"
 desc = "A few skeps stand by orchards and hedges, tended in spare moments between fieldwork. Beekeeping is a modest household sideline, valued but never the village's main concern."
+# the zero-amount goods mark the household hives as a worked method: without them the constructor rules count a
+# labour-only method as a second free output slot and hold it to the base-output band
 inputs = { furniture = 0.0, cloth = 0.0 }
 manual_labor = 0.025
 output = 0.063
@@ -781,7 +784,7 @@ names = { 0 = "Olive Grove", 1 = "Olive Farmstead", 2 = "Olive Estate", 3 = "Oli
 slot0_name = "Groves"
 descs = { 0 = "Households prune and harvest olive trees on dry hillsides.", 1 = "Manured groves and a small press turn the harvest into stored oil.", 2 = "Grafted trees and tended terraces make the groves bear more evenly.", 3 = "Beam presses, oil stores and hired hands work the groves as one managed estate." }
 provision_name = "Provision with Olives"
-beekeeping = true
+beekeeping = false   # 2026-10-03: olives are wind-pollinated; the hives moved to the fruit orchards
 side_modifiers = {}
 location_rule = '''
 OR = {

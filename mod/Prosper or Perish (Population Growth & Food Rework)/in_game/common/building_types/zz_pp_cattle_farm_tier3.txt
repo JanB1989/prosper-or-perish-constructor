@@ -22,6 +22,18 @@ construction_demand = workshop_construction
 location_potential = {
     pp_cattle_farm_location_potential = yes
 }
+ai_construct_weight = {
+    value = 0
+    if = {
+        limit = { exists = market }
+        value = "market.market_price(goods:livestock)"
+        divide = "default_price(goods:livestock)"
+        multiply = { value = 1 add = modifier:local_livestock_output_modifier }
+        subtract = 1
+        multiply = 400
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
+}
 
 unique_production_methods = {
     pp_cattle_model_farm_base = {
@@ -57,20 +69,10 @@ unique_production_methods = {
     pp_cattle_model_farm_provision = {
         icon_type = goods
         icon = livestock
-        livestock = 0.089
+        livestock = 0.011
         produced = local_food
-        output = 1.6
-        debug_max_profit = 4.993
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
-    pp_cattle_model_farm_market_sales = {
-        icon_type = goods
-        icon = livestock
-        offset = 0.012
-        produced = livestock
-        output = 0.008
+        output = 2.5
+        debug_max_profit = 74.758
         category = building_maintenance
     }
 }

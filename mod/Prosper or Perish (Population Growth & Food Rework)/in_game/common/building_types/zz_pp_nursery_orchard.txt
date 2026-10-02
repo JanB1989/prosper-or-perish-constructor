@@ -41,6 +41,24 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
+    pp_nursery_orchard_no_beekeeping = {
+        icon_type = building_type
+        icon = nursery_orchard
+        category = building_maintenance
+    }
+    pp_nursery_orchard_yard_hives = {
+        icon_type = building_type
+        icon = nursery_orchard
+        fiber_crops = 0.022
+        pottery = 0.01
+        manual_labor = 0.008
+        produced = beeswax
+        output = 0.12
+        debug_max_profit = 1.553
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
     pp_nursery_orchard_no_primary = {
         icon_type = building_type
         icon = nursery_orchard

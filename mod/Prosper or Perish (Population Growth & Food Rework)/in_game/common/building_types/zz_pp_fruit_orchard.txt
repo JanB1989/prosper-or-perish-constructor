@@ -36,6 +36,24 @@ REPLACE:fruit_orchard = {
         }
     }
     unique_production_methods = {
+        pp_fruit_orchard_no_beekeeping = {
+            icon_type = building_type
+            icon = fruit_orchard
+            category = building_maintenance
+        }
+        pp_fruit_orchard_cottage_hives = {
+            icon_type = building_type
+            icon = fruit_orchard
+            furniture = 0
+            cloth = 0
+            manual_labor = 0.025
+            produced = beeswax
+            output = 0.063
+            debug_max_profit = 0.008
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
         pp_fruit_orchard_no_primary = {
             icon_type = building_type
             icon = fruit_orchard

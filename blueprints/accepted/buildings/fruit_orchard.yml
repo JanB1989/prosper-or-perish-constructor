@@ -5,6 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_fruit_orchard_base_fruit: base
+    pp_fruit_orchard_cottage_hives: base
     pp_fruit_orchard_provision: keep
 gate_method: pp_fruit_orchard_market_sales
 upgrade_chain:
@@ -23,12 +24,16 @@ building:
     - pp_fruit_orchard_base_fruit
   - name: slot_1
     methods:
-    - pp_fruit_orchard_no_primary
-    - pp_fruit_orchard_maintenance
+    - pp_fruit_orchard_no_beekeeping
+    - pp_fruit_orchard_cottage_hives
   - name: slot_2
     methods:
-    - pp_fruit_orchard_provision
+    - pp_fruit_orchard_no_primary
+    - pp_fruit_orchard_maintenance
   - name: slot_3
+    methods:
+    - pp_fruit_orchard_provision
+  - name: slot_4
     methods:
     - pp_fruit_orchard_market_sales
   possible_production_methods: []
@@ -63,6 +68,20 @@ building:
                 manual_labor = 0.012
                 produced = fruit
                 output = 0.06
+                category = building_maintenance
+            }
+        }
+        unique_production_methods = {
+            pp_fruit_orchard_no_beekeeping = {
+                category = building_maintenance
+            }
+            pp_fruit_orchard_cottage_hives = {
+                furniture = 0
+                cloth = 0
+                manual_labor = 0.025
+                produced = beeswax
+                output = 0.063
+                debug_max_profit = 0
                 category = building_maintenance
             }
         }
@@ -110,16 +129,20 @@ building:
 localization:
   entries:
     fruit_orchard_slot_0: Fruit Trees
-    fruit_orchard_slot_1: Orchard Work
-    fruit_orchard_slot_2: Provisioning
+    fruit_orchard_slot_1: Beekeeping
+    fruit_orchard_slot_2: Orchard Work
+    fruit_orchard_slot_3: Provisioning
+    fruit_orchard_slot_4: Market
     pp_fruit_orchard_base_fruit: Fruit Trees
     pp_fruit_orchard_maintenance: Fruit Orchard Maintenance
     pp_fruit_orchard_no_primary: No Orchard Work
+    pp_fruit_orchard_no_beekeeping: No Beekeeping
+    pp_fruit_orchard_cottage_hives: Cottage Hives
+    pp_fruit_orchard_cottage_hives_desc: A few skeps stand among the fruit trees. The bees work the blossom in spring and help it set, and the household takes the wax as a modest sideline.
     pp_fruit_orchard_provision: Provision with Fruit
     pp_fruit_orchard_provision_desc: The household buys its own fruit back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_fruit_orchard_market_sales: Market Sales
     pp_fruit_orchard_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    fruit_orchard_slot_3: Market
 evaluation:
   allow_rules:
     profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
@@ -134,6 +157,10 @@ evaluation:
       production_efficiency: 1.0
     pp_fruit_orchard_maintenance:
       production_efficiency: 1.05
+    pp_fruit_orchard_no_beekeeping:
+      production_efficiency: 1.0
+    pp_fruit_orchard_cottage_hives:
+      production_efficiency: 1.0
     pp_fruit_orchard_provision:
       allow_rules:
         profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.

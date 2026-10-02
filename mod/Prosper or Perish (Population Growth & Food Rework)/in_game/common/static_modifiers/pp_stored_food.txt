@@ -27,17 +27,6 @@ pp_full_stores = {
 	game_data = { category = province }
 	local_local_food_output_modifier = -0.75
 	local_province_food_sales_output_modifier = 0.34
-	local_fish_output_modifier = 0.2
-	local_fruit_output_modifier = 0.2
-	local_wild_game_output_modifier = 0.2
-	local_wheat_output_modifier = 0.2
-	local_rice_output_modifier = 0.2
-	local_millet_output_modifier = 0.2
-	local_maize_output_modifier = 0.2
-	local_legumes_output_modifier = 0.2
-	local_potato_output_modifier = 0.2
-	local_olives_output_modifier = 0.2
-	local_livestock_output_modifier = 0.2
 }
 
 # Old saves (whole-month tiers, 2026-10-01): the names stay defined, without effects, so those saves load;

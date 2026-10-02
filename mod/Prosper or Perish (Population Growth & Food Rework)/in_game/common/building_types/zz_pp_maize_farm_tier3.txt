@@ -28,6 +28,18 @@ country_potential = {
         has_advance = pp_maize_farm_advance_general
     }
 }
+ai_construct_weight = {
+    value = 0
+    if = {
+        limit = { exists = market }
+        value = "market.market_price(goods:maize)"
+        divide = "default_price(goods:maize)"
+        multiply = { value = 1 add = modifier:local_maize_output_modifier }
+        subtract = 1
+        multiply = 400
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
+}
 
 unique_production_methods = {
     pp_maize_model_farm_base = {
@@ -63,20 +75,10 @@ unique_production_methods = {
     pp_maize_model_farm_provision = {
         icon_type = goods
         icon = maize
-        maize = 0.133
+        maize = 0.017
         produced = local_food
-        output = 1.6
-        debug_max_profit = 5.015
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
-    pp_maize_model_farm_market_sales = {
-        icon_type = goods
-        icon = maize
-        offset = 0.01
-        produced = maize
-        output = 0.01
+        output = 2.5
+        debug_max_profit = 72.529
         category = building_maintenance
     }
 }

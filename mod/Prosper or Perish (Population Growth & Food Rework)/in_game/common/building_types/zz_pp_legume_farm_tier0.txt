@@ -22,6 +22,18 @@ construction_demand = village_construction
 location_potential = {
     pp_legume_farm_location_potential = yes
 }
+ai_construct_weight = {
+    value = 0
+    if = {
+        limit = { exists = market }
+        value = "market.market_price(goods:legumes)"
+        divide = "default_price(goods:legumes)"
+        multiply = { value = 1 add = modifier:local_legumes_output_modifier }
+        subtract = 1
+        multiply = 400
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
+}
 
 unique_production_methods = {
     pp_legume_farm_base = {
@@ -84,20 +96,10 @@ unique_production_methods = {
     pp_legume_farm_provision = {
         icon_type = goods
         icon = legumes
-        legumes = 0.08
+        legumes = 0.01
         produced = local_food
-        output = 0.96
-        debug_max_profit = 5.000
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
-    pp_legume_farm_market_sales = {
-        icon_type = goods
-        icon = legumes
-        offset = 0.01
-        produced = legumes
-        output = 0.01
+        output = 1.5
+        debug_max_profit = 74.000
         category = building_maintenance
     }
 }

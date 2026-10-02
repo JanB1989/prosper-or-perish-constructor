@@ -22,6 +22,18 @@ construction_demand = village_construction
 location_potential = {
     pp_millet_farm_location_potential = yes
 }
+ai_construct_weight = {
+    value = 0
+    if = {
+        limit = { exists = market }
+        value = "market.market_price(goods:millet)"
+        divide = "default_price(goods:millet)"
+        multiply = { value = 1 add = modifier:local_millet_output_modifier }
+        subtract = 1
+        multiply = 400
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
+}
 
 unique_production_methods = {
     pp_millet_farm_base = {
@@ -66,20 +78,10 @@ unique_production_methods = {
     pp_millet_farm_provision = {
         icon_type = goods
         icon = millet
-        millet = 0.08
+        millet = 0.01
         produced = local_food
-        output = 0.96
-        debug_max_profit = 5.000
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
-    pp_millet_farm_market_sales = {
-        icon_type = goods
-        icon = millet
-        offset = 0.01
-        produced = millet
-        output = 0.01
+        output = 1.5
+        debug_max_profit = 74.000
         category = building_maintenance
     }
 }

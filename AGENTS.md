@@ -26,7 +26,8 @@
   that has an output (slots in file order, methods in listed order; `docs/ai_building_rulebook.md` 2.4i).
 - Every enabled blueprint with a producing unique method names that method with a top-level `gate_method:` key. Its slot
   is the last `unique_production_methods` block and the method is listed last. The rest is ordered by importance:
-  base slots first, storage legs and the Provisioning switch last, other slots and methods by output value,
+  base slots first, the slots that follow the province store last (Province Food: Provisioning, Serve; the Grange's
+  Surplus Sales), other slots and methods by output value,
   output-less methods first in their slot.
 - `uv run ppc gate apply` flags unflagged blueprints by that rule and rewrites the order (slot labels,
   `production_method_slots` and `# slot N` comments follow). `uv run ppc gate check` must report 0 unflagged, 0 out of
@@ -37,9 +38,32 @@
   that makes a little of that good for `offset`, at margin 1.0 (`[production_gate.leg]`). A one-method slot is always
   read, so the gate follows the main good's price whatever is researched or in the market. `ppc gate apply` writes and
   updates the leg (body block, slot list, localization, evaluation allow rules); the labour pass skips it. Buildings
-  without a market good, storage-leg gates (grange, tavern) and `strategic_goods` get none. Never gate on a method that
+  without a market good, gates on a store-following good (the Grange's Surplus Sales, the Tavern's and Cookshop's
+  Province Food) and `strategic_goods` get none. Never gate on a method that
   buys the building's own main good (inverts the AI's price response).
 - A slot's first method is what new and game-start buildings run, so reordering can change defaults.
+
+## Store Lever
+
+- The province store moves goods output through two province modifiers (`stored_food.py`, `[stored_food]` in
+  constructor.toml): **Low Stores** (size = years below 12 stored months) and **Full Stores** (size = years above).
+  They carry the Province Food output (+ below, - above), the staple output (+ above; one line per good a Provisioning
+  method buys) and the Grange's Surplus Sales (+ above, steeply - below). Stored Food keeps growth and prosperity.
+  There are no country base values for the store: at 12 months every line is zero.
+- Every maker of Province Food stops where its recipe stops paying, so the store rests there: the farms' Provisioning
+  always runs (one method, no Sell the Surplus), the Cookshop follows its staple prices, the Tavern the victuals
+  price (Serve Victuals is its only slot and its gate). Tavern and Cookshop must stay on the Province Food good: as
+  flat food they would be pure price switches.
+- The Grange earns Surplus Sales from a full store only; its fixed cost is split between Surplus Sales (the gate
+  method) and Haulage so the gate margin opens at a well-filled store. A staffed Tavern cuts the Surplus Sales in its
+  location (`local_province_food_sales_output_modifier` in its `modifier`), and `province_starving` zeroes victuals
+  output, so a Grange never packs a lean or starving province.
+- `store_lever.load_design` reads the numbers from the config, the two blueprints and `province_starving`; the
+  start-food validator (`worldbuilder/food_sim.py`), `tools/province_store_sim.py` (rest points and ripple on real
+  provinces) and `tests/test_store_lever.py` (the properties the design rests on) all use it. After changing a value
+  run the simulator and the tests.
+- Production efficiency adds to the same pool as these output modifiers, so it moves every rest point (about 1.6
+  months per +10 %). Smaller slopes make that worse; keep it in mind before flattening the lever.
 
 ## Logistics
 

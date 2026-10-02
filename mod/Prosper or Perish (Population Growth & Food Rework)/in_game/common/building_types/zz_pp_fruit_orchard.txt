@@ -53,13 +53,6 @@ REPLACE:fruit_orchard = {
         }
     }
     unique_production_methods = {
-        pp_fruit_orchard_sell_surplus = {
-            icon_type = building_type
-            icon = fruit_orchard
-            produced = province_food_sales
-            output = 0.005
-            category = building_maintenance
-        }
         pp_fruit_orchard_provision = {
             icon_type = goods
             icon = fruit

@@ -6,11 +6,38 @@
 pp_stored_food = {
 	game_data = { category = province }
 	local_population_growth = 0.0075
-	local_province_food_sales_output_modifier = 8.0
-	local_province_food_purchase_output_modifier = -8.0
 	local_devastation_recovery = 0.003
 	local_migration_attraction = 0.045
 	local_monthly_prosperity = 0.0025
+}
+
+# Store lever. Low Stores: the effects of one year short of 12.0 stored months, applied with size = the years
+# short (1 at an empty store). Province Food is worth more, so everything that makes it runs harder; the Grange's
+# Surplus Sales dry up.
+pp_low_stores = {
+	game_data = { category = province }
+	local_local_food_output_modifier = 0.75
+	local_province_food_sales_output_modifier = -3.0
+}
+
+# Full Stores: the effects of one year above 12.0 stored months, applied with size = the years above (1 at the
+# 24-month cap). Province Food is worth less, the land yields more of its staples for the market, and the Grange
+# sells the surplus.
+pp_full_stores = {
+	game_data = { category = province }
+	local_local_food_output_modifier = -0.75
+	local_province_food_sales_output_modifier = 0.34
+	local_fish_output_modifier = 0.2
+	local_fruit_output_modifier = 0.2
+	local_wild_game_output_modifier = 0.2
+	local_wheat_output_modifier = 0.2
+	local_rice_output_modifier = 0.2
+	local_millet_output_modifier = 0.2
+	local_maize_output_modifier = 0.2
+	local_legumes_output_modifier = 0.2
+	local_potato_output_modifier = 0.2
+	local_olives_output_modifier = 0.2
+	local_livestock_output_modifier = 0.2
 }
 
 # Old saves (whole-month tiers, 2026-10-01): the names stay defined, without effects, so those saves load;

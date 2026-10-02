@@ -6,7 +6,6 @@ labour:
   methods:
     pp_ocean_fishery_base_catch: base
     pp_ocean_fishery_provision: keep
-    pp_ocean_fishery_sell_surplus: keep
 gate_method: pp_ocean_fishery_market_sales
 upgrade_chain:
   family: ocean_fishery
@@ -28,7 +27,6 @@ building:
         - pp_ocean_fishery_coastal_boats
     - name: slot_2
       methods:
-        - pp_ocean_fishery_sell_surplus
         - pp_ocean_fishery_provision
     - name: slot_3
       methods:
@@ -81,11 +79,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_ocean_fishery_sell_surplus = {
-            produced = province_food_sales
-            output = 0.008
-            category = building_maintenance
-        }
         pp_ocean_fishery_provision = {
             fish = 0.12
             produced = local_food
@@ -126,9 +119,7 @@ localization:
     pp_ocean_fishery_no_coastal_gear: No Coastal Gear
     pp_ocean_fishery_coastal_boats: Coastal Boats
     pp_ocean_fishery_provision: Provision with Fish
-    pp_ocean_fishery_provision_desc: The household buys its own catch back and cooks for the province. Worth it while the province store is low and the good is cheap.
-    pp_ocean_fishery_sell_surplus: Sell the Surplus
-    pp_ocean_fishery_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
+    pp_ocean_fishery_provision_desc: The household buys its own catch back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_ocean_fishery_market_sales: Market Sales
     pp_ocean_fishery_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     ocean_fishery_slot_3: Market
@@ -153,12 +144,9 @@ evaluation:
         output_throughput: Coastal boats keep strong coastal output after repeated fish-output tuning, intentionally below the generic full-building output target.
     pp_ocean_fishery_provision:
       allow_rules:
-        profit_percent: Provisioning loses money at the Province Food floor by design; the storage signal decides the switch.
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
         input_throughput: Existing accepted input scale predates the global employment throughput baseline.
         output_throughput: Existing accepted output scale predates the global employment throughput baseline.
-    pp_ocean_fishery_sell_surplus:
-      allow_rules:
-        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
     pp_ocean_fishery_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

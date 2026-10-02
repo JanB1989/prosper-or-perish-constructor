@@ -2923,11 +2923,12 @@ def test_retained_export_offsets_match_food_sales_values() -> None:
         )
         # The disabled export blueprint leaves some old offset modifiers in place.
         # They must still match sales values; new sales sources need no inert clone.
-        # Exception (2026-09-22): the country constant +19.0 on offset is the import market's steady
-        # provisioning leg (20x on a tiny amount, so production efficiency barely moves it).
+        # The country base values carry no store constants any more (2026-10-02: the store lever is zero at the
+        # pivot, so -100 % Surplus Sales, +1500 % Scarcity Premium and +1900 % offset are gone).
         from collections import Counter
         if scope == "global" and path.name == "pp_country_base_values.txt":
-            assert offset == ["19.0"], path
+            assert offset == [] and sales == [], path
+            assert "province_food_purchase_output_modifier" not in text
             continue
         assert not (Counter(offset) - Counter(sales)), path
 

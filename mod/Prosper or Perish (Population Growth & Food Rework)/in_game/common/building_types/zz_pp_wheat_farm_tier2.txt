@@ -66,13 +66,6 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_wheat_rotations_sell_surplus = {
-        icon_type = building_type
-        icon = wheat_rotations
-        produced = province_food_sales
-        output = 0.006
-        category = building_maintenance
-    }
     pp_wheat_rotations_provision = {
         icon_type = goods
         icon = wheat

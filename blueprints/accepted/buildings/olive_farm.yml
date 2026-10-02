@@ -9,7 +9,6 @@ labour:
     pp_olive_farm_pruned_grove: hand_work
     pp_olive_farm_cottage_hives: base
     pp_olive_farm_provision: keep
-    pp_olive_farm_sell_surplus: keep
 gate_method: pp_olive_farm_market_sales
 upgrade_chain:
   family: olive_farm
@@ -36,7 +35,6 @@ building:
     - pp_olive_farm_terraced_grove
   - name: slot_3
     methods:
-    - pp_olive_farm_sell_surplus
     - pp_olive_farm_provision
   - name: slot_4
     methods:
@@ -117,11 +115,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_olive_farm_sell_surplus = {
-            produced = province_food_sales
-            output = 0.005
-            category = building_maintenance
-        }
         pp_olive_farm_provision = {
             olives = 0.08
             produced = local_food
@@ -192,9 +185,7 @@ localization:
     pp_olive_farm_cottage_hives: Cottage Hives
     pp_olive_farm_cottage_hives_desc: A few skeps stand by orchards and hedges, tended in spare moments between fieldwork. Beekeeping is a modest household sideline, valued but never the village's main concern.
     pp_olive_farm_provision: Provision with Olives
-    pp_olive_farm_provision_desc: The household buys its own crop back and cooks for the province. Worth it while the province store is low and the crop is cheap.
-    pp_olive_farm_sell_surplus: Sell the Surplus
-    pp_olive_farm_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
+    pp_olive_farm_provision_desc: The household buys its own crop back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_olives_farm_advance_general: Olive Cultivation
     pp_olives_farm_advance_general_desc: Adopt olive cultivation through trade and regional exchange.
     pp_olive_farm_market_sales: Market Sales
@@ -225,12 +216,9 @@ evaluation:
       production_efficiency: 1.0
     pp_olive_farm_provision:
       allow_rules:
-        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the storage signal decides the switch.
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
         input_throughput: Existing accepted input scale predates the global employment throughput baseline.
         output_throughput: Existing accepted output scale predates the global employment throughput baseline.
-    pp_olive_farm_sell_surplus:
-      allow_rules:
-        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
     pp_olive_farm_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

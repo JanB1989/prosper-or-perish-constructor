@@ -1,5 +1,7 @@
 """Replace the "Household Food" worker-victuals slot of calorie buildings with the Provisioning slot.
 
+Also removes what is left of the former Sell the Surplus method (2026-10-02: the slot holds Provision alone).
+
 Idempotent: a rerun re-renders the Provisioning slot from the current config (amounts follow `[building_scaling]`) and
 changes nothing when it is already current. The blueprints are hand-formatted, so they are edited textually (labour
 methods, production-method slot list, the `unique_production_methods` block in the body, localization entries and the
@@ -144,20 +146,26 @@ def rewrite(path: Path) -> tuple[str, str]:
     )
     slot_name = slots[slot_index].name
     amounts = pv.provisioning_amounts(base_output(building, good, template.building_body, tuple(slots[0].methods)))
-    provision, sell = pv.slot_methods(building)
-    old_methods = {f"pp_{building}_no_worker_victuals", f"pp_{building}_worker_victuals"}
-    all_methods = old_methods | {provision, sell}
+    (provision,) = pv.slot_methods(building)
+    sell = pv.legacy_sell_method(building)
+    old_methods = {f"pp_{building}_no_worker_victuals", f"pp_{building}_worker_victuals", sell}
+    all_methods = old_methods | {provision}
 
     lines = text.split("\n")
 
-    # labour: both Provisioning methods are left as authored
-    lines = _replace_entries(lines, ("labour", "methods"), all_methods, [f"{provision}: keep", f"{sell}: keep"])
+    # labour: the Provisioning method is left as authored
+    lines = _replace_entries(lines, ("labour", "methods"), all_methods, [f"{provision}: keep"])
 
     # production_method_slots list (outside the body)
     body_start = next(i for i, line in enumerate(lines) if re.match(r"^ *body:\s*\|", line))
     for i in range(body_start):
         lines[i] = re.sub(rf"^(\s*- ){re.escape(f'pp_{building}_no_worker_victuals')}\s*$", rf"\g<1>{provision}", lines[i])
-        lines[i] = re.sub(rf"^(\s*- ){re.escape(f'pp_{building}_worker_victuals')}\s*$", rf"\g<1>{sell}", lines[i])
+    dropped = {f"pp_{building}_worker_victuals", sell}
+    lines = [
+        line
+        for i, line in enumerate(lines)
+        if not (i < body_start and re.match(r"^\s*- (\S+)\s*$", line) and line.strip()[2:].strip() in dropped)
+    ]
 
     # the slot block in the body
     lines = _replace_body_block(lines, building, amounts, good)

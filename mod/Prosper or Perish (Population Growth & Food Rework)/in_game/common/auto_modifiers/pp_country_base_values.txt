@@ -2,9 +2,9 @@
 TRY_INJECT:country_base_values = {
 	raw_material_in_province_impact = 0.075 # 0.1
 	global_food_decay = 0.01 # 0.005
-	global_province_food_sales_output_modifier = -1.0 # storage leg of the farms' Sell the Surplus and the Victualling Yard: zero output at 0 months, 16x at the 24-month cap (slope +8.0 per stored year)
-	global_province_food_purchase_output_modifier = 15.0 # import storage leg: 16x output at 0 months, zero at the 24-month cap (slope -8.0 per stored year)
-	global_offset_output_modifier = 19.0 # steady leg of the import market: 20x on a tiny amount so production efficiency barely moves it
+	# No base values for the province store: the store lever (Low Stores / Full Stores, static_modifiers/pp_stored_food.txt)
+	# is zero at 12 stored months, so the old constants (-100 % Surplus Sales, +1500 % Scarcity Premium, +1900 % offset)
+	# are gone since 2026-10-02.
 	# Tribesmen grow with free land only: the -100 % birth brake is on every topography class since 2026-09-26
 	# (topography/pp_wb_attribute_rows.txt, generated), because neither a country nor a rank modifier reaches
 	# unowned tribal land, where tribesmen grew ~1 %/yr (47M -> 186M in 1352-1482 in a test campaign).

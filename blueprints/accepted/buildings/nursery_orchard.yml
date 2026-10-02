@@ -6,7 +6,6 @@ labour:
   methods:
     pp_nursery_orchard_base_fruit: base
     pp_nursery_orchard_provision: keep
-    pp_nursery_orchard_sell_surplus: keep
 gate_method: pp_nursery_orchard_market_sales
 upgrade_chain:
   family: fruit_orchard
@@ -28,7 +27,6 @@ building:
     - pp_nursery_orchard_nursery_rows
   - name: slot_2
     methods:
-    - pp_nursery_orchard_sell_surplus
     - pp_nursery_orchard_provision
   - name: slot_3
     methods:
@@ -90,11 +88,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_nursery_orchard_sell_surplus = {
-            produced = province_food_sales
-            output = 0.007
-            category = building_maintenance
-        }
         pp_nursery_orchard_provision = {
             fruit = 0.113
             produced = local_food
@@ -142,9 +135,7 @@ localization:
     pp_nursery_orchard_nursery_rows: Nursery Rows
     pp_nursery_orchard_no_primary: No Nursery Rows
     pp_nursery_orchard_provision: Provision with Fruit
-    pp_nursery_orchard_provision_desc: The household buys its own fruit back and cooks for the province. Worth it while the province store is low and the good is cheap.
-    pp_nursery_orchard_sell_surplus: Sell the Surplus
-    pp_nursery_orchard_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
+    pp_nursery_orchard_provision_desc: The household buys its own fruit back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_nursery_orchard_market_sales: Market Sales
     pp_nursery_orchard_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     nursery_orchard_slot_3: Market
@@ -172,12 +163,9 @@ evaluation:
         output_throughput: Nursery orchards are a modest age 3 bridge and intentionally stay below later grafted orchards.
     pp_nursery_orchard_provision:
       allow_rules:
-        profit_percent: Provisioning loses money at the Province Food floor by design; the storage signal decides the switch.
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
         input_throughput: Existing accepted input scale predates the global employment throughput baseline.
         output_throughput: Existing accepted output scale predates the global employment throughput baseline.
-    pp_nursery_orchard_sell_surplus:
-      allow_rules:
-        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
     pp_nursery_orchard_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

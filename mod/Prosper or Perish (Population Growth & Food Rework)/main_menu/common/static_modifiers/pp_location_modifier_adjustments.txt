@@ -19,7 +19,14 @@ TRY_REPLACE:province_starving = {
 	local_life_expectancy = -10
 	# local_province_food_sales_output_modifier = 0.080
 	# local_offset_output_modifier = 0.080
-	local_province_food_purchase_output_modifier = 8.00 # starving people pay more: +2 gold per import level on the storage leg
+	# A starving province packs no victuals: the Grange and the Victualling Yard make none, so they lay off and stop
+	# taking food. The Grange's Surplus Sales already end well above an empty store ([stored_food.low] in
+	# constructor.toml); this is the backstop for a victuals price high enough to pay for packing without them.
+	# -200 %: production efficiency (up to +100 %) cannot bring the output back.
+	local_victuals_output_modifier = -2.0
+	# Starving people pay more for food: Province Food output +100 % on top of the Low Stores bonus, so Taverns keep
+	# serving up to a victuals price of about 7 (4 at a merely empty store), and Cookshops and farms cook more.
+	local_local_food_output_modifier = 1.0
 
 	local_migration_speed = 0.015
     local_monthly_prosperity = -0.05
@@ -64,10 +71,11 @@ TRY_REPLACE:expensive_food_in_location = {
 	# local_monthly_prosperity = -0.010
 	# local_population_growth = -0.007
 }
-# Stored-food growth: EU5 1.4 deleted the engine-scaled positive_province_food_growth modifier. All its effects
-# (growth, the PP law of +0.75 % a year per stored year up to two years; the storage legs of the Tavern and Surplus
-# Sales, devastation recovery, migration attraction, prosperity) ride the Stored Food modifier, scaled by stored years
-# (in_game/common/static_modifiers/pp_stored_food.txt); the engine's storage growth term is off
+# Stored-food growth: EU5 1.4 deleted the engine-scaled positive_province_food_growth modifier. Its effects ride the
+# province modifiers of in_game/common/static_modifiers/pp_stored_food.txt: Stored Food (growth, the PP law of +0.75 %
+# a year per stored year up to two years; devastation recovery, migration attraction, prosperity), scaled by stored
+# years, and Low Stores / Full Stores (the store lever on Province Food, staple and Surplus Sales output), scaled by
+# the distance from 12 stored months. The engine's storage growth term is off
 # (pp_defines_adjustments.txt: NPop.FOOD_STORAGE_POP_GROWTH = 0).
 
 TRY_INJECT:surplus_jobs = {

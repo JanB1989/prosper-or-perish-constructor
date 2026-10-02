@@ -78,13 +78,6 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_offshore_fishery_sell_surplus = {
-        icon_type = building_type
-        icon = offshore_fishery
-        produced = province_food_sales
-        output = 0.008
-        category = building_maintenance
-    }
     pp_offshore_fishery_provision = {
         icon_type = goods
         icon = fish

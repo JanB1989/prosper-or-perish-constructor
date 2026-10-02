@@ -7,7 +7,6 @@ labour:
   methods:
     pp_maize_model_farm_base: base
     pp_maize_model_farm_provision: keep
-    pp_maize_model_farm_sell_surplus: keep
 gate_method: pp_maize_model_farm_market_sales
 upgrade_chain:
   family: maize_farm
@@ -29,7 +28,6 @@ building:
     - pp_maize_model_farm_horse_hoed
   - name: slot_2
     methods:
-    - pp_maize_model_farm_sell_surplus
     - pp_maize_model_farm_provision
   - name: slot_3
     methods:
@@ -90,11 +88,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_maize_model_farm_sell_surplus = {
-            produced = province_food_sales
-            output = 0.008
-            category = building_maintenance
-        }
         pp_maize_model_farm_provision = {
             maize = 0.133
             produced = local_food
@@ -135,9 +128,7 @@ localization:
     pp_maize_model_farm_horse_hoed: Horse-Hoed Maize
     pp_maize_model_farm_horse_hoed_desc: Horse-hoes clean the rows between the maize.
     pp_maize_model_farm_provision: Provision with Maize
-    pp_maize_model_farm_provision_desc: The household buys its own crop back and cooks for the province. Worth it while the province store is low and the crop is cheap.
-    pp_maize_model_farm_sell_surplus: Sell the Surplus
-    pp_maize_model_farm_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
+    pp_maize_model_farm_provision_desc: The household buys its own crop back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_maize_model_farm_market_sales: Market Sales
     pp_maize_model_farm_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
 icon:
@@ -159,12 +150,9 @@ evaluation:
       production_efficiency: 1.0
     pp_maize_model_farm_provision:
       allow_rules:
-        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the storage signal decides the switch.
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
         input_throughput: Existing accepted input scale predates the global employment throughput baseline.
         output_throughput: Existing accepted output scale predates the global employment throughput baseline.
-    pp_maize_model_farm_sell_surplus:
-      allow_rules:
-        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
     pp_maize_model_farm_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

@@ -1,14 +1,19 @@
 """The Provisioning slot of calorie-producing buildings (replaces the former "Household Food" victuals slot).
 
-Every building that grows or catches a calorie good gets one slot with two methods, the choice the AI makes by profit:
+Every building that grows or catches a calorie good gets one slot with one method:
 
-- ``pp_<b>_sell_surplus`` (listed first): a no-input dummy that produces ``province_food_sales`` ("Surplus Sales"), whose
-  output modifier grows with the stored province food (0x while the store is empty). It pays the fuller the store is.
-- ``pp_<b>_provision`` (listed last): buys the building's own good back and turns it into Province Food (``local_food``).
-  At the Province Food floor price it earns a thin margin by design; it pays while the province store is low and the good
-  is cheap. Provision is listed last in the slot. The AI's profit-margin check reads the building's Market gate leg,
-  which comes after this slot (``production_gate.py``): Provision buys the building's own good, so gating on it made the
-  AI stop building exactly when the good was dear.
+- ``pp_<b>_provision``: buys the building's own good back and turns it into Province Food (``local_food``). It always
+  runs. The province store moves what it yields: Province Food output is higher while the store is low and lower
+  while it is full (Low Stores / Full Stores, ``stored_food.py``), and above the pivot the same land yields more of
+  its good for the market instead. At the Province Food floor price it earns a thin margin by design.
+
+Until 2026-10-02 the slot also held ``pp_<b>_sell_surplus`` (a no-input dummy producing Surplus Sales that the AI
+switched to at a full store); the store lever replaced that switch. ``legacy_sell_method`` names it so tooling can
+remove what is left of it.
+
+The AI's profit-margin check reads the building's Market gate leg, which comes after this slot
+(``production_gate.py``): Provision buys the building's own good, so gating on it made the AI stop building exactly
+when the good was dear.
 
 Amounts scale with the building's size, measured by its base output: ``M = base_output / reference_base_output``,
 where ``base_output`` is the output of the first slot-0 method that produces the building's own good.
@@ -16,7 +21,6 @@ where ``base_output`` is the output of the first slot-0 method that produces the
 - input  = ``input_per_level * M / good_price``  (the same gold of the good per level whatever its price)
 - output = ``input_per_level * food_per_gold * M`` (so Province Food per gold of the good is the same for every good:
   a price-1 good gives ``food_per_gold`` food per unit; livestock at 1.5 gives input 0.053 M, output still 0.96 M)
-- sell   = ``sell_per_level * M``
 
 All amounts are rounded half up to 3 decimals and never fall below 0.001. The constants live in
 ``[building_scaling]`` of ``constructor.toml``.
@@ -34,18 +38,15 @@ from typing import Any
 CONFIG_SECTION = "building_scaling"
 INPUT_PER_LEVEL_FIELD = "provision_input_per_level"
 FOOD_PER_GOLD_FIELD = "provision_food_per_gold"
-SELL_PER_LEVEL_FIELD = "sell_surplus_per_level"
 REFERENCE_BASE_OUTPUT_FIELD = "provisioning_reference_base_output"
 DEFAULT_PROJECT = Path(__file__).resolve().parents[2] / "constructor.toml"
 CROP_TABLE = Path(__file__).resolve().parents[2] / "config" / "crop_farms.toml"
 
 PROVINCE_FOOD_GOOD = "local_food"
-SURPLUS_SALES_GOOD = "province_food_sales"
 SLOT_LABEL = "Provisioning"
-SELL_LABEL = "Sell the Surplus"
-SELL_DESC = (
-    "The household sells what the province does not need. It pays more the fuller the province store is, "
-    "and nothing while it is empty."
+PROVISION_DESC = (
+    "The household buys its own {noun} back and cooks for the province. The lower the province store is, the more "
+    "food it makes of it."
 )
 
 def _crop_table(path: Path = CROP_TABLE) -> dict[str, Any]:
@@ -110,7 +111,6 @@ _STEP = Decimal("0.001")
 class ProvisioningConfig:
     input_per_level: Decimal = Decimal("0.08")
     food_per_gold: Decimal = Decimal("12")
-    sell_per_level: Decimal = Decimal("0.005")
     reference_base_output: Decimal = Decimal("0.06")
 
 
@@ -118,7 +118,6 @@ class ProvisioningConfig:
 class ProvisioningAmounts:
     input: Decimal
     output: Decimal
-    sell: Decimal
 
 
 def load_provisioning_config(project: Path = DEFAULT_PROJECT) -> ProvisioningConfig:
@@ -131,7 +130,6 @@ def load_provisioning_config(project: Path = DEFAULT_PROJECT) -> ProvisioningCon
     for attribute, field_name in (
         ("input_per_level", INPUT_PER_LEVEL_FIELD),
         ("food_per_gold", FOOD_PER_GOLD_FIELD),
-        ("sell_per_level", SELL_PER_LEVEL_FIELD),
         ("reference_base_output", REFERENCE_BASE_OUTPUT_FIELD),
     ):
         value = _decimal(section.get(field_name, getattr(default, attribute)), f"{CONFIG_SECTION}.{field_name}")
@@ -166,7 +164,6 @@ def provisioning_amounts(
     return ProvisioningAmounts(
         input=round_amount(config.input_per_level * scale / price),
         output=round_amount(config.input_per_level * config.food_per_gold * scale),
-        sell=round_amount(config.sell_per_level * scale),
     )
 
 
@@ -183,23 +180,19 @@ def provision_method(building_key: str) -> str:
     return f"pp_{building_key}_provision"
 
 
-def sell_method(building_key: str) -> str:
+def legacy_sell_method(building_key: str) -> str:
+    """The former Sell the Surplus method of the slot (removed 2026-10-02 with the store lever)."""
     return f"pp_{building_key}_sell_surplus"
 
 
-def slot_methods(building_key: str) -> tuple[str, str]:
-    return provision_method(building_key), sell_method(building_key)
+def slot_methods(building_key: str) -> tuple[str, ...]:
+    return (provision_method(building_key),)
 
 
 def render_slot(building_key: str, good: str, amounts: ProvisioningAmounts, indent: str = "") -> str:
     """The `unique_production_methods` block, 4-space indented below ``indent``, without a trailing newline."""
     lines = [
         "unique_production_methods = {",
-        f"    {sell_method(building_key)} = {{",
-        f"        produced = {SURPLUS_SALES_GOOD}",
-        f"        output = {format_amount(amounts.sell)}",
-        "        category = building_maintenance",
-        "    }",
         f"    {provision_method(building_key)} = {{",
         f"        {good} = {format_amount(amounts.input)}",
         f"        produced = {PROVINCE_FOOD_GOOD}",
@@ -219,30 +212,20 @@ def slot_localization(building_key: str, good: str, slot_name: str | None = None
     if slot_name is not None:
         entries[f"{building_key}_{slot_name}"] = SLOT_LABEL
     entries[provision_method(building_key)] = f"Provision with {label}"
-    entries[f"{provision_method(building_key)}_desc"] = (
-        f"The household buys its own {noun} back and cooks for the province. "
-        "Worth it while the province store is low and the good is cheap."
-    )
-    entries[sell_method(building_key)] = SELL_LABEL
-    entries[f"{sell_method(building_key)}_desc"] = SELL_DESC
+    entries[f"{provision_method(building_key)}_desc"] = PROVISION_DESC.format(noun=noun)
     return entries
 
 
 def evaluation_rules(building_key: str) -> dict[str, dict[str, Any]]:
-    """Per-method `evaluation.production_methods` entries (allow rules) for the two Provisioning methods."""
+    """Per-method `evaluation.production_methods` entries (allow rules) for the Provisioning method."""
     return {
         provision_method(building_key): {
             "allow_rules": {
                 "profit_percent": (
-                    "Provisioning is balanced at the Province Food floor (12 food per gold of crop); the storage signal decides the switch."
+                    "Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output."
                 ),
                 "input_throughput": "Existing accepted input scale predates the global employment throughput baseline.",
                 "output_throughput": "Existing accepted output scale predates the global employment throughput baseline.",
-            }
-        },
-        sell_method(building_key): {
-            "allow_rules": {
-                "base_output_per_1k": "Sell the Surplus is a no-input dummy signal, not a production line.",
             }
         },
     }

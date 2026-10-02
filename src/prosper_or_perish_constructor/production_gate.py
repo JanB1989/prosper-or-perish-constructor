@@ -30,8 +30,8 @@ below. The old Provision gate bought the building's own crop, so the AI stopped 
 is listed last in it. Everything else is ordered by importance, bottom = most important:
 
 - slots: base slots at the top (every producing method pays only ``base_inputs``, e.g. ``*_base``), then the other
-  slots by their highest output value at base prices, the dynamic slots (a method produces one of ``dynamic_goods``: the
-  storage legs Surplus Sales and Scarcity Premium, the Provisioning switch) at the bottom, the flagged slot last;
+  slots by their highest output value at base prices, the dynamic slots (a method produces one of ``dynamic_goods``, the
+  goods whose output follows the province store: Province Food and the Grange's Surplus Sales) at the bottom, the flagged slot last;
 - methods: output-less methods first (idle choices never gate), then by output value, the flagged method last.
 
 Ties keep the file order. Methods never move between slots, amounts never change (the leg is written whole). The slot labels
@@ -94,7 +94,7 @@ class LegConfig:
 @dataclass(frozen=True)
 class GateConfig:
     threshold: float = 1.2
-    dynamic_goods: frozenset[str] = frozenset({"province_food_sales", "province_food_purchase"})
+    dynamic_goods: frozenset[str] = frozenset({"province_food_sales", "local_food"})
     base_inputs: frozenset[str] = frozenset({"manual_labor"})
     price_overrides: Mapping[str, float] = field(default_factory=dict)
     pinned_goods: frozenset[str] = frozenset({"local_food", "offset", "logistics"})
@@ -253,8 +253,8 @@ def method_key(method: Method, prices: Mapping[str, float]) -> tuple[int, float]
 
 def suggest_gate(slots: Sequence[Slot], config: GateConfig, prices: Mapping[str, float]) -> str | None:
     """The method the importance order puts last: in the most important slot, the most important method with an
-    output. In a dynamic slot a method that buys its inputs (Provision, Scarcity Premium) beats a no-input dummy
-    (Sell the Surplus), because the dummy earns nothing at an empty store."""
+    output. In a dynamic slot a method that buys its inputs (Provision, Serve) beats a no-input dummy, because a
+    dummy may earn nothing at an empty store."""
     candidates = [i for i, slot in enumerate(slots) if any(m.has_output for m in slot.methods)]
     if not candidates:
         return None

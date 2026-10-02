@@ -818,11 +818,11 @@ def test_province_food_sales_output_modifier_values_use_three_decimal_precision(
     assert values_by_good["province_food_sales"]
     purchases = [abs(float(value)) for value in values_by_good["province_food_purchase"]]
     sales = [abs(float(value)) for value in values_by_good["province_food_sales"]]
-    # Current overpopulation balance deliberately distinguishes import and sale pressure.
-    # province_starving: +8.0 purchase output (starving people pay more on the storage-price leg).
-    assert purchases[0] == 8.0
+    # province_starving carries no purchase line any more (2026-10-02: the Tavern's Scarcity Premium is gone; starving
+    # raises the Province Food output instead). What is left are the commented-out price modifiers and the location
+    # ranks, where both goods keep equal values; the first sales value is province_starving's commented-out line.
     assert sales[0] == 0.08
-    assert purchases[1:] == sales[1:]
+    assert purchases == sales[1:]
 
 
 def test_production_throughput_prints_best_available_building_slot_sums(

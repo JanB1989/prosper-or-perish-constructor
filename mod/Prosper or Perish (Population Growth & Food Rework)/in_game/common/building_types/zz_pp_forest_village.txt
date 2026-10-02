@@ -110,13 +110,6 @@ REPLACE:forest_village = {
         }
     }
     unique_production_methods = {
-        pp_forest_village_sell_surplus = {
-            icon_type = building_type
-            icon = forest_village
-            produced = province_food_sales
-            output = 0.005
-            category = building_maintenance
-        }
         pp_forest_village_provision = {
             icon_type = goods
             icon = wild_game

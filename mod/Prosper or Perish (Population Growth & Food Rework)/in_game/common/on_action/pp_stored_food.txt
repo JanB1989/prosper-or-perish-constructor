@@ -1,8 +1,9 @@
 ﻿# Prosper or Perish - Stored Food (EU5 1.4).
-# EU5 1.4 deleted the engine-scaled stored-food modifier. Its effects per stored year (population growth, Surplus
-# Sales / Tavern storage legs, devastation recovery, migration attraction, prosperity) ride the province static
-# modifier pp_stored_food, applied with size = the province's stored years (generated from [stored_food] in
-# constructor.toml); the engine's own storage growth term is off (NPop.FOOD_STORAGE_POP_GROWTH = 0).
+# EU5 1.4 deleted the engine-scaled stored-food modifier. Its effects per stored year (population growth, devastation
+# recovery, migration attraction, prosperity) ride the province static modifier pp_stored_food, applied with size =
+# the province's stored years; the store lever (Province Food, staple and Surplus Sales output) rides pp_low_stores
+# and pp_full_stores, applied with size = the years the store is below / above 12 months (all generated from
+# [stored_food] in constructor.toml). The engine's own storage growth term is off (NPop.FOOD_STORAGE_POP_GROWTH = 0).
 #
 # Exception to the mod's "no pulsing scripts" rule, approved by Jan on 2026-10-01 after the in-game cost test: no
 # engine mechanism follows a province's stored food in 1.4, so each country refreshes its provinces' tiers once a

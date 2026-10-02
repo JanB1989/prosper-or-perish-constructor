@@ -68,13 +68,6 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_potato_farm_sell_surplus = {
-        icon_type = building_type
-        icon = potato_farm
-        produced = province_food_sales
-        output = 0.005
-        category = building_maintenance
-    }
     pp_potato_farm_provision = {
         icon_type = goods
         icon = potato

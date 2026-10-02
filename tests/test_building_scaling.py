@@ -32,7 +32,6 @@ def test_building_scaling_config_loads_provisioning_constants() -> None:
 
     assert provision.input_per_level == Decimal("0.08")
     assert provision.food_per_gold == Decimal("12")
-    assert provision.sell_per_level == Decimal("0.005")
     assert provision.reference_base_output == Decimal("0.06")
     assert config.increase_per_level_cost_multiplier == Decimal("0.75")
     assert config.burgher_building_employment_size == Decimal("0.3")
@@ -131,7 +130,8 @@ def test_provisioning_slots_match_configured_amounts() -> None:
 
     for building in provisioning.PROVISIONING_BUILDINGS:
         template = load_template(BUILDING_BLUEPRINT_ROOT / f"{building}.yml")
-        provision, sell = provisioning.slot_methods(building)
+        (provision,) = provisioning.slot_methods(building)
+        sell = provisioning.legacy_sell_method(building)
         good = provisioning.provisioned_good(building)
         assert good is not None
 
@@ -140,7 +140,7 @@ def test_provisioning_slots_match_configured_amounts() -> None:
             for slot in template.production_method_slots
             if provision in slot.methods or sell in slot.methods
         ]
-        assert slots == [(sell, provision)], building  # Provision is the gate method: listed last
+        assert slots == [(provision,)], building  # one always-on method: the province store moves its output
 
         block = _building_block(template.key, template.building_body)
         amounts = provisioning.provisioning_amounts(
@@ -156,14 +156,11 @@ def test_provisioning_slots_match_configured_amounts() -> None:
         assert provision_values["produced"] == "local_food"
         assert Decimal(str(provision_values["output"])) == amounts.output, building
 
-        sell_values = _unique_method_values(block, sell)
-        assert {key for key in sell_values if key not in METHOD_KEYS} == set(), building
-        assert sell_values["produced"] == "province_food_sales"
-        assert Decimal(str(sell_values["output"])) == amounts.sell, building
-
 
 def test_provisioning_slots_are_limited_to_calorie_buildings() -> None:
-    assert _accepted_buildings_with_method_suffix("_sell_surplus") == set(provisioning.PROVISIONING_BUILDINGS)
+    assert _accepted_buildings_with_method_suffix("_provision") == set(provisioning.PROVISIONING_BUILDINGS)
+    # the Sell the Surplus switch is gone (2026-10-02): Surplus Sales are the Grange's leg alone
+    assert _accepted_buildings_with_method_suffix("_sell_surplus") == set()
 
 
 def test_no_blueprint_keeps_worker_victuals() -> None:

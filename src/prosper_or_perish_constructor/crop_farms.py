@@ -18,7 +18,7 @@ Per blueprint:
   ``hand_work``); a method that names an advance is unlocked by it (``pp_heavy_plough``, ``pp_improved_rotations``,
   ``pp_water_lifting``, rendered once in ``wheat_farm.yml``);
 - slot 2 (legumes and olives, tiers 0-2): ``pp_<b>_no_beekeeping`` and the tier's hive method;
-- Provisioning (``provisioning.py``), Sell the Surplus listed first, then Provision;
+- Provisioning (``provisioning.py``): the one Provision method;
 - last slot: the Market gate leg ``pp_<b>_market_sales`` (``production_gate.order_mapping`` adds it).
 
 The slots and methods are then put in the production-gate order (``production_gate.order_mapping``): the gate leg is
@@ -594,9 +594,9 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
     body.append("}")
 
     # ---- slot metadata
-    provision, sell = provisioning.slot_methods(building)
+    (provision,) = provisioning.slot_methods(building)
     slot_methods = [[method.name for method in methods] for _, methods in slots]
-    slot_methods.append([sell, provision])
+    slot_methods.append([provision])
     production_method_slots = [{"name": f"slot_{index}", "methods": methods} for index, methods in enumerate(slot_methods)]
 
     # ---- labour tag: the tier class by default, per-method overrides (base, hand_work, household hives)
@@ -607,7 +607,6 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
             if method.labour_class is not None and method.labour_class != tier_class:
                 labour_methods[method.name] = method.labour_class
     labour_methods[provision] = "keep"
-    labour_methods[sell] = "keep"
 
     # ---- localization
     entries: dict[str, str] = {building: crop.names[tier], f"{building}_desc": crop.descs[tier]}
@@ -632,9 +631,7 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
         if hive.get("desc"):
             entries[f"pp_{building}_{hive['key']}_desc"] = str(hive["desc"])
     entries[provision] = crop.provision_name
-    entries[f"{provision}_desc"] = str(loc.get("provision_desc", ""))
-    entries[sell] = str(loc.get("sell_surplus", provisioning.SELL_LABEL))
-    entries[f"{sell}_desc"] = str(loc.get("sell_surplus_desc", provisioning.SELL_DESC))
+    entries[f"{provision}_desc"] = str(loc.get("provision_desc", provisioning.PROVISION_DESC.format(noun="crop")))
 
     # ---- advancements
     advancements: list[dict[str, str]] = []

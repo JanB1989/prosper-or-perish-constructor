@@ -7,7 +7,6 @@ labour:
   methods:
     pp_potato_farmstead_base: base
     pp_potato_farmstead_provision: keep
-    pp_potato_farmstead_sell_surplus: keep
 gate_method: pp_potato_farmstead_market_sales
 upgrade_chain:
   family: potato_farm
@@ -29,7 +28,6 @@ building:
     - pp_potato_farmstead_manured_ridges
   - name: slot_2
     methods:
-    - pp_potato_farmstead_sell_surplus
     - pp_potato_farmstead_provision
   - name: slot_3
     methods:
@@ -90,11 +88,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_potato_farmstead_sell_surplus = {
-            produced = province_food_sales
-            output = 0.007
-            category = building_maintenance
-        }
         pp_potato_farmstead_provision = {
             potato = 0.107
             produced = local_food
@@ -137,9 +130,7 @@ localization:
     pp_potato_farmstead_manured_ridges: Manured Ridges and Clamps
     pp_potato_farmstead_manured_ridges_desc: Manured ridges grow the crop and earth clamps store it.
     pp_potato_farmstead_provision: Provision with Potatoes
-    pp_potato_farmstead_provision_desc: The household buys its own crop back and cooks for the province. Worth it while the province store is low and the crop is cheap.
-    pp_potato_farmstead_sell_surplus: Sell the Surplus
-    pp_potato_farmstead_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
+    pp_potato_farmstead_provision_desc: The household buys its own crop back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_potato_farmstead_market_sales: Market Sales
     pp_potato_farmstead_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
 icon:
@@ -161,12 +152,9 @@ evaluation:
       production_efficiency: 1.05
     pp_potato_farmstead_provision:
       allow_rules:
-        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the storage signal decides the switch.
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
         input_throughput: Existing accepted input scale predates the global employment throughput baseline.
         output_throughput: Existing accepted output scale predates the global employment throughput baseline.
-    pp_potato_farmstead_sell_surplus:
-      allow_rules:
-        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
     pp_potato_farmstead_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

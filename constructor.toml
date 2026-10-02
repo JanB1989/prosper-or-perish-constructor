@@ -54,10 +54,9 @@ base_method_input_goods = ["manual_labor"]  # base methods pay a token labour co
 increase_per_level_cost_multiplier = 0.75
 burgher_building_employment_size = 0.3
 # Provisioning slot of calorie buildings (provisioning.py): per level of a building whose base output equals the
-# reference, the gold of its own good bought back, Province Food per gold of that good, and Surplus Sales output.
+# reference, the gold of its own good bought back and the Province Food per gold of that good.
 provision_input_per_level = 0.08
 provision_food_per_gold = 12
-sell_surplus_per_level = 0.005
 provisioning_reference_base_output = 0.06
 
 
@@ -921,8 +920,9 @@ logistics_hand = { share = 0.45, max_goods = 6, min_good_share = 0.0 }  # porter
 # and lists it last, ordering the rest by importance (base slots top, dynamic slots bottom, else by output value);
 # ppc gate check reports missing flags and bodies out of order (ppc build prints it). Ordering only: amounts never change.
 threshold = 1.2               # fallback only: the gate reads NAI.AI_BUILDING_PROFIT_MARGIN_THRESHOLD (EU5 1.4 name) from the mod defines (else vanilla)
-# goods whose methods react to the province store or the market (Surplus Sales, Scarcity Premium): their slots go last
-dynamic_goods = ["province_food_sales", "province_food_purchase"]
+# goods whose output follows the province store (Province Food: the Provisioning, Serve and Cookshop slots; the
+# Grange's Surplus Sales): their slots go last, and a gate flagged on one keeps it (no Market leg)
+dynamic_goods = ["province_food_sales", "local_food"]
 # floor-pinned dummy goods: their price never moves, so they are never a building's main (market) good
 pinned_goods = ["local_food", "offset", "logistics"]
 # goods with ai_rgo_expansion_priority > 0 (vanilla goods files): a building that outputs one skips the margin check
@@ -990,20 +990,44 @@ pp_llama_caravan_post = { slot = "Mountain Network", method = "Tambo Relay", des
 
 [stored_food]
 # Stored-food effect carrier (EU5 1.4, stored_food.py; docs/historical_growth_calibration.md 6.2). EU5 1.4 deleted the
-# engine-scaled positive_province_food_growth modifier; all its effects, growth included, ride the province static
-# modifier pp_stored_food: the payload of one stored year, applied with size = the province's stored years (stored
-# months / 12, capped at NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX years), so the effects follow the store continuously.
+# engine-scaled positive_province_food_growth modifier; its effects ride three province static modifiers, each the
+# payload of one year and applied with a size the monthly country pulse refreshes
+# (in_game/common/on_action/pp_stored_food.txt; re-applied only when the stored months moved by more than
+# deadband_months since the last refresh, or the store emptied):
+#   pp_stored_food  "Stored Food"  size = stored years (stored months / 12, capped at
+#                                  NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX years): growth and prosperity
+#   pp_low_stores   "Low Stores"   size = (pivot_months - stored months) / 12, below the pivot
+#   pp_full_stores  "Full Stores"  size = (stored months - pivot_months) / 12, above the pivot
 # Values are rounded to five decimals (EU5 1.4 rejects six). The engine's own storage growth term is off
-# (NPop.FOOD_STORAGE_POP_GROWTH = 0, pp_defines_adjustments.txt). The monthly country pulse refreshes the size
-# (in_game/common/on_action/pp_stored_food.txt); it re-applies the modifier only when the stored months moved by more
-# than deadband_months since the last refresh (or the store emptied).
+# (NPop.FOOD_STORAGE_POP_GROWTH = 0, pp_defines_adjustments.txt).
+#
+# Store lever (2026-10-02, tools/province_store_sim.py): the store moves the Province Food output of everything that
+# makes it (the farms' Provisioning, Cookshops, Taverns): worth more while the store is low, less while it is full.
+# Every maker therefore stops where its own recipe stops paying: the Cookshop by its staple prices, the Tavern by the
+# victuals price. Above the pivot the same land yields more of its staple for the market instead. Surplus Sales is the
+# Grange's leg: it grows with a full store and dries up quickly below the pivot, so a Grange never packs a lean store.
+# No country base values belong to this: at the pivot every line is zero.
 deadband_months = 0.05
+pivot_months = 12
 
 [stored_food.per_year]
-# per stored year, the 1.3 positive_province_food_growth values
+# Stored Food: per stored year
 local_population_growth = 0.0075                    # the PP growth law: +0.75 %/yr per stored year, 1.5 % at 24 months
-local_province_food_sales_output_modifier = 8.0     # Sell the Surplus legs and the Grange gate: 0x empty, 16x at 24 months
-local_province_food_purchase_output_modifier = -8.0 # Tavern Scarcity Premium leg: 16x empty, 0x at 24 months
 local_devastation_recovery = 0.003
 local_migration_attraction = 0.045
 local_monthly_prosperity = 0.0025
+
+[stored_food.low]
+# Low Stores: per year short of the pivot (size 1 at an empty store)
+local_local_food_output_modifier = 0.75             # Province Food output +75 % at an empty store
+local_province_food_sales_output_modifier = -3.0    # the Grange's Surplus Sales reach zero 4 months below the pivot
+# staple_output = local_<good>_output_modifier of every good a Provisioning method buys (provisioning.py). 0 below the
+# pivot on purpose: the farms' Market gate leg sells the staple, so a cut here would stop the AI from building new
+# farms exactly where the store is low.
+staple_output = 0.0
+
+[stored_food.full]
+# Full Stores: per year above the pivot (size 1 at 24 months)
+local_local_food_output_modifier = -0.75            # Province Food output -75 % at 24 months
+local_province_food_sales_output_modifier = 0.34    # the Grange's Surplus Sales +34 % at 24 months
+staple_output = 0.20                                # staples +20 % at 24 months: the land feeds the market

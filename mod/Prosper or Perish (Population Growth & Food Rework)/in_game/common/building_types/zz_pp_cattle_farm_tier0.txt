@@ -63,13 +63,6 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_cattle_farm_sell_surplus = {
-        icon_type = building_type
-        icon = cattle_farm
-        produced = province_food_sales
-        output = 0.005
-        category = building_maintenance
-    }
     pp_cattle_farm_provision = {
         icon_type = goods
         icon = livestock

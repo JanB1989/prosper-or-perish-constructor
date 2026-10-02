@@ -239,7 +239,7 @@ def test_every_crop_farm_has_base_cultivation_and_provisioning_slots(table: crop
             assert slots[0] == [f"pp_{building}_base"]
             cultivation = [f"pp_{building}_no_cultivation", *(f"pp_{building}_{m.key}" for m in crop.tier_methods(tier))]
             assert sorted(slots[-3]) == sorted(cultivation) and slots[-3][0] == cultivation[0]
-            assert slots[-2] == [f"pp_{building}_sell_surplus", f"pp_{building}_provision"]
+            assert slots[-2] == [f"pp_{building}_provision"]
             assert slots[-1] == [f"pp_{building}_market_sales"]
             assert _blueprint(building)["gate_method"] == f"pp_{building}_market_sales"
             assert len(slots) == (5 if crop_farms.has_beekeeping(table, crop, tier) else 4)

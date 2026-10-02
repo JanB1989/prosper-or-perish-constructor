@@ -87,13 +87,6 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_legume_rotations_sell_surplus = {
-        icon_type = building_type
-        icon = legume_rotations
-        produced = province_food_sales
-        output = 0.006
-        category = building_maintenance
-    }
     pp_legume_rotations_provision = {
         icon_type = goods
         icon = legumes

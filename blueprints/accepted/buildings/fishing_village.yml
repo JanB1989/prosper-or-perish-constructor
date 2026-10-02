@@ -6,7 +6,6 @@ labour:
   methods:
     pp_fishing_village_base_fish: base
     pp_fishing_village_provision: keep
-    pp_fishing_village_sell_surplus: keep
 gate_method: pp_fishing_village_market_sales
 upgrade_chain:
   family: fishing_village
@@ -38,7 +37,6 @@ building:
         - pp_fishing_village_maintenance
     - name: slot_4
       methods:
-        - pp_fishing_village_sell_surplus
         - pp_fishing_village_provision
     - name: slot_5
       methods:
@@ -141,11 +139,6 @@ building:
             }
         }
         unique_production_methods = {
-            pp_fishing_village_sell_surplus = {
-                produced = province_food_sales
-                output = 0.004
-                category = building_maintenance
-            }
             pp_fishing_village_provision = {
                 fish = 0.067
                 produced = local_food
@@ -228,9 +221,7 @@ localization:
     pp_fishing_village_no_freshwater_works: No Freshwater Works
     pp_fishing_village_no_primary: No Main Catch
     pp_fishing_village_provision: Provision with Fish
-    pp_fishing_village_provision_desc: The household buys its own catch back and cooks for the province. Worth it while the province store is low and the good is cheap.
-    pp_fishing_village_sell_surplus: Sell the Surplus
-    pp_fishing_village_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
+    pp_fishing_village_provision_desc: The household buys its own catch back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_fishing_village_strand_line: Handline fishing
     pp_fishing_village_stew_ponds: Stew Ponds
     pp_fishing_village_wattle_weirs: Wattle Fish Weirs
@@ -272,12 +263,9 @@ evaluation:
       production_efficiency: 1.10
     pp_fishing_village_provision:
       allow_rules:
-        profit_percent: Provisioning loses money at the Province Food floor by design; the storage signal decides the switch.
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
         input_throughput: Existing accepted input scale predates the global employment throughput baseline.
         output_throughput: Existing accepted output scale predates the global employment throughput baseline.
-    pp_fishing_village_sell_surplus:
-      allow_rules:
-        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
     pp_fishing_village_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

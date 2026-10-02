@@ -172,8 +172,8 @@ rank (town 521, city 815, megalopolis 1,241), R² 0.968; buildings add their
    best Yard cap, which rewards rivers, coasts, harbours and market centres. A Yard
    packs its pool's surplus / 40 food per victual, at most 1.5 per level (loose
    stores). Demand is the pops' victuals and what the Taverns will actually buy: a
-   Tavern only runs while its pool is short (its storage leg stops paying above 12
-   months), so it buys its pool's gap / 30 food per victual, at most 2 per level.
+   Tavern only runs while its pool is short (its Province Food stops paying above
+   about 7 stored months at the mean victuals price), so it buys its pool's gap / 30 food per victual, at most 2 per level.
    Cookshops make no victuals.
 4. Pools that would otherwise collapse (fed below `import_priority_coverage`,
    0.85) get the market's victuals first, cheapest first; the rest by coverage.
@@ -289,8 +289,13 @@ stone or copper.
 
 ## Taverns and Victualling Yards
 
+**Store lever (2026-10-02, branch `province-food-store-lever`).** The two-legged design below (Scarcity Premium,
+Sell the Surplus, -8 / +8 per stored year, droop, country constants) is replaced: the province store moves the
+Province Food output, the Tavern earns by its Serve method alone and the Grange keeps one gentle Surplus Sales leg.
+See `docs/historical_growth_calibration.md` section 6.5; the text below describes the design before that.
+
 EU5 1.4: the game deleted the stored-food modifier that drove both storage legs (the -8 / +8 per stored year
-below); the Stored Food modifier carries them again, scaled by the stored years (`pp_stored_food`, refreshed monthly;
+below); the Stored Food modifier carried them again, scaled by the stored years (`pp_stored_food`, refreshed monthly;
 `docs/historical_growth_calibration.md` sections 6.2 and 6.4).
 
 Both move **24 food per fully staffed level** (one noble each; 60 before 2026-09-30, when the three victuals

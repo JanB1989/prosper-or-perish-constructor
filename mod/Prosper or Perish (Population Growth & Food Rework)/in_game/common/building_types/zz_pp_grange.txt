@@ -69,7 +69,8 @@ unique_production_methods = {
 # Same food chain as the Victualling Yard: each staffed level takes 24 food (the modifier below) and packs 0.6
 # victuals, 1:40 against the Tavern's 1:30. 2026-09-30: every input, output and the food modifier scaled x0.4
 # (was 60 food -> 1.5 victuals), together with the Tavern and the Yard, so the victuals balance stays. slot 1: how the store reaches the market. The three methods pack the
-# same amount; the carts and wagons swap labour for animals and gear, so they pay only where labour is dear
+# same amount; the carts and wagons swap labour for animals and gear, so they pay only where labour is dear;
+# each carries 1.64 offset, the Haulage share of the Grange's fixed cost (see slot 2)
 # (at default goods prices: Porters below labour 1.3, Ox Carts 1.3 to 1.55, Horse Wagons above).
 unique_production_methods = {
   pp_grange_porters = {
@@ -77,6 +78,7 @@ unique_production_methods = {
     icon = grange
     produced = victuals
     manual_labor = 0.08
+    offset = 1.64
     output = 0.6
     category = building_maintenance
   }
@@ -86,6 +88,7 @@ unique_production_methods = {
     livestock = 0.016
     lumber = 0.016
     manual_labor = 0.04
+    offset = 1.64
     produced = victuals
     output = 0.6
     category = building_maintenance
@@ -97,21 +100,29 @@ unique_production_methods = {
     tools = 0.012
     lumber = 0.008
     manual_labor = 0.016
+    offset = 1.64
     produced = victuals
     output = 0.6
     category = building_maintenance
   }
 }
-# slot 2: surplus sales, the storage leg and the AI gate method (profit = 0.6p - 11.28 + 0.8 x 8y per level at
-# floor prices; break-even near 18 months stored at victuals 2.7). Offset 11.2: its margin 0.8 x 8y / 11.2 reaches
-# the AI profit threshold 1.05 at ~22 months stored, so the AI builds granges from there.
+# slot 2: Surplus Sales, the store leg and the AI gate method. Store lever (2026-10-02, [stored_food] in
+# constructor.toml): Surplus Sales output +34 % per stored year above 12 months, -300 % per year below (zero at
+# 8 months), and -500 % per staffed Tavern level in the location. The fixed cost is 6.1 offset, split between
+# this method (4.46) and Haulage (1.64) so that the gate margin 4.0 x output modifier / 4.46 reaches the AI
+# threshold 1.05 at 18 months stored: the AI builds a new Grange from there.
+# Per level at floor prices, f = years above 12 months: profit = 0.6 p - 0.08 + 4.0 x (1 + 0.34 f) - 6.1
+# -> at victuals p = 2.7 it packs down to 17 months, at 3.5 to 12.7, at 2.0 to 20.7; below 12 months the sales
+# fall much faster, and under 8 months there are none, so the lean part of the store stays in the province.
+# Without Surplus Sales packing pays only above victuals 10.3 (6.9 at +50 % production efficiency), and a
+# starving province packs nothing at all (province_starving, pp_location_modifier_adjustments.txt).
 unique_production_methods = {
   pp_grange_surplus_sales = {
     icon_type = building_type
     icon = grange
     produced = province_food_sales
-    offset = 11.2
-    output = 0.8
+    offset = 4.46
+    output = 4.0
     category = building_maintenance
   }
 }
@@ -122,8 +133,6 @@ raw_modifier = {
 
 modifier = {
   local_monthly_food = -24.0
-  # droop: each staffed level lowers the storage leg a little, so staffing settles instead of flipping
-  local_province_food_sales_output_modifier = -0.2
   local_nobles_estate_power = 0.05
   local_peasant_enfranchisment = -0.01
 }

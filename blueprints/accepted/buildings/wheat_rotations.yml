@@ -7,7 +7,6 @@ labour:
   methods:
     pp_wheat_rotations_base: base
     pp_wheat_rotations_provision: keep
-    pp_wheat_rotations_sell_surplus: keep
 gate_method: pp_wheat_rotations_market_sales
 upgrade_chain:
   family: wheat_farm
@@ -30,7 +29,6 @@ building:
     - pp_wheat_rotations_marled_fields
   - name: slot_2
     methods:
-    - pp_wheat_rotations_sell_surplus
     - pp_wheat_rotations_provision
   - name: slot_3
     methods:
@@ -95,11 +93,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_wheat_rotations_sell_surplus = {
-            produced = province_food_sales
-            output = 0.006
-            category = building_maintenance
-        }
         pp_wheat_rotations_provision = {
             wheat = 0.093
             produced = local_food
@@ -176,9 +169,7 @@ localization:
     pp_wheat_rotations_marled_fields: Marled Fields
     pp_wheat_rotations_marled_fields_desc: Marl and clay dressings sweeten sour fields between the leys.
     pp_wheat_rotations_provision: Provision with Wheat
-    pp_wheat_rotations_provision_desc: The household buys its own crop back and cooks for the province. Worth it while the province store is low and the crop is cheap.
-    pp_wheat_rotations_sell_surplus: Sell the Surplus
-    pp_wheat_rotations_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
+    pp_wheat_rotations_provision_desc: The household buys its own crop back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_farming_village_rotations: Rotational Farmsteads
     pp_farming_village_rotations_desc: Legume rotations, managed fallow, hedges, manure carts, and mixed husbandry make peasant village fields more reliable without turning them into planned model farms.
     pp_improved_rotations: Improved Rotations
@@ -205,12 +196,9 @@ evaluation:
       production_efficiency: 1.0
     pp_wheat_rotations_provision:
       allow_rules:
-        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the storage signal decides the switch.
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
         input_throughput: Existing accepted input scale predates the global employment throughput baseline.
         output_throughput: Existing accepted output scale predates the global employment throughput baseline.
-    pp_wheat_rotations_sell_surplus:
-      allow_rules:
-        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
     pp_wheat_rotations_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

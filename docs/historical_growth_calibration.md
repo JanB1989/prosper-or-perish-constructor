@@ -304,3 +304,59 @@ band) looked empty to their buildings. Replaced by the exact form option 1 of 6.
   month; the tiers: 0.56 s in their test, 13.9 µs in the 1337-1412 profile); the consumption loop 0.25 s. About 2,600
   re-applies a month (tiers: ~700 changes); the engine's modifier recompute for them does not show in the script
   profile. `deadband_months` is the lever if a profile shows it.
+
+### 6.5 Store lever: Low Stores and Full Stores (2026-10-02, branch `province-food-store-lever`)
+
+Jan's design: the store no longer carries big output multipliers on dummy goods. It moves what Province Food is
+worth, and everything that makes Province Food answers by itself.
+
+- **Three province modifiers** (`stored_food.py`, `[stored_food]`): Stored Food (size = stored years) keeps growth,
+  devastation recovery, migration attraction and prosperity. **Low Stores** is applied at size = the years the store
+  is below 12 months (1 at an empty store), **Full Stores** at the years above (1 at 24 months). At 12 months neither
+  exists, so there are no country base values for the store (the old -100 % Surplus Sales, +1500 % Scarcity Premium
+  and +1900 % offset constants are gone).
+
+  | Line | Low Stores (per year short) | Full Stores (per year above) |
+  | --- | --- | --- |
+  | Province Food output (`local_local_food_output_modifier`) | +0.75 | -0.75 |
+  | staple output (one line per provisioned good) | none | +0.20 |
+  | Surplus Sales output (the Grange) | -3.0 | +0.34 |
+
+- **Farms** (every Provisioning building): one always-on Provision method, no Sell the Surplus. A wheat farm level
+  on decent land yields 3.2 / 2.5 / 1.7 food and 0.23 / 0.23 / 0.28 wheat at 0 / 12 / 24 months; its profit stays
+  positive and is highest at a low store. Staples are not cut below 12 months: the farms' Market gate leg sells the
+  staple, and a cut would stop the AI from building new farms where the store is low.
+- **Cookshop**: recipes unchanged; it serves while Province Food output x revenue covers its staples. At default
+  prices (inputs 1.04 x revenue) it fills the store to 11.4 months, 13.6 with staples 15 % cheaper, 8.8 with 15 %
+  dearer. New Cookshops pass the AI gate below about 10 months.
+- **Tavern**: Serve Victuals is its only slot and its gate (0.8 victuals, 0.08 labour, 0.91 offset -> 24 Province
+  Food). It fills the store to 10.7 / 7.0 / 2.7 months at victuals 2.0 / 2.7 / 3.5 and stops above 4.0;
+  `province_starving` adds +100 % Province Food output, so a starving province still buys up to about 7.
+- **Grange**: 0.6 victuals from 24 food, Surplus Sales 4.0 against 6.1 offset (4.46 on Surplus Sales, the gate method,
+  1.64 on Haulage). It packs down to 20.6 / 16.9 / 12.7 / 11.5 / 10.6 months at victuals 2.0 / 2.7 / 3.5 / 4.5 / 6.0;
+  the Surplus Sales end at 8 months, and without them packing pays only above victuals 10.3 (6.9 at +50 % production
+  efficiency). The AI builds a new Grange from 18 months. A staffed Tavern takes 500 % of the Surplus Sales in its
+  location per level, and `province_starving` sets victuals output to -200 %: a starving province packs nothing.
+- **No droop and no dead legs**: the per-level droops of Tavern and Grange are gone; the Scarcity Premium good
+  (`province_food_purchase`) stays defined for old saves but nothing produces it.
+
+Simulation (`tools/province_store_sim.py`, 13 province cases built from the game-start pools, 60 years monthly, the
+engine's staffing rule): stores rest at the break-even of the building that feeds or skims them (7 months behind
+Taverns, 11.4 behind Cookshops, 17 under Granges with enough levels), ripple at most +-0.5 months without harvest
+rolls, +-1.7 with the modifier seen three months late, about 6 months wide with harvest rolls, lag and the
+prosperity appetite together. No sustained swing. What it does not do: a surplus province with too few Grange levels
+still sits near its cap, and a deficit province without Cookshop or Tavern still starves.
+
+Known limits:
+
+- **Production efficiency** adds to the same pool as the lever, so it moves every rest point by about 1.6 months per
+  +10 % (Taverns and Cookshops fill higher, Granges pack deeper). From about +25 % a Tavern and a Grange in the same
+  province would both pay at one store; the Tavern's cut of the Surplus Sales bounds the food that cycles between
+  them (9 % of consumption in the worst simulated case).
+- **Growth**: the start-food validator (now on the lever's rules, `SimRules.from_project`) gives +4.93 % world
+  population over 96 months (+5.37 % with the validator's old rules, which still carried the pre-2026-09-30 60-food
+  Tavern and Grange), 2,673 pools pinned at the cap (3,262), 2 collapsing (3), 125 with a starving month. Cookshop
+  provinces rest near 11 months instead of at the cap, so they grow more slowly; the growth law itself is unchanged.
+- **Not verified in game.** The modifiers, the refresh and the buildings load without script errors (1.4.0); rest
+  points, AI building and old-save behaviour are untested. Saves made before the change keep an empty Provisioning
+  slot where a building ran Sell the Surplus: a new game is needed.

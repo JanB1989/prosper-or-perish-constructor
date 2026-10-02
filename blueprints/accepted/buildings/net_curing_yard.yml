@@ -6,7 +6,6 @@ labour:
   methods:
     pp_net_curing_yard_base_fish: base
     pp_net_curing_yard_provision: keep
-    pp_net_curing_yard_sell_surplus: keep
 gate_method: pp_net_curing_yard_market_sales
 upgrade_chain:
   family: fishing_village
@@ -38,7 +37,6 @@ building:
         - pp_net_curing_yard_preserved_catch
     - name: slot_4
       methods:
-        - pp_net_curing_yard_sell_surplus
         - pp_net_curing_yard_provision
     - name: slot_5
       methods:
@@ -147,11 +145,6 @@ building:
         }
     }
     unique_production_methods = {
-        pp_net_curing_yard_sell_surplus = {
-            produced = province_food_sales
-            output = 0.006
-            category = building_maintenance
-        }
         pp_net_curing_yard_provision = {
             fish = 0.093
             produced = local_food
@@ -211,9 +204,7 @@ localization:
     pp_net_curing_yard_wattle_weirs: Wattle Fish Weirs
     pp_net_curing_yard_stew_ponds: Stew Ponds
     pp_net_curing_yard_provision: Provision with Fish
-    pp_net_curing_yard_provision_desc: The household buys its own catch back and cooks for the province. Worth it while the province store is low and the good is cheap.
-    pp_net_curing_yard_sell_surplus: Sell the Surplus
-    pp_net_curing_yard_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
+    pp_net_curing_yard_provision_desc: The household buys its own catch back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_net_curing_yard_market_sales: Market Sales
     pp_net_curing_yard_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     net_curing_yard_slot_5: Market
@@ -270,12 +261,9 @@ evaluation:
         output_throughput: Freshwater works are auxiliary methods and intentionally stay below primary catch throughput.
     pp_net_curing_yard_provision:
       allow_rules:
-        profit_percent: Provisioning loses money at the Province Food floor by design; the storage signal decides the switch.
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
         input_throughput: Existing accepted input scale predates the global employment throughput baseline.
         output_throughput: Existing accepted output scale predates the global employment throughput baseline.
-    pp_net_curing_yard_sell_surplus:
-      allow_rules:
-        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.
     pp_net_curing_yard_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

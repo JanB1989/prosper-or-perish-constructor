@@ -2,7 +2,14 @@
 
 from __future__ import annotations
 
+from dataclasses import asdict
+from pathlib import Path
+
+import pytest
+
 from prosper_or_perish_constructor.worldbuilder import food_sim as fs
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def pools():
@@ -95,11 +102,46 @@ def test_the_tribe_can_feed_the_settled_share_up_to_all_of_it():
     assert fs.fed_share(p, 0.0, 90.0, 0.5, fs.SimRules(tribal_feeding=2.0)) == 1.0
 
 
-def test_tribal_share_can_cut_the_scarcity_premium():
-    rules = fs.SimRules(tribal_tavern_premium=-16.0)
-    assert rules.tavern_profit(0.0, False, 1.0, 1.0) < fs.SimRules().tavern_profit(0.0, False, 1.0, 1.0)
-    assert rules.tavern_profit(0.0, True, 1.0, 0.6) > 0                 # a starving tribal province still imports
-    assert fs.SimRules().tavern_profit(0.0, False, 1.0, 1.0) == fs.SimRules().tavern_profit(0.0, False, 1.0)
+def test_default_rules_are_the_mods_store_lever():
+    """The defaults are the mod's values (constructor.toml, the Tavern and Grange blueprints, province_starving)."""
+    project, default = asdict(fs.SimRules.from_project(ROOT)), asdict(fs.SimRules())
+    assert project == pytest.approx(default)
+    assert fs.SimRules.from_project(ROOT, {"months": 12}).months == 12
+    assert fs.SimRules.from_project(ROOT / "nowhere") == fs.SimRules()      # no project: the defaults
+
+
+def test_tavern_fills_a_low_store_and_the_grange_packs_a_full_one():
+    rules = fs.SimRules()
+    # Province Food is worth more below 12 stored months and less above; the lever stops at 24 months
+    assert rules.food_modifier(0) == 1.75 and rules.food_modifier(12) == 1.0 and rules.food_modifier(24) == 0.25
+    assert rules.food_modifier(40) == rules.food_modifier(24)
+    assert rules.food_modifier(0, starving=True) == 2.75                # starving people pay more
+    # the Tavern pays at a low store only, the Grange at a full one only, never both at the same store
+    assert rules.tavern_profit(3, False) > 0 > rules.tavern_profit(12, False)
+    assert rules.yard_profit(22, False) > 0 > rules.yard_profit(12, False)
+    for months in range(25):
+        assert not (rules.tavern_profit(months, False) > 0 and rules.yard_profit(months, False) > 0), months
+    # a staffed Tavern takes the Grange's Surplus Sales away, and a starving province packs no victuals
+    assert rules.yard_profit(24, False, staffed_taverns=1.0) < 0
+    assert rules.yard_profit(0, True) == -rules.yard_fixed
+    assert rules.harbor_yard_profit(False) > 0 > rules.harbor_yard_profit(True)
+    # a starving province still buys victuals at a price that stops the Tavern at a merely empty store
+    dear = fs.SimRules(victuals_price=5.0)
+    assert dear.tavern_profit(0, True) > 0 > dear.tavern_profit(0, False)
+
+
+def test_cookshops_serve_up_to_their_break_even_store():
+    """A pool that only its Cookshops can feed: they serve while the store is low and stop above ~11 months."""
+    rules = fs.SimRules(harvest=False, months=120)
+    pool = fs.Pool(owner="A", province="cooks", catchment="m", pop0=100.0, tribesmen=0.0, demand0=100.0, workers0=90.0,
+                   jobs0=0.0, yield_=80 / 90, flat_food=0.0, provision_food=0.0, serve_food=60.0, cookshop_levels=2.0,
+                   taverns=0.0, yards=0.0, capacity=4000.0, start_food=600.0, victuals_demand=0.0, peasant_share=0.8)
+    row = fs.simulate([pool], rules)[0]
+    assert 9.0 < row["end_months"] < 13.0 and not row["pinned"] and row["months_starving"] == 0
+    assert 0.0 < row["cookshop_staffed_end"] < 1.0
+    # with costlier staples they stop earlier and the store rests lower
+    dear = fs.simulate([pool], fs.SimRules(harvest=False, months=120, cookshop_cost=1.3))[0]
+    assert dear["end_months"] < row["end_months"] - 2
 
 
 def _unowned_tribe(capacity_k):

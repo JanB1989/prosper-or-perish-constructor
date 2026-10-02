@@ -63,6 +63,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/rural_capacity.py",
     "src/prosper_or_perish_constructor/setup_layout.py",          # the setup folder every setup writer uses
     "src/prosper_or_perish_constructor/stored_food.py",           # the location view's Stored Food chip lists its effects
+    "src/prosper_or_perish_constructor/store_lever.py",           # the start-food validator reads the store lever's numbers
     "src/prosper_or_perish_constructor/vanilla_food_productivity.py",   # script value resolution (EU5 1.4 override rule)
     "src/prosper_or_perish_constructor/yaml_io.py",
     "scripts/generate_rural_capacity_values.py",
@@ -423,7 +424,7 @@ def _build_parser() -> argparse.ArgumentParser:
     province_food_sales_check = _add_command(
         subcommands,
         "province-food-sales-check",
-        "Check parsed Surplus Sales (farms and Victualling Yard storage leg) modifier edge conditions.",
+        "Check parsed Surplus Sales (the Grange's store leg) modifier edge conditions (legacy targets).",
         _province_food_sales_check,
     )
     province_food_sales_check.add_argument(
@@ -2059,8 +2060,8 @@ def _load_province_food_sales_check_inputs(
             "province_starving",
         )
     }
-    # EU5 1.4 deleted the engine-scaled positive_province_food_growth modifier; the Stored Food modifier carries its
-    # storage legs again (stored_food.py), the payload of [stored_food.per_year] applied at size = stored years.
+    # EU5 1.4 deleted the engine-scaled positive_province_food_growth modifier; the Surplus Sales leg rides the store
+    # lever (stored_food.py): the Full Stores payload of [stored_food.full], applied at size = years above the pivot.
     static_values["stored_food"] = _province_food_sales_stored_food_per_year(project)
     rank_values = {
         name: rank_data.modifier_baseline(name, "rank_modifier", PROVINCE_FOOD_SALES_MODIFIER_KEY)
@@ -2086,7 +2087,7 @@ def _load_province_food_sales_check_inputs(
 def _province_food_sales_stored_food_per_year(project: Path) -> float:
     from prosper_or_perish_constructor import stored_food
 
-    return dict(stored_food.load_config(project).per_year).get(PROVINCE_FOOD_SALES_MODIFIER_KEY, 0.0)
+    return dict(stored_food.load_config(project).full).get(PROVINCE_FOOD_SALES_MODIFIER_KEY, 0.0)
 
 
 def _load_province_food_sales_profitability_rows(

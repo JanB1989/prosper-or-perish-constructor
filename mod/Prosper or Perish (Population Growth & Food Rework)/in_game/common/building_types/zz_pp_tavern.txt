@@ -28,15 +28,15 @@ build_time = 365
 construction_demand = victuals_trade_construction
 
 # The Tavern serves bought-in victuals to the province: 0.8 victuals -> 24 Province Food per staffed level
-# (1 victual = 30 food). Its money is set by the province store, not by the victuals price.
-# 2026-09-30: every input, output and the food scaled x0.4 (was 2 victuals -> 60 food): the AI valued the +60 food
-# far above any other building (h03 hook run); margins, gates and the per-level droop are unchanged.
-# 2026-10-01: the food is the Serve method's Province Food (was a flat +24 local_monthly_food): a method's output
-# follows the victuals it actually bought, so a Tavern only feeds its province as far as Granges and Victualling
-# Yards supply the market. slot 0: serving. At floor prices (dummy goods and labour 1 gold, Province Food 0.10) it
-# costs 0.8 victuals x p + 0.08 labour + 1.06 offset and earns 24 x 0.10 = 2.40 gold: the same 1.34 gold net as the
-# former offset income, so this slot alone loses money whenever the victuals price p > 1.57 and the Tavern cannot
-# run on the price alone.
+# (1 victual = 30 food). The food is the Serve method's Province Food, so it follows the victuals actually bought:
+# a Tavern only feeds its province as far as Granges and Victualling Yards supply the market.
+# Store lever (2026-10-02, [stored_food] in constructor.toml): Province Food output runs from +75 % at an empty
+# store over 0 at 12 months to -75 % at 24, so the Tavern earns 24 x 0.10 x (1 + that) and stops where the recipe
+# stops paying. Per level at floor prices (dummy goods and labour 1 gold, Province Food 0.10), s = years short of
+# 12 months: profit = 2.40 x (1 + 0.75 s) - 0.8 p - 0.08 - 0.91
+# -> at victuals p = 2.7 it fills the store to 7 months, at 2.0 to 10.7, at 3.5 to 2.7, above 4.0 never.
+# The AI builds a new Tavern where this margin reaches the threshold: below about 6 months at p = 2.7.
+# No Scarcity Premium slot and no droop any more: the Serve method is the gate.
 unique_production_methods = {
   pp_tavern_serve_victuals = {
     icon_type = building_type
@@ -44,23 +44,8 @@ unique_production_methods = {
     produced = local_food
     victuals = 0.8
     manual_labor = 0.08
-    offset = 1.06
+    offset = 0.91
     output = 24.0
-    category = building_maintenance
-  }
-}
-# slot 1: scarcity premium. 0.213 province_food_purchase whose output modifier runs from 16x at an empty store
-# (3.41 gold) to zero at the 24-month cap (+8 more while starving), minus a fixed 0.8 offset input (0.8 gold,
-# inputs ignore production efficiency).
-# Per level (y = stored years, capped at 2): profit = 1.34 - 0.8p - 0.08 + 0.213 x (16 - 8y) - 0.8
-# -> at p = 2.7: +1.71 gold when empty, 0 at 12 months, -1.71 at the 24-month cap.
-unique_production_methods = {
-  pp_tavern_scarcity_premium = {
-    icon_type = building_type
-    icon = tavern
-    produced = province_food_purchase
-    offset = 0.8
-    output = 0.213
     category = building_maintenance
   }
 }
@@ -70,9 +55,10 @@ raw_modifier = {
 }
 
 modifier = {
-  # droop: each staffed level lowers the storage leg a little, so staffing settles instead of flipping
-  # (kept at -0.2 per level when the level shrank to 24 food: the same number of staffed levels, 0.4 x the food)
-  local_province_food_purchase_output_modifier = -0.2
+  # a working Tavern means the province has no surplus to sell: each staffed level takes the Surplus Sales of a
+  # Grange in the same location away, so a Grange and a Tavern never pass the same food round in a circle
+  # (they could in a country with high production efficiency, where both would pay at the same store)
+  local_province_food_sales_output_modifier = -5.0
   # inns quartered and fed marching troops
   local_supply_limit_modifier = 0.01
 }

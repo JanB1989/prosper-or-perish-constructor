@@ -373,9 +373,7 @@ demand|, weighted by production (0 = every market makes what it uses); exporting
 >= 1.5x short of a good next to a market <= 0.9x with a surplus of it.
 
 **Why markets were alike.** From 1337 to 1407 raw trade fell from 18.7 % to 9.8 % of output and the gap from 0.40 to
-0.24. Building output per level is the same in every location (location goods output modifiers reach RGOs only: a wheat
-farm makes 0.06 per level on and off wheat land), so outside RGOs and the crop gates no market makes a good more
-cheaply than another. And an importer's price counted 75 % of country-trade and 10 % of burgher-trade imports: burghers
+0.24. An importer's price counted 75 % of country-trade and 10 % of burgher-trade imports: burghers
 covered the shortage, the price still showed it, and the importer built its own copy of the supply.
 
 **Changes.**

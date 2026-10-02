@@ -696,8 +696,12 @@ The **"Too low profit margin"** gate (utility × 0) hits about half of all candi
   - The define was renamed. The old name, **AI_BUILDING_PROFIT_THRESHOLD** (vanilla 0.25), is now a second gate on the
     **raw profit**: the profit estimate below (best method per block, × market access, summed over the blocks, one level,
     gold per month, before taxes and control). A building is gated when the margin OR the raw profit is too low.
-  - Both checks skip a building type that already stands in the location: **expansions are never gated**. They get
-    AI_UPGRADE_BUILDING_UTILITY (0.001) on top instead. In 1.3 expansions were already almost never gated in practice.
+  - **Extra levels are gated like new buildings** (measured 2026-10-02 in a 1.4 game). The only candidate that skips both
+    checks is a building that replaces its `obsolete` predecessor in the location (cloth workshop over cloth guild, fort
+    over stockade); it gets AI_UPGRADE_BUILDING_UTILITY (0.001) on top instead. Example: in markets where wheat sat below
+    1.05x its base price, every Wheat Farm candidate scored 0, also the 958 at locations that already had a farm; no
+    farm was queued there although almost all of them were below their level cap. (1.3.11 long runs had seemed to show
+    ungated expansions; that does not hold on 1.4.)
   - PP's per-level profits are small (labour is paid in the methods): median about 0.27 gold at base prices against
     about 0.66 in vanilla. A raw minimum of 0.25 would close about half of PP's producing buildings at base prices
     (vanilla: a fifth of its own), the old 1.05 line nearly all (178 of 200). PP therefore sets the margin define to
@@ -730,7 +734,7 @@ The **"Too low profit margin"** gate (utility × 0) hits about half of all candi
   in a **Market** slot with one method, **Market Sales**: a little of the main good (worth 0.01-0.02 gold per level)
   for a floor-pinned dummy, balanced at margin 1.0 at base prices (`[production_gate.leg]`). A one-method block is
   always read, never skipped for research, triggers or inputs, so this leg alone decides the gate for new buildings
-  (expansions are not gated, see above): margin = (1 + output modifiers) x the main good's market price / its base price. The AI builds
+  and extra levels: margin = (1 + output modifiers) x the main good's market price / its base price. The AI builds
   when the good is dear, first on land with output bonuses, and stops when it is cheap. Buildings without a market
   good (cookshops, logistics), storage-leg gates (grange, tavern) and goods the gate never applies to keep their own
   gate. Evaluator check (300 places of h02, wheat price scaled): old gate 7 % gated at 0.6x, 85 % at 2x; leg 73 % at

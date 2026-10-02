@@ -931,7 +931,7 @@ strategic_goods = ["clay", "iron", "goods_gold", "silver", "stone", "ivory", "ma
 [production_gate.leg]
 # Gate leg (2026-09-30): every building with a market main good gets a last slot with one method that makes a little of
 # that good for a floor-pinned dummy. The AI always reads a one-method slot (no research, potential, allow or input
-# check) and the last method it reads decides the margin check for new buildings (1.4: expansions skip it). The leg's margin
+# check) and the last method it reads decides the margin check for new buildings and extra levels alike (1.4). The leg's margin
 # is (1 + output modifiers) x the good's market price / base price x margin, so the AI builds when the good is dear and
 # stops when it is cheap: at margin 1.0 and the 1.05 threshold it opens at 1.05x the base price without output bonus,
 # earlier on good land. Storage-leg gates (grange, tavern), services and logistics keep their own gate.

@@ -567,7 +567,9 @@ the logged month: 197 lines; `consumption_*.py`).
   - **Gates on methods only block the move.** There is no fallback to the best allowed method, and nothing moves a
     building off a method that stopped being allowed. Where the locked method is the favourite, buildings stay on
     whatever they run. Only this switcher ignores gates: the build valuation, the profit gate and the player's method
-    choice respect them.
+    choice respect them. For the player a gated method is disabled with the failing condition in its tooltip, but a
+    building that already runs it keeps it when the condition turns false; no part of the engine re-checks running
+    methods (read from the code, not tested in game).
   - **`location_allow`** (new in 1.4, location-scoped trigger on a method) works the same way. It is safe when the lock
     matches input availability (vanilla's Fortress Granary: "this market produces wheat" on the wheat method) or when
     the slot has only two methods (where the lock says no, staying on the other one is the right answer, as long as the

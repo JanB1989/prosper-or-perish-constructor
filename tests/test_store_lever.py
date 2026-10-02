@@ -44,8 +44,9 @@ def test_province_food_is_worth_more_below_the_pivot_and_less_above(design: stor
     values = [design.food_modifier(months) for months in range(25)]
     assert values == sorted(values, reverse=True) and values[0] > 1 > values[-1] > 0
     assert design.food_modifier(40) == design.food_modifier(24)                # the lever stops at 24 months
-    # staples: never below normal (the farms' Market gate leg sells the staple), more above the pivot
-    assert design.staple_modifier(0) == 1.0 and design.staple_modifier(24) > 1.0
+    # staples: never moved by the store (farm v3: the farms' ai_construct_weight reads the crop output modifier as land
+    # quality, so a store-driven staple bonus would make the AI build farms where the store is full)
+    assert design.staple_modifier(0) == 1.0 and design.staple_modifier(24) == 1.0
 
 
 def test_tavern_fills_the_store_from_below_and_follows_the_victuals_price(design: store_lever.Design) -> None:

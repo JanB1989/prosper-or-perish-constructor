@@ -7,7 +7,7 @@ labour:
   methods:
     pp_legume_rotations_base: base
     pp_legume_rotations_provision: keep
-gate_method: pp_legume_rotations_market_sales
+gate_method: pp_legume_rotations_provision
 upgrade_chain:
   family: legume_farm
   tier: 2
@@ -34,9 +34,6 @@ building:
   - name: slot_3
     methods:
     - pp_legume_rotations_provision
-  - name: slot_4
-    methods:
-    - pp_legume_rotations_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -60,6 +57,18 @@ building:
 
     location_potential = {
         pp_legume_farm_location_potential = yes
+    }
+    ai_construct_weight = {
+        value = 0
+        if = {
+            limit = { exists = market }
+            value = "market.market_price(goods:legumes)"
+            divide = "default_price(goods:legumes)"
+            multiply = { value = 1 add = modifier:local_legumes_output_modifier }
+            subtract = 1
+            multiply = 400
+            divide = { value = scope:owner.monthly_income_total add = 10 }
+        }
     }
 
     unique_production_methods = {
@@ -115,18 +124,10 @@ building:
     }
     unique_production_methods = {
         pp_legume_rotations_provision = {
-            legumes = 0.093
+            legumes = 0.012
             produced = local_food
-            output = 1.12
+            output = 1.75
             debug_max_profit = 0
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
-        pp_legume_rotations_market_sales = {
-            offset = 0.01
-            produced = legumes
-            output = 0.01
             category = building_maintenance
         }
     }
@@ -155,7 +156,6 @@ localization:
     legume_rotations_slot_1: Beekeeping
     legume_rotations_slot_2: Cultivation
     legume_rotations_slot_3: Provisioning
-    legume_rotations_slot_4: Market
     pp_legume_rotations_base: Fields
     pp_legume_rotations_no_cultivation: No Cultivation
     pp_legume_rotations_pulse_rotation: Pulse Rotation
@@ -166,9 +166,7 @@ localization:
     pp_legume_rotations_hedgerow_hives: Hedgerow Hives
     pp_legume_rotations_hedgerow_hives_desc: Cottage hives line hedges and orchard edges, adding wax from the same improved field boundaries.
     pp_legume_rotations_provision: Provision with Legumes
-    pp_legume_rotations_provision_desc: The household buys its own crop back and cooks for the province. The lower the province store is, the more food it makes of it.
-    pp_legume_rotations_market_sales: Market Sales
-    pp_legume_rotations_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    pp_legume_rotations_provision_desc: The household keeps back a little of its crop and cooks for the province. The lower the province store is, the more food it makes of it.
 icon:
   source_png: ../assets/icons/legume_rotations.png
   output_dds: legume_rotations.dds
@@ -194,11 +192,6 @@ evaluation:
         output_throughput: Hedgerow hive sideline is intentionally smaller than the full-building throughput target.
     pp_legume_rotations_provision:
       allow_rules:
-        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
+        profit_percent: Provisioning takes a token of the crop and feeds the province; it is the farm's AI gate, so its margin is far above the threshold by design.
         input_throughput: Existing accepted input scale predates the global employment throughput baseline.
         output_throughput: Existing accepted output scale predates the global employment throughput baseline.
-    pp_legume_rotations_market_sales:
-      allow_rules:
-        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
-        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
-        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

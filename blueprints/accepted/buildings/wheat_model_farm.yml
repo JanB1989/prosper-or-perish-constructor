@@ -7,7 +7,7 @@ labour:
   methods:
     pp_wheat_model_farm_base: base
     pp_wheat_model_farm_provision: keep
-gate_method: pp_wheat_model_farm_market_sales
+gate_method: pp_wheat_model_farm_provision
 upgrade_chain:
   family: wheat_farm
   tier: 3
@@ -29,9 +29,6 @@ building:
   - name: slot_2
     methods:
     - pp_wheat_model_farm_provision
-  - name: slot_3
-    methods:
-    - pp_wheat_model_farm_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -55,6 +52,18 @@ building:
 
     location_potential = {
         pp_wheat_farm_location_potential = yes
+    }
+    ai_construct_weight = {
+        value = 0
+        if = {
+            limit = { exists = market }
+            value = "market.market_price(goods:wheat)"
+            divide = "default_price(goods:wheat)"
+            multiply = { value = 1 add = modifier:local_wheat_output_modifier }
+            subtract = 1
+            multiply = 400
+            divide = { value = scope:owner.monthly_income_total add = 10 }
+        }
     }
 
     unique_production_methods = {
@@ -83,18 +92,10 @@ building:
     }
     unique_production_methods = {
         pp_wheat_model_farm_provision = {
-            wheat = 0.133
+            wheat = 0.017
             produced = local_food
-            output = 1.6
+            output = 2.5
             debug_max_profit = 0
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
-        pp_wheat_model_farm_market_sales = {
-            offset = 0.01
-            produced = wheat
-            output = 0.01
             category = building_maintenance
         }
     }
@@ -131,17 +132,14 @@ localization:
     wheat_model_farm_slot_0: Fields
     wheat_model_farm_slot_1: Cultivation
     wheat_model_farm_slot_2: Provisioning
-    wheat_model_farm_slot_3: Market
     pp_wheat_model_farm_base: Fields
     pp_wheat_model_farm_no_cultivation: No Cultivation
     pp_wheat_model_farm_seed_drill: Seed Drill and Horse-Hoe
     pp_wheat_model_farm_seed_drill_desc: Seed drills sow in rows and horse-hoes keep the rows clean.
     pp_wheat_model_farm_provision: Provision with Wheat
-    pp_wheat_model_farm_provision_desc: The household buys its own crop back and cooks for the province. The lower the province store is, the more food it makes of it.
+    pp_wheat_model_farm_provision_desc: The household keeps back a little of its crop and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_model_farm: Model Farms
     pp_model_farm_desc: Field surveys, seed drills, horse-hoes, crop rotations, and printed agronomy organize village cultivation into a larger managed farm.
-    pp_wheat_model_farm_market_sales: Market Sales
-    pp_wheat_model_farm_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
 icon:
   source_png: ../assets/icons/wheat_model_farm.png
   output_dds: wheat_model_farm.dds
@@ -161,11 +159,6 @@ evaluation:
       production_efficiency: 1.0
     pp_wheat_model_farm_provision:
       allow_rules:
-        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
+        profit_percent: Provisioning takes a token of the crop and feeds the province; it is the farm's AI gate, so its margin is far above the threshold by design.
         input_throughput: Existing accepted input scale predates the global employment throughput baseline.
         output_throughput: Existing accepted output scale predates the global employment throughput baseline.
-    pp_wheat_model_farm_market_sales:
-      allow_rules:
-        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
-        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
-        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

@@ -370,7 +370,11 @@ def test_every_production_blueprint_is_in_gate_order() -> None:
 
 def test_every_market_good_building_gates_on_its_leg_and_no_gate_buys_its_main_good() -> None:
     """Engine rule (AI rulebook 2.4i): the last method the AI reads decides the margin check, and a one-method slot is
-    always read. So every building with a market main good ends in its gate leg; no remaining gate buys its main good."""
+    always read. So every building with a market main good ends in its gate leg; no remaining gate buys its main good,
+    except the crop farms' Provision (farm v3): it takes only a token of the crop, so its margin stays several times
+    the threshold at any crop price, and the farm's price response is its ai_construct_weight."""
+    from prosper_or_perish_constructor import provisioning
+
     config = pg.load_config(ROOT / "constructor.toml")
     prices = pg.load_prices(ROOT, ROOT / "constructor.toml", config)
     result = pg.apply(ROOT, ROOT / "constructor.toml", prices, write=False)
@@ -384,8 +388,13 @@ def test_every_market_good_building_gates_on_its_leg_and_no_gate_buys_its_main_g
         else:
             where = pg.locate(plan.slots, plan.gate)
             gate = plan.slots[where[0]].methods[where[1]]
+            if plan.building in provisioning.CROP_FARM_GOODS:
+                assert plan.gate == provisioning.provision_method(plan.building), plan.building
+                assert gate.margin(prices) >= 4 * config.threshold, plan.building  # open up to ~4x the crop price
+                continue
             assert not (good and gate.inputs.get(good, 0) > 0), plan.building
     assert legs > 150
     by_name = {p.building: p for p in result.plans}
-    assert by_name["wheat_farm"].gate == "pp_wheat_farm_market_sales"
+    assert by_name["wheat_farm"].gate == "pp_wheat_farm_provision" and by_name["wheat_farm"].leg is None
+    assert by_name["fishing_village"].gate == "pp_fishing_village_market_sales"
     assert by_name["grange"].gate == "pp_grange_surplus_sales" and by_name["tavern"].leg is None

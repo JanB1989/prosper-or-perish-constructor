@@ -11,9 +11,14 @@ Until 2026-10-02 the slot also held ``pp_<b>_sell_surplus`` (a no-input dummy pr
 switched to at a full store); the store lever replaced that switch. ``legacy_sell_method`` names it so tooling can
 remove what is left of it.
 
-The AI's profit-margin check reads the building's Market gate leg, which comes after this slot
-(``production_gate.py``): Provision buys the building's own good, so gating on it made the AI stop building exactly
-when the good was dear.
+Fisheries, orchards and forest villages: the AI's profit-margin check reads the building's Market gate leg, which comes
+after this slot (``production_gate.py``): Provision buys the building's own good back, so gating on it made the AI
+stop building exactly when the good was dear.
+
+Crop farms (farm v3, 2026-10-02): Provision buys only a token of the crop (``crop_input_gold``) and makes a fixed
+Province Food amount per level (``crop_food_per_level``). The farm sells nearly all its crop, and Provision's margin
+(Province Food / a token of crop) stays far above the AI's threshold at any crop price, so it is the farm's gate and
+the farm has no Market leg; the AI's price response is the farm's ``ai_construct_weight`` (``crop_farms.py``).
 
 Amounts scale with the building's size, measured by its base output: ``M = base_output / reference_base_output``,
 where ``base_output`` is the output of the first slot-0 method that produces the building's own good.
@@ -21,6 +26,7 @@ where ``base_output`` is the output of the first slot-0 method that produces the
 - input  = ``input_per_level * M / good_price``  (the same gold of the good per level whatever its price)
 - output = ``input_per_level * food_per_gold * M`` (so Province Food per gold of the good is the same for every good:
   a price-1 good gives ``food_per_gold`` food per unit; livestock at 1.5 gives input 0.053 M, output still 0.96 M)
+- crop farms: input = ``crop_input_gold * M / good_price``, output = ``crop_food_per_level * M``
 
 All amounts are rounded half up to 3 decimals and never fall below 0.001. The constants live in
 ``[building_scaling]`` of ``constructor.toml``.
@@ -38,6 +44,8 @@ from typing import Any
 CONFIG_SECTION = "building_scaling"
 INPUT_PER_LEVEL_FIELD = "provision_input_per_level"
 FOOD_PER_GOLD_FIELD = "provision_food_per_gold"
+CROP_INPUT_GOLD_FIELD = "crop_provision_input_gold"
+CROP_FOOD_PER_LEVEL_FIELD = "crop_provision_food_per_level"
 REFERENCE_BASE_OUTPUT_FIELD = "provisioning_reference_base_output"
 DEFAULT_PROJECT = Path(__file__).resolve().parents[2] / "constructor.toml"
 CROP_TABLE = Path(__file__).resolve().parents[2] / "config" / "crop_farms.toml"
@@ -112,6 +120,8 @@ class ProvisioningConfig:
     input_per_level: Decimal = Decimal("0.08")
     food_per_gold: Decimal = Decimal("12")
     reference_base_output: Decimal = Decimal("0.06")
+    crop_input_gold: Decimal = Decimal("0.01")
+    crop_food_per_level: Decimal = Decimal("1.5")
 
 
 @dataclass(frozen=True)
@@ -131,6 +141,8 @@ def load_provisioning_config(project: Path = DEFAULT_PROJECT) -> ProvisioningCon
         ("input_per_level", INPUT_PER_LEVEL_FIELD),
         ("food_per_gold", FOOD_PER_GOLD_FIELD),
         ("reference_base_output", REFERENCE_BASE_OUTPUT_FIELD),
+        ("crop_input_gold", CROP_INPUT_GOLD_FIELD),
+        ("crop_food_per_level", CROP_FOOD_PER_LEVEL_FIELD),
     ):
         value = _decimal(section.get(field_name, getattr(default, attribute)), f"{CONFIG_SECTION}.{field_name}")
         if value <= 0:
@@ -165,6 +177,36 @@ def provisioning_amounts(
         input=round_amount(config.input_per_level * scale / price),
         output=round_amount(config.input_per_level * config.food_per_gold * scale),
     )
+
+
+def crop_provisioning_amounts(
+    base_output: Decimal | float | str,
+    good_price: Decimal | float | str = 1,
+    config: ProvisioningConfig | None = None,
+) -> ProvisioningAmounts:
+    """A crop farm's Provision: a token of the crop in, a fixed Province Food amount per level out."""
+    config = config or load_provisioning_config()
+    base = _decimal(base_output, "base_output")
+    price = _decimal(good_price, "good_price")
+    if base <= 0 or price <= 0:
+        raise ValueError(f"base_output and good_price must be positive: {base}, {price}")
+    scale = base / config.reference_base_output
+    return ProvisioningAmounts(
+        input=round_amount(config.crop_input_gold * scale / price),
+        output=round_amount(config.crop_food_per_level * scale),
+    )
+
+
+def building_amounts(
+    building_key: str,
+    base_output: Decimal | float | str,
+    good_price: Decimal | float | str = 1,
+    config: ProvisioningConfig | None = None,
+) -> ProvisioningAmounts:
+    """The Provision amounts a building carries: the crop-farm rule for crop farms, the buy-back rule otherwise."""
+    if building_key in CROP_FARM_GOODS:
+        return crop_provisioning_amounts(base_output, good_price, config)
+    return provisioning_amounts(base_output, good_price, config)
 
 
 def round_amount(value: Decimal) -> Decimal:
@@ -218,12 +260,15 @@ def slot_localization(building_key: str, good: str, slot_name: str | None = None
 
 def evaluation_rules(building_key: str) -> dict[str, dict[str, Any]]:
     """Per-method `evaluation.production_methods` entries (allow rules) for the Provisioning method."""
+    profit = (
+        "Provisioning takes a token of the crop and feeds the province; it is the farm's AI gate, so its margin is far above the threshold by design."
+        if building_key in CROP_FARM_GOODS
+        else "Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output."
+    )
     return {
         provision_method(building_key): {
             "allow_rules": {
-                "profit_percent": (
-                    "Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output."
-                ),
+                "profit_percent": profit,
                 "input_throughput": "Existing accepted input scale predates the global employment throughput baseline.",
                 "output_throughput": "Existing accepted output scale predates the global employment throughput baseline.",
             }

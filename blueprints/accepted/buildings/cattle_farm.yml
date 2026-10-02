@@ -8,7 +8,7 @@ labour:
     pp_cattle_farm_base: base
     pp_cattle_farm_open_pasture: hand_work
     pp_cattle_farm_provision: keep
-gate_method: pp_cattle_farm_market_sales
+gate_method: pp_cattle_farm_provision
 upgrade_chain:
   family: cattle_farm
   tier: 0
@@ -31,9 +31,6 @@ building:
   - name: slot_2
     methods:
     - pp_cattle_farm_provision
-  - name: slot_3
-    methods:
-    - pp_cattle_farm_market_sales
   possible_production_methods: []
   body: |-
     audio_tier = 1
@@ -57,6 +54,18 @@ building:
 
     location_potential = {
         pp_cattle_farm_location_potential = yes
+    }
+    ai_construct_weight = {
+        value = 0
+        if = {
+            limit = { exists = market }
+            value = "market.market_price(goods:livestock)"
+            divide = "default_price(goods:livestock)"
+            multiply = { value = 1 add = modifier:local_livestock_output_modifier }
+            subtract = 1
+            multiply = 400
+            divide = { value = scope:owner.monthly_income_total add = 10 }
+        }
     }
 
     unique_production_methods = {
@@ -92,18 +101,10 @@ building:
     }
     unique_production_methods = {
         pp_cattle_farm_provision = {
-            livestock = 0.053
+            livestock = 0.007
             produced = local_food
-            output = 0.96
+            output = 1.5
             debug_max_profit = 0
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
-        pp_cattle_farm_market_sales = {
-            offset = 0.012
-            produced = livestock
-            output = 0.008
             category = building_maintenance
         }
     }
@@ -132,7 +133,6 @@ localization:
     cattle_farm_slot_0: Pastures
     cattle_farm_slot_1: Cultivation
     cattle_farm_slot_2: Provisioning
-    cattle_farm_slot_3: Market
     pp_cattle_farm_base: Pastures
     pp_cattle_farm_no_cultivation: No Cultivation
     pp_cattle_farm_open_pasture: Open Pasture
@@ -140,9 +140,7 @@ localization:
     pp_cattle_farm_byres_yards: Byres and Yards
     pp_cattle_farm_byres_yards_desc: Byres and yards shelter the herd and gather its manure.
     pp_cattle_farm_provision: Provision with Livestock
-    pp_cattle_farm_provision_desc: The household buys its own crop back and cooks for the province. The lower the province store is, the more food it makes of it.
-    pp_cattle_farm_market_sales: Market Sales
-    pp_cattle_farm_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    pp_cattle_farm_provision_desc: The household keeps back a little of its crop and cooks for the province. The lower the province store is, the more food it makes of it.
 icon:
   source_png: ../assets/icons/cattle_farm.png
   output_dds: cattle_farm.dds
@@ -165,11 +163,6 @@ evaluation:
       production_efficiency: 1.05
     pp_cattle_farm_provision:
       allow_rules:
-        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
+        profit_percent: Provisioning takes a token of the crop and feeds the province; it is the farm's AI gate, so its margin is far above the threshold by design.
         input_throughput: Existing accepted input scale predates the global employment throughput baseline.
         output_throughput: Existing accepted output scale predates the global employment throughput baseline.
-    pp_cattle_farm_market_sales:
-      allow_rules:
-        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
-        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
-        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

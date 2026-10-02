@@ -84,14 +84,13 @@ def test_store_lever_moves_province_food_staples_and_surplus_sales() -> None:
     assert -1 < full[FOOD] < 0
     # Surplus Sales (the Grange's leg) grow above the pivot and are gone at most 6 months below it
     assert full[SALES] > 0 and low[SALES] <= -2
-    # staples: one line per provisioned good above the pivot, all equal; none below it, because the farms' Market
-    # gate leg sells the staple and a cut would stop the AI from building new farms where the store is low
+    # staples: no store lever on them (farm v3: the crop farms' ai_construct_weight reads the crop output modifier as
+    # land quality, so a store-driven staple bonus would make the AI build farms where the store is full)
     goods = stored_food.staple_goods()
     assert set(goods) == set(provisioning.PROVISIONED_GOOD_BY_BUILDING.values()) and len(goods) == len(set(goods))
     staples = {f"local_{good}_output_modifier" for good in goods}
-    assert staples <= set(full) and len({full[key] for key in staples}) == 1 and full[sorted(staples)[0]] > 0
-    assert not staples & set(low)
-    assert set(low) == {FOOD, SALES} and set(full) == {FOOD, SALES} | staples
+    assert not staples & set(low) and not staples & set(full)
+    assert set(low) == {FOOD, SALES} and set(full) == {FOOD, SALES}
     # nothing of the old storage legs is left on Stored Food, and no Scarcity Premium anywhere
     assert not {FOOD, SALES, PURCHASE} & set(stored_food.payload(config))
     assert PURCHASE not in low and PURCHASE not in full

@@ -7,7 +7,7 @@ labour:
   methods:
     pp_maize_rotations_base: base
     pp_maize_rotations_provision: keep
-gate_method: pp_maize_rotations_market_sales
+gate_method: pp_maize_rotations_provision
 upgrade_chain:
   family: maize_farm
   tier: 2
@@ -30,9 +30,6 @@ building:
   - name: slot_2
     methods:
     - pp_maize_rotations_provision
-  - name: slot_3
-    methods:
-    - pp_maize_rotations_market_sales
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -61,6 +58,18 @@ building:
         OR = {
             pp_maize_native_country = yes
             has_advance = pp_maize_farm_advance_general
+        }
+    }
+    ai_construct_weight = {
+        value = 0
+        if = {
+            limit = { exists = market }
+            value = "market.market_price(goods:maize)"
+            divide = "default_price(goods:maize)"
+            multiply = { value = 1 add = modifier:local_maize_output_modifier }
+            subtract = 1
+            multiply = 400
+            divide = { value = scope:owner.monthly_income_total add = 10 }
         }
     }
 
@@ -101,18 +110,10 @@ building:
     }
     unique_production_methods = {
         pp_maize_rotations_provision = {
-            maize = 0.093
+            maize = 0.012
             produced = local_food
-            output = 1.12
+            output = 1.75
             debug_max_profit = 0
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
-        pp_maize_rotations_market_sales = {
-            offset = 0.01
-            produced = maize
-            output = 0.01
             category = building_maintenance
         }
     }
@@ -136,7 +137,6 @@ localization:
     maize_rotations_slot_0: Fields
     maize_rotations_slot_1: Cultivation
     maize_rotations_slot_2: Provisioning
-    maize_rotations_slot_3: Market
     pp_maize_rotations_base: Fields
     pp_maize_rotations_no_cultivation: No Cultivation
     pp_maize_rotations_ploughed_rows: Ploughed Maize Rows
@@ -144,9 +144,7 @@ localization:
     pp_maize_rotations_maize_bean_rotation: Maize-Bean Rotation
     pp_maize_rotations_maize_bean_rotation_desc: Maize and beans take turns on the same fields.
     pp_maize_rotations_provision: Provision with Maize
-    pp_maize_rotations_provision_desc: The household buys its own crop back and cooks for the province. The lower the province store is, the more food it makes of it.
-    pp_maize_rotations_market_sales: Market Sales
-    pp_maize_rotations_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    pp_maize_rotations_provision_desc: The household keeps back a little of its crop and cooks for the province. The lower the province store is, the more food it makes of it.
 icon:
   source_png: ../assets/icons/maize_rotations.png
   output_dds: maize_rotations.dds
@@ -165,11 +163,6 @@ evaluation:
       production_efficiency: 1.0
     pp_maize_rotations_provision:
       allow_rules:
-        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
+        profit_percent: Provisioning takes a token of the crop and feeds the province; it is the farm's AI gate, so its margin is far above the threshold by design.
         input_throughput: Existing accepted input scale predates the global employment throughput baseline.
         output_throughput: Existing accepted output scale predates the global employment throughput baseline.
-    pp_maize_rotations_market_sales:
-      allow_rules:
-        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
-        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
-        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

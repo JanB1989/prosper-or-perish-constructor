@@ -40,15 +40,23 @@
   updates the leg (body block, slot list, localization, evaluation allow rules); the labour pass skips it. Buildings
   without a market good, gates on a store-following good (the Grange's Surplus Sales, the Tavern's and Cookshop's
   Province Food) and `strategic_goods` get none. Never gate on a method that
-  buys the building's own main good (inverts the AI's price response).
+  buys the building's own main good (inverts the AI's price response), except a token amount:
+- Crop farms (farm v3, 2026-10-02): Provision takes a token of the crop (`crop_provision_input_gold` in
+  `[building_scaling]`) and makes a fixed Province Food amount per level, so it is the farm's gate (margin about 15 at
+  base prices, open at any realistic crop price) and the farms have no Market leg. The AI's price response is the
+  farm's `ai_construct_weight` (`[general.ai_construct_weight]` in `config/crop_farms.toml`: slope x ((1 + local crop
+  output modifier) x market price / default price - 1) / (owner monthly income + offset); EU5 1.4 adds it raw at the
+  end of the build score, after the gate). Fisheries, orchards and forest villages keep the buy-back Provision and
+  their Market leg.
 - A slot's first method is what new and game-start buildings run, so reordering can change defaults.
 
 ## Store Lever
 
 - The province store moves goods output through two province modifiers (`stored_food.py`, `[stored_food]` in
   constructor.toml): **Low Stores** (size = years below 12 stored months) and **Full Stores** (size = years above).
-  They carry the Province Food output (+ below, - above), the staple output (+ above; one line per good a Provisioning
-  method buys) and the Grange's Surplus Sales (+ above, steeply - below). Stored Food keeps growth and prosperity.
+  They carry the Province Food output (+ below, - above) and the Grange's Surplus Sales (+ above, steeply - below);
+  the staple output line is 0 since farm v3 (the farms' price weight reads the crop output modifier as land quality).
+  Stored Food keeps growth and prosperity.
   There are no country base values for the store: at 12 months every line is zero.
 - Every maker of Province Food stops where its recipe stops paying, so the store rests there: the farms' Provisioning
   always runs (one method, no Sell the Surplus), the Cookshop follows its staple prices, the Tavern the victuals

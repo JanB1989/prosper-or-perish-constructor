@@ -58,6 +58,11 @@ burgher_building_employment_size = 0.3
 provision_input_per_level = 0.08
 provision_food_per_gold = 12
 provisioning_reference_base_output = 0.06
+# Crop farms (farm v3, 2026-10-02): Provision takes a token of the crop and makes a fixed Province Food amount per
+# level, so the farm sells nearly all its crop and Provision is its AI gate (open at any crop price); the AI's price
+# response is the farm's ai_construct_weight (config/crop_farms.toml [general.ai_construct_weight]).
+crop_provision_input_gold = 0.01
+crop_provision_food_per_level = 1.5
 
 
 [blueprint_evaluation.price_overrides]
@@ -1030,4 +1035,6 @@ staple_output = 0.0
 # Full Stores: per year above the pivot (size 1 at 24 months)
 local_local_food_output_modifier = -0.75            # Province Food output -75 % at 24 months
 local_province_food_sales_output_modifier = 0.34    # the Grange's Surplus Sales +34 % at 24 months
-staple_output = 0.20                                # staples +20 % at 24 months: the land feeds the market
+# 0 since farm v3 (2026-10-02, was 0.20): the crop farms' ai_construct_weight reads the location's crop output modifier
+# as land quality, so a store-driven staple bonus would make the AI build farms exactly where the store is full
+staple_output = 0.0

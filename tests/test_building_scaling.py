@@ -143,7 +143,8 @@ def test_provisioning_slots_match_configured_amounts() -> None:
         assert slots == [(provision,)], building  # one always-on method: the province store moves its output
 
         block = _building_block(template.key, template.building_body)
-        amounts = provisioning.provisioning_amounts(
+        amounts = provisioning.building_amounts(
+            building,
             _base_output(block, template.production_method_slots[0].methods, good),
             good_price=provisioning.provisioned_good_price(good),
             config=config,

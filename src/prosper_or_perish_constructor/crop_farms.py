@@ -18,13 +18,16 @@ Per blueprint:
   ``hand_work``); a method that names an advance is unlocked by it (``pp_heavy_plough``, ``pp_improved_rotations``,
   ``pp_water_lifting``, rendered once in ``wheat_farm.yml``);
 - slot 2 (legumes and olives, tiers 0-2): ``pp_<b>_no_beekeeping`` and the tier's hive method;
-- Provisioning (``provisioning.py``): the one Provision method;
-- last slot: the Market gate leg ``pp_<b>_market_sales`` (``production_gate.order_mapping`` adds it).
+- last slot: Provisioning (``provisioning.py``), the one Provision method: a token of the crop in, a fixed Province
+  Food amount per level out (farm v3, 2026-10-02).
 
-The slots and methods are then put in the production-gate order (``production_gate.order_mapping``): the gate leg is
-the ``gate_method`` that decides the AI's profit-margin check by the crop's price, so it comes last; the other slots
-follow by importance (base slot first, then beekeeping and cultivation by output value, Provisioning last before the
-leg). ``increase_per_level_cost`` takes the ``[farm_level_cost]`` factor (farm_land footprint).
+The slots and methods are then put in the production-gate order (``production_gate.order_mapping``): Provision is the
+``gate_method`` (its margin, Province Food over a token of crop, stays far above the AI's threshold at any crop price),
+so the farm has no Market gate leg; the other slots follow by importance (base slot first, then beekeeping and
+cultivation by output value). The AI's price response is ``ai_construct_weight`` in the body
+(``[general.ai_construct_weight]``: the crop's market price over its default price times the location's crop output
+modifier, divided by the owner's income). ``increase_per_level_cost`` takes the ``[farm_level_cost]`` factor
+(farm_land footprint).
 
 Every producing method goes through the production-labour pass (``production_labour.plan_method``) before it is
 written, so ``ppc labour check`` finds nothing to change. Gated crops (rice, maize, potato, olives) carry
@@ -531,7 +534,7 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
         slots.append(("beekeeping", [_selector(f"pp_{building}_no_beekeeping"), hives]))
     base_output = Decimal(str(table.tier_value("tier_base_output", tier)))
     price = Decimal(str(context.prices.get(crop.good, 1.0)))
-    amounts = provisioning.provisioning_amounts(base_output, good_price=price, config=context.provisioning)
+    amounts = provisioning.crop_provisioning_amounts(base_output, good_price=price, config=context.provisioning)
 
     # ---- body
     shared = dict(general.get("body", {}))
@@ -570,6 +573,7 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
                 "}",
             ]
         )
+    body.extend(ai_construct_weight_lines(table, crop))
     body.append("")
     for _, methods in slots:
         body.append("unique_production_methods = {")
@@ -702,8 +706,33 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
     if context.gate_config is not None:
         from prosper_or_perish_constructor import production_gate
 
-        production_gate.order_mapping(blueprint, context.gate_config, context.gate_prices)
+        production_gate.order_mapping(blueprint, context.gate_config, context.gate_prices, gate=provision)
     return blueprint
+
+
+def ai_construct_weight_lines(table: CropTable, crop: Crop) -> list[str]:
+    """The farm's ``ai_construct_weight`` (EU5 1.4, location scope, scope:owner): the AI's price response.
+
+    slope x ((1 + local crop output modifier) x market price / default price - 1) / (owner monthly income + offset);
+    0 outside a market."""
+    spec = dict(table.general.get("ai_construct_weight", {}))
+    slope = float(spec.get("slope", 400))
+    offset = float(spec.get("income_offset", 10))
+    good = crop.good
+    return [
+        "ai_construct_weight = {",
+        "    value = 0",
+        "    if = {",
+        "        limit = { exists = market }",
+        f'        value = "market.market_price(goods:{good})"',
+        f'        divide = "default_price(goods:{good})"',
+        f"        multiply = {{ value = 1 add = modifier:local_{good}_output_modifier }}",
+        "        subtract = 1",
+        f"        multiply = {_num(slope)}",
+        f"        divide = {{ value = scope:owner.monthly_income_total add = {_num(offset)} }}",
+        "    }",
+        "}",
+    ]
 
 
 def _increase_cost(crop: Crop, slots: Sequence[tuple[str, Sequence[RenderedMethod]]], context: RenderContext, footprint: str) -> str:

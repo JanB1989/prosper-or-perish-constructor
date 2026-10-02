@@ -34,6 +34,16 @@ location_potential_base = "pp_general_farmable_food_location_potential"   # AND-
 max_levels_pattern = "farm_capacity_max_{building}"
 farm_capacity_line_pattern = "farm_capacity_from_{building} = -1"
 
+# AI price response (farm v3, 2026-10-02). Provision (a token of the crop -> Province Food) is the farm's gate and stays
+# open at any crop price; the AI's build score gets ai_construct_weight (EU5 1.4, added raw after every other term):
+#   slope x ((1 + local <crop> output modifier) x market price / default price - 1) / (owner monthly income + income_offset)
+# 0 at the base price on average land, positive while the crop is dear or the land good, negative in a glut (a
+# negative score drops the market from the AI's farm search). Divided by income because the AI's scores run about 30x
+# higher in poor countries than in rich ones (ppeval h02). No market: 0.
+[general.ai_construct_weight]
+slope = 400
+income_offset = 10
+
 # Body lines shared by every tier (values as in the blueprints)
 [general.body]
 is_foreign = "no"
@@ -240,7 +250,7 @@ slot_beekeeping = "Beekeeping"
 slot_provisioning = "Provisioning"
 no_cultivation = "No Cultivation"
 no_beekeeping = "No Beekeeping"
-provision_desc = "The household buys its own crop back and cooks for the province. The lower the province store is, the more food it makes of it."
+provision_desc = "The household keeps back a little of its crop and cooks for the province. The lower the province store is, the more food it makes of it."
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Crops

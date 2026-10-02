@@ -550,19 +550,41 @@ the logged month: 197 lines; `consumption_*.py`).
 - Non-food → food: 99 % go to the higher margin.
 - Food → non-food: only 4 % go to the higher margin. The AI leaves food methods even when they pay more, and these
   switches happen in provinces that are not in food deficit.
-- Rule (decoded 2026-09-29): once a month, for each building type and market, the AI takes every method group with
-  more than one method and scores each method whose inputs the market can supply as market access × (output value −
-  input cost). It keeps the best; ties go to the method listed later. A random building of that type in that market
-  whose potential/allow accept the pick is moved to it.
-- **Methods without an output all score 0** (still so in EU5 1.4.0: same switcher, same scoring). Input cost is never looked at. Maintenance-only buildings (field
-  management) therefore always get the LAST listed method whose inputs are all available in the market; when no method has its inputs,
-  a fallback applies (in Tongatapu it gave Field Stewards).
+- **Rule (EU5 1.4, decoded and measured 2026-10-02).** Once a month, per country, building type, market and method
+  slot with more than one method:
+  1. The AI picks a favourite: among the methods whose inputs are in the market, the one with the highest market
+     access × (output value − input cost); ties go to the method listed later. "In the market" means, for every
+     input, supply (production + imports) + stockpile ≥ the amount one level uses. Demand is never subtracted, so a
+     market in deficit still counts. If no method has its inputs, the method with the largest output, else the first.
+     **While picking it ignores research, `potential`, `allow` and `location_allow`.**
+  2. It walks that country's buildings of the type in that market in random order. Buildings whose location does not
+     allow the favourite are skipped. The first one that allows it decides: if it is not on the favourite it switches
+     (from another method with inputs only when the favourite earns at least `PRODUCTION_METHOD_AUTO_SWITCH_MARGIN`,
+     10 %, more); if it is already on the favourite, nothing moves this month.
+  - So at most one building moves per country × type × market × slot per month, and it slows down as the conversion
+    proceeds: N buildings take about N × (1 + 1/2 + … + 1/N) months (5 ≈ 1 year, 10 ≈ 2.5 years, 50 ≈ 19 years).
+    Switching back runs at the same rate. (Inferred from the code, not measured in game.)
+  - **Gates on methods only block the move.** There is no fallback to the best allowed method, and nothing moves a
+    building off a method that stopped being allowed. Where the locked method is the favourite, buildings stay on
+    whatever they run. Only this switcher ignores gates: the build valuation, the profit gate and the player's method
+    choice respect them.
+  - **`location_allow`** (new in 1.4, location-scoped trigger on a method) works the same way. It is safe when the lock
+    matches input availability (vanilla's Fortress Granary: "this market produces wheat" on the wheat method) or when
+    the slot has only two methods (where the lock says no, staying on the other one is the right answer, as long as the
+    building starts there). A condition that can turn off while a building runs the method does not take it off.
+- **Methods without an output all score 0.** Input cost is never looked at. Maintenance-only buildings (field
+  management) therefore always get the LAST listed method whose inputs are in the market, whatever its price or
+  shortage; they leave it only when its good is gone from the market (no supply and stockpile below one level's need).
+  The 10 % margin never blocks them (0 vs 0).
   - Measured on the observer run 1338-1437 and h02: 99.97 % of about 6,800 field managements run Marling (last
     listed), although at market prices Field Stewards is about 25 % cheaper for 99 % of them. Folding is never used.
   - The only switches in 97 years were 2 buildings in Tongatapu (no livestock there), which flip Marling ↔ Stewards
     as stone comes and goes.
-  - To steer the choice: list order (last wins) or input availability. Gating the last method with potential/allow
-    does not move buildings to the next one; the switch is then just skipped.
+  - To steer the choice: list order (last wins) or input availability. A gate on the last method freezes buildings
+    instead of moving them to the next one.
+  - Idea, not built: a dummy input good that is only supplied while a condition holds would switch a maintenance
+    method on and off with that condition, but market-wide (not per location), at the slow rate above, and off only
+    after the good's stockpile falls below one level's need.
 
 **Fishing villages are not AI-built.**
 - Zero AI constructions in the lab month.
@@ -684,7 +706,8 @@ The **"Too low profit margin"** gate (utility × 0) hits about half of all candi
     writes 0). Which methods are looked at is unchanged (allowed, researched, inputs on the local market; no market:
     one-method blocks only), and so is the profit sum. At base prices this changes the gate method of 2 of 203 PP
     producing buildings (Cookshop, Public Kitchen: regional dishes in one block, same margin), the margin of none.
-  - The method switcher (below) is unchanged: output-less methods still score 0 and the last listed available one wins.
+  - The method switcher (below) keeps its scoring (output-less methods score 0, the last listed available one wins);
+    1.4 adds a 10 % switch margin and the method key `location_allow`.
 - The margin that counts is that of the **last** method the estimate looks at, not the best one. It walks the
   `possible_production_methods` group, then every `unique_production_methods` block in file order, and inside a block
   the methods in listed order. A block with one method is always looked at; in a block with more, a method is looked

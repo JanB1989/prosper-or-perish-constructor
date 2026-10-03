@@ -2030,22 +2030,13 @@ CULL_LOG_FIELDS = (
 )
 
 
-def test_scripted_culls_log_date_owner_location_building_and_level() -> None:
-    # Every scripted cull writes one error_log line from the culled building's scope, before the level change (removing
-    # the last level destroys the building and its scope). Verified in game 2026-09-30: the log text reaches the
-    # building through THIS; ROOT and saved scopes (SCOPE.sCountry/sLocation/...) resolve to nothing there.
-    capacity =CAPACITY_CULLING_EFFECTS.read_text(encoding="utf-8-sig")
+def test_scripted_culls_ship_without_debug_logging() -> None:
+    # The cull's debug hooks (PPBLD error_log line and the pp_dbg_script_cull counter) are generated only with
+    # CULL_DEBUG = True in scripts/generate_rural_capacity_values.py; the shipped mod carries none (2026-10-03, Jan).
+    capacity = CAPACITY_CULLING_EFFECTS.read_text(encoding="utf-8-sig")
     helper = capacity.split("pp_cull_capacity_building_above_max = {\n", maxsplit=1)[1]
-    log = f'error_log = "PPBLD;capacity_cull{CULL_LOG_FIELDS}'
-    assert helper.count("error_log") == 1
-    scope = helper.split("random_buildings_in_location = {", maxsplit=1)[1].split("\n\t\t}", maxsplit=1)[0]
-    assert "limit = { building_type = building_type:$building$ }" in scope
-    assert log in scope
-    assert helper.index(log) < helper.index("change_building_level_in_location")
-    assert helper.index("pp_dbg_script_cull") < helper.index("change_building_level_in_location")
-    assert "ROOT." not in helper and "SCOPE.s" not in helper and "save_temporary_scope_as" not in helper
-    # a macro inside the quoted log string lost its separator in game (PPBLD;capacity_cullgrange)
-    assert '$building$"' not in helper
+    assert "error_log" not in helper and "pp_dbg_script_cull" not in helper and "PPBLD" not in helper
+    assert "change_building_level_in_location" in helper
 
 
 def test_only_abundant_free_land_gives_foraging_food() -> None:
@@ -2149,27 +2140,9 @@ def test_capacity_culling_debug_event_runs_same_global_four_year_action() -> Non
 def test_monthly_market_food_stockpile_topup_is_defined_but_weather_hook_is_disabled() -> None:
     # no script rides the yearly country pulse (the closed-building review was removed 2026-10-01)
     assert not COUNTRY_YEARLY.exists()
-
-    global_pulse_entries = {
-        entry.key: entry.value for entry in parse_file(MARKET_FOOD_PRICE_EXTREME_ON_ACTION).entries
-    }
-    assert "weather_monthly_pulse" in global_pulse_entries
-    global_pulse = global_pulse_entries["weather_monthly_pulse"]
-    assert isinstance(global_pulse, CList)
-    global_on_actions = _entry_values(global_pulse)["on_actions"]
-    assert isinstance(global_on_actions, CList)
-    # the stockpile top-up stays disabled; no other script rides the monthly pulse (the Victualling Yard sells real
-    # victuals, so no export delivery script is needed)
-    assert global_on_actions.items == [
-        "pp_monthly_market_food_stockpile_topup_on_weather_pulse",
-    ]
-    assert "effect" not in _entry_values(global_pulse)
-
-    global_effect_action = global_pulse_entries["pp_monthly_market_food_stockpile_topup_on_weather_pulse"]
-    assert isinstance(global_effect_action, CList)
-    global_effect = _entry_values(global_effect_action)["effect"]
-    assert isinstance(global_effect, CList)
-    assert "pp_monthly_market_food_stockpile_topup" not in _entry_values(global_effect)
+    # the empty weather-pulse hook of the disabled stockpile top-up is gone (2026-10-03: it ran an empty effect on every
+    # location each month); the top-up effect itself stays defined for a test run
+    assert not MARKET_FOOD_PRICE_EXTREME_ON_ACTION.exists()
 
     text = MARKET_FOOD_PRICE_EXTREMES.read_text(encoding="utf-8-sig")
     entries = {entry.key: entry.value for entry in parse_file(MARKET_FOOD_PRICE_EXTREMES).entries}
@@ -2258,15 +2231,6 @@ def test_capacity_culling_v2_avoids_pooled_and_iterative_culling() -> None:
         path.read_text(encoding="utf-8-sig")
         for path in (BUILDING_CAPACITY_CULLING_V2, CAPACITY_CULLING_EFFECTS)
     )
-    # The one building iterator only writes the cull's log line from the building's scope (it changes nothing): drop it
-    # before the check.
-    log_scope = re.search(r"\n\t\trandom_buildings_in_location = \{\n(.*?)\n\t\t\}", text, flags=re.S)
-    assert log_scope is not None
-    body = [line.strip() for line in log_scope.group(1).splitlines()]
-    assert body[0] == "limit = { building_type = building_type:$building$ }"
-    assert len(body) == 2 and body[1].startswith('error_log = "PPBLD;capacity_cull;')
-    text = text.replace(log_scope.group(0), "")
-
     forbidden_tokens = (
         "destroy_building",
         "while =",

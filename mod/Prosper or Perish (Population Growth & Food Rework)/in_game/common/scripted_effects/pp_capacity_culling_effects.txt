@@ -106,14 +106,6 @@ pp_cull_capacity_building_above_max = {
 				value > $max_level$
 			}
 		}
-		# Debug flag: scripted cull, counted per location (save) and logged from the building's scope before the
-		# level change (the log text reaches the building through THIS). Log fields: kind;date;owner tag;
-		# location id;building;level before the cull.
-		if = { limit = { has_variable = pp_dbg_script_cull } change_variable = { name = pp_dbg_script_cull add = 1 } } else = { set_variable = { name = pp_dbg_script_cull value = 1 } }
-		random_buildings_in_location = {
-			limit = { building_type = building_type:$building$ }
-			error_log = "PPBLD;capacity_cull;[GetDateString];[THIS.GetBuilding.GetOwner.GetTag];[THIS.GetBuilding.GetLocation.GetKey];[THIS.GetBuilding.GetType.GetNameWithNoTooltip];[THIS.GetBuilding.GetLevel]"
-		}
 		change_building_level_in_location = {
 			building = building_type:$building$
 			value = -1

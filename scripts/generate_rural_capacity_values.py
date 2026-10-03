@@ -28,6 +28,9 @@ CULLING_EFFECTS_PATH = MOD_ROOT / "in_game" / "common" / "scripted_effects" / "p
 # error_log fields after "PPBLD;capacity_cull;", written in the culled building's scope: date;building owner tag;
 # location id;building;level before the cull. Verified in game 2026-09-30: the log text reaches the building through
 # THIS; ROOT and saved scopes (SCOPE.sCountry/sLocation/...) resolve to nothing there.
+# Debug instrumentation of the capacity cull (per-location counter pp_dbg_script_cull + PPBLD error_log line per cull).
+# Off in the shipped mod since 2026-10-03 (Jan: no test hooks in normal play); set True for a measuring run.
+CULL_DEBUG = False
 CULL_LOG_FIELDS = (
     "[GetDateString];[THIS.GetBuilding.GetOwner.GetTag];[THIS.GetBuilding.GetLocation.GetKey];"
     "[THIS.GetBuilding.GetType.GetNameWithNoTooltip];[THIS.GetBuilding.GetLevel]"
@@ -420,14 +423,20 @@ def _culling_effects_file() -> str:
             _line("value > $max_level$", 4),
             _line("}", 3),
             _line("}", 2),
-            _line("# Debug flag: scripted cull, counted per location (save) and logged from the building's scope before the", 2),
-            _line("# level change (the log text reaches the building through THIS). Log fields: kind;date;owner tag;", 2),
-            _line("# location id;building;level before the cull.", 2),
-            _line("if = { limit = { has_variable = pp_dbg_script_cull } change_variable = { name = pp_dbg_script_cull add = 1 } } else = { set_variable = { name = pp_dbg_script_cull value = 1 } }", 2),
-            _line("random_buildings_in_location = {", 2),
-            _line("limit = { building_type = building_type:$building$ }", 3),
-            _line(f'error_log = "PPBLD;capacity_cull;{CULL_LOG_FIELDS}"', 3),
-            _line("}", 2),
+            *(
+                [
+                    _line("# Debug flag: scripted cull, counted per location (save) and logged from the building's scope before the", 2),
+                    _line("# level change (the log text reaches the building through THIS). Log fields: kind;date;owner tag;", 2),
+                    _line("# location id;building;level before the cull.", 2),
+                    _line("if = { limit = { has_variable = pp_dbg_script_cull } change_variable = { name = pp_dbg_script_cull add = 1 } } else = { set_variable = { name = pp_dbg_script_cull value = 1 } }", 2),
+                    _line("random_buildings_in_location = {", 2),
+                    _line("limit = { building_type = building_type:$building$ }", 3),
+                    _line(f'error_log = "PPBLD;capacity_cull;{CULL_LOG_FIELDS}"', 3),
+                    _line("}", 2),
+                ]
+                if CULL_DEBUG
+                else []
+            ),
             _line("change_building_level_in_location = {", 2),
             _line("building = building_type:$building$", 3),
             _line("value = -1", 3),

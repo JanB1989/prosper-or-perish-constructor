@@ -165,7 +165,7 @@ pp_rgo_bonus_olives = {
 	local_olives_output_modifier = 0.20
 	local_peasants_food_consumption = -0.02
 	local_market_access = 0.03
-	local_devastation_recovery = -0.10
+	local_devastation_recovery = -0.0005
 }
 
 pp_rgo_bonus_pepper = {
@@ -183,7 +183,7 @@ pp_rgo_bonus_potato = {
 	local_potato_output_modifier = 0.20
 	local_peasants_food_consumption = -0.08
 	local_population_growth = 0.0003
-	local_devastation_recovery = 0.05
+	local_devastation_recovery = 0.001
 }
 
 pp_rgo_bonus_rice = {

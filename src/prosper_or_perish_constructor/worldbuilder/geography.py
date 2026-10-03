@@ -6,8 +6,8 @@ icons and localization. Test-only files (vanilla building copies, the location w
 not copied. A manifest of copied files is kept so a later sync removes what the export no longer ships.
 
 The location window is the one exception: it is taken from the export and re-patched here, because
-the stored-food gauge, the population-capacity readout, the RGO chip and the status chips (location_status.py)
-are the main mod's, not the export's.
+the stored-food gauge, the population-capacity readout, the RGO chip, the status chips (location_status.py) and
+the condition icons moved to the top left are the main mod's, not the export's.
 """
 
 from __future__ import annotations
@@ -195,6 +195,59 @@ def add_land_potential_chip(text: str) -> str:
     return text.replace(_RGO_ANCHOR, "pp_land_potential_chip = {}\n" + _RGO_ANCHOR)
 
 
+MODIFIER_ROW = "pp_location_modifier_row"
+_CONDITIONS = "# BOTTOM CONDITIONS\n"
+_SCENE_ROWS = "# IOs & PERIPHORA\n"
+_FIRST_MODIFIER = "# SOUND TOLL\n"
+_MODIFIER_ROW_FRAME = f"""name = "{MODIFIER_ROW}"
+	parentanchor = top|left
+	size = {{ 460 40 }}
+	background = {{
+		using = color_dark_blue_texture
+		alpha = 0.8
+		modify_texture = {{
+			using = bg_fade_vertical_down_mask_texture
+			blend_mode = alphamultiply
+			alpha = 1
+		}}
+	}}"""
+
+
+def move_modifier_row(text: str) -> str:
+    """Move the vanilla condition icons (winter, disease, location and province modifiers, ...) to the top left of the scene.
+
+    Vanilla draws them in the bottom row after the geography card, which the native chips fill: in a location with every
+    chip the last icons (the province modifiers, Stored Food among them) ran past the window's edge. The row keeps its
+    vanilla icons and tooltips and becomes a widget pinned to the scene's top-left corner (the top-right corner holds the
+    owner's construction queue buttons).
+    """
+    found = text.count(_CONDITIONS)
+    if found != 1:
+        raise ValueError(f"location_window.gui: expected 1 bottom-conditions anchor for the modifier row, found {found}")
+    conditions = text.index(_CONDITIONS)
+    first = text.find(_FIRST_MODIFIER, conditions)
+    start = text.rfind("widget = {", conditions, first)
+    if first < 0 or start < 0:
+        raise ValueError("location_window.gui: expected the condition icons' widget after the bottom-conditions anchor")
+    end = _block_end(text, text.index("{", start))
+    row = text[start:end]
+    if row.count("using = layoutpolicy_expanding") < 1 or row.index("using = layoutpolicy_expanding") > row.index(_FIRST_MODIFIER):
+        raise ValueError("location_window.gui: the condition icons' widget no longer opens with layoutpolicy_expanding")
+    line_start = text.rfind("\n", 0, start) + 1
+    text = text[:line_start] + text[end + 1 if text[end:end + 1] == "\n" else end:]
+
+    scene = text.rfind("vbox = {", 0, text.rfind(_SCENE_ROWS, 0, conditions))
+    scene_end = _block_end(text, text.index("{", scene))
+    if not scene < conditions < scene_end:
+        raise ValueError("location_window.gui: expected the bottom conditions inside the scene's row stack")
+    indent = text[text.rfind("\n", 0, scene) + 1:scene]
+    policy = row.index("using = layoutpolicy_expanding")
+    inner = row[row.rfind("\n", 0, policy) + 1:policy]
+    row = row.replace("using = layoutpolicy_expanding", _MODIFIER_ROW_FRAME.replace("\n\t", "\n" + inner), 1)
+    comment = f"\n{indent}# PP: the condition icons at the top left (the bottom row is full with the geography chips)\n{indent}"
+    return text[:scene_end] + comment + row + text[scene_end:]
+
+
 # EU5 1.4 builds the population cell of `location_card` and of the location view header from one template;
 # the header overrides its size, text format and gauge. The mod changes the location card's cell only, so it
 # draws a pp_ copy of the template (a template another mod re-declares under the vanilla name cannot undo it).
@@ -367,6 +420,7 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path |
             merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla),
                                                     location_status.load_stored_food_rows(mod_root, vanilla, stored_food, *stored_lever))
             location_status.write_harvest_files(mod_root, harvests)
+            merged = move_modifier_row(merged)
             if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
                 dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")
                 changed += 1

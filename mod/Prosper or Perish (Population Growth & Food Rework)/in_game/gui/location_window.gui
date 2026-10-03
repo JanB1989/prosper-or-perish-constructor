@@ -6551,8 +6551,24 @@ pp_land_potential_chip = {}
 }
 						}
 
-						widget = {
-							using = layoutpolicy_expanding
+
+						expand = {}
+					}
+				}
+				# PP: the condition icons at the top left (the bottom row is full with the geography chips)
+				widget = {
+							name = "pp_location_modifier_row"
+							parentanchor = top|left
+							size = { 460 40 }
+							background = {
+								using = color_dark_blue_texture
+								alpha = 0.8
+								modify_texture = {
+									using = bg_fade_vertical_down_mask_texture
+									blend_mode = alphamultiply
+									alpha = 1
+								}
+							}
 
 							hbox = {
 								margin = { 5 5 }
@@ -7045,10 +7061,6 @@ pp_land_potential_chip = {}
 								expand = {}
 							}
 						}
-
-						expand = {}
-					}
-				}
 				widget = {
 					parentanchor = top|right
 					widgetanchor = top|right

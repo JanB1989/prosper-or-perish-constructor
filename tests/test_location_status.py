@@ -202,3 +202,35 @@ def test_stored_food_chip_lists_the_store_lever_too():
     values = stored_food.render_script_values(config)
     assert "pp_stored_food_low_years = {" in values and "pp_stored_food_full_years = {" in values
     assert "subtract = var:pp_food_store_step" in values   # read from the carried step, so step 0 still counts
+
+def test_condition_icons_sit_at_the_top_left_of_the_scene():
+    # 2026-10-03 (Jan): the bottom row is full with the geography chips, so vanilla's condition icons (winter, disease,
+    # location and province modifiers, Stored Food among them) ran past the window's edge; they get their own top-left row
+    from prosper_or_perish_constructor.worldbuilder import geography
+
+    scene = (
+        "\t\t\t\tvbox = {\n\t\t\t\t\texpand = {}\n\t\t\t\t\t# IOs & PERIPHORA\n\t\t\t\t\twidget = {}\n"
+        "\t\t\t\t\t# BOTTOM CONDITIONS\n\t\t\t\t\thbox = {\n\t\t\t\t\t\thbox = { widget = { name = \"chip\" } }\n"
+        "\t\t\t\t\t\twidget = {\n\t\t\t\t\t\t\tusing = layoutpolicy_expanding\n\t\t\t\t\t\t\thbox = {\n"
+        "\t\t\t\t\t\t\t\t# SOUND TOLL\n\t\t\t\t\t\t\t\ticon = { name = \"toll\" }\n"
+        "\t\t\t\t\t\t\t\t# Province timed modifiers\n\t\t\t\t\t\t\t\twidget = { name = \"province\" }\n"
+        "\t\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t\texpand = {}\n\t\t\t\t\t}\n"
+        "\t\t\t\t}\n\t\t\t\twidget = { name = \"queue\" parentanchor = top|right }\n"
+    )
+    out = geography.move_modifier_row(scene)
+    assert out.count("{") == out.count("}") and out.count("# SOUND TOLL") == 1
+    bottom = out[out.index("# BOTTOM CONDITIONS"):out.index(f'name = "{geography.MODIFIER_ROW}"')]
+    assert 'name = "chip"' in bottom and "SOUND TOLL" not in bottom and "layoutpolicy_expanding" not in bottom
+    # a sibling of the scene's row stack, before the queue buttons, pinned top left
+    row = out[out.index(f'name = "{geography.MODIFIER_ROW}"'):out.index('name = "queue"')]
+    assert "parentanchor = top|left" in row and 'name = "province"' in row
+    assert "\t\t\t\t}\n\t\t\t\t# PP: the condition icons" in out
+    with pytest.raises(ValueError, match="modifier row"):
+        geography.move_modifier_row(scene + scene)
+
+    # the shipped window: the icons left the bottom row and the queue buttons keep the top-right corner
+    window = (MOD_ROOT / "in_game/gui/location_window.gui").read_text(encoding="utf-8-sig")
+    assert window.count(f'name = "{geography.MODIFIER_ROW}"') == 1
+    row_at = window.index(f'name = "{geography.MODIFIER_ROW}"')
+    assert window.index("# BOTTOM CONDITIONS") < row_at < window.index("# SOUND TOLL") < window.index("# Province timed modifiers")
+    assert window.index("# Province timed modifiers") < window.index("size = { 62 220 }")

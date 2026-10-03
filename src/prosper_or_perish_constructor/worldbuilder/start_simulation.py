@@ -1260,6 +1260,51 @@ class Simulation:
             use -= running * victuals
         return use
 
+    def farm_net_food(self, tag, key):
+        """Food one more staffed level of the farm ``key`` adds to its province: its local food (scaled) and its
+        Provisioning food, minus the subsistence its peasants gave up."""
+        num = self.numbers[key]
+        return (self.food_per_level(key, self.food_mult.get(tag, 1.0))
+                - num["employment_size"] * self.location_yield(tag))
+
+    def deficit_farm(self, tag):
+        """The tier-0 crop farm a short pool gets its next level from at ``tag``: allowed here (native gates), room
+        under its live cap, best by the location's crop weight, livestock last; None when none adds enough food."""
+        cfg = self.crop_cfg
+        if cfg is None:
+            return None
+        weights = self.crop_weights.get(tag, {})
+        rank = {key: i for i, key in enumerate(cfg.buildings.values())}
+        goods = self.crop_candidates(tag) & self.crop_available.get(tag, frozenset())
+        floor = float(self.food_model.deficit_farm_min_net_food)
+        for good in sorted(goods, key=lambda g: (g == ca.LIVESTOCK, -float(weights.get(g, 0.0)), rank[cfg.buildings[g]])):
+            key = cfg.buildings[good]
+            if self.farm_net_food(tag, key) >= floor:
+                return key
+        return None
+
+    def _feed_with_farms(self, members, need):
+        """Crop farm levels in the pools with a need, one level at a time round the pool's locations (most people
+        first), each where a level adds at least ``deficit_farm_min_net_food`` (caps, workers and land through
+        ``add``), until the need is met or no location takes another level. Returns the levels placed."""
+        placed = 0
+        for group in sorted((g for g in members if need.get(g, 0.0) > 0), key=lambda g: (-need[g], g)):
+            remaining = need[group]
+            tags = sorted(self.groups[group], key=lambda t: (-self.base[t]["population"], t))
+            open_ = list(tags)
+            while remaining > 1e-6 and open_:
+                for tag in list(open_):
+                    key = self.deficit_farm(tag)
+                    if key is None or not self.add(tag, key, 1):
+                        open_.remove(tag)
+                        continue
+                    self.__dict__.setdefault("crop_placed", defaultdict(Counter))[tag][key] += 1
+                    remaining -= self.farm_net_food(tag, key)
+                    placed += 1
+                    if remaining <= 1e-6:
+                        break
+        return placed
+
     def _serve_cookshops(self, members, need, room, budgets):
         """Cookshops in the pools with a remaining need, at most ``room`` levels, one level at a time to the pool whose
         need is the largest share of its demand. A Cookshop feeds only its own province (it serves, it does not sell
@@ -1397,6 +1442,12 @@ class Simulation:
                 used = sum(self.budgets(groups=members)[g]["cookshop_levels"] for g in members) * raw_per_level
                 return max(0, math.floor((share * raw - used) / raw_per_level))
 
+            # 0. Farms first (2026-10-03, Jan): crop farm levels wherever they add food, before any kitchen or Tavern
+            farms = self._feed_with_farms(members, need0)
+            self.deficit_farm_levels = getattr(self, "deficit_farm_levels", 0) + farms
+            if farms:
+                b = self.budgets(groups=members)
+                need0 = needs(b)
             # 1. Cookshops where the market's raw goods allow (all Serve: Province Food, no victuals)
             serve = self._serve_cookshops(members, dict(need0), room(model.serve_raw_goods_share), b)
             wanted = None
@@ -1459,6 +1510,7 @@ class Simulation:
             self.victuals[catchment] = {
                 "deficit": round(sum(need0.values()), 1),
                 "raw_goods": round(raw, 1),
+                "deficit_farm_levels": farms,
                 "serve_cookshop_levels": serve,
                 "fallback_cookshop_levels": fallback,
                 "wanted_tavern_levels": wanted or 0,
@@ -2083,6 +2135,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         "victuals": {
             "supply": round(sum(c["victuals_supply"] for c in sim.victuals.values()), 1),
             "demand": round(sum(c["victuals_demand"] for c in sim.victuals.values()), 1),
+            "deficit_farm_levels": sum(c.get("deficit_farm_levels", 0) for c in sim.victuals.values()),
             "serve_cookshop_levels": sum(c["serve_cookshop_levels"] for c in sim.victuals.values()),
             "fallback_cookshop_levels": sum(c["fallback_cookshop_levels"] for c in sim.victuals.values()),
             "wanted_tavern_levels": sum(c["wanted_tavern_levels"] for c in sim.victuals.values()),

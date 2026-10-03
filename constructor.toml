@@ -740,6 +740,10 @@ harbor_yard_victuals_per_level = 0.932   # victuals a staffed harbour Victuallin
                                          # food since 2026-10-03)
 grange_at_start = false           # no Granges at game start (2026-10-03): every store starts far above its rest point;
                                   # the AI builds Granges where food really piles up (the Grange's ai_construct_weight)
+# Food deficits (2026-10-03, Jan: farms almost always where they make sense, Taverns only in rare cases): before any
+# Cookshop or Tavern, short pools get tier-0 crop farm levels (best crop by suitability, livestock last), one level at a
+# time over the pool's locations, wherever a level adds at least this much food after its peasants' lost subsistence
+deficit_farm_min_net_food = 0.25
 # Cookshops: every level runs a dish (no Preserve recipes since 2026-09-25); since 2026-10-03 dishes and drinks sell
 # for offset and the food is the flat local_monthly_food only
 cookshop_serve_share = 1.0

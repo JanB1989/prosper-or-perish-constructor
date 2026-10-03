@@ -4,7 +4,8 @@
 writes `graphs/report/<run>/`:
 
 - `maps/*.mp4` - one H.264 video per map (political, population, population change, unemployment, development,
-  building levels, building investment, trade routes, market trade balance), one frame per save, sized to stay
+  building levels, building investment, trade between world regions, the largest trade routes, market trade
+  balance), one frame per save, sized to stay
   under 10 MB so Discord and GitHub play it inline; `maps/*.png` - the last frame of each (a poster / thumbnail);
 - `index.html` - the page: summary tiles, the videos and the interactive charts and tables of
   `run_report_charts` (population, trade, prices, buildings, countries), drawn by Apache ECharts (loaded from
@@ -43,6 +44,9 @@ from prosper_or_perish_constructor.run_report_charts import (
     GOODS_GROUPS,
     build_payload,
     goods_group_expr,
+    land_region_expr,
+    region_trade,
+    region_trade_totals,
     titleize,
     world_trade_share,
 )
@@ -439,9 +443,10 @@ class FrameComposer:
     BAR = 120
 
     def __init__(self, canvas: MapCanvas, title: str, subtitle: str, scale: Scale | None,
-                 legend: list[tuple[str, tuple[int, int, int]]] | None = None):
+                 legend: list[tuple[str, tuple[int, int, int]]] | None = None, nodata_label: str = "no data"):
         self.canvas = canvas
         self.legend = legend or []
+        self.nodata_label = nodata_label
         self.width = canvas.width
         self.height = canvas.height + self.BAR
         self.title = title
@@ -467,8 +472,8 @@ class FrameComposer:
                 draw.text((x - (box[2] - box[0]) / 2, y0 + h + 10), label, font=self.fonts["small"], fill=TEXT_MUTED)
             nodata_x = x0 + w + 24
             draw.rectangle([nodata_x, y0, nodata_x + 16, y0 + h], fill=LAND_NODATA)
-            draw.text((nodata_x + 24, y0 - 3), "no data", font=self.fonts["small"], fill=TEXT_MUTED)
-        x, y = self.width // 2 - 330, 42
+            draw.text((nodata_x + 24, y0 - 3), self.nodata_label, font=self.fonts["small"], fill=TEXT_MUTED)
+        x, y = self.width // 2 - 480, 42
         for label, rgb in self.legend:
             draw.rounded_rectangle([x, y + 3, x + 22, y + 13], radius=3, fill=rgb)
             draw.text((x + 30, y - 2), label, font=self.fonts["small"], fill=TEXT_MUTED)
@@ -741,7 +746,10 @@ TRADE_LAND = (46, 52, 62)
 NO_MARKET_LAND = (34, 38, 46)
 MARKET_BORDER = (98, 106, 120)
 BALANCE_BORDER = (16, 20, 26)
-TRADE_VIDEOS = ("trade_routes", "trade_balance")
+REGION_BORDER = (12, 16, 22)
+TRADE_VIDEOS = ("trade_regions", "trade_routes", "trade_balance")
+TOP_ROUTES = 40  # market pairs drawn per frame in the routes video
+TOP_REGION_FLOWS = 18  # region pairs drawn per frame in the regions video
 
 
 def _location_centroids(canvas: MapCanvas) -> np.ndarray:
@@ -824,9 +832,57 @@ def _draw_trade(base: np.ndarray, routes: list[tuple], dots: list[tuple[float, f
     return np.asarray(out.convert("RGB"))
 
 
+def _region_layout(canvas: MapCanvas, run: RunData) -> tuple[np.ndarray, list[str], dict[str, tuple[float, float]]]:
+    """H x W index into the sorted world regions per pixel (-1 none), the regions, and each region's centre: the
+    pixel mean of its locations (a region drawn across the map edge is measured unwrapped)."""
+    pairs = run.locations.filter(land_region_expr()).select("slug", "macro_region").unique("slug")
+    regions = sorted(pairs["macro_region"].unique().to_list())
+    region_index = {r: i for i, r in enumerate(regions)}
+    of_location = np.full(len(canvas.tags), -1, dtype=np.int64)
+    index = pairs["slug"].replace_strict(canvas.tag_index, default=-1, return_dtype=pl.Int64).to_numpy()
+    keep = index >= 0
+    of_location[index[keep]] = pairs["macro_region"].replace_strict(region_index, return_dtype=pl.Int64).to_numpy()[keep]
+    raster = np.where(canvas.index >= 0, of_location[np.maximum(canvas.index, 0)], -1)
+    centres: dict[str, tuple[float, float]] = {}
+    ys, xs = np.nonzero(raster >= 0)
+    ids = raster[ys, xs]
+    for region, i in region_index.items():
+        mask = ids == i
+        if not mask.any():
+            continue
+        rx, ry = xs[mask], ys[mask]
+        columns = np.bincount(rx, minlength=canvas.width) > 0
+        if columns[0] and columns[-1] and not columns.all():  # wraps the map edge: shift the left part right
+            gap = np.nonzero(~columns)[0]
+            rx = np.where(rx < gap[0], rx + canvas.width, rx)
+        centres[region] = ((float(rx.mean()) % canvas.width), float(ry.mean()))
+    return raster, regions, centres
+
+
+def _region_borders(raster: np.ndarray) -> np.ndarray:
+    mask = np.zeros(raster.shape, dtype=bool)
+    mask[:, 1:] |= (raster[:, 1:] != raster[:, :-1]) & ((raster[:, 1:] >= 0) | (raster[:, :-1] >= 0))
+    mask[1:, :] |= (raster[1:, :] != raster[:-1, :]) & ((raster[1:, :] >= 0) | (raster[:-1, :] >= 0))
+    return mask
+
+
+def _draw_labels(rgb: np.ndarray, labels: list[tuple[float, float, str, str]]) -> np.ndarray:
+    """Region labels (x, y, name, figures) centred on (x, y), with a dark outline so they read over any colour."""
+    image = Image.fromarray(rgb)
+    draw = ImageDraw.Draw(image)
+    name_font, figure_font = _font(17, True), _font(15)
+    for x, y, name, figures in labels:
+        for text, font, dy, fill in ((name, name_font, -11, TEXT), (figures, figure_font, 10, (214, 220, 228))):
+            box = draw.textbbox((0, 0), text, font=font)
+            draw.text((x - (box[2] - box[0]) / 2, y + dy - (box[3] - box[1]) / 2), text, font=font, fill=fill,
+                      stroke_width=3, stroke_fill=(8, 10, 14))
+    return np.asarray(image)
+
+
 def render_trade_maps(run: RunData, canvas: MapCanvas, out: Path, *, fps: int,
                       log: Callable[[str], None] = print) -> list[dict[str, str]]:
-    """Two videos: the trade routes between markets, and each market's net trade (exports - imports)."""
+    """Three videos: trade between world regions (in, out and the largest flows), the largest trade routes between
+    markets, and each market's net trade (exports - imports)."""
     if run.trades.is_empty() or run.market_goods.is_empty() or run.markets.is_empty():
         log("trade maps: no trade routes in the dataset; skipped")
         return []
@@ -858,13 +914,28 @@ def render_trade_maps(run: RunData, canvas: MapCanvas, out: Path, *, fps: int,
     share_by_snapshot = world_trade_share(run)
     duration = len(snapshots) / fps
     max_kbps = int(MAX_VIDEO_BYTES * 8 / 1000 / (duration + 2.0))
-    route_composer = FrameComposer(canvas, "Trade routes", "Goods moved between markets each month, at base prices", None,
-                                   legend=[(label, group_rgb[key]) for key, label, _, _ in GOODS_GROUPS])
+    legend = [(label, group_rgb[key]) for key, label, _, _ in GOODS_GROUPS]
+    route_composer = FrameComposer(canvas, "Largest trade routes", f"Top {TOP_ROUTES} market pairs, base prices",
+                                   None, legend=legend)
+    # world regions: flows between them (exporter -> importer, main goods group) and their net trade
+    flows = region_trade(run)
+    pair_flows = (flows.filter(pl.col("from_region") != pl.col("to_region"))
+                  .group_by("snapshot_id", "from_region", "to_region")
+                  .agg(pl.col("value").sum(), pl.col("group").sort_by("value").last()))
+    region_totals = region_trade_totals(flows)
+    flow_ref = float(pair_flows["value"].quantile(0.99) or 1.0) if not pair_flows.is_empty() else 1.0
+    region_raster, regions, region_centre = _region_layout(canvas, run)
+    region_edges = _region_borders(region_raster)
+    region_scale = Scale("diverging", -1.0, 1.0, _ramp(DIVERGING[:3] + (DIVERGING_DARK_MID,) + DIVERGING[4:]),
+                         [(-1.0, "imports only"), (-0.5, "-50%"), (0.0, "balanced"), (0.5, "+50%"), (1.0, "exports only")])
+    region_composer = FrameComposer(canvas, "Trade between world regions", "Colour: net trade · arrows: largest flows",
+                                    region_scale, nodata_label="little trade")
     balance_scale = Scale("diverging", -0.3, 0.3, _ramp(DIVERGING[:3] + (DIVERGING_DARK_MID,) + DIVERGING[4:]),
                           [(-0.3, "-30% importer"), (-0.15, "-15%"), (0.0, "0"), (0.15, "+15%"), (0.3, "+30% exporter")])
     balance_composer = FrameComposer(canvas, "Market trade balance", "Exports minus imports, share of production + imports",
                                      balance_scale)
     writers = {
+        "trade_regions": (region_composer, VideoWriter(out / "trade_regions.mp4", region_composer.width, region_composer.height, fps, max_kbps)),
         "trade_routes": (route_composer, VideoWriter(out / "trade_routes.mp4", route_composer.width, route_composer.height, fps, max_kbps)),
         "trade_balance": (balance_composer, VideoWriter(out / "trade_balance.mp4", balance_composer.width, balance_composer.height, fps, max_kbps)),
     }
@@ -888,22 +959,62 @@ def render_trade_maps(run: RunData, canvas: MapCanvas, out: Path, *, fps: int,
                 centre[market_id] = tuple(centroids[tag_index])
         radius = {m: 2.0 + 7.0 * math.sqrt(min(1.0, (t or 0.0) / trade_ref)) for m, t in total.select("market_id", "traded").iter_rows()}
         lines = []
-        frame_routes = routes.filter(pl.col("snapshot_id") == snapshot).sort("value")
-        for from_market, to_market, value, group in frame_routes.select("from_market", "to_market", "value", "group").iter_rows():
+        frame_routes = routes.filter(pl.col("snapshot_id") == snapshot)
+        top_routes = frame_routes.sort("value", descending=True).head(TOP_ROUTES).sort("value")
+        on_routes: set[Any] = set()
+        for from_market, to_market, value, group in top_routes.select("from_market", "to_market", "value", "group").iter_rows():
             a, b = centre.get(from_market), centre.get(to_market)
-            if a is None or b is None or not value or value < route_ref * 0.003:
+            if a is None or b is None or not value:
                 continue
             t = min(1.0, math.sqrt(value / route_ref))
             rgb = group_rgb.get(group, group_rgb["produced"])
             lines.append((a[0], a[1], radius.get(from_market, 2.0), b[0], b[1], radius.get(to_market, 2.0),
-                          0.5 + 6.0 * t, (*rgb, int(80 + 175 * t))))
-        dots = [(centre[m][0], centre[m][1], r) for m, r in radius.items() if m in centre]
+                          1.0 + 6.0 * t, (*rgb, int(120 + 135 * t))))
+            on_routes.update((from_market, to_market))
+        dots = [(centre[m][0], centre[m][1], radius.get(m, 2.0)) for m in on_routes if m in centre]
         traded = float(frame_routes["value"].sum() or 0.0)
+        top_share = float(top_routes["value"].sum() or 0.0) / traded if traded else 0.0
         composer = writers["trade_routes"][0]
         frame = composer.compose(_draw_trade(base, lines, dots), year,
-                                 [("traded per month", f"{_format_number(traded)} gold"), ("market pairs", str(frame_routes.height))])
+                                 [("traded per month", f"{_format_number(traded)} gold"), ("market pairs", str(frame_routes.height)),
+                                  (f"top {TOP_ROUTES} carry", f"{top_share * 100:.0f}%")])
         writers["trade_routes"][1].write(frame)
         last["trade_routes"] = frame
+        # world regions filled by net trade with other regions, the largest flows between them, labels in / out
+        region_frame = region_totals.filter(pl.col("snapshot_id") == snapshot)
+        net = np.full(len(regions) + 1, np.nan)
+        labels = []
+        cross_total = float(region_frame["exports"].sum() or 0.0)
+        for region, exports, imports, inside in region_frame.select("region", "exports", "imports", "inside").iter_rows():
+            if region not in region_centre:
+                continue
+            if cross_total and exports + imports >= 0.01 * cross_total:  # under 1 % of the world's: "little trade"
+                net[regions.index(region)] = (exports - imports) / (exports + imports)
+            if cross_total and (exports + imports) >= 0.04 * cross_total:
+                cx, cy = region_centre[region]
+                labels.append((cx, cy, titleize(region), f"in {_format_number(imports)} · out {_format_number(exports)}"))
+        lut = region_scale.colours(net[:-1])
+        palette = np.vstack([lut, np.array([TRADE_LAND], dtype=np.uint8)])
+        region_rgb = np.empty((canvas.height, canvas.width, 3), dtype=np.uint8)
+        region_rgb[:] = SEA
+        land = canvas.index >= 0
+        region_rgb[land] = palette[region_raster[land]]  # -1 (land outside a world region) takes the last row
+        region_rgb[region_edges & land] = REGION_BORDER
+        flows_frame = pair_flows.filter(pl.col("snapshot_id") == snapshot).sort("value", descending=True).head(TOP_REGION_FLOWS).sort("value")
+        arrows = []
+        for from_region, to_region, value, group in flows_frame.select("from_region", "to_region", "value", "group").iter_rows():
+            a, b = region_centre.get(from_region), region_centre.get(to_region)
+            if a is None or b is None or not value:
+                continue
+            t = min(1.0, math.sqrt(value / flow_ref))
+            rgb = group_rgb.get(group, group_rgb["produced"])
+            arrows.append((a[0], a[1], 26.0, b[0], b[1], 26.0, 1.5 + 9.0 * t, (*rgb, int(150 + 105 * t))))
+        region_map = _draw_labels(_draw_trade(region_rgb, arrows, []), labels)
+        inside_total = float(region_frame["inside"].sum() or 0.0)
+        frame = writers["trade_regions"][0].compose(region_map, year, [
+            ("between regions", f"{_format_number(cross_total)} gold"), ("inside regions", f"{_format_number(inside_total)} gold")])
+        writers["trade_regions"][1].write(frame)
+        last["trade_regions"] = frame
         # every location in its market's colour: net exporter blue, net importer red
         values = locs.select("slug", "market_id").join(total.select("market_id", pl.col("net_share").alias("value")), on="market_id",
                                                        how="left") if not locs.is_empty() else pl.DataFrame(schema={"slug": pl.String, "value": pl.Float64})
@@ -915,8 +1026,14 @@ def render_trade_maps(run: RunData, canvas: MapCanvas, out: Path, *, fps: int,
         writers["trade_balance"][1].write(frame)
         last["trade_balance"] = frame
     results = []
-    titles = {"trade_routes": ("Trade routes", "Routes between markets: width = value moved per month (base prices), "
-                                               "arrow = importer, colour = main goods group, dot = market (size: trade)"),
+    titles = {"trade_regions": ("Trade between world regions", "World regions coloured by exports − imports as a share of "
+                                                               "their trade with other regions (blue: exporter, red: importer); "
+                                                               f"the {TOP_REGION_FLOWS} largest flows as arrows (width = value per "
+                                                               "month at base prices, colour = main goods group); labels: imports "
+                                                               "and exports in gold per month"),
+              "trade_routes": ("Largest trade routes", f"The {TOP_ROUTES} largest routes between markets: width = value moved "
+                                                       "per month (base prices), arrow = importer, colour = main goods group, "
+                                                       "dot = market (size: trade)"),
               "trade_balance": ("Market trade balance", "Exports minus imports of each market, as a share of its "
                                                         "production plus imports (blue: net exporter, red: net importer)")}
     for key, (composer, writer) in writers.items():

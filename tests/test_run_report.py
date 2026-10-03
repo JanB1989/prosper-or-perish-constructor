@@ -256,8 +256,29 @@ def test_trade_maps_draw_routes_over_market_borders(tmp_path: Path) -> None:
     borders = rr._market_borders(raster)
     assert borders[5, 18] and not borders[5, 30] and not borders[3, 5]
     maps = rr.render_trade_maps(run, canvas, tmp_path, fps=2, log=lambda _: None)
-    assert [m["key"] for m in maps] == ["trade_routes", "trade_balance"]
+    assert [m["key"] for m in maps] == ["trade_regions", "trade_routes", "trade_balance"]
     assert all((tmp_path / f"{m['key']}.mp4").stat().st_size > 0 for m in maps)
+    region_raster, regions, centres = rr._region_layout(canvas, run)
+    assert regions == ["british_isles", "western_europe"]  # no ocean pseudo-region
+    assert region_raster[5, 5] == 1 and region_raster[5, 20] == 0 and region_raster[5, 31] == -1
+    assert centres["western_europe"] == pytest.approx((10.5, 9.5))
+
+
+def test_region_trade_sums_flows_between_world_regions() -> None:
+    from prosper_or_perish_constructor.run_report_charts import build_payload, region_trade, region_trade_totals
+
+    run = _trade_run()
+    flows = region_trade(run)
+    assert flows.filter(pl.col("snapshot_id") == "s2").select("from_region", "to_region", "value").rows() == [
+        ("western_europe", "british_isles", 12.0)]
+    totals = {r["region"]: r for r in region_trade_totals(flows).filter(pl.col("snapshot_id") == "s2").iter_rows(named=True)}
+    assert totals["western_europe"]["exports"] == 12.0 and totals["western_europe"]["net"] == 12.0
+    assert totals["british_isles"]["imports"] == 12.0 and totals["british_isles"]["inside"] == 0.0
+    tables = {t["key"]: t for t in build_payload(run)["tables"]}
+    column = {c["key"]: i for i, c in enumerate(tables["regions"]["columns"])}
+    rows = {r[column["region"]]: r for r in tables["regions"]["rows"][-1]}
+    assert rows["Western Europe"][column["to"]] == "British Isles 12" and rows["British Isles"][column["top_imports"]] == [["cloth", 12.0]]
+    assert tables["region_pairs"]["rows"][-1][0][:4] == ["Western Europe", "British Isles", 12.0, 100.0]
 
 
 def test_routes_over_the_map_edge_take_the_short_way() -> None:

@@ -522,6 +522,141 @@ def trade_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
     return charts
 
 
+def region_trade(run: RunData) -> pl.DataFrame:
+    """snapshot_id, from_region, to_region, good_id, group, value: the routes that ran, summed per pair of world
+    regions (the region of each market's centre; value = amount x base price, gold per month). from == to is trade
+    between markets of one region."""
+    schema = {"snapshot_id": pl.String, "from_region": pl.String, "to_region": pl.String, "good_id": pl.String,
+              "group": pl.String, "value": pl.Float64}
+    if run.trades.is_empty() or run.markets.is_empty() or run.market_goods.is_empty():
+        return pl.DataFrame(schema=schema)
+    region_of = run.locations.filter(land_region_expr()).select(
+        "snapshot_id", pl.col("slug").alias("center_slug"), pl.col("macro_region").alias("region"))
+    market_region = run.markets.select("snapshot_id", "market_id", "center_slug").join(
+        region_of, on=["snapshot_id", "center_slug"], how="inner").select("snapshot_id", "market_id", "region")
+    prices = run.market_goods.group_by("snapshot_id", "good_id").agg(pl.col("default_price").first(), pl.col("group").first())
+    return (
+        run.trades.filter(~pl.col("good_id").is_in(list(DUMMY_GOODS)))
+        .join(prices, on=["snapshot_id", "good_id"], how="left")
+        .with_columns((pl.col("amount") * pl.col("default_price").fill_null(1.0)).alias("value"), pl.col("group").fill_null("produced"))
+        .join(market_region.rename({"market_id": "from_market", "region": "from_region"}), on=["snapshot_id", "from_market"], how="inner")
+        .join(market_region.rename({"market_id": "to_market", "region": "to_region"}), on=["snapshot_id", "to_market"], how="inner")
+        .group_by("snapshot_id", "from_region", "to_region", "good_id")
+        .agg(pl.col("group").first(), pl.col("value").sum())
+        .select(list(schema))
+    )
+
+
+def region_trade_totals(flows: pl.DataFrame) -> pl.DataFrame:
+    """snapshot_id, region, exports (to other regions), imports (from other regions), inside (between the region's
+    own markets), net (exports - imports); gold per month at base prices."""
+    cross = flows.filter(pl.col("from_region") != pl.col("to_region"))
+    out = cross.group_by("snapshot_id", pl.col("from_region").alias("region")).agg(pl.col("value").sum().alias("exports"))
+    inn = cross.group_by("snapshot_id", pl.col("to_region").alias("region")).agg(pl.col("value").sum().alias("imports"))
+    inside = flows.filter(pl.col("from_region") == pl.col("to_region")).group_by(
+        "snapshot_id", pl.col("from_region").alias("region")).agg(pl.col("value").sum().alias("inside"))
+    return (
+        out.join(inn, on=["snapshot_id", "region"], how="full", coalesce=True)
+        .join(inside, on=["snapshot_id", "region"], how="full", coalesce=True)
+        .with_columns(pl.col("exports", "imports", "inside").fill_null(0.0))
+        .with_columns((pl.col("exports") - pl.col("imports")).alias("net"))
+    )
+
+
+def region_trade_charts(run: RunData, x: pl.DataFrame, flows: pl.DataFrame) -> list[dict[str, Any]]:
+    if flows.is_empty():
+        return []
+    xs = x["x"].to_list()
+    totals = region_trade_totals(flows)
+    palette = [(k, label, colour) for k, label, colour in region_palette(run) if k in set(totals["region"].to_list())]
+    series = {value: _by_key(totals, "region", value, x) for value in ("exports", "imports", "net", "inside")}
+    world = totals.group_by("snapshot_id").agg(pl.col("exports").sum().alias("cross"), pl.col("inside").sum())
+
+    def lines(value: str) -> list[dict[str, Any]]:
+        return [_series(label, series[value].get(k, [None] * len(xs)), colour, width=1.6) for k, label, colour in palette]
+
+    return [chart(
+        "region_trade", "trade", "Trade between world regions",
+        "Goods moved by the trade routes that ran, summed per world region (the region of each market's centre), gold "
+        "per month at base prices. Exports and imports count only trade with other regions; inside is trade between "
+        "markets of the same region. Net = exports − imports.",
+        [view("Exports to other regions", "gold", line_option(xs, lines("exports"), unit="gold", stack=True)),
+         view("Imports from other regions", "gold", line_option(xs, lines("imports"), unit="gold", stack=True)),
+         view("Net", "gold", line_option(xs, lines("net"), unit="gold", y_min=None, reference=0.0)),
+         view("Inside the region", "gold", line_option(xs, lines("inside"), unit="gold", stack=True)),
+         view("World", "gold", line_option(xs, [
+             _series("Between regions", _aligned(world, "cross", x), "#2a78d6", width=2.5),
+             _series("Inside regions", _aligned(world, "inside", x), "#1baf7a", width=2.5)], unit="gold"))])]
+
+
+def region_trade_tables(run: RunData, x: pl.DataFrame, flows: pl.DataFrame) -> list[dict[str, Any]]:
+    if flows.is_empty():
+        return []
+    snapshots = x["snapshot_id"].to_list()
+    labels = x["label"].to_list()
+    keys = ["snapshot_id", "region"]
+    cross = flows.filter(pl.col("from_region") != pl.col("to_region"))
+    totals = region_trade_totals(flows)
+    goods_out = cross.group_by("snapshot_id", pl.col("from_region").alias("region"), "good_id").agg(pl.col("value").sum().alias("ex"))
+    goods_in = cross.group_by("snapshot_id", pl.col("to_region").alias("region"), "good_id").agg(pl.col("value").sum().alias("im"))
+    partners_out = cross.group_by("snapshot_id", pl.col("from_region").alias("region"), "to_region").agg(pl.col("value").sum().alias("to_v"))
+    partners_in = cross.group_by("snapshot_id", pl.col("to_region").alias("region"), "from_region").agg(pl.col("value").sum().alias("from_v"))
+    totals = (totals.join(_top_goods(goods_out, keys, "ex"), on=keys, how="left")
+              .join(_top_goods(goods_in, keys, "im"), on=keys, how="left")
+              .join(_top(partners_out.with_columns(pl.col("to_region").map_elements(titleize, return_dtype=pl.String).alias("to_name")),
+                         keys, "to_v", "to_name"), on=keys, how="left")
+              .join(_top(partners_in.with_columns(pl.col("from_region").map_elements(titleize, return_dtype=pl.String).alias("from_name")),
+                         keys, "from_v", "from_name"), on=keys, how="left"))
+    columns = [
+        {"key": "region", "label": "World region", "kind": "text"},
+        {"key": "exports", "label": "Exports", "kind": "num", "unit": "gold", "title": "to other regions, gold per month at base prices"},
+        {"key": "imports", "label": "Imports", "kind": "num", "unit": "gold", "title": "from other regions"},
+        {"key": "net", "label": "Net", "kind": "num", "unit": "gold", "signed": True, "title": "exports − imports"},
+        {"key": "inside", "label": "Inside", "kind": "num", "unit": "gold", "title": "between markets of the region"},
+        {"key": "top_exports", "label": "Main exports", "kind": "goods", "unit": "gold"},
+        {"key": "top_imports", "label": "Main imports", "kind": "goods", "unit": "gold"},
+        {"key": "to", "label": "Exports go to", "kind": "text", "wide": True},
+        {"key": "from", "label": "Imports come from", "kind": "text", "wide": True},
+    ]
+    rows: list[list[list[Any]]] = []
+    by_snapshot = totals.partition_by("snapshot_id", as_dict=True)
+    for snapshot in snapshots:
+        frame = by_snapshot.get((snapshot,), pl.DataFrame())
+        rows.append([] if frame.is_empty() else [
+            [titleize(r["region"]), _r(r["exports"]), _r(r["imports"]), _r(r["net"]), _r(r["inside"]),
+             _goods_cell(r["top_ex"]), _goods_cell(r["top_im"]), r["top_to_v"] or "", r["top_from_v"] or ""]
+            for r in frame.sort(pl.col("exports") + pl.col("imports"), descending=True).iter_rows(named=True)])
+    pairs = cross.group_by("snapshot_id", "from_region", "to_region").agg(pl.col("value").sum())
+    pairs = pairs.join(_top_goods(cross, ["snapshot_id", "from_region", "to_region"], "value"),
+                       on=["snapshot_id", "from_region", "to_region"], how="left")
+    share = pairs.group_by("snapshot_id").agg(pl.col("value").sum().alias("all"))
+    pairs = pairs.join(share, on="snapshot_id").with_columns((pl.col("value") / pl.col("all") * 100).alias("share"))
+    pcolumns = [
+        {"key": "from", "label": "From (exporter)", "kind": "text"},
+        {"key": "to", "label": "To (importer)", "kind": "text"},
+        {"key": "value", "label": "Value", "kind": "num", "unit": "gold", "title": "gold per month at base prices"},
+        {"key": "share", "label": "Share", "kind": "num", "unit": "pct", "title": "of all trade between regions"},
+        {"key": "goods", "label": "Main goods", "kind": "goods", "unit": "gold"},
+    ]
+    prows: list[list[list[Any]]] = []
+    by_snapshot = pairs.partition_by("snapshot_id", as_dict=True)
+    for snapshot in snapshots:
+        frame = by_snapshot.get((snapshot,), pl.DataFrame())
+        prows.append([] if frame.is_empty() else [
+            [titleize(r["from_region"]), titleize(r["to_region"]), _r(r["value"]), _r(r["share"]), _goods_cell(r["top_value"])]
+            for r in frame.sort("value", descending=True).iter_rows(named=True)])
+    return [{
+        "key": "regions", "section": "trade", "title": "World regions: trade in and out",
+        "caption": "Every world region of the save: what it sent to and received from other regions, trade inside it, "
+                   "its main goods and partners (gold per month at base prices).",
+        "columns": columns, "snapshots": labels, "rows": rows, "sort": "exports", "limit": 40,
+    }, {
+        "key": "region_pairs", "section": "trade", "title": "Flows between world regions",
+        "caption": "Every pair of world regions that traded, exporter to importer, with the goods that made up the flow.",
+        "columns": pcolumns, "snapshots": labels, "rows": prows, "sort": "value", "limit": 30,
+    }]
+
+
 def _top(frame: pl.DataFrame, keys: list[str], value: str, label: str, n: int = 3) -> pl.DataFrame:
     """keys + one string "A 12 · B 5 · C 1" of the n largest positive values per group."""
     return (
@@ -850,7 +985,10 @@ def build_payload(run: RunData) -> dict[str, Any]:
     if not run.market_goods.is_empty():
         world = _goods_world(run)
         goods = goods_info(run, world, x)
+        flows = region_trade(run)
         charts += trade_charts(run, x, world)
+        charts += region_trade_charts(run, x, flows)
+        tables += region_trade_tables(run, x, flows)
         tables += trade_tables(run, x, world)
         charts += price_charts(run, x, world)
     charts += building_charts(run, x)

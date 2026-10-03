@@ -747,8 +747,7 @@ yard_surplus_share = 0.25          # Yards only in pools that feed themselves by
 yard_min_capacity_months = 20.0    # ... and whose store can reach the Grange's band (20 months)
 harbor_yard_min_capacity_months = 12.0   # the harbour Yard's band starts lower (break-even about 12 months stored)
 yard_min_level_share = 0.3         # a Yard level once the spare food fills 30 % of one (levels staff partly)
-raw_goods_per_rgo_k = 0.75         # raw food goods per 1,000 RGO workers (nb.eu5 median 1.50, halved by the
-                                   # country base value global_raw_material_output -0.5 since 2026-10-03)
+raw_goods_per_rgo_k = 1.5          # raw food goods per 1,000 RGO workers (nb.eu5 median 1.50; Jan 2026-10-03: stays)
 serve_raw_goods_share = 0.2        # share of the market's raw food output new Serve Cookshops may use (nb.eu5: 21 % spare)
 serve_fallback_raw_goods_share = 0.5   # when the market cannot supply the Taverns' victuals
 

@@ -168,3 +168,11 @@ NPop = {
 	# At 1 it never applies (PP keeps capacity pressure in its own overpopulation modifiers).
 	GROWTH_DAMPING_START = 1 # 0.6
 }
+
+NEstate = {
+	# 2026-10-03 (Jan): rich estates press the crown harder. Mini World run 5: the nobles' gold grew 191k -> 3.2M in
+	# 1352-1522 while their power and satisfaction barely moved.
+	COMPARATIVE_WEALTH_POWER_FACTOR = 0.015 # 0.01; estate power from its wealth
+	COMPARATIVE_WEALTH_POWER_CAP = 1.25 # 1.0
+	POWER_TO_SATISFACTION_PENALTY = -0.6 # -0.5
+}

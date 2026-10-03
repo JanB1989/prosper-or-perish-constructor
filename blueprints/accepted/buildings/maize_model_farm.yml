@@ -66,7 +66,7 @@ building:
             add = {
                 value = "market.market_price(goods:maize)"
                 divide = "default_price(goods:maize)"
-                multiply = { value = 1 add = modifier:local_maize_output_modifier }
+                multiply = { value = 1 add = modifier:local_maize_output_modifier subtract = pp_stored_food_staple_line }
                 subtract = 1
                 multiply = 400
             }
@@ -94,13 +94,13 @@ building:
             category = building_maintenance
         }
         pp_maize_model_farm_horse_hoed = {
-            tools = 0.29
-            livestock = 0.37
-            lumber = 0.24
-            paper = 0.29
-            manual_labor = 0.24
+            tools = 0.15
+            livestock = 0.19
+            lumber = 0.12
+            paper = 0.15
+            manual_labor = 0.091
             produced = maize
-            output = 3.04
+            output = 1.52
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -109,7 +109,7 @@ building:
         pp_maize_model_farm_provision = {
             maize = 0.024
             produced = local_food
-            output = 3.625
+            output = 5.294
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -123,7 +123,7 @@ building:
     }
 
     modifier = {
-        local_monthly_food = 6
+        local_monthly_food = 4.331
         local_food_capacity = 50
         local_laborers_desired_pop = 0.002
     }
@@ -147,8 +147,8 @@ icon:
 evaluation:
   allow_rules:
     amortization_months: The 10k laborer model farm keeps a slower estate-improvement payback than global construction targets; revisit with the rural producer rebalance.
-    input_throughput: Food relief of age_5_absolutism (age_food.py, throughput x1.45) raises output per worker on purpose.
-    output_throughput: Food relief of age_5_absolutism (age_food.py, throughput x1.45) raises output per worker on purpose.
+    input_throughput: Farm trade-off (crop_farms.toml tier_cultivation_throughput x0.5) runs a smaller cultivation on purpose, so the store curve's crop line cannot cost the crew more than its Province Food earns at a low store; food relief of age_5_absolutism (age_food.py, throughput x1.45) on top.
+    output_throughput: Farm trade-off (crop_farms.toml tier_cultivation_throughput x0.5) runs a smaller cultivation on purpose, so the store curve's crop line cannot cost the crew more than its Province Food earns at a low store; food relief of age_5_absolutism (age_food.py, throughput x1.45) on top.
   production_methods:
     pp_maize_model_farm_base:
       production_efficiency: 1.0

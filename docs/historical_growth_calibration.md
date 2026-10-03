@@ -435,3 +435,30 @@ buildings and a population-weighted fit of province growth on stored years. Run 
   1402 -> 1522: 399 -> 891, of it lumber mills 149 -> 235 (Extra Rations), Taverns 43 -> 185, pops 123 -> 202.
   Farm output per level fell about 9 % (no relief from advances). Answer (2026-10-03 evening): the steeper Grange line,
   Yards at every market centre (small inland caps), lumber mill victuals methods only in a glut.
+
+### 6.7 Farm trade-off: one store curve for every staple good (2026-10-03)
+
+Jan's design of 2026-10-02 (the farm feeds the province while the store is low and sells its crop while it is full),
+never built until now: farm v3 had set the staple line to 0, so a hungry farm was strictly better than a full one.
+
+- The store curve (`[stored_food.curve]`): Province Food output of every maker at Jan's shares 100 / 80 / 65 / 50 /
+  40 % of an empty store's output at 0 / 6 / 12 / 18 / 24 months (+53.8 % / +23.1 % / 0 / -23.1 % / -38.5 %, linear
+  between; was +-75 % linear); one crop line for the 8 crop farm goods = -0.40 x that (-21.5 % at an empty store,
+  +15.4 % at 24 months). Output modifiers are per good, so every farm tier, every RGO and every other producer of these
+  goods carries the same line; fish, fruit and game stay off it.
+- 0.40: what a farm gains in food it gives up in crop at 12 food per unit of crop value; with the late tiers' changes
+  below every farm's value (food + 12 x crop value) moves by at most 8 % between an empty and a full store.
+- Late tiers: their crop is 4-15x tier 0's for about the same Province Food, so the crop line in a poor harvest at a
+  low store cost them more than their Provision earned and they laid off workers (already at harvest -0.15..-0.35
+  before). Tiers 2-3 now run their cultivation at half throughput, make 55 % of their food at 12 months as Province Food
+  (Rotation Farm 3.78 Province Food + 3.09 flat, Model Farm 5.29 + 4.33; same total), and Rotational Farmsteads / Model
+  Farms add +0.05 output of every crop farm good. Profit per level at 12 months: tier 2 0.59-0.66 (was 0.50-0.65),
+  tier 3 0.87-1.08 (0.63-0.98); crop per level at 12 months: tier 2 1.16 (2.14), tier 3 1.81 (3.16).
+- The promise (tests/test_crop_farms.py): at 0-12 stored months no crop farm loses money, so none lays off workers, on
+  land 0 in a -0.5 harvest or on land -0.10 in a -0.4 harvest, with its cultivation held (default prices). Worst
+  harvest survived on land 0 (0 / 12 / 24 months): tier 0 any / any / -0.90, tier 1 -0.59 / -0.67 / -0.72, tier 2
+  -0.50 / -0.54 / -0.56, tier 3 -0.51 / -0.56 / -0.59.
+- The Tavern's Serve Victuals went from 24 to 25.5 Province Food (the curve gives less at an empty store than +75 %):
+  it fills the store to 11.6 / 5.9 / 1.0 months at victuals 2.0 / 2.7 / 3.5 (was 10.7 / 7.0 / 2.7).
+- The crop farms' `ai_construct_weight` reads the land without the store's line (`pp_stored_food_staple_line`).
+- Start validator (96 months): world +2.99 %, 11 of 2,883 food pools lose 25 % or more. Not tested in game.

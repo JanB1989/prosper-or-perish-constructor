@@ -21,12 +21,19 @@ Per blueprint:
 - last slot: Provisioning (``provisioning.py``), the one Provision method: a token of the crop in, a fixed Province
   Food amount per level out (farm v3, 2026-10-02).
 
+Farm trade-off (2026-10-03, Jan): the store curve (``[stored_food.curve]``, stored_food.py) moves every crop farm
+between Province Food (low store) and its crop (full store), one curve for every crop farm good and tier. The late
+tiers run their cultivation at ``tier_cultivation_throughput`` (goods in and out, on top of the [age_food] factor) and
+make ``tier_province_food_share`` of their food per level at 12 stored months as Province Food instead of flat food
+(``provisioning.crop_food_split``; the total stays the same), so a poor harvest at a low store does not make them lay
+off workers; their tier advances carry ``staple_output`` (``global_<good>_output_modifier`` of every crop farm good).
+
 The slots and methods are then put in the production-gate order (``production_gate.order_mapping``): Provision is the
 ``gate_method`` (its margin, Province Food over a token of crop, stays far above the AI's threshold at any crop price),
 so the farm has no Market gate leg; the other slots follow by importance (base slot first, then beekeeping and
 cultivation by output value). The AI's price response is ``ai_construct_weight`` in the body
 (``[general.ai_construct_weight]``: the crop's market price over its default price times the location's crop output
-modifier, divided by the owner's income). ``increase_per_level_cost`` takes the ``[farm_level_cost]`` factor
+modifier without the store's crop line, divided by the owner's income). ``increase_per_level_cost`` takes the ``[farm_level_cost]`` factor
 (farm_land footprint).
 
 Every producing method goes through the production-labour pass (``production_labour.plan_method``) before it is
@@ -69,6 +76,7 @@ RETIRED_BLUEPRINTS = ("husbandry_farmstead", "farming_village_rotations", "model
 TOMBSTONE_METHOD = "pp_farming_village_retired"
 LABOUR_GOOD = "manual_labor"
 TIER_ADVANCE_HOST_STEM = "wheat"          # each tier advance is rendered once, in the wheat blueprint of its tier
+STAPLE_LINE_VALUE = "pp_stored_food_staple_line"   # stored_food.py: the crop line of the province's Stored Food step
 # The cultivation advances are rendered once, in the same wheat blueprints: in the tier whose tier advance they require,
 # tier 0 otherwise. The game resolves `requires` in load order (the files alphabetically), so an advance in
 # pp_wheat_farm_tier0.txt cannot require one defined in pp_wheat_farm_tier2.txt ("Failed to read key reference").
@@ -482,6 +490,15 @@ def tier_throughput(table: CropTable, tier: int, context: "RenderContext | None"
     return config.ages[tier_age(table, tier)].throughput
 
 
+def cultivation_throughput(table: CropTable, tier: int) -> float:
+    """``tier_cultivation_throughput`` of the tier: a factor on its cultivation methods, goods in and out, on top of the
+    [age_food] factor (farm trade-off, 2026-10-03: the late tiers run a smaller cultivation); 1 when not listed."""
+    value = float(dict(table.general.get("tier_cultivation_throughput", {})).get(str(tier), 1.0))
+    if not 0 < value <= 1:
+        raise ValueError(f"general.tier_cultivation_throughput.{tier} must be in (0, 1]: {value}")
+    return value
+
+
 def _scale(value: float, factor: float) -> float:
     from prosper_or_perish_constructor.age_food import scaled
 
@@ -551,10 +568,11 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
     # ---- slots (the provisioning slot is rendered by provisioning.py and comes last)
     slots: list[tuple[str, list[RenderedMethod]]] = []
     factor = tier_throughput(table, tier, context)   # [age_food]: the tier's age scales every crop method
+    cultivation_factor = cultivation_throughput(table, tier)   # farm trade-off: the late tiers' smaller cultivation
     slots.append(("base", [_labour_pass(_base_method(table, crop, tier, building, factor), building, context)]))
     cultivation = [_selector(f"pp_{building}_no_cultivation")]
     cultivation += [
-        _labour_pass(_cultivation_method(table, crop, method, building, factor), building, context)
+        _labour_pass(_cultivation_method(table, crop, method, building, factor * cultivation_factor), building, context)
         for method in crop.tier_methods(tier)
     ]
     slots.append(("cultivation", cultivation))
@@ -563,7 +581,13 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
         slots.append(("beekeeping", [_selector(f"pp_{building}_no_beekeeping"), hives]))
     base_output = Decimal(str(_scale(float(table.tier_value("tier_base_output", tier)), factor)))
     price = Decimal(str(context.prices.get(crop.good, 1.0)))
-    amounts = provisioning.crop_provisioning_amounts(base_output, good_price=price, config=context.provisioning)
+    ages = getattr(context.age_food, "ages", {}) if context.age_food is not None else {}
+    flat_food = (ages[tier_age(table, tier)].flat_food if tier_age(table, tier) in ages   # [age_food]: the age's flat food
+                 else float(dict(general.get("tier_modifier", {}).get(str(tier), {})).get("local_monthly_food", 0.0)))
+    # the tier's flat food and Provision; a tier with tier_province_food_share makes that share of the two as Province Food
+    amounts, flat_food = provisioning.crop_food_split(base_output, Decimal(str(flat_food)), good_price=price,
+                                                      config=context.provisioning,
+                                                      share=provisioning.crop_province_food_share(tier, table.raw))
 
     # ---- body
     shared = dict(general.get("body", {}))
@@ -612,9 +636,7 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
     body.append(provisioning.render_slot(building, crop.good, amounts))
     body.append("")
     modifier = dict(general.get("tier_modifier", {}).get(str(tier), {}))
-    ages = getattr(context.age_food, "ages", {}) if context.age_food is not None else {}
-    if tier_age(table, tier) in ages:   # [age_food]: the age's flat food per level
-        modifier["local_monthly_food"] = ages[tier_age(table, tier)].flat_food
+    modifier["local_monthly_food"] = float(flat_food)   # the age's flat food, less what the tier makes as Province Food
     modifier.update(crop.side_modifiers)
     # level counters go to raw_modifier: they count every standing level, not its staffing (Cookshop caps, 2026-10-03)
     counters = {key: modifier.pop(key) for key in RAW_COUNTERS if key in modifier}
@@ -745,6 +767,14 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
         from prosper_or_perish_constructor.age_food import throughput_allow_rules
 
         allow_rules.update(throughput_allow_rules(tier_age(table, tier), factor))
+    if abs(cultivation_factor - 1.0) > 1e-9:
+        # plain YAML scalar: no leading bracket, no ": "
+        reason = (f"Farm trade-off (crop_farms.toml tier_cultivation_throughput x{_num(cultivation_factor)}) runs a smaller "
+                  "cultivation on purpose, so the store curve's crop line cannot cost the crew more than its Province "
+                  "Food earns at a low store")
+        if abs(factor - 1.0) > 1e-9:
+            reason += f"; food relief of {tier_age(table, tier)} (age_food.py, throughput x{_num(factor)}) on top"
+        allow_rules.update({"input_throughput": reason + ".", "output_throughput": reason + "."})
     blueprint["evaluation"] = {"allow_rules": allow_rules, "production_methods": per_method}
     if context.gate_config is not None:
         from prosper_or_perish_constructor import production_gate
@@ -756,10 +786,14 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
 def ai_construct_weight_lines(table: CropTable, crop: Crop, tier: int = 0, context: "RenderContext | None" = None) -> list[str]:
     """The farm's ``ai_construct_weight`` (EU5 1.4, location scope, scope:owner): the AI's farm choice.
 
-    (slope x ((1 + local crop output modifier) x market price / default price - 1), 0 outside a market,
+    (slope x ((1 + local crop output modifier - the store curve's crop line) x market price / default price - 1),
+    0 outside a market,
     + store_bonus x the share the province's store is below store_full_months,
     - crowding_per_level x the farm levels already in the location (capped))
-    / (owner monthly income + offset)."""
+    / (owner monthly income + offset).
+    The crop line of the province's Stored Food step (``pp_stored_food_staple_line``, stored_food.py) is part of the
+    location's crop output modifier but says nothing about the land: without taking it out, a full store would read as
+    good land and a hungry province as bad land."""
     spec = dict(table.general.get("ai_construct_weight", {}))
     slope = float(spec.get("slope", 400))
     offset = float(spec.get("income_offset", 10))
@@ -776,7 +810,7 @@ def ai_construct_weight_lines(table: CropTable, crop: Crop, tier: int = 0, conte
         "        add = {",
         f'            value = "market.market_price(goods:{good})"',
         f'            divide = "default_price(goods:{good})"',
-        f"            multiply = {{ value = 1 add = modifier:local_{good}_output_modifier }}",
+        f"            multiply = {{ value = 1 add = modifier:local_{good}_output_modifier subtract = {STAPLE_LINE_VALUE} }}",
         "            subtract = 1",
         f"            multiply = {_num(slope)}",
         "        }",
@@ -834,8 +868,17 @@ def _tier_advance_body(table: CropTable, key: str, tier: int) -> str:
     lines.append(f"age = {spec['age']}")
     lines.append(f"requires = {spec['requires']}")
     lines.extend(f"unlock_building = {table.building(crop, tier)}" for crop in table.crops)
+    staple = float(spec.get("staple_output", 0) or 0)
+    if staple:   # farm trade-off: a little more of every crop farm good, wherever it grows
+        lines.extend(f"global_{good}_output_modifier = {_num(staple)}" for good in staple_output_goods(table))
     lines.append(f"ai_weight = {{ add = {int(spec.get('ai_weight', 125))} }}")
     return "\n".join(lines)
+
+
+def staple_output_goods(table: CropTable) -> tuple[str, ...]:
+    """The crop farm goods, each once, in chain order: the goods of the store curve's crop line and of the tier
+    advances' ``staple_output``."""
+    return tuple(dict.fromkeys(crop.good for crop in table.crops))
 
 
 def _general_advance_body(table: CropTable, crop: Crop, gate: RgoUnlockGate | None) -> str:

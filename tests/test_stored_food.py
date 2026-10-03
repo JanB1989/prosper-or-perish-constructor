@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import tomllib
 from pathlib import Path
 
 import pytest
@@ -75,23 +76,46 @@ def test_growth_rides_the_modifier_and_the_engine_term_is_off() -> None:
     assert _define("FOOD_SURPLUS_POP_GROWTH") == 0
 
 
+def _curve_exact(config: stored_food.StoredFoodConfig, months: float) -> dict[str, float]:
+    """The store curve at ``months``, recomputed here from the knots (float), for checking the generated steps."""
+    knots = list(config.food_curve)
+
+    def share(m: float) -> float:
+        for (m0, s0), (m1, s1) in zip(knots, knots[1:]):
+            if m <= m1:
+                return s0 + (s1 - s0) * (m - m0) / (m1 - m0)
+        return knots[-1][1]
+
+    food = share(months) / share(config.pivot_months) - 1
+    lines = {FOOD: food}
+    lines.update({f"local_{good}_output_modifier": config.staple_factor * food for good in config.staple_goods})
+    return lines
+
+
 def test_store_lever_moves_province_food_staples_and_surplus_sales() -> None:
     config = _config()
     low, full = stored_food.low_payload(config), stored_food.full_payload(config)
     assert config.pivot_months == 12
-    # Province Food is worth more below the pivot and less above, by the same slope; some output is left at the cap
-    assert low[FOOD] > 0 and full[FOOD] == -low[FOOD]
-    assert -1 < full[FOOD] < 0
-    # Surplus Sales (the Grange's leg) grow above the pivot and are gone at most 6 months below it
+    # Surplus Sales (the Grange's leg) grow above the pivot and are gone at most 6 months below it; they are the only
+    # linear lever left: Province Food and the staples follow the store curve (2026-10-03)
     assert full[SALES] > 0 and low[SALES] <= -2
-    # staples: no store lever on them (farm v3: the crop farms' ai_construct_weight reads the crop output modifier as
-    # land quality, so a store-driven staple bonus would make the AI build farms where the store is full)
+    assert set(low) == {SALES} and set(full) == {SALES}
+    # the store curve: Jan's shares of an empty store's Province Food output (100 / 80 / 65 / 50 / 40 % at 0 / 6 / 12 /
+    # 18 / 24 months), so the output modifier runs +53.8 % .. 0 .. -38.5 %; some output is left at the cap
+    assert config.food_curve == ((0.0, 1.0), (6.0, 0.8), (12.0, 0.65), (18.0, 0.5), (24.0, 0.4))
+    assert stored_food.province_food_line(config, 0) == pytest.approx(1 / 0.65 - 1)
+    assert stored_food.province_food_line(config, 24) == pytest.approx(0.4 / 0.65 - 1)
+    # staples (the farm trade-off, Jan 2026-10-03): one crop line for every crop farm good, opposite to Province Food,
+    # 0.40 of it; the goods are exactly the crop farm goods (fish, fruit and game buy their own good back already)
+    assert config.staple_factor == -0.40
+    farm_goods = {crop["good"] for crop in tomllib.loads((ROOT / "config/crop_farms.toml").read_text())["crops"]}
+    assert set(config.staple_goods) == farm_goods and len(config.staple_goods) == len(farm_goods) == 8
+    assert not {"fish", "fruit", "wild_game", "victuals"} & set(config.staple_goods)
+    for months in range(25):
+        assert stored_food.staple_line(config, months) == pytest.approx(-0.40 * stored_food.province_food_line(config, months))
+    # the old staple_output switch stays available for the provisioned goods, but nothing uses it any more
     goods = stored_food.staple_goods()
     assert set(goods) == set(provisioning.PROVISIONED_GOOD_BY_BUILDING.values()) and len(goods) == len(set(goods))
-    staples = {f"local_{good}_output_modifier" for good in goods}
-    assert not staples & set(low) and not staples & set(full)
-    # no victuals line (2026-10-03): the harbour Yard takes no store food, the Grange stops by its Surplus Sales
-    assert set(low) == {FOOD, SALES} and set(full) == {FOOD, SALES}
     # nothing of the old storage legs is left on Stored Food, and no Scarcity Premium anywhere
     assert not {FOOD, SALES, PURCHASE} & set(stored_food.payload(config))
     assert PURCHASE not in low and PURCHASE not in full
@@ -113,22 +137,30 @@ def test_one_step_modifier_per_stored_month_carries_every_effect() -> None:
         assert values == stored_food.step_payload(config, step), step
         assert all(len(v.split(".")[1]) <= 5 for v in re.findall(r"= (-?[\d.]+)$", block, flags=re.MULTILINE))
         # every line within half a fixed-point step of the exact value
-        for key in set(per_year) | set(low) | set(full):
+        curve = _curve_exact(config, step)
+        for key in set(per_year) | set(low) | set(full) | set(curve):
             exact = per_year.get(key, 0.0) * step / 12
             exact += low.get(key, 0.0) * max(pivot - step, 0) / 12 + full.get(key, 0.0) * max(step - pivot, 0) / 12
+            exact += curve.get(key, 0.0)
             assert abs(values.get(key, 0.0) - exact) <= 0.000005 + 1e-12, (step, key)
-        # the Stored Food lines only grow with the store; Province Food output only falls
+        # every staple good carries the same crop line, opposite to Province Food
+        staples = {values.get(f"local_{good}_output_modifier", 0.0) for good in config.staple_goods}
+        assert len(staples) == 1, step
+        # the Stored Food lines only grow with the store; Province Food output only falls, the staples only rise
         if previous is not None:
             for key in per_year:
                 assert values[key] >= previous.get(key, 0.0), (step, key)
             assert values.get(FOOD, 0.0) < previous.get(FOOD, 0.0), step
+            assert staples.pop() > previous.get(f"local_{config.staple_goods[0]}_output_modifier", 0.0), step
         previous = values
-    # the ends and the pivot are exact: an empty store is the whole Low Stores year, the pivot carries no lever line,
-    # the cap is two Stored Food years plus the whole Full Stores year
-    assert stored_food.step_payload(config, 0) == stored_food.low_payload(config)
+    # the ends and the pivot: an empty store is the whole Low Stores year plus the curve at 0, the pivot carries no lever
+    # or curve line, the cap is two Stored Food years plus the whole Full Stores year plus the curve at 24
+    rounded = lambda lines: {k: round(v, 5) for k, v in lines.items()}   # noqa: E731
+    assert stored_food.step_payload(config, 0) == {**stored_food.low_payload(config), **rounded(_curve_exact(config, 0))}
     assert stored_food.step_payload(config, pivot) == PAYLOAD_1_3
     cap = stored_food.step_payload(config, 24)
-    assert cap == {**{k: 2 * v for k, v in PAYLOAD_1_3.items()}, **stored_food.full_payload(config)}
+    assert cap == {**{k: 2 * v for k, v in PAYLOAD_1_3.items()}, **stored_food.full_payload(config),
+                   **rounded(_curve_exact(config, 24))}
     # the scaled carriers of 2026-10-01..03 are gone from the effects
     for name in stored_food.LEGACY_SCALED:
         assert f"\n{name} = {{ game_data = {{ category = province }} }}" in "\n" + text

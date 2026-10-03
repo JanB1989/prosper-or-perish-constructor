@@ -1046,23 +1046,18 @@ pp_llama_caravan_post = { slot = "Mountain Network", method = "Tambo Relay", des
 
 [stored_food]
 # Stored-food effect carrier (EU5 1.4, stored_food.py; docs/historical_growth_calibration.md 6.2). EU5 1.4 deleted the
-# engine-scaled positive_province_food_growth modifier; its effects ride three province static modifiers, each the
-# payload of one year and applied with a size the monthly country pulse refreshes
-# (in_game/common/on_action/pp_stored_food.txt; re-applied only when the stored months moved by more than
-# deadband_months since the last refresh, or the store emptied):
-#   pp_stored_food  "Stored Food"  size = stored years (stored months / 12, capped at
-#                                  NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX years): growth and prosperity
-#   pp_low_stores   "Low Stores"   size = (pivot_months - stored months) / 12, below the pivot
-#   pp_full_stores  "Full Stores"  size = (stored months - pivot_months) / 12, above the pivot
-# Values are rounded to five decimals (EU5 1.4 rejects six). The engine's own storage growth term is off
+# engine-scaled positive_province_food_growth modifier; its effects ride one province modifier per whole stored month,
+# pp_food_store_0 .. _24 (the monthly country pulse picks the step, in_game/common/on_action/pp_stored_food.txt). Step
+# s = Stored Food ([stored_food.per_year]) x s / 12 + Low Stores ([stored_food.low]) x the years short of the pivot or
+# Full Stores ([stored_food.full]) x the years above + the store curve ([stored_food.curve]) at s months. Values are
+# rounded to five decimals (EU5 1.4 rejects six). The engine's own storage growth term is off
 # (NPop.FOOD_STORAGE_POP_GROWTH = 0, pp_defines_adjustments.txt).
 #
 # Store lever (2026-10-02, tools/province_store_sim.py): the store moves the Province Food output of everything that
-# makes it (the farms' Provisioning, Cookshops, Taverns): worth more while the store is low, less while it is full.
-# Every maker therefore stops where its own recipe stops paying: the Cookshop by its staple prices, the Tavern by the
-# victuals price. Above the pivot the same land yields more of its staple for the market instead. Surplus Sales is the
-# Grange's leg: it grows with a full store and dries up quickly below the pivot, so a Grange never packs a lean store.
-# No country base values belong to this: at the pivot every line is zero.
+# makes it (the farms' Provisioning, Taverns, fisheries, orchards, forest villages): worth more while the store is
+# low, less while it is full, so every maker stops where its own recipe stops paying (the Tavern by the victuals
+# price). Surplus Sales is the Grange's leg: it grows with a full store and dries up quickly below the pivot, so a
+# Grange never packs a lean store. No country base values belong to this: at the pivot every line is zero.
 deadband_months = 0.05
 pivot_months = 12
 
@@ -1077,21 +1072,32 @@ local_monthly_prosperity = 0.0025
 
 [stored_food.low]
 # Low Stores: per year short of the pivot (size 1 at an empty store)
-local_local_food_output_modifier = 0.75             # Province Food output +75 % at an empty store
 local_province_food_sales_output_modifier = -3.0    # the Grange's Surplus Sales
 # (no victuals line since 2026-10-03: the harbour Yard takes no store food any more, and the Grange stops by its own
-# Surplus Sales; a starving province still packs nothing, province_starving)
-# staple_output = local_<good>_output_modifier of every good a Provisioning method buys (provisioning.py). 0 below the
-# pivot on purpose: the farms' Market gate leg sells the staple, so a cut here would stop the AI from building new
-# farms exactly where the store is low.
-staple_output = 0.0
+# Surplus Sales; a starving province still packs nothing, province_starving). Province Food output and the staples
+# follow the store curve below since 2026-10-03 (was Province Food +0.75 per year, staples 0).
 
 [stored_food.full]
 # Full Stores: per year above the pivot (size 1 at 24 months)
-local_local_food_output_modifier = -0.75            # Province Food output -75 % at 24 months
 local_province_food_sales_output_modifier = 0.13    # the Grange's Surplus Sales (2026-10-03 evening, was 0.34: a
 # flatter store term makes the victuals price move the Grange's stop point 13.9 months per gold instead of 5.3)
-# 0 since farm v3 (2026-10-02, was 0.20): the crop farms' ai_construct_weight reads the location's crop output modifier
-# as land quality, so a store-driven staple bonus would make the AI build farms exactly where the store is full
-staple_output = 0.0
+# (Province Food output and the staples: the store curve below; was Province Food -0.75 per year, staples 0)
+
+[stored_food.curve]
+# Farm trade-off (Jan's design 2026-10-02, built 2026-10-03): the store moves the farms between feeding the province
+# and selling their crop, one curve for every staple good and every farm tier (output modifiers are per good).
+# province_food_share: Province Food output of every maker at that store as a share of its output at an empty store
+#   (Jan's values; linear between the knots); the step modifier carries share / share at the pivot - 1:
+#   +53.8 % at 0 months, +23.1 % at 6, 0 at 12, -23.1 % at 18, -38.5 % at 24 (was +-75 %, linear)
+# staple_per_province_food: the staple goods' crop output line = this x the Province Food line (-21.5 % at an empty
+#   store, +15.4 % at 24 months). 0.40 balances the farm tiers: what a farm gains in food it gives up in crop, at
+#   12 food per unit of crop value (the food value of a staple), within about 8 % of its value for every tier
+#   (the late tiers' throughput and Province Food share in config/crop_farms.toml finish the balance)
+# staple_goods: the crop farm goods (config/crop_farms.toml; fish, fruit and wild game stay off the curve: their
+#   buildings buy their own catch for Province Food, which is their trade already)
+# The crop line also moves every RGO and every other producer of these goods. The crop farms' ai_construct_weight
+# takes the line out of the crop output modifier it reads as land quality (pp_stored_food_staple_line).
+province_food_share = { 0 = 1.0, 6 = 0.8, 12 = 0.65, 18 = 0.5, 24 = 0.4 }
+staple_per_province_food = -0.40
+staple_goods = ["wheat", "rice", "millet", "maize", "legumes", "potato", "olives", "livestock"]
 

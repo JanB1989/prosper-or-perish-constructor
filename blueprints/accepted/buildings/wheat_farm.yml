@@ -61,7 +61,7 @@ building:
             add = {
                 value = "market.market_price(goods:wheat)"
                 divide = "default_price(goods:wheat)"
-                multiply = { value = 1 add = modifier:local_wheat_output_modifier }
+                multiply = { value = 1 add = modifier:local_wheat_output_modifier subtract = pp_stored_food_staple_line }
                 subtract = 1
                 multiply = 400
             }

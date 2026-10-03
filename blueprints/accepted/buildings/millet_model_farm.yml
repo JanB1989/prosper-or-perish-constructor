@@ -60,7 +60,7 @@ building:
             add = {
                 value = "market.market_price(goods:millet)"
                 divide = "default_price(goods:millet)"
-                multiply = { value = 1 add = modifier:local_millet_output_modifier }
+                multiply = { value = 1 add = modifier:local_millet_output_modifier subtract = pp_stored_food_staple_line }
                 subtract = 1
                 multiply = 400
             }
@@ -88,13 +88,13 @@ building:
             category = building_maintenance
         }
         pp_millet_model_farm_drilled_rows = {
-            tools = 0.31
-            horses = 0.24
-            livestock = 0.21
-            paper = 0.24
-            manual_labor = 0.22
+            tools = 0.15
+            horses = 0.12
+            livestock = 0.11
+            paper = 0.12
+            manual_labor = 0.12
             produced = millet
-            output = 3.04
+            output = 1.52
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -103,7 +103,7 @@ building:
         pp_millet_model_farm_provision = {
             millet = 0.024
             produced = local_food
-            output = 3.625
+            output = 5.294
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -117,7 +117,7 @@ building:
     }
 
     modifier = {
-        local_monthly_food = 6
+        local_monthly_food = 4.331
         local_food_capacity = 50
         local_laborers_desired_pop = 0.002
     }
@@ -141,8 +141,8 @@ icon:
 evaluation:
   allow_rules:
     amortization_months: The 10k laborer model farm keeps a slower estate-improvement payback than global construction targets; revisit with the rural producer rebalance.
-    input_throughput: Food relief of age_5_absolutism (age_food.py, throughput x1.45) raises output per worker on purpose.
-    output_throughput: Food relief of age_5_absolutism (age_food.py, throughput x1.45) raises output per worker on purpose.
+    input_throughput: Farm trade-off (crop_farms.toml tier_cultivation_throughput x0.5) runs a smaller cultivation on purpose, so the store curve's crop line cannot cost the crew more than its Province Food earns at a low store; food relief of age_5_absolutism (age_food.py, throughput x1.45) on top.
+    output_throughput: Farm trade-off (crop_farms.toml tier_cultivation_throughput x0.5) runs a smaller cultivation on purpose, so the store curve's crop line cannot cost the crew more than its Province Food earns at a low store; food relief of age_5_absolutism (age_food.py, throughput x1.45) on top.
   production_methods:
     pp_millet_model_farm_base:
       production_efficiency: 1.0

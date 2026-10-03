@@ -35,7 +35,7 @@ ai_construct_weight = {
         add = {
             value = "market.market_price(goods:olives)"
             divide = "default_price(goods:olives)"
-            multiply = { value = 1 add = modifier:local_olives_output_modifier }
+            multiply = { value = 1 add = modifier:local_olives_output_modifier subtract = pp_stored_food_staple_line }
             subtract = 1
             multiply = 400
         }
@@ -69,13 +69,13 @@ unique_production_methods = {
     pp_olive_model_farm_beam_press = {
         icon_type = building_type
         icon = olive_model_farm
-        tools = 0.28
-        livestock = 0.35
-        lumber = 0.24
-        pottery = 0.68
-        manual_labor = 0.21
+        tools = 0.14
+        livestock = 0.17
+        lumber = 0.12
+        pottery = 0.34
+        manual_labor = 0.12
         produced = olives
-        output = 3.03
+        output = 1.52
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -86,8 +86,8 @@ unique_production_methods = {
         icon = olives
         olives = 0.024
         produced = local_food
-        output = 3.625
-        debug_max_profit = 74.521
+        output = 5.294
+        debug_max_profit = 109.292
         category = building_maintenance
     }
 }
@@ -100,7 +100,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_monthly_food = 6
+    local_monthly_food = 4.331
     local_food_capacity = 50
     local_laborers_desired_pop = 0.002
 }

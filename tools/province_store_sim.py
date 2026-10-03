@@ -247,8 +247,9 @@ def cell(p: Prov, d: Design, **kw) -> dict:
 
 def describe(d: Design) -> str:
     lines = [
-        f"Province Food output {d.food_low:+.0%} (empty) .. {d.food_full:+.0%} (24 months); staples {d.staple_low:+.0%} .. "
-        f"{d.staple_full:+.0%}; Surplus Sales {d.sales_low:+.0%} .. {d.sales_full:+.0%} per year from {d.pivot:g} months",
+        f"Province Food output {d.food_line(0):+.0%} (empty) .. {d.food_line(24):+.0%} (24 months); staples "
+        f"{d.staple_line(0):+.0%} .. {d.staple_line(24):+.0%}; Surplus Sales {d.sales_low:+.0%} .. {d.sales_full:+.0%} "
+        f"per year from {d.pivot:g} months",
         "Tavern fills to " + " / ".join(f"{d.tavern_fill(v):.1f}" for v in (2.0, 2.7, 3.5))
         + " months at victuals 2.0 / 2.7 / 3.5; Grange packs down to "
         + " / ".join(f"{d.grange_dig(v):.1f}" for v in (2.0, 2.7, 3.5, 4.5, 6.0)) + " months at 2.0 / 2.7 / 3.5 / 4.5 / 6.0",

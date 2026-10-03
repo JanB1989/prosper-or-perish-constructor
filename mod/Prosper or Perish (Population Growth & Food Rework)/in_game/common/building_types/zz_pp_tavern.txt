@@ -41,15 +41,16 @@ AI_ignore_available_worker_flag = yes
 build_time = 365
 construction_demand = victuals_trade_construction
 
-# The Tavern serves bought-in victuals to the province: 0.8 victuals -> 24 Province Food per staffed level
-# (1 victual = 30 food). The food is the Serve method's Province Food, so it follows the victuals actually bought:
+# The Tavern serves bought-in victuals to the province: 0.8 victuals -> 25.5 Province Food per staffed level
+# (1 victual = 32 food). The food is the Serve method's Province Food, so it follows the victuals actually bought:
 # a Tavern only feeds its province as far as Granges and Victualling Yards supply the market.
-# Store lever (2026-10-02, [stored_food] in constructor.toml): Province Food output runs from +75 % at an empty
-# store over 0 at 12 months to -75 % at 24, so the Tavern earns 24 x 0.10 x (1 + that) and stops where the recipe
-# stops paying. Per level at floor prices (dummy goods and labour 1 gold, Province Food 0.10), s = years short of
-# 12 months: profit = 2.40 x (1 + 0.75 s) - 0.8 p - 0.08 - 0.91
-# -> at victuals p = 2.7 it fills the store to 7 months, at 2.0 to 10.7, at 3.5 to 2.7, above 4.0 never.
-# The AI builds a new Tavern where this margin reaches the threshold: below about 6 months at p = 2.7.
+# Store curve (2026-10-03, [stored_food.curve] in constructor.toml): Province Food output runs from +53.8 % at an
+# empty store over +23.1 % at 6 months and 0 at 12 to -38.5 % at 24, so the Tavern earns 25.5 x 0.10 x (1 + that)
+# and stops where the recipe stops paying. Per level at floor prices (dummy goods and labour 1 gold, Province Food
+# 0.10): profit = 2.55 x (1 + curve) - 0.8 p - 0.08 - 0.91
+# -> at victuals p = 2.7 it fills the store to 5.9 months, at 2.0 to 11.6, at 3.5 to 1.0, above 3.7 never.
+# 25.5 (was 24 on the +-75 % line) keeps it near its old stop points and below the 12-month pivot at p = 2.0.
+# The AI builds a new Tavern where this margin reaches the threshold: below about 4.7 months at p = 2.7.
 # No Scarcity Premium slot and no droop any more: the Serve method is the gate.
 unique_production_methods = {
   pp_tavern_serve_victuals = {
@@ -59,7 +60,7 @@ unique_production_methods = {
     victuals = 0.8
     manual_labor = 0.08
     offset = 0.91
-    output = 24.0
+    output = 25.5
     category = building_maintenance
   }
 }

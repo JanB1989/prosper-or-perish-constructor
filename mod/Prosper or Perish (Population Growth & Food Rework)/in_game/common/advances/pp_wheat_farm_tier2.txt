@@ -11,6 +11,14 @@ unlock_building = legume_rotations
 unlock_building = potato_rotations
 unlock_building = olive_rotations
 unlock_building = cattle_rotations
+global_wheat_output_modifier = 0.05
+global_rice_output_modifier = 0.05
+global_millet_output_modifier = 0.05
+global_maize_output_modifier = 0.05
+global_legumes_output_modifier = 0.05
+global_potato_output_modifier = 0.05
+global_olives_output_modifier = 0.05
+global_livestock_output_modifier = 0.05
 ai_weight = { add = 125 }
 }
 

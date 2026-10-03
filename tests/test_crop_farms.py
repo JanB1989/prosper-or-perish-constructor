@@ -323,3 +323,117 @@ def test_farm_capacity_tooltip_rows_have_localization() -> None:
     for key in crop_farms.crop_buildings(crop_farms.load_crop_table(ROOT)):
         assert f"value = this.farm_capacity_max_{key}_other_farms" in text, key
     assert sorted(keys - localized) == []
+
+
+# ------------------------------------------------------------------------------------- farm trade-off (2026-10-03)
+def _method_values(body: str) -> dict[str, dict[str, float | str]]:
+    """Every production method block of a blueprint body: its goods amounts, produced good and output."""
+    methods: dict[str, dict[str, float | str]] = {}
+    for name, inner in re.findall(r"(?m)^\s*(pp_\w+) = \{\n(.*?)^\s*\}", body, flags=re.S):
+        values: dict[str, float | str] = {}
+        for key, value in re.findall(r"(?m)^\s*(\w+) = ([\w.]+)\s*$", inner):
+            if key in {"category", "debug_max_profit", "icon_type", "icon"}:
+                continue
+            values[key] = value if key == "produced" else float(value)
+        methods[name] = values
+    return methods
+
+
+def _flat_food(body: str) -> float:
+    modifier = body[body.index("\nmodifier = {"):]
+    return float(re.search(r"local_monthly_food = ([\d.]+)", modifier).group(1))
+
+
+def test_late_tiers_make_part_of_their_food_as_province_food(table: crop_farms.CropTable) -> None:
+    """tier_province_food_share: the late tiers make that share of their food per level at 12 stored months as Province
+    Food, the total stays the age's flat food + the plain Provision; the other tiers keep the plain rule."""
+    shares = {tier: provisioning.crop_province_food_share(tier) for tier in crop_farms.TIERS}
+    assert shares[0] is None and shares[1] is None and float(shares[2]) == float(shares[3]) == 0.55
+    for crop in table.crops:
+        for tier in crop_farms.TIERS:
+            building = table.building(crop, tier)
+            body = _blueprint(building)["building"]["body"]
+            methods = _method_values(body)
+            base = float(methods[f"pp_{building}_base"]["output"])
+            provision = float(methods[f"pp_{building}_provision"]["output"])
+            plain = float(provisioning.crop_provisioning_amounts(base, provisioning.provisioned_good_price(crop.good)).output)
+            age_flat = float(provisioning.crop_tier_flat_food(tier))
+            flat = _flat_food(body)
+            assert flat + provision == pytest.approx(age_flat + plain, abs=0.0015), building   # same food at 12 months
+            if shares[tier] is None:
+                assert provision == pytest.approx(plain) and flat == pytest.approx(age_flat), building
+            else:
+                assert provision / (flat + provision) == pytest.approx(float(shares[tier]), abs=0.001), building
+
+
+def test_tier_advances_add_a_little_staple_output(table: crop_farms.CropTable) -> None:
+    """The late tier advances carry global_<good>_output_modifier of every crop farm good (the store curve's goods)."""
+    from prosper_or_perish_constructor import stored_food
+
+    goods = crop_farms.staple_output_goods(table)
+    assert set(goods) == set(stored_food.load_config(PROJECT).staple_goods)
+    for tier in (1, 2, 3):
+        key = table.tier_advance(tier)
+        generated = (ADVANCES_ROOT / f"pp_wheat_farm_tier{tier}.txt").read_text(encoding="utf-8-sig")
+        block = generated[generated.index(f"{key} = {{"):]
+        block = block[: block.index("\n}")]
+        lines = dict(re.findall(r"(?m)^global_(\w+)_output_modifier = ([\d.]+)$", block))
+        expected = {1: {}, 2: {good: "0.05" for good in goods}, 3: {good: "0.05" for good in goods}}[tier]
+        assert lines == expected, key
+
+
+def test_crop_farm_weights_read_the_land_without_the_store_line(table: crop_farms.CropTable) -> None:
+    """The store curve's crop line is part of modifier:local_<good>_output_modifier but is not land: every crop farm's
+    ai_construct_weight takes the province's line out (pp_stored_food_staple_line, one branch per Stored Food step)."""
+    from prosper_or_perish_constructor import stored_food
+
+    for crop in table.crops:
+        for tier in crop_farms.TIERS:
+            body = _blueprint(table.building(crop, tier))["building"]["body"]
+            assert (f"add = modifier:local_{crop.good}_output_modifier subtract = {stored_food.STAPLE_LINE_VALUE}" in body)
+    text = (MOD_ROOT / stored_food.SCRIPT_VALUES).read_text(encoding="utf-8-sig")
+    block = text[text.index(f"\n{stored_food.STAPLE_LINE_VALUE} = {{"):]
+    adds = [float(v) for v in re.findall(r"add = (-?[\d.]+) \}", block[: block.index("\n}")])]
+    assert adds == stored_food.staple_line_by_step(stored_food.load_config(PROJECT))
+    assert adds[0] < 0 == adds[12] < adds[24]
+
+
+def test_staple_farms_keep_their_crews_at_low_stores(table: crop_farms.CropTable) -> None:
+    """The farm trade-off's promise (Jan, 2026-10-03): at 0-12 stored months, where the farms must feed the province,
+    no crop farm loses money, so none lays off workers, on land 0 in a harvest of -0.5 or on land -0.10 in a harvest
+    of -0.4, with the cultivation it runs held (the AI moves one building a month off a losing method). Default
+    prices, labour at its floor, Province Food at 0.10, the tier advances' staple output counted. Worse land and worse
+    harvests may lay off workers (Jan: fine), and so may a full store on bad land."""
+    from prosper_or_perish_constructor import production_labour, store_lever, stored_food
+
+    config = stored_food.load_config(PROJECT)
+    prices = dict(production_labour.load_prices(ROOT, PROJECT))
+    prices["manual_labor"] *= production_labour.load_config(PROJECT).price_floor_share
+    tech = {tier: sum(float(table.raw["tier_advance"][table.tier_advance(t)].get("staple_output", 0) or 0)
+                      for t in range(1, tier + 1)) for tier in crop_farms.TIERS}
+    worst = []
+    for crop in table.crops:
+        for tier in crop_farms.TIERS:
+            building = table.building(crop, tier)
+            methods = _method_values(_blueprint(building)["building"]["body"])
+            base = methods[f"pp_{building}_base"]
+            provision = methods[f"pp_{building}_provision"]
+            worked = [m for name, m in methods.items() if m.get("produced") == crop.good and name != f"pp_{building}_base"
+                      and not name.endswith("_provision")]
+            assert worked, building
+            price = prices[crop.good]
+
+            def cost(method: dict) -> float:
+                return sum(float(v) * prices[k] for k, v in method.items() if k not in {"produced", "output"})
+
+            for land, harvest in ((0.0, -0.5), (-0.10, -0.4)):
+                for months in range(13):
+                    pool = max(0.0, 1 + land + harvest + tech[tier] + stored_food.staple_line(config, months))
+                    food = float(provision["output"]) * max(0.0, 1 + stored_food.province_food_line(config, months))
+                    fixed = (float(base["output"]) * pool * price - cost(base) + food * store_lever.FOOD_PRICE
+                             - cost(provision))
+                    for method in worked:
+                        profit = fixed + float(method["output"]) * pool * price - cost(method)
+                        worst.append((round(profit, 4), building, land, harvest, months))
+    losing = [row for row in worst if row[0] < 0]
+    assert losing == [], losing[:10]

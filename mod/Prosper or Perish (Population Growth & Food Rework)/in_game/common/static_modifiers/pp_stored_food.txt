@@ -3,14 +3,24 @@
 # Stored Food (2026-10-03): one province modifier per whole month of stored food, 0 to the 24-month cap, so the
 # province carries exactly one and it shows with its true values in the location view's province modifier list.
 # Each step holds every stored-food effect at that store: Stored Food ([stored_food.per_year], growth included;
-# the engine's storage growth term is off, NPop.FOOD_STORAGE_POP_GROWTH = 0) x months / 12, and the store lever:
+# the engine's storage growth term is off, NPop.FOOD_STORAGE_POP_GROWTH = 0) x months / 12, the store lever:
 # Low Stores ([stored_food.low]) x the years short of 12.0 months, Full Stores ([stored_food.full]) x the years
-# above. pp_refresh_stored_food picks the step: the stored months rounded to the nearest whole month, kept while
+# above, and the store curve ([stored_food.curve]): Province Food output of every maker by stored month, and the
+# crop farm goods' output moving the other way (farms feed a lean province, sell from a full one).
+# pp_refresh_stored_food picks the step: the stored months rounded to the nearest whole month, kept while
 # the store stays within half a month plus the deadband of it. Values are rounded once, to five decimals.
 pp_food_store_0 = {
 	game_data = { category = province }
-	local_local_food_output_modifier = 0.75
 	local_province_food_sales_output_modifier = -3.0
+	local_local_food_output_modifier = 0.53846
+	local_wheat_output_modifier = -0.21538
+	local_rice_output_modifier = -0.21538
+	local_millet_output_modifier = -0.21538
+	local_maize_output_modifier = -0.21538
+	local_legumes_output_modifier = -0.21538
+	local_potato_output_modifier = -0.21538
+	local_olives_output_modifier = -0.21538
+	local_livestock_output_modifier = -0.21538
 }
 pp_food_store_1 = {
 	game_data = { category = province }
@@ -18,8 +28,16 @@ pp_food_store_1 = {
 	local_devastation_recovery = 0.00025
 	local_migration_attraction = 0.00375
 	local_monthly_prosperity = 0.00021
-	local_local_food_output_modifier = 0.6875
 	local_province_food_sales_output_modifier = -2.75
+	local_local_food_output_modifier = 0.48718
+	local_wheat_output_modifier = -0.19487
+	local_rice_output_modifier = -0.19487
+	local_millet_output_modifier = -0.19487
+	local_maize_output_modifier = -0.19487
+	local_legumes_output_modifier = -0.19487
+	local_potato_output_modifier = -0.19487
+	local_olives_output_modifier = -0.19487
+	local_livestock_output_modifier = -0.19487
 }
 pp_food_store_2 = {
 	game_data = { category = province }
@@ -27,8 +45,16 @@ pp_food_store_2 = {
 	local_devastation_recovery = 0.0005
 	local_migration_attraction = 0.0075
 	local_monthly_prosperity = 0.00042
-	local_local_food_output_modifier = 0.625
 	local_province_food_sales_output_modifier = -2.5
+	local_local_food_output_modifier = 0.4359
+	local_wheat_output_modifier = -0.17436
+	local_rice_output_modifier = -0.17436
+	local_millet_output_modifier = -0.17436
+	local_maize_output_modifier = -0.17436
+	local_legumes_output_modifier = -0.17436
+	local_potato_output_modifier = -0.17436
+	local_olives_output_modifier = -0.17436
+	local_livestock_output_modifier = -0.17436
 }
 pp_food_store_3 = {
 	game_data = { category = province }
@@ -36,8 +62,16 @@ pp_food_store_3 = {
 	local_devastation_recovery = 0.00075
 	local_migration_attraction = 0.01125
 	local_monthly_prosperity = 0.00063
-	local_local_food_output_modifier = 0.5625
 	local_province_food_sales_output_modifier = -2.25
+	local_local_food_output_modifier = 0.38462
+	local_wheat_output_modifier = -0.15385
+	local_rice_output_modifier = -0.15385
+	local_millet_output_modifier = -0.15385
+	local_maize_output_modifier = -0.15385
+	local_legumes_output_modifier = -0.15385
+	local_potato_output_modifier = -0.15385
+	local_olives_output_modifier = -0.15385
+	local_livestock_output_modifier = -0.15385
 }
 pp_food_store_4 = {
 	game_data = { category = province }
@@ -45,8 +79,16 @@ pp_food_store_4 = {
 	local_devastation_recovery = 0.001
 	local_migration_attraction = 0.015
 	local_monthly_prosperity = 0.00083
-	local_local_food_output_modifier = 0.5
 	local_province_food_sales_output_modifier = -2.0
+	local_local_food_output_modifier = 0.33333
+	local_wheat_output_modifier = -0.13333
+	local_rice_output_modifier = -0.13333
+	local_millet_output_modifier = -0.13333
+	local_maize_output_modifier = -0.13333
+	local_legumes_output_modifier = -0.13333
+	local_potato_output_modifier = -0.13333
+	local_olives_output_modifier = -0.13333
+	local_livestock_output_modifier = -0.13333
 }
 pp_food_store_5 = {
 	game_data = { category = province }
@@ -54,8 +96,16 @@ pp_food_store_5 = {
 	local_devastation_recovery = 0.00125
 	local_migration_attraction = 0.01875
 	local_monthly_prosperity = 0.00104
-	local_local_food_output_modifier = 0.4375
 	local_province_food_sales_output_modifier = -1.75
+	local_local_food_output_modifier = 0.28205
+	local_wheat_output_modifier = -0.11282
+	local_rice_output_modifier = -0.11282
+	local_millet_output_modifier = -0.11282
+	local_maize_output_modifier = -0.11282
+	local_legumes_output_modifier = -0.11282
+	local_potato_output_modifier = -0.11282
+	local_olives_output_modifier = -0.11282
+	local_livestock_output_modifier = -0.11282
 }
 pp_food_store_6 = {
 	game_data = { category = province }
@@ -63,8 +113,16 @@ pp_food_store_6 = {
 	local_devastation_recovery = 0.0015
 	local_migration_attraction = 0.0225
 	local_monthly_prosperity = 0.00125
-	local_local_food_output_modifier = 0.375
 	local_province_food_sales_output_modifier = -1.5
+	local_local_food_output_modifier = 0.23077
+	local_wheat_output_modifier = -0.09231
+	local_rice_output_modifier = -0.09231
+	local_millet_output_modifier = -0.09231
+	local_maize_output_modifier = -0.09231
+	local_legumes_output_modifier = -0.09231
+	local_potato_output_modifier = -0.09231
+	local_olives_output_modifier = -0.09231
+	local_livestock_output_modifier = -0.09231
 }
 pp_food_store_7 = {
 	game_data = { category = province }
@@ -72,8 +130,16 @@ pp_food_store_7 = {
 	local_devastation_recovery = 0.00175
 	local_migration_attraction = 0.02625
 	local_monthly_prosperity = 0.00146
-	local_local_food_output_modifier = 0.3125
 	local_province_food_sales_output_modifier = -1.25
+	local_local_food_output_modifier = 0.19231
+	local_wheat_output_modifier = -0.07692
+	local_rice_output_modifier = -0.07692
+	local_millet_output_modifier = -0.07692
+	local_maize_output_modifier = -0.07692
+	local_legumes_output_modifier = -0.07692
+	local_potato_output_modifier = -0.07692
+	local_olives_output_modifier = -0.07692
+	local_livestock_output_modifier = -0.07692
 }
 pp_food_store_8 = {
 	game_data = { category = province }
@@ -81,8 +147,16 @@ pp_food_store_8 = {
 	local_devastation_recovery = 0.002
 	local_migration_attraction = 0.03
 	local_monthly_prosperity = 0.00167
-	local_local_food_output_modifier = 0.25
 	local_province_food_sales_output_modifier = -1.0
+	local_local_food_output_modifier = 0.15385
+	local_wheat_output_modifier = -0.06154
+	local_rice_output_modifier = -0.06154
+	local_millet_output_modifier = -0.06154
+	local_maize_output_modifier = -0.06154
+	local_legumes_output_modifier = -0.06154
+	local_potato_output_modifier = -0.06154
+	local_olives_output_modifier = -0.06154
+	local_livestock_output_modifier = -0.06154
 }
 pp_food_store_9 = {
 	game_data = { category = province }
@@ -90,8 +164,16 @@ pp_food_store_9 = {
 	local_devastation_recovery = 0.00225
 	local_migration_attraction = 0.03375
 	local_monthly_prosperity = 0.00188
-	local_local_food_output_modifier = 0.1875
 	local_province_food_sales_output_modifier = -0.75
+	local_local_food_output_modifier = 0.11538
+	local_wheat_output_modifier = -0.04615
+	local_rice_output_modifier = -0.04615
+	local_millet_output_modifier = -0.04615
+	local_maize_output_modifier = -0.04615
+	local_legumes_output_modifier = -0.04615
+	local_potato_output_modifier = -0.04615
+	local_olives_output_modifier = -0.04615
+	local_livestock_output_modifier = -0.04615
 }
 pp_food_store_10 = {
 	game_data = { category = province }
@@ -99,8 +181,16 @@ pp_food_store_10 = {
 	local_devastation_recovery = 0.0025
 	local_migration_attraction = 0.0375
 	local_monthly_prosperity = 0.00208
-	local_local_food_output_modifier = 0.125
 	local_province_food_sales_output_modifier = -0.5
+	local_local_food_output_modifier = 0.07692
+	local_wheat_output_modifier = -0.03077
+	local_rice_output_modifier = -0.03077
+	local_millet_output_modifier = -0.03077
+	local_maize_output_modifier = -0.03077
+	local_legumes_output_modifier = -0.03077
+	local_potato_output_modifier = -0.03077
+	local_olives_output_modifier = -0.03077
+	local_livestock_output_modifier = -0.03077
 }
 pp_food_store_11 = {
 	game_data = { category = province }
@@ -108,8 +198,16 @@ pp_food_store_11 = {
 	local_devastation_recovery = 0.00275
 	local_migration_attraction = 0.04125
 	local_monthly_prosperity = 0.00229
-	local_local_food_output_modifier = 0.0625
 	local_province_food_sales_output_modifier = -0.25
+	local_local_food_output_modifier = 0.03846
+	local_wheat_output_modifier = -0.01538
+	local_rice_output_modifier = -0.01538
+	local_millet_output_modifier = -0.01538
+	local_maize_output_modifier = -0.01538
+	local_legumes_output_modifier = -0.01538
+	local_potato_output_modifier = -0.01538
+	local_olives_output_modifier = -0.01538
+	local_livestock_output_modifier = -0.01538
 }
 pp_food_store_12 = {
 	game_data = { category = province }
@@ -124,8 +222,16 @@ pp_food_store_13 = {
 	local_devastation_recovery = 0.00325
 	local_migration_attraction = 0.04875
 	local_monthly_prosperity = 0.00271
-	local_local_food_output_modifier = -0.0625
 	local_province_food_sales_output_modifier = 0.01083
+	local_local_food_output_modifier = -0.03846
+	local_wheat_output_modifier = 0.01538
+	local_rice_output_modifier = 0.01538
+	local_millet_output_modifier = 0.01538
+	local_maize_output_modifier = 0.01538
+	local_legumes_output_modifier = 0.01538
+	local_potato_output_modifier = 0.01538
+	local_olives_output_modifier = 0.01538
+	local_livestock_output_modifier = 0.01538
 }
 pp_food_store_14 = {
 	game_data = { category = province }
@@ -133,8 +239,16 @@ pp_food_store_14 = {
 	local_devastation_recovery = 0.0035
 	local_migration_attraction = 0.0525
 	local_monthly_prosperity = 0.00292
-	local_local_food_output_modifier = -0.125
 	local_province_food_sales_output_modifier = 0.02167
+	local_local_food_output_modifier = -0.07692
+	local_wheat_output_modifier = 0.03077
+	local_rice_output_modifier = 0.03077
+	local_millet_output_modifier = 0.03077
+	local_maize_output_modifier = 0.03077
+	local_legumes_output_modifier = 0.03077
+	local_potato_output_modifier = 0.03077
+	local_olives_output_modifier = 0.03077
+	local_livestock_output_modifier = 0.03077
 }
 pp_food_store_15 = {
 	game_data = { category = province }
@@ -142,8 +256,16 @@ pp_food_store_15 = {
 	local_devastation_recovery = 0.00375
 	local_migration_attraction = 0.05625
 	local_monthly_prosperity = 0.00313
-	local_local_food_output_modifier = -0.1875
 	local_province_food_sales_output_modifier = 0.0325
+	local_local_food_output_modifier = -0.11538
+	local_wheat_output_modifier = 0.04615
+	local_rice_output_modifier = 0.04615
+	local_millet_output_modifier = 0.04615
+	local_maize_output_modifier = 0.04615
+	local_legumes_output_modifier = 0.04615
+	local_potato_output_modifier = 0.04615
+	local_olives_output_modifier = 0.04615
+	local_livestock_output_modifier = 0.04615
 }
 pp_food_store_16 = {
 	game_data = { category = province }
@@ -151,8 +273,16 @@ pp_food_store_16 = {
 	local_devastation_recovery = 0.004
 	local_migration_attraction = 0.06
 	local_monthly_prosperity = 0.00333
-	local_local_food_output_modifier = -0.25
 	local_province_food_sales_output_modifier = 0.04333
+	local_local_food_output_modifier = -0.15385
+	local_wheat_output_modifier = 0.06154
+	local_rice_output_modifier = 0.06154
+	local_millet_output_modifier = 0.06154
+	local_maize_output_modifier = 0.06154
+	local_legumes_output_modifier = 0.06154
+	local_potato_output_modifier = 0.06154
+	local_olives_output_modifier = 0.06154
+	local_livestock_output_modifier = 0.06154
 }
 pp_food_store_17 = {
 	game_data = { category = province }
@@ -160,8 +290,16 @@ pp_food_store_17 = {
 	local_devastation_recovery = 0.00425
 	local_migration_attraction = 0.06375
 	local_monthly_prosperity = 0.00354
-	local_local_food_output_modifier = -0.3125
 	local_province_food_sales_output_modifier = 0.05417
+	local_local_food_output_modifier = -0.19231
+	local_wheat_output_modifier = 0.07692
+	local_rice_output_modifier = 0.07692
+	local_millet_output_modifier = 0.07692
+	local_maize_output_modifier = 0.07692
+	local_legumes_output_modifier = 0.07692
+	local_potato_output_modifier = 0.07692
+	local_olives_output_modifier = 0.07692
+	local_livestock_output_modifier = 0.07692
 }
 pp_food_store_18 = {
 	game_data = { category = province }
@@ -169,8 +307,16 @@ pp_food_store_18 = {
 	local_devastation_recovery = 0.0045
 	local_migration_attraction = 0.0675
 	local_monthly_prosperity = 0.00375
-	local_local_food_output_modifier = -0.375
 	local_province_food_sales_output_modifier = 0.065
+	local_local_food_output_modifier = -0.23077
+	local_wheat_output_modifier = 0.09231
+	local_rice_output_modifier = 0.09231
+	local_millet_output_modifier = 0.09231
+	local_maize_output_modifier = 0.09231
+	local_legumes_output_modifier = 0.09231
+	local_potato_output_modifier = 0.09231
+	local_olives_output_modifier = 0.09231
+	local_livestock_output_modifier = 0.09231
 }
 pp_food_store_19 = {
 	game_data = { category = province }
@@ -178,8 +324,16 @@ pp_food_store_19 = {
 	local_devastation_recovery = 0.00475
 	local_migration_attraction = 0.07125
 	local_monthly_prosperity = 0.00396
-	local_local_food_output_modifier = -0.4375
 	local_province_food_sales_output_modifier = 0.07583
+	local_local_food_output_modifier = -0.25641
+	local_wheat_output_modifier = 0.10256
+	local_rice_output_modifier = 0.10256
+	local_millet_output_modifier = 0.10256
+	local_maize_output_modifier = 0.10256
+	local_legumes_output_modifier = 0.10256
+	local_potato_output_modifier = 0.10256
+	local_olives_output_modifier = 0.10256
+	local_livestock_output_modifier = 0.10256
 }
 pp_food_store_20 = {
 	game_data = { category = province }
@@ -187,8 +341,16 @@ pp_food_store_20 = {
 	local_devastation_recovery = 0.005
 	local_migration_attraction = 0.075
 	local_monthly_prosperity = 0.00417
-	local_local_food_output_modifier = -0.5
 	local_province_food_sales_output_modifier = 0.08667
+	local_local_food_output_modifier = -0.28205
+	local_wheat_output_modifier = 0.11282
+	local_rice_output_modifier = 0.11282
+	local_millet_output_modifier = 0.11282
+	local_maize_output_modifier = 0.11282
+	local_legumes_output_modifier = 0.11282
+	local_potato_output_modifier = 0.11282
+	local_olives_output_modifier = 0.11282
+	local_livestock_output_modifier = 0.11282
 }
 pp_food_store_21 = {
 	game_data = { category = province }
@@ -196,8 +358,16 @@ pp_food_store_21 = {
 	local_devastation_recovery = 0.00525
 	local_migration_attraction = 0.07875
 	local_monthly_prosperity = 0.00438
-	local_local_food_output_modifier = -0.5625
 	local_province_food_sales_output_modifier = 0.0975
+	local_local_food_output_modifier = -0.30769
+	local_wheat_output_modifier = 0.12308
+	local_rice_output_modifier = 0.12308
+	local_millet_output_modifier = 0.12308
+	local_maize_output_modifier = 0.12308
+	local_legumes_output_modifier = 0.12308
+	local_potato_output_modifier = 0.12308
+	local_olives_output_modifier = 0.12308
+	local_livestock_output_modifier = 0.12308
 }
 pp_food_store_22 = {
 	game_data = { category = province }
@@ -205,8 +375,16 @@ pp_food_store_22 = {
 	local_devastation_recovery = 0.0055
 	local_migration_attraction = 0.0825
 	local_monthly_prosperity = 0.00458
-	local_local_food_output_modifier = -0.625
 	local_province_food_sales_output_modifier = 0.10833
+	local_local_food_output_modifier = -0.33333
+	local_wheat_output_modifier = 0.13333
+	local_rice_output_modifier = 0.13333
+	local_millet_output_modifier = 0.13333
+	local_maize_output_modifier = 0.13333
+	local_legumes_output_modifier = 0.13333
+	local_potato_output_modifier = 0.13333
+	local_olives_output_modifier = 0.13333
+	local_livestock_output_modifier = 0.13333
 }
 pp_food_store_23 = {
 	game_data = { category = province }
@@ -214,8 +392,16 @@ pp_food_store_23 = {
 	local_devastation_recovery = 0.00575
 	local_migration_attraction = 0.08625
 	local_monthly_prosperity = 0.00479
-	local_local_food_output_modifier = -0.6875
 	local_province_food_sales_output_modifier = 0.11917
+	local_local_food_output_modifier = -0.35897
+	local_wheat_output_modifier = 0.14359
+	local_rice_output_modifier = 0.14359
+	local_millet_output_modifier = 0.14359
+	local_maize_output_modifier = 0.14359
+	local_legumes_output_modifier = 0.14359
+	local_potato_output_modifier = 0.14359
+	local_olives_output_modifier = 0.14359
+	local_livestock_output_modifier = 0.14359
 }
 pp_food_store_24 = {
 	game_data = { category = province }
@@ -223,8 +409,16 @@ pp_food_store_24 = {
 	local_devastation_recovery = 0.006
 	local_migration_attraction = 0.09
 	local_monthly_prosperity = 0.005
-	local_local_food_output_modifier = -0.75
 	local_province_food_sales_output_modifier = 0.13
+	local_local_food_output_modifier = -0.38462
+	local_wheat_output_modifier = 0.15385
+	local_rice_output_modifier = 0.15385
+	local_millet_output_modifier = 0.15385
+	local_maize_output_modifier = 0.15385
+	local_legumes_output_modifier = 0.15385
+	local_potato_output_modifier = 0.15385
+	local_olives_output_modifier = 0.15385
+	local_livestock_output_modifier = 0.15385
 }
 
 # Old saves: the names of the earlier versions stay defined, without effects, so those saves load;

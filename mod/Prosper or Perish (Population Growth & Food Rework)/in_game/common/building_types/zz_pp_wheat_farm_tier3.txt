@@ -29,7 +29,7 @@ ai_construct_weight = {
         add = {
             value = "market.market_price(goods:wheat)"
             divide = "default_price(goods:wheat)"
-            multiply = { value = 1 add = modifier:local_wheat_output_modifier }
+            multiply = { value = 1 add = modifier:local_wheat_output_modifier subtract = pp_stored_food_staple_line }
             subtract = 1
             multiply = 400
         }
@@ -63,13 +63,13 @@ unique_production_methods = {
     pp_wheat_model_farm_seed_drill = {
         icon_type = building_type
         icon = wheat_model_farm
-        tools = 0.32
-        horses = 0.27
-        legumes = 0.33
-        paper = 0.17
-        manual_labor = 0.22
+        tools = 0.16
+        horses = 0.13
+        legumes = 0.17
+        paper = 0.086
+        manual_labor = 0.12
         produced = wheat
-        output = 3.07
+        output = 1.54
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -80,8 +80,8 @@ unique_production_methods = {
         icon = wheat
         wheat = 0.024
         produced = local_food
-        output = 3.625
-        debug_max_profit = 74.521
+        output = 5.294
+        debug_max_profit = 109.292
         category = building_maintenance
     }
 }
@@ -94,7 +94,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_monthly_food = 6
+    local_monthly_food = 4.331
     local_food_capacity = 50
     local_laborers_desired_pop = 0.002
 }

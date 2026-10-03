@@ -34,3 +34,40 @@ pp_province_food_storage_growth = {
 	value = pp_stored_food_years
 	multiply = 0.006
 }
+
+# Location scope: the crop line of the Stored Food step the province carries ([stored_food.curve], the same value
+# as the step's local_<staple>_output_modifier); 0 without a step. The crop farms' ai_construct_weight takes it out
+# of the crop output modifier it reads as land quality (crop_farms.py): the store is not the land.
+pp_stored_food_staple_line = {
+	value = 0
+	province ?= {
+		if = {
+			limit = { has_variable = pp_food_store_step var:pp_food_store_step > 99.5 }
+			if = { limit = { var:pp_food_store_step < 100.5 } add = -0.21538 }
+			else_if = { limit = { var:pp_food_store_step < 101.5 } add = -0.19487 }
+			else_if = { limit = { var:pp_food_store_step < 102.5 } add = -0.17436 }
+			else_if = { limit = { var:pp_food_store_step < 103.5 } add = -0.15385 }
+			else_if = { limit = { var:pp_food_store_step < 104.5 } add = -0.13333 }
+			else_if = { limit = { var:pp_food_store_step < 105.5 } add = -0.11282 }
+			else_if = { limit = { var:pp_food_store_step < 106.5 } add = -0.09231 }
+			else_if = { limit = { var:pp_food_store_step < 107.5 } add = -0.07692 }
+			else_if = { limit = { var:pp_food_store_step < 108.5 } add = -0.06154 }
+			else_if = { limit = { var:pp_food_store_step < 109.5 } add = -0.04615 }
+			else_if = { limit = { var:pp_food_store_step < 110.5 } add = -0.03077 }
+			else_if = { limit = { var:pp_food_store_step < 111.5 } add = -0.01538 }
+			else_if = { limit = { var:pp_food_store_step < 112.5 } add = 0.0 }
+			else_if = { limit = { var:pp_food_store_step < 113.5 } add = 0.01538 }
+			else_if = { limit = { var:pp_food_store_step < 114.5 } add = 0.03077 }
+			else_if = { limit = { var:pp_food_store_step < 115.5 } add = 0.04615 }
+			else_if = { limit = { var:pp_food_store_step < 116.5 } add = 0.06154 }
+			else_if = { limit = { var:pp_food_store_step < 117.5 } add = 0.07692 }
+			else_if = { limit = { var:pp_food_store_step < 118.5 } add = 0.09231 }
+			else_if = { limit = { var:pp_food_store_step < 119.5 } add = 0.10256 }
+			else_if = { limit = { var:pp_food_store_step < 120.5 } add = 0.11282 }
+			else_if = { limit = { var:pp_food_store_step < 121.5 } add = 0.12308 }
+			else_if = { limit = { var:pp_food_store_step < 122.5 } add = 0.13333 }
+			else_if = { limit = { var:pp_food_store_step < 123.5 } add = 0.14359 }
+			else = { add = 0.15385 }
+		}
+	}
+}

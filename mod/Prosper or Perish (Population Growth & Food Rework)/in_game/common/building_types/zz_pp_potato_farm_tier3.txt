@@ -35,7 +35,7 @@ ai_construct_weight = {
         add = {
             value = "market.market_price(goods:potato)"
             divide = "default_price(goods:potato)"
-            multiply = { value = 1 add = modifier:local_potato_output_modifier }
+            multiply = { value = 1 add = modifier:local_potato_output_modifier subtract = pp_stored_food_staple_line }
             subtract = 1
             multiply = 400
         }
@@ -69,13 +69,13 @@ unique_production_methods = {
     pp_potato_model_farm_drilled_ridges = {
         icon_type = building_type
         icon = potato_model_farm
-        tools = 0.29
-        livestock = 0.39
-        clay = 0.49
-        paper = 0.37
-        manual_labor = 0.23
+        tools = 0.15
+        livestock = 0.19
+        clay = 0.25
+        paper = 0.19
+        manual_labor = 0.097
         produced = potato
-        output = 3.1
+        output = 1.55
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -86,8 +86,8 @@ unique_production_methods = {
         icon = potato
         potato = 0.024
         produced = local_food
-        output = 3.625
-        debug_max_profit = 74.521
+        output = 5.294
+        debug_max_profit = 109.292
         category = building_maintenance
     }
 }
@@ -100,7 +100,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_monthly_food = 6
+    local_monthly_food = 4.331
     local_food_capacity = 50
     local_laborers_desired_pop = 0.002
 }

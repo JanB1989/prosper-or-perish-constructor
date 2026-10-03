@@ -33,7 +33,7 @@ def _margin_threshold() -> float:
 
 def test_design_is_read_from_the_blueprints_and_the_config(design: store_lever.Design) -> None:
     assert design.pivot == 12
-    assert design.tavern_food == 24.0 and design.tavern_victuals == 0.8        # 1 victual = 30 food
+    assert design.tavern_food == 25.5 and design.tavern_victuals == 0.8        # 1 victual = 32 food
     assert design.grange_food == 24.0 and design.grange_victuals == 0.6       # 1 victual = 40 food
     assert design.tavern_fixed > 0 and design.grange_fixed > design.grange_gate_cost > 0
     assert design.tavern_sales_cut < 0 and design.starving_victuals <= -2 and design.starving_food > 0
@@ -44,9 +44,14 @@ def test_province_food_is_worth_more_below_the_pivot_and_less_above(design: stor
     values = [design.food_modifier(months) for months in range(25)]
     assert values == sorted(values, reverse=True) and values[0] > 1 > values[-1] > 0
     assert design.food_modifier(40) == design.food_modifier(24)                # the lever stops at 24 months
-    # staples: never moved by the store (farm v3: the farms' ai_construct_weight reads the crop output modifier as land
-    # quality, so a store-driven staple bonus would make the AI build farms where the store is full)
-    assert design.staple_modifier(0) == 1.0 and design.staple_modifier(24) == 1.0
+    # Jan's shares of an empty store's output (2026-10-03): 100 / 80 / 65 / 50 / 40 % at 0 / 6 / 12 / 18 / 24 months
+    shares = [design.food_modifier(months) / design.food_modifier(0) for months in (0, 6, 12, 18, 24)]
+    assert shares == pytest.approx([1.0, 0.8, 0.65, 0.5, 0.4])
+    # staples move the other way (the farm trade-off): less crop for the market while the store is low, more while it is
+    # full, by -0.40 x the Province Food line; the farms' ai_construct_weight takes the line out (pp_stored_food_staple_line)
+    assert design.staple_modifier(0) < 1.0 == design.staple_modifier(12) < design.staple_modifier(24)
+    for months in range(25):
+        assert design.staple_line(months) == pytest.approx(-0.40 * design.food_line(months)), months
 
 
 def test_tavern_fills_the_store_from_below_and_follows_the_victuals_price(design: store_lever.Design) -> None:

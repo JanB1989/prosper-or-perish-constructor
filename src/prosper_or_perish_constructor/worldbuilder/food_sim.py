@@ -174,7 +174,7 @@ class SimRules:
     consumption_drift: float = 0.0015
     noble_hazard: float = 0.09
     ramp: float = 0.15                  # staffing change per month (defines LAID_OFF / REHIRED_PERCENTAGE = 15)
-    tavern_food: float = 24.0            # Province Food per staffed Tavern level at 12 stored months (Serve Victuals)
+    tavern_food: float = 25.5            # Province Food per staffed Tavern level at 12 stored months (Serve Victuals)
     yard_food: float = 24.0              # food per staffed Grange level (-local_monthly_food)
     harbor_yard_food: float = 0.0        # food per staffed harbour Victualling Yard level (none since 2026-10-03)
     provision_month: int = 0             # Provisioning always runs (one method since the store lever)
@@ -205,10 +205,11 @@ class SimRules:
     # first tick (config/start_markets.csv, predicted from a start save) instead of the nearest-centre proxy
     market_assignment: bool = False
     # Store lever (store_lever.py; SimRules.from_project reads these from constructor.toml, the Tavern and Grange
-    # blueprints and the mod's province_starving, the defaults are the values of 2026-10-02)
+    # blueprints and the mod's province_starving, the defaults are the values of 2026-10-03)
     pivot_months: float = 12.0
-    food_low: float = 0.75              # Province Food output per year below the pivot
-    food_full: float = -0.75            # ... per year above
+    # the store curve ([stored_food.curve]): (stored months, Province Food output as a share of an empty store's),
+    # linear between the knots; the output modifier is share / share at the pivot - 1
+    food_curve: tuple = ((0.0, 1.0), (6.0, 0.8), (12.0, 0.65), (18.0, 0.5), (24.0, 0.4))
     sales_low: float = -3.0             # Surplus Sales output per year below the pivot
     sales_full: float = 0.13
     starving_food: float = 1.0          # province_starving: Province Food output
@@ -252,7 +253,7 @@ class SimRules:
             return cls.from_raw(raw)                      # no project around (a bare input.csv): the defaults
         d = store_lever.load_design(repo)
         values: dict[str, Any] = dict(
-            pivot_months=d.pivot, food_low=d.food_low, food_full=d.food_full, sales_low=d.sales_low,
+            pivot_months=d.pivot, food_curve=d.food_curve, sales_low=d.sales_low,
             sales_full=d.sales_full, starving_food=d.starving_food, starving_victuals=d.starving_victuals,
             food_price=store_lever.FOOD_PRICE, tavern_food=d.tavern_food, tavern_victuals=d.tavern_victuals,
             tavern_fixed=d.tavern_fixed, tavern_sales_cut=d.tavern_sales_cut, yard_food=d.grange_food,
@@ -266,10 +267,20 @@ class SimRules:
         months = min(24.0, max(0.0, months))
         return max(0.0, self.pivot_months - months) / 12.0, max(0.0, months - self.pivot_months) / 12.0
 
+    def _curve_share(self, months: float) -> float:
+        knots = [(float(m), float(s)) for m, s in self.food_curve]
+        months = min(24.0, max(0.0, months))
+        if months <= knots[0][0]:
+            return knots[0][1]
+        for (m0, s0), (m1, s1) in zip(knots, knots[1:]):
+            if months <= m1:
+                return s0 + (s1 - s0) * (months - m0) / (m1 - m0)
+        return knots[-1][1]
+
     def food_modifier(self, months: float, starving: bool = False) -> float:
-        """Province Food output multiplier of everything that makes it (1 at the pivot)."""
-        low, full = self.lever_sizes(months)
-        return max(0.0, 1.0 + self.food_low * low + self.food_full * full + (self.starving_food if starving else 0.0))
+        """Province Food output multiplier of everything that makes it (1 at the pivot): the store curve."""
+        line = self._curve_share(months) / self._curve_share(self.pivot_months) - 1.0
+        return max(0.0, 1.0 + line + (self.starving_food if starving else 0.0))
 
     def tavern_profit(self, months: float, starving: bool) -> float:
         return (self.tavern_food * self.food_price * self.food_modifier(months, starving)

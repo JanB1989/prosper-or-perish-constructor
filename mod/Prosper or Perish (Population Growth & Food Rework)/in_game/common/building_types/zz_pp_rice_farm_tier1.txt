@@ -35,7 +35,7 @@ ai_construct_weight = {
         add = {
             value = "market.market_price(goods:rice)"
             divide = "default_price(goods:rice)"
-            multiply = { value = 1 add = modifier:local_rice_output_modifier }
+            multiply = { value = 1 add = modifier:local_rice_output_modifier subtract = pp_stored_food_staple_line }
             subtract = 1
             multiply = 400
         }

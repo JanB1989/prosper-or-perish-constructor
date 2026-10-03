@@ -19,6 +19,9 @@ Crop farms (farm v3, 2026-10-02): Provision buys only a token of the crop (``cro
 Province Food amount per level (``crop_food_per_level``). The farm sells nearly all its crop, and Provision's margin
 (Province Food / a token of crop) stays far above the AI's threshold at any crop price, so it is the farm's gate and
 the farm has no Market leg; the AI's price response is the farm's ``ai_construct_weight`` (``crop_farms.py``).
+Farm trade-off (2026-10-03): a tier with ``tier_province_food_share`` in the crop table makes that share of its food
+per level at 12 stored months as Province Food and keeps the rest as flat food (``crop_food_split``; the total is the
+plain Provision + the tier's age flat food), so more of its food follows the store.
 
 Amounts scale with the building's size, measured by its base output: ``M = base_output / reference_base_output``,
 where ``base_output`` is the output of the first slot-0 method that produces the building's own good.
@@ -69,8 +72,15 @@ def _crop_farm_goods(raw: dict[str, Any]) -> dict[str, str]:
     return {f"{crop['stem']}_{suffixes[tier]}": str(crop["good"]) for crop in raw.get("crops", []) for tier in tiers}
 
 
+def _crop_farm_tiers(raw: dict[str, Any]) -> dict[str, int]:
+    """Building -> tier of the crop farm chains."""
+    suffixes = raw.get("general", {}).get("tier_suffix", {})
+    return {f"{crop['stem']}_{suffix}": int(tier) for crop in raw.get("crops", []) for tier, suffix in suffixes.items()}
+
+
 _CROP_TABLE = _crop_table()
 CROP_FARM_GOODS: dict[str, str] = _crop_farm_goods(_CROP_TABLE)
+CROP_FARM_TIERS: dict[str, int] = _crop_farm_tiers(_CROP_TABLE)
 CROP_FARM_FAMILY_GOODS: dict[str, str] = {f"{crop['stem']}_farm": str(crop["good"]) for crop in _CROP_TABLE.get("crops", [])}
 
 # The good each calorie family provisions with, keyed by blueprint `upgrade_chain.family` (crop chains: `<stem>_farm`).
@@ -197,15 +207,71 @@ def crop_provisioning_amounts(
     )
 
 
+def crop_province_food_share(tier: int, raw: dict[str, Any] | None = None) -> Decimal | None:
+    """``tier_province_food_share`` of the crop table: the share of a crop farm tier's food per level at 12 stored
+    months (flat food + Provision) that it makes as Province Food; None keeps the plain rule (farm trade-off,
+    2026-10-03)."""
+    shares = (raw if raw is not None else _CROP_TABLE).get("general", {}).get("tier_province_food_share", {})
+    value = shares.get(str(tier))
+    if value is None:
+        return None
+    share = _decimal(value, f"tier_province_food_share.{tier}")
+    if not 0 < share <= 1:
+        raise ValueError(f"tier_province_food_share.{tier} must be in (0, 1]: {share}")
+    return share
+
+
+def crop_food_split(
+    base_output: Decimal | float | str,
+    flat_food: Decimal | float | str,
+    good_price: Decimal | float | str = 1,
+    config: ProvisioningConfig | None = None,
+    share: Decimal | None = None,
+) -> tuple[ProvisioningAmounts, Decimal]:
+    """A crop farm's Provision amounts and its flat food per level. With ``share`` the farm makes that share of its
+    food per level at 12 stored months (``flat_food`` + the plain Provision output) as Province Food and keeps the rest
+    as flat food: the total stays the same, but more of it follows the store (Province Food earns most at a low store,
+    which keeps the late tiers' crews through a poor harvest there)."""
+    amounts = crop_provisioning_amounts(base_output, good_price, config)
+    flat = _decimal(flat_food, "flat_food")
+    if share is None:
+        return amounts, flat
+    total = flat + amounts.output
+    output = round_amount(total * share)
+    return ProvisioningAmounts(input=amounts.input, output=output), total - output
+
+
+def crop_tier_flat_food(tier: int, project: Path = DEFAULT_PROJECT, raw: dict[str, Any] | None = None) -> Decimal:
+    """The flat food per level of a crop farm tier before the split: the ``[age_food]`` flat food of the tier's age
+    (the farm: age 1; a later tier: its tier advance's age), else the tier's own ``local_monthly_food``
+    (``[general.tier_modifier.<tier>]``), as ``crop_farms.render_blueprint`` takes it."""
+    from prosper_or_perish_constructor import age_food   # age_food imports this module
+
+    table = raw if raw is not None else _CROP_TABLE
+    general = table.get("general", {})
+    age = "age_1_traditions" if tier == 0 else str(table["tier_advance"][general["tier_advances"][str(tier)]]["age"])
+    ages = age_food.load_config(project).ages
+    if age in ages:
+        return _decimal(ages[age].flat_food, f"[age_food] {age}.flat_food")
+    own = general.get("tier_modifier", {}).get(str(tier), {}).get("local_monthly_food", 0)
+    return _decimal(own, f"general.tier_modifier.{tier}.local_monthly_food")
+
+
 def building_amounts(
     building_key: str,
     base_output: Decimal | float | str,
     good_price: Decimal | float | str = 1,
     config: ProvisioningConfig | None = None,
 ) -> ProvisioningAmounts:
-    """The Provision amounts a building carries: the crop-farm rule for crop farms, the buy-back rule otherwise."""
+    """The Provision amounts a building carries: the crop-farm rule for crop farms (with their tier's Province Food
+    share), the buy-back rule otherwise."""
     if building_key in CROP_FARM_GOODS:
-        return crop_provisioning_amounts(base_output, good_price, config)
+        tier = CROP_FARM_TIERS[building_key]
+        share = crop_province_food_share(tier)
+        if share is None:
+            return crop_provisioning_amounts(base_output, good_price, config)
+        amounts, _ = crop_food_split(base_output, crop_tier_flat_food(tier), good_price, config, share)
+        return amounts
     return provisioning_amounts(base_output, good_price, config)
 
 

@@ -29,7 +29,7 @@ ai_construct_weight = {
         add = {
             value = "market.market_price(goods:livestock)"
             divide = "default_price(goods:livestock)"
-            multiply = { value = 1 add = modifier:local_livestock_output_modifier }
+            multiply = { value = 1 add = modifier:local_livestock_output_modifier subtract = pp_stored_food_staple_line }
             subtract = 1
             multiply = 400
         }
@@ -63,13 +63,13 @@ unique_production_methods = {
     pp_cattle_model_farm_dairy_breeding = {
         icon_type = building_type
         icon = cattle_model_farm
-        tools = 0.27
-        horses = 0.24
-        legumes = 0.47
-        paper = 0.16
-        manual_labor = 0.19
+        tools = 0.13
+        horses = 0.12
+        legumes = 0.23
+        paper = 0.08
+        manual_labor = 0.12
         produced = livestock
-        output = 2.03
+        output = 1.01
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -80,8 +80,8 @@ unique_production_methods = {
         icon = livestock
         livestock = 0.016
         produced = local_food
-        output = 3.625
-        debug_max_profit = 74.521
+        output = 5.294
+        debug_max_profit = 109.292
         category = building_maintenance
     }
 }
@@ -94,7 +94,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_monthly_food = 6
+    local_monthly_food = 4.331
     local_food_capacity = 50
     local_laborers_desired_pop = 0.002
     local_wheat_output_modifier = 0.01

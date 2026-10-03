@@ -112,10 +112,12 @@ def test_default_rules_are_the_mods_store_lever():
 
 def test_tavern_fills_a_low_store_and_the_grange_packs_a_full_one():
     rules = fs.SimRules()
-    # Province Food is worth more below 12 stored months and less above; the lever stops at 24 months
-    assert rules.food_modifier(0) == 1.75 and rules.food_modifier(12) == 1.0 and rules.food_modifier(24) == 0.25
+    # Province Food is worth more below 12 stored months and less above (the store curve, 2026-10-03: Jan's shares
+    # 1.0 / 0.65 / 0.4 of an empty store's output at 0 / 12 / 24 months); the curve stops at 24 months
+    assert rules.food_modifier(0) == pytest.approx(1 / 0.65) and rules.food_modifier(12) == pytest.approx(1.0)
+    assert rules.food_modifier(24) == pytest.approx(0.4 / 0.65)
     assert rules.food_modifier(40) == rules.food_modifier(24)
-    assert rules.food_modifier(0, starving=True) == 2.75                # starving people pay more
+    assert rules.food_modifier(0, starving=True) == pytest.approx(1 / 0.65 + 1)   # starving people pay more
     # the Tavern pays at a low store only, the Grange at a full one only, never both at the same store
     assert rules.tavern_profit(3, False) > 0 > rules.tavern_profit(12, False)
     # 2026-10-03: only a really full store, and only from about the default victuals price up (never below 2.86)
@@ -142,7 +144,10 @@ def test_cookshops_serve_up_to_their_break_even_store():
                    taverns=0.0, yards=0.0, capacity=4000.0, start_food=600.0, victuals_demand=0.0, peasant_share=0.8)
     row = fs.simulate([pool], rules)[0]
     assert 9.0 < row["end_months"] < 13.0 and not row["pinned"] and row["months_starving"] == 0
-    assert 0.0 < row["cookshop_staffed_end"] < 1.0
+    # they serve part of the time: staffing ramps 0.15 a month toward the sign of their profit, so it swings around
+    # the break-even store (10.3-11.7 months on the store curve); averaged over a year it is neither off nor full
+    staffed = [fs.simulate([pool], fs.SimRules(harvest=False, months=m))[0]["cookshop_staffed_end"] for m in range(114, 126)]
+    assert 0.0 < sum(staffed) / len(staffed) < 1.0
     # with costlier staples they stop earlier and the store rests lower
     dear = fs.simulate([pool], fs.SimRules(harvest=False, months=120, cookshop_cost=1.3))[0]
     assert dear["end_months"] < row["end_months"] - 2

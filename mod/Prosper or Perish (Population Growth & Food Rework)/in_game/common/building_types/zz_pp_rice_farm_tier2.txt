@@ -35,7 +35,7 @@ ai_construct_weight = {
         add = {
             value = "market.market_price(goods:rice)"
             divide = "default_price(goods:rice)"
-            multiply = { value = 1 add = modifier:local_rice_output_modifier }
+            multiply = { value = 1 add = modifier:local_rice_output_modifier subtract = pp_stored_food_staple_line }
             subtract = 1
             multiply = 400
         }
@@ -69,26 +69,26 @@ unique_production_methods = {
     pp_rice_rotations_double_cropping = {
         icon_type = building_type
         icon = rice_rotations
-        tools = 0.2
-        livestock = 0.28
-        clay = 0.54
-        lumber = 0.14
-        manual_labor = 0.22
+        tools = 0.1
+        livestock = 0.14
+        clay = 0.27
+        lumber = 0.072
+        manual_labor = 0.1
         produced = rice
-        output = 2.08
+        output = 1.04
         debug_max_profit = 0
         category = building_maintenance
     }
     pp_rice_rotations_chain_pump = {
         icon_type = building_type
         icon = rice_rotations
-        tools = 0.19
-        livestock = 0.24
-        clay = 0.43
-        lumber = 0.23
-        manual_labor = 0.2
+        tools = 0.096
+        livestock = 0.12
+        clay = 0.22
+        lumber = 0.11
+        manual_labor = 0.1
         produced = rice
-        output = 2.16
+        output = 1.08
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -99,8 +99,8 @@ unique_production_methods = {
         icon = rice
         rice = 0.016
         produced = local_food
-        output = 2.375
-        debug_max_profit = 73.219
+        output = 3.781
+        debug_max_profit = 117.156
         category = building_maintenance
     }
 }
@@ -113,7 +113,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_monthly_food = 4.5
+    local_monthly_food = 3.094
     local_food_capacity = 50
     local_peasants_estate_power = 0.021
     local_peasant_enfranchisment = 0.002

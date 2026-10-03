@@ -45,9 +45,17 @@
   `[building_scaling]`) and makes a fixed Province Food amount per level, so it is the farm's gate (margin about 15 at
   base prices, open at any realistic crop price) and the farms have no Market leg. The AI's price response is the
   farm's `ai_construct_weight` (`[general.ai_construct_weight]` in `config/crop_farms.toml`: slope x ((1 + local crop
-  output modifier) x market price / default price - 1) / (owner monthly income + offset); EU5 1.4 adds it raw at the
-  end of the build score, after the gate). Fisheries, orchards and forest villages keep the buy-back Provision and
-  their Market leg.
+  output modifier - the store curve's crop line `pp_stored_food_staple_line`) x market price / default price - 1) /
+  (owner monthly income + offset); EU5 1.4 adds it raw at the end of the build score, after the gate). Fisheries,
+  orchards and forest villages keep the buy-back Provision and their Market leg.
+- Farm trade-off (2026-10-03, Jan; see Store Lever): tiers 2-3 run their cultivation at half throughput
+  (`tier_cultivation_throughput`, goods in and out, on top of [age_food]) and make 55 % of their food per level at 12
+  stored months as Province Food (`tier_province_food_share`, `provisioning.crop_food_split`; the total stays the
+  age's flat food + the plain Provision); Rotational Farmsteads and Model Farms give +0.05 `global_<good>_output_modifier`
+  of every crop farm good (`staple_output`). `tests/test_crop_farms.py` pins the promise: at 0-12 stored months no
+  crop farm loses money (so none lays off workers) on land 0 in a -0.5 harvest or on land -0.10 in a -0.4 harvest.
+  Workers are laid off whenever profit at full staffing is negative unless the AI subsidises; `can_close` /
+  `ai_forbid_shutdown` do not stop that.
 - A slot's first method is what new and game-start buildings run, so reordering can change defaults.
 
 ## Store Lever
@@ -56,8 +64,14 @@
   N months", `stored_food.py`, `[stored_food]` in constructor.toml; 2026-10-03, replaced the size-scaled Stored Food /
   Low Stores / Full Stores, which did not show their scaled values). Step s = Stored Food (`per_year`, growth and
   prosperity) x s/12 + the store lever: Low Stores (`low`) x the years below 12 months or Full Stores (`full`) x the
-  years above (Province Food output + below / - above, the Grange's Surplus Sales + above / steeply - below; staple
-  line 0 since farm v3). Exact values rounded once to five decimals; the pivot step has no lever line, so there are no
+  years above (the Grange's Surplus Sales + above / steeply - below) + the store curve (`[stored_food.curve]`,
+  2026-10-03, Jan's farm trade-off): Province Food output of every maker at Jan's shares 100 / 80 / 65 / 50 / 40 % of an
+  empty store's output at 0 / 6 / 12 / 18 / 24 months (+53.8 % .. 0 .. -38.5 %, was +-75 % linear), and ONE crop line
+  for the 8 crop farm goods (wheat, rice, millet, maize, legumes, potato, olives, livestock) = -0.40 x that (-21.5 % ..
+  +15.4 %): farms feed a lean province and sell from a full one. Output modifiers are per good, so the line is the same
+  for every farm tier, every RGO and every other producer of those goods; fish, fruit and game stay off it (their
+  Provision buys their own good back). `pp_stored_food_staple_line` (location scope) is the carried step's line for the
+  farm weights. Exact values rounded once to five decimals; the pivot step has no lever or curve line, so there are no
   country base values for the store. The refresh picks the nearest whole month (half up) and keeps the carried step
   while the store stays within 0.55 months of it; `pp_stored_food_months` keeps the continuous months for the AI
   weights. The step shows in the location view's province modifier list (no longer hidden).

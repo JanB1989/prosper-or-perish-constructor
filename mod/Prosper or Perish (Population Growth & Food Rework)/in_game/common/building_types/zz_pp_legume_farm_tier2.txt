@@ -29,7 +29,7 @@ ai_construct_weight = {
         add = {
             value = "market.market_price(goods:legumes)"
             divide = "default_price(goods:legumes)"
-            multiply = { value = 1 add = modifier:local_legumes_output_modifier }
+            multiply = { value = 1 add = modifier:local_legumes_output_modifier subtract = pp_stored_food_staple_line }
             subtract = 1
             multiply = 400
         }
@@ -83,26 +83,26 @@ unique_production_methods = {
     pp_legume_rotations_pulse_rotation = {
         icon_type = building_type
         icon = legume_rotations
-        tools = 0.23
-        horses = 0.18
-        livestock = 0.12
-        cloth = 0.048
-        manual_labor = 0.2
+        tools = 0.11
+        horses = 0.09
+        livestock = 0.061
+        cloth = 0.024
+        manual_labor = 0.11
         produced = legumes
-        output = 2.11
+        output = 1.05
         debug_max_profit = 0
         category = building_maintenance
     }
     pp_legume_rotations_vetch_lentil = {
         icon_type = building_type
         icon = legume_rotations
-        tools = 0.2
-        horses = 0.17
-        livestock = 0.14
-        fiber_crops = 0.11
-        manual_labor = 0.21
+        tools = 0.1
+        horses = 0.085
+        livestock = 0.072
+        fiber_crops = 0.054
+        manual_labor = 0.11
         produced = legumes
-        output = 2.19
+        output = 1.09
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -113,8 +113,8 @@ unique_production_methods = {
         icon = legumes
         legumes = 0.016
         produced = local_food
-        output = 2.375
-        debug_max_profit = 73.219
+        output = 3.781
+        debug_max_profit = 117.156
         category = building_maintenance
     }
 }
@@ -127,7 +127,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_monthly_food = 4.5
+    local_monthly_food = 3.094
     local_food_capacity = 50
     local_peasants_estate_power = 0.021
     local_peasant_enfranchisment = 0.002

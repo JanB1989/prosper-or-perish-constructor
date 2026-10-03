@@ -246,7 +246,7 @@ def test_victuals_trade_templates_split_export_and_import_flows() -> None:
     for text in tavern_texts:
         assert "pp_tavern_serve_victuals" in text
         # 2026-10-01: the Tavern's food is Serve Victuals' Province Food (follows the victuals it bought), no flat food
-        assert re.search(r"pp_tavern_serve_victuals = \{[^}]*produced = local_food[^}]*victuals = 0\.8[^}]*output = 24\.0", text, re.S)
+        assert re.search(r"pp_tavern_serve_victuals = \{[^}]*produced = local_food[^}]*victuals = 0\.8[^}]*output = 25\.5", text, re.S)
         assert "victuals = 0.8" in text
         # store lever (2026-10-02): no Scarcity Premium slot and no droop; the Tavern earns by the Province Food
         # output of its Serve method, and a working Tavern takes a Grange's Surplus Sales in the location away

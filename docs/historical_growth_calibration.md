@@ -360,3 +360,46 @@ Known limits:
 - **Not verified in game.** The modifiers, the refresh and the buildings load without script errors (1.4.0); rest
   points, AI building and old-save behaviour are untested. Saves made before the change keep an empty Provisioning
   slot where a building ran Sell the Surplus: a new game is needed.
+
+### 6.6 Mini World growth calibration (2026-10-03, branch `province-food-store-lever`)
+
+Jan's target: world growth about 0.3 %/yr, not uniform, set through food or minimal changes to growth from storage, no
+financial or growth buffs. Test bed: PP + EU5 Mini World for PP, profile `europe` (5,543 land locations, 78.4M people at
+start, the rest of the world empty and non-ownable), observer at top speed, five-yearly autosaves, 1337-1437 (100
+years in about 25 minutes). Saves are extracted to `~/pp_ai_run/tables/miniN_*`; the scripts (scratchpad) report
+growth per step, stores, starvation, food buildings and a population-weighted fit of province growth on stored years.
+
+| Run | Rules | 1337-1347 | Black Death 1347-1352 | 1352-1437 | Store (mean) | Fit |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| 1 | food set 303946d8, Stored Food 0.0075 | -0.09 / +0.35 %/yr | -30 % | +0.48 %/yr | 16.3 months | -0.26 + 0.54 x stored years |
+| 2 | + flat Cookshop veto, Stored Food **0.006** | -0.22 / +0.50 %/yr | -30 % | **+0.28 %/yr** | 15.9 months | -0.43 + 0.54 x stored years |
+
+- The growth law is `local_population_growth` 0.006 per stored year since run 2 (0.0062 would give 0.30 exactly at the
+  stores of run 1). The engine's surplus term (`FOOD_SURPLUS_POP_GROWTH`) stays 0: growth was already above target.
+- Run 2: 0.4-1.9 % of provinces starving at a save (0.1-1.5 % of people); of the provinces starving at a save half hold
+  3+ months five years later and 31 % still starve. The AI answers with Cookshops (29 levels per 100 starving
+  province-steps), farms (14) and Taverns (10). The chronic cases are tiny collapsed pools (1-3k people: Ireland,
+  steppes, Urals, North Atlantic isles) whose Cookshops find no staff.
+- Two thirds of the peasants are jobless (subsistence) throughout; farm levels grow about 50 % in 100 years.
+
+### 6.6 Mini World growth calibration (2026-10-03, branch `province-food-store-lever`)
+
+Jan's target: world growth about 0.3 %/yr, not uniform, set through food or minimal changes to growth from storage, no
+financial or growth buffs. Test bed: PP + EU5 Mini World for PP, profile `europe` (5,543 land locations, 78.4M people at
+start, the rest of the world empty and non-ownable), observer at top speed, five-yearly autosaves, 1337-1437 (100
+years in about 25 minutes). Saves are extracted to `~/pp_ai_run/tables/miniN_*`; the scripts (session scratchpad)
+report growth per step, stores, starvation, food buildings and a population-weighted fit of province growth on stored
+years.
+
+| Run | Rules | 1337-1347 | Black Death 1347-1352 | 1352-1437 | Store (mean) | Fit |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| 1 | food set 303946d8, Stored Food 0.0075 | -0.09 / +0.35 %/yr | -30 % | +0.48 %/yr | 16.3 months | -0.26 + 0.54 x stored years |
+| 2 | + flat Cookshop veto, Stored Food **0.006** | -0.22 / +0.50 %/yr | -30 % | **+0.28 %/yr** | 15.9 months | -0.43 + 0.54 x stored years |
+
+- The growth law is `local_population_growth` 0.006 per stored year since run 2 (0.0062 would give 0.30 exactly at the
+  stores of run 1). The engine's surplus term (`FOOD_SURPLUS_POP_GROWTH`) stays 0: growth was already above target.
+- Run 2: 0.4-1.9 % of provinces starving at a save (0.1-1.5 % of the people); of the provinces starving at a save half
+  hold 3+ months five years later and 31 % still starve. The AI answers with Cookshops (29 levels per 100 starving
+  province-steps), farms (14) and Taverns (10). The chronic cases are tiny collapsed pools (1-3k people: Ireland,
+  steppes, Urals, North Atlantic isles) whose Cookshops find no staff.
+- Two thirds of the peasants are jobless (subsistence) throughout; farm levels grow about 50 % in 100 years.

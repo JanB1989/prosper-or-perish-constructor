@@ -48,7 +48,7 @@ building:
     	is_foreign = no
     # Non-raw producer with its own price key: 40 gold and a normal level cost since 2026-10-01 (was 75 gold and the
     # triple urbanisation-brake cost 0.39).
-    # Farm reward (2026-10-03, Jan): one level per 5 worked staple food levels in the province (cookshop_max_level:
+    # Farm reward (2026-10-03, Jan): one level per 5 standing staple food levels in the province (cookshop_max_level, counted in raw_modifier since 2026-10-03:
     # farms and orchards, and since 2026-10-03 fisheries, flocks, hunting forests and palm groves through
     # local_pp_staple_levels), about five
     # farm levels' throughput per level. Its recipes buy a little staple and drink and sell meals for offset at a thin

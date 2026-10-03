@@ -44,7 +44,7 @@ building:
     city = yes
     megalopolis = yes
     obsolete = maize_farm
-    forbidden_for_estates = yes
+    forbidden_for_estates = no
     ai_forbid_shutdown = no
     can_close = yes
     build_time = workshop_build_time
@@ -117,12 +117,12 @@ building:
 
     raw_modifier = {
       farm_capacity_from_maize_farmstead = -1
+      local_pp_farm_levels = 1
       local_population_capacity = -5
       local_pp_farmland_used = 5
     }
 
     modifier = {
-        local_pp_farm_levels = 1
         local_monthly_food = 3.5
         local_food_capacity = 50
         local_peasants_estate_power = 0.03

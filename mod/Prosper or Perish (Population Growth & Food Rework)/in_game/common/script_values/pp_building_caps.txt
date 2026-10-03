@@ -1,5 +1,5 @@
 ﻿cookshop_max_level = {
-	# 2026-10-03 (Jan): the kitchens reward stacking farms; one level per 5 worked farm, orchard and other staple food levels in the
+	# 2026-10-03 (Jan): the kitchens reward stacking farms; one level per 5 standing (raw_modifier, staffing ignored) farm, orchard and other staple food levels in the
 	# province, nothing else (no base, development, population or rank levels). Cookshop and Public Kitchen alike.
 	add = {
 		desc = "PP_BUILDING_LEVEL_PROVINCE_FARMS"

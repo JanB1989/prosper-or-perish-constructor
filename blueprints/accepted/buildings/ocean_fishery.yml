@@ -97,10 +97,10 @@ building:
     }
 
     raw_modifier = {
+    local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
     }
 
     modifier = {
-        local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
         local_monthly_food = 3.0
         local_food_capacity = 50
         local_fish_output_modifier = -0.010

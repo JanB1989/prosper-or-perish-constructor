@@ -310,9 +310,17 @@ def script_values(vanilla_root: Path, mod_root: Path) -> dict[str, Decimal]:
 
 
 def _employment(body: str) -> str:
+    """The building's top-level employment_size; for a size cut by [building_scaling.employment_cut] the reference it
+    records, so the footprint (population capacity) stays at the employment before the cut."""
+    from prosper_or_perish_constructor.building_scaling import employment_reference
+
     tops = _depth_zero_text(body)
     match = _EMPLOYMENT_RE.search(tops)
-    return match.group("value") if match else ""
+    if not match:
+        return ""
+    line_end = tops.find("\n", match.end())
+    reference = employment_reference(body[match.end(): line_end if line_end >= 0 else len(body)])
+    return format(reference.normalize(), "f") if reference is not None else match.group("value")
 
 
 def _depth_zero_text(body: str) -> str:

@@ -52,6 +52,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/worldbuilder",
     "src/prosper_or_perish_constructor/age_food.py",               # crop_farms renders the farm tiers from [age_food]
     "src/prosper_or_perish_constructor/building_footprint.py",
+    "src/prosper_or_perish_constructor/building_scaling.py",
     "src/prosper_or_perish_constructor/crop_farms.py",
     "src/prosper_or_perish_constructor/free_building_levels.py",
     "src/prosper_or_perish_constructor/goods_categories.py",      # crop_farms (start crop allocation) imports these
@@ -1250,6 +1251,16 @@ def _apply_building_footprint(repo: Path, project: Path, mod_root: Path) -> None
     )
 
 
+def _apply_employment_cut(repo: Path, project: Path, mod_root: Path) -> None:
+    from prosper_or_perish_constructor.building_scaling import apply_employment_cut
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    result = apply_employment_cut(mod_root, project, vanilla_root(repo, project))
+    counts = ", ".join(f"{pop} {n}" for pop, n in result.buildings.items())
+    print(f"Employment cut ([building_scaling.employment_cut]): {counts} buildings across {result.files_changed} changed files.",
+          flush=True)
+
+
 def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     if _worldbuilder_apply_on_build(project):
         _worldbuilder_apply(repo, project)
@@ -1324,6 +1335,7 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         flush=True,
     )
     _apply_building_footprint(repo, project, mod_root)
+    _apply_employment_cut(repo, project, mod_root)
     if local_free_building_levels_sheet_csv_path(repo).is_file():
         compile_free_building_level_modifiers(repo, mod_root)
     _ensure_farming_capacity_raw_modifier_bridges(repo, mod_root)

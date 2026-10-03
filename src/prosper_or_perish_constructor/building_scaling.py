@@ -215,3 +215,92 @@ def _clausewitz_code(line: str) -> str:
         elif char == "#" and not in_quote:
             return line[:index]
     return line
+
+
+# ---------------------------------------------------------------------------------------------------- employment cut
+EMPLOYMENT_CUT_SECTION = "employment_cut"
+# written after the new size; the footprint (building_footprint._employment) reads the reference back from it
+EMPLOYMENT_CUT_MARKER = "[building_scaling.employment_cut] reference"
+_POP_TYPE_RE = re.compile(r"^[ \t]*pop_type\s*=\s*(?P<pop>\w+)", re.MULTILINE)
+_EMPLOYMENT_LINE_RE = re.compile(r"^(?P<indent>[ \t]*)employment_size\s*=\s*(?P<value>[^\s#{}]+)(?P<rest>[^\n]*)$", re.MULTILINE)
+_REFERENCE_RE = re.compile(re.escape(EMPLOYMENT_CUT_MARKER) + r"\s+(?P<ref>[0-9.]+)")
+
+
+@dataclass(frozen=True)
+class EmploymentCut:
+    reference: Decimal
+    employment: Decimal
+
+
+@dataclass
+class EmploymentCutResult:
+    buildings: dict[str, int]
+    files_changed: int
+
+
+def load_employment_cut(path: Path) -> dict[str, EmploymentCut]:
+    """[building_scaling.employment_cut]: pop type -> (reference employment_size, new employment_size)."""
+    raw = tomllib.loads(path.read_text(encoding="utf-8-sig")).get(CONFIG_SECTION, {}).get(EMPLOYMENT_CUT_SECTION, {})
+    cuts = {}
+    for pop, spec in dict(raw).items():
+        cut = EmploymentCut(_decimal_config_value(spec["reference"], f"{pop}.reference"),
+                            _decimal_config_value(spec["employment"], f"{pop}.employment"))
+        if cut.reference <= 0 or cut.employment <= 0:
+            raise ValueError(f"{path}: [{CONFIG_SECTION}.{EMPLOYMENT_CUT_SECTION}] {pop}: sizes must be positive")
+        cuts[str(pop)] = cut
+    return cuts
+
+
+def employment_reference(line_rest: str) -> Decimal | None:
+    """The reference employment recorded on a cut employment_size line, else None."""
+    match = _REFERENCE_RE.search(line_rest)
+    return Decimal(match.group("ref")) if match else None
+
+
+def apply_employment_cut(mod_root: Path, project: Path, vanilla_root: Path) -> EmploymentCutResult:
+    """Set employment_size of every mod-defined building (CREATE/REPLACE) of a configured pop type whose size is the
+    reference to the cut size, recording the reference on the line. Idempotent: a line that already carries the marker
+    is recomputed from its reference. Runs after the footprint, which keeps the reference."""
+    from prosper_or_perish_constructor import building_footprint as bf
+
+    cuts = load_employment_cut(project)
+    result = EmploymentCutResult(buildings={pop: 0 for pop in cuts}, files_changed=0)
+    if not cuts:
+        return result
+    edits: dict[Path, list[tuple[int, int, str]]] = {}
+    for key, block in bf.owner_blocks(mod_root, vanilla_root).items():
+        if block.mode in bf._INJECT_MODES:
+            continue
+        text = bf._read(block.path)
+        body = text[block.open + 1: block.close]
+        tops = bf._depth_zero_text(body)  # same length as body: nested blocks blanked
+        pop = _POP_TYPE_RE.search(tops)
+        line = _EMPLOYMENT_LINE_RE.search(tops)
+        if not pop or not line or pop.group("pop") not in cuts:
+            continue
+        cut = cuts[pop.group("pop")]
+        rest = body[line.start("rest"): line.end("rest")]
+        try:
+            current = employment_reference(rest) or Decimal(line.group("value"))
+        except ArithmeticError:
+            continue  # a script value name: not a plain size
+        if current != cut.reference:
+            continue
+        new_line = f"{line.group('indent')}employment_size = {_fmt_size(cut.employment)}   # {EMPLOYMENT_CUT_MARKER} {_fmt_size(cut.reference)}"
+        start = block.open + 1 + line.start()
+        end = block.open + 1 + line.end()
+        edits.setdefault(block.path, []).append((start, end, new_line))
+        result.buildings[pop.group("pop")] += 1
+    for path, items in edits.items():
+        text = bf._read(path)
+        new = text
+        for start, end, line in sorted(items, key=lambda item: -item[0]):
+            new = new[:start] + line + new[end:]
+        if new != text:
+            path.write_text(new, encoding="utf-8-sig", newline="\n")
+            result.files_changed += 1
+    return result
+
+
+def _fmt_size(value: Decimal) -> str:
+    return format(value.normalize(), "f")

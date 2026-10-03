@@ -404,15 +404,16 @@ class Simulation:
             key: rules.modifiers(key, "raw_modifier") for key in rules.buildings
         }
         self.numbers = {key: rules.numbers(key) for key in rules.buildings}
-        # farm and orchard levels carry local_pp_farm_levels in their modifier: Cookshop caps read the province's sum
-        # (script value pp_location_province_farm_levels; the engine counts staffed levels, the start counts placed ones)
-        # (read from the modifier block: Rules.numbers carries only employment, pop type and local food)
-        self.farm_counters = {k: float(v) for k in rules.buildings
-                              if (v := rules.modifiers(k).get(FARM_LEVELS_MODIFIER, 0))}
+        # farm and orchard levels carry local_pp_farm_levels: Cookshop caps read the province's sum (script value
+        # pp_location_province_farm_levels). Since 2026-10-03 the counter sits in raw_modifier (every standing level,
+        # staffing ignored); both blocks are read. Rules.numbers carries only employment, pop type and local food.
+        def counter(key: str, name: str) -> float:
+            return float(rules.modifiers(key).get(name, 0)) + float(self.raw[key].get(name, 0))
+
+        self.farm_counters = {k: v for k in rules.buildings if (v := counter(k, FARM_LEVELS_MODIFIER))}
         # the Cookshop cap also counts fishery and sheep levels (local_pp_staple_levels)
-        self.kitchen_counters = {k: float(v) for k in rules.buildings
-                                 if (v := rules.modifiers(k).get(FARM_LEVELS_MODIFIER, 0)
-                                     + rules.modifiers(k).get(STAPLE_LEVELS_MODIFIER, 0))}
+        self.kitchen_counters = {k: v for k in rules.buildings
+                                 if (v := counter(k, FARM_LEVELS_MODIFIER) + counter(k, STAPLE_LEVELS_MODIFIER))}
         self.base = {}
         self.neighbors = defaultdict(list)
         self.navigation = cfg.raw.get("_navigation", {})

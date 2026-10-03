@@ -44,7 +44,7 @@ building:
     city = yes
     megalopolis = yes
     obsolete = wheat_rotations
-    forbidden_for_estates = yes
+    forbidden_for_estates = no
     ai_forbid_shutdown = no
     can_close = yes
     build_time = workshop_build_time
@@ -111,12 +111,12 @@ building:
 
     raw_modifier = {
       farm_capacity_from_wheat_model_farm = -1
+      local_pp_farm_levels = 1
       local_population_capacity = -5
       local_pp_farmland_used = 5
     }
 
     modifier = {
-        local_pp_farm_levels = 1
         local_monthly_food = 6
         local_food_capacity = 50
         local_laborers_desired_pop = 0.002

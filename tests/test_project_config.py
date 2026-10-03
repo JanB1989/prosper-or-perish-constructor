@@ -663,6 +663,16 @@ def test_education_building_priorities_are_in_employment_systems() -> None:
         assert university_maintenance_values[input_good] == expected_amount
 
 
+def _rendered_employment(pop_type: str, blueprint_size: float) -> float:
+    """The compiled employment_size: [building_scaling.employment_cut] replaces the reference size of its pop types."""
+    from prosper_or_perish_constructor.building_scaling import load_employment_cut
+
+    cut = load_employment_cut(ROOT / "constructor.toml").get(pop_type)
+    if cut is not None and float(cut.reference) == float(blueprint_size):
+        return float(cut.employment)
+    return blueprint_size
+
+
 def test_food_security_storage_and_market_workers_match_source_blueprints() -> None:
     rendered_buildings = _database_entries(BUILDING_TYPE_ROOT)
 
@@ -675,7 +685,7 @@ def test_food_security_storage_and_market_workers_match_source_blueprints() -> N
         assert isinstance(rendered, CList)
         rendered_values = _entry_values(rendered)
         assert rendered_values["pop_type"] == pop_type
-        assert rendered_values["employment_size"] == employment_size
+        assert rendered_values["employment_size"] == _rendered_employment(pop_type, employment_size)
 
 
 
@@ -2563,7 +2573,8 @@ def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -
     _factor, braked = _price_brake(ROOT / "constructor.toml", accepted_blueprint_paths_by_building(ROOT))
     assert {"cloth_guild", "cookshop", "tools_guild"} <= braked and "mason" not in braked
     for building in scoped_buildings:
-        assert buildings[building]["employment_size"] == 1.0, building
+        expected = _rendered_employment(buildings[building]["pop_type"], 1.0)
+        assert buildings[building]["employment_size"] == expected, building
         if building in braked:
             assert buildings[building]["price"] == f"pp_{building}_price", building
             assert buildings[building]["price_kind"] == "explicit", building

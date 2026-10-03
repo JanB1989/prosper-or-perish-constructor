@@ -46,7 +46,7 @@ farm_capacity_line_pattern = "farm_capacity_from_{building} = -1"
 #   - crowding_per_level x farm levels already in the location (at most crowding_cap_levels): among places with about
 #     the same land and price the AI spreads its farms instead of stacking them in one location.
 # The stored months are the store refresh's applied months (script value pp_location_stored_months), the farm levels
-# the location's staffed farm and orchard levels (modifier local_pp_farm_levels, one per level in every farm's modifier).
+# the location's farm and orchard levels (modifier local_pp_farm_levels, one per standing level in every farm's raw_modifier).
 [general.ai_construct_weight]
 slope = 400
 income_offset = 10
@@ -65,7 +65,7 @@ rural_settlement = "yes"
 town = "yes"
 city = "yes"
 megalopolis = "yes"
-forbidden_for_estates = "yes"
+forbidden_for_estates = "no"   # estates may build farms (2026-10-03, Jan; was yes)
 ai_forbid_shutdown = "no"
 
 # Extra body lines only tier 0 (farming_village) carries today
@@ -76,7 +76,7 @@ startup_ramp_target = "rural_startup_ramp_target"
 # Building modifier block per tier (scaled by employment). local_food_capacity: every building with a Provisioning
 # slot adds 50 province food capacity per staffed level (the AI values it while the province holds < 24 months).
 [general.tier_modifier.0]
-local_pp_farm_levels = 1             # counts the staffed level (cookshop caps and the AI's farm spread read it)
+local_pp_farm_levels = 1             # rendered into raw_modifier: counts every standing level (Cookshop caps, the AI's farm spread)
 local_monthly_food = 1.5
 local_food_capacity = 50
 local_peasants_estate_power = 0.040

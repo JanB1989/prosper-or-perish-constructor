@@ -62,6 +62,8 @@ TRIGGERS_RELATIVE_PATH = Path("in_game/common/scripted_triggers/pp_crop_farm_tri
 GOODS_CATEGORIES_RELATIVE = Path("config/goods_categories.csv")
 GOODS_CATEGORY_SCALING_RELATIVE = Path("config/goods_category_scaling.toml")
 TIERS = (0, 1, 2, 3)
+# level counters rendered into raw_modifier (one per standing level, staffing ignored): the Cookshop cap reads them
+RAW_COUNTERS = ("local_pp_farm_levels", "local_pp_staple_levels")
 TOMBSTONE = "farming_village"
 RETIRED_BLUEPRINTS = ("husbandry_farmstead", "farming_village_rotations", "model_farm")
 TOMBSTONE_METHOD = "pp_farming_village_retired"
@@ -609,10 +611,19 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
         body.append("}")
     body.append(provisioning.render_slot(building, crop.good, amounts))
     body.append("")
+    modifier = dict(general.get("tier_modifier", {}).get(str(tier), {}))
+    ages = getattr(context.age_food, "ages", {}) if context.age_food is not None else {}
+    if tier_age(table, tier) in ages:   # [age_food]: the age's flat food per level
+        modifier["local_monthly_food"] = ages[tier_age(table, tier)].flat_food
+    modifier.update(crop.side_modifiers)
+    # level counters go to raw_modifier: they count every standing level, not its staffing (Cookshop caps, 2026-10-03)
+    counters = {key: modifier.pop(key) for key in RAW_COUNTERS if key in modifier}
     body.extend(
         [
             "raw_modifier = {",
             f"  {str(general.get('farm_capacity_line_pattern', 'farm_capacity_from_{building} = -1')).format(building=building)}",
+            # after the capacity line, where the World Builder land merge (worldbuilder/buildings.py) keeps it
+            *(f"  {key} = {_num(value)}" for key, value in counters.items()),
             f"  local_population_capacity = {_land_text(-context.land(building))}",
             # the same land as a record the farm max-level tooltips read ("Used by other farms", 2026-10-03)
             f"  local_pp_farmland_used = {_land_text(context.land(building))}",
@@ -621,11 +632,6 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
             "modifier = {",
         ]
     )
-    modifier = dict(general.get("tier_modifier", {}).get(str(tier), {}))
-    ages = getattr(context.age_food, "ages", {}) if context.age_food is not None else {}
-    if tier_age(table, tier) in ages:   # [age_food]: the age's flat food per level
-        modifier["local_monthly_food"] = ages[tier_age(table, tier)].flat_food
-    modifier.update(crop.side_modifiers)
     body.extend(f"    {key} = {_num(value)}" for key, value in modifier.items())
     body.append("}")
 

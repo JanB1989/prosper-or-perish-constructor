@@ -78,12 +78,12 @@ building:
         }
         raw_modifier = {
           farm_capacity_from_sheep_farms = -1
+          local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
           local_population_capacity = -2
           local_pp_farmland_used = 2
         }
 
         modifier = {
-            local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
             local_monthly_food = 0.0
             # local_food_capacity = 50
             # folding: the flock manures the field crops of the same location (cattle farms give +1 %)

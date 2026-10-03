@@ -53,8 +53,11 @@ building:
         always = yes
     }
     build_time = trade_post_build_time
+    raw_modifier = {
+      local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
+    }
+
     modifier = {
-        local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
         local_monthly_development_modifier = 0.2
         local_life_expectancy = 2
         supply_limit = 2.5

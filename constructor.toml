@@ -64,6 +64,13 @@ provisioning_reference_base_output = 0.06
 crop_provision_input_gold = 0.01
 crop_provision_food_per_level = 1.5
 
+# Fewer workers per level (2026-10-03, Jan): every building of the pop type whose employment_size is the reference gets
+# the new size at finalize (after the footprint, which keeps the reference, so population capacity stays). Output and
+# profit per level are unchanged; blueprints and the blueprint evaluation keep the reference. building_scaling.py.
+[building_scaling.employment_cut]
+laborers = { reference = 1.0, employment = 0.8 }
+burghers = { reference = 0.3, employment = 0.25 }
+
 
 [blueprint_evaluation.price_overrides]
 manual_labor = 1.0   # labour is balanced at its price floor (20 % of 5), see [production_labour]

@@ -82,8 +82,10 @@
 - Lumber mills feed crews victuals only in a glut (2026-10-03): Extra Rations 0.2 victuals -> 0.35 lumber and the two
   Provisioned Crews methods break even at victuals 2.4 at default prices (run 5: Extra Rations took 219 of the mills'
   235 victuals in 1522, a quarter of all victuals demand, mostly at a loss).
-- Cookshop / Public Kitchen = farm reward (2026-10-03, Jan): `cookshop_max_level` = the province's worked farm and
-  orchard levels / 5 (`pp_location_province_farm_levels`; no base, development, population or rank levels; the
+- Cookshop / Public Kitchen = farm reward (2026-10-03, Jan): `cookshop_max_level` = the province's standing farm,
+  orchard, fishery and flock levels / 5 (`pp_location_province_farm_levels`; the counters `local_pp_farm_levels` /
+  `local_pp_staple_levels` sit in `raw_modifier`, so staffing does not move the cap and the over-cap cull does not eat
+  Cookshops; crop_farms.py renders them there, `start_simulation` reads both blocks; no base, development, population or rank levels; the
   `allow` town-or-province-capital rule stays). Small recipes (dish about 0.45 gold of staples + labour at margin
   1.08, drink about 0.23 at 1.2; Public Kitchen 0.55 / 0.28) sell their meals for `offset`, so profit is thin and
   store-independent; the food is the flat `local_monthly_food` (15 / 18 per staffed level, scaled by input
@@ -213,3 +215,15 @@
 - Use plain text in situation panes and generated static-modifier descriptions unless that target UI is verified to support inline concept links; unsupported formatter tags spam `error.log`.
 - Situation map legends should use mod-owned plain localization keys, not inherited or generic `LEGEND_KEY_*` keys, because legend UI is sensitive to formatter syntax.
 - In GUI files, do not put `#` formatter markers in `default_format` style names; use the raw style key such as `yellow_titles`.
+
+## Workers per level and estates (2026-10-03, Jan)
+
+- `[building_scaling.employment_cut]` in constructor.toml: at finalize (after the footprint) every mod-defined
+  building of a listed pop type whose `employment_size` is the reference gets the new size (laborers 1.0 -> 0.8,
+  burghers 0.3 -> 0.25; peasants untouched). The line records `# [building_scaling.employment_cut] reference X`, which
+  `building_footprint._employment` reads back, so population capacity stays at the reference and a second finalize
+  changes nothing. Blueprints, the blueprint evaluation and the labour/gate tools keep the reference; output and profit
+  per level are unchanged. In towns the AI's per-capita factor is 0.3 / employment_size, so cut buildings score higher.
+- Crop farms are open to estates (`forbidden_for_estates = no` in config/crop_farms.toml); Cookshops and Public
+  Kitchens already were. `ESTATE_MAX_PRICE_MULTIPLIER` = 2.0 (a plain multiplier on what an estate pays for its own
+  builds, not a cap; was 1.2). Tests: tests/test_employment_cut.py.

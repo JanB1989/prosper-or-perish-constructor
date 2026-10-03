@@ -49,8 +49,12 @@ unique_production_methods = {
     }
 }
 construction_demand = village_construction
+raw_modifier = {
+	local_population_capacity = -0.25
+  local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
+}
+
 modifier = {
-    local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
     local_monthly_food = 1.5
     local_crown_estate_power = 0.5
     local_max_control = 0.05
@@ -58,8 +62,5 @@ modifier = {
     cannot_upgrade_location = yes
 }
 increase_per_level_cost = 0.17
-	raw_modifier = {
-		local_population_capacity = -0.25
-	}
 }
 # <<< eu5-building-pipeline:eng_royal_forest:building

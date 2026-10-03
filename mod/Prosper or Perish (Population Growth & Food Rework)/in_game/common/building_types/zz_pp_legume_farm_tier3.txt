@@ -4,7 +4,7 @@ is_foreign = no
 increase_per_level_cost = 0.07
 max_levels = farm_capacity_max_legume_model_farm
 pop_type = laborers
-employment_size = 1
+employment_size = 0.8   # [building_scaling.employment_cut] reference 1
 category = village_category
 custom_tags = { farming_capacity pp_food_security_priority pp_staple_food_priority }
 icon = legume_model_farm
@@ -13,7 +13,7 @@ town = yes
 city = yes
 megalopolis = yes
 obsolete = legume_rotations
-forbidden_for_estates = yes
+forbidden_for_estates = no
 ai_forbid_shutdown = no
 can_close = yes
 build_time = workshop_build_time
@@ -88,12 +88,12 @@ unique_production_methods = {
 
 raw_modifier = {
   farm_capacity_from_legume_model_farm = -1
+  local_pp_farm_levels = 1
   local_population_capacity = -5
   local_pp_farmland_used = 5
 }
 
 modifier = {
-    local_pp_farm_levels = 1
     local_monthly_food = 6
     local_food_capacity = 50
     local_laborers_desired_pop = 0.002

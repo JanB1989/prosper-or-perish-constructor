@@ -7,7 +7,7 @@ increase_per_level_cost = 0.18
     pop_type = laborers
     max_levels = rural_building_cap
 
-    employment_size = 1
+    employment_size = 0.8   # [building_scaling.employment_cut] reference 1
     obsolete = charcoal_maker
 
     category = rgo_building_category

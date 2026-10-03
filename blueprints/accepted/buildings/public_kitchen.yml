@@ -72,9 +72,11 @@ building:
     	ai_construct_weight = {
     		value = 0
     		add = { value = 10 subtract = pp_location_stored_months divide = 10 min = 0 max = 1 multiply = 60 }
-    		subtract = { value = pp_location_stored_months subtract = 10 divide = 4 min = 0 max = 1 multiply = 1000 }
     		add = { value = pp_location_province_farm_levels divide = 40 max = 1 multiply = 40 }
     		divide = { value = scope:owner.monthly_income_total add = 10 }
+    		# the veto is flat, not income-scaled: the AI scored Cookshops at 14-18 months up to about 100 and in hungry
+    		# provinces up to about 400 (Mini World run 2026-10-03), so it has to outweigh any of that
+    		subtract = { value = pp_location_stored_months subtract = 10 divide = 4 min = 0 max = 1 multiply = 10000 }
     	}
     	build_time = workshop_build_time
     	construction_demand = workshop_construction

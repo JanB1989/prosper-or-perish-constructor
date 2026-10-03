@@ -176,7 +176,7 @@ class SimRules:
     ramp: float = 0.15                  # staffing change per month (defines LAID_OFF / REHIRED_PERCENTAGE = 15)
     tavern_food: float = 24.0            # Province Food per staffed Tavern level at 12 stored months (Serve Victuals)
     yard_food: float = 24.0              # food per staffed Grange level (-local_monthly_food)
-    harbor_yard_food: float = 8.0        # food per staffed harbour Victualling Yard level (-local_monthly_food)
+    harbor_yard_food: float = 0.0        # food per staffed harbour Victualling Yard level (none since 2026-10-03)
     provision_month: int = 0             # Provisioning always runs (one method since the store lever)
     serve_month: int = 1
     pin_months: float = 24.0
@@ -223,15 +223,15 @@ class SimRules:
     tavern_sales_cut: float = -5.0      # Surplus Sales output per staffed Tavern level in the location
     # harbour Victualling Yard (per level; blueprints/accepted/buildings/victualling_yard.yml): 8 food and shipped
     # grain for 1.2 victuals, no storage leg; its grain is bought at grain_price, the shipping goods cost about 0.32
-    harbor_yard_victuals: float = 1.2   # Merchantmen 0.268 + a Grain Shipment 0.932
+    harbor_yard_victuals: float = 0.932 # a Grain Shipment (the Provisions slot is gone since 2026-10-03)
     harbor_yard_grain: float = 2.332
     grain_price: float = 1.0
-    harbor_yard_labour: float = 0.32
+    harbor_yard_labour: float = 0.0     # the grain shipment has no labour or shipping goods
     # Grange (per level; blueprints/accepted/buildings/grange.yml; the yard_* names predate the split)
     yard_victuals: float = 0.6          # Porters (loose stores)
     yard_packing_victuals: float = 0.0  # a Packing method's extra victuals (what-if; its goods cost is not modelled)
     yard_sales: float = 4.0             # province_food_sales (Surplus Sales, the Grange's leg alone)
-    yard_fixed: float = 6.18            # labour 0.08 + offset 1.64 (Haulage) + 4.46 (Surplus Sales)
+    yard_fixed: float = 6.933           # labour 0.08 + offset 2.393 (Haulage, since 2026-10-03) + 4.46 (Surplus Sales)
 
     @classmethod
     def from_raw(cls, raw: Mapping[str, Any] | None) -> "SimRules":

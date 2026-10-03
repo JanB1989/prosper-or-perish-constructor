@@ -701,7 +701,7 @@ pop_demand_scale = 0.305  # observed pop demand vs the goods file's demand_add x
 # victuals per building level as the market shows them (food-check refits). Cookshops make none since 2026-09-25 (Serve
 # only); the Grange packs 1.5 per level loose, the harbour Victualling Yard makes 3 (20 food + shipped grain) and the
 # Tavern buys 2 (the former 90-food Victualler's measured 1.8 x 2/3).
-producers = { victualling_yard = 3.0, grange = 1.5 }
+producers = { victualling_yard = 0.932, grange = 0.6 }   # 2026-10-03: the Yard ships grain only; the Grange packs 24 food
 consumers = { tavern = 1.2, lumber_mill = 0.3 }
 [worldbuilder.start.province_food]
 # Province Food (the local_food good, 1 food per unit) one staffed level makes on top of its local_monthly_food, as the
@@ -735,7 +735,10 @@ capacity = { per_development = 31.97, per_population_k = 3.65, per_location = 99
 # 2026-09-30: the three victuals buildings scaled x0.4 (inputs, outputs and food modifier together)
 tavern_victuals_per_level = 0.8    # victuals a staffed Tavern buys per month (24 food, 30 per victual)
 yard_victuals_per_level = 0.6      # victuals a staffed Grange packs per month (24 food, loose stores)
-harbor_yard_victuals_per_level = 1.2   # victuals a staffed harbour Victualling Yard makes (8 food + 2.33 grain)
+harbor_yard_victuals_per_level = 0.932   # victuals a staffed harbour Victualling Yard makes (2.33 shipped grain, no store
+                                         # food since 2026-10-03)
+grange_at_start = false           # no Granges at game start (2026-10-03): every store starts far above its rest point;
+                                  # the AI builds Granges where food really piles up (the Grange's ai_construct_weight)
 # Cookshops serve every dish as Province Food (no Preserve recipes since 2026-09-25)
 cookshop_serve_share = 1.0
 cookshop_drink_food = 12.0         # drink slot Province Food per level (estimate; refit from a save with food-check)
@@ -1033,10 +1036,9 @@ local_monthly_prosperity = 0.0025
 [stored_food.low]
 # Low Stores: per year short of the pivot (size 1 at an empty store)
 local_local_food_output_modifier = 0.75             # Province Food output +75 % at an empty store
-local_province_food_sales_output_modifier = -3.0    # the Grange's Surplus Sales (the Grange is off since 2026-10-03)
-# the harbour Victualling Yard packs no lean store (2026-10-03, with the Grange off): victuals output -100 % per year
-# short, so a staffed Yard stops below about 10 months at victuals 2.7 and its Market gate closes there as well
-local_victuals_output_modifier = -1.0
+local_province_food_sales_output_modifier = -3.0    # the Grange's Surplus Sales
+# (no victuals line since 2026-10-03: the harbour Yard takes no store food any more, and the Grange stops by its own
+# Surplus Sales; a starving province still packs nothing, province_starving)
 # staple_output = local_<good>_output_modifier of every good a Provisioning method buys (provisioning.py). 0 below the
 # pivot on purpose: the farms' Market gate leg sells the staple, so a cut here would stop the AI from building new
 # farms exactly where the store is low.

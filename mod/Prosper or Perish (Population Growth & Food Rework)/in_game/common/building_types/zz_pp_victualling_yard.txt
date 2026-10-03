@@ -28,53 +28,14 @@ location_potential = {
   pp_victualling_yard_site = yes
 }
 
-# The harbour Yard is the merchants' victualling house: it packs a little of the province store and ships in
-# grain from the wider market, so it needs far less of the local food than the Grange and makes twice the victuals.
-# Per level: 8 food + 2.33 grain (12 food each in the farms' Provisioning) = 36 food for 1.2 victuals, which a
-# Tavern turns back into 36 food: food-neutral, where the Grange loses a quarter (24 food for 0.6 victuals).
-# 2026-09-30: every input, output and the food modifier scaled x0.4 (was 20 food + 5.83 grain -> 3.0 victuals),
-# together with the Tavern and the Grange; the per-level -5 % victuals stays, so a Yard still tops out at the same
-# level. Food capacity (was 100) removed: the Granary is the capacity building. Sailors 0.01 -> 0.003.
-# slot 0: shipping the province's own food out; the inputs are the cost of the shipment, and the better ships lose
-# less of the cargo: River Barges 0.2, Merchantmen 0.268, Armed Convoy 0.32 victuals from the 8 food. The labour share
-# falls from method to method (54 %, 12 %, 4 %), so dear labour moves a harbour up the list. The raw_modifier's -5 %
-# victuals per level keeps the Yard from making food: a convoy Yard makes (0.32 + 0.932) x 0.95 = 1.19 victuals from
-# 36 food at one level, and every further level loses another 5 %.
-unique_production_methods = {
-  pp_victualling_yard_river_barges = {
-    icon_type = building_type
-    icon = victualling_yard
-    cloth = 0.02
-    lumber = 0.032
-    manual_labor = 0.112
-    produced = victuals
-    output = 0.2
-    category = building_maintenance
-  }
-  pp_victualling_yard_merchantmen = {
-    icon_type = building_type
-    icon = victualling_yard
-    naval_supplies = 0.052
-    tar = 0.068
-    manual_labor = 0.032
-    produced = victuals
-    output = 0.268
-    category = building_maintenance
-  }
-  # armed and escorted merchantmen, like the Venetian mude: a surgeon's chest and guns on board (Cannon Maker)
-  pp_victualling_yard_armed_convoy = {
-    icon_type = building_type
-    icon = victualling_yard
-    naval_supplies = 0.04
-    medicaments = 0.1
-    cannons = 0.024
-    manual_labor = 0.016
-    produced = victuals
-    output = 0.32
-    category = building_maintenance
-  }
-}
-# slot 1: food shipments, the long-distance staples the harbour receives (already packed, so no packing slot): grain,
+# The harbour Yard is the merchants' victualling house: it ships in grain, pulses and salt fish from the wider
+# market and packs them into victuals. Since 2026-10-03 it takes no food from its own province (the great harbours
+# are short of food themselves, and a Yard draining a hungry port made no sense): the Provisions slot that shipped
+# 8 store food per level (River Barges, Merchantmen, Armed Convoy) is gone, so the Yard turns market staples into
+# victuals and nothing else. Per level: 2.33 staples (12 food each in the farms' Provisioning) -> 0.932 victuals,
+# which a Tavern turns back into 28 food: food-neutral, it only makes the food denser for trade. The raw_modifier's
+# -5 % victuals per level keeps a big Yard from paying at base prices.
+# slot 0: food shipments, the long-distance staples the harbour receives (already packed, so no packing slot): grain,
 # dried pulses (ship's pease) and salt fish (market fish is already cured, the fisheries buy the salt). Every staple
 # costs 1 gold and feeds 12 food in Provisioning, so all shipments share the grain numbers and stay food-neutral.
 # Rice and maize need an advance, the same split as their farms: the countries of the rice and maize lands (the farms'
@@ -139,9 +100,11 @@ unique_production_methods = {
     category = building_maintenance
   }
 }
-# No storage leg (2026-09-26): the great harbours live on imported grain and are short of food by nature, so the
-# Yard's profit follows only the victuals price against grain and shipping. Per level at base prices (victuals 3,
-# grain 1): about +0.7..+0.9 gold at level 1, falling by the -5 % per level to 0 around level 5.
+# No storage leg (2026-09-26; no store food at all since 2026-10-03): the great harbours live on imported grain and
+# are short of food by nature, so the Yard's profit follows only the victuals price against the staple's. Per level
+# at base prices (victuals 3, grain 1): about +0.3 gold at level 1, falling by the -5 % per level to 0 around level
+# 3; at victuals 3.5 about +0.8 at level 1 and 0 near level 7. The Market Sales gate opens only above victuals 3.15
+# (level 1), so the AI adds Yards when victuals are dear.
 
 # per Yard level, staffed or not: every level ships a little less (-5 % victuals), so a big Yard never makes food and
 # grows with diminishing returns (its free-building-level cost was removed 2026-09-30: supported levels come only from
@@ -152,7 +115,6 @@ raw_modifier = {
 }
 
 modifier = {
-  local_monthly_food = -8.0
   local_burghers_estate_power = 0.05
   # yards provisioned and refitted the fleets
   local_repair_speed = 0.01

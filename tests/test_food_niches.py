@@ -70,34 +70,26 @@ def _method(text, key):
     return {k: float(v) if re.fullmatch(r"-?[\d.]+", v) else v for k, v in re.findall(r"(\w+) = (\S+)", match.group(1))}
 
 
-def test_the_harbour_yard_ships_grain_and_packs_little_of_the_store() -> None:
-    """The harbour Victualling Yard (2026-09-26; scaled x0.4 on 2026-09-30): burghers, 8 food per level, three
-    Provisions methods (labour or goods) and a grain shipment slot; food-neutral against the Tavern; no packing slot
-    (the grain arrives packed); no food capacity (the Granary's job)."""
+def test_the_harbour_yard_ships_grain_and_takes_no_store_food() -> None:
+    """The harbour Victualling Yard (2026-09-26; scaled x0.4 on 2026-09-30; no food part since 2026-10-03): burghers,
+    a staple shipment slot and the Market gate; no store food, no Provisions slot; food-neutral against the Tavern; no
+    packing slot (the grain arrives packed); no food capacity (the Granary's job)."""
     text = (BLUEPRINTS / "victualling_yard.yml").read_text(encoding="utf-8-sig")
-    provisions = [_method(text, f"pp_victualling_yard_{m}") for m in ("river_barges", "merchantmen", "armed_convoy")]
+    for gone in ("river_barges", "merchantmen", "armed_convoy"):
+        assert f"pp_victualling_yard_{gone}" not in text
+    assert "victualling_yard_armed_convoy_advance" not in text and "local_monthly_food" not in text
     shipments = [_method(text, f"pp_victualling_yard_{m}_shipment") for m in ("grain", "rice", "millet")]
-    # shipping cost methods: the better ships lose less cargo, and the labour share falls from method to method
-    assert all(m["produced"] == "victuals" for m in provisions)
-    outputs = [m["output"] for m in provisions]
-    assert outputs == sorted(outputs) and outputs[0] < outputs[-1]
-    labour = [m["manual_labor"] for m in provisions]
-    assert labour == sorted(labour, reverse=True)
-    assert "cannons" in provisions[2] and "requires = cannon_maker_advance" in text
-    # the Yard never makes food: with the -5 % victuals per level, the best method and a grain shipment at one level
-    # give no more victuals than 36 food buys back at a Tavern (30 food each)
-    assert "local_victuals_output_modifier = -0.05" in text
-    assert (max(outputs) + 0.932) * 0.95 <= 1.2 + 1e-9
-    assert "employment_size = 0.2" in text
     assert [next(g for g in ("wheat", "rice", "millet") if g in m) for m in shipments] == ["wheat", "rice", "millet"]
     assert all(m["produced"] == "victuals" and m["output"] == 0.932 for m in shipments)
-    assert "local_monthly_food = -8.0" in text and "pop_type = burghers" in text
+    # the Yard never makes food: 2.33 staples (12 food each in the farms' Provisioning) for 0.932 victuals, 30 food
+    # each at a Tavern, and every further level ships 5 % less
+    grain = shipments[0]["wheat"]
+    assert abs(grain * 12.0 / 0.932 - 30.0) < 0.05
+    assert "local_victuals_output_modifier = -0.05" in text
+    assert "employment_size = 0.2" in text and "pop_type = burghers" in text
     assert "local_food_capacity" not in text and "local_sailors = 0.002" in text
     assert "increase_per_level_cost = 1.0" in text and "{gold = 50}" in text
     assert "free_building_levels" not in text   # supported levels come only from attributes and rank (2026-09-30)
-    # 8 food + 2.33 grain (12 food each in the farms' Provisioning) for 1.2 victuals = 30 food per victual (the Tavern's)
-    grain = shipments[0]["wheat"]
-    assert abs((8.0 + grain * 12.0) / (0.268 + 0.932) - 30.0) < 0.05
     assert "tin_cans" not in text and "pottery_jars" not in text
     grange = (BLUEPRINTS / "grange.yml").read_text(encoding="utf-8-sig")
     assert "unlock_production_method = pp_grange_tin_cans" in grange   # the advance moved with the packing slot

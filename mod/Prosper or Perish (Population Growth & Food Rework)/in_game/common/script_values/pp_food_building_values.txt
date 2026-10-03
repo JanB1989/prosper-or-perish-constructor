@@ -29,3 +29,21 @@ pp_location_province_farm_levels = {
 		add = pp_province_farm_levels
 	}
 }
+
+# Province scope: the food the province gains per month (its locations' food production plus their food consumption,
+# which the engine reports as negative). Above 0 the store grows. Read by the Grange's AI weight.
+pp_province_food_balance = {
+	value = 0
+	every_location_in_province = {
+		add = food_production
+		add = food_consumption
+	}
+}
+
+# Location scope: the food the location's province gains per month.
+pp_location_province_food_balance = {
+	value = 0
+	province ?= {
+		add = pp_province_food_balance
+	}
+}

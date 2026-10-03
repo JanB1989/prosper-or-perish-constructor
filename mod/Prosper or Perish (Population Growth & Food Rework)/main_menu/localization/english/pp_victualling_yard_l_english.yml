@@ -2,15 +2,9 @@
 
 # >>> eu5-building-pipeline:victualling_yard:localization
   victualling_yard: "Victualling Yard"
-  victualling_yard_desc: "The merchants' victualling house of a great harbour. It ships in grain, dried pulses and salt fish from the wider market and packs it, with a little of the province store, into [ShowGoodsName('victuals')|e] for the fleets and the markets beyond. Only good harbours and the great river ports can hold one, and each further level costs much more; elsewhere the Grange sends the surplus overland."
-  victualling_yard_slot_0: "Provisions"
-  victualling_yard_slot_1: "Food Shipments"
+  victualling_yard_desc: "The merchants' victualling house of a great harbour. It ships in grain, dried pulses and salt fish from the wider market and packs it into [ShowGoodsName('victuals')|e] for the fleets and the markets beyond, without touching the province store. Only good harbours and the great river ports can hold one, and each further level costs much more; elsewhere the Grange sends the surplus overland."
+  victualling_yard_slot_0: "Food Shipments"
   victuals_trade_construction: "Victuals Trade Construction"
-  pp_victualling_yard_river_barges: "River Barges"
-  pp_victualling_yard_merchantmen: "Merchantmen"
-  pp_victualling_yard_armed_convoy: "Armed Convoy"
-  victualling_yard_armed_convoy_advance: "Armed Convoys"
-  victualling_yard_armed_convoy_advance_desc: "Merchantmen sail together under escort, with guns and a surgeon's chest on board, so the harbour's shipments reach the markets beyond even in dangerous waters."
   pp_victualling_yard_grain_shipment: "Grain Shipment"
   pp_victualling_yard_rice_shipment: "Rice Shipment"
   pp_victualling_yard_millet_shipment: "Millet Shipment"
@@ -26,5 +20,5 @@
   pp_victualling_yard_price: "Victualling Yard Price"
   pp_victualling_yard_market_sales: "Market Sales"
   pp_victualling_yard_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  victualling_yard_slot_2: "Market"
+  victualling_yard_slot_1: "Market"
 # <<< eu5-building-pipeline:victualling_yard:localization

@@ -66,7 +66,8 @@ class FoodModelConfig:
     # placement v2
     tavern_victuals_per_level: float = 0.8           # victuals a staffed Tavern buys per month (24 food)
     yard_victuals_per_level: float = 0.6             # victuals a staffed Grange packs per month (24 food, loose)
-    harbor_yard_victuals_per_level: float = 1.2      # victuals a staffed harbour Victualling Yard makes (8 food + grain)
+    harbor_yard_victuals_per_level: float = 0.932    # victuals a staffed harbour Victualling Yard makes (shipped grain)
+    grange_at_start: bool = True                     # place Granges at game start (off: the AI builds them later)
     cookshop_serve_share: float = 1.0                # share of cookshop levels whose dish slot runs Serve (all: no Preserve)
     cookshop_drink_food: float = 12.0                # Province Food of the drink slot per level (estimate: ~0.4 of the
                                                      # 0.67 victuals drinks + packing made per level on nb.eu5, x30)
@@ -85,6 +86,8 @@ class FoodModelConfig:
     def from_raw(cls, raw: Mapping[str, Any] | None) -> "FoodModelConfig":
         raw = dict(raw or {})
         kwargs: dict[str, Any] = {}
+        if "grange_at_start" in raw:
+            kwargs["grange_at_start"] = bool(raw["grange_at_start"])
         for name in ("subsistence_pop_types", "overpopulation_pop_types"):
             if name in raw:
                 kwargs[name] = tuple(str(v) for v in raw[name])

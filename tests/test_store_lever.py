@@ -67,7 +67,11 @@ def test_cookshop_fills_higher_than_the_tavern_at_default_prices(design: store_l
 def test_grange_packs_a_full_store_and_never_a_lean_one(design: store_lever.Design) -> None:
     dig = [design.grange_dig(price) for price in PRICES]
     assert dig == sorted(dig, reverse=True)                                    # dearer victuals: packs deeper
-    assert 15.0 <= design.grange_dig(VICTUALS) <= 19.0
+    # 2026-10-03: only a really full store at base victuals (Full Stores stops growing at 24 months, so the break-even
+    # sits just under it), about 5 months deeper per gold, and never below victuals 2.6
+    assert 21.5 <= design.grange_dig(3.0) <= 22.5
+    assert 16.0 <= design.grange_dig(4.0) <= 17.5
+    assert design.grange_dig(2.5) == store_lever.CAP_MONTHS
     # its Surplus Sales are gone well above an empty store, and without them packing does not pay at any victuals
     # price the game shows (10 = more than three times the default)
     sales_end = design.pivot + 12 / design.sales_low
@@ -92,3 +96,20 @@ def test_ai_builds_a_new_grange_only_at_a_well_filled_store(design: store_lever.
     opens = next(months for months in range(25) if design.grange_gate_margin(months) >= threshold)
     assert 16 <= opens <= 20
     assert design.grange_gate_margin(12) < threshold
+
+
+def test_grange_ai_weight_follows_its_break_even(design: store_lever.Design) -> None:
+    """The Grange's ai_construct_weight vetoes a new Grange below its break-even store at today's victuals price plus
+    a month (2026-10-03): the line it writes must be the design's grange_dig."""
+    text = (ROOT / "blueprints/accepted/buildings/grange.yml").read_text(encoding="utf-8-sig")
+    m = re.search(r'value = ([\d.]+) subtract = \{ value = "market\.market_price\(goods:victuals\)" multiply = ([\d.]+) \}'
+                  r' subtract = pp_location_stored_months min = 0 max = 1 multiply = 10000', text)
+    assert m, "the Grange weight's break-even veto"
+    intercept, slope = float(m.group(1)), float(m.group(2))
+    for price in (3.0, 3.25, 3.5, 4.0, 4.5):
+        assert abs((intercept - 1.0 - slope * price) - design.grange_dig(price)) < 0.15, price
+    assert "pp_location_province_food_balance <= 0" in text
+    # the build gate itself still opens below that line, so the weight decides where (gate = if, weight = where)
+    threshold = _margin_threshold()
+    opens = next(months for months in range(25) if design.grange_gate_margin(months) >= threshold)
+    assert opens < intercept - 1.0 - slope * 3.0

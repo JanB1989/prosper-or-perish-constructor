@@ -1117,11 +1117,11 @@ class Simulation:
 
     def packer(self, key):
         """(food per level, victuals per level, minimum store months) of a packing building: food from its blueprint
-        modifier, victuals and store band from the food model config."""
+        modifier (none for the harbour Yard since 2026-10-03), victuals and store band from the food model config."""
         model = self.food_model
         if key not in self.numbers:
             return 0.0, 0.0, math.inf   # a building the rules do not define (test fixtures): never placed
-        food = -self.numbers[key]["local_monthly_food"]
+        food = -self.numbers[key].get("local_monthly_food", 0.0)
         if key == self.YARD:
             return food, model.harbor_yard_victuals_per_level, model.harbor_yard_min_capacity_months
         return food, model.yard_victuals_per_level, model.yard_min_capacity_months
@@ -1294,11 +1294,17 @@ class Simulation:
                 break
             for key in self.YARDS:
                 food, per_level, min_months = self.packer(key)
-                if months < min_months or food <= 0:
+                if per_level <= 0 or key not in self.numbers:
                     continue
-                if key == self.GRANGE and not surplus_ok:
+                if key == self.GRANGE and (not surplus_ok or not model.grange_at_start):
                     continue
-                room = math.floor(spare / food + 1.0 - model.yard_min_level_share)
+                if food > 0:
+                    if months < min_months:
+                        continue
+                    room = math.floor(spare / food + 1.0 - model.yard_min_level_share)
+                else:
+                    # ships its own grain (the harbour Yard since 2026-10-03): only the need and its sites limit it
+                    room = math.ceil(victuals / per_level)
                 want = min(room, math.ceil(victuals / per_level))
                 for tag in self.order(self.groups[group], key):
                     if want <= 0 or victuals <= 1e-6:
@@ -1332,7 +1338,8 @@ class Simulation:
         model = self.food_model
         target = self.start.food_target_ratio
         per_tavern = self.food_per_level(self.TAVERN)
-        if per_tavern <= 0 or any(self.packer(k)[0] <= 0 for k in self.YARDS if k in self.numbers):
+        # every packer must make victuals; the harbour Yard takes no store food since 2026-10-03 (it ships grain)
+        if per_tavern <= 0 or any(self.packer(k)[1] <= 0 for k in self.YARDS if k in self.numbers):
             raise ValueError("Start trade requires positive food transfer units")
         vict = model.tavern_victuals_per_level
         _, raw_per_level = self.serve_inputs()
@@ -2064,7 +2071,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
             "day0_production": round(sum(b["day0_production"] for b in budgets.values())),
         },
         "tavern_food": sim.food_per_level(sim.TAVERN),
-        "yard_food": sim.numbers[sim.YARD]["local_monthly_food"],
+        "yard_food": sim.numbers[sim.YARD].get("local_monthly_food", 0.0),
         "building_rows_audited": audited,
         "over_cap_rows": 0,
         "setup_validation": setup_validation,

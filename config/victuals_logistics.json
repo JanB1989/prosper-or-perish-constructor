@@ -24,16 +24,16 @@
     "market_center": 3,
     "development": 0.05,
     "threshold": -2,
-    "minimum": 1,
+    "minimum": 2,
     "maximum": 10
   },
   "grange": {
-    "base": 0,
+    "base": 1,
     "per_road": 0.5,
     "road_max": 3,
     "market_center": 4,
     "development": 0.08,
-    "maximum": 0
+    "maximum": 12
   },
   "yard_site": {
     "sea_harbor": 0.25,

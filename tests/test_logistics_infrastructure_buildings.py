@@ -225,12 +225,12 @@ def test_victuals_trade_templates_split_export_and_import_flows() -> None:
     yard_texts = tuple(path.read_text(encoding="utf-8-sig") for path in (VICTUALLING_YARD_BLUEPRINT, VICTUALLING_YARD_RENDERED))
     tavern_texts = tuple(path.read_text(encoding="utf-8-sig") for path in (TAVERN_BLUEPRINT, TAVERN_RENDERED))
 
-    # the harbour Victualling Yard packs a little of the store and ships in grain: real victuals, no negative input, no
-    # storage leg (its profit follows the victuals and grain prices only), no packing slot (the grain arrives packed)
+    # the harbour Victualling Yard ships in grain and takes no store food (2026-10-03): real victuals, no negative input,
+    # no storage leg (its profit follows the victuals and grain prices only), no packing slot (the grain arrives packed)
     assert "victualling_yard: Victualling Yard" in yard_texts[0]
     for text in yard_texts:
-        assert "pp_victualling_yard_merchantmen" in text
-        assert re.search(r"pp_victualling_yard_merchantmen = \{[^}]*produced = victuals[^}]*output = 0\.268", text, re.S)
+        for gone in ("river_barges", "merchantmen", "armed_convoy"):
+            assert f"pp_victualling_yard_{gone}" not in text
         assert re.search(r"pp_victualling_yard_grain_shipment = \{[^}]*wheat = 2\.332[^}]*output = 0\.932", text, re.S)
         # every staple shipment shares the grain numbers (1 gold, 12 food each): food-neutral
         for good in ("rice", "millet", "maize", "legumes", "fish"):
@@ -255,7 +255,7 @@ def test_victuals_trade_templates_split_export_and_import_flows() -> None:
         assert "pp_victualling_yard_merchantmen" not in text
 
     for text in yard_texts:
-        assert "local_monthly_food = -8.0" in text
+        assert "local_monthly_food" not in text
         assert "max_levels = victualling_yard_max_level" in text
         assert "local_burghers_estate_power = 0.05" in text
         assert "local_nobles_estate_power" not in text

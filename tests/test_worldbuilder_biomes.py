@@ -93,6 +93,7 @@ mystery = { topography = flatland vegetation = forest climate = ha1300_climate_n
 
 DESIGN = """
 [general]
+own_biomes = true
 own_biome_minimum_locations = 2
 max_total_biomes = 20
 [climate_groups.temperate]
@@ -184,7 +185,7 @@ def test_own_palette_keeps_the_coasts_and_follows_the_class_pattern(written):
 
 
 def test_rough_and_wet_keep_part_of_their_base():
-    design_rows = biomes.Design(1, 20, {"temperate": ["continental", "oceanic"]}, {"temperate": []},
+    design_rows = biomes.Design(1, 20, True, {"temperate": ["continental", "oceanic"]}, {"temperate": []},
                                 {"temperate": {"DENSE": "dense", "SCATTER": "scatter"}},
                                 {"flatland": "flat", "wetlands": "wet", "hills": "rough"},
                                 {"flat": "flatland", "wet": "wetlands", "rough": "hills"},
@@ -201,3 +202,21 @@ def test_check_rejects_a_missing_material():
     broken = VANILLA_MATERIALS.replace("\t\t\triver\n", "\t\t\tno_such_material\n", 1)
     with pytest.raises(ValueError, match="no_such_material"):
         biomes.check(VANILLA_BIOMES, broken, TEMPLATES)
+
+
+def test_parent_only_keeps_vanilla_definitions_and_drops_a_stale_materials_override(written, tmp_path):
+    # EU5 1.4 stops at game start with "Too many biomes" above its limit: parent-only adds no biome and no definition
+    vanilla, mod = tmp_path / "vanilla", tmp_path / "mod"
+    assert (mod / biomes.MATERIALS_PATH).is_file()                     # written by the own-biome run in the fixture
+    report = biomes.write(vanilla, mod, FAMILIES, ["pp_river_channel"], None)
+    out = (mod / biomes.RELATIVE_PATH).read_text(encoding="utf-8-sig")
+    assert report["mode"] == "parent_only" and report["removed_materials_override"]
+    assert not (mod / biomes.MATERIALS_PATH).exists()
+    assert len(biomes.definitions(out)) == len(biomes.definitions(VANILLA_BIOMES))
+    flat = {"climate": "continental", "vegetation": "ha1300_veg_coniferous_forest", "topography": "flatland"}
+    assert _biome_of(out, flat) == "oceanic_flatland_forest_jungle_biome"
+
+
+def test_the_shipped_config_adds_no_biome():
+    design = biomes.load_design(Path(__file__).resolve().parents[1] / "config/terrain_biomes.toml")
+    assert not design.own_biomes and design.max_total <= 191

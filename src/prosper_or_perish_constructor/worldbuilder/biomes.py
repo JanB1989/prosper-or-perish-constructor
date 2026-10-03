@@ -55,6 +55,7 @@ Families = dict[str, dict[str, list[str]]]
 class Design:
     minimum: int
     max_total: int
+    own_biomes: bool
     groups: dict[str, list[str]]
     neighbours: dict[str, list[str]]
     tones: dict[str, dict[str, str]]
@@ -68,7 +69,8 @@ def load_design(path: Path) -> Design:
     raw = tomllib.loads(Path(path).read_text(encoding="utf-8"))
     general = raw.get("general", {})
     groups = {g: list(v["climates"]) for g, v in raw["climate_groups"].items()}
-    return Design(int(general.get("own_biome_minimum_locations", 50)), int(general.get("max_total_biomes", 245)), groups,
+    return Design(int(general.get("own_biome_minimum_locations", 50)), int(general.get("max_total_biomes", 191)),
+                  bool(general.get("own_biomes", False)), groups,
                   {g: list(v.get("neighbours", [])) for g, v in raw["climate_groups"].items()},
                   {g: dict(v) for g, v in raw.get("tones", {}).items()}, dict(raw["terrain"]), dict(raw["terrain_base"]),
                   {k: list(v) for k, v in raw["classes"].items()}, {k: dict(v) for k, v in raw.get("materials", {}).items()})
@@ -346,13 +348,25 @@ def write(vanilla_root: Path, mod_root: Path, families: Families, channel_topogr
     templates_path = Path(mod_root) / "in_game/map_data/location_templates.txt"
     templates = templates_path.read_text(encoding="utf-8-sig") if templates_path.is_file() else ""
     report: dict[str, object] = {}
-    if design is None:
+    if design is None or not design.own_biomes:
+        # parent looks only: vanilla's definitions and biomes, no materials.txt override
         biomes_out, added = widen(vanilla_biomes, full)
+        vanilla_defs = len(definitions(vanilla_biomes))
+        if len(definitions(biomes_out)) != vanilla_defs:
+            raise ValueError("parent-only biomes.txt must keep vanilla's definitions")
         _write(Path(mod_root) / RELATIVE_PATH, HEADER + biomes_out)
-        report["keys_added"] = added
+        stale = Path(mod_root) / MATERIALS_PATH
+        if stale.is_file() and stale.read_text(encoding="utf-8-sig").startswith(MATERIALS_HEADER[:40]):
+            stale.unlink()
+            report["removed_materials_override"] = True
+        report.update({"mode": "parent_only", "keys_added": added, "definitions": vanilla_defs})
         if templates:
             report["plain_before"] = len(plain_locations(vanilla_biomes, templates))
             report["plain_after"] = len(plain_locations(biomes_out, templates))
+            unexpected = sorted(set(n for n, a in _templates(templates) if len(matching(definitions(biomes_out), a)) > 1)
+                                - set(parent_ambiguous(vanilla_biomes, templates, full)))
+            if unexpected:
+                raise ValueError(f"locations matching several biome definitions: {unexpected[:12]}")
         return report
     vanilla_materials = (game / MATERIALS_PATH).read_text(encoding="utf-8-sig")
     _, vanilla_palettes = parse_materials(vanilla_materials)

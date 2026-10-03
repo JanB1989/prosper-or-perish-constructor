@@ -95,6 +95,8 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = arctic_flatlands_sparse_biome
 }
 
@@ -105,6 +107,8 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = arctic_hills_sparse_biome
 }
 
@@ -116,6 +120,8 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = arctic_plateau_sparse_biome
 }
 
@@ -148,6 +154,8 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = arctic_wetlands_sparse_biome
 }
 
@@ -164,7 +172,11 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = arctic_flatland_grasslands_woods_biome
 }
 
@@ -175,7 +187,11 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = arctic_hills_grasslands_woods_biome
 }
 
@@ -186,7 +202,11 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = arctic_plateau_grasslands_woods_biome
 }
 
@@ -226,7 +246,11 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = arctic_wetlands_grasslands_woods_biome
 }
 
@@ -298,6 +322,9 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = arctic_flatland_forest_jungle_biome
 }
@@ -309,6 +336,9 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = arctic_hills_forest_jungle_biome
 }
@@ -320,6 +350,9 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = arctic_plateau_forest_jungle_biome
 }
@@ -358,6 +391,9 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = arctic_wetlands_forest_jungle_biome
 }
@@ -458,6 +494,8 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = arid_flatlands_sparse_biome
 }
 
@@ -468,6 +506,8 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = arid_hills_sparse_biome
 }
 
@@ -479,6 +519,8 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = arid_plateau_sparse_biome
 }
 
@@ -511,6 +553,8 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = arid_wetlands_sparse_biome
 }
 
@@ -527,7 +571,11 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = arid_flatland_grasslands_woods_biome
 }
 
@@ -538,7 +586,11 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = arid_hills_grasslands_woods_biome
 }
 
@@ -549,7 +601,11 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = arid_plateau_grasslands_woods_biome
 }
 
@@ -589,7 +645,11 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = arid_wetlands_grasslands_woods_biome
 }
 
@@ -661,6 +721,9 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = arid_flatland_forest_jungle_biome
 }
@@ -672,6 +735,9 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = arid_hills_forest_jungle_biome
 }
@@ -683,6 +749,9 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = arid_plateau_forest_jungle_biome
 }
@@ -721,6 +790,9 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = arid_wetlands_forest_jungle_biome
 }
@@ -821,6 +893,8 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = cold_arid_flatlands_sparse_biome
 }
 
@@ -831,6 +905,8 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = cold_arid_hills_sparse_biome
 }
 
@@ -842,6 +918,8 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = cold_arid_plateau_sparse_biome
 }
 
@@ -874,6 +952,8 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = cold_arid_wetlands_sparse_biome
 }
 
@@ -890,7 +970,11 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = cold_arid_flatland_grasslands_woods_biome
 }
 
@@ -901,7 +985,11 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = cold_arid_hills_grasslands_woods_biome
 }
 
@@ -912,7 +1000,11 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = cold_arid_plateau_grasslands_woods_biome
 }
 
@@ -952,7 +1044,11 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = cold_arid_wetlands_grasslands_woods_biome
 }
 
@@ -1024,6 +1120,9 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = cold_arid_flatland_forest_jungle_biome
 }
@@ -1035,6 +1134,9 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = cold_arid_hills_forest_jungle_biome
 }
@@ -1046,6 +1148,9 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = cold_arid_plateau_forest_jungle_biome
 }
@@ -1084,6 +1189,9 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = cold_arid_wetlands_forest_jungle_biome
 }
@@ -1202,6 +1310,8 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = tropical_flatlands_sparse_biome
 }
 
@@ -1215,6 +1325,8 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = tropical_hills_sparse_biome
 }
 
@@ -1229,6 +1341,8 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = tropical_plateau_sparse_biome
 }
 
@@ -1270,6 +1384,8 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = tropical_wetlands_sparse_biome
 }
 
@@ -1289,7 +1405,11 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = tropical_flatland_grasslands_woods_biome
 }
 
@@ -1303,7 +1423,11 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = tropical_hills_grasslands_woods_biome
 }
 
@@ -1317,7 +1441,11 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = tropical_plateau_grasslands_woods_biome
 }
 
@@ -1366,7 +1494,11 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = tropical_wetlands_grasslands_woods_biome
 }
 
@@ -1457,6 +1589,9 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = tropical_flatland_forest_jungle_biome
 }
@@ -1471,6 +1606,9 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = tropical_hills_forest_jungle_biome
 }
@@ -1485,6 +1623,9 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = tropical_plateau_forest_jungle_biome
 }
@@ -1532,6 +1673,9 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = tropical_wetlands_forest_jungle_biome
 }
@@ -1662,6 +1806,8 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = oceanic_flatlands_sparse_biome
 }
 
@@ -1676,6 +1822,8 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = oceanic_hills_sparse_biome
 }
 
@@ -1691,6 +1839,8 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = oceanic_plateau_sparse_biome
 }
 
@@ -1735,6 +1885,8 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = oceanic_wetlands_sparse_biome
 }
 
@@ -1755,6 +1907,8 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	biome = oceanic_flatland_grasslands_biome
 }
 
@@ -1769,6 +1923,8 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	biome = oceanic_hills_grasslands_biome
 }
 
@@ -1783,6 +1939,8 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	biome = oceanic_plateau_grasslands_biome
 }
 
@@ -1828,6 +1986,8 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	biome = oceanic_wetlands_grasslands_biome
 }
 
@@ -1849,6 +2009,8 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = oceanic_flatland_woods_biome
 }
 
@@ -1863,6 +2025,8 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = oceanic_hills_woods_biome
 }
 
@@ -1877,6 +2041,8 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = oceanic_plateau_woods_biome
 }
 
@@ -1922,6 +2088,8 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = oceanic_wetlands_woods_biome
 }
 
@@ -2018,6 +2186,9 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = oceanic_flatland_forest_jungle_biome
 }
@@ -2033,6 +2204,9 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = oceanic_hills_forest_jungle_biome
 }
@@ -2048,6 +2222,9 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = oceanic_plateau_forest_jungle_biome
 }
@@ -2098,6 +2275,9 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = oceanic_wetlands_forest_jungle_biome
 }
@@ -2200,6 +2380,8 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = mediterranean_flatlands_sparse_biome
 }
 
@@ -2209,6 +2391,8 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = mediterranean_hills_sparse_biome
 }
 
@@ -2219,6 +2403,8 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = mediterranean_plateau_sparse_biome
 }
 
@@ -2248,6 +2434,8 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = sparse
+	vegetation = ha1300_veg_scrubland
+	vegetation = ha1300_veg_tundra
 	biome = mediterranean_wetlands_sparse_biome
 }
 
@@ -2263,7 +2451,11 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = mediterranean_flatland_grasslands_woods_biome
 }
 
@@ -2273,7 +2465,11 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = mediterranean_hills_grasslands_woods_biome
 }
 
@@ -2283,7 +2479,11 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = mediterranean_plateau_grasslands_woods_biome
 }
 
@@ -2320,7 +2520,11 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = grasslands
+	vegetation = ha1300_veg_savanna
+	vegetation = ha1300_veg_marsh
 	vegetation = woods
+	vegetation = ha1300_veg_thicket
+	vegetation = ha1300_veg_dry_forest
 	biome = mediterranean_wetlands_grasslands_woods_biome
 }
 
@@ -2387,6 +2591,9 @@
 	topography = ha1300_topo_deltas
 	topography = flatland_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = mediterranean_flatland_forest_jungle_biome
 }
@@ -2397,6 +2604,9 @@
 	topography = hills
 	topography = hills_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = mediterranean_hills_forest_jungle_biome
 }
@@ -2407,6 +2617,9 @@
 	topography = plateau
 	topography = plateau_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = mediterranean_plateau_forest_jungle_biome
 }
@@ -2442,6 +2655,9 @@
 	topography = wetlands
 	topography = wetlands_wasteland
 	vegetation = forest
+	vegetation = ha1300_veg_coniferous_forest
+	vegetation = ha1300_veg_mixed_forest
+	vegetation = ha1300_veg_swamp
 	vegetation = jungle
 	biome = mediterranean_wetlands_forest_jungle_biome
 }
@@ -2492,2113 +2708,4 @@
 {
 	topography = atoll
 	biome = atolls
-}
-
-
-########################################################################################################### PROSPER OR PERISH: WORLD BUILDER VEGETATION CLASSES
-
-pp_coniferous_forest_arctic_flat =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_coniferous_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_coniferous_forest_arctic_flat_biome
-}
-
-pp_coniferous_forest_arctic_wet =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_coniferous_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_coniferous_forest_arctic_wet_biome
-}
-
-pp_coniferous_forest_arctic_rough =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_coniferous_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_coniferous_forest_arctic_rough_biome
-}
-
-pp_coniferous_forest_temperate_flat =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_coniferous_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_coniferous_forest_temperate_flat_biome
-}
-
-pp_coniferous_forest_temperate_wet =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_coniferous_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_coniferous_forest_temperate_flat_biome
-}
-
-pp_coniferous_forest_temperate_rough =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_coniferous_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_coniferous_forest_temperate_rough_biome
-}
-
-pp_coniferous_forest_mediterranean_flat =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_coniferous_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_coniferous_forest_temperate_flat_biome
-}
-
-pp_coniferous_forest_mediterranean_wet =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_coniferous_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_coniferous_forest_temperate_flat_biome
-}
-
-pp_coniferous_forest_mediterranean_rough =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_coniferous_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_coniferous_forest_temperate_rough_biome
-}
-
-pp_coniferous_forest_tropical_flat =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_coniferous_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_coniferous_forest_tropical_flat_biome
-}
-
-pp_coniferous_forest_tropical_wet =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_coniferous_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_coniferous_forest_tropical_flat_biome
-}
-
-pp_coniferous_forest_tropical_rough =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_coniferous_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_coniferous_forest_tropical_rough_biome
-}
-
-pp_coniferous_forest_arid_flat =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_coniferous_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_coniferous_forest_arctic_flat_biome
-}
-
-pp_coniferous_forest_arid_wet =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_coniferous_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_coniferous_forest_arctic_wet_biome
-}
-
-pp_coniferous_forest_arid_rough =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_coniferous_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_coniferous_forest_arctic_rough_biome
-}
-
-pp_coniferous_forest_cold_arid_flat =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_coniferous_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_coniferous_forest_arctic_flat_biome
-}
-
-pp_coniferous_forest_cold_arid_wet =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_coniferous_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_coniferous_forest_arctic_wet_biome
-}
-
-pp_coniferous_forest_cold_arid_rough =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_coniferous_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_coniferous_forest_arctic_rough_biome
-}
-
-pp_mixed_forest_arctic_flat =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_mixed_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_mixed_forest_arctic_flat_biome
-}
-
-pp_mixed_forest_arctic_wet =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_mixed_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_mixed_forest_arctic_wet_biome
-}
-
-pp_mixed_forest_arctic_rough =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_mixed_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_mixed_forest_arctic_rough_biome
-}
-
-pp_mixed_forest_temperate_flat =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_mixed_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_mixed_forest_temperate_flat_biome
-}
-
-pp_mixed_forest_temperate_wet =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_mixed_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_mixed_forest_temperate_flat_biome
-}
-
-pp_mixed_forest_temperate_rough =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_mixed_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_mixed_forest_temperate_rough_biome
-}
-
-pp_mixed_forest_mediterranean_flat =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_mixed_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_mixed_forest_temperate_flat_biome
-}
-
-pp_mixed_forest_mediterranean_wet =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_mixed_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_mixed_forest_temperate_flat_biome
-}
-
-pp_mixed_forest_mediterranean_rough =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_mixed_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_mixed_forest_temperate_rough_biome
-}
-
-pp_mixed_forest_tropical_flat =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_mixed_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_mixed_forest_tropical_flat_biome
-}
-
-pp_mixed_forest_tropical_wet =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_mixed_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_mixed_forest_tropical_flat_biome
-}
-
-pp_mixed_forest_tropical_rough =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_mixed_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_mixed_forest_tropical_rough_biome
-}
-
-pp_mixed_forest_arid_flat =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_mixed_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_mixed_forest_arctic_flat_biome
-}
-
-pp_mixed_forest_arid_wet =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_mixed_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_mixed_forest_arctic_wet_biome
-}
-
-pp_mixed_forest_arid_rough =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_mixed_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_mixed_forest_arctic_rough_biome
-}
-
-pp_mixed_forest_cold_arid_flat =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_mixed_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_mixed_forest_arctic_flat_biome
-}
-
-pp_mixed_forest_cold_arid_wet =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_mixed_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_mixed_forest_arctic_wet_biome
-}
-
-pp_mixed_forest_cold_arid_rough =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_mixed_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_mixed_forest_arctic_rough_biome
-}
-
-pp_swamp_arctic_flat =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_swamp
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_swamp_arctic_flat_biome
-}
-
-pp_swamp_arctic_wet =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_swamp
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_swamp_arctic_wet_biome
-}
-
-pp_swamp_arctic_rough =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_swamp
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_swamp_arctic_flat_biome
-}
-
-pp_swamp_temperate_flat =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_swamp
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_swamp_temperate_flat_biome
-}
-
-pp_swamp_temperate_wet =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_swamp
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_swamp_temperate_wet_biome
-}
-
-pp_swamp_temperate_rough =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_swamp
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_swamp_temperate_rough_biome
-}
-
-pp_swamp_mediterranean_flat =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_swamp
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_swamp_temperate_flat_biome
-}
-
-pp_swamp_mediterranean_wet =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_swamp
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_swamp_temperate_wet_biome
-}
-
-pp_swamp_mediterranean_rough =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_swamp
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_swamp_temperate_rough_biome
-}
-
-pp_swamp_tropical_flat =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_swamp
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_swamp_tropical_flat_biome
-}
-
-pp_swamp_tropical_wet =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_swamp
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_swamp_tropical_wet_biome
-}
-
-pp_swamp_tropical_rough =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_swamp
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_swamp_tropical_flat_biome
-}
-
-pp_swamp_arid_flat =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_swamp
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_swamp_arctic_flat_biome
-}
-
-pp_swamp_arid_wet =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_swamp
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_swamp_arctic_wet_biome
-}
-
-pp_swamp_arid_rough =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_swamp
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_swamp_temperate_rough_biome
-}
-
-pp_swamp_cold_arid_flat =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_swamp
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_swamp_arctic_flat_biome
-}
-
-pp_swamp_cold_arid_wet =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_swamp
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_swamp_arctic_wet_biome
-}
-
-pp_swamp_cold_arid_rough =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_swamp
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_swamp_arctic_flat_biome
-}
-
-pp_marsh_arctic_flat =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_marsh
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_marsh_temperate_flat_biome
-}
-
-pp_marsh_arctic_wet =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_marsh
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_marsh_temperate_wet_biome
-}
-
-pp_marsh_arctic_rough =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_marsh
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_marsh_temperate_rough_biome
-}
-
-pp_marsh_temperate_flat =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_marsh
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_marsh_temperate_flat_biome
-}
-
-pp_marsh_temperate_wet =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_marsh
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_marsh_temperate_wet_biome
-}
-
-pp_marsh_temperate_rough =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_marsh
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_marsh_temperate_rough_biome
-}
-
-pp_marsh_mediterranean_flat =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_marsh
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_marsh_temperate_flat_biome
-}
-
-pp_marsh_mediterranean_wet =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_marsh
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_marsh_temperate_wet_biome
-}
-
-pp_marsh_mediterranean_rough =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_marsh
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_marsh_temperate_rough_biome
-}
-
-pp_marsh_tropical_flat =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_marsh
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_marsh_tropical_flat_biome
-}
-
-pp_marsh_tropical_wet =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_marsh
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_marsh_tropical_wet_biome
-}
-
-pp_marsh_tropical_rough =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_marsh
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_marsh_tropical_rough_biome
-}
-
-pp_marsh_arid_flat =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_marsh
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_marsh_arid_flat_biome
-}
-
-pp_marsh_arid_wet =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_marsh
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_marsh_arid_flat_biome
-}
-
-pp_marsh_arid_rough =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_marsh
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_marsh_arid_flat_biome
-}
-
-pp_marsh_cold_arid_flat =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_marsh
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_marsh_cold_arid_flat_biome
-}
-
-pp_marsh_cold_arid_wet =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_marsh
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_marsh_cold_arid_flat_biome
-}
-
-pp_marsh_cold_arid_rough =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_marsh
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_marsh_cold_arid_flat_biome
-}
-
-pp_savanna_arctic_flat =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_savanna
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_savanna_temperate_flat_biome
-}
-
-pp_savanna_arctic_wet =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_savanna
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_savanna_temperate_flat_biome
-}
-
-pp_savanna_arctic_rough =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_savanna
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_savanna_temperate_rough_biome
-}
-
-pp_savanna_temperate_flat =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_savanna
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_savanna_temperate_flat_biome
-}
-
-pp_savanna_temperate_wet =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_savanna
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_savanna_temperate_flat_biome
-}
-
-pp_savanna_temperate_rough =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_savanna
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_savanna_temperate_rough_biome
-}
-
-pp_savanna_mediterranean_flat =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_savanna
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_savanna_mediterranean_flat_biome
-}
-
-pp_savanna_mediterranean_wet =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_savanna
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_savanna_mediterranean_flat_biome
-}
-
-pp_savanna_mediterranean_rough =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_savanna
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_savanna_mediterranean_rough_biome
-}
-
-pp_savanna_tropical_flat =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_savanna
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_savanna_tropical_flat_biome
-}
-
-pp_savanna_tropical_wet =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_savanna
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_savanna_tropical_flat_biome
-}
-
-pp_savanna_tropical_rough =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_savanna
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_savanna_tropical_rough_biome
-}
-
-pp_savanna_arid_flat =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_savanna
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_savanna_arid_flat_biome
-}
-
-pp_savanna_arid_wet =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_savanna
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_savanna_arid_flat_biome
-}
-
-pp_savanna_arid_rough =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_savanna
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_savanna_arid_rough_biome
-}
-
-pp_savanna_cold_arid_flat =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_savanna
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_savanna_arid_flat_biome
-}
-
-pp_savanna_cold_arid_wet =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_savanna
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_savanna_arid_flat_biome
-}
-
-pp_savanna_cold_arid_rough =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_savanna
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_savanna_arid_rough_biome
-}
-
-pp_thicket_arctic_flat =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_thicket
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_thicket_temperate_rough_biome
-}
-
-pp_thicket_arctic_wet =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_thicket
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_thicket_temperate_rough_biome
-}
-
-pp_thicket_arctic_rough =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_thicket
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_thicket_temperate_rough_biome
-}
-
-pp_thicket_temperate_flat =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_thicket
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_thicket_temperate_rough_biome
-}
-
-pp_thicket_temperate_wet =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_thicket
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_thicket_temperate_rough_biome
-}
-
-pp_thicket_temperate_rough =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_thicket
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_thicket_temperate_rough_biome
-}
-
-pp_thicket_mediterranean_flat =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_thicket
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_thicket_mediterranean_flat_biome
-}
-
-pp_thicket_mediterranean_wet =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_thicket
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_thicket_mediterranean_flat_biome
-}
-
-pp_thicket_mediterranean_rough =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_thicket
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_thicket_mediterranean_rough_biome
-}
-
-pp_thicket_tropical_flat =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_thicket
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_thicket_tropical_flat_biome
-}
-
-pp_thicket_tropical_wet =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_thicket
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_thicket_tropical_flat_biome
-}
-
-pp_thicket_tropical_rough =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_thicket
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_thicket_tropical_flat_biome
-}
-
-pp_thicket_arid_flat =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_thicket
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_thicket_arid_flat_biome
-}
-
-pp_thicket_arid_wet =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_thicket
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_thicket_arid_flat_biome
-}
-
-pp_thicket_arid_rough =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_thicket
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_thicket_arid_flat_biome
-}
-
-pp_thicket_cold_arid_flat =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_thicket
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_thicket_cold_arid_flat_biome
-}
-
-pp_thicket_cold_arid_wet =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_thicket
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_thicket_cold_arid_flat_biome
-}
-
-pp_thicket_cold_arid_rough =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_thicket
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_thicket_cold_arid_rough_biome
-}
-
-pp_dry_forest_arctic_flat =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_dry_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_dry_forest_tropical_flat_biome
-}
-
-pp_dry_forest_arctic_wet =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_dry_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_dry_forest_tropical_flat_biome
-}
-
-pp_dry_forest_arctic_rough =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_dry_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_dry_forest_tropical_rough_biome
-}
-
-pp_dry_forest_temperate_flat =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_dry_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_dry_forest_tropical_flat_biome
-}
-
-pp_dry_forest_temperate_wet =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_dry_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_dry_forest_tropical_flat_biome
-}
-
-pp_dry_forest_temperate_rough =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_dry_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_dry_forest_tropical_rough_biome
-}
-
-pp_dry_forest_mediterranean_flat =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_dry_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_dry_forest_arid_flat_biome
-}
-
-pp_dry_forest_mediterranean_wet =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_dry_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_dry_forest_arid_flat_biome
-}
-
-pp_dry_forest_mediterranean_rough =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_dry_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_dry_forest_arid_flat_biome
-}
-
-pp_dry_forest_tropical_flat =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_dry_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_dry_forest_tropical_flat_biome
-}
-
-pp_dry_forest_tropical_wet =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_dry_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_dry_forest_tropical_flat_biome
-}
-
-pp_dry_forest_tropical_rough =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_dry_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_dry_forest_tropical_rough_biome
-}
-
-pp_dry_forest_arid_flat =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_dry_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_dry_forest_arid_flat_biome
-}
-
-pp_dry_forest_arid_wet =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_dry_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_dry_forest_arid_flat_biome
-}
-
-pp_dry_forest_arid_rough =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_dry_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_dry_forest_arid_flat_biome
-}
-
-pp_dry_forest_cold_arid_flat =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_dry_forest
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_dry_forest_arid_flat_biome
-}
-
-pp_dry_forest_cold_arid_wet =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_dry_forest
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_dry_forest_arid_flat_biome
-}
-
-pp_dry_forest_cold_arid_rough =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_dry_forest
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_dry_forest_arid_flat_biome
-}
-
-pp_scrubland_arctic_flat =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_scrubland
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_scrubland_cold_arid_flat_biome
-}
-
-pp_scrubland_arctic_wet =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_scrubland
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_scrubland_cold_arid_flat_biome
-}
-
-pp_scrubland_arctic_rough =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_scrubland
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_scrubland_cold_arid_rough_biome
-}
-
-pp_scrubland_temperate_flat =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_scrubland
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_scrubland_arid_flat_biome
-}
-
-pp_scrubland_temperate_wet =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_scrubland
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_scrubland_arid_flat_biome
-}
-
-pp_scrubland_temperate_rough =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_scrubland
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_scrubland_arid_rough_biome
-}
-
-pp_scrubland_mediterranean_flat =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_scrubland
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_scrubland_arid_flat_biome
-}
-
-pp_scrubland_mediterranean_wet =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_scrubland
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_scrubland_arid_flat_biome
-}
-
-pp_scrubland_mediterranean_rough =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_scrubland
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_scrubland_arid_rough_biome
-}
-
-pp_scrubland_tropical_flat =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_scrubland
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_scrubland_arid_flat_biome
-}
-
-pp_scrubland_tropical_wet =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_scrubland
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_scrubland_arid_flat_biome
-}
-
-pp_scrubland_tropical_rough =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_scrubland
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_scrubland_arid_rough_biome
-}
-
-pp_scrubland_arid_flat =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_scrubland
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_scrubland_arid_flat_biome
-}
-
-pp_scrubland_arid_wet =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_scrubland
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_scrubland_arid_flat_biome
-}
-
-pp_scrubland_arid_rough =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_scrubland
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_scrubland_arid_rough_biome
-}
-
-pp_scrubland_cold_arid_flat =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_scrubland
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_scrubland_cold_arid_flat_biome
-}
-
-pp_scrubland_cold_arid_wet =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_scrubland
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_scrubland_cold_arid_flat_biome
-}
-
-pp_scrubland_cold_arid_rough =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_scrubland
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_scrubland_cold_arid_rough_biome
-}
-
-pp_tundra_arctic_flat =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_tundra
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_arctic_wet =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_tundra
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_arctic_rough =
-{
-	climate = arctic
-	climate = subpolar
-	vegetation = ha1300_veg_tundra
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_temperate_flat =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_tundra
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_temperate_wet =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_tundra
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_temperate_rough =
-{
-	climate = continental
-	climate = oceanic
-	climate = ha1300_climate_dry_summer_continental
-	climate = ha1300_climate_continental_monsoon
-	climate = ha1300_climate_highland_monsoon
-	climate = ha1300_climate_subpolar_oceanic
-	vegetation = ha1300_veg_tundra
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_mediterranean_flat =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_tundra
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_mediterranean_wet =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_tundra
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_mediterranean_rough =
-{
-	climate = mediterranean
-	vegetation = ha1300_veg_tundra
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_tropical_flat =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_tundra
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_tropical_wet =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_tundra
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_tropical_rough =
-{
-	climate = subtropical
-	climate = tropical
-	climate = ha1300_climate_subtropical_monsoon
-	climate = ha1300_climate_tropical_monsoon
-	climate = ha1300_climate_savanna
-	vegetation = ha1300_veg_tundra
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_arid_flat =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_tundra
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_arid_wet =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_tundra
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_arid_rough =
-{
-	climate = arid
-	climate = hot_semi_arid
-	vegetation = ha1300_veg_tundra
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_cold_arid_flat =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_tundra
-	topography = flatland
-	topography = flatland_wasteland
-	topography = ha1300_topo_rolling
-	topography = ha1300_topo_valleys
-	topography = ha1300_topo_floodplains
-	topography = ha1300_topo_deltas
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_cold_arid_wet =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_tundra
-	topography = wetlands
-	topography = wetlands_wasteland
-	biome = pp_tundra_arctic_rough_biome
-}
-
-pp_tundra_cold_arid_rough =
-{
-	climate = cold_arid
-	climate = cold_semi_arid
-	vegetation = ha1300_veg_tundra
-	topography = hills
-	topography = hills_wasteland
-	topography = plateau
-	topography = plateau_wasteland
-	biome = pp_tundra_arctic_rough_biome
 }

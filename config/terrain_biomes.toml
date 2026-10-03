@@ -9,11 +9,15 @@
 # variation slots follow the class pattern below. Mountains keep the vanilla parent's biome.
 
 [general]
+# Own biomes for the vegetation classes are OFF: EU5 1.4 stops at game start with "Important assertion failed: Too many
+# biomes" with 243 biomes (vanilla 191; the engine limit is not known, 2026-10-03). Off = parent looks only: biomes.txt
+# lists every class next to its vanilla parent, vanilla's 191 definitions and biomes, no materials.txt override.
+own_biomes = false
 # a (class, climate group, terrain) combination gets its own biome from this many locations; rarer ones use the
 # class's biome of another terrain or a neighbouring climate group, else the vanilla parent
 own_biome_minimum_locations = 50
-# the engine stores a location's biome in a texture whose format is not known; vanilla has 191 biomes, stay below 256
-max_total_biomes = 245
+# total biomes (vanilla 191 + own) must stay at or below the engine limit
+max_total_biomes = 191
 
 # vanilla's climate groups (the climates biomes.txt lists together), with the groups a rare combination borrows from
 [climate_groups.arctic]

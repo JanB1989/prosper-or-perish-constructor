@@ -38,6 +38,9 @@ ai_construct_weight = {
     add = { value = 14 subtract = pp_location_stored_months divide = 14 min = 0 max = 1 multiply = 120 }
     # spread out: every farm level already here makes the next one less wanted
     subtract = { value = modifier:local_pp_farm_levels max = 30 multiply = 4 }
+    # upgrade where the previous tier stands ([age_food] upgrade_weight): the engine scores a replacement with a
+    # near-zero upgrade utility, so the weight carries it
+    if = { limit = { has_building = building_type:wheat_farm } add = 200 }
     divide = { value = scope:owner.monthly_income_total add = 10 }
 }
 
@@ -45,9 +48,9 @@ unique_production_methods = {
     pp_wheat_farmstead_base = {
         icon_type = building_type
         icon = wheat_farmstead
-        manual_labor = 0.016
+        manual_labor = 0.018
         produced = wheat
-        output = 0.08
+        output = 0.092
         category = building_maintenance
     }
 }
@@ -60,14 +63,14 @@ unique_production_methods = {
     pp_wheat_farmstead_manured_three_field = {
         icon_type = building_type
         icon = wheat_farmstead
-        horses = 0.043
-        livestock = 0.086
-        tools = 0.017
-        lumber = 0.022
-        manual_labor = 0.059
+        horses = 0.049
+        livestock = 0.099
+        tools = 0.02
+        lumber = 0.026
+        manual_labor = 0.065
         produced = wheat
-        output = 0.64
-        debug_max_profit = 0
+        output = 0.736
+        debug_max_profit = 0.007
         category = building_maintenance
     }
 }
@@ -75,10 +78,10 @@ unique_production_methods = {
     pp_wheat_farmstead_provision = {
         icon_type = goods
         icon = wheat
-        wheat = 0.013
+        wheat = 0.015
         produced = local_food
-        output = 2
-        debug_max_profit = 75.923
+        output = 2.3
+        debug_max_profit = 75.667
         category = building_maintenance
     }
 }
@@ -91,7 +94,7 @@ raw_modifier = {
 
 modifier = {
     local_pp_farm_levels = 1
-    local_monthly_food = 1.5
+    local_monthly_food = 3.5
     local_food_capacity = 50
     local_peasants_estate_power = 0.03
     local_peasant_enfranchisment = 0.002

@@ -50,6 +50,7 @@ SYNC_STAGES = ("worldbuilder", "blueprints")
 # the constructor load order (scripts, setup, map data).
 WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/worldbuilder",
+    "src/prosper_or_perish_constructor/age_food.py",               # crop_farms renders the farm tiers from [age_food]
     "src/prosper_or_perish_constructor/building_footprint.py",
     "src/prosper_or_perish_constructor/crop_farms.py",
     "src/prosper_or_perish_constructor/free_building_levels.py",
@@ -284,6 +285,17 @@ def _build_parser() -> argparse.ArgumentParser:
         "--verbose",
         action="store_true",
         help="check: also list every method apply would change.",
+    )
+    age_food = _add_command(
+        subcommands,
+        "age-food",
+        "Food relief by age ([age_food]): flat food and method throughput of the farming buildings, decay of the age advances.",
+        _age_food,
+    )
+    age_food.add_argument(
+        "action",
+        choices=("apply", "check"),
+        help="apply rewrites the listed blueprints and the age advances (then run ppc crop-farms, labour, gate); check lists what is off.",
     )
     gate = _add_command(
         subcommands,
@@ -1054,6 +1066,30 @@ def _labour(args: argparse.Namespace, extra: Sequence[str], repo: Path, project:
     return 0
 
 
+def _age_food(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("age-food does not accept extra arguments.")
+    from prosper_or_perish_constructor import age_food
+
+    changes = age_food.apply(repo, project, write=args.action == "apply")
+    for change in changes:
+        print(f"{change.building}: {'; '.join(change.what)}")
+    verb = "rewritten" if args.action == "apply" else "off"
+    print(f"age food: {len(changes)} files {verb}.")
+    return 0 if args.action == "apply" or not changes else 1
+
+
+def _print_age_food_check(repo: Path, project: Path) -> None:
+    from prosper_or_perish_constructor import age_food
+
+    try:
+        changes = age_food.apply(repo, project, write=False)
+    except Exception as exc:  # noqa: BLE001 - build summary only
+        print(f"Age food check skipped: {exc}", flush=True)
+        return
+    print(f"Age food: {len(changes)} files off [age_food] (run ppc age-food apply).", flush=True)
+
+
 def _print_labour_check(repo: Path, project: Path) -> None:
     """Build-time summary; problems are printed, not fatal (tag new producing methods with ppc labour check)."""
     from prosper_or_perish_constructor import production_labour
@@ -1230,6 +1266,7 @@ def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: 
     if build_code != 0:
         return build_code
     _finalize_constructor_mod(repo, project)
+    _print_age_food_check(repo, project)
     _print_labour_check(repo, project)
     _print_logistics_check(repo, project)
     _print_gate_check(repo, project)

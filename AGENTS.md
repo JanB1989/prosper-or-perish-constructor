@@ -87,7 +87,20 @@
   `allow` town-or-province-capital rule stays). Small recipes (dish about 0.45 gold of staples + labour at margin
   1.08, drink about 0.23 at 1.2; Public Kitchen 0.55 / 0.28) sell their meals for `offset`, so profit is thin and
   store-independent; the food is the flat `local_monthly_food` (15 / 18 per staffed level, scaled by input
-  fulfilment), plus `local_food_preservation_efficiency_modifier` +0.02 and `local_peasants_food_consumption` -0.01.
+  fulfilment), plus `local_food_preservation_efficiency_modifier` +0.04 (Public Kitchen +0.05) and
+  `local_peasants_food_consumption` -0.01.
+- Food relief by age (`[age_food]` in constructor.toml, `age_food.py`, 2026-10-03, Jan: age 2 stays tough, age 3
+  brings decent relief): per age the farming buildings' flat `local_monthly_food` and a throughput factor on their
+  methods (Provision follows the scaled base output; the blueprint records the factor applied as
+  `age_food_throughput`, so a new value rescales from it), and the age's food advance carries `global_food_decay`
+  (base 0.015 a month; age 3 -0.003, ages 4/5 -0.002). Crop farm tiers take their tier advance's age (rendered by
+  `crop_farms.py`); other farming buildings are listed in `[age_food.buildings]` and rewritten by
+  `ppc age-food apply` (`check` must report 0 off; `ppc build` prints it; `tests/test_age_food.py`). Scaled tiers get
+  throughput allow reasons in their evaluation block. Every farming upgrade has `upgrade_weight` (200 / (income + 10))
+  where its predecessor stands: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so without it
+  the AI barely upgraded (farmsteads 19 % by 1550, run b033350e). Province decay = (local + global food decay) /
+  max(1, 1 + summed preservation of the province's locations); the Granary carries preservation 0.03 (was 0.0002,
+  a port slip). Order after editing: `ppc age-food apply`, `ppc crop-farms --write`, labour, logistics, gate.
   Well Water (labour -> offset) is the gate method, always available. AI weight: (20 + up to 40 by province farms)
   / (owner income + 10), no store terms. Daily Fare and Farm Produce are gone. The start simulation counts the
   province's placed farm levels for the cap (its caps are memoised on them) and the river top-up / setup audit count

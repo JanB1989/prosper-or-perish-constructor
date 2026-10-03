@@ -298,7 +298,7 @@ increase_per_level_cost = 0.10
 		# and by the inputs the kitchen gets
 		local_monthly_food = 18.0
 		# people eat the perishables: a little less food spoils in store, and the peasants eat a little less
-		local_food_preservation_efficiency_modifier = 0.02
+		local_food_preservation_efficiency_modifier = 0.05
 		local_peasants_food_consumption = -0.01
 		# no food capacity (was 800, removed 2026-09-30): the Granary is the capacity building
 		local_unrest = -0.05

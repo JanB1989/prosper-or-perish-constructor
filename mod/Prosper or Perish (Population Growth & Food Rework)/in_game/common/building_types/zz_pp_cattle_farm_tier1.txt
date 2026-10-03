@@ -38,6 +38,9 @@ ai_construct_weight = {
     add = { value = 14 subtract = pp_location_stored_months divide = 14 min = 0 max = 1 multiply = 120 }
     # spread out: every farm level already here makes the next one less wanted
     subtract = { value = modifier:local_pp_farm_levels max = 30 multiply = 4 }
+    # upgrade where the previous tier stands ([age_food] upgrade_weight): the engine scores a replacement with a
+    # near-zero upgrade utility, so the weight carries it
+    if = { limit = { has_building = building_type:cattle_farm } add = 200 }
     divide = { value = scope:owner.monthly_income_total add = 10 }
 }
 
@@ -45,9 +48,9 @@ unique_production_methods = {
     pp_cattle_farmstead_base = {
         icon_type = building_type
         icon = cattle_farmstead
-        manual_labor = 0.024
+        manual_labor = 0.028
         produced = livestock
-        output = 0.08
+        output = 0.092
         category = building_maintenance
     }
 }
@@ -60,14 +63,14 @@ unique_production_methods = {
     pp_cattle_farmstead_stall_feeding = {
         icon_type = building_type
         icon = cattle_farmstead
-        livestock = 0.1
-        legumes = 0.086
-        clay = 0.1
-        lumber = 0.04
+        livestock = 0.12
+        legumes = 0.099
+        clay = 0.12
+        lumber = 0.046
         manual_labor = 0.066
         produced = livestock
-        output = 0.44
-        debug_max_profit = 0
+        output = 0.506
+        debug_max_profit = 0.013
         category = building_maintenance
     }
 }
@@ -75,10 +78,10 @@ unique_production_methods = {
     pp_cattle_farmstead_provision = {
         icon_type = goods
         icon = livestock
-        livestock = 0.009
+        livestock = 0.01
         produced = local_food
-        output = 2
-        debug_max_profit = 73.074
+        output = 2.3
+        debug_max_profit = 75.667
         category = building_maintenance
     }
 }
@@ -91,7 +94,7 @@ raw_modifier = {
 
 modifier = {
     local_pp_farm_levels = 1
-    local_monthly_food = 1.5
+    local_monthly_food = 3.5
     local_food_capacity = 50
     local_peasants_estate_power = 0.03
     local_peasant_enfranchisment = 0.002

@@ -246,10 +246,17 @@ def test_every_crop_farm_has_base_cultivation_and_provisioning_slots(table: crop
 
 
 def test_every_crop_farm_carries_its_price_weight(table: crop_farms.CropTable) -> None:
+    from types import SimpleNamespace
+
+    from prosper_or_perish_constructor import age_food
+
+    context = SimpleNamespace(age_food=age_food.load_config(PROJECT))
     for crop in table.crops:
         for tier in crop_farms.TIERS:
             body = _blueprint(table.building(crop, tier))["building"]["body"]
-            assert "\n".join(crop_farms.ai_construct_weight_lines(table, crop)) in body
+            assert "\n".join(crop_farms.ai_construct_weight_lines(table, crop, tier, context)) in body
+            if tier:   # [age_food] upgrade weight where the previous tier stands
+                assert f"has_building = building_type:{table.building(crop, tier - 1)}" in body
             assert f'"market.market_price(goods:{crop.good})"' in body
             assert f"modifier:local_{crop.good}_output_modifier" in body and "scope:owner.monthly_income_total" in body
 

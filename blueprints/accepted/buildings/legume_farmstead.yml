@@ -73,14 +73,17 @@ building:
         add = { value = 14 subtract = pp_location_stored_months divide = 14 min = 0 max = 1 multiply = 120 }
         # spread out: every farm level already here makes the next one less wanted
         subtract = { value = modifier:local_pp_farm_levels max = 30 multiply = 4 }
+        # upgrade where the previous tier stands ([age_food] upgrade_weight): the engine scores a replacement with a
+        # near-zero upgrade utility, so the weight carries it
+        if = { limit = { has_building = building_type:legume_farm } add = 200 }
         divide = { value = scope:owner.monthly_income_total add = 10 }
     }
 
     unique_production_methods = {
         pp_legume_farmstead_base = {
-            manual_labor = 0.016
+            manual_labor = 0.018
             produced = legumes
-            output = 0.08
+            output = 0.092
             category = building_maintenance
         }
     }
@@ -103,22 +106,22 @@ building:
             category = building_maintenance
         }
         pp_legume_farmstead_fodder_leys = {
-            horses = 0.03
-            livestock = 0.043
-            fiber_crops = 0.052
-            pottery = 0.052
-            manual_labor = 0.049
+            horses = 0.034
+            livestock = 0.049
+            fiber_crops = 0.059
+            pottery = 0.059
+            manual_labor = 0.06
             produced = legumes
-            output = 0.59
+            output = 0.678
             debug_max_profit = 0
             category = building_maintenance
         }
     }
     unique_production_methods = {
         pp_legume_farmstead_provision = {
-            legumes = 0.013
+            legumes = 0.015
             produced = local_food
-            output = 2
+            output = 2.3
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -132,7 +135,7 @@ building:
 
     modifier = {
         local_pp_farm_levels = 1
-        local_monthly_food = 1.5
+        local_monthly_food = 3.5
         local_food_capacity = 50
         local_peasants_estate_power = 0.03
         local_peasant_enfranchisment = 0.002
@@ -166,8 +169,8 @@ evaluation:
   allow_rules:
     profit_percent: Passive selectors, no-output options, and household sidelines can sit outside the narrow margin band; worked farmstead methods carry the tier balance.
     base_output_per_1k: Early farmstead selectors keep passive food output small; worked crop methods carry the tier economy.
-    input_throughput: Husbandry farmsteads are an age 3 bridge and intentionally stay below rotational farming throughput.
-    output_throughput: Husbandry farmsteads are an age 3 bridge and intentionally stay below rotational farming throughput.
+    input_throughput: Food relief of age_3_discovery (age_food.py, throughput x1.15) raises output per worker on purpose.
+    output_throughput: Food relief of age_3_discovery (age_food.py, throughput x1.15) raises output per worker on purpose.
   production_methods:
     pp_legume_farmstead_base:
       production_efficiency: 1.0

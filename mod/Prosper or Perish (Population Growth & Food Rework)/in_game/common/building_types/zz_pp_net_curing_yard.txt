@@ -13,6 +13,13 @@ town = yes
 city = yes
 megalopolis = yes
 obsolete = fishing_village
+# AI (age_food.py): build the upgrade where its predecessor stands; the engine scores a replacement
+# with a near-zero upgrade utility, so the weight carries it
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:fishing_village } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 forbidden_for_estates = yes
 ai_forbid_shutdown = no
 can_close = yes

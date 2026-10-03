@@ -13,6 +13,13 @@ town = yes
 city = yes
 megalopolis = yes
 obsolete = ocean_fishery
+# AI (age_food.py): build the upgrade where its predecessor stands; the engine scores a replacement
+# with a near-zero upgrade utility, so the weight carries it
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:ocean_fishery } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 build_time = workshop_build_time
 
 location_potential = {
@@ -28,9 +35,9 @@ unique_production_methods = {
     pp_drift_net_fishery_base_catch = {
         icon_type = building_type
         icon = drift_net_fishery
-        manual_labor = 0.018
+        manual_labor = 0.021
         produced = fish
-        output = 0.09
+        output = 0.103
         category = building_maintenance
     }
 }
@@ -43,13 +50,13 @@ unique_production_methods = {
     pp_drift_net_fishery_coastal_drift_nets = {
         icon_type = building_type
         icon = drift_net_fishery
-        fiber_crops = 0.15 # hemp and flax nets and cordage
-        cloth = 0.03 # small sails and net patches
-        salt = 0.043 # brine and shore curing
-        lumber = 0.047 # floats, cask staves, light repairs
-        manual_labor = 0.1
+        fiber_crops = 0.172 # hemp and flax nets and cordage
+        cloth = 0.034 # small sails and net patches
+        salt = 0.049 # brine and shore curing
+        lumber = 0.054 # floats, cask staves, light repairs
+        manual_labor = 0.115
         produced = fish
-        output = 1.08
+        output = 1.24
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -58,10 +65,10 @@ unique_production_methods = {
     pp_drift_net_fishery_provision = {
         icon_type = goods
         icon = fish
-        fish = 0.12
+        fish = 0.137
         produced = local_food
-        output = 1.44
-        debug_max_profit = 5.000
+        output = 1.648
+        debug_max_profit = 5.015
         category = building_maintenance
     }
 }
@@ -81,7 +88,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_monthly_food = 3.0
+    local_monthly_food = 3.5
     local_food_capacity = 50
     local_fish_output_modifier = -0.007
     local_merchant_capacity = 0.045

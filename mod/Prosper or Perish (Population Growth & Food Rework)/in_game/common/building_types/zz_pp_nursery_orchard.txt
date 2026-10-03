@@ -13,6 +13,13 @@ town = yes
 city = yes
 megalopolis = yes
 obsolete = fruit_orchard
+# AI (age_food.py): build the upgrade where its predecessor stands; the engine scores a replacement
+# with a near-zero upgrade utility, so the weight carries it
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:fruit_orchard } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 forbidden_for_estates = yes
 ai_forbid_shutdown = no
 can_close = yes
@@ -34,9 +41,9 @@ unique_production_methods = {
     pp_nursery_orchard_base_fruit = {
         icon_type = building_type
         icon = nursery_orchard
-        manual_labor = 0.017
+        manual_labor = 0.02
         produced = fruit
-        output = 0.085
+        output = 0.098
         category = building_maintenance
     }
 }
@@ -49,12 +56,12 @@ unique_production_methods = {
     pp_nursery_orchard_yard_hives = {
         icon_type = building_type
         icon = nursery_orchard
-        fiber_crops = 0.022
-        pottery = 0.01
-        manual_labor = 0.008
+        fiber_crops = 0.025
+        pottery = 0.011
+        manual_labor = 0.009
         produced = beeswax
-        output = 0.12
-        debug_max_profit = 1.553
+        output = 0.138
+        debug_max_profit = 1.604
         category = building_maintenance
     }
 }
@@ -68,12 +75,12 @@ unique_production_methods = {
         icon_type = building_type
         icon = nursery_orchard
         produced = fruit
-        output = 0.55
-        fiber_crops = 0.089 # osier baskets, graft ties, harvest mats
-        pottery = 0.047 # earthen nursery pots and storage crocks
-        tools = 0.028 # pruning and grafting knives
-        furniture = 0.021 # sorting racks and apple-loft boards
-        manual_labor = 0.061
+        output = 0.632
+        fiber_crops = 0.102 # osier baskets, graft ties, harvest mats
+        pottery = 0.054 # earthen nursery pots and storage crocks
+        tools = 0.032 # pruning and grafting knives
+        furniture = 0.024 # sorting racks and apple-loft boards
+        manual_labor = 0.07
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -82,10 +89,10 @@ unique_production_methods = {
     pp_nursery_orchard_provision = {
         icon_type = goods
         icon = fruit
-        fruit = 0.113
+        fruit = 0.131
         produced = local_food
-        output = 1.36
-        debug_max_profit = 5.018
+        output = 1.568
+        debug_max_profit = 4.985
         category = building_maintenance
     }
 }
@@ -108,7 +115,7 @@ raw_modifier = {
 
 modifier = {
     local_pp_farm_levels = 1
-    local_monthly_food = 1.5
+    local_monthly_food = 3.5
     local_food_capacity = 50
 }
 }

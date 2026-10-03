@@ -1,5 +1,6 @@
 version: 2
 tag: pomological_orchard
+age_food_throughput: 1.45
 footprint: farm_land
 labour:
   class: primary_absolutism
@@ -51,6 +52,13 @@ building:
     city = yes
     megalopolis = yes
     obsolete = nursery_orchard
+    # AI (age_food.py): build the upgrade where its predecessor stands; the engine scores a replacement
+    # with a near-zero upgrade utility, so the weight carries it
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:nursery_orchard } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
     forbidden_for_estates = yes
     ai_forbid_shutdown = no
     can_close = yes
@@ -70,9 +78,9 @@ building:
 
     unique_production_methods = {
         pp_pomological_orchard_base_fruit = {
-            manual_labor = 0.02
+            manual_labor = 0.029
             produced = fruit
-            output = 0.10
+            output = 0.145
             category = building_maintenance
         }
     }
@@ -81,13 +89,13 @@ building:
             category = building_maintenance
         }
         pp_pomological_orchard_hedgerow_hives = {
-            tools = 0.036
-            lumber = 0.089
-            fiber_crops = 0.071
-            pottery = 0.045
-            manual_labor = 0.055
+            tools = 0.052
+            lumber = 0.129
+            fiber_crops = 0.103
+            pottery = 0.065
+            manual_labor = 0.08
             produced = beeswax
-            output = 0.31
+            output = 0.45
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -98,20 +106,20 @@ building:
         }
         pp_pomological_orchard_grafted_rows = {
             produced = fruit
-            output = 2.10
-            tools = 0.35 # pruning tools, grafting knives
-            lumber = 0.32 # trellises, crates, stakes
-            paper = 0.15 # cultivar ledgers
-            manual_labor = 0.17
+            output = 3.04
+            tools = 0.507 # pruning tools, grafting knives
+            lumber = 0.464 # trellises, crates, stakes
+            paper = 0.217 # cultivar ledgers
+            manual_labor = 0.246
             debug_max_profit = 0
             category = building_maintenance
         }
     }
     unique_production_methods = {
         pp_pomological_orchard_provision = {
-            fruit = 0.133
+            fruit = 0.193
             produced = local_food
-            output = 1.6
+            output = 2.32
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -133,7 +141,7 @@ building:
 
     modifier = {
         local_pp_farm_levels = 1
-        local_monthly_food = 3.0
+        local_monthly_food = 6
         local_food_capacity = 50
     }
 advancements:
@@ -173,6 +181,8 @@ icon:
 evaluation:
   allow_rules:
     amortization_months: Upgraded former-food producer keeps a slower payback than global construction targets; revisit with the rural producer rebalance.
+    input_throughput: Food relief of age_5_absolutism (age_food.py, throughput x1.45) raises output per worker on purpose.
+    output_throughput: Food relief of age_5_absolutism (age_food.py, throughput x1.45) raises output per worker on purpose.
   production_methods:
     pp_pomological_orchard_base_fruit:
       production_efficiency: 1.0

@@ -344,6 +344,7 @@ class RenderContext:
     gate_config: Any = None  # production_gate.GateConfig
     gate_prices: dict[str, float] = field(default_factory=dict)  # base prices with the evaluation overrides
     farm_cost_factor: tuple[Any, frozenset[str]] = (1, frozenset())  # [farm_level_cost] factor, footprints
+    age_food: Any = None  # age_food.AgeFoodConfig: flat food and method throughput per age (None: the table's own values)
 
     def land_class(self, building: str) -> str:
         """The [worldbuilder.farm_land] class of a farm building, as ``worldbuilder.buildings.farm_constants`` finds it."""
@@ -377,6 +378,9 @@ def load_context(repo: Path, project: Path, table: CropTable, *, gates: bool = T
         farm_classes=classes,
     )
     context.gate_config = production_gate.load_config(project)
+    from prosper_or_perish_constructor import age_food
+
+    context.age_food = age_food.load_config(project)
     context.gate_prices = production_gate.gate_prices(context.prices, context.gate_config)
     for crop in table.crops:
         for tier in TIERS:
@@ -461,13 +465,34 @@ def _labour_pass(method: RenderedMethod, building: str, context: RenderContext) 
     raise ValueError(f"{building}: {method.name}: the labour pass does not settle")
 
 
-def _base_method(table: CropTable, crop: Crop, tier: int, building: str) -> RenderedMethod:
+def tier_age(table: CropTable, tier: int) -> str:
+    """The age a tier belongs to: age 1 for the farm, else the age of its tier advance."""
+    if tier == 0:
+        return "age_1_traditions"
+    return str(table.raw["tier_advance"][str(table.tier_advance(tier))]["age"])
+
+
+def tier_throughput(table: CropTable, tier: int, context: "RenderContext | None") -> float:
+    """[age_food] throughput of the tier's age (1 without the table or the age)."""
+    config = getattr(context, "age_food", None)
+    if config is None or tier_age(table, tier) not in config.ages:
+        return 1.0
+    return config.ages[tier_age(table, tier)].throughput
+
+
+def _scale(value: float, factor: float) -> float:
+    from prosper_or_perish_constructor.age_food import scaled
+
+    return value if factor == 1.0 else scaled(value, factor)
+
+
+def _base_method(table: CropTable, crop: Crop, tier: int, building: str, factor: float = 1.0) -> RenderedMethod:
     labour = crop.base_labour[tier] if crop.base_labour else float(table.tier_value("tier_base_labour", tier))
     return RenderedMethod(
         name=f"pp_{building}_base",
-        inputs={LABOUR_GOOD: labour},
+        inputs={LABOUR_GOOD: _scale(labour, factor)},
         produced=crop.good,
-        output=float(table.tier_value("tier_base_output", tier)),
+        output=_scale(float(table.tier_value("tier_base_output", tier)), factor),
         labour_class=str(table.general.get("base_labour_class", "base")),
         kind="base",
         worked=False,
@@ -478,12 +503,12 @@ def _selector(name: str) -> RenderedMethod:
     return RenderedMethod(name=name, inputs={}, produced=None, output=None, labour_class=None, kind="none", worked=False)
 
 
-def _cultivation_method(table: CropTable, crop: Crop, method: CropMethod, building: str) -> RenderedMethod:
+def _cultivation_method(table: CropTable, crop: Crop, method: CropMethod, building: str, factor: float = 1.0) -> RenderedMethod:
     return RenderedMethod(
         name=f"pp_{building}_{method.key}",
-        inputs=dict(method.inputs),
+        inputs={good: _scale(amount, factor) for good, amount in method.inputs.items()},
         produced=crop.good,
-        output=method.output,
+        output=_scale(method.output, factor) if method.output is not None else None,
         labour_class=method.labour_class or str(table.tier_value("tier_labour_class", method.tier)),
         kind="cultivation",
     )
@@ -523,16 +548,18 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
 
     # ---- slots (the provisioning slot is rendered by provisioning.py and comes last)
     slots: list[tuple[str, list[RenderedMethod]]] = []
-    slots.append(("base", [_labour_pass(_base_method(table, crop, tier, building), building, context)]))
+    factor = tier_throughput(table, tier, context)   # [age_food]: the tier's age scales every crop method
+    slots.append(("base", [_labour_pass(_base_method(table, crop, tier, building, factor), building, context)]))
     cultivation = [_selector(f"pp_{building}_no_cultivation")]
     cultivation += [
-        _labour_pass(_cultivation_method(table, crop, method, building), building, context) for method in crop.tier_methods(tier)
+        _labour_pass(_cultivation_method(table, crop, method, building, factor), building, context)
+        for method in crop.tier_methods(tier)
     ]
     slots.append(("cultivation", cultivation))
     if has_beekeeping(table, crop, tier):
         hives = _labour_pass(_hive_method(table, tier, building), building, context)
         slots.append(("beekeeping", [_selector(f"pp_{building}_no_beekeeping"), hives]))
-    base_output = Decimal(str(table.tier_value("tier_base_output", tier)))
+    base_output = Decimal(str(_scale(float(table.tier_value("tier_base_output", tier)), factor)))
     price = Decimal(str(context.prices.get(crop.good, 1.0)))
     amounts = provisioning.crop_provisioning_amounts(base_output, good_price=price, config=context.provisioning)
 
@@ -573,7 +600,7 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
                 "}",
             ]
         )
-    body.extend(ai_construct_weight_lines(table, crop))
+    body.extend(ai_construct_weight_lines(table, crop, tier, context))
     body.append("")
     for _, methods in slots:
         body.append("unique_production_methods = {")
@@ -595,6 +622,9 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
         ]
     )
     modifier = dict(general.get("tier_modifier", {}).get(str(tier), {}))
+    ages = getattr(context.age_food, "ages", {}) if context.age_food is not None else {}
+    if tier_age(table, tier) in ages:   # [age_food]: the age's flat food per level
+        modifier["local_monthly_food"] = ages[tier_age(table, tier)].flat_food
     modifier.update(crop.side_modifiers)
     body.extend(f"    {key} = {_num(value)}" for key, value in modifier.items())
     body.append("}")
@@ -704,7 +734,12 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
         blueprint["advancements"] = advancements
     blueprint["localization"] = {"entries": entries}
     blueprint["icon"] = {"source_png": f"../assets/icons/{building}.png", "output_dds": f"{building}.dds", "size": 512}
-    blueprint["evaluation"] = {"allow_rules": dict(evaluation.get("allow_rules", {})), "production_methods": per_method}
+    allow_rules = dict(evaluation.get("allow_rules", {}))
+    if abs(factor - 1.0) > 1e-9:
+        from prosper_or_perish_constructor.age_food import throughput_allow_rules
+
+        allow_rules.update(throughput_allow_rules(tier_age(table, tier), factor))
+    blueprint["evaluation"] = {"allow_rules": allow_rules, "production_methods": per_method}
     if context.gate_config is not None:
         from prosper_or_perish_constructor import production_gate
 
@@ -712,7 +747,7 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
     return blueprint
 
 
-def ai_construct_weight_lines(table: CropTable, crop: Crop) -> list[str]:
+def ai_construct_weight_lines(table: CropTable, crop: Crop, tier: int = 0, context: "RenderContext | None" = None) -> list[str]:
     """The farm's ``ai_construct_weight`` (EU5 1.4, location scope, scope:owner): the AI's farm choice.
 
     (slope x ((1 + local crop output modifier) x market price / default price - 1), 0 outside a market,
@@ -751,6 +786,13 @@ def ai_construct_weight_lines(table: CropTable, crop: Crop) -> list[str]:
         lines += [
             "    # spread out: every farm level already here makes the next one less wanted",
             f"    subtract = {{ value = modifier:local_pp_farm_levels max = {_num(cap)} multiply = {_num(crowding)} }}",
+        ]
+    upgrade = float(getattr(getattr(context, "age_food", None), "upgrade_weight", 0.0) or 0.0)
+    if tier > 0 and upgrade:
+        lines += [
+            "    # upgrade where the previous tier stands ([age_food] upgrade_weight): the engine scores a replacement with a",
+            "    # near-zero upgrade utility, so the weight carries it",
+            f"    if = {{ limit = {{ has_building = building_type:{table.building(crop, tier - 1)} }} add = {_num(upgrade)} }}",
         ]
     lines += [
         f"    divide = {{ value = scope:owner.monthly_income_total add = {_num(offset)} }}",

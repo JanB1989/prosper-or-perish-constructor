@@ -853,9 +853,10 @@ def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> Non
     raw = _load_blueprint("offshore_fishery")
     body = raw["building"]["body"]
     expected_outputs = {
-        "pp_offshore_fishery_herring_busses": "1.185",
-        "pp_offshore_fishery_distant_water_schooners": "1.55",
-        "pp_offshore_fishery_steam_trawlers": "1.80",
+        # x1.35 since [age_food] (2026-10-03): was 1.185 / 1.55 / 1.80
+        "pp_offshore_fishery_herring_busses": "1.6",
+        "pp_offshore_fishery_distant_water_schooners": "2.09",
+        "pp_offshore_fishery_steam_trawlers": "2.43",
     }
 
     for method, output in expected_outputs.items():
@@ -867,12 +868,12 @@ def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> Non
 
     # production labour (2026-09-23) folded the small cloth input into labour
     assert re.search(
-        r"pp_offshore_fishery_herring_busses\s*=\s*\{.*?\bfiber_crops\s*=\s*0\.18\b.*?\bmanual_labor\s*=\s*0\.13\b",
+        r"pp_offshore_fishery_herring_busses\s*=\s*\{.*?\bfiber_crops\s*=\s*0\.243\b.*?\bmanual_labor\s*=\s*0\.176\b",
         body,
         flags=re.S,
     )
     assert raw["evaluation"]["bands"] == {
-        "output_gold_per_1k": {"max": 1.90},
+        "output_gold_per_1k": {"max": 2.56},   # 1.90 x1.35 [age_food]
         "amortization_months": {"max": 900},
     }
 
@@ -1266,7 +1267,7 @@ def test_crop_farmsteads_keep_crop_specific_worked_methods() -> None:
             outputs[method] = float(re.search(r"(?m)^\s*output\s*=\s*(\d+(?:\.\d+)?)\b", blocks[method]).group(1))
 
     assert len(set(signatures.values())) == len(signatures)   # every crop works its fields differently
-    assert max(outputs.values()) < 0.70
+    assert max(outputs.values()) < 0.70 * 1.15   # [age_food] age 3 throughput x1.15
     assert min(outputs.values()) > 0.40
 
 

@@ -76,14 +76,17 @@ building:
         add = { value = 14 subtract = pp_location_stored_months divide = 14 min = 0 max = 1 multiply = 120 }
         # spread out: every farm level already here makes the next one less wanted
         subtract = { value = modifier:local_pp_farm_levels max = 30 multiply = 4 }
+        # upgrade where the previous tier stands ([age_food] upgrade_weight): the engine scores a replacement with a
+        # near-zero upgrade utility, so the weight carries it
+        if = { limit = { has_building = building_type:potato_farmstead } add = 200 }
         divide = { value = scope:owner.monthly_income_total add = 10 }
     }
 
     unique_production_methods = {
         pp_potato_rotations_base = {
-            manual_labor = 0.014
+            manual_labor = 0.019
             produced = potato
-            output = 0.07
+            output = 0.095
             category = building_maintenance
         }
     }
@@ -92,33 +95,33 @@ building:
             category = building_maintenance
         }
         pp_potato_rotations_potato_rotation = {
-            tools = 0.17
-            livestock = 0.2
-            clay = 0.23
-            cloth = 0.071
-            manual_labor = 0.15
+            tools = 0.23
+            livestock = 0.28
+            clay = 0.31
+            cloth = 0.096
+            manual_labor = 0.19
             produced = potato
-            output = 1.56
+            output = 2.11
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_potato_rotations_seed_selection = {
-            tools = 0.15
-            livestock = 0.2
-            clay = 0.27
-            fiber_crops = 0.13
-            manual_labor = 0.15
+            tools = 0.2
+            livestock = 0.26
+            clay = 0.36
+            fiber_crops = 0.18
+            manual_labor = 0.22
             produced = potato
-            output = 1.62
+            output = 2.19
             debug_max_profit = 0
             category = building_maintenance
         }
     }
     unique_production_methods = {
         pp_potato_rotations_provision = {
-            potato = 0.012
+            potato = 0.016
             produced = local_food
-            output = 1.75
+            output = 2.375
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -132,7 +135,7 @@ building:
 
     modifier = {
         local_pp_farm_levels = 1
-        local_monthly_food = 1.5
+        local_monthly_food = 4.5
         local_food_capacity = 50
         local_peasants_estate_power = 0.021
         local_peasant_enfranchisment = 0.002
@@ -160,6 +163,8 @@ icon:
 evaluation:
   allow_rules:
     amortization_months: Intermediate farm upgrade intentionally has slower payback than global construction targets; revisit with the rural producer rebalance.
+    input_throughput: Food relief of age_4_reformation (age_food.py, throughput x1.35) raises output per worker on purpose.
+    output_throughput: Food relief of age_4_reformation (age_food.py, throughput x1.35) raises output per worker on purpose.
   production_methods:
     pp_potato_rotations_base:
       production_efficiency: 1.0

@@ -1,5 +1,6 @@
 version: 2
 tag: managed_forest_village
+age_food_throughput: 1.35
 footprint: rural_village
 labour:
   class: primary_reformation
@@ -55,6 +56,13 @@ building:
     city = yes
     megalopolis = yes
     obsolete = forest_village
+    # AI (age_food.py): build the upgrade where its predecessor stands; the engine scores a replacement
+    # with a near-zero upgrade utility, so the weight carries it
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:forest_village } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
     forbidden_for_estates = yes
     ai_forbid_shutdown = no
     can_close = yes
@@ -73,27 +81,27 @@ building:
     }
     unique_production_methods = {
         pp_managed_forest_village_base_wild_game = {
-            manual_labor = 0.02
+            manual_labor = 0.027
             produced = wild_game
-            output = 0.10
+            output = 0.135
             category = building_maintenance
         }
         pp_managed_forest_village_base_fur = {
-            manual_labor = 0.04
+            manual_labor = 0.054
             produced = fur
-            output = 0.10
+            output = 0.135
             category = building_maintenance
         }
         pp_managed_forest_village_base_beeswax = {
-            manual_labor = 0.04
+            manual_labor = 0.054
             produced = beeswax
-            output = 0.10
+            output = 0.135
             category = building_maintenance
         }
         pp_managed_forest_village_base_leather = {
-            manual_labor = 0.06
+            manual_labor = 0.081
             produced = leather
-            output = 0.10
+            output = 0.135
             category = building_maintenance
         }
     }
@@ -103,54 +111,54 @@ building:
         }
         pp_managed_forest_village_apiaries = {
             produced = beeswax
-            output = 0.675
-            tools = 0.15
-            cloth = 0.09
-            lumber = 0.12
-            victuals = 0.093
-            manual_labor = 0.16
+            output = 0.911
+            tools = 0.203
+            cloth = 0.121
+            lumber = 0.162
+            victuals = 0.126
+            manual_labor = 0.216
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_managed_forest_village_gamekeepers = {
             produced = wild_game
-            output = 1.367
-            tools = 0.16
-            horses = 0.11
-            victuals = 0.098
-            lumber = 0.072
-            manual_labor = 0.15
+            output = 1.85
+            tools = 0.216
+            horses = 0.149
+            victuals = 0.132
+            lumber = 0.097
+            manual_labor = 0.203
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_managed_forest_village_fur_trappers = {
             produced = fur
-            output = 0.685
-            tools = 0.16
-            horses = 0.1
-            victuals = 0.1
-            lumber = 0.088
-            manual_labor = 0.15
+            output = 0.925
+            tools = 0.216
+            horses = 0.135
+            victuals = 0.135
+            lumber = 0.119
+            manual_labor = 0.203
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_managed_forest_village_tannery = {
             produced = leather
-            output = 0.474
-            wild_game = 0.49
-            tools = 0.13
-            horses = 0.054
-            victuals = 0.054
-            manual_labor = 0.14
+            output = 0.64
+            wild_game = 0.661
+            tools = 0.176
+            horses = 0.073
+            victuals = 0.073
+            manual_labor = 0.189
             debug_max_profit = 0
             category = building_maintenance
         }
     }
     unique_production_methods = {
         pp_managed_forest_village_provision = {
-            wild_game = 0.133
+            wild_game = 0.18
             produced = local_food
-            output = 1.6
+            output = 2.16
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -168,7 +176,7 @@ building:
     }
 
     modifier = {
-        local_monthly_food = 3.0
+        local_monthly_food = 4.5
         local_food_capacity = 50
         local_peasants_estate_power = 0.014
         local_laborers_desired_pop = 0.003

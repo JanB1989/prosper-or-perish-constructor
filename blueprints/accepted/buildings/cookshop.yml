@@ -304,7 +304,7 @@ building:
     		# food per level, scaled by staffing and by the inputs the kitchen gets
     		local_monthly_food = 15.0
     		# people eat the perishables: a little less food spoils in store, and the peasants eat a little less
-    		local_food_preservation_efficiency_modifier = 0.02
+    		local_food_preservation_efficiency_modifier = 0.04
     		local_peasants_food_consumption = -0.01
     		# no food capacity (was 400, removed 2026-09-30): the Granary is the capacity building
     		local_migration_attraction = 0.025

@@ -62,10 +62,15 @@
   always runs (one method, no Sell the Surplus), the Cookshop follows its staple prices, the Tavern the victuals
   price (Serve Victuals is its only slot and its gate). Tavern and Cookshop must stay on the Province Food good: as
   flat food they would be pure price switches.
-- The Grange is off since 2026-10-03 (`grange_max_level` 0: config/victuals_logistics.json `maximum` 0); its type,
-  blueprint and Surplus Sales lines stay so `store_lever.load_design` and old saves keep working. Low Stores cuts
-  victuals output (-1.0 per year short), so the harbour Victualling Yard stops packing below about 10 months and its
-  Market gate closes there; `province_starving` zeroes victuals output.
+- The Grange packs only a really full store (d3091976, 2026-10-03; it was off for a night): a working Grange
+  breaks even at 37.88 - 5.29 x victuals price stored months (22 at 3.0, because Full Stores stops growing at 24; 16.7
+  at 4.0; never below 2.6). Its `ai_construct_weight` vetoes (flat) a new Grange below that line + 1 month at today's
+  price and where the province does not gain food each month (`pp_location_province_food_balance`); the Surplus Sales
+  gate still opens at 18 months; `tests/test_store_lever.py` ties the weight's numbers to the design. No Granges at
+  game start (`grange_at_start = false`: every store starts near 42 months and falls).
+- The harbour Victualling Yard takes no store food (2026-10-03): it turns 2.33 market staples into 0.932 victuals and
+  nothing else (food-neutral, denser for trade); cap minimum 2. Low Stores no longer cuts victuals;
+  `province_starving` still zeroes victuals output.
 - Farm Produce (`[stored_food.farm_produce]`): Cookshop and Public Kitchen locations get +Province Food output scaled by
   the province's worked farm levels (`local_pp_farm_levels`, script value `pp_province_farm_levels`); the store refresh
   renews it every January, so it adds no pulse. The start simulation counts placed farm levels for the Cookshop cap.

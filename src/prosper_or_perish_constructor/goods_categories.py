@@ -294,6 +294,8 @@ def _produced_good_candidates_by_building(
     ):
         if row["name"] in provisioning.slot_methods(str(row["building"])) or row["produced"] in LOCAL_FOOD_GOODS:
             continue  # province food and its storage dummies are the local half of a building, never its market good
+        if row["produced"] == "offset":
+            continue  # the floor-pinned money dummy (the kitchens sell their meals for it since 2026-10-03), never a market good
         _append_candidate(candidates, row["building"], row, row["name"])
 
     global_methods = {

@@ -227,13 +227,6 @@ pp_food_store_24 = {
 	local_province_food_sales_output_modifier = 0.13
 }
 
-# Farm Produce (2026-10-03): on every location of a province that holds a cookshop or public_kitchen,
-# applied with size = the province's worked farm and orchard levels / 40.0 (at most 1).
-pp_farm_produce = {
-	game_data = { category = location }
-	local_local_food_output_modifier = 0.1
-}
-
 # Old saves: the names of the earlier versions stay defined, without effects, so those saves load;
 # pp_refresh_stored_food removes them at the province's first refresh (scaled modifiers 2026-10-01..03,
 # whole-month tiers 2026-10-01).

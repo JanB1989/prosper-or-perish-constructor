@@ -8,8 +8,10 @@ One province pool, monthly steps, the pieces the mod controls:
   is base x max(0, 1 + production efficiency + the good's local output modifier);
 * a building's staffing moves +-0.15 a month toward the sign of its profit per level (0..1);
 * farms always run Provisioning (their crop -> Province Food); their staple output follows the store;
-* Cookshops and Taverns make Province Food, so their revenue and food follow the store; the Grange takes 24 food per
-  staffed level, packs victuals and earns Surplus Sales, which a staffed Tavern in the same location cuts;
+* Taverns make Province Food, so their revenue and food follow the store; Cookshops (since 2026-10-03) sell their
+  meals for offset at a thin fixed margin and feed the province with their flat local_monthly_food, so they stay
+  staffed at any store; the Grange takes 24 food per staffed level, packs victuals and earns Surplus Sales, which a
+  staffed Tavern in the same location cuts;
 * a starving province makes no victuals and pays double for Province Food.
 
 Prices at their floors: Province Food 0.10, dummy goods and labour 1 gold; victuals and staples are scenario inputs.
@@ -28,6 +30,7 @@ from __future__ import annotations
 import argparse
 import csv
 import random
+import re
 from dataclasses import dataclass, replace
 from pathlib import Path
 
@@ -40,6 +43,15 @@ HARVEST = ((0.30, 0.05), (0.20, 0.10), (0.11, 0.15), (0.0, 0.40), (-0.11, 0.15),
 CROP_PLOUGH, CROP_PLAIN = 0.22, 0.07
 COST_PLOUGH, COST_PLAIN = 0.1415, 0.022
 PROVISION_FOOD, PROVISION_CROP = 0.96, 0.08
+
+
+def cookshop_flat(root: Path = ROOT) -> float:
+    """The Cookshop's flat local_monthly_food per staffed level, from its accepted blueprint."""
+    text = (root / "blueprints/accepted/buildings/cookshop.yml").read_text(encoding="utf-8")
+    return float(re.search(r"local_monthly_food = ([0-9.]+)", text).group(1))
+
+
+COOK_FLAT = cookshop_flat()
 
 
 # ---------------------------------------------------------------------------------------------
@@ -55,12 +67,13 @@ class Prov:
     farms: float
     land: float           # the staple's local output modifier at the farms
     cook: float           # cookshop levels
-    serve_per: float      # Province Food per cookshop level
+    serve_per: float      # Province Food per cookshop level (0 since 2026-10-03)
     tav: float
     grange: float
     cap: float            # store capacity (food)
     peasant_share: float = 0.8
     yield_: float = 1.5
+    cook_flat: float = COOK_FLAT   # flat food per cookshop level
 
 
 def _f(row: dict, key: str) -> float:
@@ -98,9 +111,10 @@ def load_pools(root: Path = ROOT) -> dict[tuple[str, str], Prov]:
             cook = _f(r, "cookshop_levels")
             pools[key] = Prov(
                 name=r["province"], cons=_f(r, "demand0"),
-                sub=_f(r, "yield_") * max(0.0, _f(r, "workers0") - _f(r, "jobs0")), flat=_f(r, "flat_food"),
+                sub=_f(r, "yield_") * max(0.0, _f(r, "workers0") - _f(r, "jobs0")),
+                flat=max(0.0, _f(r, "flat_food") - cook * COOK_FLAT),   # the Cookshops' flat food is counted per level
                 provision=_f(r, "provision_food"), farms=a["farms"], land=a["w"] / a["n"] if a["n"] else 0.0,
-                cook=cook, serve_per=_f(r, "serve_food") / cook if cook else 39.6, tav=_f(r, "taverns"),
+                cook=cook, serve_per=_f(r, "serve_food") / cook if cook else 0.0, tav=_f(r, "taverns"),
                 grange=_f(r, "yards"), cap=_f(r, "capacity"), peasant_share=_f(r, "peasant_share"), yield_=_f(r, "yield_"))
     return pools
 
@@ -126,7 +140,10 @@ def provinces(pools: dict[tuple[str, str], Prov]) -> list[Prov]:
         fez, u,
         start("MIH", "garmsir_province", "Garmsir (Persia) start: 5 farms, bad land"),
         later(gat, "Gatinais later: 58 farms, 3 cookshops, 2 granges", 40, cook=3, grange=2),
+        later(gat, "Gatinais later, kitchens at cap: 58 farms, 11 cookshops, 2 granges", 40, cook=11, grange=2),
         later(lin, "Lincolnshire later: 90 farms, 2 cookshops, 8 taverns, 2 granges", 60, cook=2, tav=8, grange=2),
+        later(lin, "Lincolnshire later, kitchens at cap: 90 farms, 18 cookshops, 8 taverns, 2 granges", 60, cook=18, tav=8,
+              grange=2),
         later(lin, "Lincolnshire, no cookshop: 60 farms, 8 taverns, 4 granges", 30, cook=0, tav=8, grange=4),
         replace(fez, name="Fez later: 6 cookshops, 10 taverns", cook=6, tav=10, sub=fez.sub * 0.5),
         replace(u, name="U later: 2 cookshops, 11 taverns", cook=2, tav=11),
@@ -177,7 +194,8 @@ def simulate(p: Prov, d: Design, months: int = 720, eff: float = 0.0, victuals: 
         food_mod = d.food_modifier(m, starving, eff)
 
         f_profit, _, crop = farm_profit(d, m, p.land, staple, eff, starving)
-        cook_profit = p.serve_per * FOOD_PRICE * (food_mod - cook_cost * staple)
+        # a Province Food recipe follows the store; the offset recipes (2026-10-03) earn a thin margin at any store
+        cook_profit = p.serve_per * FOOD_PRICE * (food_mod - cook_cost * staple) if p.serve_per else 0.05
         tav_profit = d.tavern_profit(m, vp, starving, eff)
         gr_profit = d.grange_profit(m, vp, starving, p.tav * s_t, eff)
 
@@ -191,7 +209,8 @@ def simulate(p: Prov, d: Design, months: int = 720, eff: float = 0.0, victuals: 
 
         tavern_food = p.tav * s_t * d.tavern_food * food_mod
         grange_take = p.grange * s_g * d.grange_food
-        production = (p.sub + p.flat * s_f + p.provision * s_f * food_mod + p.cook * s_c * p.serve_per * food_mod
+        production = (p.sub + p.flat * s_f + p.provision * s_f * food_mod
+                      + p.cook * s_c * (p.cook_flat + p.serve_per * food_mod)
                       + tavern_food - grange_take)
         store = min(p.cap, max(0.0, store + production - cons))
         hist.append(store)
@@ -233,8 +252,7 @@ def describe(d: Design) -> str:
         "Tavern fills to " + " / ".join(f"{d.tavern_fill(v):.1f}" for v in (2.0, 2.7, 3.5))
         + " months at victuals 2.0 / 2.7 / 3.5; Grange packs down to "
         + " / ".join(f"{d.grange_dig(v):.1f}" for v in (2.0, 2.7, 3.5, 4.5, 6.0)) + " months at 2.0 / 2.7 / 3.5 / 4.5 / 6.0",
-        "Cookshop fills to " + " / ".join(f"{d.cookshop_fill(c):.1f}" for c in (0.9, 1.04, 1.2))
-        + " months at staple cost 0.90 / 1.04 / 1.20 of its revenue",
+        f"Cookshop: {COOK_FLAT:g} flat food per staffed level at any store (offset recipes, 2026-10-03)",
         "wheat farm profit per level (store 0 / 6 / 12 / 18 / 24 months): " + "; ".join(
             f"land {land:+.2f}: " + " ".join(f"{farm_profit(d, m, land)[0]:+.3f}" for m in (0, 6, 12, 18, 24))
             for land in (-0.54, -0.14, 0.06, 0.11)),

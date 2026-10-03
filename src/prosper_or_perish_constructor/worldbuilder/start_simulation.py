@@ -287,6 +287,14 @@ def summed(block):
 PROVINCE_FOOD_GOOD = "local_food"
 
 
+def has_method(body, method):
+    """Whether the building defines the unique production method ``method``."""
+    return any(
+        isinstance(first(block, method), CList)
+        for block in (body.values("unique_production_methods") if isinstance(body, CList) else [])
+    )
+
+
 def method_output(body, method, good=PROVINCE_FOOD_GOOD):
     """Output of the building's unique production method ``method`` when it produces ``good`` (else 0)."""
     for block in body.values("unique_production_methods") if isinstance(body, CList) else []:
@@ -312,10 +320,12 @@ def province_food_per_level(rules, spec):
         if value:
             out[key] = value
     for key, method in serve.items():
-        value = method_output(rules.buildings.get(key), str(method))
-        if not value:
-            raise ValueError(f"[worldbuilder.start.province_food] serve: {key} has no {method} producing {PROVINCE_FOOD_GOOD}")
-        out[key] = value
+        body = rules.buildings.get(key)
+        if not has_method(body, str(method)):
+            raise ValueError(f"[worldbuilder.start.province_food] serve: {key} has no method {method}")
+        # 0 when the method sells something else: the Cookshop's dishes sell for offset since 2026-10-03 and its food
+        # is its flat local_monthly_food (the method still names the recipe whose staples the start budget counts)
+        out[key] = method_output(body, str(method))
     for key, value in (spec.get("per_level") or {}).items():
         out[str(key)] = float(value)
     return dict(sorted(out.items()))
@@ -394,8 +404,9 @@ class Simulation:
         self.numbers = {key: rules.numbers(key) for key in rules.buildings}
         # farm and orchard levels carry local_pp_farm_levels in their modifier: Cookshop caps read the province's sum
         # (script value pp_location_province_farm_levels; the engine counts staffed levels, the start counts placed ones)
-        self.farm_counters = {k: float(n.get(FARM_LEVELS_MODIFIER, 0)) for k, n in self.numbers.items()
-                              if n.get(FARM_LEVELS_MODIFIER)}
+        # (read from the modifier block: Rules.numbers carries only employment, pop type and local food)
+        self.farm_counters = {k: float(v) for k in rules.buildings
+                              if (v := rules.modifiers(k).get(FARM_LEVELS_MODIFIER, 0))}
         self.base = {}
         self.neighbors = defaultdict(list)
         self.navigation = cfg.raw.get("_navigation", {})
@@ -606,9 +617,9 @@ class Simulation:
         for tag, ctx in self.base.items():
             ctx["neighbors"] = self.neighbors[tag]
 
-    def ctx(self, tag, counts=None):
+    def ctx(self, tag, counts=None, others=None):
         """The location's rule context with its building levels (``counts``: other levels than the plan's, e.g. the
-        ones the setup files place)."""
+        ones the setup files place; ``others``: location -> levels for the rest of the province, default the plan)."""
         base = self.base[tag]
         levels = self.counts[tag] if counts is None else counts
         mods = defaultdict(float, base["modifiers"])
@@ -617,13 +628,22 @@ class Simulation:
                 mods[k] += v * n
         counters = getattr(self, "farm_counters", {})   # absent on the bare test doubles
         mods[FARM_LEVELS_MODIFIER] += sum(levels.get(k, 0) * v for k, v in counters.items())
+        province_farms = self.province_farm_levels(tag, levels, others)
+        return {**base, "buildings": levels, "modifiers": dict(mods), PROVINCE_FARM_LEVELS_VALUE: province_farms}
+
+    def province_farm_levels(self, tag, levels=None, others=None):
+        """Farm and orchard levels placed in the location's province pool (``levels``: this location's own, if not the
+        plan's; ``others``: location -> levels for the other locations, default the plan). The Cookshop cap reads it,
+        so it depends on the other locations of the province too."""
+        counters = getattr(self, "farm_counters", {})
+        levels = self.counts[tag] if levels is None else levels
+        others = self.counts if others is None else others
         group = getattr(self, "group_of", {}).get(tag)
-        province_farms = sum(
-            (levels if t == tag else self.counts[t]).get(k, 0) * v
+        return sum(
+            (levels if t == tag else others.get(t, {})).get(k, 0) * v
             for t in (self.groups.get(group, (tag,)) if group is not None else (tag,))
             for k, v in counters.items()
         )
-        return {**base, "buildings": levels, "modifiers": dict(mods), PROVINCE_FARM_LEVELS_VALUE: province_farms}
 
     def food_per_level(self, key, mult=1.0):
         """Province food one staffed level makes: ``local_monthly_food`` scaled by the local food modifier ``mult``,
@@ -727,9 +747,10 @@ class Simulation:
         return placed
 
     def cap(self, tag, key, gates=True):
-        """``Rules.cap`` on the location's current state. Between navigation refreshes the context depends only
-        on the location's building levels, so results are memoised per level state."""
-        state = (tag, key, gates, tuple(sorted((k, n) for k, n in self.counts[tag].items() if n)))
+        """``Rules.cap`` on the location's current state. Between navigation refreshes the context depends on the
+        location's building levels and its province's farm levels (the Cookshop cap), so results are memoised on both."""
+        state = (tag, key, gates, tuple(sorted((k, n) for k, n in self.counts[tag].items() if n)),
+                 self.province_farm_levels(tag))
         cache = self.__dict__.setdefault("_caps", {})
         cached = cache.get(state)
         if cached is None:
@@ -766,12 +787,9 @@ class Simulation:
         pp_start_river_topup adds the rest at game start, after pp_navigation_preserve_rivers, each level only where
         the engine's own potential and max level allow it (write_topup)."""
         topup = {}
-        for tag in sorted(self.locations):
-            ctx = self.ctx(tag)
-            if not ctx["has_river"]:
-                continue
-            dry = without_river(ctx, self.rules)
-            for key, n in sorted(self.counts[tag].items()):
+
+        def check(tag, dry, keys):
+            for key, n in keys:
                 body = self.rules.buildings.get(key)
                 if not n or body is None:
                     continue
@@ -785,7 +803,24 @@ class Simulation:
                     self.rules.unsupported = before
                     keep = n
                 if keep < n:
-                    topup[(tag, key)] = n - keep
+                    topup[(tag, key)] = max(topup.get((tag, key), 0), n - keep)
+
+        for tag in sorted(self.locations):
+            ctx = self.ctx(tag)
+            if not ctx["has_river"]:
+                continue
+            check(tag, without_river(ctx, self.rules), sorted(self.counts[tag].items()))
+        # Farm levels moved to the topup are not there when the engine validates the setup, and the Cookshop cap counts
+        # the province's farms: re-check the other buildings of those provinces against the setup's farms only.
+        counters = getattr(self, "farm_counters", {})
+        moved = {(t, k): n for (t, k), n in topup.items() if k in counters}
+        if moved:
+            setup = {t: Counter({k: n - moved.get((t, k), 0) for k, n in c.items()}) for t, c in self.counts.items()}
+            groups = {self.group_of.get(t) for t, _ in moved}
+            for tag in sorted(t for g in groups for t in self.groups.get(g, ())):
+                ctx = self.ctx(tag, setup[tag], setup)
+                dry = without_river(ctx, self.rules) if ctx["has_river"] else ctx
+                check(tag, dry, sorted((k, setup[tag][k]) for k in setup[tag] if k not in counters))
         return topup
 
     def clamp(self):
@@ -1635,7 +1670,7 @@ def audit_setup(sim, levels, cultures=None):
             elif body is None:
                 problem = "unknown building"
             else:
-                ctx = sim.ctx(tag, local)
+                ctx = sim.ctx(tag, local, levels)   # the province's farms as the setup files place them
                 if ctx.get("has_river"):
                     ctx = without_river(ctx, sim.rules)
                 if cultures.get(tag):

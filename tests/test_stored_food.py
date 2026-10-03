@@ -213,7 +213,8 @@ def test_refresh_picks_the_nearest_step_with_hysteresis() -> None:
     for name in stored_food.LEGACY_SCALED:
         assert f"if = {{ limit = {{ has_province_modifier = {name} }} remove_province_modifier = {name} }}" in effect
     assert "if = { limit = { has_variable = pp_stored_food_size } remove_variable = pp_stored_food_size }" in effect
-    assert "size =" not in effect.split("pp_refresh_farm_produce")[0]
+    assert "size =" not in effect
+    assert "pp_farm_produce" not in effect   # Farm Produce removed 2026-10-03 (the farm-based Cookshop cap is the reward)
     # +100 offsets (a variable at 0 counts as unset) and no `var:x = n` (a scope comparison in game)
     assert not re.search(r"var:\w+ = ", effect)
     parse_file(MOD_ROOT / stored_food.SCRIPTED_EFFECTS)   # well formed

@@ -38,8 +38,8 @@
   that makes a little of that good for `offset`, at margin 1.0 (`[production_gate.leg]`). A one-method slot is always
   read, so the gate follows the main good's price whatever is researched or in the market. `ppc gate apply` writes and
   updates the leg (body block, slot list, localization, evaluation allow rules); the labour pass skips it. Buildings
-  without a market good, gates on a store-following good (the Grange's Surplus Sales, the Tavern's and Cookshop's
-  Province Food) and `strategic_goods` get none. Never gate on a method that
+  without a market good, gates on a store-following good (the Grange's Surplus Sales, the Tavern's Province Food),
+  buildings that sell only for `offset` (the Cookshop line) and `strategic_goods` get none. Never gate on a method that
   buys the building's own main good (inverts the AI's price response), except a token amount:
 - Crop farms (farm v3, 2026-10-02): Provision takes a token of the crop (`crop_provision_input_gold` in
   `[building_scaling]`) and makes a fixed Province Food amount per level, so it is the farm's gate (margin about 15 at
@@ -62,9 +62,9 @@
   while the store stays within 0.55 months of it; `pp_stored_food_months` keeps the continuous months for the AI
   weights. The step shows in the location view's province modifier list (no longer hidden).
 - Every maker of Province Food stops where its recipe stops paying, so the store rests there: the farms' Provisioning
-  always runs (one method, no Sell the Surplus), the Cookshop follows its staple prices, the Tavern the victuals
-  price (Serve Victuals is its only slot and its gate). Tavern and Cookshop must stay on the Province Food good: as
-  flat food they would be pure price switches.
+  always runs (one method, no Sell the Surplus), the Tavern follows the victuals price (Serve Victuals is its only
+  slot and its gate). The Tavern must stay on the Province Food good: as flat food it would be a pure price switch.
+  The Cookshop line is off the lever since 2026-10-03 (see Cookshop below).
 - The Grange packs a full store and answers the victuals price steeply (2026-10-03 evening; d3091976 had
   37.88 - 5.29 x price): a working Grange breaks even at 63.53 - 13.85 x victuals price stored months (22 at 3.0,
   because Full Stores stops growing at 24; 15 at 3.5; about 12 from 3.75 up, the pivot; never below 2.86). Full Stores
@@ -82,13 +82,19 @@
 - Lumber mills feed crews victuals only in a glut (2026-10-03): Extra Rations 0.2 victuals -> 0.35 lumber and the two
   Provisioned Crews methods break even at victuals 2.4 at default prices (run 5: Extra Rations took 219 of the mills'
   235 victuals in 1522, a quarter of all victuals demand, mostly at a loss).
-- Farm Produce (`[stored_food.farm_produce]`): Cookshop and Public Kitchen locations get +Province Food output scaled by
-  the province's worked farm levels (`local_pp_farm_levels`, script value `pp_province_farm_levels`); the store refresh
-  renews it every January, so it adds no pulse. The start simulation counts placed farm levels for the Cookshop cap.
+- Cookshop / Public Kitchen = farm reward (2026-10-03, Jan): `cookshop_max_level` = the province's worked farm and
+  orchard levels / 5 (`pp_location_province_farm_levels`; no base, development, population or rank levels; the
+  `allow` town-or-province-capital rule stays). Small recipes (dish about 0.45 gold of staples + labour at margin
+  1.08, drink about 0.23 at 1.2; Public Kitchen 0.55 / 0.28) sell their meals for `offset`, so profit is thin and
+  store-independent; the food is the flat `local_monthly_food` (15 / 18 per staffed level, scaled by input
+  fulfilment), plus `local_food_preservation_efficiency_modifier` +0.02 and `local_peasants_food_consumption` -0.01.
+  Well Water (labour -> offset) is the gate method, always available. AI weight: (20 + up to 40 by province farms)
+  / (owner income + 10), no store terms. Daily Fare and Farm Produce are gone. The start simulation counts the
+  province's placed farm levels for the cap (its caps are memoised on them) and the river top-up / setup audit count
+  only the farms the setup files place.
 - AI weights of the food buildings (`ai_construct_weight`: crop farm generator, cookshop/public_kitchen/tavern
   blueprints). The AI's own score for a building that adds Province Food to a short province runs from about 25 to
-  1e9 (the engine's food term), so income-scaled terms are nudges only. Vetoes are flat (Cookshop -10000 from 10 to 14
-  stored months; Tavern -10000 from 4 to 6 months and -100 per standing level) and still lose to the largest scores;
+  1e9 (the engine's food term), so income-scaled terms are nudges only. Vetoes are flat (Tavern -10000 from 4 to 6 months and -100 per standing level) and still lose to the largest scores;
   the store-following gate is the only hard stop. The AI never removes a Tavern, so every famine it answers stays
   built (Mini World runs 3/4: 68 -> 735/815 levels by 1522; the flat Tavern terms of run 4 changed nothing measurable).
 - `store_lever.load_design` reads the numbers from the config, the two blueprints and `province_starving`; the

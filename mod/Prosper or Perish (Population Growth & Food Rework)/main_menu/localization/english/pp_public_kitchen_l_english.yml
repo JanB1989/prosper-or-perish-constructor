@@ -2,12 +2,9 @@
 
 # >>> eu5-building-pipeline:public_kitchen:localization
   public_kitchen: "Public Kitchen"
-  public_kitchen_desc: "A large town kitchen that feeds workers, the poor and the garrison from the market's staples. Its dishes and drinks feed the province as [ShowGoodsName('local_food')|e], and a fed town is a calmer one."
-  public_kitchen_slot_0: "Drink"
-  public_kitchen_slot_1: "Main Dish"
-  public_kitchen_slot_2: "Daily Fare"
-  pp_public_kitchen_daily_fare: "Daily Fare"
-  pp_public_kitchen_daily_fare_desc: "The kitchen sells a cheap daily fare at its door. It pays only while the province is short of food, so the lords build and extend kitchens where people need them, not where the granaries are already full."
+  public_kitchen_desc: "A large town kitchen that feeds workers, the poor and the garrison from the farms' produce and sells meals and drink at its door. The more farm land the province works, the more kitchens it can hold. What it serves adds to the province's food, less food spoils while people eat it fresh, and a fed town is a calmer one."
+  public_kitchen_slot_0: "Main Dish"
+  public_kitchen_slot_1: "Drink"
   pp_public_kitchen: "Public Kitchens"
   pp_public_kitchen_desc: "Towns organize large kitchens with kettles, stores and paid crews that feed workers and the poor every day."
   pp_public_kitchen_beer: "Beer"

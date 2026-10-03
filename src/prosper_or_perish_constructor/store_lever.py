@@ -7,7 +7,7 @@ of Province Food stops where its own recipe stops paying, so the store rests the
 
 * the Tavern (``pp_tavern_serve_victuals``): 24 Province Food from 0.8 victuals; it fills the store up to the months
   where 24 x 0.10 x (1 + Province Food output) = victuals + labour + offset;
-* the Cookshop: the same, with its staples as the cost;
+* the Cookshop is off the lever since 2026-10-03: its meals sell for offset and it feeds by flat food;
 * the farms' Provisioning: always on, the modifier scales what it yields;
 * the Grange (``pp_grange_surplus_sales`` + Haulage): takes 24 food per staffed level and packs victuals; its Surplus
   Sales grow above the pivot and are gone well above an empty store, and a staffed Tavern in the same location takes
@@ -107,10 +107,6 @@ class Design:
     def grange_dig(self, victuals: float, efficiency: float = 0.0) -> float:
         """The store a Grange packs down to: it pays above this many months (24 = never, 0 = at every store)."""
         return _threshold(lambda m: self.grange_profit(m, victuals, efficiency=efficiency), rising=True)
-
-    def cookshop_fill(self, cost_share: float, efficiency: float = 0.0) -> float:
-        """The store a Cookshop fills up to when its inputs cost ``cost_share`` of its revenue at the pivot."""
-        return _threshold(lambda m: self.food_modifier(m, efficiency=efficiency) - cost_share, rising=False)
 
 
 def _threshold(profit, *, rising: bool) -> float:

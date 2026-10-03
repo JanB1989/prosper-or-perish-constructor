@@ -171,24 +171,4 @@ pp_refresh_stored_food = {
 		if = { limit = { has_province_modifier = pp_food_store_24 } remove_province_modifier = pp_food_store_24 }
 		set_variable = { name = pp_food_store_step value = 99 }
 	}
-	# Farm Produce: once a year (January) and at the province's first refresh
-	if = {
-		limit = { OR = { current_month < 2 NOT = { has_variable = pp_farm_produce_set } } }
-		pp_refresh_farm_produce = yes
-	}
-}
-
-# Province scope. Farm Produce: every location of the province that holds one of the kitchens gets the modifier
-# at size = the province's worked farm and orchard levels (pp_province_farm_levels) / 40.0, at most 1;
-# every other location loses it. Run by the store refresh, so it adds no pulse of its own.
-pp_refresh_farm_produce = {
-	save_scope_value_as = { name = pp_farm_produce_size value = { value = pp_province_farm_levels divide = 40.0 max = 1 } }
-	every_location_in_province = {
-		if = { limit = { has_location_modifier = pp_farm_produce } remove_location_modifier = pp_farm_produce }
-		if = {
-			limit = { scope:pp_farm_produce_size > 0.01 OR = { has_building = building_type:cookshop has_building = building_type:public_kitchen } }
-			add_location_modifier = { modifier = pp_farm_produce size = scope:pp_farm_produce_size }
-		}
-	}
-	set_variable = { name = pp_farm_produce_set value = 1 }
 }

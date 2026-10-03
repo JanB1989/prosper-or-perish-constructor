@@ -218,7 +218,7 @@ def test_the_setup_audit_checks_what_holds_without_the_engine_river():
     ctxs = {"inland": {**river, "is_coastal": False}, "bank": {**river, "is_coastal": True},
             "dry": {"has_river": False, "is_coastal": True, "static_modifiers": set(), "modifiers": {}, "location_rank": "rural_settlement"}}
     sim = SimpleNamespace(rules=rules, locations={"inland", "bank", "dry"},
-                          ctx=lambda tag, counts=None: {**ctxs[tag], "buildings": counts or {}})
+                          ctx=lambda tag, counts=None, others=None: {**ctxs[tag], "buildings": counts or {}})
     levels = {
         "inland": Counter(fishing_village=1),     # needs the engine's river: invalid where it traces none
         "bank": Counter(fishing_village=2),       # coastal, but its second level needs the river size

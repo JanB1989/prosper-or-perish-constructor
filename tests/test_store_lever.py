@@ -58,12 +58,6 @@ def test_tavern_fills_the_store_from_below_and_follows_the_victuals_price(design
     assert design.tavern_profit(0, 6.0, starving=True) > 0                     # but a starving province still buys
 
 
-def test_cookshop_fills_higher_than_the_tavern_at_default_prices(design: store_lever.Design) -> None:
-    # the Cookshop (inputs 1.04 x its revenue at default prices) is the first answer, the Tavern the fallback
-    assert design.cookshop_fill(1.04) > design.tavern_fill(VICTUALS)
-    assert design.cookshop_fill(0.9) > design.cookshop_fill(1.04) > design.cookshop_fill(1.2) > 0   # by staple prices
-
-
 def test_grange_packs_a_full_store_and_never_a_lean_one(design: store_lever.Design) -> None:
     dig = [design.grange_dig(price) for price in PRICES]
     assert dig == sorted(dig, reverse=True)                                    # dearer victuals: packs deeper

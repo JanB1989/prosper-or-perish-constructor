@@ -183,11 +183,10 @@ def test_provisioning_feeds_at_least_the_workers() -> None:
         assert Decimal(provision.group(1)) >= worker_food * Decimal("0.75"), building
 
     cookshop = load_template(BUILDING_BLUEPRINT_ROOT / "cookshop.yml")
-    # a small input-free base in the modifier (Jan, 2026-09-25); the bulk comes from the Serve methods
-    assert "local_monthly_food = 10.0" in cookshop.building_body
+    # since 2026-10-03 (Jan): all of the kitchen's food is the flat modifier food, its dishes sell for offset
+    assert "local_monthly_food = 15.0" in cookshop.building_body
     assert "produced = victuals" not in cookshop.building_body
-    serve = re.search(r"pp_cookshop_livestock_pottage_serve\s*=\s*\{[^}]*?output\s*=\s*([0-9.]+)", cookshop.building_body, re.S)
-    assert serve and Decimal(serve.group(1)) >= Decimal("20")
+    assert "produced = local_food" not in cookshop.building_body
 
 
 def _building_block(building: str, body: str) -> CList:

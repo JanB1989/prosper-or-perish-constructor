@@ -711,7 +711,8 @@ consumers = { tavern = 1.2, lumber_mill = 0.3 }
 # Serve method (on top of the Cookshop's flat local_monthly_food). The budget assumes that method runs and does
 # not scale it by the local food modifier. per_level = { building = value } overrides a derived value.
 method_pattern = "pp_{building}_provision"
-serve = { cookshop = "pp_cookshop_livestock_pottage_serve" }   # 27.57 food per level, the European pottage
+serve = { cookshop = "pp_cookshop_livestock_pottage_serve" }   # its staples count against the market; it sells for
+# offset since 2026-10-03, so it adds no Province Food (the Cookshop feeds by its flat local_monthly_food)
 # the Tavern unpacks victuals into Province Food (Serve Victuals, 24 per level since 2026-10-01; was a flat +24)
 unpack = { tavern = "pp_tavern_serve_victuals" }
 per_level = {}
@@ -739,9 +740,10 @@ harbor_yard_victuals_per_level = 0.932   # victuals a staffed harbour Victuallin
                                          # food since 2026-10-03)
 grange_at_start = false           # no Granges at game start (2026-10-03): every store starts far above its rest point;
                                   # the AI builds Granges where food really piles up (the Grange's ai_construct_weight)
-# Cookshops serve every dish as Province Food (no Preserve recipes since 2026-09-25)
+# Cookshops: every level runs a dish (no Preserve recipes since 2026-09-25); since 2026-10-03 dishes and drinks sell
+# for offset and the food is the flat local_monthly_food only
 cookshop_serve_share = 1.0
-cookshop_drink_food = 12.0         # drink slot Province Food per level (estimate; refit from a save with food-check)
+cookshop_drink_food = 0.0          # drink slot Province Food per level (none since 2026-10-03: drinks sell for offset)
 victuals_target = 1.1              # per market: victuals supply >= demand (Taverns + pops) x this
 yard_surplus_share = 0.25          # Yards only in pools that feed themselves by more than +25 %
 yard_min_capacity_months = 20.0    # ... and whose store can reach the Grange's band (20 months)
@@ -1054,12 +1056,3 @@ local_province_food_sales_output_modifier = 0.13    # the Grange's Surplus Sales
 # as land quality, so a store-driven staple bonus would make the AI build farms exactly where the store is full
 staple_output = 0.0
 
-[stored_food.farm_produce]
-# Farm Produce (2026-10-03, Jan: Cookshops scale a little with the farms of their province): the location modifier
-# pp_farm_produce on every location that holds a Cookshop or Public Kitchen, size = the province's worked farm and
-# orchard levels (pp_province_farm_levels) / full_at_farm_levels, at most 1; renewed every January by the store refresh.
-# +10 % Province Food moves a kitchen's stop point about 1.6 months up; the Cookshop's AI weight keeps the AI from
-# extending kitchens in a province that already holds a year of food.
-local_local_food_output_modifier = 0.10
-full_at_farm_levels = 40
-buildings = ["cookshop", "public_kitchen"]

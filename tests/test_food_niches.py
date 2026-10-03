@@ -47,12 +47,21 @@ def test_no_blueprint_sells_victuals_as_a_negative_input() -> None:
 
 
 def test_the_cookshop_line_only_feeds_the_province() -> None:
+    # Farm reward (2026-10-03, Jan): thin offset recipes at any store, the food is the flat modifier food alone
     for key in ("cookshop", "public_kitchen"):
         text = (BLUEPRINTS / f"{key}.yml").read_text(encoding="utf-8-sig")
         assert "produced = victuals" not in text, key
         assert f"pp_{key}_pottery_jars" not in text and f"pp_{key}_tin_cans" not in text, key   # packing moved away
-        assert re.search(rf"pp_{key}_beer = \{{[^}}]*produced = local_food", text, re.S), key       # drinks feed too
-        assert "local_monthly_food = " in text, key                                                # the flat base
+        assert "produced = local_food" not in text and "daily_fare" not in text, key              # off the store lever
+        assert "local_monthly_food = " in text, key                                                # the food
+        assert "local_food_preservation_efficiency_modifier = " in text, key
+        assert "local_peasants_food_consumption = -" in text, key
+        assert "pp_location_stored_months" not in text, key                                        # AI weight: no store terms
+        for name, body in re.findall(rf"(pp_{key}_\w+) = \{{([^}}]*)\}}", text, re.S):
+            assert "produced = offset" in body, name
+            out = float(re.search(r"output = ([\d.]+)", body).group(1))
+            cost = sum(float(v) for g, v in re.findall(r"(\w+) = ([\d.]+)", body) if g == "manual_labor")
+            assert out > cost, name                                                                 # never below its labour
 
 
 def test_the_public_kitchen_needs_a_town_or_the_province_capital() -> None:

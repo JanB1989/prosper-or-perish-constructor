@@ -22,11 +22,6 @@ growth included, come back through this carrier; the engine's own storage growth
 - old saves: the scaled version (2026-10-01..03: ``pp_stored_food``, ``pp_low_stores``, ``pp_full_stores``) and the
   whole-month tier version (2026-10-01, ``pp_stored_food_tier_<t>``) stay defined without effects so saves load; the
   first refresh removes them.
-- Farm Produce (2026-10-03, ``[stored_food.farm_produce]``): the location modifier ``pp_farm_produce`` (more Province
-  Food output) on every location of a province that holds a Cookshop or Public Kitchen, applied with ``size`` = the
-  province's worked farm and orchard levels (script value ``pp_province_farm_levels``) / ``full_at_farm_levels``, at
-  most 1. ``pp_refresh_farm_produce`` renews it once a year (January) inside the store refresh, and at a province's
-  first refresh; it adds no pulse of its own.
 - display helpers (view only, location scope): ``pp_stored_food_years`` (the carried step's months / 12) and
   ``pp_province_food_storage_growth`` (its growth); the location view's Stored Food chip scales each Stored Food
   effect by the years (location_status.py).
@@ -89,12 +84,6 @@ LEGACY_FILES = (
     Path("main_menu/localization/english/pp_stored_food_tiers_l_english.yml"),
 )
 
-FARM_PRODUCE_SECTION = "farm_produce"
-FARM_PRODUCE_MODIFIER = "pp_farm_produce"
-FARM_PRODUCE_EFFECT = "pp_refresh_farm_produce"
-FARM_PRODUCE_VARIABLE = "pp_farm_produce_set"   # 1 once the province got its first Farm Produce pass
-FARM_PRODUCE_SIZE = "pp_farm_produce_size"      # scope value of one pass
-FARM_LEVELS_VALUE = "pp_province_farm_levels"   # province scope, hand-kept in pp_food_building_values.txt
 
 GROWTH_KEY = "local_population_growth"
 GROWTH_VALUE = "pp_province_food_storage_growth"
@@ -112,11 +101,6 @@ DESCRIPTION = (
     "markets. The effects follow the store month by month, up to a cap."
 )
 LEGACY_DESCRIPTION = "Replaced by the Stored Food modifier at the province's next monthly update."
-FARM_PRODUCE_NAME = "Farm Produce"
-FARM_PRODUCE_DESCRIPTION = (
-    "The kitchens here draw on the farms of the province. The more farm land the province works, the more food its "
-    "Cookshops and Public Kitchens make from what they buy. Renewed every January."
-)
 
 
 @dataclass(frozen=True)
@@ -126,9 +110,6 @@ class StoredFoodConfig:
     pivot_months: float = 12.0
     low: tuple[tuple[str, float], ...] = ()    # Low Stores: per year short of the pivot, staple lines expanded
     full: tuple[tuple[str, float], ...] = ()   # Full Stores: per year above the pivot, staple lines expanded
-    farm_produce: tuple[tuple[str, float], ...] = ()   # Farm Produce payload at size 1 (empty: not generated)
-    farm_produce_full_levels: float = 40.0
-    farm_produce_buildings: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -157,24 +138,7 @@ def load_config(project: Path) -> StoredFoodConfig:
         pivot_months=pivot,
         low=_lever_payload(section.get("low", {}), f"{project}: [{CONFIG_SECTION}.low]"),
         full=_lever_payload(section.get("full", {}), f"{project}: [{CONFIG_SECTION}.full]"),
-        **_farm_produce(section.get(FARM_PRODUCE_SECTION), f"{project}: [{CONFIG_SECTION}.{FARM_PRODUCE_SECTION}]"),
     )
-
-
-def _farm_produce(table: object, where: str) -> dict:
-    """``[stored_food.farm_produce]``: modifier lines at size 1, ``full_at_farm_levels``, ``buildings`` (optional)."""
-    if table is None:
-        return {}
-    if not isinstance(table, dict):
-        raise ValueError(f"{where} must be a table")
-    full = float(table.get("full_at_farm_levels", 40))
-    buildings = tuple(str(b) for b in table.get("buildings", ()))
-    if full <= 0 or not buildings:
-        raise ValueError(f"{where}: full_at_farm_levels must be > 0 and buildings must name at least one building")
-    lines = tuple((str(k), float(v)) for k, v in table.items() if k not in ("full_at_farm_levels", "buildings"))
-    if not lines:
-        raise ValueError(f"{where}: no modifier lines")
-    return {"farm_produce": lines, "farm_produce_full_levels": full, "farm_produce_buildings": buildings}
 
 
 def staple_goods() -> tuple[str, ...]:
@@ -287,16 +251,6 @@ def render_static_modifiers(config: StoredFoodConfig) -> str:
     for step in range(STEPS + 1):
         lines += [f"{step_name(step)} = {{", "\tgame_data = { category = province }"]
         lines += [f"\t{key} = {format_value(value)}" for key, value in step_payload(config, step).items()]
-        lines.append("}")
-    if config.farm_produce:
-        lines += [
-            "",
-            f"# Farm Produce (2026-10-03): on every location of a province that holds a {' or '.join(config.farm_produce_buildings)},",
-            f"# applied with size = the province's worked farm and orchard levels / {format_value(config.farm_produce_full_levels)} (at most 1).",
-            f"{FARM_PRODUCE_MODIFIER} = {{",
-            "\tgame_data = { category = location }",
-        ]
-        lines += [f"\t{key} = {format_value(value)}" for key, value in _rounded(config.farm_produce).items()]
         lines.append("}")
     lines += [
         "",
@@ -445,36 +399,7 @@ def render_scripted_effects(config: StoredFoodConfig) -> str:
         f"\t\tset_variable = {{ name = {STEP_VARIABLE} value = {NO_STEP} }}",
         "\t}",
     ]
-    if config.farm_produce:
-        lines += [
-            "\t# Farm Produce: once a year (January) and at the province's first refresh",
-            "\tif = {",
-            f"\t\tlimit = {{ OR = {{ current_month < 2 NOT = {{ has_variable = {FARM_PRODUCE_VARIABLE} }} }} }}",
-            f"\t\t{FARM_PRODUCE_EFFECT} = yes",
-            "\t}",
-        ]
     lines.append("}")
-    if config.farm_produce:
-        has = " ".join(f"has_building = building_type:{b}" for b in config.farm_produce_buildings)
-        lines += [
-            "",
-            "# Province scope. Farm Produce: every location of the province that holds one of the kitchens gets the modifier",
-            f"# at size = the province's worked farm and orchard levels ({FARM_LEVELS_VALUE}) / "
-            f"{format_value(config.farm_produce_full_levels)}, at most 1;",
-            "# every other location loses it. Run by the store refresh, so it adds no pulse of its own.",
-            f"{FARM_PRODUCE_EFFECT} = {{",
-            f"\tsave_scope_value_as = {{ name = {FARM_PRODUCE_SIZE} value = {{ value = {FARM_LEVELS_VALUE} "
-            f"divide = {format_value(config.farm_produce_full_levels)} max = 1 }} }}",
-            "\tevery_location_in_province = {",
-            f"\t\tif = {{ limit = {{ has_location_modifier = {FARM_PRODUCE_MODIFIER} }} remove_location_modifier = {FARM_PRODUCE_MODIFIER} }}",
-            "\t\tif = {",
-            f"\t\t\tlimit = {{ scope:{FARM_PRODUCE_SIZE} > 0.01 OR = {{ {has} }} }}",
-            f"\t\t\tadd_location_modifier = {{ modifier = {FARM_PRODUCE_MODIFIER} size = scope:{FARM_PRODUCE_SIZE} }}",
-            "\t\t}",
-            "\t}",
-            f"\tset_variable = {{ name = {FARM_PRODUCE_VARIABLE} value = 1 }}",
-            "}",
-        ]
     return "\n".join(lines) + "\n"
 
 
@@ -483,9 +408,6 @@ def render_localization(config: StoredFoodConfig) -> str:
     for step in range(STEPS + 1):
         lines.append(f'  STATIC_MODIFIER_NAME_{step_name(step)}: "Stored Food: {step_label(step)}"')
         lines.append(f'  STATIC_MODIFIER_DESC_{step_name(step)}: "{DESCRIPTION}"')
-    if config.farm_produce:
-        lines.append(f'  STATIC_MODIFIER_NAME_{FARM_PRODUCE_MODIFIER}: "{FARM_PRODUCE_NAME}"')
-        lines.append(f'  STATIC_MODIFIER_DESC_{FARM_PRODUCE_MODIFIER}: "{FARM_PRODUCE_DESCRIPTION}"')
     for name in LEGACY_SCALED:
         lines.append(f'  STATIC_MODIFIER_NAME_{name}: "Stored Food"')
         lines.append(f'  STATIC_MODIFIER_DESC_{name}: "{LEGACY_DESCRIPTION}"')

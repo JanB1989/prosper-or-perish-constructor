@@ -47,6 +47,10 @@ pp_start_topup_clay_pit_potential = {
 	}
 }
 
+pp_start_topup_cookshop_potential = {
+	always = yes
+}
+
 pp_start_topup_fishing_village_potential = {
 	OR = {
 		has_river = yes

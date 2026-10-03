@@ -22,18 +22,13 @@ increase_per_level_cost = 0.10
 			is_province_capital = yes
 		}
 	}
-	# AI (2026-10-03): Cookshops answer hunger. A province that holds about a year of food or more must not get more of
-	# them: their food would go to waste, and below their stop point the gate alone does not hold where staples are
-	# cheap. Farms around make a Cookshop more useful (staples close by). Divided by the owner's income like the farm
-	# weight (the AI's scores run about 30x higher in poor countries than in rich ones).
+	# AI (2026-10-03, farm reward): as the Cookshop. Build them up to the cap wherever the farms allow, store or
+	# not; the AI values their food only while the province loses food, so elsewhere this positive weight carries
+	# them past their cost. Divided by the owner's income like the farm weight.
 	ai_construct_weight = {
-		value = 0
-		add = { value = 10 subtract = pp_location_stored_months divide = 10 min = 0 max = 1 multiply = 60 }
+		value = 20
 		add = { value = pp_location_province_farm_levels divide = 40 max = 1 multiply = 40 }
 		divide = { value = scope:owner.monthly_income_total add = 10 }
-		# the veto is flat, not income-scaled: the AI scored Cookshops at 14-18 months up to about 100 and in hungry
-		# provinces up to about 400 (Mini World run 2026-10-03), so it has to outweigh any of that
-		subtract = { value = pp_location_stored_months subtract = 10 divide = 4 min = 0 max = 1 multiply = 10000 }
 	}
 	build_time = workshop_build_time
 	construction_demand = workshop_construction
@@ -43,285 +38,254 @@ increase_per_level_cost = 0.10
 	AI_ignore_available_worker_flag = yes
 	can_close = yes
 	# ==========================================
-	# 2. TABLE BEVERAGES (pick ONE), served as Province Food
-	# - Baseline: well water (no trade goods; EU5 has no water good)
-	# - Upgrades: one drink good each (weights sum prior two-input recipes for similar cost)
+	# 1. MAIN DISH (pick ONE)
+	# - a little of the market's staples cooked into meals, sold for offset at margin 1.08; the food itself is the
+	#   building's flat local_monthly_food
 	# ==========================================
 	unique_production_methods = {
-		pp_public_kitchen_well_water = {
+		pp_public_kitchen_boreal_hunter_stew_serve = {
 			icon_type = building_type
 			icon = public_kitchen
+			fur = 0.15
+			millet = 0.13
+			salt = 0.014
+			manual_labor = 0.039
+			produced = offset
+			output = 0.582
 			category = building_maintenance
 		}
-		pp_public_kitchen_coffee = {
-        icon_type = building_type
-        icon = public_kitchen
-        coffee = 0.35
-        manual_labor = 0.096
-			produced = local_food
-        output = 11.67
-			debug_max_profit = 2.814
+		# --- OCEANIA (NEW) ---
+		pp_public_kitchen_ika_mata_serve = {
+			icon_type = building_type
+			icon = public_kitchen
+			fish = 0.31
+			fruit = 0.16
+			salt = 0.006
+			manual_labor = 0.04
+			produced = offset
+			output = 0.583
 			category = building_maintenance
 		}
-		pp_public_kitchen_chocolate = {
-        icon_type = building_type
-        icon = public_kitchen
-        cocoa = 0.3
-        manual_labor = 0.092
-			produced = local_food
-        output = 11.82
-			debug_max_profit = 2.560
+
+		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
+		pp_public_kitchen_kheer_serve = {
+			icon_type = building_type
+			icon = public_kitchen
+			rice = 0.24
+			sugar = 0.022
+			livestock = 0.13
+			manual_labor = 0.042
+			produced = offset
+			output = 0.586
 			category = building_maintenance
 		}
-		pp_public_kitchen_tea = {
-        icon_type = building_type
-        icon = public_kitchen
-        tea = 0.46
-        manual_labor = 0.096
-			produced = local_food
-        output = 14.97
-			debug_max_profit = 3.024
+		# --- EUROPE ---
+		pp_public_kitchen_livestock_pottage_serve = {
+			icon_type = building_type
+			icon = public_kitchen
+			wheat = 0.22
+			livestock = 0.16
+			legumes = 0.045
+			manual_labor = 0.039
+			produced = offset
+			output = 0.588
 			category = building_maintenance
 		}
-		pp_public_kitchen_beer = {
-        icon_type = building_type
-        icon = public_kitchen
-        beer = 0.66
-        manual_labor = 0.11
-			produced = local_food
-        output = 15.15
-			debug_max_profit = 3.051
+		pp_public_kitchen_pemmican_serve = {
+			icon_type = building_type
+			icon = public_kitchen
+			wild_game = 0.33
+			livestock = 0.069
+			fruit = 0.073
+			manual_labor = 0.04
+			produced = offset
+			output = 0.59
 			category = building_maintenance
 		}
-		pp_public_kitchen_wine = {
-        icon_type = building_type
-        icon = public_kitchen
-        wine = 0.72
-        manual_labor = 0.11
-			produced = local_food
-        output = 15.51
-			debug_max_profit = 2.897
+		pp_public_kitchen_labskaus_serve = {
+			icon_type = building_type
+			icon = public_kitchen
+			potato = 0.069
+			fish = 0.11
+			livestock = 0.22
+			manual_labor = 0.039
+			produced = offset
+			output = 0.592
 			category = building_maintenance
 		}
-		pp_public_kitchen_liquor = {
-        icon_type = building_type
-        icon = public_kitchen
-        liquor = 0.62
-        manual_labor = 0.12
-			produced = local_food
-        output = 16.11
-			debug_max_profit = 2.747
-			category = building_maintenance
-		}
-	}
-	# ==========================================
-	# 1. MAIN DISH (pick ONE)
-	# - Main food preparations
-	# - every dish is served to the province as Province Food (local_food); victuals are the Victualling Yard's
-	# ==========================================
-unique_production_methods = {
+
 		# --- ASIA ---
 		pp_public_kitchen_khichdi_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        rice = 1.23
-        legumes = 1.06
-        pepper = 0.037
-        manual_labor = 0.19
-			produced = local_food
-        output = 27.09
-			debug_max_profit = 2.955
+			icon_type = building_type
+			icon = public_kitchen
+			rice = 0.25
+			legumes = 0.22
+			pepper = 0.008
+			manual_labor = 0.039
+			produced = offset
+			output = 0.593
 			category = building_maintenance
 		}
 		pp_public_kitchen_fish_congee_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        rice = 1.23
-        fish = 1.06
-        pepper = 0.037
-        manual_labor = 0.19
-			produced = local_food
-        output = 27.09
-			debug_max_profit = 2.955
+			icon_type = building_type
+			icon = public_kitchen
+			rice = 0.25
+			fish = 0.22
+			pepper = 0.008
+			manual_labor = 0.039
+			produced = offset
+			output = 0.593
+			category = building_maintenance
+		}
+		pp_public_kitchen_saltfish_porridge_serve = {
+			icon_type = building_type
+			icon = public_kitchen
+			millet = 0.18
+			fish = 0.26
+			salt = 0.014
+			manual_labor = 0.039
+			produced = offset
+			output = 0.593
 			category = building_maintenance
 		}
 
 		# --- AMERICA ---
 		pp_public_kitchen_pozole_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        maize = 0.77
-        wild_game = 0.98
-        chili = 0.15
-        manual_labor = 0.17
-			produced = local_food
-        output = 27.3
-			debug_max_profit = 3.075
+			icon_type = building_type
+			icon = public_kitchen
+			maize = 0.16
+			wild_game = 0.2
+			chili = 0.031
+			manual_labor = 0.035
+			produced = offset
+			output = 0.594
 			category = building_maintenance
 		}
 		pp_public_kitchen_mediterranean_fish_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        fish = 1.87
-        olives = 0.56
-        wine = 0.076
-        manual_labor = 0.2
-			produced = local_food
-        output = 28.32
-			debug_max_profit = 2.953
-			category = building_maintenance
-		}
-		pp_public_kitchen_pemmican_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        wild_game = 1.68
-        livestock = 0.35
-        fruit = 0.37
-        manual_labor = 0.2
-			produced = local_food
-        output = 28.32
-			debug_max_profit = 2.961
-			category = building_maintenance
-		}
-		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
-		pp_public_kitchen_kheer_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        rice = 1.23
-        sugar = 0.11
-        livestock = 0.67
-        manual_labor = 0.21
-			produced = local_food
-        output = 28.32
-			debug_max_profit = 2.917
-			category = building_maintenance
-		}
-
-		pp_public_kitchen_labskaus_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        potato = 0.35
-        fish = 0.56
-        livestock = 1.12
-        manual_labor = 0.2
-			produced = local_food
-        output = 28.41
-			debug_max_profit = 2.957
-			category = building_maintenance
-		}
-		# --- OCEANIA (NEW) ---
-		pp_public_kitchen_ika_mata_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        fish = 1.79
-        fruit = 0.94
-        salt = 0.037
-        manual_labor = 0.23
-			produced = local_food
-        output = 28.89
-			debug_max_profit = 2.554
-			category = building_maintenance
-		}
-		# --- EUROPE ---
-		pp_public_kitchen_livestock_pottage_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        wheat = 1.2
-        livestock = 0.86
-        legumes = 0.24
-        manual_labor = 0.21
-			produced = local_food
-        output = 29.97
-			debug_max_profit = 2.964
-			category = building_maintenance
-		}
-
-		pp_public_kitchen_mutton_and_pease_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        wool = 0.92
-        legumes = 0.44
-        salt = 0.053
-        manual_labor = 0.22
-			produced = local_food
-        output = 30.09
-			debug_max_profit = 2.665
-			category = building_maintenance
-		}
-		pp_public_kitchen_saltfish_porridge_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        millet = 0.98
-        fish = 1.4
-        salt = 0.076
-        manual_labor = 0.21
-			produced = local_food
-        output = 30.12
-			debug_max_profit = 2.953
-			category = building_maintenance
-		}
-
-		pp_public_kitchen_surstromming_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        fish = 1.93
-        millet = 0.2
-        salt = 0.2
-        manual_labor = 0.21
-			produced = local_food
-        output = 30.9
-			debug_max_profit = 2.696
+			icon_type = building_type
+			icon = public_kitchen
+			fish = 0.37
+			olives = 0.11
+			wine = 0.015
+			manual_labor = 0.04
+			produced = offset
+			output = 0.594
 			category = building_maintenance
 		}
 
 		pp_public_kitchen_honey_gruel_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        wheat = 0.9
-        fruit = 0.59
-        beeswax = 0.67
-        manual_labor = 0.22
-			produced = local_food
-        output = 31.11
-			debug_max_profit = 2.958
+			icon_type = building_type
+			icon = public_kitchen
+			wheat = 0.16
+			fruit = 0.11
+			beeswax = 0.12
+			manual_labor = 0.04
+			produced = offset
+			output = 0.594
+			category = building_maintenance
+		}
+
+		pp_public_kitchen_surstromming_serve = {
+			icon_type = building_type
+			icon = public_kitchen
+			fish = 0.32
+			millet = 0.033
+			salt = 0.033
+			manual_labor = 0.035
+			produced = offset
+			output = 0.597
+			category = building_maintenance
+		}
+		pp_public_kitchen_mutton_and_pease_serve = {
+			icon_type = building_type
+			icon = public_kitchen
+			wool = 0.16
+			legumes = 0.075
+			salt = 0.009
+			manual_labor = 0.038
+			produced = offset
+			output = 0.603
 			category = building_maintenance
 		}
 		# --- AFRICA (NEW) ---
 		pp_public_kitchen_meat_tajine_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        livestock = 1.31
-        fruit = 0.59
-        saffron = 0.056
-        manual_labor = 0.22
-			produced = local_food
-        output = 31.2
-			debug_max_profit = 2.964
-			category = building_maintenance
-		}
-		pp_public_kitchen_boreal_hunter_stew_serve = {
-        icon_type = building_type
-        icon = public_kitchen
-        fur = 0.86
-        millet = 0.75
-        salt = 0.076
-        manual_labor = 0.22
-			produced = local_food
-        output = 31.2
-			debug_max_profit = 2.949
+			icon_type = building_type
+			icon = public_kitchen
+			livestock = 0.24
+			fruit = 0.11
+			saffron = 0.01
+			manual_labor = 0.04
+			produced = offset
+			output = 0.605
 			category = building_maintenance
 		}
 	}
-	# GATE (2026-10-03): one method alone in the last slot, so the AI's margin check reads it. Province Food from
-	# offset at margin 1.0 at 12 stored months: the store lever lifts it over the AI's 1.05 below about 11 months and
-	# drops it under above, whatever the staples cost, so no kitchen is built or extended in a well-stocked province.
+	# ==========================================
+	# 2. DRINK (pick ONE), sold at the door for offset: the kitchen's small earner and the AI's gate slot
+	# - Well Water: no drink good, a little labour (always available, so the gate never falls back to the dish)
+	# - one drink good each at margin 1.2
+	# ==========================================
 	unique_production_methods = {
-		pp_public_kitchen_daily_fare = {
+		pp_public_kitchen_liquor = {
 			icon_type = building_type
 			icon = public_kitchen
-			offset = 0.1
-			produced = local_food
-			output = 1.0
+			liquor = 0.1
+			manual_labor = 0.02
+			produced = offset
+			output = 0.324
+			category = building_maintenance
+		}
+		pp_public_kitchen_tea = {
+			icon_type = building_type
+			icon = public_kitchen
+			tea = 0.087
+			manual_labor = 0.018
+			produced = offset
+			output = 0.335
+			category = building_maintenance
+		}
+		pp_public_kitchen_chocolate = {
+			icon_type = building_type
+			icon = public_kitchen
+			cocoa = 0.065
+			manual_labor = 0.02
+			produced = offset
+			output = 0.336
+			category = building_maintenance
+		}
+		pp_public_kitchen_wine = {
+			icon_type = building_type
+			icon = public_kitchen
+			wine = 0.13
+			manual_labor = 0.02
+			produced = offset
+			output = 0.336
+			category = building_maintenance
+		}
+		pp_public_kitchen_coffee = {
+			icon_type = building_type
+			icon = public_kitchen
+			coffee = 0.086
+			manual_labor = 0.023
+			produced = offset
+			output = 0.337
+			category = building_maintenance
+		}
+		pp_public_kitchen_beer = {
+			icon_type = building_type
+			icon = public_kitchen
+			beer = 0.13
+			manual_labor = 0.022
+			produced = offset
+			output = 0.338
+			category = building_maintenance
+		}
+		pp_public_kitchen_well_water = {
+			icon_type = building_type
+			icon = public_kitchen
+			manual_labor = 0.06
+			produced = offset
+			output = 0.072
 			category = building_maintenance
 		}
 	}
@@ -330,7 +294,12 @@ unique_production_methods = {
 	}
 
 	modifier = {
-		local_monthly_food = 15.0
+		# the kitchen's food (2026-10-03: was 15 plus about 43 Province Food from the recipes), scaled by staffing
+		# and by the inputs the kitchen gets
+		local_monthly_food = 18.0
+		# people eat the perishables: a little less food spoils in store, and the peasants eat a little less
+		local_food_preservation_efficiency_modifier = 0.02
+		local_peasants_food_consumption = -0.01
 		# no food capacity (was 800, removed 2026-09-30): the Granary is the capacity building
 		local_unrest = -0.05
 		local_monthly_prosperity = 0.001

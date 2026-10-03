@@ -185,3 +185,20 @@ def test_province_modifier_list_shows_the_stored_food_step():
     assert "STATIC_MODIFIER_NAME_pp_stored_food" not in window
     assert "ScriptValue('pp_stored_food_years'), '(CFixedPoint)0'), '(int32)1', '(int32)0'))" not in window
     assert not hasattr(location_status, "hide_stored_food_modifier")
+
+
+def test_stored_food_chip_lists_the_store_lever_too():
+    # 2026-10-03 (Jan): the chip shows every line of the step modifier, the Low / Full Stores lines included, each at
+    # the years the carried step is short of / above the pivot and only while it applies
+    config = stored_food.load_config(PROJECT)
+    rows = location_status.load_stored_food_rows(MOD_ROOT, None, config.per_year, config.low, config.full)
+    for name, payload in (("pp_stored_food_low_years", config.low), ("pp_stored_food_full_years", config.full)):
+        size = f"LocationView.GetLocation.MakeScope.ScriptValue('{name}')"
+        for key, value in payload:
+            if value:
+                line = f"[ShowModifierTypeName('{key}')]: [Multiply_CFixedPoint({size}, '(CFixedPoint){location_status._fixed(value)}')"
+                assert line in rows
+        assert f"GreaterThan_CFixedPoint({size}, '(CFixedPoint)0')" in rows
+    values = stored_food.render_script_values(config)
+    assert "pp_stored_food_low_years = {" in values and "pp_stored_food_full_years = {" in values
+    assert "subtract = var:pp_food_store_step" in values   # read from the carried step, so step 0 still counts

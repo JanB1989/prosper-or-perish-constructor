@@ -15,6 +15,33 @@ pp_stored_food_years = {
 	min = 0
 }
 
+# Location scope (display only): the years the carried step is short of / above the pivot, the sizes its store-lever
+# lines (Low Stores / Full Stores) are applied at. 0 without a step.
+pp_stored_food_low_years = {
+	value = 0
+	province ?= {
+		if = {
+			limit = { has_variable = pp_food_store_step var:pp_food_store_step > 99.5 }
+			add = 112.0
+			subtract = var:pp_food_store_step
+		}
+	}
+	divide = 12
+	min = 0
+}
+pp_stored_food_full_years = {
+	value = 0
+	province ?= {
+		if = {
+			limit = { has_variable = pp_food_store_step var:pp_food_store_step > 99.5 }
+			add = var:pp_food_store_step
+			subtract = 112.0
+		}
+	}
+	divide = 12
+	min = 0
+}
+
 # Location scope (display only): yearly population growth from the province's Stored Food step, its local_population_growth.
 # It is part of modifier:local_population_growth; the engine adds no storage term of its own.
 pp_province_food_storage_growth = {

@@ -49,7 +49,8 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     report: dict[str, object] = {"handover": str(contract.root), "version": contract.version, "worldbuilder_commit": contract.meta.get("worldbuilder_commit")}
     if cfg.sync_geography:
         report["geography"] = wb_geography.sync_geography(cfg.geography_export, mod_root, repo, vanilla_root(repo, project),
-                                                         stored_food.configured_payload(project))
+                                                         stored_food.configured_payload(project),
+                                                         stored_food.configured_lever(project))
     # channel tiles take the topography of their navigation state (Navigable River, Shallows, Falls)
     if cfg.raw.get("navigation_config"):
         nav_settings = json.loads((repo / str(cfg.raw["navigation_config"])).read_text(encoding="utf-8"))

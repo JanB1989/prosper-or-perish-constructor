@@ -335,11 +335,13 @@ def merge_population_capacity(text: str) -> str:
 
 
 def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path | None = None,
-                   stored_food: tuple[tuple[str, float], ...] = ()) -> dict[str, object]:
+                   stored_food: tuple[tuple[str, float], ...] = (),
+                   stored_lever: tuple[tuple[tuple[str, float], ...], tuple[tuple[str, float], ...]] = ((), ())) -> dict[str, object]:
     """Copy the export into the mod, remove stale copies from a previous sync and the legacy attribute injects.
 
     ``stored_food`` is the Stored Food modifier's payload per stored year (``[stored_food.per_year]``), whose effects the
-    location view's Stored Food chip lists at the province's stored years.
+    location view's Stored Food chip lists at the province's stored years; ``stored_lever`` its (Low Stores, Full Stores)
+    lines, listed at the years the step is short of / above the pivot.
     """
     export_dir = Path(export_dir)
     if not (export_dir / EXPORT_BUILD_FILE).is_file():
@@ -363,7 +365,7 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path |
             merged = add_land_potential_chip(add_rgo_chip(merge_population_capacity(water_access_chips(merge_location_window(src.read_text(encoding="utf-8-sig")))), goods))
             harvests = location_status.load_harvests(mod_root)
             merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla),
-                                                    location_status.load_stored_food_rows(mod_root, vanilla, stored_food))
+                                                    location_status.load_stored_food_rows(mod_root, vanilla, stored_food, *stored_lever))
             location_status.write_harvest_files(mod_root, harvests)
             if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
                 dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")

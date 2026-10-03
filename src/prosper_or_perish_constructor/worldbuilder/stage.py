@@ -74,6 +74,17 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     if cfg.compat_files:
         families = wb_compat.load_families(cfg.geography_export)
         report["compat_patches"] = wb_compat.write_compat_patches(vanilla_root(repo, project), mod_root, repo, families, cfg.compat_files)
+    # terrain look: the World Builder classes and channel topographies take their vanilla parent's biome
+    from . import biomes
+
+    channels = []
+    if cfg.raw.get("navigation_config"):
+        nav = json.loads((repo / str(cfg.raw["navigation_config"])).read_text(encoding="utf-8"))
+        if nav.get("enabled"):
+            channels = [str(t["key"]) for t in (nav.get("topographies") or {}).values()]
+    if cfg.raw.get("terrain_biomes"):
+        report["biomes"] = biomes.write(vanilla_root(repo, project), mod_root, wb_compat.load_families(cfg.geography_export),
+                                        channels, biomes.load_design(repo / str(cfg.raw["terrain_biomes"])))
     # vanilla scripts that route fleets over the open sea must not pick a river channel (after the widening above)
     from . import navigation_scripts
 

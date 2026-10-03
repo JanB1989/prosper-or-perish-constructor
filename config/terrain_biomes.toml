@@ -1,0 +1,119 @@
+# Terrain look of the World Builder classes (ppc worldbuilder apply -> in_game/gfx/map/biome_definitions/biomes.txt and
+# in_game/gfx/terrain2/materials.txt; code: src/prosper_or_perish_constructor/worldbuilder/biomes.py). Visual only.
+#
+# EU5 1.4 paints each location's ground from the biome biomes.txt gives its climate, vegetation and topography; a biome
+# is a palette of materials (materials.txt): 6 coast slots (one per topography + coastline transition), rivers/lakes,
+# borders/water transition, vegetation transition, climate transition, then the variation slots that fill the location.
+# Climate and topography classes take their vanilla parent's biome. Each vegetation class gets its own biomes: per
+# vanilla climate group and terrain (flat, wet, rough) a copy of the vanilla palette of its parent vegetation whose
+# variation slots follow the class pattern below. Mountains keep the vanilla parent's biome.
+
+[general]
+# a (class, climate group, terrain) combination gets its own biome from this many locations; rarer ones use the
+# class's biome of another terrain or a neighbouring climate group, else the vanilla parent
+own_biome_minimum_locations = 50
+# the engine stores a location's biome in a texture whose format is not known; vanilla has 191 biomes, stay below 256
+max_total_biomes = 245
+
+# vanilla's climate groups (the climates biomes.txt lists together), with the groups a rare combination borrows from
+[climate_groups.arctic]
+climates = ["arctic", "subpolar"]
+neighbours = ["temperate", "cold_arid"]
+[climate_groups.temperate]
+climates = ["continental", "oceanic"]
+neighbours = ["arctic", "mediterranean"]
+[climate_groups.mediterranean]
+climates = ["mediterranean"]
+neighbours = ["temperate", "arid"]
+[climate_groups.tropical]
+climates = ["subtropical", "tropical"]
+neighbours = ["mediterranean", "arid"]
+[climate_groups.arid]
+climates = ["arid", "hot_semi_arid"]
+neighbours = ["mediterranean", "cold_arid"]
+[climate_groups.cold_arid]
+climates = ["cold_arid", "cold_semi_arid"]
+neighbours = ["arid", "arctic"]
+
+# grass and dirt tone of each climate group, used where a class pattern says DENSE, SCATTER, DIRT, DRY_DENSE or
+# DRY_SCATTER (dry grass: orange in the tropics and arid lands, pale elsewhere)
+[tones.arctic]
+DENSE = "grass_dense_dark_variation_01"
+SCATTER = "grass_scatter_dark_variation_01"
+DIRT = "base_dirt_dark"
+DRY_DENSE = "grass_dense_light_variation_02"
+DRY_SCATTER = "grass_scatter_light_variation_01"
+[tones.temperate]
+DENSE = "grass_dense_variation_01"
+SCATTER = "grass_scatter_variation_01"
+DIRT = "dirt_transition_02"
+DRY_DENSE = "grass_dense_light_variation_01"
+DRY_SCATTER = "grass_scatter_light_variation_01"
+[tones.mediterranean]
+DENSE = "grass_dense_light_variation_01"
+SCATTER = "grass_scatter_light_variation_01"
+DIRT = "dirt_transition_bright_01"
+DRY_DENSE = "grass_dense_light_variation_02"
+DRY_SCATTER = "grass_scatter_light_variation_01"
+[tones.tropical]
+DENSE = "grass_dense_green_variation_03"
+SCATTER = "grass_scatter_green_variation_02"
+DIRT = "dirt_transition_02"
+DRY_DENSE = "grass_dense_orange_variation_01"
+DRY_SCATTER = "grass_scatter_orange_variation_01"
+[tones.arid]
+DENSE = "grass_dense_orange_variation_01"
+SCATTER = "grass_scatter_orange_variation_01"
+DIRT = "dirt_orange_transition_01"
+DRY_DENSE = "grass_dense_orange_variation_02"
+DRY_SCATTER = "grass_scatter_orange_variation_01"
+[tones.cold_arid]
+DENSE = "grass_dense_light_variation_02"
+SCATTER = "grass_scatter_light_variation_01"
+DIRT = "base_dirt_variation"
+DRY_DENSE = "grass_dense_light_variation_02"
+DRY_SCATTER = "grass_scatter_light_variation_01"
+
+# terrain of a topography (its vanilla parent); the base palette is the vanilla one of that topography. Rough keeps
+# every third variation slot of the base (rock and dirt of hills), wet every third from the second (wetland ground).
+[terrain]
+flatland = "flat"
+flatland_wasteland = "flat"
+wetlands = "wet"
+wetlands_wasteland = "wet"
+hills = "rough"
+hills_wasteland = "rough"
+plateau = "rough"
+plateau_wasteland = "rough"
+
+[terrain_base]
+flat = "flatland"
+wet = "wetlands"
+rough = "hills"
+
+# variation pattern of each vegetation class, repeated over the base palette's variation slots
+[classes]
+# conifer canopy over dark undergrowth
+ha1300_veg_coniferous_forest = ["grass_wood_dense_02", "grass_wood_dense_02", "DENSE", "grass_wood_dense_02", "grass_wood_dense_02", "SCATTER"]
+# broadleaf and conifer canopy in turns
+ha1300_veg_mixed_forest = ["grass_wood_dense_01", "grass_wood_dense_02", "DENSE", "grass_wood_dense_01", "grass_wood_dense_02", "SCATTER"]
+# forested wetland: dark wet ground, ponds, broadleaf canopy
+ha1300_veg_swamp = ["wetlands_dense_green_01", "grass_wood_dense_01", "wetlands_ponds_01", "wetlands_dense_green_01", "grass_wood_dense_01", "wetlands_dense_02"]
+# open wetland: wet meadow with ponds
+ha1300_veg_marsh = ["wetlands_dense_01", "DENSE", "wetlands_ponds_01", "SCATTER", "wetlands_dense_02", "DENSE"]
+# dry grass with bare patches and a few trees
+ha1300_veg_savanna = ["DRY_DENSE", "DRY_SCATTER", "DRY_DENSE", "DIRT", "DRY_SCATTER", "pp_grass_wood_variation_01"]
+# dense shrub and low wood
+ha1300_veg_thicket = ["pp_grass_wood_variation_01", "grass_wood_dense_01", "DENSE", "pp_grass_wood_variation_01", "SCATTER", "grass_dense_dark_variation_01"]
+# broadleaf canopy over dry grass
+ha1300_veg_dry_forest = ["grass_wood_dense_01", "DRY_SCATTER", "pp_grass_wood_variation_01", "grass_wood_dense_01", "DRY_DENSE", "DIRT"]
+# dry ground, stones and scattered grass
+ha1300_veg_scrubland = ["DIRT", "SCATTER", "sand_rocks_variation_01", "grass_scatter_light_variation_01", "DIRT", "pp_grass_wood_variation_01"]
+# dark sparse grass, gravel and snow patches
+ha1300_veg_tundra = ["grass_scatter_dark_variation_01", "sediment_heavy_dark_01", "ice_snow_variation_01", "grass_scatter_dark_variation_01", "sediment_dark_01", "base_dirt_dark"]
+
+# materials the mod adds (textures vanilla ships without a material)
+[materials.pp_grass_wood_variation_01]
+diffuse = "textures/grass/grass_wood_variation_01_diffuse.dds"
+normal = "textures/grass/grass_wood_variation_01_normal.dds"
+properties = "textures/grass/grass_wood_variation_01_properties.dds"

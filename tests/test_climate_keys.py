@@ -68,7 +68,7 @@ def test_every_climate_test_names_a_defined_climate(known) -> None:
     unknown = sorted(
         f"{_rel(path)}: climate = {key}"
         for path, text in _files(MOD, REPO / "blueprints/accepted", REPO / "config", PROJECT, suffixes={".txt", ".gui", ".yml", ".toml"})
-        for key in {m.group(1) for m in _TEST.finditer(text)}
+        for key in {m.group(1) for m in _TEST.finditer(re.sub(r"#[^\n]*", "", text))}   # comments are not tests
         if key not in keys
     )
     assert unknown == []

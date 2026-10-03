@@ -89,6 +89,8 @@ orchestrator = "../eu5-mod-orchestrator"
 
 [worldbuilder]
 navigation_config = "config/river_navigation.json"
+# Terrain look of the World Builder classes (biomes.txt + materials.txt, worldbuilder/biomes.py).
+terrain_biomes = "config/terrain_biomes.toml"
 # World Builder handover (EU5WorldBuilder `worldbuilder handover`); the constructor consumes this contract only.
 handover = "../EU5WorldBuilder/artifacts/handover/latest"
 # World Builder geography export (`worldbuilder geography-test` build), synced into the mod.

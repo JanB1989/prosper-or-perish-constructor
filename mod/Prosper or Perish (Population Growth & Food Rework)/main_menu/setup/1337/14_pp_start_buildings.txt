@@ -17661,7 +17661,6 @@ building_manager = {
 	tavern = { tag = MAM level = 1 location = asyut }
 	tavern = { tag = AGC level = 1 location = augsburg }
 	tavern = { tag = DLH level = 1 location = awadh }
-	tavern = { tag = ETH level = 1 location = axum }
 	tavern = { tag = TEP level = 1 location = azcapotzalco }
 	tavern = { tag = SLD level = 1 location = balkh }
 	tavern = { tag = ARA level = 1 location = barcelona }
@@ -17713,7 +17712,6 @@ building_manager = {
 	tavern = { tag = GOA level = 1 location = goa }
 	tavern = { tag = GRA level = 1 location = granada }
 	tavern = { tag = CHI level = 1 location = guancheng_zhengzhou }
-	tavern = { tag = CHI level = 1 location = guangzhou }
 	tavern = { tag = GWA level = 1 location = gwalior }
 	tavern = { tag = KOR level = 1 location = gyeongju }
 	tavern = { tag = HDN level = 1 location = hamadan }
@@ -17722,7 +17720,6 @@ building_manager = {
 	tavern = { tag = CHI level = 1 location = hangzhou }
 	tavern = { tag = KRT level = 1 location = herat }
 	tavern = { tag = ORM level = 1 location = hormuz }
-	tavern = { tag = INJ level = 1 location = isfahan }
 	tavern = { tag = DLH level = 1 location = jalandhar }
 	tavern = { tag = KOR level = 1 location = jeonju }
 	tavern = { tag = CHI level = 1 location = jingzhao }
@@ -17735,7 +17732,6 @@ building_manager = {
 	tavern = { tag = JAP level = 1 location = kamakura }
 	tavern = { tag = KMA level = 1 location = kamatapur }
 	tavern = { tag = KAN level = 1 location = kano }
-	tavern = { tag = DGH level = 1 location = kashgar }
 	tavern = { tag = KTS level = 1 location = katsina }
 	tavern = { tag = ERE level = 1 location = kayseri }
 	tavern = { tag = RKL level = 1 location = kermanshah }
@@ -17743,7 +17739,6 @@ building_manager = {
 	tavern = { tag = VND level = 1 location = kollam }
 	tavern = { tag = KAR level = 1 location = konya }
 	tavern = { tag = ZMR level = 1 location = kozhikode }
-	tavern = { tag = POL level = 1 location = krakow }
 	tavern = { tag = LNG level = 1 location = kunming }
 	tavern = { tag = JAP level = 1 location = kyoto }
 	tavern = { tag = TIB level = 1 location = lhasa }
@@ -17761,7 +17756,6 @@ building_manager = {
 	tavern = { tag = MAN level = 1 location = mantova }
 	tavern = { tag = MOR level = 1 location = marrakesh }
 	tavern = { tag = PRO level = 1 location = marseille }
-	tavern = { tag = PEG level = 1 location = martaban }
 	tavern = { tag = COC level = 1 location = mayapan }
 	tavern = { tag = SIC level = 1 location = messina }
 	tavern = { tag = MTZ level = 1 location = metz }
@@ -17777,7 +17771,6 @@ building_manager = {
 	tavern = { tag = NRB level = 1 location = narbonne }
 	tavern = { tag = MAL level = 1 location = niani }
 	tavern = { tag = CHI level = 1 location = ningxia }
-	tavern = { tag = JKR level = 1 location = nishapur }
 	tavern = { tag = ITZ level = 1 location = noh_peten }
 	tavern = { tag = ATQ level = 1 location = nusaybin }
 	tavern = { tag = TLE level = 1 location = oran }
@@ -17863,6 +17856,7 @@ building_manager = {
 	tavern = { tag = CHI level = 1 location = wuxian }
 	tavern = { tag = CHI level = 1 location = xiangyang }
 	tavern = { tag = CHI level = 1 location = xuanhua_nanning }
+	tavern = { tag = DGH level = 1 location = yarkand }
 	tavern = { tag = MZF level = 1 location = yazd }
 	tavern = { tag = CHI level = 1 location = yiyang }
 	tavern = { tag = ZZZ level = 1 location = zazzau }
@@ -18122,15 +18116,21 @@ building_manager = {
 	tools_guild = { tag = ZZZ level = 2 location = zazzau }
 	tools_guild = { tag = ZUR level = 2 location = zurich }
 	victualling_yard = { tag = SWE level = 1 location = abo }
+	victualling_yard = { tag = JRW level = 1 location = al_ahsa }
 	victualling_yard = { tag = MAM level = 2 location = alexandria }
 	victualling_yard = { tag = ANC level = 2 location = ancona }
+	victualling_yard = { tag = ETH level = 1 location = axum }
 	victualling_yard = { tag = ADH level = 2 location = ayodhya }
+	victualling_yard = { tag = JAL level = 1 location = baghdad }
+	victualling_yard = { tag = BON level = 1 location = begho }
 	victualling_yard = { tag = BQA level = 2 location = benghazi }
 	victualling_yard = { tag = NOR level = 1 location = bergen }
 	victualling_yard = { tag = ENG level = 1 location = bristol }
+	victualling_yard = { tag = CAS level = 1 location = burgos }
 	victualling_yard = { tag = ARA level = 2 location = cagliari }
 	victualling_yard = { tag = CRT level = 2 location = candia }
 	victualling_yard = { tag = GMG level = 2 location = cardiff }
+	victualling_yard = { tag = KOL level = 1 location = cologne }
 	victualling_yard = { tag = BQA level = 1 location = derna }
 	victualling_yard = { tag = RAG level = 1 location = dubrovnik }
 	victualling_yard = { tag = ALB level = 2 location = durres }
@@ -18138,22 +18138,33 @@ building_manager = {
 	victualling_yard = { tag = GBS level = 1 location = gabes }
 	victualling_yard = { tag = BYZ level = 3 location = gallipoli }
 	victualling_yard = { tag = GAU level = 1 location = gaur }
+	victualling_yard = { tag = CHI level = 1 location = guangzhou }
 	victualling_yard = { tag = TUN level = 1 location = hammamet }
+	victualling_yard = { tag = INJ level = 1 location = isfahan }
 	victualling_yard = { tag = TUR level = 1 location = izmit }
 	victualling_yard = { tag = CHI level = 1 location = jiangdu }
 	victualling_yard = { tag = CHI level = 1 location = jiangling }
 	victualling_yard = { tag = CHI level = 1 location = jiangxia }
 	victualling_yard = { tag = ACH level = 2 location = kalamata }
+	victualling_yard = { tag = DGH level = 1 location = kashgar }
 	victualling_yard = { tag = DAN level = 3 location = kobenhavn }
+	victualling_yard = { tag = POL level = 1 location = krakow }
+	victualling_yard = { tag = KIE level = 2 location = kyiv }
 	victualling_yard = { tag = MOR level = 1 location = larache }
 	victualling_yard = { tag = CYP level = 2 location = larnaca }
 	victualling_yard = { tag = ENG level = 3 location = london }
 	victualling_yard = { tag = NAP level = 2 location = manfredonia }
+	victualling_yard = { tag = PEG level = 2 location = martaban }
 	victualling_yard = { tag = MEN level = 2 location = milas }
+	victualling_yard = { tag = MDI level = 1 location = mogadishu }
+	victualling_yard = { tag = CHI level = 1 location = nanchang }
+	victualling_yard = { tag = JKR level = 1 location = nishapur }
+	victualling_yard = { tag = NOV level = 1 location = novgorod }
 	victualling_yard = { tag = DAN level = 2 location = odense }
 	victualling_yard = { tag = NOR level = 4 location = oslo }
 	victualling_yard = { tag = MLL level = 2 location = palma }
 	victualling_yard = { tag = MLL level = 2 location = perpignan }
+	victualling_yard = { tag = HUN level = 2 location = pest }
 	victualling_yard = { tag = BPR level = 2 location = pyay }
 	victualling_yard = { tag = DAN level = 2 location = roskilde }
 	victualling_yard = { tag = CAS level = 2 location = san_sebastian }
@@ -18163,7 +18174,9 @@ building_manager = {
 	victualling_yard = { tag = STE level = 2 location = stettin }
 	victualling_yard = { tag = SWE level = 5 location = stockholm }
 	victualling_yard = { tag = MOR level = 1 location = tetouan }
+	victualling_yard = { tag = DAI level = 2 location = thang_long }
 	victualling_yard = { tag = TTE level = 2 location = trieste }
+	victualling_yard = { tag = QCH level = 1 location = turpan }
 	wheat_farm = { tag = DAN level = 2 location = aalborg }
 	wheat_farm = { tag = FLA level = 1 location = aalst }
 	wheat_farm = { tag = HAB level = 1 location = aarau }

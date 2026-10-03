@@ -37,7 +37,7 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   against ``cookshop_cost``, their inputs' share of the revenue at 12 months);
 * Taverns, Granges and Victualling Yards ramp their staffing the same way at the market victuals price (2.7): the
   Tavern serves 24 Province Food (x the modifier) from 0.8 victuals and pays below ~7 stored months; the Grange takes
-  24 food, packs 0.6 victuals and earns Surplus Sales (+0.34 per year above 12 months, -3.0 per year below, -5.0 per
+  24 food, packs 0.6 victuals and earns Surplus Sales (+0.13 per year above 12 months, -3.0 per year below, -5.0 per
   staffed Tavern level), so it pays above ~17 months; the harbour Yard takes 8 food and follows the victuals price
   alone; a starving pool packs no victuals. Taverns only get the victuals their market has (staffed Yards and other
   producers; pops compete); a starving pool loses the noble who staffs its Tavern at 0.09 a year;
@@ -210,7 +210,7 @@ class SimRules:
     food_low: float = 0.75              # Province Food output per year below the pivot
     food_full: float = -0.75            # ... per year above
     sales_low: float = -3.0             # Surplus Sales output per year below the pivot
-    sales_full: float = 0.34
+    sales_full: float = 0.13
     starving_food: float = 1.0          # province_starving: Province Food output
     starving_victuals: float = -2.0     # province_starving: victuals output (a starving province packs nothing)
     food_price: float = 0.10            # Province Food at its floor
@@ -231,7 +231,7 @@ class SimRules:
     yard_victuals: float = 0.6          # Porters (loose stores)
     yard_packing_victuals: float = 0.0  # a Packing method's extra victuals (what-if; its goods cost is not modelled)
     yard_sales: float = 4.0             # province_food_sales (Surplus Sales, the Grange's leg alone)
-    yard_fixed: float = 6.933           # labour 0.08 + offset 2.393 (Haulage, since 2026-10-03) + 4.46 (Surplus Sales)
+    yard_fixed: float = 6.233           # labour 0.08 + offset 2.323 (Haulage) + 3.83 (Surplus Sales), 2026-10-03 evening
 
     @classmethod
     def from_raw(cls, raw: Mapping[str, Any] | None) -> "SimRules":

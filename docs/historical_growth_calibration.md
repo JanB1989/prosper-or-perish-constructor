@@ -376,6 +376,7 @@ buildings and a population-weighted fit of province growth on stored years. Run 
 | 2 | + flat Cookshop veto, Stored Food **0.006** | -0.22 / +0.50 %/yr | -30 % | **+0.28 %/yr** | | 15.9 months | -0.43 + 0.54 x stored years |
 | 3 | + Daily Fare gate (384a743c) | +0.50 / -0.28 %/yr | -29 % | +0.28 %/yr | -0.00 %/yr | 16.0 / 13.6 months | -0.45 + 0.55 x stored years |
 | 4 | + flat Tavern weight terms (b4b4c102) | +0.49 / -0.70 %/yr | -32 % | +0.30 %/yr | -0.04 %/yr | 15.8 / 13.8 months | -0.34 + 0.48 x stored years |
+| 5 | new game: Grange price rule, grain-only Yard (d3091976), speed defines | | -29 % | +0.28 %/yr | -0.06 %/yr | | |
 
 - The growth law is `local_population_growth` 0.006 per stored year since run 2 (0.0062 would give 0.30 exactly at the
   stores of run 1). The engine's surplus term (`FOOD_SURPLUS_POP_GROWTH`) stays 0: growth was already above target.
@@ -405,3 +406,12 @@ buildings and a population-weighted fit of province growth on stored years. Run 
   1500), while Cookshops in hungry provinces that cannot buy their inputs get closed (90-140 at 4 months or less).
   80 % of Cookshop levels stand in full provinces; their `local_monthly_food` (10 per staffed level) is not on the store
   lever.
+- **Run 5** (Grange back with its price rule, grain-only harbour Yard; pp_mini5_base): the victuals market healed
+  (supply/demand 0.86 in 1522, price 3.38; Granges 883 levels but only 13 % staffed), the plateau stayed (66.9M in
+  1522). Why dear victuals did not reach the farms: farm and Cookshop levels were added where victuals were cheap and
+  lost where they were dear (per million people and 5 years: farms +4 below 3.0, -13 above 4.0); the farm weight reads
+  the crop price and the store (below 14 months) only, Yards stood only on harbours, and the dear markets' provinces sat
+  at a median 14.8 months, between the farm store bonus and the Grange line (19.4 months at 3.5). Victuals demand
+  1402 -> 1522: 399 -> 891, of it lumber mills 149 -> 235 (Extra Rations), Taverns 43 -> 185, pops 123 -> 202.
+  Farm output per level fell about 9 % (no relief from advances). Answer (2026-10-03 evening): the steeper Grange line,
+  Yards at every market centre (small inland caps), lumber mill victuals methods only in a glut.

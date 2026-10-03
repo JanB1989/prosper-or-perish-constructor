@@ -23,13 +23,9 @@ tavern_max_level = {
 }
 
 victualling_yard_max_level = {
- add = { desc = PP_VM_CAP_HARBOR_CAPACITY value = modifier:harbor_suitability multiply = 4 }
- if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_MARKET value = 3 } }
- add = { desc = PP_VM_CAP_DEVELOPMENT value = development multiply = 0.05 }
- add = { desc = PP_VM_CAP_THRESHOLD value = -2 }
- min = { desc = PP_VM_CAP_MINIMUM value = 2 }
- max = { desc = PP_VM_CAP_MAXIMUM value = 10 }
- if = { limit = { NOT = { pp_victualling_yard_site = yes } } multiply = { desc = PP_VM_CAP_SITE_YARD value = 0 } }
+ if = { limit = { pp_victualling_yard_site = yes } add = { desc = PP_VM_CAP_HARBOR_CAPACITY value = modifier:harbor_suitability multiply = 4 } if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_MARKET value = 3 } } add = { desc = PP_VM_CAP_DEVELOPMENT value = development multiply = 0.05 } add = { desc = PP_VM_CAP_THRESHOLD value = -2 } min = { desc = PP_VM_CAP_MINIMUM value = 2 } max = { desc = PP_VM_CAP_MAXIMUM value = 10 } }
+ else_if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_INLAND_MARKET value = 1 } if = { limit = { is_coastal = yes } add = { desc = PP_VM_CAP_WATER_ACCESS value = 1 } } add = { desc = PP_VM_CAP_DEVELOPMENT value = development multiply = 0.025 } max = { desc = PP_VM_CAP_MAXIMUM value = 4 } }
+ else = { add = { desc = PP_VM_CAP_SITE_YARD value = 0 } }
 }
 
 grange_max_level = {

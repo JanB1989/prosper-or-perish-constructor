@@ -22,10 +22,15 @@ forbidden_for_estates = no
 AI_ignore_available_worker_flag = yes
 build_time = 365
 construction_demand = victuals_trade_construction
-# Harbour sites only (pp_victuals_site_triggers.txt, generated from config/victuals_logistics.json); everywhere
-# else the Grange packs the province store for the overland markets.
+# Harbour sites (pp_victuals_site_triggers.txt, generated from config/victuals_logistics.json) and, since
+# 2026-10-03, every market centre: an inland market had no buyer that turned its grain into victuals, so dear
+# victuals never reached its farms (Mini World run 5, Prague and Nuremberg). Inland the cap stays small: 2 levels
+# with river or sea access, 1 without, a little more with development (victualling_yard_max_level).
 location_potential = {
-  pp_victualling_yard_site = yes
+  OR = {
+    pp_victualling_yard_site = yes
+    is_market_center = yes
+  }
 }
 
 # The harbour Yard is the merchants' victualling house: it ships in grain, pulses and salt fish from the wider

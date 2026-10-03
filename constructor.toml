@@ -1047,7 +1047,8 @@ staple_output = 0.0
 [stored_food.full]
 # Full Stores: per year above the pivot (size 1 at 24 months)
 local_local_food_output_modifier = -0.75            # Province Food output -75 % at 24 months
-local_province_food_sales_output_modifier = 0.34    # the Grange's Surplus Sales (the Grange is off since 2026-10-03)
+local_province_food_sales_output_modifier = 0.13    # the Grange's Surplus Sales (2026-10-03 evening, was 0.34: a
+# flatter store term makes the victuals price move the Grange's stop point 13.9 months per gold instead of 5.3)
 # 0 since farm v3 (2026-10-02, was 0.20): the crop farms' ai_construct_weight reads the location's crop output modifier
 # as land quality, so a store-driven staple bonus would make the AI build farms exactly where the store is full
 staple_output = 0.0

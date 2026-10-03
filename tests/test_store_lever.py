@@ -68,10 +68,12 @@ def test_grange_packs_a_full_store_and_never_a_lean_one(design: store_lever.Desi
     dig = [design.grange_dig(price) for price in PRICES]
     assert dig == sorted(dig, reverse=True)                                    # dearer victuals: packs deeper
     # 2026-10-03: only a really full store at base victuals (Full Stores stops growing at 24 months, so the break-even
-    # sits just under it), about 5 months deeper per gold, and never below victuals 2.6
+    # sits just under it), about 14 months deeper per gold down to the pivot, never below victuals 2.86. Dear victuals
+    # must reach the 14-19 month stores the farms leave alone (farm store bonus below 14; Mini World run 5).
     assert 21.5 <= design.grange_dig(3.0) <= 22.5
-    assert 16.0 <= design.grange_dig(4.0) <= 17.5
-    assert design.grange_dig(2.5) == store_lever.CAP_MONTHS
+    assert 14.5 <= design.grange_dig(3.5) <= 15.5
+    assert 11.0 <= design.grange_dig(4.0) <= 12.5
+    assert design.grange_dig(2.8) == store_lever.CAP_MONTHS
     # its Surplus Sales are gone well above an empty store, and without them packing does not pay at any victuals
     # price the game shows (10 = more than three times the default)
     sales_end = design.pivot + 12 / design.sales_low
@@ -92,9 +94,10 @@ def test_tavern_and_grange_never_pay_at_the_same_store(design: store_lever.Desig
 
 
 def test_ai_builds_a_new_grange_only_at_a_well_filled_store(design: store_lever.Design) -> None:
+    # the gate opens just above the pivot; the weight's price line (next test) decides where above it
     threshold = _margin_threshold()
     opens = next(months for months in range(25) if design.grange_gate_margin(months) >= threshold)
-    assert 16 <= opens <= 20
+    assert 12 < opens <= 14
     assert design.grange_gate_margin(12) < threshold
 
 
@@ -102,14 +105,21 @@ def test_grange_ai_weight_follows_its_break_even(design: store_lever.Design) -> 
     """The Grange's ai_construct_weight vetoes a new Grange below its break-even store at today's victuals price plus
     a month (2026-10-03): the line it writes must be the design's grange_dig."""
     text = (ROOT / "blueprints/accepted/buildings/grange.yml").read_text(encoding="utf-8-sig")
-    m = re.search(r'value = ([\d.]+) subtract = \{ value = "market\.market_price\(goods:victuals\)" multiply = ([\d.]+) \}'
-                  r' subtract = pp_location_stored_months min = 0 max = 1 multiply = 10000', text)
+    m = re.search(r'value = ([\d.]+) subtract = \{ value = "market\.market_price\(goods:victuals\)" multiply = ([\d.]+)'
+                  r' max = ([\d.]+) \} subtract = pp_location_stored_months min = 0 max = 1 multiply = 10000', text)
     assert m, "the Grange weight's break-even veto"
-    intercept, slope = float(m.group(1)), float(m.group(2))
-    for price in (3.0, 3.25, 3.5, 4.0, 4.5):
-        assert abs((intercept - 1.0 - slope * price) - design.grange_dig(price)) < 0.15, price
+    intercept, slope, cap = float(m.group(1)), float(m.group(2)), float(m.group(3))
+
+    def line(price: float) -> float:
+        return intercept - min(slope * price, cap) - 1.0
+
+    for price in (3.0, 3.25, 3.5):
+        assert abs(line(price) - design.grange_dig(price)) < 0.15, price
+    # never below the pivot: at dear victuals the Grange stops just under 12 months, the veto at the pivot
+    for price in (4.0, 4.5):
+        assert line(price) == pytest.approx(design.pivot) and abs(line(price) - design.grange_dig(price)) < 1.0, price
     assert "pp_location_province_food_balance <= 0" in text
     # the build gate itself still opens below that line, so the weight decides where (gate = if, weight = where)
     threshold = _margin_threshold()
     opens = next(months for months in range(25) if design.grange_gate_margin(months) >= threshold)
-    assert opens < intercept - 1.0 - slope * 3.0
+    assert opens <= line(6.0) + 1.0

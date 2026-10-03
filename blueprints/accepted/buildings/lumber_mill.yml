@@ -29,8 +29,8 @@ building:
     methods:
     - pp_lumber_mill_no_primary
     - pp_lumber_mill_livestock_victuals
-    - pp_lumber_mill_livestock_tools
     - pp_lumber_mill_horse_victuals
+    - pp_lumber_mill_livestock_tools
     - pp_lumber_mill_horse_tools
   - name: slot_3
     methods:
@@ -87,11 +87,15 @@ building:
                 debug_max_profit = 0
                 category = building_maintenance
             }
+            # 2026-10-03: victuals feed the crews only in a glut. At default lumber (1.75) and labour at its floor
+            # (1 gold) the victuals methods break even at victuals 2.4 (80 % of default); at the run's prices (lumber
+            # ~1.5, labour ~1.8) nearer 2.0. Mini World run 5: Extra Rations took 219 of the 235 victuals the mills
+            # bought by 1522, a quarter of all victuals demand, mostly at a loss.
             pp_lumber_mill_extra_rations = {
-                victuals = 0.35 # crew rations
-                manual_labor = 0.24
+                victuals = 0.2 # crew rations
+                manual_labor = 0.132
                 produced = lumber
-                output = 0.796
+                output = 0.35
                 debug_max_profit = 0
                 category = building_maintenance
             }
@@ -102,10 +106,19 @@ building:
             }
             pp_lumber_mill_livestock_victuals = {
                 produced = lumber
-                output = 0.897
+                output = 0.712
                 livestock = 0.28 # ox log hauling
                 victuals = 0.24 # provisioned cutting crews
-                manual_labor = 0.23
+                manual_labor = 0.25
+                debug_max_profit = 0
+                category = building_maintenance
+            }
+            pp_lumber_mill_horse_victuals = {
+                produced = lumber
+                output = 0.730
+                horses = 0.14 # fast log hauling
+                victuals = 0.25 # provisioned cutting crews
+                manual_labor = 0.257
                 debug_max_profit = 0
                 category = building_maintenance
             }
@@ -115,15 +128,6 @@ building:
                 tools = 0.21 # axes, saw upkeep
                 livestock = 0.28 # ox log hauling
                 manual_labor = 0.22
-                debug_max_profit = 0
-                category = building_maintenance
-            }
-            pp_lumber_mill_horse_victuals = {
-                produced = lumber
-                output = 0.960
-                horses = 0.14 # fast log hauling
-                victuals = 0.25 # provisioned cutting crews
-                manual_labor = 0.26
                 debug_max_profit = 0
                 category = building_maintenance
             }
@@ -164,6 +168,7 @@ localization:
     lumber_mill_slot_0: Woodland Cutting
     lumber_mill_slot_1: Crew Support
     lumber_mill_slot_2: Logging Method
+    lumber_mill_slot_3: Market
     lumber_improvements_discovery: Dedicated Forestry
     lumber_improvements_discovery_desc: Dedicated woodland management prepares larger forest districts for later sawmill improvements.
     pp_lumber_mill_base_lumber: Woodland Cutting
@@ -177,7 +182,6 @@ localization:
     pp_lumber_mill_wound_salves: Wound Salves
     pp_lumber_mill_market_sales: Market Sales
     pp_lumber_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    lumber_mill_slot_3: Market
 evaluation:
   production_methods:
     pp_lumber_mill_base_lumber:
@@ -192,13 +196,16 @@ evaluation:
     pp_lumber_mill_horse_victuals:
       production_efficiency: 1.0
       allow_rules:
-        profit_percent: Provisioned horse logging crews intentionally sit just above the generic profit band after accepted lumber tuning.
+        profit_percent: Provisioned crews pay only where victuals are in a glut (break-even victuals 2.4 at default prices).
     pp_lumber_mill_livestock_tools:
       production_efficiency: 1.0
     pp_lumber_mill_livestock_victuals:
       production_efficiency: 1.0
     pp_lumber_mill_extra_rations:
       production_efficiency: 1.0
+      allow_rules:
+        input_throughput: Extra rations are a small glut-only crew method (break-even victuals 2.4 at default prices), deliberately below the full-building throughput.
+        output_throughput: Extra rations are a small glut-only crew method (break-even victuals 2.4 at default prices), deliberately below the full-building throughput.
     pp_lumber_mill_wound_salves:
       production_efficiency: 1.0
       allow_rules:

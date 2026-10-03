@@ -31,7 +31,9 @@ def write(repo, mod_root):
         "MINIMUM": "Minimum",
         "MAXIMUM": "Upper limit",
         "SITE_TAVERN": "Not a town or city that is a province capital",
-        "SITE_YARD": "Not a Victualling Yard site",
+        "SITE_YARD": "Not a Victualling Yard site or a market centre",
+        "INLAND_MARKET": "Inland market centre",
+        "WATER_ACCESS": "River or sea access",
         "SITE_GRANGE": "Not a province capital, or a Victualling Yard site",
     }
 
@@ -112,17 +114,29 @@ def write(repo, mod_root):
             f"{role}_max_level = {{\n " + "\n ".join(body) + "\n}"
         )
     # The harbour Victualling Yard: harbour capacity (natural harbour + river mouth + docks and shipyards), market centre
-    # and development, minus a threshold, at least `minimum` on a Yard site. Elsewhere 0, so the four-yearly cull clears
-    # Yards an old save left outside the harbour sites.
+    # and development, minus a threshold, at least `minimum` on a Yard site. An inland market centre (2026-10-03) gets a
+    # small Yard: `water` levels with river or sea access, `land` without, plus development. Elsewhere 0, so the
+    # four-yearly cull clears Yards an old save left outside these sites.
     y = cfg["victualling_yard"]
-    body = [
+    harbour = " ".join([
         add("HARBOR_CAPACITY", f"modifier:harbor_suitability multiply = {y['harbor_capacity']}"),
         when("is_market_center = yes", "MARKET", y["market_center"]),
         add("DEVELOPMENT", f"development multiply = {y['development']}"),
         add("THRESHOLD", y["threshold"]),
         clamp("min", "MINIMUM", y["minimum"]),
         clamp("max", "MAXIMUM", y["maximum"]),
-        zero_unless("NOT = { pp_victualling_yard_site = yes }", "SITE_YARD"),
+    ])
+    inland_cfg = y["inland_market_center"]
+    inland = " ".join([
+        add("INLAND_MARKET", inland_cfg["land"]),
+        when("is_coastal = yes", "WATER_ACCESS", round(inland_cfg["water"] - inland_cfg["land"], 6)),
+        add("DEVELOPMENT", f"development multiply = {inland_cfg['development']}"),
+        clamp("max", "MAXIMUM", inland_cfg["maximum"]),
+    ])
+    body = [
+        f"if = {{ limit = {{ pp_victualling_yard_site = yes }} {harbour} }}",
+        f"else_if = {{ limit = {{ is_market_center = yes }} {inland} }}",
+        f"else = {{ {add('SITE_YARD', 0)} }}",
     ]
     lines.append("victualling_yard_max_level = {\n " + "\n ".join(body) + "\n}")
     # The Grange, the Yard's overland twin at province capitals: base, roads, market centre, development.

@@ -1,36 +1,35 @@
-"""Stored-food effect carriers (EU5 1.4): province modifiers scaled by the province's stored food.
+"""Stored-food effect carrier (EU5 1.4): one province modifier per whole month of stored food.
 
 EU5 1.4 deleted the engine-scaled static modifier ``positive_province_food_growth``. Its per-stored-year effects,
-growth included, come back through these carriers; the engine's own storage growth term is off
+growth included, come back through this carrier; the engine's own storage growth term is off
 (``NPop.FOOD_STORAGE_POP_GROWTH = 0`` in pp_defines_adjustments.txt), so growth from stored food is the
 ``local_population_growth`` of the Stored Food modifier:
 
-- ``pp_stored_food`` ("Stored Food") carries the payload of one stored year (``[stored_food.per_year]`` in
-  constructor.toml: growth, prosperity, migration, devastation recovery); it is applied with ``size`` = stored years
-  (stored months / 12, 0 to the 24-month cap of ``pp_stored_food_province_months``).
-- the store lever (2026-10-02): ``pp_low_stores`` ("Low Stores", ``[stored_food.low]``) is applied with ``size`` =
-  the years the store is short of ``pivot_months``, ``pp_full_stores`` ("Full Stores", ``[stored_food.full]``) with
-  the years above it. They move the Province Food output (worth more while the store is low, less while it is full),
-  the staple output (``staple_output`` = one line per good a Provisioning method buys) and the Grange's Surplus
-  Sales. At the pivot neither is applied, so no country base value belongs to the lever.
-  Every payload is per year because per-month values would need six decimals, which EU5 1.4 rejects.
+- ``pp_food_store_<s>`` ("Stored Food: s months", s = 0 to the 24-month cap): since 2026-10-03 one province modifier
+  per whole month, so a province carries exactly one and it shows with its true values in the location view's
+  province modifier list (Jan: one food storage modifier in its rightful place; the size-scaled carriers did not show
+  their scaled values). Step s holds every stored-food effect at that store, worked out exactly and rounded once to
+  five decimals (``step_payload``): ``[stored_food.per_year]`` x s / 12 (growth, prosperity, migration, devastation
+  recovery) and the store lever, ``[stored_food.low]`` x the years short of ``pivot_months`` or ``[stored_food.full]``
+  x the years above (Province Food output, the staples, the Grange's Surplus Sales). The pivot step carries no lever
+  line, so no country base value belongs to the lever.
 - the province-scope scripted effect ``pp_refresh_stored_food``: works out the province's consumption once (the
-  location loop is the expensive part), the stored months from it, and re-applies the modifiers only when the months
-  moved by more than ``deadband_months`` since the last refresh or the store emptied. The applied months are kept in
-  a province variable (+100 offset: a variable at 0 counts as unset; locals use the same offset); a province that
-  was never refreshed gets a value below every store, so its first refresh always applies.
-- old saves: the whole-month tier version (2026-10-01) left one ``pp_stored_food_tier_<t>`` modifier and its
-  variables on each province; their names stay defined without effects (``LEGACY_TIERS``) so saves load, and the
-  first refresh removes them. The single-modifier version kept its months in ``pp_stored_food_size``; the first
-  refresh drops it, which also applies Low / Full Stores to those provinces.
+  location loop is the expensive part) and the stored months from it. The step is the months rounded to the nearest
+  whole month (half rounds up), re-picked only when the store moved more than half a month + ``deadband_months``
+  away from the carried step, so a store on a boundary does not flip. A province nobody eats in carries no step. The
+  stored months themselves stay in ``pp_stored_food_months`` (re-set past the deadband) for the AI weights; variables
+  carry +100 (a variable at 0 counts as unset); a province never refreshed starts below every store.
+- old saves: the scaled version (2026-10-01..03: ``pp_stored_food``, ``pp_low_stores``, ``pp_full_stores``) and the
+  whole-month tier version (2026-10-01, ``pp_stored_food_tier_<t>``) stay defined without effects so saves load; the
+  first refresh removes them.
 - Farm Produce (2026-10-03, ``[stored_food.farm_produce]``): the location modifier ``pp_farm_produce`` (more Province
   Food output) on every location of a province that holds a Cookshop or Public Kitchen, applied with ``size`` = the
   province's worked farm and orchard levels (script value ``pp_province_farm_levels``) / ``full_at_farm_levels``, at
   most 1. ``pp_refresh_farm_produce`` renews it once a year (January) inside the store refresh, and at a province's
   first refresh; it adds no pulse of its own.
-- display helpers (view only, location scope): ``pp_stored_food_years`` (the stored years the modifier is applied at)
-  and ``pp_province_food_storage_growth`` (its growth); the location view's Stored Food chip scales each effect by
-  the years (location_status.py). Low Stores and Full Stores show in the province modifier list beside it.
+- display helpers (view only, location scope): ``pp_stored_food_years`` (the carried step's months / 12) and
+  ``pp_province_food_storage_growth`` (its growth); the location view's Stored Food chip scales each Stored Food
+  effect by the years (location_status.py).
 
 The refresh runs from ``in_game/common/on_action/pp_stored_food.txt`` (monthly country pulse, staggered over the month)
 and once at game start (pp_game_start.txt). ``ppc build`` / ``ppc sync`` write the generated files in their finalize
@@ -52,7 +51,13 @@ STAPLE_KEY = "staple_output"   # in [stored_food.low] / [stored_food.full]: one 
 REFRESH_EFFECT = "pp_refresh_stored_food"
 MONTHS_VALUE = "pp_stored_food_province_months"
 CONSUMPTION_VALUE = "pp_stored_food_province_consumption"
-SIZE_VARIABLE = "pp_stored_food_months"         # applied months + 100
+SIZE_VARIABLE = "pp_stored_food_months"         # stored months + 100 (AI weights: pp_location_stored_months)
+STEP_PREFIX = "pp_food_store_"                  # pp_food_store_0 .. pp_food_store_24
+STEP_VARIABLE = "pp_food_store_step"            # carried step + 100
+STEP_LOCAL = "pp_food_store_new"
+STEP_CHANGE_LOCAL = "pp_food_store_change"
+STEPS = 24                                      # the cap: NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX x 12 months
+NO_STEP = 99                                    # a province nobody eats in: no step
 OLD_SIZE_VARIABLE = "pp_stored_food_size"       # the single-modifier version's variable (2026-10-01), dropped once
 UNSET_VALUE = 50                                # "never refreshed": below every store (0 months = 100)
 CONSUMPTION_LOCAL = "pp_stored_food_consumption"
@@ -68,6 +73,8 @@ EPSILON = 0.00001   # the engine's fixed-point step
 LEGACY_TIERS = 24
 LEGACY_PREFIX = "pp_stored_food_tier_"
 LEGACY_VARIABLES = ("pp_stored_food_tier", "pp_stored_food_tier_next", "pp_stored_food_tier_change")
+# The scaled version (2026-10-01..03): one modifier at size = stored years plus Low / Full Stores.
+LEGACY_SCALED = ("pp_stored_food", "pp_low_stores", "pp_full_stores")
 
 STATIC_MODIFIERS = Path("in_game/common/static_modifiers/pp_stored_food.txt")
 SCRIPT_VALUES = Path("in_game/common/script_values/pp_stored_food.txt")
@@ -98,20 +105,11 @@ HEADER = "# Generated by ppc build from [stored_food] in constructor.toml (store
 # Player-facing plain text (generated static-modifier descriptions take no concept links); no balance numbers, the
 # modifier tooltip shows them.
 DESCRIPTION = (
-    "The food this province holds in storage, counted in its own consumption. Full stores let its people grow faster, "
-    "and they help the province recover from devastation, draw settlers and prosper. The effects grow with the store "
-    "up to a cap and follow it from month to month."
-)
-LOW_NAME = "Low Stores"
-LOW_DESCRIPTION = (
-    "The province holds less food than a year of its own needs. Food is worth more here, so farms, cookshops and "
-    "taverns cook and serve more of it, and the victualling yards find little to pack. The effects grow as the store "
-    "empties."
-)
-FULL_NAME = "Full Stores"
-FULL_DESCRIPTION = (
-    "The province holds more food than a year of its own needs. Food is worth less here, so cooking and serving slow "
-    "down and the surplus is left to the markets. The effects grow as the store fills, up to a cap."
+    "The food this province holds in storage, counted in months of its own consumption. Full stores let its people grow "
+    "faster, and they help the province recover from devastation, draw settlers and prosper. While the store is low, "
+    "food is worth more here, so farms, cookshops and taverns make and serve more of it and the granges find little to "
+    "pack; while it is full, food is worth less, cooking slows down and the surplus is left to the granges and the "
+    "markets. The effects follow the store month by month, up to a cap."
 )
 LEGACY_DESCRIPTION = "Replaced by the Stored Food modifier at the province's next monthly update."
 FARM_PRODUCE_NAME = "Farm Produce"
@@ -236,40 +234,62 @@ def growth_per_year(config: StoredFoodConfig) -> float:
     return dict(config.per_year).get(GROWTH_KEY, 0.0)
 
 
+def step_name(step: int) -> str:
+    return f"{STEP_PREFIX}{step}"
+
+
+def step_payload(config: StoredFoodConfig, step: int) -> dict[str, float]:
+    """The Stored Food modifier at ``step`` whole stored months: Stored Food x step / 12, plus Low Stores x the years
+    short of the pivot or Full Stores x the years above it. Every line is worked out exactly (Decimal) and rounded once
+    to five decimals; lines that round to 0 are left out, so the pivot step carries no store-lever line at all."""
+    if not 0 <= step <= STEPS:
+        raise ValueError(f"step {step} outside 0..{STEPS}")
+    pivot = Decimal(repr(config.pivot_months))
+    months = Decimal(step)
+    total: dict[str, Decimal] = {}
+
+    def add(lines: tuple[tuple[str, float], ...], years: Decimal) -> None:
+        for key, value in lines:
+            total[key] = total.get(key, Decimal(0)) + Decimal(repr(value)) * years
+
+    add(config.per_year, months / MONTHS_PER_YEAR)
+    if months < pivot:
+        add(config.low, (pivot - months) / MONTHS_PER_YEAR)
+    elif months > pivot:
+        add(config.full, (months - pivot) / MONTHS_PER_YEAR)
+    quantum = Decimal(1).scaleb(-DECIMALS)
+    out = {}
+    for key, value in total.items():
+        rounded = value.quantize(quantum, rounding=ROUND_HALF_UP)
+        if rounded != 0:
+            out[key] = float(rounded)
+    return out
+
+
+def step_label(step: int) -> str:
+    if step == 0:
+        return "almost empty"
+    return "1 month" if step == 1 else f"{step} months"
+
+
 def render_static_modifiers(config: StoredFoodConfig) -> str:
+    pivot = format_value(config.pivot_months)
     lines = [
         HEADER,
-        "# Stored Food (EU5 1.4 carrier of the 1.3 stored-food effects, growth included; the engine's storage growth term",
-        "# is off, NPop.FOOD_STORAGE_POP_GROWTH = 0): the effects of one stored year. pp_refresh_stored_food applies it",
-        "# with size = the province's stored years (0 to the 2-year cap), so the effects follow the store continuously.",
-        f"{MODIFIER} = {{",
-        "\tgame_data = { category = province }",
+        "# Stored Food (2026-10-03): one province modifier per whole month of stored food, 0 to the 24-month cap, so the",
+        "# province carries exactly one and it shows with its true values in the location view's province modifier list.",
+        "# Each step holds every stored-food effect at that store: Stored Food ([stored_food.per_year], growth included;",
+        "# the engine's storage growth term is off, NPop.FOOD_STORAGE_POP_GROWTH = 0) x months / 12, and the store lever:",
+        f"# Low Stores ([stored_food.low]) x the years short of {pivot} months, Full Stores ([stored_food.full]) x the years",
+        "# above. pp_refresh_stored_food picks the step: the stored months rounded to the nearest whole month, kept while",
+        "# the store stays within half a month plus the deadband of it. Values are rounded once, to five decimals.",
     ]
-    lines += [f"\t{key} = {format_value(value)}" for key, value in payload(config).items()]
-    pivot = format_value(config.pivot_months)
-    lines += [
-        "}",
-        "",
-        f"# Store lever. Low Stores: the effects of one year short of {pivot} stored months, applied with size = the years",
-        "# short (1 at an empty store). Province Food is worth more, so everything that makes it runs harder; the Grange's",
-        "# Surplus Sales dry up.",
-        f"{LOW_MODIFIER} = {{",
-        "\tgame_data = { category = province }",
-    ]
-    lines += [f"\t{key} = {format_value(value)}" for key, value in low_payload(config).items()]
-    lines += [
-        "}",
-        "",
-        f"# Full Stores: the effects of one year above {pivot} stored months, applied with size = the years above (1 at the",
-        "# 24-month cap). Province Food is worth less, the land yields more of its staples for the market, and the Grange",
-        "# sells the surplus.",
-        f"{FULL_MODIFIER} = {{",
-        "\tgame_data = { category = province }",
-    ]
-    lines += [f"\t{key} = {format_value(value)}" for key, value in full_payload(config).items()]
+    for step in range(STEPS + 1):
+        lines += [f"{step_name(step)} = {{", "\tgame_data = { category = province }"]
+        lines += [f"\t{key} = {format_value(value)}" for key, value in step_payload(config, step).items()]
+        lines.append("}")
     if config.farm_produce:
         lines += [
-            "}",
             "",
             f"# Farm Produce (2026-10-03): on every location of a province that holds a {' or '.join(config.farm_produce_buildings)},",
             f"# applied with size = the province's worked farm and orchard levels / {format_value(config.farm_produce_full_levels)} (at most 1).",
@@ -277,12 +297,14 @@ def render_static_modifiers(config: StoredFoodConfig) -> str:
             "\tgame_data = { category = location }",
         ]
         lines += [f"\t{key} = {format_value(value)}" for key, value in _rounded(config.farm_produce).items()]
+        lines.append("}")
     lines += [
-        "}",
         "",
-        "# Old saves (whole-month tiers, 2026-10-01): the names stay defined, without effects, so those saves load;",
-        "# pp_refresh_stored_food removes them at the province's first refresh.",
+        "# Old saves: the names of the earlier versions stay defined, without effects, so those saves load;",
+        "# pp_refresh_stored_food removes them at the province's first refresh (scaled modifiers 2026-10-01..03,",
+        "# whole-month tiers 2026-10-01).",
     ]
+    lines += [f"{name} = {{ game_data = {{ category = province }} }}" for name in LEGACY_SCALED]
     lines += [f"{legacy_name(t)} = {{ game_data = {{ category = province }} }}" for t in range(1, LEGACY_TIERS + 1)]
     return "\n".join(lines) + "\n"
 
@@ -291,14 +313,14 @@ def render_script_values(config: StoredFoodConfig) -> str:
     offset = VARIABLE_OFFSET
     return (
         f"{HEADER}\n"
-        "# Location scope (display only): the stored years the province's Stored Food modifier is applied at (its size;\n"
-        f"# {SIZE_VARIABLE} holds the applied months + {offset}). 0 without the modifier.\n"
+        "# Location scope (display only): the stored years of the Stored Food step the province carries (its whole months\n"
+        f"# / 12; {STEP_VARIABLE} holds the step + {offset}). 0 without one.\n"
         f"{YEARS_VALUE} = {{\n"
         "\tvalue = 0\n"
         "\tprovince ?= {\n"
         "\t\tif = {\n"
-        f"\t\t\tlimit = {{ has_variable = {SIZE_VARIABLE} }}\n"
-        f"\t\t\tadd = var:{SIZE_VARIABLE}\n"
+        f"\t\t\tlimit = {{ has_variable = {STEP_VARIABLE} var:{STEP_VARIABLE} > {format_value(offset - 0.5)} }}\n"
+        f"\t\t\tadd = var:{STEP_VARIABLE}\n"
         f"\t\t\tsubtract = {offset}\n"
         "\t\t}\n"
         "\t}\n"
@@ -306,8 +328,8 @@ def render_script_values(config: StoredFoodConfig) -> str:
         "\tmin = 0\n"
         "}\n"
         "\n"
-        f"# Location scope (display only): yearly population growth from the province's Stored Food modifier, its {GROWTH_KEY}\n"
-        f"# at the applied size. It is part of modifier:{GROWTH_KEY}; the engine adds no storage term of its own.\n"
+        f"# Location scope (display only): yearly population growth from the province's Stored Food step, its {GROWTH_KEY}.\n"
+        f"# It is part of modifier:{GROWTH_KEY}; the engine adds no storage term of its own.\n"
         f"{GROWTH_VALUE} = {{\n"
         f"\tvalue = {YEARS_VALUE}\n"
         f"\tmultiply = {format_value(growth_per_year(config))}\n"
@@ -315,22 +337,29 @@ def render_script_values(config: StoredFoodConfig) -> str:
     )
 
 
+def _remove_steps(indent: str) -> list[str]:
+    return [f"{indent}if = {{ limit = {{ has_province_modifier = {step_name(s)} }} remove_province_modifier = {step_name(s)} }}"
+            for s in range(STEPS + 1)]
+
+
 def render_scripted_effects(config: StoredFoodConfig) -> str:
     offset = VARIABLE_OFFSET
     high = format_value(offset + config.deadband_months)
     low = format_value(offset - config.deadband_months)
     zero = format_value(offset + EPSILON)
-    pivot = format_value(offset + config.pivot_months)
-    below_pivot = format_value(offset + config.pivot_months - EPSILON)
-    above_pivot = format_value(offset + config.pivot_months + EPSILON)
+    step_high = format_value(offset + 0.5 + config.deadband_months)
+    step_low = format_value(offset - 0.5 - config.deadband_months)
     lines = [
         HEADER,
-        "# Province scope. Keeps the province's Stored Food modifier at size = its stored years, and Low Stores / Full Stores",
-        f"# at the years the store is below / above {format_value(config.pivot_months)} months. The consumption (a loop over the province's",
-        "# locations) is worked out once; the modifiers are re-applied only when the stored months moved by more than",
-        f"# {format_value(config.deadband_months)} since the last refresh or the store emptied. Variables and locals carry + {offset} (a variable at 0",
-        "# counts as unset); `var:x = n` compares scopes, so only < / > ranges are used. A province that was never refreshed",
-        f"# starts at {UNSET_VALUE}, below every store, so its first refresh always applies.",
+        "# Province scope. Keeps the province on the Stored Food step of its store: the stored months rounded to the nearest",
+        f"# whole month (half a month rounds up), re-picked only when the store moved more than half a month + {format_value(config.deadband_months)}",
+        "# away from the carried step, so a store sitting on a boundary does not flip back and forth. The consumption (a loop",
+        "# over the province's locations) is worked out once. A province nobody eats in carries no step.",
+        f"# {SIZE_VARIABLE} keeps the stored months themselves (re-set when they moved by more than {format_value(config.deadband_months)}) for",
+        f"# the AI weights and displays that read pp_location_stored_months; {STEP_VARIABLE} keeps the carried step.",
+        f"# Variables and locals carry + {offset} (a variable at 0 counts as unset); `var:x = n` compares scopes, so only < / >",
+        f"# ranges are used. A province never refreshed starts at {UNSET_VALUE}, below every store, so its first refresh applies;",
+        f"# {NO_STEP} marks a province without a step.",
         f"{REFRESH_EFFECT} = {{",
         "\t# old saves: drop the whole-month tier modifier and its variables once",
         "\tif = {",
@@ -343,7 +372,11 @@ def render_scripted_effects(config: StoredFoodConfig) -> str:
         lines.append(f"\t\tif = {{ limit = {{ has_variable = {variable} }} remove_variable = {variable} }}")
     lines += [
         "\t}",
-        "\t# old saves: the single-modifier version's months; without the new variable the first refresh applies everything",
+        "\t# old saves: the scaled modifiers (2026-10-01..03) and the single-modifier version's months",
+    ]
+    for name in LEGACY_SCALED:
+        lines.append(f"\tif = {{ limit = {{ has_province_modifier = {name} }} remove_province_modifier = {name} }}")
+    lines += [
         f"\tif = {{ limit = {{ has_variable = {OLD_SIZE_VARIABLE} }} remove_variable = {OLD_SIZE_VARIABLE} }}",
         f"\tset_local_variable = {{ name = {CONSUMPTION_LOCAL} value = {{ value = {CONSUMPTION_VALUE} add = {offset} }} }}",
         f"\tset_local_variable = {{ name = {TARGET_LOCAL} value = {offset} }}",
@@ -360,6 +393,7 @@ def render_scripted_effects(config: StoredFoodConfig) -> str:
         "\t\t\t}",
         "\t\t}",
         "\t}",
+        "\t# the stored months (AI weights, displays)",
         "\tif = {",
         f"\t\tlimit = {{ NOT = {{ has_variable = {SIZE_VARIABLE} }} }}",
         f"\t\tset_variable = {{ name = {SIZE_VARIABLE} value = {UNSET_VALUE} }}",
@@ -374,27 +408,41 @@ def render_scripted_effects(config: StoredFoodConfig) -> str:
         f"\t\t\t\tAND = {{ local_var:{TARGET_LOCAL} < {zero} var:{SIZE_VARIABLE} > {zero} }}",
         "\t\t\t}",
         "\t\t}",
-    ]
-    for name in (MODIFIER, LOW_MODIFIER, FULL_MODIFIER):
-        lines.append(f"\t\tif = {{ limit = {{ has_province_modifier = {name} }} remove_province_modifier = {name} }}")
-    lines += [
-        "\t\tif = {",
-        f"\t\t\tlimit = {{ local_var:{TARGET_LOCAL} > {zero} }}",
-        f"\t\t\tadd_province_modifier = {{ modifier = {MODIFIER} size = {{ value = local_var:{TARGET_LOCAL} "
-        f"subtract = {offset} divide = {MONTHS_PER_YEAR} }} }}",
-        "\t\t}",
-        "\t\t# the store lever; a province nobody eats in gets neither",
-        "\t\tif = {",
-        f"\t\t\tlimit = {{ local_var:{CONSUMPTION_LOCAL} > {offset} local_var:{TARGET_LOCAL} < {below_pivot} }}",
-        f"\t\t\tadd_province_modifier = {{ modifier = {LOW_MODIFIER} size = {{ value = {pivot} "
-        f"subtract = local_var:{TARGET_LOCAL} divide = {MONTHS_PER_YEAR} }} }}",
-        "\t\t}",
-        "\t\tif = {",
-        f"\t\t\tlimit = {{ local_var:{TARGET_LOCAL} > {above_pivot} }}",
-        f"\t\t\tadd_province_modifier = {{ modifier = {FULL_MODIFIER} size = {{ value = local_var:{TARGET_LOCAL} "
-        f"subtract = {pivot} divide = {MONTHS_PER_YEAR} }} }}",
-        "\t\t}",
         f"\t\tset_variable = {{ name = {SIZE_VARIABLE} value = local_var:{TARGET_LOCAL} }}",
+        "\t}",
+        "\t# the Stored Food step",
+        "\tif = {",
+        f"\t\tlimit = {{ NOT = {{ has_variable = {STEP_VARIABLE} }} }}",
+        f"\t\tset_variable = {{ name = {STEP_VARIABLE} value = {UNSET_VALUE} }}",
+        "\t}",
+        "\tif = {",
+        f"\t\tlimit = {{ local_var:{CONSUMPTION_LOCAL} > {offset} }}",
+        f"\t\tset_local_variable = {{ name = {STEP_CHANGE_LOCAL} value = {{ value = local_var:{TARGET_LOCAL} "
+        f"subtract = var:{STEP_VARIABLE} add = {offset} }} }}",
+        "\t\tif = {",
+        f"\t\t\tlimit = {{ OR = {{ local_var:{STEP_CHANGE_LOCAL} > {step_high} local_var:{STEP_CHANGE_LOCAL} < {step_low} }} }}",
+        f"\t\t\tset_local_variable = {{ name = {STEP_LOCAL} value = {{ value = local_var:{TARGET_LOCAL} add = 0.5 floor = yes "
+        f"max = {offset + STEPS} }} }}",
+    ]
+    lines += _remove_steps("\t\t\t")
+    for step in range(STEPS + 1):
+        if step < STEPS:
+            keyword = "if" if step == 0 else "else_if"
+            lines.append(f"\t\t\t{keyword} = {{ limit = {{ local_var:{STEP_LOCAL} < {format_value(offset + step + 0.5)} }} "
+                         f"add_province_modifier = {{ modifier = {step_name(step)} }} }}")
+        else:
+            lines.append(f"\t\t\telse = {{ add_province_modifier = {{ modifier = {step_name(step)} }} }}")
+    lines += [
+        f"\t\t\tset_variable = {{ name = {STEP_VARIABLE} value = local_var:{STEP_LOCAL} }}",
+        "\t\t}",
+        "\t}",
+        "\t# nobody eats here: no step",
+        "\telse_if = {",
+        f"\t\tlimit = {{ var:{STEP_VARIABLE} > {format_value(NO_STEP + 0.5)} }}",
+    ]
+    lines += _remove_steps("\t\t")
+    lines += [
+        f"\t\tset_variable = {{ name = {STEP_VARIABLE} value = {NO_STEP} }}",
         "\t}",
     ]
     if config.farm_produce:
@@ -432,15 +480,15 @@ def render_scripted_effects(config: StoredFoodConfig) -> str:
 
 def render_localization(config: StoredFoodConfig) -> str:
     lines = ["l_english:", f"  {HEADER.strip()}"]
-    lines.append(f'  STATIC_MODIFIER_NAME_{MODIFIER}: "Stored Food"')
-    lines.append(f'  STATIC_MODIFIER_DESC_{MODIFIER}: "{DESCRIPTION}"')
-    lines.append(f'  STATIC_MODIFIER_NAME_{LOW_MODIFIER}: "{LOW_NAME}"')
-    lines.append(f'  STATIC_MODIFIER_DESC_{LOW_MODIFIER}: "{LOW_DESCRIPTION}"')
-    lines.append(f'  STATIC_MODIFIER_NAME_{FULL_MODIFIER}: "{FULL_NAME}"')
-    lines.append(f'  STATIC_MODIFIER_DESC_{FULL_MODIFIER}: "{FULL_DESCRIPTION}"')
+    for step in range(STEPS + 1):
+        lines.append(f'  STATIC_MODIFIER_NAME_{step_name(step)}: "Stored Food: {step_label(step)}"')
+        lines.append(f'  STATIC_MODIFIER_DESC_{step_name(step)}: "{DESCRIPTION}"')
     if config.farm_produce:
         lines.append(f'  STATIC_MODIFIER_NAME_{FARM_PRODUCE_MODIFIER}: "{FARM_PRODUCE_NAME}"')
         lines.append(f'  STATIC_MODIFIER_DESC_{FARM_PRODUCE_MODIFIER}: "{FARM_PRODUCE_DESCRIPTION}"')
+    for name in LEGACY_SCALED:
+        lines.append(f'  STATIC_MODIFIER_NAME_{name}: "Stored Food"')
+        lines.append(f'  STATIC_MODIFIER_DESC_{name}: "{LEGACY_DESCRIPTION}"')
     for tier in range(1, LEGACY_TIERS + 1):
         lines.append(f'  STATIC_MODIFIER_NAME_{legacy_name(tier)}: "Stored Food"')
         lines.append(f'  STATIC_MODIFIER_DESC_{legacy_name(tier)}: "{LEGACY_DESCRIPTION}"')

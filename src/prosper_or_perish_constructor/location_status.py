@@ -5,10 +5,10 @@ is a set of widgets, one per state, with exclusive visibility tests, like the so
 
 How each state is read:
 - food: the stored months are a script value (`pp_province_food_storage_months` in
-  script_values/pp_province_food_storage.txt); the effects are those of the province's Stored Food modifier
-  (`pp_stored_food`, stored_food.py), one line per effect at its applied size: the script value `pp_stored_food_years`
-  times the effect's value per stored year, and a "no effects" line without the modifier; starvation is the
-  engine's `Province.IsStarving`.
+  script_values/pp_province_food_storage.txt); the effects are the Stored Food part of the province's Stored Food
+  step (`pp_food_store_<s>`, stored_food.py), one line per effect: the script value `pp_stored_food_years` (the
+  step's months / 12) times the effect's value per stored year, and a "no effects" line without a step; starvation
+  is the engine's `Province.IsStarving`.
 - land: the engine applies `abundant_free_land`, `available_free_land` and `overpopulation` itself, and scripts
   cannot see them, so each carries a marker modifier type (`pp_land_*`, in pp_capacity_pressure_effects.txt) that
   the GUI reads through `GetModifierValueFixed`. Its value is the modifier's strength, so the tooltip lists every
@@ -18,8 +18,8 @@ How each state is read:
   frame's colour and the signed badge); a fourth tests region membership, so the chip shows the harvest region's
   crop in average years too.
 
-The Stored Food chip replaces the modifier's icon in the province modifier list beside it, so that list skips the
-modifier (`hide_stored_food_modifier`): the icons and tooltip rows by its display name, the count by the stored years.
+The Stored Food step itself shows in the province modifier list beside the chips with its full effects (2026-10-03:
+the list no longer skips it).
 """
 
 from __future__ import annotations
@@ -490,50 +490,6 @@ def add_status_row(text: str, harvests: Harvests, land_rows: dict[str, str] | No
     if found != 1:
         raise ValueError(f"location_window.gui: expected 1 top-row anchor for the status chips, found {found}")
     return text.replace(_ANCHOR, _ANCHOR[:_SPLIT] + status_row(harvests, land_rows, stored_rows) + _ANCHOR[_SPLIT:])
-
-
-_PROVINCE_MODIFIERS = f"{_LOC}.GetProvince.GetTimedModifiers"
-_PROVINCE_MODIFIERS_MARK = "# Province timed modifiers\n"
-# The modifier's display name (the old saves' tier modifiers share it, so they stay hidden too).
-_NOT_STORED_FOOD = "Not(EqualTo_string(TimedModifier.GetModifier.GetName, Localize('STATIC_MODIFIER_NAME_pp_stored_food')))"
-
-
-def _replace_exactly(block: str, pattern: str, repl, count: int) -> str:
-    out, found = re.subn(pattern, repl, block)
-    if found != count:
-        raise ValueError(f"location_window.gui: expected {count} x {pattern!r} in the province modifier list, found {found}")
-    return out
-
-
-def hide_stored_food_modifier(text: str) -> str:
-    """Leave the Stored Food modifier out of the location view's province modifier list (the chip shows it).
-
-    The list counts the province's timed modifiers less one while the province carries the modifier (stored years
-    above 0); the icon (one modifier) and the tooltip row (several) of the modifier itself are invisible and skipped.
-    """
-    if text.count(_PROVINCE_MODIFIERS_MARK) != 1:
-        raise ValueError("location_window.gui: expected 1 province timed modifier list")
-    start = text.index(_PROVINCE_MODIFIERS_MARK)
-    depth, end = 0, text.index("{", start)
-    while True:
-        depth += {"{": 1, "}": -1}.get(text[end], 0)
-        end += 1
-        if depth == 0:
-            break
-    block = text[start:end]
-    models = re.escape(_PROVINCE_MODIFIERS)
-    stored = f"GreaterThan_CFixedPoint({stored_food_years()}, '(CFixedPoint)0')"
-    shown = f"Subtract_int32(GetDataModelSize({_PROVINCE_MODIFIERS}), Select_int32({stored}, '(int32)1', '(int32)0'))"
-    block = _replace_exactly(block, rf"GetDataModelSize\({models}\)", lambda _: shown, 4)
-    # one modifier: the flow skips the hidden icon
-    block = _replace_exactly(block, rf'(\n(\t*)datamodel = "\[{models}\]"\n)', r'\1\2ignoreinvisible = yes\n', 1)
-    block = _replace_exactly(block, r'(\n\t*item = \{\n\t*timed_modifier_icon = \{\n(\t*)datacontext = "\[TimedModifier\]"\n)',
-                             lambda m: f'{m.group(1)}{m.group(2)}visible = "[{_NOT_STORED_FOOD}]"\n', 1)
-    # several modifiers: the tooltip skips the hidden row (its whole table field, so no empty row is left)
-    block = _replace_exactly(
-        block, rf'(\n(\t*)blockoverride "rowlist_datamodel" \{{ datamodel = "\[{models}\]") \}}',
-        lambda m: f'{m.group(1)} ignoreinvisible = yes }}\n{m.group(2)}blockoverride "visibility" {{ visible = "[{_NOT_STORED_FOOD}]" }}', 1)
-    return text[:start] + block + text[end:]
 
 
 def write_harvest_files(mod_root: Path, harvests: Harvests) -> int:

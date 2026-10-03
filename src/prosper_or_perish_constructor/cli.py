@@ -1311,7 +1311,7 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
 
     stored = stored_food.apply(project, mod_root)
     print(
-        f"Stored food: scaled province modifier, refresh effect, display values and localization "
+        f"Stored food: step modifiers, refresh effect, display values and localization "
         f"({stored.files_changed} files changed).",
         flush=True,
     )

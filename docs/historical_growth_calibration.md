@@ -361,6 +361,26 @@ Known limits:
   points, AI building and old-save behaviour are untested. Saves made before the change keep an empty Provisioning
   slot where a building ran Sell the Surplus: a new game is needed.
 
+### 6.5a One Stored Food step modifier (2026-10-03, branch `province-food-store-lever`)
+
+Jan: one food storage modifier that shows in the location view in its rightful place. The three size-scaled modifiers
+(Stored Food, Low Stores, Full Stores) are replaced by 25 province modifiers `pp_food_store_0` .. `_24`, one per whole
+stored month; a province carries exactly one, and the location view's province modifier list shows it with its true
+values (the list no longer skips it; the Stored Food chip stays).
+
+- Step s carries, worked out exactly and rounded once to five decimals: `[stored_food.per_year]` x s / 12, plus
+  `[stored_food.low]` x (12 - s) / 12 below the pivot or `[stored_food.full]` x (s - 12) / 12 above it. Step 0 is the
+  whole Low Stores year, step 12 carries no lever line, step 24 is two Stored Food years plus the whole Full Stores year;
+  every line is within 0.000005 of the continuous value (tests/test_stored_food.py).
+- Step choice: the stored months rounded to the nearest whole month, half up (`add = 0.5 floor = yes`); re-picked only
+  when the store moved more than 0.55 months (half a month + `deadband_months`) away from the carried step, so a store
+  on a boundary does not flip each month; an emptied store always lands on step 0; a province nobody eats in carries
+  none. Against the continuous lever the effects sit at most about half a month off (Province Food output 3 %, Surplus
+  Sales 1-12 %), the rest points of the buildings move in whole-month steps.
+- `pp_stored_food_months` keeps the continuous stored months (deadband 0.05) for the AI weights
+  (`pp_location_stored_months`); `pp_food_store_step` holds the carried step (+100). Old saves: the scaled modifiers
+  and the tier modifiers stay defined without effects and are removed at the province's first refresh.
+
 ### 6.6 Mini World growth calibration (2026-10-03, branch `province-food-store-lever`)
 
 Jan's target: world growth about 0.3 %/yr, not uniform, set through food or minimal changes to growth from storage, no

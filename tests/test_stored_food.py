@@ -97,19 +97,41 @@ def test_store_lever_moves_province_food_staples_and_surplus_sales() -> None:
     assert PURCHASE not in low and PURCHASE not in full
 
 
-def test_three_scaled_modifiers_carry_one_year_each() -> None:
+def test_one_step_modifier_per_stored_month_carries_every_effect() -> None:
+    """2026-10-03: one province modifier per whole stored month (0..24); a province carries exactly one, with its true
+    values. Each line is the exact continuous value at that month, rounded once to five decimals."""
     config = _config()
     text = _read(MOD_ROOT / stored_food.STATIC_MODIFIERS)
-    for name, expected in (
-        ("pp_stored_food", PAYLOAD_1_3),
-        ("pp_low_stores", stored_food.low_payload(config)),
-        ("pp_full_stores", stored_food.full_payload(config)),
-    ):
-        block = _block("\n" + text, name)
+    assert stored_food.STEPS == 2 * 12 == _define("GROWTH_FROM_FOOD_MULTIPLIER_MAX") * 12
+    pivot = int(config.pivot_months)
+    low, full, per_year = dict(config.low), dict(config.full), dict(config.per_year)
+    previous: dict[str, float] | None = None
+    for step in range(stored_food.STEPS + 1):
+        block = _block("\n" + text, f"pp_food_store_{step}")
         assert "game_data = { category = province }" in block
-        values = dict(re.findall(r"^\t(local_\w+) = (-?[\d.]+)$", block, flags=re.MULTILINE))
-        assert {key: float(value) for key, value in values.items()} == expected, name
-        assert all(len(value.split(".")[1]) <= 5 for value in values.values())   # EU5 1.4 rejects six decimals
+        values = {k: float(v) for k, v in re.findall(r"^\t(local_\w+) = (-?[\d.]+)$", block, flags=re.MULTILINE)}
+        assert values == stored_food.step_payload(config, step), step
+        assert all(len(v.split(".")[1]) <= 5 for v in re.findall(r"= (-?[\d.]+)$", block, flags=re.MULTILINE))
+        # every line within half a fixed-point step of the exact value
+        for key in set(per_year) | set(low) | set(full):
+            exact = per_year.get(key, 0.0) * step / 12
+            exact += low.get(key, 0.0) * max(pivot - step, 0) / 12 + full.get(key, 0.0) * max(step - pivot, 0) / 12
+            assert abs(values.get(key, 0.0) - exact) <= 0.000005 + 1e-12, (step, key)
+        # the Stored Food lines only grow with the store; Province Food output only falls
+        if previous is not None:
+            for key in per_year:
+                assert values[key] >= previous.get(key, 0.0), (step, key)
+            assert values.get(FOOD, 0.0) < previous.get(FOOD, 0.0), step
+        previous = values
+    # the ends and the pivot are exact: an empty store is the whole Low Stores year, the pivot carries no lever line,
+    # the cap is two Stored Food years plus the whole Full Stores year
+    assert stored_food.step_payload(config, 0) == stored_food.low_payload(config)
+    assert stored_food.step_payload(config, pivot) == PAYLOAD_1_3
+    cap = stored_food.step_payload(config, 24)
+    assert cap == {**{k: 2 * v for k, v in PAYLOAD_1_3.items()}, **stored_food.full_payload(config)}
+    # the scaled carriers of 2026-10-01..03 are gone from the effects
+    for name in stored_food.LEGACY_SCALED:
+        assert f"\n{name} = {{ game_data = {{ category = province }} }}" in "\n" + text
     parse_file(MOD_ROOT / stored_food.STATIC_MODIFIERS)
 
 
@@ -124,9 +146,11 @@ def test_old_save_tier_names_stay_defined_without_effects() -> None:
     text = _read(MOD_ROOT / stored_food.STATIC_MODIFIERS)
     names = re.findall(r"^(pp_stored_food_tier_\d+) = \{ game_data = \{ category = province \} \}$", text, flags=re.MULTILINE)
     assert names == [f"pp_stored_food_tier_{t}" for t in range(1, 25)]
+    scaled = re.findall(r"^(pp_\w+) = \{ game_data = \{ category = province \} \}$", text, flags=re.MULTILINE)
+    assert set(stored_food.LEGACY_SCALED) <= set(scaled)
     loc = _read(MOD_ROOT / stored_food.LOCALIZATION)
-    for tier in range(1, 25):
-        assert f"\n  STATIC_MODIFIER_NAME_pp_stored_food_tier_{tier}:" in loc
+    for name in [f"pp_stored_food_tier_{t}" for t in range(1, 25)] + list(stored_food.LEGACY_SCALED):
+        assert f"\n  STATIC_MODIFIER_NAME_{name}:" in loc
 
 
 def test_generated_files_match_the_configuration_and_the_tier_files_are_gone() -> None:
@@ -136,20 +160,19 @@ def test_generated_files_match_the_configuration_and_the_tier_files_are_gone() -
         assert not (MOD_ROOT / path).exists()
 
 
-def test_localization_names_the_modifier_without_numbers_in_the_description() -> None:
+def test_localization_names_each_step_without_numbers_in_the_description() -> None:
     loc = _read(MOD_ROOT / stored_food.LOCALIZATION)
-    assert '  STATIC_MODIFIER_NAME_pp_stored_food: "Stored Food"' in loc
-    assert "\n  STATIC_MODIFIER_DESC_pp_stored_food:" in loc
-    assert '  STATIC_MODIFIER_NAME_pp_low_stores: "Low Stores"' in loc
-    assert '  STATIC_MODIFIER_NAME_pp_full_stores: "Full Stores"' in loc
-    assert "\n  STATIC_MODIFIER_DESC_pp_low_stores:" in loc and "\n  STATIC_MODIFIER_DESC_pp_full_stores:" in loc
-    for text in (stored_food.DESCRIPTION, stored_food.LOW_DESCRIPTION, stored_food.FULL_DESCRIPTION,
-                 stored_food.LEGACY_DESCRIPTION):
+    assert '  STATIC_MODIFIER_NAME_pp_food_store_0: "Stored Food: almost empty"' in loc
+    assert '  STATIC_MODIFIER_NAME_pp_food_store_1: "Stored Food: 1 month"' in loc
+    assert '  STATIC_MODIFIER_NAME_pp_food_store_24: "Stored Food: 24 months"' in loc
+    for step in range(stored_food.STEPS + 1):
+        assert f'\n  STATIC_MODIFIER_DESC_pp_food_store_{step}: "{stored_food.DESCRIPTION}"' in loc
+    for text in (stored_food.DESCRIPTION, stored_food.LEGACY_DESCRIPTION):
         assert not re.search(r"\d", text)
         assert "[" not in text and "#" not in text
 
 
-def test_refresh_works_out_consumption_once_and_scales_the_modifier() -> None:
+def test_refresh_picks_the_nearest_step_with_hysteresis() -> None:
     effect = _block("\n" + _read(MOD_ROOT / stored_food.SCRIPTED_EFFECTS), "pp_refresh_stored_food")
     # the location loop runs once per refresh; province_food is divided by the stored local
     assert effect.count("pp_stored_food_province_consumption") == 1
@@ -157,43 +180,58 @@ def test_refresh_works_out_consumption_once_and_scales_the_modifier() -> None:
     assert "value = { value = pp_stored_food_province_consumption add = 100 }" in effect
     assert "divide = { value = local_var:pp_stored_food_consumption subtract = 100 }" in effect
     assert "min = 0" in effect and "max = { value = define:NEconomy|GROWTH_FROM_FOOD_MULTIPLIER_MAX multiply = 12 }" in effect
-    # size = stored years (the payload is per year), applied only from the change branch
-    add = (
-        "add_province_modifier = { modifier = pp_stored_food size = { value = local_var:pp_stored_food_target "
-        "subtract = 100 divide = 12 } }"
-    )
-    assert effect.count(add) == 1
-    change = effect[effect.index("local_var:pp_stored_food_change > 100.05") :]
-    assert add in change and "remove_province_modifier = pp_stored_food }" in change
-    assert "set_variable = { name = pp_stored_food_months value = local_var:pp_stored_food_target }" in change
-    # the store lever rides the same change branch: Low Stores below 12 months (not where nobody eats), Full Stores
-    # above, each at the years of distance, and both are dropped before either is added again
-    low = (
-        "limit = { local_var:pp_stored_food_consumption > 100 local_var:pp_stored_food_target < 111.99999 }\n"
-        "\t\t\tadd_province_modifier = { modifier = pp_low_stores size = { value = 112.0 "
-        "subtract = local_var:pp_stored_food_target divide = 12 } }"
-    )
-    full = (
-        "limit = { local_var:pp_stored_food_target > 112.00001 }\n"
-        "\t\t\tadd_province_modifier = { modifier = pp_full_stores size = { value = local_var:pp_stored_food_target "
-        "subtract = 112.0 divide = 12 } }"
-    )
-    assert effect.count(low) == 1 and effect.count(full) == 1 and low in change and full in change
-    for name in ("pp_low_stores", "pp_full_stores"):
-        drop = f"if = {{ limit = {{ has_province_modifier = {name} }} remove_province_modifier = {name} }}"
-        assert drop in change and change.index(drop) < change.index("add_province_modifier")
-    # deadband both ways, and an emptied store always drops the modifier
-    assert "local_var:pp_stored_food_change < 99.95" in effect
+    # the stored months for the AI weights: re-set past the deadband or when the store emptied
+    assert "local_var:pp_stored_food_change > 100.05" in effect and "local_var:pp_stored_food_change < 99.95" in effect
     assert "AND = { local_var:pp_stored_food_target < 100.00001 var:pp_stored_food_months > 100.00001 }" in effect
-    # a province that was never refreshed starts below every store, so its first refresh applies (an empty province
-    # needs Low Stores although its Stored Food size is 0); the single-modifier version's variable is dropped, which
-    # makes old saves take that path once
-    unset = "limit = { NOT = { has_variable = pp_stored_food_months } }\n\t\tset_variable = { name = pp_stored_food_months value = 50 }"
-    assert unset in effect and effect.index(unset) < effect.index("local_var:pp_stored_food_change > 100.05")
+    assert "set_variable = { name = pp_stored_food_months value = local_var:pp_stored_food_target }" in effect
+    # the step: nearest whole month (half rounds up), re-picked only half a month + the deadband away from the carried
+    # step, so a store on a boundary does not flip back and forth
+    assert ("limit = { OR = { local_var:pp_food_store_change > 100.55 local_var:pp_food_store_change < 99.45 } }" in effect)
+    assert ("set_local_variable = { name = pp_food_store_new value = { value = local_var:pp_stored_food_target "
+            "add = 0.5 floor = yes max = 124 } }") in effect
+    change = effect[effect.index("local_var:pp_food_store_change > 100.55"):effect.index("# nobody eats here")]
+    adds = re.findall(r"(if|else_if|else) = \{ (?:limit = \{ local_var:pp_food_store_new < ([\d.]+) \} )?"
+                      r"add_province_modifier = \{ modifier = pp_food_store_(\d+) \} \}", change)
+    assert [int(step) for _, _, step in adds] == list(range(25))
+    assert [float(bound) for _, bound, _ in adds[:-1]] == [100.5 + s for s in range(24)]
+    assert adds[0][0] == "if" and adds[-1][0] == "else" and adds[-1][1] == ""
+    # every step is dropped before the new one is added, and the carried step is stored
+    first_add = change.index("add_province_modifier")
+    for step in range(25):
+        drop = f"if = {{ limit = {{ has_province_modifier = pp_food_store_{step} }} remove_province_modifier = pp_food_store_{step} }}"
+        assert change.index(drop) < first_add
+    assert "set_variable = { name = pp_food_store_step value = local_var:pp_food_store_new }" in change
+    # only where people eat; elsewhere no step at all
+    assert "limit = { local_var:pp_stored_food_consumption > 100 }\n\t\tset_local_variable = { name = pp_food_store_change" in effect
+    nobody = effect[effect.index("# nobody eats here"):]
+    assert "limit = { var:pp_food_store_step > 99.5 }" in nobody and "set_variable = { name = pp_food_store_step value = 99 }" in nobody
+    assert nobody.count("remove_province_modifier = pp_food_store_") == 25
+    # never refreshed: below every store, so the first refresh applies both
+    for variable in ("pp_stored_food_months", "pp_food_store_step"):
+        assert f"limit = {{ NOT = {{ has_variable = {variable} }} }}\n\t\tset_variable = {{ name = {variable} value = 50 }}" in effect
+    # old saves: the scaled modifiers and the single-modifier version's variable go
+    for name in stored_food.LEGACY_SCALED:
+        assert f"if = {{ limit = {{ has_province_modifier = {name} }} remove_province_modifier = {name} }}" in effect
     assert "if = { limit = { has_variable = pp_stored_food_size } remove_variable = pp_stored_food_size }" in effect
+    assert "size =" not in effect.split("pp_refresh_farm_produce")[0]
     # +100 offsets (a variable at 0 counts as unset) and no `var:x = n` (a scope comparison in game)
     assert not re.search(r"var:\w+ = ", effect)
     parse_file(MOD_ROOT / stored_food.SCRIPTED_EFFECTS)   # well formed
+
+
+def _step(months: float, carried: int | None) -> int | None:
+    """The refresh's step rule in Python: the step after a refresh at ``months`` while ``carried`` is on."""
+    if carried is not None and abs(months - carried) <= 0.5 + 0.05:
+        return carried
+    return min(int(months + 0.5), 24)
+
+
+def test_step_rule_rounds_to_the_nearest_month_and_holds_on_boundaries() -> None:
+    assert [_step(m, None) for m in (0.0, 0.49, 0.5, 11.5, 11.49, 23.6, 24.0)] == [0, 0, 1, 12, 11, 24, 24]
+    # a store sitting on a boundary keeps its step until it is clearly past it
+    assert _step(12.53, 12) == 12 and _step(12.56, 12) == 13 and _step(11.46, 12) == 12 and _step(11.44, 12) == 11
+    # an emptied store always lands on step 0
+    assert _step(0.0, 1) == 0 and _step(0.0, 24) == 0
 
 
 def test_refresh_clears_old_save_tiers_once() -> None:
@@ -208,12 +246,12 @@ def test_refresh_clears_old_save_tiers_once() -> None:
     assert "add_province_modifier" not in legacy
 
 
-def test_display_values_read_the_applied_size() -> None:
+def test_display_values_read_the_carried_step() -> None:
     text = "\n" + _read(MOD_ROOT / stored_food.SCRIPT_VALUES)
     years = _block(text, "pp_stored_food_years")
     assert re.search(
-        r"province \?= \{\s*if = \{\s*limit = \{ has_variable = pp_stored_food_months \}\s*"
-        r"add = var:pp_stored_food_months\s*subtract = 100\s*\}\s*\}\s*divide = 12\s*min = 0",
+        r"province \?= \{\s*if = \{\s*limit = \{ has_variable = pp_food_store_step var:pp_food_store_step > 99.5 \}\s*"
+        r"add = var:pp_food_store_step\s*subtract = 100\s*\}\s*\}\s*divide = 12\s*min = 0",
         years,
     )
     growth = _block(text, "pp_province_food_storage_growth")

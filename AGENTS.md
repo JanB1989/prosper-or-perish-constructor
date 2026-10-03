@@ -52,12 +52,15 @@
 
 ## Store Lever
 
-- The province store moves goods output through two province modifiers (`stored_food.py`, `[stored_food]` in
-  constructor.toml): **Low Stores** (size = years below 12 stored months) and **Full Stores** (size = years above).
-  They carry the Province Food output (+ below, - above) and the Grange's Surplus Sales (+ above, steeply - below);
-  the staple output line is 0 since farm v3 (the farms' price weight reads the crop output modifier as land quality).
-  Stored Food keeps growth and prosperity.
-  There are no country base values for the store: at 12 months every line is zero.
+- All stored-food effects ride ONE province modifier per whole stored month, `pp_food_store_0` .. `_24` ("Stored Food:
+  N months", `stored_food.py`, `[stored_food]` in constructor.toml; 2026-10-03, replaced the size-scaled Stored Food /
+  Low Stores / Full Stores, which did not show their scaled values). Step s = Stored Food (`per_year`, growth and
+  prosperity) x s/12 + the store lever: Low Stores (`low`) x the years below 12 months or Full Stores (`full`) x the
+  years above (Province Food output + below / - above, the Grange's Surplus Sales + above / steeply - below; staple
+  line 0 since farm v3). Exact values rounded once to five decimals; the pivot step has no lever line, so there are no
+  country base values for the store. The refresh picks the nearest whole month (half up) and keeps the carried step
+  while the store stays within 0.55 months of it; `pp_stored_food_months` keeps the continuous months for the AI
+  weights. The step shows in the location view's province modifier list (no longer hidden).
 - Every maker of Province Food stops where its recipe stops paying, so the store rests there: the farms' Provisioning
   always runs (one method, no Sell the Surplus), the Cookshop follows its staple prices, the Tavern the victuals
   price (Serve Victuals is its only slot and its gate). Tavern and Cookshop must stay on the Province Food good: as

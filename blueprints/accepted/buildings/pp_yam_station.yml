@@ -107,6 +107,14 @@ building:
       local_saltpeter_output_modifier = -0.01
       local_alum_output_modifier = -0.01
       local_lumber_output_modifier = -0.005
+      local_wheat_output_modifier = -0.005
+      local_rice_output_modifier = -0.005
+      local_millet_output_modifier = -0.005
+      local_maize_output_modifier = -0.005
+      local_legumes_output_modifier = -0.005
+      local_potato_output_modifier = -0.0075
+      local_olives_output_modifier = -0.0035
+      local_livestock_output_modifier = -0.0025
       local_institution_growth_modifier = 0.05
       local_supply_limit_modifier = 0.05
       local_disease_resistance = -0.05

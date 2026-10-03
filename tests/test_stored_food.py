@@ -90,7 +90,9 @@ def test_store_lever_moves_province_food_staples_and_surplus_sales() -> None:
     assert set(goods) == set(provisioning.PROVISIONED_GOOD_BY_BUILDING.values()) and len(goods) == len(set(goods))
     staples = {f"local_{good}_output_modifier" for good in goods}
     assert not staples & set(low) and not staples & set(full)
-    assert set(low) == {FOOD, SALES} and set(full) == {FOOD, SALES}
+    # Low Stores also cuts victuals output (2026-10-03: the harbour Yard packs no lean store, the Grange is off)
+    assert set(low) == {FOOD, SALES, "local_victuals_output_modifier"} and set(full) == {FOOD, SALES}
+    assert low["local_victuals_output_modifier"] < 0
     # nothing of the old storage legs is left on Stored Food, and no Scarcity Premium anywhere
     assert not {FOOD, SALES, PURCHASE} & set(stored_food.payload(config))
     assert PURCHASE not in low and PURCHASE not in full

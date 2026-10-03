@@ -321,6 +321,11 @@ def province_food_per_level(rules, spec):
     return dict(sorted(out.items()))
 
 
+# Farm counters (2026-10-03): the modifier every farm and orchard level carries, and the location-scope script value
+# the Cookshop cap reads (in_game/common/script_values/pp_food_building_values.txt).
+FARM_LEVELS_MODIFIER = "local_pp_farm_levels"
+PROVINCE_FARM_LEVELS_VALUE = "pp_location_province_farm_levels"
+
 class Simulation:
     # Engine start state per location (filled in __init__; empty means "as the pops file says").
     est_pops: dict = {}
@@ -387,6 +392,10 @@ class Simulation:
             key: rules.modifiers(key, "raw_modifier") for key in rules.buildings
         }
         self.numbers = {key: rules.numbers(key) for key in rules.buildings}
+        # farm and orchard levels carry local_pp_farm_levels in their modifier: Cookshop caps read the province's sum
+        # (script value pp_location_province_farm_levels; the engine counts staffed levels, the start counts placed ones)
+        self.farm_counters = {k: float(n.get(FARM_LEVELS_MODIFIER, 0)) for k, n in self.numbers.items()
+                              if n.get(FARM_LEVELS_MODIFIER)}
         self.base = {}
         self.neighbors = defaultdict(list)
         self.navigation = cfg.raw.get("_navigation", {})
@@ -523,6 +532,7 @@ class Simulation:
         self.groups = defaultdict(list)
         for tag, loc in self.locations.items():
             self.groups[(owners[tag], str(loc.get("province") or tag))].append(tag)
+        self.group_of = {t: g for g, ts in self.groups.items() for t in ts}
         # Historical countries can share markets. Region masks prevent a global
         # pool from teleporting food between unconnected continents.
         centres = defaultdict(list)
@@ -605,7 +615,15 @@ class Simulation:
         for key, n in levels.items():
             for k, v in self.raw.get(key, {}).items():
                 mods[k] += v * n
-        return {**base, "buildings": levels, "modifiers": dict(mods)}
+        counters = getattr(self, "farm_counters", {})   # absent on the bare test doubles
+        mods[FARM_LEVELS_MODIFIER] += sum(levels.get(k, 0) * v for k, v in counters.items())
+        group = getattr(self, "group_of", {}).get(tag)
+        province_farms = sum(
+            (levels if t == tag else self.counts[t]).get(k, 0) * v
+            for t in (self.groups.get(group, (tag,)) if group is not None else (tag,))
+            for k, v in counters.items()
+        )
+        return {**base, "buildings": levels, "modifiers": dict(mods), PROVINCE_FARM_LEVELS_VALUE: province_farms}
 
     def food_per_level(self, key, mult=1.0):
         """Province food one staffed level makes: ``local_monthly_food`` scaled by the local food modifier ``mult``,

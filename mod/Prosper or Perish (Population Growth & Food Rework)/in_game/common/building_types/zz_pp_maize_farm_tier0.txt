@@ -32,13 +32,19 @@ ai_construct_weight = {
     value = 0
     if = {
         limit = { exists = market }
-        value = "market.market_price(goods:maize)"
-        divide = "default_price(goods:maize)"
-        multiply = { value = 1 add = modifier:local_maize_output_modifier }
-        subtract = 1
-        multiply = 400
-        divide = { value = scope:owner.monthly_income_total add = 10 }
+        add = {
+            value = "market.market_price(goods:maize)"
+            divide = "default_price(goods:maize)"
+            multiply = { value = 1 add = modifier:local_maize_output_modifier }
+            subtract = 1
+            multiply = 400
+        }
     }
+    # a province short of food wants farms first
+    add = { value = 14 subtract = pp_location_stored_months divide = 14 min = 0 max = 1 multiply = 120 }
+    # spread out: every farm level already here makes the next one less wanted
+    subtract = { value = modifier:local_pp_farm_levels max = 30 multiply = 4 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
 }
 
 unique_production_methods = {
@@ -97,6 +103,7 @@ raw_modifier = {
 }
 
 modifier = {
+    local_pp_farm_levels = 1
     local_monthly_food = 1.5
     local_food_capacity = 50
     local_peasants_estate_power = 0.04

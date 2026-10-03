@@ -1,0 +1,10 @@
+﻿# Prosper or Perish - food building counters (2026-10-03).
+# local_pp_farm_levels: one per staffed farm or orchard level (every crop farm tier and fruit orchard carries
+# local_pp_farm_levels = 1 in its employment-scaled modifier). Cookshop caps and the AI weights of farms and Cookshops
+# read it (script values pp_province_farm_levels, pp_location_province_farm_levels).
+local_pp_farm_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}

@@ -18,6 +18,7 @@ pp_low_stores = {
 	game_data = { category = province }
 	local_local_food_output_modifier = 0.75
 	local_province_food_sales_output_modifier = -3.0
+	local_victuals_output_modifier = -1.0
 }
 
 # Full Stores: the effects of one year above 12.0 stored months, applied with size = the years above (1 at the
@@ -27,6 +28,13 @@ pp_full_stores = {
 	game_data = { category = province }
 	local_local_food_output_modifier = -0.75
 	local_province_food_sales_output_modifier = 0.34
+}
+
+# Farm Produce (2026-10-03): on every location of a province that holds a cookshop or public_kitchen,
+# applied with size = the province's worked farm and orchard levels / 40.0 (at most 1).
+pp_farm_produce = {
+	game_data = { category = location }
+	local_local_food_output_modifier = 0.1
 }
 
 # Old saves (whole-month tiers, 2026-10-01): the names stay defined, without effects, so those saves load;

@@ -40,9 +40,20 @@ farm_capacity_line_pattern = "farm_capacity_from_{building} = -1"
 # 0 at the base price on average land, positive while the crop is dear or the land good, negative in a glut (a
 # negative score drops the market from the AI's farm search). Divided by income because the AI's scores run about 30x
 # higher in poor countries than in rich ones (ppeval h02). No market: 0.
+# Two more terms (2026-10-03), divided by the same income:
+#   + store_bonus x (store_full_months - the province's stored months) / store_full_months, 0 from store_full_months:
+#     a province short of food wants farms first, before Cookshops and Taverns;
+#   - crowding_per_level x farm levels already in the location (at most crowding_cap_levels): among places with about
+#     the same land and price the AI spreads its farms instead of stacking them in one location.
+# The stored months are the store refresh's applied months (script value pp_location_stored_months), the farm levels
+# the location's staffed farm and orchard levels (modifier local_pp_farm_levels, one per level in every farm's modifier).
 [general.ai_construct_weight]
 slope = 400
 income_offset = 10
+store_bonus = 120
+store_full_months = 14
+crowding_per_level = 4
+crowding_cap_levels = 30
 
 # Body lines shared by every tier (values as in the blueprints)
 [general.body]
@@ -65,6 +76,7 @@ startup_ramp_target = "rural_startup_ramp_target"
 # Building modifier block per tier (scaled by employment). local_food_capacity: every building with a Provisioning
 # slot adds 50 province food capacity per staffed level (the AI values it while the province holds < 24 months).
 [general.tier_modifier.0]
+local_pp_farm_levels = 1             # counts the staffed level (cookshop caps and the AI's farm spread read it)
 local_monthly_food = 1.5
 local_food_capacity = 50
 local_peasants_estate_power = 0.040
@@ -73,6 +85,7 @@ local_laborers_desired_pop = 0
 local_soldiers_desired_pop = 0
 
 [general.tier_modifier.1]
+local_pp_farm_levels = 1
 local_monthly_food = 1.5
 local_food_capacity = 50
 local_peasants_estate_power = 0.030
@@ -80,6 +93,7 @@ local_peasant_enfranchisment = 0.002
 local_laborers_desired_pop = 0
 
 [general.tier_modifier.2]
+local_pp_farm_levels = 1
 local_monthly_food = 1.5
 local_food_capacity = 50
 local_peasants_estate_power = 0.021
@@ -87,6 +101,7 @@ local_peasant_enfranchisment = 0.002
 local_laborers_desired_pop = 0
 
 [general.tier_modifier.3]
+local_pp_farm_levels = 1
 local_monthly_food = 3.0
 local_food_capacity = 50
 local_laborers_desired_pop = 0.002

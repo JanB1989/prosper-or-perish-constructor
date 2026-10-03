@@ -970,6 +970,10 @@ improved_method_bonus = 0.05  # extra output share on the improved (third) metho
 network_output = 0.30         # logistics per level of the input-less network method (pure profit, no input cost)
 bulky_goods = ["stone", "marble", "clay", "sand", "coal", "iron", "copper", "tin", "lead", "salt", "saltpeter", "alum"]
 bulky_half_goods = ["lumber"] # get half the class cut
+# the crop farms' staples (2026-10-03): a small share of the class cut by bulk, so a crowded transport hub grows a little
+# less grain (the farms' AI weight reads the crop output modifier) and new farms go to the quieter land around it.
+# Grain and pulses are heavy sacks, potatoes heavier and quick to spoil, olives travel as oil, livestock walks to market.
+bulky_staples = { wheat = 0.5, rice = 0.5, millet = 0.5, maize = 0.5, legumes = 0.5, potato = 0.75, olives = 0.35, livestock = 0.25 }
 pop_type = "laborers"
 employment_size = 1
 flavour = { local_institution_growth_modifier = 0.05, local_supply_limit_modifier = 0.05, local_disease_resistance = -0.05 }  # per level, in modifier
@@ -1025,7 +1029,10 @@ local_monthly_prosperity = 0.0025
 [stored_food.low]
 # Low Stores: per year short of the pivot (size 1 at an empty store)
 local_local_food_output_modifier = 0.75             # Province Food output +75 % at an empty store
-local_province_food_sales_output_modifier = -3.0    # the Grange's Surplus Sales reach zero 4 months below the pivot
+local_province_food_sales_output_modifier = -3.0    # the Grange's Surplus Sales (the Grange is off since 2026-10-03)
+# the harbour Victualling Yard packs no lean store (2026-10-03, with the Grange off): victuals output -100 % per year
+# short, so a staffed Yard stops below about 10 months at victuals 2.7 and its Market gate closes there as well
+local_victuals_output_modifier = -1.0
 # staple_output = local_<good>_output_modifier of every good a Provisioning method buys (provisioning.py). 0 below the
 # pivot on purpose: the farms' Market gate leg sells the staple, so a cut here would stop the AI from building new
 # farms exactly where the store is low.
@@ -1034,7 +1041,17 @@ staple_output = 0.0
 [stored_food.full]
 # Full Stores: per year above the pivot (size 1 at 24 months)
 local_local_food_output_modifier = -0.75            # Province Food output -75 % at 24 months
-local_province_food_sales_output_modifier = 0.34    # the Grange's Surplus Sales +34 % at 24 months
+local_province_food_sales_output_modifier = 0.34    # the Grange's Surplus Sales (the Grange is off since 2026-10-03)
 # 0 since farm v3 (2026-10-02, was 0.20): the crop farms' ai_construct_weight reads the location's crop output modifier
 # as land quality, so a store-driven staple bonus would make the AI build farms exactly where the store is full
 staple_output = 0.0
+
+[stored_food.farm_produce]
+# Farm Produce (2026-10-03, Jan: Cookshops scale a little with the farms of their province): the location modifier
+# pp_farm_produce on every location that holds a Cookshop or Public Kitchen, size = the province's worked farm and
+# orchard levels (pp_province_farm_levels) / full_at_farm_levels, at most 1; renewed every January by the store refresh.
+# +10 % Province Food moves a kitchen's stop point about 1.6 months up; the Cookshop's AI weight keeps the AI from
+# extending kitchens in a province that already holds a year of food.
+local_local_food_output_modifier = 0.10
+full_at_farm_levels = 40
+buildings = ["cookshop", "public_kitchen"]

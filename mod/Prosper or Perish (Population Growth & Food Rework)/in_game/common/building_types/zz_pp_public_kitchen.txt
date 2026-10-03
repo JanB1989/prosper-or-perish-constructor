@@ -22,6 +22,17 @@ increase_per_level_cost = 0.10
 			is_province_capital = yes
 		}
 	}
+	# AI (2026-10-03): Cookshops answer hunger. A province that holds about a year of food or more must not get more of
+	# them: their food would go to waste, and below their stop point the gate alone does not hold where staples are
+	# cheap. Farms around make a Cookshop more useful (staples close by). Divided by the owner's income like the farm
+	# weight (the AI's scores run about 30x higher in poor countries than in rich ones).
+	ai_construct_weight = {
+		value = 0
+		add = { value = 10 subtract = pp_location_stored_months divide = 10 min = 0 max = 1 multiply = 60 }
+		subtract = { value = pp_location_stored_months subtract = 10 divide = 4 min = 0 max = 1 multiply = 1000 }
+		add = { value = pp_location_province_farm_levels divide = 40 max = 1 multiply = 40 }
+		divide = { value = scope:owner.monthly_income_total add = 10 }
+	}
 	build_time = workshop_build_time
 	construction_demand = workshop_construction
 	ai_forbid_shutdown = no

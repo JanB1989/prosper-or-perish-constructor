@@ -19,6 +19,15 @@ megalopolis = yes
 location_potential = {
   is_province_capital = yes
 }
+# AI (2026-10-03): the Tavern is the fallback for a town whose province cannot feed itself; farms and Cookshops come
+# first. Only a store near empty makes a Tavern level worth wanting, and every level already standing makes the
+# next one less wanted. Divided by the owner's income like the farm weight.
+ai_construct_weight = {
+  value = -60
+  add = { value = 6 subtract = pp_location_stored_months divide = 6 min = 0 max = 1 multiply = 120 }
+  subtract = { value = "location_building_level(building_type:tavern)" multiply = 10 }
+  divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 ai_forbid_shutdown = yes
 important_for_AI = yes
 can_close = yes

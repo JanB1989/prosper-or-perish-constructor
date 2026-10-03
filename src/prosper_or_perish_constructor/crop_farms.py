@@ -711,28 +711,50 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
 
 
 def ai_construct_weight_lines(table: CropTable, crop: Crop) -> list[str]:
-    """The farm's ``ai_construct_weight`` (EU5 1.4, location scope, scope:owner): the AI's price response.
+    """The farm's ``ai_construct_weight`` (EU5 1.4, location scope, scope:owner): the AI's farm choice.
 
-    slope x ((1 + local crop output modifier) x market price / default price - 1) / (owner monthly income + offset);
-    0 outside a market."""
+    (slope x ((1 + local crop output modifier) x market price / default price - 1), 0 outside a market,
+    + store_bonus x the share the province's store is below store_full_months,
+    - crowding_per_level x the farm levels already in the location (capped))
+    / (owner monthly income + offset)."""
     spec = dict(table.general.get("ai_construct_weight", {}))
     slope = float(spec.get("slope", 400))
     offset = float(spec.get("income_offset", 10))
+    store_bonus = float(spec.get("store_bonus", 0))
+    full = float(spec.get("store_full_months", 14))
+    crowding = float(spec.get("crowding_per_level", 0))
+    cap = float(spec.get("crowding_cap_levels", 30))
     good = crop.good
-    return [
+    lines = [
         "ai_construct_weight = {",
         "    value = 0",
         "    if = {",
         "        limit = { exists = market }",
-        f'        value = "market.market_price(goods:{good})"',
-        f'        divide = "default_price(goods:{good})"',
-        f"        multiply = {{ value = 1 add = modifier:local_{good}_output_modifier }}",
-        "        subtract = 1",
-        f"        multiply = {_num(slope)}",
-        f"        divide = {{ value = scope:owner.monthly_income_total add = {_num(offset)} }}",
+        "        add = {",
+        f'            value = "market.market_price(goods:{good})"',
+        f'            divide = "default_price(goods:{good})"',
+        f"            multiply = {{ value = 1 add = modifier:local_{good}_output_modifier }}",
+        "            subtract = 1",
+        f"            multiply = {_num(slope)}",
+        "        }",
         "    }",
+    ]
+    if store_bonus:
+        lines += [
+            "    # a province short of food wants farms first",
+            f"    add = {{ value = {_num(full)} subtract = pp_location_stored_months divide = {_num(full)} min = 0 max = 1 "
+            f"multiply = {_num(store_bonus)} }}",
+        ]
+    if crowding:
+        lines += [
+            "    # spread out: every farm level already here makes the next one less wanted",
+            f"    subtract = {{ value = modifier:local_pp_farm_levels max = {_num(cap)} multiply = {_num(crowding)} }}",
+        ]
+    lines += [
+        f"    divide = {{ value = scope:owner.monthly_income_total add = {_num(offset)} }}",
         "}",
     ]
+    return lines
 
 
 def _increase_cost(crop: Crop, slots: Sequence[tuple[str, Sequence[RenderedMethod]]], context: RenderContext, footprint: str) -> str:

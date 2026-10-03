@@ -21,8 +21,8 @@ Each logistics blueprint carries a ``logistics`` tag::
   method name come from ``[logistics.network.<building>]``;
 - ``raw_modifier`` holds only ``local_market_access`` (not scaled by staffing: a staffed or demanding building keeps
   its market access);
-- ``modifier`` holds the bulky-goods output cut (class cut x bulky_scale, half on ``bulky_half_goods``) and the flavour
-  lines;
+- ``modifier`` holds the bulky-goods output cut (class cut x bulky_scale, half on ``bulky_half_goods``, the share
+  ``bulky_staples`` gives each staple) and the flavour lines;
 - ``allow`` gains ``market_access < gate_max_market_access`` and ``total_building_levels >= gate_min_building_levels``
   (other conditions stay);
 - ``increase_per_level_cost`` comes from the class, ``pop_type`` and ``employment_size`` from the section.
@@ -106,6 +106,7 @@ class LogisticsConfig:
     classes: dict[str, LogisticsClass]
     network_output: float = 0.0
     network: dict[str, NetworkNames] = field(default_factory=dict)
+    bulky_staples: tuple[tuple[str, float], ...] = ()   # staple -> share of the class cut (2026-10-03)
 
 
 def load_config(project: Path) -> LogisticsConfig:
@@ -137,6 +138,7 @@ def load_config(project: Path) -> LogisticsConfig:
         improved_method_bonus=float(section.get("improved_method_bonus", 0.0)),
         bulky_goods=tuple(str(g) for g in section.get("bulky_goods", ())),
         bulky_half_goods=tuple(str(g) for g in section.get("bulky_half_goods", ())),
+        bulky_staples=tuple((str(g), float(v)) for g, v in (section.get("bulky_staples") or {}).items()),
         flavour=tuple((str(k), float(v)) for k, v in flavour.items()),
         pop_type=str(section.get("pop_type", "laborers")),
         employment_size=float(section.get("employment_size", 1)),
@@ -367,6 +369,7 @@ def plan_modifier(config: LogisticsConfig, cls: LogisticsClass, bulky_scale: flo
     cut = cls.bulky_cut * bulky_scale
     lines = [(f"local_{good}_output_modifier", -_round(cut)) for good in config.bulky_goods]
     lines += [(f"local_{good}_output_modifier", -_round(cut / 2)) for good in config.bulky_half_goods]
+    lines += [(f"local_{good}_output_modifier", -_round(cut * share)) for good, share in config.bulky_staples]
     lines += list(config.flavour)
     return lines
 
@@ -745,7 +748,7 @@ def plan_all(repo: Path, config: LogisticsConfig, prices: Mapping[str, float]) -
             continue
         result.plans.append(plan)
         result.problems.extend(f"{path.name}: {p}" for p in plan.problems)
-    for good in (*config.bulky_goods, *config.bulky_half_goods):
+    for good in (*config.bulky_goods, *config.bulky_half_goods, *(g for g, _ in config.bulky_staples)):
         if good not in prices:
             result.problems.append(f"[{CONFIG_SECTION}] bulky good {good!r} is not a trade good")
     return result

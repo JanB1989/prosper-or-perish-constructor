@@ -1,0 +1,31 @@
+﻿# Prosper or Perish - values the food buildings' caps and AI weights read (2026-10-03).
+
+# Location scope: the months of food the province holds, as the monthly store refresh last applied them
+# (province variable pp_stored_food_months = months + 100; a province never refreshed counts as empty).
+pp_location_stored_months = {
+	value = 0
+	province ?= {
+		if = {
+			limit = { has_variable = pp_stored_food_months }
+			add = var:pp_stored_food_months
+			subtract = 100
+		}
+	}
+	min = 0
+}
+
+# Province scope: the farm and orchard levels worked in the province (sum of modifier:local_pp_farm_levels).
+pp_province_farm_levels = {
+	value = 0
+	every_location_in_province = {
+		add = modifier:local_pp_farm_levels
+	}
+}
+
+# Location scope: the farm and orchard levels worked in the location's province.
+pp_location_province_farm_levels = {
+	value = 0
+	province ?= {
+		add = pp_province_farm_levels
+	}
+}

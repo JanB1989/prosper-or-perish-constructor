@@ -33,7 +33,7 @@ victualling_yard_max_level = {
 }
 
 grange_max_level = {
- add = { desc = PP_VM_CAP_BASE value = 1 }
+ add = { desc = PP_VM_CAP_BASE value = 0 }
  if = { limit = { num_roads >= 1 } add = { desc = PP_VM_CAP_ROADS value = 0.5 } }
  if = { limit = { num_roads >= 2 } add = { desc = PP_VM_CAP_ROADS value = 0.5 } }
  if = { limit = { num_roads >= 3 } add = { desc = PP_VM_CAP_ROADS value = 0.5 } }
@@ -44,5 +44,5 @@ grange_max_level = {
  add = { desc = PP_VM_CAP_DEVELOPMENT value = development multiply = 0.08 }
  if = { limit = { OR = { is_province_capital = no pp_victualling_yard_site = yes } } multiply = { desc = PP_VM_CAP_SITE_GRANGE value = 0 } }
  min = { desc = PP_VM_CAP_MINIMUM value = 0 }
- max = { desc = PP_VM_CAP_MAXIMUM value = 12 }
+ max = { desc = PP_VM_CAP_MAXIMUM value = 0 }
 }

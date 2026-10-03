@@ -62,10 +62,13 @@
   always runs (one method, no Sell the Surplus), the Cookshop follows its staple prices, the Tavern the victuals
   price (Serve Victuals is its only slot and its gate). Tavern and Cookshop must stay on the Province Food good: as
   flat food they would be pure price switches.
-- The Grange earns Surplus Sales from a full store only; its fixed cost is split between Surplus Sales (the gate
-  method) and Haulage so the gate margin opens at a well-filled store. A staffed Tavern cuts the Surplus Sales in its
-  location (`local_province_food_sales_output_modifier` in its `modifier`), and `province_starving` zeroes victuals
-  output, so a Grange never packs a lean or starving province.
+- The Grange is off since 2026-10-03 (`grange_max_level` 0: config/victuals_logistics.json `maximum` 0); its type,
+  blueprint and Surplus Sales lines stay so `store_lever.load_design` and old saves keep working. Low Stores cuts
+  victuals output (-1.0 per year short), so the harbour Victualling Yard stops packing below about 10 months and its
+  Market gate closes there; `province_starving` zeroes victuals output.
+- Farm Produce (`[stored_food.farm_produce]`): Cookshop and Public Kitchen locations get +Province Food output scaled by
+  the province's worked farm levels (`local_pp_farm_levels`, script value `pp_province_farm_levels`); the store refresh
+  renews it every January, so it adds no pulse. The start simulation counts placed farm levels for the Cookshop cap.
 - `store_lever.load_design` reads the numbers from the config, the two blueprints and `province_starving`; the
   start-food validator (`worldbuilder/food_sim.py`), `tools/province_store_sim.py` (rest points and ripple on real
   provinces) and `tests/test_store_lever.py` (the properties the design rests on) all use it. After changing a value

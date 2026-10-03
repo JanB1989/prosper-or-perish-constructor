@@ -519,7 +519,9 @@ def farm_constants(cfg: WorldBuilderConfig, building: str) -> tuple[float, float
 
 
 def patch_farm_blueprints(cfg: WorldBuilderConfig, repo: Path, farm_buildings: list[str]) -> list[str]:
-    """Each farm level takes land: raw_modifier local_population_capacity = -land (kept beside its level counter)."""
+    """Each farm level takes land: raw_modifier local_population_capacity = -land (kept beside its level counter), and
+    records it as local_pp_farmland_used = land, which the farm max-level tooltips read as "Used by other farms"
+    (scripts/generate_rural_capacity_values.py; one modifier read instead of a sum over every farm type)."""
     patched: list[str] = []
     for key in farm_buildings:
         path = repo / BLUEPRINTS / f"{key}.yml"
@@ -528,7 +530,7 @@ def patch_farm_blueprints(cfg: WorldBuilderConfig, repo: Path, farm_buildings: l
         land, _ = farm_constants(cfg, key)
         data = yaml_io.safe_load(path.read_text(encoding="utf-8"))
         body = str(data["building"]["body"])
-        new = _replace_raw_modifier(body, {"local_population_capacity": _fmt(-land)})
+        new = _replace_raw_modifier(body, {"local_population_capacity": _fmt(-land), "local_pp_farmland_used": _fmt(land)})
         if new != body:
             data["building"]["body"] = new
             _save_blueprint(path, data)

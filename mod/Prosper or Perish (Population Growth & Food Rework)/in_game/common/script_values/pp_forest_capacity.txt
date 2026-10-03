@@ -99,19 +99,13 @@ forest_capacity = {
 forest_capacity_max_forest_village = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FOREST"
-		if = {
-			limit = { has_variable = pp_forest_base_capacity }
-			value = var:pp_forest_base_capacity
-		}
-		else = { value = pp_forest_base_capacity_value }
+		value = this.forest_capacity_max_forest_village_building_level_base_forest
 	}
 	if = {
 		limit = { has_variable = pp_forest_base_capacity }
 		add = {
 			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
-			value = var:pp_forest_base_capacity
-			multiply = max_rgo_workers
-			multiply = 0.040
+			value = this.forest_capacity_max_forest_village_building_level_rgo_size_forest
 		}
 	}
 	if = {
@@ -172,27 +166,40 @@ forest_capacity_max_forest_village = {
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_FOREST_URBANIZATION"
-		value = total_building_levels
-		multiply = 0.05
+		value = this.forest_capacity_max_forest_village_building_level_forest_urbanization
 	}
+}
+
+# Tooltip helpers of forest_capacity_max_forest_village (cap_tooltips.py): each is one row of the cap, read through this.
+forest_capacity_max_forest_village_building_level_base_forest = {
+	if = {
+		limit = { has_variable = pp_forest_base_capacity }
+		value = var:pp_forest_base_capacity
+	}
+	else = { value = pp_forest_base_capacity_value }
+}
+
+forest_capacity_max_forest_village_building_level_rgo_size_forest = {
+	value = var:pp_forest_base_capacity
+	multiply = max_rgo_workers
+	multiply = 0.040
+}
+
+forest_capacity_max_forest_village_building_level_forest_urbanization = {
+	value = total_building_levels
+	multiply = 0.05
 }
 
 forest_capacity_max_managed_forest_village = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FOREST"
-		if = {
-			limit = { has_variable = pp_forest_base_capacity }
-			value = var:pp_forest_base_capacity
-		}
-		else = { value = pp_forest_base_capacity_value }
+		value = this.forest_capacity_max_managed_forest_village_building_level_base_forest
 	}
 	if = {
 		limit = { has_variable = pp_forest_base_capacity }
 		add = {
 			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
-			value = var:pp_forest_base_capacity
-			multiply = max_rgo_workers
-			multiply = 0.040
+			value = this.forest_capacity_max_managed_forest_village_building_level_rgo_size_forest
 		}
 	}
 	if = {
@@ -246,27 +253,40 @@ forest_capacity_max_managed_forest_village = {
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_FOREST_URBANIZATION"
-		value = total_building_levels
-		multiply = 0.05
+		value = this.forest_capacity_max_managed_forest_village_building_level_forest_urbanization
 	}
+}
+
+# Tooltip helpers of forest_capacity_max_managed_forest_village (cap_tooltips.py): each is one row of the cap, read through this.
+forest_capacity_max_managed_forest_village_building_level_base_forest = {
+	if = {
+		limit = { has_variable = pp_forest_base_capacity }
+		value = var:pp_forest_base_capacity
+	}
+	else = { value = pp_forest_base_capacity_value }
+}
+
+forest_capacity_max_managed_forest_village_building_level_rgo_size_forest = {
+	value = var:pp_forest_base_capacity
+	multiply = max_rgo_workers
+	multiply = 0.040
+}
+
+forest_capacity_max_managed_forest_village_building_level_forest_urbanization = {
+	value = total_building_levels
+	multiply = 0.05
 }
 
 forest_capacity_max_lumber_mill = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FOREST"
-		if = {
-			limit = { has_variable = pp_forest_base_capacity }
-			value = var:pp_forest_base_capacity
-		}
-		else = { value = pp_forest_base_capacity_value }
+		value = this.forest_capacity_max_lumber_mill_building_level_base_forest
 	}
 	if = {
 		limit = { has_variable = pp_forest_base_capacity }
 		add = {
 			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
-			value = var:pp_forest_base_capacity
-			multiply = max_rgo_workers
-			multiply = 0.040
+			value = this.forest_capacity_max_lumber_mill_building_level_rgo_size_forest
 		}
 	}
 	if = {
@@ -327,27 +347,40 @@ forest_capacity_max_lumber_mill = {
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_FOREST_URBANIZATION"
-		value = total_building_levels
-		multiply = 0.05
+		value = this.forest_capacity_max_lumber_mill_building_level_forest_urbanization
 	}
+}
+
+# Tooltip helpers of forest_capacity_max_lumber_mill (cap_tooltips.py): each is one row of the cap, read through this.
+forest_capacity_max_lumber_mill_building_level_base_forest = {
+	if = {
+		limit = { has_variable = pp_forest_base_capacity }
+		value = var:pp_forest_base_capacity
+	}
+	else = { value = pp_forest_base_capacity_value }
+}
+
+forest_capacity_max_lumber_mill_building_level_rgo_size_forest = {
+	value = var:pp_forest_base_capacity
+	multiply = max_rgo_workers
+	multiply = 0.040
+}
+
+forest_capacity_max_lumber_mill_building_level_forest_urbanization = {
+	value = total_building_levels
+	multiply = 0.05
 }
 
 forest_capacity_max_water_sawmill = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FOREST"
-		if = {
-			limit = { has_variable = pp_forest_base_capacity }
-			value = var:pp_forest_base_capacity
-		}
-		else = { value = pp_forest_base_capacity_value }
+		value = this.forest_capacity_max_water_sawmill_building_level_base_forest
 	}
 	if = {
 		limit = { has_variable = pp_forest_base_capacity }
 		add = {
 			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
-			value = var:pp_forest_base_capacity
-			multiply = max_rgo_workers
-			multiply = 0.040
+			value = this.forest_capacity_max_water_sawmill_building_level_rgo_size_forest
 		}
 	}
 	if = {
@@ -401,27 +434,40 @@ forest_capacity_max_water_sawmill = {
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_FOREST_URBANIZATION"
-		value = total_building_levels
-		multiply = 0.05
+		value = this.forest_capacity_max_water_sawmill_building_level_forest_urbanization
 	}
+}
+
+# Tooltip helpers of forest_capacity_max_water_sawmill (cap_tooltips.py): each is one row of the cap, read through this.
+forest_capacity_max_water_sawmill_building_level_base_forest = {
+	if = {
+		limit = { has_variable = pp_forest_base_capacity }
+		value = var:pp_forest_base_capacity
+	}
+	else = { value = pp_forest_base_capacity_value }
+}
+
+forest_capacity_max_water_sawmill_building_level_rgo_size_forest = {
+	value = var:pp_forest_base_capacity
+	multiply = max_rgo_workers
+	multiply = 0.040
+}
+
+forest_capacity_max_water_sawmill_building_level_forest_urbanization = {
+	value = total_building_levels
+	multiply = 0.05
 }
 
 forest_capacity_max_lumber_mill_improved = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FOREST"
-		if = {
-			limit = { has_variable = pp_forest_base_capacity }
-			value = var:pp_forest_base_capacity
-		}
-		else = { value = pp_forest_base_capacity_value }
+		value = this.forest_capacity_max_lumber_mill_improved_building_level_base_forest
 	}
 	if = {
 		limit = { has_variable = pp_forest_base_capacity }
 		add = {
 			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
-			value = var:pp_forest_base_capacity
-			multiply = max_rgo_workers
-			multiply = 0.040
+			value = this.forest_capacity_max_lumber_mill_improved_building_level_rgo_size_forest
 		}
 	}
 	if = {
@@ -468,7 +514,26 @@ forest_capacity_max_lumber_mill_improved = {
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_FOREST_URBANIZATION"
-		value = total_building_levels
-		multiply = 0.05
+		value = this.forest_capacity_max_lumber_mill_improved_building_level_forest_urbanization
 	}
+}
+
+# Tooltip helpers of forest_capacity_max_lumber_mill_improved (cap_tooltips.py): each is one row of the cap, read through this.
+forest_capacity_max_lumber_mill_improved_building_level_base_forest = {
+	if = {
+		limit = { has_variable = pp_forest_base_capacity }
+		value = var:pp_forest_base_capacity
+	}
+	else = { value = pp_forest_base_capacity_value }
+}
+
+forest_capacity_max_lumber_mill_improved_building_level_rgo_size_forest = {
+	value = var:pp_forest_base_capacity
+	multiply = max_rgo_workers
+	multiply = 0.040
+}
+
+forest_capacity_max_lumber_mill_improved_building_level_forest_urbanization = {
+	value = total_building_levels
+	multiply = 0.05
 }

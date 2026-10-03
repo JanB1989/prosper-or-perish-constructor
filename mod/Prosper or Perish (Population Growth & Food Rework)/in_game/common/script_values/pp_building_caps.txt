@@ -3,9 +3,14 @@
 	# province, nothing else (no base, development, population or rank levels). Cookshop and Public Kitchen alike.
 	add = {
 		desc = "PP_BUILDING_LEVEL_PROVINCE_FARMS"
-		value = pp_location_province_farm_levels
-		multiply = 0.2
+		value = this.cookshop_max_level_pp_building_level_province_farms
 	}
+}
+
+# Tooltip helpers of cookshop_max_level (cap_tooltips.py): each is one row of the cap, read through this.
+cookshop_max_level_pp_building_level_province_farms = {
+	value = pp_location_province_farm_levels
+	multiply = 0.2
 }
 
 pp_granary_cap = {
@@ -15,12 +20,21 @@ pp_granary_cap = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_DEVELOPMENT"
-		value = development
-		multiply = 0.175
+		value = this.pp_granary_cap_building_level_development
 	}
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION"
-		value = population
-		multiply = 0.0200
+		value = this.pp_granary_cap_building_level_population
 	}
+}
+
+# Tooltip helpers of pp_granary_cap (cap_tooltips.py): each is one row of the cap, read through this.
+pp_granary_cap_building_level_development = {
+	value = development
+	multiply = 0.175
+}
+
+pp_granary_cap_building_level_population = {
+	value = population
+	multiply = 0.0200
 }

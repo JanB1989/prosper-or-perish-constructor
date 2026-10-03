@@ -587,6 +587,8 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
             "raw_modifier = {",
             f"  {str(general.get('farm_capacity_line_pattern', 'farm_capacity_from_{building} = -1')).format(building=building)}",
             f"  local_population_capacity = {_land_text(-context.land(building))}",
+            # the same land as a record the farm max-level tooltips read ("Used by other farms", 2026-10-03)
+            f"  local_pp_farmland_used = {_land_text(context.land(building))}",
             "}",
             "",
             "modifier = {",

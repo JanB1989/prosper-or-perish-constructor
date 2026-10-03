@@ -865,10 +865,16 @@ def test_fish_and_forest_fixed_environment_paths_are_removed() -> None:
     assert offenders == []
 
 
+def _tooltip_helpers(text: str) -> set[str]:
+    """Script values a file reads through this. (one-row max-level tooltip helpers, cap_tooltips.py) and defines."""
+    defined = set(re.findall(r"(?m)^(\w+) = \{", text))
+    return set(re.findall(r"\bthis\.(\w+)", text)) & defined
+
+
 def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
     text = FISHING_CAPACITY.read_text(encoding="utf-8-sig")
     cap_values = BUILDING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")
-    entries = {entry.key for entry in parse_file(FISHING_CAPACITY).entries}
+    entries = {entry.key for entry in parse_file(FISHING_CAPACITY).entries} - _tooltip_helpers(text)
     obsolete_value = "fish_" "natural_capacity"
     obsolete_modifier = f"{obsolete_value}_modifier"
 
@@ -973,8 +979,11 @@ def test_urban_industry_cap_adjustments_double_growth_factors() -> None:
     for cap, (development, population, city, megalopolis) in expected.items():
         assert f"REPLACE:{cap}" in entries
         block = text.split(f"REPLACE:{cap} = {{", 1)[1].split("\n\nREPLACE:", 1)[0]
-        assert f'desc = "BUILDING_LEVEL_DEVELOPMENT"\n\t\tvalue = development\n\t\tmultiply = {development}' in block
-        assert f'desc = "BUILDING_LEVEL_POPULATION"\n\t\tvalue = population\n\t\tmultiply = {population}' in block
+        # each scaled row is one tooltip row: it reads its helper through this. (cap_tooltips.py)
+        assert f'desc = "BUILDING_LEVEL_DEVELOPMENT"\n\t\tvalue = this.{cap}_building_level_development' in block
+        assert f'{cap}_building_level_development = {{\n\tvalue = development\n\tmultiply = {development}\n}}' in block
+        assert f'desc = "BUILDING_LEVEL_POPULATION"\n\t\tvalue = this.{cap}_building_level_population' in block
+        assert f'{cap}_building_level_population = {{\n\tvalue = population\n\tmultiply = {population}\n}}' in block
         assert re.search(
             rf'desc = "BUILDING_LEVEL_IS_CITY"\s+value = {city}\b',
             block,
@@ -1057,7 +1066,7 @@ def test_direct_fish_capacity_modifier_replaces_hidden_natural_path() -> None:
 def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> None:
     text = FOREST_CAPACITY.read_text(encoding="utf-8-sig")
     cap_values = BUILDING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")
-    entries = {entry.key for entry in parse_file(FOREST_CAPACITY).entries}
+    entries = {entry.key for entry in parse_file(FOREST_CAPACITY).entries} - _tooltip_helpers(text)
     assert entries == {"forest_capacity", *FOREST_CAPACITY_MAX_VALUES}
     assert "forest_rgo_capacity_bonus" not in entries
     assert "forest_capacity_remaining" not in entries

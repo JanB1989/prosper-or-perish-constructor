@@ -2,7 +2,8 @@
 
 The generated files intentionally duplicate formula rows for each building's
 max-level path. EU5 exposes the scripted-value rows directly in the building
-max-level tooltip, so nested helper values make the UI misleading.
+max-level tooltip: every step of a described row is drawn as a sub-row, so the
+farm rows read their helpers through ``this.`` (one number each, cap_tooltips.py).
 """
 
 from __future__ import annotations
@@ -173,20 +174,49 @@ def _farm_source_rows(
     if not omitted:
         land, reserve = default
         return _free_land_rows(land, reserve, "BUILDING_LEVEL_WB_FREE_FARMLAND") + [_line('min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }', 1)]
+    # Max-level tooltip, in levels of this farm (2026-10-03, Jan): "Farmland for this farm" (the free farmland plus the
+    # land every farm here already uses) minus "Used by other farms" (that land less this farm's own levels and its
+    # replaceable lower tiers). The difference is the old sum, floor((flat - reserve) / land) + own levels, exactly.
+    # Each row reads its helper through this., so the game shows it as one number (cap_tooltips.py); the farms carry
+    # local_pp_farmland_used = land per level (worldbuilder/buildings.py patch_farm_blueprints).
     target = omitted[0]
     land, reserve = per_building.get(target, default)
-    rows = _free_land_rows(land, reserve, "BUILDING_LEVEL_WB_FREE_FARMLAND")
-    for building in omitted:
-        rows.extend(
-            [
-                _line("subtract = {", 1),
-                _line(f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"', 2),
-                _line(f"value = modifier:{farm_capacity_modifier_for_building(building)}", 2),
-                _line("}", 1),
-            ]
-        )
-    rows.append(_line('min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }', 1))
-    return rows
+    farmland = _farmland_helper(land, reserve)
+    others = f"farm_capacity_max_{target}_other_farms"
+    FARM_HELPERS[others] = _script_value(
+        others,
+        [
+            _line(f"value = modifier:{FARMLAND_USED}", 1),
+            _line(f"divide = {land:g}", 1),
+            *(_line(f"add = modifier:{farm_capacity_modifier_for_building(b)}", 1) for b in omitted),
+        ],
+    )
+    return [
+        _line(f'add = {{ desc = "PP_BUILDING_LEVEL_FARMLAND" value = this.{farmland} }}', 1),
+        _line(f'subtract = {{ desc = "PP_BUILDING_LEVEL_FARMLAND_OTHER_FARMS" value = this.{others} }}', 1),
+        _line('min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }', 1),
+    ]
+
+
+FARMLAND_USED = "local_pp_farmland_used"
+FARM_HELPERS: dict[str, str] = {}   # tooltip helpers of the farm max levels, written after them
+
+
+def _farmland_helper(land: float, reserve: float) -> str:
+    """Farmland for a farm with this land per level and reserve, in its levels: the free farmland (floored, as the
+    cap always had it) plus the land all farms here already use."""
+    name = f"pp_farmland_levels_land_{land:g}_reserve_{reserve:g}".replace(".", "_")
+    FARM_HELPERS[name] = _script_value(
+        name,
+        [
+            _line("value = modifier:local_population_capacity", 1),
+            _line(f"subtract = {reserve:g}", 1),
+            _line(f"divide = {land:g}", 1),
+            _line("floor = yes", 1),
+            _line(f"add = {{ value = modifier:{FARMLAND_USED} divide = {land:g} }}", 1),
+        ],
+    )
+    return name
 
 
 def _fish_source_rows(
@@ -448,6 +478,10 @@ def main() -> None:
             max_omitted_buildings=forest_max_omissions.__getitem__,
         ),
     }
+    outputs["pp_farming_capacity.txt"] += (
+        "\n# Tooltip helpers of the farm max levels: each is one row, read through this. (one number in the tooltip).\n\n"
+        + "\n\n".join(FARM_HELPERS[name] for name in sorted(FARM_HELPERS)) + "\n"
+    )
     for filename, text in outputs.items():
         (SCRIPT_VALUES_ROOT / filename).write_text(text, encoding="utf-8-sig")
     CULLING_EFFECTS_PATH.write_text(_culling_effects_file(), encoding="utf-8-sig", newline="\n")

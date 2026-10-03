@@ -581,3 +581,12 @@ farm_capacity_from_vineyard_estate = {
 		category = location
 	}
 }
+
+local_pp_farmland_used = {
+	decimals = 0
+	color = neutral
+	game_data = {
+		category = location
+		format = "FormatPopCaps"
+	}
+}

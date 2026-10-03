@@ -304,11 +304,15 @@ def test_generated_mod_advances_match_the_crop_blueprints(table: crop_farms.Crop
 
 
 def test_farm_capacity_tooltip_rows_have_localization() -> None:
-    keys = set(re.findall(r'desc = "(BUILDING_LEVEL_FARM_\w+)"', FARMING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")))
+    # 2026-10-03 (Jan): every farm max level reads in levels of that farm, "Farmland for this farm" minus "Used by
+    # other farms", each one row (read through this.); the Farmland label links the concept that explains it
+    text = FARMING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")
+    keys = set(re.findall(r'desc = "((?:PP_)?BUILDING_LEVEL_\w+)"', text))
     localized: set[str] = set()
     for path in ENGLISH_LOCALIZATION.glob("*.yml"):
-        localized.update(re.findall(r"(?m)^\s+(BUILDING_LEVEL_FARM_\w+):", path.read_text(encoding="utf-8-sig")))
+        localized.update(re.findall(r"(?m)^\s+((?:PP_)?BUILDING_LEVEL_\w+):", path.read_text(encoding="utf-8-sig")))
 
-    assert keys
-    assert {f"BUILDING_LEVEL_FARM_{key.upper()}" for key in crop_farms.crop_buildings(crop_farms.load_crop_table(ROOT))} <= keys
+    assert {"PP_BUILDING_LEVEL_FARMLAND", "PP_BUILDING_LEVEL_FARMLAND_OTHER_FARMS"} <= keys
+    for key in crop_farms.crop_buildings(crop_farms.load_crop_table(ROOT)):
+        assert f"value = this.farm_capacity_max_{key}_other_farms" in text, key
     assert sorted(keys - localized) == []

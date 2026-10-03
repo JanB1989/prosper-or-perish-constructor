@@ -165,11 +165,16 @@ pp_wb_cap_land_clearance = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = development
-		multiply = 0.03
+		value = this.pp_wb_cap_land_clearance_building_level_wb_development
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 40 }
+}
+
+# Tooltip helpers of pp_wb_cap_land_clearance (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_land_clearance_building_level_wb_development = {
+	value = development
+	multiply = 0.03
 }
 
 pp_wb_cap_field_management_shared = {
@@ -399,7 +404,7 @@ pp_wb_cap_field_management_shared = {
 pp_wb_cap_field_management = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = pp_wb_cap_field_management_shared
+		value = this.pp_wb_cap_field_management_building_level_wb_family
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_CONVERTIBLE"
@@ -416,10 +421,15 @@ pp_wb_cap_field_management = {
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
+# Tooltip helpers of pp_wb_cap_field_management (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_field_management_building_level_wb_family = {
+	value = pp_wb_cap_field_management_shared
+}
+
 pp_wb_cap_field_management_convertible = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = pp_wb_cap_field_management_shared
+		value = this.pp_wb_cap_field_management_convertible_building_level_wb_family
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_IMPROVED"
@@ -432,10 +442,15 @@ pp_wb_cap_field_management_convertible = {
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
+# Tooltip helpers of pp_wb_cap_field_management_convertible (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_field_management_convertible_building_level_wb_family = {
+	value = pp_wb_cap_field_management_shared
+}
+
 pp_wb_cap_field_management_improved = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = pp_wb_cap_field_management_shared
+		value = this.pp_wb_cap_field_management_improved_building_level_wb_family
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_HILL_TERRACES"
@@ -444,10 +459,15 @@ pp_wb_cap_field_management_improved = {
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
+# Tooltip helpers of pp_wb_cap_field_management_improved (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_field_management_improved_building_level_wb_family = {
+	value = pp_wb_cap_field_management_shared
+}
+
 pp_wb_cap_jiangnan_hill_terraces = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = pp_wb_cap_field_management_shared
+		value = this.pp_wb_cap_jiangnan_hill_terraces_building_level_wb_family
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT"
@@ -462,6 +482,11 @@ pp_wb_cap_jiangnan_hill_terraces = {
 		value = modifier:pp_wb_levels_field_management_improved
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+}
+
+# Tooltip helpers of pp_wb_cap_jiangnan_hill_terraces (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_jiangnan_hill_terraces_building_level_wb_family = {
+	value = pp_wb_cap_field_management_shared
 }
 
 pp_wb_cap_irrigation_systems_shared = {
@@ -516,7 +541,7 @@ pp_wb_cap_irrigation_systems_shared = {
 pp_wb_cap_irrigation_systems = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = pp_wb_cap_irrigation_systems_shared
+		value = this.pp_wb_cap_irrigation_systems_building_level_wb_family
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
@@ -527,12 +552,17 @@ pp_wb_cap_irrigation_systems = {
 		value = modifier:pp_wb_levels_incamisana
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+}
+
+# Tooltip helpers of pp_wb_cap_irrigation_systems (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_irrigation_systems_building_level_wb_family = {
+	value = pp_wb_cap_irrigation_systems_shared
 }
 
 pp_wb_cap_khmer_baray = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = pp_wb_cap_irrigation_systems_shared
+		value = this.pp_wb_cap_khmer_baray_building_level_wb_family
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
@@ -545,10 +575,15 @@ pp_wb_cap_khmer_baray = {
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
+# Tooltip helpers of pp_wb_cap_khmer_baray (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_khmer_baray_building_level_wb_family = {
+	value = pp_wb_cap_irrigation_systems_shared
+}
+
 pp_wb_cap_incamisana = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = pp_wb_cap_irrigation_systems_shared
+		value = this.pp_wb_cap_incamisana_building_level_wb_family
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
@@ -559,6 +594,11 @@ pp_wb_cap_incamisana = {
 		value = modifier:pp_wb_levels_khmer_baray
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+}
+
+# Tooltip helpers of pp_wb_cap_incamisana (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_incamisana_building_level_wb_family = {
+	value = pp_wb_cap_irrigation_systems_shared
 }
 
 pp_wb_cap_irrigated_fields_shared = {
@@ -837,7 +877,7 @@ pp_wb_cap_irrigated_fields_shared = {
 pp_wb_cap_irrigated_fields = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = pp_wb_cap_irrigated_fields_shared
+		value = this.pp_wb_cap_irrigated_fields_building_level_wb_family
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_CANAL_NETWORK"
@@ -846,16 +886,26 @@ pp_wb_cap_irrigated_fields = {
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
+# Tooltip helpers of pp_wb_cap_irrigated_fields (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_irrigated_fields_building_level_wb_family = {
+	value = pp_wb_cap_irrigated_fields_shared
+}
+
 pp_wb_cap_jiangnan_canal_network = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = pp_wb_cap_irrigated_fields_shared
+		value = this.pp_wb_cap_jiangnan_canal_network_building_level_wb_family
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATED_FIELDS"
 		value = modifier:pp_wb_levels_irrigated_fields
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+}
+
+# Tooltip helpers of pp_wb_cap_jiangnan_canal_network (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_jiangnan_canal_network_building_level_wb_family = {
+	value = pp_wb_cap_irrigated_fields_shared
 }
 
 pp_wb_cap_bund = {
@@ -1012,11 +1062,16 @@ pp_wb_cap_bund = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = development
-		multiply = 0.02
+		value = this.pp_wb_cap_bund_building_level_wb_development
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 }
+}
+
+# Tooltip helpers of pp_wb_cap_bund (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_bund_building_level_wb_development = {
+	value = development
+	multiply = 0.02
 }
 
 pp_wb_cap_field_drainage = {
@@ -1236,11 +1291,16 @@ pp_wb_cap_field_drainage = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = development
-		multiply = 0.03
+		value = this.pp_wb_cap_field_drainage_building_level_wb_development
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 }
+}
+
+# Tooltip helpers of pp_wb_cap_field_drainage (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_field_drainage_building_level_wb_development = {
+	value = development
+	multiply = 0.03
 }
 
 pp_wb_cap_polders = {
@@ -1285,11 +1345,16 @@ pp_wb_cap_polders = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = development
-		multiply = 0.01
+		value = this.pp_wb_cap_polders_building_level_wb_development
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 }
+}
+
+# Tooltip helpers of pp_wb_cap_polders (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_polders_building_level_wb_development = {
+	value = development
+	multiply = 0.01
 }
 
 pp_wb_cap_qanats = {
@@ -1516,9 +1581,14 @@ pp_wb_cap_qanats = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = development
-		multiply = 0.1
+		value = this.pp_wb_cap_qanats_building_level_wb_development
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 }
+}
+
+# Tooltip helpers of pp_wb_cap_qanats (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_qanats_building_level_wb_development = {
+	value = development
+	multiply = 0.1
 }

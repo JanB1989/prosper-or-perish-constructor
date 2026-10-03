@@ -8,7 +8,7 @@ TRY_INJECT:clergy = {
 	promotion_factor = 0.3
 }
 TRY_INJECT:burghers = {
-	pop_food_consumption = 10 # 6.5 # 4.0
+	pop_food_consumption = 8 # 10 until 2026-10-03 (Jan: burghers 8, the short game-start towns are burgher-heavy) # 6.5 # 4.0
 	promotion_factor = 0.25
 	pop_percentage_impact = {
 		local_pop_promotion_speed = 0.001

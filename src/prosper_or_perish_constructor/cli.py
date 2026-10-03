@@ -1315,6 +1315,15 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         f"({stored.files_changed} files changed).",
         flush=True,
     )
+    from prosper_or_perish_constructor import cap_tooltips
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    caps = cap_tooltips.apply(mod_root, vanilla_root(repo, project))
+    print(
+        f"Max-level tooltips: {caps.rows_fixed} multi-step rows read through this. (one clean row each), "
+        f"{len(caps.changed)} files changed.",
+        flush=True,
+    )
     from prosper_or_perish_constructor import gui_compat
 
     gui_compat.strip(mod_root)   # the food-storage compile counts its gauge lines per file
@@ -1507,6 +1516,21 @@ def _write_farming_capacity_modifier_types(mod_root: Path, modifier_keys: Sequen
                 "",
             )
         )
+    # The farmland a farm level takes, in people like the population capacity it uses up (a neutral record, not a
+    # bonus): the farm max-level tooltips read it for "Used by other farms" (generate_rural_capacity_values.py).
+    lines.extend(
+        (
+            "local_pp_farmland_used = {",
+            "\tdecimals = 0",
+            "\tcolor = neutral",
+            "\tgame_data = {",
+            "\t\tcategory = location",
+            '\t\tformat = "FormatPopCaps"',
+            "\t}",
+            "}",
+            "",
+        )
+    )
     _write_text_if_changed(
         mod_root / FARMING_CAPACITY_MODIFIER_TYPES,
         "\n".join(lines).rstrip() + "\n",
@@ -1535,6 +1559,8 @@ def _write_farming_capacity_modifier_icons(
                 "",
             )
         )
+    capacity_icon = "gfx/interface/icons/modifier_types/global_population_capacity_modifier.dds"
+    lines.extend(("local_pp_farmland_used = {", f'\tpositive = "{capacity_icon}"', f'\tnegative = "{capacity_icon}"', "}", ""))
     _write_text_if_changed(
         mod_root / FARMING_CAPACITY_MODIFIER_ICONS,
         "\n".join(lines).rstrip() + "\n",
@@ -1557,6 +1583,8 @@ def _write_farming_capacity_modifier_localization(
         lines.append(
             f'  MODIFIER_TYPE_DESC_{modifier_key}: "Shows how {building_link} changes Farming Capacity in this location."'
         )
+    lines.append('  MODIFIER_TYPE_NAME_local_pp_farmland_used: "Farmland Used"')
+    lines.append('  MODIFIER_TYPE_DESC_local_pp_farmland_used: "The [pp_farmland|e] this building takes from the location."')
     _write_text_if_changed(
         mod_root / FARMING_CAPACITY_MODIFIER_LOCALIZATION,
         "\n".join(lines).rstrip() + "\n",

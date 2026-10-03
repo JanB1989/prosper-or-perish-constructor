@@ -5,13 +5,11 @@
 	}
 	add = {
 		desc = "BUILDING_LEVEL_DEVELOPMENT"
-		value = development
-		multiply = 0.4
+		value = this.guild_max_level_building_level_development
 	}
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION"
-		value = population
-		multiply = 0.2
+		value = this.guild_max_level_building_level_population
 	}
 	if = {
 		limit = {
@@ -45,11 +43,26 @@
 		limit = { market_access < 0.75 }
 		multiply = {
 			desc = "BUILDING_LEVEL_LOW_MARKET_ACCESS_PENALTY"
-			value = market_access
-			add = 0.25
+			value = this.guild_max_level_building_level_low_market_access_penalty
 		}
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 1 }
+}
+
+# Tooltip helpers of guild_max_level (cap_tooltips.py): each is one row of the cap, read through this.
+guild_max_level_building_level_development = {
+	value = development
+	multiply = 0.4
+}
+
+guild_max_level_building_level_population = {
+	value = population
+	multiply = 0.2
+}
+
+guild_max_level_building_level_low_market_access_penalty = {
+	value = market_access
+	add = 0.25
 }
 
 REPLACE:workshop_max_level = {
@@ -59,13 +72,11 @@ REPLACE:workshop_max_level = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_DEVELOPMENT"
-		value = development
-		multiply = 1
+		value = this.workshop_max_level_building_level_development
 	}
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION"
-		value = population
-		multiply = 0.2
+		value = this.workshop_max_level_building_level_population
 	}
 	if = {
 		limit = {
@@ -89,11 +100,26 @@ REPLACE:workshop_max_level = {
 		limit = { market_access < 0.75 }
 		multiply = {
 			desc = "BUILDING_LEVEL_LOW_MARKET_ACCESS_PENALTY"
-			value = market_access
-			add = 0.25
+			value = this.workshop_max_level_building_level_low_market_access_penalty
 		}
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 1 }
+}
+
+# Tooltip helpers of workshop_max_level (cap_tooltips.py): each is one row of the cap, read through this.
+workshop_max_level_building_level_development = {
+	value = development
+	multiply = 1
+}
+
+workshop_max_level_building_level_population = {
+	value = population
+	multiply = 0.2
+}
+
+workshop_max_level_building_level_low_market_access_penalty = {
+	value = market_access
+	add = 0.25
 }
 
 REPLACE:manufactory_max_level = {
@@ -103,13 +129,11 @@ REPLACE:manufactory_max_level = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_DEVELOPMENT"
-		value = development
-		multiply = 2
+		value = this.manufactory_max_level_building_level_development
 	}
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION"
-		value = population
-		multiply = 0.4
+		value = this.manufactory_max_level_building_level_population
 	}
 	if = {
 		limit = {
@@ -133,11 +157,26 @@ REPLACE:manufactory_max_level = {
 		limit = { market_access < 0.75 }
 		multiply = {
 			desc = "BUILDING_LEVEL_LOW_MARKET_ACCESS_PENALTY"
-			value = market_access
-			add = 0.25
+			value = this.manufactory_max_level_building_level_low_market_access_penalty
 		}
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 1 }
+}
+
+# Tooltip helpers of manufactory_max_level (cap_tooltips.py): each is one row of the cap, read through this.
+manufactory_max_level_building_level_development = {
+	value = development
+	multiply = 2
+}
+
+manufactory_max_level_building_level_population = {
+	value = population
+	multiply = 0.4
+}
+
+manufactory_max_level_building_level_low_market_access_penalty = {
+	value = market_access
+	add = 0.25
 }
 
 REPLACE:mills_max_level = {
@@ -147,13 +186,11 @@ REPLACE:mills_max_level = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_DEVELOPMENT"
-		value = development
-		multiply = 4
+		value = this.mills_max_level_building_level_development
 	}
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION"
-		value = population
-		multiply = 1
+		value = this.mills_max_level_building_level_population
 	}
 	if = {
 		limit = {
@@ -177,11 +214,26 @@ REPLACE:mills_max_level = {
 		limit = { market_access < 0.75 }
 		multiply = {
 			desc = "BUILDING_LEVEL_LOW_MARKET_ACCESS_PENALTY"
-			value = market_access
-			add = 0.25
+			value = this.mills_max_level_building_level_low_market_access_penalty
 		}
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 1 }
+}
+
+# Tooltip helpers of mills_max_level (cap_tooltips.py): each is one row of the cap, read through this.
+mills_max_level_building_level_development = {
+	value = development
+	multiply = 4
+}
+
+mills_max_level_building_level_population = {
+	value = population
+	multiply = 1
+}
+
+mills_max_level_building_level_low_market_access_penalty = {
+	value = market_access
+	add = 0.25
 }
 
 REPLACE:rural_building_cap = {
@@ -191,13 +243,11 @@ REPLACE:rural_building_cap = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_DEVELOPMENT"
-		value = development
-		multiply = 0.15
+		value = this.rural_building_cap_building_level_development
 	}
 	add = {
 		desc = "BUILDING_LEVEL_RGO_MAX"
-		value = max_rgo_workers
-		multiply = 0.65
+		value = this.rural_building_cap_building_level_rgo_max
 	}
 	if = {
 		limit = {
@@ -208,6 +258,17 @@ REPLACE:rural_building_cap = {
 			value = 1
 		}
 	}
+}
+
+# Tooltip helpers of rural_building_cap (cap_tooltips.py): each is one row of the cap, read through this.
+rural_building_cap_building_level_development = {
+	value = development
+	multiply = 0.15
+}
+
+rural_building_cap_building_level_rgo_max = {
+	value = max_rgo_workers
+	multiply = 0.65
 }
 
 REPLACE:irrigant_cap = {

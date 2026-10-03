@@ -132,6 +132,9 @@ class Rules:
                 result = self.op(key, v, ctx, result, depth + 1)
             return result
         key = str(value)
+        if key.startswith(("this.", "root.")):
+            # max-level tooltip helpers read through the location itself (cap_tooltips.py): same scope, same value
+            key = key.split(".", 1)[1]
         if key in ctx:
             return float(ctx[key])
         if key.startswith("modifier:"):

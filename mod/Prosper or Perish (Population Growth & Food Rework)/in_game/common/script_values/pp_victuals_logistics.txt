@@ -2,9 +2,18 @@
 
 tavern_max_level = {
  add = { desc = PP_VM_CAP_BASE value = 1.5 }
- add = { desc = PP_VM_CAP_DEVELOPMENT value = development multiply = 0.18 }
- add = { desc = PP_VM_CAP_POPULATION value = population multiply = 0.0375 }
- add = { desc = PP_VM_CAP_HARBOR value = modifier:natural_harbor_suitability max = 3 min = 0 multiply = 2.25 }
+ add = {
+ 	desc = PP_VM_CAP_DEVELOPMENT
+ 	value = this.tavern_max_level_pp_vm_cap_development
+ }
+ add = {
+ 	desc = PP_VM_CAP_POPULATION
+ 	value = this.tavern_max_level_pp_vm_cap_population
+ }
+ add = {
+ 	desc = PP_VM_CAP_HARBOR
+ 	value = this.tavern_max_level_pp_vm_cap_harbor
+ }
  if = { limit = { is_coastal = yes } add = { desc = PP_VM_CAP_COAST value = 1.5 } if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 1 var:pp_navigation_map_state = 4 var:pp_navigation_map_state = 6 } } } add = { desc = PP_VM_CAP_NAVIGABLE value = 3 } if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 } } add = { desc = PP_VM_CAP_MAINTAINED value = 1.5 } } } else_if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 2 var:pp_navigation_map_state = 5 } } } add = { desc = PP_VM_CAP_DIFFICULT value = 0.75 } } }
  if = { limit = { pp_wb_river_size_1 = yes } add = { desc = PP_VM_CAP_RIVER value = 0.45 } }
  else_if = { limit = { pp_wb_river_size_2 = yes } add = { desc = PP_VM_CAP_RIVER value = 0.9 } }
@@ -22,10 +31,45 @@ tavern_max_level = {
  max = { desc = PP_VM_CAP_MAXIMUM value = 36 }
 }
 
+# Tooltip helpers of tavern_max_level (cap_tooltips.py): each is one row of the cap, read through this.
+tavern_max_level_pp_vm_cap_development = {
+	value = development multiply = 0.18
+}
+
+tavern_max_level_pp_vm_cap_population = {
+	value = population multiply = 0.0375
+}
+
+tavern_max_level_pp_vm_cap_harbor = {
+	value = modifier:natural_harbor_suitability max = 3 min = 0 multiply = 2.25
+}
+
 victualling_yard_max_level = {
- if = { limit = { pp_victualling_yard_site = yes } add = { desc = PP_VM_CAP_HARBOR_CAPACITY value = modifier:harbor_suitability multiply = 4 } if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_MARKET value = 3 } } add = { desc = PP_VM_CAP_DEVELOPMENT value = development multiply = 0.05 } add = { desc = PP_VM_CAP_THRESHOLD value = -2 } min = { desc = PP_VM_CAP_MINIMUM value = 2 } max = { desc = PP_VM_CAP_MAXIMUM value = 10 } }
- else_if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_INLAND_MARKET value = 1 } if = { limit = { is_coastal = yes } add = { desc = PP_VM_CAP_WATER_ACCESS value = 1 } } add = { desc = PP_VM_CAP_DEVELOPMENT value = development multiply = 0.025 } max = { desc = PP_VM_CAP_MAXIMUM value = 4 } }
+ if = { limit = { pp_victualling_yard_site = yes } add = {
+ 	desc = PP_VM_CAP_HARBOR_CAPACITY
+ 	value = this.victualling_yard_max_level_pp_vm_cap_harbor_capacity
+ } if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_MARKET value = 3 } } add = {
+ 	desc = PP_VM_CAP_DEVELOPMENT
+ 	value = this.victualling_yard_max_level_pp_vm_cap_development
+ } add = { desc = PP_VM_CAP_THRESHOLD value = -2 } min = { desc = PP_VM_CAP_MINIMUM value = 2 } max = { desc = PP_VM_CAP_MAXIMUM value = 10 } }
+ else_if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_INLAND_MARKET value = 1 } if = { limit = { is_coastal = yes } add = { desc = PP_VM_CAP_WATER_ACCESS value = 1 } } add = {
+ 	desc = PP_VM_CAP_DEVELOPMENT
+ 	value = this.victualling_yard_max_level_pp_vm_cap_development_2
+ } max = { desc = PP_VM_CAP_MAXIMUM value = 4 } }
  else = { add = { desc = PP_VM_CAP_SITE_YARD value = 0 } }
+}
+
+# Tooltip helpers of victualling_yard_max_level (cap_tooltips.py): each is one row of the cap, read through this.
+victualling_yard_max_level_pp_vm_cap_harbor_capacity = {
+	value = modifier:harbor_suitability multiply = 4
+}
+
+victualling_yard_max_level_pp_vm_cap_development = {
+	value = development multiply = 0.05
+}
+
+victualling_yard_max_level_pp_vm_cap_development_2 = {
+	value = development multiply = 0.025
 }
 
 grange_max_level = {
@@ -37,8 +81,16 @@ grange_max_level = {
  if = { limit = { num_roads >= 5 } add = { desc = PP_VM_CAP_ROADS value = 0.5 } }
  if = { limit = { num_roads >= 6 } add = { desc = PP_VM_CAP_ROADS value = 0.5 } }
  if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_MARKET value = 4 } }
- add = { desc = PP_VM_CAP_DEVELOPMENT value = development multiply = 0.08 }
+ add = {
+ 	desc = PP_VM_CAP_DEVELOPMENT
+ 	value = this.grange_max_level_pp_vm_cap_development
+ }
  if = { limit = { OR = { is_province_capital = no pp_victualling_yard_site = yes } } multiply = { desc = PP_VM_CAP_SITE_GRANGE value = 0 } }
  min = { desc = PP_VM_CAP_MINIMUM value = 0 }
  max = { desc = PP_VM_CAP_MAXIMUM value = 12 }
+}
+
+# Tooltip helpers of grange_max_level (cap_tooltips.py): each is one row of the cap, read through this.
+grange_max_level_pp_vm_cap_development = {
+	value = development multiply = 0.08
 }

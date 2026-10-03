@@ -162,6 +162,23 @@
   while the copy differs from vanilla apart from those values, and also pins the net food productivity of every
   vanilla object (and of the mod's own objects) to 0 under this rule.
 
+## Max-Level Tooltips (EU5 1.4)
+
+- The game draws a building's max level as one row per script-value operation: every step after the first `value =`
+  inside a described row is a sub-row ("missing key" without a desc, its own change with one). A script value read
+  through a scope link (`value = this.<helper>`) is ONE number. Probed in game 2026-10-03.
+- `cap_tooltips.py` runs in the finalize step of `ppc build`/`sync`: every described row with steps keeps its label
+  and reads `this.<cap>_<desc>`, the helper (the same steps) written right after its cap; caps defined only in
+  vanilla get fixed `REPLACE:` copies in `script_values/zz_pp_cap_tooltips_vanilla.txt`. Numbers never change.
+  `tests/test_cap_tooltips.py` fails on any max-level row with sub-steps or without a desc (vanilla buildings too).
+  A labelled `floor = { ... }` breaks the cap to 0; keep floors inside helpers. The start planner's evaluator
+  (`start_rules.py`) reads `this.`/`root.` as the same location.
+- Farm max levels speak in levels of that farm (`scripts/generate_rural_capacity_values.py`): "[Farmland] for this
+  farm" (free farmland, floored as before, plus the land all farms here use) minus "Used by other farms" (that land
+  less this farm's own and replaceable lower-tier levels); the difference is the old cap exactly. Every land farm
+  records its land per level as `raw_modifier local_pp_farmland_used` (`crop_farms.py` and worldbuilder
+  `patch_farm_blueprints`), shown as "Farmland Used"; the Farmland concept (`pp_farmland`) explains it on hover.
+
 ## Release Checklist
 
 - Treat an explicit request to create or publish a release as authorization for the one final guarded live sync required by this checklist. Confirm the exact `constructor.local.toml` deploy target before running it.

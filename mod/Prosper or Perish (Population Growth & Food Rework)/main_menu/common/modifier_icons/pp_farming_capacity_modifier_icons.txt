@@ -415,3 +415,8 @@ farm_capacity_from_vineyard_estate = {
 	positive = "gfx/interface/icons/buildings/vineyard_estate.dds"
 	negative = "gfx/interface/icons/buildings/vineyard_estate.dds"
 }
+
+local_pp_farmland_used = {
+	positive = "gfx/interface/icons/modifier_types/global_population_capacity_modifier.dds"
+	negative = "gfx/interface/icons/modifier_types/global_population_capacity_modifier.dds"
+}

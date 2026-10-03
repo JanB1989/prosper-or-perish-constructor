@@ -80,21 +80,11 @@ fish_capacity = {
 fish_capacity_max_fishing_village = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FISHING"
-		if = {
-			limit = { has_variable = pp_fish_base_capacity }
-			value = var:pp_fish_base_capacity
-		}
-		else = { value = pp_fish_base_capacity_value }
+		value = this.fish_capacity_max_fishing_village_building_level_base_fishing
 	}
 	add = {
 		desc = "BUILDING_LEVEL_RGO_SIZE_FISHING"
-		if = {
-			limit = { has_variable = pp_fish_base_capacity }
-			value = var:pp_fish_base_capacity
-		}
-		else = { value = pp_fish_base_capacity_value }
-		multiply = max_rgo_workers
-		multiply = 0.030
+		value = this.fish_capacity_max_fishing_village_building_level_rgo_size_fishing
 	}
 	add = {
 		# River size is bridged through a source-specific modifier so it remains a
@@ -137,26 +127,35 @@ fish_capacity_max_fishing_village = {
 			value = "location_building_level(building_type:offshore_fishery)"
 		}
 	}
+}
+
+# Tooltip helpers of fish_capacity_max_fishing_village (cap_tooltips.py): each is one row of the cap, read through this.
+fish_capacity_max_fishing_village_building_level_base_fishing = {
+	if = {
+		limit = { has_variable = pp_fish_base_capacity }
+		value = var:pp_fish_base_capacity
+	}
+	else = { value = pp_fish_base_capacity_value }
+}
+
+fish_capacity_max_fishing_village_building_level_rgo_size_fishing = {
+	if = {
+		limit = { has_variable = pp_fish_base_capacity }
+		value = var:pp_fish_base_capacity
+	}
+	else = { value = pp_fish_base_capacity_value }
+	multiply = max_rgo_workers
+	multiply = 0.030
 }
 
 fish_capacity_max_net_curing_yard = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FISHING"
-		if = {
-			limit = { has_variable = pp_fish_base_capacity }
-			value = var:pp_fish_base_capacity
-		}
-		else = { value = pp_fish_base_capacity_value }
+		value = this.fish_capacity_max_net_curing_yard_building_level_base_fishing
 	}
 	add = {
 		desc = "BUILDING_LEVEL_RGO_SIZE_FISHING"
-		if = {
-			limit = { has_variable = pp_fish_base_capacity }
-			value = var:pp_fish_base_capacity
-		}
-		else = { value = pp_fish_base_capacity_value }
-		multiply = max_rgo_workers
-		multiply = 0.030
+		value = this.fish_capacity_max_net_curing_yard_building_level_rgo_size_fishing
 	}
 	add = {
 		# River size is bridged through a source-specific modifier so it remains a
@@ -194,24 +193,33 @@ fish_capacity_max_net_curing_yard = {
 	}
 }
 
+# Tooltip helpers of fish_capacity_max_net_curing_yard (cap_tooltips.py): each is one row of the cap, read through this.
+fish_capacity_max_net_curing_yard_building_level_base_fishing = {
+	if = {
+		limit = { has_variable = pp_fish_base_capacity }
+		value = var:pp_fish_base_capacity
+	}
+	else = { value = pp_fish_base_capacity_value }
+}
+
+fish_capacity_max_net_curing_yard_building_level_rgo_size_fishing = {
+	if = {
+		limit = { has_variable = pp_fish_base_capacity }
+		value = var:pp_fish_base_capacity
+	}
+	else = { value = pp_fish_base_capacity_value }
+	multiply = max_rgo_workers
+	multiply = 0.030
+}
+
 fish_capacity_max_ocean_fishery = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FISHING"
-		if = {
-			limit = { has_variable = pp_fish_base_capacity }
-			value = var:pp_fish_base_capacity
-		}
-		else = { value = pp_fish_base_capacity_value }
+		value = this.fish_capacity_max_ocean_fishery_building_level_base_fishing
 	}
 	add = {
 		desc = "BUILDING_LEVEL_RGO_SIZE_FISHING"
-		if = {
-			limit = { has_variable = pp_fish_base_capacity }
-			value = var:pp_fish_base_capacity
-		}
-		else = { value = pp_fish_base_capacity_value }
-		multiply = max_rgo_workers
-		multiply = 0.030
+		value = this.fish_capacity_max_ocean_fishery_building_level_rgo_size_fishing
 	}
 	add = {
 		# River size is bridged through a source-specific modifier so it remains a
@@ -256,24 +264,33 @@ fish_capacity_max_ocean_fishery = {
 	}
 }
 
+# Tooltip helpers of fish_capacity_max_ocean_fishery (cap_tooltips.py): each is one row of the cap, read through this.
+fish_capacity_max_ocean_fishery_building_level_base_fishing = {
+	if = {
+		limit = { has_variable = pp_fish_base_capacity }
+		value = var:pp_fish_base_capacity
+	}
+	else = { value = pp_fish_base_capacity_value }
+}
+
+fish_capacity_max_ocean_fishery_building_level_rgo_size_fishing = {
+	if = {
+		limit = { has_variable = pp_fish_base_capacity }
+		value = var:pp_fish_base_capacity
+	}
+	else = { value = pp_fish_base_capacity_value }
+	multiply = max_rgo_workers
+	multiply = 0.030
+}
+
 fish_capacity_max_drift_net_fishery = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FISHING"
-		if = {
-			limit = { has_variable = pp_fish_base_capacity }
-			value = var:pp_fish_base_capacity
-		}
-		else = { value = pp_fish_base_capacity_value }
+		value = this.fish_capacity_max_drift_net_fishery_building_level_base_fishing
 	}
 	add = {
 		desc = "BUILDING_LEVEL_RGO_SIZE_FISHING"
-		if = {
-			limit = { has_variable = pp_fish_base_capacity }
-			value = var:pp_fish_base_capacity
-		}
-		else = { value = pp_fish_base_capacity_value }
-		multiply = max_rgo_workers
-		multiply = 0.030
+		value = this.fish_capacity_max_drift_net_fishery_building_level_rgo_size_fishing
 	}
 	add = {
 		# River size is bridged through a source-specific modifier so it remains a
@@ -311,24 +328,33 @@ fish_capacity_max_drift_net_fishery = {
 	}
 }
 
+# Tooltip helpers of fish_capacity_max_drift_net_fishery (cap_tooltips.py): each is one row of the cap, read through this.
+fish_capacity_max_drift_net_fishery_building_level_base_fishing = {
+	if = {
+		limit = { has_variable = pp_fish_base_capacity }
+		value = var:pp_fish_base_capacity
+	}
+	else = { value = pp_fish_base_capacity_value }
+}
+
+fish_capacity_max_drift_net_fishery_building_level_rgo_size_fishing = {
+	if = {
+		limit = { has_variable = pp_fish_base_capacity }
+		value = var:pp_fish_base_capacity
+	}
+	else = { value = pp_fish_base_capacity_value }
+	multiply = max_rgo_workers
+	multiply = 0.030
+}
+
 fish_capacity_max_offshore_fishery = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FISHING"
-		if = {
-			limit = { has_variable = pp_fish_base_capacity }
-			value = var:pp_fish_base_capacity
-		}
-		else = { value = pp_fish_base_capacity_value }
+		value = this.fish_capacity_max_offshore_fishery_building_level_base_fishing
 	}
 	add = {
 		desc = "BUILDING_LEVEL_RGO_SIZE_FISHING"
-		if = {
-			limit = { has_variable = pp_fish_base_capacity }
-			value = var:pp_fish_base_capacity
-		}
-		else = { value = pp_fish_base_capacity_value }
-		multiply = max_rgo_workers
-		multiply = 0.030
+		value = this.fish_capacity_max_offshore_fishery_building_level_rgo_size_fishing
 	}
 	add = {
 		# River size is bridged through a source-specific modifier so it remains a
@@ -357,4 +383,23 @@ fish_capacity_max_offshore_fishery = {
 			value = "location_building_level(building_type:net_curing_yard)"
 		}
 	}
+}
+
+# Tooltip helpers of fish_capacity_max_offshore_fishery (cap_tooltips.py): each is one row of the cap, read through this.
+fish_capacity_max_offshore_fishery_building_level_base_fishing = {
+	if = {
+		limit = { has_variable = pp_fish_base_capacity }
+		value = var:pp_fish_base_capacity
+	}
+	else = { value = pp_fish_base_capacity_value }
+}
+
+fish_capacity_max_offshore_fishery_building_level_rgo_size_fishing = {
+	if = {
+		limit = { has_variable = pp_fish_base_capacity }
+		value = var:pp_fish_base_capacity
+	}
+	else = { value = pp_fish_base_capacity_value }
+	multiply = max_rgo_workers
+	multiply = 0.030
 }

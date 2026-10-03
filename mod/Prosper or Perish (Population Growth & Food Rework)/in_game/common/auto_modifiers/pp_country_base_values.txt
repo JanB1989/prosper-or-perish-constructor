@@ -1,6 +1,9 @@
 ﻿# Global base values applied automatically to all real countries
 TRY_INJECT:country_base_values = {
 	raw_material_in_province_impact = 0.075 # 0.1
+	# RGOs yield half (2026-10-03, Jan: the starting RGOs were too strong; Mini World run 5 grew real output per head
+	# about 40 % in 1352-1522). Raw Materials Output is the RGO's multiplier; per-good output modifiers are untouched.
+	global_raw_material_output = -0.5
 	global_food_decay = 0.01 # 0.005
 	# No base values for the province store: the store lever (Low Stores / Full Stores, static_modifiers/pp_stored_food.txt)
 	# is zero at 12 stored months, so the old constants (-100 % Surplus Sales, +1500 % Scarcity Premium, +1900 % offset)

@@ -404,6 +404,24 @@ def test_publish_docs_copies_generated_graphs_and_assets(tmp_path: Path) -> None
     assert (repo / "docs" / "examples" / "assets" / "icon.svg").read_text() == "<svg />\n"
 
 
+def test_publish_docs_ships_a_large_inline_payload_gzipped() -> None:
+    # 2026-10-03: the savegame explorer's inline payload passed GitHub's 50 MB file warning; it ships as gzip + base64
+    import base64
+    import gzip
+
+    data = json.dumps({"rows": [{"location": f"loc_{i}", "value": i * 0.5} for i in range(60_000)]})
+    page = f"<html><body>\n  <script src=\"x.js\"></script>\n  <script>\n    const payload = {data};\n    draw(payload);\n  </script>\n</body></html>\n"
+    out = cli._compress_inline_payload(page)
+    assert len(out) < len(page) / 5 and "draw(payload);" in out
+    assert out.index(cli.FFLATE_SCRIPT) < out.index("<script>\n    const payload = JSON.parse(fflate.strFromU8(fflate.gunzipSync(")
+    packed = re.search(r'atob\("([A-Za-z0-9+/=]+)"\)', out).group(1)
+    assert json.loads(gzip.decompress(base64.b64decode(packed))) == json.loads(data)
+    # small payloads and pages without one stay as they are
+    small = page.replace(data, "{}")
+    assert cli._compress_inline_payload(small) == small
+    assert cli._compress_inline_payload("<html></html>") == "<html></html>"
+
+
 def test_europedia_generates_and_publishes_export(tmp_path: Path) -> None:
     repo = _repo(tmp_path)
     _write_minimal_europedia_sources(repo)

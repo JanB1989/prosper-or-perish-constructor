@@ -40,12 +40,24 @@ logs/
 *.tar
 *.tar.gz
 *.tgz
-/tmp/pdfs/
 .DS_Store
 Thumbs.db
+desktop.ini
 *.bak
 *.swp
+*.orig
+*.rej
+*.tmp
+*.log
 *~
+# Scratch folders and files (tools/check_repo_files.py fails on any that get tracked).
+tmp/
+.tmp/
+tmp_*
+# Windows device name: `> nul` from a POSIX shell writes a file Windows cannot check out.
+nul
+# Research sources (papers, page scans) kept locally.
+/research/pdfs/
 
 # Local machine overrides.
 *.local.toml

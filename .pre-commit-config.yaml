@@ -6,3 +6,8 @@ repos:
         entry: uv run python tools/check_path_lengths.py
         language: system
         pass_filenames: false
+      - id: check-repo-files
+        name: Check tracked files for size, temp junk and Windows names
+        entry: uv run python tools/check_repo_files.py
+        language: system
+        pass_filenames: false

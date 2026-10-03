@@ -3360,8 +3360,37 @@ def _copy_published_example(source: Path, destination: Path, repo: Path) -> None
         shutil.copy2(source, destination)
         return
 
-    text = source.read_text(encoding="utf-8")
-    destination.write_text(_portable_published_text(text, repo), encoding="utf-8")
+    text = _portable_published_text(source.read_text(encoding="utf-8"), repo)
+    if source.suffix == ".html":
+        text = _compress_inline_payload(text)
+    destination.write_text(text, encoding="utf-8")
+
+
+# Inline data above this size is shipped gzipped: the savegame explorer's payload alone passed GitHub's 50 MB
+# file warning (82 MB) and heads for its 100 MB hard limit; gzip + base64 makes it about a twelfth.
+COMPRESS_PAYLOAD_ABOVE = 1_000_000
+FFLATE_SCRIPT = '<script src="https://unpkg.com/fflate@0.8.2/umd/index.js"></script>'
+_INLINE_PAYLOAD = re.compile(r"(?m)^([ \t]*)const payload = (.*);[ \t]*$")
+
+
+def _compress_inline_payload(text: str) -> str:
+    """Ship a large inline `const payload = <json>;` as gzip + base64, unpacked synchronously in the page by fflate."""
+    match = _INLINE_PAYLOAD.search(text)
+    if not match or len(match.group(2)) <= COMPRESS_PAYLOAD_ABOVE:
+        return text
+    import base64
+    import gzip
+
+    packed = base64.b64encode(gzip.compress(match.group(2).encode("utf-8"), 9, mtime=0)).decode("ascii")
+    line = (
+        f'{match.group(1)}const payload = JSON.parse(fflate.strFromU8(fflate.gunzipSync('
+        f'Uint8Array.from(atob("{packed}"), (c) => c.charCodeAt(0)))));'
+    )
+    text = text[: match.start()] + line + text[match.end():]
+    script = text.rfind("<script>", 0, match.start())
+    if script < 0:
+        raise SystemExit("publish-docs: the inline payload is not inside a <script> block")
+    return text[:script] + FFLATE_SCRIPT + "\n  " + text[script:]
 
 
 def _portable_published_text(text: str, repo: Path) -> str:

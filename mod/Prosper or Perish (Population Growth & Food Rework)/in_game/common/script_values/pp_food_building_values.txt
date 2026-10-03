@@ -14,15 +14,17 @@ pp_location_stored_months = {
 	min = 0
 }
 
-# Province scope: the farm and orchard levels worked in the province (sum of modifier:local_pp_farm_levels).
+# Province scope: the farm, orchard and other staple food levels worked in the province (sum of modifier:local_pp_farm_levels
+# and modifier:local_pp_staple_levels). The Cookshop cap and the Cookshop AI weight read it.
 pp_province_farm_levels = {
 	value = 0
 	every_location_in_province = {
 		add = modifier:local_pp_farm_levels
+		add = modifier:local_pp_staple_levels
 	}
 }
 
-# Location scope: the farm and orchard levels worked in the location's province.
+# Location scope: the farm, orchard and other staple food levels worked in the location's province.
 pp_location_province_farm_levels = {
 	value = 0
 	province ?= {

@@ -8,3 +8,14 @@ local_pp_farm_levels = {
 		category = location
 	}
 }
+
+# local_pp_staple_levels: one per staffed level of every other staple food maker (fishing village, net curing yard,
+# ocean, offshore and drift net fisheries; sheep farms, hurdled sheepcotes, enclosed sheep walks; forest and managed
+# forest villages, the royal forest; the Maghreb palm groves). Counts toward the Cookshop cap with the farm levels
+# (pp_province_farm_levels) but not toward the farms' own spread term.
+local_pp_staple_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}

@@ -50,6 +50,7 @@ unique_production_methods = {
 }
 construction_demand = village_construction
 modifier = {
+    local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
     local_monthly_food = 1.5
     local_crown_estate_power = 0.5
     local_max_control = 0.05

@@ -331,9 +331,11 @@ def province_food_per_level(rules, spec):
     return dict(sorted(out.items()))
 
 
-# Farm counters (2026-10-03): the modifier every farm and orchard level carries, and the location-scope script value
-# the Cookshop cap reads (in_game/common/script_values/pp_food_building_values.txt).
+# Farm counters (2026-10-03): the modifier every farm and orchard level carries, the one every fishery and sheep level
+# carries, and the location-scope script value the Cookshop cap reads (in_game/common/script_values/
+# pp_food_building_values.txt: both counters). The farms' own spread term reads only the farm counter.
 FARM_LEVELS_MODIFIER = "local_pp_farm_levels"
+STAPLE_LEVELS_MODIFIER = "local_pp_staple_levels"
 PROVINCE_FARM_LEVELS_VALUE = "pp_location_province_farm_levels"
 
 class Simulation:
@@ -407,6 +409,10 @@ class Simulation:
         # (read from the modifier block: Rules.numbers carries only employment, pop type and local food)
         self.farm_counters = {k: float(v) for k in rules.buildings
                               if (v := rules.modifiers(k).get(FARM_LEVELS_MODIFIER, 0))}
+        # the Cookshop cap also counts fishery and sheep levels (local_pp_staple_levels)
+        self.kitchen_counters = {k: float(v) for k in rules.buildings
+                                 if (v := rules.modifiers(k).get(FARM_LEVELS_MODIFIER, 0)
+                                     + rules.modifiers(k).get(STAPLE_LEVELS_MODIFIER, 0))}
         self.base = {}
         self.neighbors = defaultdict(list)
         self.navigation = cfg.raw.get("_navigation", {})
@@ -632,10 +638,10 @@ class Simulation:
         return {**base, "buildings": levels, "modifiers": dict(mods), PROVINCE_FARM_LEVELS_VALUE: province_farms}
 
     def province_farm_levels(self, tag, levels=None, others=None):
-        """Farm and orchard levels placed in the location's province pool (``levels``: this location's own, if not the
-        plan's; ``others``: location -> levels for the other locations, default the plan). The Cookshop cap reads it,
-        so it depends on the other locations of the province too."""
-        counters = getattr(self, "farm_counters", {})
+        """Farm, orchard, fishery and sheep levels placed in the location's province pool (``levels``: this location's
+        own, if not the plan's; ``others``: location -> levels for the other locations, default the plan). The Cookshop
+        cap reads it, so it depends on the other locations of the province too."""
+        counters = getattr(self, "kitchen_counters", getattr(self, "farm_counters", {}))
         levels = self.counts[tag] if levels is None else levels
         others = self.counts if others is None else others
         group = getattr(self, "group_of", {}).get(tag)
@@ -810,9 +816,9 @@ class Simulation:
             if not ctx["has_river"]:
                 continue
             check(tag, without_river(ctx, self.rules), sorted(self.counts[tag].items()))
-        # Farm levels moved to the topup are not there when the engine validates the setup, and the Cookshop cap counts
-        # the province's farms: re-check the other buildings of those provinces against the setup's farms only.
-        counters = getattr(self, "farm_counters", {})
+        # Farm (and fishery, sheep) levels moved to the topup are not there when the engine validates the setup, and the
+        # Cookshop cap counts them in the province: re-check the other buildings of those provinces against the setup's.
+        counters = getattr(self, "kitchen_counters", getattr(self, "farm_counters", {}))
         moved = {(t, k): n for (t, k), n in topup.items() if k in counters}
         if moved:
             setup = {t: Counter({k: n - moved.get((t, k), 0) for k, n in c.items()}) for t, c in self.counts.items()}

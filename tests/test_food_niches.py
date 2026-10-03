@@ -150,3 +150,42 @@ def test_a_harbour_yard_needs_only_spare_food_a_grange_the_surplus_share() -> No
     placed = sim._place_yards(list(sim.groups), budgets, 1.1, victuals=6.0)
     assert sim.counts["h"][Simulation.YARD] == 2 and sim.counts["c"][Simulation.GRANGE] == 0
     assert placed == 2
+
+
+STAPLE_FOODS = {"wheat", "rice", "maize", "millet", "potato", "legumes", "olives", "fruit", "livestock", "fish", "wild_game"}
+
+
+def test_every_staple_food_maker_raises_the_cookshop_cap() -> None:
+    # 2026-10-03 (Jan): the Cookshop cap counts every staple food maker, not only the crop farms and orchards; the
+    # fisheries, flocks, hunting forests and palm groves carry local_pp_staple_levels (farms keep local_pp_farm_levels,
+    # which their own spread term reads too). Sheep count although they make wool (Jan: a staple).
+    missing, marked = [], set()
+    for path in sorted((MOD_ROOT / "in_game/common/building_types").glob("*.txt")):
+        text = re.sub(r"#[^\n]*", "", path.read_text(encoding="utf-8-sig"))
+        pos = 0
+        top = re.compile(r"(?:REPLACE:|INJECT:|TRY_INJECT:|REPLACE_OR_CREATE:)?(\w+)\s*=\s*\{")
+        while (m := top.search(text, pos)):   # top-level blocks only: the files do not indent building bodies
+            depth, i = 1, m.end()
+            while depth and i < len(text):
+                depth += (text[i] == "{") - (text[i] == "}")
+                i += 1
+            pos = i
+            body = text[m.end():i]
+            if re.search(r"always\s*=\s*no", body) and "max_levels = 0" in body:
+                continue   # retired (farming_village)
+            makes = set(re.findall(r"produced\s*=\s*(\w+)", body)) & STAPLE_FOODS
+            counted = "local_pp_farm_levels = 1" in body or "local_pp_staple_levels = 1" in body
+            if counted:
+                marked.add(m.group(1))
+            if makes and not counted and path.name != "rural_buildings.txt":
+                missing.append(f"{m.group(1)} ({', '.join(sorted(makes))})")
+    assert missing == []
+    assert {"fishing_village", "ocean_fishery", "sheep_farms", "forest_village", "eng_royal_forest",
+            "maghreb_palm_irrigation", "wheat_farm", "fruit_orchard"} <= marked
+    # the cap reads both markers; the farms' spread term only their own
+    values = (MOD_ROOT / "in_game/common/script_values/pp_food_building_values.txt").read_text(encoding="utf-8-sig")
+    block = values[values.index("pp_province_farm_levels = {"):]
+    block = block[:block.index("\n}\n")]
+    assert "add = modifier:local_pp_farm_levels" in block and "add = modifier:local_pp_staple_levels" in block
+    wheat = (MOD_ROOT / "in_game/common/building_types/zz_pp_wheat_farm_tier0.txt").read_text(encoding="utf-8-sig")
+    assert "modifier:local_pp_farm_levels max" in wheat and "local_pp_staple_levels" not in wheat

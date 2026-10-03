@@ -5,10 +5,10 @@ is a set of widgets, one per state, with exclusive visibility tests, like the so
 
 How each state is read:
 - food: the stored months are a script value (`pp_province_food_storage_months` in
-  script_values/pp_province_food_storage.txt); the effects are the Stored Food part of the province's Stored Food
-  step (`pp_food_store_<s>`, stored_food.py), one line per effect: the script value `pp_stored_food_years` (the
-  step's months / 12) times the effect's value per stored year, and a "no effects" line without a step; starvation
-  is the engine's `Province.IsStarving`.
+  script_values/pp_province_food_storage.txt); the effects are the province's Stored Food step modifier itself
+  (`pp_food_store_<s>`, stored_food.py; exactly one per province at a time), shown with `ShowModifierEffect` on the
+  step the script value `pp_stored_food_step` reads, and a "no effects" line without a step; starvation is the
+  engine's `Province.IsStarving`.
 - land: the engine applies `abundant_free_land`, `available_free_land` and `overpopulation` itself, and scripts
   cannot see them, so each carries a marker modifier type (`pp_land_*`, in pp_capacity_pressure_effects.txt) that
   the GUI reads through `GetModifierValueFixed`. Its value is the modifier's strength, so the tooltip lists every
@@ -56,8 +56,7 @@ REGION_GOODS = {
 LAND_MARKERS = ("pp_land_overpopulation", "pp_land_abundant", "pp_land_available")
 # The stored years the province's Stored Food modifier is applied at (location-scope script value, stored_food.py).
 STORED_FOOD_YEARS = "pp_stored_food_years"
-STORED_FOOD_LOW_YEARS = "pp_stored_food_low_years"
-STORED_FOOD_FULL_YEARS = "pp_stored_food_full_years"
+STORED_FOOD_STEP = "pp_stored_food_step"   # the carried step, -1 without one (stored_food.py)
 
 _ANCHOR = "\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\t# BOTTOM CONDITIONS\n"
 _SPLIT = len("\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n")   # after the IO/periphora hbox, inside the row widget
@@ -194,38 +193,23 @@ def stored_food_years() -> str:
     return f"{_LOC}.MakeScope.ScriptValue('{STORED_FOOD_YEARS}')"
 
 
-def stored_food_rows(per_year: tuple[tuple[str, float], ...] | list[tuple[str, float]],
-                     types: dict[str, dict[str, str]] | None = None,
-                     low: tuple[tuple[str, float], ...] | list[tuple[str, float]] = (),
-                     full: tuple[tuple[str, float], ...] | list[tuple[str, float]] = ()) -> str:
-    """The Stored Food modifier's effects at the province's applied size, like a modifier tooltip: each effect's value
-    per stored year times the stored years, largest first, then the store lever's lines (``low``: Low Stores per year
-    short of the pivot, ``full``: Full Stores per year above it) at the years the step is short of / above the pivot,
-    each shown only while it applies; a plain line without the modifier."""
-    types = types or {}
-    years = stored_food_years()
-    carried = f"GreaterThan_CFixedPoint({years}, '(CFixedPoint)0')"
+def stored_food_step() -> str:
+    """GUI value: the Stored Food step (whole stored months) the location's province carries, -1 without one."""
+    return f"{_LOC}.MakeScope.ScriptValue('{STORED_FOOD_STEP}')"
 
-    def block(size: str, visible: str, payload) -> list[tuple[float, str]]:
-        out = []
-        for key, value in payload:
-            if value == 0:
-                continue
-            info = types.get(key, {})
-            # decimals for a single stored month, so a small store does not round its effects to zero
-            shown = _scaled_value(size, _fixed(value), info, abs(value) / 12)
-            out.append((_magnitude(str(value), info), _raw_block(f"[ShowModifierTypeName('{key}')]: {shown}", visible)))
-        out.sort(key=lambda item: -item[0])
-        return out
 
-    rows = [b for _, b in block(years, carried, per_year)]
-    for name, payload in ((STORED_FOOD_LOW_YEARS, low), (STORED_FOOD_FULL_YEARS, full)):
-        size = f"{_LOC}.MakeScope.ScriptValue('{name}')"
-        rows += [b for _, b in block(size, f"GreaterThan_CFixedPoint({size}, '(CFixedPoint)0')", payload)]
-    # no step at all (an almost empty store, step 0, still carries Low Stores)
-    low_size = f"{_LOC}.MakeScope.ScriptValue('{STORED_FOOD_LOW_YEARS}')"
-    none = f"Not(Or({carried}, GreaterThan_CFixedPoint({low_size}, '(CFixedPoint)0')))" if low else f"Not({carried})"
-    rows.append(f'TooltipTextBlock = {{ visible = "[{none}]" blockoverride "text" {{ text = "PP_FOOD_CHIP_NO_TIER" }} }}')
+def stored_food_rows(steps: tuple[str, ...] | list[str] = ()) -> str:
+    """The province's Stored Food step modifier, shown as itself (2026-10-03, Jan: one modifier per province, show it):
+    one ``ShowModifierEffect`` block per step (``steps``: the step modifiers in step order, 0 first), visible only on
+    the step the province carries; a plain line without a step."""
+    step = stored_food_step()
+    rows = [
+        _row(name, f"And(GreaterThan_CFixedPoint({step}, '(CFixedPoint){s - 0.5}'), "
+                   f"Not(GreaterThan_CFixedPoint({step}, '(CFixedPoint){s + 0.5}')))")
+        for s, name in enumerate(steps)
+    ]
+    rows.append(f'TooltipTextBlock = {{ visible = "[Not(GreaterThan_CFixedPoint({step}, \'(CFixedPoint)-0.5\'))]" '
+                f'blockoverride "text" {{ text = "PP_FOOD_CHIP_NO_TIER" }} }}')
     return " ".join(rows)
 
 
@@ -235,14 +219,13 @@ def _fixed(value: float) -> str:
 
 
 def load_stored_food_rows(mod_root: Path, vanilla: Path | None,
-                          per_year: tuple[tuple[str, float], ...] | list[tuple[str, float]],
-                          low: tuple[tuple[str, float], ...] = (), full: tuple[tuple[str, float], ...] = ()) -> str | None:
-    """The chip's effect rows with the display settings of vanilla's and the mod's modifier types."""
+                          per_year: tuple[tuple[str, float], ...] | list[tuple[str, float]]) -> str | None:
+    """The chip's rows: the step modifiers of the configured Stored Food (None without ``[stored_food]``)."""
     if not per_year:
         return None
-    roots = [root for root in ((vanilla / "game") if vanilla else None, mod_root) if root is not None]
-    texts = [p.read_text(encoding="utf-8-sig") for root in roots for p in sorted((root / TYPE_DEFINITIONS).glob("*.txt"))]
-    return stored_food_rows(per_year, modifier_types(texts), low, full)
+    from prosper_or_perish_constructor import stored_food
+
+    return stored_food_rows([stored_food.step_name(s) for s in range(stored_food.STEPS + 1)])
 
 
 def _marker(key: str) -> str:

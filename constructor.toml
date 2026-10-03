@@ -1021,7 +1021,9 @@ pivot_months = 12
 
 [stored_food.per_year]
 # Stored Food: per stored year
-local_population_growth = 0.0075                    # the PP growth law: +0.75 %/yr per stored year, 1.5 % at 24 months
+# the PP growth law: +0.60 %/yr per stored year, 1.2 % at 24 months (2026-10-03, was 0.0075: the Mini World run
+# 1352-1392 grew +0.55 %/yr at a median store of 17 months, fit -0.34 + 0.63 x stored years; Jan's target ~0.3 %/yr)
+local_population_growth = 0.006
 local_devastation_recovery = 0.003
 local_migration_attraction = 0.045
 local_monthly_prosperity = 0.0025

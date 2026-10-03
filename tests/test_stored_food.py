@@ -24,7 +24,7 @@ DEFINES = MOD_ROOT / "loading_screen/common/defines/pp_defines_adjustments.txt"
 # term NPop.FOOD_STORAGE_POP_GROWTH is 0 since growth moved onto the modifier). The storage legs it once carried
 # (Surplus Sales +8.0, Scarcity Premium -8.0 per year) are gone: the store lever (Low Stores / Full Stores) replaced them.
 PAYLOAD_1_3 = {
-    "local_population_growth": 0.0075,
+    "local_population_growth": 0.006,   # 2026-10-03 Mini World calibration (was the 1.3 value 0.0075)
     "local_devastation_recovery": 0.003,
     "local_migration_attraction": 0.045,
     "local_monthly_prosperity": 0.0025,
@@ -66,10 +66,10 @@ def test_payload_is_the_1_3_stored_food_modifier() -> None:
 
 
 def test_growth_rides_the_modifier_and_the_engine_term_is_off() -> None:
-    # same law as the old define term: 0.0075 per stored year = FOOD_STORAGE_POP_GROWTH 0.015 at the 2-year cap
+    # 0.006 per stored year = FOOD_STORAGE_POP_GROWTH 0.012 at the 2-year cap (the 1.3 law was 0.0075 = 0.015)
     config = _config()
     cap_years = _define("GROWTH_FROM_FOOD_MULTIPLIER_MAX")
-    assert stored_food.growth_per_year(config) * cap_years == pytest.approx(0.015)
+    assert stored_food.growth_per_year(config) * cap_years == pytest.approx(0.012)
     # the engine's own storage term would add the growth a second time
     assert _define("FOOD_STORAGE_POP_GROWTH") == 0
     assert _define("FOOD_SURPLUS_POP_GROWTH") == 0
@@ -218,7 +218,7 @@ def test_display_values_read_the_applied_size() -> None:
         years,
     )
     growth = _block(text, "pp_province_food_storage_growth")
-    assert "value = pp_stored_food_years" in growth and "multiply = 0.0075" in growth
+    assert "value = pp_stored_food_years" in growth and "multiply = 0.006" in growth
     assert "FOOD_STORAGE_POP_GROWTH" not in growth
     # the hand-written storage values no longer model an engine term
     storage = "\n" + _read(STORAGE_VALUES)

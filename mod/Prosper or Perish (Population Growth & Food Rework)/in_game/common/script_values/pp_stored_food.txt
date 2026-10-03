@@ -19,5 +19,5 @@ pp_stored_food_years = {
 # at the applied size. It is part of modifier:local_population_growth; the engine adds no storage term of its own.
 pp_province_food_storage_growth = {
 	value = pp_stored_food_years
-	multiply = 0.0075
+	multiply = 0.006
 }

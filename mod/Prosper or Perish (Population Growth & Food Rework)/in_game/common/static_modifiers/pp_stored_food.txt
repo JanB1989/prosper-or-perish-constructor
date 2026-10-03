@@ -5,7 +5,7 @@
 # with size = the province's stored years (0 to the 2-year cap), so the effects follow the store continuously.
 pp_stored_food = {
 	game_data = { category = province }
-	local_population_growth = 0.0075
+	local_population_growth = 0.006
 	local_devastation_recovery = 0.003
 	local_migration_attraction = 0.045
 	local_monthly_prosperity = 0.0025

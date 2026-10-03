@@ -314,6 +314,19 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 	}
+	# GATE (2026-10-03): one method alone in the last slot, so the AI's margin check reads it. Province Food from
+	# offset at margin 1.0 at 12 stored months: the store lever lifts it over the AI's 1.05 below about 11 months and
+	# drops it under above, whatever the staples cost, so no kitchen is built or extended in a well-stocked province.
+	unique_production_methods = {
+		pp_cookshop_daily_fare = {
+			icon_type = building_type
+			icon = cookshop
+			offset = 0.1
+			produced = local_food
+			output = 1.0
+			category = building_maintenance
+		}
+	}
 	raw_modifier = {
 		local_population_capacity = 0.55
 	}

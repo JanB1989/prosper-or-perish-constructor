@@ -146,7 +146,7 @@ class SimRules:
     months: int = 96
     victuals_price: float = 2.7
     growth_base: float = -0.0048
-    growth_per_year: float = 0.0086     # per stored year, whole months (stored-food tiers); pre-plague fit (law 0.0075)
+    growth_per_year: float = 0.0069     # per stored year; the pre-plague fit 0.0086 (law 0.0075) x 0.006 / 0.0075 (2026-10-03)
     starving_growth: float = -0.04
     starving_migration: float = -0.012
     emp_elasticity: float = 0.5

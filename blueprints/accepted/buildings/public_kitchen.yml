@@ -3,7 +3,9 @@ tag: public_kitchen
 footprint: manufactory
 labour:
   class: craft_absolutism
-gate_method: pp_public_kitchen_boreal_hunter_stew_serve
+  methods:
+    pp_public_kitchen_daily_fare: keep
+gate_method: pp_public_kitchen_daily_fare
 upgrade_chain:
   family: cookshop
   tier: 1
@@ -41,6 +43,9 @@ building:
         - pp_public_kitchen_honey_gruel_serve
         - pp_public_kitchen_meat_tajine_serve
         - pp_public_kitchen_boreal_hunter_stew_serve
+    - name: slot_2
+      methods:
+        - pp_public_kitchen_daily_fare
   possible_production_methods: []
   body: |2-
     	is_foreign = no
@@ -311,6 +316,17 @@ building:
     			category = building_maintenance
     		}
     	}
+    	# GATE (2026-10-03): one method alone in the last slot, so the AI's margin check reads it. Province Food from
+    	# offset at margin 1.0 at 12 stored months: the store lever lifts it over the AI's 1.05 below about 11 months and
+    	# drops it under above, whatever the staples cost, so no kitchen is built or extended in a well-stocked province.
+    	unique_production_methods = {
+    		pp_public_kitchen_daily_fare = {
+    			offset = 0.1
+    			produced = local_food
+    			output = 1.0
+    			category = building_maintenance
+    		}
+    	}
     	raw_modifier = {
     	}
 
@@ -335,6 +351,9 @@ localization:
     public_kitchen_desc: A large town kitchen that feeds workers, the poor and the garrison from the market's staples. Its dishes and drinks feed the province as [ShowGoodsName('local_food')|e], and a fed town is a calmer one.
     public_kitchen_slot_0: Drink
     public_kitchen_slot_1: Main Dish
+    public_kitchen_slot_2: Daily Fare
+    pp_public_kitchen_daily_fare: Daily Fare
+    pp_public_kitchen_daily_fare_desc: The kitchen sells a cheap daily fare at its door. It pays only while the province is short of food, so the lords build and extend kitchens where people need them, not where the granaries are already full.
     pp_public_kitchen: Public Kitchens
     pp_public_kitchen_desc: Towns organize large kitchens with kettles, stores and paid crews that feed workers and the poor every day.
     pp_public_kitchen_beer: Beer
@@ -370,6 +389,11 @@ evaluation:
     input_throughput: Base dish recipes intentionally received two 10% throughput passes (the second on 2026-09-23 with a 5% output buff); the drink slot remains a partial add-on.
     output_throughput: Base dish recipes intentionally received two 10% throughput passes (the second on 2026-09-23 with a 5% output buff); the drink slot remains a partial add-on.
   production_methods:
+    pp_public_kitchen_daily_fare:
+      allow_rules:
+        profit_percent: The Daily Fare is the kitchen's AI gate, balanced at margin 1.0 at a 12-month store; the store lever moves it.
+        input_throughput: The Daily Fare is a small gate method that only sets the AI margin check.
+        output_throughput: The Daily Fare is a small gate method that only sets the AI margin check.
     pp_public_kitchen_khichdi_serve:
       production_efficiency: 1.15
       allow_rules:

@@ -366,35 +366,16 @@ Known limits:
 Jan's target: world growth about 0.3 %/yr, not uniform, set through food or minimal changes to growth from storage, no
 financial or growth buffs. Test bed: PP + EU5 Mini World for PP, profile `europe` (5,543 land locations, 78.4M people at
 start, the rest of the world empty and non-ownable), observer at top speed, five-yearly autosaves, 1337-1437 (100
-years in about 25 minutes). Saves are extracted to `~/pp_ai_run/tables/miniN_*`; the scripts (scratchpad) report
-growth per step, stores, starvation, food buildings and a population-weighted fit of province growth on stored years.
+years in about 25 minutes; runs 3 and 4 went on to 1522, 185 years in about 50 minutes). Saves are extracted to
+`~/pp_ai_run/tables/miniN_*`; the scripts (session scratchpad) report growth per step, stores, starvation, food
+buildings and a population-weighted fit of province growth on stored years. Run 4 starts from run 3's start save.
 
-| Run | Rules | 1337-1347 | Black Death 1347-1352 | 1352-1437 | Store (mean) | Fit |
-| --- | --- | ---: | ---: | ---: | ---: | --- |
-| 1 | food set 303946d8, Stored Food 0.0075 | -0.09 / +0.35 %/yr | -30 % | +0.48 %/yr | 16.3 months | -0.26 + 0.54 x stored years |
-| 2 | + flat Cookshop veto, Stored Food **0.006** | -0.22 / +0.50 %/yr | -30 % | **+0.28 %/yr** | 15.9 months | -0.43 + 0.54 x stored years |
-
-- The growth law is `local_population_growth` 0.006 per stored year since run 2 (0.0062 would give 0.30 exactly at the
-  stores of run 1). The engine's surplus term (`FOOD_SURPLUS_POP_GROWTH`) stays 0: growth was already above target.
-- Run 2: 0.4-1.9 % of provinces starving at a save (0.1-1.5 % of people); of the provinces starving at a save half hold
-  3+ months five years later and 31 % still starve. The AI answers with Cookshops (29 levels per 100 starving
-  province-steps), farms (14) and Taverns (10). The chronic cases are tiny collapsed pools (1-3k people: Ireland,
-  steppes, Urals, North Atlantic isles) whose Cookshops find no staff.
-- Two thirds of the peasants are jobless (subsistence) throughout; farm levels grow about 50 % in 100 years.
-
-### 6.6 Mini World growth calibration (2026-10-03, branch `province-food-store-lever`)
-
-Jan's target: world growth about 0.3 %/yr, not uniform, set through food or minimal changes to growth from storage, no
-financial or growth buffs. Test bed: PP + EU5 Mini World for PP, profile `europe` (5,543 land locations, 78.4M people at
-start, the rest of the world empty and non-ownable), observer at top speed, five-yearly autosaves, 1337-1437 (100
-years in about 25 minutes). Saves are extracted to `~/pp_ai_run/tables/miniN_*`; the scripts (session scratchpad)
-report growth per step, stores, starvation, food buildings and a population-weighted fit of province growth on stored
-years.
-
-| Run | Rules | 1337-1347 | Black Death 1347-1352 | 1352-1437 | Store (mean) | Fit |
-| --- | --- | ---: | ---: | ---: | ---: | --- |
-| 1 | food set 303946d8, Stored Food 0.0075 | -0.09 / +0.35 %/yr | -30 % | +0.48 %/yr | 16.3 months | -0.26 + 0.54 x stored years |
-| 2 | + flat Cookshop veto, Stored Food **0.006** | -0.22 / +0.50 %/yr | -30 % | **+0.28 %/yr** | 15.9 months | -0.43 + 0.54 x stored years |
+| Run | Rules | 1337-1347 | Black Death 1347-1352 | 1352-1437 | 1437-1522 | Store (mean) | Fit 1352-1437 |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
+| 1 | food set 303946d8, Stored Food 0.0075 | -0.09 / +0.35 %/yr | -30 % | +0.48 %/yr | | 16.3 months | -0.26 + 0.54 x stored years |
+| 2 | + flat Cookshop veto, Stored Food **0.006** | -0.22 / +0.50 %/yr | -30 % | **+0.28 %/yr** | | 15.9 months | -0.43 + 0.54 x stored years |
+| 3 | + Daily Fare gate (384a743c) | +0.50 / -0.28 %/yr | -29 % | +0.28 %/yr | -0.00 %/yr | 16.0 / 13.6 months | -0.45 + 0.55 x stored years |
+| 4 | + flat Tavern weight terms (b4b4c102) | +0.49 / -0.70 %/yr | -32 % | +0.30 %/yr | -0.04 %/yr | 15.8 / 13.8 months | -0.34 + 0.48 x stored years |
 
 - The growth law is `local_population_growth` 0.006 per stored year since run 2 (0.0062 would give 0.30 exactly at the
   stores of run 1). The engine's surplus term (`FOOD_SURPLUS_POP_GROWTH`) stays 0: growth was already above target.
@@ -403,3 +384,24 @@ years.
   province-steps), farms (14) and Taverns (10). The chronic cases are tiny collapsed pools (1-3k people: Ireland,
   steppes, Urals, North Atlantic isles) whose Cookshops find no staff.
 - Two thirds of the peasants are jobless (subsistence) throughout; farm levels grow about 50 % in 100 years.
+- **Plateau after about 1450 (runs 3 and 4).** The population stops growing (71.1M and 65.9M in 1522; 78.4M at start):
+  the mean store falls from 16 to under 14 months, provinces under 3 months rise from about 6 % to 14 % (starving 2 % ->
+  5 %), staples supply/demand falls from about 1.0 to 0.8-0.9 and victuals cost 3.5-3.7 (default 3.0). The hunger is
+  structural (the starving provinces of 1512 make 61 % of what they eat) and has spread into big provinces of the core
+  (Lombardy, Bohemia, Castile, the Low Countries). Europe as a whole still makes about 20 % more food than it eats, but
+  the surplus sits in full inland provinces: with the Grange off it can only leave as crops (farms) or as victuals from
+  harbour Yards. Cookshops are the main staple buyers (building demand 2.6k -> 6k a month, pops 1.8k -> 2.7k).
+- **Taverns ratchet.** 68 -> 735 levels (run 3) and 815 (run 4) by 1522 at 240-263 town capitals. The AI adds them in
+  famines, often 2-12 levels at once, never removes them, and about 60 % stand idle once the store refills. The flat
+  Tavern weight terms of run 4 changed nothing measurable: the AI's score for a Tavern in a famine runs from thousands
+  to billions (the engine's food term), far beyond any weight; only the gate (Serve Victuals) is a hard stop.
+- AI answer to hunger (run 4, levels added per 100 province-steps): starving provinces get Taverns 20, Cookshops 14,
+  farms 12 (42 % hold 3+ months five years later, 36 % still starve); provinces at 3-12 months get Cookshops 22, farms
+  10, Taverns 4; full provinces farms 16, Cookshops 4. Farms follow crop prices, not the local store: the farm weight's
+  store bonus lifts their AI score in hungry provinces (median 6.7 below 3 months vs 2.4 at 12-15) but stays far below
+  what a Cookshop or Tavern scores there.
+- Engine behaviour around the gates (run 3): a gated building (score 0) gets no close or subsidy decision, so subsidies
+  granted in a famine are never withdrawn once the store refills (about 100 Cookshops subsidised at 18+ months by
+  1500), while Cookshops in hungry provinces that cannot buy their inputs get closed (90-140 at 4 months or less).
+  80 % of Cookshop levels stand in full provinces; their `local_monthly_food` (10 per staffed level) is not on the store
+  lever.

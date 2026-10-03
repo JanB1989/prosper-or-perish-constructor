@@ -69,6 +69,12 @@
 - Farm Produce (`[stored_food.farm_produce]`): Cookshop and Public Kitchen locations get +Province Food output scaled by
   the province's worked farm levels (`local_pp_farm_levels`, script value `pp_province_farm_levels`); the store refresh
   renews it every January, so it adds no pulse. The start simulation counts placed farm levels for the Cookshop cap.
+- AI weights of the food buildings (`ai_construct_weight`: crop farm generator, cookshop/public_kitchen/tavern
+  blueprints). The AI's own score for a building that adds Province Food to a short province runs from about 25 to
+  1e9 (the engine's food term), so income-scaled terms are nudges only. Vetoes are flat (Cookshop -10000 from 10 to 14
+  stored months; Tavern -10000 from 4 to 6 months and -100 per standing level) and still lose to the largest scores;
+  the store-following gate is the only hard stop. The AI never removes a Tavern, so every famine it answers stays
+  built (Mini World runs 3/4: 68 -> 735/815 levels by 1522; the flat Tavern terms of run 4 changed nothing measurable).
 - `store_lever.load_design` reads the numbers from the config, the two blueprints and `province_starving`; the
   start-food validator (`worldbuilder/food_sim.py`), `tools/province_store_sim.py` (rest points and ripple on real
   provinces) and `tests/test_store_lever.py` (the properties the design rests on) all use it. After changing a value

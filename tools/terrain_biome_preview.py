@@ -251,7 +251,7 @@ def main() -> None:
         print(name, flush=True)
     if args.world:
         for key, s in srcs.items():
-            if key not in ("before", "final"):
+            if key not in ("before", "parents", "final"):
                 continue
             img = render(s, tex, (0, 0, 16384, 8192), 1, downsample=4, textured=False)
             img.save(args.out / f"world_{key}.png", optimize=True)

@@ -104,12 +104,13 @@ def _top_level_increase_per_level_cost(building: str, body: str) -> str | None:
     return str(values[-1])
 
 
-def test_tavern_levels_each_cost_another_full_base_price():
+def test_tavern_levels_cost_the_base_price():
+    """2026-10-04 (Jan): no level cost scaling for the Tavern (was 1.33, another full base price per level)."""
     path = accepted_blueprint_paths_by_building(ROOT)['tavern']
     template = load_template(path)
     source = Decimal(_top_level_increase_per_level_cost(template.key, template.building_body))
     scaling = load_building_scaling_config(PROJECT)
-    assert scaled_increase_per_level_cost_text(source, scaling.increase_per_level_cost_multiplier) == "1.00"
+    assert scaled_increase_per_level_cost_text(source, scaling.increase_per_level_cost_multiplier) == "0.00"
 
 
 def test_farms_repeat_their_levels_cheaper() -> None:

@@ -894,14 +894,15 @@ land_reserve = -0.25          # hunting grounds, royal forests and gardens, catt
 #   flat_food   local_monthly_food per staffed level of every farming building of the age
 #   throughput  factor on the building's production methods (goods in and out; Provision follows the base output)
 #               against the recipe as balanced before this table (1.0 = unchanged)
-#   advance / global_food_decay   the age's food advance changes the country's food decay (base 0.015 a month)
+#   advance / global_food_decay   the age's food advance changes the country's food decay (base 0.004 a month since
+#                                 2026-10-04, Jan; was 0.015: the cuts below scaled by 0.4 / 1.5 with it)
 # Math (run b033350e): age 3 lifts the province store's resting point from ~8 to ~14 months (+0.3 %/yr) at about a
 # third of the farm levels upgraded; a farmstead level makes 5.8 food instead of 3.0, decay falls 1.5 % -> 1.2 %.
 age_1_traditions = { flat_food = 1.5, throughput = 1.0 }
 age_2_renaissance = { flat_food = 1.5, throughput = 1.0, advance = "food_advance_renaissance", global_food_decay = 0.0 }
-age_3_discovery = { flat_food = 3.5, throughput = 1.15, advance = "new_world_crops", global_food_decay = -0.003 }
-age_4_reformation = { flat_food = 4.5, throughput = 1.35, advance = "food_advance_reformation", global_food_decay = -0.002 }
-age_5_absolutism = { flat_food = 6.0, throughput = 1.45, advance = "food_advance_absolutism", global_food_decay = -0.002 }
+age_3_discovery = { flat_food = 3.5, throughput = 1.15, advance = "new_world_crops", global_food_decay = -0.0008 }
+age_4_reformation = { flat_food = 4.5, throughput = 1.35, advance = "food_advance_reformation", global_food_decay = -0.0005 }
+age_5_absolutism = { flat_food = 6.0, throughput = 1.45, advance = "food_advance_absolutism", global_food_decay = -0.0005 }
 # AI weight of a farming upgrade where its predecessor stands (divided by owner income + 10, like the farm weight):
 # the engine gives a replacement no profit gate but only AI_UPGRADE_BUILDING_UTILITY (0.001), so farmsteads stalled at
 # 19 % (run b033350e, 1550)

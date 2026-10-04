@@ -25,7 +25,7 @@ def test_relief_never_falls_with_the_age() -> None:
         assert later.flat_food >= earlier.flat_food
         assert later.throughput >= earlier.throughput
     assert all(age.global_food_decay <= 0 for age in ages)   # decay only falls (base 0.015)
-    assert sum(age.global_food_decay for age in ages) > -0.015
+    assert sum(age.global_food_decay for age in ages) > -0.004   # base 0.004 since 2026-10-04 (was 0.015)
     assert config.upgrade_weight > 0
 
 

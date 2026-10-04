@@ -18,8 +18,8 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    # hefty: every further level costs another full base price (1.33 x the 0.75 [building_scaling] multiplier = 1.00)
-    increase_per_level_cost = 1.33
+    # every level costs the base price (2026-10-04, Jan: was 1.33, every further level another full base price)
+    increase_per_level_cost = 0
     max_levels = tavern_max_level
     pop_type = nobles
     employment_size = 0.001

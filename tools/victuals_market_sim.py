@@ -90,7 +90,7 @@ class Scenario:
     prosperity: bool = False
     prosperity_gain: float = 0.0025   # local_monthly_prosperity per stored year (1.3 stored-food modifier; 1.4 stored-food tiers)
     prosperity_decay: float = 0.005   # local_prosperity_decay in the prosperity modifier (scaled by prosperity)
-    prosperity_consumption: float = 0.5  # +50 % pop food consumption at full prosperity (mod inject)
+    prosperity_consumption: float = 0.3  # +30 % pop food consumption at full prosperity (mod inject)
     pop_growth: bool = False          # growth gate: +0.75 %/yr per stored year, -0.5 %/yr from rank
     decay: float = 0.0                # share of the stockpile lost per month (mod global_food_decay = 0.01)
     workers_per_level: int = 0  # 0 = continuous staffing; N = whole workers per level

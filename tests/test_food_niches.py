@@ -90,11 +90,11 @@ def test_the_harbour_yard_ships_grain_and_takes_no_store_food() -> None:
     shipments = [_method(text, f"pp_victualling_yard_{m}_shipment") for m in ("grain", "rice", "millet")]
     assert [next(g for g in ("wheat", "rice", "millet") if g in m) for m in shipments] == ["wheat", "rice", "millet"]
     assert all(m["produced"] == "victuals" and m["output"] == 0.932 for m in shipments)
-    # the Yard never makes food: 2.33 staples (12 food each in the farms' Provisioning) for 0.932 victuals, 30 food
-    # each at a Tavern, and every further level ships 5 % less
+    # 2.33 staples (12 food each in the farms' Provisioning) for 0.932 victuals, 30 food each at a Tavern; every
+    # further level ships 3 % more (2026-10-04, Jan; was -5 %)
     grain = shipments[0]["wheat"]
     assert abs(grain * 12.0 / 0.932 - 30.0) < 0.05
-    assert "local_victuals_output_modifier = -0.05" in text
+    assert "local_victuals_output_modifier = 0.03" in text and "local_victuals_output_modifier = -" not in text
     assert "employment_size = 0.2" in text and "pop_type = burghers" in text
     assert "local_food_capacity" not in text and "local_sailors = 0.002" in text
     assert "increase_per_level_cost = 1.0" in text and "{gold = 50}" in text
@@ -110,6 +110,12 @@ def test_the_logistics_caps_are_generated_under_the_new_names() -> None:
     assert "victuals_market" not in text
     yard = text[text.index("victualling_yard_max_level = {"):]
     assert "raw_material = goods:" not in yard and "vegetation = farmland" not in yard   # it packs the store, not crops
+    # harbour capacity x8 (2026-10-04) and a Grand Staple Port +3 after the upper limit, harbour and inland alike
+    assert "modifier:harbor_suitability multiply = 8" in yard
+    staple = "if = { limit = { has_town_rights = town_rights_type:royal_staple_rights } add = { desc = PP_VM_CAP_STAPLE_PORT value = 3 } }"
+    assert yard.count(staple) == 2
+    for limit in (10, 4):
+        assert f"max = {{ desc = PP_VM_CAP_MAXIMUM value = {limit} }} {staple}" in yard
 
 
 def _packer_sim(caps):

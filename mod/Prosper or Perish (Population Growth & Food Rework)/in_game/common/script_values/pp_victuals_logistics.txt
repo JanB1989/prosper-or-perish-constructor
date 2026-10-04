@@ -51,17 +51,17 @@ victualling_yard_max_level = {
  } if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_MARKET value = 3 } } add = {
  	desc = PP_VM_CAP_DEVELOPMENT
  	value = this.victualling_yard_max_level_pp_vm_cap_development
- } add = { desc = PP_VM_CAP_THRESHOLD value = -2 } min = { desc = PP_VM_CAP_MINIMUM value = 2 } max = { desc = PP_VM_CAP_MAXIMUM value = 10 } }
+ } add = { desc = PP_VM_CAP_THRESHOLD value = -2 } min = { desc = PP_VM_CAP_MINIMUM value = 2 } max = { desc = PP_VM_CAP_MAXIMUM value = 10 } if = { limit = { has_town_rights = town_rights_type:royal_staple_rights } add = { desc = PP_VM_CAP_STAPLE_PORT value = 3 } } }
  else_if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_INLAND_MARKET value = 1 } if = { limit = { is_coastal = yes } add = { desc = PP_VM_CAP_WATER_ACCESS value = 1 } } add = {
  	desc = PP_VM_CAP_DEVELOPMENT
  	value = this.victualling_yard_max_level_pp_vm_cap_development_2
- } max = { desc = PP_VM_CAP_MAXIMUM value = 4 } }
+ } max = { desc = PP_VM_CAP_MAXIMUM value = 4 } if = { limit = { has_town_rights = town_rights_type:royal_staple_rights } add = { desc = PP_VM_CAP_STAPLE_PORT value = 3 } } }
  else = { add = { desc = PP_VM_CAP_SITE_YARD value = 0 } }
 }
 
 # Tooltip helpers of victualling_yard_max_level (cap_tooltips.py): each is one row of the cap, read through this.
 victualling_yard_max_level_pp_vm_cap_harbor_capacity = {
-	value = modifier:harbor_suitability multiply = 4
+	value = modifier:harbor_suitability multiply = 8
 }
 
 victualling_yard_max_level_pp_vm_cap_development = {

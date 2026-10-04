@@ -19,3 +19,61 @@ TRY_REPLACE:print_culture = {
 
 	global_institution_growth_modifier = 0.10 # 0.20
 }
+
+# New World branch (2026-10-04, Jan): Christian Iberian countries may open the New World branch without embracing the
+# New World institution. With the slower spread it spawned in London (~1440) and had not reached Iberia by 1557
+# (Portugal 3 %, Castile 9 % of their development), so neither could recruit explorers or sail the open sea and England
+# found the Americas alone (~1542). Same advances for everyone, nothing doubled: the Iberians only skip the gate.
+TRY_REPLACE:new_world_advance = {
+	age = age_3_discovery
+
+	depth = 0
+
+	allow = {
+		OR = {
+			has_embraced_institution = institution:new_world
+			AND = {
+				culture = { has_culture_group = culture_group:iberian_group }
+				religion.group = religion_group:christian
+			}
+		}
+	}
+
+	exploration_preparation_time_modifier = -0.05
+	colonial_range = 600
+	diplomatic_range_modifier = 0.10
+
+	ai_preference_tags = {
+		exploration
+	}
+
+	ai_weight = {
+		if = {
+			limit = {
+				culture = { has_culture_group = culture_group:iberian_group }
+				religion.group = religion_group:christian
+			}
+			add = 100
+		}
+	}
+}
+
+TRY_REPLACE:explorer_commisions_advance = {
+	age = age_3_discovery
+	icon = safe_exploration_techniques_advance
+	requires = new_world_advance
+	can_recruit_explorer = yes
+	ai_preference_tags = {
+		exploration
+	}
+
+	ai_weight = {
+		if = {
+			limit = {
+				culture = { has_culture_group = culture_group:iberian_group }
+				religion.group = religion_group:christian
+			}
+			add = 100
+		}
+	}
+}

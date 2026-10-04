@@ -250,7 +250,17 @@ def _advance_has_player_payload(row: dict) -> bool:
     modifiers = _json_object(row.get("modifiers"))
     unlocks = _json_object(row.get("unlocks"))
 
-    return _has_nonzero_modifier(modifiers) or any(unlocks.values())
+    return _has_nonzero_modifier(modifiers) or any(unlocks.values()) or _has_yes_capability(row)
+
+
+def _has_yes_capability(row: dict) -> bool:
+    """A `<capability> = yes` line (can_recruit_explorer, allow_open_sea_exploration); the parser keeps these out of
+    the modifier column."""
+    data = _json_object(row.get("data"))
+    return any(
+        entry.get("value") is True and entry.get("key") not in {"allow_children", "pure_tooltip_entry"}
+        for entry in data.get("entries", [])
+    )
 
 
 def _has_nonzero_modifier(value: object) -> bool:

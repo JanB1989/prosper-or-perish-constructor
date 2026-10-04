@@ -71,6 +71,23 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
     # institution spread (2026-10-04): research speed instead of max literacy, Print Culture growth halved
     "printing_press_advance": ({"global_max_literacy = 10"}, {"research_speed_modifier = 0.05"}),
     "print_culture": ({"global_institution_growth_modifier = 0.2"}, {"global_institution_growth_modifier = 0.1"}),
+    # New World branch (2026-10-04): Christian Iberian countries skip the institution gate, AI weight for them
+    "new_world_advance": (
+        {"allow = {has_embraced_institution=institution:new_world}"},
+        {
+            "allow = {OR={has_embraced_institution=institution:new_world AND={culture={has_culture_group="
+            "culture_group:iberian_group} religion.group=religion_group:christian}}}",
+            "ai_weight = {if={limit={culture={has_culture_group=culture_group:iberian_group} "
+            "religion.group=religion_group:christian} add=100}}",
+        },
+    ),
+    "explorer_commisions_advance": (
+        set(),
+        {
+            "ai_weight = {if={limit={culture={has_culture_group=culture_group:iberian_group} "
+            "religion.group=religion_group:christian} add=100}}",
+        },
+    ),
     "advanced_mining": (set(), {"unlock_building = alum_quarry", "unlock_building = saltpeter_beds"}),
     "efficient_mining": ({"global_iron_output_modifier = 0.1"}, set()),
     "new_currency_demands": (

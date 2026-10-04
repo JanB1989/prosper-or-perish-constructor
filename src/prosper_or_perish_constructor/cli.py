@@ -3748,7 +3748,61 @@ def _windows_userprofile_from_cmd() -> str | None:
 
 
 def _sync_stage_fingerprints(repo: Path, project: Path) -> dict[str, str]:
-    return {stage: _sync_stage_fingerprint(repo, project, stage) for stage in SYNC_STAGES}
+    prints = {stage: _sync_stage_fingerprint(repo, project, stage) for stage in SYNC_STAGES}
+    prints.update({f"{WB_PART}{label}": digest for label, digest in _worldbuilder_parts(repo, project).items()})
+    return prints
+
+
+WB_PART = "worldbuilder|"
+
+
+def _worldbuilder_parts(repo: Path, project: Path) -> dict[str, str]:
+    """One digest per World Builder input (file or folder), so a rerun can say which input changed."""
+    from eu5gameparser.load_order import local_load_order_path
+
+    from prosper_or_perish_constructor.vanilla_mirror import installed_build_id
+
+    config = _project_config(project)
+    load_order = repo / CONSTRUCTOR_LOAD_ORDER
+    paths = [
+        *_worldbuilder_fingerprint_paths(repo, project, config),
+        *_blueprint_fingerprint_paths(repo, project, config),
+        load_order,
+        local_load_order_path(load_order),
+    ]
+    parts: dict[str, str] = {}
+    for path in sorted({item.resolve() if item.exists() else item for item in paths}, key=str):
+        try:
+            label = str(path.relative_to(repo.resolve()))
+        except ValueError:
+            label = str(path)
+        # Compared without comments, AI weights and blueprint localization/icon/evaluation (_worldbuilder_view): the
+        # stage never reads them, and a weight or comment edit used to rerun the whole start setup (about two minutes).
+        parts[label] = _fingerprint_paths([path], file_filter=_is_fingerprint_input, view=_worldbuilder_view)
+    # The game data itself is too large to hash; its Steam build stands in for it.
+    parts["game build"] = str(installed_build_id(load_order))
+    return parts
+
+
+def _worldbuilder_rerun_reason(repo: Path, project: Path, state: dict[str, str]) -> str:
+    """The inputs whose digest moved since the last recorded sync, and up to eight files in them edited since then."""
+    parts = _worldbuilder_parts(repo, project)
+    changed = [label for label, digest in parts.items() if state.get(f"{WB_PART}{label}") != digest]
+    if not changed:
+        return "no recorded input changed (first sync with per-input records)"
+    state_file = repo / SYNC_STATE_PATH
+    since = state_file.stat().st_mtime if state_file.is_file() else 0.0
+    files: list[str] = []
+    for label in changed:
+        root = Path(label) if Path(label).is_absolute() else repo / label
+        candidates = [root] if root.is_file() else (sorted(root.rglob("*")) if root.is_dir() else [])
+        for candidate in candidates:
+            if candidate.is_file() and _is_fingerprint_input(candidate) and candidate.stat().st_mtime > since:
+                files.append(str(candidate.relative_to(repo)) if candidate.is_relative_to(repo) else str(candidate))
+                if len(files) >= 8:
+                    break
+    detail = f"; edited since the last sync: {', '.join(files)}" if files else ""
+    return f"changed: {', '.join(changed[:8])}{detail}"
 
 
 def _sync_stage_fingerprint(repo: Path, project: Path, stage: str) -> str:
@@ -3759,24 +3813,8 @@ def _sync_stage_fingerprint(repo: Path, project: Path, stage: str) -> str:
 
     from prosper_or_perish_constructor.vanilla_mirror import installed_build_id
 
-    load_order = repo / CONSTRUCTOR_LOAD_ORDER
-    # Compared without comments, AI weights and blueprint localization/icon/evaluation (_worldbuilder_view): the stage
-    # never reads them, and a weight or comment edit used to rerun the whole start setup (about two minutes).
-    digest = hashlib.sha256(
-        _fingerprint_paths(
-            [
-                *_worldbuilder_fingerprint_paths(repo, project, config),
-                *_blueprint_fingerprint_paths(repo, project, config),
-                load_order,
-                local_load_order_path(load_order),
-            ],
-            file_filter=_is_fingerprint_input,
-            view=_worldbuilder_view,
-        ).encode()
-    )
-    # The game data itself is too large to hash; its Steam build stands in for it.
-    digest.update(f"game build {installed_build_id(load_order)}".encode())
-    return digest.hexdigest()
+    parts = _worldbuilder_parts(repo, project)
+    return hashlib.sha256("".join(f"{label}={digest}\n" for label, digest in parts.items()).encode()).hexdigest()
 
 
 def _worldbuilder_fingerprint_paths(repo: Path, project: Path, config: dict[str, Any]) -> list[Path]:
@@ -3836,9 +3874,9 @@ def _worldbuilder_view(path: Path, data: bytes) -> bytes:
     """What the World Builder stage can read of a text input: no comments, no AI weight blocks and, in a blueprint, no
     localization/icon/evaluation section. A line holding a quote keeps its comment (a # inside a string is text)."""
     suffix = path.suffix.lower()
-    if suffix not in {".txt", ".yml", ".yaml"}:
+    if suffix not in {".txt", ".yml", ".yaml", ".toml"}:
         return data
-    if suffix != ".txt":
+    if suffix in {".yml", ".yaml"}:
         kept, skipping = [], False
         for line in data.split(b"\n"):
             if line[:1] not in (b" ", b"\t", b"") and not line.startswith(b"-"):
@@ -3976,6 +4014,8 @@ def _smart_sync(args: argparse.Namespace, repo: Path, project: Path, clock: "_St
             print(f"Smart sync: {stage} inputs unchanged; skipping.", flush=True)
             continue
         if stage == "worldbuilder":
+            reason = "--force-build" if args.force_build else _worldbuilder_rerun_reason(repo, project, state)
+            print(f"Smart sync: worldbuilder (start setup) RERUNS, {reason}.", flush=True)
             clock.run("worldbuilder", _worldbuilder_apply, repo, project)
         else:
             result = clock.run("render", _run, ["eu5-orchestrator", "render", "--project", project, "--overwrite"], repo)

@@ -178,6 +178,10 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
     )
     # the game writes playthrough_name only for some starts (e.g. "England #7558ddce"); else the id's first block
     name = next((n for n in snapshots["playthrough_name"].to_list() if n), f"Run {playthrough[:8]}")
+    # a reloaded older save is a branch `<id>_r<yyyy_mm_dd>` of its run (eu5gameparser dataset ingest)
+    reload = re.search(r"_r(\d{4})_\d{2}_\d{2}(?:_\d+)?$", playthrough)
+    if reload:
+        name = f"{name} (reloaded {reload.group(1)})"
     wanted = snapshots["snapshot_id"].to_list()
     loc_columns = [
         "snapshot_id", "location_id", "slug", "country_tag", "owner", "market_id", "super_region", "macro_region",

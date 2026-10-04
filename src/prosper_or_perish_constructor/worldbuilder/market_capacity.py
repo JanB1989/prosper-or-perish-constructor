@@ -117,8 +117,9 @@ def write(repo, mod_root):
     # The harbour Victualling Yard: harbour capacity (natural harbour + river mouth + docks and shipyards), market centre
     # and development, minus a threshold, at least `minimum` on a Yard site. An inland market centre (2026-10-03) gets a
     # small Yard: `water` levels with river or sea access, `land` without, plus development. Elsewhere 0, so the
-    # four-yearly cull clears Yards an old save left outside these sites. The building-levels modifier (the Grand Staple
-    # Port carries it, 2026-10-04) adds after the upper limit, in both branches, as vanilla's marketplace levels.
+    # four-yearly cull clears Yards an old save left outside these sites. The building-levels modifier (Staple Port 3,
+    # Grand Staple Port 8, 2026-10-04) adds on top, in both branches, as vanilla's marketplace levels. No upper limit
+    # since 2026-10-04 (Jan; was 10 on a Yard site, 4 at an inland market centre): a `maximum` in the config brings it back.
     y = cfg["victualling_yard"]
     levels = f"modifier:{y['building_levels_modifier']}"
     staple = when(f"{levels} > 0", "STAPLE_PORT", levels)
@@ -128,7 +129,7 @@ def write(repo, mod_root):
         add("DEVELOPMENT", f"development multiply = {y['development']}"),
         add("THRESHOLD", y["threshold"]),
         clamp("min", "MINIMUM", y["minimum"]),
-        clamp("max", "MAXIMUM", y["maximum"]),
+        *([clamp("max", "MAXIMUM", y["maximum"])] if y.get("maximum") else []),
         staple,
     ])
     inland_cfg = y["inland_market_center"]
@@ -136,7 +137,7 @@ def write(repo, mod_root):
         add("INLAND_MARKET", inland_cfg["land"]),
         when("is_coastal = yes", "WATER_ACCESS", round(inland_cfg["water"] - inland_cfg["land"], 6)),
         add("DEVELOPMENT", f"development multiply = {inland_cfg['development']}"),
-        clamp("max", "MAXIMUM", inland_cfg["maximum"]),
+        *([clamp("max", "MAXIMUM", inland_cfg["maximum"])] if inland_cfg.get("maximum") else []),
         staple,
     ])
     body = [

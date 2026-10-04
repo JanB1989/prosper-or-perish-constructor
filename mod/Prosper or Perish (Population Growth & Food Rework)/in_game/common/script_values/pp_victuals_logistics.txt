@@ -51,11 +51,11 @@ victualling_yard_max_level = {
  } if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_MARKET value = 3 } } add = {
  	desc = PP_VM_CAP_DEVELOPMENT
  	value = this.victualling_yard_max_level_pp_vm_cap_development
- } add = { desc = PP_VM_CAP_THRESHOLD value = -2 } min = { desc = PP_VM_CAP_MINIMUM value = 2 } max = { desc = PP_VM_CAP_MAXIMUM value = 10 } if = { limit = { modifier:local_victualling_yard_building_levels > 0 } add = { desc = PP_VM_CAP_STAPLE_PORT value = modifier:local_victualling_yard_building_levels } } }
+ } add = { desc = PP_VM_CAP_THRESHOLD value = -2 } min = { desc = PP_VM_CAP_MINIMUM value = 2 } if = { limit = { modifier:local_victualling_yard_building_levels > 0 } add = { desc = PP_VM_CAP_STAPLE_PORT value = modifier:local_victualling_yard_building_levels } } }
  else_if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_INLAND_MARKET value = 1 } if = { limit = { is_coastal = yes } add = { desc = PP_VM_CAP_WATER_ACCESS value = 1 } } add = {
  	desc = PP_VM_CAP_DEVELOPMENT
  	value = this.victualling_yard_max_level_pp_vm_cap_development_2
- } max = { desc = PP_VM_CAP_MAXIMUM value = 4 } if = { limit = { modifier:local_victualling_yard_building_levels > 0 } add = { desc = PP_VM_CAP_STAPLE_PORT value = modifier:local_victualling_yard_building_levels } } }
+ } if = { limit = { modifier:local_victualling_yard_building_levels > 0 } add = { desc = PP_VM_CAP_STAPLE_PORT value = modifier:local_victualling_yard_building_levels } } }
  else = { add = { desc = PP_VM_CAP_SITE_YARD value = 0 } }
 }
 

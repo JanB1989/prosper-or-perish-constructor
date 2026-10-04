@@ -118,18 +118,20 @@ def test_the_logistics_caps_are_generated_under_the_new_names() -> None:
     assert "victuals_market" not in text
     yard = text[text.index("victualling_yard_max_level = {"):]
     assert "raw_material = goods:" not in yard and "vegetation = farmland" not in yard   # it packs the store, not crops
-    # harbour capacity x8 (2026-10-04); the Grand Staple Port's building-levels modifier (+3, on the town right) adds
-    # after the upper limit, harbour and inland alike
+    # harbour capacity x8 (2026-10-04); the staple ports building-levels modifier (Staple Port +3, Grand +8, on the town
+    # right) adds on top, harbour and inland alike
     assert "modifier:harbor_suitability multiply = 8" in yard
     key = "local_victualling_yard_building_levels"
     staple = f"if = {{ limit = {{ modifier:{key} > 0 }} add = {{ desc = PP_VM_CAP_STAPLE_PORT value = modifier:{key} }} }}"
     rights = (MOD_ROOT / "in_game/common/town_rights/pp_town_rights.txt").read_text(encoding="utf-8-sig")
-    assert re.search(rf"TRY_INJECT:royal_staple_rights = \{{\s*location_modifier = \{{\s*{key} = 3\s*\}}", rights)
+    for right, n in (("staple_port", 3), ("royal_staple_rights", 8)):
+        assert re.search(rf"TRY_INJECT:{right} = \{{\s*location_modifier = \{{\s*{key} = {n}\s*\}}", rights)
     types = (MOD_ROOT / "main_menu/common/modifier_type_definitions/pp_building_cap_modifiers.txt").read_text(encoding="utf-8-sig")
     assert f"{key} = {{" in types
     assert yard.count(staple) == 2
-    for limit in (10, 4):
-        assert f"max = {{ desc = PP_VM_CAP_MAXIMUM value = {limit} }} {staple}" in yard
+    # no upper limit (2026-10-04, Jan)
+    assert "PP_VM_CAP_MAXIMUM" not in yard.split("grange_max_level")[0]
+    assert f"min = {{ desc = PP_VM_CAP_MINIMUM value = 2 }} {staple}" in yard
 
 
 def _packer_sim(caps):

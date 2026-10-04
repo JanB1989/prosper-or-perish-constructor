@@ -313,6 +313,13 @@ def _ensure_icons(mod_root: Path, goods: Iterable[str], project: dict) -> None:
     missing: list[str] = []
     for good in goods:
         destination = target / f"pp_{good}_output.dds"
+        # The mod's own goods icon (local_food, victuals, ...) is the source of truth: mirror it,
+        # so the map mode follows a redrawn goods icon and never keeps a hand-placed file.
+        own = mod_root / TRADE_GOOD_ICON_REL / f"icon_goods_{good}.dds"
+        if own.is_file():
+            if not destination.exists() or destination.read_bytes() != own.read_bytes():
+                shutil.copy2(own, destination)
+            continue
         if destination.exists():
             continue
         source = vanilla_root / "game" / TRADE_GOOD_ICON_REL / f"icon_goods_{good}.dds"

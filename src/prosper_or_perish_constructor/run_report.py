@@ -4,7 +4,7 @@
 writes `graphs/report/<run>/`:
 
 - `maps/*.mp4` - one H.264 video per map (political, population, population change, unemployment, development,
-  building levels, building investment, trade between world regions, the largest trade routes, market trade
+  institutions, building levels, building investment, trade between world regions, the largest trade routes, market trade
   balance), one frame per save, sized to stay
   under 10 MB so Discord and GitHub play it inline; `maps/*.png` - the last frame of each (a poster / thumbnail);
 - `index.html` - the page: summary tiles, the videos and the interactive charts and tables of
@@ -129,6 +129,9 @@ class RunData:
     investment_by_category: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, investment_category, investment
     investment_by_country: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, country_tag, investment
     investment_basis: str = "list"  # "location": at the location's prices (investment_local), "list": list price
+    # engine table location_institutions, institutions at 100 % spread: snapshot_id, institution, population (thousands
+    # living where it is present); locations then carry `institutions` (count, null in snapshots without the table)
+    institutions: pl.DataFrame = field(default_factory=pl.DataFrame)
     good_icons: dict[str, str] = field(default_factory=dict)  # good_id -> page-relative PNG (write_good_icons)
 
     @property
@@ -177,10 +180,11 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
     name = next((n for n in snapshots["playthrough_name"].to_list() if n), f"Run {playthrough[:8]}")
     wanted = snapshots["snapshot_id"].to_list()
     loc_columns = [
-        "snapshot_id", "slug", "country_tag", "owner", "market_id", "super_region", "macro_region", "development",
-        "possible_tax", "total_population", "unemployed_total", "unemployed_peasants", *[f"population_{p}" for p in POP_TYPES],
+        "snapshot_id", "location_id", "slug", "country_tag", "owner", "market_id", "super_region", "macro_region",
+        "development", "possible_tax", "total_population", "unemployed_total", "unemployed_peasants", *[f"population_{p}" for p in POP_TYPES],
     ]
     locations = _scan(dataset, "locations", playthrough).select(loc_columns).filter(pl.col("snapshot_id").is_in(wanted)).collect()
+    locations, institutions = _institutions(dataset, playthrough, wanted, locations)
     buildings = _scan(dataset, "buildings", playthrough).select("snapshot_id", "building_type", "location_slug", "level")
     catalog = (
         _scan(dataset, "building_catalog", playthrough)
@@ -260,9 +264,35 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
         names = goods_scan.select("good_id", "good_name").unique("good_id").collect()
         labels.goods = {**{g: n for g, n in names.iter_rows() if n}, **labels.goods}
     run = RunData(playthrough, str(name), snapshots, locations, building_levels, buildings_by_category, countries,
-                  market_goods, markets, trades, economy, labels)
+                  market_goods, markets, trades, economy, labels, institutions=institutions)
     _load_investment(run, dataset, wanted)
     return run
+
+
+INSTITUTION_PRESENT = 100.0  # location spread at which the game counts the institution as present
+
+
+def _institutions(dataset: Path, playthrough: str, wanted: list[str],
+                  locations: pl.DataFrame) -> tuple[pl.DataFrame, pl.DataFrame]:
+    """Institutions present per location (engine table location_institutions, spread >= 100): adds the count
+    `institutions` to the locations and returns the population living where each institution is present."""
+    scan = _scan_optional(dataset, "location_institutions", playthrough)
+    if scan is None:
+        return locations.with_columns(pl.lit(None, dtype=pl.Float64).alias("institutions")), pl.DataFrame()
+    present = (
+        scan.filter(pl.col("snapshot_id").is_in(wanted) & (pl.col("progress") >= INSTITUTION_PRESENT))
+        .select("snapshot_id", "location_id", "institution")
+        .collect()
+    )
+    have = scan.select("snapshot_id").unique().collect()["snapshot_id"]
+    counts = present.group_by("snapshot_id", "location_id").agg(pl.len().cast(pl.Float64).alias("institutions"))
+    locations = locations.join(counts, on=["snapshot_id", "location_id"], how="left").with_columns(
+        pl.when(pl.col("snapshot_id").is_in(have.implode())).then(pl.col("institutions").fill_null(0.0)).alias("institutions"))
+    population = (
+        present.join(locations.select("snapshot_id", "location_id", "total_population"), on=["snapshot_id", "location_id"])
+        .group_by("snapshot_id", "institution").agg(pl.col("total_population").sum().alias("population"))
+    )
+    return locations, population
 
 
 def _load_investment(run: RunData, dataset: Path, wanted: list[str]) -> None:
@@ -593,6 +623,16 @@ def _development_values(run: RunData, locs: pl.DataFrame) -> pl.DataFrame:
     return locs.select("slug", pl.col("development").alias("value"))
 
 
+def _institution_values(run: RunData, locs: pl.DataFrame) -> pl.DataFrame:
+    return locs.select("slug", pl.col("institutions").alias("value"))
+
+
+def _count_scale(frames: pl.DataFrame) -> Scale:
+    high = max(1.0, float(frames["value"].max() or 1.0))
+    step = max(1, math.ceil(high / 6))
+    return _linear_scale(0.0, high, [(float(v), str(v)) for v in range(0, int(high) + 1, step)])
+
+
 def _unemployment_values(run: RunData, locs: pl.DataFrame) -> pl.DataFrame:
     # subsistence peasants (peasants without a job) as a share of all people
     return locs.select(
@@ -632,6 +672,8 @@ def default_maps() -> list[MapSpec]:
         MapSpec("development", "Development", "Development of every location", _development_values,
                 lambda f: _linear_scale(0.0, max(1.0, float(f["value"].quantile(0.995) or 1.0)),
                                         [(v, f"{v:.0f}") for v in np.linspace(0, max(1.0, float(f["value"].quantile(0.995) or 1.0)), 5)])),
+        MapSpec("institutions", "Institutions", "Institutions present in every location (spread at 100 %)",
+                _institution_values, _count_scale),
         MapSpec("buildings", "Building levels", "Sum of building levels per location (log scale)", _building_values,
                 lambda f: _log_scale(f)),
         MapSpec("investment", "Building investment", "Gold the buildings of a location cost to build (log scale)",
@@ -662,6 +704,8 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
     specs = specs or default_maps()
     if run.investment_by_location.is_empty():
         specs = [s for s in specs if s.key not in {"investment", "investment_change"}]
+    if run.institutions.is_empty():
+        specs = [s for s in specs if s.key != "institutions"]
     snapshots = run.snapshots.to_dicts()
     by_snapshot = run.locations.partition_by("snapshot_id", as_dict=True)
     first = by_snapshot.get((snapshots[0]["snapshot_id"],), pl.DataFrame())
@@ -1054,6 +1098,20 @@ def render_trade_maps(run: RunData, canvas: MapCanvas, out: Path, *, fps: int,
 # Page
 
 
+def institutions_per_person(locations: pl.DataFrame, order: list[str]) -> list[float]:
+    """Population-weighted institutions present per location, per save that has institution data (in save order)."""
+    if "institutions" not in locations.columns:
+        return []
+    rows = (
+        locations.filter(pl.col("institutions").is_not_null())
+        .group_by("snapshot_id")
+        .agg((pl.col("institutions") * pl.col("total_population")).sum().alias("w"), pl.col("total_population").sum().alias("p"))
+        .filter(pl.col("p") > 0)
+    )
+    by = {r["snapshot_id"]: r["w"] / r["p"] for r in rows.to_dicts()}
+    return [by[snap] for snap in order if snap in by]
+
+
 def _summary(run: RunData) -> dict[str, object]:
     first, last = run.snapshots["snapshot_id"][0], run.snapshots["snapshot_id"][-1]
     subsistence = (
@@ -1087,13 +1145,18 @@ def _summary(run: RunData) -> dict[str, object]:
         if not run.investment_by_category.is_empty() else {}
     )
     trade = world_trade_share(run)
+    per_person = institutions_per_person(run.locations, run.snapshots["snapshot_id"].to_list())
     return {"first": at.get(first, {}), "last": at.get(last, {}), "levels_first": lv.get(first, 0), "levels_last": lv.get(last, 0),
             "investment_first": world_investment.get(first), "investment_last": world_investment.get(last),
+            "institutions_first": per_person[0] if per_person else None,
+            "institutions_last": per_person[-1] if per_person else None,
             "trade_first": trade.get(first), "trade_last": trade.get(last), "leaders": leaders}
 
 
 SECTIONS = (
     ("population", "Population", "Who lives where, and how many have work."),
+    ("institutions", "Institutions", "How far the institutions have spread: a location has an institution once its "
+                                     "spread reaches 100 %."),
     ("trade", "Trade", "What moved between markets and what did not: the routes and the trade balance of every market "
                        "as videos, then trade per goods group, per good and per market."),
     ("prices", "Prices", "Every good's price against its base price, and whether the world uses more than it makes."),
@@ -1399,6 +1462,9 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
     if summary.get("trade_last") is not None:
         tiles.insert(3, ("Imported share", f"{float(summary['trade_last']) * 100:.1f}%",  # type: ignore[arg-type]
                          f"{float(summary['trade_first'] or 0) * 100:.1f}% in {start}"))  # type: ignore[arg-type]
+    if summary.get("institutions_last") is not None:
+        tiles.insert(3, ("Institutions per person", f"{float(summary['institutions_last']):.1f}",  # type: ignore[arg-type]
+                         f"{float(summary['institutions_first'] or 0):.1f} in {start}"))  # type: ignore[arg-type]
     if summary.get("investment_last") is not None:
         tiles.insert(-1, ("Building investment", f"{_format_number(float(summary['investment_last']))} gold",  # type: ignore[arg-type]
                           f"{_format_number(float(summary['investment_first'] or 0))} in {start}"))  # type: ignore[arg-type]

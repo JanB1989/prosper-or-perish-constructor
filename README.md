@@ -361,6 +361,12 @@ graphs/report/<playthrough>/charts/*.png    progression charts
 
 `uv run ppc report` rebuilds it on its own (`--playthrough` for another run, `--fps`, `--width`).
 
+Institutions: the engine table `location_institutions` (spread 0..100 per location and institution, kept per snapshot)
+gives the institution map video (institutions at 100 % spread per location), the Institutions section (institutions
+per person, world and world regions, and the share of the world's people living where each institution is present)
+and the "Institutions per person" tile. Snapshots whose save was overwritten before the dataset kept the table have
+no institution data.
+
 #### Building investment
 
 The build also keeps the derived table `graphs/dataset/tables/building_investment/playthrough_id=<id>/<snapshot>.parquet`

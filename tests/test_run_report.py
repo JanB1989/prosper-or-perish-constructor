@@ -316,3 +316,35 @@ def test_good_icons_prefer_the_mod_and_skip_goods_without_one(tmp_path: Path) ->
     assert icons == {"victuals": "icons/victuals.png", "wheat": "icons/wheat.png"}
     with Image.open(out / "icons" / "victuals.png") as image:
         assert image.size == (rr.GOOD_ICON_PX, rr.GOOD_ICON_PX) and image.getpixel((5, 5))[:3] == (255, 0, 0)
+
+
+def test_institutions_count_full_spread_per_location_and_feed_map_chart_and_tile(tmp_path: Path) -> None:
+    from prosper_or_perish_constructor.run_report_charts import build_payload
+
+    run = _trade_run()
+    run.locations = run.locations.with_columns(
+        pl.col("slug").replace_strict({"paris": 1, "london": 2, "atlantis": 3}, return_dtype=pl.Int64).alias("location_id"))
+    folder = tmp_path / "tables" / "location_institutions" / "playthrough_id=run"
+    folder.mkdir(parents=True)
+    # s1: Paris has feudalism, London is half-way; s2: London has it too and Paris adds renaissance; s0 has no table
+    pl.DataFrame({"snapshot_id": ["s1", "s1"], "location_id": [1, 2], "institution": ["feudalism"] * 2,
+                  "progress": [100.0, 50.0]}).write_parquet(folder / "s1.parquet")
+    pl.DataFrame({"snapshot_id": ["s2"] * 3, "location_id": [1, 2, 1],
+                  "institution": ["feudalism", "feudalism", "renaissance"],
+                  "progress": [100.0, 100.0, 100.0]}).write_parquet(folder / "s2.parquet")
+    run.locations, run.institutions = rr._institutions(tmp_path, "run", ["s1", "s2"], run.locations)
+
+    counts = {(s, slug): n for s, slug, n in run.locations.select("snapshot_id", "slug", "institutions").iter_rows()}
+    assert counts[("s1", "paris")] == 1 and counts[("s1", "london")] == 0 and counts[("s2", "paris")] == 2
+    assert counts[("s2", "london")] == 1 and counts[("s2", "atlantis")] == 0
+    values = rr._institution_values(run, run.locations.filter(pl.col("snapshot_id") == "s2"))
+    assert dict(values.iter_rows()) == {"paris": 2.0, "london": 1.0, "atlantis": 0.0}
+    assert [label for _, label in rr._count_scale(values).ticks] == ["0", "1", "2"]
+
+    # s2: 150k Paris x 2 + 75k London x 1 + 1.5k islet x 0 over 226.5k people
+    per_person = rr.institutions_per_person(run.locations, ["s1", "s2"])
+    assert per_person[-1] == (150 * 2 + 75) / 226.5
+    charts = {c["key"]: c for c in build_payload(run)["charts"]}
+    shares = {s["name"]: s["data"] for s in charts["institutions"]["views"][1]["option"]["series"]}
+    assert list(shares) == ["Feudalism", "Renaissance"]  # in the order they appeared
+    assert abs(shares["Feudalism"][-1][1] - 225 / 226.5 * 100) < 0.01

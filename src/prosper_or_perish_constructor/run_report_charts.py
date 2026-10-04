@@ -343,6 +343,38 @@ def population_charts(run: RunData, x: pl.DataFrame) -> list[dict[str, Any]]:
 
 
 # --------------------------------------------------------------------------------------------------------
+# Institutions
+
+
+def institution_charts(run: RunData, x: pl.DataFrame) -> list[dict[str, Any]]:
+    """Institutions per person (population-weighted count present per location), world and world regions, and the
+    share of the world's people living where each institution is present."""
+    if run.institutions.is_empty() or "institutions" not in run.locations.columns:
+        return []
+    xs = x["x"].to_list()
+    known = run.locations.filter(pl.col("institutions").is_not_null())
+    weighted = (pl.col("institutions") * pl.col("total_population")).sum() / pl.col("total_population").sum()
+    world = known.group_by("snapshot_id").agg(weighted.alias("per_person"), pl.col("total_population").sum().alias("population"))
+    regions = known.filter(land_region_expr()).group_by("snapshot_id", "macro_region").agg(weighted.alias("per_person"))
+    per_region = _by_key(regions, "macro_region", "per_person", x)
+    per_person = [_series("World", _aligned(world, "per_person", x), WORLD, width=3)] + [
+        _series(label, per_region.get(key, []), colour, width=1.6) for key, label, colour in region_palette(run)]
+    shares = run.institutions.join(world.select("snapshot_id", "population").rename({"population": "world"}), on="snapshot_id").with_columns(
+        (pl.col("population") / pl.col("world") * 100).alias("share"))
+    first_seen = shares.join(x.select("snapshot_id", "x"), on="snapshot_id").group_by("institution").agg(pl.col("x").min()).sort("x", "institution")
+    by_institution = _by_key(shares, "institution", "share", x)
+    spread = [_series(titleize(name), by_institution.get(name, []), CATEGORICAL[i % len(CATEGORICAL)])
+              for i, name in enumerate(first_seen["institution"].to_list())]
+    return [chart(
+        "institutions", "institutions", "Institutions",
+        "Per person: the institutions present in each location (spread at 100 %), averaged over the people, world and "
+        "world regions. Share of people: the part of the world's population that lives where an institution is present, "
+        "per institution in the order they appeared.",
+        [view("Per person", "num", line_option(xs, per_person, unit="num")),
+         view("Share of people", "pct", line_option(xs, spread, unit="pct", y_max=100))], height=480)]
+
+
+# --------------------------------------------------------------------------------------------------------
 # Goods: prices, production and trade
 
 
@@ -979,7 +1011,7 @@ def country_charts(run: RunData, x: pl.DataFrame) -> tuple[list[dict[str, Any]],
 def build_payload(run: RunData) -> dict[str, Any]:
     """Every chart and table of the page, in section order."""
     x = xaxis(run)
-    charts = population_charts(run, x)
+    charts = population_charts(run, x) + institution_charts(run, x)
     tables: list[dict[str, Any]] = []
     goods: dict[str, dict[str, Any]] = {}
     if not run.market_goods.is_empty():

@@ -1,0 +1,21 @@
+﻿# Printing branch (2026-10-04, Jan): the Printing Press advance gives research speed instead of +10 max literacy
+# (literacy multiplies nearly every institution spread channel), Print Culture's institution growth is halved.
+
+TRY_REPLACE:printing_press_advance = {
+	age = age_3_discovery
+	icon = printing_press_advance
+
+	research_speed_modifier = 0.05 # was global_max_literacy = 10
+
+	depth = 0
+	allow = { has_embraced_institution = institution:printing_press }
+}
+
+TRY_REPLACE:print_culture = {
+	icon = printing_press_advance
+	age = age_3_discovery
+
+	requires = formalized_relations
+
+	global_institution_growth_modifier = 0.10 # 0.20
+}

@@ -152,7 +152,7 @@ TRY_REPLACE:location_exports = {
 	}
 	blockade_force_required = 0.01
 	local_monthly_development_modifier = 0.003
-	local_institution_growth_modifier = 0.020
+	local_institution_growth_modifier = 0.001 # vanilla; was 0.020 (2026-10-04)
 }
 TRY_REPLACE:location_imports = {
 	game_data = {
@@ -160,7 +160,7 @@ TRY_REPLACE:location_imports = {
 	}
 	blockade_force_required = 0.01
 	local_monthly_development_modifier = 0.003
-	local_institution_growth_modifier = 0.020
+	local_institution_growth_modifier = 0.001 # vanilla; was 0.020 (2026-10-04)
 }
 # Scales depending on how much over capacity
 TRY_REPLACE:rgo_level = {

@@ -5,6 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_sheep_farm_base_wool: base
+    pp_sheep_farms_provision: keep
 gate_method: pp_sheep_farms_market_sales
 upgrade_chain:
   family: sheep_farms
@@ -25,6 +26,9 @@ building:
     - pp_sheep_farm_no_primary
     - pp_sheep_farm_maintenance
   - name: slot_2
+    methods:
+    - pp_sheep_farms_provision
+  - name: slot_3
     methods:
     - pp_sheep_farms_market_sales
   possible_production_methods: []
@@ -69,6 +73,15 @@ building:
             }
         }
         unique_production_methods = {
+            pp_sheep_farms_provision = {
+                wool = 0.032
+                produced = local_food
+                output = 0.96
+                debug_max_profit = 0
+                category = building_maintenance
+            }
+        }
+        unique_production_methods = {
             pp_sheep_farms_market_sales = {
                 offset = 0.01
                 produced = wool
@@ -98,18 +111,26 @@ localization:
   entries:
     sheep_farms_slot_0: Wool Pasture
     sheep_farms_slot_1: Sheep Work
+    sheep_farms_slot_2: Provisioning
+    sheep_farms_slot_3: Market
+    pp_sheep_farms_provision: Provision with Mutton
+    pp_sheep_farms_provision_desc: The household buys its own sheep back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_sheep_farm_base_wool: Wool Pasture
     pp_sheep_farm_maintenance: Sheep Farm Maintenance
     pp_sheep_farm_no_primary: No Sheep Work
     pp_sheep_farms_market_sales: Market Sales
     pp_sheep_farms_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    sheep_farms_slot_2: Market
 evaluation:
   allow_rules:
     profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
+    pp_sheep_farms_provision:
+      allow_rules:
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
+        input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+        output_throughput: Existing accepted output scale predates the global employment throughput baseline.
     pp_sheep_farm_base_wool:
       production_efficiency: 1.0
       allow_rules:

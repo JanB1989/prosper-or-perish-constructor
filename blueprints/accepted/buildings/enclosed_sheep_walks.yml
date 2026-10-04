@@ -5,6 +5,7 @@ labour:
   class: primary_absolutism
   methods:
     pp_enclosed_sheep_walks_base_wool: base
+    pp_enclosed_sheep_walks_provision: keep
 output_tag: sheep_farms_hurdled_walks
 gate_method: pp_enclosed_sheep_walks_market_sales
 upgrade_chain:
@@ -26,6 +27,9 @@ building:
     - pp_enclosed_sheep_walks_no_primary
     - pp_enclosed_sheep_walks_improved_flocks
   - name: slot_2
+    methods:
+    - pp_enclosed_sheep_walks_provision
+  - name: slot_3
     methods:
     - pp_enclosed_sheep_walks_market_sales
   possible_production_methods: []
@@ -78,6 +82,15 @@ building:
         }
     }
     unique_production_methods = {
+        pp_enclosed_sheep_walks_provision = {
+            wool = 0.053
+            produced = local_food
+            output = 1.6
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
         pp_enclosed_sheep_walks_market_sales = {
             offset = 0.01
             produced = wool
@@ -112,10 +125,14 @@ advancements:
     ai_weight = { add = 125 }
 localization:
   entries:
-    enclosed_sheep_walks: Enclosed Sheep Walks
-    enclosed_sheep_walks_desc: Enclosed sheep walks gather pasture, shearing sheds, wool sorting, and flock records into a larger pastoral estate.
     enclosed_sheep_walks_slot_0: Wool Pasture
     enclosed_sheep_walks_slot_1: Improved Flocks
+    enclosed_sheep_walks_slot_2: Provisioning
+    enclosed_sheep_walks_slot_3: Market
+    pp_enclosed_sheep_walks_provision: Provision with Mutton
+    pp_enclosed_sheep_walks_provision_desc: The household buys its own sheep back and cooks for the province. The lower the province store is, the more food it makes of it.
+    enclosed_sheep_walks: Enclosed Sheep Walks
+    enclosed_sheep_walks_desc: Enclosed sheep walks gather pasture, shearing sheds, wool sorting, and flock records into a larger pastoral estate.
     pp_enclosed_sheep_walks: Enclosed Sheep Walks
     pp_enclosed_sheep_walks_base_wool: Wool Pasture
     pp_enclosed_sheep_walks_desc: Enclosure, flock records, shearing sheds, and improved husbandry move more wool through organized pasture.
@@ -123,7 +140,6 @@ localization:
     pp_enclosed_sheep_walks_no_primary: No Improved Flocks
     pp_enclosed_sheep_walks_market_sales: Market Sales
     pp_enclosed_sheep_walks_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    enclosed_sheep_walks_slot_2: Market
 icon:
   source_png: ../assets/icons/enclosed_sheep_walks.png
   output_dds: enclosed_sheep_walks.dds
@@ -133,6 +149,11 @@ evaluation:
   allow_rules:
     amortization_months: 7-pop normalization and 10% lower maintenance inputs intentionally make the upgraded former-food producer modestly profitable; revisit with the rural producer rebalance.
   production_methods:
+    pp_enclosed_sheep_walks_provision:
+      allow_rules:
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
+        input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+        output_throughput: Existing accepted output scale predates the global employment throughput baseline.
     pp_enclosed_sheep_walks_base_wool:
       production_efficiency: 1.0
       allow_rules:

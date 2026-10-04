@@ -115,6 +115,10 @@ building:
       local_potato_output_modifier = -0.0075
       local_olives_output_modifier = -0.0035
       local_livestock_output_modifier = -0.0025
+      local_fish_output_modifier = -0.005
+      local_fruit_output_modifier = -0.006
+      local_wild_game_output_modifier = -0.004
+      local_wool_output_modifier = -0.0025
       local_institution_growth_modifier = 0.05
       local_supply_limit_modifier = 0.05
       local_disease_resistance = -0.05

@@ -52,7 +52,7 @@
   (`tier_cultivation_throughput`, goods in and out, on top of [age_food]) and make 55 % of their food per level at 12
   stored months as Province Food (`tier_province_food_share`, `provisioning.crop_food_split`; the total stays the
   age's flat food + the plain Provision); Rotational Farmsteads and Model Farms give +0.05 `global_<good>_output_modifier`
-  of every crop farm good (`staple_output`). `tests/test_crop_farms.py` pins the promise: at 0-12 stored months no
+  of every crop farm good (`crop_farm_output`). `tests/test_crop_farms.py` pins the promise: at 0-12 stored months no
   crop farm loses money (so none lays off workers) on land 0 in a -0.5 harvest or on land -0.10 in a -0.4 harvest.
   Workers are laid off whenever profit at full staffing is negative unless the AI subsidises; `can_close` /
   `ai_forbid_shutdown` do not stop that.
@@ -66,12 +66,13 @@
   prosperity) x s/12 + the store lever: Low Stores (`low`) x the years below 12 months or Full Stores (`full`) x the
   years above (the Grange's Surplus Sales + above / steeply - below) + the store curve (`[stored_food.curve]`,
   2026-10-03, Jan's farm trade-off): Province Food output of every maker at Jan's shares 100 / 80 / 65 / 50 / 40 % of an
-  empty store's output at 0 / 6 / 12 / 18 / 24 months (+53.8 % .. 0 .. -38.5 %, was +-75 % linear), and ONE crop line
-  for the 8 crop farm goods (wheat, rice, millet, maize, legumes, potato, olives, livestock) = -0.40 x that (-21.5 % ..
-  +15.4 %): farms feed a lean province and sell from a full one. Output modifiers are per good, so the line is the same
-  for every farm tier, every RGO and every other producer of those goods; fish, fruit and game stay off it (their
-  Provision buys their own good back). `pp_stored_food_staple_line` (location scope) is the carried step's line for the
-  farm weights. Exact values rounded once to five decimals; the pivot step has no lever or curve line, so there are no
+  empty store's output at 0 / 6 / 12 / 18 / 24 months (+53.8 % .. 0 .. -38.5 %, was +-75 % linear), and one line per
+  staple food (every one since 2026-10-04, see Staple Foods) = its factor x that: -0.40 for the crop farm goods
+  (-21.5 % .. +15.4 %; `staple_per_province_food`), own factors for the buy-back goods (fish -0.20, fruit -0.21,
+  wild_game -0.14, wool -0.23; `staple_per_province_food_by_good`, the same food-for-goods balance, recomputed from the
+  blueprints by `tests/test_staple_foods.py`): food makers feed a lean province and sell from a full one. Output
+  modifiers are per good, so the line is the same for every tier, every RGO and every other producer of that good.
+  `pp_stored_food_staple_line` (location scope) is the carried step's crop farm line for the farm weights. Exact values rounded once to five decimals; the pivot step has no lever or curve line, so there are no
   country base values for the store. The refresh picks the nearest whole month (half up) and keeps the carried step
   while the store stays within 0.55 months of it; `pp_stored_food_months` keeps the continuous months for the AI
   weights. The step shows in the location view's province modifier list (no longer hidden).
@@ -88,8 +89,9 @@
   `tests/test_store_lever.py` ties the weight's numbers to the design. Why: in Mini World run 5 the dear-victuals
   markets sat at 14-19 stored months, above the farms' store bonus (below 14) and below the old Grange line, so no
   building answered the price. No Granges at game start (`grange_at_start = false`).
-- The Victualling Yard takes no store food (2026-10-03): it turns 2.33 market staples into 0.932 victuals and nothing
-  else (food-neutral, denser for trade). Harbour sites (cap minimum 2) and, since the evening, every market centre:
+- The Victualling Yard takes no store food (2026-10-03): it turns 2.33 gold of market staples into 0.932 victuals and
+  nothing else (food-neutral, denser for trade): grain, rice, millet, maize, pease, salt fish and, since 2026-10-04,
+  salt beef (1.555 livestock; sheep walked to market and stay inland). Harbour sites (cap minimum 2) and, since the evening, every market centre:
   inland 2 levels with river or sea access (`is_coastal`), 1 without, + 0.025 x development, at most 4
   (`victuals_logistics.json` `inland_market_center`); the start planner places some there too. Low Stores no longer
   cuts victuals; `province_starving` still zeroes victuals output.
@@ -99,8 +101,11 @@
 - Cookshop / Public Kitchen = farm reward (2026-10-03, Jan): `cookshop_max_level` = the province's standing farm,
   orchard, fishery and flock levels / 5 (`pp_location_province_farm_levels`; the counters `local_pp_farm_levels` /
   `local_pp_staple_levels` sit in `raw_modifier`, so staffing does not move the cap and the over-cap cull does not eat
-  Cookshops; crop_farms.py renders them there, `start_simulation` reads both blocks; no base, development, population or rank levels; the
-  `allow` town-or-province-capital rule stays). Small recipes (dish about 0.45 gold of staples + labour at margin
+  Cookshops; crop_farms.py renders them there, `start_simulation` reads both blocks) + half a level per standing
+  Victualling Yard level in the province (2026-10-04, Jan: raw `local_pp_victualling_yard_levels`,
+  `pp_location_province_victualling_yard_levels`; the start planner counts it, and Yard levels its river top-up adds at
+  game start are re-checked like farm levels, written first in `pp_start_river_topup`); no base, development,
+  population or rank levels; the `allow` town-or-province-capital rule stays. Small recipes (dish about 0.45 gold of staples + labour at margin
   1.08, drink about 0.23 at 1.2; Public Kitchen 0.55 / 0.28) sell their meals for `offset`, so profit is thin and
   store-independent; the food is the flat `local_monthly_food` (15 / 18 per staffed level, scaled by input
   fulfilment), plus `local_food_preservation_efficiency_modifier` +0.04 (Public Kitchen +0.05) and
@@ -123,7 +128,7 @@
   only the farms the setup files place.
 - AI weights of the food buildings (`ai_construct_weight`: crop farm generator, cookshop/public_kitchen/tavern
   blueprints). The AI's own score for a building that adds Province Food to a short province runs from about 25 to
-  1e9 (the engine's food term), so income-scaled terms are nudges only. Vetoes are flat (Tavern -10000 from 4 to 6 months and -100 per standing level) and still lose to the largest scores;
+  1e9 (the engine's food term), so income-scaled terms are nudges only. Vetoes are flat (Tavern -10000 from 10 to 12 months, 2026-10-04, was 4 to 6, and -100 per standing level) and still lose to the largest scores;
   the store-following gate is the only hard stop. The AI never removes a Tavern, so every famine it answers stays
   built (Mini World runs 3/4: 68 -> 735/815 levels by 1522; the flat Tavern terms of run 4 changed nothing measurable).
 - `store_lever.load_design` reads the numbers from the config, the two blueprints and `province_starving`; the
@@ -132,6 +137,24 @@
   run the simulator and the tests.
 - Production efficiency adds to the same pool as these output modifiers, so it moves every rest point (about 1.6
   months per +10 %). Smaller slopes make that worse; keep it in mind before flattening the lever.
+
+## Staple Foods
+
+- One list (2026-10-04, Jan): staple crops (wheat, rice, millet, maize, potato, legumes), staple animals (livestock,
+  fish, wild_game, wool; wool stands for sheep, which were eaten) and staple fruits (fruit, olives). The source is the
+  `staple_group` column of `config/goods_categories.csv` (`crops` / `animals` / `fruits`, empty otherwise), read by
+  `staple_foods.py`; category and subcategory stay as they are (production and RGO expansion cost). Nothing keeps a
+  list of its own.
+- Readers: the store curve (every staple food), `[logistics] bulky_staples` (one share per staple food; `ppc logistics
+  check` reports a missing one), the crop allocation's staple crops (`grains` is gone), the Cookshop cap counters and
+  the employment tag `pp_staple_food_priority`, Seasonal Harvests (`[exempt] staple_groups = ["animals"]` in
+  variable_harvests.toml: the harvests leave the staple animals alone; the generator's input file is gone, so the
+  generated modifiers were trimmed by hand), the Colonial Nation output bonus (every raw good but the staple foods).
+- Every building that makes a staple food runs Provisioning (`provisioning.py`): the flocks since 2026-10-04 (Provision
+  with Mutton, buying their wool back at 2.5) and the Maghreb palm groves and the English royal forest at reference
+  size (one-level specials without a base slot). `tests/test_staple_foods.py` pins the list, the makers (Provision,
+  tag, counters), the curve factors, the bulk shares, the Yard's salt beef and the Cookshop cap's Yard term.
+- The crop farm tier advances' `crop_farm_output` (was `staple_output`) stays on the crop farm goods: farming advances.
 
 ## Logistics
 

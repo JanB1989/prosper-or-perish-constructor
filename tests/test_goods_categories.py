@@ -160,6 +160,7 @@ def _goods_category_rows() -> list[dict[str, str]]:
         "subcategory",
         "increase_per_level_cost",
         "increase_per_level_cost_explanation",
+        "staple_group",   # 2026-10-04: crops / animals / fruits for the staple foods (staple_foods.py), else empty
     ]
     with GOODS_CATEGORIES.open(newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)

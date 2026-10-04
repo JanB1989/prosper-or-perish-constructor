@@ -1,10 +1,14 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:enclosed_sheep_walks:localization
-  enclosed_sheep_walks: "Enclosed Sheep Walks"
-  enclosed_sheep_walks_desc: "Enclosed sheep walks gather pasture, shearing sheds, wool sorting, and flock records into a larger pastoral estate."
   enclosed_sheep_walks_slot_0: "Wool Pasture"
   enclosed_sheep_walks_slot_1: "Improved Flocks"
+  enclosed_sheep_walks_slot_2: "Provisioning"
+  enclosed_sheep_walks_slot_3: "Market"
+  pp_enclosed_sheep_walks_provision: "Provision with Mutton"
+  pp_enclosed_sheep_walks_provision_desc: "The household buys its own sheep back and cooks for the province. The lower the province store is, the more food it makes of it."
+  enclosed_sheep_walks: "Enclosed Sheep Walks"
+  enclosed_sheep_walks_desc: "Enclosed sheep walks gather pasture, shearing sheds, wool sorting, and flock records into a larger pastoral estate."
   pp_enclosed_sheep_walks: "Enclosed Sheep Walks"
   pp_enclosed_sheep_walks_base_wool: "Wool Pasture"
   pp_enclosed_sheep_walks_desc: "Enclosure, flock records, shearing sheds, and improved husbandry move more wool through organized pasture."
@@ -12,5 +16,4 @@
   pp_enclosed_sheep_walks_no_primary: "No Improved Flocks"
   pp_enclosed_sheep_walks_market_sales: "Market Sales"
   pp_enclosed_sheep_walks_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  enclosed_sheep_walks_slot_2: "Market"
 # <<< eu5-building-pipeline:enclosed_sheep_walks:localization

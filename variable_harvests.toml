@@ -157,6 +157,12 @@ abysmal = 0.20
 [output_scaling]
 max_abs_output_modifier = 1.00
 
+[exempt]
+# 2026-10-04 (Jan): the harvests do not touch the staple animals (livestock, fish, wild_game, wool: the staple_group
+# column of config/goods_categories.csv). Their goods stay in their families below, so the other goods' tiers keep
+# their derivation; the generator only leaves their output lines out.
+staple_groups = ["animals"]
+
 [families.dry_cereals]
 goods = ["wheat", "millet", "maize"]
 

@@ -1,8 +1,9 @@
 """The store lever's numbers, read from the mod's sources (2026-10-02; store curve 2026-10-03).
 
 The province store moves three goods outputs through its Stored Food step modifier (``stored_food.py``): Province Food
-(worth more while the store is low, less while it is full) and the staple goods (the crop farm goods: less for the
-market while the store is low, more while it is full) follow the store curve ``[stored_food.curve]``; the Grange's
+(worth more while the store is low, less while it is full) and the staple foods (less for the market while the store
+is low, more while it is full; this module models the crop farms, whose goods share ``staple_factor``) follow the store
+curve ``[stored_food.curve]``; the Grange's
 Surplus Sales follow ``[stored_food.low]`` / ``[stored_food.full]`` linearly. Every maker of Province Food stops where
 its own recipe stops paying, so the store rests there:
 

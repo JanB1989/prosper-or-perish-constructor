@@ -89,6 +89,7 @@ PROVISIONED_GOOD_BY_FAMILY: dict[str, str] = {
     "ocean_fishery": "fish",
     "fruit_orchard": "fruit",
     "forest_village": "wild_game",
+    "sheep_farms": "wool",
     **CROP_FARM_FAMILY_GOODS,
 }
 
@@ -104,12 +105,19 @@ PROVISIONED_GOOD_BY_BUILDING: dict[str, str] = {
     "pomological_orchard": "fruit",
     "forest_village": "wild_game",
     "managed_forest_village": "wild_game",
+    # every staple food building provisions (2026-10-04): the flocks (wool stands for sheep, which were eaten), the
+    # Maghreb palm groves and the English royal forest, so the store curve moves them like the farms
+    "sheep_farms": "wool",
+    "hurdled_sheepcotes": "wool",
+    "enclosed_sheep_walks": "wool",
+    "maghreb_palm_irrigation": "fruit",
+    "eng_royal_forest": "wild_game",
     **CROP_FARM_GOODS,
 }
 PROVISIONING_BUILDINGS: tuple[str, ...] = tuple(PROVISIONED_GOOD_BY_BUILDING)
 
 # Market price of a provisioned good where it is not 1 (the Provision input is the same gold of the good per level).
-PROVISIONED_GOOD_PRICES: dict[str, Decimal] = {"livestock": Decimal("1.5")}
+PROVISIONED_GOOD_PRICES: dict[str, Decimal] = {"livestock": Decimal("1.5"), "wool": Decimal("2.5")}
 
 
 def provisioned_good_price(good: str) -> Decimal:
@@ -120,7 +128,12 @@ GOOD_WORDS: dict[str, tuple[str, str]] = {
     "fish": ("Fish", "catch"),
     "fruit": ("Fruit", "fruit"),
     "wild_game": ("Game", "game"),
+    "wool": ("Mutton", "sheep"),
 }
+
+# One-level special buildings without a base slot (slot 0 is their whole output): they provision at the reference size
+# (M = 1), like one level of a village, not at the size their main method would give.
+REFERENCE_SIZED_BUILDINGS: frozenset[str] = frozenset({"maghreb_palm_irrigation", "eng_royal_forest"})
 
 _STEP = Decimal("0.001")
 
@@ -264,7 +277,9 @@ def building_amounts(
     config: ProvisioningConfig | None = None,
 ) -> ProvisioningAmounts:
     """The Provision amounts a building carries: the crop-farm rule for crop farms (with their tier's Province Food
-    share), the buy-back rule otherwise."""
+    share), the buy-back rule otherwise (reference-sized for ``REFERENCE_SIZED_BUILDINGS``)."""
+    if building_key in REFERENCE_SIZED_BUILDINGS:
+        base_output = (config or load_provisioning_config()).reference_base_output
     if building_key in CROP_FARM_GOODS:
         tier = CROP_FARM_TIERS[building_key]
         share = crop_province_food_share(tier)

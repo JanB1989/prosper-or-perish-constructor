@@ -192,7 +192,7 @@ def test_load_crop_config_reads_constructor_toml():
     assert cfg.floor_share == 0.6 and cfg.rgo_bonus == 0.5 and cfg.grain_min_levels_from == 3
     assert (cfg.livestock_share_default, cfg.livestock_share_min, cfg.livestock_share_max) == (0.2, 0.1, 0.35)
     assert cfg.gated_goods == ("rice", "maize", "potato", "olives")
-    assert cfg.grains == ("wheat", "millet", "rice", "maize", "legumes", "potato")
+    assert set(cfg.staple_crops) == {"wheat", "millet", "rice", "maize", "legumes", "potato"}
     assert cfg.buildings == ca.DEFAULT_BUILDINGS
     assert cfg.livestock_source == (ROOT / "../EU5WorldBuilder/artifacts/locations/locations.csv").resolve()
     # missing section -> defaults

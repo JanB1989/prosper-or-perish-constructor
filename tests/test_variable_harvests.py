@@ -15,7 +15,9 @@ from scripts.generate_variable_harvests import (
     PROFILE,
     ROOT,
     _regions_by_subcontinent,
+    exempt_goods,
 )
+from prosper_or_perish_constructor import staple_foods
 from test_project_config import LAND_FARM_BUILDINGS
 
 
@@ -76,6 +78,9 @@ def test_variable_harvest_modifiers_cover_all_farmed_goods() -> None:
     assert farmed_goods <= configured_goods
     assert {"dyes", "elephants", "medicaments", "wine"} <= farmed_goods
     assert fallback_goods <= configured_goods
+    # 2026-10-04 (Jan): the harvests leave the staple animals alone (they stay configured for their families' tiers)
+    exempt = exempt_goods(config)
+    assert exempt == set(staple_foods.goods_in_group("animals")) == {"livestock", "fish", "wild_game", "wool"}
 
     entries = _modifier_entries()
     for subcontinent in config["subcontinents"]:
@@ -83,9 +88,10 @@ def test_variable_harvest_modifiers_cover_all_farmed_goods() -> None:
             key = f"pp_harvest_{subcontinent}_{severity}"
             assert key in entries
             covered = _output_goods(entries[key])
-            assert configured_goods == covered
-            assert farmed_goods <= covered
-            assert fallback_goods <= covered
+            assert configured_goods - exempt == covered
+            assert farmed_goods - exempt <= covered
+            assert fallback_goods - exempt <= covered
+            assert not exempt & covered
 
 
 def test_variable_harvest_crop_families_capture_historical_adjustments() -> None:

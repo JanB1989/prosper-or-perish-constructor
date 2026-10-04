@@ -216,7 +216,7 @@ def render_trigger(node, depth=1):
     return "\n".join(lines)
 
 
-def write_topup(topup, owners, mod_root, *, base=None, potentials=None):
+def write_topup(topup, owners, mod_root, *, base=None, potentials=None, first_keys=frozenset()):
     """``pp_start_river_topup``: the river share of the starting buildings (called by pp_navigation_start).
 
     Whether the engine traces a location's river, and at which size, cannot be told offline: it keeps stray river
@@ -225,7 +225,9 @@ def write_topup(topup, owners, mod_root, *, base=None, potentials=None):
     So every level is added only where the engine allows it at game start, which is also when it validates the
     start buildings: the building's own location_potential (``pp_start_topup_<key>_potential``, a copy of it) and its
     live max level (``building_type_max_level`` at least the level the step reaches). ``base``: (location, building)
-    -> levels the setup already places; ``potentials``: building -> its location_potential block (None: no gate)."""
+    -> levels the setup already places; ``potentials``: building -> its location_potential block (None: no gate);
+    ``first_keys``: buildings whose levels raise other caps (farms, fisheries, Victualling Yards: the Cookshop cap),
+    written before the rest so the live max-level checks after them see their levels."""
     from eu5gameparser.clausewitz.parser import parse_text
     from eu5gameparser.clausewitz.serializer import normalized_value
 
@@ -235,7 +237,7 @@ def write_topup(topup, owners, mod_root, *, base=None, potentials=None):
              "# Each level only where the engine allows it: the building's location_potential and its live max level.",
              "pp_start_river_topup = {"]
     guarded = set()
-    for (tag, key), n in sorted(topup.items()):
+    for (tag, key), n in sorted(topup.items(), key=lambda kv: (kv[0][1] not in first_keys, kv[0])):
         if n <= 0 or tag not in owners:
             continue
         have = int(base.get((tag, key), 0))
@@ -337,6 +339,10 @@ def province_food_per_level(rules, spec):
 FARM_LEVELS_MODIFIER = "local_pp_farm_levels"
 STAPLE_LEVELS_MODIFIER = "local_pp_staple_levels"
 PROVINCE_FARM_LEVELS_VALUE = "pp_location_province_farm_levels"
+# Victualling Yard levels (2026-10-04): every standing level adds half a Cookshop level to its province
+# (raw_modifier local_pp_victualling_yard_levels, script value pp_location_province_victualling_yard_levels).
+YARD_LEVELS_MODIFIER = "local_pp_victualling_yard_levels"
+PROVINCE_YARD_LEVELS_VALUE = "pp_location_province_victualling_yard_levels"
 
 class Simulation:
     # Engine start state per location (filled in __init__; empty means "as the pops file says").
@@ -414,6 +420,8 @@ class Simulation:
         # the Cookshop cap also counts fishery and sheep levels (local_pp_staple_levels)
         self.kitchen_counters = {k: v for k in rules.buildings
                                  if (v := counter(k, FARM_LEVELS_MODIFIER) + counter(k, STAPLE_LEVELS_MODIFIER))}
+        # and the Victualling Yard levels (half a Cookshop level each)
+        self.yard_counters = {k: v for k in rules.buildings if (v := counter(k, YARD_LEVELS_MODIFIER))}
         self.base = {}
         self.neighbors = defaultdict(list)
         self.navigation = cfg.raw.get("_navigation", {})
@@ -636,13 +644,22 @@ class Simulation:
         counters = getattr(self, "farm_counters", {})   # absent on the bare test doubles
         mods[FARM_LEVELS_MODIFIER] += sum(levels.get(k, 0) * v for k, v in counters.items())
         province_farms = self.province_farm_levels(tag, levels, others)
-        return {**base, "buildings": levels, "modifiers": dict(mods), PROVINCE_FARM_LEVELS_VALUE: province_farms}
+        province_yards = self.province_yard_levels(tag, levels, others)
+        return {**base, "buildings": levels, "modifiers": dict(mods), PROVINCE_FARM_LEVELS_VALUE: province_farms,
+                PROVINCE_YARD_LEVELS_VALUE: province_yards}
 
     def province_farm_levels(self, tag, levels=None, others=None):
         """Farm, orchard, fishery and sheep levels placed in the location's province pool (``levels``: this location's
         own, if not the plan's; ``others``: location -> levels for the other locations, default the plan). The Cookshop
         cap reads it, so it depends on the other locations of the province too."""
         counters = getattr(self, "kitchen_counters", getattr(self, "farm_counters", {}))
+        return self._province_levels(tag, counters, levels, others)
+
+    def province_yard_levels(self, tag, levels=None, others=None):
+        """Victualling Yard levels placed in the location's province pool (the Cookshop cap adds half a level each)."""
+        return self._province_levels(tag, getattr(self, "yard_counters", {}), levels, others)
+
+    def _province_levels(self, tag, counters, levels=None, others=None):
         levels = self.counts[tag] if levels is None else levels
         others = self.counts if others is None else others
         group = getattr(self, "group_of", {}).get(tag)
@@ -755,9 +772,10 @@ class Simulation:
 
     def cap(self, tag, key, gates=True):
         """``Rules.cap`` on the location's current state. Between navigation refreshes the context depends on the
-        location's building levels and its province's farm levels (the Cookshop cap), so results are memoised on both."""
+        location's building levels and its province's farm and Yard levels (the Cookshop cap), so results are memoised on
+        them."""
         state = (tag, key, gates, tuple(sorted((k, n) for k, n in self.counts[tag].items() if n)),
-                 self.province_farm_levels(tag))
+                 self.province_farm_levels(tag), self.province_yard_levels(tag))
         cache = self.__dict__.setdefault("_caps", {})
         cached = cache.get(state)
         if cached is None:
@@ -817,9 +835,11 @@ class Simulation:
             if not ctx["has_river"]:
                 continue
             check(tag, without_river(ctx, self.rules), sorted(self.counts[tag].items()))
-        # Farm (and fishery, sheep) levels moved to the topup are not there when the engine validates the setup, and the
-        # Cookshop cap counts them in the province: re-check the other buildings of those provinces against the setup's.
-        counters = getattr(self, "kitchen_counters", getattr(self, "farm_counters", {}))
+        # Farm (and fishery, sheep) levels and Victualling Yard levels moved to the topup are not there when the engine
+        # validates the setup, and the Cookshop cap counts them in the province: re-check the other buildings of those
+        # provinces against the setup's.
+        counters = {**getattr(self, "kitchen_counters", getattr(self, "farm_counters", {})),
+                    **getattr(self, "yard_counters", {})}
         moved = {(t, k): n for (t, k), n in topup.items() if k in counters}
         if moved:
             setup = {t: Counter({k: n - moved.get((t, k), 0) for k, n in c.items()}) for t, c in self.counts.items()}
@@ -1985,6 +2005,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         mod_root,
         base={(tag, key): counts[tag][key] + kept_vanilla[tag][key] + kept_improvements[tag][key] for tag, key in topup},
         potentials={key: first(rules.buildings.get(key), "location_potential") for _, key in topup},
+        first_keys=frozenset({*getattr(sim, "kitchen_counters", {}), *getattr(sim, "yard_counters", {})}),
     )
     for name, (extra_doc, counts_extra) in extra.items():
         kept = defaultdict(Counter)

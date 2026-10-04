@@ -445,7 +445,10 @@ never built until now: farm v3 had set the staple line to 0, so a hungry farm wa
   40 % of an empty store's output at 0 / 6 / 12 / 18 / 24 months (+53.8 % / +23.1 % / 0 / -23.1 % / -38.5 %, linear
   between; was +-75 % linear); one crop line for the 8 crop farm goods = -0.40 x that (-21.5 % at an empty store,
   +15.4 % at 24 months). Output modifiers are per good, so every farm tier, every RGO and every other producer of these
-  goods carries the same line; fish, fruit and game stay off it.
+  goods carries the same line; fish, fruit and game stay off it. Since 2026-10-04 (Jan: one staple food list, staple
+  crops, animals and fruits) every staple food is on the curve, and every staple food building provisions: fish -0.20,
+  fruit -0.21, wild_game -0.14, wool -0.23 by the same food-for-goods balance against the crop farms' 0.40
+  (`staple_per_province_food_by_good`; `tests/test_staple_foods.py` recomputes it from the blueprints).
 - 0.40: what a farm gains in food it gives up in crop at 12 food per unit of crop value; with the late tiers' changes
   below every farm's value (food + 12 x crop value) moves by at most 8 % between an empty and a full store.
 - Late tiers: their crop is 4-15x tier 0's for about the same Province Food, so the crop line in a poor harvest at a

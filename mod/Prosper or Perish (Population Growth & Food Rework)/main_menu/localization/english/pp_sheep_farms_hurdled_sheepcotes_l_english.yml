@@ -1,10 +1,14 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:hurdled_sheepcotes:localization
-  hurdled_sheepcotes: "Hurdled Sheepcotes"
-  hurdled_sheepcotes_desc: "Hurdled sheepcotes use portable pens, shelter, and managed folding to keep flocks closer to useful pasture and fallow fields."
   hurdled_sheepcotes_slot_0: "Wool Pasture"
   hurdled_sheepcotes_slot_1: "Foldcourse Husbandry"
+  hurdled_sheepcotes_slot_2: "Provisioning"
+  hurdled_sheepcotes_slot_3: "Market"
+  pp_hurdled_sheepcotes_provision: "Provision with Mutton"
+  pp_hurdled_sheepcotes_provision_desc: "The household buys its own sheep back and cooks for the province. The lower the province store is, the more food it makes of it."
+  hurdled_sheepcotes: "Hurdled Sheepcotes"
+  hurdled_sheepcotes_desc: "Hurdled sheepcotes use portable pens, shelter, and managed folding to keep flocks closer to useful pasture and fallow fields."
   pp_foldcourse_husbandry: "Foldcourse Husbandry"
   pp_foldcourse_husbandry_desc: "Portable hurdles, sheltered sheepcotes, and managed breeding let shepherds gather steadier wool clips before full enclosure."
   pp_hurdled_sheepcotes_base_wool: "Wool Pasture"
@@ -12,5 +16,4 @@
   pp_hurdled_sheepcotes_no_primary: "No Foldcourse Husbandry"
   pp_hurdled_sheepcotes_market_sales: "Market Sales"
   pp_hurdled_sheepcotes_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  hurdled_sheepcotes_slot_2: "Market"
 # <<< eu5-building-pipeline:hurdled_sheepcotes:localization

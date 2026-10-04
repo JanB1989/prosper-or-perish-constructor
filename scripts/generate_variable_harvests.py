@@ -8,6 +8,7 @@ from typing import Any
 
 from eu5gameparser.savegame.hierarchy import load_location_hierarchy
 
+from prosper_or_perish_constructor import staple_foods
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "variable_harvests.toml"
@@ -254,14 +255,24 @@ def _combined_modifier_lines(
     food_consumption = config["food_consumption"].get(severity)
     if food_consumption is not None:
         lines.append(f"\tlocal_peasants_food_consumption = {_format_number(food_consumption)}")
+    exempt = exempt_goods(config)
     for family, family_config in config["families"].items():
         tier = tiers[subcontinent][family]
         multiplier = config["tier_multipliers"][tier]
         for good in family_config["goods"]:
+            if good in exempt:
+                continue
             value = _modifier_value_for_good(good, severity, multiplier, config, output_scale)
             lines.append(f"\tlocal_{good}_output_modifier = {_format_number(value)}")
     lines.extend(["}", ""])
     return lines
+
+
+def exempt_goods(config: dict[str, Any]) -> frozenset[str]:
+    """Goods the harvests leave alone: every good of the staple groups in ``[exempt] staple_groups`` (2026-10-04, Jan:
+    the staple animals). They still count toward their family's tier, so the other goods' tiers do not move."""
+    groups = config.get("exempt", {}).get("staple_groups", [])
+    return frozenset(good for group in groups for good in staple_foods.goods_in_group(str(group)))
 
 
 def _modifier_value_for_good(

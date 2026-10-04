@@ -54,6 +54,17 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
+    pp_enclosed_sheep_walks_provision = {
+        icon_type = goods
+        icon = wool
+        wool = 0.053
+        produced = local_food
+        output = 1.6
+        debug_max_profit = 5.038
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
     pp_enclosed_sheep_walks_market_sales = {
         icon_type = goods
         icon = wool

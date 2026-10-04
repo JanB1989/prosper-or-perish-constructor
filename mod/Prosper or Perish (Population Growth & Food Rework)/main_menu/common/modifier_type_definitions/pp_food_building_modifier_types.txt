@@ -19,3 +19,12 @@ local_pp_staple_levels = {
 		category = location
 	}
 }
+
+# local_pp_victualling_yard_levels: one per standing Victualling Yard level (raw_modifier, 2026-10-04). Every Yard level
+# adds half a Cookshop level to its province (cookshop_max_level, pp_province_victualling_yard_levels).
+local_pp_victualling_yard_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}

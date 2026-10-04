@@ -78,11 +78,13 @@ def test_textile_mill_keeps_its_own_output() -> None:
 
 
 def test_maghreb_palm_irrigation_is_a_market_producer() -> None:
-    # One-level cultural oasis building (like the Omani falaj, estate_land): not a farm on the land capacity, so no
-    # Provisioning slot and no province food; its dates go to market and the Market leg is its gate.
+    # One-level cultural oasis building (like the Omani falaj, estate_land): not a farm on the land capacity; its dates
+    # go to market and the Market leg is its gate. Since 2026-10-04 (Jan: every staple food maker follows the store
+    # curve) it provisions like one level of a village (reference size), no flat food.
     raw = _blueprint("maghreb_palm_irrigation")
     assert raw["footprint"] == "estate_land"
     methods = [method for slot in raw["building"]["production_method_slots"] for method in slot["methods"]]
-    assert not [method for method in methods if "provision" in method or "sell_surplus" in method]
+    assert [method for method in methods if "provision" in method] == ["pp_maghreb_palm_irrigation_provision"]
+    assert not [method for method in methods if "sell_surplus" in method]
     assert raw["gate_method"] == "pp_maghreb_palm_irrigation_market_sales" == methods[-1]
     assert "local_monthly_food" not in raw["building"]["body"]

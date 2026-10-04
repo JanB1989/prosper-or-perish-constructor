@@ -48,6 +48,8 @@ import tomllib
 from typing import Any, Mapping, Sequence
 
 from eu5gameparser.clausewitz.parser import parse_file
+
+from prosper_or_perish_constructor import staple_foods
 from eu5gameparser.clausewitz.syntax import CList
 
 from prosper_or_perish_constructor import yaml_io
@@ -751,6 +753,11 @@ def plan_all(repo: Path, config: LogisticsConfig, prices: Mapping[str, float]) -
     for good in (*config.bulky_goods, *config.bulky_half_goods, *(g for g, _ in config.bulky_staples)):
         if good not in prices:
             result.problems.append(f"[{CONFIG_SECTION}] bulky good {good!r} is not a trade good")
+    staples = set(staple_foods.staple_foods())
+    listed = {g for g, _ in config.bulky_staples}
+    if config.bulky_staples and listed != staples:
+        result.problems.append(f"[{CONFIG_SECTION}] bulky_staples must give every staple food a share: "
+                               f"missing {sorted(staples - listed)}, not staple foods {sorted(listed - staples)}")
     return result
 
 

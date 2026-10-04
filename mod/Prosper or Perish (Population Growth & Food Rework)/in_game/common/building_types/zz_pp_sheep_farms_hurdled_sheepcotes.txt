@@ -53,6 +53,17 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
+    pp_hurdled_sheepcotes_provision = {
+        icon_type = goods
+        icon = wool
+        wool = 0.048
+        produced = local_food
+        output = 1.44
+        debug_max_profit = 5.000
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
     pp_hurdled_sheepcotes_market_sales = {
         icon_type = goods
         icon = wool

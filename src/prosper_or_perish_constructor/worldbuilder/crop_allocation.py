@@ -29,6 +29,7 @@ from typing import Any
 
 import polars as pl
 
+from prosper_or_perish_constructor import staple_foods
 from prosper_or_perish_constructor.crop_farms import RgoUnlockGate, derive_rgo_unlock_gates
 from prosper_or_perish_constructor.worldbuilder.contract import Contract
 from prosper_or_perish_constructor.worldbuilder.modifiers import class_rows
@@ -63,7 +64,9 @@ class CropConfig:
     livestock_vegetation: tuple[str, ...] = ("grasslands", "sparse")
     livestock_source: Path | None = None     # EU5WorldBuilder artifacts/locations/locations.csv
     gated_goods: tuple[str, ...] = ("rice", "maize", "potato", "olives")
-    grains: tuple[str, ...] = ("wheat", "millet", "rice", "maize", "legumes", "potato")
+    # the staple crops (staple_foods.py: the staple_group column of config/goods_categories.csv, 2026-10-04; was the
+    # config list `grains`): from grain_min_levels_from levels on, at least one of them is placed
+    staple_crops: tuple[str, ...] = field(default_factory=lambda: staple_foods.goods_in_group("crops"))
     buildings: Mapping[str, str] = field(default_factory=lambda: dict(DEFAULT_BUILDINGS))
 
     @property
@@ -89,7 +92,10 @@ def load_crop_config(project_toml: Mapping[str, Any], repo: Path | None = None) 
             kwargs[name] = float(raw[name])
     if "grain_min_levels_from" in raw:
         kwargs["grain_min_levels_from"] = int(raw["grain_min_levels_from"])
-    for name in ("livestock_rgos", "livestock_vegetation", "gated_goods", "grains"):
+    if "grains" in raw:
+        raise ValueError("[worldbuilder.start.crops] grains is gone: the staple crops are the staple_group 'crops' of "
+                         "config/goods_categories.csv")
+    for name in ("livestock_rgos", "livestock_vegetation", "gated_goods"):
         if name in raw:
             kwargs[name] = tuple(str(x) for x in raw[name])
     if isinstance(raw.get("buildings"), Mapping):
@@ -101,7 +107,7 @@ def load_crop_config(project_toml: Mapping[str, Any], repo: Path | None = None) 
     cfg = CropConfig(**kwargs)
     if not 0.0 <= cfg.livestock_share_min <= cfg.livestock_share_max < 1.0:
         raise ValueError("[worldbuilder.start.crops]: need 0 <= livestock_share_min <= livestock_share_max < 1")
-    unknown = [g for g in (*cfg.gated_goods, *cfg.grains) if g not in cfg.buildings]
+    unknown = [g for g in (*cfg.gated_goods, *cfg.staple_crops) if g not in cfg.buildings]
     if unknown:
         raise ValueError(f"[worldbuilder.start.crops]: goods without a building: {', '.join(sorted(set(unknown)))}")
     return cfg
@@ -255,8 +261,8 @@ def allocate(
     for i in range(remainder):
         out[queue[i % len(queue)]] += 1
 
-    if levels >= cfg.grain_min_levels_from and not any(out.get(g, 0) > 0 for g in cfg.grains):
-        staples = [g for g in cfg.grains if g in allowed and weights.get(g, 0.0) > 0]
+    if levels >= cfg.grain_min_levels_from and not any(out.get(g, 0) > 0 for g in cfg.staple_crops):
+        staples = [g for g in cfg.staple_crops if g in allowed and weights.get(g, 0.0) > 0]
         if staples:
             grain = min(staples, key=lambda g: (-float(weights[g]), rank(g)))
             donor = min((g for g in out if out[g] > 0), key=lambda g: (-out[g], rank(g)))

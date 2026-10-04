@@ -3,6 +3,8 @@ tag: eng_royal_forest
 footprint: land_reserve
 labour:
   class: primary_medieval
+  methods:
+    pp_eng_royal_forest_provision: keep
 gate_method: pp_eng_royal_forest_market_sales
 building:
   key: eng_royal_forest
@@ -13,6 +15,9 @@ building:
     methods:
     - pp_eng_royal_forest_eng_royal_forest_maintenance
   - name: slot_1
+    methods:
+    - pp_eng_royal_forest_provision
+  - name: slot_2
     methods:
     - pp_eng_royal_forest_market_sales
   possible_production_methods: []
@@ -26,6 +31,8 @@ building:
     forbidden_for_estates = yes
     category = government_category
     employment_size = 1.0
+    # a staple food maker (2026-10-04): staffed with the farms and fisheries (pp_employment_priority.txt)
+    custom_tags = { pp_food_security_priority pp_staple_food_priority }
     rural_settlement = yes
     country_potential = {
         has_or_had_tag = ENG
@@ -54,6 +61,15 @@ building:
         }
     }
     unique_production_methods = {
+        pp_eng_royal_forest_provision = {
+            wild_game = 0.08
+            produced = local_food
+            output = 0.96
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
         pp_eng_royal_forest_market_sales = {
             offset = 0.01
             produced = wild_game
@@ -77,16 +93,24 @@ building:
 localization:
   entries:
     eng_royal_forest_slot_0: Eng Royal Forest Work
+    eng_royal_forest_slot_1: Provisioning
+    eng_royal_forest_slot_2: Market
+    pp_eng_royal_forest_provision: Provision with Game
+    pp_eng_royal_forest_provision_desc: The household buys its own game back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_eng_royal_forest_eng_royal_forest_maintenance: Eng Royal Forest Eng Royal Forest Maintenance
     pp_eng_royal_forest_market_sales: Market Sales
     pp_eng_royal_forest_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    eng_royal_forest_slot_1: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
     input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
     output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
   production_methods:
+    pp_eng_royal_forest_provision:
+      allow_rules:
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
+        input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+        output_throughput: Existing accepted output scale predates the global employment throughput baseline.
     pp_eng_royal_forest_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

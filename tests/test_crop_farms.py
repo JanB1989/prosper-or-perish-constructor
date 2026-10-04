@@ -366,12 +366,15 @@ def test_late_tiers_make_part_of_their_food_as_province_food(table: crop_farms.C
                 assert provision / (flat + provision) == pytest.approx(float(shares[tier]), abs=0.001), building
 
 
-def test_tier_advances_add_a_little_staple_output(table: crop_farms.CropTable) -> None:
-    """The late tier advances carry global_<good>_output_modifier of every crop farm good (the store curve's goods)."""
+def test_tier_advances_add_a_little_crop_farm_output(table: crop_farms.CropTable) -> None:
+    """The late tier advances carry global_<good>_output_modifier of every crop farm good (farming advances: only the
+    crop farms' goods, each a staple food on the store curve with the crop farms' one factor)."""
     from prosper_or_perish_constructor import stored_food
 
-    goods = crop_farms.staple_output_goods(table)
-    assert set(goods) == set(stored_food.load_config(PROJECT).staple_goods)
+    goods = crop_farms.crop_farm_output_goods(table)
+    config = stored_food.load_config(PROJECT)
+    assert set(goods) < set(config.staple_goods)
+    assert {config.factor(good) for good in goods} == {config.staple_factor}
     for tier in (1, 2, 3):
         key = table.tier_advance(tier)
         generated = (ADVANCES_ROOT / f"pp_wheat_farm_tier{tier}.txt").read_text(encoding="utf-8-sig")
@@ -409,7 +412,7 @@ def test_staple_farms_keep_their_crews_at_low_stores(table: crop_farms.CropTable
     config = stored_food.load_config(PROJECT)
     prices = dict(production_labour.load_prices(ROOT, PROJECT))
     prices["manual_labor"] *= production_labour.load_config(PROJECT).price_floor_share
-    tech = {tier: sum(float(table.raw["tier_advance"][table.tier_advance(t)].get("staple_output", 0) or 0)
+    tech = {tier: sum(float(table.raw["tier_advance"][table.tier_advance(t)].get("crop_farm_output", 0) or 0)
                       for t in range(1, tier + 1)) for tier in crop_farms.TIERS}
     worst = []
     for crop in table.crops:

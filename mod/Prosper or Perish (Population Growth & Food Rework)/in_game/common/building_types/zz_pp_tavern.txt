@@ -24,13 +24,13 @@ location_potential = {
 # income like the farm weight; the last two are flat, because the AI scored Taverns in hungry towns from about 25
 # to millions and income-scaled terms vanish next to that (Mini World run 3, 2026-10-03: 68 -> 691 levels by 1502,
 # most added in short famines, two to twelve levels at once, and kept idle once the store refilled):
-# no new level once the store holds 6 months (fading in from 4), and every standing level costs 100, so a second
-# or third level needs a deep shortage.
+# no new level once the store holds 12 months (fading in from 10; 2026-10-04, Jan: was 6 from 4), and every
+# standing level costs 100, so a second or third level needs a deep shortage.
 ai_construct_weight = {
   value = -60
   add = { value = 6 subtract = pp_location_stored_months divide = 6 min = 0 max = 1 multiply = 120 }
   divide = { value = scope:owner.monthly_income_total add = 10 }
-  subtract = { value = pp_location_stored_months subtract = 4 divide = 2 min = 0 max = 1 multiply = 10000 }
+  subtract = { value = pp_location_stored_months subtract = 10 divide = 2 min = 0 max = 1 multiply = 10000 }
   subtract = { value = "location_building_level(building_type:tavern)" multiply = 100 }
 }
 ai_forbid_shutdown = yes

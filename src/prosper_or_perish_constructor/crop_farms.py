@@ -26,7 +26,7 @@ between Province Food (low store) and its crop (full store), one curve for every
 tiers run their cultivation at ``tier_cultivation_throughput`` (goods in and out, on top of the [age_food] factor) and
 make ``tier_province_food_share`` of their food per level at 12 stored months as Province Food instead of flat food
 (``provisioning.crop_food_split``; the total stays the same), so a poor harvest at a low store does not make them lay
-off workers; their tier advances carry ``staple_output`` (``global_<good>_output_modifier`` of every crop farm good).
+off workers; their tier advances carry ``crop_farm_output`` (``global_<good>_output_modifier`` of every crop farm good).
 
 The slots and methods are then put in the production-gate order (``production_gate.order_mapping``): Provision is the
 ``gate_method`` (its margin, Province Food over a token of crop, stays far above the AI's threshold at any crop price),
@@ -868,16 +868,16 @@ def _tier_advance_body(table: CropTable, key: str, tier: int) -> str:
     lines.append(f"age = {spec['age']}")
     lines.append(f"requires = {spec['requires']}")
     lines.extend(f"unlock_building = {table.building(crop, tier)}" for crop in table.crops)
-    staple = float(spec.get("staple_output", 0) or 0)
+    staple = float(spec.get("crop_farm_output", 0) or 0)
     if staple:   # farm trade-off: a little more of every crop farm good, wherever it grows
-        lines.extend(f"global_{good}_output_modifier = {_num(staple)}" for good in staple_output_goods(table))
+        lines.extend(f"global_{good}_output_modifier = {_num(staple)}" for good in crop_farm_output_goods(table))
     lines.append(f"ai_weight = {{ add = {int(spec.get('ai_weight', 125))} }}")
     return "\n".join(lines)
 
 
-def staple_output_goods(table: CropTable) -> tuple[str, ...]:
-    """The crop farm goods, each once, in chain order: the goods of the store curve's crop line and of the tier
-    advances' ``staple_output``."""
+def crop_farm_output_goods(table: CropTable) -> tuple[str, ...]:
+    """The crop farm goods, each once, in chain order: the goods of the tier advances' ``crop_farm_output`` (farming
+    advances, so only the crop farms' goods; every one is a staple food and shares the store curve's crop line)."""
     return tuple(dict.fromkeys(crop.good for crop in table.crops))
 
 

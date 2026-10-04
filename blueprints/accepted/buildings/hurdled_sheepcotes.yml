@@ -5,6 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_hurdled_sheepcotes_base_wool: base
+    pp_hurdled_sheepcotes_provision: keep
 output_tag: sheep_farms_hurdled_sheepcotes
 gate_method: pp_hurdled_sheepcotes_market_sales
 upgrade_chain:
@@ -26,6 +27,9 @@ building:
     - pp_hurdled_sheepcotes_no_primary
     - pp_hurdled_sheepcotes_foldcourse_husbandry
   - name: slot_2
+    methods:
+    - pp_hurdled_sheepcotes_provision
+  - name: slot_3
     methods:
     - pp_hurdled_sheepcotes_market_sales
   possible_production_methods: []
@@ -77,6 +81,15 @@ building:
         }
     }
     unique_production_methods = {
+        pp_hurdled_sheepcotes_provision = {
+            wool = 0.048
+            produced = local_food
+            output = 1.44
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
         pp_hurdled_sheepcotes_market_sales = {
             offset = 0.01
             produced = wool
@@ -111,10 +124,14 @@ advancements:
     ai_weight = { add = 125 }
 localization:
   entries:
-    hurdled_sheepcotes: Hurdled Sheepcotes
-    hurdled_sheepcotes_desc: Hurdled sheepcotes use portable pens, shelter, and managed folding to keep flocks closer to useful pasture and fallow fields.
     hurdled_sheepcotes_slot_0: Wool Pasture
     hurdled_sheepcotes_slot_1: Foldcourse Husbandry
+    hurdled_sheepcotes_slot_2: Provisioning
+    hurdled_sheepcotes_slot_3: Market
+    pp_hurdled_sheepcotes_provision: Provision with Mutton
+    pp_hurdled_sheepcotes_provision_desc: The household buys its own sheep back and cooks for the province. The lower the province store is, the more food it makes of it.
+    hurdled_sheepcotes: Hurdled Sheepcotes
+    hurdled_sheepcotes_desc: Hurdled sheepcotes use portable pens, shelter, and managed folding to keep flocks closer to useful pasture and fallow fields.
     pp_foldcourse_husbandry: Foldcourse Husbandry
     pp_foldcourse_husbandry_desc: Portable hurdles, sheltered sheepcotes, and managed breeding let shepherds gather steadier wool clips before full enclosure.
     pp_hurdled_sheepcotes_base_wool: Wool Pasture
@@ -122,7 +139,6 @@ localization:
     pp_hurdled_sheepcotes_no_primary: No Foldcourse Husbandry
     pp_hurdled_sheepcotes_market_sales: Market Sales
     pp_hurdled_sheepcotes_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    hurdled_sheepcotes_slot_2: Market
 icon:
   source_png: ../assets/icons/hurdled_sheepcotes.png
   output_dds: hurdled_sheepcotes.dds
@@ -130,6 +146,11 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game building icon for Hurdled Sheepcotes on a perfectly flat magenta chroma-key background (#ff00ff). Center a compact medieval sheepfold with portable woven hurdles, a small timber sheepcote, wool bundles, troughs, and shepherding gear. Use detailed historic bitmap cutout style, material-rich painterly brushwork, three-quarter view, readable worksite props, warm wool whites, weathered wood, muted pasture greens, no text, no frame, no modern fencing, no scenic landscape.
 evaluation:
   production_methods:
+    pp_hurdled_sheepcotes_provision:
+      allow_rules:
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
+        input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+        output_throughput: Existing accepted output scale predates the global employment throughput baseline.
     pp_hurdled_sheepcotes_base_wool:
       production_efficiency: 1.0
       allow_rules:

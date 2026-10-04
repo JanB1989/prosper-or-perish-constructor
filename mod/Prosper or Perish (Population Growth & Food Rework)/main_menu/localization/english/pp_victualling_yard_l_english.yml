@@ -2,7 +2,7 @@
 
 # >>> eu5-building-pipeline:victualling_yard:localization
   victualling_yard: "Victualling Yard"
-  victualling_yard_desc: "The merchants' victualling house of a great harbour. It ships in grain, dried pulses and salt fish from the wider market and packs it into [ShowGoodsName('victuals')|e] for the fleets and the markets beyond, without touching the province store. Only good harbours and the great river ports can hold one, and each further level costs much more; elsewhere the Grange sends the surplus overland."
+  victualling_yard_desc: "The merchants' victualling house of a great harbour. It ships in grain, dried pulses, salt fish and salt beef from the wider market and packs it into [ShowGoodsName('victuals')|e] for the fleets and the markets beyond, without touching the province store. Only good harbours and the great river ports can hold one, and each further level costs much more; elsewhere the Grange sends the surplus overland."
   victualling_yard_slot_0: "Food Shipments"
   victuals_trade_construction: "Victuals Trade Construction"
   pp_victualling_yard_grain_shipment: "Grain Shipment"
@@ -13,6 +13,8 @@
   pp_victualling_yard_legumes_shipment_desc: "Dried peas and beans keep for years in the hold and were a fixed part of every ship's rations."
   pp_victualling_yard_fish_shipment: "Salt Fish Shipment"
   pp_victualling_yard_fish_shipment_desc: "Barrels of salted herring, stockfish and salt cod come in from the fishing grounds."
+  pp_victualling_yard_salt_beef_shipment: "Salt Beef Shipment"
+  pp_victualling_yard_salt_beef_shipment_desc: "Barrels of salted beef and pork and casks of butter come in from the cattle country."
   victualling_yard_rice_shipment_advance: "Rice Shipments"
   victualling_yard_rice_shipment_advance_desc: "The harbours of the rice lands ship husked rice along the coasts and rivers to the markets beyond."
   victualling_yard_maize_shipment_advance: "Maize Shipments"

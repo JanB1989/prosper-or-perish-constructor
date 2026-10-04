@@ -7,6 +7,7 @@ import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from prosper_or_perish_constructor import staple_foods
 from prosper_or_perish_constructor.worldbuilder.start_food_model_v2 import FoodModelConfig
 from prosper_or_perish_constructor.worldbuilder.start_simulation import Simulation
 
@@ -171,7 +172,7 @@ def test_a_harbour_yard_needs_only_spare_food_a_grange_the_surplus_share() -> No
     assert placed == 2
 
 
-STAPLE_FOODS = {"wheat", "rice", "maize", "millet", "potato", "legumes", "olives", "fruit", "livestock", "fish", "wild_game"}
+STAPLE_FOODS = set(staple_foods.staple_foods())   # the one list (2026-10-04): staple crops, animals and fruits
 
 
 def test_every_staple_food_maker_raises_the_cookshop_cap() -> None:

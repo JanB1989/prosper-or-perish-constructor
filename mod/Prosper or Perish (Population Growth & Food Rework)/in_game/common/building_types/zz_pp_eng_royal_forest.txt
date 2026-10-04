@@ -9,6 +9,8 @@ pop_type = peasants
 forbidden_for_estates = yes
 category = government_category
 employment_size = 1.0
+# a staple food maker (2026-10-04): staffed with the farms and fisheries (pp_employment_priority.txt)
+custom_tags = { pp_food_security_priority pp_staple_food_priority }
 rural_settlement = yes
 country_potential = {
     has_or_had_tag = ENG
@@ -35,6 +37,17 @@ unique_production_methods = {
         horses = 0.095
         manual_labor = 0.17
         debug_max_profit = rural_profit_margin
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_eng_royal_forest_provision = {
+        icon_type = goods
+        icon = wild_game
+        wild_game = 0.08
+        produced = local_food
+        output = 0.96
+        debug_max_profit = 5.000
         category = building_maintenance
     }
 }

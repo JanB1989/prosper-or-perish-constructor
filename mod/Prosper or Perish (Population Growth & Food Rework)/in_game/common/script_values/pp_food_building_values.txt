@@ -32,6 +32,23 @@ pp_location_province_farm_levels = {
 	}
 }
 
+# Province scope: the standing Victualling Yard levels in the province (sum of modifier:local_pp_victualling_yard_levels,
+# raw_modifier, 2026-10-04). The Cookshop cap adds half a level per Yard level.
+pp_province_victualling_yard_levels = {
+	value = 0
+	every_location_in_province = {
+		add = modifier:local_pp_victualling_yard_levels
+	}
+}
+
+# Location scope: the standing Victualling Yard levels in the location's province.
+pp_location_province_victualling_yard_levels = {
+	value = 0
+	province ?= {
+		add = pp_province_victualling_yard_levels
+	}
+}
+
 # Province scope: the food the province gains per month (its locations' food production plus their food consumption,
 # which the engine reports as negative). Above 0 the store grows. Read by the Grange's AI weight.
 pp_province_food_balance = {

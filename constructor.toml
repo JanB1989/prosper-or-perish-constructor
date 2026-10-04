@@ -822,7 +822,7 @@ livestock_bonus = 0.1              # added on livestock_rgos and grasslands/spar
 livestock_rgos = ["livestock", "wool", "horses", "camels"]   # pastoral RGOs (camels: EU5 1.4)
 livestock_source = "../EU5WorldBuilder/artifacts/locations/locations.csv"
 gated_goods = ["rice", "maize", "potato", "olives"]   # only in their native sub-continents/regions (config/crop_farms.toml [unlocks] gates)
-grains = ["wheat", "millet", "rice", "maize", "legumes", "potato"]
+# the staple crops of grain_min_levels_from: the staple_group "crops" of config/goods_categories.csv (staple_foods.py)
 buildings = { wheat = "wheat_farm", rice = "rice_farm", millet = "millet_farm", maize = "maize_farm", legumes = "legume_farm", potato = "potato_farm", olives = "olive_farm", livestock = "cattle_farm" }
 
 [worldbuilder.level_scale]
@@ -1017,10 +1017,13 @@ improved_method_bonus = 0.05  # extra output share on the improved (third) metho
 network_output = 0.30         # logistics per level of the input-less network method (pure profit, no input cost)
 bulky_goods = ["stone", "marble", "clay", "sand", "coal", "iron", "copper", "tin", "lead", "salt", "saltpeter", "alum"]
 bulky_half_goods = ["lumber"] # get half the class cut
-# the crop farms' staples (2026-10-03): a small share of the class cut by bulk, so a crowded transport hub grows a little
-# less grain (the farms' AI weight reads the crop output modifier) and new farms go to the quieter land around it.
-# Grain and pulses are heavy sacks, potatoes heavier and quick to spoil, olives travel as oil, livestock walks to market.
-bulky_staples = { wheat = 0.5, rice = 0.5, millet = 0.5, maize = 0.5, legumes = 0.5, potato = 0.75, olives = 0.35, livestock = 0.25 }
+# the staple foods (2026-10-03, every staple food since 2026-10-04: one share per good of the staple_group column of
+# config/goods_categories.csv, ppc logistics check reports a missing or extra one): a small share of the class cut by
+# bulk, so a crowded transport hub grows a little less food (the farms' AI weight reads the crop output modifier) and
+# new farms go to the quieter land around it. Grain and pulses are heavy sacks, potatoes heavier and quick to spoil,
+# fish travels in salt barrels, fruit bruises and spoils, game spoils unless smoked, olives travel as oil, wool in
+# light bales, livestock walks to market.
+bulky_staples = { wheat = 0.5, rice = 0.5, millet = 0.5, maize = 0.5, legumes = 0.5, potato = 0.75, olives = 0.35, livestock = 0.25, fish = 0.5, fruit = 0.6, wild_game = 0.4, wool = 0.25 }
 pop_type = "laborers"
 employment_size = 1
 flavour = { local_institution_growth_modifier = 0.05, local_supply_limit_modifier = 0.05, local_disease_resistance = -0.05 }  # per level, in modifier
@@ -1089,15 +1092,21 @@ local_province_food_sales_output_modifier = 0.13    # the Grange's Surplus Sales
 # province_food_share: Province Food output of every maker at that store as a share of its output at an empty store
 #   (Jan's values; linear between the knots); the step modifier carries share / share at the pivot - 1:
 #   +53.8 % at 0 months, +23.1 % at 6, 0 at 12, -23.1 % at 18, -38.5 % at 24 (was +-75 %, linear)
-# staple_per_province_food: the staple goods' crop output line = this x the Province Food line (-21.5 % at an empty
-#   store, +15.4 % at 24 months). 0.40 balances the farm tiers: what a farm gains in food it gives up in crop, at
-#   12 food per unit of crop value (the food value of a staple), within about 8 % of its value for every tier
-#   (the late tiers' throughput and Province Food share in config/crop_farms.toml finish the balance)
-# staple_goods: the crop farm goods (config/crop_farms.toml; fish, fruit and wild game stay off the curve: their
-#   buildings buy their own catch for Province Food, which is their trade already)
-# The crop line also moves every RGO and every other producer of these goods. The crop farms' ai_construct_weight
+# The curve takes every staple food (2026-10-04, Jan: one list; staple crops, staple animals and staple fruits, the
+#   staple_group column of config/goods_categories.csv, read by staple_foods.py). Every staple food building runs a
+#   Provisioning method (provisioning.py), so a low store moves its goods from the market into Province Food.
+# staple_per_province_food: a staple food's output line = this x the Province Food line (-21.5 % at an empty store,
+#   +15.4 % at 24 months). 0.40 balances the farm tiers: what a farm gains in food it gives up in crop, at 12 food per
+#   unit of crop value (the food value of a staple), within about 8 % of its value for every tier (the late tiers'
+#   throughput and Province Food share in config/crop_farms.toml finish the balance). Every crop farm good keeps it
+#   (one pp_stored_food_staple_line for the crop farms' AI weight).
+# staple_per_province_food_by_good: goods whose buildings make less Province Food per gold of their good than a crop
+#   farm (the buy-back Provision). The same balance: 0.40 x the median over the good's provisioning buildings of
+#   Province Food / (12 x the good's output value at their best methods), over the crop farms' median of the same
+#   ratio (0.266); tests/test_stored_food.py recomputes it from the blueprints.
+# The line also moves every RGO and every other producer of these goods. The crop farms' ai_construct_weight
 # takes the line out of the crop output modifier it reads as land quality (pp_stored_food_staple_line).
 province_food_share = { 0 = 1.0, 6 = 0.8, 12 = 0.65, 18 = 0.5, 24 = 0.4 }
 staple_per_province_food = -0.40
-staple_goods = ["wheat", "rice", "millet", "maize", "legumes", "potato", "olives", "livestock"]
+staple_per_province_food_by_good = { fish = -0.20, fruit = -0.21, wild_game = -0.14, wool = -0.23 }
 

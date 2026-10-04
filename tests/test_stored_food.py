@@ -10,7 +10,7 @@ import pytest
 from eu5gameparser.clausewitz.parser import parse_file
 from eu5gameparser.clausewitz.syntax import CList
 
-from prosper_or_perish_constructor import cli, provisioning, stored_food
+from prosper_or_perish_constructor import cli, provisioning, staple_foods, stored_food
 from prosper_or_perish_constructor.worldbuilder import migration
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -88,7 +88,7 @@ def _curve_exact(config: stored_food.StoredFoodConfig, months: float) -> dict[st
 
     food = share(months) / share(config.pivot_months) - 1
     lines = {FOOD: food}
-    lines.update({f"local_{good}_output_modifier": config.staple_factor * food for good in config.staple_goods})
+    lines.update({f"local_{good}_output_modifier": config.factor(good) * food for good in config.staple_goods})
     return lines
 
 
@@ -105,14 +105,19 @@ def test_store_lever_moves_province_food_staples_and_surplus_sales() -> None:
     assert config.food_curve == ((0.0, 1.0), (6.0, 0.8), (12.0, 0.65), (18.0, 0.5), (24.0, 0.4))
     assert stored_food.province_food_line(config, 0) == pytest.approx(1 / 0.65 - 1)
     assert stored_food.province_food_line(config, 24) == pytest.approx(0.4 / 0.65 - 1)
-    # staples (the farm trade-off, Jan 2026-10-03): one crop line for every crop farm good, opposite to Province Food,
-    # 0.40 of it; the goods are exactly the crop farm goods (fish, fruit and game buy their own good back already)
+    # staple foods (the farm trade-off, Jan 2026-10-03; every staple food since 2026-10-04): one line per staple food,
+    # opposite to Province Food; the crop farm goods share 0.40 of it, the buy-back goods have their own factor
     assert config.staple_factor == -0.40
+    assert config.staple_goods == staple_foods.staple_foods() and len(config.staple_goods) == 12
     farm_goods = {crop["good"] for crop in tomllib.loads((ROOT / "config/crop_farms.toml").read_text())["crops"]}
-    assert set(config.staple_goods) == farm_goods and len(config.staple_goods) == len(farm_goods) == 8
-    assert not {"fish", "fruit", "wild_game", "victuals"} & set(config.staple_goods)
+    assert farm_goods < set(config.staple_goods) and "victuals" not in config.staple_goods
+    assert {good: config.factor(good) for good in farm_goods} == dict.fromkeys(farm_goods, -0.40)
+    assert dict(config.staple_factor_by_good) == {"fish": -0.20, "fruit": -0.21, "wild_game": -0.14, "wool": -0.23}
     for months in range(25):
         assert stored_food.staple_line(config, months) == pytest.approx(-0.40 * stored_food.province_food_line(config, months))
+        for good in config.staple_goods:
+            assert stored_food.staple_line(config, months, good) == pytest.approx(
+                config.factor(good) * stored_food.province_food_line(config, months))
     # the old staple_output switch stays available for the provisioned goods, but nothing uses it any more
     goods = stored_food.staple_goods()
     assert set(goods) == set(provisioning.PROVISIONED_GOOD_BY_BUILDING.values()) and len(goods) == len(set(goods))
@@ -143,15 +148,18 @@ def test_one_step_modifier_per_stored_month_carries_every_effect() -> None:
             exact += low.get(key, 0.0) * max(pivot - step, 0) / 12 + full.get(key, 0.0) * max(step - pivot, 0) / 12
             exact += curve.get(key, 0.0)
             assert abs(values.get(key, 0.0) - exact) <= 0.000005 + 1e-12, (step, key)
-        # every staple good carries the same crop line, opposite to Province Food
-        staples = {values.get(f"local_{good}_output_modifier", 0.0) for good in config.staple_goods}
+        # every crop farm good carries the same crop line, opposite to Province Food (the others their own factor's)
+        farm = sorted(g for g in config.staple_goods if config.factor(g) == config.staple_factor)
+        staples = {values.get(f"local_{good}_output_modifier", 0.0) for good in farm}
         assert len(staples) == 1, step
+        for good in config.staple_goods:
+            assert (values.get(f"local_{good}_output_modifier", 0.0) > 0) == (step > pivot), (step, good)
         # the Stored Food lines only grow with the store; Province Food output only falls, the staples only rise
         if previous is not None:
             for key in per_year:
                 assert values[key] >= previous.get(key, 0.0), (step, key)
             assert values.get(FOOD, 0.0) < previous.get(FOOD, 0.0), step
-            assert staples.pop() > previous.get(f"local_{config.staple_goods[0]}_output_modifier", 0.0), step
+            assert staples.pop() > previous.get(f"local_{farm[0]}_output_modifier", 0.0), step
         previous = values
     # the ends and the pivot: an empty store is the whole Low Stores year plus the curve at 0, the pivot carries no lever
     # or curve line, the cap is two Stored Food years plus the whole Full Stores year plus the curve at 24

@@ -64,6 +64,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/provisioning.py",
     "src/prosper_or_perish_constructor/rural_capacity.py",
     "src/prosper_or_perish_constructor/setup_layout.py",          # the setup folder every setup writer uses
+    "src/prosper_or_perish_constructor/staple_foods.py",          # the staple crops of the start crop allocation
     "src/prosper_or_perish_constructor/stored_food.py",           # the location view's Stored Food chip lists its effects
     "src/prosper_or_perish_constructor/store_lever.py",           # the start-food validator reads the store lever's numbers
     "src/prosper_or_perish_constructor/vanilla_food_productivity.py",   # script value resolution (EU5 1.4 override rule)

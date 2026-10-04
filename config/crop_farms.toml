@@ -137,7 +137,7 @@ age = "age_4_reformation"
 requires = "global_trade_advance"
 ai_weight = 125
 # global_<good>_output_modifier of every crop farm good (farm trade-off, see tier_cultivation_throughput above)
-staple_output = 0.05
+crop_farm_output = 0.05
 name = "Rotational Farmsteads"
 desc = "Legume rotations, managed fallow, hedges, manure carts, and mixed husbandry make peasant village fields more reliable without turning them into planned model farms."
 
@@ -147,7 +147,7 @@ icon = "model_farm"
 age = "age_5_absolutism"
 requires = "scientific_revolution_advance"
 ai_weight = 125
-staple_output = 0.05
+crop_farm_output = 0.05
 name = "Model Farms"
 desc = "Field surveys, seed drills, horse-hoes, crop rotations, and printed agronomy organize village cultivation into a larger managed farm."
 

@@ -41,8 +41,10 @@ location_potential = {
 # which a Tavern turns back into 28 food: food-neutral, it only makes the food denser for trade. The raw_modifier's
 # +3 % victuals per level (2026-10-04, Jan; was -5 %) makes a big harbour Yard pay better with every level.
 # slot 0: food shipments, the long-distance staples the harbour receives (already packed, so no packing slot): grain,
-# dried pulses (ship's pease) and salt fish (market fish is already cured, the fisheries buy the salt). Every staple
-# costs 1 gold and feeds 12 food in Provisioning, so all shipments share the grain numbers and stay food-neutral.
+# dried pulses (ship's pease), salt fish (market fish is already cured, the fisheries buy the salt) and, since
+# 2026-10-04 (Jan), salt beef (livestock: Cork's salt beef, pork and butter for the plantations and the fleets; sheep
+# walked to their markets and stay inland). Every shipment buys 2.332 gold of its staple, which feeds 12 food per
+# gold in Provisioning, so all shipments share the grain numbers and stay food-neutral (livestock at 1.5: 1.555).
 # Rice and maize need an advance, the same split as their farms: the countries of the rice and maize lands (the farms'
 # native triggers) have it from the start, everyone else gets it with Rice / Maize Cultivation.
 unique_production_methods = {
@@ -94,6 +96,14 @@ unique_production_methods = {
     output = 0.932
     category = building_maintenance
   }
+  pp_victualling_yard_salt_beef_shipment = {
+    icon_type = building_type
+    icon = victualling_yard
+    livestock = 1.555
+    produced = victuals
+    output = 0.932
+    category = building_maintenance
+  }
 }
 unique_production_methods = {
   pp_victualling_yard_market_sales = {
@@ -113,9 +123,12 @@ unique_production_methods = {
 # per Yard level, staffed or not: every level ships a little more (+3 % victuals; 2026-10-04, Jan: was -5 %), the
 # harbour's economies of scale (its free-building-level cost was removed 2026-09-30: supported levels come only from
 # location attributes and rank)
+# local_pp_victualling_yard_levels: every standing Yard level adds half a Cookshop level to its province
+# (cookshop_max_level, 2026-10-04, Jan): a harbour that packs food also cooks it
 raw_modifier = {
 	local_population_capacity = 0.12
   local_victuals_output_modifier = 0.03
+  local_pp_victualling_yard_levels = 1
 }
 
 modifier = {

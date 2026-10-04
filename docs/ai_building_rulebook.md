@@ -798,11 +798,36 @@ building per pulse. Saves before 2026-10-01 also carry `review_cull_closed` line
 
 **The yearly closed-building review was removed on 2026-10-01.** It culled one closed level per AI location per year
 (taverns exempt). Closed is not dead: the engine closes a producing building after a losing month whose utility without
-the build price is below 0, and non-producing ones (libraries, temples, marketplaces) when building maintenance is over
-36 % of income; it reopens them only by a 25 % lottery per AI pass (every 2-8 months by rank) and only above utility
-0.2. The cull therefore deleted temporarily closed buildings that the AI then rebuilt at full price. Run c5c4d982:
+the build price is below 0 and reopens it only by a 25 % lottery per AI pass (every 2-8 months by rank) and only above
+utility 0.2; buildings without goods output close and reopen by the maintenance budget (next section). The cull
+therefore deleted temporarily closed buildings that the AI then rebuilt at full price. Run c5c4d982:
 20.1k review culls 1337-1446 (masons 6.1k, cookshops 2.6k, libraries 1.5k with ~2.7k built to keep 1.15k,
 marketplaces 1.4k); run f3368e9e: culls grew from ~600 to 1,026 levels per 5 years by 1417-1422, more than bankruptcy.
+
+### Maintenance budget: closing and reopening buildings without goods output (EU5 1.4, 2026-10-04)
+
+Libraries, temples, monasteries, universities, marketplaces, armories, docks, assemblies and the like (no goods output)
+are closed and reopened by the country's maintenance budget, not by profit:
+
+- B = `AI_ALLOWED_BUILDING_MAINTENANCE` x total monthly income (plus a quarter of large surpluses above 50 gold);
+  M = last month's building maintenance (`last_months_building_maintenance`; closed buildings cost nothing).
+- **Close** when M > `AI_BUILDING_MAINTENANCE_LEEWAY` x B: the AI closes such buildings location by location until M is
+  back at B. Once that cut is met, every remaining location still closes its first eligible building in the same pass,
+  the capital included. A country in high saving mode closes already above B.
+- **Reopen** when M < B (not in saving mode): location by location from the top, each reopening must keep M within the
+  close line; once M passes B only that location stops, every later location reopens one more, so a reopen pass fills
+  back up towards the close line.
+- **Build**: new buildings of this kind are queued only while M < B and M + their upkeep fits under the close line.
+  Buildings sitting closed do not count, so the AI builds more of them while others are closed.
+
+Monthly income swings 25-45 % within a year (harvests, wars, subjects): in observer run 379f7d7a with 0.2 x 1.5,
+2,604 of these buildings were closed in 1452 (libraries 435, monasteries 367, temples 364, marketplaces 361, universities
+78 of 141) and ~10 % of them flipped closed every 5 years, ~9 % reopened; their maintenance at base prices was 4,525
+gold a month (books -34 %, paper -24 % of world demand). Genoa closed 13 buildings in its capital when its income fell
+from 75 to 49. `tools/ai_maintenance_sim.py` replays the pass on a save's countries with fitted income swings: churn
+depends almost only on the leeway (closures per building per century at 0.2: 11 at 1.5, 4.7 at 2.0, 2.1 at 2.5,
+1.0 at 3.0), spending and the closed share on allowed x leeway. Since 2026-10-04 PP uses 0.15 x 2.5 (vanilla
+0.25 x 1.2): the same spending as 0.2 x 1.5 (~16 % of income) with ~75 % fewer closures and slower stock growth.
 
 ### Engine paths that remove building levels (verified 2026-09-30)
 

@@ -24,8 +24,13 @@ NAI = {
 	# AI_ALLOWED_PARALLEL_SAME_TYPE_CONSTRUCTION_RATIO / _MINIMUM = 0.2 / 10, AI_GOLD_COST_UTIL_FROM_LOW_PROFIT_MARGIN = 0.
 	FOOD_NEGATIVE_IN_PROV_UTILITY = 0.5
 	PEASANT_BUILDING_IN_CITY_UTILITY_MULT = 0.9
-	AI_ALLOWED_BUILDING_MAINTENANCE = 0.2 # 0.25; share of income for non-producing building maintenance (build budget; close above this x leeway)
-	AI_BUILDING_MAINTENANCE_LEEWAY = 1.5 # 1.2; build and close limit = 0.2 x 1.5 = 0.30 of income
+	# AI budget for buildings without goods output (libraries, temples, universities, marketplaces, ...), as a share of
+	# total monthly income: the AI builds them while their maintenance is below ALLOWED, closes them above ALLOWED x
+	# LEEWAY (cutting back down to ALLOWED) and reopens them below ALLOWED. Income swings of 25-45 % within a year
+	# (harvests) made 0.2 x 1.5 close and reopen ~10 % of them every 5 years; 0.15 x 2.5 keeps the same spending with
+	# ~75 % fewer closures (tools/ai_maintenance_sim.py, 2026-10-04).
+	AI_ALLOWED_BUILDING_MAINTENANCE = 0.15 # 0.25; build budget and reopen line
+	AI_BUILDING_MAINTENANCE_LEEWAY = 2.5 # 1.2; close line = 0.15 x 2.5 = 0.375 of income
 	AI_DEVELOPMENT_UTILITY = 0.2
 	AI_PROFIT_MARGIN_TARGET = 0.10
 	AI_BUILDING_PROFIT_MARGIN_THRESHOLD = 1.05 # 1.2; minimum revenue/input cost (the gate method's) for the AI to build a new producing building; many PP methods sit near break-even

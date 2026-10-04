@@ -1,7 +1,7 @@
-﻿# Colonial nations (2026-10-04, Jan): raw-material economies. Vanilla's colonial_nation (EU5 1.4) copied whole, with
-# PP's changes marked "PP". A subject type's subject_modifier and ai_biases hold only while the country is a colonial
-# subject; independence or a merge ends them.
-REPLACE:colonial_nation = {
+# Colonial nations (2026-10-04, Jan): raw-material economies. Vanilla's colonial_nation (EU5 1.4) copied whole;
+# PP's lines are marked "PP" in subject_modifier, everything else (ai_biases included) is vanilla. A subject
+# type's subject_modifier holds only while the country is a colonial subject; independence or a merge ends it.
+REPLACE:colonial_nation = { 
 	subject_pays = subject_pays_colonial
 	color = subject_colonial_nation
 	annullment_favours_required = 10
@@ -49,7 +49,7 @@ REPLACE:colonial_nation = {
 			always = yes
 		}
 	}
-
+	
 	has_overlords_ruler = no
 	will_join_independence_wars = yes
 	can_be_annexed = no
@@ -63,35 +63,35 @@ REPLACE:colonial_nation = {
 
 	subject_can_cancel = no
 	overlord_can_cancel = no
-
+	
 	has_limited_diplomacy = yes
-	allow_declaring_wars = {
+	allow_declaring_wars = { 
 		colonial_nation_can_declare_wars_trigger = yes
 	}
-
+	
 	fleet_basing_rights = yes
 	food_access = yes
 	can_overlord_build_rgos = yes
 
 	overlord_share_exploration = yes
-
+	
 	allow_subjects = no
-
+	
 	can_change_rank = yes
 	can_change_heir_selection = no
-
+	
 	minimum_opinion_for_offer = 100
 
 	great_power_score_transfer = 0.75 # the amount of Great Power Score that is transferred from the Subject to the Overlord
 	merchants_to_overlord_fraction = 0.33 #percentage of merchant power that goes to the overlord
 
-
+	
 	government = republic
-
+	
 	institution_spread_to_overlord = monthly_institution_spread_severe
 	institution_spread_to_subject = monthly_institution_spread_severe
-
-
+	
+	
 	overlord_modifier = {
 	}
 
@@ -105,6 +105,53 @@ REPLACE:colonial_nation = {
 		global_rural_build_buildings_efficiency = 0.25
 		global_urban_build_buildings_efficiency = -0.25
 		global_production_efficiency = -0.05
+		# PP: +10 % output of every raw material except the staple foods (RGOs and every building making them).
+		# Cash crops
+		global_sugar_output_modifier = 0.1
+		global_cotton_output_modifier = 0.1
+		global_tobacco_output_modifier = 0.1
+		global_cocoa_output_modifier = 0.1
+		global_coffee_output_modifier = 0.1
+		global_tea_output_modifier = 0.1
+		global_pepper_output_modifier = 0.1
+		global_cloves_output_modifier = 0.1
+		global_chili_output_modifier = 0.1
+		global_saffron_output_modifier = 0.1
+		global_incense_output_modifier = 0.1
+		global_dyes_output_modifier = 0.1
+		global_silk_output_modifier = 0.1
+		global_fiber_crops_output_modifier = 0.1
+		global_medicaments_output_modifier = 0.1
+		global_wine_output_modifier = 0.1
+		# Precious goods
+		global_goods_gold_output_modifier = 0.1
+		global_silver_output_modifier = 0.1
+		global_gems_output_modifier = 0.1
+		global_pearls_output_modifier = 0.1
+		global_amber_output_modifier = 0.1
+		global_ivory_output_modifier = 0.1
+		global_fur_output_modifier = 0.1
+		# Metals and minerals
+		global_copper_output_modifier = 0.1
+		global_iron_output_modifier = 0.1
+		global_lead_output_modifier = 0.1
+		global_tin_output_modifier = 0.1
+		global_mercury_output_modifier = 0.1
+		global_coal_output_modifier = 0.1
+		global_alum_output_modifier = 0.1
+		global_saltpeter_output_modifier = 0.1
+		global_salt_output_modifier = 0.1
+		# Building materials and timber
+		global_stone_output_modifier = 0.1
+		global_marble_output_modifier = 0.1
+		global_clay_output_modifier = 0.1
+		global_sand_output_modifier = 0.1
+		global_lumber_output_modifier = 0.1
+		# Animals and forest goods
+		global_horses_output_modifier = 0.1
+		global_camels_output_modifier = 0.1
+		global_elephants_output_modifier = 0.1
+		global_beeswax_output_modifier = 0.1
 	}
 
 	creation_visible = {
@@ -129,16 +176,16 @@ REPLACE:colonial_nation = {
 		ordered_owned_location = {
 			max = 1
 			order_by = best_capital_for_colony
-
+			
 			save_scope_as = new_town
 		}
-
+	
 		add_policy = policy:colonial_representation_law_no
 		setup_colonial_nation = yes
 		scope:new_town = {
 			if = {
 				limit = {
-					location_rank = location_rank:rural_settlement
+					location_rank = location_rank:rural_settlement		
 				}
 				change_location_rank_effect = { location_rank = location_rank:town }
 			}
@@ -146,7 +193,7 @@ REPLACE:colonial_nation = {
 		}
 		set_capital = scope:new_town
 	}
-
+	
 	can_rival = {
 		or = {
 			scope:recipient ?= {
@@ -173,101 +220,18 @@ REPLACE:colonial_nation = {
 	}
 
 	ai_biases = {
-		# Vanilla: the three plantations.
-		building_type = { type = building_type:sugar_plantation bias = 5 }
-		building_type = { type = building_type:cotton_plantation bias = 5 }
-		building_type = { type = building_type:tobacco_plantation bias = 5 }
-
-		# PP: every raw-material building of the mod (main good of goods category raw_material), every tier, at
-		# vanilla's plantation bias. Left out: the staple foods (crop farms, cattle, sheep, fish, fruit, olives, game;
-		# the food chain steers them), town workshops and unique / estate buildings.
-		# Cash crops
-		building_type = { type = building_type:sugarcane_farm bias = 5 }
-		building_type = { type = building_type:trapiche_sugarcane_farm bias = 5 }
-		building_type = { type = building_type:cotton_farm bias = 5 }
-		building_type = { type = building_type:market_cotton_farm bias = 5 }
-		building_type = { type = building_type:tobacco_farm bias = 5 }
-		building_type = { type = building_type:market_tobacco_farm bias = 5 }
-		building_type = { type = building_type:cocoa_grove bias = 5 }
-		building_type = { type = building_type:managed_cocoa_grove bias = 5 }
-		building_type = { type = building_type:coffee_grove bias = 5 }
-		building_type = { type = building_type:terraced_coffee_grove bias = 5 }
-		building_type = { type = building_type:tea_garden bias = 5 }
-		building_type = { type = building_type:tea_sorting_garden bias = 5 }
-		building_type = { type = building_type:pepper_garden bias = 5 }
-		building_type = { type = building_type:managed_pepper_garden bias = 5 }
-		building_type = { type = building_type:clove_grove bias = 5 }
-		building_type = { type = building_type:chili_plantation bias = 5 }
-		building_type = { type = building_type:saffron_croft bias = 5 }
-		building_type = { type = building_type:saffron_kiln_croft bias = 5 }
-		building_type = { type = building_type:incense_grove bias = 5 }
-		building_type = { type = building_type:dye_plantation bias = 5 }
-		building_type = { type = building_type:sericulture_farm bias = 5 }
-		building_type = { type = building_type:regulated_sericulture_farm bias = 5 }
-		building_type = { type = building_type:fiber_crops_farm bias = 5 }
-		building_type = { type = building_type:fiber_dressing_yard bias = 5 }
-		building_type = { type = building_type:simplers_grove bias = 5 }
-		building_type = { type = building_type:vineyard_estate bias = 5 }
-		# Herds
-		building_type = { type = building_type:horse_breeders bias = 5 }
-		building_type = { type = building_type:stud_farm bias = 5 }
-		building_type = { type = building_type:camel_herders bias = 5 }
-		building_type = { type = building_type:camel_stud bias = 5 }
-		building_type = { type = building_type:elephant_kraal bias = 5 }
-		# Precious metals and gems
-		building_type = { type = building_type:gold_diggings bias = 5 }
-		building_type = { type = building_type:gold_stamp_mill bias = 5 }
-		building_type = { type = building_type:silver_mine bias = 5 }
-		building_type = { type = building_type:silver_mine_improved bias = 5 }
-		building_type = { type = building_type:gem_gravel_pit bias = 5 }
-		building_type = { type = building_type:gem_sluice bias = 5 }
-		building_type = { type = building_type:pearl_fishery bias = 5 }
-		building_type = { type = building_type:amber_collector bias = 5 }
-		# Metals and minerals
-		building_type = { type = building_type:copper_mine bias = 5 }
-		building_type = { type = building_type:copper_mine_adit bias = 5 }
-		building_type = { type = building_type:iron_mine bias = 5 }
-		building_type = { type = building_type:iron_mine_improved bias = 5 }
-		building_type = { type = building_type:iron_mine_deep bias = 5 }
-		building_type = { type = building_type:bog_iron_smelter bias = 5 }
-		building_type = { type = building_type:bog_iron_smelter_blast_furnace bias = 5 }
-		building_type = { type = building_type:bog_iron_smelter_coke_blast_furnace bias = 5 }
-		building_type = { type = building_type:lead_mine bias = 5 }
-		building_type = { type = building_type:lead_mine_bole_smelting bias = 5 }
-		building_type = { type = building_type:lead_mine_cupola_smelting bias = 5 }
-		building_type = { type = building_type:tin_streamworks bias = 5 }
-		building_type = { type = building_type:tin_stamping_mill bias = 5 }
-		building_type = { type = building_type:cinnabar_pit bias = 5 }
-		building_type = { type = building_type:quicksilver_retort bias = 5 }
-		building_type = { type = building_type:coal_mine bias = 5 }
-		building_type = { type = building_type:coal_mine_improved bias = 5 }
-		building_type = { type = building_type:coal_mine_revolutions bias = 5 }
-		building_type = { type = building_type:charcoal_maker bias = 5 }
-		building_type = { type = building_type:improved_charcoal_maker bias = 5 }
-		building_type = { type = building_type:alum_quarry bias = 5 }
-		building_type = { type = building_type:alum_works bias = 5 }
-		building_type = { type = building_type:saltpeter_beds bias = 5 }
-		building_type = { type = building_type:salt_mine bias = 5 }
-		building_type = { type = building_type:salt_mine_improved bias = 5 }
-		building_type = { type = building_type:inland_saltworks bias = 5 }
-		building_type = { type = building_type:engineered_brine_saltworks bias = 5 }
-		building_type = { type = building_type:salt_collector bias = 5 }
-		# Building materials and timber
-		building_type = { type = building_type:stone_quarry bias = 5 }
-		building_type = { type = building_type:stone_quarry_improved bias = 5 }
-		building_type = { type = building_type:marble_quarry bias = 5 }
-		building_type = { type = building_type:marble_saw_yard bias = 5 }
-		building_type = { type = building_type:clay_pit bias = 5 }
-		building_type = { type = building_type:clay_washmill bias = 5 }
-		building_type = { type = building_type:sand_pit bias = 5 }
-		building_type = { type = building_type:sand_washery bias = 5 }
-		building_type = { type = building_type:lumber_mill bias = 5 }
-		building_type = { type = building_type:water_sawmill bias = 5 }
-		building_type = { type = building_type:lumber_mill_improved bias = 5 }
-		# Hunting
-		building_type = { type = building_type:ivory_hunting_camp bias = 5 }
-		building_type = { type = building_type:elephant_hunting_grounds bias = 5 }
-
+		building_type = {
+			type = building_type:sugar_plantation
+			bias = 5
+		}
+		building_type = {
+			type = building_type:cotton_plantation
+			bias = 5
+		}
+		building_type = {
+			type = building_type:tobacco_plantation
+			bias = 5
+		}
 		goods = {
 			type = goods:cotton
 			bias = 3
@@ -322,3 +286,4 @@ REPLACE:colonial_nation = {
 		}
 	}
 }
+

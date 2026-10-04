@@ -57,6 +57,11 @@ building:
         city = yes
         megalopolis = yes
         forbidden_for_estates = yes
+        # AI: build up food in its capital province (pp_capital_food_weight, flat)
+        ai_construct_weight = {
+            value = 0
+            add = pp_capital_food_weight
+        }
         ai_forbid_shutdown = no
         location_potential = {
             OR = {

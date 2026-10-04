@@ -53,6 +53,8 @@ building:
         multiply = 100
         multiply = { value = pp_location_stored_months subtract = 4 divide = 2 min = 0 max = 1 }
       }
+      # the AI builds up food in its capital province (pp_capital_food_weight, flat)
+      add = pp_capital_food_weight
     }
     ai_forbid_shutdown = yes
     important_for_AI = yes

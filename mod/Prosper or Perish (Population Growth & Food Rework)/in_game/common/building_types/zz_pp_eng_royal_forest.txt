@@ -23,6 +23,11 @@ location_potential = {
     }
 }
 allow = {}
+# AI: build up food in its capital province (pp_capital_food_weight, flat)
+ai_construct_weight = {
+    value = 0
+    add = pp_capital_food_weight
+}
 build_time = rural_build_time
 expensive = yes
 allow_wrong_startup = yes

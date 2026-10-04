@@ -90,7 +90,7 @@ def scaled(value: float, factor: float) -> float:
 
 def upgrade_weight_lines(predecessor: str, weight: float, indent: str = "\t") -> list[str]:
     """``ai_construct_weight`` of a farming upgrade: ``weight`` where its predecessor stands, divided by the owner's
-    income like the farm weight. Used by buildings without a weight of their own."""
+    income like the farm weight, plus the flat capital food term. Used by buildings without a weight of their own."""
     step = "    " if indent.startswith(" ") else "\t"
     return [
         f"{indent}# AI (age_food.py): build the upgrade where its predecessor stands; the engine scores a replacement",
@@ -99,6 +99,8 @@ def upgrade_weight_lines(predecessor: str, weight: float, indent: str = "\t") ->
         f"{indent}{step}value = 0",
         f"{indent}{step}if = {{ limit = {{ has_building = building_type:{predecessor} }} add = {num(weight)} }}",
         f"{indent}{step}divide = {{ value = scope:owner.monthly_income_total add = {INCOME_OFFSET} }}",
+        f"{indent}{step}# the AI builds up food in its capital province (pp_capital_food_weight, flat)",
+        f"{indent}{step}add = pp_capital_food_weight",
         f"{indent}}}",
     ]
 

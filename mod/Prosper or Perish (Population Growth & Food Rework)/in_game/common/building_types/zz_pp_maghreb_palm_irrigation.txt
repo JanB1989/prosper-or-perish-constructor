@@ -37,6 +37,11 @@ allow = {
 can_destroy = {
     always = yes
 }
+# AI: build up food in its capital province (pp_capital_food_weight, flat)
+ai_construct_weight = {
+    value = 0
+    add = pp_capital_food_weight
+}
 build_time = trade_post_build_time
 raw_modifier = {
 	local_population_capacity = 0.1

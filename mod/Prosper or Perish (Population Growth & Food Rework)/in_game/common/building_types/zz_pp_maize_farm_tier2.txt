@@ -48,6 +48,8 @@ ai_construct_weight = {
     # near-zero upgrade utility, so the weight carries it
     if = { limit = { has_building = building_type:maize_farmstead } add = 200 }
     divide = { value = scope:owner.monthly_income_total add = 10 }
+    # the AI builds up food in its capital province (pp_capital_food_weight, flat)
+    add = pp_capital_food_weight
 }
 
 unique_production_methods = {

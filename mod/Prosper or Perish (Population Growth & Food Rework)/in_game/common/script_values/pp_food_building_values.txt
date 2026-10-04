@@ -66,3 +66,22 @@ pp_location_province_food_balance = {
 		add = pp_province_food_balance
 	}
 }
+
+# Location scope: the AI's extra wish for food buildings in its country's capital province (2026-10-04, Jan: the AI
+# should focus on building up food in the capital). Added flat, after the income divide, to the ai_construct_weight of
+# every building that makes Province Food in the province (crop farms and their tiers, the other Provisioning food
+# buildings, Tavern, Cookshop, Public Kitchen; tests/test_capital_food_weight.py). Not divided by income: the engine
+# values food and profit far less in rich empires (save 1592: farm scores 1.8 at income 300+ vs 7.9 under 20), and the
+# capitals belong to the richest. Full up to 6 stored months, fading out to 0 at 14 (the farms' store_full_months).
+# Profit gates, caps and the Tavern's store veto still decide; the gold buffer still stops a country's whole build walk.
+pp_capital_food_weight = {
+	value = 0
+	if = {
+		limit = {
+			exists = owner
+			exists = owner.capital
+			province_definition = owner.capital.province_definition
+		}
+		add = { value = 14 subtract = pp_location_stored_months divide = 8 min = 0 max = 1 multiply = 100 }
+	}
+}

@@ -12,6 +12,11 @@ rural_settlement = yes
 town = yes
 city = yes
 megalopolis = yes
+# AI: build up food in its capital province (pp_capital_food_weight, flat)
+ai_construct_weight = {
+    value = 0
+    add = pp_capital_food_weight
+}
 build_time = village_build_time
 
 location_potential = {

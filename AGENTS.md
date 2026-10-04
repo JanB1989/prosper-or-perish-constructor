@@ -154,6 +154,11 @@
   1e9 (the engine's food term), so income-scaled terms are nudges only. Vetoes are flat (Tavern -10000 from 10 to 12 months, 2026-10-04, was 4 to 6, and -100 per standing level from 6 stored months, fading in from 4; below 4 months none, 2026-10-04) and still lose to the largest scores;
   the store-following gate is the only hard stop. The AI never removes a Tavern, so every famine it answers stays
   built (Mini World runs 3/4: 68 -> 735/815 levels by 1522; the flat Tavern terms of run 4 changed nothing measurable).
+  Capital food (2026-10-04, Jan: the AI should build up food in its capital): every Province Food maker (Provisioning
+  slot, Tavern, Cookshop, Public Kitchen; not Grange/Yard) adds the script value `pp_capital_food_weight`
+  (`pp_food_building_values.txt`) after its income divide: +100 flat in the owner's capital province up to 6 stored
+  months, 0 from 14. Crop farms render it (crop_farms.py), upgrade weights too (age_food.py);
+  `tests/test_capital_food_weight.py` checks every maker. The gold buffer still stops a whole build walk.
 - `store_lever.load_design` reads the numbers from the config, the two blueprints and `province_starving`; the
   start-food validator (`worldbuilder/food_sim.py`), `tools/province_store_sim.py` (rest points and ripple on real
   provinces) and `tests/test_store_lever.py` (the properties the design rests on) all use it. After changing a value

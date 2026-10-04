@@ -44,9 +44,9 @@ building:
     # levels do not eat the treasury; one method, livestock, stone and labour in about equal cost shares.
     unique_production_methods = {
       pp_field_management_maintenance = {
-        livestock = 0.007
-        stone = 0.01
-        manual_labor = 0.01
+        livestock = 0.004
+        stone = 0.005
+        manual_labor = 0.005
         category = building_maintenance
       }
     }

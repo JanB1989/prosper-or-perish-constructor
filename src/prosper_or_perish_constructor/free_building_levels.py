@@ -647,8 +647,7 @@ def build_game_start_location_frame(
     ports = load_port_locations(profile)
     locations_png = resolve_map_data_file(profile, "locations.png")
     rivers_png = resolve_map_data_file(profile, "rivers.png")
-    river_levels = extract_river_levels_from_maps(locations, locations_png_path=locations_png, rivers_png_path=rivers_png)
-    river_sizes = extract_development_river_sizes(locations, locations_png_path=locations_png, rivers_png_path=rivers_png)
+    river_levels, river_sizes = _cached_map_rivers(locations, locations_png, rivers_png)
     if development_weights is None:
         development_weights = load_development_weights(profile)
 
@@ -664,6 +663,32 @@ def build_game_start_location_frame(
         development_river_sizes=river_sizes,
     )
     return enriched
+
+
+# Reading the two map rasters takes about 13 s; the result only changes with the images or the location colours
+# (2026-10-04: every World Builder run read them again). Bump the version when either extractor changes.
+_MAP_RIVER_CACHE_VERSION = "1"
+
+
+def _cached_map_rivers(locations: pl.DataFrame, locations_png: Path, rivers_png: Path) -> tuple[pl.DataFrame, pl.DataFrame]:
+    import hashlib
+
+    digest = hashlib.sha256(_MAP_RIVER_CACHE_VERSION.encode())
+    for path in (Path(locations_png), Path(rivers_png)):
+        stat = path.stat()
+        digest.update(f"{path.resolve()}|{stat.st_size}|{stat.st_mtime_ns}\n".encode())
+    keys = locations.select("location_tag", "named_location_hex", "has_river").sort("location_tag")
+    digest.update(keys.write_csv().encode())
+    folder = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "ppc" / "map_rivers" / digest.hexdigest()
+    levels_path, sizes_path = folder / "river_levels.parquet", folder / "river_sizes.parquet"
+    if levels_path.is_file() and sizes_path.is_file():
+        return pl.read_parquet(levels_path), pl.read_parquet(sizes_path)
+    river_levels = extract_river_levels_from_maps(locations, locations_png_path=locations_png, rivers_png_path=rivers_png)
+    river_sizes = extract_development_river_sizes(locations, locations_png_path=locations_png, rivers_png_path=rivers_png)
+    folder.mkdir(parents=True, exist_ok=True)
+    river_levels.write_parquet(levels_path)
+    river_sizes.write_parquet(sizes_path)
+    return river_levels, river_sizes
 
 
 def enrich_locations_with_game_start_data(

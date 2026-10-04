@@ -25,6 +25,54 @@ from .modifiers import setup_modifier_keys
 from .start_rules import Rules, Unresolved, entries, first
 from ..setup_layout import SETUP_DIR
 
+# Bumped on every change of a location's building levels in the plan (_TrackedCounter): the province farm and Yard
+# level sums are cached until the next change instead of being re-added on every cap check (2026-10-04: 1.6 million
+# re-sums, about 80 s of the two-minute World Builder stage).
+_LEVELS_VERSION = [0]
+
+
+class _TrackedCounter(Counter):
+    """A location's building levels; any change invalidates the cached province sums."""
+
+    def __setitem__(self, key, value):
+        _LEVELS_VERSION[0] += 1
+        super().__setitem__(key, value)
+
+    def __delitem__(self, key):
+        _LEVELS_VERSION[0] += 1
+        super().__delitem__(key)
+
+    def pop(self, *args):
+        _LEVELS_VERSION[0] += 1
+        return super().pop(*args)
+
+    def popitem(self):
+        _LEVELS_VERSION[0] += 1
+        return super().popitem()
+
+    def clear(self):
+        _LEVELS_VERSION[0] += 1
+        super().clear()
+
+    def setdefault(self, key, default=None):
+        _LEVELS_VERSION[0] += 1
+        return super().setdefault(key, default)
+
+    def update(self, *args, **kwargs):
+        _LEVELS_VERSION[0] += 1
+        super().update(*args, **kwargs)
+
+    def subtract(self, *args, **kwargs):
+        _LEVELS_VERSION[0] += 1
+        super().subtract(*args, **kwargs)
+
+
+def _tracked_counts(initial):
+    tracked = {tag: _TrackedCounter(levels) for tag, levels in initial.items()}
+    if isinstance(initial, defaultdict):
+        return defaultdict(_TrackedCounter, tracked)
+    return tracked
+
 
 VANILLA_CLIMATES = {"arctic", "arid", "cold_arid", "cold_semi_arid", "continental", "hot_semi_arid", "mediterranean", "oceanic",
                     "subpolar", "subtropical", "tropical"}   # EU5 1.4 keys; the World Builder uses them for its own semi-arid and subpolar
@@ -378,7 +426,7 @@ class Simulation:
         self.rules, self.cfg, self.start = rules, cfg, start
         self.province_food = dict(province_food or {})
         self.pops, self.owners, self.ranks, self.food = pops, owners, ranks, food
-        self.counts = initial
+        self.counts = _tracked_counts(initial)
         self.improvement_keys = improvement_keys
         self.original = {tag: dict(buildings) for tag, buildings in initial.items()}
         self.conversions = []
@@ -643,8 +691,9 @@ class Simulation:
                 mods[k] += v * n
         counters = getattr(self, "farm_counters", {})   # absent on the bare test doubles
         mods[FARM_LEVELS_MODIFIER] += sum(levels.get(k, 0) * v for k, v in counters.items())
-        province_farms = self.province_farm_levels(tag, levels, others)
-        province_yards = self.province_yard_levels(tag, levels, others)
+        # ``counts``, not ``levels``: None takes the cached province sums (the plan's own levels)
+        province_farms = self.province_farm_levels(tag, counts, others)
+        province_yards = self.province_yard_levels(tag, counts, others)
         return {**base, "buildings": levels, "modifiers": dict(mods), PROVINCE_FARM_LEVELS_VALUE: province_farms,
                 PROVINCE_YARD_LEVELS_VALUE: province_yards}
 
@@ -660,6 +709,19 @@ class Simulation:
         return self._province_levels(tag, getattr(self, "yard_counters", {}), levels, others)
 
     def _province_levels(self, tag, counters, levels=None, others=None):
+        if levels is None and others is None:
+            cache = self.__dict__.setdefault("_province_levels_cache", {})
+            if cache.get("version") != _LEVELS_VERSION[0]:
+                cache.clear()
+                cache["version"] = _LEVELS_VERSION[0]
+            key = (id(counters), getattr(self, "group_of", {}).get(tag, ("location", tag)))
+            cached = cache.get(key)
+            if cached is None:
+                cached = cache[key] = self._sum_province_levels(tag, counters, None, None)
+            return cached
+        return self._sum_province_levels(tag, counters, levels, others)
+
+    def _sum_province_levels(self, tag, counters, levels=None, others=None):
         levels = self.counts[tag] if levels is None else levels
         others = self.counts if others is None else others
         group = getattr(self, "group_of", {}).get(tag)
@@ -770,12 +832,17 @@ class Simulation:
             self.rejections["crop farms: no room"] += leftover   # no crop farm could take them: not placed
         return placed
 
-    def cap(self, tag, key, gates=True):
+    def _cap_state(self, tag):
+        """The part of the cap memo key that belongs to the location: its levels and its province's farm and Yard
+        levels. One placement re-checks every building of the location against the same state."""
+        return (tuple(sorted((k, n) for k, n in self.counts[tag].items() if n)),
+                self.province_farm_levels(tag), self.province_yard_levels(tag))
+
+    def cap(self, tag, key, gates=True, loc_state=None):
         """``Rules.cap`` on the location's current state. Between navigation refreshes the context depends on the
         location's building levels and its province's farm and Yard levels (the Cookshop cap), so results are memoised on
         them."""
-        state = (tag, key, gates, tuple(sorted((k, n) for k, n in self.counts[tag].items() if n)),
-                 self.province_farm_levels(tag), self.province_yard_levels(tag))
+        state = (tag, key, gates, *(self._cap_state(tag) if loc_state is None else loc_state))
         cache = self.__dict__.setdefault("_caps", {})
         cached = cache.get(state)
         if cached is None:
@@ -931,8 +998,9 @@ class Simulation:
             self.counts[tag][key] += 1
             # Forest pressure and all other shared caps must remain valid after
             # every placement, including the building's own level.
+            loc_state = self._cap_state(tag)
             if any(
-                n > self.cap(tag, k, gates=False)
+                n > self.cap(tag, k, gates=False, loc_state=loc_state)
                 for k, n in list(self.counts[tag].items())
                 if n
             ):
@@ -1466,7 +1534,8 @@ class Simulation:
             raw = self.market_raw_goods(members)
 
             def room(share, members=members, raw=raw):
-                used = sum(self.budgets(groups=members)[g]["cookshop_levels"] for g in members) * raw_per_level
+                current = self.budgets(groups=members)
+                used = sum(current[g]["cookshop_levels"] for g in members) * raw_per_level
                 return max(0, math.floor((share * raw - used) / raw_per_level))
 
             # 0. Farms first (2026-10-03, Jan): crop farm levels wherever they add food, before any kitchen or Tavern

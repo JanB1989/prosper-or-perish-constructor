@@ -363,7 +363,8 @@ def write(vanilla_root: Path, mod_root: Path, families: Families, channel_topogr
         if templates:
             report["plain_before"] = len(plain_locations(vanilla_biomes, templates))
             report["plain_after"] = len(plain_locations(biomes_out, templates))
-            unexpected = sorted(set(n for n, a in _templates(templates) if len(matching(definitions(biomes_out), a)) > 1)
+            defs_out = definitions(biomes_out)
+            unexpected = sorted(set(n for n, a in _templates(templates) if len(matching(defs_out, a)) > 1)
                                 - set(parent_ambiguous(vanilla_biomes, templates, full)))
             if unexpected:
                 raise ValueError(f"locations matching several biome definitions: {unexpected[:12]}")

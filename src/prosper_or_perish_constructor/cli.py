@@ -784,6 +784,28 @@ def _require_project_root(repo: Path) -> None:
         raise SystemExit(f"{repo} does not look like this constructor repo; missing {ROOT_MARKER}.")
 
 
+class _StageClock:
+    """Wall time of each stage of `ppc build` / `ppc sync`, printed as one line at the end (2026-10-04, Jan: a sync
+    took minutes and nobody saw where)."""
+
+    def __init__(self, command: str) -> None:
+        self.command = command
+        self.start = time.perf_counter()
+        self.stages: list[tuple[str, float]] = []
+
+    def run(self, label: str, func, *args, **kwargs):
+        start = time.perf_counter()
+        try:
+            return func(*args, **kwargs)
+        finally:
+            self.stages.append((label, time.perf_counter() - start))
+
+    def report(self) -> None:
+        total = time.perf_counter() - self.start
+        parts = ", ".join(f"{label} {seconds:.1f}" for label, seconds in self.stages if seconds >= 0.05)
+        print(f"{self.command} took {total:.1f} s ({parts}).", flush=True)
+
+
 def _run(command: Sequence[str | os.PathLike[str]], repo: Path) -> int:
     printable = " ".join(str(part) for part in command)
     print(f"$ {printable}", flush=True)
@@ -1328,10 +1350,20 @@ def _apply_employment_cut(repo: Path, project: Path, mod_root: Path) -> None:
 
 
 def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    clock = _StageClock("ppc build")
+    try:
+        return _build_stages(clock, extra, repo, project)
+    finally:
+        clock.report()
+
+
+def _build_stages(clock: "_StageClock", extra: Sequence[str], repo: Path, project: Path) -> int:
     if _worldbuilder_apply_on_build(project):
-        _worldbuilder_apply(repo, project)
+        clock.run("worldbuilder", _worldbuilder_apply, repo, project)
     if _has_crop_farm_table(repo):
-        crop_code = _crop_farms(
+        crop_code = clock.run(
+            "crop farm check",
+            _crop_farms,
             argparse.Namespace(write=False, check=True),
             (),
             repo,
@@ -1339,15 +1371,20 @@ def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: 
         )
         if crop_code != 0:
             return crop_code
-    build_code = _run(["eu5-orchestrator", "build", "--project", project, "--overwrite", *extra], repo)
+    build_code = clock.run(
+        "render", _run, ["eu5-orchestrator", "build", "--project", project, "--overwrite", *extra], repo
+    )
     if build_code != 0:
         return build_code
-    _finalize_constructor_mod(repo, project)
-    _print_age_food_check(repo, project)
-    _print_labour_check(repo, project)
-    _print_legacy_check(repo, project)
-    _print_logistics_check(repo, project)
-    _print_gate_check(repo, project)
+    clock.run("finalize", _finalize_constructor_mod, repo, project)
+    for label, check in (
+        ("age food check", _print_age_food_check),
+        ("labour check", _print_labour_check),
+        ("legacy check", _print_legacy_check),
+        ("logistics check", _print_logistics_check),
+        ("gate check", _print_gate_check),
+    ):
+        clock.run(label, check, repo, project)
     _print_food_sim(repo)
     return 0
 
@@ -3723,6 +3760,8 @@ def _sync_stage_fingerprint(repo: Path, project: Path, stage: str) -> str:
     from prosper_or_perish_constructor.vanilla_mirror import installed_build_id
 
     load_order = repo / CONSTRUCTOR_LOAD_ORDER
+    # Compared without comments, AI weights and blueprint localization/icon/evaluation (_worldbuilder_view): the stage
+    # never reads them, and a weight or comment edit used to rerun the whole start setup (about two minutes).
     digest = hashlib.sha256(
         _fingerprint_paths(
             [
@@ -3732,6 +3771,7 @@ def _sync_stage_fingerprint(repo: Path, project: Path, stage: str) -> str:
                 local_load_order_path(load_order),
             ],
             file_filter=_is_fingerprint_input,
+            view=_worldbuilder_view,
         ).encode()
     )
     # The game data itself is too large to hash; its Steam build stands in for it.
@@ -3781,32 +3821,71 @@ def _is_validation_input(path: Path) -> bool:
     return path.suffix.lower() in {".txt", ".yml", ".yaml", ".gui"}
 
 
-def _fingerprint_paths(paths: Sequence[Path], *, file_filter=None) -> str:
+def _fingerprint_paths(paths: Sequence[Path], *, file_filter=None, view=None) -> str:
     digest = hashlib.sha256()
     for path in sorted({item.resolve() if item.exists() else item for item in paths}, key=str):
-        _fingerprint_path(digest, path, path, file_filter=file_filter)
+        _fingerprint_path(digest, path, path, file_filter=file_filter, view=view)
     return digest.hexdigest()
 
 
-def _fingerprint_path(digest, path: Path, root: Path, *, file_filter=None) -> None:
+_WEIGHT_BLOCK = re.compile(rb"ai_(?:construct|destroy)_weight\s*=\s*\{")
+_BLUEPRINT_SKIPPED_SECTIONS = (b"localization:", b"icon:", b"evaluation:")
+
+
+def _worldbuilder_view(path: Path, data: bytes) -> bytes:
+    """What the World Builder stage can read of a text input: no comments, no AI weight blocks and, in a blueprint, no
+    localization/icon/evaluation section. A line holding a quote keeps its comment (a # inside a string is text)."""
+    suffix = path.suffix.lower()
+    if suffix not in {".txt", ".yml", ".yaml"}:
+        return data
+    if suffix != ".txt":
+        kept, skipping = [], False
+        for line in data.split(b"\n"):
+            if line[:1] not in (b" ", b"\t", b"") and not line.startswith(b"-"):
+                skipping = line.startswith(_BLUEPRINT_SKIPPED_SECTIONS)
+            if not skipping:
+                kept.append(line)
+        data = b"\n".join(kept)
+    out = []
+    for line in data.split(b"\n"):
+        cut = line.find(b"#")
+        if cut >= 0 and b'"' not in line:
+            line = line[:cut]
+        line = line.rstrip()
+        if line:
+            out.append(line)
+    data = b"\n".join(out)
+    while True:
+        match = _WEIGHT_BLOCK.search(data)
+        if not match:
+            return data
+        i, depth = match.end(), 1
+        while i < len(data) and depth:
+            depth += (data[i] == 0x7B) - (data[i] == 0x7D)
+            i += 1
+        data = data[: match.start()] + data[i:]
+
+
+def _fingerprint_path(digest, path: Path, root: Path, *, file_filter=None, view=None) -> None:
     if path.is_dir():
         files = sorted(candidate for candidate in path.rglob("*") if candidate.is_file())
         for candidate in files:
             if file_filter is not None and not file_filter(candidate):
                 continue
-            _fingerprint_file(digest, candidate, candidate.relative_to(root))
+            _fingerprint_file(digest, candidate, candidate.relative_to(root), view=view)
         return
     if not path.is_file():
         digest.update(f"missing:{path}\n".encode("utf-8", errors="surrogateescape"))
         return
     if file_filter is None or file_filter(path):
-        _fingerprint_file(digest, path, Path(path.name))
+        _fingerprint_file(digest, path, Path(path.name), view=view)
 
 
-def _fingerprint_file(digest, path: Path, label: Path) -> None:
+def _fingerprint_file(digest, path: Path, label: Path, *, view=None) -> None:
     digest.update(str(label).replace(os.sep, "/").encode("utf-8", errors="surrogateescape"))
     digest.update(b"\0")
-    digest.update(path.read_bytes())
+    data = path.read_bytes()
+    digest.update(view(path, data) if view is not None else data)
     digest.update(b"\0")
 
 
@@ -3887,35 +3966,38 @@ def _deploy_built_mod(repo: Path, project: Path, *, force: bool, while_running: 
     return _run(command, repo)
 
 
-def _smart_sync(args: argparse.Namespace, repo: Path, project: Path) -> int:
+def _smart_sync(args: argparse.Namespace, repo: Path, project: Path, clock: "_StageClock") -> int:
     state = _load_sync_state(repo)
     ran_generator = False
     for stage in SYNC_STAGES:
         # Taken when the stage is reached: the World Builder stage patches blueprints the render stage reads.
-        if not args.force_build and state.get(stage) == _sync_stage_fingerprint(repo, project, stage):
+        fingerprint = clock.run(f"{stage} fingerprint", _sync_stage_fingerprint, repo, project, stage)
+        if not args.force_build and state.get(stage) == fingerprint:
             print(f"Smart sync: {stage} inputs unchanged; skipping.", flush=True)
             continue
         if stage == "worldbuilder":
-            _worldbuilder_apply(repo, project)
+            clock.run("worldbuilder", _worldbuilder_apply, repo, project)
         else:
-            result = _run(["eu5-orchestrator", "render", "--project", project, "--overwrite"], repo)
+            result = clock.run("render", _run, ["eu5-orchestrator", "render", "--project", project, "--overwrite"], repo)
             if result != 0:
                 return result
         ran_generator = True
-    _finalize_constructor_mod(repo, project)
+    clock.run("finalize", _finalize_constructor_mod, repo, project)
     # The stages rewrite blueprints and mod files they also read, so the inputs are recorded as this sync
     # leaves them; the next sync reruns a stage only if something changed them since.
-    state.update(_sync_stage_fingerprints(repo, project))
-    validation_before = _validation_fingerprint(repo, project)
+    state.update(clock.run("record fingerprints", _sync_stage_fingerprints, repo, project))
+    validation_before = clock.run("validation fingerprint", _validation_fingerprint, repo, project)
     if ran_generator or args.force_build or state.get("validation") != validation_before:
-        result = _run(["eu5-orchestrator", "validate", "--project", project], repo)
+        result = clock.run("validate", _run, ["eu5-orchestrator", "validate", "--project", project], repo)
         if result != 0:
             return result
-        state["validation"] = _validation_fingerprint(repo, project)
+        state["validation"] = clock.run("validation fingerprint", _validation_fingerprint, repo, project)
     else:
         print("Smart sync: validation inputs unchanged; skipping validation.", flush=True)
     _save_sync_state(repo, state)
-    return _deploy_built_mod(repo, project, force=args.force_deploy, while_running=args.while_running)
+    return clock.run(
+        "deploy", _deploy_built_mod, repo, project, force=args.force_deploy, while_running=args.while_running
+    )
 
 
 def _sync(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
@@ -3936,7 +4018,11 @@ def _sync(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: P
             return build_result
         _record_current_sync_state(repo, project)
         return _deploy_built_mod(repo, project, force=args.force_deploy, while_running=args.while_running)
-    return _smart_sync(args, repo, project)
+    clock = _StageClock("ppc sync")
+    try:
+        return _smart_sync(args, repo, project, clock)
+    finally:
+        clock.report()
 
 
 

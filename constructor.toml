@@ -994,6 +994,44 @@ slot_label = "Market"
 method_name = "Market Sales"
 method_desc = "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
 
+[legacy_methods]
+# An upgrade never takes a recipe away (2026-10-04, Jan). Vanilla's manufacturing lines drop the older tiers' recipes on
+# upgrade (stone/copper/bronze tools stop at the guild, every beer grain but wheat at the workshop) and the old tier can
+# no longer be built once the next is researched, so an economy built on the old inputs could not grow. Every tier of a
+# line below keeps the recipes of the tiers under it as legacy methods pp_<building>_legacy_<origin method>: same goods,
+# output = share x the slot's most valuable own method, at that method's margin (same profit per gold, less per level).
+# Share = the origin method's value / its slot's best own method (vanilla's own ratios), x decay per tier moved up.
+# A recipe the tier's own methods already run (a subset of its goods, no other advance) is not carried. The AI's method
+# switcher takes the best profit per level among methods whose inputs are in the market, so the contemporary method wins
+# wherever its goods exist. `ppc legacy apply|check` (legacy_methods.py; ppc build prints the check, a test enforces it).
+# Order after editing recipes: ppc labour apply, ppc legacy apply, ppc logistics apply, ppc gate apply.
+decay = 0.75
+label_suffix = "(Old Ways)"
+desc = "An older way of working, kept from the {origin}. It still runs on its old materials, but turns out less per level than the methods of this age."
+
+[legacy_methods.lines]
+# tiers bottom up; each tier's blueprint must name the one before it as obsolete
+beer = ["brewery", "beer_workshop", "brewery_manufactory", "brewery_mill"]
+books = ["scriptorium", "printing_press_shop", "printing_manufactory", "printing_mill"]
+cannons = ["cannon_maker", "cannon_workshop", "cannon_foundry", "cannons_factory"]
+cloth = ["cloth_guild", "cloth_workshop", "cloth_manufactory", "textile_mill"]
+dyes = ["dyes_guild", "dyes_workshop", "dyesworks", "dyes_mill"]
+fine_cloth = ["fine_cloth_guild", "fine_cloth_workshop", "fine_cloth_manufactory", "fine_cloth_mill"]
+firearms = ["hand_cannon_guild", "gun_smith", "guns_workshop", "firearms_manufactory", "firearms_factory"]
+furniture = ["furniture_guild", "furniture_workshop", "furniture_manufactory", "furniture_mill"]
+glass = ["glass_guild", "glass_workshop", "glassworks", "glass_mill"]
+lacquerware = ["lacquerware_guild", "lacquerware_manufactory"]
+leather = ["tannery", "tanning_workshop", "tannery_manufactory", "tannery_mill"]
+liquor = ["distillers_guild", "distillers_workshop", "distiller_manufactory", "distiller_mill"]
+naval_supplies = ["naval_supplies_guild", "naval_supplies_workshop", "naval_supplies_manufactory", "naval_supplies_mill"]
+paper = ["paper_guild", "paper_workshop", "paper_manufactory", "paper_mill"]
+porcelain = ["porcelain_guild", "porcelain_manufactory"]
+pottery = ["pottery_guild", "pottery_workshop", "pottery_manufactory", "pottery_mill"]
+saltpeter = ["saltpeter_guild", "saltpeter_workshop", "putrefaction_works", "putrefaction_mill"]
+tools = ["tools_guild", "tools_workshop", "iron_foundry", "iron_mill"]
+weapons = ["weapon_guild", "weapon_workshop", "weapon_manufactory", "weapon_factory"]
+wine = ["winery", "winery_manufactory"]
+
 [logistics]
 # Logistics buildings carry goods to the market: they produce the pinned dummy good `logistics` (1 gold at its floor,
 # like offset) and raise market access. Every logistics blueprint carries `logistics: { class: <class>, bulky_scale: x }`.

@@ -12,6 +12,8 @@ building:
   - name: slot_0
     methods:
     - pp_glass_mill_glassmill_maintenance
+    - pp_glass_mill_legacy_glass_guild_maintenance
+    - pp_glass_mill_legacy_metal_glass_workshop_maintenance
   - name: slot_1
     methods:
     - pp_glass_mill_market_sales
@@ -41,6 +43,31 @@ building:
             debug_max_profit = mills_profit_margin
             category = guild_input
         }
+        pp_glass_mill_legacy_glass_guild_maintenance = {
+            icon_type = goods
+            icon = glass
+            lumber = 0.32
+            sand = 1.58
+            tools = 0.61
+            manual_labor = 0.52
+            produced = glass
+            output = 1.27
+            debug_max_profit = mills_profit_margin
+            category = guild_input
+        }
+        pp_glass_mill_legacy_metal_glass_workshop_maintenance = {
+            icon_type = building_type
+            icon = glass_workshop
+            lumber = 0.76
+            sand = 2.4
+            tools = 0.97
+            lead = 0.22
+            manual_labor = 0.71
+            produced = glass
+            output = 2.25
+            debug_max_profit = mills_profit_margin
+            category = guild_input
+        }
     }
     unique_production_methods = {
         pp_glass_mill_market_sales = {
@@ -66,6 +93,10 @@ localization:
     pp_glass_mill_market_sales: Market Sales
     pp_glass_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     glass_mill_slot_1: Market
+    pp_glass_mill_legacy_glass_guild_maintenance: "$glass_guild_maintenance$ (Old Ways)"
+    pp_glass_mill_legacy_glass_guild_maintenance_desc: "An older way of working, kept from the $glass_guild$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_glass_mill_legacy_metal_glass_workshop_maintenance: "$metal_glass_workshop_maintenance$ (Old Ways)"
+    pp_glass_mill_legacy_metal_glass_workshop_maintenance_desc: "An older way of working, kept from the $glass_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
@@ -77,3 +108,13 @@ evaluation:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
         input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
         output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+    pp_glass_mill_legacy_glass_guild_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_glass_mill_legacy_metal_glass_workshop_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."

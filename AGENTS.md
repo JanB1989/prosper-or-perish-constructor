@@ -58,6 +58,29 @@
   `ai_forbid_shutdown` do not stop that.
 - A slot's first method is what new and game-start buildings run, so reordering can change defaults.
 
+## Legacy Methods
+
+- An upgrade never takes a recipe away (2026-10-04, Jan). Vanilla's manufacturing lines (guild -> workshop ->
+  manufactory -> mill/factory, `obsolete` chains) drop the older tiers' recipes, and once the next tier is researched
+  the engine refuses new copies of the old one ("There is no need to build a X when we can build a Y"), so an economy
+  built on the old inputs could not grow. Every tier of a line in `[legacy_methods.lines]` keeps the recipes of the
+  tiers below it as `pp_<building>_legacy_<origin method>` (`legacy_methods.py`).
+- Recipe = a method's goods set (labour aside). Walking up a line slot by slot (slots matched by shared goods), a
+  recipe is carried unless the tier has an own method needing a subset of its goods and no other advance; same goods
+  merge, a carried recipe dominated by a cheaper one (fewer goods, no other advance, share at least as high) is
+  dropped. Share = origin value / the origin slot's best own method, x `decay` (0.75) per tier moved up. Output = share x
+  the slot's best own method (the reference), inputs = the origin's goods and labour scaled to the reference's margin,
+  category / debug_max_profit from the reference, icon from the origin, unlock advances carried
+  (`TRY_INJECT:<advance>`), name = vanilla's name of the origin + "(Old Ways)".
+- The labour pass skips legacy methods (their labour is the origin's); the gate pass lists them after the building's
+  own methods (`method_key`), so no new building starts on an old recipe. `uv run ppc legacy apply|check` must report
+  0 blueprints to write and 0 problems (`ppc build` prints it; `tests/test_legacy_methods.py` also checks that no
+  upgrade loses a recipe). Order after editing recipes: `ppc labour apply`, `ppc legacy apply`, `ppc logistics apply`,
+  `ppc gate apply`.
+- The cannon foundry/factory, firearms manufactory/factory and fine cloth mill run their line's two slots (barrels and
+  ammunition, weaving and dyeing; the combined vanilla method split by goods cost, tin and lead restored); the leather
+  line keeps tar in every tier (`labour.keep_goods: [tar]`: goods the labour pass never drops).
+
 ## Store Lever
 
 - All stored-food effects ride ONE province modifier per whole stored month, `pp_food_store_0` .. `_24` ("Stored Food:

@@ -1,9 +1,17 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:cannon_foundry:localization
-  cannon_foundry_slot_0: "Cannon Foundry Work"
+  cannon_foundry_slot_0: "Ammunition"
+  pp_cannon_foundry_ammunition_maintenance: "Cannon Foundry Ammunition"
+  cannon_foundry_slot_1: "Cannon Foundry Work"
   pp_cannon_foundry_cannon_foundry_maintenance: "Cannon Foundry Cannon Foundry Maintenance"
   pp_cannon_foundry_market_sales: "Market Sales"
   pp_cannon_foundry_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  cannon_foundry_slot_1: "Market"
+  cannon_foundry_slot_2: "Market"
+  pp_cannon_foundry_legacy_cannon_workshop_ammunition_iron_maintenance: "$cannon_workshop_ammunition_iron_maintenance$ (Old Ways)"
+  pp_cannon_foundry_legacy_cannon_workshop_ammunition_iron_maintenance_desc: "An older way of working, kept from the $cannon_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+  pp_cannon_foundry_legacy_cannon_workshop_ammunition_stone_maintenance: "$cannon_workshop_ammunition_stone_maintenance$ (Old Ways)"
+  pp_cannon_foundry_legacy_cannon_workshop_ammunition_stone_maintenance_desc: "An older way of working, kept from the $cannon_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+  pp_cannon_foundry_legacy_cannon_workshop_iron_maintenance: "$cannon_workshop_iron_maintenance$ (Old Ways)"
+  pp_cannon_foundry_legacy_cannon_workshop_iron_maintenance_desc: "An older way of working, kept from the $cannon_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
 # <<< eu5-building-pipeline:cannon_foundry:localization

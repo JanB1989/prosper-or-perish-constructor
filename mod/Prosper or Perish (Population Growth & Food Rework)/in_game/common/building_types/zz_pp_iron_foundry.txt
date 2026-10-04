@@ -23,6 +23,47 @@ unique_production_methods = {
         output = 2.0
         debug_max_profit = manufactory_profit_margin
     }
+    pp_iron_foundry_legacy_stone_tools_guild_maintenance = {
+        icon_type = goods
+        icon = stone
+        stone = 0.69
+        manual_labor = 0.12
+        produced = tools
+        output = 0.28
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+    pp_iron_foundry_legacy_copper_tools_guild_maintenance = {
+        icon_type = goods
+        icon = copper
+        copper = 0.51
+        manual_labor = 0.26
+        produced = tools
+        output = 0.63
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+    pp_iron_foundry_legacy_bronze_tools_guild_maintenance = {
+        icon_type = goods
+        icon = tin
+        copper = 0.52
+        tin = 0.042
+        manual_labor = 0.27
+        produced = tools
+        output = 0.67
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+    pp_iron_foundry_legacy_metalwork_workshop_maintenance = {
+        icon_type = building_type
+        icon = tools_workshop
+        iron = 1.1
+        manual_labor = 0.43
+        produced = tools
+        output = 1.5
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
 }
 unique_production_methods = {
     pp_iron_foundry_market_sales = {

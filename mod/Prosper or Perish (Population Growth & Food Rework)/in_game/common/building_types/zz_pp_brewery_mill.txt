@@ -26,6 +26,53 @@ unique_production_methods = {
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
+    pp_brewery_mill_legacy_fruit_beer_workshop_maintenance = {
+        icon_type = goods
+        icon = fruit
+        fruit = 2
+        lumber = 0.4
+        tools = 0.21
+        manual_labor = 0.34
+        produced = beer
+        output = 1.9
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_brewery_mill_legacy_maize_beer_workshop_maintenance = {
+        icon_type = goods
+        icon = maize
+        maize = 2.71
+        pottery = 0.63
+        manual_labor = 0.36
+        produced = beer
+        output = 1.9
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_brewery_mill_legacy_millet_beer_workshop_maintenance = {
+        icon_type = goods
+        icon = millet
+        millet = 1.9
+        lumber = 0.47
+        tools = 0.19
+        manual_labor = 0.38
+        produced = beer
+        output = 1.9
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_brewery_mill_legacy_rice_beer_workshop_maintenance = {
+        icon_type = goods
+        icon = rice
+        rice = 1.9
+        lumber = 0.47
+        tools = 0.19
+        manual_labor = 0.38
+        produced = beer
+        output = 1.9
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
 }
 unique_production_methods = {
     pp_brewery_mill_market_sales = {

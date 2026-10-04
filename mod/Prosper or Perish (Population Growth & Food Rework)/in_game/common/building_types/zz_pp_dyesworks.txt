@@ -23,6 +23,16 @@ unique_production_methods = {
         debug_max_profit = manufactory_profit_margin
         category = workshop_input
     }
+    pp_dyesworks_legacy_dyes_guild_maintenance = {
+        icon_type = goods
+        icon = dyes
+        lumber = 1.42
+        manual_labor = 0.41
+        produced = dyes
+        output = 0.75
+        debug_max_profit = manufactory_profit_margin
+        category = workshop_input
+    }
 }
 unique_production_methods = {
     pp_dyesworks_market_sales = {

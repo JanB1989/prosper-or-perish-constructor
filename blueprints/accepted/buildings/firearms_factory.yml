@@ -11,8 +11,15 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
-    - pp_firearms_factory_firearms_factory_maintenance
+    - pp_firearms_factory_ammunition_maintenance
+    - pp_firearms_factory_legacy_guns_workshop_ammunition_iron_maintenance
   - name: slot_1
+    methods:
+    - pp_firearms_factory_firearms_factory_maintenance
+    - pp_firearms_factory_legacy_guns_workshop_iron_maintenance
+    - pp_firearms_factory_legacy_guns_workshop_bronze_maintenance
+    - pp_firearms_factory_legacy_firearms_manufactory_maintenance
+  - name: slot_2
     methods:
     - pp_firearms_factory_market_sales
   possible_production_methods: []
@@ -31,13 +38,70 @@ building:
     build_time = mills_build_time
     obsolete = firearms_manufactory
     unique_production_methods = {
-        pp_firearms_factory_firearms_factory_maintenance = {
-            steel = 1.7
+        pp_firearms_factory_ammunition_maintenance = {
+            icon_type = goods
+            icon = lead
             lead = 0.51
             saltpeter = 0.85
+            manual_labor = 0.12
+            produced = firearms
+            output = 0.97
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+        pp_firearms_factory_legacy_guns_workshop_ammunition_iron_maintenance = {
+            icon_type = goods
+            icon = iron
+            iron = 0.27
+            saltpeter = 0.27
+            manual_labor = 0.13
+            produced = firearms
+            output = 0.55
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+    }
+    unique_production_methods = {
+        pp_firearms_factory_firearms_factory_maintenance = {
+            steel = 1.7
+            manual_labor = 0.37
+            produced = firearms
+            output = 3.03
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+        pp_firearms_factory_legacy_guns_workshop_iron_maintenance = {
+            icon_type = goods
+            icon = iron
+            iron = 0.74
+            tools = 0.46
+            manual_labor = 0.46
+            produced = firearms
+            output = 1.55
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+        pp_firearms_factory_legacy_guns_workshop_bronze_maintenance = {
+            icon_type = goods
+            icon = copper
+            copper = 0.83
+            tin = 0.17
+            tools = 0.52
             manual_labor = 0.49
             produced = firearms
-            output = 4.0
+            output = 1.7
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+        pp_firearms_factory_legacy_firearms_manufactory_maintenance = {
+            icon_type = building_type
+            icon = firearms_manufactory
+            lumber = 0.47
+            coal = 0.47
+            iron = 1.27
+            manual_labor = 0.46
+            produced = firearms
+            output = 2.27
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -60,11 +124,21 @@ building:
     increase_per_level_cost = 0.25
 localization:
   entries:
-    firearms_factory_slot_0: Firearms Factory Work
+    firearms_factory_slot_0: Ammunition
+    pp_firearms_factory_ammunition_maintenance: Firearms Factory Ammunition
+    firearms_factory_slot_1: Firearms Factory Work
     pp_firearms_factory_firearms_factory_maintenance: Firearms Factory Firearms Factory Maintenance
     pp_firearms_factory_market_sales: Market Sales
     pp_firearms_factory_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    firearms_factory_slot_1: Market
+    firearms_factory_slot_2: Market
+    pp_firearms_factory_legacy_firearms_manufactory_maintenance: "$firearms_manufactory_maintenance$ (Old Ways)"
+    pp_firearms_factory_legacy_firearms_manufactory_maintenance_desc: "An older way of working, kept from the $firearms_manufactory$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_firearms_factory_legacy_guns_workshop_ammunition_iron_maintenance: "$guns_workshop_ammunition_iron_maintenance$ (Old Ways)"
+    pp_firearms_factory_legacy_guns_workshop_ammunition_iron_maintenance_desc: "An older way of working, kept from the $guns_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_firearms_factory_legacy_guns_workshop_bronze_maintenance: "$guns_workshop_bronze_maintenance$ (Old Ways)"
+    pp_firearms_factory_legacy_guns_workshop_bronze_maintenance_desc: "An older way of working, kept from the $guns_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_firearms_factory_legacy_guns_workshop_iron_maintenance: "$guns_workshop_iron_maintenance$ (Old Ways)"
+    pp_firearms_factory_legacy_guns_workshop_iron_maintenance_desc: "An older way of working, kept from the $guns_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
@@ -76,3 +150,23 @@ evaluation:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
         input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
         output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+    pp_firearms_factory_legacy_firearms_manufactory_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_firearms_factory_legacy_guns_workshop_ammunition_iron_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_firearms_factory_legacy_guns_workshop_bronze_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_firearms_factory_legacy_guns_workshop_iron_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."

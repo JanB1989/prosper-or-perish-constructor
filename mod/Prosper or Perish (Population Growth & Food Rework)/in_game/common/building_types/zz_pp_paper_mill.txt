@@ -34,6 +34,38 @@ unique_production_methods = {
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
+    pp_paper_mill_legacy_paper_guild_leather_maintenance = {
+        icon_type = goods
+        icon = leather
+        leather = 0.34
+        lumber = 0.34
+        manual_labor = 0.24
+        produced = paper
+        output = 0.95
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_paper_mill_legacy_paper_workshop_fiber_pulp_maintenance = {
+        icon_type = goods
+        icon = fiber_crops
+        fiber_crops = 1.95
+        manual_labor = 0.56
+        produced = paper
+        output = 2.3
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_paper_mill_legacy_paper_workshop_cloth_maintenance = {
+        icon_type = goods
+        icon = cloth
+        cloth = 1.27
+        lumber = 0.27
+        manual_labor = 0.6
+        produced = paper
+        output = 2.53
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
 }
 unique_production_methods = {
     pp_paper_mill_market_sales = {

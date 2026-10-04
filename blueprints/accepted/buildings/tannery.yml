@@ -3,6 +3,7 @@ tag: tannery
 footprint: manufactory
 labour:
   class: craft_medieval
+  keep_goods: [tar]
 gate_method: pp_tannery_market_sales
 building:
   key: tannery

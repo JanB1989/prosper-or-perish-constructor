@@ -12,6 +12,10 @@ building:
   - name: slot_0
     methods:
     - pp_iron_foundry_iron_foundry_maintenance
+    - pp_iron_foundry_legacy_stone_tools_guild_maintenance
+    - pp_iron_foundry_legacy_copper_tools_guild_maintenance
+    - pp_iron_foundry_legacy_bronze_tools_guild_maintenance
+    - pp_iron_foundry_legacy_metalwork_workshop_maintenance
   - name: slot_1
     methods:
     - pp_iron_foundry_market_sales
@@ -38,6 +42,47 @@ building:
             output = 2.0
             debug_max_profit = manufactory_profit_margin
         }
+        pp_iron_foundry_legacy_stone_tools_guild_maintenance = {
+            icon_type = goods
+            icon = stone
+            stone = 0.69
+            manual_labor = 0.12
+            produced = tools
+            output = 0.28
+            debug_max_profit = manufactory_profit_margin
+            category = manufactory_input
+        }
+        pp_iron_foundry_legacy_copper_tools_guild_maintenance = {
+            icon_type = goods
+            icon = copper
+            copper = 0.51
+            manual_labor = 0.26
+            produced = tools
+            output = 0.63
+            debug_max_profit = manufactory_profit_margin
+            category = manufactory_input
+        }
+        pp_iron_foundry_legacy_bronze_tools_guild_maintenance = {
+            icon_type = goods
+            icon = tin
+            copper = 0.52
+            tin = 0.042
+            manual_labor = 0.27
+            produced = tools
+            output = 0.67
+            debug_max_profit = manufactory_profit_margin
+            category = manufactory_input
+        }
+        pp_iron_foundry_legacy_metalwork_workshop_maintenance = {
+            icon_type = building_type
+            icon = tools_workshop
+            iron = 1.1
+            manual_labor = 0.43
+            produced = tools
+            output = 1.5
+            debug_max_profit = manufactory_profit_margin
+            category = manufactory_input
+        }
     }
     unique_production_methods = {
         pp_iron_foundry_market_sales = {
@@ -50,6 +95,10 @@ building:
     obsolete = tools_workshop
     construction_demand = manufactory_construction
     increase_per_level_cost = 0.21
+advancements:
+- key: TRY_INJECT:copperworking
+  body: |-
+    unlock_production_method = pp_iron_foundry_legacy_copper_tools_guild_maintenance
 localization:
   entries:
     iron_foundry_slot_0: Iron Foundry Work
@@ -57,6 +106,14 @@ localization:
     pp_iron_foundry_market_sales: Market Sales
     pp_iron_foundry_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     iron_foundry_slot_1: Market
+    pp_iron_foundry_legacy_bronze_tools_guild_maintenance: "$bronze_tools_guild_maintenance$ (Old Ways)"
+    pp_iron_foundry_legacy_bronze_tools_guild_maintenance_desc: "An older way of working, kept from the $tools_guild$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_iron_foundry_legacy_copper_tools_guild_maintenance: "$copper_tools_guild_maintenance$ (Old Ways)"
+    pp_iron_foundry_legacy_copper_tools_guild_maintenance_desc: "An older way of working, kept from the $tools_guild$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_iron_foundry_legacy_metalwork_workshop_maintenance: "$metalwork_workshop_maintenance$ (Old Ways)"
+    pp_iron_foundry_legacy_metalwork_workshop_maintenance_desc: "An older way of working, kept from the $tools_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_iron_foundry_legacy_stone_tools_guild_maintenance: "$stone_tools_guild_maintenance$ (Old Ways)"
+    pp_iron_foundry_legacy_stone_tools_guild_maintenance_desc: "An older way of working, kept from the $tools_guild$. It still runs on its old materials, but turns out less per level than the methods of this age."
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
@@ -68,3 +125,23 @@ evaluation:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
         input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
         output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+    pp_iron_foundry_legacy_bronze_tools_guild_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_iron_foundry_legacy_copper_tools_guild_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_iron_foundry_legacy_metalwork_workshop_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_iron_foundry_legacy_stone_tools_guild_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."

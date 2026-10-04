@@ -68,6 +68,28 @@ unique_production_methods = {
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
+    pp_distiller_manufactory_legacy_beer_liquor_workshop_maintenance = {
+        icon_type = goods
+        icon = beer
+        beer = 1.35
+        glass = 0.16
+        manual_labor = 0.37
+        produced = liquor
+        output = 1.5
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+    pp_distiller_manufactory_legacy_wine_liquor_workshop_maintenance = {
+        icon_type = goods
+        icon = wine
+        wine = 1.35
+        glass = 0.16
+        manual_labor = 0.37
+        produced = liquor
+        output = 1.5
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
 }
 unique_production_methods = {
     pp_distiller_manufactory_market_sales = {

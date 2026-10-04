@@ -11,9 +11,14 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
+    - pp_fine_cloth_mill_dyeing_maintenance
+    - pp_fine_cloth_mill_legacy_fur_trim_workshop_maintenance
+  - name: slot_1
+    methods:
     - pp_fine_cloth_mill_fine_cloth_mill_maintenance
     - pp_fine_cloth_mill_silk_cloth_mill_maintenance
-  - name: slot_1
+    - pp_fine_cloth_mill_legacy_wool_weavers_workshop_maintenance
+  - name: slot_2
     methods:
     - pp_fine_cloth_mill_market_sales
   possible_production_methods: []
@@ -32,21 +37,51 @@ building:
     obsolete = fine_cloth_manufactory
     build_time = mills_build_time
     unique_production_methods = {
+        pp_fine_cloth_mill_dyeing_maintenance = {
+            icon_type = goods
+            icon = dyes
+            dyes = 0.47
+            manual_labor = 0.079
+            produced = fine_cloth
+            output = 0.33
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+        pp_fine_cloth_mill_legacy_fur_trim_workshop_maintenance = {
+            icon_type = goods
+            icon = fur
+            fur = 0.5
+            manual_labor = 0.1
+            produced = fine_cloth
+            output = 0.19
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+    }
+    unique_production_methods = {
         pp_fine_cloth_mill_fine_cloth_mill_maintenance = {
             cloth = 6.96
-            dyes = 0.47
-            manual_labor = 0.95
+            manual_labor = 0.87
             produced = fine_cloth
-            output = 4.0
+            output = 3.67
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
         pp_fine_cloth_mill_silk_cloth_mill_maintenance = {
             silk = 5.22
-            dyes = 0.47
-            manual_labor = 0.95
+            manual_labor = 0.87
             produced = fine_cloth
-            output = 4.0
+            output = 3.67
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+        pp_fine_cloth_mill_legacy_wool_weavers_workshop_maintenance = {
+            icon_type = goods
+            icon = wool
+            wool = 3.31
+            manual_labor = 0.9
+            produced = fine_cloth
+            output = 1.55
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -69,12 +104,18 @@ building:
     increase_per_level_cost = 0.19
 localization:
   entries:
-    fine_cloth_mill_slot_0: Fine Cloth Mill Work
+    fine_cloth_mill_slot_0: Dyeing
+    pp_fine_cloth_mill_dyeing_maintenance: Fine Cloth Mill Dyeing
+    fine_cloth_mill_slot_1: Fine Cloth Mill Work
     pp_fine_cloth_mill_fine_cloth_mill_maintenance: Fine Cloth Mill Fine Cloth Mill Maintenance
     pp_fine_cloth_mill_silk_cloth_mill_maintenance: Fine Cloth Mill Silk Cloth Mill Maintenance
     pp_fine_cloth_mill_market_sales: Market Sales
     pp_fine_cloth_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    fine_cloth_mill_slot_1: Market
+    fine_cloth_mill_slot_2: Market
+    pp_fine_cloth_mill_legacy_fur_trim_workshop_maintenance: "$fur_trim_workshop_maintenance$ (Old Ways)"
+    pp_fine_cloth_mill_legacy_fur_trim_workshop_maintenance_desc: "An older way of working, kept from the $fine_cloth_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_fine_cloth_mill_legacy_wool_weavers_workshop_maintenance: "$wool_weavers_workshop_maintenance$ (Old Ways)"
+    pp_fine_cloth_mill_legacy_wool_weavers_workshop_maintenance_desc: "An older way of working, kept from the $fine_cloth_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
@@ -86,3 +127,13 @@ evaluation:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
         input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
         output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+    pp_fine_cloth_mill_legacy_fur_trim_workshop_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_fine_cloth_mill_legacy_wool_weavers_workshop_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."

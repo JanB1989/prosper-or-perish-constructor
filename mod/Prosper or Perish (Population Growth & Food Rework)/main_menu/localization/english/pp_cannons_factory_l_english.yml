@@ -1,9 +1,19 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:cannons_factory:localization
-  cannons_factory_slot_0: "Cannons Factory Work"
+  cannons_factory_slot_0: "Ammunition"
+  pp_cannons_factory_ammunition_maintenance: "Cannon Factory Ammunition"
+  cannons_factory_slot_1: "Cannons Factory Work"
   pp_cannons_factory_gun_factory_maintenance: "Cannons Factory Gun Factory Maintenance"
   pp_cannons_factory_market_sales: "Market Sales"
   pp_cannons_factory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  cannons_factory_slot_1: "Market"
+  cannons_factory_slot_2: "Market"
+  pp_cannons_factory_legacy_cannon_foundry_maintenance: "$cannon_foundry_maintenance$ (Old Ways)"
+  pp_cannons_factory_legacy_cannon_foundry_maintenance_desc: "An older way of working, kept from the $cannon_foundry$. It still runs on its old materials, but turns out less per level than the methods of this age."
+  pp_cannons_factory_legacy_cannon_workshop_ammunition_iron_maintenance: "$cannon_workshop_ammunition_iron_maintenance$ (Old Ways)"
+  pp_cannons_factory_legacy_cannon_workshop_ammunition_iron_maintenance_desc: "An older way of working, kept from the $cannon_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+  pp_cannons_factory_legacy_cannon_workshop_ammunition_stone_maintenance: "$cannon_workshop_ammunition_stone_maintenance$ (Old Ways)"
+  pp_cannons_factory_legacy_cannon_workshop_ammunition_stone_maintenance_desc: "An older way of working, kept from the $cannon_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+  pp_cannons_factory_legacy_cannon_workshop_iron_maintenance: "$cannon_workshop_iron_maintenance$ (Old Ways)"
+  pp_cannons_factory_legacy_cannon_workshop_iron_maintenance_desc: "An older way of working, kept from the $cannon_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
 # <<< eu5-building-pipeline:cannons_factory:localization

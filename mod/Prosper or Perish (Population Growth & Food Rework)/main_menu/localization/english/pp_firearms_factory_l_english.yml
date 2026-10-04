@@ -1,9 +1,19 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:firearms_factory:localization
-  firearms_factory_slot_0: "Firearms Factory Work"
+  firearms_factory_slot_0: "Ammunition"
+  pp_firearms_factory_ammunition_maintenance: "Firearms Factory Ammunition"
+  firearms_factory_slot_1: "Firearms Factory Work"
   pp_firearms_factory_firearms_factory_maintenance: "Firearms Factory Firearms Factory Maintenance"
   pp_firearms_factory_market_sales: "Market Sales"
   pp_firearms_factory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  firearms_factory_slot_1: "Market"
+  firearms_factory_slot_2: "Market"
+  pp_firearms_factory_legacy_firearms_manufactory_maintenance: "$firearms_manufactory_maintenance$ (Old Ways)"
+  pp_firearms_factory_legacy_firearms_manufactory_maintenance_desc: "An older way of working, kept from the $firearms_manufactory$. It still runs on its old materials, but turns out less per level than the methods of this age."
+  pp_firearms_factory_legacy_guns_workshop_ammunition_iron_maintenance: "$guns_workshop_ammunition_iron_maintenance$ (Old Ways)"
+  pp_firearms_factory_legacy_guns_workshop_ammunition_iron_maintenance_desc: "An older way of working, kept from the $guns_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+  pp_firearms_factory_legacy_guns_workshop_bronze_maintenance: "$guns_workshop_bronze_maintenance$ (Old Ways)"
+  pp_firearms_factory_legacy_guns_workshop_bronze_maintenance_desc: "An older way of working, kept from the $guns_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+  pp_firearms_factory_legacy_guns_workshop_iron_maintenance: "$guns_workshop_iron_maintenance$ (Old Ways)"
+  pp_firearms_factory_legacy_guns_workshop_iron_maintenance_desc: "An older way of working, kept from the $guns_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
 # <<< eu5-building-pipeline:firearms_factory:localization

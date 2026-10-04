@@ -14,14 +14,35 @@ megalopolis = yes
 obsolete = fine_cloth_manufactory
 build_time = mills_build_time
 unique_production_methods = {
+    pp_fine_cloth_mill_dyeing_maintenance = {
+        icon_type = goods
+        icon = dyes
+        dyes = 0.47
+        manual_labor = 0.079
+        produced = fine_cloth
+        output = 0.33
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_fine_cloth_mill_legacy_fur_trim_workshop_maintenance = {
+        icon_type = goods
+        icon = fur
+        fur = 0.5
+        manual_labor = 0.1
+        produced = fine_cloth
+        output = 0.19
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+}
+unique_production_methods = {
     pp_fine_cloth_mill_fine_cloth_mill_maintenance = {
         icon_type = goods
         icon = cloth
         cloth = 6.96
-        dyes = 0.47
-        manual_labor = 0.95
+        manual_labor = 0.87
         produced = fine_cloth
-        output = 4.0
+        output = 3.67
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -29,10 +50,19 @@ unique_production_methods = {
         icon_type = goods
         icon = silk
         silk = 5.22
-        dyes = 0.47
-        manual_labor = 0.95
+        manual_labor = 0.87
         produced = fine_cloth
-        output = 4.0
+        output = 3.67
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_fine_cloth_mill_legacy_wool_weavers_workshop_maintenance = {
+        icon_type = goods
+        icon = wool
+        wool = 3.31
+        manual_labor = 0.9
+        produced = fine_cloth
+        output = 1.55
         debug_max_profit = mills_profit_margin
         category = mills_input
     }

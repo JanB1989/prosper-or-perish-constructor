@@ -13,16 +13,61 @@ megalopolis = yes
 build_time = manufactory_build_time
 obsolete = cannon_workshop
 unique_production_methods = {
+    pp_cannon_foundry_ammunition_maintenance = {
+        icon_type = goods
+        icon = lead
+        lead = 0.45
+        saltpeter = 0.74
+        manual_labor = 0.19
+        produced = cannons
+        output = 0.65
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+    pp_cannon_foundry_legacy_cannon_workshop_ammunition_stone_maintenance = {
+        icon_type = goods
+        icon = stone
+        stone = 0.29
+        saltpeter = 0.29
+        manual_labor = 0.099
+        produced = cannons
+        output = 0.24
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+    pp_cannon_foundry_legacy_cannon_workshop_ammunition_iron_maintenance = {
+        icon_type = goods
+        icon = iron
+        iron = 0.33
+        saltpeter = 0.27
+        manual_labor = 0.24
+        produced = cannons
+        output = 0.49
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+}
+unique_production_methods = {
     pp_cannon_foundry_cannon_foundry_maintenance = {
         icon_type = building_type
         icon = cannon_foundry
-        tools = 0.66
-        lead = 0.5
-        saltpeter = 0.83
-        copper = 0.83
-        manual_labor = 0.57
+        tools = 0.6
+        copper = 0.74
+        tin = 0.37
+        manual_labor = 0.38
         produced = cannons
-        output = 2.0
+        output = 1.35
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+    pp_cannon_foundry_legacy_cannon_workshop_iron_maintenance = {
+        icon_type = goods
+        icon = iron
+        iron = 0.92
+        tools = 0.1
+        manual_labor = 0.41
+        produced = cannons
+        output = 1.01
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }

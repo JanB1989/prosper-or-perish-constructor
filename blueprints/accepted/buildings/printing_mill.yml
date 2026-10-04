@@ -13,6 +13,8 @@ building:
     methods:
     - pp_printing_mill_printing_mill_maintenance
     - pp_printing_mill_printing_mill_leather_maintenance
+    - pp_printing_mill_legacy_scriptorium_leather_maintenance
+    - pp_printing_mill_legacy_scriptorium_maintenance
   - name: slot_1
     methods:
     - pp_printing_mill_market_sales
@@ -52,6 +54,30 @@ building:
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
+        pp_printing_mill_legacy_scriptorium_leather_maintenance = {
+            icon_type = goods
+            icon = leather
+            dyes = 0.28
+            paper = 1.11
+            leather = 0.28
+            manual_labor = 0.74
+            produced = books
+            output = 1.69
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+        pp_printing_mill_legacy_scriptorium_maintenance = {
+            icon_type = building_type
+            icon = scriptorium
+            dyes = 0.28
+            paper = 1.08
+            lumber = 0.55
+            manual_labor = 0.72
+            produced = books
+            output = 1.69
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
     }
     unique_production_methods = {
         pp_printing_mill_market_sales = {
@@ -74,6 +100,10 @@ localization:
     pp_printing_mill_market_sales: Market Sales
     pp_printing_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     printing_mill_slot_1: Market
+    pp_printing_mill_legacy_scriptorium_leather_maintenance: "$scriptorium_leather_maintenance$ (Old Ways)"
+    pp_printing_mill_legacy_scriptorium_leather_maintenance_desc: "An older way of working, kept from the $scriptorium$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_printing_mill_legacy_scriptorium_maintenance: "$scriptorium_maintenance$ (Old Ways)"
+    pp_printing_mill_legacy_scriptorium_maintenance_desc: "An older way of working, kept from the $scriptorium$. It still runs on its old materials, but turns out less per level than the methods of this age."
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
@@ -85,3 +115,13 @@ evaluation:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
         input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
         output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+    pp_printing_mill_legacy_scriptorium_leather_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_printing_mill_legacy_scriptorium_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."

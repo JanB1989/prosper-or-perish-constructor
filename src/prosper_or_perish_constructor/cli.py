@@ -288,6 +288,23 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="check: also list every method apply would change.",
     )
+    legacy = _add_command(
+        subcommands,
+        "legacy",
+        "Carry the older tiers' recipes up each manufacturing line ([legacy_methods.lines]) as lower-throughput legacy methods.",
+        _legacy,
+    )
+    legacy.add_argument(
+        "action",
+        choices=("apply", "check"),
+        help="apply writes the legacy methods into blueprints/accepted (after ppc labour apply, before ppc gate apply); "
+        "check lists blueprints apply would change and problems.",
+    )
+    legacy.add_argument(
+        "--verbose",
+        action="store_true",
+        help="also print every legacy method with its origin, share, output and margin.",
+    )
     age_food = _add_command(
         subcommands,
         "age-food",
@@ -1221,6 +1238,54 @@ def _install_good_icons(repo: Path, project: Path, mod_root: Path) -> None:
     print(f"Internal good icons: {len(result.written)} DDS written{missing}.", flush=True)
 
 
+def _legacy(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("legacy does not accept extra arguments.")
+    from prosper_or_perish_constructor import legacy_methods
+
+    prices = legacy_methods.load_prices(repo, project)
+    result = legacy_methods.apply(repo, project, prices, write=args.action == "apply")
+    for problem in result.problems:
+        print(problem)
+    if args.verbose:
+        for method in result.methods:
+            cost = method.cost(prices)
+            print(
+                f"{method.building}: {method.name} from {method.recipe.origin} ({method.recipe.steps} up) share "
+                f"{method.share:.3f} output {method.output:g} {method.produced} margin "
+                f"{method.value(prices) / cost if cost else 0:.2f}"
+            )
+    summary = f"legacy methods: {len(result.methods)} in {len({m.building for m in result.methods})} buildings"
+    if args.action == "check":
+        for plan in result.changed:
+            print(f"{plan.tier.path.name}: legacy methods differ (run ppc legacy apply)")
+        print(f"{summary}, {len(result.changed)} blueprints to write, {len(result.problems)} problems")
+        return 1 if result.problems or result.changed else 0
+    if result.problems:
+        print(f"legacy methods: {len(result.problems)} problems, nothing written")
+        return 1
+    print(f"{summary}; {result.files_changed} blueprints written; report {legacy_methods.REPORT_RELATIVE_PATH}.")
+    return 0
+
+
+def _print_legacy_check(repo: Path, project: Path) -> None:
+    """Build-time summary; problems are printed, not fatal (run ppc legacy apply)."""
+    from prosper_or_perish_constructor import legacy_methods
+
+    try:
+        result = legacy_methods.apply(repo, project, write=False)
+    except Exception as exc:  # noqa: BLE001 - the build must not fail on the advisory check
+        print(f"Legacy methods check skipped: {exc}", flush=True)
+        return
+    for problem in result.problems:
+        print(f"Legacy methods: {problem}", flush=True)
+    print(
+        f"Legacy methods: {len(result.methods)} methods, {len(result.changed)} blueprints off "
+        f"(run ppc legacy apply), {len(result.problems)} problems.",
+        flush=True,
+    )
+
+
 def _print_logistics_check(repo: Path, project: Path) -> None:
     """Build-time summary; problems are printed, not fatal (run ppc logistics apply)."""
     from prosper_or_perish_constructor import logistics
@@ -1280,6 +1345,7 @@ def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: 
     _finalize_constructor_mod(repo, project)
     _print_age_food_check(repo, project)
     _print_labour_check(repo, project)
+    _print_legacy_check(repo, project)
     _print_logistics_check(repo, project)
     _print_gate_check(repo, project)
     _print_food_sim(repo)

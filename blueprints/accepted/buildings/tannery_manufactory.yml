@@ -3,6 +3,7 @@ tag: tannery_manufactory
 footprint: manufactory
 labour:
   class: craft_absolutism
+  keep_goods: [tar]
 gate_method: pp_tannery_manufactory_market_sales
 building:
   key: tannery_manufactory

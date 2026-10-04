@@ -26,6 +26,42 @@ unique_production_methods = {
         output = 4.0
         debug_max_profit = mills_profit_margin
     }
+    pp_weapon_factory_legacy_pre_columbian_weapon_smith_maintenance = {
+        icon_type = goods
+        icon = stone
+        lumber = 0.11
+        stone = 1.51
+        manual_labor = 0.28
+        produced = weaponry
+        output = 0.68
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_weapon_factory_legacy_weapon_smith_maintenance = {
+        icon_type = goods
+        icon = weaponry
+        lumber = 0.4
+        coal = 0.48
+        tools = 0.8
+        manual_labor = 0.66
+        produced = weaponry
+        output = 1.69
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_weapon_factory_legacy_weapon_manufactory_maintenance = {
+        icon_type = building_type
+        icon = weapon_manufactory
+        lumber = 0.89
+        coal = 0.89
+        iron = 0.71
+        tools = 0.71
+        manual_labor = 0.68
+        produced = weaponry
+        output = 3
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
 }
 unique_production_methods = {
     pp_weapon_factory_market_sales = {

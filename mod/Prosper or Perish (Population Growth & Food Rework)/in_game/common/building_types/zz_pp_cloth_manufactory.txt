@@ -46,6 +46,36 @@ unique_production_methods = {
         category = guild_input
         debug_max_profit = manufactory_profit_margin
     }
+    pp_cloth_manufactory_legacy_fiber_crops_cloth_workshop_maintenance = {
+        icon_type = goods
+        icon = fiber_crops
+        fiber_crops = 1.58
+        manual_labor = 0.34
+        produced = cloth
+        output = 1.23
+        debug_max_profit = manufactory_profit_margin
+        category = guild_input
+    }
+    pp_cloth_manufactory_legacy_cotton_cloth_workshop_maintenance = {
+        icon_type = goods
+        icon = cotton
+        cotton = 1.28
+        manual_labor = 0.44
+        produced = cloth
+        output = 1.5
+        debug_max_profit = manufactory_profit_margin
+        category = guild_input
+    }
+    pp_cloth_manufactory_legacy_wool_cloth_workshop_maintenance = {
+        icon_type = goods
+        icon = wool
+        wool = 1.54
+        manual_labor = 0.44
+        produced = cloth
+        output = 1.5
+        debug_max_profit = manufactory_profit_margin
+        category = guild_input
+    }
 }
 unique_production_methods = {
     pp_cloth_manufactory_market_sales = {

@@ -32,7 +32,9 @@ is listed last in it. Everything else is ordered by importance, bottom = most im
 - slots: base slots at the top (every producing method pays only ``base_inputs``, e.g. ``*_base``), then the other
   slots by their highest output value at base prices, the dynamic slots (a method produces one of ``dynamic_goods``, the
   goods whose output follows the province store: Province Food and the Grange's Surplus Sales) at the bottom, the flagged slot last;
-- methods: output-less methods first (idle choices never gate), then by output value, the flagged method last.
+- methods: output-less methods first (idle choices never gate), then by output value, legacy methods (older recipes
+  carried up an upgrade line, ``legacy_methods.py``) after the building's own ones, so a slot's first method (what new
+  buildings run) is never an old recipe; the flagged method last.
 
 Ties keep the file order. Methods never move between slots, amounts never change (the leg is written whole). The slot labels
 (``<building>_slot_<n>``), the ``production_method_slots`` list and ``# slot <n>`` comments follow their slot. A
@@ -247,8 +249,8 @@ def slot_key(slot: Slot, config: GateConfig, prices: Mapping[str, float]) -> tup
     return slot_class(slot, config), max((m.value(prices) for m in slot.methods), default=0.0)
 
 
-def method_key(method: Method, prices: Mapping[str, float]) -> tuple[int, float]:
-    return (1 if method.has_output else 0), method.value(prices)
+def method_key(method: Method, prices: Mapping[str, float]) -> tuple[int, int, float]:
+    return (1 if method.has_output else 0), (1 if is_legacy(method.name) else 0), method.value(prices)
 
 
 def suggest_gate(slots: Sequence[Slot], config: GateConfig, prices: Mapping[str, float]) -> str | None:
@@ -280,6 +282,19 @@ def leg_name(building: str) -> str:
 
 def is_leg(method: str) -> bool:
     return method.startswith("pp_") and method.endswith(LEG_SUFFIX)
+
+
+LEGACY_INFIX = "_legacy_"
+
+
+def legacy_name(building: str, stem: str) -> str:
+    """The name of an older recipe (``stem``: the origin method without its ``pp_<building>_`` prefix) in ``building``."""
+    return f"pp_{building}{LEGACY_INFIX}{stem}"
+
+
+def is_legacy(method: str) -> bool:
+    """A legacy method (``legacy_methods.py``): an older recipe carried up an upgrade line at lower throughput."""
+    return method.startswith("pp_") and LEGACY_INFIX in method
 
 
 def without_legs(slots: Sequence[Slot]) -> list[Slot]:

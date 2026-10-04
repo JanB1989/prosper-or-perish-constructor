@@ -3,6 +3,7 @@ tag: tanning_workshop
 footprint: urban_workshop
 labour:
   class: craft_reformation
+  keep_goods: [tar]
 gate_method: pp_tanning_workshop_market_sales
 building:
   key: tanning_workshop
@@ -31,9 +32,10 @@ building:
     build_time = workshop_build_time
     unique_production_methods = {
         pp_tanning_workshop_leather_livestock_workshop_maintenance = {
-            livestock = 1.25
-            sand = 0.48
-            tools = 0.21
+            livestock = 1.19
+            sand = 0.46
+            tar = 0.067
+            tools = 0.2
             manual_labor = 0.3
             produced = leather
             output = 1.1
@@ -41,9 +43,10 @@ building:
             category = workshop_input
         }
         pp_tanning_workshop_leather_wildgame_workshop_maintenance = {
-            wild_game = 1.89
-            sand = 0.47
-            tools = 0.2
+            wild_game = 1.8
+            sand = 0.45
+            tar = 0.065
+            tools = 0.19
             manual_labor = 0.32
             produced = leather
             output = 1.1

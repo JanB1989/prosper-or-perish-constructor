@@ -33,6 +33,17 @@ unique_production_methods = {
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
+    pp_paper_workshop_legacy_paper_guild_leather_maintenance = {
+        icon_type = goods
+        icon = leather
+        leather = 0.13
+        lumber = 0.13
+        manual_labor = 0.095
+        produced = paper
+        output = 0.41
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
 }
 unique_production_methods = {
     pp_paper_workshop_market_sales = {

@@ -14,15 +14,71 @@ megalopolis = yes
 build_time = mills_build_time
 obsolete = cannon_foundry
 unique_production_methods = {
+    pp_cannons_factory_ammunition_maintenance = {
+        icon_type = goods
+        icon = lead
+        lead = 0.5
+        saltpeter = 0.83
+        manual_labor = 0.11
+        produced = cannons
+        output = 0.7
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_cannons_factory_legacy_cannon_workshop_ammunition_stone_maintenance = {
+        icon_type = goods
+        icon = stone
+        stone = 0.23
+        saltpeter = 0.23
+        manual_labor = 0.08
+        produced = cannons
+        output = 0.2
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_cannons_factory_legacy_cannon_workshop_ammunition_iron_maintenance = {
+        icon_type = goods
+        icon = iron
+        iron = 0.26
+        saltpeter = 0.22
+        manual_labor = 0.19
+        produced = cannons
+        output = 0.39
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+}
+unique_production_methods = {
     pp_cannons_factory_gun_factory_maintenance = {
         icon_type = building_type
         icon = cannons_factory
         steel = 2.49
-        lead = 0.5
-        saltpeter = 0.83
-        manual_labor = 0.6
+        manual_labor = 0.49
         produced = cannons
-        output = 4.0
+        output = 3.3
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_cannons_factory_legacy_cannon_workshop_iron_maintenance = {
+        icon_type = goods
+        icon = iron
+        iron = 1.69
+        tools = 0.19
+        manual_labor = 0.75
+        produced = cannons
+        output = 1.86
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_cannons_factory_legacy_cannon_foundry_maintenance = {
+        icon_type = building_type
+        icon = cannon_foundry
+        tools = 1.1
+        copper = 1.36
+        tin = 0.68
+        manual_labor = 0.7
+        produced = cannons
+        output = 2.47
         debug_max_profit = mills_profit_margin
         category = mills_input
     }

@@ -6,6 +6,8 @@ Each enabled blueprint with producing methods carries a ``labour`` tag::
       class: craft_medieval          # default for the building's producing methods
       methods:                       # per-method overrides (optional)
         pp_brewery_base: base
+      keep_goods: [tar]              # goods never dropped, however small (optional; keeps a recipe the same along
+                                     # an upgrade line)
 
 ``[production_labour.classes]`` in constructor.toml maps a class to
 
@@ -21,6 +23,7 @@ takes the class share and the remaining goods scale to fill the rest. Amounts ar
 labour absorbs the goods' rounding. Zero-amount goods lines are left alone.
 A method already within ``tolerance`` of its class is not touched, so apply is stable. ``ppc labour check`` reports
 untagged methods, unknown classes and methods off their class; ``ppc build`` prints the check.
+Legacy methods (``legacy_methods.py``) are scaled copies of their origin method, labour included, so this pass skips them.
 """
 
 from __future__ import annotations
@@ -38,7 +41,7 @@ from typing import Any
 from eu5gameparser.clausewitz.parser import parse_text
 from eu5gameparser.clausewitz.syntax import CList
 from prosper_or_perish_constructor import yaml_io
-from prosper_or_perish_constructor.production_gate import is_leg
+from prosper_or_perish_constructor.production_gate import is_leg, is_legacy
 
 CONFIG_SECTION = "production_labour"
 KEEP = "keep"
@@ -214,6 +217,16 @@ def blueprint_tag(path: Path) -> tuple[str | None, dict[str, str]]:
     return (str(tag["class"]) if tag.get("class") else None), {str(k): str(v) for k, v in methods.items()}
 
 
+def blueprint_keep_goods(path: Path) -> frozenset[str]:
+    """Goods of the blueprint's ``labour.keep_goods``: never dropped from its methods."""
+    tag = (yaml_io.safe_load(_read(path)) or {}).get("labour")
+    if not isinstance(tag, dict) or not tag.get("keep_goods"):
+        return frozenset()
+    if not isinstance(tag["keep_goods"], list):
+        raise ValueError(f"{path.name}: labour.keep_goods must be a list of goods")
+    return frozenset(str(g) for g in tag["keep_goods"])
+
+
 def is_labour_method(method: Method, good: str) -> bool:
     """Producing methods, and any method that already pays labour. Methods that produce labour (labour yards) are out."""
     if method.produced == good:
@@ -249,7 +262,13 @@ def _on_target(current: float, target: float, tolerance: float) -> bool:
     return abs(current - target) <= max(tolerance, float(_step(max(target, 1e-9))) + 1e-9)
 
 
-def plan_method(method: Method, labour_class: LabourClass, config: LabourConfig, prices: dict[str, float]) -> Plan:
+def plan_method(
+    method: Method,
+    labour_class: LabourClass,
+    config: LabourConfig,
+    prices: dict[str, float],
+    keep: frozenset[str] = frozenset(),
+) -> Plan:
     good = config.good
     labour_price = prices.get(good, 5.0) * config.price_floor_share
     goods = {g: a for g, a in method.inputs.items() if g != good and a > 0}
@@ -289,7 +308,7 @@ def plan_method(method: Method, labour_class: LabourClass, config: LabourConfig,
     if cost <= 0:
         plan.problem = f"class {labour_class.name} needs goods inputs (use an output_share class)"
         return plan
-    kept = _kept_goods(goods, prices, config, labour_class)
+    kept = _kept_goods(goods, prices, config, labour_class, keep)
     dropped = sorted(set(goods) - set(kept))
     if not dropped and _on_target(labour, share * cost / labour_price, config.tolerance * cost / labour_price):
         return plan
@@ -311,10 +330,15 @@ def plan_method(method: Method, labour_class: LabourClass, config: LabourConfig,
 
 
 def _kept_goods(
-    goods: dict[str, float], prices: dict[str, float], config: LabourConfig, labour_class: LabourClass | None = None
+    goods: dict[str, float],
+    prices: dict[str, float],
+    config: LabourConfig,
+    labour_class: LabourClass | None = None,
+    keep: frozenset[str] = frozenset(),
 ) -> list[str]:
     """Goods that stay: the dearest always, the rest while worth ``min_good_share`` of the goods cost (a ratio that
-    proportional scaling leaves alone, so apply is stable), at most ``max_goods`` (a class may override both)."""
+    proportional scaling leaves alone, so apply is stable), at most ``max_goods`` (a class may override both). Goods in
+    ``keep`` (the blueprint's ``labour.keep_goods``) always stay, on top of that limit."""
     min_share = config.min_good_share
     max_goods = config.max_goods
     if labour_class is not None and labour_class.min_good_share is not None:
@@ -324,7 +348,8 @@ def _kept_goods(
     goods_cost = sum(a * prices[g] for g, a in goods.items())
     ranked = sorted(goods, key=lambda g: goods[g] * prices[g], reverse=True)
     kept = [g for i, g in enumerate(ranked) if i == 0 or goods[g] * prices[g] >= min_share * goods_cost]
-    return kept[: max(max_goods, 1)]
+    kept = kept[: max(max_goods, 1)]
+    return kept + [g for g in ranked if g in keep and g not in kept]
 
 
 def plan_all(repo: Path, config: LabourConfig, prices: dict[str, float]) -> LabourResult:
@@ -335,16 +360,21 @@ def plan_all(repo: Path, config: LabourConfig, prices: dict[str, float]) -> Labo
         if not path.is_file():
             continue
         # the production gate leg is a technical method: its cost is a floor-pinned dummy, never labour; the logistics
-        # network method has no inputs at all, so its slot always counts as supplied (logistics.py)
+        # network method has no inputs at all, so its slot always counts as supplied (logistics.py); a legacy method is a
+        # scaled copy of its origin method, labour included (legacy_methods.py)
         methods = [
             m
             for m in blueprint_methods(path)
-            if is_labour_method(m, config.good) and not is_leg(m.name) and not is_network_method(m.name)
+            if is_labour_method(m, config.good)
+            and not is_leg(m.name)
+            and not is_network_method(m.name)
+            and not is_legacy(m.name)
         ]
         if not methods:
             continue
         try:
             default, overrides = blueprint_tag(path)
+            keep = blueprint_keep_goods(path)
         except ValueError as exc:
             result.problems.append(str(exc))
             continue
@@ -359,7 +389,7 @@ def plan_all(repo: Path, config: LabourConfig, prices: dict[str, float]) -> Labo
             if labour_class is None:
                 result.problems.append(f"{path.name}: {method.name}: labour class {name!r} is not in [{CONFIG_SECTION}.classes]")
                 continue
-            plan = plan_method(method, labour_class, config, prices)
+            plan = plan_method(method, labour_class, config, prices, keep)
             if plan.problem:
                 result.problems.append(f"{path.name}: {method.name}: {plan.problem}")
             result.plans.append(plan)

@@ -34,6 +34,16 @@ unique_production_methods = {
         category = guild_input
         debug_max_profit = manufactory_profit_margin
     }
+    pp_fine_cloth_manufactory_legacy_fur_trim_workshop_maintenance = {
+        icon_type = goods
+        icon = fur
+        fur = 0.76
+        manual_labor = 0.16
+        produced = fine_cloth
+        output = 0.3
+        debug_max_profit = manufactory_profit_margin
+        category = guild_input
+    }
 }
 unique_production_methods = {
     pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance = {
@@ -53,6 +63,16 @@ unique_production_methods = {
         cloth = 3.67
         manual_labor = 0.84
         output = 2.0
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+    pp_fine_cloth_manufactory_legacy_wool_weavers_workshop_maintenance = {
+        icon_type = goods
+        icon = wool
+        wool = 2.4
+        manual_labor = 0.65
+        produced = fine_cloth
+        output = 1.12
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }

@@ -14,6 +14,9 @@ building:
     - pp_textile_mill_wool_mill_maintenance
     - pp_textile_mill_fiber_crops_mill_maintenance
     - pp_textile_mill_cotton_mill_maintenance
+    - pp_textile_mill_legacy_fiber_crops_cloth_workshop_maintenance
+    - pp_textile_mill_legacy_cotton_cloth_workshop_maintenance
+    - pp_textile_mill_legacy_wool_cloth_workshop_maintenance
   - name: slot_1
     methods:
     - pp_textile_mill_market_sales
@@ -60,6 +63,36 @@ building:
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
+        pp_textile_mill_legacy_fiber_crops_cloth_workshop_maintenance = {
+            icon_type = goods
+            icon = fiber_crops
+            fiber_crops = 1.81
+            manual_labor = 0.39
+            produced = cloth
+            output = 1.38
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+        pp_textile_mill_legacy_cotton_cloth_workshop_maintenance = {
+            icon_type = goods
+            icon = cotton
+            cotton = 1.47
+            manual_labor = 0.5
+            produced = cloth
+            output = 1.69
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+        pp_textile_mill_legacy_wool_cloth_workshop_maintenance = {
+            icon_type = goods
+            icon = wool
+            wool = 1.76
+            manual_labor = 0.5
+            produced = cloth
+            output = 1.69
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
     }
     unique_production_methods = {
         pp_textile_mill_market_sales = {
@@ -86,6 +119,12 @@ localization:
     pp_textile_mill_market_sales: Market Sales
     pp_textile_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     textile_mill_slot_1: Market
+    pp_textile_mill_legacy_cotton_cloth_workshop_maintenance: "$cotton_cloth_workshop_maintenance$ (Old Ways)"
+    pp_textile_mill_legacy_cotton_cloth_workshop_maintenance_desc: "An older way of working, kept from the $cloth_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_textile_mill_legacy_fiber_crops_cloth_workshop_maintenance: "$fiber_crops_cloth_workshop_maintenance$ (Old Ways)"
+    pp_textile_mill_legacy_fiber_crops_cloth_workshop_maintenance_desc: "An older way of working, kept from the $cloth_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_textile_mill_legacy_wool_cloth_workshop_maintenance: "$wool_cloth_workshop_maintenance$ (Old Ways)"
+    pp_textile_mill_legacy_wool_cloth_workshop_maintenance_desc: "An older way of working, kept from the $cloth_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
@@ -97,3 +136,18 @@ evaluation:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
         input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
         output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+    pp_textile_mill_legacy_cotton_cloth_workshop_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_textile_mill_legacy_fiber_crops_cloth_workshop_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_textile_mill_legacy_wool_cloth_workshop_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."

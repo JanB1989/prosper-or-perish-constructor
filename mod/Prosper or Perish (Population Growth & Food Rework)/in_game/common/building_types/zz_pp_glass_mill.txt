@@ -26,6 +26,31 @@ unique_production_methods = {
         debug_max_profit = mills_profit_margin
         category = guild_input
     }
+    pp_glass_mill_legacy_glass_guild_maintenance = {
+        icon_type = goods
+        icon = glass
+        lumber = 0.32
+        sand = 1.58
+        tools = 0.61
+        manual_labor = 0.52
+        produced = glass
+        output = 1.27
+        debug_max_profit = mills_profit_margin
+        category = guild_input
+    }
+    pp_glass_mill_legacy_metal_glass_workshop_maintenance = {
+        icon_type = building_type
+        icon = glass_workshop
+        lumber = 0.76
+        sand = 2.4
+        tools = 0.97
+        lead = 0.22
+        manual_labor = 0.71
+        produced = glass
+        output = 2.25
+        debug_max_profit = mills_profit_margin
+        category = guild_input
+    }
 }
 unique_production_methods = {
     pp_glass_mill_market_sales = {

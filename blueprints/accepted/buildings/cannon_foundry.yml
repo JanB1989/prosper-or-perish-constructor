@@ -11,8 +11,14 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
-    - pp_cannon_foundry_cannon_foundry_maintenance
+    - pp_cannon_foundry_ammunition_maintenance
+    - pp_cannon_foundry_legacy_cannon_workshop_ammunition_stone_maintenance
+    - pp_cannon_foundry_legacy_cannon_workshop_ammunition_iron_maintenance
   - name: slot_1
+    methods:
+    - pp_cannon_foundry_cannon_foundry_maintenance
+    - pp_cannon_foundry_legacy_cannon_workshop_iron_maintenance
+  - name: slot_2
     methods:
     - pp_cannon_foundry_market_sales
   possible_production_methods: []
@@ -30,14 +36,59 @@ building:
     build_time = manufactory_build_time
     obsolete = cannon_workshop
     unique_production_methods = {
-        pp_cannon_foundry_cannon_foundry_maintenance = {
-            tools = 0.66
-            lead = 0.5
-            saltpeter = 0.83
-            copper = 0.83
-            manual_labor = 0.57
+        pp_cannon_foundry_ammunition_maintenance = {
+            icon_type = goods
+            icon = lead
+            lead = 0.45
+            saltpeter = 0.74
+            manual_labor = 0.19
             produced = cannons
-            output = 2.0
+            output = 0.65
+            debug_max_profit = manufactory_profit_margin
+            category = manufactory_input
+        }
+        pp_cannon_foundry_legacy_cannon_workshop_ammunition_stone_maintenance = {
+            icon_type = goods
+            icon = stone
+            stone = 0.29
+            saltpeter = 0.29
+            manual_labor = 0.099
+            produced = cannons
+            output = 0.24
+            debug_max_profit = manufactory_profit_margin
+            category = manufactory_input
+        }
+        pp_cannon_foundry_legacy_cannon_workshop_ammunition_iron_maintenance = {
+            icon_type = goods
+            icon = iron
+            iron = 0.33
+            saltpeter = 0.27
+            manual_labor = 0.24
+            produced = cannons
+            output = 0.49
+            debug_max_profit = manufactory_profit_margin
+            category = manufactory_input
+        }
+    }
+    unique_production_methods = {
+        pp_cannon_foundry_cannon_foundry_maintenance = {
+            tools = 0.6
+            copper = 0.74
+            tin = 0.37
+            manual_labor = 0.38
+            produced = cannons
+            output = 1.35
+            debug_max_profit = manufactory_profit_margin
+            category = manufactory_input
+        }
+        pp_cannon_foundry_legacy_cannon_workshop_iron_maintenance = {
+            icon_type = goods
+            icon = iron
+            iron = 0.92
+            tools = 0.1
+            manual_labor = 0.41
+            produced = cannons
+            output = 1.01
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -57,11 +108,19 @@ building:
     increase_per_level_cost = 0.25
 localization:
   entries:
-    cannon_foundry_slot_0: Cannon Foundry Work
+    cannon_foundry_slot_0: Ammunition
+    pp_cannon_foundry_ammunition_maintenance: Cannon Foundry Ammunition
+    cannon_foundry_slot_1: Cannon Foundry Work
     pp_cannon_foundry_cannon_foundry_maintenance: Cannon Foundry Cannon Foundry Maintenance
     pp_cannon_foundry_market_sales: Market Sales
     pp_cannon_foundry_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    cannon_foundry_slot_1: Market
+    cannon_foundry_slot_2: Market
+    pp_cannon_foundry_legacy_cannon_workshop_ammunition_iron_maintenance: "$cannon_workshop_ammunition_iron_maintenance$ (Old Ways)"
+    pp_cannon_foundry_legacy_cannon_workshop_ammunition_iron_maintenance_desc: "An older way of working, kept from the $cannon_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_cannon_foundry_legacy_cannon_workshop_ammunition_stone_maintenance: "$cannon_workshop_ammunition_stone_maintenance$ (Old Ways)"
+    pp_cannon_foundry_legacy_cannon_workshop_ammunition_stone_maintenance_desc: "An older way of working, kept from the $cannon_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_cannon_foundry_legacy_cannon_workshop_iron_maintenance: "$cannon_workshop_iron_maintenance$ (Old Ways)"
+    pp_cannon_foundry_legacy_cannon_workshop_iron_maintenance_desc: "An older way of working, kept from the $cannon_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
@@ -73,3 +132,18 @@ evaluation:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
         input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
         output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+    pp_cannon_foundry_legacy_cannon_workshop_ammunition_iron_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_cannon_foundry_legacy_cannon_workshop_ammunition_stone_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_cannon_foundry_legacy_cannon_workshop_iron_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."

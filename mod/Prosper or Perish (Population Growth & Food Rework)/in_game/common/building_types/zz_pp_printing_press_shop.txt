@@ -37,6 +37,30 @@ unique_production_methods = {
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
+    pp_printing_press_shop_legacy_scriptorium_leather_maintenance = {
+        icon_type = goods
+        icon = leather
+        dyes = 0.12
+        paper = 0.47
+        leather = 0.12
+        manual_labor = 0.31
+        produced = books
+        output = 0.75
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_printing_press_shop_legacy_scriptorium_maintenance = {
+        icon_type = building_type
+        icon = scriptorium
+        dyes = 0.12
+        paper = 0.45
+        lumber = 0.23
+        manual_labor = 0.3
+        produced = books
+        output = 0.75
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
 }
 unique_production_methods = {
     pp_printing_press_shop_market_sales = {

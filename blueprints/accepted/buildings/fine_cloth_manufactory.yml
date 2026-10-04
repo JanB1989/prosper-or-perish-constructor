@@ -13,10 +13,12 @@ building:
     methods:
     - pp_fine_cloth_manufactory_standard_cloth_manufactory_maintenance
     - pp_fine_cloth_manufactory_alum_fine_cloth_manufactory_maintenance
+    - pp_fine_cloth_manufactory_legacy_fur_trim_workshop_maintenance
   - name: slot_1
     methods:
     - pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance
     - pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance
+    - pp_fine_cloth_manufactory_legacy_wool_weavers_workshop_maintenance
   - name: slot_2
     methods:
     - pp_fine_cloth_manufactory_market_sales
@@ -52,6 +54,16 @@ building:
             category = guild_input
             debug_max_profit = manufactory_profit_margin
         }
+        pp_fine_cloth_manufactory_legacy_fur_trim_workshop_maintenance = {
+            icon_type = goods
+            icon = fur
+            fur = 0.76
+            manual_labor = 0.16
+            produced = fine_cloth
+            output = 0.3
+            debug_max_profit = manufactory_profit_margin
+            category = guild_input
+        }
     }
     unique_production_methods = {
         pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance = {
@@ -67,6 +79,16 @@ building:
             cloth = 3.67
             manual_labor = 0.84
             output = 2.0
+            debug_max_profit = manufactory_profit_margin
+            category = manufactory_input
+        }
+        pp_fine_cloth_manufactory_legacy_wool_weavers_workshop_maintenance = {
+            icon_type = goods
+            icon = wool
+            wool = 2.4
+            manual_labor = 0.65
+            produced = fine_cloth
+            output = 1.12
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -95,6 +117,10 @@ localization:
     pp_fine_cloth_manufactory_market_sales: Market Sales
     pp_fine_cloth_manufactory_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     fine_cloth_manufactory_slot_2: Market
+    pp_fine_cloth_manufactory_legacy_fur_trim_workshop_maintenance: "$fur_trim_workshop_maintenance$ (Old Ways)"
+    pp_fine_cloth_manufactory_legacy_fur_trim_workshop_maintenance_desc: "An older way of working, kept from the $fine_cloth_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_fine_cloth_manufactory_legacy_wool_weavers_workshop_maintenance: "$wool_weavers_workshop_maintenance$ (Old Ways)"
+    pp_fine_cloth_manufactory_legacy_wool_weavers_workshop_maintenance_desc: "An older way of working, kept from the $fine_cloth_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
@@ -106,3 +132,13 @@ evaluation:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
         input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
         output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+    pp_fine_cloth_manufactory_legacy_fur_trim_workshop_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_fine_cloth_manufactory_legacy_wool_weavers_workshop_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."

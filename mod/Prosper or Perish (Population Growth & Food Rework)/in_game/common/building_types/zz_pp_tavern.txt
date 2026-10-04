@@ -74,6 +74,9 @@ modifier = {
   # Grange in the same location away, so a Grange and a Tavern never pass the same food round in a circle
   # (they could in a country with high production efficiency, where both would pay at the same store)
   local_province_food_sales_output_modifier = -5.0
+  # victuals keep: the food it brings in is packed, so a little less food spoils in store (as the Cookshop,
+  # 2026-10-04, Jan: towns hold smaller stores because their surplus is thin, the Tavern lets them keep more)
+  local_food_preservation_efficiency_modifier = 0.04
   # inns quartered and fed marching troops
   local_supply_limit_modifier = 0.01
 }

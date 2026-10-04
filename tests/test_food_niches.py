@@ -40,6 +40,13 @@ def test_old_building_keys_are_gone_from_the_mod() -> None:
     assert offenders == []
 
 
+def test_the_tavern_keeps_food_from_spoiling_like_the_cookshop() -> None:
+    # 2026-10-04 (Jan): victuals do not rot, so a serving Tavern cuts store decay as a Cookshop does (staffing-scaled)
+    text = (BLUEPRINTS / "tavern.yml").read_text(encoding="utf-8-sig")
+    modifier = text.split("    modifier = {", 1)[1].split("}", 1)[0]
+    assert "local_food_preservation_efficiency_modifier = 0.04" in modifier
+
+
 def test_no_blueprint_sells_victuals_as_a_negative_input() -> None:
     enabled = [p for p in BLUEPRINTS.glob("*.yml") if p.stem != "dummy_victuals_producer"]   # disabled experiment
     offenders = [p.name for p in enabled if re.search(r"^\s*victuals = -", p.read_text(encoding="utf-8-sig"), re.M)]

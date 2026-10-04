@@ -256,6 +256,7 @@ TRY_INJECT:market_center = {
 	# maximum_stockpile_capacity = 250
 	# local_food_capacity = 100000
 	free_building_levels = 5
+	local_market_access = 10   # Jan 2026-10-05: market centres get full access
 }
 
 TRY_INJECT:location_template_natural_harbor_suitability_poor = {

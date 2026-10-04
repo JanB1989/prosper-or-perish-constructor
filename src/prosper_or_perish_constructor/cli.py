@@ -3868,11 +3868,23 @@ def _fingerprint_paths(paths: Sequence[Path], *, file_filter=None, view=None) ->
 
 _WEIGHT_BLOCK = re.compile(rb"ai_(?:construct|destroy)_weight\s*=\s*\{")
 _BLUEPRINT_SKIPPED_SECTIONS = (b"localization:", b"icon:", b"evaluation:")
+# Static modifier keys the World Builder stage never reads: no script reads them as modifier:<key> and the start
+# setup sums only river, setup-attribute and cap rows into its location modifiers (2026-10-05, Jan: a market_center
+# market access edit reran the whole start setup, 94 s). tests/test_sync_fingerprint.py checks nothing reads them.
+WB_BLIND_STATIC_KEYS = (
+    "local_market_access",
+    "local_merchant_capacity",
+    "local_merchant_power",
+    "local_institution_growth_modifier",
+    "maximum_stockpile_capacity",
+    "local_trade_center_power",
+)
+_WB_BLIND_STATIC_LINE = re.compile(rb"\s*(?:" + "|".join(WB_BLIND_STATIC_KEYS).encode() + rb")\s*=\s*[-+]?[0-9.]+")
 
 
 def _worldbuilder_view(path: Path, data: bytes) -> bytes:
-    """What the World Builder stage can read of a text input: no comments, no AI weight blocks and, in a blueprint, no
-    localization/icon/evaluation section. A line holding a quote keeps its comment (a # inside a string is text)."""
+    """What the World Builder stage can read of a text input: no comments, no AI weight blocks, no stage-blind static
+    modifier lines (WB_BLIND_STATIC_KEYS) and, in a blueprint, no localization/icon/evaluation section. A line holding a quote keeps its comment (a # inside a string is text)."""
     suffix = path.suffix.lower()
     if suffix not in {".txt", ".yml", ".yaml", ".toml"}:
         return data
@@ -3884,13 +3896,14 @@ def _worldbuilder_view(path: Path, data: bytes) -> bytes:
             if not skipping:
                 kept.append(line)
         data = b"\n".join(kept)
+    static = "static_modifiers" in path.parts
     out = []
     for line in data.split(b"\n"):
         cut = line.find(b"#")
         if cut >= 0 and b'"' not in line:
             line = line[:cut]
         line = line.rstrip()
-        if line:
+        if line and not (static and _WB_BLIND_STATIC_LINE.fullmatch(line)):
             out.append(line)
     data = b"\n".join(out)
     while True:

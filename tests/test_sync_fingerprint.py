@@ -59,3 +59,33 @@ def test_script_files_drop_comments_and_weights_only() -> None:
     assert b'"a # b"' in out and b"max_levels = 3" in out
     assert view(script.replace(b"value = 5", b"value = 9"), "zz_pp_x.txt") == out
     assert view(b"\x89PNG binary # data", "map.png") == b"\x89PNG binary # data"
+
+
+def test_stage_blind_static_keys_are_ignored_in_static_modifiers_only() -> None:
+    block = b"market_center = {\n\tfree_building_levels = 5\n\tlocal_market_access = 10\n}\n"
+    name = "main_menu/common/static_modifiers/pp_x.txt"
+    out = view(block, name)
+    assert view(block.replace(b"= 10", b"= 0.5"), name) == out
+    assert view(block.replace(b"\tlocal_market_access = 10\n", b""), name) == out
+    assert view(block.replace(b"= 5", b"= 6"), name) != out
+    # a building's market access is not a static modifier line: it still counts
+    assert view(block.replace(b"= 10", b"= 0.5"), "in_game/common/building_types/x.txt") != view(block, "in_game/common/building_types/x.txt")
+
+
+def test_nothing_the_stage_runs_reads_the_blind_keys() -> None:
+    import re
+
+    from prosper_or_perish_constructor.cli import WB_BLIND_STATIC_KEYS, WORLDBUILDER_CODE_AND_DATA
+
+    repo = Path(__file__).resolve().parents[1]
+    # save-side market tools (not imported by the stage) and the logistics writer (writes the buildings' raw line)
+    writers = {"market_access.py", "markets.py", "logistics.py"}
+    code = [p for rel in WORLDBUILDER_CODE_AND_DATA if (root := repo / rel).exists()
+            for p in ([root] if root.is_file() else root.rglob("*.py")) if p.suffix == ".py" and p.name not in writers]
+    mod = next((repo / "mod").glob("Prosper or Perish (Population*"))
+    scripts = [p for sub in ("in_game/common", "main_menu/common") for p in (mod / sub).rglob("*.txt")
+               if "static_modifiers" not in p.parts]
+    for key in WB_BLIND_STATIC_KEYS:
+        assert not [p.name for p in code if key in p.read_text(encoding="utf-8")], key
+        read = re.compile(rf"modifier:{key}\b")
+        assert not [p.name for p in scripts if read.search(p.read_text(encoding="utf-8-sig", errors="replace"))], key

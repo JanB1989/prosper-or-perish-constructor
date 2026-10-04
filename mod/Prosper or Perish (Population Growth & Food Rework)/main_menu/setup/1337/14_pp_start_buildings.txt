@@ -11356,7 +11356,7 @@ building_manager = {
 	lumber_mill = { tag = LIT level = 2 location = begoml }
 	lumber_mill = { tag = CAS level = 2 location = bejar }
 	lumber_mill = { tag = PAR level = 2 location = berceto }
-	lumber_mill = { tag = ARA level = 3 location = besalu }
+	lumber_mill = { tag = ARA level = 2 location = besalu }
 	lumber_mill = { tag = KHN level = 1 location = besima }
 	lumber_mill = { tag = DUL level = 2 location = besni }
 	lumber_mill = { tag = POR level = 2 location = besteiros }
@@ -11500,7 +11500,6 @@ building_manager = {
 	lumber_mill = { tag = PDU level = 1 location = edappaly }
 	lumber_mill = { tag = ICE level = 1 location = egilsstadir }
 	lumber_mill = { tag = AJU level = 2 location = el_dhere }
-	lumber_mill = { tag = BIJ level = 1 location = el_kala }
 	lumber_mill = { tag = BIJ level = 2 location = el_kseur }
 	lumber_mill = { tag = BIJ level = 2 location = el_milia }
 	lumber_mill = { tag = NAV level = 2 location = elizondo }
@@ -12197,7 +12196,6 @@ building_manager = {
 	lumber_mill = { tag = TZP level = 2 location = tetzapotitlan }
 	lumber_mill = { tag = TTA level = 1 location = teutila }
 	lumber_mill = { tag = LIG level = 2 location = tha_tong }
-	lumber_mill = { tag = TUN level = 2 location = thagaste }
 	lumber_mill = { tag = ARK level = 2 location = thandwe }
 	lumber_mill = { tag = DGL level = 2 location = thiladhunmathi_atoll }
 	lumber_mill = { tag = LUX level = 2 location = thionville }
@@ -12604,7 +12602,6 @@ building_manager = {
 	market_village = { tag = HDY level = 2 location = hadiya }
 	market_village = { tag = CHI level = 2 location = haiyan }
 	market_village = { tag = MEC level = 2 location = hali }
-	market_village = { tag = TUN level = 2 location = hammamet }
 	market_village = { tag = JRW level = 1 location = harad_al_ahsa }
 	market_village = { tag = HSN level = 2 location = hasankeyf }
 	market_village = { tag = YSU level = 1 location = hazarasp }
@@ -12693,7 +12690,6 @@ building_manager = {
 	market_village = { tag = NGD level = 2 location = maruf }
 	market_village = { tag = NSU level = 1 location = masinga }
 	market_village = { tag = MAJ level = 2 location = mataram }
-	market_village = { tag = TUN level = 1 location = mateur }
 	market_village = { tag = NSU level = 1 location = mbanza_nsundi }
 	market_village = { tag = TLE level = 2 location = medea }
 	market_village = { tag = TUN level = 2 location = medjez_el_bab }
@@ -12777,7 +12773,6 @@ building_manager = {
 	market_village = { tag = LAL level = 1 location = shulan }
 	market_village = { tag = CHI level = 1 location = shuluun_khoboot_tsagaan }
 	market_village = { tag = ALO level = 2 location = singa }
-	market_village = { tag = BIJ level = 2 location = skikda }
 	market_village = { tag = SER level = 1 location = smederevo }
 	market_village = { tag = HZP level = 1 location = somaleh }
 	market_village = { tag = CHI level = 1 location = sonod }
@@ -13019,7 +13014,6 @@ building_manager = {
 	mason = { tag = HAL level = 2 location = lviv }
 	mason = { tag = QUL level = 2 location = macaya }
 	mason = { tag = PCJ level = 2 location = machaqa }
-	mason = { tag = TUN level = 1 location = mahdia }
 	mason = { tag = JJK level = 2 location = mahoba }
 	mason = { tag = MAI level = 2 location = mainz }
 	mason = { tag = MIH level = 2 location = maiwand }
@@ -13123,7 +13117,7 @@ building_manager = {
 	mason = { tag = MAJ level = 2 location = trowulan }
 	mason = { tag = BTG level = 2 location = tsakhalkho }
 	mason = { tag = JAP level = 1 location = tsukuba }
-	mason = { tag = TUN level = 2 location = tunis }
+	mason = { tag = TUN level = 1 location = tunis }
 	mason = { tag = QCH level = 2 location = turpan }
 	mason = { tag = TVE level = 2 location = tver }
 	mason = { tag = CHI level = 2 location = ulan_hua }
@@ -16727,6 +16721,7 @@ building_manager = {
 	tavern = { tag = DHU level = 1 location = amber_loc }
 	tavern = { tag = HOL level = 1 location = amsterdam }
 	tavern = { tag = ANC level = 1 location = ancona }
+	tavern = { tag = ANR level = 1 location = andorra_la_vella }
 	tavern = { tag = KHM level = 1 location = angkor }
 	tavern = { tag = AHI level = 1 location = ankara }
 	tavern = { tag = BIJ level = 1 location = annaba }
@@ -16739,21 +16734,31 @@ building_manager = {
 	tavern = { tag = GLH level = 1 location = astrakhan }
 	tavern = { tag = AGC level = 1 location = augsburg }
 	tavern = { tag = DLH level = 1 location = awadh }
+	tavern = { tag = BQA level = 1 location = awjila }
 	tavern = { tag = ETH level = 1 location = axum }
 	tavern = { tag = TEP level = 1 location = azcapotzalco }
 	tavern = { tag = JAL level = 1 location = baghdad }
 	tavern = { tag = SLD level = 1 location = balkh }
+	tavern = { tag = BNB level = 1 location = ballenstedt }
+	tavern = { tag = BTL level = 1 location = bani_walid }
 	tavern = { tag = ARA level = 1 location = barcelona }
 	tavern = { tag = NAP level = 2 location = bari }
 	tavern = { tag = HLG level = 1 location = basra }
 	tavern = { tag = CHI level = 1 location = baxian }
+	tavern = { tag = BHL level = 1 location = beichlingen }
 	tavern = { tag = BIJ level = 1 location = bejaia }
 	tavern = { tag = PAP level = 2 location = benevento }
 	tavern = { tag = BEN level = 1 location = benin }
-	tavern = { tag = NOR level = 2 location = bergen }
+	tavern = { tag = NOR level = 1 location = berg }
 	tavern = { tag = NUP level = 1 location = bida }
 	tavern = { tag = DLH level = 1 location = bijapur }
+	tavern = { tag = TUN level = 1 location = bir_el_alter }
+	tavern = { tag = ARB level = 1 location = bitti }
+	tavern = { tag = BBG level = 1 location = blankenburg }
+	tavern = { tag = BOD level = 1 location = bodonitsa }
+	tavern = { tag = DAN level = 1 location = bolling }
 	tavern = { tag = BLG level = 1 location = bologna }
+	tavern = { tag = NOR level = 1 location = bragernes }
 	tavern = { tag = VER level = 1 location = brescia }
 	tavern = { tag = DLH level = 1 location = broach }
 	tavern = { tag = FLA level = 1 location = bruges }
@@ -16762,6 +16767,7 @@ building_manager = {
 	tavern = { tag = TUR level = 1 location = bursa }
 	tavern = { tag = ARA level = 5 location = cagliari }
 	tavern = { tag = MAM level = 11 location = cairo }
+	tavern = { tag = ARA level = 1 location = caspe }
 	tavern = { tag = CKP level = 1 location = chakan_putum }
 	tavern = { tag = GNJ level = 1 location = chamdo }
 	tavern = { tag = CMN level = 1 location = champaner }
@@ -16777,34 +16783,41 @@ building_manager = {
 	tavern = { tag = BYZ level = 1 location = constantinople }
 	tavern = { tag = CAS level = 1 location = cordoba }
 	tavern = { tag = CHI level = 1 location = dadu }
+	tavern = { tag = SWE level = 1 location = dalaborg }
 	tavern = { tag = MAM level = 1 location = damascus }
 	tavern = { tag = MAM level = 1 location = damietta }
 	tavern = { tag = CHI level = 1 location = datong_datong }
+	tavern = { tag = GFS level = 1 location = debila }
 	tavern = { tag = DLH level = 1 location = delhi }
+	tavern = { tag = DPH level = 1 location = diepholz }
 	tavern = { tag = SUT level = 1 location = diyarbekir }
 	tavern = { tag = MAK level = 1 location = dongola }
 	tavern = { tag = BUL level = 1 location = drastar }
 	tavern = { tag = RAG level = 1 location = dubrovnik }
 	tavern = { tag = ERF level = 1 location = erfurt }
+	tavern = { tag = LBB level = 1 location = eutin }
 	tavern = { tag = MOR level = 1 location = fez }
 	tavern = { tag = FLO level = 1 location = florence }
 	tavern = { tag = MEI level = 2 location = freiberg }
+	tavern = { tag = THU level = 1 location = freyburg }
 	tavern = { tag = CHI level = 1 location = fuliang }
+	tavern = { tag = BRU level = 1 location = gandersheim }
 	tavern = { tag = CHI level = 1 location = ganzhou }
 	tavern = { tag = TEU level = 1 location = gdansk }
 	tavern = { tag = GEN level = 1 location = genoa }
+	tavern = { tag = DJE level = 1 location = ghadames }
+	tavern = { tag = TRP level = 1 location = ghariyan }
 	tavern = { tag = NGD level = 1 location = ghazni }
 	tavern = { tag = FLA level = 1 location = ghent }
 	tavern = { tag = GOA level = 1 location = goa }
 	tavern = { tag = BOH level = 1 location = gorlitz }
 	tavern = { tag = GRA level = 1 location = granada }
+	tavern = { tag = ATH level = 1 location = gravia }
 	tavern = { tag = CHI level = 1 location = guancheng_zhengzhou }
 	tavern = { tag = GWA level = 1 location = gwalior }
 	tavern = { tag = KOR level = 1 location = gyeongju }
-	tavern = { tag = MAG level = 2 location = halle_an_der_saale }
 	tavern = { tag = HDN level = 1 location = hamadan }
-	tavern = { tag = NOR level = 2 location = hamar }
-	tavern = { tag = HAM level = 2 location = hamburg }
+	tavern = { tag = HAM level = 1 location = hamburg }
 	tavern = { tag = CHI level = 1 location = handan }
 	tavern = { tag = CHI level = 1 location = hangzhou }
 	tavern = { tag = KRT level = 1 location = herat }
@@ -16831,13 +16844,17 @@ building_manager = {
 	tavern = { tag = DGH level = 1 location = khotan }
 	tavern = { tag = DLH level = 1 location = kolhapur }
 	tavern = { tag = VND level = 1 location = kollam }
+	tavern = { tag = NOR level = 1 location = konghalla }
 	tavern = { tag = KAR level = 1 location = konya }
 	tavern = { tag = ZMR level = 1 location = kozhikode }
 	tavern = { tag = LNG level = 1 location = kunming }
 	tavern = { tag = JAP level = 1 location = kyoto }
+	tavern = { tag = DAN level = 1 location = laholm }
 	tavern = { tag = NAP level = 1 location = lanciano }
+	tavern = { tag = FRI level = 1 location = leer }
 	tavern = { tag = TIB level = 1 location = lhasa }
 	tavern = { tag = POR level = 1 location = lisbon }
+	tavern = { tag = NOR level = 1 location = lofotr }
 	tavern = { tag = LUB level = 1 location = lubeck }
 	tavern = { tag = LUC level = 1 location = lucca }
 	tavern = { tag = NAP level = 3 location = lucera }
@@ -16856,6 +16873,8 @@ building_manager = {
 	tavern = { tag = ZEE level = 2 location = middelburg }
 	tavern = { tag = MLO level = 1 location = milano }
 	tavern = { tag = CHI level = 1 location = minxian }
+	tavern = { tag = BTL level = 1 location = mizda }
+	tavern = { tag = NOR level = 2 location = molde }
 	tavern = { tag = MLL level = 1 location = montpellier }
 	tavern = { tag = MOS level = 1 location = moscow }
 	tavern = { tag = SUT level = 1 location = mosul }
@@ -16865,6 +16884,8 @@ building_manager = {
 	tavern = { tag = NAM level = 3 location = namur }
 	tavern = { tag = NAP level = 1 location = naples }
 	tavern = { tag = NRB level = 1 location = narbonne }
+	tavern = { tag = SWE level = 2 location = nas }
+	tavern = { tag = NMB level = 1 location = naumburg }
 	tavern = { tag = MAL level = 1 location = niani }
 	tavern = { tag = CHI level = 1 location = ningxia }
 	tavern = { tag = JKR level = 1 location = nishapur }
@@ -16886,8 +16907,10 @@ building_manager = {
 	tavern = { tag = PEG level = 1 location = pegu }
 	tavern = { tag = PEA level = 1 location = perugia }
 	tavern = { tag = CHI level = 1 location = pingjin }
+	tavern = { tag = HSP level = 1 location = pinneberg }
 	tavern = { tag = PIS level = 1 location = pisa }
 	tavern = { tag = KIC level = 1 location = pismachi }
+	tavern = { tag = HPL level = 1 location = plon }
 	tavern = { tag = PSK level = 1 location = pskov }
 	tavern = { tag = BPR level = 1 location = pyay }
 	tavern = { tag = CHI level = 1 location = qingxiang }
@@ -16895,9 +16918,12 @@ building_manager = {
 	tavern = { tag = CHI level = 1 location = qufu }
 	tavern = { tag = MOR level = 1 location = rabat }
 	tavern = { tag = VIJ level = 1 location = raichur }
+	tavern = { tag = RZB level = 1 location = ratzeburg }
 	tavern = { tag = BDS level = 1 location = rey }
+	tavern = { tag = DAN level = 1 location = ribe }
 	tavern = { tag = RIG level = 1 location = riga }
 	tavern = { tag = PAP level = 1 location = rome }
+	tavern = { tag = RUP level = 1 location = ruppin }
 	tavern = { tag = YSU level = 1 location = samarkand }
 	tavern = { tag = GLH level = 1 location = sarayjuk }
 	tavern = { tag = STN level = 1 location = satgaon }
@@ -16910,16 +16936,20 @@ building_manager = {
 	tavern = { tag = SIE level = 1 location = siena }
 	tavern = { tag = TFL level = 1 location = sijilmasa }
 	tavern = { tag = ERE level = 1 location = sivas }
-	tavern = { tag = SWE level = 3 location = skara }
+	tavern = { tag = MAM level = 2 location = siwa }
 	tavern = { tag = BUL level = 2 location = sliven }
 	tavern = { tag = SMO level = 1 location = smolensk }
 	tavern = { tag = AYD level = 1 location = smyrna }
 	tavern = { tag = GRG level = 1 location = soltaniyeh }
 	tavern = { tag = SYE level = 1 location = speyer }
 	tavern = { tag = PAP level = 2 location = spoleto }
+	tavern = { tag = SPB level = 1 location = spremberg }
 	tavern = { tag = KSH level = 1 location = srinagar }
 	tavern = { tag = CHI level = 1 location = suiyang_guide }
 	tavern = { tag = SUK level = 1 location = sukhothai }
+	tavern = { tag = NOR level = 2 location = sunnfjord }
+	tavern = { tag = BRA level = 1 location = swidwin }
+	tavern = { tag = WOL level = 1 location = szadzko }
 	tavern = { tag = JAL level = 1 location = tabriz }
 	tavern = { tag = CDL level = 1 location = taihe_dali }
 	tavern = { tag = GEO level = 1 location = tbilisi }
@@ -16951,19 +16981,24 @@ building_manager = {
 	tavern = { tag = CAS level = 1 location = valladolid }
 	tavern = { tag = JLM level = 1 location = van }
 	tavern = { tag = DLH level = 1 location = varanasi }
+	tavern = { tag = NOR level = 1 location = vardal }
+	tavern = { tag = SER level = 1 location = velbuzd }
 	tavern = { tag = VEN level = 1 location = venice }
 	tavern = { tag = VER level = 1 location = verona }
 	tavern = { tag = HAB level = 1 location = vienna }
 	tavern = { tag = CHA level = 1 location = vijaya }
 	tavern = { tag = VIJ level = 1 location = vijayanagar }
 	tavern = { tag = PAP level = 1 location = viterbo }
+	tavern = { tag = WGO level = 1 location = wernigerode }
 	tavern = { tag = SWB level = 1 location = wittenberg }
+	tavern = { tag = BMS level = 1 location = wurzen }
 	tavern = { tag = CHI level = 1 location = xiangyang }
 	tavern = { tag = CHI level = 1 location = xuanhua_nanning }
 	tavern = { tag = MZF level = 1 location = yazd }
 	tavern = { tag = CHI level = 1 location = yiyang }
 	tavern = { tag = ZZZ level = 1 location = zazzau }
 	tavern = { tag = CHI level = 1 location = zichuan }
+	tavern = { tag = JAW level = 1 location = zittau }
 	tin_streamworks = { tag = AAC level = 1 location = aachen }
 	tin_streamworks = { tag = POR level = 1 location = aguiar }
 	tin_streamworks = { tag = HNK level = 1 location = allpas }
@@ -17075,7 +17110,6 @@ building_manager = {
 	tools_guild = { tag = NGD level = 1 location = ghazni }
 	tools_guild = { tag = BRU level = 2 location = gottingen }
 	tools_guild = { tag = KOR level = 2 location = gyeongju }
-	tools_guild = { tag = MAG level = 1 location = halle_an_der_saale }
 	tools_guild = { tag = HDN level = 2 location = hamadan }
 	tools_guild = { tag = QUL level = 2 location = hatunqulla }
 	tools_guild = { tag = PAL level = 2 location = heidelberg }
@@ -17095,7 +17129,6 @@ building_manager = {
 	tools_guild = { tag = QCH level = 2 location = kurla }
 	tools_guild = { tag = DLH level = 2 location = lahore }
 	tools_guild = { tag = ETH level = 1 location = lalibela }
-	tools_guild = { tag = LDB level = 1 location = leipzig }
 	tools_guild = { tag = TIB level = 2 location = lhasa }
 	tools_guild = { tag = CHI level = 1 location = linan }
 	tools_guild = { tag = JOL level = 1 location = linguere }
@@ -17113,7 +17146,6 @@ building_manager = {
 	tools_guild = { tag = CHI level = 1 location = ningguo }
 	tools_guild = { tag = JKR level = 2 location = nishapur }
 	tools_guild = { tag = ENG level = 1 location = norwich }
-	tools_guild = { tag = DAN level = 2 location = odense }
 	tools_guild = { tag = OET level = 2 location = oettingen }
 	tools_guild = { tag = SER level = 1 location = ohrid }
 	tools_guild = { tag = TLE level = 1 location = oran }
@@ -17135,7 +17167,6 @@ building_manager = {
 	tools_guild = { tag = BDS level = 2 location = rey }
 	tools_guild = { tag = AQU level = 1 location = rijeka }
 	tools_guild = { tag = KNI level = 1 location = rodos }
-	tools_guild = { tag = DAN level = 1 location = roskilde }
 	tools_guild = { tag = NRM level = 2 location = rouen }
 	tools_guild = { tag = XLL level = 2 location = sana }
 	tools_guild = { tag = DLH level = 2 location = sargadwari }
@@ -17145,7 +17176,6 @@ building_manager = {
 	tools_guild = { tag = ALO level = 2 location = soba }
 	tools_guild = { tag = KSH level = 2 location = srinagar }
 	tools_guild = { tag = NOV level = 1 location = staraya_ladoga }
-	tools_guild = { tag = WOL level = 1 location = stralsund }
 	tools_guild = { tag = SFC level = 2 location = strasbourg }
 	tools_guild = { tag = WUR level = 2 location = stuttgart }
 	tools_guild = { tag = TLE level = 2 location = tahert }

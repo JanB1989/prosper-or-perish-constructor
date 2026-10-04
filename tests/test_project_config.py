@@ -2176,7 +2176,7 @@ def test_capacity_culling_v2_calls_helper_for_each_capacity_building() -> None:
         # victuals packing and serving: caps are 0 in the wrong kind of location, so the cull also clears misplaced ones
         ("victualling_yard", "victualling_yard_max_level"),
         ("grange", "grange_max_level"),
-        ("tavern", "tavern_max_level"),   # towns and larger that are province capitals only (2026-10-01)
+        ("tavern", "tavern_max_level"),   # province capitals only, any rank (2026-10-04)
     ]
 
     effect_entries = {entry.key: entry.value for entry in parse_file(CAPACITY_CULLING_EFFECTS).entries}

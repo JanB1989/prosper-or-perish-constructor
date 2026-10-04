@@ -264,8 +264,11 @@ def test_victuals_trade_templates_split_export_and_import_flows() -> None:
     for text in tavern_texts:
         assert not re.search(r"^\s*local_monthly_food\s*=", text, re.M)   # no flat food line
         assert "max_levels = tavern_max_level" in text
-        # towns and larger that are province capitals only (2026-10-01)
-        assert "rural_settlement = no" in text
+        # every province capital, whatever its rank (2026-10-04, Jan; towns and larger 2026-10-01 to 10-04)
+        assert "rural_settlement = yes" in text
+        # the AI's profit check reads the Common Table (one-method last slot): 0.1 offset -> 0.852 Province Food, margin
+        # 0.852 x (1 + store curve) at floor prices, so it passes 1.05 up to 6 stored months whatever victuals cost
+        assert re.search(r"pp_tavern_common_table = \{[^}]*produced = local_food[^}]*offset = 0\.1\b[^}]*output = 0\.852", text, re.S)
         assert re.search(r"location_potential = \{\s*is_province_capital = yes\s*\}", text)
         assert "local_nobles_estate_power" not in text
         assert "local_peasant_enfranchisment" not in text

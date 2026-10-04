@@ -10,9 +10,10 @@ price = pp_tavern_price
 category = consumer_goods_category
 custom_tags = { pp_food_security_priority pp_food_distribution_priority }
 icon = tavern
-# 2026-10-01: the urban food answer only: towns and larger that are province capitals (one site per province).
-# Rural provinces answer hunger with farms and Cookshops, which pull staple goods off the market.
-rural_settlement = no
+# Every province capital, whatever its rank (2026-10-04, Jan; 2026-10-01 to 10-04 towns and larger only): one site
+# per province. In save 1757, 78 % of the hungry country capitals (under 4 stored months, 1707-1757) were rural
+# province capitals that could not take a Tavern, and three in four of those countries built nothing at all.
+rural_settlement = yes
 town = yes
 city = yes
 megalopolis = yes
@@ -59,8 +60,13 @@ construction_demand = victuals_trade_construction
 # 0.10): profit = 2.55 x (1 + curve) - 0.8 p - 0.08 - 0.91
 # -> at victuals p = 2.7 it fills the store to 5.9 months, at 2.0 to 11.6, at 3.5 to 1.0, above 3.7 never.
 # 25.5 (was 24 on the +-75 % line) keeps it near its old stop points and below the 12-month pivot at p = 2.0.
-# The AI builds a new Tavern where this margin reaches the threshold: below about 4.7 months at p = 2.7.
-# No Scarcity Premium slot and no droop any more: the Serve method is the gate.
+# Gate (2026-10-04, Jan): the AI's profit check reads the one-method last slot, the Common Table, not Serve Victuals.
+# Serve Victuals passed the 1.05 margin only near an empty store at real victuals prices (save 1757, hungry capitals
+# 1707-1757: 65 % passed at 0 stored months, 34 % at 1, 20 % at 2, 4 % at 3; median victuals 3.4), so the Tavern
+# never entered the AI's queue where it was needed. The Common Table turns 0.1 offset into 0.852 Province Food:
+# margin = 0.852 x (1 + store curve), so it passes 1.05 up to 6 stored months (+23.1 %) and fails above, whatever
+# victuals cost. Its food is small (0.852 per level vs 25.5); Serve Victuals and the store curve are unchanged,
+# so where a standing Tavern fills the store still follows the victuals price as above.
 unique_production_methods = {
   pp_tavern_serve_victuals = {
     icon_type = building_type
@@ -70,6 +76,16 @@ unique_production_methods = {
     manual_labor = 0.08
     offset = 0.91
     output = 25.5
+    category = building_maintenance
+  }
+}
+unique_production_methods = {
+  pp_tavern_common_table = {
+    icon_type = building_type
+    icon = tavern
+    produced = local_food
+    offset = 0.1
+    output = 0.852
     category = building_maintenance
   }
 }

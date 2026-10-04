@@ -26,7 +26,7 @@ tavern_max_level = {
  else_if = { limit = { location_rank ?= location_rank:megalopolis } add = { desc = PP_VM_CAP_RANK value = 6 } }
  if = { limit = { topography = mountains } add = { desc = PP_VM_CAP_TERRAIN value = -2 } }
  else_if = { limit = { topography = hills } add = { desc = PP_VM_CAP_TERRAIN value = -1 } }
- if = { limit = { OR = { is_province_capital = no location_rank ?= location_rank:rural_settlement } } multiply = { desc = PP_VM_CAP_SITE_TAVERN value = 0 } }
+ if = { limit = { is_province_capital = no } multiply = { desc = PP_VM_CAP_SITE_TAVERN value = 0 } }
  min = { desc = PP_VM_CAP_MINIMUM value = 0 }
  max = { desc = PP_VM_CAP_MAXIMUM value = 36 }
 }

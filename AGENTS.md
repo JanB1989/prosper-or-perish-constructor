@@ -38,7 +38,8 @@
   that makes a little of that good for `offset`, at margin 1.0 (`[production_gate.leg]`). A one-method slot is always
   read, so the gate follows the main good's price whatever is researched or in the market. `ppc gate apply` writes and
   updates the leg (body block, slot list, localization, evaluation allow rules); the labour pass skips it. Buildings
-  without a market good, gates on a store-following good (the Grange's Surplus Sales, the Tavern's Province Food),
+  without a market good, gates on a store-following good (the Grange's Surplus Sales, the Tavern's Common Table: 0.1 offset -> 0.852 Province Food, so it passes 1.05 up to ~6 stored
+  months whatever victuals cost, 2026-10-04),
   buildings that sell only for `offset` (the Cookshop line) and `strategic_goods` get none. Never gate on a method that
   buys the building's own main good (inverts the AI's price response), except a token amount:
 - Crop farms (farm v3, 2026-10-02): Provision takes a token of the crop (`crop_provision_input_gold` in
@@ -159,6 +160,9 @@
   (`pp_food_building_values.txt`) after its income divide: +100 flat in the owner's capital province up to 6 stored
   months, 0 from 14. Crop farms render it (crop_farms.py), upgrade weights too (age_food.py);
   `tests/test_capital_food_weight.py` checks every maker. The gold buffer still stops a whole build walk.
+  Tavern (2026-10-04, Jan): allowed in every province capital whatever its rank (`tavern_max_level` 0 only outside
+  province capitals); gate = the Common Table slot. Serve Victuals passed 1.05 only near an empty store at real victuals
+  prices (save 1757: 4 % at 3 stored months), so hungry capitals never queued one.
 - `store_lever.load_design` reads the numbers from the config, the two blueprints and `province_starving`; the
   start-food validator (`worldbuilder/food_sim.py`), `tools/province_store_sim.py` (rest points and ripple on real
   provinces) and `tests/test_store_lever.py` (the properties the design rests on) all use it. After changing a value

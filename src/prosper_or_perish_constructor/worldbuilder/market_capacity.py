@@ -30,7 +30,7 @@ def write(repo, mod_root):
         # (2026-10-01). No floor = yes: the engine floors max_levels to whole levels itself.
         "MINIMUM": "Minimum",
         "MAXIMUM": "Upper limit",
-        "SITE_TAVERN": "Not a town or city that is a province capital",
+        "SITE_TAVERN": "Not a province capital",
         "SITE_YARD": "Not a Victualling Yard site or a market centre",
         "INLAND_MARKET": "Inland market centre",
         "WATER_ACCESS": "River or sea access",
@@ -107,9 +107,9 @@ def write(repo, mod_root):
             # one topography per location
             keyword = "if" if i == 0 else "else_if"
             body.append(f"{keyword} = {{ limit = {{ topography = {terrain} }} {add('TERRAIN', n)} }}")
-        # Towns and larger that are province capitals only (2026-10-01, as the building's rank flags and potential).
-        # Elsewhere 0, so the four-yearly cull clears Taverns an old save left in villages and non-capitals.
-        body.append(zero_unless("OR = { is_province_capital = no location_rank ?= location_rank:rural_settlement }", "SITE_TAVERN"))
+        # Province capitals only, whatever their rank (2026-10-04, Jan; towns and larger 2026-10-01 to 10-04), as the
+        # building's potential. Elsewhere 0, so the four-yearly cull clears Taverns an old save left in non-capitals.
+        body.append(zero_unless("is_province_capital = no", "SITE_TAVERN"))
         body += [clamp("min", "MINIMUM", 0), clamp("max", "MAXIMUM", spec["maximum"])]
         lines.append(
             f"{role}_max_level = {{\n " + "\n ".join(body) + "\n}"

@@ -62,8 +62,8 @@ building:
         value = 0
         if = { limit = { has_building = building_type:forest_village } add = 200 }
         divide = { value = scope:owner.monthly_income_total add = 10 }
-        # the AI builds up food in its capital province (pp_capital_food_weight, flat)
-        add = pp_capital_food_weight
+        # the AI answers a low province store (pp_food_urgency_weight, flat)
+        add = pp_food_urgency_weight
     }
     forbidden_for_estates = yes
     ai_forbid_shutdown = no

@@ -67,21 +67,16 @@ pp_location_province_food_balance = {
 	}
 }
 
-# Location scope: the AI's extra wish for food buildings in its country's capital province (2026-10-04, Jan: the AI
-# should focus on building up food in the capital). Added flat, after the income divide, to the ai_construct_weight of
-# every building that makes Province Food in the province (crop farms and their tiers, the other Provisioning food
-# buildings, Tavern, Cookshop, Public Kitchen; tests/test_capital_food_weight.py). Not divided by income: the engine
-# values food and profit far less in rich empires (save 1592: farm scores 1.8 at income 300+ vs 7.9 under 20), and the
-# capitals belong to the richest. Full up to 6 stored months, fading out to 0 at 14 (the farms' store_full_months).
-# Profit gates, caps and the Tavern's store veto still decide; the gold buffer still stops a country's whole build walk.
-pp_capital_food_weight = {
-	value = 0
-	if = {
-		limit = {
-			exists = owner
-			exists = owner.capital
-			province_definition = owner.capital.province_definition
-		}
-		add = { value = 14 subtract = pp_location_stored_months divide = 8 min = 0 max = 1 multiply = 100 }
-	}
+# Location scope: the AI's food urgency (2026-10-04, Jan): every building that makes Province Food in the province
+# (crop farms and their tiers, the other Provisioning food buildings, Tavern, Cookshop, Public Kitchen;
+# tests/test_capital_food_weight.py) adds it to its ai_construct_weight after the income divide, so it is flat.
+# Low food = under 12 stored months, critical under 8: the weight rises linearly as the store falls,
+# 7.5 per month below 12 (8 months 30, 5 months 52.5, empty 90). The engine's own food value is 0 wherever the
+# province makes more food than it eats, however low its store is (save 1454: Constantinople +16.3 a month at
+# 5.4 months, Tavern utility -13.29 with Food Utility 0.0000), so this term carries the AI's answer to low stores.
+pp_food_urgency_weight = {
+	value = 12
+	subtract = pp_location_stored_months
+	min = 0
+	multiply = 7.5
 }

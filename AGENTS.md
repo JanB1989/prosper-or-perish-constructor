@@ -155,11 +155,12 @@
   1e9 (the engine's food term), so income-scaled terms are nudges only. Vetoes are flat (Tavern -10000 from 10 to 12 months, 2026-10-04, was 4 to 6, and -100 per standing level from 8 stored months, fading in from 6; below 6 months none, 2026-10-04) and still lose to the largest scores;
   the store-following gate is the only hard stop. The AI never removes a Tavern, so every famine it answers stays
   built (Mini World runs 3/4: 68 -> 735/815 levels by 1522; the flat Tavern terms of run 4 changed nothing measurable).
-  Capital food (2026-10-04, Jan: the AI should build up food in its capital): every Province Food maker (Provisioning
-  slot, Tavern, Cookshop, Public Kitchen; not Grange/Yard) adds the script value `pp_capital_food_weight`
-  (`pp_food_building_values.txt`) after its income divide: +100 flat in the owner's capital province up to 6 stored
-  months, 0 from 14. Crop farms render it (crop_farms.py), upgrade weights too (age_food.py);
-  `tests/test_capital_food_weight.py` checks every maker. The gold buffer still stops a whole build walk.
+  Food urgency (2026-10-04, Jan: low food = under 12 stored months, critical under 8, a sliding scale): every
+  Province Food maker (Provisioning slot, Tavern, Cookshop, Public Kitchen; not Grange/Yard) adds the script value
+  `pp_food_urgency_weight` (`pp_food_building_values.txt`) = 7.5 x (12 - stored months), min 0, after its income
+  divide. The engine's own Food Utility is 0 wherever the province makes more food than it eats, however low the
+  store (Constantinople 1454: +16.3/month at 5.4 months, Tavern utility -13.29). Crop farms render it (crop_farms.py),
+  upgrade weights too (age_food.py); `tests/test_capital_food_weight.py` checks every maker.
   Tavern (2026-10-04, Jan): allowed in every province capital whatever its rank (`tavern_max_level` 0 only outside
   province capitals); gate = the Common Table slot. Serve Victuals passed 1.05 only near an empty store at real victuals
   prices (save 1757: 4 % at 3 stored months), so hungry capitals never queued one.

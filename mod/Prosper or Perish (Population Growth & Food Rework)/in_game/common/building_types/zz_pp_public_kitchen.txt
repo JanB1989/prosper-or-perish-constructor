@@ -29,8 +29,8 @@ increase_per_level_cost = 0.10
 		value = 20
 		add = { value = pp_location_province_farm_levels divide = 40 max = 1 multiply = 40 }
 		divide = { value = scope:owner.monthly_income_total add = 10 }
-		# the AI builds up food in its capital province (pp_capital_food_weight, flat)
-		add = pp_capital_food_weight
+		# the AI answers a low province store (pp_food_urgency_weight, flat)
+		add = pp_food_urgency_weight
 	}
 	build_time = workshop_build_time
 	construction_demand = workshop_construction

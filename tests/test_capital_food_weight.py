@@ -1,7 +1,7 @@
-"""The AI builds up food in its capital province (2026-10-04, Jan).
+"""The AI answers a low province store with food buildings (2026-10-04, Jan): one urgency for every province.
 
 Every building that makes Province Food in the province (a Provisioning slot, the Tavern, the Cookshop, the Public
-Kitchen) adds the location-scope script value ``pp_capital_food_weight`` to its ``ai_construct_weight`` after the income
+Kitchen) adds the location-scope script value ``pp_food_urgency_weight`` to its ``ai_construct_weight`` after the income
 divide, so the term is flat: the engine values a capital's food and profit far less in rich empires, and the capitals
 belong to the richest. Buildings that move food out of the province (Grange, Victualling Yard) do not get it.
 """
@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BLUEPRINTS = ROOT / "blueprints/accepted/buildings"
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 VALUES = MOD_ROOT / "in_game/common/script_values/pp_food_building_values.txt"
-TERM = "add = pp_capital_food_weight"
+TERM = "add = pp_food_urgency_weight"
 
 
 def _blueprints() -> dict[str, dict]:
@@ -56,15 +56,15 @@ def _food_makers() -> dict[str, dict]:
     return makers
 
 
-def test_capital_food_weight_value() -> None:
+def test_food_urgency_value() -> None:
+    """7.5 per stored month below 12 (low food), 30 at 8 (critical), 90 at an empty store; never negative."""
     text = VALUES.read_text(encoding="utf-8-sig")
-    block = text[text.index("pp_capital_food_weight = {"):]
-    assert "province_definition = owner.capital.province_definition" in block
-    assert re.search(r"add = \{ value = 14 subtract = pp_location_stored_months divide = 8 min = 0 max = 1 "
-                     r"multiply = 100 \}", block)
+    block = text[text.index("pp_food_urgency_weight = {"):]
+    block = block[: block.index("}") + 1]
+    assert re.search(r"value = 12\s+subtract = pp_location_stored_months\s+min = 0\s+multiply = 7\.5", block)
 
 
-def test_every_food_maker_wants_the_capital() -> None:
+def test_every_food_maker_carries_the_urgency() -> None:
     makers = _food_makers()
     assert {"tavern", "cookshop", "public_kitchen", "wheat_farm", "fishing_village", "fruit_orchard"} <= set(makers)
     missing = [tag for tag, raw in makers.items() if TERM not in _weight(raw["building"]["body"])]

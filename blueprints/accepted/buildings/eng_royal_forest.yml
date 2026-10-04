@@ -45,10 +45,10 @@ building:
         }
     }
     allow = {}
-    # AI: build up food in its capital province (pp_capital_food_weight, flat)
+    # the AI answers a low province store (pp_food_urgency_weight, flat)
     ai_construct_weight = {
         value = 0
-        add = pp_capital_food_weight
+        add = pp_food_urgency_weight
     }
     build_time = rural_build_time
     expensive = yes

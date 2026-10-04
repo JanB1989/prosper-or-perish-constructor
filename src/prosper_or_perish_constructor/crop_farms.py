@@ -783,9 +783,9 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
     return blueprint
 
 
-# Location-scope script value (script_values/pp_food_building_values.txt): the AI builds up food in its capital
-# province; added flat to every food building's ai_construct_weight (2026-10-04).
-CAPITAL_FOOD_WEIGHT = "pp_capital_food_weight"
+# Location-scope script value (script_values/pp_food_building_values.txt): the AI's food urgency, 7.5 per stored
+# month below 12; added flat to every food building's ai_construct_weight (2026-10-04).
+FOOD_URGENCY_WEIGHT = "pp_food_urgency_weight"
 
 
 def ai_construct_weight_lines(table: CropTable, crop: Crop, tier: int = 0, context: "RenderContext | None" = None) -> list[str]:
@@ -796,7 +796,7 @@ def ai_construct_weight_lines(table: CropTable, crop: Crop, tier: int = 0, conte
     + store_bonus x the share the province's store is below store_full_months,
     - crowding_per_level x the farm levels already in the location (capped))
     / (owner monthly income + offset)
-    + the capital food term (``pp_capital_food_weight``, flat: full in the owner's capital province up to 6 stored months).
+    + the food urgency (``pp_food_urgency_weight``, flat: 7.5 per stored month below 12).
     The crop line of the province's Stored Food step (``pp_stored_food_staple_line``, stored_food.py) is part of the
     location's crop output modifier but says nothing about the land: without taking it out, a full store would read as
     good land and a hungry province as bad land."""
@@ -842,8 +842,8 @@ def ai_construct_weight_lines(table: CropTable, crop: Crop, tier: int = 0, conte
         ]
     lines += [
         f"    divide = {{ value = scope:owner.monthly_income_total add = {_num(offset)} }}",
-        f"    # the AI builds up food in its capital province ({CAPITAL_FOOD_WEIGHT}, flat)",
-        f"    add = {CAPITAL_FOOD_WEIGHT}",
+        f"    # the AI answers a low province store ({FOOD_URGENCY_WEIGHT}, flat)",
+        f"    add = {FOOD_URGENCY_WEIGHT}",
         "}",
     ]
     return lines

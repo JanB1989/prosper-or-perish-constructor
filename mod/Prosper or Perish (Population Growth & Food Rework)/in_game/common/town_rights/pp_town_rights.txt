@@ -8,3 +8,10 @@
 		local_livestock_output_modifier = 0.10
 	}
 }
+
+# Grand Staple Port: the staple harbour's victualling houses (2026-10-04, Jan). Read by victualling_yard_max_level.
+TRY_INJECT:royal_staple_rights = {
+	location_modifier = {
+		local_victualling_yard_building_levels = 3
+	}
+}

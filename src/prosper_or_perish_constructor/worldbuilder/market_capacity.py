@@ -34,7 +34,7 @@ def write(repo, mod_root):
         "SITE_YARD": "Not a Victualling Yard site or a market centre",
         "INLAND_MARKET": "Inland market centre",
         "WATER_ACCESS": "River or sea access",
-        "STAPLE_PORT": "Grand Staple Port",
+        "STAPLE_PORT": "Urban rights",
         "SITE_GRANGE": "Not a province capital, or a Victualling Yard site",
     }
 
@@ -117,12 +117,11 @@ def write(repo, mod_root):
     # The harbour Victualling Yard: harbour capacity (natural harbour + river mouth + docks and shipyards), market centre
     # and development, minus a threshold, at least `minimum` on a Yard site. An inland market centre (2026-10-03) gets a
     # small Yard: `water` levels with river or sea access, `land` without, plus development. Elsewhere 0, so the
-    # four-yearly cull clears Yards an old save left outside these sites. A Grand Staple Port (2026-10-04) adds its
-    # levels after the upper limit, in both branches.
+    # four-yearly cull clears Yards an old save left outside these sites. The building-levels modifier (the Grand Staple
+    # Port carries it, 2026-10-04) adds after the upper limit, in both branches, as vanilla's marketplace levels.
     y = cfg["victualling_yard"]
-    staple = " ".join(
-        when(f"has_town_rights = town_rights_type:{right}", "STAPLE_PORT", n) for right, n in y["town_rights"].items()
-    )
+    levels = f"modifier:{y['building_levels_modifier']}"
+    staple = when(f"{levels} > 0", "STAPLE_PORT", levels)
     harbour = " ".join([
         add("HARBOR_CAPACITY", f"modifier:harbor_suitability multiply = {y['harbor_capacity']}"),
         when("is_market_center = yes", "MARKET", y["market_center"]),

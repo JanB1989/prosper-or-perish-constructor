@@ -152,7 +152,7 @@
   only the farms the setup files place.
 - AI weights of the food buildings (`ai_construct_weight`: crop farm generator, cookshop/public_kitchen/tavern
   blueprints). The AI's own score for a building that adds Province Food to a short province runs from about 25 to
-  1e9 (the engine's food term), so income-scaled terms are nudges only. Vetoes are flat (Tavern -10000 from 10 to 12 months, 2026-10-04, was 4 to 6, and -100 per standing level from 6 stored months, fading in from 4; below 4 months none, 2026-10-04) and still lose to the largest scores;
+  1e9 (the engine's food term), so income-scaled terms are nudges only. Vetoes are flat (Tavern -10000 from 10 to 12 months, 2026-10-04, was 4 to 6, and -100 per standing level from 8 stored months, fading in from 6; below 6 months none, 2026-10-04) and still lose to the largest scores;
   the store-following gate is the only hard stop. The AI never removes a Tavern, so every famine it answers stays
   built (Mini World runs 3/4: 68 -> 735/815 levels by 1522; the flat Tavern terms of run 4 changed nothing measurable).
   Capital food (2026-10-04, Jan: the AI should build up food in its capital): every Province Food maker (Provisioning

@@ -154,11 +154,11 @@ def test_victualling_yard_ships_salt_beef_and_raises_the_cookshop_cap() -> None:
 
 
 def test_tavern_level_cost_spares_hungry_provinces() -> None:
-    """2026-10-04 (Jan): standing Taverns cost 100 each only from 6 stored months (fading in from 4), so a hungry
-    capital can add levels while the store pays for them."""
+    """2026-10-04 (Jan): standing Taverns cost 100 each only from 8 stored months (fading in from 6, where the Common
+    Table gate closes), so a hungry capital can add levels while the store is low."""
     body = _body("tavern")
     assert re.search(r'value = "location_building_level\(building_type:tavern\)"\s+multiply = 100\s+'
-                     r"multiply = \{ value = pp_location_stored_months subtract = 4 divide = 2 min = 0 max = 1 \}", body)
+                     r"multiply = \{ value = pp_location_stored_months subtract = 6 divide = 2 min = 0 max = 1 \}", body)
 
 
 def test_tavern_veto_starts_at_twelve_months() -> None:

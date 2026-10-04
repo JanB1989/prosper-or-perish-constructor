@@ -26,8 +26,10 @@ location_potential = {
 # to millions and income-scaled terms vanish next to that (Mini World run 3, 2026-10-03: 68 -> 691 levels by 1502,
 # most added in short famines, two to twelve levels at once, and kept idle once the store refilled):
 # no new level once the store holds 12 months (fading in from 10; 2026-10-04, Jan: was 6 from 4), and every
-# standing level costs 100 once the store holds 6 months (fading in from 4), so a full province does not stack
-# levels. Below 4 months standing levels cost nothing (2026-10-04, Jan): the flat cost had locked hungry capitals
+# standing level costs 100 once the store holds 8 months (fading in from 6), so a full province does not stack
+# levels. Below 6 months standing levels cost nothing, the same band where the Common Table gate opens (2026-10-04,
+# Jan; 4 to 6 before: at 5 months two standing levels cost exactly the +100 capital food term, so Constantinople
+# with 2 Taverns at 5 months scored about 0 and never queued a third, save 1448.3.21). The flat cost had locked hungry capitals
 # at their first Tavern (save 1592: 31 of 37 hungry country capitals, Constantinople at 0 months with no Tavern
 # candidate), although a Tavern pays most there (0.58 gold per level under 3 months vs 0.04 at 8-14).
 ai_construct_weight = {
@@ -38,7 +40,7 @@ ai_construct_weight = {
   subtract = {
     value = "location_building_level(building_type:tavern)"
     multiply = 100
-    multiply = { value = pp_location_stored_months subtract = 4 divide = 2 min = 0 max = 1 }
+    multiply = { value = pp_location_stored_months subtract = 6 divide = 2 min = 0 max = 1 }
   }
   # the AI builds up food in its capital province (pp_capital_food_weight, flat)
   add = pp_capital_food_weight

@@ -24,7 +24,8 @@ NAI = {
 	# AI_ALLOWED_PARALLEL_SAME_TYPE_CONSTRUCTION_RATIO / _MINIMUM = 0.2 / 10, AI_GOLD_COST_UTIL_FROM_LOW_PROFIT_MARGIN = 0.
 	FOOD_NEGATIVE_IN_PROV_UTILITY = 0.5
 	PEASANT_BUILDING_IN_CITY_UTILITY_MULT = 0.9
-	AI_ALLOWED_BUILDING_MAINTENANCE = 0.3
+	AI_ALLOWED_BUILDING_MAINTENANCE = 0.2 # 0.25; share of income for non-producing building maintenance (build budget; close above this x leeway)
+	AI_BUILDING_MAINTENANCE_LEEWAY = 1.5 # 1.2; build and close limit = 0.2 x 1.5 = 0.30 of income
 	AI_DEVELOPMENT_UTILITY = 0.2
 	AI_PROFIT_MARGIN_TARGET = 0.10
 	AI_BUILDING_PROFIT_MARGIN_THRESHOLD = 1.05 # 1.2; minimum revenue/input cost (the gate method's) for the AI to build a new producing building; many PP methods sit near break-even

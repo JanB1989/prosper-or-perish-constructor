@@ -108,8 +108,8 @@ NMarket = {
 	# (local_market_access per level over the supported ones) eat into it. Logistics buildings add it back.
 	MARKET_BASE_ACCESS = 1.3 # 1
 	MARKET_BASE_DISTANCE_FACTOR = 0.006 # 0.005; land carries market access poorly
-	MARKET_OPEN_SEA_DISTANCE_FACTOR = 0.4 # 1.5
-	MARKET_SEA_DISTANCE_FACTOR = 0.2 # 0.75
+	MARKET_OPEN_SEA_DISTANCE_FACTOR = 0.5 # 1.5
+	MARKET_SEA_DISTANCE_FACTOR = 0.3 # 0.75; 0.2 until 2026-10-05 (the North Sea and the Channel tied Britain to Cologne)
 	MARKET_SEA_TO_LAND_DISTANCE_FACTOR = 0.3 # 0.5
 	# Native rivers left after the navigation export are small streams: a mild help only.
 	MARKET_DOWNSTREAM_FACTOR = 0.5 # 0.5

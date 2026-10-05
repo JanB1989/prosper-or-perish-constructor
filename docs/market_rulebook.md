@@ -56,7 +56,7 @@ in locations.png:
 | Step | Cost |
 |---|---|
 | land → land | K d favg min(road, river); f = 1 + (topography movement_cost − 1)/2 + (vegetation movement_cost − 1)/2, favg the mean of both ends; road = 1 + the road's `market_access` if negative (gravel 0.9, navigable river 0.4, improved 0.2; positive values ignored); river 0.5 downstream / 0.8 upstream (seen from the centre), else 1 — see the river test below |
-| water → water | K d favg S road; S = 0.2 (`MARKET_SEA_DISTANCE_FACTOR`), 0.4 if either tile is open sea (no passable land neighbour) or the step joins a lake and a sea tile |
+| water → water | K d favg S road; S = `MARKET_SEA_DISTANCE_FACTOR`, `MARKET_OPEN_SEA_DISTANCE_FACTOR` if either tile is open sea (no passable land neighbour) or the step joins a lake and a sea tile (measured at 0.2 / 0.4; 0.3 / 0.5 since 2026-10-05, with the navigation road values rescaled so every river step costs what it did) |
 | land ↔ water | (K d 0.15 + P) road; P = 0.02 x (1 − harbour suitability) if the land location is owned, has a port and the water tile is its port sea zone or a lake, else 0.1 (`MARKET_NO_PORT_EXTRA_DISTANCE`) |
 
 - **River test** (found 2026-09-27 on 10,304 measured land edges): a land step gets the river factor when the river
@@ -203,6 +203,14 @@ capital.
 
 - **Defines that matter:** only `MARKET_CREATION_MONTHS`. The thresholds 0.55, 0.25 and 100 are hardcoded, not
   defines.
+- **The mod's second rule (2026-10-05, not tested in game):** every location starts at `MARKET_BASE_ACCESS` 1.3, so
+  the hardcoded 0.55 needs a transport cost above 0.75 (vanilla: 0.45). The AI-only generic action `pp_found_market`
+  (`generic_actions/pp_market_founding.txt`, checked yearly through `pp_market_founding_list`) repeats rules 1-4 for a
+  city capital of a country without overlord at `pp_market_founding_access_threshold` (0.65,
+  `script_values/pp_market_founding_values.txt`); subjects and rural capitals keep the engine rule. Unlike the engine
+  path it pays the create_market price. Why: in the 1837 Byzantium run London lost its market around 1675 and Great
+  Britain (16 M people) sat in Cologne's market from then on with no capital able to found a new one. On that save the
+  0.65 rule adds two candidates (colonial nations); kingdom capitals all sit above 0.75.
 - **Defines that do not steer founding:** the AI market-value defines `MARKET_ACCESS_IMPORTANCE` (0.15),
   `MARKET_TAX_BASE_REFERENCE` (100) and `MARKET_OWNING_IMPORTANCE` (0.0005). The engine uses them only in the script
   values `create_market_utility` / `relocate_market_utility`, which the rule above does not call. Those values show

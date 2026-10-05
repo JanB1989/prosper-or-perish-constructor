@@ -1,0 +1,121 @@
+﻿# Prosper or Perish: the AI founds a market in its capital up to a higher market access than the engine allows.
+# The engine's own founding rule (kept as it is) needs capital market access below 0.55, but every location starts at
+# MARKET_BASE_ACCESS 1.3 here, so a capital must lie much further from every market than in vanilla. This action
+# repeats the engine rule with the threshold pp_market_founding_access_threshold: not at war, kingdom or empire or
+# 100+ locations, no overlord, a city capital that is not a market centre yet. Subjects and rural capitals keep the
+# engine rule (0.25). AI only; players use Create new Market.
+
+pp_found_market = {
+	type = owncountry
+
+	potential = {
+		scope:actor = {
+			is_ai = yes
+		}
+	}
+
+	allow = {
+	}
+
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	automation_tick = never
+	automation_tick_frequency = 12
+
+	maximum_targets_in_one_tick = 1
+
+	# like create_market: the market construction carries its own price
+	should_execute_price = no
+	price = price:create_market
+	goods_demand = market_create_demand
+	price_location = scope:target
+	price_modifier = {
+		add = {
+			desc = "game_concept_market_access"
+			if = {
+				limit = {
+					exists = scope:target
+				}
+				scope:target = {
+					value = market_access
+					min = 0.1
+				}
+			}
+		}
+	}
+
+	#location in scope:target
+	select_trigger = {
+		looking_for_a = location
+		source = actor
+		target_flag = target
+		ai_interaction_source_list = {
+			scope:actor = {
+				capital ?= {
+					add_to_list = source
+				}
+			}
+		}
+		name = "create_market_select_location"
+		none_available_msg_key = "create_market_no_locations"
+		column = {
+			data = name
+		}
+		visible = {
+			this = scope:actor.capital
+			owner = scope:actor
+			is_city = yes
+			is_market_center = no
+			market_access < pp_market_founding_access_threshold
+			scope:actor = {
+				at_war = no
+				is_subject = no
+				OR = {
+					country_rank_level > 2
+					num_locations >= 100
+				}
+			}
+		}
+		enabled = {
+			has_market_construction = no
+			not = {
+				market ?= {
+					owner = {
+						has_trade_treaty_with = scope:actor
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				exists = scope:target
+			}
+			scope:target = {
+				market = {
+					location = {
+						save_scope_as = old_location
+					}
+				}
+			}
+			create_market = {
+				builder = scope:actor
+				location = scope:target
+				price = scope:price
+				price_modifier = scope:price_modifier
+			}
+		}
+	}
+
+	ai_will_do = {
+		value = 0
+		if = {
+			limit = {
+				exists = scope:target
+			}
+			add = 100
+		}
+	}
+}

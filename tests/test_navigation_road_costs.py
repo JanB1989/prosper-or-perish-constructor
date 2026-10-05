@@ -35,3 +35,16 @@ def test_navigable_river_beats_coast_beats_small_river_beats_land():
     assert value("MARKET_OPEN_SEA_DISTANCE_FACTOR") <= value("MARKET_DOWNSTREAM_FACTOR") < value("MARKET_UPSTREAM_FACTOR") < 1
     assert step["navigable"] < step["difficult"] < step["improvable"] < step["barrier"] <= 1
     assert land >= 0.005
+
+
+def test_market_access_model_uses_the_mod_values():
+    from prosper_or_perish_constructor.worldbuilder import market_access as ma
+
+    defines = (MOD / "loading_screen/common/defines/pp_defines_adjustments.txt").read_text(encoding="utf-8-sig")
+    value = lambda key: float(defines.split(f"{key} = ", 1)[1].split()[0])
+    assert ma.PARAMS["sea"] == ma.PARAMS["lake"] == value("MARKET_SEA_DISTANCE_FACTOR")
+    assert ma.PARAMS["open"] == ma.PARAMS["lake_sea"] == value("MARKET_OPEN_SEA_DISTANCE_FACTOR")
+    assert ma.PARAMS["down"] == value("MARKET_DOWNSTREAM_FACTOR") and ma.PARAMS["up"] == value("MARKET_UPSTREAM_FACTOR")
+    costs = json.loads((ROOT / "config/river_navigation.json").read_text())["road_costs"]
+    assert {name: ma.ROAD_MARKET_ACCESS[f"pp_navigation_{name}"] for name in costs} == {
+        name: cost["market_access"] for name, cost in costs.items()}

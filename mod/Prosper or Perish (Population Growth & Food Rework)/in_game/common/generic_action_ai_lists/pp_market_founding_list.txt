@@ -1,0 +1,15 @@
+﻿# Prosper or Perish: countries that could found a market in their capital (pp_market_founding.txt).
+pp_market_founding_list = {
+	potential = {
+		is_ai = yes
+		at_war = no
+		is_subject = no
+		OR = {
+			country_rank_level > 2
+			num_locations >= 100
+		}
+	}
+	actions = {
+		pp_found_market
+	}
+}

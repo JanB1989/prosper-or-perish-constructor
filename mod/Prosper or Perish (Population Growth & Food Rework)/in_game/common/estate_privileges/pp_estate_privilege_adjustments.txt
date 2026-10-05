@@ -65,8 +65,8 @@ TRY_REPLACE:noble_sponsored_navy = {
 	}
 }
 
-# Great Offices of the Crown of France: vanilla block plus fort upkeep relief and raw material output (Jan 2026-10-05).
-# France kept collapsing in observer runs: its nobles are barely taxable and the crown went bankrupt in the 1340s.
+# Great Offices of the Crown of France: vanilla block plus a higher noble tax cap (Jan 2026-10-05).
+# France kept collapsing in observer runs: its nobles (+50 % power from this privilege) were taxable at only 4-5 %.
 TRY_REPLACE:great_offices_of_the_crown_of_france = {
 	estate = nobles_estate
 	content_priority = 100
@@ -79,7 +79,6 @@ TRY_REPLACE:great_offices_of_the_crown_of_france = {
 		nobles_estate_target_satisfaction = small_privilege_target_satisfaction
 		global_nobles_estate_power = 0.5
 		global_peasant_enfranchisment = -0.1
-		fort_maintenance_efficiency = 0.2
-		global_raw_material_output = 0.2
+		nobles_estate_max_tax = 0.05
 	}
 }

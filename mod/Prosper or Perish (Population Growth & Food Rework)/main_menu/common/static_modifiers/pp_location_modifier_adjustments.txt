@@ -179,8 +179,8 @@ TRY_REPLACE:raised_levies = {
 	game_data = {
 		category = location
 	}
-	local_production_efficiency = -0.10
-	local_raw_material_output = -0.30
+	local_production_efficiency = -0.05 # -0.10 until 2026-10-05
+	local_raw_material_output = -0.20 # vanilla -0.20; -0.30 until 2026-10-05; no food penalty (vanilla -20 % monthly food)
 }
 
 # Devastation doesn't kill people, starvation and other stuff does

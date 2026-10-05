@@ -61,11 +61,11 @@ building:
     ai_forbid_shutdown = yes
 localization:
   entries:
-    field_management: Field Management
-    field_management_desc: Rotations, manuring, marling and terracing raise how many people the existing fields can feed. Each level is a lasting improvement of the land already under the plough.
-    field_management_slot_0: Maintenance
-    pp_field_management_maintenance: Manuring and Marling
-    pp_field_management_price: Field Management Price
+    field_management: Marled Fields
+    field_management_desc: Fields dressed with marl and manure, worked in rotation and terraced where the slope demands it, feed more people than the bare land did. Each level is a lasting improvement of the land already under the plough.
+    field_management_slot_0: Upkeep
+    pp_field_management_maintenance: None
+    pp_field_management_price: Marled Fields Price
 prices:
 - key: pp_field_management_price
   body: '{gold = 130}'

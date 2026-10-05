@@ -265,9 +265,11 @@ def test_modifiers_the_chips_show_get_no_top_row_icon():
     for key in ("pp_wb_fertility_high", "pp_wb_soil_loam", "pp_wb_coastal", "pp_wb_lake", "river_flowing_through_1",
                 f"pp_rgo_bonus_{goods[0]}"):
         assert f"Localize('STATIC_MODIFIER_NAME_{key}')" in loc
-    assert "Custom('pp_harvest_state')" in loc and "pp_harvest_" not in loc.replace("pp_harvest_state", "")
-    assert loc.count("Or(") == loc.count("EqualTo_string(") - 1 and loc.count("(") == loc.count(")")
-    assert hidden["province_modifier"].endswith("Localize('STATIC_MODIFIER_NAME_pp_food_store_0'))")
+    # contains, not equals: in game GetName never equalled the localized name (b921e221); key prefixes as a fallback
+    assert "StringContains(TimedModifier.GetModifier.GetName, LocationView.GetLocation.Custom('pp_harvest_state'))" in loc
+    assert "EqualTo_string" not in loc and "StringContains(TimedModifier.GetModifier.GetName, 'pp_wb_')" in loc
+    assert loc.count("Or(") == loc.count("StringContains(") - 1 and loc.count("(") == loc.count(")")
+    assert "Localize('STATIC_MODIFIER_NAME_pp_food_store_0')" in hidden["province_modifier"]
     # the shipped window: both icon lists carry the test, other modifiers (events, canals) keep their icons
     window = (MOD_ROOT / "in_game/gui/location_window.gui").read_text(encoding="utf-8-sig")
     assert window.count(f'visible = "[Not({loc})]"') == 1

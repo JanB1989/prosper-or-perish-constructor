@@ -252,6 +252,7 @@ WB_CHIP_MODIFIERS = re.compile(r"^(pp_wb_(?:fertility|soil)_\w+|pp_wb_coastal|pp
 RIVER_MODIFIERS = re.compile(r"^(river_flowing_through_\w+)\s*=\s*\{", re.M)
 _STATIC_NAME = re.compile(r'^\s*STATIC_MODIFIER_NAME_(\w+):\d*\s*"(.*)"\s*$', re.M)
 STORED_FOOD_STEP = "pp_food_store_0"   # every step carries the name Stored Food
+CHIP_KEY_PREFIXES = ("pp_wb_", "river_flowing_through", "pp_rgo_bonus_", "pp_harvest_")
 
 
 def _any(tests: list[str]) -> str:
@@ -275,8 +276,11 @@ def shown_by_chips(mod_root: Path, vanilla: Path | None, goods: list[str], harve
 
     The fertility, soil, water access and lake chips show the World Builder modifiers, the river chip vanilla's river
     modifiers (RiverModifier_tooltip), the RGO chip the raw material bonus, the harvest chip the location's harvest and
-    the Stored Food chip the province's step. A GUI icon cannot see a modifier's key, so the test compares its name: one
-    test per distinct name, the harvest against the harvest chip's own text (one test for the ~100 harvests).
+    the Stored Food chip the province's step. A GUI icon cannot see a modifier's key, so the test looks for its name: one
+    test per distinct name, the harvest against the harvest chip's own text (one test for the ~100 harvests; its
+    fallback, Average Harvest, is never empty). The tests are ``StringContains``, not equality: in game (2026-10-05,
+    b921e221) ``DatabaseModifier.GetName`` never equalled the localized name, not even for plain names such as High
+    Fertility, so it carries more than the bare text. The key prefixes are tested too, in case it is the key.
     """
     game = None if vanilla is None else (vanilla / "game" if (vanilla / "game" / "main_menu").is_dir() else vanilla)
     keys = WB_CHIP_MODIFIERS.findall(_read(mod_root / "main_menu/common/static_modifiers/pp_wb_attribute_modifiers.txt"))
@@ -285,16 +289,16 @@ def shown_by_chips(mod_root: Path, vanilla: Path | None, goods: list[str], harve
     keys += [f"pp_rgo_bonus_{good}" for good in goods]
     names = _static_names([root for root in (game, mod_root) if root is not None])
     seen: set[str] = set()
-    tests = [f"EqualTo_string({_NAME}, {_LOC}.Custom('pp_harvest_state'))"] if harvests else []
+    tests = [f"StringContains({_NAME}, {_LOC}.Custom('pp_harvest_state'))"] if harvests else []
     for key in keys:
         name = names.get(key, key)
         if name not in seen:
             seen.add(name)
-            tests.append(f"EqualTo_string({_NAME}, Localize('STATIC_MODIFIER_NAME_{key}'))")
-    hidden = {"province_modifier": f"EqualTo_string({_NAME}, Localize('STATIC_MODIFIER_NAME_{STORED_FOOD_STEP}'))"}
-    if tests:
-        hidden["location_modifier"] = _any(tests)
-    return hidden
+            tests.append(f"StringContains({_NAME}, Localize('STATIC_MODIFIER_NAME_{key}'))")
+    tests += [f"StringContains({_NAME}, '{prefix}')" for prefix in CHIP_KEY_PREFIXES]
+    stored = [f"StringContains({_NAME}, Localize('STATIC_MODIFIER_NAME_{STORED_FOOD_STEP}'))",
+              f"StringContains({_NAME}, 'pp_food_store_')"]
+    return {"location_modifier": _any(tests), "province_modifier": _any(stored)}
 
 
 def _read(path: Path) -> str:

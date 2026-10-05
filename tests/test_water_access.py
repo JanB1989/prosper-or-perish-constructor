@@ -15,6 +15,7 @@ from pathlib import Path
 import polars as pl
 import pytest
 
+from prosper_or_perish_constructor import location_view
 from prosper_or_perish_constructor.worldbuilder import coast
 from prosper_or_perish_constructor.worldbuilder import navigation_scripts as ns
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
@@ -57,7 +58,7 @@ def test_water_access_chip_replaces_the_coast_chip_after_river_and_lake():
            'widget = { name = "ha1300_native_soil" size = { 30 30 }\n}\n'
            'hbox = {\n# NATURAL HABOUR\nwidget = {\n tooltipwidget = { using = HarborCapacity_tooltip }\n}\n\n'
            '# SOUND TOLL\nicon = { size = { 30 30 } }\n}\n')
-    out = coast.water_access_chips(gui)
+    out = location_view.water_access_chips(gui)
     assert "ha1300_native_coast" not in out
     assert out.index("ha1300_native_lake") < out.index('name = "pp_water_access"') < out.index('name = "pp_port"') < out.index("ha1300_native_soil")
     # the sea-coast effects show only on the sea coast; the engine's coastal effects on both water states
@@ -73,10 +74,10 @@ def test_water_access_chip_replaces_the_coast_chip_after_river_and_lake():
     assert 'visible = "[LocationView.GetLocation.IsCoastal]"' in ring and ring.count("pieslice_no_highlight") == 2
     assert "GetModifierValueFixed('harbor_suitability')" in ring
     assert port.index("pp_port_harbor_ring") < port.index("size = { 20 20 } parentanchor = center")
-    for tex in (coast.SEA_ICON, coast.WATERWAY_ICON, coast.INLAND_ICON, coast.PORT_ICON):
+    for tex in (location_view.SEA_ICON, location_view.WATERWAY_ICON, location_view.INLAND_ICON, location_view.PORT_ICON):
         assert tex in out
     with pytest.raises(ValueError):
-        coast.water_access_chips(out)
+        location_view.water_access_chips(out)
 
 
 def test_custom_localization_splits_the_engine_coast_into_three_states():

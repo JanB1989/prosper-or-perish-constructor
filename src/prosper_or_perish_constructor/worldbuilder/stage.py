@@ -14,8 +14,6 @@ import polars as pl
 
 from prosper_or_perish_constructor.location_baseline import resolve_load_order_path
 from prosper_or_perish_constructor.setup_layout import LEGACY_SETUP_DIR, check_setup_folder
-from prosper_or_perish_constructor import stored_food
-from prosper_or_perish_constructor.worldbuilder import attribute_tooltips as wb_tooltips
 from prosper_or_perish_constructor.worldbuilder import buildings as wb_buildings
 from prosper_or_perish_constructor.worldbuilder import compat as wb_compat
 from prosper_or_perish_constructor.worldbuilder import development as wb_development
@@ -48,8 +46,7 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     check_setup_folder(vanilla_root(repo, project) / "game", mod_root)
     report: dict[str, object] = {"handover": str(contract.root), "version": contract.version, "worldbuilder_commit": contract.meta.get("worldbuilder_commit")}
     if cfg.sync_geography:
-        report["geography"] = wb_geography.sync_geography(cfg.geography_export, mod_root, repo, vanilla_root(repo, project),
-                                                         stored_food.configured_payload(project))
+        report["geography"] = wb_geography.sync_geography(cfg.geography_export, mod_root, repo)
     # channel tiles take the topography of their navigation state (Navigable River, Shallows, Falls)
     if cfg.raw.get("navigation_config"):
         nav_settings = json.loads((repo / str(cfg.raw["navigation_config"])).read_text(encoding="utf-8"))
@@ -95,8 +92,7 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     current = load_current_location_frame(repo, project)
     cfg = navigation.prepare(repo, cfg, contract, locations=current)
     report["static_modifiers"] = wb_modifiers.write_static_modifiers(contract, cfg, mod_root, vanilla_root(repo, project))
-    # the geography chips' tooltips read back the class injects and static modifiers written above
-    report["attribute_tooltips"] = wb_tooltips.write(mod_root, vanilla_root(repo, project))
+    # the geography chips' tooltips (attribute_tooltips.py) and the location window are written in finalize (location_view.py)
     # raw-material placement is the mod's: the goods lose vanilla's location_potential (EU5 1.4), the Columbian exchange
     # actions test the mod's placement rules instead
     from . import raw_material_placement

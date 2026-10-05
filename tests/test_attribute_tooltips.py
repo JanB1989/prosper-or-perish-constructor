@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from prosper_or_perish_constructor.worldbuilder import attribute_tooltips as tt
+from prosper_or_perish_constructor import attribute_tooltips as tt
 
 _TEMPLATES = """\
 template Topography_tooltip {
@@ -308,7 +308,7 @@ def test_location_attributes_come_from_the_templates_and_the_setup(tmp_path):
 
 
 def test_location_window_chips_use_the_generated_tooltips():
-    from prosper_or_perish_constructor.worldbuilder import geography as wb_geography
+    from prosper_or_perish_constructor import location_view as wb_geography
 
     gui = (
         "tooltipwidget = { using = Topography_tooltip }\ntooltipwidget = { using = Climate_tooltip }\n"

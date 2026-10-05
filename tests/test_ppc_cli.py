@@ -326,6 +326,33 @@ def test_smart_sync_reruns_world_builder_only_when_its_inputs_change(
 def test_world_builder_fingerprint_covers_the_code_the_stage_imports() -> None:
     package = ROOT / "src" / "prosper_or_perish_constructor"
     covered = [ROOT / relative for relative in cli.WORLDBUILDER_CODE_AND_DATA]
+    seen = _stage_imports(package)
+    uncovered = [
+        str(path.relative_to(ROOT))
+        for path in sorted(seen)
+        if path.name != "__init__.py" or path.parent == package / "worldbuilder"
+        if not any(path == entry or entry in path.parents for entry in covered)
+    ]
+    assert uncovered == []
+
+
+def test_location_view_stays_out_of_the_start_setup() -> None:
+    # 2026-10-05: a GUI edit to the location window reran the whole start setup (80 s sync); the window and the chip
+    # tooltips are built in finalize (location_view.py), so the stage must not import them and their code must stay out
+    # of the World Builder fingerprint
+    package = ROOT / "src" / "prosper_or_perish_constructor"
+    view = {package / name for name in ("location_view.py", "attribute_tooltips.py", "location_status.py")}
+    assert not view & _stage_imports(package)
+    covered = [ROOT / relative for relative in cli.WORLDBUILDER_CODE_AND_DATA]
+    assert not [p.name for p in view if any(p == entry or entry in p.parents for entry in covered)]
+    source = (package / "cli.py").read_text(encoding="utf-8-sig")
+    start = source.index("\ndef _finalize_constructor_mod(")
+    finalize = source[start:source.index("\ndef ", start + 1)]
+    assert finalize.index("location_view.apply(") < finalize.index("gui_compat.strip(mod_root)")
+
+
+def _stage_imports(package: Path) -> set[Path]:
+    """Every package module the World Builder stage imports, directly or through other modules (function bodies too)."""
     seen: set[Path] = set()
     pending = [package / "worldbuilder" / "stage.py"]
     while pending:
@@ -351,14 +378,7 @@ def test_world_builder_fingerprint_covers_the_code_the_stage_imports() -> None:
                 for candidate in (target.with_suffix(".py"), target / "__init__.py"):
                     if candidate.is_file():
                         pending.append(candidate)
-
-    uncovered = [
-        str(path.relative_to(ROOT))
-        for path in sorted(seen)
-        if path.name != "__init__.py" or path.parent == package / "worldbuilder"
-        if not any(path == entry or entry in path.parents for entry in covered)
-    ]
-    assert uncovered == []
+    return seen
 
 
 def test_build_does_not_finalize_after_failed_orchestrator_build(

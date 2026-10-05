@@ -5,10 +5,10 @@ only needs a rerun: the stored-food gauges (the script value ``pp_province_food_
 vanilla food-capacity percentage) and, for the Europedia, the Prosper or Perish page (its button and its cards, taken from the current mod
 file). Everything else is vanilla, so whatever the game adds to these windows stays visible.
 
-``location_window.gui`` is not handled here: it is generated from the World Builder export by
-``ppc worldbuilder apply`` (worldbuilder/geography.py). After a rerun, ``ppc build`` (or the finalize GUI steps
-``gui_compat.strip`` -> ``compile_food_storage_gui`` -> ``gui_compat.protect``) writes the food-storage divisor and the
-CMF-proof ``pp_`` type copies again.
+``location_window.gui`` is not handled here: it is generated from the World Builder export by the finalize step of
+``ppc build`` / ``ppc sync`` (location_view.py), followed by the finalize GUI steps ``gui_compat.strip`` ->
+``compile_food_storage_gui`` -> ``gui_compat.protect``, which write the food-storage divisor and the CMF-proof ``pp_``
+type copies.
 
     uv run python tools/port_vanilla_gui.py            # write the overrides into the mod
     uv run python tools/port_vanilla_gui.py --check    # report which overrides differ from a fresh port

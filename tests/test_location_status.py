@@ -192,7 +192,7 @@ def test_province_modifier_list_shows_the_stored_food_step():
 def test_condition_icons_sit_at_the_top_left_of_the_scene():
     # 2026-10-03 (Jan): the bottom row is full with the geography chips, so vanilla's condition icons (winter, disease,
     # location and province modifiers, Stored Food among them) ran past the window's edge; they get their own top-left row
-    from prosper_or_perish_constructor.worldbuilder import geography
+    from prosper_or_perish_constructor import location_view as geography
 
     scene = (
         "\t\t\t\tvbox = {\n\t\t\t\t\texpand = {}\n\t\t\t\t\t# IOs & PERIPHORA\n\t\t\t\t\twidget = {}\n"
@@ -222,7 +222,7 @@ def test_condition_icons_sit_at_the_top_left_of_the_scene():
 
 def test_every_location_and_province_modifier_gets_its_own_icon():
     # 2026-10-05 (Jan): vanilla folds two or more modifiers into a count; the top-left row has room for every icon
-    from prosper_or_perish_constructor.worldbuilder import geography
+    from prosper_or_perish_constructor import location_view as geography
 
     def vanilla(model: str, concept: str) -> str:
         return (f'widget = {{\n\tsize = {{ 45 26 }}\n\tvisible = "[GreaterThan_int32(GetDataModelSize({model}), \'(int32)0\')]"\n'

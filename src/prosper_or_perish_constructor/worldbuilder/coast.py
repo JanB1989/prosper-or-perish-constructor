@@ -155,105 +155,11 @@ def sea_coast(state: dict[str, str]) -> set[str]:
     return {tag for tag, value in state.items() if value == "sea_coast"}
 
 
-# --- location view: Water Access and Port chips ------------------------------------------------------------------
+# --- location view: the Water Access custom localization (the chips are in location_view.py) --------------------
 
-_LOC = "LocationView.GetLocation"
-_FRAME = f'background = {{ texture = "[GetClimateFrame({_LOC}.GetClimate)]" }}'
-SEA_ICON = "gfx/interface/icons/location_icons/coastal.dds"
-WATERWAY_ICON = "gfx/interface/topography/pp_river_channel.dds"
-INLAND_ICON = "gfx/interface/icons/location_icons/inland.dds"
-PORT_ICON = "gfx/interface/icons/modifier_types/natural_harbor_suitability.dds"
-IS_SEA = f"EqualTo_string({_LOC}.Custom('pp_water_access'), Localize('PP_WATER_SEA_COAST'))"
-IS_WATERWAY = f"EqualTo_string({_LOC}.Custom('pp_water_access'), Localize('PP_WATER_WATERWAY'))"
-IS_INLAND = f"EqualTo_string({_LOC}.Custom('pp_water_access'), Localize('PP_WATER_INLAND'))"
-ALSO_RIVER = f"EqualTo_string({_LOC}.Custom('pp_water_access_river_note'), Localize('PP_WATER_ALSO_RIVER'))"
 CUSTOM_LOC_PATH = Path("in_game/common/customizable_localization/pp_water_access.txt")
 SCRIPT_VALUES_PATH = Path("in_game/common/script_values/pp_water_access.txt")   # retired: the Port chip reads the modifier
 LOCALIZATION_PATH = Path("main_menu/localization/english/pp_water_access_l_english.yml")
-_COAST_CHIP = re.compile(r'widget = \{\s*name = "ha1300_native_coast".*?(?=widget = \{\s*name = "ha1300_native_river")', re.S)
-# vanilla's natural harbour pie next to the river and sound toll icons; the Port chip carries its tooltip now
-_HARBOR_PIE = re.compile(r'# NATURAL HABOUR\s*widget = \{.*?(?=# (?:RIVER MODIFIER|SOUND TOLL))', re.S)
-_SOIL_CHIP = 'widget = { name = "ha1300_native_soil"'
-# vanilla's natural harbour ring around the Port icon on the coast: green = harbour suitability, red = the rest
-_SUITABILITY = f"FixedPointToFloat({_LOC}.GetModifierValueFixed('harbor_suitability'))"
-_PIE = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
-_HARBOR_RING = (
-    f'piechart = {{ name = "pp_port_harbor_ring" visible = "[{_LOC}.IsCoastal]" size = {{ 100% 100% }} parentanchor = center '
-    f"using = bg_circle using = piechart_angles using = bg_circle_piechart "
-    f'icon = {{ texture = "{_PIE}" size = {{ 97% 97% }} parentanchor = center color = {{ 0 0 0 1 }} }} '
-    f'pieslice_no_highlight = {{ texture = "{_PIE}" value = "[{_SUITABILITY}]" color = {{ 0.3 0.8 0.3 1 }} alpha = 0.8 }} '
-    f'pieslice_no_highlight = {{ texture = "{_PIE}" value = "[Max_float(Subtract_float(\'(float)1.0\', {_SUITABILITY}), \'(float)0\')]" '
-    f"color = {{ 0.8 0.3 0.3 1 }} alpha = 0.8 }} }}"
-)
-
-
-def _icons(size: str, extra: str = "") -> str:
-    return " ".join(f'icon = {{ {size} texture = "{tex}" visible = "[{gate}]" {extra}}}'
-                    for tex, gate in ((SEA_ICON, IS_SEA), (WATERWAY_ICON, IS_WATERWAY), (INLAND_ICON, IS_INLAND)))
-
-
-def water_access_chip() -> str:
-    return f'''widget = {{
-        name = "pp_water_access"
-        size = {{ 30 30 }}
-        datacontext = "[{_LOC}]"
-        tooltipwidget = {{
-        ContextualTooltipType = {{
-            blockoverride "title_text" {{ text = "[{_LOC}.Custom('pp_water_access')]" }}
-            blockoverride "concept_link" {{ visible = yes text = "[coastal|E]" }}
-            blockoverride "title_icon" {{
-                widget = {{ using = tooltip_title_icon_size {_FRAME} {_icons("using = tooltip_title_icon_size")} }}
-            }}
-            blockoverride "tooltip_content" {{
-                TooltipTextBlock = {{ blockoverride "text" {{ text = "[{_LOC}.Custom('pp_water_access_help')]" }} }}
-                TooltipTextBlock = {{ visible = "[{ALSO_RIVER}]" blockoverride "text" {{ text = "PP_WATER_ALSO_RIVER" }} }}
-                TooltipStringPairList = {{ visible = "[{_LOC}.IsCoastal]" textcontext = "[ShowModifierEffect('coastal')]" }}
-                pp_attribute_view_coast = {{}}
-            }}
-        }}
-    }}
-        {_FRAME}
-        {_icons("size = { 30 30 }")}
-    }}
-widget = {{
-        name = "pp_port"
-        size = {{ 30 30 }}
-        datacontext = "[{_LOC}]"
-        tooltipwidget = {{
-        ContextualTooltipType = {{
-            blockoverride "title_text" {{ text = "[SelectLocalization({_LOC}.HasPort, 'PP_PORT', 'PP_NO_PORT')]" }}
-            blockoverride "concept_link" {{ visible = yes text = "[port|E]" }}
-            blockoverride "title_icon" {{
-                widget = {{ using = tooltip_title_icon_size {_FRAME} icon = {{ using = tooltip_title_icon_size texture = "{PORT_ICON}" }} }}
-            }}
-            blockoverride "title_button" {{
-                mapmode_tooltip_button = {{ datacontext = "[GetMapMode('natural_harbor_suitability')]" }}
-            }}
-            blockoverride "tooltip_content" {{
-                TooltipTextBlock = {{ blockoverride "text" {{ text = "[SelectLocalization({_LOC}.HasPort, 'PP_PORT_HELP', 'PP_NO_PORT_HELP')]" }} }}
-                TooltipTextBlock = {{ visible = "[{_LOC}.IsCoastal]" blockoverride "text" {{ text = "PP_PORT_HARBOR" }} }}
-                TooltipStringPairList = {{
-                    visible = "[{_LOC}.IsCoastal]"
-                    blockoverride "block_title" {{ text = "HARBOR_SUITABILITY_DESC" }}
-                    textcontext = "[Location.GetDescriptionFor('harbor_suitability')]"
-                }}
-                TooltipStringPairList = {{
-                    visible = "[{_LOC}.IsCoastal]"
-                    blockoverride "block_title" {{ text = "HARBOR_SUITABILITY_IMPACT" }}
-                    textcontext = "[Location.GetHarborCapacityImpactInfo]"
-                }}
-            }}
-        }}
-    }}
-        {_FRAME}
-        {_HARBOR_RING}
-        icon = {{ size = {{ 20 20 }} parentanchor = center texture = "{PORT_ICON}" visible = "[And({_LOC}.IsCoastal, {_LOC}.HasPort)]" }}
-        icon = {{ size = {{ 20 20 }} parentanchor = center texture = "{PORT_ICON}" alpha = 0.4 visible = "[And({_LOC}.IsCoastal, Not({_LOC}.HasPort))]" }}
-        icon = {{ size = {{ 30 30 }} texture = "{PORT_ICON}" alpha = 0.3 visible = "[Not({_LOC}.IsCoastal)]" }}
-    }}
-'''
-
-
 _TOPOGRAPHY_MODE = "topography = {\n\tcolor_mode = topography\n"
 
 
@@ -267,22 +173,6 @@ def topography_map_mode_without_rivers(text: str) -> str:
     if text.count(_TOPOGRAPHY_MODE) != 1:
         raise ValueError("map_modes.txt: expected 1 Topography map mode block")
     return text.replace(_TOPOGRAPHY_MODE, _TOPOGRAPHY_MODE + "\tenable_rivers = no\n")
-
-
-def water_access_chips(text: str) -> str:
-    """Replace the World Builder's coast chip (engine is_coastal: Coastal / Inland) by the Water Access chip (Inland /
-    Waterway / Sea Coast) and a Port chip; both sit after the river and lake chips. Vanilla's natural harbour pie goes:
-    the Port chip's tooltip carries the harbour suitability, harbour capacity and its effects."""
-    found = len(_COAST_CHIP.findall(text))
-    if found != 1:
-        raise ValueError(f"location_window.gui: expected 1 World Builder coast chip, found {found}")
-    if text.count(_SOIL_CHIP) != 1:
-        raise ValueError("location_window.gui: expected 1 soil chip anchor for the water access chips")
-    pies = len(_HARBOR_PIE.findall(text))
-    if pies != 1:
-        raise ValueError(f"location_window.gui: expected 1 vanilla natural harbour widget, found {pies}")
-    text = _HARBOR_PIE.sub("", _COAST_CHIP.sub("", text))
-    return text.replace(_SOIL_CHIP, water_access_chip() + _SOIL_CHIP)
 
 
 CUSTOM_LOCALIZATION = """﻿# Generated by ppc worldbuilder (coast.py); do not edit by hand.

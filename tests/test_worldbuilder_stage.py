@@ -375,7 +375,7 @@ def test_compat_copy_leaves_replaced_objects_alone_and_never_undoes_earlier_over
 
 
 def test_population_capacity_cell_bands_the_gauge_and_names_both_sides_of_the_ratio():
-    from prosper_or_perish_constructor.worldbuilder import geography as wb_geography
+    from prosper_or_perish_constructor import location_view as wb_geography
 
     # EU5 1.4: one template draws the population cell of the location card and of the location view header
     template = """template location_card_population_button_body {
@@ -483,7 +483,7 @@ def test_river_replacements_fold_in_the_hand_authored_injects(tmp_path):
 
 
 def test_rgo_chip_lists_the_bonus_of_the_location_raw_material_only():
-    from prosper_or_perish_constructor.worldbuilder import geography as wb_geography
+    from prosper_or_perish_constructor import location_view as wb_geography
 
     goods = wb_geography.rgo_bonus_goods("pp_rgo_bonus_wheat = {\n}\n# pp_rgo_bonus_x = {\npp_rgo_bonus_goods_gold = {\n}\n")
     assert goods == ["wheat", "goods_gold"]

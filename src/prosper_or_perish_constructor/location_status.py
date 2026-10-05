@@ -402,7 +402,7 @@ def harvest_chip(harvests: Harvests) -> str:
         f'raw_text = "#{"G" if badge.startswith("+") else "R"} {badge}#!" }}'
         for sev, badge in SEVERITY_BADGES.items()
     ]
-    # every harvest's effects, then its goods output as an icon table (worldbuilder/attribute_tooltips.py, gated by harvest_gate)
+    # every harvest's effects, then its goods output as an icon table (attribute_tooltips.py, gated by harvest_gate)
     rows = "pp_attribute_view_harvest = {}" if harvests.keys else ""
     help_texts = " ".join(
         f'TooltipTextBlock = {{ visible = "[{_harvest_test(trend)}]" blockoverride "text" {{ text = "PP_HARVEST_CHIP_{trend.upper()}" }} }}'

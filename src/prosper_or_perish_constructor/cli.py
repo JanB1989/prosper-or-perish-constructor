@@ -57,7 +57,6 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/free_building_levels.py",
     "src/prosper_or_perish_constructor/goods_categories.py",      # crop_farms (start crop allocation) imports these
     "src/prosper_or_perish_constructor/location_baseline.py",
-    "src/prosper_or_perish_constructor/location_status.py",
     "src/prosper_or_perish_constructor/logistics.py",            # production_labour skips its network methods
     "src/prosper_or_perish_constructor/production_gate.py",
     "src/prosper_or_perish_constructor/production_labour.py",
@@ -65,7 +64,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/rural_capacity.py",
     "src/prosper_or_perish_constructor/setup_layout.py",          # the setup folder every setup writer uses
     "src/prosper_or_perish_constructor/staple_foods.py",          # the staple crops of the start crop allocation
-    "src/prosper_or_perish_constructor/stored_food.py",           # the location view's Stored Food chip lists its effects
+    "src/prosper_or_perish_constructor/stored_food.py",           # store_lever (start-food validator) reads its config
     "src/prosper_or_perish_constructor/store_lever.py",           # the start-food validator reads the store lever's numbers
     "src/prosper_or_perish_constructor/vanilla_food_productivity.py",   # script value resolution (EU5 1.4 override rule)
     "src/prosper_or_perish_constructor/yaml_io.py",
@@ -1479,8 +1478,12 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         f"{len(caps.changed)} files changed.",
         flush=True,
     )
-    from prosper_or_perish_constructor import gui_compat
+    from prosper_or_perish_constructor import gui_compat, location_view
 
+    # view only, so here and not in the World Builder stage: a GUI edit does not rerun the start setup
+    view = location_view.apply(repo, project, mod_root, vanilla_root(repo, project))
+    print("Location view: " + ("skipped, no geography export." if view.get("skipped") else
+                               "location window and geography chip tooltips rebuilt."), flush=True)
     gui_compat.strip(mod_root)   # the food-storage compile counts its gauge lines per file
     food_storage_gui_result = compile_food_storage_gui(
         repo=repo,

@@ -20,8 +20,8 @@ Only the (good, step) pairs that occur at some location get a cell (the attribut
 tooltip at a few hundred cheap tests.
 
 The values are read back from the files the game loads (the class definitions with the mod's injects, the static
-modifiers), so the views show what applies. The location window is patched before those files are written (geography
-sync), so it refers to the generated templates and types by name only.
+modifiers), so the views show what applies. The location window (location_view.py) refers to the generated templates
+and types by name only. Both run in the constructor's finalize step, after the World Builder stage wrote those files.
 """
 
 from __future__ import annotations
@@ -36,7 +36,7 @@ from pathlib import Path
 from prosper_or_perish_constructor import location_status
 from prosper_or_perish_constructor.setup_layout import SETUP_DIR
 
-from .modifiers import CLASS_DIRS
+from prosper_or_perish_constructor.worldbuilder.modifiers import CLASS_DIRS
 
 GUI_PATH = Path("in_game/gui/shared/pp_attribute_tooltips.gui")
 MODIFIERS_PATH = Path("main_menu/common/static_modifiers/pp_attribute_tooltip_views.txt")

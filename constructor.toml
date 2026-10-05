@@ -1160,6 +1160,7 @@ local_monthly_prosperity = 0.0025
 [stored_food.low]
 # Low Stores: per year short of the pivot (size 1 at an empty store)
 local_province_food_sales_output_modifier = -3.0    # the Grange's Surplus Sales
+local_defensive = -0.24    # defensiveness: -24 % at an empty store, 2 % per month short of the pivot (2026-10-05, Jan)
 # (no victuals line since 2026-10-03: the harbour Yard takes no store food any more, and the Grange stops by its own
 # Surplus Sales; a starving province still packs nothing, province_starving). Province Food output and the staples
 # follow the store curve below since 2026-10-03 (was Province Food +0.75 per year, staples 0).
@@ -1169,6 +1170,7 @@ local_province_food_sales_output_modifier = -3.0    # the Grange's Surplus Sales
 local_province_food_sales_output_modifier = 0.13    # the Grange's Surplus Sales (2026-10-03 evening, was 0.34: a
 # flatter store term makes the victuals price move the Grange's stop point 13.9 months per gold instead of 5.3)
 # (Province Food output and the staples: the store curve below; was Province Food -0.75 per year, staples 0)
+local_defensive = 0.24     # defensiveness: +24 % at 24 months, 2 % per month above the pivot (2026-10-05, Jan)
 
 [stored_food.curve]
 # Farm trade-off (Jan's design 2026-10-02, built 2026-10-03): the store moves the farms between feeding the province

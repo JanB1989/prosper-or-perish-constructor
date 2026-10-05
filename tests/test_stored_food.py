@@ -99,7 +99,9 @@ def test_store_lever_moves_province_food_staples_and_surplus_sales() -> None:
     # Surplus Sales (the Grange's leg) grow above the pivot and are gone at most 6 months below it; they are the only
     # linear lever left: Province Food and the staples follow the store curve (2026-10-03)
     assert full[SALES] > 0 and low[SALES] <= -2
-    assert set(low) == {SALES} and set(full) == {SALES}
+    # defensiveness: -24 % at an empty store, +24 % at 24 months, 2 % per month around the pivot (2026-10-05, Jan)
+    assert set(low) == {SALES, "local_defensive"} and set(full) == {SALES, "local_defensive"}
+    assert low["local_defensive"] == -0.24 and full["local_defensive"] == 0.24
     # the store curve: Jan's shares of an empty store's Province Food output (100 / 80 / 65 / 50 / 40 % at 0 / 6 / 12 /
     # 18 / 24 months), so the output modifier runs +53.8 % .. 0 .. -38.5 %; some output is left at the cap
     assert config.food_curve == ((0.0, 1.0), (6.0, 0.8), (12.0, 0.65), (18.0, 0.5), (24.0, 0.4))

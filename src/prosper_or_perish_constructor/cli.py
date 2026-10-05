@@ -1463,16 +1463,15 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         )
     _ensure_price_cost_modifier_assets(mod_root)
     _install_good_icons(repo, project, mod_root)
-    from prosper_or_perish_constructor import stored_food
+    from prosper_or_perish_constructor import cap_tooltips, stored_food
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
-    stored = stored_food.apply(project, mod_root)
+    stored = stored_food.apply(project, mod_root, vanilla_game=cap_tooltips.game_root(vanilla_root(repo, project)))
     print(
-        f"Stored food: step modifiers, refresh effect, display values and localization "
+        f"Stored food: step modifiers, icons, refresh effect, display values and localization "
         f"({stored.files_changed} files changed).",
         flush=True,
     )
-    from prosper_or_perish_constructor import cap_tooltips
-    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
     caps = cap_tooltips.apply(mod_root, vanilla_root(repo, project))
     print(

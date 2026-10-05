@@ -218,6 +218,32 @@ def test_condition_icons_sit_at_the_top_left_of_the_scene():
     # the shipped window: the icons left the bottom row and the queue buttons keep the top-right corner
     window = (MOD_ROOT / "in_game/gui/location_window.gui").read_text(encoding="utf-8-sig")
     assert window.count(f'name = "{geography.MODIFIER_ROW}"') == 1
+
+
+def test_every_location_and_province_modifier_gets_its_own_icon():
+    # 2026-10-05 (Jan): vanilla folds two or more modifiers into a count; the top-left row has room for every icon
+    from prosper_or_perish_constructor.worldbuilder import geography
+
+    def vanilla(model: str, concept: str) -> str:
+        return (f'widget = {{\n\tsize = {{ 45 26 }}\n\tvisible = "[GreaterThan_int32(GetDataModelSize({model}), \'(int32)0\')]"\n'
+                f'\tflowcontainer = {{ datamodel = "[{model}]" item = {{ timed_modifier_icon = {{ text = "[{concept}|e]" }} }} }}\n'
+                f'\tflowcontainer = {{ text_single = {{ text = "[GetDataModelSize({model})]" }} }}\n}}\n')
+
+    loc, prov = "LocationView.GetLocation.GetTimedModifiers", "LocationView.GetLocation.GetProvince.GetTimedModifiers"
+    row = ("hbox = {\n\t# Location timed modifiers\n\t" + vanilla(loc, "location_modifier").replace("\n", "\n\t")
+           + "# Province timed modifiers\n\t" + vanilla(prov, "province_modifier").replace("\n", "\n\t") + "expand = {}\n}\n")
+    out = geography.show_every_timed_modifier(row)
+    assert out.count("{") == out.count("}") and "GetDataModelSize" not in out
+    for model, concept in ((loc, "location_modifier"), (prov, "province_modifier")):
+        assert f'visible = "[DataModelHasItems({model})]"\n\t\tdatamodel = "[{model}]"' in out
+        assert f'text = "[{concept}|e]"' in out
+    with pytest.raises(ValueError, match="Location timed modifiers"):
+        geography.show_every_timed_modifier(row + row)
+
+    window = (MOD_ROOT / "in_game/gui/location_window.gui").read_text(encoding="utf-8-sig")
+    top = window[window.index(f'name = "{geography.MODIFIER_ROW}"'):]
+    for model in (loc, prov):
+        assert f"DataModelHasItems({model})" in top and f"GetDataModelSize({model})" not in window
     row_at = window.index(f'name = "{geography.MODIFIER_ROW}"')
     assert window.index("# BOTTOM CONDITIONS") < row_at < window.index("# SOUND TOLL") < window.index("# Province timed modifiers")
     assert window.index("# Province timed modifiers") < window.index("size = { 62 220 }")

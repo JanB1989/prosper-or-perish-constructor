@@ -68,6 +68,11 @@ def test_water_access_chip_replaces_the_coast_chip_after_river_and_lake():
     for text in ("PP_PORT_HARBOR", "GetDescriptionFor('harbor_suitability')", "GetHarborCapacityImpactInfo",
                  "GetMapMode('natural_harbor_suitability')"):
         assert text in port
+    # 2026-10-05 (Jan): on the coast the Port icon sits in vanilla's harbour ring (green = harbour suitability)
+    ring = port[port.index('name = "pp_port_harbor_ring"'):]
+    assert 'visible = "[LocationView.GetLocation.IsCoastal]"' in ring and ring.count("pieslice_no_highlight") == 2
+    assert "GetModifierValueFixed('harbor_suitability')" in ring
+    assert port.index("pp_port_harbor_ring") < port.index("size = { 20 20 } parentanchor = center")
     for tex in (coast.SEA_ICON, coast.WATERWAY_ICON, coast.INLAND_ICON, coast.PORT_ICON):
         assert tex in out
     with pytest.raises(ValueError):

@@ -248,6 +248,51 @@ def move_modifier_row(text: str) -> str:
     return text[:scene_end] + comment + row + text[scene_end:]
 
 
+_TIMED_MODIFIERS = (("# Location timed modifiers\n", "location_modifier"), ("# Province timed modifiers\n", "province_modifier"))
+_TIMED_MODIFIER_ICONS = """hbox = {{
+	# PP: every modifier as its own icon (vanilla: one icon, or a count whose tooltip lists them)
+	spacing = 7
+	visible = "[DataModelHasItems({model})]"
+	datamodel = "[{model}]"
+	item = {{
+		timed_modifier_icon = {{
+			datacontext = "[TimedModifier]"
+			tooltipwidget = {{
+				using = timed_modifier_tooltip
+				blockoverride "concept_link" {{
+					text = "[{concept}|e]"
+				}}
+			}}
+		}}
+	}}
+}}"""
+
+
+def show_every_timed_modifier(text: str) -> str:
+    """Show each location and province modifier as its own icon in the condition row.
+
+    Vanilla draws a single modifier's icon, but two or more only as a count with a generic icon (the modifiers listed in
+    its tooltip). The condition row at the top of the scene has room for every icon, each with its own tooltip.
+    """
+    for anchor, concept in _TIMED_MODIFIERS:
+        found = text.count(anchor)
+        if found != 1:
+            raise ValueError(f"location_window.gui: expected 1 '{anchor.strip()}' widget in the condition row, found {found}")
+        after = text.index(anchor) + len(anchor)
+        start = text.find("widget = {", after)
+        if start < 0 or text[after:start].strip():
+            raise ValueError(f"location_window.gui: expected a widget right after '{anchor.strip()}'")
+        end = _block_end(text, text.index("{", start))
+        block = text[start:end]
+        model = re.search(r'datamodel = "\[([\w.]+\.GetTimedModifiers)\]"', block)
+        if model is None or f"[{concept}|e]" not in block:
+            raise ValueError(f"location_window.gui: '{anchor.strip()}' no longer lists {concept} timed modifiers")
+        indent = text[text.rfind("\n", 0, start) + 1:start]
+        icons = _TIMED_MODIFIER_ICONS.format(model=model.group(1), concept=concept).replace("\n", "\n" + indent)
+        text = text[:start] + icons + text[end:]
+    return text
+
+
 # EU5 1.4 builds the population cell of `location_card` and of the location view header from one template;
 # the header overrides its size, text format and gauge. The mod changes the location card's cell only, so it
 # draws a pp_ copy of the template (a template another mod re-declares under the vanilla name cannot undo it).
@@ -418,7 +463,7 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path |
             merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla),
                                                     location_status.load_stored_food_rows(mod_root, vanilla, stored_food))
             location_status.write_harvest_files(mod_root, harvests)
-            merged = move_modifier_row(merged)
+            merged = show_every_timed_modifier(move_modifier_row(merged))
             if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
                 dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")
                 changed += 1

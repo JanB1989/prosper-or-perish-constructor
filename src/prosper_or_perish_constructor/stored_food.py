@@ -86,6 +86,10 @@ SCRIPT_VALUES = Path("in_game/common/script_values/pp_stored_food.txt")
 SCRIPTED_EFFECTS = Path("in_game/common/scripted_effects/pp_stored_food.txt")
 LOCALIZATION = Path("main_menu/localization/english/pp_stored_food_l_english.yml")
 GENERATED_FILES = (STATIC_MODIFIERS, SCRIPT_VALUES, SCRIPTED_EFFECTS, LOCALIZATION)
+# The engine draws a static modifier with gfx/interface/icons/modifiers/<key>.dds (vanilla: overpopulation, looted) and
+# falls back to a generic icon; each step gets the location view's Stored Food chip icon.
+STEP_ICONS = Path("main_menu/gfx/interface/icons/modifiers")
+STEP_ICON_SOURCE = Path("main_menu/gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds")
 LEGACY_FILES = (
     Path("in_game/common/static_modifiers/pp_stored_food_tiers.txt"),
     Path("in_game/common/script_values/pp_stored_food_tiers.txt"),
@@ -606,9 +610,14 @@ def _read(path: Path) -> str | None:
         return handle.read()
 
 
-def apply(project: Path, mod_root: Path, *, write: bool = True) -> StoredFoodResult:
+def step_icon(step: int) -> Path:
+    return STEP_ICONS / f"{step_name(step)}.dds"
+
+
+def apply(project: Path, mod_root: Path, *, write: bool = True, vanilla_game: Path | None = None) -> StoredFoodResult:
     """Write (or with ``write=False`` only compare) the generated stored-food files, UTF-8 with BOM, and delete the
-    tier version's files."""
+    tier version's files. With ``vanilla_game`` (the folder holding main_menu/) each step modifier also gets the
+    food stockpile icon as its own icon file."""
     config = load_config(project)
     changed: list[Path] = []
     for relative, text in render(config).items():
@@ -620,6 +629,16 @@ def apply(project: Path, mod_root: Path, *, write: bool = True) -> StoredFoodRes
             path.parent.mkdir(parents=True, exist_ok=True)
             with path.open("w", encoding="utf-8-sig", newline="") as handle:
                 handle.write(text)
+    if vanilla_game is not None:
+        icon = (vanilla_game / STEP_ICON_SOURCE).read_bytes()
+        for step in range(STEPS + 1):
+            path = mod_root / step_icon(step)
+            if path.is_file() and path.read_bytes() == icon:
+                continue
+            changed.append(step_icon(step))
+            if write:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(icon)
     for relative in LEGACY_FILES:
         path = mod_root / relative
         if path.is_file():

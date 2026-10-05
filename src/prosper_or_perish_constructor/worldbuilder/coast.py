@@ -174,6 +174,17 @@ _COAST_CHIP = re.compile(r'widget = \{\s*name = "ha1300_native_coast".*?(?=widge
 # vanilla's natural harbour pie next to the river and sound toll icons; the Port chip carries its tooltip now
 _HARBOR_PIE = re.compile(r'# NATURAL HABOUR\s*widget = \{.*?(?=# (?:RIVER MODIFIER|SOUND TOLL))', re.S)
 _SOIL_CHIP = 'widget = { name = "ha1300_native_soil"'
+# vanilla's natural harbour ring around the Port icon on the coast: green = harbour suitability, red = the rest
+_SUITABILITY = f"FixedPointToFloat({_LOC}.GetModifierValueFixed('harbor_suitability'))"
+_PIE = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+_HARBOR_RING = (
+    f'piechart = {{ name = "pp_port_harbor_ring" visible = "[{_LOC}.IsCoastal]" size = {{ 100% 100% }} parentanchor = center '
+    f"using = bg_circle using = piechart_angles using = bg_circle_piechart "
+    f'icon = {{ texture = "{_PIE}" size = {{ 97% 97% }} parentanchor = center color = {{ 0 0 0 1 }} }} '
+    f'pieslice_no_highlight = {{ texture = "{_PIE}" value = "[{_SUITABILITY}]" color = {{ 0.3 0.8 0.3 1 }} alpha = 0.8 }} '
+    f'pieslice_no_highlight = {{ texture = "{_PIE}" value = "[Max_float(Subtract_float(\'(float)1.0\', {_SUITABILITY}), \'(float)0\')]" '
+    f"color = {{ 0.8 0.3 0.3 1 }} alpha = 0.8 }} }}"
+)
 
 
 def _icons(size: str, extra: str = "") -> str:
@@ -235,8 +246,10 @@ widget = {{
         }}
     }}
         {_FRAME}
-        icon = {{ size = {{ 30 30 }} texture = "{PORT_ICON}" visible = "[{_LOC}.HasPort]" }}
-        icon = {{ size = {{ 30 30 }} texture = "{PORT_ICON}" alpha = 0.3 visible = "[Not({_LOC}.HasPort)]" }}
+        {_HARBOR_RING}
+        icon = {{ size = {{ 20 20 }} parentanchor = center texture = "{PORT_ICON}" visible = "[And({_LOC}.IsCoastal, {_LOC}.HasPort)]" }}
+        icon = {{ size = {{ 20 20 }} parentanchor = center texture = "{PORT_ICON}" alpha = 0.4 visible = "[And({_LOC}.IsCoastal, Not({_LOC}.HasPort))]" }}
+        icon = {{ size = {{ 30 30 }} texture = "{PORT_ICON}" alpha = 0.3 visible = "[Not({_LOC}.IsCoastal)]" }}
     }}
 '''
 

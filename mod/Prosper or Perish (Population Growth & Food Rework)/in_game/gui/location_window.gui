@@ -6222,8 +6222,10 @@ widget = {
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
-        icon = { size = { 30 30 } texture = "gfx/interface/icons/modifier_types/natural_harbor_suitability.dds" visible = "[LocationView.GetLocation.HasPort]" }
-        icon = { size = { 30 30 } texture = "gfx/interface/icons/modifier_types/natural_harbor_suitability.dds" alpha = 0.3 visible = "[Not(LocationView.GetLocation.HasPort)]" }
+        piechart = { name = "pp_port_harbor_ring" visible = "[LocationView.GetLocation.IsCoastal]" size = { 100% 100% } parentanchor = center using = bg_circle using = piechart_angles using = bg_circle_piechart icon = { texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds" size = { 97% 97% } parentanchor = center color = { 0 0 0 1 } } pieslice_no_highlight = { texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds" value = "[FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('harbor_suitability'))]" color = { 0.3 0.8 0.3 1 } alpha = 0.8 } pieslice_no_highlight = { texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds" value = "[Max_float(Subtract_float('(float)1.0', FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('harbor_suitability'))), '(float)0')]" color = { 0.8 0.3 0.3 1 } alpha = 0.8 } }
+        icon = { size = { 20 20 } parentanchor = center texture = "gfx/interface/icons/modifier_types/natural_harbor_suitability.dds" visible = "[And(LocationView.GetLocation.IsCoastal, LocationView.GetLocation.HasPort)]" }
+        icon = { size = { 20 20 } parentanchor = center texture = "gfx/interface/icons/modifier_types/natural_harbor_suitability.dds" alpha = 0.4 visible = "[And(LocationView.GetLocation.IsCoastal, Not(LocationView.GetLocation.HasPort))]" }
+        icon = { size = { 30 30 } texture = "gfx/interface/icons/modifier_types/natural_harbor_suitability.dds" alpha = 0.3 visible = "[Not(LocationView.GetLocation.IsCoastal)]" }
     }
 widget = { name = "ha1300_native_soil" size = { 30 30 }
 widget = {
@@ -6826,102 +6828,18 @@ pp_land_potential_chip = {}
 								}
 
 								# Location timed modifiers
-								widget = {
-									size = { 45 26 }
-									visible = "[GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetTimedModifiers), '(int32)0')]"
-
-									# RIGHT DIVISION
-									flowcontainer = {
-										visible = "[Not(GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetTimedModifiers), '(int32)1'))]"
-
-										layoutpolicy_horizontal = expanding
-
-										datamodel = "[LocationView.GetLocation.GetTimedModifiers]"
-										item = {
-											timed_modifier_icon = {
-												datacontext = "[TimedModifier]"
-												tooltipwidget = {
-													using = timed_modifier_tooltip
-													blockoverride "concept_link" {
-														text = "[location_modifier|e]"
-													}
-												}
-											}
-										}
-
-										expand = {}
-									}
-
-									flowcontainer = {
-										visible = "[GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetTimedModifiers), '(int32)1')]"
-
-										text_single = {
-											minimumsize = { -1 26 }
-											align = nobaseline|hcenter
-											text = "[GetDataModelSize(LocationView.GetLocation.GetTimedModifiers)]"
-										}
-										icon = {
-											size = { 26 26 }
-											texture = "gfx/interface/icons/modifiers/locations.dds"
-											texture_density = 2
-
+								hbox = {
+									# PP: every modifier as its own icon (vanilla: one icon, or a count whose tooltip lists them)
+									spacing = 7
+									visible = "[DataModelHasItems(LocationView.GetLocation.GetTimedModifiers)]"
+									datamodel = "[LocationView.GetLocation.GetTimedModifiers]"
+									item = {
+										timed_modifier_icon = {
+											datacontext = "[TimedModifier]"
 											tooltipwidget = {
-												ContextualTooltipType = {
-													blockoverride "title_icon" {
-														icon = {
-															texture = "gfx/interface/icons/modifiers/locations.dds"
-															using = tooltip_title_icon_size
-														}
-													}
-													blockoverride "title_text" {
-															text = "game_concept_location_modifier"
-													}
-													blockoverride "concept_link" {
-														text = [location_modifier|e]
-													}
-
-													blockoverride "tooltip_content" {
-														TooltipScrolledRowList = {
-															blockoverride "block_title" { visible = no }
-															blockoverride "rowlist_datamodel_is_empty" { visible = "[IsDataModelEmpty(LocationView.GetLocation.GetTimedModifiers)]"}
-															blockoverride "rowlist_datamodel_has_items" { visible = "[DataModelHasItems(LocationView.GetLocation.GetTimedModifiers)]"}
-															blockoverride "rowlist_datamodel" { datamodel = "[LocationView.GetLocation.GetTimedModifiers]" }
-															blockoverride "rowlist_content" {
-																hbox = {
-																	layoutpolicy_horizontal = expanding
-																	spacing = 10
-																	datacontext = "[TimedModifier]"
-																	tooltipwidget = {
-																		using = timed_modifier_tooltip
-																	}
-																	text_single = {
-																		margin_left = 20
-																		text = "[TimedModifier.GetModifier.GetName]"
-																	}
-																	timed_modifier_icon = {
-																		datacontext = "[TimedModifier]"
-																		tooltipwidget = {
-																			using = timed_modifier_tooltip
-																			blockoverride "concept_link" {
-																				text = "[location_modifier|e]"
-																			}
-																		}
-																	}
-
-																	expand = {}
-																}
-															}
-
-															blockoverride "block_scrollarea" {
-																maximumsize = { -1 210 }
-															}
-
-															blockoverride "row_size" {
-																maximumsize = { -1 40 }
-																minimumsize = { -1 40 }
-															}
-														}
-													}
+												using = timed_modifier_tooltip
+												blockoverride "concept_link" {
+													text = "[location_modifier|e]"
 												}
 											}
 										}
@@ -6929,102 +6847,18 @@ pp_land_potential_chip = {}
 								}
 
 								# Province timed modifiers
-								widget = {
-									size = { 45 26 }
-									visible = "[GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers), '(int32)0')]"
-
-									# RIGHT DIVISION
-									flowcontainer = {
-										visible = "[Not(GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers), '(int32)1'))]"
-
-										layoutpolicy_horizontal = expanding
-
-										datamodel = "[LocationView.GetLocation.GetProvince.GetTimedModifiers]"
-										item = {
-											timed_modifier_icon = {
-												datacontext = "[TimedModifier]"
-												tooltipwidget = {
-													using = timed_modifier_tooltip
-													blockoverride "concept_link" {
-														text = "[province_modifier|e]"
-													}
-												}
-											}
-										}
-
-										expand = {}
-									}
-
-									flowcontainer = {
-										visible = "[GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers), '(int32)1')]"
-
-										text_single = {
-											minimumsize = { -1 26 }
-											align = nobaseline|hcenter
-											text = "[GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers)]"
-										}
-										icon = {
-											size = { 26 26 }
-											texture = "gfx/interface/icons/modifiers/province.dds"
-											texture_density = 2
-
+								hbox = {
+									# PP: every modifier as its own icon (vanilla: one icon, or a count whose tooltip lists them)
+									spacing = 7
+									visible = "[DataModelHasItems(LocationView.GetLocation.GetProvince.GetTimedModifiers)]"
+									datamodel = "[LocationView.GetLocation.GetProvince.GetTimedModifiers]"
+									item = {
+										timed_modifier_icon = {
+											datacontext = "[TimedModifier]"
 											tooltipwidget = {
-												ContextualTooltipType = {
-													blockoverride "title_icon" {
-														icon = {
-															texture = "gfx/interface/icons/modifiers/province.dds"
-															using = tooltip_title_icon_size
-														}
-													}
-													blockoverride "title_text" {
-															text = "game_concept_location_modifier"
-													}
-													blockoverride "concept_link" {
-														text = [province_modifier|e]
-													}
-
-													blockoverride "tooltip_content" {
-														TooltipScrolledRowList = {
-															blockoverride "block_title" { visible = no }
-															blockoverride "rowlist_datamodel_is_empty" { visible = "[IsDataModelEmpty(LocationView.GetLocation.GetProvince.GetTimedModifiers)]"}
-															blockoverride "rowlist_datamodel_has_items" { visible = "[DataModelHasItems(LocationView.GetLocation.GetProvince.GetTimedModifiers)]"}
-															blockoverride "rowlist_datamodel" { datamodel = "[LocationView.GetLocation.GetProvince.GetTimedModifiers]" }
-															blockoverride "rowlist_content" {
-																hbox = {
-																	layoutpolicy_horizontal = expanding
-																	spacing = 10
-																	datacontext = "[TimedModifier]"
-																	tooltipwidget = {
-																		using = timed_modifier_tooltip
-																	}
-																	text_single = {
-																		margin_left = 20
-																		text = "[TimedModifier.GetModifier.GetName]"
-																	}
-																	timed_modifier_icon = {
-																		datacontext = "[TimedModifier]"
-																		tooltipwidget = {
-																			using = timed_modifier_tooltip
-																			blockoverride "concept_link" {
-																				text = "[province_modifier|e]"
-																			}
-																		}
-																	}
-
-																	expand = {}
-																}
-															}
-
-															blockoverride "block_scrollarea" {
-																maximumsize = { -1 210 }
-															}
-
-															blockoverride "row_size" {
-																maximumsize = { -1 40 }
-																minimumsize = { -1 40 }
-															}
-														}
-													}
+												using = timed_modifier_tooltip
+												blockoverride "concept_link" {
+													text = "[province_modifier|e]"
 												}
 											}
 										}

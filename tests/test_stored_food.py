@@ -200,6 +200,16 @@ def test_generated_files_match_the_configuration_and_the_tier_files_are_gone() -
         assert not (MOD_ROOT / path).exists()
 
 
+def test_every_step_modifier_has_the_stored_food_icon() -> None:
+    # 2026-10-05 (Jan): the province modifier row drew the steps with the engine's generic icon; the engine reads a
+    # static modifier's icon from icons/modifiers/<key>.dds, so each step carries the Stored Food chip's icon
+    icons = {(MOD_ROOT / stored_food.step_icon(step)).read_bytes() for step in range(stored_food.STEPS + 1)}
+    assert len(icons) == 1 and next(iter(icons))[:4] == b"DDS "
+    assert stored_food.STEP_ICON_SOURCE.as_posix().endswith("flat_icons/trade_market/food_stockpile.dds")
+    chip = (ROOT / "src/prosper_or_perish_constructor/location_status.py").read_text(encoding="utf-8")
+    assert "flat_icons/trade_market/food_stockpile.dds" in chip
+
+
 def test_localization_names_each_step_without_numbers_in_the_description() -> None:
     loc = _read(MOD_ROOT / stored_food.LOCALIZATION)
     assert '  STATIC_MODIFIER_NAME_pp_food_store_0: "Stored Food: almost empty"' in loc

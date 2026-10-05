@@ -1,14 +1,14 @@
-﻿# >>> eu5-building-pipeline:irrigated_fields:building
-irrigated_fields = {
+﻿# >>> eu5-building-pipeline:paddy_water_control:building
+paddy_water_control = {
 is_foreign = no
-max_levels = pp_wb_cap_irrigated_fields
+max_levels = pp_wb_cap_paddy_water_control
 increase_per_level_cost = 0.05
 pop_type = peasants
 employment_size = 0
-price = pp_irrigated_fields_price
+price = pp_paddy_water_control_price
 category = infrastructure_category
 custom_tags = { pp_food_security_priority pp_water_control_priority }
-icon = irrigated_fields
+icon = paddy_water_control
 rural_settlement = yes
 town = yes
 city = yes
@@ -24,13 +24,14 @@ construction_demand = village_construction
 
 raw_modifier = {
   local_population_capacity = 5
+  pp_wb_levels_paddy_water_control = 1
   free_building_levels = 1
 }
 
 unique_production_methods = {
-    pp_irrigated_fields_upkeep = {
+    pp_paddy_water_control_upkeep = {
         icon_type = building_type
-        icon = irrigated_fields
+        icon = paddy_water_control
         category = building_maintenance
     }
 }
@@ -42,4 +43,4 @@ forbidden_for_estates = no
 ai_forbid_shutdown = yes
 	can_close = no # building_shutdown
 }
-# <<< eu5-building-pipeline:irrigated_fields:building
+# <<< eu5-building-pipeline:paddy_water_control:building

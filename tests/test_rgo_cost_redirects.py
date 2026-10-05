@@ -67,6 +67,7 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
         "field_management_improved": "pp_field_management_improved_price",
         "incamisana": "pp_incamisana_price",
         "irrigated_fields": "pp_irrigated_fields_price",
+        "paddy_water_control": "pp_paddy_water_control_price",
         "irrigation_reservoirs": "pp_irrigation_reservoirs_price",
         "land_clearance": "pp_land_clearance_price",
         "qanats": "pp_qanats_price",

@@ -251,11 +251,32 @@ def write_level_counters(keys: list[str], mod_root: Path) -> None:
         target.write_text("\ufeff" + "\n".join(lines).rstrip() + "\n", encoding="utf-8", newline="\n")
 
 
+def cap_groups(contract: Contract, cfg: WorldBuilderConfig) -> dict[str, list[str]]:
+    """Handover cap group -> the blueprint keys of its general members (``building_types.csv`` ``cap_group``)."""
+    out: dict[str, list[str]] = {}
+    if "cap_group" not in contract.building_types.columns:
+        return out
+    for row in contract.building_types.iter_rows(named=True):
+        group = str(row.get("cap_group") or "")
+        key = cfg.building_map.get(str(row["building"]))
+        if group and key:
+            out.setdefault(group, []).append(key)
+    return out
+
+
 def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> dict[str, dict[str, float]]:
-    """Write the cap script values; return per building key {unit_people, unit_units, scale, limit, kind[, family, niche]}."""
+    """Write the cap script values; return per building key {unit_people, unit_units, scale, limit, kind[, family, niche,
+    group, shared]}.
+
+    Buildings that share a cap (a handover cap group, a general building with niche members, or both: the niche members
+    of a group member) get one ``pp_wb_cap_<group or key>_shared`` equation; each member's max level is that equation
+    minus the levels of every other building sharing it."""
     blocks: list[str] = []
     info: dict[str, dict[str, float]] = {}
     shared = families(cfg)
+    groups = cap_groups(contract, cfg)
+    written: set[str] = set()
+    counted: set[str] = set()
     for row in contract.building_types.iter_rows(named=True):
         kind = str(row["building"])
         key = cfg.building_map.get(kind)
@@ -266,30 +287,39 @@ def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> d
         limit = int(row.get("level_limit") or cfg.level_limit)
         people = float(row["unit_people_per_level"]) / scale
         info[key] = {"kind": kind, "unit_people": people, "unit_units": units(people), "scale": scale, "limit": int(round(limit * scale))}
-        members = shared.get(key, [])
-        if not members:
+        group = str(row.get("cap_group") or "")
+        generals = groups.get(group, [key]) if group else [key]
+        sharers = [*generals, *(n for g in generals for n in shared.get(g, []))]
+        if len(sharers) == 1:
             blocks.append(cap_script_value(contract, key, equation, scale, limit))
             continue
-        source = f"pp_wb_cap_{key}_shared"
-        blocks.append(cap_script_value(contract, key, equation, scale, limit, name=source))
-        blocks.append(shared_cap_value(f"pp_wb_cap_{key}", source, members))
-        for niche in members:
+        source = f"pp_wb_cap_{group or key}_shared"
+        if source not in written:
+            blocks.append(cap_script_value(contract, group or key, equation, scale, limit, name=source))
+            written.add(source)
+        counted.update(sharers)
+        info[key]["shared"] = True
+        if group:
+            info[key]["group"] = group
+        blocks.append(shared_cap_value(f"pp_wb_cap_{key}", source, [k for k in sharers if k != key]))
+        for niche in shared.get(key, []):
             strength = float(cfg.niche[niche]["strength"])
             niche_people = people * strength
             lower = lower_tiers(cfg, niche)
-            siblings = [m for m in (key, *members) if m != niche and m not in lower]
+            siblings = [m for m in sharers if m != niche and m not in lower]
             block = shared_cap_value(f"pp_wb_cap_{niche}", source, siblings)
             if cfg.niche[niche].get("maximum_levels"):
                 block = block[:-1] + _clamp("max", "MAXIMUM", int(cfg.niche[niche]["maximum_levels"])) + "\n}"
             blocks.append(block)
-            info[niche] = {"kind": kind, "unit_people": niche_people, "unit_units": units(niche_people), "scale": scale, "limit": int(round(limit * scale)), "family": key, "strength": strength, "niche": True}
+            info[niche] = {"kind": kind, "unit_people": niche_people, "unit_units": units(niche_people), "scale": scale, "limit": int(round(limit * scale)),
+                           "family": key, "strength": strength, "niche": True, "shared": True, **({"group": group} if group else {})}
     missing = [n for n, spec in cfg.niche.items() if spec["family"] not in info]
     if missing:
         raise ValueError(f"[worldbuilder.buildings.niche] family is not a mapped general building: {', '.join(missing)}")
-    counters = sorted({k for family, members in shared.items() for k in (family, *members)})
-    write_level_counters(counters, mod_root)
+    write_level_counters(sorted(counted), mod_root)
     text = "\n\n".join([GENERATED, "# Improvement building level caps: base + attribute class terms + levels per development point x development.",
-                          "# Families with niche members: <key>_shared is the equation; each member's cap subtracts the other members' levels.", *blocks]) + "\n"
+                          "# Shared caps (cap groups, families with niche members): <group or key>_shared is the equation; each member's cap",
+                          "# subtracts the other members' levels.", *blocks]) + "\n"
     (mod_root / CAPS_PATH).parent.mkdir(parents=True, exist_ok=True)
     (mod_root / CAPS_PATH).write_text("﻿" + text, encoding="utf-8", newline="\n")
     write_river_size_triggers(mod_root)
@@ -423,8 +453,6 @@ def patch_improvement_blueprints(contract: Contract, cfg: WorldBuilderConfig, re
     """Point each mapped blueprint at its cap value, set its capacity per level and its gate."""
     patched: list[str] = []
     gates = {str(r["building"]): json.loads(str(r["gate_json"])) for r in contract.building_types.iter_rows(named=True)}
-    shared = families(cfg)
-    counted = {k for family, members in shared.items() for k in (family, *members)}
     for key, info in caps.items():
         kind = str(info["kind"])
         if key == "field_management" and not (repo / BLUEPRINTS / "field_management.yml").is_file():
@@ -435,7 +463,7 @@ def patch_improvement_blueprints(contract: Contract, cfg: WorldBuilderConfig, re
         body = str(data["building"]["body"])
         body = _set_max_levels(body, f"pp_wb_cap_{key}")
         raw = {"local_population_capacity": _fmt(float(info["unit_units"]))}
-        if key in counted:
+        if info.get("shared"):
             raw[LEVELS_MODIFIER.format(key=key)] = "1"
         # The engine's unsupported-level count takes raw levels of every building (decompiled FUN_144612a10). Capacity
         # improvements are farmland units, not buildings that need logistics (62 % of all levels at game start), so each
@@ -556,7 +584,11 @@ def gate_matches(rules: list[dict[str, list[str]]], attributes: Mapping[str, obj
 
 def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, Mapping[str, float]], owners: Mapping[str, str], mod_root: Path,
                 demand: Mapping[str, float] | None = None, cultures: Mapping[str, str] | None = None) -> dict[str, int]:
-    """Starting improvement levels for owned locations (levels rescaled with the building's scale, never above the cap).
+    """Starting improvement levels for owned locations (levels rescaled with the building's scale).
+
+    The World Builder's starting levels are the works standing in 1337. With ``[worldbuilder.start]
+    clamp_improvements_to_cap = false`` they are kept in full above the cap (the engine keeps setup levels above
+    max_levels; they cannot be extended), otherwise they are clamped to it.
 
     ``demand`` (people per location the improvements must house so the pops at game start fit their capacity) raises
     the ledger's levels of the location's eligible buildings up to their caps, largest people per level first. The
@@ -570,6 +602,11 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
     gated = 0
     raised = 0
     navigation_exchanged = 0
+    above_cap = 0
+    clamp = bool((cfg.raw.get("start") or {}).get("clamp_improvements_to_cap", True))
+    # buildings sharing one cap (a cap group, a family with its niche members) fill it together
+    share = {k: str(v.get("group") or v.get("family") or k) for k, v in caps.items()}
+    share.update({k: str(caps[str(v["family"])].get("group") or v["family"]) for k, v in caps.items() if v.get("niche") and caps.get(str(v["family"]), {}).get("group")})
     filled: set[str] = set()
     short: set[str] = set()
     kinds = {str(v["kind"]): k for k, v in caps.items() if not v.get("niche")}
@@ -600,11 +637,13 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
                 continue
             scale = float(caps[key]["scale"])
             limit = int(caps[key]["limit"])
-            level = min(int(math.floor(start * scale + 1e-9)), limit)
+            level = int(math.floor(start * scale + 1e-9))
             cap = cap_levels(equations[kind], by_tag.get(tag, {}), scale, limit) if tag in by_tag else level
-            if level > cap:
+            if clamp and level > min(cap, limit):
                 clamped += 1
-                level = cap
+                level = min(cap, limit)
+            elif level > cap:
+                above_cap += 1
             attrs = {**by_tag.get(tag, {}), "culture": (cultures or {}).get(tag, "")}
             if not gate_matches(gates[kind], attrs):
                 # the game rejects a setup building whose location_potential fails ("has an invalid building")
@@ -618,8 +657,11 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
             levels[selected] = (level, cap)
         need = float(demand.get(tag, 0.0)) if demand else 0.0
         need -= sum(level * float(caps[key]["unit_people"]) for key, (level, _) in levels.items())
+        def used(key: str) -> int:
+            return sum(level for other, (level, _) in levels.items() if share.get(other, other) == share.get(key, key))
+
         while need > 0:
-            room = [key for key, (level, cap) in levels.items() if level < cap]
+            room = [key for key, (level, cap) in levels.items() if used(key) < cap]
             if not room:
                 short.add(tag)
                 break
@@ -648,7 +690,8 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
     for rel in LEGACY_SETUP:
         if (mod_root / rel).is_file():
             (mod_root / rel).unlink()
-    return {"rows": len(rows), "navigation_levels_exchanged": navigation_exchanged, "unowned_skipped": skipped, "clamped_to_cap": clamped, "gate_rejected": gated, "levels_raised_for_pops": raised,
+    return {"rows": len(rows), "navigation_levels_exchanged": navigation_exchanged, "unowned_skipped": skipped, "clamped_to_cap": clamped,
+            "starting_works_above_cap": above_cap, "gate_rejected": gated, "levels_raised_for_pops": raised,
             "locations_filled_for_pops": len(filled), "locations_still_short": len(short)}
 
 

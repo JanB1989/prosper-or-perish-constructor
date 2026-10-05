@@ -905,8 +905,9 @@ class Simulation:
         # Farm (and fishery, sheep) levels and Victualling Yard levels moved to the topup are not there when the engine
         # validates the setup, and the Cookshop cap counts them in the province: re-check the other buildings of those
         # provinces against the setup's.
+        # Improvement levels moved there take their capacity with them, so the farms they house are re-checked too.
         counters = {**getattr(self, "kitchen_counters", getattr(self, "farm_counters", {})),
-                    **getattr(self, "yard_counters", {})}
+                    **getattr(self, "yard_counters", {}), **{k: None for k in getattr(self, "improvement_keys", ())}}
         moved = {(t, k): n for (t, k), n in topup.items() if k in counters}
         if moved:
             setup = {t: Counter({k: n - moved.get((t, k), 0) for k, n in c.items()}) for t, c in self.counts.items()}
@@ -914,17 +915,19 @@ class Simulation:
             for tag in sorted(t for g in groups for t in self.groups.get(g, ())):
                 ctx = self.ctx(tag, setup[tag], setup)
                 dry = without_river(ctx, self.rules) if ctx["has_river"] else ctx
-                check(tag, dry, sorted((k, setup[tag][k]) for k in setup[tag] if k not in counters))
+                check(tag, dry, sorted((k, setup[tag][k]) for k in setup[tag] if (tag, k) not in moved))
         return topup
 
     def clamp(self):
         # Caps can share pools or shrink with urbanisation: iterate to a stable
         # state, always removing levels and never silently raising the cap.
+        # The 1337 improvement works stand in full above their cap unless [worldbuilder.start] clamp_improvements_to_cap.
+        keep_improvements = not bool((self.cfg.raw.get("start") or {}).get("clamp_improvements_to_cap", True))
         for _ in range(20):
             changed = False
             for tag in sorted(self.locations):
                 for key, n in sorted(self.counts[tag].items()):
-                    if not n:
+                    if not n or (keep_improvements and key in self.improvement_keys):
                         continue
                     cap = self.cap(tag, key, gates=False)
                     if n > cap:
@@ -1755,6 +1758,7 @@ class Simulation:
 
     def verify(self):
         failures = []
+        keep_improvements = not bool((self.cfg.raw.get("start") or {}).get("clamp_improvements_to_cap", True))
         for tag in sorted(self.locations):
             ctx = self.ctx(tag)
             for key, n in sorted(self.counts[tag].items()):
@@ -1764,7 +1768,7 @@ class Simulation:
                 self.audit.append(
                     {"location": tag, "building": key, "levels": n, "cap": cap}
                 )
-                if n > cap:
+                if n > cap and not (keep_improvements and key in self.improvement_keys):
                     failures.append(self.audit[-1])
         if failures:
             raise ValueError(f"Buildings above cap: {failures[:10]}")
@@ -1841,7 +1845,10 @@ def audit_setup(sim, levels, cultures=None):
                 else:
                     cap = value
                     if not problem and n > cap:
-                        problem = "above max level"
+                        # improvement levels above their cap are the 1337 works, kept on purpose (the engine keeps
+                        # setup levels above max_levels; [worldbuilder.start] clamp_improvements_to_cap)
+                        kept = str(first(body, "max_levels", "")).startswith("pp_wb_cap_")
+                        problem = KEPT_ABOVE_CAP if kept else "above max level"
                 sim.rules.unsupported = before
                 if not problem and unresolved:
                     problem, detail = "unresolved", "; ".join(unresolved)
@@ -1880,6 +1887,9 @@ def unguarded_topup_rows(path):
     return bad
 
 
+KEPT_ABOVE_CAP = "starting works above the cap (kept)"
+
+
 def validate_setup(sim, repo, vanilla_root, mod_root):
     """Audit the setup files as written (``audit_setup``) and the topup's guards; any error the engine would log at
     the start fails the build. Writes every audited row to ``SETUP_AUDIT_RELATIVE_PATH``."""
@@ -1890,7 +1900,7 @@ def validate_setup(sim, repo, vanilla_root, mod_root):
     schema = {"location": pl.String, "building": pl.String, "levels": pl.Int64, "cap": pl.Int64, "problem": pl.String, "detail": pl.String}
     pl.DataFrame(rows, schema=schema).write_csv(path)
     problems = Counter(r["problem"] for r in rows if r["problem"])
-    errors = [r for r in rows if r["problem"] not in ("", "unresolved")]
+    errors = [r for r in rows if r["problem"] not in ("", "unresolved", KEPT_ABOVE_CAP)]
     if errors or unguarded:
         raise ValueError(
             f"Setup buildings the engine would reject at game start: {dict(problems)}; first rows {errors[:10]}; "
@@ -2074,7 +2084,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         mod_root,
         base={(tag, key): counts[tag][key] + kept_vanilla[tag][key] + kept_improvements[tag][key] for tag, key in topup},
         potentials={key: first(rules.buildings.get(key), "location_potential") for _, key in topup},
-        first_keys=frozenset({*getattr(sim, "kitchen_counters", {}), *getattr(sim, "yard_counters", {})}),
+        first_keys=frozenset({*getattr(sim, "kitchen_counters", {}), *getattr(sim, "yard_counters", {}), *caps}),
     )
     for name, (extra_doc, counts_extra) in extra.items():
         kept = defaultdict(Counter)

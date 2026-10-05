@@ -15,7 +15,7 @@ building:
     is_special = yes
     is_foreign = no
     max_levels = pp_wb_cap_bund
-    increase_per_level_cost = 0.33
+    increase_per_level_cost = 0.07
     pop_type = laborers
     price = pp_bund_price
     category = infrastructure_category
@@ -67,7 +67,8 @@ building:
       local_cloves_output_modifier = 0.012
       local_chili_output_modifier = 0.012
       local_horses_output_modifier = 0.0015
-      local_population_capacity = 0.8
+      local_population_capacity = 5
+      pp_wb_levels_bund = 1
       free_building_levels = 1
     }
 
@@ -84,7 +85,7 @@ building:
     ai_forbid_shutdown = yes
 prices:
 - key: pp_bund_price
-  body: '{gold = 50}'
+  body: '{gold = 145}'
 localization:
   entries:
     bund_slot_0: Upkeep

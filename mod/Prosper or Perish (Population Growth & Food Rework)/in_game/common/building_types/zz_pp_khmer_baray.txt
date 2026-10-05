@@ -5,7 +5,7 @@ is_special = yes
 is_foreign = no
 pop_type = laborers
 max_levels = pp_wb_cap_khmer_baray
-increase_per_level_cost = 0.20
+increase_per_level_cost = 0.05
 price = pp_khmer_baray_price
 employment_size = 0
 category = infrastructure_category
@@ -44,7 +44,7 @@ raw_modifier = {
   local_cotton_output_modifier = 0.02
   local_sugar_output_modifier = 0.02
   local_tea_output_modifier = 0.01
-  local_population_capacity = 2.4
+  local_population_capacity = 7.5
   pp_wb_levels_khmer_baray = 1
   free_building_levels = 1
 }

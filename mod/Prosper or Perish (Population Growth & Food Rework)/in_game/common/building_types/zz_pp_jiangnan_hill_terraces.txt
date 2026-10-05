@@ -2,9 +2,9 @@
 jiangnan_hill_terraces = {
 is_foreign = no
 max_levels = pp_wb_cap_jiangnan_hill_terraces
-increase_per_level_cost = 0.20
+increase_per_level_cost = 0.05
 pop_type = peasants
-employment_size = 0.075
+employment_size = 0.15
 price = pp_jiangnan_hill_terraces_price
 category = infrastructure_category
 custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -26,13 +26,13 @@ unique_production_methods = {
   pp_jiangnan_hill_terraces_maintenance = {
     icon_type = building_type
     icon = jiangnan_hill_terraces
-    manual_labor = 0.1
-    lumber = 0.025
+    manual_labor = 0.195
+    lumber = 0.049
     category = building_maintenance
   }
 }
 raw_modifier = {
-  local_population_capacity = 7.7
+  local_population_capacity = 15
   pp_wb_levels_jiangnan_hill_terraces = 1
   free_building_levels = 1
 }

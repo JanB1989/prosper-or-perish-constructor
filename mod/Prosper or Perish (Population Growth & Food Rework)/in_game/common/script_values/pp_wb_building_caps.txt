@@ -2,165 +2,139 @@
 
 # Improvement building level caps: base + attribute class terms + levels per development point x development.
 
-# Families with niche members: <key>_shared is the equation; each member's cap subtracts the other members' levels.
+# Shared caps (cap groups, families with niche members): <group or key>_shared is the equation; each member's cap
+
+# subtracts the other members' levels.
 
 pp_wb_cap_land_clearance = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
-		value = 4
+		value = 2
 	}
 	if = {
 		limit = { climate = cold_semi_arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_SEMI_ARID"
-			value = 2
+			value = 1
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_continental_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_CONTINENTAL_MONSOON"
-			value = 18
+			value = 9
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_highland_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_HIGHLAND_MONSOON"
-			value = 4
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { climate = hot_semi_arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_SEMI_ARID"
-			value = 4
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_savanna }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SAVANNA"
-			value = 6
+			value = 4
 		}
 	}
 	else_if = {
 		limit = { climate = subtropical }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL"
-			value = 6
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_subtropical_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL_MONSOON"
-			value = 8
+			value = 4
 		}
 	}
 	else_if = {
 		limit = { climate = tropical }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL"
-			value = 8
+			value = 4
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_tropical_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL_MONSOON"
-			value = 6
-		}
-	}
-	if = {
-		limit = { topography = ha1300_topo_deltas }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_DELTAS"
-			value = 4
-		}
-	}
-	else_if = {
-		limit = { topography = mountain_wasteland }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAIN_WASTELAND"
-			value = 4
-		}
-	}
-	else_if = {
-		limit = { topography = plateau }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_PLATEAU"
-			value = 2
-		}
-	}
-	else_if = {
-		limit = { topography = ha1300_topo_valleys }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_VALLEYS"
-			value = 2
+			value = 3
 		}
 	}
 	if = {
 		limit = { vegetation = desert }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_DESERT"
-			value = 6
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { vegetation = ha1300_veg_dry_forest }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_DRY_FOREST"
-			value = 6
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { vegetation = ha1300_veg_marsh }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_MARSH"
-			value = 2
+			value = 1
 		}
 	}
 	else_if = {
 		limit = { vegetation = sparse }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_SPARSE"
-			value = 6
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { vegetation = ha1300_veg_tundra }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_TUNDRA"
-			value = 6
+			value = 2
 		}
 	}
 	if = {
 		limit = { has_location_modifier = pp_wb_fertility_high }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_HIGH"
-			value = 2
+			value = 1
 		}
 	}
 	else_if = {
 		limit = { has_location_modifier = pp_wb_fertility_low }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_LOW"
-			value = -2
+			value = -1
 		}
 	}
 	else_if = {
 		limit = { has_location_modifier = pp_wb_fertility_very_high }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_HIGH"
-			value = 4
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { has_location_modifier = pp_wb_fertility_very_low }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_LOW"
-			value = -2
+			value = -1
 		}
 	}
 	add = {
@@ -168,221 +142,235 @@ pp_wb_cap_land_clearance = {
 		value = this.pp_wb_cap_land_clearance_building_level_wb_development
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 40 }
+	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 }
 }
 
 # Tooltip helpers of pp_wb_cap_land_clearance (cap_tooltips.py): each is one row of the cap, read through this.
 pp_wb_cap_land_clearance_building_level_wb_development = {
 	value = development
-	multiply = 0.03
+	multiply = 0.015
 }
 
 pp_wb_cap_field_management_shared = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
-		value = 18
+		value = 10
 	}
 	if = {
 		limit = { climate = arctic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_ARCTIC"
-			value = -12
+			value = -6
 		}
 	}
 	else_if = {
 		limit = { climate = arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_ARID"
-			value = -12
+			value = -6
 		}
 	}
 	else_if = {
 		limit = { climate = cold_arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_ARID"
-			value = -12
+			value = -6
 		}
 	}
 	else_if = {
 		limit = { climate = cold_semi_arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_SEMI_ARID"
-			value = -12
+			value = -6
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_continental_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_CONTINENTAL_MONSOON"
-			value = -12
+			value = -6
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_dry_summer_continental }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_DRY_SUMMER_CONTINENTAL"
-			value = -6
+			value = -3
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_highland_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_HIGHLAND_MONSOON"
-			value = -9
+			value = -4
 		}
 	}
 	else_if = {
 		limit = { climate = hot_semi_arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_SEMI_ARID"
-			value = -9
+			value = -5
 		}
 	}
 	else_if = {
 		limit = { climate = mediterranean }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_MEDITERRANEAN"
-			value = -6
+			value = -3
 		}
 	}
 	else_if = {
 		limit = { climate = oceanic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_OCEANIC"
-			value = 3
+			value = 1
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_savanna }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SAVANNA"
-			value = -9
+			value = -4
 		}
 	}
 	else_if = {
 		limit = { climate = subpolar }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR"
-			value = -9
+			value = -5
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_subpolar_oceanic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR_OCEANIC"
-			value = -12
+			value = -5
 		}
 	}
 	else_if = {
 		limit = { climate = subtropical }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL"
-			value = 3
+			value = 1
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_subtropical_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL_MONSOON"
-			value = -6
+			value = -4
+		}
+	}
+	else_if = {
+		limit = { climate = tropical }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL"
+			value = -1
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_tropical_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL_MONSOON"
-			value = -3
+			value = -2
 		}
 	}
 	if = {
 		limit = { topography = ha1300_topo_deltas }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_DELTAS"
-			value = 9
+			value = 1
 		}
 	}
 	else_if = {
 		limit = { topography = mountain_wasteland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAIN_WASTELAND"
-			value = 9
+			value = 1
 		}
 	}
 	if = {
+		limit = { vegetation = ha1300_veg_coniferous_forest }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_CONIFEROUS_FOREST"
+			value = 1
+		}
+	}
+	else_if = {
 		limit = { vegetation = ha1300_veg_dry_forest }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_DRY_FOREST"
-			value = 3
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { vegetation = farmland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_FARMLAND"
-			value = 6
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { vegetation = forest }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_FOREST"
-			value = 3
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { vegetation = jungle }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_JUNGLE"
-			value = 3
+			value = 1
 		}
 	}
 	else_if = {
 		limit = { vegetation = ha1300_veg_marsh }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_MARSH"
-			value = 3
+			value = 1
 		}
 	}
 	else_if = {
 		limit = { vegetation = ha1300_veg_mixed_forest }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_MIXED_FOREST"
-			value = 3
+			value = 1
 		}
 	}
 	else_if = {
 		limit = { vegetation = ha1300_veg_swamp }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_SWAMP"
-			value = 3
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { vegetation = woods }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_WOODS"
-			value = 3
+			value = 2
 		}
 	}
 	if = {
 		limit = { has_location_modifier = pp_wb_fertility_high }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_HIGH"
-			value = 3
+			value = 1
 		}
 	}
 	else_if = {
 		limit = { has_location_modifier = pp_wb_fertility_low }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_LOW"
-			value = -3
+			value = -1
 		}
 	}
 	else_if = {
 		limit = { has_location_modifier = pp_wb_fertility_very_high }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_HIGH"
-			value = 3
+			value = 2
 		}
 	}
 	else_if = {
@@ -395,10 +383,10 @@ pp_wb_cap_field_management_shared = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
 		value = development
-		multiply = 0.09
+		multiply = 0.03
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 60 }
+	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 }
 }
 
 pp_wb_cap_field_management = {
@@ -489,59 +477,110 @@ pp_wb_cap_jiangnan_hill_terraces_building_level_wb_family = {
 	value = pp_wb_cap_field_management_shared
 }
 
-pp_wb_cap_irrigation_systems_shared = {
+pp_wb_cap_water_control_shared = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
-		value = 2
+		value = 1
 	}
 	if = {
-		limit = { climate = arid }
+		limit = { climate = ha1300_climate_continental_monsoon }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_ARID"
-			value = 2
+			desc = "BUILDING_LEVEL_WB_CLIMATE_CONTINENTAL_MONSOON"
+			value = -1
+		}
+	}
+	else_if = {
+		limit = { climate = ha1300_climate_highland_monsoon }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_HIGHLAND_MONSOON"
+			value = -1
+		}
+	}
+	else_if = {
+		limit = { climate = mediterranean }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_MEDITERRANEAN"
+			value = -1
+		}
+	}
+	else_if = {
+		limit = { climate = subtropical }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL"
+			value = -1
 		}
 	}
 	if = {
 		limit = { topography = atoll }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ATOLL"
-			value = 4
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { topography = ha1300_topo_deltas }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_DELTAS"
-			value = 4
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { topography = mountain_wasteland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAIN_WASTELAND"
-			value = 4
+			value = 2
 		}
 	}
 	if = {
+		limit = { vegetation = farmland }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_FARMLAND"
+			value = 1
+		}
+	}
+	else_if = {
 		limit = { vegetation = ha1300_veg_marsh }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_MARSH"
 			value = 2
 		}
 	}
+	else_if = {
+		limit = { vegetation = ha1300_veg_swamp }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_SWAMP"
+			value = 1
+		}
+	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
 		value = development
-		multiply = 0.03
+		multiply = 0.02
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 40 }
+	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 }
 }
 
 pp_wb_cap_irrigation_systems = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FAMILY"
 		value = this.pp_wb_cap_irrigation_systems_building_level_wb_family
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_QANATS"
+		value = modifier:pp_wb_levels_qanats
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_BUND"
+		value = modifier:pp_wb_levels_bund
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE"
+		value = modifier:pp_wb_levels_field_drainage
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_POLDERS"
+		value = modifier:pp_wb_levels_polders
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
@@ -556,7 +595,7 @@ pp_wb_cap_irrigation_systems = {
 
 # Tooltip helpers of pp_wb_cap_irrigation_systems (cap_tooltips.py): each is one row of the cap, read through this.
 pp_wb_cap_irrigation_systems_building_level_wb_family = {
-	value = pp_wb_cap_irrigation_systems_shared
+	value = pp_wb_cap_water_control_shared
 }
 
 pp_wb_cap_khmer_baray = {
@@ -569,6 +608,22 @@ pp_wb_cap_khmer_baray = {
 		value = modifier:pp_wb_levels_irrigation_systems
 	}
 	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_QANATS"
+		value = modifier:pp_wb_levels_qanats
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_BUND"
+		value = modifier:pp_wb_levels_bund
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE"
+		value = modifier:pp_wb_levels_field_drainage
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_POLDERS"
+		value = modifier:pp_wb_levels_polders
+	}
+	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
 		value = modifier:pp_wb_levels_incamisana
 	}
@@ -577,7 +632,7 @@ pp_wb_cap_khmer_baray = {
 
 # Tooltip helpers of pp_wb_cap_khmer_baray (cap_tooltips.py): each is one row of the cap, read through this.
 pp_wb_cap_khmer_baray_building_level_wb_family = {
-	value = pp_wb_cap_irrigation_systems_shared
+	value = pp_wb_cap_water_control_shared
 }
 
 pp_wb_cap_incamisana = {
@@ -590,6 +645,22 @@ pp_wb_cap_incamisana = {
 		value = modifier:pp_wb_levels_irrigation_systems
 	}
 	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_QANATS"
+		value = modifier:pp_wb_levels_qanats
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_BUND"
+		value = modifier:pp_wb_levels_bund
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE"
+		value = modifier:pp_wb_levels_field_drainage
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_POLDERS"
+		value = modifier:pp_wb_levels_polders
+	}
+	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
 		value = modifier:pp_wb_levels_khmer_baray
 	}
@@ -598,417 +669,279 @@ pp_wb_cap_incamisana = {
 
 # Tooltip helpers of pp_wb_cap_incamisana (cap_tooltips.py): each is one row of the cap, read through this.
 pp_wb_cap_incamisana_building_level_wb_family = {
-	value = pp_wb_cap_irrigation_systems_shared
+	value = pp_wb_cap_water_control_shared
 }
 
-pp_wb_cap_irrigated_fields_shared = {
+pp_wb_cap_qanats = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = this.pp_wb_cap_qanats_building_level_wb_family
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
+		value = modifier:pp_wb_levels_irrigation_systems
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_BUND"
+		value = modifier:pp_wb_levels_bund
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE"
+		value = modifier:pp_wb_levels_field_drainage
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_POLDERS"
+		value = modifier:pp_wb_levels_polders
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
+		value = modifier:pp_wb_levels_khmer_baray
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
+		value = modifier:pp_wb_levels_incamisana
+	}
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+}
+
+# Tooltip helpers of pp_wb_cap_qanats (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_qanats_building_level_wb_family = {
+	value = pp_wb_cap_water_control_shared
+}
+
+pp_wb_cap_bund = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = this.pp_wb_cap_bund_building_level_wb_family
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
+		value = modifier:pp_wb_levels_irrigation_systems
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_QANATS"
+		value = modifier:pp_wb_levels_qanats
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE"
+		value = modifier:pp_wb_levels_field_drainage
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_POLDERS"
+		value = modifier:pp_wb_levels_polders
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
+		value = modifier:pp_wb_levels_khmer_baray
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
+		value = modifier:pp_wb_levels_incamisana
+	}
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+}
+
+# Tooltip helpers of pp_wb_cap_bund (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_bund_building_level_wb_family = {
+	value = pp_wb_cap_water_control_shared
+}
+
+pp_wb_cap_field_drainage = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = this.pp_wb_cap_field_drainage_building_level_wb_family
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
+		value = modifier:pp_wb_levels_irrigation_systems
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_QANATS"
+		value = modifier:pp_wb_levels_qanats
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_BUND"
+		value = modifier:pp_wb_levels_bund
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_POLDERS"
+		value = modifier:pp_wb_levels_polders
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
+		value = modifier:pp_wb_levels_khmer_baray
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
+		value = modifier:pp_wb_levels_incamisana
+	}
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+}
+
+# Tooltip helpers of pp_wb_cap_field_drainage (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_field_drainage_building_level_wb_family = {
+	value = pp_wb_cap_water_control_shared
+}
+
+pp_wb_cap_polders = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = this.pp_wb_cap_polders_building_level_wb_family
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
+		value = modifier:pp_wb_levels_irrigation_systems
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_QANATS"
+		value = modifier:pp_wb_levels_qanats
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_BUND"
+		value = modifier:pp_wb_levels_bund
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE"
+		value = modifier:pp_wb_levels_field_drainage
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
+		value = modifier:pp_wb_levels_khmer_baray
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
+		value = modifier:pp_wb_levels_incamisana
+	}
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+}
+
+# Tooltip helpers of pp_wb_cap_polders (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_polders_building_level_wb_family = {
+	value = pp_wb_cap_water_control_shared
+}
+
+pp_wb_cap_irrigated_fields = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
-		value = 16
+		value = 5
 	}
 	if = {
 		limit = { climate = arctic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_ARCTIC"
-			value = 32
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_ARID"
-			value = 32
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = cold_arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_ARID"
-			value = 32
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = cold_semi_arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_SEMI_ARID"
-			value = 32
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_dry_summer_continental }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_DRY_SUMMER_CONTINENTAL"
-			value = 32
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = hot_semi_arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_SEMI_ARID"
-			value = 32
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = mediterranean }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_MEDITERRANEAN"
-			value = 32
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = oceanic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_OCEANIC"
-			value = 32
-		}
-	}
-	else_if = {
-		limit = { climate = subpolar }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR"
-			value = 32
-		}
-	}
-	else_if = {
-		limit = { climate = ha1300_climate_subpolar_oceanic }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR_OCEANIC"
-			value = 32
-		}
-	}
-	else_if = {
-		limit = { climate = subtropical }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL"
-			value = 16
-		}
-	}
-	else_if = {
-		limit = { climate = tropical }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL"
-			value = 16
-		}
-	}
-	else_if = {
-		limit = { climate = ha1300_climate_tropical_monsoon }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL_MONSOON"
-			value = 8
-		}
-	}
-	if = {
-		limit = { topography = atoll }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ATOLL"
-			value = 48
-		}
-	}
-	else_if = {
-		limit = { topography = ha1300_topo_deltas }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_DELTAS"
-			value = 48
-		}
-	}
-	else_if = {
-		limit = { topography = hills }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_HILLS"
-			value = -8
-		}
-	}
-	else_if = {
-		limit = { topography = mountain_wasteland }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAIN_WASTELAND"
-			value = 48
-		}
-	}
-	else_if = {
-		limit = { topography = mountains }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAINS"
-			value = 48
-		}
-	}
-	else_if = {
-		limit = { topography = plateau }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_PLATEAU"
-			value = -8
-		}
-	}
-	else_if = {
-		limit = { topography = ha1300_topo_rolling }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ROLLING"
-			value = 48
-		}
-	}
-	else_if = {
-		limit = { topography = ha1300_topo_valleys }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_VALLEYS"
-			value = -8
-		}
-	}
-	else_if = {
-		limit = { topography = wetlands }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_WETLANDS"
-			value = 16
-		}
-	}
-	if = {
-		limit = { vegetation = desert }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_DESERT"
-			value = 24
-		}
-	}
-	else_if = {
-		limit = { vegetation = ha1300_veg_dry_forest }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_DRY_FOREST"
-			value = 8
-		}
-	}
-	else_if = {
-		limit = { vegetation = farmland }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_FARMLAND"
-			value = 24
-		}
-	}
-	else_if = {
-		limit = { vegetation = jungle }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_JUNGLE"
-			value = 16
-		}
-	}
-	else_if = {
-		limit = { vegetation = ha1300_veg_marsh }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_MARSH"
-			value = 24
-		}
-	}
-	else_if = {
-		limit = { vegetation = ha1300_veg_mixed_forest }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_MIXED_FOREST"
-			value = 8
-		}
-	}
-	else_if = {
-		limit = { vegetation = ha1300_veg_savanna }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_SAVANNA"
-			value = 16
-		}
-	}
-	else_if = {
-		limit = { vegetation = sparse }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_SPARSE"
-			value = 24
-		}
-	}
-	else_if = {
-		limit = { vegetation = ha1300_veg_swamp }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_SWAMP"
-			value = 16
-		}
-	}
-	else_if = {
-		limit = { vegetation = ha1300_veg_tundra }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_TUNDRA"
-			value = 24
-		}
-	}
-	else_if = {
-		limit = { vegetation = woods }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_WOODS"
-			value = 8
-		}
-	}
-	if = {
-		limit = { has_location_modifier = pp_wb_fertility_high }
-		add = {
-			desc = "BUILDING_LEVEL_WB_FERTILITY_HIGH"
-			value = 8
-		}
-	}
-	else_if = {
-		limit = { has_location_modifier = pp_wb_fertility_very_high }
-		add = {
-			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_HIGH"
-			value = 8
-		}
-	}
-	if = {
-		limit = { pp_wb_river_size_5 = yes }
-		add = {
-			desc = "BUILDING_LEVEL_WB_RIVER_LEVEL_5"
-			value = 8
-		}
-	}
-	if = {
-		limit = { is_adjacent_to_lake = yes }
-		add = {
-			desc = "BUILDING_LEVEL_WB_IS_ADJACENT_TO_LAKE_TRUE"
-			value = 24
-		}
-	}
-	add = {
-		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = development
-		multiply = 0.24
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 160 }
-}
-
-pp_wb_cap_irrigated_fields = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_irrigated_fields_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_CANAL_NETWORK"
-		value = modifier:pp_wb_levels_jiangnan_canal_network
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-}
-
-# Tooltip helpers of pp_wb_cap_irrigated_fields (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_irrigated_fields_building_level_wb_family = {
-	value = pp_wb_cap_irrigated_fields_shared
-}
-
-pp_wb_cap_jiangnan_canal_network = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_jiangnan_canal_network_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATED_FIELDS"
-		value = modifier:pp_wb_levels_irrigated_fields
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-}
-
-# Tooltip helpers of pp_wb_cap_jiangnan_canal_network (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_jiangnan_canal_network_building_level_wb_family = {
-	value = pp_wb_cap_irrigated_fields_shared
-}
-
-pp_wb_cap_bund = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_BASE"
-		value = 2
-	}
-	if = {
-		limit = { climate = arctic }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_ARCTIC"
-			value = -1
-		}
-	}
-	else_if = {
-		limit = { climate = arid }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_ARID"
-			value = -1
-		}
-	}
-	else_if = {
-		limit = { climate = cold_arid }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_ARID"
-			value = -1
-		}
-	}
-	else_if = {
-		limit = { climate = cold_semi_arid }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_SEMI_ARID"
-			value = -1
-		}
-	}
-	else_if = {
-		limit = { climate = ha1300_climate_continental_monsoon }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_CONTINENTAL_MONSOON"
-			value = -1
-		}
-	}
-	else_if = {
-		limit = { climate = ha1300_climate_dry_summer_continental }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_DRY_SUMMER_CONTINENTAL"
-			value = -1
-		}
-	}
-	else_if = {
-		limit = { climate = ha1300_climate_highland_monsoon }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_HIGHLAND_MONSOON"
-			value = -1
-		}
-	}
-	else_if = {
-		limit = { climate = hot_semi_arid }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_SEMI_ARID"
-			value = -1
-		}
-	}
-	else_if = {
-		limit = { climate = mediterranean }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_MEDITERRANEAN"
-			value = -1
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_savanna }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SAVANNA"
-			value = -1
+			value = 1
 		}
 	}
 	else_if = {
 		limit = { climate = subpolar }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR"
-			value = -1
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_subpolar_oceanic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR_OCEANIC"
-			value = -1
+			value = 3
+		}
+	}
+	else_if = {
+		limit = { climate = subtropical }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL"
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_subtropical_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL_MONSOON"
-			value = -1
+			value = 1
+		}
+	}
+	else_if = {
+		limit = { climate = tropical }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL"
+			value = 3
+		}
+	}
+	else_if = {
+		limit = { climate = ha1300_climate_tropical_monsoon }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL_MONSOON"
+			value = 3
 		}
 	}
 	if = {
 		limit = { topography = atoll }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ATOLL"
-			value = 1
+			value = 2
+		}
+	}
+	else_if = {
+		limit = { topography = ha1300_topo_deltas }
+		add = {
+			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_DELTAS"
+			value = 2
 		}
 	}
 	else_if = {
@@ -1019,224 +952,44 @@ pp_wb_cap_bund = {
 		}
 	}
 	else_if = {
-		limit = { topography = mountain_wasteland }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAIN_WASTELAND"
-			value = 1
-		}
-	}
-	else_if = {
-		limit = { topography = wetlands }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_WETLANDS"
-			value = 1
-		}
-	}
-	if = {
-		limit = { vegetation = ha1300_veg_dry_forest }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_DRY_FOREST"
-			value = 1
-		}
-	}
-	else_if = {
-		limit = { vegetation = farmland }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_FARMLAND"
-			value = 2
-		}
-	}
-	else_if = {
-		limit = { vegetation = ha1300_veg_marsh }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_MARSH"
-			value = 3
-		}
-	}
-	else_if = {
-		limit = { vegetation = ha1300_veg_swamp }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_SWAMP"
-			value = 2
-		}
-	}
-	add = {
-		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = this.pp_wb_cap_bund_building_level_wb_development
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 }
-}
-
-# Tooltip helpers of pp_wb_cap_bund (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_bund_building_level_wb_development = {
-	value = development
-	multiply = 0.02
-}
-
-pp_wb_cap_field_drainage = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_BASE"
-		value = 5
-	}
-	if = {
-		limit = { climate = arctic }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_ARCTIC"
-			value = -4
-		}
-	}
-	else_if = {
-		limit = { climate = arid }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_ARID"
-			value = -4
-		}
-	}
-	else_if = {
-		limit = { climate = cold_arid }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_ARID"
-			value = -4
-		}
-	}
-	else_if = {
-		limit = { climate = cold_semi_arid }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_SEMI_ARID"
-			value = -3
-		}
-	}
-	else_if = {
-		limit = { climate = ha1300_climate_continental_monsoon }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_CONTINENTAL_MONSOON"
-			value = -2
-		}
-	}
-	else_if = {
-		limit = { climate = ha1300_climate_dry_summer_continental }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_DRY_SUMMER_CONTINENTAL"
-			value = -3
-		}
-	}
-	else_if = {
-		limit = { climate = ha1300_climate_highland_monsoon }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_HIGHLAND_MONSOON"
-			value = -4
-		}
-	}
-	else_if = {
-		limit = { climate = hot_semi_arid }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_SEMI_ARID"
-			value = -3
-		}
-	}
-	else_if = {
-		limit = { climate = mediterranean }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_MEDITERRANEAN"
-			value = -3
-		}
-	}
-	else_if = {
-		limit = { climate = oceanic }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_OCEANIC"
-			value = -1
-		}
-	}
-	else_if = {
-		limit = { climate = ha1300_climate_savanna }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_SAVANNA"
-			value = -4
-		}
-	}
-	else_if = {
-		limit = { climate = subpolar }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR"
-			value = -4
-		}
-	}
-	else_if = {
-		limit = { climate = ha1300_climate_subpolar_oceanic }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR_OCEANIC"
-			value = -4
-		}
-	}
-	else_if = {
-		limit = { climate = subtropical }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL"
-			value = -4
-		}
-	}
-	else_if = {
-		limit = { climate = ha1300_climate_subtropical_monsoon }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL_MONSOON"
-			value = -4
-		}
-	}
-	else_if = {
-		limit = { climate = tropical }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL"
-			value = -3
-		}
-	}
-	else_if = {
-		limit = { climate = ha1300_climate_tropical_monsoon }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL_MONSOON"
-			value = -4
-		}
-	}
-	if = {
-		limit = { topography = atoll }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ATOLL"
-			value = 1
-		}
-	}
-	else_if = {
-		limit = { topography = ha1300_topo_deltas }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_DELTAS"
-			value = -1
-		}
-	}
-	else_if = {
 		limit = { topography = hills }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_HILLS"
-			value = -1
+			value = -3
 		}
 	}
 	else_if = {
 		limit = { topography = mountain_wasteland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAIN_WASTELAND"
-			value = 1
+			value = 2
 		}
 	}
 	else_if = {
 		limit = { topography = mountains }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAINS"
-			value = -1
+			value = 2
+		}
+	}
+	else_if = {
+		limit = { topography = plateau }
+		add = {
+			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_PLATEAU"
+			value = -2
 		}
 	}
 	else_if = {
 		limit = { topography = ha1300_topo_rolling }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ROLLING"
+			value = 2
+		}
+	}
+	else_if = {
+		limit = { topography = ha1300_topo_valleys }
+		add = {
+			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_VALLEYS"
 			value = -1
 		}
 	}
@@ -1248,6 +1001,20 @@ pp_wb_cap_field_drainage = {
 		}
 	}
 	if = {
+		limit = { vegetation = ha1300_veg_coniferous_forest }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_CONIFEROUS_FOREST"
+			value = -1
+		}
+	}
+	else_if = {
+		limit = { vegetation = desert }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_DESERT"
+			value = 4
+		}
+	}
+	else_if = {
 		limit = { vegetation = ha1300_veg_dry_forest }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_DRY_FOREST"
@@ -1262,17 +1029,73 @@ pp_wb_cap_field_drainage = {
 		}
 	}
 	else_if = {
+		limit = { vegetation = jungle }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_JUNGLE"
+			value = 4
+		}
+	}
+	else_if = {
 		limit = { vegetation = ha1300_veg_marsh }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_MARSH"
-			value = 3
+			value = 4
+		}
+	}
+	else_if = {
+		limit = { vegetation = ha1300_veg_mixed_forest }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_MIXED_FOREST"
+			value = 2
+		}
+	}
+	else_if = {
+		limit = { vegetation = ha1300_veg_savanna }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_SAVANNA"
+			value = 4
+		}
+	}
+	else_if = {
+		limit = { vegetation = ha1300_veg_scrubland }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_SCRUBLAND"
+			value = -1
+		}
+	}
+	else_if = {
+		limit = { vegetation = sparse }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_SPARSE"
+			value = 4
 		}
 	}
 	else_if = {
 		limit = { vegetation = ha1300_veg_swamp }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_SWAMP"
-			value = 3
+			value = 4
+		}
+	}
+	else_if = {
+		limit = { vegetation = ha1300_veg_thicket }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_THICKET"
+			value = -1
+		}
+	}
+	else_if = {
+		limit = { vegetation = ha1300_veg_tundra }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_TUNDRA"
+			value = 4
+		}
+	}
+	else_if = {
+		limit = { vegetation = woods }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_WOODS"
+			value = 4
 		}
 	}
 	if = {
@@ -1283,188 +1106,148 @@ pp_wb_cap_field_drainage = {
 		}
 	}
 	else_if = {
+		limit = { has_location_modifier = pp_wb_fertility_low }
+		add = {
+			desc = "BUILDING_LEVEL_WB_FERTILITY_LOW"
+			value = -1
+		}
+	}
+	else_if = {
 		limit = { has_location_modifier = pp_wb_fertility_very_high }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_HIGH"
 			value = 1
 		}
 	}
-	add = {
-		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = this.pp_wb_cap_field_drainage_building_level_wb_development
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 }
-}
-
-# Tooltip helpers of pp_wb_cap_field_drainage (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_field_drainage_building_level_wb_development = {
-	value = development
-	multiply = 0.03
-}
-
-pp_wb_cap_polders = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_BASE"
-		value = 1
-	}
-	if = {
-		limit = { topography = atoll }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ATOLL"
-			value = 19
-		}
-	}
 	else_if = {
-		limit = { topography = mountain_wasteland }
+		limit = { has_location_modifier = pp_wb_fertility_very_low }
 		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAIN_WASTELAND"
-			value = 19
-		}
-	}
-	else_if = {
-		limit = { topography = mountains }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAINS"
-			value = 19
-		}
-	}
-	else_if = {
-		limit = { topography = plateau }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_PLATEAU"
-			value = 19
-		}
-	}
-	else_if = {
-		limit = { topography = ha1300_topo_rolling }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ROLLING"
-			value = 19
+			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_LOW"
+			value = -1
 		}
 	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = this.pp_wb_cap_polders_building_level_wb_development
+		value = this.pp_wb_cap_irrigated_fields_building_level_wb_development
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 }
+	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 }
 }
 
-# Tooltip helpers of pp_wb_cap_polders (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_polders_building_level_wb_development = {
+# Tooltip helpers of pp_wb_cap_irrigated_fields (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_irrigated_fields_building_level_wb_development = {
 	value = development
-	multiply = 0.01
+	multiply = 0.05
 }
 
-pp_wb_cap_qanats = {
+pp_wb_cap_paddy_water_control_shared = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
-		value = 0
+		value = 5
 	}
 	if = {
 		limit = { climate = arctic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_ARCTIC"
-			value = 16
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_ARID"
-			value = 1
+			value = 3
 		}
 	}
 	else_if = {
-		limit = { climate = ha1300_climate_continental_monsoon }
+		limit = { climate = cold_arid }
 		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_CONTINENTAL_MONSOON"
-			value = 16
+			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_ARID"
+			value = 3
+		}
+	}
+	else_if = {
+		limit = { climate = cold_semi_arid }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_SEMI_ARID"
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_dry_summer_continental }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_DRY_SUMMER_CONTINENTAL"
-			value = 16
-		}
-	}
-	else_if = {
-		limit = { climate = ha1300_climate_highland_monsoon }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_HIGHLAND_MONSOON"
-			value = 16
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = hot_semi_arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_SEMI_ARID"
-			value = 1
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = mediterranean }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_MEDITERRANEAN"
-			value = 16
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = oceanic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_OCEANIC"
-			value = 16
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_savanna }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SAVANNA"
-			value = 16
+			value = 1
 		}
 	}
 	else_if = {
 		limit = { climate = subpolar }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR"
-			value = 16
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_subpolar_oceanic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR_OCEANIC"
-			value = 16
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = subtropical }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL"
-			value = 16
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_subtropical_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL_MONSOON"
-			value = 16
+			value = 1
 		}
 	}
 	else_if = {
 		limit = { climate = tropical }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL"
-			value = 16
+			value = 3
 		}
 	}
 	else_if = {
 		limit = { climate = ha1300_climate_tropical_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL_MONSOON"
-			value = 16
+			value = 3
 		}
 	}
 	if = {
@@ -1482,10 +1265,17 @@ pp_wb_cap_qanats = {
 		}
 	}
 	else_if = {
+		limit = { topography = ha1300_topo_floodplains }
+		add = {
+			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_FLOODPLAINS"
+			value = 1
+		}
+	}
+	else_if = {
 		limit = { topography = hills }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_HILLS"
-			value = 1
+			value = -3
 		}
 	}
 	else_if = {
@@ -1506,7 +1296,7 @@ pp_wb_cap_qanats = {
 		limit = { topography = plateau }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_PLATEAU"
-			value = 1
+			value = -2
 		}
 	}
 	else_if = {
@@ -1517,45 +1307,59 @@ pp_wb_cap_qanats = {
 		}
 	}
 	else_if = {
+		limit = { topography = ha1300_topo_valleys }
+		add = {
+			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_VALLEYS"
+			value = -1
+		}
+	}
+	else_if = {
 		limit = { topography = wetlands }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_WETLANDS"
-			value = 2
+			value = 1
 		}
 	}
 	if = {
 		limit = { vegetation = ha1300_veg_coniferous_forest }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_CONIFEROUS_FOREST"
-			value = 2
+			value = -1
 		}
 	}
 	else_if = {
 		limit = { vegetation = desert }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_DESERT"
-			value = 2
+			value = 4
+		}
+	}
+	else_if = {
+		limit = { vegetation = ha1300_veg_dry_forest }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_DRY_FOREST"
+			value = 1
 		}
 	}
 	else_if = {
 		limit = { vegetation = farmland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_FARMLAND"
-			value = 2
-		}
-	}
-	else_if = {
-		limit = { vegetation = forest }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_FOREST"
-			value = 2
+			value = 4
 		}
 	}
 	else_if = {
 		limit = { vegetation = jungle }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_JUNGLE"
-			value = 2
+			value = 4
+		}
+	}
+	else_if = {
+		limit = { vegetation = ha1300_veg_marsh }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_MARSH"
+			value = 4
 		}
 	}
 	else_if = {
@@ -1566,29 +1370,121 @@ pp_wb_cap_qanats = {
 		}
 	}
 	else_if = {
+		limit = { vegetation = ha1300_veg_savanna }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_SAVANNA"
+			value = 4
+		}
+	}
+	else_if = {
+		limit = { vegetation = ha1300_veg_scrubland }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_SCRUBLAND"
+			value = -1
+		}
+	}
+	else_if = {
+		limit = { vegetation = sparse }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_SPARSE"
+			value = 4
+		}
+	}
+	else_if = {
 		limit = { vegetation = ha1300_veg_swamp }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_SWAMP"
-			value = 2
+			value = 4
+		}
+	}
+	else_if = {
+		limit = { vegetation = ha1300_veg_thicket }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_THICKET"
+			value = -1
+		}
+	}
+	else_if = {
+		limit = { vegetation = ha1300_veg_tundra }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_TUNDRA"
+			value = 4
 		}
 	}
 	else_if = {
 		limit = { vegetation = woods }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_WOODS"
-			value = 2
+			value = 4
+		}
+	}
+	if = {
+		limit = { has_location_modifier = pp_wb_fertility_high }
+		add = {
+			desc = "BUILDING_LEVEL_WB_FERTILITY_HIGH"
+			value = 1
+		}
+	}
+	else_if = {
+		limit = { has_location_modifier = pp_wb_fertility_low }
+		add = {
+			desc = "BUILDING_LEVEL_WB_FERTILITY_LOW"
+			value = -1
+		}
+	}
+	else_if = {
+		limit = { has_location_modifier = pp_wb_fertility_very_high }
+		add = {
+			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_HIGH"
+			value = 1
+		}
+	}
+	else_if = {
+		limit = { has_location_modifier = pp_wb_fertility_very_low }
+		add = {
+			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_LOW"
+			value = -1
 		}
 	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = this.pp_wb_cap_qanats_building_level_wb_development
+		value = development
+		multiply = 0.05
 	}
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 }
+	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 }
 }
 
-# Tooltip helpers of pp_wb_cap_qanats (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_qanats_building_level_wb_development = {
-	value = development
-	multiply = 0.1
+pp_wb_cap_paddy_water_control = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = this.pp_wb_cap_paddy_water_control_building_level_wb_family
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_CANAL_NETWORK"
+		value = modifier:pp_wb_levels_jiangnan_canal_network
+	}
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+}
+
+# Tooltip helpers of pp_wb_cap_paddy_water_control (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_paddy_water_control_building_level_wb_family = {
+	value = pp_wb_cap_paddy_water_control_shared
+}
+
+pp_wb_cap_jiangnan_canal_network = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FAMILY"
+		value = this.pp_wb_cap_jiangnan_canal_network_building_level_wb_family
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_PADDY_WATER_CONTROL"
+		value = modifier:pp_wb_levels_paddy_water_control
+	}
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+}
+
+# Tooltip helpers of pp_wb_cap_jiangnan_canal_network (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_jiangnan_canal_network_building_level_wb_family = {
+	value = pp_wb_cap_paddy_water_control_shared
 }

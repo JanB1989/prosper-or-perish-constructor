@@ -6,7 +6,7 @@ REPLACE:polders = {
   is_special = yes
   is_foreign = no
   max_levels = pp_wb_cap_polders
-  increase_per_level_cost = 0.50
+  increase_per_level_cost = 0.05
   pop_type = laborers
   category = infrastructure_category
   employment_size = 0
@@ -35,7 +35,8 @@ REPLACE:polders = {
       local_millet_output_modifier = 0.02
       local_fiber_crops_output_modifier = 0.005
       local_horses_output_modifier = 0.0035
-      local_population_capacity = 2.2
+      local_population_capacity = 5
+      pp_wb_levels_polders = 1
       free_building_levels = 1
     }
 

@@ -4,7 +4,7 @@ audio_tier = 4
 is_special = yes
 is_foreign = no
 max_levels = pp_wb_cap_bund
-increase_per_level_cost = 0.25
+increase_per_level_cost = 0.05
 pop_type = laborers
 price = pp_bund_price
 category = infrastructure_category
@@ -56,7 +56,8 @@ raw_modifier = {
   local_cloves_output_modifier = 0.012
   local_chili_output_modifier = 0.012
   local_horses_output_modifier = 0.0015
-  local_population_capacity = 0.8
+  local_population_capacity = 5
+  pp_wb_levels_bund = 1
   free_building_levels = 1
 }
 

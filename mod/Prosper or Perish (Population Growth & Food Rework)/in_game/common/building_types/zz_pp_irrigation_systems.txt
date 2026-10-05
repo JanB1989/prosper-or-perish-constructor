@@ -3,7 +3,7 @@ REPLACE:irrigation_systems = {
   audio_tier = 1
   is_foreign = no
   max_levels = pp_wb_cap_irrigation_systems
-  increase_per_level_cost = 0.35
+  increase_per_level_cost = 0.05
   pop_type = peasants
   price = pp_irrigation_systems_price
   category = infrastructure_category
@@ -27,7 +27,7 @@ REPLACE:irrigation_systems = {
   build_time = infrastructure_build_time
   construction_demand = village_construction
   raw_modifier = {
-    local_population_capacity = 1.6
+    local_population_capacity = 5
     pp_wb_levels_irrigation_systems = 1
     free_building_levels = 1
   }

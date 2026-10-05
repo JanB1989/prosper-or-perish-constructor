@@ -2,9 +2,9 @@
 field_management = {
 is_foreign = no
 max_levels = pp_wb_cap_field_management
-increase_per_level_cost = 0.20
+increase_per_level_cost = 0.05
 pop_type = peasants
-employment_size = 0.050
+employment_size = 0.10
 price = pp_field_management_price
 category = infrastructure_category
 custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -27,15 +27,15 @@ unique_production_methods = {
   pp_field_management_maintenance = {
     icon_type = building_type
     icon = field_management
-    livestock = 0.004
-    stone = 0.005
-    manual_labor = 0.005
+    livestock = 0.008
+    stone = 0.01
+    manual_labor = 0.01
     category = building_maintenance
   }
 }
 
 raw_modifier = {
-  local_population_capacity = 2.57
+  local_population_capacity = 5
   pp_wb_levels_field_management = 1
   free_building_levels = 1
 }

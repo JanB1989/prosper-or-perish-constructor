@@ -23,9 +23,9 @@ building:
     audio_tier = 2
     is_foreign = no
     max_levels = pp_wb_cap_field_management_convertible
-    increase_per_level_cost = 0.27
+    increase_per_level_cost = 0.07
     pop_type = peasants
-    employment_size = 0.075
+    employment_size = 0.15
     price = pp_field_management_convertible_price
     category = infrastructure_category
     custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -45,17 +45,17 @@ building:
 
     unique_production_methods = {
       pp_field_management_convertible_leys = {
-        legumes = 0.006
-        livestock = 0.005
-        stone = 0.007
-        tools = 0.002
-        manual_labor = 0.006
+        legumes = 0.012
+        livestock = 0.01
+        stone = 0.014
+        tools = 0.004
+        manual_labor = 0.012
         category = building_maintenance
       }
     }
 
     raw_modifier = {
-      local_population_capacity = 3.85
+      local_population_capacity = 7.5
       pp_wb_levels_field_management_convertible = 1
       free_building_levels = 1
     }
@@ -84,7 +84,7 @@ localization:
     pp_field_management_convertible_desc: Alternating arable and ley pasture on the same fields keeps the soil in heart and lets more people live from the land already under the plough.
 prices:
 - key: pp_field_management_convertible_price
-  body: '{gold = 50}'
+  body: '{gold = 195}'
 icon:
   source_png: ../assets/icons/field_management_convertible.png
   output_dds: field_management_convertible.dds

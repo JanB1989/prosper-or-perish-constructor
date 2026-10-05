@@ -259,7 +259,7 @@ FOOD_SECURITY_PRIORITY_GROUPS = {
             "Irrigation and other water-control buildings need high priority so food production "
             "or capacity are not destroyed through underemployment."
         ),
-        ("irrigation_systems", "bund", "terraces", "polders", "khmer_baray", "incamisana", "land_clearance", "field_management", "field_management_convertible", "field_management_improved", "field_drainage", "irrigated_fields", "qanats"),
+        ("irrigation_systems", "bund", "terraces", "polders", "khmer_baray", "incamisana", "land_clearance", "field_management", "field_management_convertible", "field_management_improved", "field_drainage", "irrigated_fields", "paddy_water_control", "qanats"),
     ),
     "staple_food_production": (
         90000,
@@ -1606,19 +1606,21 @@ def test_water_control_capacity_buildings_use_scaled_gold_prices() -> None:
     data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
     buildings = {row["name"]: row for row in data.building_data.buildings.to_dicts()}
     expected_prices = {
-        "bund": ("pp_bund_price", 50.0),
-        "irrigation_systems": ("pp_irrigation_systems_price", 50.0),
+        # 2026-10-05: one 5,000-people level each, 160 gold x a history-ordered cost factor x strength
+        "bund": ("pp_bund_price", 145.0),
+        "irrigation_systems": ("pp_irrigation_systems_price", 160.0),
         "terraces": ("pp_terraces_price", 100.0),
-        "polders": ("pp_polders_price", 50.0),
-        "khmer_baray": ("pp_khmer_baray_price", 50.0),
-        "incamisana": ("pp_incamisana_price", 50.0),
-        "land_clearance": ("pp_land_clearance_price", 50.0),
-        "field_management": ("pp_field_management_price", 50.0),
-        "field_management_convertible": ("pp_field_management_convertible_price", 50.0),
-        "field_management_improved": ("pp_field_management_improved_price", 50.0),
-        "field_drainage": ("pp_field_drainage_price", 50.0),
-        "irrigated_fields": ("pp_irrigated_fields_price", 50.0),
-        "qanats": ("pp_qanats_price", 50.0),
+        "polders": ("pp_polders_price", 210.0),
+        "khmer_baray": ("pp_khmer_baray_price", 240.0),
+        "incamisana": ("pp_incamisana_price", 240.0),
+        "land_clearance": ("pp_land_clearance_price", 145.0),
+        "field_management": ("pp_field_management_price", 130.0),
+        "field_management_convertible": ("pp_field_management_convertible_price", 195.0),
+        "field_management_improved": ("pp_field_management_improved_price", 260.0),
+        "field_drainage": ("pp_field_drainage_price", 135.0),
+        "irrigated_fields": ("pp_irrigated_fields_price", 175.0),
+        "paddy_water_control": ("pp_paddy_water_control_price", 160.0),
+        "qanats": ("pp_qanats_price", 240.0),
         "aqueduct_system": ("expand_aqueduct_system", 1000.0),
     }
 

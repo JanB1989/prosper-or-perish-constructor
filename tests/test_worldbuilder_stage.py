@@ -143,6 +143,33 @@ def test_niche_buildings_share_the_family_cap_and_are_stronger(tmp_path):
     assert out["rows"] == 1 and "land_clearance = { tag = SWE level = 3 location = a }" in rows and "terraces_x" not in rows
 
 
+def test_cap_group_members_share_one_cap_and_keep_their_1337_works(tmp_path):
+    import dataclasses
+
+    c = _contract(tmp_path)
+    eq = c.building_types["cap_equation_json"][0]
+    types = pl.DataFrame({"building": ["bunds", "drains"], "unit_people_per_level": [5000.0, 5000.0], "level_limit": [15, 15],
+                          "gate_json": ['[{"climate": ["arid", "continental"]}]'] * 2, "cap_equation_json": [eq, eq], "cap_group": ["water", "water"]})
+    lb = pl.DataFrame({"location_tag": ["a", "a"], "building": ["bunds", "drains"], "starting_levels": [5, 1], "cap_at_start": [3, 3], "cap_at_reference_development": [4, 4]})
+    c = dataclasses.replace(c, building_types=types, location_buildings=lb)
+    cfg = dataclasses.replace(_cfg(tmp_path, {"baray_x": {"family": "bund", "strength": 1.5}}), building_map={"bunds": "bund", "drains": "field_drainage"})
+    caps = wb_buildings.write_caps(c, cfg, tmp_path)
+    text = (tmp_path / wb_buildings.CAPS_PATH).read_text(encoding="utf-8-sig")
+    assert text.count("pp_wb_cap_water_shared = {") == 1
+    # each member: the group's equation minus every other member's levels, the niche of a member included
+    for key, others in (("bund", ("field_drainage", "baray_x")), ("field_drainage", ("bund", "baray_x")), ("baray_x", ("bund", "field_drainage"))):
+        block = text.split(f"pp_wb_cap_{key} = {{")[1].split("\n}")[0]
+        assert "value = pp_wb_cap_water_shared" in block and all(f"modifier:pp_wb_levels_{o}" in block for o in others)
+    assert caps["bund"]["group"] == "water" and caps["baray_x"]["group"] == "water" and caps["baray_x"]["shared"]
+    # 1337 works above the cap stand in full unless clamp_improvements_to_cap
+    keep = dataclasses.replace(cfg, raw={"start": {"clamp_improvements_to_cap": False}})
+    out = wb_buildings.write_setup(c, keep, caps, {"a": "SWE"}, tmp_path)
+    rows = (tmp_path / wb_buildings.SETUP_PATH).read_text(encoding="utf-8-sig")
+    assert "bund = { tag = SWE level = 5 location = a }" in rows and out["clamped_to_cap"] == 0 and out["starting_works_above_cap"] == 1
+    wb_buildings.write_setup(c, cfg, caps, {"a": "SWE"}, tmp_path)
+    assert "bund = { tag = SWE level = 3 location = a }" in (tmp_path / wb_buildings.SETUP_PATH).read_text(encoding="utf-8-sig")
+
+
 def test_niche_blueprint_gets_lock_gate_counter_and_must_be_replace(tmp_path):
     import yaml
 

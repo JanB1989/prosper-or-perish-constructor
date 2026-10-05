@@ -1,0 +1,67 @@
+version: 2
+tag: paddy_water_control
+footprint: capacity_source
+building:
+  key: paddy_water_control
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_paddy_water_control_upkeep
+  possible_production_methods: []
+  body: |-
+    is_foreign = no
+    max_levels = pp_wb_cap_paddy_water_control
+    increase_per_level_cost = 0.07
+    pop_type = peasants
+    employment_size = 0
+    price = pp_paddy_water_control_price
+    category = infrastructure_category
+    custom_tags = { pp_food_security_priority pp_water_control_priority }
+    icon = paddy_water_control
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_highland_monsoon climate = ha1300_climate_continental_monsoon climate = ha1300_climate_savanna }
+      OR = { topography = flatland topography = ha1300_topo_floodplains topography = wetlands topography = ha1300_topo_deltas topography = ha1300_topo_valleys topography = hills topography = plateau }
+    }
+
+    construction_demand = village_construction
+
+    raw_modifier = {
+      local_population_capacity = 5
+      pp_wb_levels_paddy_water_control = 1
+      free_building_levels = 1
+    }
+
+    unique_production_methods = {
+        pp_paddy_water_control_upkeep = {
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+    }
+
+    forbidden_for_estates = no
+    ai_forbid_shutdown = yes
+localization:
+  entries:
+    paddy_water_control_slot_0: Upkeep
+    pp_paddy_water_control_upkeep: Village Upkeep
+    paddy_water_control: Paddy Water Control
+    paddy_water_control_desc: Sluices, feeder canals, dikes and water gates bring water onto the wet-rice fields and drain it off again at the right time of the crop. Village crews keep the channels open.
+    pp_paddy_water_control_price: Paddy Water Control Price
+prices:
+- key: pp_paddy_water_control_price
+  body: '{gold = 160}'
+icon:
+  source_png: ../assets/icons/paddy_water_control.png
+  output_dds: paddy_water_control.dds
+  size: 512
+  prompt: 'Procedural drawing: assets/icon_drawings/paddy_water_control/draw.py'

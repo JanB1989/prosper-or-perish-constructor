@@ -110,7 +110,9 @@ vanilla_baseline = "data/vanilla/locations_with_raw_material.parquet"
 development_geography = "vanilla"
 sync_geography = true
 apply_on_build = true
-level_limit = 20
+# Improvements (2026-10-05, Jan): every level is worth the World Builder's one unit (5,000 people) and no building has
+# more than 15 levels, so level counts and prices are comparable; caps never clamp the 1337 works (see write_setup).
+level_limit = 15
 
 # Hand-set flavour effects on the shore modifiers (pp_wb_coastal, pp_wb_lake), next to the fitted rows.
 # Capacity and goods output stay with the World Builder fit; only other modifier types belong here.
@@ -123,11 +125,16 @@ local_defensive = 0.1              # the lake works as a moat
 clearing = "land_clearance"
 management = "field_management"
 water_supply = "irrigation_systems"
-paddy_control = "irrigated_fields"
+paddy_fields = "irrigated_fields"
+paddy_water_control = "paddy_water_control"
 flood_bunds = "bund"
 field_drainage = "field_drainage"
 polders = "polders"
 oasis_irrigation = "qanats"
+
+# Cap groups come from the handover (building_types.csv cap_group): the water works (irrigation systems, qanats, bunds,
+# field drainage, polders) share ONE cap; each keeps its own gate and starting levels, and its max level is the group's
+# cap minus the levels of every other member (niche members of a group building included).
 
 [worldbuilder.buildings.niche]
 # Culture- or country-locked capacity buildings. Each is a full REPLACE or new CREATE blueprint that
@@ -143,7 +150,7 @@ field_management_improved = { family = "field_management", strength = 2.0, upgra
 
 # Song/Yuan-era Lower Yangzi improvements. Geography and local culture are checked both in game and at setup.
 [worldbuilder.buildings.niche.jiangnan_canal_network]
-family = "irrigated_fields"
+family = "paddy_water_control"
 strength = 2.5
 place_at_start = true
 gate = [
@@ -606,6 +613,9 @@ replace = [
 # savegame-driven food startup compiler. A farm never pushes a location over its cap: spare land = capacity - pops.
 keep_pops_within_capacity = true
 fill_improvements_to_pops = true      # starting improvement levels rise to their caps where the 1337 pops need the room
+# The 1337 works (World Builder starting levels) stand in full even above the cap: the engine keeps setup levels above
+# max_levels, they just cannot be extended (2026-10-05, Jan: China's past investment is its advantage).
+clamp_improvements_to_cap = false
 peasant_work_share = 0.6              # share of a location's peasants that may staff rural buildings at start
 max_farm_levels_per_location = 6
 food_target_ratio = 1.1               # province food supply aimed for, relative to what the pops eat
@@ -826,18 +836,9 @@ gated_goods = ["rice", "maize", "potato", "olives"]   # only in their native sub
 buildings = { wheat = "wheat_farm", rice = "rice_farm", millet = "millet_farm", maize = "maize_farm", legumes = "legume_farm", potato = "potato_farm", olives = "olive_farm", livestock = "cattle_farm" }
 
 [worldbuilder.level_scale]
-# multiply levels, divide people per level; 1.0 keeps the World Builder units. Chosen so every general building is
-# worth roughly 700-2,600 people per level (niche strengths are configured above); only integer scales are safe because caps
-# and starting levels are floored, so bund and field drainage keep their small World Builder units. A common price per
-# level then means a similar price per person; the level limit scales with it.
-irrigated_fields = 8
-field_management = 3
-land_clearance = 2
-irrigation_systems = 2
-polders = 1
-qanats = 1
-bund = 1
-field_drainage = 1
+# multiply levels, divide people per level; 1.0 keeps the World Builder units. Empty since 2026-10-05: the World Builder
+# itself fits every improvement in one 5,000-people unit (was irrigated fields 8, field management 3, land clearance and
+# irrigation systems 2, which let irrigated fields stack to 160 levels).
 
 [worldbuilder.farm_land]
 # capacity units (1 unit = 1,000 people) a farm level takes from subsistence land, and the land that must stay

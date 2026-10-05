@@ -2,7 +2,7 @@
 field_drainage = {
 is_foreign = no
 max_levels = pp_wb_cap_field_drainage
-increase_per_level_cost = 0.30
+increase_per_level_cost = 0.05
 pop_type = peasants
 employment_size = 0
 price = pp_field_drainage_price
@@ -29,7 +29,8 @@ location_potential = {
 construction_demand = village_construction
 
 raw_modifier = {
-  local_population_capacity = 0.7
+  local_population_capacity = 5
+  pp_wb_levels_field_drainage = 1
   free_building_levels = 1
 }
 

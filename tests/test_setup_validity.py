@@ -313,7 +313,7 @@ def test_the_shipped_setup_passed_the_start_placement_audit():
     if not table.is_file():   # no build in this checkout yet
         return
     audit = pl.read_csv(table, schema_overrides={"problem": pl.String, "cap": pl.Int64}).with_columns(pl.col("problem").fill_null(""))
-    errors = audit.filter(~pl.col("problem").is_in(["", "unresolved"]))
+    errors = audit.filter(~pl.col("problem").is_in(["", "unresolved", ss.KEPT_ABOVE_CAP]))
     assert errors.height == 0, errors.head(10)
     audited = {(r["location"], r["building"]): r["levels"] for r in audit.iter_rows(named=True)}
     for line in (MOD_ROOT / START_SETUP_PATH).read_text(encoding="utf-8-sig").splitlines():

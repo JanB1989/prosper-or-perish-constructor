@@ -13,7 +13,7 @@ building:
   body: |-
     is_foreign = no
     max_levels = pp_wb_cap_land_clearance
-    increase_per_level_cost = 0.47
+    increase_per_level_cost = 0.07
     pop_type = peasants
     employment_size = 0
     price = pp_land_clearance_price
@@ -33,7 +33,7 @@ building:
     construction_demand = village_construction
 
     raw_modifier = {
-      local_population_capacity = 2.6
+      local_population_capacity = 5
       free_building_levels = 1
     }
 
@@ -57,7 +57,7 @@ localization:
     pp_land_clearance_price: Land Clearance Price
 prices:
 - key: pp_land_clearance_price
-  body: '{gold = 50}'
+  body: '{gold = 145}'
 icon:
   source_png: ../assets/icons/land_clearance.png
   output_dds: land_clearance.dds

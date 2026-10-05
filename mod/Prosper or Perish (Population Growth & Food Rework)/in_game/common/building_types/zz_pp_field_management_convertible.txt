@@ -4,9 +4,9 @@ field_management_convertible = {
 audio_tier = 2
 is_foreign = no
 max_levels = pp_wb_cap_field_management_convertible
-increase_per_level_cost = 0.20
+increase_per_level_cost = 0.05
 pop_type = peasants
-employment_size = 0.075
+employment_size = 0.15
 price = pp_field_management_convertible_price
 category = infrastructure_category
 custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -28,17 +28,17 @@ unique_production_methods = {
   pp_field_management_convertible_leys = {
     icon_type = building_type
     icon = field_management_convertible
-    legumes = 0.006
-    livestock = 0.005
-    stone = 0.007
-    tools = 0.002
-    manual_labor = 0.006
+    legumes = 0.012
+    livestock = 0.01
+    stone = 0.014
+    tools = 0.004
+    manual_labor = 0.012
     category = building_maintenance
   }
 }
 
 raw_modifier = {
-  local_population_capacity = 3.85
+  local_population_capacity = 7.5
   pp_wb_levels_field_management_convertible = 1
   free_building_levels = 1
 }

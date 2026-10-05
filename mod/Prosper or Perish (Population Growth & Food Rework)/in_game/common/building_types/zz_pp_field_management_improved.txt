@@ -5,9 +5,9 @@ field_management_improved = {
 audio_tier = 3
 is_foreign = no
 max_levels = pp_wb_cap_field_management_improved
-increase_per_level_cost = 0.20
+increase_per_level_cost = 0.05
 pop_type = peasants
-employment_size = 0.1
+employment_size = 0.20
 price = pp_field_management_improved_price
 category = infrastructure_category
 custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -29,18 +29,18 @@ unique_production_methods = {
   pp_field_management_improved_four_course = {
     icon_type = building_type
     icon = field_management_improved
-    legumes = 0.008
-    livestock = 0.005
-    horses = 0.003
-    tools = 0.002
-    stone = 0.007
-    manual_labor = 0.007
+    legumes = 0.016
+    livestock = 0.01
+    horses = 0.006
+    tools = 0.004
+    stone = 0.014
+    manual_labor = 0.014
     category = building_maintenance
   }
 }
 
 raw_modifier = {
-  local_population_capacity = 5.13
+  local_population_capacity = 10
   pp_wb_levels_field_management_improved = 1
   free_building_levels = 1
 }

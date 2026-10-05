@@ -51,6 +51,52 @@ pp_start_topup_cookshop_potential = {
 	always = yes
 }
 
+pp_start_topup_field_drainage_potential = {
+	OR = {
+		OR = {
+			topography = wetlands
+			topography = ha1300_topo_floodplains
+			topography = ha1300_topo_deltas
+		}
+		OR = {
+			vegetation = ha1300_veg_marsh
+			vegetation = ha1300_veg_swamp
+		}
+		AND = {
+			OR = {
+				climate = continental
+				climate = ha1300_climate_continental_monsoon
+				climate = ha1300_climate_dry_summer_continental
+				climate = oceanic
+				climate = ha1300_climate_subpolar_oceanic
+				climate = mediterranean
+				climate = subtropical
+				climate = ha1300_climate_subtropical_monsoon
+				climate = tropical
+				climate = ha1300_climate_tropical_monsoon
+				climate = ha1300_climate_highland_monsoon
+				climate = ha1300_climate_savanna
+				climate = hot_semi_arid
+				climate = cold_semi_arid
+			}
+			OR = {
+				topography = flatland
+				topography = ha1300_topo_floodplains
+				topography = wetlands
+				topography = ha1300_topo_deltas
+				topography = ha1300_topo_valleys
+				topography = hills
+				topography = ha1300_topo_rolling
+				topography = plateau
+			}
+		}
+	}
+}
+
+pp_start_topup_field_management_potential = {
+	always = yes
+}
+
 pp_start_topup_fishing_village_potential = {
 	OR = {
 		has_river = yes
@@ -286,8 +332,97 @@ pp_start_topup_jiangnan_canal_network_potential = {
 	}
 }
 
+pp_start_topup_land_clearance_potential = {
+	OR = {
+		vegetation = forest
+		vegetation = ha1300_veg_mixed_forest
+		vegetation = ha1300_veg_coniferous_forest
+		vegetation = woods
+		vegetation = jungle
+		vegetation = ha1300_veg_marsh
+		vegetation = ha1300_veg_swamp
+		vegetation = ha1300_veg_thicket
+		vegetation = ha1300_veg_dry_forest
+		vegetation = ha1300_veg_scrubland
+		vegetation = ha1300_veg_savanna
+		vegetation = grasslands
+		vegetation = farmland
+	}
+}
+
 pp_start_topup_market_village_potential = {
 	always = yes
+}
+
+pp_start_topup_paddy_water_control_potential = {
+	OR = {
+		climate = subtropical
+		climate = ha1300_climate_subtropical_monsoon
+		climate = tropical
+		climate = ha1300_climate_tropical_monsoon
+		climate = ha1300_climate_highland_monsoon
+		climate = ha1300_climate_continental_monsoon
+		climate = ha1300_climate_savanna
+	}
+	OR = {
+		topography = flatland
+		topography = ha1300_topo_floodplains
+		topography = wetlands
+		topography = ha1300_topo_deltas
+		topography = ha1300_topo_valleys
+		topography = hills
+		topography = plateau
+	}
+}
+
+pp_start_topup_polders_potential = {
+	OR = {
+		AND = {
+			has_location_modifier = pp_wb_coastal
+			OR = {
+				topography = flatland
+				topography = wetlands
+				topography = ha1300_topo_deltas
+				topography = ha1300_topo_floodplains
+				topography = hills
+				topography = ha1300_topo_valleys
+			}
+		}
+		OR = {
+			topography = wetlands
+			topography = ha1300_topo_deltas
+		}
+	}
+}
+
+pp_start_topup_qanats_potential = {
+	OR = {
+		AND = {
+			OR = {
+				climate = arid
+				climate = cold_arid
+			}
+			has_river = no
+			NOT = {
+				is_adjacent_to_lake = yes
+			}
+		}
+		AND = {
+			OR = {
+				climate = hot_semi_arid
+				climate = cold_semi_arid
+			}
+			OR = {
+				vegetation = desert
+				vegetation = ha1300_veg_scrubland
+				vegetation = sparse
+			}
+			has_river = no
+			NOT = {
+				is_adjacent_to_lake = yes
+			}
+		}
+	}
 }
 
 pp_start_topup_rice_farm_potential = {
@@ -323,4 +458,8 @@ pp_start_topup_victualling_yard_potential = {
 		pp_victualling_yard_site = yes
 		is_market_center = yes
 	}
+}
+
+pp_start_topup_wheat_farm_potential = {
+	pp_wheat_farm_location_potential = yes
 }

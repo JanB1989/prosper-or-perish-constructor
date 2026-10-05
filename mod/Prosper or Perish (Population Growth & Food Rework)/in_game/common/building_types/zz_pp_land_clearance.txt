@@ -2,7 +2,7 @@
 land_clearance = {
 is_foreign = no
 max_levels = pp_wb_cap_land_clearance
-increase_per_level_cost = 0.35
+increase_per_level_cost = 0.05
 pop_type = peasants
 employment_size = 0
 price = pp_land_clearance_price
@@ -22,7 +22,7 @@ location_potential = {
 construction_demand = village_construction
 
 raw_modifier = {
-  local_population_capacity = 2.6
+  local_population_capacity = 5
   free_building_levels = 1
 }
 

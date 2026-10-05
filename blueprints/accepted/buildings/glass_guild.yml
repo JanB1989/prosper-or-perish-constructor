@@ -22,7 +22,7 @@ building:
     is_foreign = no
     pop_type = burghers
     max_levels = guild_max_level
-    startup_ramp_target = guild_startup_ramp_target
+    startup_ramp_target = 90
     category = basic_industry_category
     employment_size = 0.3
     town = yes
@@ -40,7 +40,7 @@ building:
             clay = 0.52 # clay crucibles (pots) for the melt
             manual_labor = 0.31
             produced = glass
-            output = 0.75
+            output = 0.675
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -51,7 +51,7 @@ building:
             lead = 0.22 # lead oxide flux for the lead glass
             manual_labor = 0.44
             produced = glass
-            output = 1.0
+            output = 0.9
             debug_max_profit = guild_profit_margin
             category = guild_input
         }

@@ -3,7 +3,7 @@ REPLACE:cannon_maker = {
 is_foreign = no
 pop_type = burghers
 max_levels = guild_max_level
-startup_ramp_target = guild_startup_ramp_target
+startup_ramp_target = 120
 category = weapons_industry_category
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 town = yes
@@ -18,7 +18,7 @@ unique_production_methods = {
         saltpeter = 0.089
         manual_labor = 0.045
         produced = cannons
-        output = 0.087
+        output = 0.0783
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -29,7 +29,7 @@ unique_production_methods = {
         saltpeter = 0.095
         manual_labor = 0.064
         produced = cannons
-        output = 0.12
+        output = 0.108
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -40,7 +40,7 @@ unique_production_methods = {
         saltpeter = 0.095
         manual_labor = 0.083
         produced = cannons
-        output = 0.16
+        output = 0.144
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -54,7 +54,7 @@ unique_production_methods = {
         tools = 0.015
         manual_labor = 0.054
         produced = cannons
-        output = 0.1
+        output = 0.09
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
@@ -67,7 +67,7 @@ unique_production_methods = {
         lumber = 0.63 # charcoal for the casting furnace, mould frames and carriages
         manual_labor = 0.58
         produced = cannons
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -80,7 +80,7 @@ unique_production_methods = {
         lumber = 0.18 # carriages and beds
         manual_labor = 0.58
         produced = cannons
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }

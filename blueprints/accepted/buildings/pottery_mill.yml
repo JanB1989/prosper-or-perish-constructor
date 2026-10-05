@@ -23,7 +23,7 @@ building:
     pop_type = laborers
     is_mill = yes
     max_levels = mills_max_level
-    startup_ramp_target = mills_startup_ramp_target
+    startup_ramp_target = 105
     category = consumer_goods_category
     employment_size = 1.0
     town = yes
@@ -39,7 +39,7 @@ building:
             coal = 0.11 # coal-fired bottle kilns
             manual_labor = 0.12
             produced = pottery
-            output = 3.25
+            output = 2.925
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -51,7 +51,7 @@ building:
             tools = 0.051
             manual_labor = 0.16
             produced = pottery
-            output = 1.83
+            output = 1.65
             debug_max_profit = mills_profit_margin
             category = mills_input
         }

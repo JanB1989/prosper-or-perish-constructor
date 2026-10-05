@@ -4,7 +4,7 @@ audio_tier = 3
 is_foreign = no
 pop_type = burghers
 max_levels = manufactory_max_level
-startup_ramp_target = manufactory_startup_ramp_target
+startup_ramp_target = 90
 category = basic_industry_category
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 town = yes
@@ -21,7 +21,7 @@ unique_production_methods = {
         tools = 0.175 # tools cut to a running cost (~10 %)
         manual_labor = 0.39
         produced = leather
-        output = 2.0
+        output = 1.8
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -34,7 +34,7 @@ unique_production_methods = {
         tools = 0.175 # tools cut to a running cost (~10 %)
         manual_labor = 0.4
         produced = leather
-        output = 2.0
+        output = 1.8
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }

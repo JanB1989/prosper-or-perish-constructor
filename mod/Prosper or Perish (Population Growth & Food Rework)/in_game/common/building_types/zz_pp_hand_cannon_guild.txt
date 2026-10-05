@@ -3,6 +3,7 @@ REPLACE:hand_cannon_guild = {
 is_foreign = no
 pop_type = burghers
 max_levels = 1
+startup_ramp_target = 120
 category = weapons_industry_category
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 town = yes
@@ -19,7 +20,7 @@ unique_production_methods = {
         tin = 0.042 # more tin for a harder gunmetal bronze
         manual_labor = 0.13
         produced = firearms
-        output = 0.3
+        output = 0.27
         debug_max_profit = guild_profit_margin
         category = guild_input
     }

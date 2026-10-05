@@ -4,7 +4,7 @@ audio_tier = 3
 is_foreign = no
 pop_type = burghers
 max_levels = manufactory_max_level
-startup_ramp_target = manufactory_startup_ramp_target
+startup_ramp_target = 180
 category = weapons_industry_category
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 town = yes
@@ -20,7 +20,7 @@ unique_production_methods = {
         saltpeter = 0.74
         manual_labor = 0.19
         produced = cannons
-        output = 0.65
+        output = 0.585
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -31,7 +31,7 @@ unique_production_methods = {
         saltpeter = 0.29
         manual_labor = 0.099
         produced = cannons
-        output = 0.24
+        output = 0.22
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -42,7 +42,7 @@ unique_production_methods = {
         saltpeter = 0.27
         manual_labor = 0.24
         produced = cannons
-        output = 0.49
+        output = 0.44
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -57,7 +57,7 @@ unique_production_methods = {
         coal = 0.58 # fuel for the reverberatory furnace
         manual_labor = 0.38
         produced = cannons
-        output = 1.35
+        output = 1.215
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -69,7 +69,7 @@ unique_production_methods = {
         tools = 0.11
         manual_labor = 0.41
         produced = cannons
-        output = 1.01
+        output = 0.91
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -80,7 +80,7 @@ unique_production_methods = {
         tools = 0.1
         manual_labor = 0.41
         produced = cannons
-        output = 1.01
+        output = 0.91
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }

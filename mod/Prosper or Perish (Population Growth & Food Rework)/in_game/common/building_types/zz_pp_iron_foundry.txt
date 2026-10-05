@@ -4,7 +4,7 @@ audio_tier = 3
 is_foreign = no
 pop_type = laborers
 max_levels = manufactory_max_level
-startup_ramp_target = manufactory_startup_ramp_target
+startup_ramp_target = 135
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
 category = basic_industry_category
 town = yes
@@ -20,7 +20,7 @@ unique_production_methods = {
         manual_labor = 0.39
         category = manufactory_input
         produced = tools
-        output = 2.0
+        output = 1.8
         debug_max_profit = manufactory_profit_margin
     }
     pp_iron_foundry_legacy_stone_tools_guild_maintenance = {
@@ -29,7 +29,7 @@ unique_production_methods = {
         stone = 0.69
         manual_labor = 0.12
         produced = tools
-        output = 0.28
+        output = 0.25
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -39,7 +39,7 @@ unique_production_methods = {
         copper = 0.51
         manual_labor = 0.26
         produced = tools
-        output = 0.63
+        output = 0.57
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -50,7 +50,7 @@ unique_production_methods = {
         tin = 0.042
         manual_labor = 0.27
         produced = tools
-        output = 0.67
+        output = 0.61
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -60,7 +60,7 @@ unique_production_methods = {
         iron = 1.1
         manual_labor = 0.43
         produced = tools
-        output = 1.5
+        output = 1.35
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }

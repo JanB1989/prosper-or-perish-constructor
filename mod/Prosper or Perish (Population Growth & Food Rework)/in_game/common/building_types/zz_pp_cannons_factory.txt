@@ -5,7 +5,7 @@ is_foreign = no
 pop_type = laborers
 is_mill = yes
 max_levels = mills_max_level
-startup_ramp_target = mills_startup_ramp_target
+startup_ramp_target = 210
 category = weapons_industry_category
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
 town = yes
@@ -21,7 +21,7 @@ unique_production_methods = {
         saltpeter = 0.83
         manual_labor = 0.11
         produced = cannons
-        output = 0.7
+        output = 0.63
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -32,7 +32,7 @@ unique_production_methods = {
         saltpeter = 0.23
         manual_labor = 0.08
         produced = cannons
-        output = 0.2
+        output = 0.18
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -43,7 +43,7 @@ unique_production_methods = {
         saltpeter = 0.22
         manual_labor = 0.19
         produced = cannons
-        output = 0.39
+        output = 0.35
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -55,7 +55,7 @@ unique_production_methods = {
         steel = 2.49
         manual_labor = 0.49
         produced = cannons
-        output = 3.3
+        output = 2.97
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -67,7 +67,7 @@ unique_production_methods = {
         tools = 0.2
         manual_labor = 0.74
         produced = cannons
-        output = 1.86
+        output = 1.67
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -78,7 +78,7 @@ unique_production_methods = {
         tools = 0.19
         manual_labor = 0.75
         produced = cannons
-        output = 1.86
+        output = 1.67
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -91,7 +91,7 @@ unique_production_methods = {
         coal = 1.07
         manual_labor = 0.7
         produced = cannons
-        output = 2.47
+        output = 2.23
         debug_max_profit = mills_profit_margin
         category = mills_input
     }

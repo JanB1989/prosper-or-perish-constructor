@@ -1,0 +1,28 @@
+﻿# Establishment (know-how), branch establishment-know-how, 2026-10-06 (Jan).
+# One-off at game start: the start buildings of the final-goods manufacturing lines are established industries,
+# so every country gets a huge per-good establishment speed for two months (gain = base x (1 + local + global
+# good speed) x profit factor; 0.01 x 100001 = 1000 points > the largest target, 420). Added by
+# pp_establishment_game_start, never again.
+pp_establishment_start = {
+	game_data = {
+		category = country
+	}
+	global_beer_establishment_speed = 100000
+	global_books_establishment_speed = 100000
+	global_cannons_establishment_speed = 100000
+	global_cloth_establishment_speed = 100000
+	global_fine_cloth_establishment_speed = 100000
+	global_firearms_establishment_speed = 100000
+	global_furniture_establishment_speed = 100000
+	global_glass_establishment_speed = 100000
+	global_jewelry_establishment_speed = 100000
+	global_lacquerware_establishment_speed = 100000
+	global_leather_establishment_speed = 100000
+	global_liquor_establishment_speed = 100000
+	global_naval_supplies_establishment_speed = 100000
+	global_porcelain_establishment_speed = 100000
+	global_pottery_establishment_speed = 100000
+	global_tools_establishment_speed = 100000
+	global_weaponry_establishment_speed = 100000
+	global_wine_establishment_speed = 100000
+}

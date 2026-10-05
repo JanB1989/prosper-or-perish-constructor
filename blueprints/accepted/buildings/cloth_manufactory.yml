@@ -26,7 +26,7 @@ building:
     is_foreign = no
     pop_type = burghers
     max_levels = manufactory_max_level
-    startup_ramp_target = manufactory_startup_ramp_target
+    startup_ramp_target = 135
     category = consumer_goods_category
     employment_size = 0.3
     town = yes
@@ -40,13 +40,13 @@ building:
             dyes = 0.17
             manual_labor = 0.4
             produced = cloth
-            output = 2.0
+            output = 1.8
             category = guild_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_cloth_manufactory_cotton_cloth_manufactory_maintenance = {
             produced = cloth
-            output = 2.0
+            output = 1.8
             cotton = 1.54
             dyes = 0.17
             manual_labor = 0.41
@@ -58,7 +58,7 @@ building:
             fiber_crops = 2.51
             dyes = 0.07
             manual_labor = 0.41
-            output = 2.0
+            output = 1.8
             category = guild_input
             debug_max_profit = manufactory_profit_margin
         }
@@ -68,7 +68,7 @@ building:
             fiber_crops = 1.58
             manual_labor = 0.34
             produced = cloth
-            output = 1.23
+            output = 1.1
             debug_max_profit = manufactory_profit_margin
             category = guild_input
         }
@@ -78,7 +78,7 @@ building:
             cotton = 1.28
             manual_labor = 0.44
             produced = cloth
-            output = 1.5
+            output = 1.35
             debug_max_profit = manufactory_profit_margin
             category = guild_input
         }
@@ -88,7 +88,7 @@ building:
             wool = 1.54
             manual_labor = 0.44
             produced = cloth
-            output = 1.5
+            output = 1.35
             debug_max_profit = manufactory_profit_margin
             category = guild_input
         }

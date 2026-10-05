@@ -21,7 +21,7 @@ building:
     is_foreign = no
     pop_type = burghers
     max_levels = manufactory_max_level
-    startup_ramp_target = manufactory_startup_ramp_target
+    startup_ramp_target = 135
     category = consumer_goods_category
     employment_size = 0.3
     town = yes
@@ -36,7 +36,7 @@ building:
             tools = 0.175 # tools cut to a running cost (~10 %)
             manual_labor = 0.43
             produced = furniture
-            output = 2.0
+            output = 1.8
             category = manufactory_input
             debug_max_profit = manufactory_profit_margin
         }

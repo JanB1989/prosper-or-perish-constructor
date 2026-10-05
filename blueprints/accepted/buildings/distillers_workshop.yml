@@ -26,7 +26,7 @@ building:
     is_foreign = no
     pop_type = burghers
     max_levels = workshop_max_level
-    startup_ramp_target = workshop_startup_ramp_target
+    startup_ramp_target = 75
     category = consumer_goods_category
     employment_size = 0.3
     town = yes
@@ -40,7 +40,7 @@ building:
             glass = 0.078
             manual_labor = 0.25
             produced = liquor
-            output = 1.1
+            output = 0.99
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -49,7 +49,7 @@ building:
             glass = 0.091
             manual_labor = 0.25
             produced = liquor
-            output = 1.1
+            output = 0.99
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -58,7 +58,7 @@ building:
             glass = 0.091
             manual_labor = 0.25
             produced = liquor
-            output = 1.1
+            output = 0.99
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -67,7 +67,7 @@ building:
             glass = 0.091
             manual_labor = 0.25
             produced = liquor
-            output = 1.1
+            output = 0.99
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -76,7 +76,7 @@ building:
             glass = 0.11
             manual_labor = 0.26
             produced = liquor
-            output = 1.1
+            output = 0.99
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -85,7 +85,7 @@ building:
             glass = 0.11
             manual_labor = 0.26
             produced = liquor
-            output = 1.1
+            output = 0.99
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }

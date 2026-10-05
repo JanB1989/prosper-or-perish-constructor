@@ -1,0 +1,55 @@
+﻿# Establishment (know-how) cleanup, location scope. See pp_establishment.txt (on_action).
+pp_establishment_cleanup_location = {
+	every_buildings_in_location = {
+		limit = {
+			pp_is_establishment_craft = yes
+			building_level >= 1
+		}
+		save_scope_as = pp_est_b
+		if = {
+			limit = {
+				OR = {
+					is_opened = no
+					building_employed_amount < 0.001
+				}
+			}
+			if = {
+				limit = {
+					location = {
+						is_target_in_variable_list = { name = pp_est_idle target = scope:pp_est_b.building_type }
+					}
+				}
+				location = {
+					add_to_variable_list = { name = pp_est_kill target = scope:pp_est_b }
+					remove_list_variable = { name = pp_est_idle target = scope:pp_est_b.building_type }
+				}
+			}
+			else = {
+				location = {
+					add_to_variable_list = { name = pp_est_idle target = scope:pp_est_b.building_type years = 2 }
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				location = {
+					is_target_in_variable_list = { name = pp_est_idle target = scope:pp_est_b.building_type }
+				}
+			}
+			location = {
+				remove_list_variable = { name = pp_est_idle target = scope:pp_est_b.building_type }
+			}
+		}
+	}
+	if = {
+		limit = { has_variable_list = pp_est_kill }
+		every_in_list = {
+			variable = pp_est_kill
+			save_scope_as = pp_est_k
+			location = {
+				destroy_building = scope:pp_est_k
+			}
+		}
+		clear_variable_list = pp_est_kill
+	}
+}

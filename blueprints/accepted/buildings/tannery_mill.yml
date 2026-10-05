@@ -24,7 +24,7 @@ building:
     pop_type = laborers
     is_mill = yes
     max_levels = mills_max_level
-    startup_ramp_target = mills_startup_ramp_target
+    startup_ramp_target = 105
     category = basic_industry_category
     employment_size = 1.0
     town = yes
@@ -39,7 +39,7 @@ building:
             tools = 0.36 # tools cut to a running cost (~10 %)
             manual_labor = 0.48
             produced = leather
-            output = 4.0
+            output = 3.6
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -50,7 +50,7 @@ building:
             tools = 0.36 # tools cut to a running cost (~10 %)
             manual_labor = 0.46
             produced = leather
-            output = 4.0
+            output = 3.6
             debug_max_profit = mills_profit_margin
             category = mills_input
         }

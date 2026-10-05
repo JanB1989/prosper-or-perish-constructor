@@ -4,7 +4,7 @@ audio_tier = 3
 is_foreign = no
 pop_type = burghers
 max_levels = manufactory_max_level
-startup_ramp_target = manufactory_startup_ramp_target
+startup_ramp_target = 90
 category = consumer_goods_category
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 town = yes
@@ -20,7 +20,7 @@ unique_production_methods = {
         glass = 0.21
         manual_labor = 0.33
         produced = liquor
-        output = 2.0
+        output = 1.8
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
@@ -31,7 +31,7 @@ unique_production_methods = {
         glass = 0.21
         manual_labor = 0.34
         produced = liquor
-        output = 2.0
+        output = 1.8
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
@@ -42,7 +42,7 @@ unique_production_methods = {
         glass = 0.21
         manual_labor = 0.34
         produced = liquor
-        output = 2.0
+        output = 1.8
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
@@ -53,7 +53,7 @@ unique_production_methods = {
         glass = 0.21
         manual_labor = 0.34
         produced = liquor
-        output = 2.0
+        output = 1.8
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
@@ -64,7 +64,7 @@ unique_production_methods = {
         glass = 0.21
         manual_labor = 0.34
         produced = liquor
-        output = 2.0
+        output = 1.8
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
@@ -75,7 +75,7 @@ unique_production_methods = {
         glass = 0.16
         manual_labor = 0.37
         produced = liquor
-        output = 1.5
+        output = 1.35
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -86,7 +86,7 @@ unique_production_methods = {
         glass = 0.16
         manual_labor = 0.37
         produced = liquor
-        output = 1.5
+        output = 1.35
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }

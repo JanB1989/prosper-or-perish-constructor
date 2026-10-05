@@ -4,7 +4,7 @@ audio_tier = 2
 is_foreign = no
 pop_type = burghers
 max_levels = workshop_max_level
-startup_ramp_target = workshop_startup_ramp_target
+startup_ramp_target = 112
 category = basic_industry_category
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 town = yes
@@ -18,7 +18,7 @@ unique_production_methods = {
         iron = 0.79
         manual_labor = 0.31
         produced = tools
-        output = 1.1
+        output = 0.99
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -28,7 +28,7 @@ unique_production_methods = {
         stone = 0.49
         manual_labor = 0.083
         produced = tools
-        output = 0.21
+        output = 0.19
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -38,7 +38,7 @@ unique_production_methods = {
         copper = 0.37
         manual_labor = 0.19
         produced = tools
-        output = 0.46
+        output = 0.42
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -49,7 +49,7 @@ unique_production_methods = {
         tin = 0.03
         manual_labor = 0.19
         produced = tools
-        output = 0.5
+        output = 0.45
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }

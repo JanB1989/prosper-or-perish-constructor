@@ -23,7 +23,7 @@ building:
     is_foreign = no
     pop_type = burghers
     max_levels = workshop_max_level
-    startup_ramp_target = workshop_startup_ramp_target
+    startup_ramp_target = 112
     category = consumer_goods_category
     employment_size = 0.3
     obsolete = cloth_guild
@@ -36,7 +36,7 @@ building:
             fiber_crops = 1.1
             manual_labor = 0.24
             produced = cloth
-            output = 0.9
+            output = 0.81
             category = workshop_input
             debug_max_profit = workshop_profit_margin
         }
@@ -44,7 +44,7 @@ building:
             cotton = 0.91
             manual_labor = 0.31
             produced = cloth
-            output = 1.1
+            output = 0.99
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -52,7 +52,7 @@ building:
             wool = 1.09
             manual_labor = 0.31
             produced = cloth
-            output = 1.1
+            output = 0.99
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }

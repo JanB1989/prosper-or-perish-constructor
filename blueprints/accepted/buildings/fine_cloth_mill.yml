@@ -28,7 +28,7 @@ building:
     pop_type = laborers
     is_mill = yes
     max_levels = mills_max_level
-    startup_ramp_target = mills_startup_ramp_target
+    startup_ramp_target = 210
     category = consumer_goods_category
     employment_size = 1.0
     town = yes
@@ -43,7 +43,7 @@ building:
             dyes = 0.47
             manual_labor = 0.079
             produced = fine_cloth
-            output = 0.33
+            output = 0.297
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -53,7 +53,7 @@ building:
             fur = 0.5
             manual_labor = 0.1
             produced = fine_cloth
-            output = 0.19
+            output = 0.17
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -63,7 +63,7 @@ building:
             cloth = 6.96
             manual_labor = 0.87
             produced = fine_cloth
-            output = 3.67
+            output = 3.303
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -71,7 +71,7 @@ building:
             silk = 5.22
             manual_labor = 0.87
             produced = fine_cloth
-            output = 3.67
+            output = 3.303
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -81,7 +81,7 @@ building:
             wool = 3.31
             manual_labor = 0.9
             produced = fine_cloth
-            output = 1.55
+            output = 1.39
             debug_max_profit = mills_profit_margin
             category = mills_input
         }

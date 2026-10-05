@@ -3,7 +3,7 @@ REPLACE:distillers_guild = {
 is_foreign = no
 pop_type = burghers
 max_levels = guild_max_level
-startup_ramp_target = guild_startup_ramp_target
+startup_ramp_target = 60
 category = consumer_goods_category
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 town = yes
@@ -19,7 +19,7 @@ unique_production_methods = {
         glass = 0.082
         manual_labor = 0.35
         produced = liquor
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -30,7 +30,7 @@ unique_production_methods = {
         glass = 0.1
         manual_labor = 0.35
         produced = liquor
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -41,7 +41,7 @@ unique_production_methods = {
         glass = 0.1
         manual_labor = 0.35
         produced = liquor
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -52,7 +52,7 @@ unique_production_methods = {
         glass = 0.1
         manual_labor = 0.35
         produced = liquor
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -63,7 +63,7 @@ unique_production_methods = {
         glass = 0.1
         manual_labor = 0.35
         produced = liquor
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -74,7 +74,7 @@ unique_production_methods = {
         glass = 0.1
         manual_labor = 0.35
         produced = liquor
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }

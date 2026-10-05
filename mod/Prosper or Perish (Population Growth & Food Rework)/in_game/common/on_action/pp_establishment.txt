@@ -1,0 +1,36 @@
+﻿# Establishment (know-how), branch establishment-know-how, 2026-10-06 (Jan).
+pp_establishment_game_start = {
+	effect = {
+		every_country = {
+			add_country_modifier = {
+				modifier = pp_establishment_start
+				months = 2
+				mode = replace
+			}
+		}
+	}
+}
+
+# Cleanup (Jan): a craft building of the ramping lines that is closed or has no workers on two yearly checks in a row
+# is destroyed. The first idle check notes its type in the location list pp_est_idle (kept 2 years); a check that finds
+# it working again removes the note. Buildings are collected first and destroyed after the location's building loop.
+yearly_country_pulse = {
+	on_actions = {
+		pp_establishment_cleanup
+	}
+}
+
+pp_establishment_cleanup = {
+	effect = {
+		every_owned_location = {
+			limit = {
+				OR = {
+					location_rank ?= location_rank:town
+					location_rank ?= location_rank:city
+					location_rank ?= location_rank:megalopolis
+				}
+			}
+			pp_establishment_cleanup_location = yes
+		}
+	}
+}

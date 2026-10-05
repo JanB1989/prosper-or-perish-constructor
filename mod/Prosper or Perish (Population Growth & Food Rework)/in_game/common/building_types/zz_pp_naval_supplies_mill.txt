@@ -5,7 +5,7 @@ is_foreign = no
 pop_type = laborers
 is_mill = yes
 max_levels = mills_max_level
-startup_ramp_target = mills_startup_ramp_target
+startup_ramp_target = 158
 category = weapons_industry_category
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
 town = yes
@@ -23,7 +23,7 @@ unique_production_methods = {
         cloth = 0.27
         manual_labor = 0.51
         produced = naval_supplies
-        output = 4.0
+        output = 3.6
         debug_max_profit = mills_profit_margin
         category = mills_input
     }

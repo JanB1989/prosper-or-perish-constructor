@@ -29,7 +29,7 @@ building:
     is_foreign = no
     pop_type = burghers
     max_levels = workshop_max_level
-    startup_ramp_target = workshop_startup_ramp_target
+    startup_ramp_target = 150
     category = consumer_goods_category
     employment_size = 0.3
     town = yes
@@ -41,7 +41,7 @@ building:
             produced = fine_cloth
             dyes = 0.13
             manual_labor = 0.072
-            output = 0.12
+            output = 0.108
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -50,7 +50,7 @@ building:
             dyes = 0.26
             manual_labor = 0.15
             produced = fine_cloth
-            output = 0.25
+            output = 0.225
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -58,7 +58,7 @@ building:
             fur = 0.62
             manual_labor = 0.13
             produced = fine_cloth
-            output = 0.25
+            output = 0.225
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -68,7 +68,7 @@ building:
             cloth = 1.04
             manual_labor = 0.35
             produced = fine_cloth
-            output = 0.6
+            output = 0.54
             category = workshop_input
             debug_max_profit = workshop_profit_margin
         }
@@ -76,7 +76,7 @@ building:
             wool = 1.25
             manual_labor = 0.34
             produced = fine_cloth
-            output = 0.6
+            output = 0.54
             category = workshop_input
             debug_max_profit = workshop_profit_margin
         }
@@ -90,7 +90,7 @@ building:
             wool = 1.25
             manual_labor = 0.34
             produced = fine_cloth
-            output = 0.6
+            output = 0.54
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -98,7 +98,7 @@ building:
             silk = 1.05
             manual_labor = 0.47
             produced = fine_cloth
-            output = 0.8
+            output = 0.72
             category = workshop_input
             debug_max_profit = workshop_profit_margin
         }

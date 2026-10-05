@@ -4,7 +4,7 @@ audio_tier = 3
 is_foreign = no
 pop_type = burghers
 max_levels = manufactory_max_level
-startup_ramp_target = manufactory_startup_ramp_target
+startup_ramp_target = 180
 category = weapons_industry_category
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 town = yes
@@ -23,7 +23,7 @@ unique_production_methods = {
         manual_labor = 0.45
         category = manufactory_input
         produced = weaponry
-        output = 2.0
+        output = 1.8
         debug_max_profit = manufactory_profit_margin
     }
     pp_weapon_manufactory_legacy_pre_columbian_weapon_smith_maintenance = {
@@ -33,7 +33,7 @@ unique_production_methods = {
         stone = 1
         manual_labor = 0.19
         produced = weaponry
-        output = 0.45
+        output = 0.41
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -46,7 +46,7 @@ unique_production_methods = {
         leather = 0.13
         manual_labor = 0.44
         produced = weaponry
-        output = 1.13
+        output = 1.01
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }

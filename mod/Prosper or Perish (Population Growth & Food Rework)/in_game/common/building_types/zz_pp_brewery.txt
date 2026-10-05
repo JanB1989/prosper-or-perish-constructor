@@ -4,7 +4,7 @@ audio_tier = 1
 is_foreign = no
 pop_type = burghers
 max_levels = guild_max_level
-startup_ramp_target = guild_startup_ramp_target
+startup_ramp_target = 60
 category = consumer_goods_category
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 town = yes
@@ -20,7 +20,7 @@ unique_production_methods = {
         tools = 0.06 # tools cut to a running cost (~10 %)
         manual_labor = 0.28
         produced = beer
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -32,7 +32,7 @@ unique_production_methods = {
         tools = 0.06 # tools cut to a running cost (~10 %)
         manual_labor = 0.28
         produced = beer
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -44,7 +44,7 @@ unique_production_methods = {
         tools = 0.06 # tools cut to a running cost (~10 %)
         manual_labor = 0.28
         produced = beer
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -55,7 +55,7 @@ unique_production_methods = {
         pottery = 0.29
         manual_labor = 0.27
         produced = beer
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -68,7 +68,7 @@ unique_production_methods = {
         tools = 0.06 # tools cut to a running cost (~10 %)
         manual_labor = 0.28
         produced = beer
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -80,7 +80,7 @@ unique_production_methods = {
         tools = 0.06 # tools cut to a running cost (~10 %)
         manual_labor = 0.28
         produced = beer
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -92,7 +92,7 @@ unique_production_methods = {
         tools = 0.072 # tools cut to a running cost (~10 %)
         manual_labor = 0.32
         produced = beer
-        output = 1.2
+        output = 1.08
         category = guild_input
         debug_max_profit = guild_profit_margin
     }

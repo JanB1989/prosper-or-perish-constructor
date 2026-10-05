@@ -4,7 +4,7 @@ audio_tier = 2
 is_foreign = no
 pop_type = burghers
 max_levels = workshop_max_level
-startup_ramp_target = workshop_startup_ramp_target
+startup_ramp_target = 112
 category = basic_industry_category
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 town = yes
@@ -21,7 +21,7 @@ unique_production_methods = {
         lead = 0.27 # lead oxide flux for the lead glass
         manual_labor = 0.33
         produced = glass
-        output = 1.1
+        output = 0.99
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -34,7 +34,7 @@ unique_production_methods = {
         clay = 0.4
         manual_labor = 0.24
         produced = glass
-        output = 0.62
+        output = 0.56
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }

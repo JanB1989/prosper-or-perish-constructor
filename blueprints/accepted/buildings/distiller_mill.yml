@@ -28,7 +28,7 @@ building:
     pop_type = laborers
     is_mill = yes
     max_levels = mills_max_level
-    startup_ramp_target = mills_startup_ramp_target
+    startup_ramp_target = 105
     category = consumer_goods_category
     employment_size = 1.0
     town = yes
@@ -42,7 +42,7 @@ building:
             glass = 0.54
             manual_labor = 0.38
             produced = liquor
-            output = 4.0
+            output = 3.6
             category = mills_input
             debug_max_profit = mills_profit_margin
         }
@@ -51,7 +51,7 @@ building:
             glass = 0.7
             manual_labor = 0.4
             produced = liquor
-            output = 4.0
+            output = 3.6
             category = mills_input
             debug_max_profit = mills_profit_margin
         }
@@ -60,7 +60,7 @@ building:
             glass = 0.68
             manual_labor = 0.4
             produced = liquor
-            output = 4.0
+            output = 3.6
             category = mills_input
             debug_max_profit = mills_profit_margin
         }
@@ -69,7 +69,7 @@ building:
             glass = 0.68
             manual_labor = 0.4
             produced = liquor
-            output = 4.0
+            output = 3.6
             category = mills_input
             debug_max_profit = mills_profit_margin
         }
@@ -78,7 +78,7 @@ building:
             glass = 0.72
             manual_labor = 0.38
             produced = liquor
-            output = 4.0
+            output = 3.6
             category = mills_input
             debug_max_profit = mills_profit_margin
         }
@@ -89,7 +89,7 @@ building:
             glass = 0.24
             manual_labor = 0.57
             produced = liquor
-            output = 2.25
+            output = 2.03
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -100,7 +100,7 @@ building:
             glass = 0.24
             manual_labor = 0.57
             produced = liquor
-            output = 2.25
+            output = 2.03
             debug_max_profit = mills_profit_margin
             category = mills_input
         }

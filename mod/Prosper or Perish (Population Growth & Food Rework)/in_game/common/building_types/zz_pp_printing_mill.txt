@@ -5,7 +5,7 @@ is_foreign = no
 pop_type = laborers
 is_mill = yes
 max_levels = mills_max_level
-startup_ramp_target = mills_startup_ramp_target
+startup_ramp_target = 210
 category = consumer_goods_category
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
 town = yes
@@ -22,7 +22,7 @@ unique_production_methods = {
         lumber = 1.14
         manual_labor = 0.47
         produced = books
-        output = 4.0
+        output = 3.6
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -34,7 +34,7 @@ unique_production_methods = {
         leather = 0.57
         manual_labor = 0.47
         produced = books
-        output = 4.0
+        output = 3.6
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -46,7 +46,7 @@ unique_production_methods = {
         leather = 0.28
         manual_labor = 0.74
         produced = books
-        output = 1.69
+        output = 1.52
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -58,7 +58,7 @@ unique_production_methods = {
         lumber = 0.55
         manual_labor = 0.72
         produced = books
-        output = 1.69
+        output = 1.52
         debug_max_profit = mills_profit_margin
         category = mills_input
     }

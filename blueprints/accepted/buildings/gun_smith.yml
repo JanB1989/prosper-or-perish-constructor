@@ -28,7 +28,7 @@ building:
     is_foreign = no
     pop_type = burghers
     max_levels = guild_max_level
-    startup_ramp_target = guild_startup_ramp_target
+    startup_ramp_target = 120
     category = weapons_industry_category
     employment_size = 0.3
     town = yes
@@ -42,7 +42,7 @@ building:
             saltpeter = 0.095
             manual_labor = 0.064
             produced = firearms
-            output = 0.16
+            output = 0.144
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -51,7 +51,7 @@ building:
             saltpeter = 0.088
             manual_labor = 0.077
             produced = firearms
-            output = 0.2
+            output = 0.18
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -63,7 +63,7 @@ building:
             tools = 0.015
             manual_labor = 0.055
             produced = firearms
-            output = 0.15
+            output = 0.135
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
@@ -74,7 +74,7 @@ building:
             lumber = 0.28 # charcoal for the casting furnace, wooden stocks
             manual_labor = 0.44
             produced = firearms
-            output = 1.0
+            output = 0.9
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -85,7 +85,7 @@ building:
             coal = 0.11 # forge fuel for welding the barrels
             manual_labor = 0.43
             produced = firearms
-            output = 1.0
+            output = 0.9
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -98,7 +98,7 @@ building:
             tin = 0.11
             manual_labor = 0.36
             produced = firearms
-            output = 0.75
+            output = 0.68
             debug_max_profit = guild_profit_margin
             category = guild_input
         }

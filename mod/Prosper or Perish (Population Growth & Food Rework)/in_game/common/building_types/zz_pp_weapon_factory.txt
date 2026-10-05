@@ -5,7 +5,7 @@ is_foreign = no
 pop_type = laborers
 is_mill = yes
 max_levels = mills_max_level
-startup_ramp_target = mills_startup_ramp_target
+startup_ramp_target = 210
 category = weapons_industry_category
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
 town = yes
@@ -23,7 +23,7 @@ unique_production_methods = {
         manual_labor = 0.49
         category = mills_input
         produced = weaponry
-        output = 4.0
+        output = 3.6
         debug_max_profit = mills_profit_margin
     }
     pp_weapon_factory_legacy_pre_columbian_weapon_smith_maintenance = {
@@ -33,7 +33,7 @@ unique_production_methods = {
         stone = 1.51
         manual_labor = 0.28
         produced = weaponry
-        output = 0.68
+        output = 0.61
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -46,7 +46,7 @@ unique_production_methods = {
         leather = 0.19
         manual_labor = 0.66
         produced = weaponry
-        output = 1.69
+        output = 1.52
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -59,7 +59,7 @@ unique_production_methods = {
         tools = 0.41
         manual_labor = 0.68
         produced = weaponry
-        output = 3
+        output = 2.7
         debug_max_profit = mills_profit_margin
         category = mills_input
     }

@@ -24,7 +24,7 @@ building:
     is_foreign = no
     pop_type = burghers
     max_levels = guild_max_level
-    startup_ramp_target = guild_startup_ramp_target
+    startup_ramp_target = 90
     category = basic_industry_category
     employment_size = 0.3
     town = yes
@@ -36,7 +36,7 @@ building:
             stone = 0.58
             manual_labor = 0.098
             produced = tools
-            output = 0.25
+            output = 0.225
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -44,7 +44,7 @@ building:
             copper = 0.45
             manual_labor = 0.23
             produced = tools
-            output = 0.56
+            output = 0.504
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -53,7 +53,7 @@ building:
             tin = 0.038
             manual_labor = 0.24
             produced = tools
-            output = 0.6
+            output = 0.54
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -61,7 +61,7 @@ building:
             iron = 0.72
             manual_labor = 0.41
             produced = tools
-            output = 1.0
+            output = 0.9
             debug_max_profit = guild_profit_margin
             category = guild_input
         }

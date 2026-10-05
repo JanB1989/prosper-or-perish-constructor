@@ -5,7 +5,7 @@ is_foreign = no
 pop_type = laborers
 is_mill = yes
 max_levels = mills_max_level
-startup_ramp_target = mills_startup_ramp_target
+startup_ramp_target = 158
 category = consumer_goods_category
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
 town = yes
@@ -21,7 +21,7 @@ unique_production_methods = {
         dyes = 0.3
         manual_labor = 0.31
         produced = cloth
-        output = 2.5
+        output = 2.25
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -32,7 +32,7 @@ unique_production_methods = {
         dyes = 0.29
         manual_labor = 0.29
         produced = cloth
-        output = 2.5
+        output = 2.25
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -43,7 +43,7 @@ unique_production_methods = {
         dyes = 0.32
         manual_labor = 0.32
         produced = cloth
-        output = 3.0
+        output = 2.7
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -53,7 +53,7 @@ unique_production_methods = {
         fiber_crops = 1.81
         manual_labor = 0.39
         produced = cloth
-        output = 1.38
+        output = 1.24
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -63,7 +63,7 @@ unique_production_methods = {
         cotton = 1.47
         manual_labor = 0.5
         produced = cloth
-        output = 1.69
+        output = 1.52
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -73,7 +73,7 @@ unique_production_methods = {
         wool = 1.76
         manual_labor = 0.5
         produced = cloth
-        output = 1.69
+        output = 1.52
         debug_max_profit = mills_profit_margin
         category = mills_input
     }

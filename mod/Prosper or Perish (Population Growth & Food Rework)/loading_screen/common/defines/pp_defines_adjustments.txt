@@ -93,7 +93,17 @@ NEconomy = {
  	UNPROFITABLE_BUILDING_WORKERS_LAID_OFF_PERCENTAGE = 15 # 5; 15 settles Tavern and Victualling Yard staffing faster (food sim 2026-09-26)
  	PROFITABLE_BUILDING_WORKERS_REHIRED_PERCENTAGE = 15 # 5
 	BANKRUPTCY_INFLATION_CHANGE_PERCENT = -0.75
-	ESTABLISHMENT_SYSTEM_ENABLED = no # vanilla building establishment ramp (startup_ramp_target); off in the main mod: it crashed the game, tested in a separate mod
+	# Establishment (know-how), branch establishment-know-how, 2026-10-06 (Jan): only the final-goods manufacturing lines
+	# ramp (startup_ramp_target in their blueprints, every other building 0). Share = progress / target; below the
+	# threshold throughput = share / threshold, above it production efficiency + (share - threshold) x max bonus, so
+	# +20 % at full establishment; their methods make 0.9 of the old output (mastered = 1.08, newcomer = 0.9).
+	ESTABLISHMENT_SYSTEM_ENABLED = yes
+	ESTABLISHMENT_THROUGHPUT_THRESHOLD = 0.333
+	STARTUP_MAX_PE_BONUS = 0.30
+	STARTUP_DECAY_RATE = 1.0
+	ESTABLISHMENT_UPGRADE_TRANSFER_FRACTION = 0.5
+	ESTABLISHMENT_PROFIT_CAP_PER_LEVEL = 1.0 # vanilla 3: PP profits are ~0.1-0.7 gold per level and month
+	ESTABLISHMENT_MAX_PROFIT_BONUS = 1.0
 }
 
 NLocation = {

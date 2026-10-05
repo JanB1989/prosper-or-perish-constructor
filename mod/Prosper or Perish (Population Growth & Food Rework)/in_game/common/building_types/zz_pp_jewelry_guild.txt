@@ -4,7 +4,7 @@ audio_tier = 1
 is_foreign = no
 pop_type = burghers
 max_levels = jewelry_guild_max_level
-startup_ramp_target = guild_startup_ramp_target
+startup_ramp_target = 120
 category = consumer_goods_category
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 town = yes
@@ -18,7 +18,7 @@ unique_production_methods = {
         ivory = 0.1
         manual_labor = 0.064
         produced = jewelry
-        output = 0.1
+        output = 0.09
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
@@ -28,7 +28,7 @@ unique_production_methods = {
         amber = 0.1
         manual_labor = 0.064
         produced = jewelry
-        output = 0.1
+        output = 0.09
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
@@ -38,7 +38,7 @@ unique_production_methods = {
         gems = 0.1
         manual_labor = 0.064
         produced = jewelry
-        output = 0.1
+        output = 0.09
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
@@ -48,7 +48,7 @@ unique_production_methods = {
         pearls = 0.1
         manual_labor = 0.064
         produced = jewelry
-        output = 0.1
+        output = 0.09
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
@@ -60,7 +60,7 @@ unique_production_methods = {
         goods_gold = 0.53
         manual_labor = 0.82
         produced = jewelry
-        output = 1.0
+        output = 0.9
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
@@ -70,7 +70,7 @@ unique_production_methods = {
         silver = 0.71
         manual_labor = 0.7
         produced = jewelry
-        output = 1.0
+        output = 0.9
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
@@ -80,7 +80,7 @@ unique_production_methods = {
         copper = 1.42
         manual_labor = 0.71
         produced = jewelry
-        output = 1.0
+        output = 0.9
         category = guild_input
         debug_max_profit = guild_profit_margin
     }

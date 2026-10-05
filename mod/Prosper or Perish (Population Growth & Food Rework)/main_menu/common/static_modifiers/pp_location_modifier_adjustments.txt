@@ -524,3 +524,11 @@ TRY_INJECT:possible_promotion_percentage = {
 	local_nobles_estate_power = 1
 	local_clergy_estate_power = 1
 }
+
+# Crowded Establishment: -10 % establishment speed per other ramping building in the location (vanilla -30 %), 2026-10-06.
+TRY_REPLACE:unestablished_buildings = {
+	game_data = {
+		category = location
+	}
+	local_building_establishment_speed = -0.1
+}

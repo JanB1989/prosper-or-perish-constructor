@@ -23,7 +23,7 @@ building:
     is_foreign = no
     pop_type = burghers
     max_levels = workshop_max_level
-    startup_ramp_target = workshop_startup_ramp_target
+    startup_ramp_target = 150
     category = weapons_industry_category
     employment_size = 0.3
     town = yes
@@ -39,7 +39,7 @@ building:
             manual_labor = 0.36
             category = workshop_input
             produced = weaponry
-            output = 1.1
+            output = 0.99
             debug_max_profit = workshop_profit_margin
         }
         pp_weapon_workshop_legacy_pre_columbian_weapon_smith_maintenance = {
@@ -49,7 +49,7 @@ building:
             stone = 0.71
             manual_labor = 0.13
             produced = weaponry
-            output = 0.33
+            output = 0.3
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -62,7 +62,7 @@ building:
             leather = 0.091
             manual_labor = 0.31
             produced = weaponry
-            output = 0.83
+            output = 0.74
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }

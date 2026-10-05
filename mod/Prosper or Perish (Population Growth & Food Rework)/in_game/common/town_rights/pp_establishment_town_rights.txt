@@ -1,0 +1,150 @@
+﻿# Establishment (know-how), 2026-10-06 (Jan): a town right for a craft halves the time its buildings need to learn it
+# (+100 % establishment speed of the good, i.e. the per-good factor 1 -> 2).
+TRY_INJECT:artisan_charter = {
+	location_modifier = {
+		local_furniture_establishment_speed = 1.0
+		local_leather_establishment_speed = 1.0
+		local_pottery_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:royal_artisan_rights = {
+	location_modifier = {
+		local_furniture_establishment_speed = 1.0
+		local_leather_establishment_speed = 1.0
+		local_pottery_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:book_charter = {
+	location_modifier = {
+		local_books_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:royal_book_rights = {
+	location_modifier = {
+		local_books_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:brewing_charter = {
+	location_modifier = {
+		local_beer_establishment_speed = 1.0
+		local_liquor_establishment_speed = 1.0
+		local_wine_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:royal_brewing_rights = {
+	location_modifier = {
+		local_beer_establishment_speed = 1.0
+		local_liquor_establishment_speed = 1.0
+		local_wine_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:jewelry_charter = {
+	location_modifier = {
+		local_jewelry_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:royal_jewelry_rights = {
+	location_modifier = {
+		local_jewelry_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:masonry_charter = {
+	location_modifier = {
+		local_glass_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:royal_masonry_rights = {
+	location_modifier = {
+		local_glass_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:naval_charter = {
+	location_modifier = {
+		local_naval_supplies_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:royal_naval_rights = {
+	location_modifier = {
+		local_naval_supplies_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:scandinavian_tar_privileges = {
+	location_modifier = {
+		local_naval_supplies_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:textile_charter = {
+	location_modifier = {
+		local_cloth_establishment_speed = 1.0
+		local_fine_cloth_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:royal_textile_rights = {
+	location_modifier = {
+		local_cloth_establishment_speed = 1.0
+		local_fine_cloth_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:constantinopolitan_silk_monopoly_rights = {
+	location_modifier = {
+		local_cloth_establishment_speed = 1.0
+		local_fine_cloth_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:flemish_cloth_industries_right = {
+	location_modifier = {
+		local_cloth_establishment_speed = 1.0
+		local_fine_cloth_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:tooling_charter = {
+	location_modifier = {
+		local_tools_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:royal_tooling_rights = {
+	location_modifier = {
+		local_tools_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:scandinavian_bergslag_privileges = {
+	location_modifier = {
+		local_tools_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:weaponry_charter = {
+	location_modifier = {
+		local_weaponry_establishment_speed = 1.0
+		local_firearms_establishment_speed = 1.0
+		local_cannons_establishment_speed = 1.0
+	}
+}
+
+TRY_INJECT:royal_weaponry_rights = {
+	location_modifier = {
+		local_weaponry_establishment_speed = 1.0
+		local_firearms_establishment_speed = 1.0
+		local_cannons_establishment_speed = 1.0
+	}
+}
+

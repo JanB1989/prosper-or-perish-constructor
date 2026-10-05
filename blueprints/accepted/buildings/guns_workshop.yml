@@ -28,7 +28,7 @@ building:
     is_foreign = no
     pop_type = burghers
     max_levels = workshop_max_level
-    startup_ramp_target = workshop_startup_ramp_target
+    startup_ramp_target = 150
     category = weapons_industry_category
     employment_size = 0.3
     town = yes
@@ -41,7 +41,7 @@ building:
             saltpeter = 0.11
             manual_labor = 0.04
             produced = firearms
-            output = 0.2
+            output = 0.18
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -50,7 +50,7 @@ building:
             saltpeter = 0.11
             manual_labor = 0.055
             produced = firearms
-            output = 0.25
+            output = 0.225
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -63,7 +63,7 @@ building:
             coal = 0.13 # forge fuel for welding the barrels
             manual_labor = 0.3
             produced = firearms
-            output = 1.0
+            output = 0.9
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -74,7 +74,7 @@ building:
             lumber = 0.35 # charcoal for the casting furnace, wooden stocks
             manual_labor = 0.32
             produced = firearms
-            output = 1.1
+            output = 0.99
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -86,7 +86,7 @@ building:
             tools = 0.013
             manual_labor = 0.047
             produced = firearms
-            output = 0.12
+            output = 0.11
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -99,7 +99,7 @@ building:
             tin = 0.092
             manual_labor = 0.28
             produced = firearms
-            output = 0.62
+            output = 0.56
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }

@@ -13,6 +13,7 @@ on_game_start = {
 		pp_game_start_effect
 		pp_load_base_population_baselines_on_start
 		pp_stored_food_game_start
+		pp_establishment_game_start
 		# pp_remove_invalid_buildings # we leave this off as it somehow causes crashes?
 	}
 }

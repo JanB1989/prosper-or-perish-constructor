@@ -4,7 +4,7 @@ audio_tier = 1
 is_foreign = no
 pop_type = burghers
 max_levels = guild_max_level
-startup_ramp_target = guild_startup_ramp_target
+startup_ramp_target = 90
 category = consumer_goods_category
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 town = yes
@@ -21,7 +21,7 @@ unique_production_methods = {
         beeswax = 0.08 # wax polish for the finish
         manual_labor = 0.38
         produced = furniture
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
         category = guild_input
     }

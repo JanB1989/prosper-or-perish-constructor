@@ -4,7 +4,7 @@ audio_tier = 2
 is_foreign = no
 pop_type = burghers
 max_levels = workshop_max_level
-startup_ramp_target = workshop_startup_ramp_target
+startup_ramp_target = 150
 category = consumer_goods_category
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 town = yes
@@ -21,7 +21,7 @@ unique_production_methods = {
         lumber = 0.27
         manual_labor = 0.33
         produced = books
-        output = 1.0
+        output = 0.9
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -33,7 +33,7 @@ unique_production_methods = {
         leather = 0.135
         manual_labor = 0.33
         produced = books
-        output = 1.0
+        output = 0.9
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -45,7 +45,7 @@ unique_production_methods = {
         leather = 0.12
         manual_labor = 0.31
         produced = books
-        output = 0.75
+        output = 0.68
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -57,7 +57,7 @@ unique_production_methods = {
         lumber = 0.23
         manual_labor = 0.3
         produced = books
-        output = 0.75
+        output = 0.68
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }

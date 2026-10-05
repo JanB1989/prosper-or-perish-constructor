@@ -23,7 +23,7 @@ building:
     is_foreign = no
     pop_type = burghers
     max_levels = manufactory_max_level
-    startup_ramp_target = manufactory_startup_ramp_target
+    startup_ramp_target = 135
     category = basic_industry_category
     employment_size = 0.3
     town = yes
@@ -38,7 +38,7 @@ building:
             coal = 1.09 # coal-fired covered-pot furnace
             manual_labor = 0.4
             produced = glass
-            output = 2.0
+            output = 1.8
             debug_max_profit = manufactory_profit_margin
             category = workshop_input
         }
@@ -51,7 +51,7 @@ building:
             clay = 0.57
             manual_labor = 0.34
             produced = glass
-            output = 0.84
+            output = 0.76
             debug_max_profit = manufactory_profit_margin
             category = workshop_input
         }
@@ -64,7 +64,7 @@ building:
             lead = 0.38
             manual_labor = 0.46
             produced = glass
-            output = 1.5
+            output = 1.35
             debug_max_profit = manufactory_profit_margin
             category = workshop_input
         }

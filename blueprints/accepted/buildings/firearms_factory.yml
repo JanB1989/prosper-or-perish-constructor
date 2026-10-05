@@ -30,7 +30,7 @@ building:
     pop_type = laborers
     is_mill = yes
     max_levels = mills_max_level
-    startup_ramp_target = mills_startup_ramp_target
+    startup_ramp_target = 210
     category = weapons_industry_category
     employment_size = 1.0
     town = yes
@@ -46,7 +46,7 @@ building:
             saltpeter = 0.85
             manual_labor = 0.12
             produced = firearms
-            output = 0.97
+            output = 0.873
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -57,7 +57,7 @@ building:
             saltpeter = 0.27
             manual_labor = 0.13
             produced = firearms
-            output = 0.55
+            output = 0.49
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -67,7 +67,7 @@ building:
             steel = 1.7
             manual_labor = 0.37
             produced = firearms
-            output = 3.03
+            output = 2.727
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -79,7 +79,7 @@ building:
             tools = 0.019
             manual_labor = 0.071
             produced = firearms
-            output = 0.19
+            output = 0.17
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -92,7 +92,7 @@ building:
             tin = 0.14
             manual_labor = 0.44
             produced = firearms
-            output = 0.96
+            output = 0.86
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -105,7 +105,7 @@ building:
             lumber = 0.54
             manual_labor = 0.49
             produced = firearms
-            output = 1.7
+            output = 1.53
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -117,7 +117,7 @@ building:
             iron = 1.27
             manual_labor = 0.46
             produced = firearms
-            output = 2.27
+            output = 2.05
             debug_max_profit = mills_profit_margin
             category = mills_input
         }

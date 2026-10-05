@@ -22,7 +22,7 @@ building:
     is_foreign = no
     pop_type = clergy
     max_levels = guild_max_level
-    startup_ramp_target = guild_startup_ramp_target
+    startup_ramp_target = 120
     category = consumer_goods_category
     employment_size = 0.3
     town = yes
@@ -36,7 +36,7 @@ building:
             lumber = 0.092
             manual_labor = 0.12
             produced = books
-            output = 0.3
+            output = 0.27
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -46,7 +46,7 @@ building:
             leather = 0.046
             manual_labor = 0.12
             produced = books
-            output = 0.3
+            output = 0.27
             debug_max_profit = guild_profit_margin
             category = guild_input
         }

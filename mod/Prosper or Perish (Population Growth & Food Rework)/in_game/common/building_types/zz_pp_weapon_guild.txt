@@ -3,7 +3,7 @@ REPLACE:weapon_guild = {
 is_foreign = no
 pop_type = burghers
 max_levels = guild_max_level
-startup_ramp_target = guild_startup_ramp_target
+startup_ramp_target = 120
 category = weapons_industry_category
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 town = yes
@@ -18,7 +18,7 @@ unique_production_methods = {
         stone = 0.86
         manual_labor = 0.16
         produced = weaponry
-        output = 0.4
+        output = 0.36
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
@@ -30,7 +30,7 @@ unique_production_methods = {
         gems = 0.088
         manual_labor = 0.16
         produced = weaponry
-        output = 0.4
+        output = 0.36
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
@@ -44,7 +44,7 @@ unique_production_methods = {
         manual_labor = 0.41
         category = guild_input
         produced = weaponry
-        output = 1.0
+        output = 0.9
         debug_max_profit = guild_profit_margin
     }
 }

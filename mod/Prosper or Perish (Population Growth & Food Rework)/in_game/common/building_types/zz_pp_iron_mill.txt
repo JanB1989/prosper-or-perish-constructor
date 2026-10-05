@@ -5,7 +5,7 @@ is_foreign = no
 pop_type = laborers
 is_mill = yes
 max_levels = mills_max_level
-startup_ramp_target = mills_startup_ramp_target
+startup_ramp_target = 158
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
 category = basic_industry_category
 town = yes
@@ -21,7 +21,7 @@ unique_production_methods = {
         manual_labor = 0.48
         category = mills_input
         produced = tools
-        output = 4.0
+        output = 3.6
         debug_max_profit = mills_profit_margin
     }
     pp_iron_mill_steel_tools = {
@@ -31,7 +31,7 @@ unique_production_methods = {
         manual_labor = 0.46
         category = mills_input
         produced = tools
-        output = 4.0
+        output = 3.6
         debug_max_profit = mills_profit_margin
     }
     pp_iron_mill_legacy_stone_tools_guild_maintenance = {
@@ -40,7 +40,7 @@ unique_production_methods = {
         stone = 1.06
         manual_labor = 0.18
         produced = tools
-        output = 0.42
+        output = 0.38
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -50,7 +50,7 @@ unique_production_methods = {
         copper = 0.79
         manual_labor = 0.4
         produced = tools
-        output = 0.95
+        output = 0.85
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -61,7 +61,7 @@ unique_production_methods = {
         tin = 0.065
         manual_labor = 0.41
         produced = tools
-        output = 1.01
+        output = 0.91
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -71,7 +71,7 @@ unique_production_methods = {
         iron = 1.69
         manual_labor = 0.66
         produced = tools
-        output = 2.25
+        output = 2.03
         debug_max_profit = mills_profit_margin
         category = mills_input
     }

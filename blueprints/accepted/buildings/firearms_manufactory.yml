@@ -28,7 +28,7 @@ building:
     is_foreign = no
     pop_type = burghers
     max_levels = manufactory_max_level
-    startup_ramp_target = manufactory_startup_ramp_target
+    startup_ramp_target = 180
     category = weapons_industry_category
     employment_size = 0.3
     town = yes
@@ -44,7 +44,7 @@ building:
             saltpeter = 0.23
             manual_labor = 0.052
             produced = firearms
-            output = 0.27
+            output = 0.243
             category = manufactory_input
             debug_max_profit = manufactory_profit_margin
         }
@@ -55,7 +55,7 @@ building:
             saltpeter = 0.094
             manual_labor = 0.047
             produced = firearms
-            output = 0.2
+            output = 0.18
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -68,7 +68,7 @@ building:
             manual_labor = 0.34
             category = manufactory_input
             produced = firearms
-            output = 1.73
+            output = 1.557
             debug_max_profit = manufactory_profit_margin
         }
         pp_firearms_manufactory_legacy_guns_guild_lumber_maintenance = {
@@ -79,7 +79,7 @@ building:
             tools = 0.014
             manual_labor = 0.053
             produced = firearms
-            output = 0.15
+            output = 0.13
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -92,7 +92,7 @@ building:
             tin = 0.1
             manual_labor = 0.32
             produced = firearms
-            output = 0.73
+            output = 0.66
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -105,7 +105,7 @@ building:
             lumber = 0.4
             manual_labor = 0.36
             produced = firearms
-            output = 1.3
+            output = 1.17
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }

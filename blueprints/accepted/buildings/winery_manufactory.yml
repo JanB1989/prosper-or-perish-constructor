@@ -25,7 +25,7 @@ building:
     is_foreign = no
     pop_type = burghers
     max_levels = manufactory_max_level
-    startup_ramp_target = manufactory_startup_ramp_target
+    startup_ramp_target = 90
     category = consumer_goods_category
     employment_size = 0.3
     town = yes
@@ -41,7 +41,7 @@ building:
             glass = 0.07 # glass bottles
             manual_labor = 0.28
             produced = wine
-            output = 2.0
+            output = 1.8
             category = guild_input
             debug_max_profit = manufactory_profit_margin
         }
@@ -52,7 +52,7 @@ building:
             pottery = 0.21 # stoneware storage jars
             manual_labor = 0.28
             produced = wine
-            output = 2.0
+            output = 1.8
             category = manufactory_input
             debug_max_profit = manufactory_profit_margin
         }
@@ -62,7 +62,7 @@ building:
             tools = 0.115 # tools cut to a running cost (~10 %)
             manual_labor = 0.27
             produced = wine
-            output = 2.0
+            output = 1.8
             category = manufactory_input
             debug_max_profit = manufactory_profit_margin
         }
@@ -74,7 +74,7 @@ building:
             tools = 0.087
             manual_labor = 0.41
             produced = wine
-            output = 1.5
+            output = 1.35
             debug_max_profit = manufactory_profit_margin
             category = guild_input
         }
@@ -86,7 +86,7 @@ building:
             tools = 0.086
             manual_labor = 0.39
             produced = wine
-            output = 1.5
+            output = 1.35
             debug_max_profit = manufactory_profit_margin
             category = guild_input
         }

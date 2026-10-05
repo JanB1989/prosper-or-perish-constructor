@@ -146,8 +146,20 @@ def nil_script_value_files(vanilla_game: Path) -> dict[Path, tuple[bytes, int]]:
         for path in sorted(folder.glob("*.txt")) if folder.is_dir() else ():
             data = path.read_bytes()
             if FOOD_SCRIPT_VALUE_PREFIX.encode() in data:
-                out[Path(scope) / "common" / "script_values" / path.name] = nil_bytes(path.name, data)
+                nil, zeroed = nil_bytes(path.name, data)
+                out[Path(scope) / "common" / "script_values" / path.name] = (zero_ramp_targets(nil), zeroed)
     return out
+
+
+# Establishment (branch establishment-know-how, 2026-10-06): only the final-goods manufacturing lines ramp, with their
+# own startup_ramp_target in the blueprints. Vanilla's shared ramp values (guilds, workshops, manufactories, mills,
+# rural buildings) are 0 in the same-name copy, so every other building stays out of the system.
+RAMP_TARGET_VALUES = ("guild", "workshop", "manufactory", "mills", "rural")
+_RAMP_TARGET = re.compile(rb"(?m)^((?:" + b"|".join(k.encode() for k in RAMP_TARGET_VALUES) + rb")_startup_ramp_target\s*=\s*)\d+")
+
+
+def zero_ramp_targets(data: bytes) -> bytes:
+    return _RAMP_TARGET.sub(rb"\g<1>0", data)
 
 
 @dataclass(frozen=True)

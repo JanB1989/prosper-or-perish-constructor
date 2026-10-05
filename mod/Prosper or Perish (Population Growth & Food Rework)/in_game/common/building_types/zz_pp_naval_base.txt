@@ -48,5 +48,7 @@ REPLACE:naval_base = {
         local_repair_speed = 0.1
         local_merchant_capacity = 10
     }
+    can_close = no # building_shutdown
+    ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:naval_base:building

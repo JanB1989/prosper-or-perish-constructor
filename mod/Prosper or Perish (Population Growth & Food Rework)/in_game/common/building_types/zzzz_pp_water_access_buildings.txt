@@ -112,6 +112,8 @@ REPLACE:pirate_haven = {
 	raw_modifier = {
 		local_population_capacity = 0.025
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:black_market = {
@@ -152,6 +154,8 @@ REPLACE:black_market = {
 	raw_modifier = {
 		local_population_capacity = 0.06
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:smuggler_cove = {
@@ -188,6 +192,8 @@ REPLACE:smuggler_cove = {
 	raw_modifier = {
 		local_population_capacity = 0.06
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:brothel = {
@@ -225,6 +231,8 @@ REPLACE:brothel = {
 	raw_modifier = {
 		local_population_capacity = 0.06
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:pirate_tavern = {
@@ -298,6 +306,8 @@ REPLACE:lazaretto = {
 	raw_modifier = {
 		local_population_capacity = 0.06
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:trade_company_harbor = {
@@ -381,6 +391,8 @@ REPLACE:trade_company_harbor = {
 	raw_modifier = {
 		local_population_capacity = 0.12
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:por_feitoria = {
@@ -440,6 +452,8 @@ REPLACE:por_feitoria = {
 	raw_modifier = {
 		local_population_capacity = 0.06
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:cinque_port = {  
@@ -489,6 +503,8 @@ REPLACE:cinque_port = {
 	raw_modifier = {
 		local_population_capacity = 0.08
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:north_sea_shipyards = {
@@ -542,6 +558,8 @@ REPLACE:north_sea_shipyards = {
 	raw_modifier = {
 		local_population_capacity = 1.2
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:kilwan_shipwrights = {
@@ -580,6 +598,8 @@ REPLACE:kilwan_shipwrights = {
 	raw_modifier = {
 		local_population_capacity = 0.4
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:brethren_marsh = {
@@ -646,6 +666,8 @@ REPLACE:brethren_marsh = {
 	raw_modifier = {
 		local_population_capacity = 0.4
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:korean_gunnery_coastal_defense = {
@@ -730,4 +752,6 @@ REPLACE:coastal_settlements = {
 	raw_modifier = {
 		local_population_capacity = 0.5
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }

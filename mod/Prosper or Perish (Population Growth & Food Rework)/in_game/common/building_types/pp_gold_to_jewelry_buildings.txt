@@ -48,6 +48,7 @@ REPLACE:urban_parliament_seat = {
 	raw_modifier = {
 		local_population_capacity = 0.07
 	}
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:chancery = {
@@ -114,6 +115,8 @@ REPLACE:chancery = {
 	raw_modifier = {
 		local_population_capacity = 0.07
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:provincial_chancery = {
@@ -148,6 +151,8 @@ REPLACE:provincial_chancery = {
 	raw_modifier = {
 		local_population_capacity = 0.07
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:house_of_parliament = {
@@ -207,6 +212,8 @@ REPLACE:house_of_parliament = {
 	raw_modifier = {
 		local_population_capacity = 0.14
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:royal_court = {
@@ -263,6 +270,8 @@ REPLACE:royal_court = {
 	raw_modifier = {
 		local_population_capacity = 0.07
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:royal_garden = {
@@ -313,6 +322,8 @@ REPLACE:royal_garden = {
 	raw_modifier = {
 		local_population_capacity = -0.013
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:local_governor = {
@@ -416,6 +427,7 @@ REPLACE:local_governor = {
 	raw_modifier = {
 		local_population_capacity = 0.07
 	}
+	can_close = no # building_shutdown
 }
 
 REPLACE:naval_governor = {
@@ -489,6 +501,7 @@ REPLACE:naval_governor = {
 	raw_modifier = {
 		local_population_capacity = 0.07
 	}
+	can_close = no # building_shutdown
 }
 
 REPLACE:funduq = {
@@ -542,6 +555,8 @@ REPLACE:funduq = {
 	raw_modifier = {
 		local_population_capacity = 0.06
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:republican_assembly = {
@@ -599,6 +614,8 @@ REPLACE:republican_assembly = {
 	raw_modifier = {
 		local_population_capacity = 0.07
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:caravan_stop = {
@@ -650,6 +667,8 @@ REPLACE:caravan_stop = {
 	raw_modifier = {
 		local_population_capacity = 0.06
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 # EU5 1.4 government palaces of tribes, hordes, republics and theocracies (chancery-like capital buildings).
@@ -714,6 +733,8 @@ REPLACE:chieftain_hall = {
 	raw_modifier = {
 		local_population_capacity = 0.07
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:khan_ordu = {
@@ -778,6 +799,8 @@ REPLACE:khan_ordu = {
 	raw_modifier = {
 		local_population_capacity = 0.07
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:patrician_hall = {
@@ -843,6 +866,8 @@ REPLACE:patrician_hall = {
 	raw_modifier = {
 		local_population_capacity = 0.21
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:sacred_council = {
@@ -908,6 +933,8 @@ REPLACE:sacred_council = {
 	raw_modifier = {
 		local_population_capacity = 0.07
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:itinerant_court_seat = {

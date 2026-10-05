@@ -1,6 +1,7 @@
 version: 2
 tag: kurultai
 footprint: military_grounds
+shutdown: never  # an assembly, not a camp
 building:
   key: kurultai
   mode: INJECT

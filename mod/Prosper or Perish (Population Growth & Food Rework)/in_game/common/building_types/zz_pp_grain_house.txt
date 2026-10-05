@@ -40,5 +40,7 @@ REPLACE:grain_house = {
 		local_food_capacity = 100
 		local_supply_limit_modifier = 0.01
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:grain_house:building

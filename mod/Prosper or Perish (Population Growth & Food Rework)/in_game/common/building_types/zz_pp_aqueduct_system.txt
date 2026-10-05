@@ -15,5 +15,7 @@ modifier = {
   local_legumes_output_modifier = 0.05
   local_potato_output_modifier = 0.05
 }
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:aqueduct_system:building

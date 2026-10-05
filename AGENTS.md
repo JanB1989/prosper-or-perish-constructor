@@ -229,6 +229,22 @@
   Never put market access, owner or culture conditions in `location_potential`: the game re-checks it on owner change
   and deletes buildings that fail it.
 
+## Building Shutdown (2026-10-05, Jan)
+
+- Buildings without goods output may not be closed unless they are military. `[building_shutdown.classes]` in
+  constructor.toml maps every footprint class to `never` or `keep` (keep: barracks, fortification, military_grounds,
+  farm_land, technical); a blueprint overrides with a top-level `shutdown: never | keep` (the Kurultai is `never`).
+- The finalize step of `ppc build`/`sync` (`building_shutdown.py`, after the footprint) writes `can_close = no` (the
+  player) and `ai_forbid_shutdown = yes` (the AI's maintenance-budget and profit closing) into the block that owns each
+  `never` building, marked `# building_shutdown`; a building switched to `keep` loses them again. Buildings with a goods
+  output are skipped (a losing producer must stay closable). An INJECT never repeats a flag vanilla already sets.
+  `uv run ppc shutdown apply|check` (0 problems; `tests/test_building_shutdown.py`). 306 buildings locked.
+- Why: the AI's maintenance budget (docs/ai_building_rulebook.md, "Maintenance budget") closed and reopened temples,
+  libraries, marketplaces and docks 5-13 times a game; universities and grand palaces of small countries stayed closed.
+  Their maintenance now always counts, so an over-budget AI closes its military buildings first and builds fewer new
+  ones. Estimated extra cost on run 4f95382e: ~3.4 % of world income, worst for small countries holding a university
+  or grand palace (open question: cheaper upkeep for those two and the library).
+
 ## Production Method Icons (EU5 1.4)
 
 - EU5 1.4 gives every production method an `icon_type` (`building_type`, `goods`, ...) and an `icon`. The finalize step of

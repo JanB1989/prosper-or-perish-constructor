@@ -4,5 +4,7 @@ INJECT:tibetan_great_monastery = {
 	raw_modifier = {
 		local_population_capacity = 0.275
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:tibetan_great_monastery:building

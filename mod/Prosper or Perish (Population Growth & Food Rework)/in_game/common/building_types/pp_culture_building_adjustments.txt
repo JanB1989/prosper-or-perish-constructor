@@ -47,6 +47,8 @@ REPLACE:library = {
 	raw_modifier = {
 		local_population_capacity = 0.06
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:university = {
@@ -107,6 +109,8 @@ REPLACE:university = {
 	raw_modifier = {
 		local_population_capacity = 0.03
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 
 REPLACE:gymnasium_building = {
@@ -170,4 +174,6 @@ REPLACE:gymnasium_building = {
 	raw_modifier = {
 		local_population_capacity = 0.3
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }

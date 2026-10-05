@@ -828,6 +828,15 @@ from 75 to 49. `tools/ai_maintenance_sim.py` replays the pass on a save's countr
 depends almost only on the leeway (closures per building per century at 0.2: 11 at 1.5, 4.7 at 2.0, 2.1 at 2.5,
 1.0 at 3.0), spending and the closed share on allowed x leeway. Since 2026-10-04 PP uses 0.15 x 2.5 (vanilla
 0.25 x 1.2): the same spending as 0.2 x 1.5 (~16 % of income) with ~75 % fewer closures and slower stock growth.
+Observer runs 4f95382e and 1eaa2d96 (0.15 x 2.5) measured closed share 40 % -> 24-25 % and 11.4 % -> 5.9 % newly
+closed per 5 years (half, not three quarters).
+
+Since 2026-10-05 only military buildings without goods output can close at all: every other one carries
+`can_close = no` and `ai_forbid_shutdown = yes` (the AI never closed a building with `ai_forbid_shutdown`, e.g. 147k
+granary snapshots in run 4f95382e), written by footprint class (`[building_shutdown.classes]`, AGENTS.md "Building
+Shutdown"). Their maintenance always counts, so an over-budget AI closes its barracks, armories and forts first and
+stops building new ones; had they stayed open in run 4f95382e, AI building maintenance would have been ~12 % higher
+(~3.4 % of world income, worst for small countries with a university or grand palace).
 
 ### Engine paths that remove building levels (verified 2026-09-30)
 

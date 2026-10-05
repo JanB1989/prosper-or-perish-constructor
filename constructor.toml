@@ -888,6 +888,40 @@ estate_land = 0.10            # manors and estates that hold land
 extractive_open = 0.05        # quarries, pits, diggings, salt pans
 land_reserve = -0.25          # hunting grounds, royal forests and gardens, cattle enclosures
 
+# Which buildings WITHOUT goods output may be closed (2026-10-05, Jan): "never" writes can_close = no and
+# ai_forbid_shutdown = yes into the building (finalize step, building_shutdown.py; ppc shutdown apply|check), "keep"
+# leaves the engine default. Keyed by footprint class; a blueprint overrides with `shutdown: never | keep`.
+# Buildings with a goods output are never touched (a producer that loses money must stay closable). Why: the AI's
+# maintenance budget closed and reopened temples, libraries, marketplaces ... 5-13 times a game; only military
+# buildings are worth mothballing.
+[building_shutdown.classes]
+farm_land = "keep"
+capacity_source = "never"
+technical = "keep"
+urban_workshop = "never"
+urban_district = "never"
+administration = "never"
+institutional = "never"
+trade = "never"
+religious = "never"
+manufactory = "never"
+barracks = "keep"
+rural_village = "never"
+mill_works = "never"
+fishery = "never"
+infrastructure = "never"
+maritime = "never"
+rural_processing = "never"
+palace_grounds = "never"
+monument = "never"
+forestry = "never"
+fortification = "keep"
+mining = "never"
+military_grounds = "keep"
+estate_land = "never"
+extractive_open = "never"
+land_reserve = "never"
+
 [age_food]
 # Food relief by age (2026-10-03, Jan: age 2 stays tough, age 3 brings decent relief, later ages keep the progression;
 # age_food.py, `ppc age-food apply|check`, the crop farm generator reads it for the farm tiers).

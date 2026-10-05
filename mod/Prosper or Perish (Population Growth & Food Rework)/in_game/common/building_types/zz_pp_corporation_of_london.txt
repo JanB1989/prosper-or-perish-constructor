@@ -4,5 +4,7 @@ INJECT:corporation_of_london = {
 	raw_modifier = {
 		local_population_capacity = 0.21
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:corporation_of_london:building

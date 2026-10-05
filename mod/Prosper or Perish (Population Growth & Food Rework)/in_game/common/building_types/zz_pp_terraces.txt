@@ -53,5 +53,6 @@ REPLACE:terraces = {
   }
   ai_forbid_shutdown = yes
   forbidden_for_estates = no
+  can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:terraces:building

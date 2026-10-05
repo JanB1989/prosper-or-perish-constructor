@@ -4,5 +4,7 @@ INJECT:market_warehouse = {
 	raw_modifier = {
 		local_population_capacity = 0.06
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:market_warehouse:building

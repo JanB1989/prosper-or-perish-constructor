@@ -48,5 +48,7 @@ REPLACE:grand_shipyard = {
         local_repair_speed = 0.08
         local_merchant_capacity = 7.5
     }
+    can_close = no # building_shutdown
+    ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:grand_shipyard:building

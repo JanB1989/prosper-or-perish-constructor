@@ -4,5 +4,6 @@ INJECT:mercury_patio = {
 	raw_modifier = {
 		local_population_capacity = 0.175
 	}
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:mercury_patio:building

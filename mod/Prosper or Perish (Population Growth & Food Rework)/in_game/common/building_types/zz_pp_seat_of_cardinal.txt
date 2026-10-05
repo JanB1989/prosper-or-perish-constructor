@@ -4,5 +4,6 @@ INJECT:seat_of_cardinal = {
 	raw_modifier = {
 		local_population_capacity = 0.028
 	}
+	ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:seat_of_cardinal:building

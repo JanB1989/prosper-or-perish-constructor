@@ -4,5 +4,6 @@ INJECT:stannary_court = {
 	raw_modifier = {
 		local_population_capacity = 0.175
 	}
+	ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:stannary_court:building

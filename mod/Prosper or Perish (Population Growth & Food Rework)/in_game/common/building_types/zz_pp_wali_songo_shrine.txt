@@ -4,5 +4,6 @@ INJECT:wali_songo_shrine = {
 	raw_modifier = {
 		local_population_capacity = 0.028
 	}
+	ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:wali_songo_shrine:building

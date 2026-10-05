@@ -45,5 +45,7 @@ REPLACE:dock = {
         local_repair_speed = 0.02
         local_merchant_capacity = 1
     }
+    can_close = no # building_shutdown
+    ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:dock:building

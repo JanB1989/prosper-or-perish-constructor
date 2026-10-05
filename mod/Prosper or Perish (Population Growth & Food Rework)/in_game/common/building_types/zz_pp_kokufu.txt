@@ -4,5 +4,7 @@ INJECT:kokufu = {
 	raw_modifier = {
 		local_population_capacity = 0.07
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:kokufu:building

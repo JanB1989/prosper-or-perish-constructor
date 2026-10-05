@@ -48,5 +48,7 @@ REPLACE:dry_dock = {
         local_repair_speed = 0.04
         local_merchant_capacity = 2
     }
+    can_close = no # building_shutdown
+    ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:dry_dock:building

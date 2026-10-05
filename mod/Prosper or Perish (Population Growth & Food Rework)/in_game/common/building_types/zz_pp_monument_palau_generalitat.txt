@@ -4,5 +4,7 @@ INJECT:monument_palau_generalitat = {
 	raw_modifier = {
 		local_population_capacity = 0.035
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:monument_palau_generalitat:building

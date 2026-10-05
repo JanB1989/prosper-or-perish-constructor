@@ -271,6 +271,17 @@ def _build_parser() -> argparse.ArgumentParser:
         choices=("apply", "check"),
         help="apply writes the capacity lines into the compiled mod (ppc build does this too); check validates the classes.",
     )
+    shutdown = _add_command(
+        subcommands,
+        "shutdown",
+        "Lock buildings without goods output against closing (can_close = no, ai_forbid_shutdown = yes) by footprint class.",
+        _shutdown,
+    )
+    shutdown.add_argument(
+        "action",
+        choices=("apply", "check"),
+        help="apply writes the flags into the compiled mod (ppc build does this too); check lists locked buildings without them.",
+    )
     labour = _add_command(
         subcommands,
         "labour",
@@ -1079,6 +1090,22 @@ def _footprint(args: argparse.Namespace, extra: Sequence[str], repo: Path, proje
     return 0
 
 
+def _shutdown(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("shutdown does not accept extra arguments.")
+    from prosper_or_perish_constructor import building_shutdown
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    if args.action == "check":
+        problems = building_shutdown.check(repo, _project_mod_root(repo, project), project, vanilla_root(repo, project))
+        for problem in problems:
+            print(problem)
+        print(f"building shutdown: {len(problems)} problems")
+        return 1 if problems else 0
+    _apply_building_shutdown(repo, project, _project_mod_root(repo, project))
+    return 0
+
+
 def _labour(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     if extra:
         raise SystemExit("labour does not accept extra arguments.")
@@ -1341,6 +1368,19 @@ def _apply_building_footprint(repo: Path, project: Path, mod_root: Path) -> None
     )
 
 
+def _apply_building_shutdown(repo: Path, project: Path, mod_root: Path) -> None:
+    from prosper_or_perish_constructor import building_shutdown
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    result = building_shutdown.apply(repo, mod_root, project, vanilla_root(repo, project))
+    print(
+        f"Building shutdown: {len(result.locked)} buildings without goods output locked open "
+        f"({result.kept} closable by class, {result.producing_skipped} skipped for their goods output) across "
+        f"{result.files_changed} changed files.",
+        flush=True,
+    )
+
+
 def _apply_employment_cut(repo: Path, project: Path, mod_root: Path) -> None:
     from prosper_or_perish_constructor.building_scaling import apply_employment_cut
     from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
@@ -1441,6 +1481,7 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         flush=True,
     )
     _apply_building_footprint(repo, project, mod_root)
+    _apply_building_shutdown(repo, project, mod_root)
     _apply_employment_cut(repo, project, mod_root)
     if local_free_building_levels_sheet_csv_path(repo).is_file():
         compile_free_building_level_modifiers(repo, mod_root)

@@ -291,6 +291,55 @@ def test_the_rendered_network_method_has_no_inputs() -> None:
         assert [key for key in keys if key not in {"icon_type", "icon"}] == ["category", "output", "produced"]
 
 
+# ---------------------------------------------------------------- AI urgency
+
+URGENCY = '\n[project]\nmod_root = "mod"\n' + CONFIG.replace(
+    "network_output = 0.30\n", "network_output = 0.30\nurgency_per_level = 2.0\nurgency_levels_cap = 60\nurgency_level_step = 5\n"
+)
+
+
+def test_apply_writes_the_urgency_weight_and_its_script_value(repo: Path) -> None:
+    (repo / "constructor.toml").write_text(URGENCY, encoding="utf-8")
+    result = lg.apply(repo, repo / "constructor.toml", PRICES)
+    assert result.problems == [] and not result.urgency_stale
+    assert _block(_body(repo), "ai_construct_weight") == [
+        "# heavily built locations at low market access first (flat, ppc logistics)",
+        f"value = {lg.URGENCY_VALUE}",
+    ]
+    text = (repo / "mod" / lg.URGENCY_RELATIVE).read_text(encoding="utf-8")
+    assert text.startswith("﻿")
+    assert text.count("total_building_levels >=") == 12  # 5, 10, ... 60
+    assert "multiply = { value = 0.85 subtract = market_access min = 0 divide = 0.85 }" in text
+    again = lg.apply(repo, repo / "constructor.toml", PRICES, write=False)
+    assert not again.changed and not again.urgency_stale
+    (repo / "mod" / lg.URGENCY_RELATIVE).write_text("edited by hand", encoding="utf-8")
+    assert lg.apply(repo, repo / "constructor.toml", PRICES, write=False).urgency_stale
+
+
+def test_no_urgency_weight_without_the_numbers(repo: Path) -> None:
+    lg.apply(repo, repo / "constructor.toml", PRICES)
+    assert "ai_construct_weight" not in _body(repo)
+
+
+def test_urgency_weight_grows_with_building_levels_and_the_access_gap() -> None:
+    config = lg.load_config(ROOT / "constructor.toml")
+    # the 1834 cases of run 4f95382e: Dingbian 70 levels at 0.20, Kurchum 77 at 0.37; a typical 15-level place at 0.75
+    assert lg.urgency_weight(config, 70, 0.20) == pytest.approx(91.8, abs=0.1)
+    assert lg.urgency_weight(config, 77, 0.37) == pytest.approx(67.8, abs=0.1)
+    assert lg.urgency_weight(config, 15, 0.75) == pytest.approx(3.5, abs=0.1)
+    assert lg.urgency_weight(config, 200, 0.0) == pytest.approx(120.0)  # the cap; the food urgency peaks at 90
+    assert lg.urgency_weight(config, 60, 0.85) == 0.0  # the allow gate's line
+    assert lg.urgency_weight(config, 60, 1.10) == 0.0
+
+
+def test_every_logistics_building_weighs_the_urgency_and_the_value_is_current() -> None:
+    result = lg.apply(ROOT, ROOT / "constructor.toml", write=False)
+    assert not result.urgency_stale
+    for plan in result.plans:
+        body = yaml_io.safe_load(plan.blueprint.read_text(encoding="utf-8"))["building"]["body"]
+        assert f"value = {lg.URGENCY_VALUE}" in _block(body, "ai_construct_weight"), plan.building
+
+
 # ---------------------------------------------------------------- zones
 
 

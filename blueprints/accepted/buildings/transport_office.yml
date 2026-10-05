@@ -125,6 +125,11 @@ building:
       local_supply_limit_modifier = 0.05
       local_disease_resistance = -0.05
     }
+
+    ai_construct_weight = {
+      # heavily built locations at low market access first (flat, ppc logistics)
+      value = pp_logistics_urgency_weight
+    }
 localization:
   entries:
     transport_office_slot_0: Dispatch

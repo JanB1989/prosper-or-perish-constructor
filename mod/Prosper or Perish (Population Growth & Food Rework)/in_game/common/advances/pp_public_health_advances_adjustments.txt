@@ -1,0 +1,25 @@
+﻿# Public Health (2026-10-05, Jan): EU5 1.4 gives the two Public Health advances flat population growth. In this mod
+# positive growth comes only from food and storage, so the growth lines become disease resistance and population
+# capacity instead (on top of vanilla's own resistance and life expectancy). Capacity on the scale of the food advances.
+
+TRY_REPLACE:sanitation_advance = {
+	age = age_5_absolutism
+
+	global_life_expectancy = 4
+	global_disease_resistance = 0.10 # vanilla 0.07
+	global_population_capacity_modifier = 0.05 # was global_population_growth = 0.001
+
+	depth = 0
+}
+
+TRY_REPLACE:vaccination_advance = {
+	age = age_6_revolutions
+	icon = scientific_revolution_advance
+
+	casualty_pop_losses = -0.07
+	global_life_expectancy = 4
+	global_disease_resistance = 0.12 # vanilla 0.07
+	global_population_capacity_modifier = 0.08 # was global_population_growth = 0.002
+
+	depth = 0
+}

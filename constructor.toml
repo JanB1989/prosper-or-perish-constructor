@@ -1054,6 +1054,16 @@ gate_max_market_access = 0.85 # allow: market_access < this
 gate_min_building_levels = 15 # allow: total_building_levels >= this
 improved_method_bonus = 0.05  # extra output share on the improved (third) method
 network_output = 0.30         # logistics per level of the input-less network method (pure profit, no input cost)
+# AI urgency (2026-10-05, Jan): the engine's build score does not see market access, so a heavily built location at
+# low access (it loses a share of every building's goods) ranked its logistics buildings like any small earner and
+# could stall. ppc logistics apply writes pp_logistics_urgency_weight (script_values/pp_logistics_urgency.txt) and adds
+# it flat (no income divide, like the food urgency) as each logistics building's ai_construct_weight:
+# urgency_per_level x building levels (steps of urgency_level_step, at most urgency_levels_cap) x the access gap below
+# gate_max_market_access as a share of it. 70 levels at 0.20 access -> 92; 15 levels at 0.75 -> 3.5; max 120 (the food
+# urgency's max is 90).
+urgency_per_level = 2.0
+urgency_levels_cap = 60
+urgency_level_step = 5
 bulky_goods = ["stone", "marble", "clay", "sand", "coal", "iron", "copper", "tin", "lead", "salt", "saltpeter", "alum"]
 bulky_half_goods = ["lumber"] # get half the class cut
 # the staple foods (2026-10-03, every staple food since 2026-10-04: one share per good of the staple_group column of

@@ -1226,12 +1226,14 @@ def _logistics(args: argparse.Namespace, extra: Sequence[str], repo: Path, proje
     if args.action == "check":
         for plan in result.changed:
             print(f"{plan.blueprint.name}: off its logistics class")
+        if result.urgency_stale:
+            print(f"{logistics.URGENCY_RELATIVE}: differs from [logistics] (run ppc logistics apply)")
         _print_logistics_zones(repo, project)
         print(
             f"logistics: {len(result.plans)} buildings, {len(result.changed)} off their class, "
-            f"{len(result.problems)} problems"
+            f"urgency value {'stale' if result.urgency_stale else 'current'}, {len(result.problems)} problems"
         )
-        return 1 if result.problems or result.changed else 0
+        return 1 if result.problems or result.changed or result.urgency_stale else 0
     if result.problems:
         print(f"logistics: {len(result.problems)} problems, nothing written")
         return 1
@@ -1320,8 +1322,9 @@ def _print_logistics_check(repo: Path, project: Path) -> None:
     for problem in result.problems:
         print(f"Logistics: {problem}", flush=True)
     print(
-        f"Logistics: {len(result.plans)} buildings tagged, {len(result.changed)} off their class "
-        f"(run ppc logistics apply), {len(result.problems)} problems.",
+        f"Logistics: {len(result.plans)} buildings tagged, {len(result.changed)} off their class"
+        f"{', urgency value stale' if result.urgency_stale else ''} (run ppc logistics apply), "
+        f"{len(result.problems)} problems.",
         flush=True,
     )
 

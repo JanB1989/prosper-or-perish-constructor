@@ -210,7 +210,14 @@
   writes it (body, `production_method_slots`, slot labels and names from `[logistics.network]`, evaluation allow rule);
   the labour pass skips it; the gate stays on the main slot's last method (the network slot is a base slot, so the gate
   rule puts it first; an input-less gate would read a margin of output / 0.001 and never close).
-  `uv run ppc logistics check` must report 0 off, 0 problems; `ppc build` prints it and `tests/test_logistics.py`
+- AI urgency (2026-10-05, Jan): the engine's build score does not see market access, so a heavily built location at low
+  access ranked its logistics buildings like any small earner and could stall. `ppc logistics apply` writes
+  `pp_logistics_urgency_weight` (`in_game/common/script_values/pp_logistics_urgency.txt`, generated) from `[logistics]`
+  `urgency_per_level` x building levels (steps of `urgency_level_step`, at most `urgency_levels_cap`) x the access gap
+  below `gate_max_market_access` as a share of it, and makes it every logistics building's flat `ai_construct_weight`
+  (no income divide, like the food urgency; 70 levels at 0.20 -> 92, max 120). Edits to logistics.py rerun the start
+  setup (it is a World Builder input); the weight numbers do too, since constructor.toml is hashed whole.
+  `uv run ppc logistics check` must report 0 off, a current urgency value and 0 problems; `ppc build` prints it and `tests/test_logistics.py`
   enforces it. Order after editing recipes: `ppc labour apply`, `ppc logistics apply`, `ppc gate apply`.
 - Logistics buildings (custom tag `pp_logistics`) are staffed before every other building in every employment system
   (`pp_employment_priority.txt`, river > coastal > city > rural, above food security and education). Overbuilt

@@ -1,6 +1,7 @@
 version: 2
 tag: marketplace
 footprint: trade
+shutdown: keep  # the marketplace line may be closed by the AI to save upkeep (Jan 2026-10-05)
 building:
   key: marketplace
   mode: INJECT

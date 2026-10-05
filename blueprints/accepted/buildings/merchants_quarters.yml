@@ -1,6 +1,7 @@
 version: 2
 tag: merchants_quarters
 footprint: urban_district
+shutdown: keep  # the marketplace line may be closed by the AI to save upkeep (Jan 2026-10-05)
 building:
   key: merchants_quarters
   mode: INJECT

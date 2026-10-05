@@ -1,6 +1,7 @@
 version: 2
 tag: commerce_center
 footprint: trade
+shutdown: keep  # the marketplace line may be closed by the AI to save upkeep (Jan 2026-10-05)
 building:
   key: commerce_center
   mode: INJECT

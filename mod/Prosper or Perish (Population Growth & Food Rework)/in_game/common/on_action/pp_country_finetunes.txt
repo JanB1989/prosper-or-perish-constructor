@@ -1,0 +1,19 @@
+﻿# Country finetunes at game start (docs/country_finetunes.md): one-off starting gold.
+on_game_start = {
+	on_actions = {
+		pp_country_finetune_start_gold
+	}
+}
+
+pp_country_finetune_start_gold = {
+	effect = {
+		if = {
+			limit = { exists = c:TUR }
+			c:TUR = { add_gold = 1000 }
+		}
+		if = {
+			limit = { exists = c:FRA }
+			c:FRA = { add_gold = 500 }
+		}
+	}
+}

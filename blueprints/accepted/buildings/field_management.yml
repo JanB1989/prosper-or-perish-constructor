@@ -40,13 +40,10 @@ building:
 
     construction_demand = village_construction
 
-    # Tier 1 of 3 (field_management_convertible, field_management_improved). Upkeep is kept light so early
-    # levels do not eat the treasury; one method, livestock, stone and labour in about equal cost shares.
+    # Tier 1 of 3 (field_management_convertible, field_management_improved). No upkeep in the whole family
+    # (2026-10-05): thousands of standing levels ate the crown's income (France 1342: ~10 of 25 gold a month).
     unique_production_methods = {
       pp_field_management_maintenance = {
-        livestock = 0.008
-        stone = 0.01
-        manual_labor = 0.01
         category = building_maintenance
       }
     }

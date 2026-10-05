@@ -87,7 +87,9 @@ def test_new_niches_are_complete_buildings_with_upkeep_and_owned_icons(tmp_path)
         data = yaml_io.safe_load((ROOT / b.BLUEPRINTS / f'{key}.yml').read_text())
         assert data['building']['mode'] == 'CREATE'
         assert data['footprint'] == 'capacity_source'
-        assert {"jiangnan_canal_network": "manual_labor = 0.225", "jiangnan_hill_terraces": "manual_labor = 0.195"}[key] in data["building"]["body"]
+        # the hill terraces belong to the field management family, which has no upkeep (2026-10-05)
+        upkeep = {"jiangnan_canal_network": "manual_labor = 0.225", "jiangnan_hill_terraces": "manual_labor"}[key]
+        assert (upkeep in data["building"]["body"]) == (key == "jiangnan_canal_network")
         assert "employment_size = 0.15" in data["building"]["body"]
         assert cfg.niche[key]['strength'] == {'jiangnan_canal_network': 2.5, 'jiangnan_hill_terraces': 3.0}[key]
         assert (ROOT / b.BLUEPRINTS / data['icon']['source_png']).resolve().is_file()

@@ -8,7 +8,7 @@ REPLACE:fishing_village = {
     pop_type = peasants
     category = village_category
     custom_tags = { pp_food_security_priority pp_staple_food_priority fishing_capacity }
-    employment_size = 1
+    employment_size = 1.25
     rural_settlement = yes
     town = yes
     city = yes
@@ -143,7 +143,7 @@ REPLACE:fishing_village = {
     }
     construction_demand = village_construction
     raw_modifier = {
-      local_population_capacity = 0.5
+      local_population_capacity = 0.625
     local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
     }
 

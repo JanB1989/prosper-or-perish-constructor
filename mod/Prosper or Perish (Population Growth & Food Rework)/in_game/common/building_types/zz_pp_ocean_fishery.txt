@@ -4,7 +4,7 @@ is_foreign = no
 increase_per_level_cost = 0.18
 max_levels = fish_capacity_max_ocean_fishery
 pop_type = laborers
-employment_size = 0.8   # [building_scaling.employment_cut] reference 1
+employment_size = 1.25
 category = rgo_building_category
 custom_tags = { pp_food_security_priority pp_staple_food_priority fishing_capacity }
 icon = ocean_fishery
@@ -79,7 +79,7 @@ unique_production_methods = {
 }
 
 raw_modifier = {
-	local_population_capacity = 0.4
+	local_population_capacity = 0.5
 local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
 }
 

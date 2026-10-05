@@ -72,7 +72,7 @@ crowding_cap_levels = 30
 # Body lines shared by every tier (values as in the blueprints)
 [general.body]
 is_foreign = "no"
-employment_size = 1
+employment_size = 1.25   # staple food buildings 1,250 workers per level, peasants and laborers (2026-10-05, Jan: early-game nerf; laborer tiers skip the employment cut)
 category = "village_category"
 custom_tags = ["farming_capacity", "pp_food_security_priority", "pp_staple_food_priority"]
 rural_settlement = "yes"

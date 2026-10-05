@@ -6,7 +6,7 @@ max_levels = fish_capacity_max_net_curing_yard
 pop_type = peasants
 category = village_category
 custom_tags = { pp_food_security_priority pp_staple_food_priority fishing_capacity }
-employment_size = 1
+employment_size = 1.25
 icon = net_curing_yard
 rural_settlement = yes
 town = yes
@@ -151,7 +151,7 @@ unique_production_methods = {
 }
 
 raw_modifier = {
-	local_population_capacity = 0.5
+	local_population_capacity = 0.625
 local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
 }
 

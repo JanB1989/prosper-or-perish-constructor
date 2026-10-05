@@ -180,7 +180,8 @@ def test_provisioning_feeds_at_least_the_workers() -> None:
             rf"pp_{re.escape(building)}_provision\s*=\s*\{{[^}}]*?output\s*=\s*([0-9.]+)", template.building_body, re.S
         )
         assert provision, building
-        assert Decimal(provision.group(1)) >= worker_food * Decimal("0.75"), building
+        # 0.6 since 2026-10-05: staple food buildings employ 1,250 per level with the same output (fishing village 0.64)
+        assert Decimal(provision.group(1)) >= worker_food * Decimal("0.6"), building
 
     cookshop = load_template(BUILDING_BLUEPRINT_ROOT / "cookshop.yml")
     # since 2026-10-03 (Jan): all of the kitchen's food is the flat modifier food, its dishes sell for offset

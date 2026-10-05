@@ -4,7 +4,7 @@ is_foreign = no
 increase_per_level_cost = 0.14
 max_levels = forest_capacity_max_managed_forest_village
 pop_type = laborers
-employment_size = 0.8   # [building_scaling.employment_cut] reference 1
+employment_size = 1.25
 category = village_category
 custom_tags = { pp_food_security_priority pp_staple_food_priority forest_capacity }
 icon = managed_forest_village
@@ -154,7 +154,7 @@ unique_production_methods = {
 }
 
 raw_modifier = {
-	local_population_capacity = 0.5
+	local_population_capacity = 0.625
 local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
 }
 

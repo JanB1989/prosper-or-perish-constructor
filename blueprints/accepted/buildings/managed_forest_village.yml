@@ -47,7 +47,7 @@ building:
     increase_per_level_cost = 0.19
     max_levels = forest_capacity_max_managed_forest_village
     pop_type = laborers
-    employment_size = 1
+    employment_size = 1.25
     category = village_category
     custom_tags = { pp_food_security_priority pp_staple_food_priority forest_capacity }
     icon = managed_forest_village

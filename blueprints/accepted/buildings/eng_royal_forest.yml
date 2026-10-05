@@ -30,7 +30,7 @@ building:
     pop_type = peasants
     forbidden_for_estates = yes
     category = government_category
-    employment_size = 1.0
+    employment_size = 1.25
     # a staple food maker (2026-10-04): staffed with the farms and fisheries (pp_employment_priority.txt)
     custom_tags = { pp_food_security_priority pp_staple_food_priority }
     rural_settlement = yes

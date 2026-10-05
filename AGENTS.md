@@ -244,6 +244,12 @@
   Their maintenance now always counts, so an over-budget AI closes its military buildings first and builds fewer new
   ones. Estimated extra cost on run 4f95382e: ~3.4 % of world income, worst for small countries holding a university
   or grand palace (open question: cheaper upkeep for those two and the library).
+- Library and University AI weight (2026-10-05, Jan): `ai_construct_weight` = 200 (University 150) x
+  `pp_promotion_signal` / (owner monthly income + 10). The signal is the open laborer jobs of the location, 0..1, read
+  from `modifier:local_pp_surplus_laborer_jobs`, one line in the engine's `surplus_jobs` static modifier (no script
+  keeps it), where at least 2k peasants stand idle (`unemployed_pops_of_pop_type_in_location`), else 0. Evaluated only
+  when the AI scores the candidate. Run 4f95382e: on in 230-680 locations, 86-91 % without a Library; 87-93 % of
+  locations have more laborers than laborer jobs and get nothing (more promotion would only add unemployed laborers).
 
 ## Production Method Icons (EU5 1.4)
 

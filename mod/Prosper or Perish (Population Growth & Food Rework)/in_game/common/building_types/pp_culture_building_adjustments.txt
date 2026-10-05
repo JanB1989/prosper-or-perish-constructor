@@ -23,6 +23,14 @@ REPLACE:library = {
 
 	build_time = cultural_building_time
 
+	# AI: open laborer jobs with idle peasants next to them (pp_promotion_signal, 0..1), like the other PP weights
+	# divided by the owner's income, so it outweighs the library's own score (~1 in a mid-size country) where it applies.
+	ai_construct_weight = {
+		value = pp_promotion_signal
+		multiply = 200
+		divide = { value = scope:owner.monthly_income_total add = 10 }
+	}
+
 	# No allow: vanilla 1.4's only allow forbids a library in Cordoba next to library_cordoba, a building of the
 	# unreleased DLC d009_across_the_pillars. Without the DLC the building does not exist, the link fails at load
 	# ("Failed to find 'library_cordoba' ... for link 'building_type'") even inside the has_dlc limit, and the gate can
@@ -70,6 +78,13 @@ REPLACE:university = {
 	expensive = yes
 
 	build_time = large_cultural_building_time
+
+	# AI: the Library's promotion term (pp_promotion_signal), a bit weaker; universities stand in towns and up only.
+	ai_construct_weight = {
+		value = pp_promotion_signal
+		multiply = 150
+		divide = { value = scope:owner.monthly_income_total add = 10 }
+	}
 
 	forbidden_for_estates = yes
 

@@ -1,0 +1,13 @@
+﻿# Prosper or Perish - promotion signal for the Library and University AI weights (2026-10-05).
+# Location scope: open laborer jobs in the location, 0..1 (modifier:local_pp_surplus_laborer_jobs, carried by the
+# engine's surplus_jobs static modifier), where at least 2k peasants stand idle to be promoted into them; else 0.
+# Read only when the AI scores a Library or University candidate (ai_construct_weight); nothing updates it by script.
+# Run 4f95382e: on in 230-680 locations (1448-1829), 86-91 % of them without a Library; 87-93 % of locations have more
+# laborers than laborer jobs, where more promotion would only add unemployed laborers.
+pp_promotion_signal = {
+	value = 0
+	if = {
+		limit = { "unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 2 }
+		value = modifier:local_pp_surplus_laborer_jobs
+	}
+}

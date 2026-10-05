@@ -84,6 +84,8 @@ TRY_INJECT:surplus_jobs = {
 	}
 	# with vanilla 0.1 and POP_JOB_SURPLUS_SCALE_CAP = 1: up to +2 migration attraction at 1k free jobs
 	local_migration_attraction = 1.9
+	# the promotion signal the Library and University AI weights read (pp_promotion_building_weight)
+	local_pp_surplus_laborer_jobs = 1
 }
 
 # I want to in general move more towards satisfaction mattering more and being more dependent on demand

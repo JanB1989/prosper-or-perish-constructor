@@ -1,0 +1,11 @@
+﻿# Prosper or Perish - promotion signal (2026-10-05).
+# local_pp_surplus_laborer_jobs: carried by the engine's surplus_jobs static modifier (1 per 1k open laborer jobs, capped
+# at POP_JOB_SURPLUS_SCALE_CAP = 1), so it reads 0..1 = open laborer jobs in the location (laborer jobs incl. RGO slots
+# minus laborers). No script keeps it: the engine applies surplus_jobs anyway. The AI weights of the Library and the
+# University read it (pp_promotion_building_weight).
+local_pp_surplus_laborer_jobs = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}

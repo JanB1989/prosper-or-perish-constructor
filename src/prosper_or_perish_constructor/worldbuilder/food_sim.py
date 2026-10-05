@@ -16,7 +16,7 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   tribal share of the pool's locations, scaled with the pool's tribal share), plus the tribesmen's own food
   (``tribesmen_food`` per 1,000, the pop type's ``pop_food_consumption``; negative = they feed the province). A
   province whose total consumption is zero or below gets no storage growth bonus (engine, verified 2026-09-25);
-  the settled consumption is further scaled by prosperity (+30 % x P, P a pool state fitted on the 1342-1437 run:
+  the settled consumption is further scaled by prosperity (+40 % x P, P a pool state fitted on the 1342-1437 run:
   +0.018 x stored years - 0.0025 starving - 0.075 x P per year), winter (the climates' maximum winter level for three
   months, Dec-Feb north / Jun-Aug south) and a promotion drift of +0.15 % a year;
 * tribesmen (engine, verified 2026-09-25): the location growth below also carries ``tribal_growth`` x tribal share for
@@ -155,12 +155,12 @@ class SimRules:
     abundant_peasant_food: float = -0.5     # abundant_free_land local_peasants_food_consumption
     available_peasant_food: float = -0.32   # available_free_land local_peasants_food_consumption
     abundant_food: float = 1.0              # abundant_free_land local_monthly_food (foraging)
-    # prosperity (0..1 per location; the mod's prosperity inject: every settled pop type +30 % food at 100 %), dynamics
+    # prosperity (0..1 per location; the mod's prosperity inject: every settled pop type +40 % food at 100 %), dynamics
     # fitted on the 100-year run 1342-1437 (saves r7bee, 249k location pairs): dP/yr = +0.0181 x stored years
     # - 0.0025 starving - 0.0747 x P, so ~0.24 at one stored year and ~0.49 at two. EU5 1.3 fit; in 1.4 the
     # Stored Food modifier (stored_food.py) gives the same prosperity per stored year again, so the fit stands (a 1.4
     # run can confirm it).
-    prosperity_consumption: float = 0.3
+    prosperity_consumption: float = 0.4     # 0.3 until 2026-10-05
     prosperity_per_year: float = 0.0181
     prosperity_starving: float = -0.0025
     prosperity_decay: float = 0.0747

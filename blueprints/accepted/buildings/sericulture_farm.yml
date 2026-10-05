@@ -66,8 +66,9 @@ building:
             category = building_maintenance
         }
         pp_sericulture_farm_cocoon_reeling = {
-            lumber = 0.098 # rearing trays, frames
-            tools = 0.033 # knives, reels
+            lumber = 0.12 # rearing trays, frames, reeling wheels and fuel for the cocoon basins
+            tools = 0.01 # knives, reel fittings
+            pottery = 0.036 # basins for boiling the cocoons
             manual_labor = 0.059
             produced = silk
             output = 0.089

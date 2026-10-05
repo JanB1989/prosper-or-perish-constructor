@@ -34,9 +34,10 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_glass_guild_glass_guild_maintenance = {
-            lumber = 0.19
+            lumber = 0.58 # furnace fuel and wood ash for potash flux
             sand = 0.94
-            tools = 0.36
+            tools = 0.07 # tools cut to a running cost (~10 %)
+            clay = 0.52 # clay crucibles (pots) for the melt
             manual_labor = 0.31
             produced = glass
             output = 0.75
@@ -44,10 +45,10 @@ building:
             category = guild_input
         }
         pp_glass_guild_metal_glass_guild_maintenance = {
-            lumber = 0.32
+            lumber = 0.77 # furnace fuel and wood ash for potash flux
             sand = 1.03
-            tools = 0.42
-            lead = 0.082
+            tools = 0.093 # tools cut to a running cost (~10 %)
+            lead = 0.22 # lead oxide flux for the lead glass
             manual_labor = 0.44
             produced = glass
             output = 1.0

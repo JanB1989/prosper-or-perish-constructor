@@ -51,12 +51,25 @@ unique_production_methods = {
     pp_cannon_foundry_cannon_foundry_maintenance = {
         icon_type = building_type
         icon = cannon_foundry
-        tools = 0.6
+        tools = 0.24 # tools cut to a running cost (~15 %, arms making)
         copper = 0.74
         tin = 0.37
+        coal = 0.58 # fuel for the reverberatory furnace
         manual_labor = 0.38
         produced = cannons
         output = 1.35
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+    pp_cannon_foundry_legacy_cannon_workshop_bronze_maintenance = {
+        icon_type = goods
+        icon = copper
+        copper = 0.91
+        tin = 0.23
+        tools = 0.11
+        manual_labor = 0.41
+        produced = cannons
+        output = 1.01
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }

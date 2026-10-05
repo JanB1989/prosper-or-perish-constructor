@@ -30,9 +30,9 @@ building:
     build_time = workshop_build_time
     unique_production_methods = {
         pp_furniture_workshop_furniture_workshop_maintenance = {
-            lumber = 1.06
+            lumber = 1.13 # finer timber and veneers, more offcuts
             dyes = 0.13
-            tools = 0.13
+            tools = 0.095 # tools cut to a running cost (~10 %)
             manual_labor = 0.28
             produced = furniture
             output = 1.1

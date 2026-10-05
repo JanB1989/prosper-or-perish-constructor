@@ -95,8 +95,8 @@ building:
             category = building_maintenance
         }
         pp_legume_rotations_hedgerow_hives = {
-            tools = 0.036
-            lumber = 0.089
+            tools = 0.014
+            lumber = 0.13
             fiber_crops = 0.071
             pottery = 0.045
             manual_labor = 0.055
@@ -111,22 +111,22 @@ building:
             category = building_maintenance
         }
         pp_legume_rotations_pulse_rotation = {
-            tools = 0.11
+            tools = 0.03
             horses = 0.09
-            livestock = 0.061
-            cloth = 0.024
-            manual_labor = 0.11
+            livestock = 0.19
+            cloth = 0.051
+            manual_labor = 0.093
             produced = legumes
             output = 1.05
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_legume_rotations_vetch_lentil = {
-            tools = 0.1
+            tools = 0.03
             horses = 0.085
-            livestock = 0.072
-            fiber_crops = 0.054
-            manual_labor = 0.11
+            livestock = 0.17
+            fiber_crops = 0.1
+            manual_labor = 0.1
             produced = legumes
             output = 1.09
             debug_max_profit = 0

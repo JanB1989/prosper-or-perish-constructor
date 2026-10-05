@@ -115,8 +115,10 @@ building:
         pp_water_sawmill_livestock_tools = {
             produced = lumber
             output = 1.314
-            tools = 0.41 # saw frame, gearing
-            livestock = 0.23 # ox log hauling
+            tools = 0.055 # saw blades, gearing (2026-10-05: tools an accelerant, was 0.41)
+            livestock = 0.4 # ox log hauling, more yoked teams (was 0.23)
+            fiber_crops = 0.2 # hauling ropes, rafting lines
+            tar = 0.25 # gearing and slide grease, sealing the wheel and flume
             manual_labor = 0.21
             debug_max_profit = 0
             category = building_maintenance
@@ -133,8 +135,10 @@ building:
         pp_water_sawmill_horse_tools = {
             produced = lumber
             output = 1.400
-            tools = 0.42 # saw frame, gearing
+            tools = 0.055 # saw blades, gearing (2026-10-05: tools an accelerant, was 0.42)
             horses = 0.12 # fast log hauling
+            leather = 0.2 # harness and traces for the teams
+            tar = 0.3 # gearing and slide grease, sealing the wheel and flume
             manual_labor = 0.22
             debug_max_profit = 0
             category = building_maintenance

@@ -71,18 +71,20 @@ building:
             category = building_maintenance
         }
         pp_lead_mine_cupola_silver = {
-            lumber = 0.028
-            tools = 0.019
+            lumber = 0.037 # props, cupellation hearths
+            tools = 0.006 # picks, tongs
             lead = 0.019
+            coal = 0.013 # cupellation fuel
             manual_labor = 0.009
             produced = silver
             output = 0.03
             category = building_maintenance
         }
         pp_lead_mine_cupola_gold = {
-            lumber = 0.028
-            tools = 0.019
+            lumber = 0.037 # props, parting hearths
+            tools = 0.006 # picks, tongs
             lead = 0.019
+            coal = 0.013 # parting and cupellation fuel
             manual_labor = 0.009
             produced = goods_gold
             output = 0.027
@@ -94,9 +96,10 @@ building:
             category = building_maintenance
         }
         pp_lead_mine_cupola_lead = {
-            lumber = 0.21
-            tools = 0.5
-            beeswax = 0.057
+            lumber = 0.41 # shaft timbering, furnace frames
+            tools = 0.1 # picks, rabbles, hammers
+            beeswax = 0.08 # mine candles
+            coal = 0.45 # cupola furnace coal
             manual_labor = 0.12
             produced = lead
             output = 1.22

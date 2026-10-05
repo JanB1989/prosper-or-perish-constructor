@@ -89,8 +89,9 @@ building:
             category = building_maintenance
         }
         pp_millet_farm_broadcast_hoe = {
-            tools = 0.014
-            manual_labor = 0.036
+            tools = 0.002
+            lumber = 0.021
+            manual_labor = 0.038
             produced = millet
             output = 0.15
             debug_max_profit = 0
@@ -98,8 +99,9 @@ building:
         }
         pp_millet_farm_millet_pulses = {
             legumes = 0.041
-            tools = 0.016
+            tools = 0.003
             livestock = 0.011
+            lumber = 0.025
             manual_labor = 0.026
             produced = millet
             output = 0.166

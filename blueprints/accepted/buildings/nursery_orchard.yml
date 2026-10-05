@@ -107,8 +107,8 @@ building:
             produced = fruit
             output = 0.632
             fiber_crops = 0.102 # osier baskets, graft ties, harvest mats
-            pottery = 0.054 # earthen nursery pots and storage crocks
-            tools = 0.032 # pruning and grafting knives
+            pottery = 0.106 # earthen nursery pots and storage crocks (more pots: seedlings raised in pots)
+            tools = 0.016 # pruning and grafting knives (an accelerant, a small share)
             furniture = 0.024 # sorting racks and apple-loft boards
             manual_labor = 0.07
             debug_max_profit = 0

@@ -71,8 +71,8 @@ building:
             pp_sheep_farm_maintenance = {
                 produced = wool
                 output = 0.06
-                lumber = 0.041
-                tools = 0.008
+                lumber = 0.048 # hurdles and pens
+                tools = 0.004 # shears
                 manual_labor = 0.022
                 category = building_maintenance
             }

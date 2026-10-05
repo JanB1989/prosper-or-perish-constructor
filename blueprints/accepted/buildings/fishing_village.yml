@@ -137,7 +137,9 @@ building:
                 produced = fish
                 output = 0.279
                 salt = 0.012 # curing brine
-                tools = 0.052 # hooks, knives
+                tools = 0.009 # hooks, knives
+                lumber = 0.04 # boat timber and oars
+                fiber_crops = 0.035 # nets and lines
                 manual_labor = 0.051
                 debug_max_profit = 0
                 category = building_maintenance

@@ -12,6 +12,7 @@ building:
   - name: slot_0
     methods:
     - pp_pottery_mill_pottery_mill_maintenance
+    - pp_pottery_mill_legacy_pottery_w_maintenance
   - name: slot_1
     methods:
     - pp_pottery_mill_market_sales
@@ -34,10 +35,23 @@ building:
         pp_pottery_mill_pottery_mill_maintenance = {
             clay = 3.6
             lumber = 0.32
-            tools = 0.16
+            tools = 0.092 # tools cut to a running cost (~10 %)
+            coal = 0.11 # coal-fired bottle kilns
             manual_labor = 0.12
             produced = pottery
             output = 3.25
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+        pp_pottery_mill_legacy_pottery_w_maintenance = {
+            icon_type = building_type
+            icon = pottery_workshop
+            clay = 1.81
+            lumber = 0.26
+            tools = 0.051
+            manual_labor = 0.16
+            produced = pottery
+            output = 1.83
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -62,6 +76,8 @@ localization:
     pp_pottery_mill_market_sales: Market Sales
     pp_pottery_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     pottery_mill_slot_1: Market
+    pp_pottery_mill_legacy_pottery_w_maintenance: "$pottery_w_maintenance$ (Old Ways)"
+    pp_pottery_mill_legacy_pottery_w_maintenance_desc: "An older way of working, kept from the $pottery_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
@@ -73,3 +89,8 @@ evaluation:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
         input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
         output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+    pp_pottery_mill_legacy_pottery_w_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."

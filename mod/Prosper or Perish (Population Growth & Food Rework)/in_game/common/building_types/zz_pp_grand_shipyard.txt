@@ -26,10 +26,10 @@ REPLACE:grand_shipyard = {
         pp_grand_shipyard_maintenance = {
             icon_type = building_type
             icon = grand_shipyard
-            tar = 1.6
+            tar = 2.0 # caulking and paying the hulls, tarred rigging, was 1.6
             naval_supplies = 0.8
-            tools = 1.6
-            lumber = 1.6
+            tools = 1.04 # 2026-10-05: tools an accelerant, was 1.6
+            lumber = 2.2 # timber, spars and planking for repairs, was 1.6
             victuals = 3.2
             category = building_maintenance
         }

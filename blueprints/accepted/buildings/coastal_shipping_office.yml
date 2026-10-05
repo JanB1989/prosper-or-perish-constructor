@@ -58,12 +58,12 @@ building:
     unique_production_methods = {
       pp_coastal_shipping_office_maintenance = {
         naval_supplies = 0.23
-        tar = 0.095
+        tar = 0.13 # caulking the coasters (was 0.095)
         lumber = 0.19
-        tools = 0.11
+        tools = 0.09 # 2026-10-05: tools an accelerant, was 0.11
         victuals = 0.23
         paper = 0.047
-        manual_labor = 0.65
+        manual_labor = 0.64
         produced = logistics
         output = 4.05
         category = building_maintenance
@@ -80,10 +80,10 @@ building:
         category = building_maintenance
       }
       pp_coastal_shipping_office_rigged_coasters = {
-        naval_supplies = 0.33
-        tar = 0.055
+        naval_supplies = 0.38 # sails and rigging (was 0.33)
+        tar = 0.093 # caulking the coasters, tarred rigging (was 0.055)
         lumber = 0.092
-        tools = 0.16
+        tools = 0.09 # 2026-10-05: tools an accelerant, was 0.16
         victuals = 0.18
         paper = 0.037
         manual_labor = 0.61

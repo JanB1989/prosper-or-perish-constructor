@@ -77,10 +77,10 @@ building:
         pp_enclosed_sheep_walks_improved_flocks = {
             produced = wool
             output = 1.44
-            tools = 0.24
-            cloth = 0.13
+            tools = 0.058 # shears, crooks: a small running cost
+            cloth = 0.21 # woolsacks for packing the clip
             leather = 0.12
-            lumber = 0.13
+            lumber = 0.33 # hurdles, fold gates, field-wall stiles
             manual_labor = 0.14
             debug_max_profit = 0
             category = building_maintenance

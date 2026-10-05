@@ -96,11 +96,11 @@ building:
             category = building_maintenance
         }
         pp_potato_model_farm_drilled_ridges = {
-            tools = 0.15
-            livestock = 0.19
-            clay = 0.25
+            tools = 0.06
+            livestock = 0.31
+            clay = 0.47
             paper = 0.19
-            manual_labor = 0.097
+            manual_labor = 0.1
             produced = potato
             output = 1.55
             debug_max_profit = 0

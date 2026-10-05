@@ -91,7 +91,9 @@ building:
         pp_shoen_shoen_quarries_maintenance = {
             produced = stone
             output = 0.5
-            tools = 0.12
+            tools = 0.021 # chisels and wedges: a running cost, not the bulk
+            lumber = 0.1 # sledges, rollers and levers
+            sand = 0.3 # sawing grit
             manual_labor = 0.075
             debug_max_profit = rural_profit_margin
             category = building_maintenance
@@ -100,7 +102,8 @@ building:
             produced = masonry
             output = 0.8
             lumber = 0.25
-            tools = 0.057
+            tools = 0.035 # dressing chisels
+            stone = 0.07 # rough stone to dress
             manual_labor = 0.14
             debug_max_profit = rural_profit_margin
             category = building_maintenance
@@ -108,8 +111,9 @@ building:
         pp_shoen_shoen_fiber_crops_farm_maintenance = {
             produced = fiber_crops
             output = 0.5
-            lumber = 0.22
-            tools = 0.12
+            lumber = 0.32 # wooden hoes, retting frames, field stakes
+            tools = 0.03 # sickles and hoe blades
+            livestock = 0.08 # draught oxen and manure
             manual_labor = 0.19
             debug_max_profit = rural_profit_margin
             category = building_maintenance
@@ -117,9 +121,10 @@ building:
         pp_shoen_shoen_lumbermills_maintenance = {
             produced = lumber
             output = 0.6
-            tools = 0.16
-            fiber_crops = 0.17
-            manual_labor = 0.16
+            tools = 0.03 # axes and saws, kept and mended
+            fiber_crops = 0.26 # ropes for hauling and log rafts
+            livestock = 0.15 # haulage oxen
+            manual_labor = 0.18 # labour pass fixed point (class share 18 %)
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }
@@ -127,7 +132,9 @@ building:
             produced = iron
             output = 0.3
             sand = 0.57
-            tools = 0.17
+            tools = 0.047 # tongs and hammers
+            clay = 0.3 # tatara furnace walls, rebuilt for every smelt
+            lumber = 0.14 # charcoal fuel
             manual_labor = 0.19
             debug_max_profit = rural_profit_margin
             category = building_maintenance

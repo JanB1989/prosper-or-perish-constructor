@@ -68,8 +68,8 @@ building:
         pp_stud_farm_approved_stallions = {
             wheat = 0.493 # grain and stable feed
             legumes = 0.264 # hay and fodder leys
-            leather = 0.094 # tack and harness
-            tools = 0.094 # farrier and stable tools
+            leather = 0.146 # tack, harness, halters and breaking gear (more, for the young stock)
+            tools = 0.046 # farrier and stable tools (a small running cost)
             manual_labor = 0.145
             produced = horses
             output = 0.527

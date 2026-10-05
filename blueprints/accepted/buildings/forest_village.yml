@@ -124,8 +124,9 @@ building:
             pp_fur_trapping = {
                 produced = fur
                 output = 0.064
-                tools = 0.011 # traps, knives
+                tools = 0.003 # skinning knives
                 weaponry = 0.017 # hunting gear
+                fiber_crops = 0.013 # snares and cord for deadfall traps
                 manual_labor = 0.019
                 debug_max_profit = 0
                 category = building_maintenance

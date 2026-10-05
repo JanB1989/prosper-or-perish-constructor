@@ -90,11 +90,11 @@ building:
             category = building_maintenance
         }
         pp_legume_model_farm_drilled_rows = {
-            tools = 0.14
+            tools = 0.06
             horses = 0.13
-            livestock = 0.08
-            paper = 0.15
-            manual_labor = 0.11
+            livestock = 0.22
+            paper = 0.18
+            manual_labor = 0.1
             produced = legumes
             output = 1.51
             debug_max_profit = 0

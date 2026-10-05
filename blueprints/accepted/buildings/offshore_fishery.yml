@@ -103,9 +103,9 @@ building:
             category = building_maintenance
         }
         pp_offshore_fishery_steam_trawlers = {
-            naval_supplies = 0.27 # trawl gear
-            coal = 0.257 # steam fuel
-            tools = 0.189 # winches, repairs
+            naval_supplies = 0.34 # trawl gear, warps, nets and canvas (more, worn out on the seabed)
+            coal = 0.35 # steam fuel for engine and winches
+            tools = 0.066 # winch and engine repairs
             manual_labor = 0.216
             produced = fish
             output = 2.43

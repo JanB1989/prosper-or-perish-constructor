@@ -91,8 +91,8 @@ building:
             category = building_maintenance
         }
         pp_pomological_orchard_hedgerow_hives = {
-            tools = 0.052
-            lumber = 0.129
+            tools = 0.02 # hive knives only (matches the crop farm hedgerow hives, cut 2026-10-05)
+            lumber = 0.19 # wooden hive boxes and stands
             fiber_crops = 0.103
             pottery = 0.065
             manual_labor = 0.08
@@ -109,9 +109,10 @@ building:
         pp_pomological_orchard_grafted_rows = {
             produced = fruit
             output = 3.04
-            tools = 0.507 # pruning tools, grafting knives
-            lumber = 0.464 # trellises, crates, stakes
+            tools = 0.097 # pruning hooks, grafting knives: an accelerant, not the bulk of the cost
+            lumber = 1.0 # trellises, espalier frames, ladders, crates, stakes
             paper = 0.217 # cultivar ledgers
+            beeswax = 0.2 # grafting wax
             manual_labor = 0.246
             debug_max_profit = 0
             category = building_maintenance

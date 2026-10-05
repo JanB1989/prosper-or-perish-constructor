@@ -35,10 +35,10 @@ building:
 
         unique_production_methods = {
             pp_dry_dock_maintenance = {
-                tar = 0.4
+                tar = 0.5 # caulking and paying the hulls, tarred rigging, was 0.4
                 naval_supplies = 0.2
-                tools = 0.4
-                lumber = 0.4
+                tools = 0.26 # 2026-10-05: tools an accelerant, was 0.4
+                lumber = 0.55 # timber, spars and planking for repairs, was 0.4
                 victuals = 0.8
                 category = building_maintenance
             }

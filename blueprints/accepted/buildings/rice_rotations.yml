@@ -97,21 +97,21 @@ building:
             category = building_maintenance
         }
         pp_rice_rotations_double_cropping = {
-            tools = 0.1
-            livestock = 0.14
-            clay = 0.27
+            tools = 0.03
+            livestock = 0.22
+            clay = 0.5
             lumber = 0.072
-            manual_labor = 0.1
+            manual_labor = 0.097
             produced = rice
             output = 1.04
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_rice_rotations_chain_pump = {
-            tools = 0.096
+            tools = 0.03
             livestock = 0.12
             clay = 0.22
-            lumber = 0.11
+            lumber = 0.23
             manual_labor = 0.1
             produced = rice
             output = 1.08

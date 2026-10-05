@@ -82,8 +82,9 @@ building:
             produced = fruit
             output = 0.8
             lumber = 0.17
-            clay = 0.09
-            tools = 0.082
+            clay = 0.19 # channel and foggara lining (more upkeep of the earthworks)
+            tools = 0.023 # hoes and palm knives: a small running cost
+            stone = 0.14 # sluice stones and channel facing
             manual_labor = 0.14
             debug_max_profit = rural_profit_margin
             category = building_maintenance

@@ -90,11 +90,11 @@ building:
             category = building_maintenance
         }
         pp_millet_model_farm_drilled_rows = {
-            tools = 0.15
+            tools = 0.06
             horses = 0.12
-            livestock = 0.11
-            paper = 0.12
-            manual_labor = 0.12
+            livestock = 0.25
+            paper = 0.17
+            manual_labor = 0.098
             produced = millet
             output = 1.52
             debug_max_profit = 0

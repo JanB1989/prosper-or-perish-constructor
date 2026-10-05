@@ -95,7 +95,8 @@ building:
             category = building_maintenance
         }
         pp_maize_farm_hill_planting = {
-            tools = 0.004
+            tools = 0.001
+            lumber = 0.005
             manual_labor = 0.01
             produced = maize
             output = 0.1

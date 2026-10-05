@@ -32,8 +32,8 @@ building:
     unique_production_methods = {
         pp_winery_honey_winery_maintenance = {
             beeswax = 0.54
-            lumber = 0.18
-            tools = 0.09
+            lumber = 0.24 # casks and vats
+            tools = 0.06 # tools cut to a running cost (~10 %)
             manual_labor = 0.27
             produced = wine
             output = 0.97
@@ -42,8 +42,8 @@ building:
         }
         pp_winery_fruit_winery_maintenance = {
             fruit = 1.12
-            lumber = 0.15
-            tools = 0.089
+            lumber = 0.2 # casks, vats and press timber
+            tools = 0.06 # tools cut to a running cost (~10 %)
             manual_labor = 0.28
             produced = wine
             output = 1.0
@@ -52,8 +52,8 @@ building:
         }
         pp_winery_rice_winery_maintenance = {
             rice = 1.13
-            lumber = 0.15
-            tools = 0.09
+            lumber = 0.21 # casks, vats and steaming fuel
+            tools = 0.06 # tools cut to a running cost (~10 %)
             manual_labor = 0.27
             produced = wine
             output = 1.0

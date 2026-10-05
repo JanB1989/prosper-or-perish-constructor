@@ -72,13 +72,13 @@ unique_production_methods = {
         icon_type = building_type
         icon = rice_farmstead
         livestock = 0.099
-        clay = 0.24
+        clay = 0.26
         lumber = 0.049
-        tools = 0.015
-        manual_labor = 0.066
+        tools = 0.013
+        manual_labor = 0.064
         produced = rice
         output = 0.736
-        debug_max_profit = 0.004
+        debug_max_profit = 0.013
         category = building_maintenance
     }
 }

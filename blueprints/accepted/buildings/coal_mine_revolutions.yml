@@ -70,8 +70,8 @@ building:
             category = building_maintenance
         }
         pp_coal_mine_revolutions_fireclay = {
-            lumber = 0.038
-            tools = 0.019
+            lumber = 0.062 # props, weathering sheds
+            tools = 0.006 # picks, shovels
             manual_labor = 0.007
             produced = clay
             output = 0.302
@@ -83,9 +83,10 @@ building:
             category = building_maintenance
         }
         pp_coal_mine_revolutions_coal = {
-            lumber = 0.48
-            tools = 0.59
-            beeswax = 0.12
+            lumber = 0.75 # props, headframes, tubs
+            tools = 0.14 # picks, engine fittings
+            beeswax = 0.16 # candles, engine grease
+            tar = 0.45 # tarred winding ropes, pump packing (a pit does not buy its own coal)
             manual_labor = 0.15
             produced = coal
             output = 2.25

@@ -68,11 +68,12 @@ unique_production_methods = {
     pp_olive_farm_pruned_grove = {
         icon_type = building_type
         icon = olive_farm
-        tools = 0.004
+        tools = 0.001
+        lumber = 0.005
         manual_labor = 0.01
         produced = olives
         output = 0.1
-        debug_max_profit = 0.587
+        debug_max_profit = 0.613
         category = building_maintenance
     }
     pp_olive_farm_terraced_grove = {

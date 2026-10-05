@@ -81,7 +81,8 @@ building:
         livestock = 0.1
         victuals = 0.3
         lumber = 0.2
-        tools = 0.12
+        tools = 0.085 # 2026-10-05: tools an accelerant, was 0.12
+        fur = 0.057 # sledge robes and drivers' winter furs
         manual_labor = 0.61
         produced = logistics
         output = 4.05

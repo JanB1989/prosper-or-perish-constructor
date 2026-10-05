@@ -28,10 +28,10 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_hand_cannon_guild_hand_cannon_guild_maintenance = {
-            tools = 0.051
+            tools = 0.038 # tools cut to a running cost (~15 %, arms making)
             saltpeter = 0.1
             copper = 0.1
-            tin = 0.021
+            tin = 0.042 # more tin for a harder gunmetal bronze
             manual_labor = 0.13
             produced = firearms
             output = 0.3

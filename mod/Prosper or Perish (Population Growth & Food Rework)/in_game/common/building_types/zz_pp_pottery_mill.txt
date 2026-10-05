@@ -19,10 +19,23 @@ unique_production_methods = {
         icon = pottery_mill
         clay = 3.6
         lumber = 0.32
-        tools = 0.16
+        tools = 0.092 # tools cut to a running cost (~10 %)
+        coal = 0.11 # coal-fired bottle kilns
         manual_labor = 0.12
         produced = pottery
         output = 3.25
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_pottery_mill_legacy_pottery_w_maintenance = {
+        icon_type = building_type
+        icon = pottery_workshop
+        clay = 1.81
+        lumber = 0.26
+        tools = 0.051
+        manual_labor = 0.16
+        produced = pottery
+        output = 1.83
         debug_max_profit = mills_profit_margin
         category = mills_input
     }

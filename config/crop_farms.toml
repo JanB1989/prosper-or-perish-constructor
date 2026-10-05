@@ -274,7 +274,7 @@ labour_class = ""
 key = "hedgerow_hives"
 name = "Hedgerow Hives"
 desc = "Cottage hives line hedges and orchard edges, adding wax from the same improved field boundaries."
-inputs = { tools = 0.036, lumber = 0.089, fiber_crops = 0.071, pottery = 0.045 }
+inputs = { tools = 0.014, lumber = 0.13, fiber_crops = 0.071, pottery = 0.045 }  # tools cut 2026-10-05: wooden hives
 manual_labor = 0.055
 output = 0.31
 labour_class = ""
@@ -318,7 +318,7 @@ tier = 0
 key = "ox_ard"
 name = "Ox-drawn Ard"
 desc = "Oxen draw a light ard that scratches the soil open for sowing."
-inputs = { livestock = 0.045, tools = 0.017 }
+inputs = { livestock = 0.045, lumber = 0.026, tools = 0.003 }  # tools cut 2026-10-05: wooden ard and yoke, iron share only
 output = 0.150
 labour_class = ""
 advance = ""
@@ -328,7 +328,7 @@ tier = 0
 key = "heavy_plough"
 name = "Heavy Plough Team"
 desc = "A horse team pulls a mouldboard plough through heavy soils."
-inputs = { horses = 0.020, tools = 0.023 }
+inputs = { horses = 0.020, lumber = 0.035, tools = 0.004 }  # tools cut 2026-10-05: timber plough frame and mouldboard
 output = 0.166
 labour_class = ""
 advance = "pp_heavy_plough"
@@ -338,7 +338,7 @@ tier = 1
 key = "manured_three_field"
 name = "Manured Three-Field"
 desc = "Winter corn, spring corn and a manured fallow follow each other on the fields."
-inputs = { horses = 0.05, livestock = 0.10, tools = 0.02, lumber = 0.026 }
+inputs = { horses = 0.05, livestock = 0.115, tools = 0.013, lumber = 0.026 }  # tools cut 2026-10-05: more stock for manure
 output = 0.64
 labour_class = ""
 advance = ""
@@ -348,7 +348,7 @@ tier = 2
 key = "clover_ley"
 name = "Clover Ley Rotation"
 desc = "Clover and pulse leys replace the bare fallow."
-inputs = { tools = 0.18, horses = 0.16, legumes = 0.27 }
+inputs = { tools = 0.05, horses = 0.16, legumes = 0.27, lumber = 0.24 }  # tools cut 2026-10-05: hurdles, gates and field carts
 output = 1.54
 labour_class = ""
 advance = ""
@@ -358,7 +358,7 @@ tier = 2
 key = "marled_fields"
 name = "Marled Fields"
 desc = "Marl and clay dressings sweeten sour fields between the leys."
-inputs = { tools = 0.17, horses = 0.15, legumes = 0.20, clay = 0.26 }
+inputs = { tools = 0.05, horses = 0.15, legumes = 0.20, clay = 1.04 }  # tools cut 2026-10-05: more marl dressing
 output = 1.60
 labour_class = ""
 advance = "pp_improved_rotations"
@@ -368,7 +368,7 @@ tier = 3
 key = "seed_drill"
 name = "Seed Drill and Horse-Hoe"
 desc = "Seed drills sow in rows and horse-hoes keep the rows clean."
-inputs = { tools = 0.24, horses = 0.20, legumes = 0.25, paper = 0.13 }
+inputs = { tools = 0.09, horses = 0.20, legumes = 0.25, lumber = 0.43 }  # tools cut 2026-10-05: drills and horse-hoes are wooden machines (estate books folded in)
 output = 2.12
 labour_class = ""
 advance = ""
@@ -417,7 +417,7 @@ tier = 0
 key = "dryland_rice"
 name = "Dryland Rice"
 desc = "Rice is sown on rain-fed ground without standing water."
-inputs = { livestock = 0.010, tools = 0.004 }
+inputs = { livestock = 0.016, tools = 0.001 }  # tools cut 2026-10-05: buffalo work
 output = 0.110
 labour_class = ""
 advance = ""
@@ -437,7 +437,7 @@ tier = 1
 key = "bunded_paddies"
 name = "Bunded Paddies and Sluices"
 desc = "Earth bunds and sluice gates hold water on the fields."
-inputs = { livestock = 0.10, clay = 0.24, lumber = 0.05, tools = 0.016 }
+inputs = { livestock = 0.10, clay = 0.26, lumber = 0.05, tools = 0.013 }  # tools cut 2026-10-05: clay bunds
 output = 0.64
 labour_class = ""
 advance = ""
@@ -447,7 +447,7 @@ tier = 2
 key = "double_cropping"
 name = "Double Cropping"
 desc = "An early and a late rice crop follow each other on the same paddy."
-inputs = { tools = 0.17, livestock = 0.23, clay = 0.45, lumber = 0.12 }
+inputs = { tools = 0.05, livestock = 0.36, clay = 0.84, lumber = 0.12 }  # tools cut 2026-10-05: buffalo, bunds
 output = 1.54
 labour_class = ""
 advance = ""
@@ -457,7 +457,7 @@ tier = 2
 key = "chain_pump"
 name = "Chain-Pump Paddies"
 desc = "Treadle chain pumps lift water onto the higher paddies."
-inputs = { tools = 0.16, livestock = 0.20, clay = 0.36, lumber = 0.19 }
+inputs = { tools = 0.05, livestock = 0.20, clay = 0.36, lumber = 0.39 }  # tools cut 2026-10-05: wooden chain pumps
 output = 1.60
 labour_class = ""
 advance = "pp_water_lifting"
@@ -467,7 +467,7 @@ tier = 3
 key = "surveyed_paddies"
 name = "Surveyed Paddy Estate"
 desc = "Levelled paddies and planned channels are run as one estate."
-inputs = { tools = 0.22, livestock = 0.28, clay = 0.60, lumber = 0.26 }
+inputs = { tools = 0.09, livestock = 0.28, clay = 1.02, lumber = 0.38 }  # tools cut 2026-10-05: levelled bunds, sluices
 output = 2.13
 labour_class = ""
 advance = ""
@@ -499,7 +499,7 @@ tier = 0
 key = "broadcast_hoe"
 name = "Broadcast and Hoe"
 desc = "Seed is broadcast by hand and the weeds are kept down with the hoe."
-inputs = { tools = 0.025 }
+inputs = { tools = 0.004, lumber = 0.039 }  # tools cut 2026-10-05: wooden hoes and digging sticks
 output = 0.150
 labour_class = "hand_work"
 advance = ""
@@ -509,7 +509,7 @@ tier = 0
 key = "millet_pulses"
 name = "Millet with Pulses"
 desc = "Pulses grow between the millet and feed the soil."
-inputs = { legumes = 0.05, tools = 0.02, livestock = 0.014 }
+inputs = { legumes = 0.05, tools = 0.004, livestock = 0.014, lumber = 0.03 }  # tools cut 2026-10-05: wooden hoes
 output = 0.166
 labour_class = ""
 advance = ""
@@ -519,7 +519,7 @@ tier = 1
 key = "manured_hill_plots"
 name = "Manured Hill Plots"
 desc = "Manured plots and sealed seed jars steady the harvest."
-inputs = { livestock = 0.10, fiber_crops = 0.06, pottery = 0.04, tools = 0.019 }
+inputs = { livestock = 0.117, fiber_crops = 0.06, pottery = 0.04, tools = 0.011 }  # tools cut 2026-10-05: manure stock
 output = 0.60
 labour_class = ""
 advance = ""
@@ -529,7 +529,7 @@ tier = 2
 key = "millet_fallow"
 name = "Millet-Fallow Rotation"
 desc = "Millet alternates with grazed and manured fallow."
-inputs = { tools = 0.18, horses = 0.14, livestock = 0.12, fiber_crops = 0.075 }
+inputs = { tools = 0.05, horses = 0.14, livestock = 0.29, fiber_crops = 0.16 }  # tools cut 2026-10-05: fallow grazing, fodder
 output = 1.54
 labour_class = ""
 advance = ""
@@ -539,7 +539,7 @@ tier = 2
 key = "sorghum_cowpea"
 name = "Sorghum and Cowpea Rotation"
 desc = "Sorghum and cowpeas take turns on the same fields."
-inputs = { tools = 0.17, horses = 0.12, legumes = 0.27, pottery = 0.15 }
+inputs = { tools = 0.05, horses = 0.12, legumes = 0.27, pottery = 0.54 }  # tools cut 2026-10-05: seed and water jars
 output = 1.60
 labour_class = ""
 advance = "pp_improved_rotations"
@@ -549,7 +549,7 @@ tier = 3
 key = "drilled_rows"
 name = "Drilled Millet Rows"
 desc = "Millet is drilled in rows and worked with horse-hoes."
-inputs = { tools = 0.23, horses = 0.18, livestock = 0.16, paper = 0.18 }
+inputs = { tools = 0.09, horses = 0.18, livestock = 0.37, paper = 0.25 }  # tools cut 2026-10-05: draught oxen, estate books
 output = 2.10
 labour_class = ""
 advance = ""
@@ -581,7 +581,7 @@ tier = 0
 key = "hill_planting"
 name = "Hill Planting"
 desc = "Maize is planted by hand in hoed hills."
-inputs = { tools = 0.007 }
+inputs = { tools = 0.002, lumber = 0.009 }  # tools cut 2026-10-05: digging sticks
 output = 0.100
 labour_class = "hand_work"
 advance = ""
@@ -611,7 +611,7 @@ tier = 2
 key = "ploughed_rows"
 name = "Ploughed Maize Rows"
 desc = "Draught animals plough straight rows for the maize."
-inputs = { tools = 0.19, livestock = 0.20, lumber = 0.11, fiber_crops = 0.11 }
+inputs = { tools = 0.05, livestock = 0.38, lumber = 0.21, fiber_crops = 0.11 }  # tools cut 2026-10-05: ox ploughs, cribs
 output = 1.54
 labour_class = ""
 advance = ""
@@ -621,7 +621,7 @@ tier = 2
 key = "maize_bean_rotation"
 name = "Maize-Bean Rotation"
 desc = "Maize and beans take turns on the same fields."
-inputs = { tools = 0.17, livestock = 0.18, legumes = 0.30, lumber = 0.12 }
+inputs = { tools = 0.05, livestock = 0.28, legumes = 0.30, lumber = 0.25 }  # tools cut 2026-10-05: bean poles, cribs
 output = 1.60
 labour_class = ""
 advance = "pp_improved_rotations"
@@ -631,7 +631,7 @@ tier = 3
 key = "horse_hoed"
 name = "Horse-Hoed Maize"
 desc = "Horse-hoes clean the rows between the maize."
-inputs = { tools = 0.22, livestock = 0.28, lumber = 0.18, paper = 0.22 }
+inputs = { tools = 0.09, livestock = 0.45, lumber = 0.28, paper = 0.22 }  # tools cut 2026-10-05: draught stock, wooden hoes
 output = 2.10
 labour_class = ""
 advance = ""
@@ -664,7 +664,7 @@ tier = 0
 key = "pease_bean_field"
 name = "Pease and Bean Field"
 desc = "Peas and beans are sown in the open field."
-inputs = { tools = 0.02, livestock = 0.038 }
+inputs = { tools = 0.003, livestock = 0.038, lumber = 0.032 }  # tools cut 2026-10-05: bean poles
 output = 0.150
 labour_class = ""
 advance = ""
@@ -674,7 +674,7 @@ tier = 0
 key = "stubble_sowing"
 name = "Sown on Stubble"
 desc = "A horse team sows pulses into the grain stubble."
-inputs = { horses = 0.020, tools = 0.023 }
+inputs = { horses = 0.020, lumber = 0.035, tools = 0.004 }  # tools cut 2026-10-05: timber plough
 output = 0.166
 labour_class = ""
 advance = "pp_heavy_plough"
@@ -694,7 +694,7 @@ tier = 2
 key = "pulse_rotation"
 name = "Pulse Rotation"
 desc = "Pulses take their turn in the field rotation."
-inputs = { tools = 0.19, horses = 0.15, livestock = 0.10, cloth = 0.04 }
+inputs = { tools = 0.05, horses = 0.15, livestock = 0.31, cloth = 0.085 }  # tools cut 2026-10-05: stock on the stubble, sacks
 output = 1.56
 labour_class = ""
 advance = ""
@@ -704,7 +704,7 @@ tier = 2
 key = "vetch_lentil"
 name = "Vetch and Lentil Fodder"
 desc = "Vetch and lentils are grown for fodder as well as food."
-inputs = { tools = 0.17, horses = 0.14, livestock = 0.12, fiber_crops = 0.09 }
+inputs = { tools = 0.05, horses = 0.14, livestock = 0.28, fiber_crops = 0.17 }  # tools cut 2026-10-05: grazing, sacks
 output = 1.62
 labour_class = ""
 advance = "pp_improved_rotations"
@@ -714,7 +714,7 @@ tier = 3
 key = "drilled_rows"
 name = "Drilled Pulse Rows"
 desc = "Pulses are drilled in rows and their seed is kept in ledgers."
-inputs = { tools = 0.21, horses = 0.19, livestock = 0.12, paper = 0.23 }
+inputs = { tools = 0.09, horses = 0.19, livestock = 0.33, paper = 0.27 }  # tools cut 2026-10-05: draught stock
 output = 2.08
 labour_class = ""
 advance = ""
@@ -751,7 +751,7 @@ tier = 0
 key = "lazy_beds"
 name = "Lazy Beds"
 desc = "Potatoes are planted in spade-dug beds on poor ground."
-inputs = { tools = 0.007 }
+inputs = { tools = 0.002, livestock = 0.011 }  # tools cut 2026-10-05: manure and seaweed ridges
 output = 0.100
 labour_class = "hand_work"
 advance = ""
@@ -761,7 +761,7 @@ tier = 0
 key = "ridged_fields"
 name = "Ridged Fields"
 desc = "Ridges drain the ground and manure feeds them."
-inputs = { livestock = 0.016, tools = 0.004 }
+inputs = { livestock = 0.023, tools = 0.001 }  # tools cut 2026-10-05: manure
 output = 0.110
 labour_class = ""
 advance = ""
@@ -771,7 +771,7 @@ tier = 1
 key = "manured_ridges"
 name = "Manured Ridges and Clamps"
 desc = "Manured ridges grow the crop and earth clamps store it."
-inputs = { livestock = 0.09, clay = 0.19, fiber_crops = 0.06, tools = 0.02 }
+inputs = { livestock = 0.105, clay = 0.19, fiber_crops = 0.06, tools = 0.013 }  # tools cut 2026-10-05: manure stock
 output = 0.65
 labour_class = ""
 advance = ""
@@ -781,7 +781,7 @@ tier = 2
 key = "potato_rotation"
 name = "Potato Rotation"
 desc = "Potatoes take turns with grain on the same ground."
-inputs = { tools = 0.19, livestock = 0.23, clay = 0.26, cloth = 0.08 }
+inputs = { tools = 0.05, livestock = 0.41, clay = 0.62, cloth = 0.08 }  # tools cut 2026-10-05: stock, ridging soil
 output = 1.56
 labour_class = ""
 advance = ""
@@ -791,7 +791,7 @@ tier = 2
 key = "seed_selection"
 name = "Selected Seed Potatoes"
 desc = "Sound seed tubers are picked out and stored apart."
-inputs = { tools = 0.17, livestock = 0.22, clay = 0.30, fiber_crops = 0.15 }
+inputs = { tools = 0.05, livestock = 0.35, clay = 0.30, fiber_crops = 0.25 }  # tools cut 2026-10-05: seed sacks
 output = 1.62
 labour_class = ""
 advance = "pp_improved_rotations"
@@ -801,7 +801,7 @@ tier = 3
 key = "drilled_ridges"
 name = "Drilled Potato Ridges"
 desc = "Ridges are drilled in straight lines and worked with horse-hoes."
-inputs = { tools = 0.22, livestock = 0.29, clay = 0.37, paper = 0.28 }
+inputs = { tools = 0.09, livestock = 0.46, clay = 0.71, paper = 0.28 }  # tools cut 2026-10-05: stock, ridging soil
 output = 2.14
 labour_class = ""
 advance = ""
@@ -830,7 +830,7 @@ tier = 0
 key = "pruned_grove"
 name = "Pruned Grove"
 desc = "Old trees are pruned and harvested by hand."
-inputs = { tools = 0.007 }
+inputs = { tools = 0.002, lumber = 0.009 }  # tools cut 2026-10-05: ladders and props
 output = 0.100
 labour_class = "hand_work"
 advance = ""
@@ -850,7 +850,7 @@ tier = 1
 key = "manured_grove"
 name = "Manured Grove and Press"
 desc = "Manured trees and a small press turn the fruit into oil."
-inputs = { livestock = 0.075, tools = 0.03, lumber = 0.045, pottery = 0.088 }
+inputs = { livestock = 0.075, tools = 0.012, lumber = 0.061, pottery = 0.118 }  # tools cut 2026-10-05: props, oil jars
 output = 0.59
 labour_class = ""
 advance = ""
@@ -860,7 +860,7 @@ tier = 2
 key = "grafted_grove"
 name = "Grafted Grove"
 desc = "Grafted trees bear more and oil jars keep the pressing."
-inputs = { tools = 0.19, livestock = 0.22, lumber = 0.11, pottery = 0.20 }
+inputs = { tools = 0.05, livestock = 0.22, lumber = 0.24, pottery = 0.43 }  # tools cut 2026-10-05: stakes, oil jars
 output = 1.54
 labour_class = ""
 advance = ""
@@ -870,7 +870,7 @@ tier = 2
 key = "irrigated_grove"
 name = "Irrigated Grove"
 desc = "Channels and cisterns water the trees through the dry season."
-inputs = { tools = 0.17, livestock = 0.18, lumber = 0.18, clay = 0.39 }
+inputs = { tools = 0.05, livestock = 0.18, lumber = 0.27, clay = 0.86 }  # tools cut 2026-10-05: clay channels, props
 output = 1.60
 labour_class = ""
 advance = "pp_water_lifting"
@@ -880,7 +880,7 @@ tier = 3
 key = "beam_press"
 name = "Beam-Press Estate"
 desc = "Beam presses and oil stores serve the whole estate."
-inputs = { tools = 0.21, livestock = 0.26, lumber = 0.18, pottery = 0.51 }
+inputs = { tools = 0.09, livestock = 0.26, lumber = 0.34, pottery = 0.63 }  # tools cut 2026-10-05: timber beam press, jars
 output = 2.09
 labour_class = ""
 advance = ""
@@ -919,7 +919,7 @@ tier = 0
 key = "open_pasture"
 name = "Open Pasture"
 desc = "Cattle graze the common land and salt licks keep them healthy."
-inputs = { salt = 0.006, tools = 0.011 }
+inputs = { salt = 0.006, tools = 0.002, lumber = 0.017 }  # tools cut 2026-10-05: pens and hurdles
 output = 0.082
 labour_class = "hand_work"
 advance = ""
@@ -929,7 +929,7 @@ tier = 0
 key = "byres_yards"
 name = "Byres and Yards"
 desc = "Byres and yards shelter the herd and gather its manure."
-inputs = { tools = 0.008, clay = 0.16 }
+inputs = { tools = 0.003, clay = 0.193 }  # tools cut 2026-10-05: byre walls
 output = 0.091
 labour_class = ""
 advance = ""
@@ -949,7 +949,7 @@ tier = 2
 key = "ley_grazing"
 name = "Ley Grazing"
 desc = "Cattle graze sown leys on fields resting from grain."
-inputs = { tools = 0.15, horses = 0.10, legumes = 0.33, lumber = 0.089 }
+inputs = { tools = 0.05, horses = 0.10, legumes = 0.33, lumber = 0.275 }  # tools cut 2026-10-05: fences and hurdles
 output = 0.97
 labour_class = ""
 advance = ""
@@ -959,7 +959,7 @@ tier = 2
 key = "transhumance"
 name = "Transhumance Drove"
 desc = "Drovers move the herd between summer and winter pastures."
-inputs = { horses = 0.12, salt = 0.06, tools = 0.10, livestock = 0.19 }
+inputs = { horses = 0.12, salt = 0.06, tools = 0.05, livestock = 0.30 }  # tools cut 2026-10-05: herd stock
 output = 0.97
 labour_class = ""
 advance = ""
@@ -969,7 +969,7 @@ tier = 3
 key = "dairy_breeding"
 name = "Dairy and Breeding Herd"
 desc = "Selected bulls and planned dairies improve the herd."
-inputs = { tools = 0.20, horses = 0.18, legumes = 0.35, paper = 0.12 }
+inputs = { tools = 0.09, horses = 0.18, legumes = 0.35, pottery = 0.60 }  # tools cut 2026-10-05: dairy pans, churns and cheese crocks (herd books folded in)
 output = 1.40
 labour_class = ""
 advance = ""

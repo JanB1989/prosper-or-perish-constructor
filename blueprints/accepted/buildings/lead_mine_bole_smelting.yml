@@ -71,18 +71,20 @@ building:
             category = building_maintenance
         }
         pp_lead_mine_bole_silver = {
-            lumber = 0.027
-            tools = 0.018
+            lumber = 0.036 # props, cupellation hearths
+            tools = 0.006 # picks, tongs
             lead = 0.018
+            coal = 0.012 # cupellation fuel
             manual_labor = 0.016
             produced = silver
             output = 0.029
             category = building_maintenance
         }
         pp_lead_mine_bole_gold = {
-            lumber = 0.027
-            tools = 0.018
+            lumber = 0.036 # props, parting hearths
+            tools = 0.006 # picks, tongs
             lead = 0.018
+            coal = 0.012 # parting and cupellation fuel
             manual_labor = 0.016
             produced = goods_gold
             output = 0.026
@@ -94,9 +96,10 @@ building:
             category = building_maintenance
         }
         pp_lead_mine_bole_lead = {
-            lumber = 0.14
-            tools = 0.36
-            beeswax = 0.045
+            lumber = 0.4 # props, kiln-dried bole wood
+            tools = 0.075 # picks, buckers, hammers
+            beeswax = 0.06 # mine candles
+            coal = 0.22 # charcoal for the bole hearths
             manual_labor = 0.21
             produced = lead
             output = 0.952

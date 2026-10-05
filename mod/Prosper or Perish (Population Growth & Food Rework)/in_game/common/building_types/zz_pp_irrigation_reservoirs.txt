@@ -41,9 +41,9 @@ unique_production_methods = {
   pp_irrigation_reservoirs_maintenance = {
     icon_type = building_type
     icon = irrigation_reservoirs
-    stone = 0.15
-    clay = 0.15
-    tools = 0.05
+    stone = 0.23 # embankment facing and sluice stones
+    clay = 0.24 # puddled clay for tank beds and channel lining
+    tools = 0.012 # spades and baskets: a small share of the upkeep
     category = building_maintenance
   }
 }

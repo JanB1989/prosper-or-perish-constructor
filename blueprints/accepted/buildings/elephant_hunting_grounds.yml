@@ -46,9 +46,10 @@ building:
         pp_elephant_hunting_grounds_elephant_hunting_grounds_maintenance = {
             produced = ivory
             output = 1.0
-            tools = 0.2
+            tools = 0.12 # tusk saws and skinning knives: a small running cost
             weaponry = 0.2
             elephants = 0.4
+            livestock = 0.17 # pack oxen and camp provisions for the hunting parties
             manual_labor = 0.74
             debug_max_profit = rural_profit_margin
             category = guild_input

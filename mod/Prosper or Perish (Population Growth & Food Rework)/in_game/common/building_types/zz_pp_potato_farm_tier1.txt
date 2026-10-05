@@ -71,14 +71,14 @@ unique_production_methods = {
     pp_potato_farmstead_manured_ridges = {
         icon_type = building_type
         icon = potato_farmstead
-        livestock = 0.089
+        livestock = 0.1
         clay = 0.19
         fiber_crops = 0.059
-        tools = 0.02
-        manual_labor = 0.065
+        tools = 0.013
+        manual_labor = 0.072
         produced = potato
         output = 0.747
-        debug_max_profit = 0.014
+        debug_max_profit = 0
         category = building_maintenance
     }
 }

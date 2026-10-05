@@ -96,11 +96,11 @@ building:
             category = building_maintenance
         }
         pp_maize_model_farm_horse_hoed = {
-            tools = 0.15
-            livestock = 0.19
-            lumber = 0.12
+            tools = 0.06
+            livestock = 0.3
+            lumber = 0.19
             paper = 0.15
-            manual_labor = 0.091
+            manual_labor = 0.098
             produced = maize
             output = 1.52
             debug_max_profit = 0

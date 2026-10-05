@@ -31,10 +31,10 @@ building:
     build_time = workshop_build_time
     unique_production_methods = {
         pp_glass_workshop_metal_glass_workshop_maintenance = {
-            lumber = 0.35
+            lumber = 0.81 # furnace fuel and wood ash for potash flux
             sand = 1.11
-            tools = 0.45
-            lead = 0.1
+            tools = 0.097 # tools cut to a running cost (~10 %)
+            lead = 0.27 # lead oxide flux for the lead glass
             manual_labor = 0.33
             produced = glass
             output = 1.1
@@ -44,9 +44,10 @@ building:
         pp_glass_workshop_legacy_glass_guild_maintenance = {
             icon_type = goods
             icon = glass
-            lumber = 0.15
+            lumber = 0.45
             sand = 0.73
-            tools = 0.28
+            tools = 0.054
+            clay = 0.4
             manual_labor = 0.24
             produced = glass
             output = 0.62

@@ -37,8 +37,8 @@ building:
     unique_production_methods = {
         pp_beer_workshop_wheat_beer_workshop_maintenance = {
             wheat = 1.01
-            lumber = 0.25
-            tools = 0.1
+            lumber = 0.32 # casks, mash tun and fuel for the boil
+            tools = 0.06 # tools cut to a running cost (~10 %)
             manual_labor = 0.2
             produced = beer
             output = 1.1
@@ -47,8 +47,8 @@ building:
         }
         pp_beer_workshop_millet_beer_workshop_maintenance = {
             millet = 1.01
-            lumber = 0.25
-            tools = 0.1
+            lumber = 0.32 # casks, mash tun and fuel for the boil
+            tools = 0.06 # tools cut to a running cost (~10 %)
             manual_labor = 0.2
             produced = beer
             output = 1.1
@@ -57,8 +57,8 @@ building:
         }
         pp_beer_workshop_fruit_beer_workshop_maintenance = {
             fruit = 1.06
-            lumber = 0.21
-            tools = 0.11
+            lumber = 0.3 # casks, vats and press timber
+            tools = 0.06 # tools cut to a running cost (~10 %)
             manual_labor = 0.18
             produced = beer
             output = 1.1
@@ -77,8 +77,8 @@ building:
         pp_beer_workshop_honey_beer_workshop_maintenance = {
             beeswax = 0.26
             millet = 0.53
-            lumber = 0.21
-            tools = 0.11
+            lumber = 0.3 # casks, vats and fuel for the boil
+            tools = 0.06 # tools cut to a running cost (~10 %)
             manual_labor = 0.2
             produced = beer
             output = 1.1
@@ -87,8 +87,8 @@ building:
         }
         pp_beer_workshop_rice_beer_workshop_maintenance = {
             rice = 1.01
-            lumber = 0.25
-            tools = 0.1
+            lumber = 0.32 # casks, steaming fuel and vats
+            tools = 0.06 # tools cut to a running cost (~10 %)
             manual_labor = 0.2
             produced = beer
             output = 1.1
@@ -97,8 +97,8 @@ building:
         }
         pp_beer_workshop_bavarian_beer_workshop_maintenance = {
             wheat = 1.32
-            lumber = 0.24
-            tools = 0.12
+            lumber = 0.33 # casks, mash tun and fuel for the boil
+            tools = 0.072 # tools cut to a running cost (~10 %)
             manual_labor = 0.24
             produced = beer
             output = 1.3

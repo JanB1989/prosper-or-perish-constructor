@@ -71,16 +71,17 @@ building:
             category = building_maintenance
         }
         pp_gem_sluice_sand = {
-            lumber = 0.027
-            tools = 0.018
+            lumber = 0.051 # screens, troughs
+            tools = 0.005 # shovels
             manual_labor = 0.012
             produced = sand
             output = 0.198
             category = building_maintenance
         }
         pp_gem_sluice_gold = {
-            lumber = 0.045
-            tools = 0.036
+            lumber = 0.066 # sluice boxes, riffles
+            tools = 0.009 # pans, shovels
+            fiber_crops = 0.025 # sieves, catch mats
             manual_labor = 0.022
             produced = goods_gold
             output = 0.026
@@ -92,8 +93,9 @@ building:
             category = building_maintenance
         }
         pp_gem_sluice_gems = {
-            lumber = 0.34
-            tools = 0.3
+            lumber = 0.58 # flumes, sluice boxes
+            tools = 0.075 # picks, shovels
+            fiber_crops = 0.16 # gravel baskets, sieves
             manual_labor = 0.2
             produced = gems
             output = 0.476

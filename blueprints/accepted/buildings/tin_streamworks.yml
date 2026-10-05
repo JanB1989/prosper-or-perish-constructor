@@ -72,16 +72,18 @@ building:
             category = building_maintenance
         }
         pp_tin_streamworks_lead = {
-            lumber = 0.048
-            tools = 0.025
+            lumber = 0.065 # streaming boards, troughs
+            tools = 0.007 # shovels, sieves
+            coal = 0.014 # lead smelting fuel
             manual_labor = 0.034
             produced = lead
             output = 0.1
             category = building_maintenance
         }
         pp_tin_streamworks_copper = {
-            lumber = 0.048
-            tools = 0.025
+            lumber = 0.065 # streaming boards, troughs
+            tools = 0.007 # shovels, sieves
+            coal = 0.014 # copper smelting fuel
             manual_labor = 0.034
             produced = copper
             output = 0.075
@@ -100,8 +102,9 @@ building:
             category = building_maintenance
         }
         pp_tin_streamworks_tin = {
-            lumber = 0.27
-            tools = 0.16
+            lumber = 0.37 # leats, streaming boards
+            tools = 0.045 # shovels, picks, sieves
+            coal = 0.1 # charcoal for the blowing house
             manual_labor = 0.2
             produced = tin
             output = 0.631

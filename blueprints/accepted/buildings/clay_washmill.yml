@@ -72,8 +72,8 @@ building:
             category = building_maintenance
         }
         pp_clay_washmill_levigation_ponds = {
-            lumber = 0.026
-            tools = 0.017
+            lumber = 0.048 # pond boards, sluices
+            tools = 0.005 # spades
             manual_labor = 0.017
             produced = clay
             output = 0.23
@@ -85,8 +85,8 @@ building:
             category = building_maintenance
         }
         pp_clay_washmill_horse_pugging = {
-            lumber = 0.095
-            tools = 0.034
+            lumber = 0.13 # pug mill, tubs
+            tools = 0.016 # spades, pug blades
             horses = 0.017
             manual_labor = 0.055
             produced = clay
@@ -94,9 +94,9 @@ building:
             category = building_maintenance
         }
         pp_clay_washmill_ox_pugging = {
-            lumber = 0.095
-            tools = 0.034
-            livestock = 0.043
+            lumber = 0.115 # pug mill, tubs
+            tools = 0.016 # spades, pug blades
+            livestock = 0.059 # oxen turning the pug mill
             manual_labor = 0.056
             produced = clay
             output = 0.69

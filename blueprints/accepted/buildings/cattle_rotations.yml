@@ -91,11 +91,11 @@ building:
             category = building_maintenance
         }
         pp_cattle_rotations_ley_grazing = {
-            tools = 0.09
+            tools = 0.03
             horses = 0.061
             legumes = 0.2
-            lumber = 0.053
-            manual_labor = 0.092
+            lumber = 0.17
+            manual_labor = 0.085
             produced = livestock
             output = 0.655
             debug_max_profit = 0
@@ -104,8 +104,8 @@ building:
         pp_cattle_rotations_transhumance = {
             horses = 0.072
             salt = 0.036
-            tools = 0.061
-            livestock = 0.11
+            tools = 0.03
+            livestock = 0.18
             manual_labor = 0.1
             produced = livestock
             output = 0.655

@@ -95,16 +95,17 @@ building:
             category = building_maintenance
         }
         pp_potato_farm_lazy_beds = {
-            tools = 0.004
-            manual_labor = 0.01
+            tools = 0.001
+            livestock = 0.006
+            manual_labor = 0.011
             produced = potato
             output = 0.1
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_potato_farm_ridged_fields = {
-            livestock = 0.014
-            tools = 0.003
+            livestock = 0.019
+            tools = 0.001
             manual_labor = 0.006
             produced = potato
             output = 0.11

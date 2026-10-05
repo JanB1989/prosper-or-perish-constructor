@@ -77,7 +77,8 @@ building:
         pp_cannon_maker_cannon_maker_bronze_maintenance = {
             copper = 0.53
             tin = 0.11
-            tools = 0.53
+            tools = 0.19 # tools cut to a running cost (~15 %, arms making)
+            lumber = 0.63 # charcoal for the casting furnace, mould frames and carriages
             manual_labor = 0.58
             produced = cannons
             output = 1.0
@@ -86,7 +87,9 @@ building:
         }
         pp_cannon_maker_cannon_maker_iron_maintenance = {
             iron = 0.57
-            tools = 0.47
+            tools = 0.19 # tools cut to a running cost (~15 %, arms making)
+            coal = 0.3 # forge fuel for welding the hooped barrels
+            lumber = 0.18 # carriages and beds
             manual_labor = 0.58
             produced = cannons
             output = 1.0

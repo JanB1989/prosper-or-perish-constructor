@@ -65,14 +65,14 @@ unique_production_methods = {
     pp_millet_farmstead_manured_hill_plots = {
         icon_type = building_type
         icon = millet_farmstead
-        livestock = 0.099
+        livestock = 0.12
         fiber_crops = 0.059
         pottery = 0.04
-        tools = 0.019
-        manual_labor = 0.06
+        tools = 0.011
+        manual_labor = 0.055
         produced = millet
         output = 0.69
-        debug_max_profit = 0.033
+        debug_max_profit = 0.064
         category = building_maintenance
     }
 }

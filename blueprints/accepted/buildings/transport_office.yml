@@ -62,8 +62,9 @@ building:
       pp_transport_office_maintenance = {
         victuals = 0.48
         paper = 0.18
-        tools = 0.12
+        tools = 0.09 # 2026-10-05: tools an accelerant, was 0.12
         cloth = 0.072
+        leather = 0.033 # harness and cart straps
         manual_labor = 0.59
         produced = logistics
         output = 3.75
@@ -81,9 +82,10 @@ building:
       }
       pp_transport_office_ledgered_dispatch = {
         victuals = 0.32
-        paper = 0.32
-        tools = 0.22
+        paper = 0.43 # waybills and dispatch ledgers (was 0.32)
+        tools = 0.09 # 2026-10-05: tools an accelerant, was 0.22
         cloth = 0.032
+        leather = 0.067 # harness and cart straps
         manual_labor = 0.59
         produced = logistics
         output = 3.9

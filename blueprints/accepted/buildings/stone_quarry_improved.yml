@@ -80,8 +80,8 @@ building:
             category = building_maintenance
         }
         pp_stone_quarry_improved_rubble_breaking = {
-            lumber = 0.034 # sorting screens, bins
-            tools = 0.026 # hammers and sieves
+            lumber = 0.069 # sorting screens, bins, barrows
+            tools = 0.007 # hammers and sieves
             manual_labor = 0.024
             produced = sand
             output = 0.30
@@ -93,19 +93,19 @@ building:
             category = building_maintenance
         }
         pp_stone_quarry_improved_ox_haulage = {
-            lumber = 0.33 # skids, block sledges
-            tools = 0.15 # picks, wedges, dressing tools
+            lumber = 0.41 # skids, block sledges, rollers
+            tools = 0.065 # picks, wedges, dressing tools
             leather = 0.034 # yokes and straps
-            livestock = 0.052 # ox haulage teams
+            livestock = 0.14 # ox haulage teams
             manual_labor = 0.18
             produced = stone
             output = 1.47
             category = building_maintenance
         }
         pp_stone_quarry_improved_crane_winch_quarrying = {
-            lumber = 0.34 # crane frame, skids
-            tools = 0.16 # chisels, wedges, tackle
-            leather = 0.043 # slings and straps
+            lumber = 0.44 # crane frame, skids
+            tools = 0.07 # chisels, wedges
+            leather = 0.08 # slings, straps, tackle
             horses = 0.043 # hoist and cart teams
             manual_labor = 0.24
             produced = stone

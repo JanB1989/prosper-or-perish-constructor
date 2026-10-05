@@ -58,9 +58,10 @@ building:
         pp_weapon_factory_legacy_weapon_smith_maintenance = {
             icon_type = goods
             icon = weaponry
-            lumber = 0.4
-            coal = 0.48
-            tools = 0.8
+            lumber = 0.71
+            coal = 0.87
+            tools = 0.22
+            leather = 0.19
             manual_labor = 0.66
             produced = weaponry
             output = 1.69
@@ -70,10 +71,10 @@ building:
         pp_weapon_factory_legacy_weapon_manufactory_maintenance = {
             icon_type = building_type
             icon = weapon_manufactory
-            lumber = 0.89
-            coal = 0.89
+            lumber = 1.1
+            coal = 1.19
             iron = 0.71
-            tools = 0.71
+            tools = 0.41
             manual_labor = 0.68
             produced = weaponry
             output = 3

@@ -96,11 +96,11 @@ building:
             category = building_maintenance
         }
         pp_olive_model_farm_beam_press = {
-            tools = 0.14
+            tools = 0.06
             livestock = 0.17
-            lumber = 0.12
-            pottery = 0.34
-            manual_labor = 0.12
+            lumber = 0.23
+            pottery = 0.42
+            manual_labor = 0.11
             produced = olives
             output = 1.52
             debug_max_profit = 0

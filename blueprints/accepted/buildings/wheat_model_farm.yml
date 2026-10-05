@@ -90,11 +90,11 @@ building:
             category = building_maintenance
         }
         pp_wheat_model_farm_seed_drill = {
-            tools = 0.16
+            tools = 0.06
             horses = 0.13
             legumes = 0.17
-            paper = 0.086
-            manual_labor = 0.12
+            lumber = 0.29
+            manual_labor = 0.11
             produced = wheat
             output = 1.54
             debug_max_profit = 0

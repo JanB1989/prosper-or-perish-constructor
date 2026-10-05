@@ -70,16 +70,16 @@ building:
             category = building_maintenance
         }
         pp_alum_quarry_clay = {
-            lumber = 0.025
-            tools = 0.016
+            lumber = 0.045 # barrows, troughs
+            tools = 0.005 # spades
             manual_labor = 0.022
             produced = clay
             output = 0.264
             category = building_maintenance
         }
         pp_alum_quarry_stone = {
-            lumber = 0.033
-            tools = 0.025
+            lumber = 0.066 # skids, barrows
+            tools = 0.007 # hammers
             manual_labor = 0.028
             produced = stone
             output = 0.168
@@ -91,8 +91,9 @@ building:
             category = building_maintenance
         }
         pp_alum_quarry_alum = {
-            lumber = 0.16
-            tools = 0.21
+            lumber = 0.3 # calcining kiln wood, leaching vats
+            tools = 0.05 # picks, hammers
+            coal = 0.14 # charcoal for calcining and boiling
             manual_labor = 0.21
             produced = alum
             output = 0.424

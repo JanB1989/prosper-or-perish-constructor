@@ -50,9 +50,10 @@ building:
             debug_max_profit = guild_profit_margin
         }
         pp_weapon_guild_weapon_smith_maintenance = {
-            lumber = 0.25
-            coal = 0.3
-            tools = 0.5
+            lumber = 0.44 # hafts, shafts and bow staves
+            coal = 0.54 # forge fuel
+            tools = 0.14 # tools cut to a running cost (~15 %, arms making)
+            leather = 0.12 # grips, scabbards and straps
             manual_labor = 0.41
             category = guild_input
             produced = weaponry

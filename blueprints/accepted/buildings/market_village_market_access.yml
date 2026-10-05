@@ -75,8 +75,9 @@ building:
         }
         pp_market_village_rural_millet_brewery = {
             millet = 0.39
-            lumber = 0.079
-            tools = 0.056
+            lumber = 0.1 # firewood for boiling the mash (was 0.079)
+            tools = 0.02 # 2026-10-05: tools an accelerant, village brewing needs few, was 0.056
+            pottery = 0.08 # brewing and storage jars
             manual_labor = 0.24
             produced = beer
             output = 0.5

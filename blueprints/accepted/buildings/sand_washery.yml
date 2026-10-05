@@ -74,8 +74,9 @@ building:
             category = building_maintenance
         }
         pp_sand_washery_riddle_screens = {
-            lumber = 0.043
-            tools = 0.017
+            lumber = 0.051 # riddle frames, troughs
+            tools = 0.006 # shovels
+            fiber_crops = 0.011 # woven riddles
             manual_labor = 0.022
             produced = sand
             output = 0.29
@@ -87,8 +88,9 @@ building:
             category = building_maintenance
         }
         pp_sand_washery_glass_sand_washing = {
-            lumber = 0.034
-            tools = 0.026
+            lumber = 0.054 # washing troughs, sluices
+            tools = 0.007 # shovels, rakes
+            fiber_crops = 0.013 # fine sieves
             manual_labor = 0.024
             produced = sand
             output = 0.31

@@ -33,10 +33,10 @@ building:
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_weapon_manufactory_weapon_manufactory_maintenance = {
-            lumber = 0.59
-            coal = 0.59
+            lumber = 0.73 # hafts and shafts
+            coal = 0.79 # forge and tempering fuel
             iron = 0.47
-            tools = 0.47
+            tools = 0.27 # tools cut to a running cost (~15 %, arms making)
             manual_labor = 0.45
             category = manufactory_input
             produced = weaponry
@@ -57,9 +57,10 @@ building:
         pp_weapon_manufactory_legacy_weapon_smith_maintenance = {
             icon_type = goods
             icon = weaponry
-            lumber = 0.27
-            coal = 0.32
-            tools = 0.53
+            lumber = 0.47
+            coal = 0.58
+            tools = 0.15
+            leather = 0.13
             manual_labor = 0.44
             produced = weaponry
             output = 1.13

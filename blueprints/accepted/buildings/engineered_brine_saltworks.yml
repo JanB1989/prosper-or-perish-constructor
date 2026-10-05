@@ -116,9 +116,10 @@ building:
             category = building_maintenance
         }
         pp_engineered_brine_saltworks_pumped_brine_channels = {
-            lumber = 0.37 # brine pipes
-            tools = 0.23 # pumps and valves
-            pottery = 0.14 # storage jars
+            lumber = 0.55 # bored log brine pipes, pump rods
+            tools = 0.075 # pump valves, fittings
+            pottery = 0.23 # storage jars, pipe joints
+            clay = 0.2 # puddled channel linings
             manual_labor = 0.13
             produced = salt
             output = 0.330
@@ -130,10 +131,10 @@ building:
             category = building_maintenance
         }
         pp_engineered_brine_saltworks_mineral_fired_pans = {
-            coal = 0.35 # pan fuel
-            clay = 0.23 # furnace linings
+            coal = 0.42 # pan fuel
+            clay = 0.4 # furnace linings, pan seals
             pottery = 0.23 # brine vessels
-            tools = 0.14 # iron pans
+            tools = 0.07 # iron pans
             manual_labor = 0.11
             produced = salt
             output = 0.363

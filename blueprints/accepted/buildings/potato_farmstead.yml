@@ -96,11 +96,11 @@ building:
             category = building_maintenance
         }
         pp_potato_farmstead_manured_ridges = {
-            livestock = 0.089
+            livestock = 0.1
             clay = 0.19
             fiber_crops = 0.059
-            tools = 0.02
-            manual_labor = 0.065
+            tools = 0.013
+            manual_labor = 0.072
             produced = potato
             output = 0.747
             debug_max_profit = 0

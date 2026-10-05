@@ -30,8 +30,8 @@ building:
     unique_production_methods = {
         pp_pottery_guild_pottery_maintenance = {
             clay = 0.93
-            lumber = 0.11
-            tools = 0.046
+            lumber = 0.14 # kiln fuel
+            tools = 0.028 # tools cut to a running cost (~10 %)
             manual_labor = 0.13
             produced = pottery
             output = 1.0

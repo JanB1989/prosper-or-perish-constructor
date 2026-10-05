@@ -91,20 +91,21 @@ building:
             category = building_maintenance
         }
         pp_wheat_rotations_clover_ley = {
-            tools = 0.11
+            tools = 0.03
             horses = 0.096
             legumes = 0.16
-            manual_labor = 0.094
+            lumber = 0.14
+            manual_labor = 0.11
             produced = wheat
             output = 1.04
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_wheat_rotations_marled_fields = {
-            tools = 0.1
+            tools = 0.03
             horses = 0.09
             legumes = 0.12
-            clay = 0.16
+            clay = 0.62
             manual_labor = 0.1
             produced = wheat
             output = 1.08

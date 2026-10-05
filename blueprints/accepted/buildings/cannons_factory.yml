@@ -17,6 +17,7 @@ building:
   - name: slot_1
     methods:
     - pp_cannons_factory_gun_factory_maintenance
+    - pp_cannons_factory_legacy_cannon_workshop_bronze_maintenance
     - pp_cannons_factory_legacy_cannon_workshop_iron_maintenance
     - pp_cannons_factory_legacy_cannon_foundry_maintenance
   - name: slot_2
@@ -81,6 +82,18 @@ building:
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
+        pp_cannons_factory_legacy_cannon_workshop_bronze_maintenance = {
+            icon_type = goods
+            icon = copper
+            copper = 1.68
+            tin = 0.42
+            tools = 0.2
+            manual_labor = 0.74
+            produced = cannons
+            output = 1.86
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
         pp_cannons_factory_legacy_cannon_workshop_iron_maintenance = {
             icon_type = goods
             icon = iron
@@ -95,9 +108,10 @@ building:
         pp_cannons_factory_legacy_cannon_foundry_maintenance = {
             icon_type = building_type
             icon = cannon_foundry
-            tools = 1.1
+            tools = 0.44
             copper = 1.36
             tin = 0.68
+            coal = 1.07
             manual_labor = 0.7
             produced = cannons
             output = 2.47
@@ -136,6 +150,8 @@ localization:
     pp_cannons_factory_legacy_cannon_workshop_ammunition_iron_maintenance_desc: "An older way of working, kept from the $cannon_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
     pp_cannons_factory_legacy_cannon_workshop_ammunition_stone_maintenance: "$cannon_workshop_ammunition_stone_maintenance$ (Old Ways)"
     pp_cannons_factory_legacy_cannon_workshop_ammunition_stone_maintenance_desc: "An older way of working, kept from the $cannon_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_cannons_factory_legacy_cannon_workshop_bronze_maintenance: "$cannon_workshop_bronze_maintenance$ (Old Ways)"
+    pp_cannons_factory_legacy_cannon_workshop_bronze_maintenance_desc: "An older way of working, kept from the $cannon_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
     pp_cannons_factory_legacy_cannon_workshop_iron_maintenance: "$cannon_workshop_iron_maintenance$ (Old Ways)"
     pp_cannons_factory_legacy_cannon_workshop_iron_maintenance_desc: "An older way of working, kept from the $cannon_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
 evaluation:
@@ -160,6 +176,11 @@ evaluation:
         input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
         output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
     pp_cannons_factory_legacy_cannon_workshop_ammunition_stone_maintenance:
+      allow_rules:
+        profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
+        input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+        output_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."
+    pp_cannons_factory_legacy_cannon_workshop_bronze_maintenance:
       allow_rules:
         profit_percent: "Legacy method: an older recipe carried up the upgrade line on purpose, at the contemporary method's margin and a smaller output."
         input_throughput: "Legacy method: lower throughput than the contemporary method on purpose, so it runs only where the contemporary inputs are missing."

@@ -60,8 +60,9 @@ building:
             category = building_maintenance
         }
         pp_dye_plantation_vat_curing = {
-            lumber = 0.392 # drying racks, vats
-            tools = 0.132 # knives, presses
+            lumber = 0.47 # drying racks, vats, beater paddles
+            tools = 0.042 # knives, presses
+            pottery = 0.16 # steeping jars and settling pots
             manual_labor = 0.236
             produced = dyes
             output = 0.563

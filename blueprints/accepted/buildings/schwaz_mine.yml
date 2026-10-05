@@ -35,9 +35,9 @@ building:
     build_time = infrastructure_build_time
     unique_production_methods = {
         pp_schwaz_mine_schwaz_mine_maintenance = {
-            tools = 0.4
-            leather = 0.48
-            lumber = 0.8
+            tools = 0.27 # picks, gads, hammers
+            leather = 0.55 # water bags, haulage hides
+            lumber = 0.92 # shaft and gallery timbering
             stone = 0.8
             manual_labor = 1.1
             produced = silver

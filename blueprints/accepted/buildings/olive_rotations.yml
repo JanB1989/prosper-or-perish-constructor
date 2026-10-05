@@ -97,22 +97,22 @@ building:
             category = building_maintenance
         }
         pp_olive_rotations_grafted_grove = {
-            tools = 0.11
+            tools = 0.03
             livestock = 0.13
-            lumber = 0.076
-            pottery = 0.12
-            manual_labor = 0.12
+            lumber = 0.14
+            pottery = 0.26
+            manual_labor = 0.11
             produced = olives
             output = 1.04
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_olive_rotations_irrigated_grove = {
-            tools = 0.1
+            tools = 0.03
             livestock = 0.11
-            lumber = 0.11
-            clay = 0.23
-            manual_labor = 0.1
+            lumber = 0.16
+            clay = 0.52
+            manual_labor = 0.099
             produced = olives
             output = 1.08
             debug_max_profit = 0

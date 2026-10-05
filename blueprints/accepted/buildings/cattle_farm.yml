@@ -90,17 +90,18 @@ building:
         }
         pp_cattle_farm_open_pasture = {
             salt = 0.003
-            tools = 0.006
-            manual_labor = 0.031
+            tools = 0.001
+            lumber = 0.01
+            manual_labor = 0.03
             produced = livestock
             output = 0.082
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_cattle_farm_byres_yards = {
-            tools = 0.007
-            clay = 0.13
-            manual_labor = 0.018
+            tools = 0.002
+            clay = 0.16
+            manual_labor = 0.02
             produced = livestock
             output = 0.091
             debug_max_profit = 0

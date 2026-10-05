@@ -268,8 +268,8 @@ NON_SLAVE_CROP_FARMS = {
         "worked_output": "0.641",
         "inputs": {
             "lumber": "0.384",
-            "fiber_crops": "0.056",
-            "tools": "0.048",
+            "fiber_crops": "0.077",
+            "tools": "0.035",
             "manual_labor": "0.212",
         },
         "removed_inputs": {"pottery", "slaves_goods"},

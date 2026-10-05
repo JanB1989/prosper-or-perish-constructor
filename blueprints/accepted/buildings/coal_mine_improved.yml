@@ -83,9 +83,10 @@ building:
             category = building_maintenance
         }
         pp_coal_mine_improved_coal = {
-            lumber = 0.39
-            tools = 0.44
-            beeswax = 0.097
+            lumber = 0.58 # props, headgear, pump rods
+            tools = 0.11 # picks, engine fittings
+            beeswax = 0.12 # candles
+            tar = 0.35 # tarred winding ropes, pump packing (a pit does not buy its own coal)
             manual_labor = 0.2
             produced = coal
             output = 1.75

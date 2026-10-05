@@ -70,8 +70,9 @@ building:
             category = building_maintenance
         }
         pp_iron_mine_improved_ochre = {
-            lumber = 0.034 # washing troughs, racks
-            tools = 0.026 # sieves, shovels
+            lumber = 0.051 # washing troughs, drying racks
+            tools = 0.007 # sieves, shovels
+            fiber_crops = 0.016 # sieve cloths, sacks
             manual_labor = 0.024
             produced = dyes
             output = 0.040
@@ -83,12 +84,12 @@ building:
             category = building_maintenance
         }
         pp_iron_mine_improved_ore_dressing_floors = {
-            fiber_crops = 0.17 # sacks, screens
-            cloth = 0.086 # sorting cloths
-            beeswax = 0.043 # candles, seals
-            manual_labor = 0.12
+            fiber_crops = 0.19 # sacks, screens (x1.12 tools-free fallback)
+            cloth = 0.096 # sorting cloths
+            beeswax = 0.048 # candles, seals
+            manual_labor = 0.134
             produced = iron
-            output = 0.314
+            output = 0.352 # raised with its inputs: tools-free fallback, margin kept
             category = building_maintenance
         }
         pp_iron_mine_improved_horse_whim_haulage = {
@@ -101,18 +102,20 @@ building:
             category = building_maintenance
         }
         pp_iron_mine_improved_iron = {
-            lumber = 0.28 # timbering, dressing floors
-            tools = 0.3 # picks, pumps, stamps
-            beeswax = 0.066 # mine candles, seals
+            lumber = 0.4 # timbering, dressing floors
+            tools = 0.08 # picks, stamp shoes
+            beeswax = 0.08 # mine candles, seals
+            coal = 0.24 # ore roasting kilns
             manual_labor = 0.25
             produced = iron
             output = 0.672
             category = building_maintenance
         }
         pp_iron_mine_improved_slitting_dressed_ore = {
-            lumber = 0.3 # timbering, bar racks
-            tools = 0.33 # slitting rolls, dressing tools
-            beeswax = 0.077 # candles, pump seals
+            lumber = 0.44 # timbering, bar racks
+            tools = 0.09 # slitting rolls, dressing tools
+            beeswax = 0.09 # candles, pump seals
+            coal = 0.25 # ore roasting kilns
             manual_labor = 0.28
             produced = iron
             output = 0.734

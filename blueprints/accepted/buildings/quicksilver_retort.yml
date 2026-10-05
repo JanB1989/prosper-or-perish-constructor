@@ -71,16 +71,16 @@ building:
             category = building_maintenance
         }
         pp_quicksilver_retort_dyes = {
-            lumber = 0.027
-            tools = 0.018
+            lumber = 0.051 # grinding troughs
+            tools = 0.005 # mortars, shovels
             manual_labor = 0.012
             produced = dyes
             output = 0.027
             category = building_maintenance
         }
         pp_quicksilver_retort_stone = {
-            lumber = 0.027
-            tools = 0.018
+            lumber = 0.051 # skids, barrows
+            tools = 0.005 # hammers
             manual_labor = 0.012
             produced = stone
             output = 0.14
@@ -92,9 +92,10 @@ building:
             category = building_maintenance
         }
         pp_quicksilver_retort_mercury = {
-            lumber = 0.26
-            tools = 0.26
+            lumber = 0.46 # retort fuel, timbering
+            tools = 0.075 # picks, furnace irons
             beeswax = 0.093
+            pottery = 0.25 # clay aludels and condensing jars
             manual_labor = 0.17
             produced = mercury
             output = 0.610

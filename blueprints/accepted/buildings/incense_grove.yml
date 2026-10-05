@@ -61,9 +61,9 @@ building:
             category = building_maintenance
         }
         pp_incense_grove_tapping_camps = {
-            fiber_crops = 0.096 # collection cloth and baskets
+            fiber_crops = 0.10 # collection cloth and baskets (a few more baskets)
             lumber = 0.096 # drying racks and shelters
-            tools = 0.019 # tapping knives
+            tools = 0.016 # tapping knives
             manual_labor = 0.092
             produced = incense
             output = 0.222

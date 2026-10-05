@@ -59,8 +59,9 @@ building:
     unique_production_methods = {
         pp_bog_iron_smelter_coke_blast_furnace_maintenance = {
             coal = 0.37 # coke fuel, furnace heat
-            tools = 0.074 # tuyere, bellows upkeep
+            tools = 0.05 # tuyere, bellows upkeep
             lumber = 0.074 # racks, furnace frames
+            stone = 0.08 # limestone flux
             manual_labor = 0.09
             produced = iron
             output = 0.41
@@ -68,8 +69,9 @@ building:
         }
         pp_bog_iron_smelter_hot_blast_refining_maintenance = {
             coal = 0.41 # coke fuel, hot blast
-            tools = 0.092 # blast gear, repairs
+            tools = 0.064 # blast gear, repairs
             lumber = 0.083 # drying racks, staging
+            stone = 0.09 # limestone flux
             manual_labor = 0.12
             produced = iron
             output = 0.46

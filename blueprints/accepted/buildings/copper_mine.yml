@@ -73,26 +73,29 @@ building:
             category = building_maintenance
         }
         pp_copper_mine_tin = {
-            lumber = 0.025
-            tools = 0.016
+            lumber = 0.035 # props, washing troughs
+            tools = 0.005 # picks, sieves
+            coal = 0.009 # tin smelting fuel
             manual_labor = 0.022
             produced = tin
             output = 0.06
             category = building_maintenance
         }
         pp_copper_mine_silver = {
-            lumber = 0.025
-            tools = 0.025
+            lumber = 0.035 # props, liquation hearths
+            tools = 0.008 # picks, tongs
             lead = 0.016
+            coal = 0.019 # liquation and cupellation fuel
             manual_labor = 0.033
             produced = silver
             output = 0.033
             category = building_maintenance
         }
         pp_copper_mine_gold = {
-            lumber = 0.025
-            tools = 0.025
+            lumber = 0.035 # props, parting hearths
+            tools = 0.008 # picks, tongs
             lead = 0.016
+            coal = 0.019 # parting and cupellation fuel
             manual_labor = 0.033
             produced = goods_gold
             output = 0.026
@@ -112,9 +115,10 @@ building:
             category = building_maintenance
         }
         pp_copper_mine_copper = {
-            lumber = 0.22
-            tools = 0.26
-            beeswax = 0.061
+            lumber = 0.33 # pit props, roast heap wood
+            tools = 0.07 # picks, wedges, hammers
+            beeswax = 0.074 # mine candles
+            coal = 0.2 # charcoal for ore roasting heaps
             manual_labor = 0.31
             produced = copper
             output = 0.6

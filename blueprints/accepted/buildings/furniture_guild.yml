@@ -32,7 +32,8 @@ building:
         pp_furniture_guild_furniture_maintenance = {
             lumber = 0.9
             dyes = 0.14
-            tools = 0.14
+            tools = 0.09 # tools cut to a running cost (~10 %)
+            beeswax = 0.08 # wax polish for the finish
             manual_labor = 0.38
             produced = furniture
             output = 1.0

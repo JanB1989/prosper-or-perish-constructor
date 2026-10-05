@@ -32,9 +32,9 @@ building:
     build_time = mills_build_time
     unique_production_methods = {
         pp_furniture_mill_furniture_mill_maintenance = {
-            lumber = 4.38
+            lumber = 4.66 # more timber per piece, machine offcuts
             dyes = 0.51
-            tools = 0.51
+            tools = 0.36 # tools cut to a running cost (~10 %)
             manual_labor = 0.48
             produced = furniture
             output = 4.0

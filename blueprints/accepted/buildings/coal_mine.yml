@@ -71,8 +71,8 @@ building:
             category = building_maintenance
         }
         pp_coal_mine_fireclay = {
-            lumber = 0.033
-            tools = 0.025
+            lumber = 0.066 # props, weathering sheds
+            tools = 0.007 # picks, shovels
             manual_labor = 0.028
             produced = clay
             output = 0.336
@@ -92,9 +92,10 @@ building:
             category = building_maintenance
         }
         pp_coal_mine_coal = {
-            lumber = 0.2
-            tools = 0.23
-            beeswax = 0.049
+            lumber = 0.32 # pit props, headgear
+            tools = 0.065 # picks, wedges
+            beeswax = 0.06 # candles
+            fiber_crops = 0.15 # hemp winding ropes, wicker corves
             manual_labor = 0.25
             produced = coal
             output = 1.0

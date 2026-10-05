@@ -244,6 +244,32 @@ def test_every_location_and_province_modifier_gets_its_own_icon():
     top = window[window.index(f'name = "{geography.MODIFIER_ROW}"'):]
     for model in (loc, prov):
         assert f"DataModelHasItems({model})" in top and f"GetDataModelSize({model})" not in window
+
     row_at = window.index(f'name = "{geography.MODIFIER_ROW}"')
     assert window.index("# BOTTOM CONDITIONS") < row_at < window.index("# SOUND TOLL") < window.index("# Province timed modifiers")
     assert window.index("# Province timed modifiers") < window.index("size = { 62 220 }")
+
+    # 2026-10-05 (Jan): a modifier a chip of the bottom row already shows gets no icon of its own in the top row
+    out = geography.show_every_timed_modifier(row, {"location_modifier": "TEST_LOC"})
+    assert out.count('visible = "[Not(TEST_LOC)]"') == 1
+    assert out.index('visible = "[Not(TEST_LOC)]"') < out.index("[location_modifier|e]") < out.index(prov)
+
+
+def test_modifiers_the_chips_show_get_no_top_row_icon():
+    from prosper_or_perish_constructor import location_view
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    goods = location_view.rgo_bonus_goods((MOD_ROOT / location_view.RGO_BONUSES).read_text(encoding="utf-8-sig"))
+    hidden = location_view.shown_by_chips(MOD_ROOT, vanilla_root(PROJECT.parent, PROJECT), goods, harvests=True)
+    loc = hidden["location_modifier"]
+    for key in ("pp_wb_fertility_high", "pp_wb_soil_loam", "pp_wb_coastal", "pp_wb_lake", "river_flowing_through_1",
+                f"pp_rgo_bonus_{goods[0]}"):
+        assert f"Localize('STATIC_MODIFIER_NAME_{key}')" in loc
+    assert "Custom('pp_harvest_state')" in loc and "pp_harvest_" not in loc.replace("pp_harvest_state", "")
+    assert loc.count("Or(") == loc.count("EqualTo_string(") - 1 and loc.count("(") == loc.count(")")
+    assert hidden["province_modifier"].endswith("Localize('STATIC_MODIFIER_NAME_pp_food_store_0'))")
+    # the shipped window: both icon lists carry the test, other modifiers (events, canals) keep their icons
+    window = (MOD_ROOT / "in_game/gui/location_window.gui").read_text(encoding="utf-8-sig")
+    assert window.count(f'visible = "[Not({loc})]"') == 1
+    assert window.count(f'visible = "[Not({hidden["province_modifier"]})]"') == 1
+    assert "STATIC_MODIFIER_NAME_pp_river_canal_open" not in window

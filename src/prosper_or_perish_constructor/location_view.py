@@ -206,7 +206,7 @@ _TIMED_MODIFIER_ICONS = """hbox = {{
 	datamodel = "[{model}]"
 	item = {{
 		timed_modifier_icon = {{
-			datacontext = "[TimedModifier]"
+			datacontext = "[TimedModifier]"{visible}
 			tooltipwidget = {{
 				using = timed_modifier_tooltip
 				blockoverride "concept_link" {{
@@ -218,11 +218,13 @@ _TIMED_MODIFIER_ICONS = """hbox = {{
 }}"""
 
 
-def show_every_timed_modifier(text: str) -> str:
+def show_every_timed_modifier(text: str, hidden: dict[str, str] | None = None) -> str:
     """Show each location and province modifier as its own icon in the condition row.
 
     Vanilla draws a single modifier's icon, but two or more only as a count with a generic icon (the modifiers listed in
     its tooltip). The condition row at the top of the scene has room for every icon, each with its own tooltip.
+    ``hidden`` maps a concept (location_modifier, province_modifier) to a GUI test on ``TimedModifier``: the modifiers a
+    chip of the bottom row already shows (``shown_by_chips``) get no icon of their own.
     """
     for anchor, concept in _TIMED_MODIFIERS:
         found = text.count(anchor)
@@ -238,9 +240,65 @@ def show_every_timed_modifier(text: str) -> str:
         if model is None or f"[{concept}|e]" not in block:
             raise ValueError(f"location_window.gui: '{anchor.strip()}' no longer lists {concept} timed modifiers")
         indent = text[text.rfind("\n", 0, start) + 1:start]
-        icons = _TIMED_MODIFIER_ICONS.format(model=model.group(1), concept=concept).replace("\n", "\n" + indent)
+        test = (hidden or {}).get(concept)
+        visible = f'\n\t\t\tvisible = "[Not({test})]"' if test else ""
+        icons = _TIMED_MODIFIER_ICONS.format(model=model.group(1), concept=concept, visible=visible).replace("\n", "\n" + indent)
         text = text[:start] + icons + text[end:]
     return text
+
+
+_NAME = "TimedModifier.GetModifier.GetName"
+WB_CHIP_MODIFIERS = re.compile(r"^(pp_wb_(?:fertility|soil)_\w+|pp_wb_coastal|pp_wb_lake)\s*=\s*\{", re.M)
+RIVER_MODIFIERS = re.compile(r"^(river_flowing_through_\w+)\s*=\s*\{", re.M)
+_STATIC_NAME = re.compile(r'^\s*STATIC_MODIFIER_NAME_(\w+):\d*\s*"(.*)"\s*$', re.M)
+STORED_FOOD_STEP = "pp_food_store_0"   # every step carries the name Stored Food
+
+
+def _any(tests: list[str]) -> str:
+    out = tests[-1]
+    for test in reversed(tests[:-1]):
+        out = f"Or({test}, {out})"
+    return out
+
+
+def _static_names(roots: list[Path]) -> dict[str, str]:
+    """Display name of every static modifier in the English localization of ``roots`` (later roots win)."""
+    names: dict[str, str] = {}
+    for root in roots:
+        for path in sorted((root / "main_menu/localization/english").rglob("*.yml")):
+            names.update(_STATIC_NAME.findall(path.read_text(encoding="utf-8-sig", errors="replace")))
+    return names
+
+
+def shown_by_chips(mod_root: Path, vanilla: Path | None, goods: list[str], harvests: bool) -> dict[str, str]:
+    """GUI tests for the location and province modifiers a chip of the bottom row already shows.
+
+    The fertility, soil, water access and lake chips show the World Builder modifiers, the river chip vanilla's river
+    modifiers (RiverModifier_tooltip), the RGO chip the raw material bonus, the harvest chip the location's harvest and
+    the Stored Food chip the province's step. A GUI icon cannot see a modifier's key, so the test compares its name: one
+    test per distinct name, the harvest against the harvest chip's own text (one test for the ~100 harvests).
+    """
+    game = None if vanilla is None else (vanilla / "game" if (vanilla / "game" / "main_menu").is_dir() else vanilla)
+    keys = WB_CHIP_MODIFIERS.findall(_read(mod_root / "main_menu/common/static_modifiers/pp_wb_attribute_modifiers.txt"))
+    if game is not None:
+        keys += RIVER_MODIFIERS.findall(_read(game / "main_menu/common/static_modifiers/location.txt"))
+    keys += [f"pp_rgo_bonus_{good}" for good in goods]
+    names = _static_names([root for root in (game, mod_root) if root is not None])
+    seen: set[str] = set()
+    tests = [f"EqualTo_string({_NAME}, {_LOC}.Custom('pp_harvest_state'))"] if harvests else []
+    for key in keys:
+        name = names.get(key, key)
+        if name not in seen:
+            seen.add(name)
+            tests.append(f"EqualTo_string({_NAME}, Localize('STATIC_MODIFIER_NAME_{key}'))")
+    hidden = {"province_modifier": f"EqualTo_string({_NAME}, Localize('STATIC_MODIFIER_NAME_{STORED_FOOD_STEP}'))"}
+    if tests:
+        hidden["location_modifier"] = _any(tests)
+    return hidden
+
+
+def _read(path: Path) -> str:
+    return path.read_text(encoding="utf-8-sig") if path.is_file() else ""
 
 
 # EU5 1.4 builds the population cell of `location_card` and of the location view header from one template;
@@ -506,7 +564,7 @@ def build_window(export_text: str, mod_root: Path, vanilla: Path | None, stored_
     merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla),
                                             location_status.load_stored_food_rows(mod_root, vanilla, stored_food))
     location_status.write_harvest_files(mod_root, harvests)
-    return show_every_timed_modifier(move_modifier_row(merged))
+    return show_every_timed_modifier(move_modifier_row(merged), shown_by_chips(mod_root, vanilla, goods, bool(harvests.keys)))
 
 
 def apply(repo: Path, project: Path, mod_root: Path, vanilla: Path) -> dict[str, object]:

@@ -278,56 +278,61 @@ def _scaled_value(strength: str, base: str, info: dict[str, str], smallest: floa
     return f"[{value}|{decimals}{'%' if percent else ''}{sign}]{suffix}"
 
 
+LAND_STRENGTH_TEXT = {"overpopulation": "PP_LAND_CHIP_OVERPOPULATION_STRENGTH", "abundant_free_land": "PP_LAND_CHIP_ABUNDANT_STRENGTH",
+                      "available_free_land": "PP_LAND_CHIP_AVAILABLE_STRENGTH"}
+
+
 def land_effect_rows(pressure_text: str, types: dict[str, dict[str, str]]) -> dict[str, str]:
     """Each land modifier's effects at the location's current strength: its marker's value times the base value.
 
     The game shows static modifiers only at full strength (`ShowModifierEffect`), while the engine scales these three.
-    Goods-output lines with one shared value collapse into a single line that shows the affected goods as icons.
+    The lines are drawn like vanilla's modifier lists (the Port tooltip's impact list): one list whose header is the
+    strength line, a 30 px row per effect, name left, value right, every second row shaded. Goods-output lines with one
+    shared value collapse into a single row with the affected goods as icons under it.
     """
     rows: dict[str, str] = {}
     for marker, name in LAND_MODIFIERS.items():
         effects = [(k, v) for k, v in modifier_effects(pressure_text, name) if v not in ("no", "0") and (v == "yes" or float(v) != 0)]
         goods = [(k, v) for k, v in effects if _GOODS_OUTPUT.fullmatch(k)]
         shared = len(goods) >= 3 and len({v for _, v in goods}) == 1
-        lines: list[tuple[float, str]] = []
+        lines: list[tuple[float, str, str, list[str]]] = []   # (shown size, name, value, goods icons)
         for key, value in effects:
             if shared and _GOODS_OUTPUT.fullmatch(key):
                 continue
             label = f"[ShowModifierTypeName('{key}')]"
             if value == "yes":
-                lines.append((float("inf"), _raw_block(label)))
+                lines.append((float("inf"), label, "", []))
             else:
-                lines.append((_magnitude(value, types.get(key, {})), _raw_block(f"{label}: {_scaled(marker, key, value, types.get(key, {}))}")))
+                lines.append((_magnitude(value, types.get(key, {})), label, _scaled(marker, key, value, types.get(key, {})), []))
         if shared:
             key, value = goods[0]
-            line = f"[Localize('PP_LAND_CHIP_GOODS_OUTPUT')]: {_scaled(marker, key, value, types.get(key, {}))}"
-            lines.append((_magnitude(value, types.get(key, {})), _goods_block(line, [_GOODS_OUTPUT.fullmatch(k).group(1) for k, _ in goods])))
+            lines.append((_magnitude(value, types.get(key, {})), "[Localize('PP_LAND_CHIP_GOODS_OUTPUT')]",
+                          _scaled(marker, key, value, types.get(key, {})), [_GOODS_OUTPUT.fullmatch(k).group(1) for k, _ in goods]))
         # One strength scales every line alike, so the build-time order is the order of the shown values.
         lines.sort(key=lambda item: -item[0])
-        rows[name] = _scrolled(" ".join(block for _, block in lines))
+        fields = " ".join(_table_rows(label, value, icons, shaded=index % 2 == 1)
+                          for index, (_, label, value, icons) in enumerate(lines))
+        rows[name] = _scrolled(f'TooltipListBase = {{ blockoverride "block_title" {{ text = "{LAND_STRENGTH_TEXT[name]}" }} {fields} }}')
     return rows
 
 
-def _raw_block(line: str, visible: str | None = None) -> str:
-    test = f'visible = "[{visible}]" ' if visible else ""
-    return f'TooltipTextBlock = {{ {test}blockoverride "text" {{ raw_text = "{line}" }} }}'
-
-
-def _goods_block(line: str, goods: list[str]) -> str:
-    """The shared goods-output line with the affected goods as rows of icons under it, in one tooltip entry."""
-    per_row = math.ceil(len(goods) / math.ceil(len(goods) / _ICONS_PER_ROW))
-    rows = []
-    for start in range(0, len(goods), per_row):
-        icons = " ".join(
-            f"icon = {{ size = {{ 26 26 }} texture = \"{_ICONS}/trade_goods/icon_goods_{good}.dds\" tooltip = \"[ShowGoodsName('{good}')]\" }}"
-            for good in goods[start:start + per_row]
-        )
-        rows.append(f"hbox = {{ layoutpolicy_horizontal = expanding spacing = 3 {icons} expand = {{}} }}")
-    return (
-        "TooltipListBase = { vbox = { layoutpolicy_horizontal = expanding "
-        "margin = { 10 10 } spacing = 4 "
-        f'textbox = {{ using = tooltip_text_block_template raw_text = "{line}" }} {" ".join(rows)} }} }}'
-    )
+def _table_rows(label: str, value: str, goods: list[str], shaded: bool) -> str:
+    """One effect as vanilla's table row (TooltipTableField: 30 px, margin 10, name left, value right); the goods
+    icons of a shared goods-output row follow in rows of their own with the same shading."""
+    background = 'blockoverride "field_background" { background = { using = tooltip_table_field_texture } }' if shaded \
+        else 'blockoverride "field_background" {}'
+    value_text = f' text_single = {{ align = right|nobaseline raw_text = "{value}" }}' if value else ""
+    out = [f'TooltipTableField = {{ {background} blockoverride "field_content" {{ '
+           f'text_single = {{ layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "{label}" }}{value_text} }} }}']
+    if goods:
+        per_row = math.ceil(len(goods) / math.ceil(len(goods) / _ICONS_PER_ROW))
+        for start in range(0, len(goods), per_row):
+            icons = " ".join(
+                f"icon = {{ size = {{ 26 26 }} texture = \"{_ICONS}/trade_goods/icon_goods_{good}.dds\" tooltip = \"[ShowGoodsName('{good}')]\" }}"
+                for good in goods[start:start + per_row]
+            )
+            out.append(f'TooltipTableField = {{ {background} spacing = 3 blockoverride "field_content" {{ {icons} expand = {{}} }} }}')
+    return " ".join(out)
 
 
 def _magnitude(value: str, info: dict[str, str]) -> float:
@@ -435,7 +440,7 @@ def harvest_chip(harvests: Harvests) -> str:
 
 def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stored_rows: str | None = None) -> str:
     # Without the modifier types the land chips fall back to the full-strength effects.
-    land_rows = land_rows or {name: _scrolled(_row(name)) for name in LAND_MODIFIERS.values()}
+    land_rows = land_rows or {name: _text(LAND_STRENGTH_TEXT[name]) + " " + _scrolled(_row(name)) for name in LAND_MODIFIERS.values()}
     starving = f"{_LOC}.GetProvince.IsStarving"
     months = f"[{_LOC}.MakeScope.ScriptValue('pp_province_food_storage_months')|0]"
     overlay = f"""
@@ -453,14 +458,14 @@ def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stor
     over, abundant, available = (_marker(key) for key in LAND_MARKERS)
     land = _chip("pp_status_land_overpopulation", over, f"{_ICONS}/modifiers/overpopulation.dds",
                  "PP_LAND_CHIP_OVERPOPULATION_TITLE", "population_capacity",
-                 _text("PP_LAND_CHIP_OVERPOPULATION") + " " + _text("PP_LAND_CHIP_OVERPOPULATION_STRENGTH") + " " + land_rows["overpopulation"])
+                 _text("PP_LAND_CHIP_OVERPOPULATION") + " " + land_rows["overpopulation"])
     land += _chip("pp_status_land_abundant", f"And(Not({over}), {abundant})", f"{_ICONS}/location_icons/monthly_growth.dds",
                   "PP_LAND_CHIP_ABUNDANT_TITLE", "pp_abundant_free_land",
-                  _text("PP_LAND_CHIP_ABUNDANT") + " " + _text("PP_LAND_CHIP_ABUNDANT_STRENGTH") + " " + land_rows["abundant_free_land"])
+                  _text("PP_LAND_CHIP_ABUNDANT") + " " + land_rows["abundant_free_land"])
     land += _chip("pp_status_land_available", f"And3(Not({over}), Not({abundant}), {available})",
                   f"{_ICONS}/modifier_types/total_population_capacity_modifier.dds",
                   "PP_LAND_CHIP_AVAILABLE_TITLE", "pp_available_free_land",
-                  _text("PP_LAND_CHIP_AVAILABLE") + " " + _text("PP_LAND_CHIP_AVAILABLE_STRENGTH") + " " + land_rows["available_free_land"])
+                  _text("PP_LAND_CHIP_AVAILABLE") + " " + land_rows["available_free_land"])
     land += _chip("pp_status_land_settled", f"And3(Not({over}), Not({abundant}), Not({available}))",
                   f"{_ICONS}/location_icons/population.dds",
                   "PP_LAND_CHIP_SETTLED_TITLE", "population_capacity", _text("PP_LAND_CHIP_SETTLED"))

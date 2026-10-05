@@ -125,6 +125,16 @@ def test_land_rows_show_scaled_values_largest_first_in_a_scroll_area():
     assert icons == ["wheat", "rice", "fish"] and "[ShowGoodsName('rice')]" in abundant and abundant.count("{") == abundant.count("}")
     out = location_status.status_row(HARVESTS, rows)
     assert out.count("TooltipScrolledContentSection") == 4 and "ShowModifierEffect('overpopulation')" not in out
+    # 2026-10-05 (Jan): drawn like vanilla's modifier lists (the Port tooltip), not a boxed block per line: one list headed
+    # by the strength line, a table row per effect (name left, value right), every second row shaded
+    assert "TooltipTextBlock" not in over and over.count("TooltipListBase = {") == 1
+    assert 'blockoverride "block_title" { text = "PP_LAND_CHIP_OVERPOPULATION_STRENGTH" }' in over
+    shading = re.findall(r'TooltipTableField = \{ blockoverride "field_background" \{ ?(background)?', over)
+    assert shading == ["", "background"]
+    assert out.count("PP_LAND_CHIP_OVERPOPULATION_STRENGTH") == 1   # the header only, no separate text block
+    # the goods icons sit in rows shaded like their goods-output row (the first row: unshaded)
+    goods_rows = re.findall(r'TooltipTableField = \{ blockoverride "field_background" \{ ?(background)?[^T]*?spacing = 3', abundant)
+    assert goods_rows == [""]
 
 
 def test_mod_files_carry_the_markers_types_and_localization():

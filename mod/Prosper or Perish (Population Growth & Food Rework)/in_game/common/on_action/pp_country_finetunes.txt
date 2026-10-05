@@ -13,7 +13,7 @@ pp_country_finetune_start_gold = {
 		}
 		if = {
 			limit = { exists = c:BYZ }
-			c:BYZ = { add_gold = -500 }
+			c:BYZ = { add_gold = -1000 }
 		}
 		if = {
 			limit = { exists = c:FRA }

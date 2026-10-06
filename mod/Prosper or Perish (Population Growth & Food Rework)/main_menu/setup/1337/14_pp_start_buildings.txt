@@ -7990,7 +7990,7 @@ building_manager = {
 	granary = { tag = NSR level = 1 location = cantung }
 	granary = { tag = DCI level = 1 location = carrickbeg }
 	granary = { tag = SPO level = 1 location = castellaun }
-	granary = { tag = ARA level = 5 location = castellon_de_la_plana }
+	granary = { tag = ARA level = 4 location = castellon_de_la_plana }
 	granary = { tag = TNT level = 1 location = cavalese }
 	granary = { tag = TOT level = 1 location = cempoala }
 	granary = { tag = SIG level = 1 location = cenrana }
@@ -8095,7 +8095,7 @@ building_manager = {
 	granary = { tag = GRG level = 1 location = faraveh }
 	granary = { tag = POR level = 3 location = faro }
 	granary = { tag = HZP level = 1 location = fereydunshahr }
-	granary = { tag = MOR level = 4 location = fez }
+	granary = { tag = MOR level = 1 location = fez }
 	granary = { tag = INJ level = 3 location = firuzabad }
 	granary = { tag = SMD level = 1 location = fischhausen }
 	granary = { tag = NOR level = 2 location = flekkefjord }
@@ -8165,7 +8165,7 @@ building_manager = {
 	granary = { tag = KRT level = 1 location = herat }
 	granary = { tag = HSF level = 1 location = hersfeld }
 	granary = { tag = CHI level = 1 location = hezhong }
-	granary = { tag = HEZ level = 4 location = hezhou }
+	granary = { tag = HEZ level = 2 location = hezhou }
 	granary = { tag = MKR level = 1 location = hinglaj }
 	granary = { tag = HZN level = 1 location = hizan }
 	granary = { tag = HHB level = 1 location = hohenberg }
@@ -8348,7 +8348,7 @@ building_manager = {
 	granary = { tag = KRM level = 1 location = mardehek }
 	granary = { tag = HCH level = 2 location = markahuamachuco }
 	granary = { tag = MOR level = 2 location = marrakesh }
-	granary = { tag = PRO level = 4 location = marseille }
+	granary = { tag = PRO level = 2 location = marseille }
 	granary = { tag = KSW level = 1 location = marwah }
 	granary = { tag = JKR level = 1 location = mashhad }
 	granary = { tag = KHN level = 1 location = mastung }
@@ -8431,7 +8431,7 @@ building_manager = {
 	granary = { tag = KBO level = 2 location = njimi }
 	granary = { tag = TZL level = 1 location = nochixtlan }
 	granary = { tag = ENG level = 1 location = nottingham }
-	granary = { tag = MOR level = 2 location = noul_lamta }
+	granary = { tag = MOR level = 1 location = noul_lamta }
 	granary = { tag = NOV level = 3 location = novgorod }
 	granary = { tag = NRK level = 1 location = novogrudok }
 	granary = { tag = GOL level = 1 location = nubzur }
@@ -8501,7 +8501,7 @@ building_manager = {
 	granary = { tag = NOV level = 2 location = porkhov }
 	granary = { tag = RSO level = 2 location = porog }
 	granary = { tag = BLO level = 2 location = poshekhonye }
-	granary = { tag = NAP level = 3 location = potenza }
+	granary = { tag = NAP level = 1 location = potenza }
 	granary = { tag = POL level = 1 location = poznan }
 	granary = { tag = KHM level = 1 location = prasat_thong_lang }
 	granary = { tag = PRA level = 5 location = prato }
@@ -8628,7 +8628,6 @@ building_manager = {
 	granary = { tag = GHA level = 1 location = sosso }
 	granary = { tag = VDZ level = 1 location = sotk }
 	granary = { tag = ORT level = 1 location = spittal }
-	granary = { tag = PAP level = 1 location = spoleto }
 	granary = { tag = SUK level = 1 location = sri_thep }
 	granary = { tag = LUX level = 1 location = st_vith }
 	granary = { tag = NOV level = 2 location = staraya_russa }
@@ -8662,7 +8661,6 @@ building_manager = {
 	granary = { tag = KRP level = 1 location = tanjungpuri }
 	granary = { tag = AAD level = 1 location = tanumah }
 	granary = { tag = FRA level = 4 location = tarbes }
-	granary = { tag = WAL level = 1 location = targoviste }
 	granary = { tag = BID level = 2 location = tartu }
 	granary = { tag = QHT level = 1 location = tathlith }
 	granary = { tag = BIT level = 1 location = tatvan }
@@ -8676,7 +8674,6 @@ building_manager = {
 	granary = { tag = JMB level = 2 location = tembesi }
 	granary = { tag = TNX level = 1 location = tenamaxtlan }
 	granary = { tag = BMR level = 2 location = tenenkou }
-	granary = { tag = TNK level = 1 location = tenkasi }
 	granary = { tag = TEN level = 2 location = tenkodogo }
 	granary = { tag = TEO level = 1 location = teotitlan }
 	granary = { tag = TZL level = 1 location = teozacualco }
@@ -16077,7 +16074,7 @@ building_manager = {
 	tools_guild = { tag = FRA level = 2 location = lyon }
 	tools_guild = { tag = PRO level = 2 location = marseille }
 	tools_guild = { tag = DLH level = 2 location = mathura }
-	tools_guild = { tag = CAS level = 2 location = medina_del_campo }
+	tools_guild = { tag = CAS level = 1 location = medina_del_campo }
 	tools_guild = { tag = MOR level = 2 location = meknes }
 	tools_guild = { tag = SIC level = 2 location = messina }
 	tools_guild = { tag = MTZ level = 2 location = metz }
@@ -16140,6 +16137,7 @@ building_manager = {
 	tools_guild = { tag = DLH level = 2 location = sargadwari }
 	tools_guild = { tag = ARA level = 2 location = sassari }
 	tools_guild = { tag = GEN level = 2 location = savona }
+	tools_guild = { tag = CAS level = 1 location = segovia }
 	tools_guild = { tag = CAS level = 2 location = sevilla }
 	tools_guild = { tag = INJ level = 1 location = shiraz }
 	tools_guild = { tag = TFL level = 2 location = sijilmasa }

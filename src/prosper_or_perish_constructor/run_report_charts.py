@@ -20,6 +20,7 @@ at base prices (amount x the good's default price, so volumes compare across sav
 from __future__ import annotations
 
 import math
+import statistics
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
@@ -1006,6 +1007,80 @@ def country_charts(run: RunData, x: pl.DataFrame) -> tuple[list[dict[str, Any]],
 
 
 # --------------------------------------------------------------------------------------------------------
+# Game speed: wall-clock seconds per game year between consecutive saves (file time and game date), the same rule
+# as profile-analyzer's game_speed: a stretch more than PAUSE_FACTOR x slower than the median of its neighbours
+# was paused (menus, alt-tab, the observer auto pause) and stays out of the averages.
+
+PAUSE_FACTOR = 1.6
+PAUSE_NEIGHBOURS = 3
+SPEED_WINDOW = 10.0  # game years of the running average (centred)
+
+
+def speed_segments(x: pl.DataFrame, snapshots: pl.DataFrame) -> list[dict[str, Any]]:
+    """[{start, end, years, seconds, per_year, pause}] in date order; empty without save file times."""
+    if "mtime" not in snapshots.columns:
+        return []
+    points = x.join(snapshots.select("snapshot_id", "mtime"), on="snapshot_id", how="left").sort("date_sort")
+    out: list[dict[str, Any]] = []
+    previous = None
+    for game, wall in points.select("x", "mtime").iter_rows():
+        if wall is None:
+            continue
+        if previous is not None and game > previous[0] and wall > previous[1]:
+            years, seconds = game - previous[0], wall - previous[1]
+            out.append({"start": previous[0], "end": game, "years": years, "seconds": seconds, "per_year": seconds / years})
+        previous = (game, wall)
+    for i, s in enumerate(out):
+        near = [o["per_year"] for j, o in enumerate(out) if j != i and abs(j - i) <= PAUSE_NEIGHBOURS]
+        s["pause"] = bool(near) and s["per_year"] > PAUSE_FACTOR * statistics.median(near)
+    return out
+
+
+def speed_running(segments: list[dict[str, Any]], window: float = SPEED_WINDOW) -> list[tuple[float, float]]:
+    """(midpoint, seconds per game year over the window centred there), pauses left out."""
+    kept = [s for s in segments if not s["pause"]]
+    out = []
+    for s in kept:
+        mid = (s["start"] + s["end"]) / 2
+        weights = [(o["per_year"], min(mid + window / 2, o["end"]) - max(mid - window / 2, o["start"])) for o in kept]
+        total = sum(w for _, w in weights if w > 0)
+        if total:
+            out.append((mid, sum(v * w for v, w in weights if w > 0) / total))
+    return out
+
+
+def speed_charts(run: RunData, x: pl.DataFrame) -> list[dict[str, Any]]:
+    segments = speed_segments(x, run.snapshots)
+    kept = [s for s in segments if not s["pause"]]
+    if not kept:
+        return []
+    average = sum(s["seconds"] for s in kept) / sum(s["years"] for s in kept)
+    paused = sum(s["seconds"] - s["years"] * average for s in segments if s["pause"])
+    running = speed_running(segments)
+    # each stretch is a flat step from its start to its end; a pause leaves a gap
+    steps: list[list[Any]] = []
+    for s in segments:
+        if s["pause"]:
+            steps.append([_ms(s["start"]), None])
+        else:
+            steps += [[_ms(s["start"]), _r(s["per_year"])], [_ms(s["end"]), _r(s["per_year"])]]
+    xs = [segments[0]["start"], segments[-1]["end"]]
+    option = line_option(xs, [], unit="sec")
+    option["color"] = [CATEGORICAL[0], WORLD]
+    option["series"] = [
+        {"type": "line", "name": "Between two saves", "data": steps, "showSymbol": False, "connectNulls": False,
+         "lineStyle": {"width": 1.5}, "areaStyle": {"opacity": 0.18}, "emphasis": {"focus": "series"},
+         "markLine": {"silent": True, "symbol": "none", "label": {"formatter": f"average {average:.1f} s", "position": "insideEndTop"},
+                      "lineStyle": {"type": "dashed", "color": "#8a8a86", "width": 1}, "data": [{"yAxis": _r(average)}]}},
+        {"type": "line", "name": f"{SPEED_WINDOW:.0f}-year running average", "data": [[_ms(m), _r(v)] for m, v in running],
+         "showSymbol": False, "smooth": 0.3, "lineStyle": {"width": 3}, "emphasis": {"focus": "series"}},
+    ]
+    pauses = len(segments) - len(kept)
+    caption = (f"Wall-clock seconds the game took per game year between two consecutive saves (the saves' file times), "
+               f"{average:.1f} s on average. Includes saving. "
+               + (f"{pauses} stretch{'es' if pauses != 1 else ''} more than {PAUSE_FACTOR}× slower than {'their' if pauses != 1 else 'its'} "
+                  f"neighbours (paused, about {paused / 60:.0f} min) left out." if pauses else "No paused stretches found."))
+    return [chart("seconds_per_year", "speed", "Seconds per game year", caption, [view("Seconds", "sec", option)], height=380)]
 
 
 def build_payload(run: RunData) -> dict[str, Any]:
@@ -1027,6 +1102,7 @@ def build_payload(run: RunData) -> dict[str, Any]:
     country, country_tables = country_charts(run, x)
     charts += country
     tables += country_tables
+    charts += speed_charts(run, x)
     groups = [{"key": key, "label": label, "color": colour} for key, label, colour, _ in GOODS_GROUPS]
     return {"charts": charts, "tables": tables, "goods": goods, "groups": groups}
 

@@ -110,7 +110,7 @@ class Labels:
 class RunData:
     playthrough_id: str
     name: str
-    snapshots: pl.DataFrame  # snapshot_id, date, year, date_sort (sorted)
+    snapshots: pl.DataFrame  # snapshot_id, date, year, date_sort, mtime (save file time, seconds) (sorted)
     locations: pl.DataFrame  # per snapshot and location
     building_levels: pl.DataFrame  # snapshot_id, slug, levels
     buildings_by_category: pl.DataFrame  # snapshot_id, building_category, levels
@@ -172,7 +172,7 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
     playthrough = playthrough or latest_playthrough(dataset)
     manifest = pl.read_parquet(dataset / "manifest.parquet").filter(pl.col("playthrough_id") == playthrough)
     snapshots = (
-        manifest.select("snapshot_id", "date", "year", "date_sort", "playthrough_name")
+        manifest.select("snapshot_id", "date", "year", "date_sort", "mtime", "playthrough_name")
         .unique("snapshot_id")
         .sort("date_sort")
     )
@@ -1166,6 +1166,7 @@ SECTIONS = (
     ("prices", "Prices", "Every good's price against its base price, and whether the world uses more than it makes."),
     ("buildings", "Buildings", "Building levels and what they cost to build."),
     ("countries", "Countries", "The largest countries by population and by income."),
+    ("speed", "Game speed", "How long the game took per game year, from the times the saves were written."),
 )
 
 ECHARTS_URL = "https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"
@@ -1236,6 +1237,7 @@ PAGE_JS = r"""
     gold2: v => v.toFixed(2),
     num: v => compact(v),
     count: v => String(Math.round(v)),
+    sec: v => v.toFixed(1) + ' s',
   };
   const fmt = (v, unit) => (v == null || !isFinite(v)) ? '–' : (UNITS[unit] || compact)(v);
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));

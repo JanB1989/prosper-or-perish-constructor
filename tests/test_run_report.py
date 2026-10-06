@@ -348,3 +348,23 @@ def test_institutions_count_full_spread_per_location_and_feed_map_chart_and_tile
     shares = {s["name"]: s["data"] for s in charts["institutions"]["views"][1]["option"]["series"]}
     assert list(shares) == ["Feudalism", "Renaissance"]  # in the order they appeared
     assert abs(shares["Feudalism"][-1][1] - 225 / 226.5 * 100) < 0.01
+
+
+def test_speed_chart_from_save_times_leaves_pauses_out(tmp_path: Path) -> None:
+    from prosper_or_perish_constructor.run_report_charts import build_payload, speed_charts, speed_running, speed_segments, xaxis
+
+    years = [1342, 1347, 1352, 1357, 1362, 1367, 1372]
+    walls = [0, 125, 250, 375, 875, 1000, 1125]  # 25 s per game year, 375 s paused between 1357 and 1362
+    snapshots = pl.DataFrame({"snapshot_id": [f"s{y}" for y in years], "year": years,
+                              "date_sort": [y * 10000 + 401 for y in years], "mtime": [1.8e9 + w for w in walls]})
+    run = rr.RunData("run", "Run", snapshots, pl.DataFrame(), pl.DataFrame(), pl.DataFrame(), pl.DataFrame())
+    segments = speed_segments(xaxis(run), snapshots)
+    assert [s["pause"] for s in segments] == [False, False, False, True, False, False]
+    assert all(abs(v - 25) < 1e-9 for _, v in speed_running(segments))
+    (chart,) = speed_charts(run, xaxis(run))
+    assert chart["section"] == "speed" and "25.0 s on average" in chart["caption"] and "1 stretch " in chart["caption"]
+    # datasets without save file times get no chart
+    assert not speed_segments(xaxis(run), snapshots.drop("mtime"))
+    trade = _trade_run()
+    page = rr.write_page(trade, tmp_path, [], build_payload(trade)).read_text(encoding="utf-8")
+    assert "<h2 id=speed>" not in page

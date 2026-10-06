@@ -189,7 +189,8 @@ NCountry = {
 	# 2026-10-04 (Jan): institutions spread too fast in PP (age-2 institutions reached 61 % of the world's people
 	# 65 years after they appeared, run 379f7d7a). Embracing needs twice the exposed population; trade spreads
 	# institutions only over shorter routes and from busier markets (PP markets trade far more than vanilla's).
+	# 2026-10-06 (Jan): market volume threshold 30 -> 20, more mid-sized markets pass institutions on.
 	INSTITUTION_MINIMUM_PERCENT = 0.4 # 0.2
 	INSTITUTION_TRADE_SPREAD_RANGE_HALFCOST = 25 # 50
-	INSTITUTION_TRADE_MIN_VOLUME = 30 # 10
+	INSTITUTION_TRADE_MIN_VOLUME = 20 # 10
 }

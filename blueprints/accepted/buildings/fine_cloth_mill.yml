@@ -36,6 +36,22 @@ building:
     megalopolis = yes
     obsolete = fine_cloth_manufactory
     build_time = mills_build_time
+    # mastery (establishment branch, 2026-10-06): the AI scores a workshop at its recipe output and never sees
+    # the +20 % a mastered workshop makes, so expanding one gets that extra profit as weight: 0.2 x best output x
+    # price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings; matches the median).
+    ai_construct_weight = {
+        value = 0
+        if = {
+            limit = { exists = market has_building = building_type:fine_cloth_mill }
+            add = {
+                value = "market.market_price(goods:fine_cloth)"
+                multiply = 0.58720
+                multiply = { value = market_access max = 1 min = 0 }
+                multiply = { value = scope:owner.gold min = 0 add = 100 pow = 0.5 }
+                multiply = 0.2845
+            }
+        }
+    }
     unique_production_methods = {
         pp_fine_cloth_mill_dyeing_maintenance = {
             icon_type = goods
@@ -43,7 +59,7 @@ building:
             dyes = 0.47
             manual_labor = 0.079
             produced = fine_cloth
-            output = 0.297
+            output = 0.264
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -53,7 +69,7 @@ building:
             fur = 0.5
             manual_labor = 0.1
             produced = fine_cloth
-            output = 0.17
+            output = 0.15
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -63,7 +79,7 @@ building:
             cloth = 6.96
             manual_labor = 0.87
             produced = fine_cloth
-            output = 3.303
+            output = 2.936
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -71,7 +87,7 @@ building:
             silk = 5.22
             manual_labor = 0.87
             produced = fine_cloth
-            output = 3.303
+            output = 2.936
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -81,7 +97,7 @@ building:
             wool = 3.31
             manual_labor = 0.9
             produced = fine_cloth
-            output = 1.39
+            output = 1.24
             debug_max_profit = mills_profit_margin
             category = mills_input
         }

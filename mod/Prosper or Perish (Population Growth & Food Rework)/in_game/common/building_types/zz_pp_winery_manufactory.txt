@@ -12,6 +12,22 @@ city = yes
 megalopolis = yes
 build_time = manufactory_build_time
 obsolete = winery
+# mastery (establishment branch, 2026-10-06): the AI scores a workshop at its recipe output and never sees
+# the +20 % a mastered workshop makes, so expanding one gets that extra profit as weight: 0.2 x best output x
+# price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings; matches the median).
+ai_construct_weight = {
+    value = 0
+    if = {
+        limit = { exists = market has_building = building_type:winery_manufactory }
+        add = {
+            value = "market.market_price(goods:wine)"
+            multiply = 0.32000
+            multiply = { value = market_access max = 1 min = 0 }
+            multiply = { value = scope:owner.gold min = 0 add = 100 pow = 0.5 }
+            multiply = 0.2845
+        }
+    }
+}
 unique_production_methods = {
     pp_winery_manufactory_fruit_winery_manufactory_maintenance = {
         icon_type = goods
@@ -22,7 +38,7 @@ unique_production_methods = {
         glass = 0.07 # glass bottles
         manual_labor = 0.28
         produced = wine
-        output = 1.8
+        output = 1.6
         category = guild_input
         debug_max_profit = manufactory_profit_margin
     }
@@ -35,7 +51,7 @@ unique_production_methods = {
         pottery = 0.21 # stoneware storage jars
         manual_labor = 0.28
         produced = wine
-        output = 1.8
+        output = 1.6
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
@@ -47,7 +63,7 @@ unique_production_methods = {
         tools = 0.115 # tools cut to a running cost (~10 %)
         manual_labor = 0.27
         produced = wine
-        output = 1.8
+        output = 1.6
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
@@ -59,7 +75,7 @@ unique_production_methods = {
         tools = 0.087
         manual_labor = 0.41
         produced = wine
-        output = 1.35
+        output = 1.2
         debug_max_profit = manufactory_profit_margin
         category = guild_input
     }
@@ -71,7 +87,7 @@ unique_production_methods = {
         tools = 0.086
         manual_labor = 0.39
         produced = wine
-        output = 1.35
+        output = 1.2
         debug_max_profit = manufactory_profit_margin
         category = guild_input
     }

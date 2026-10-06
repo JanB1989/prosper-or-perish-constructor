@@ -13,6 +13,22 @@ city = yes
 megalopolis = yes
 build_time = mills_build_time
 obsolete = cannon_foundry
+# mastery (establishment branch, 2026-10-06): the AI scores a workshop at its recipe output and never sees
+# the +20 % a mastered workshop makes, so expanding one gets that extra profit as weight: 0.2 x best output x
+# price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings; matches the median).
+ai_construct_weight = {
+    value = 0
+    if = {
+        limit = { exists = market has_building = building_type:cannons_factory }
+        add = {
+            value = "market.market_price(goods:cannons)"
+            multiply = 0.52800
+            multiply = { value = market_access max = 1 min = 0 }
+            multiply = { value = scope:owner.gold min = 0 add = 100 pow = 0.5 }
+            multiply = 0.2845
+        }
+    }
+}
 unique_production_methods = {
     pp_cannons_factory_ammunition_maintenance = {
         icon_type = goods
@@ -21,7 +37,7 @@ unique_production_methods = {
         saltpeter = 0.83
         manual_labor = 0.11
         produced = cannons
-        output = 0.63
+        output = 0.56
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -32,7 +48,7 @@ unique_production_methods = {
         saltpeter = 0.23
         manual_labor = 0.08
         produced = cannons
-        output = 0.18
+        output = 0.16
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -43,7 +59,7 @@ unique_production_methods = {
         saltpeter = 0.22
         manual_labor = 0.19
         produced = cannons
-        output = 0.35
+        output = 0.32
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -55,7 +71,7 @@ unique_production_methods = {
         steel = 2.49
         manual_labor = 0.49
         produced = cannons
-        output = 2.97
+        output = 2.64
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -67,7 +83,7 @@ unique_production_methods = {
         tools = 0.2
         manual_labor = 0.74
         produced = cannons
-        output = 1.67
+        output = 1.49
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -78,7 +94,7 @@ unique_production_methods = {
         tools = 0.19
         manual_labor = 0.75
         produced = cannons
-        output = 1.67
+        output = 1.49
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -91,7 +107,7 @@ unique_production_methods = {
         coal = 1.07
         manual_labor = 0.7
         produced = cannons
-        output = 2.23
+        output = 1.98
         debug_max_profit = mills_profit_margin
         category = mills_input
     }

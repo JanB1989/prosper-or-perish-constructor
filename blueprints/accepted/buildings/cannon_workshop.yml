@@ -35,13 +35,29 @@ building:
     city = yes
     megalopolis = yes
     build_time = workshop_build_time
+    # mastery (establishment branch, 2026-10-06): the AI scores a workshop at its recipe output and never sees
+    # the +20 % a mastered workshop makes, so expanding one gets that extra profit as weight: 0.2 x best output x
+    # price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings; matches the median).
+    ai_construct_weight = {
+        value = 0
+        if = {
+            limit = { exists = market has_building = building_type:cannon_workshop }
+            add = {
+                value = "market.market_price(goods:cannons)"
+                multiply = 0.17600
+                multiply = { value = market_access max = 1 min = 0 }
+                multiply = { value = scope:owner.gold min = 0 add = 100 pow = 0.5 }
+                multiply = 0.2845
+            }
+        }
+    }
     unique_production_methods = {
         pp_cannon_workshop_cannon_workshop_ammunition_stone_maintenance = {
             stone = 0.096
             saltpeter = 0.096
             manual_labor = 0.033
             produced = cannons
-            output = 0.09
+            output = 0.08
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -50,7 +66,7 @@ building:
             saltpeter = 0.11
             manual_labor = 0.04
             produced = cannons
-            output = 0.135
+            output = 0.12
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -59,7 +75,7 @@ building:
             saltpeter = 0.1
             manual_labor = 0.088
             produced = cannons
-            output = 0.18
+            output = 0.16
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -71,7 +87,7 @@ building:
             tools = 0.12
             manual_labor = 0.44
             produced = cannons
-            output = 0.99
+            output = 0.88
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -80,7 +96,7 @@ building:
             tools = 0.11
             manual_labor = 0.44
             produced = cannons
-            output = 0.99
+            output = 0.88
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }

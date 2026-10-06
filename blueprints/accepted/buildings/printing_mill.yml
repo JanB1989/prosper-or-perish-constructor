@@ -33,6 +33,22 @@ building:
     megalopolis = yes
     obsolete = printing_manufactory
     build_time = mills_build_time
+    # mastery (establishment branch, 2026-10-06): the AI scores a workshop at its recipe output and never sees
+    # the +20 % a mastered workshop makes, so expanding one gets that extra profit as weight: 0.2 x best output x
+    # price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings; matches the median).
+    ai_construct_weight = {
+        value = 0
+        if = {
+            limit = { exists = market has_building = building_type:printing_mill }
+            add = {
+                value = "market.market_price(goods:books)"
+                multiply = 0.64000
+                multiply = { value = market_access max = 1 min = 0 }
+                multiply = { value = scope:owner.gold min = 0 add = 100 pow = 0.5 }
+                multiply = 0.2845
+            }
+        }
+    }
     unique_production_methods = {
         pp_printing_mill_printing_mill_maintenance = {
             lead = 0.71
@@ -40,7 +56,7 @@ building:
             lumber = 1.14
             manual_labor = 0.47
             produced = books
-            output = 3.6
+            output = 3.2
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -50,7 +66,7 @@ building:
             leather = 0.57
             manual_labor = 0.47
             produced = books
-            output = 3.6
+            output = 3.2
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -62,7 +78,7 @@ building:
             leather = 0.28
             manual_labor = 0.74
             produced = books
-            output = 1.52
+            output = 1.35
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -74,7 +90,7 @@ building:
             lumber = 0.55
             manual_labor = 0.72
             produced = books
-            output = 1.52
+            output = 1.35
             debug_max_profit = mills_profit_margin
             category = mills_input
         }

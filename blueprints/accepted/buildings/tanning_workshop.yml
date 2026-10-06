@@ -30,6 +30,22 @@ building:
     city = yes
     megalopolis = yes
     build_time = workshop_build_time
+    # mastery (establishment branch, 2026-10-06): the AI scores a workshop at its recipe output and never sees
+    # the +20 % a mastered workshop makes, so expanding one gets that extra profit as weight: 0.2 x best output x
+    # price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings; matches the median).
+    ai_construct_weight = {
+        value = 0
+        if = {
+            limit = { exists = market has_building = building_type:tanning_workshop }
+            add = {
+                value = "market.market_price(goods:leather)"
+                multiply = 0.17600
+                multiply = { value = market_access max = 1 min = 0 }
+                multiply = { value = scope:owner.gold min = 0 add = 100 pow = 0.5 }
+                multiply = 0.2845
+            }
+        }
+    }
     unique_production_methods = {
         pp_tanning_workshop_leather_livestock_workshop_maintenance = {
             livestock = 1.19
@@ -38,7 +54,7 @@ building:
             tools = 0.095 # tools cut to a running cost (~10 %)
             manual_labor = 0.3
             produced = leather
-            output = 0.99
+            output = 0.88
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -49,7 +65,7 @@ building:
             tools = 0.095 # tools cut to a running cost (~10 %)
             manual_labor = 0.32
             produced = leather
-            output = 0.99
+            output = 0.88
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }

@@ -36,6 +36,22 @@ building:
     megalopolis = yes
     build_time = manufactory_build_time
     obsolete = cannon_workshop
+    # mastery (establishment branch, 2026-10-06): the AI scores a workshop at its recipe output and never sees
+    # the +20 % a mastered workshop makes, so expanding one gets that extra profit as weight: 0.2 x best output x
+    # price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings; matches the median).
+    ai_construct_weight = {
+        value = 0
+        if = {
+            limit = { exists = market has_building = building_type:cannon_foundry }
+            add = {
+                value = "market.market_price(goods:cannons)"
+                multiply = 0.21600
+                multiply = { value = market_access max = 1 min = 0 }
+                multiply = { value = scope:owner.gold min = 0 add = 100 pow = 0.5 }
+                multiply = 0.2845
+            }
+        }
+    }
     unique_production_methods = {
         pp_cannon_foundry_ammunition_maintenance = {
             icon_type = goods
@@ -44,7 +60,7 @@ building:
             saltpeter = 0.74
             manual_labor = 0.19
             produced = cannons
-            output = 0.585
+            output = 0.52
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -55,7 +71,7 @@ building:
             saltpeter = 0.29
             manual_labor = 0.099
             produced = cannons
-            output = 0.22
+            output = 0.2
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -66,7 +82,7 @@ building:
             saltpeter = 0.27
             manual_labor = 0.24
             produced = cannons
-            output = 0.44
+            output = 0.39
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -79,7 +95,7 @@ building:
             coal = 0.58 # fuel for the reverberatory furnace
             manual_labor = 0.38
             produced = cannons
-            output = 1.215
+            output = 1.08
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -91,7 +107,7 @@ building:
             tools = 0.11
             manual_labor = 0.41
             produced = cannons
-            output = 0.91
+            output = 0.81
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -102,7 +118,7 @@ building:
             tools = 0.1
             manual_labor = 0.41
             produced = cannons
-            output = 0.91
+            output = 0.81
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }

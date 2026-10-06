@@ -34,13 +34,29 @@ building:
     megalopolis = yes
     build_time = workshop_build_time
     construction_demand = workshop_construction
+    # mastery (establishment branch, 2026-10-06): the AI scores a workshop at its recipe output and never sees
+    # the +20 % a mastered workshop makes, so expanding one gets that extra profit as weight: 0.2 x best output x
+    # price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings; matches the median).
+    ai_construct_weight = {
+        value = 0
+        if = {
+            limit = { exists = market has_building = building_type:distillers_workshop }
+            add = {
+                value = "market.market_price(goods:liquor)"
+                multiply = 0.17600
+                multiply = { value = market_access max = 1 min = 0 }
+                multiply = { value = scope:owner.gold min = 0 add = 100 pow = 0.5 }
+                multiply = 0.2845
+            }
+        }
+    }
     unique_production_methods = {
         pp_distillers_workshop_sugar_liquor_workshop_maintenance = {
             sugar = 0.67
             glass = 0.078
             manual_labor = 0.25
             produced = liquor
-            output = 0.99
+            output = 0.88
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -49,7 +65,7 @@ building:
             glass = 0.091
             manual_labor = 0.25
             produced = liquor
-            output = 0.99
+            output = 0.88
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -58,7 +74,7 @@ building:
             glass = 0.091
             manual_labor = 0.25
             produced = liquor
-            output = 0.99
+            output = 0.88
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -67,7 +83,7 @@ building:
             glass = 0.091
             manual_labor = 0.25
             produced = liquor
-            output = 0.99
+            output = 0.88
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -76,7 +92,7 @@ building:
             glass = 0.11
             manual_labor = 0.26
             produced = liquor
-            output = 0.99
+            output = 0.88
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -85,7 +101,7 @@ building:
             glass = 0.11
             manual_labor = 0.26
             produced = liquor
-            output = 0.99
+            output = 0.88
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }

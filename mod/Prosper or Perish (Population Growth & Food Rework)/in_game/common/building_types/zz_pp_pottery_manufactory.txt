@@ -12,6 +12,22 @@ city = yes
 megalopolis = yes
 build_time = manufactory_build_time
 obsolete = pottery_workshop
+# mastery (establishment branch, 2026-10-06): the AI scores a workshop at its recipe output and never sees
+# the +20 % a mastered workshop makes, so expanding one gets that extra profit as weight: 0.2 x best output x
+# price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings; matches the median).
+ai_construct_weight = {
+    value = 0
+    if = {
+        limit = { exists = market has_building = building_type:pottery_manufactory }
+        add = {
+            value = "market.market_price(goods:pottery)"
+            multiply = 0.24000
+            multiply = { value = market_access max = 1 min = 0 }
+            multiply = { value = scope:owner.gold min = 0 add = 100 pow = 0.5 }
+            multiply = 0.2845
+        }
+    }
+}
 unique_production_methods = {
     pp_pottery_manufactory_pottery_manufactory_maintenance = {
         icon_type = building_type
@@ -22,7 +38,7 @@ unique_production_methods = {
         coal = 0.08 # coal-fired kilns
         manual_labor = 0.069
         produced = pottery
-        output = 1.35
+        output = 1.2
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
@@ -34,7 +50,7 @@ unique_production_methods = {
         tools = 0.028
         manual_labor = 0.09
         produced = pottery
-        output = 1.01
+        output = 0.9
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }

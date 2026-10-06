@@ -29,6 +29,22 @@ building:
     city = yes
     megalopolis = yes
     build_time = guild_build_time
+    # mastery (establishment branch, 2026-10-06): the AI scores a workshop at its recipe output and never sees
+    # the +20 % a mastered workshop makes, so expanding one gets that extra profit as weight: 0.2 x best output x
+    # price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings; matches the median).
+    ai_construct_weight = {
+        value = 0
+        if = {
+            limit = { exists = market has_building = building_type:scriptorium }
+            add = {
+                value = "market.market_price(goods:books)"
+                multiply = 0.04800
+                multiply = { value = market_access max = 1 min = 0 }
+                multiply = { value = scope:owner.gold min = 0 add = 100 pow = 0.5 }
+                multiply = 0.2845
+            }
+        }
+    }
     unique_production_methods = {
         pp_scriptorium_scriptorium_maintenance = {
             dyes = 0.046
@@ -36,7 +52,7 @@ building:
             lumber = 0.092
             manual_labor = 0.12
             produced = books
-            output = 0.27
+            output = 0.24
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -46,7 +62,7 @@ building:
             leather = 0.046
             manual_labor = 0.12
             produced = books
-            output = 0.27
+            output = 0.24
             debug_max_profit = guild_profit_margin
             category = guild_input
         }

@@ -11,6 +11,22 @@ town = yes
 city = yes
 megalopolis = yes
 build_time = workshop_build_time
+# mastery (establishment branch, 2026-10-06): the AI scores a workshop at its recipe output and never sees
+# the +20 % a mastered workshop makes, so expanding one gets that extra profit as weight: 0.2 x best output x
+# price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings; matches the median).
+ai_construct_weight = {
+    value = 0
+    if = {
+        limit = { exists = market has_building = building_type:fine_cloth_workshop }
+        add = {
+            value = "market.market_price(goods:fine_cloth)"
+            multiply = 0.12800
+            multiply = { value = market_access max = 1 min = 0 }
+            multiply = { value = scope:owner.gold min = 0 add = 100 pow = 0.5 }
+            multiply = 0.2845
+        }
+    }
+}
 unique_production_methods = {
     pp_fine_cloth_workshop_standard_fine_cloth_workshop_maintenance = {
         icon_type = building_type
@@ -18,7 +34,7 @@ unique_production_methods = {
         produced = fine_cloth
         dyes = 0.13
         manual_labor = 0.072
-        output = 0.108
+        output = 0.096
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -29,7 +45,7 @@ unique_production_methods = {
         dyes = 0.26
         manual_labor = 0.15
         produced = fine_cloth
-        output = 0.225
+        output = 0.2
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -39,7 +55,7 @@ unique_production_methods = {
         fur = 0.62
         manual_labor = 0.13
         produced = fine_cloth
-        output = 0.225
+        output = 0.2
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -51,7 +67,7 @@ unique_production_methods = {
         cloth = 1.04
         manual_labor = 0.35
         produced = fine_cloth
-        output = 0.54
+        output = 0.48
         category = workshop_input
         debug_max_profit = workshop_profit_margin
     }
@@ -61,7 +77,7 @@ unique_production_methods = {
         wool = 1.25
         manual_labor = 0.34
         produced = fine_cloth
-        output = 0.54
+        output = 0.48
         category = workshop_input
         debug_max_profit = workshop_profit_margin
     }
@@ -77,7 +93,7 @@ unique_production_methods = {
         wool = 1.25
         manual_labor = 0.34
         produced = fine_cloth
-        output = 0.54
+        output = 0.48
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -87,7 +103,7 @@ unique_production_methods = {
         silk = 1.05
         manual_labor = 0.47
         produced = fine_cloth
-        output = 0.72
+        output = 0.64
         category = workshop_input
         debug_max_profit = workshop_profit_margin
     }

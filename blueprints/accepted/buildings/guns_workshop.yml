@@ -35,13 +35,29 @@ building:
     city = yes
     megalopolis = yes
     build_time = workshop_build_time
+    # mastery (establishment branch, 2026-10-06): the AI scores a workshop at its recipe output and never sees
+    # the +20 % a mastered workshop makes, so expanding one gets that extra profit as weight: 0.2 x best output x
+    # price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings; matches the median).
+    ai_construct_weight = {
+        value = 0
+        if = {
+            limit = { exists = market has_building = building_type:guns_workshop }
+            add = {
+                value = "market.market_price(goods:firearms)"
+                multiply = 0.17600
+                multiply = { value = market_access max = 1 min = 0 }
+                multiply = { value = scope:owner.gold min = 0 add = 100 pow = 0.5 }
+                multiply = 0.2845
+            }
+        }
+    }
     unique_production_methods = {
         pp_guns_workshop_guns_workshop_ammunition_lead_maintenance = {
             lead = 0.11
             saltpeter = 0.11
             manual_labor = 0.04
             produced = firearms
-            output = 0.18
+            output = 0.16
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -50,7 +66,7 @@ building:
             saltpeter = 0.11
             manual_labor = 0.055
             produced = firearms
-            output = 0.225
+            output = 0.2
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -63,7 +79,7 @@ building:
             coal = 0.13 # forge fuel for welding the barrels
             manual_labor = 0.3
             produced = firearms
-            output = 0.9
+            output = 0.8
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -74,7 +90,7 @@ building:
             lumber = 0.35 # charcoal for the casting furnace, wooden stocks
             manual_labor = 0.32
             produced = firearms
-            output = 0.99
+            output = 0.88
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -86,7 +102,7 @@ building:
             tools = 0.013
             manual_labor = 0.047
             produced = firearms
-            output = 0.11
+            output = 0.099
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -99,7 +115,7 @@ building:
             tin = 0.092
             manual_labor = 0.28
             produced = firearms
-            output = 0.56
+            output = 0.5
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }

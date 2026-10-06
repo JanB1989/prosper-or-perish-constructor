@@ -35,12 +35,28 @@ building:
     city = yes
     megalopolis = yes
     build_time = guild_build_time
+    # mastery (establishment branch, 2026-10-06): the AI scores a workshop at its recipe output and never sees
+    # the +20 % a mastered workshop makes, so expanding one gets that extra profit as weight: 0.2 x best output x
+    # price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings; matches the median).
+    ai_construct_weight = {
+        value = 0
+        if = {
+            limit = { exists = market has_building = building_type:fine_cloth_guild }
+            add = {
+                value = "market.market_price(goods:fine_cloth)"
+                multiply = 0.11200
+                multiply = { value = market_access max = 1 min = 0 }
+                multiply = { value = scope:owner.gold min = 0 add = 100 pow = 0.5 }
+                multiply = 0.2845
+            }
+        }
+    }
     unique_production_methods = {
         pp_fine_cloth_guild_standard_fine_cloth_guild_maintenance = {
             produced = fine_cloth
             dyes = 0.12
             manual_labor = 0.084
-            output = 0.09
+            output = 0.08
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
@@ -49,7 +65,7 @@ building:
             dyes = 0.21
             manual_labor = 0.17
             produced = fine_cloth
-            output = 0.18
+            output = 0.16
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -57,7 +73,7 @@ building:
             fur = 0.5
             manual_labor = 0.16
             produced = fine_cloth
-            output = 0.18
+            output = 0.16
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -67,7 +83,7 @@ building:
             cloth = 0.85
             manual_labor = 0.41
             produced = fine_cloth
-            output = 0.45
+            output = 0.4
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -75,7 +91,7 @@ building:
             wool = 1.02
             manual_labor = 0.42
             produced = fine_cloth
-            output = 0.45
+            output = 0.4
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -89,7 +105,7 @@ building:
             wool = 1.02
             manual_labor = 0.42
             produced = fine_cloth
-            output = 0.45
+            output = 0.4
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
@@ -97,7 +113,7 @@ building:
             silk = 0.9
             manual_labor = 0.56
             produced = fine_cloth
-            output = 0.63
+            output = 0.56
             category = guild_input
             debug_max_profit = guild_profit_margin
         }

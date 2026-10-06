@@ -3,6 +3,8 @@
 # Numeric literals follow vanilla style: integers without a decimal (3, 10, 25); floats as in base game (0.2, 1.15, -0.33).
 
 NAI = {
+	AI_MAX_NEW_BUILDINGS_PER_LOCATION = 5 # 3; establishment branch v3: learning lasts 8-25 years and the cap
+	# counts every craft building still learning in the location, expansions of mastered ones included
 	# AI_UTILITY_PER_CAPITA_THRESHOLD = 0.15
 	# AI_UTILITY_PER_CAPITA_BASE_EMPLOYMENT = 0.7
 	# AI food building (tested 2026-09-24):
@@ -94,16 +96,18 @@ NEconomy = {
  	PROFITABLE_BUILDING_WORKERS_REHIRED_PERCENTAGE = 15 # 5
 	BANKRUPTCY_INFLATION_CHANGE_PERCENT = -0.75
 	# Establishment (know-how), branch establishment-know-how, 2026-10-06 (Jan): only the final-goods manufacturing lines
-	# ramp (startup_ramp_target in their blueprints, every other building 0). Share = progress / target; below the
-	# threshold throughput = share / threshold, above it production efficiency + (share - threshold) x max bonus, so
-	# +20 % at full establishment; their methods make 0.9 of the old output (mastered = 1.08, newcomer = 0.9).
+	# ramp (startup_ramp_target in their blueprints, every other building 0). v3: no throughput ramp (threshold 0), a new
+	# workshop works at full output from the start; production efficiency + share x max bonus, so +20 % at mastery (methods
+	# make 0.8 of the old output: newcomer 0.8, mastered 0.96). Profit drives the learning: gain x (1 + min(profit /
+	# (level x 0.25), 1) x 9), so a workshop earning 0.25 gold per level learns 10x as fast as an idle one (targets 480 /
+	# 720 / 900: ~8-25 years to mastery when profitable, ~80-150 when idle).
 	ESTABLISHMENT_SYSTEM_ENABLED = yes
-	ESTABLISHMENT_THROUGHPUT_THRESHOLD = 0.333
-	STARTUP_MAX_PE_BONUS = 0.30
+	ESTABLISHMENT_THROUGHPUT_THRESHOLD = 0
+	STARTUP_MAX_PE_BONUS = 0.20
 	STARTUP_DECAY_RATE = 1.0
 	ESTABLISHMENT_UPGRADE_TRANSFER_FRACTION = 0.5
-	ESTABLISHMENT_PROFIT_CAP_PER_LEVEL = 1.0 # vanilla 3: PP profits are ~0.1-0.7 gold per level and month
-	ESTABLISHMENT_MAX_PROFIT_BONUS = 1.0
+	ESTABLISHMENT_PROFIT_CAP_PER_LEVEL = 0.25 # vanilla 3: PP profits are ~0.1-0.7 gold per level and month
+	ESTABLISHMENT_MAX_PROFIT_BONUS = 9.0
 }
 
 NLocation = {

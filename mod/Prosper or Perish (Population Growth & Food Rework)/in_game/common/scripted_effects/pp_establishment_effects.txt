@@ -16,6 +16,7 @@ pp_establishment_cleanup_location = {
 		}
 		else_if = {
 			limit = {
+				is_subsidized = no
 				OR = {
 					is_opened = no
 					building_employed_amount < 0.001

@@ -11,10 +11,8 @@ pp_establishment_game_start = {
 	}
 }
 
-# Young craft buildings are protected from the cleanup for their first 8 years: a new workshop runs at a small share of
-# its output until it reaches the establishment threshold, earns almost nothing and often lays off its workers; without
-# the grace the cleanup destroyed it before it could learn (test run 078a901e: 2,543 of 6,550 new workshops gone within
-# 10 years, the AI rebuilding them; baseline 25).
+# Young craft buildings are protected from the cleanup for their first 2 years (time to hire; v3 has no throughput
+# ramp, so a workshop that stays empty loses money even at full output). v1/v2 had 8 years for the old ramp.
 on_building_built = {
 	on_actions = {
 		pp_establishment_mark_young
@@ -29,13 +27,13 @@ pp_establishment_mark_young = {
 	effect = {
 		save_scope_as = pp_est_new
 		location = {
-			add_to_variable_list = { name = pp_est_young target = scope:pp_est_new.building_type years = 8 }
+			add_to_variable_list = { name = pp_est_young target = scope:pp_est_new.building_type years = 2 }
 		}
 	}
 }
 
 # Cleanup (Jan): a craft building of the ramping lines that is closed or has no workers on two yearly checks in a row
-# is destroyed (not in its first 8 years). The first idle check notes its type in the location list pp_est_idle (kept 2 years); a check that finds
+# is destroyed (not in its first 2 years, never when subsidised). The first idle check notes its type in the location list pp_est_idle (kept 2 years); a check that finds
 # it working again removes the note. Buildings are collected first and destroyed after the location's building loop.
 yearly_country_pulse = {
 	on_actions = {

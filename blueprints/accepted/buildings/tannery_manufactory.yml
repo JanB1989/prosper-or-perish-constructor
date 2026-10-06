@@ -23,7 +23,7 @@ building:
     is_foreign = no
     pop_type = burghers
     max_levels = manufactory_max_level
-    startup_ramp_target = 90
+    startup_ramp_target = 720
     category = basic_industry_category
     employment_size = 0.3
     town = yes
@@ -32,7 +32,7 @@ building:
     build_time = manufactory_build_time
     # mastery (establishment branch, 2026-10-06): the AI scores a workshop at its recipe output and never sees
     # the +20 % a mastered workshop makes, so expanding one gets that extra profit as weight: 0.2 x best output x
-    # price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings; matches the median).
+    # price x market access x sqrt(owner gold + 100) x K (K fitted in game on twin buildings: 0.2845 matches the median; v3 uses 3x that).
     ai_construct_weight = {
         value = 0
         if = {
@@ -42,7 +42,7 @@ building:
                 multiply = 0.32000
                 multiply = { value = market_access max = 1 min = 0 }
                 multiply = { value = scope:owner.gold min = 0 add = 100 pow = 0.5 }
-                multiply = 0.2845
+                multiply = 0.85
             }
         }
     }

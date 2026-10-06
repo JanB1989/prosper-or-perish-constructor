@@ -61,7 +61,7 @@ TRY_INJECT:beeswax = {
 	food = 0
 }
 
-# Floor trade-good transport costs at 1.
+# Floor trade-good transport costs at 1 (final craft goods 0.5 on the establishment branch, v3).
 TRY_INJECT:pepper = {
 	block_rgo_upgrade = yes
 	transport_cost = 1
@@ -79,44 +79,44 @@ TRY_INJECT:chili = {
 	transport_cost = 1
 }
 TRY_INJECT:porcelain = {
-	transport_cost = 1
+	transport_cost = 0.5
 }
 TRY_INJECT:glass = {
-	transport_cost = 1
+	transport_cost = 0.5
 }
 TRY_INJECT:cloth = {
-	transport_cost = 1
+	transport_cost = 0.5
 }
 TRY_INJECT:fine_cloth = {
-	transport_cost = 1
+	transport_cost = 0.5
 }
 TRY_INJECT:liquor = {
-	transport_cost = 1
+	transport_cost = 0.5
 }
 TRY_INJECT:beer = {
-	transport_cost = 1
+	transport_cost = 0.5
 }
 TRY_INJECT:paper = {
 	transport_cost = 1
 }
 TRY_INJECT:books = {
-	transport_cost = 1
+	transport_cost = 0.5
 }
 TRY_INJECT:jewelry = {
-	transport_cost = 1
+	transport_cost = 0.5
 }
 TRY_INJECT:tools = {
-	transport_cost = 1
+	transport_cost = 0.5
 	default_market_price = 3.25 # 3
 }
 TRY_INJECT:lacquerware = {
-	transport_cost = 1
+	transport_cost = 0.5
 }
 TRY_INJECT:pottery = {
-	transport_cost = 1
+	transport_cost = 0.5
 }
 TRY_INJECT:furniture = {
-	transport_cost = 1
+	transport_cost = 0.5
 }
 
 # Reducing burgher demand for salt, because they used salt to preserve foods, so we increase the demand for victuals instead
@@ -132,6 +132,7 @@ TRY_INJECT:salt = {
 # RGO upgrade blocks (Prosper or Perish building PM matrix); n_pm > 0
 TRY_INJECT:wine = {
 	block_rgo_upgrade = yes
+	transport_cost = 0.5
 }
 TRY_INJECT:dyes = {
 	block_rgo_upgrade = yes
@@ -251,4 +252,22 @@ TRY_INJECT:pearls = {
 }
 TRY_INJECT:tea = {
 	block_rgo_upgrade = yes
+}
+
+# Establishment branch v3 (2026-10-06, Jan): final craft goods trade cheaper (half the AI's trade weight), so
+# hubs can win merchant capacity from raw goods.
+TRY_INJECT:cannons = {
+	transport_cost = 0.5
+}
+TRY_INJECT:firearms = {
+	transport_cost = 0.5
+}
+TRY_INJECT:leather = {
+	transport_cost = 0.5
+}
+TRY_INJECT:naval_supplies = {
+	transport_cost = 0.5
+}
+TRY_INJECT:weaponry = {
+	transport_cost = 0.5
 }

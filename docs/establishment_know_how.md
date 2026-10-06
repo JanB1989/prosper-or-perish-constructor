@@ -85,13 +85,13 @@ Findings:
 ## v2 (ef11fde2): mastery weight for the AI, craft output 0.8
 
 - Producing methods of the 64 craft buildings make 0.8 of the old output (mastered 0.96).
--  on each of them, only where the location already has the building (expansion): 0.2 x best
+- `ai_construct_weight` on each of them, only where the location already has the building (expansion): 0.2 x best
   own output x market price x min(market access, 1) x sqrt(owner gold + 100) x 0.2845. Script cannot read a
   building's establishment (only interface data functions exist), so the weight goes to every standing building; ~89 %
   of craft levels are fully established, so it is mostly the mastered ones.
 - K fitted in game on twin buildings (copies of six craft buildings with 1.2x output vs copies with the weight, same
   location and pass): the AI values +20 % output at about +20 % of the candidate's own utility; median weight / true
-  value 1.08, Spearman 0.33 (country state dominates). .
+  value 1.08, Spearman 0.33 (country state dominates). `tools/establishment_eval/calib/make_twins.py`.
 - Run D = v2 from the same start save as B, 1337-1612 (playthrough 057c295e).
 
 D vs B vs C at 1602:

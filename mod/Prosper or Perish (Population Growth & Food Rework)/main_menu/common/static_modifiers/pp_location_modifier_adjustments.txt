@@ -145,8 +145,9 @@ TRY_REPLACE:total_population = {
 	local_max_rgo_size = 0.0020
 
 	# 2026-10-06 (Jan): province food capacity rides on population (~12 months of a food-positive rural province's
-	# consumption with the location base and development terms); a full 24-month store takes Granaries. Was 2.5.
-	local_food_capacity = 7
+	# consumption with the location base and development terms); a full 24-month store takes Granaries. Was 2.5;
+	# 7 on 2026-10-06 (af413ddc), 10 the same day: start validator world -0.40 % -> +1.02 % over 96 months.
+	local_food_capacity = 10
 	# local_food_capacity = 300
 }
 # capped at max 100 this value

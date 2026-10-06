@@ -24,6 +24,8 @@ building:
         city = yes
         megalopolis = yes
         location_potential = {
+            # 2026-10-06 (Jan): one Granary site per province (each owner of a split province has its own capital)
+            is_province_capital = yes
             OR = {
                 location_rank = location_rank:rural_settlement
                 location_rank = location_rank:town
@@ -54,6 +56,12 @@ building:
         }
         ai_forbid_shutdown = yes
         forbidden_for_estates = no
+        # AI (2026-10-06, Jan): the engine scores a Granary at about 0.3 against a queue median of 20-30, so the AI
+        # built 56 levels in 20 years while 27 % of provinces sat full below 24 months (run 5c0e4d06). Flat, positive
+        # only, where a level would fill: store full and under 24 months; bigger locations first (pp_food_building_values.txt)
+        ai_construct_weight = {
+            value = pp_granary_ai_weight
+        }
 prices:
   - key: pp_granary_price
     body: |2-

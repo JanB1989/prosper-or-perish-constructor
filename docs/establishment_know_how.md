@@ -128,3 +128,21 @@ Findings:
   ~40 % over 260 years in C while goods supply doubles (capacity per 100 units of supply 5.0 -> 3.2), use 92-95 % by
   1560: crafts compete with raw goods for a shrinking share; one unit = one capacity, the AI ranks trades by profit per
   (transport cost x path cost), maintenance 0.25 flat per unit.
+
+## v3 (b5eeb4c9): full output at start, profit-driven mastery (run E, stopped at 1377)
+
+- Threshold 0 (no throughput ramp), max bonus 0.20 (newcomer 0.8, mastered 0.96), profit cap 0.25 gold per level,
+  profit bonus 9 (a profitable workshop learns 10x as fast as an idle one), targets 480 / 720 / 900 x tier, expansion
+  weight K 0.85, craft transport cost 0.5, AI cap 5, cleanup grace 2 years and never subsidised buildings.
+- Run E (playthrough 7c5f432a, new game) at 1377 vs C: crafts traded between markets +52 %, traded / supply 5.7 % vs
+  3.7 %, exporting market-goods +55 %, market-level specialization +17 %, top-10 location share +43 %, supply -1 %,
+  wealth +15 %. Learning workshops earn a median 0.16-0.2 gold per level; ~30 % of them idle.
+- Shelved by Jan on 2026-10-06; the transport cost 0.5 went to 0.10 on its own (commit 00623863).
+
+## Idea F (not built): town right = know-how
+
+Nobody learns by default (location_base_values local_<good>_establishment_speed -1 for the 18 goods, per-good factor
+0); a town right of the craft adds +2 (factor 1). Threshold 0, +10 % at mastery, small profit speedup (cap 0.5, bonus
+0.5), crowding modifier emptied, AI cap 1000 (every non-learning craft building counts as ramping forever), original
+outputs, no cleanup, no start modifier, no AI weight. Porcelain and lacquerware have no town right (add to the silk
+monopoly). Open: how many town rights the AI takes.

@@ -8,6 +8,14 @@ pp_establishment_cleanup_location = {
 		save_scope_as = pp_est_b
 		if = {
 			limit = {
+				location = {
+					is_target_in_variable_list = { name = pp_est_young target = scope:pp_est_b.building_type }
+				}
+			}
+			# young: no check
+		}
+		else_if = {
+			limit = {
 				OR = {
 					is_opened = no
 					building_employed_amount < 0.001

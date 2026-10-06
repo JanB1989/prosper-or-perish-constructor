@@ -12,9 +12,14 @@ REPLACE:granary = {
     town = yes
     city = yes
     megalopolis = yes
-    location_potential = {
-        # 2026-10-06 (Jan): one Granary site per province (each owner of a split province has its own capital)
+    # 2026-10-06 (Jan): one Granary site per province (each owner of a split province has its own capital). In
+    # allow, not location_potential: the engine re-checks location_potential when a location changes owner and
+    # removes the building (run 31ef07ce: 91 % of conquered non-capital and 46 % of conquered capital Granaries
+    # gone, Cookshops with the same test in allow 1 %); allow only gates new levels.
+    allow = {
         is_province_capital = yes
+    }
+    location_potential = {
         OR = {
             location_rank = location_rank:rural_settlement
             location_rank = location_rank:town

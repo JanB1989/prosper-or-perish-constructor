@@ -467,6 +467,11 @@ def test_granary_storage_and_startup_placement_are_compatible() -> None:
     # one Granary site per province (2026-10-06, Jan) and a flat AI weight where a level would fill
     assert "is_province_capital = yes" in granary_text
     assert "value = pp_granary_ai_weight" in granary_text
+    # the capital test sits in allow: the engine removes buildings whose location_potential fails after a change of
+    # owner (run 31ef07ce: half of the conquered capital Granaries gone), allow only gates new levels
+    potential = granary_text.split("location_potential = {", 1)[1].split("\n        }", 1)[0]
+    assert "is_province_capital" not in potential
+    assert "allow = {\n            is_province_capital = yes" in granary_text
     for rank in ("rural_settlement", "town", "city", "megalopolis"):
         assert f"location_rank = location_rank:{rank}" in granary_text
 

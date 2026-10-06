@@ -370,3 +370,66 @@ def test_speed_chart_from_save_times_leaves_pauses_out(tmp_path: Path) -> None:
     trade = _trade_run()
     page = rr.write_page(trade, tmp_path, [], build_payload(trade)).read_text(encoding="utf-8")
     assert "<h2 id=speed>" not in page and "s per game year</div>" not in page
+
+
+def _urban_run():
+    """_trade_run with town rights (an upgrade in Paris, a swap in London), promotions and production per location."""
+    from prosper_or_perish_constructor.run_report_urban import RightInfo, UrbanCatalog
+
+    run = _trade_run()
+    ids = {"paris": 1, "london": 2, "atlantis": 3}
+    run.locations = run.locations.with_columns(
+        pl.col("slug").replace_strict(ids, return_dtype=pl.Int64).alias("location_id"),
+        pl.col("owner").alias("owner_country_id"),
+        pl.col("slug").replace_strict({"paris": "ile_de_france_area", "london": "london_area"}, default=None).alias("area"),
+        pl.col("slug").replace_strict({"paris": "city", "london": "town"}, default="rural_settlement").alias("rank"))
+    run.urban = UrbanCatalog(rights={
+        "textile_charter": RightInfo("specialization", ("cloth",), "royal_textile_rights", True, True),
+        "royal_textile_rights": RightInfo("specialization", ("cloth",), None, True, True),
+        "brewing_charter": RightInfo("specialization", ("beer",), None, True, True),
+        "granary_town": RightInfo("other", ()),
+    }, industries={"textiles": ("cloth",), "beverages": ("beer",)})
+    run.town_rights = pl.DataFrame({"snapshot_id": ["s1", "s1", "s2", "s2"], "town_right_id": [1, 2, 3, 4],
+                                    "location_id": [1, 2, 1, 2],
+                                    "type": ["textile_charter", "granary_town", "royal_textile_rights", "brewing_charter"]})
+    run.promotions = pl.DataFrame({"snapshot_id": ["s2", "s2"], "promotion_id": [1, 2], "country_id": [2, 1],
+                                   "area": ["ile_de_france_area", "london_area"], "type": ["textiles", "beverages"]})
+    run.urban_saves = ["s1", "s2"]
+    run.production = pl.DataFrame({"snapshot_id": ["s1", "s1", "s2", "s2", "s2"], "location_id": [1, 2, 1, 1, 2],
+                                   "good_id": ["cloth", "wheat", "cloth", "wheat", "wheat"], "value": [30.0, 10.0, 30.0, 5.0, 10.0]})
+    return run
+
+
+def test_town_rights_and_promotions_count_changes_fit_and_page(tmp_path: Path) -> None:
+    import shutil
+
+    import numpy as np
+
+    from prosper_or_perish_constructor.run_report_charts import build_payload
+    from prosper_or_perish_constructor.run_report_urban import promotion_fit, right_changes, right_fit
+
+    run = _urban_run()
+    changes = right_changes(run, run.urban_saves).row(0, named=True)
+    # Paris: the charter became the royal right; London: the granary right went, a brewing charter came
+    assert changes == {"snapshot_id": "s2", "granted": 0, "upgraded": 1, "swapped": 1, "removed": 0, "conquered": 0}
+    fit = {r["type"]: r["fit"] for r in right_fit(run).filter(pl.col("snapshot_id") == "s2").iter_rows(named=True)}
+    assert fit == {"royal_textile_rights": "best", "brewing_charter": "none"}
+    promotions = {r["type"]: (r["fit"], r["rank"]) for r in promotion_fit(run).iter_rows(named=True)}
+    assert promotions == {"textiles": ("only", 1), "beverages": ("none", None)}
+
+    payload = build_payload(run)
+    keys = {c["key"] for c in payload["charts"] if c["section"] == "towns"}
+    assert keys == {"town_rights", "town_rights_heatmap", "town_right_changes", "town_right_fit", "industry_promotions",
+                    "industry_promotion_fit"}
+    table = next(t for t in payload["tables"] if t["key"] == "town_rights")
+    assert [r[0] for r in table["rows"][-1]] == ["Brewing Charter", "Royal Textile Rights"]
+    assert table["rows"][-1][1][4] == [["cloth", 30.0]]
+    page = rr.write_page(run, tmp_path, [], payload).read_text(encoding="utf-8")
+    assert "<h2 id=towns>" in page and ">Town rights<" in page
+
+    if shutil.which("ffmpeg"):
+        index = np.full((20, 40), -1, dtype=np.int32)
+        index[4:16, 4:18], index[4:16, 18:30] = 0, 1
+        canvas = rr.MapCanvas(index=index, tags=["paris", "london"], width=40, height=20, tag_index={"paris": 0, "london": 1})
+        (video,) = rr.render_promotion_map(run, canvas, tmp_path, fps=2, log=lambda _: None)
+        assert (tmp_path / "industry_promotions.mp4").stat().st_size > 0 and video["key"] in rr.PROMOTION_VIDEOS

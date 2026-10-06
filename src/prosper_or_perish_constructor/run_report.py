@@ -5,10 +5,11 @@ writes `graphs/report/<run>/`:
 
 - `maps/*.mp4` - one H.264 video per map (political, population, population change, unemployment, development,
   institutions, building levels, building investment, trade between world regions, the largest trade routes, market trade
-  balance), one frame per save, sized to stay
+  balance, industry promotions), one frame per save, sized to stay
   under 10 MB so Discord and GitHub play it inline; `maps/*.png` - the last frame of each (a poster / thumbnail);
 - `index.html` - the page: summary tiles, the videos and the interactive charts and tables of
-  `run_report_charts` (population, trade, prices, buildings, countries), drawn by Apache ECharts (loaded from
+  `run_report_charts` and `run_report_urban` (population, trade, prices, buildings, town rights and industry
+  promotions, countries), drawn by Apache ECharts (loaded from
   jsDelivr) from the JSON embedded in the page. It only references files next to it and the chart library;
 - `icons/<good>.png` - the goods icons (the built mod's, else the game's DDS, 40 px): goods appear as icons in
   heatmap axes, tables and the goods-group legends, with the name on hover.
@@ -53,6 +54,7 @@ from prosper_or_perish_constructor.run_report_charts import (
     world_trade_share,
     xaxis,
 )
+from prosper_or_perish_constructor.run_report_urban import UrbanCatalog, industry_colours, industry_label, load_urban_catalog
 
 POP_TYPES = ("nobles", "clergy", "burghers", "laborers", "soldiers", "peasants", "slaves", "tribesmen")
 # Categorical order (fixed, never cycled), light and dark chart surfaces.
@@ -136,6 +138,14 @@ class RunData:
     # living where it is present); locations then carry `institutions` (count, null in snapshots without the table)
     institutions: pl.DataFrame = field(default_factory=pl.DataFrame)
     good_icons: dict[str, str] = field(default_factory=dict)  # good_id -> page-relative PNG (write_good_icons)
+    # engine tables town_rights and industry_promotions (empty for snapshots ingested before the dataset kept them)
+    town_rights: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, town_right_id, location_id, type
+    promotions: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, promotion_id, country_id, area, type
+    urban_saves: list[str] = field(default_factory=list)  # snapshots that carry those tables
+    # gold per month each location makes of each good (buildings + RGO, nominal output x base price); only loaded
+    # when the run has town rights or promotions
+    production: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, location_id, good_id, value
+    urban: UrbanCatalog = field(default_factory=UrbanCatalog)  # town right and industry type definitions
 
     @property
     def investment_prices(self) -> str:
@@ -187,8 +197,8 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
         name = f"{name} (reloaded {reload.group(1)})"
     wanted = snapshots["snapshot_id"].to_list()
     loc_columns = [
-        "snapshot_id", "location_id", "slug", "country_tag", "owner", "market_id", "super_region", "macro_region",
-        "development", "possible_tax", "total_population", "unemployed_total", "unemployed_peasants", *[f"population_{p}" for p in POP_TYPES],
+        "snapshot_id", "location_id", "slug", "country_tag", "owner", "owner_country_id", "market_id", "area", "rank",
+        "super_region", "macro_region", "development", "possible_tax", "total_population", "unemployed_total", "unemployed_peasants", *[f"population_{p}" for p in POP_TYPES],
     ]
     locations = _scan(dataset, "locations", playthrough).select(loc_columns).filter(pl.col("snapshot_id").is_in(wanted)).collect()
     locations, institutions = _institutions(dataset, playthrough, wanted, locations)
@@ -273,7 +283,43 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
     run = RunData(playthrough, str(name), snapshots, locations, building_levels, buildings_by_category, countries,
                   market_goods, markets, trades, economy, labels, institutions=institutions)
     _load_investment(run, dataset, wanted)
+    _load_urban(run, dataset, wanted)
     return run
+
+
+def _load_urban(run: RunData, dataset: Path, wanted: list[str]) -> None:
+    """Town rights, industry promotions and, for their fit, what every location makes."""
+    have: set[str] = set()
+    for table in ("town_rights", "industry_promotions"):
+        root = dataset / "tables" / table / f"playthrough_id={run.playthrough_id}"
+        have |= {f.stem for f in root.glob("*.parquet")}
+    run.urban_saves = [s for s in wanted if s in have]
+    rights = _scan_optional(dataset, "town_rights", run.playthrough_id)
+    if rights is not None:
+        run.town_rights = rights.filter(pl.col("snapshot_id").is_in(wanted)).select(
+            "snapshot_id", "town_right_id", "location_id", "type").collect()
+    promotions = _scan_optional(dataset, "industry_promotions", run.playthrough_id)
+    if promotions is not None:
+        run.promotions = promotions.filter(pl.col("snapshot_id").is_in(wanted)).select(
+            "snapshot_id", pl.col("industry_promotion_id").alias("promotion_id"), "country_id", "area", "type").collect()
+    if (run.town_rights.is_empty() and run.promotions.is_empty()) or run.market_goods.is_empty():
+        return
+    parts = []
+    for table in ("production_method_good_flows", "rgo_flows"):
+        scan = _scan_optional(dataset, table, run.playthrough_id)
+        if scan is not None:
+            parts.append(scan.filter(pl.col("snapshot_id").is_in(wanted) & (pl.col("direction") == "output")
+                                     & pl.col("location_id").is_not_null())
+                         .select("snapshot_id", "location_id", "good_id", pl.col("nominal_amount").fill_null(0.0).alias("amount")))
+    if not parts:
+        return
+    prices = run.market_goods.group_by("snapshot_id", "good_id").agg(pl.col("default_price").first())
+    run.production = (
+        pl.concat(parts).group_by("snapshot_id", "location_id", "good_id").agg(pl.col("amount").sum()).collect()
+        .join(prices, on=["snapshot_id", "good_id"], how="inner")  # base price; drops the mod's bookkeeping goods
+        .select("snapshot_id", "location_id", "good_id", (pl.col("amount") * pl.col("default_price")).alias("value"))
+        .filter(pl.col("value") > 0)
+    )
 
 
 INSTITUTION_PRESENT = 100.0  # location spread at which the game counts the institution as present
@@ -510,12 +556,16 @@ class FrameComposer:
             nodata_x = x0 + w + 24
             draw.rectangle([nodata_x, y0, nodata_x + 16, y0 + h], fill=LAND_NODATA)
             draw.text((nodata_x + 24, y0 - 3), self.nodata_label, font=self.fonts["small"], fill=TEXT_MUTED)
-        x, y = self.width // 2 - 480, 42
+        start = self.width // 2 - 480
+        x, y = start, 30 if len(self.legend) > 6 else 42
         for label, rgb in self.legend:
+            box = draw.textbbox((0, 0), label, font=self.fonts["small"])
+            step = 30 + (box[2] - box[0]) + 28
+            if x + step > self.width - 470 and x > start:  # wrap before the year and key figures
+                x, y = start, y + 28
             draw.rounded_rectangle([x, y + 3, x + 22, y + 13], radius=3, fill=rgb)
             draw.text((x + 30, y - 2), label, font=self.fonts["small"], fill=TEXT_MUTED)
-            box = draw.textbbox((0, 0), label, font=self.fonts["small"])
-            x += 30 + (box[2] - box[0]) + 28
+            x += step
         return bar
 
     def compose(self, rgb_map: np.ndarray, year: str, stats: list[tuple[str, str]]) -> bytes:
@@ -788,6 +838,66 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
         results.append({"key": spec.key, "title": spec.title, "subtitle": spec.subtitle,
                         "video": f"maps/{spec.key}.mp4", "poster": f"maps/{spec.key}.png", "bytes": str(size)})
     return results
+
+
+# --------------------------------------------------------------------------------------------------------
+# Industry promotions map
+
+PROMOTION_VIDEOS = ("industry_promotions",)
+PROMOTION_SHORT = {"paper_goods": "Paper"}  # legend names that would not fit
+
+
+def render_promotion_map(run: RunData, canvas: MapCanvas, out: Path, *, fps: int,
+                         log: Callable[[str], None] = print) -> list[dict[str, str]]:
+    """One video: every location coloured by the industry its owner promotes in its area."""
+    if run.promotions.is_empty() or not {"owner_country_id", "area"} <= set(run.locations.columns):
+        return []
+    started = time.perf_counter()
+    out.mkdir(parents=True, exist_ok=True)
+    colours = {k: _hex(c) for k, c in industry_colours(run).items()}
+    several = _hex("#d8d8d4")
+    present = set(run.promotions["type"].to_list())
+    legend = [(PROMOTION_SHORT.get(k) or industry_label(run, k), rgb) for k, rgb in colours.items() if k in present]
+    composer = FrameComposer(canvas, "Industry promotions", "Promoted by the owner, per area", None,
+                             legend=legend + [("Several", several)])
+    duration = run.snapshots.height / fps
+    video = out / "industry_promotions.mp4"
+    writer = VideoWriter(video, composer.width, composer.height, fps, int(MAX_VIDEO_BYTES * 8 / 1000 / (duration + 2.0)))
+    by_snapshot = run.locations.partition_by("snapshot_id", as_dict=True)
+    promotions = run.promotions.group_by("snapshot_id", "country_id", "area").agg(pl.col("type").unique())
+    by_promotion = promotions.partition_by("snapshot_id", as_dict=True)
+    last = None
+    for snap in run.snapshots.to_dicts():
+        locs = by_snapshot.get((snap["snapshot_id"],), pl.DataFrame())
+        location_rgb = np.full((len(canvas.tags), 3), NO_MARKET_LAND, dtype=np.uint8)
+        promoted = by_promotion.get((snap["snapshot_id"],), pl.DataFrame())
+        count = countries = 0
+        if not locs.is_empty():
+            owned = locs.filter(pl.col("owner_country_id").is_not_null())
+            index = owned["slug"].replace_strict(canvas.tag_index, default=-1, return_dtype=pl.Int64).to_numpy()
+            location_rgb[index[index >= 0]] = TRADE_LAND
+            if not promoted.is_empty():
+                count = int(promoted["type"].list.len().sum())
+                countries = promoted["country_id"].n_unique()
+                hit = owned.join(promoted.rename({"country_id": "owner_country_id"}), on=["owner_country_id", "area"], how="inner")
+                index = hit["slug"].replace_strict(canvas.tag_index, default=-1, return_dtype=pl.Int64).to_numpy()
+                rgb = np.array([colours.get(t[0], several) if len(t) == 1 else several for t in hit["type"].to_list()],
+                               dtype=np.uint8).reshape(-1, 3)
+                keep = index >= 0
+                location_rgb[index[keep]] = rgb[keep]
+        frame = composer.compose(_paint(canvas, location_rgb), str(snap.get("year") or snap.get("date") or ""),
+                                 [("promotions", str(count)), ("countries promoting", str(countries))])
+        writer.write(frame)
+        last = frame
+    if last is not None:
+        writer.write(last, repeat=2 * fps)
+        Image.frombytes("RGB", (composer.width, composer.height), last).save(out / "industry_promotions.png", optimize=True)
+    writer.close()
+    size = video.stat().st_size
+    log(f"map industry_promotions: {run.snapshots.height} frames, {size / 1e6:.1f} MB, {time.perf_counter() - started:.1f}s")
+    return [{"key": "industry_promotions", "title": "Industry promotions",
+             "subtitle": "The industry each location's owner promotes in its area (dark: none, light grey: several)",
+             "video": "maps/industry_promotions.mp4", "poster": "maps/industry_promotions.png", "bytes": str(size)}]
 
 
 # --------------------------------------------------------------------------------------------------------
@@ -1152,12 +1262,19 @@ def _summary(run: RunData) -> dict[str, object]:
         if not run.investment_by_category.is_empty() else {}
     )
     trade = world_trade_share(run)
+    urban: dict[str, int] = {}
+    if run.urban_saves and last in run.urban_saves:
+        def count(frame: pl.DataFrame, snapshot: str) -> int:
+            return frame.filter(pl.col("snapshot_id") == snapshot).height if not frame.is_empty() else 0
+
+        urban = {"rights_last": count(run.town_rights, last), "rights_first": count(run.town_rights, run.urban_saves[0]),
+                 "promotions_last": count(run.promotions, last)}
     per_person = institutions_per_person(run.locations, run.snapshots["snapshot_id"].to_list())
     return {"first": at.get(first, {}), "last": at.get(last, {}), "levels_first": lv.get(first, 0), "levels_last": lv.get(last, 0),
             "investment_first": world_investment.get(first), "investment_last": world_investment.get(last),
             "institutions_first": per_person[0] if per_person else None,
             "institutions_last": per_person[-1] if per_person else None,
-            "trade_first": trade.get(first), "trade_last": trade.get(last), "leaders": leaders}
+            "trade_first": trade.get(first), "trade_last": trade.get(last), "leaders": leaders, **urban}
 
 
 SECTIONS = (
@@ -1168,6 +1285,8 @@ SECTIONS = (
                        "as videos, then trade per goods group, per good and per market."),
     ("prices", "Prices", "Every good's price against its base price, and whether the world uses more than it makes."),
     ("buildings", "Buildings", "Building levels and what they cost to build."),
+    ("towns", "Town rights & industry", "Which town rights and industry promotions the AI grants, where, and whether they "
+                                        "sit where their goods are made."),
     ("countries", "Countries", "The largest countries by population and by income."),
     ("speed", "Game speed", "How long the game took per game year, from the times the saves were written."),
 )
@@ -1299,6 +1418,7 @@ PAGE_JS = r"""
       if (name === 'year') return v => String(new Date(v).getUTCFullYear());
       if (name === 'unit') return v => fmt(v, arg || view.unit);
       if (name === 'pow2') return v => Math.pow(2, v).toFixed(Math.abs(v) > 1.5 ? 1 : 2) + '×';
+      if (name === 'pow2n') return v => String(Math.round(Math.pow(2, v)));
       if (name === 'goodlabel') return goodLabel;
       if (name === 'goodrich') return goodRich();
     }
@@ -1475,18 +1595,22 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
     if summary.get("institutions_last") is not None:
         tiles.insert(3, ("Institutions per person", f"{float(summary['institutions_last']):.1f}",  # type: ignore[arg-type]
                          f"{float(summary['institutions_first'] or 0):.1f} in {start}"))  # type: ignore[arg-type]
+    if summary.get("rights_last") is not None:
+        tiles.insert(-1, ("Town rights", str(summary["rights_last"]),
+                          f"{summary['rights_first']} in {start} · {summary['promotions_last']} industry promotions"))
     if summary.get("investment_last") is not None:
         tiles.insert(-1, ("Building investment", f"{_format_number(float(summary['investment_last']))} gold",  # type: ignore[arg-type]
                           f"{_format_number(float(summary['investment_first'] or 0))} in {start}"))  # type: ignore[arg-type]
     tile_html = "".join(f"<div class=tile><div class=label>{esc(a)}</div><div class=value>{esc(b)}</div><div class=sub>{esc(c)}</div></div>"
                         for a, b, c in tiles)
-    world_maps = "".join(_video_card(m) for m in maps if m["key"] not in TRADE_VIDEOS)
-    trade_maps = "".join(_video_card(m) for m in maps if m["key"] in TRADE_VIDEOS)
+    section_videos = {"trade": TRADE_VIDEOS, "towns": PROMOTION_VIDEOS}
+    in_sections = {key for keys in section_videos.values() for key in keys}
+    world_maps = "".join(_video_card(m) for m in maps if m["key"] not in in_sections)
     sections, nav = [], ["<a href='#maps'>Maps</a>"]
     for key, title, lead in SECTIONS:
         charts = [c for c in payload["charts"] if c["section"] == key]
         tables = [t for t in payload["tables"] if t["section"] == key]
-        videos = trade_maps if key == "trade" else ""
+        videos = "".join(_video_card(m) for m in maps if m["key"] in section_videos.get(key, ()))
         if not (charts or tables or videos):
             continue
         nav.append(f"<a href='#{key}'>{esc(title)}</a>")
@@ -1552,6 +1676,8 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
     playthrough = playthrough or latest_playthrough(dataset)
     _backfill_engine_tables(repo, project, dataset, playthrough, log)
     run = load_run(dataset, playthrough, labels=load_labels(repo, project))
+    if run.urban_saves:
+        run.urban = load_urban_catalog(repo, project)
     log(f"run {run.name} ({run.playthrough_id}): {run.snapshots.height} saves {run.years[0]}-{run.years[1]}")
     out = out_root / run.playthrough_id
     if out.exists():
@@ -1560,6 +1686,7 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
     canvas = build_canvas(repo, project, width)
     maps = render_maps(run, canvas, out / "maps", repo=repo, project=project, fps=fps, log=log)
     maps += render_trade_maps(run, canvas, out / "maps", fps=fps, log=log)
+    maps += render_promotion_map(run, canvas, out / "maps", fps=fps, log=log)
     run.good_icons = write_good_icons(run.market_goods["good_id"].to_list() if not run.market_goods.is_empty() else [],
                                       good_icon_sources(repo, project), out, log)
     payload = build_payload(run)

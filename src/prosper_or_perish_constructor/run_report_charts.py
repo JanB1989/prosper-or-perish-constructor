@@ -1105,6 +1105,11 @@ def build_payload(run: RunData) -> dict[str, Any]:
         tables += trade_tables(run, x, world)
         charts += price_charts(run, x, world)
     charts += building_charts(run, x)
+    from prosper_or_perish_constructor.run_report_urban import urban_charts  # it imports this module
+
+    urban, urban_tables = urban_charts(run, x)
+    charts += urban
+    tables += urban_tables
     country, country_tables = country_charts(run, x)
     charts += country
     tables += country_tables

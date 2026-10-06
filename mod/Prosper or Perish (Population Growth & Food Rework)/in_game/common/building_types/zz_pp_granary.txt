@@ -3,6 +3,7 @@ REPLACE:granary = {
     audio_tier = 2
     is_foreign = no
     max_levels = pp_granary_cap
+    price = pp_granary_price
     pop_type = laborers
     employment_size = 0.25
     category = infrastructure_category
@@ -37,8 +38,11 @@ REPLACE:granary = {
 
     modifier = {
         local_food_preservation_efficiency_modifier = 0.03   # 2026-10-03: was 0.0002 (1:1 port slip; vanilla 0.05). Province decay = rate / (1 + summed preservation)
-        local_food_capacity = 500
-        local_food_capacity_modifier = 0.10
+        # 2026-10-06 (Jan): base capacity is ~12 months of consumption now; Granaries take a store to 24 months.
+        # The percentage scales the location's whole capacity, so later levels in big (city) locations add most.
+        # Was 500 / 0.10.
+        local_food_capacity = 600
+        local_food_capacity_modifier = 0.15
     }
     ai_forbid_shutdown = yes
     forbidden_for_estates = no

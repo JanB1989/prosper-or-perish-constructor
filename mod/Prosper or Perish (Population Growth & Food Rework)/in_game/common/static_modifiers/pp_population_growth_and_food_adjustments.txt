@@ -176,6 +176,7 @@ TRY_INJECT:winter_severe = {
 TRY_INJECT:location_base_values = {
 	local_devastation_recovery = -0.0015 # EU5 1.4 vanilla 0.0025 (1.3: 0.005): the mod's net stays +0.001
 	local_monthly_prosperity = -0.0024
+	local_food_capacity = -40 # 2026-10-06 (Jan): vanilla base 50 per location -> 10; it alone gave tiny provinces 10-20 months
 }
 
 # Little ice age

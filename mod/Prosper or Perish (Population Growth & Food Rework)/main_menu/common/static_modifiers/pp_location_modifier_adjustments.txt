@@ -144,7 +144,9 @@ TRY_REPLACE:total_population = {
 
 	local_max_rgo_size = 0.0020
 
-	local_food_capacity = 2.5
+	# 2026-10-06 (Jan): province food capacity rides on population (~12 months of a food-positive rural province's
+	# consumption with the location base and development terms); a full 24-month store takes Granaries. Was 2.5.
+	local_food_capacity = 7
 	# local_food_capacity = 300
 }
 # capped at max 100 this value
@@ -218,7 +220,7 @@ TRY_REPLACE:development = {
 	local_institution_growth_modifier = 0.001
 	local_construction_speed = 0.01
 
-	local_food_capacity = 30
+	local_food_capacity = 2 # 2026-10-06 (Jan): was 30, which gave sparse rural provinces 40+ months of free storage
 
 	free_building_levels = 0.5
 

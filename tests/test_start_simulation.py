@@ -545,3 +545,40 @@ def test_seed_vanilla_reads_the_bookmark_setup_folder(tmp_path):
         "italian_city = { temple = 1 fine_cloth_guild = 1 }\nflorence_city = { copy_from = italian_city fine_cloth_guild = 2 }\n").entries}
     _, counts = seed_vanilla(tmp_path, r, {"florence": "FLO"})
     assert counts["florence"] == Counter({"fine_cloth_guild": 6, "temple": 1})
+
+
+def test_start_granaries_fill_short_pools_until_the_store_lasts_the_configured_months():
+    from prosper_or_perish_constructor.worldbuilder import start_food_model_v2 as fm
+    from prosper_or_perish_constructor.worldbuilder.start_simulation import Simulation
+
+    sim = Simulation.__new__(Simulation)
+    sim.food_model = fm.FoodModelConfig(granary_store_months=48.0)
+    sim.numbers = {"granary": {"employment_size": 0.25, "pop_type": "laborers"}}
+    sim._food_capacity_per_level = {"granary": 600.0}
+    sim.groups = {("AAA", "short"): ["town", "village"], ("AAA", "fed"): ["farm"], ("AAA", "capped"): ["hill"]}
+    sim.base = {"town": {"population": 50}, "village": {"population": 5}, "farm": {"population": 9}, "hill": {"population": 3}}
+    budgets = {
+        ("AAA", "short"): {"balance": -40.0, "food_capacity": 600.0},    # needs 40 x 48 = 1,920: 600 + 3 levels
+        ("AAA", "fed"): {"balance": 10.0, "food_capacity": 100.0},       # no deficit: nothing
+        ("AAA", "capped"): {"balance": -20.0, "food_capacity": 0.0},     # needs 2 levels, the location takes 1
+    }
+    sim.budgets = lambda groups=None: budgets
+    caps = {"town": 2, "village": 5, "farm": 9, "hill": 1}
+    placed = Counter()
+
+    def add(tag, key, wanted=1):
+        if placed[tag] >= caps[tag]:
+            return 0
+        placed[tag] += 1
+        return 1
+
+    sim.add = add
+    sim.place_granaries()
+    # round the locations, most people first: town, village, town; the town stops at its cap of 2
+    assert placed == Counter({"town": 2, "village": 1, "hill": 1})
+    assert sim.granary_start == {"store_months": 48.0, "pools_short": 2, "pools_given": 2, "levels": 4, "pools_still_short": 1}
+    # off at 0 months
+    sim.food_model = fm.FoodModelConfig(granary_store_months=0.0)
+    placed.clear()
+    sim.place_granaries()
+    assert not placed and sim.granary_start["levels"] == 0

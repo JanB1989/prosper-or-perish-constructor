@@ -747,8 +747,10 @@ yield_climate = { arctic = 0.428, arid = 1.013, cold_arid = 0.95, cold_semi_arid
 # 0.5 until 2026-10-01, fitted in game -0.47..-0.51 at that value)
 overpopulation_consumption = 0.25
 start_food_share = 1.0             # the engine fills every province store to capacity at setup; the mod leaves it
-# province food capacity per pool (max_food_value), fitted on nb.eu5 (R2 0.968); buildings' local_food_capacity adds
-capacity = { per_development = 31.97, per_population_k = 3.65, per_location = 99.9, rank = { town = 521.3, city = 815.2, megalopolis = 1240.8 } }
+# province food capacity per pool (max_food_value), fitted on nb.eu5 (R2 0.968); buildings' local_food_capacity adds.
+# 2026-10-06 (Jan): moved with the static modifiers (development 30 -> 2, total_population 2.5 -> 7 per 1,000 pops,
+# location base 50 -> 10) at the fit's modifier stack x1.066; was 31.97 / 3.65 / 99.9. Refit on the next day-0 save.
+capacity = { per_development = 2.13, per_population_k = 8.45, per_location = 57.3, rank = { town = 521.3, city = 815.2, megalopolis = 1240.8 } }
 # placement v2 (start_simulation.place_food_chain)
 # 2026-09-30: the three victuals buildings scaled x0.4 (inputs, outputs and food modifier together)
 tavern_victuals_per_level = 0.8    # victuals a staffed Tavern buys per month (24 food, 30 per victual)
@@ -761,6 +763,10 @@ grange_at_start = false           # no Granges at game start (2026-10-03): every
 # Cookshop or Tavern, short pools get tier-0 crop farm levels (best crop by suitability, livestock last), one level at a
 # time over the pool's locations, wherever a level adds at least this much food after its peasants' lost subsistence
 deficit_farm_min_net_food = 0.25
+# Start Granaries (2026-10-06, Jan): free food capacity is about a year of consumption, so a pool in deficit at game
+# start gets Granary levels (caps and workers respected, most people first) until its start store lasts this many months
+# at its start deficit: time for the AI's farms, Cookshops and Taverns. 0 = none.
+granary_store_months = 48.0
 # Cookshops: every level runs a dish (no Preserve recipes since 2026-09-25); since 2026-10-03 dishes and drinks sell
 # for offset and the food is the flat local_monthly_food only
 cookshop_serve_share = 1.0

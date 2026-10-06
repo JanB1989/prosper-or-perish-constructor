@@ -461,8 +461,9 @@ def test_building_blueprints_do_not_emit_orphaned_optional_comparisons() -> None
 def test_granary_storage_and_startup_placement_are_compatible() -> None:
     granary_text = (BUILDING_BLUEPRINT_ROOT / "granary.yml").read_text(encoding="utf-8-sig")
     assert "local_food_preservation_efficiency_modifier = 0.03" in granary_text
-    assert "local_food_capacity = 500" in granary_text
-    assert "local_food_capacity_modifier = 0.10" in granary_text
+    assert "local_food_capacity = 600" in granary_text
+    assert "local_food_capacity_modifier = 0.15" in granary_text
+    assert "price = pp_granary_price" in granary_text
     assert "is_province_capital = yes" not in granary_text
     for rank in ("rural_settlement", "town", "city", "megalopolis"):
         assert f"location_rank = location_rank:{rank}" in granary_text

@@ -1056,7 +1056,7 @@ class Simulation:
         return y if y is not None else self.rules.subsistence * self.food_mult.get(tag, 1.0)
 
     def food_capacity_per_level(self):
-        """building -> province food capacity (``local_food_capacity``) one staffed level adds (Granary: 500; its 10 % capacity modifier is not modelled)."""
+        """building -> province food capacity (``local_food_capacity``) one staffed level adds (Granary: 600; its 15 % capacity modifier is not modelled)."""
         cached = self.__dict__.get("_food_capacity_per_level")
         if cached is None:
             modifiers = getattr(self.rules, "modifiers", None)
@@ -1213,7 +1213,47 @@ class Simulation:
             for key in ("fishing_village", "forest_village"):
                 self.add(tag, key, max(0, 2 - self.counts[tag][key]))
         self.place_food_chain()
+        self.place_granaries()
         self.place_construction_materials()
+
+    # ------------------------------------------------------------------ start Granaries (2026-10-06, Jan)
+    GRANARY = "granary"
+
+    def place_granaries(self):
+        """Granary levels in the pools that start in food deficit. Free province food capacity is about a year of
+        consumption since 2026-10-06, and the engine fills every store to capacity at setup, so a short pool would
+        empty its store before the AI answers with farms, Cookshops or Taverns. Every pool whose start store (its
+        capacity) lasts fewer than ``granary_store_months`` at its start deficit gets Granary levels, largest
+        deficit first, round its locations (most people first; caps and workers through ``add``) until it does or no
+        location takes another level. The Granary's capacity percentage is not counted, so the estimate errs high."""
+        months = float(self.food_model.granary_store_months)
+        key = self.GRANARY
+        per_level = self.food_capacity_per_level().get(key, 0.0)
+        report = {"store_months": months, "pools_short": 0, "pools_given": 0, "levels": 0, "pools_still_short": 0}
+        self.granary_start = report
+        if months <= 0 or key not in self.numbers or per_level <= 0:
+            return
+        b = self.budgets()
+        for group in sorted(b, key=lambda g: (b[g]["balance"], g)):
+            deficit = -b[group]["balance"]
+            missing = deficit * months - b[group]["food_capacity"]
+            if deficit <= 1e-6 or missing <= 0:
+                continue
+            report["pools_short"] += 1
+            placed = 0
+            open_ = sorted(self.groups[group], key=lambda t: (-self.base[t]["population"], t))
+            while missing > 0 and open_:
+                for tag in list(open_):
+                    if not self.add(tag, key, 1):
+                        open_.remove(tag)
+                        continue
+                    placed += 1
+                    missing -= per_level
+                    if missing <= 0:
+                        break
+            report["levels"] += placed
+            report["pools_given"] += bool(placed)
+            report["pools_still_short"] += missing > 0
 
     def cookshop_net_food(self, tag):
         """Food one Cookshop level adds to its province: its local food plus the Serve method's Province Food on the
@@ -2253,6 +2293,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
             "markets_covered": sum(1 for c in sim.victuals.values() if c["covered"] is None or c["covered"] >= sim.food_model.victuals_target - 1e-9),
             "catchments": sim.victuals,
         },
+        "granary_start": getattr(sim, "granary_start", {}),
         "construction_materials": getattr(sim, "construction", {}),
         "food_model": {
             "structural_short_pools": sum(1 for b in sim.before_trade.values() if b["structural_balance"] < 0),

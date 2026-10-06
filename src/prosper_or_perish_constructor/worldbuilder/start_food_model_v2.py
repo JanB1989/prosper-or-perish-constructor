@@ -42,10 +42,11 @@ RANK_ORDER = {"megalopolis": 0, "city": 1, "town": 2, "rural_settlement": 3}
 DEFAULT_YIELD_RANK = {"rural_settlement": 1.037, "town": 1.016, "city": 0.972, "megalopolis": 0.911}
 DEFAULT_YIELD_CLIMATE: dict[str, float] = {}
 DEFAULT_CAPACITY = {
-    # province food capacity (max_food_value) per pool, fitted on nb.eu5: R2 0.968
-    "per_development": 31.97,
-    "per_population_k": 3.65,
-    "per_location": 99.9,
+    # province food capacity (max_food_value) per pool, fitted on nb.eu5: R2 0.968; moved with the 2026-10-06 capacity
+    # change (development 30 -> 2, population 2.5 -> 7 per 1,000, location base 50 -> 10), see constructor.toml
+    "per_development": 2.13,
+    "per_population_k": 8.45,
+    "per_location": 57.3,
     "rank": {"town": 521.3, "city": 815.2, "megalopolis": 1240.8},
 }
 
@@ -72,6 +73,9 @@ class FoodModelConfig:
     # crop farm levels in short pools, one at a time, wherever a level adds at least this much food per month after
     # the subsistence its peasants gave up
     deficit_farm_min_net_food: float = 0.25
+    # start Granaries (2026-10-06, Jan): a pool in deficit at game start gets Granary levels until its start store
+    # lasts this many months at its start deficit (0 = none); free capacity is about a year of consumption
+    granary_store_months: float = 48.0
     cookshop_serve_share: float = 1.0                # share of cookshop levels whose dish slot runs Serve (all: no Preserve)
     cookshop_drink_food: float = 12.0                # Province Food of the drink slot per level (estimate: ~0.4 of the
                                                      # 0.67 victuals drinks + packing made per level on nb.eu5, x30)
@@ -106,7 +110,7 @@ class FoodModelConfig:
         for name in ("overpopulation_consumption", "start_food_share", "tribal_share_food", "tavern_victuals_per_level", "yard_victuals_per_level",
                      "harbor_yard_victuals_per_level", "cookshop_serve_share", "cookshop_drink_food",
                      "victuals_target", "yard_surplus_share", "yard_min_capacity_months", "harbor_yard_min_capacity_months",
-                     "yard_min_level_share", "serve_raw_goods_share", "deficit_farm_min_net_food",
+                     "yard_min_level_share", "serve_raw_goods_share", "deficit_farm_min_net_food", "granary_store_months",
                      "raw_goods_per_rgo_k", "serve_fallback_raw_goods_share", "import_priority_coverage"):
             if name in raw:
                 kwargs[name] = float(raw[name])

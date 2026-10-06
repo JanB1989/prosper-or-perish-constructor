@@ -440,3 +440,11 @@ pp_paddy_water_control_price_cost_modifier={
 		category=country
 	}
 }
+
+pp_granary_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}

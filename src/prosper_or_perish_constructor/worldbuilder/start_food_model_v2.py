@@ -43,9 +43,9 @@ DEFAULT_YIELD_RANK = {"rural_settlement": 1.037, "town": 1.016, "city": 0.972, "
 DEFAULT_YIELD_CLIMATE: dict[str, float] = {}
 DEFAULT_CAPACITY = {
     # province food capacity (max_food_value) per pool, fitted on nb.eu5: R2 0.968; moved with the 2026-10-06 capacity
-    # change (development 30 -> 2, population 2.5 -> 7 per 1,000, location base 50 -> 10), see constructor.toml
+    # change (development 30 -> 2, population 2.5 -> 10 per 1,000, location base 50 -> 10), see constructor.toml
     "per_development": 2.13,
-    "per_population_k": 8.45,
+    "per_population_k": 11.64,
     "per_location": 57.3,
     "rank": {"town": 521.3, "city": 815.2, "megalopolis": 1240.8},
 }
@@ -75,7 +75,7 @@ class FoodModelConfig:
     deficit_farm_min_net_food: float = 0.25
     # start Granaries (2026-10-06, Jan): a pool in deficit at game start gets Granary levels until its start store
     # lasts this many months at its start deficit (0 = none); free capacity is about a year of consumption
-    granary_store_months: float = 48.0
+    granary_store_months: float = 60.0
     cookshop_serve_share: float = 1.0                # share of cookshop levels whose dish slot runs Serve (all: no Preserve)
     cookshop_drink_food: float = 12.0                # Province Food of the drink slot per level (estimate: ~0.4 of the
                                                      # 0.67 victuals drinks + packing made per level on nb.eu5, x30)

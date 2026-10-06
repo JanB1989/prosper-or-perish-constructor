@@ -464,7 +464,9 @@ def test_granary_storage_and_startup_placement_are_compatible() -> None:
     assert "local_food_capacity = 600" in granary_text
     assert "local_food_capacity_modifier = 0.15" in granary_text
     assert "price = pp_granary_price" in granary_text
-    assert "is_province_capital = yes" not in granary_text
+    # one Granary site per province (2026-10-06, Jan) and a flat AI weight where a level would fill
+    assert "is_province_capital = yes" in granary_text
+    assert "value = pp_granary_ai_weight" in granary_text
     for rank in ("rural_settlement", "town", "city", "megalopolis"):
         assert f"location_rank = location_rank:{rank}" in granary_text
 
@@ -1426,7 +1428,7 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
     assert "raw_material = goods:beeswax" in general_farm_block
     assert "vegetation = farmland" in general_farm_block
     assert "is_coastal" in fishing_potential
-    assert "is_province_capital = yes" not in granary_text
+    assert "is_province_capital = yes" in granary_text   # one Granary site per province (2026-10-06)
     for rank in ("rural_settlement", "town", "city", "megalopolis"):
         assert f"location_rank = location_rank:{rank}" in granary_text
     _assert_absent_or_cost_only_building_inject(winery_blueprint)
@@ -1442,7 +1444,9 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
             unsupported.append((location, building))
         elif building == "fishing_village" and "is_coastal" not in fishing_potential:
             unsupported.append((location, building))
-        elif building == "granary" and "is_province_capital = yes" in granary_text:
+        elif building == "granary" and "is_province_capital = yes" not in granary_text:
+            # since 2026-10-06 the Granary stands at province capitals only; the start planner (drop_invalid) removes
+            # the setup Granaries elsewhere, so these old log rows are explained by the gate
             unsupported.append((location, building))
         elif building == "winery" and "NOT = { raw_material = goods:wine }" in winery_text:
             unsupported.append((location, building))

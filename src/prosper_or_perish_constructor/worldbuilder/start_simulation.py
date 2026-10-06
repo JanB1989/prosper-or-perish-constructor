@@ -1223,9 +1223,10 @@ class Simulation:
         """Granary levels in the pools that start in food deficit. Free province food capacity is about a year of
         consumption since 2026-10-06, and the engine fills every store to capacity at setup, so a short pool would
         empty its store before the AI answers with farms, Cookshops or Taverns. Every pool whose start store (its
-        capacity) lasts fewer than ``granary_store_months`` at its start deficit gets Granary levels, largest
-        deficit first, round its locations (most people first; caps and workers through ``add``) until it does or no
-        location takes another level. The Granary's capacity percentage is not counted, so the estimate errs high."""
+        capacity) lasts fewer than ``granary_store_months`` at its start deficit gets Granary levels at its province
+        capital (the only Granary site since 2026-10-06; one per province and owner), largest deficit first, until it
+        does or the capital takes no further level (caps and workers through ``add``). The Granary's capacity
+        percentage is not counted, so the estimate errs high."""
         months = float(self.food_model.granary_store_months)
         key = self.GRANARY
         per_level = self.food_capacity_per_level().get(key, 0.0)
@@ -1241,16 +1242,10 @@ class Simulation:
                 continue
             report["pools_short"] += 1
             placed = 0
-            open_ = sorted(self.groups[group], key=lambda t: (-self.base[t]["population"], t))
-            while missing > 0 and open_:
-                for tag in list(open_):
-                    if not self.add(tag, key, 1):
-                        open_.remove(tag)
-                        continue
+            for tag in sorted(t for t in self.groups[group] if self.base[t].get("is_province_capital")):
+                while missing > 0 and self.add(tag, key, 1):
                     placed += 1
                     missing -= per_level
-                    if missing <= 0:
-                        break
             report["levels"] += placed
             report["pools_given"] += bool(placed)
             report["pools_still_short"] += missing > 0

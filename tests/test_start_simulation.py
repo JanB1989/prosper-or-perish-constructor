@@ -555,15 +555,18 @@ def test_start_granaries_fill_short_pools_until_the_store_lasts_the_configured_m
     sim.food_model = fm.FoodModelConfig(granary_store_months=48.0)
     sim.numbers = {"granary": {"employment_size": 0.25, "pop_type": "laborers"}}
     sim._food_capacity_per_level = {"granary": 600.0}
-    sim.groups = {("AAA", "short"): ["town", "village"], ("AAA", "fed"): ["farm"], ("AAA", "capped"): ["hill"]}
-    sim.base = {"town": {"population": 50}, "village": {"population": 5}, "farm": {"population": 9}, "hill": {"population": 3}}
+    groups = {("AAA", "short"): ["village", "town"], ("AAA", "fed"): ["farm"], ("AAA", "capped"): ["hill"], ("BBB", "split"): ["field"]}
+    sim.groups = groups
+    capitals = {"town", "farm", "hill"}                                  # BBB's part has no known capital
+    sim.base = {t: {"population": 9, "is_province_capital": t in capitals} for ts in groups.values() for t in ts}
     budgets = {
         ("AAA", "short"): {"balance": -40.0, "food_capacity": 600.0},    # needs 40 x 48 = 1,920: 600 + 3 levels
         ("AAA", "fed"): {"balance": 10.0, "food_capacity": 100.0},       # no deficit: nothing
-        ("AAA", "capped"): {"balance": -20.0, "food_capacity": 0.0},     # needs 2 levels, the location takes 1
+        ("AAA", "capped"): {"balance": -20.0, "food_capacity": 0.0},     # needs 2 levels, the capital takes 1
+        ("BBB", "split"): {"balance": -5.0, "food_capacity": 0.0},       # short, but no capital: nothing
     }
     sim.budgets = lambda groups=None: budgets
-    caps = {"town": 2, "village": 5, "farm": 9, "hill": 1}
+    caps = {"town": 5, "village": 5, "farm": 9, "hill": 1, "field": 5}
     placed = Counter()
 
     def add(tag, key, wanted=1):
@@ -574,9 +577,9 @@ def test_start_granaries_fill_short_pools_until_the_store_lasts_the_configured_m
 
     sim.add = add
     sim.place_granaries()
-    # round the locations, most people first: town, village, town; the town stops at its cap of 2
-    assert placed == Counter({"town": 2, "village": 1, "hill": 1})
-    assert sim.granary_start == {"store_months": 48.0, "pools_short": 2, "pools_given": 2, "levels": 4, "pools_still_short": 1}
+    # Granaries stand only at the province capital: the town takes all 3, the village none; the hill stops at its cap
+    assert placed == Counter({"town": 3, "hill": 1})
+    assert sim.granary_start == {"store_months": 48.0, "pools_short": 3, "pools_given": 2, "levels": 4, "pools_still_short": 2}
     # off at 0 months
     sim.food_model = fm.FoodModelConfig(granary_store_months=0.0)
     placed.clear()

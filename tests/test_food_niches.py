@@ -49,7 +49,7 @@ def test_the_tavern_keeps_food_from_spoiling_like_the_cookshop() -> None:
 
 
 def test_no_blueprint_sells_victuals_as_a_negative_input() -> None:
-    enabled = [p for p in BLUEPRINTS.glob("*.yml") if p.stem != "dummy_victuals_producer"]   # disabled experiment
+    enabled = list(BLUEPRINTS.glob("*.yml"))
     offenders = [p.name for p in enabled if re.search(r"^\s*victuals = -", p.read_text(encoding="utf-8-sig"), re.M)]
     assert offenders == []
 

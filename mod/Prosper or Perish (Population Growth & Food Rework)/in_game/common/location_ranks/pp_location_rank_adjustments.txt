@@ -11,7 +11,6 @@ TRY_INJECT:megalopolis = {
 		local_food_production_mult = 0.3   # vanilla -0.3: no food penalty from the rank
 		local_province_food_sales_output_modifier = 0.10
 		local_offset_output_modifier = 0.10
-		local_province_food_purchase_output_modifier = 0.10
 		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 
 		free_building_levels = -152
@@ -33,7 +32,6 @@ TRY_INJECT:city = {
 		local_food_production_mult = 0.2   # vanilla -0.2: no food penalty from the rank
 		local_province_food_sales_output_modifier = 0.05
 		local_offset_output_modifier = 0.05
-		local_province_food_purchase_output_modifier = 0.05
 
 		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 
@@ -52,7 +50,6 @@ TRY_INJECT:town = {
 		local_food_production_mult = 0.1   # vanilla -0.1: no food penalty from the rank
 		local_province_food_sales_output_modifier = 0.025
 		local_offset_output_modifier = 0.025
-		local_province_food_purchase_output_modifier = 0.025
 		free_building_levels = 11
 		local_build_buildings_efficiency = -0.3
 		local_construction_speed = -0.3
@@ -64,7 +61,6 @@ TRY_INJECT:rural_settlement = {
 		local_max_rgo_size_modifier = -0.50
 		local_province_food_sales_output_modifier = 0.00
 		local_offset_output_modifier = 0.00
-		local_province_food_purchase_output_modifier = 0.00
 		free_building_levels = 30
 		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 		local_build_buildings_efficiency = -0.3

@@ -35,7 +35,6 @@ GOODS_OUTPUT_LEGEND_SUFFIXES = (
 )
 GOODS_WITHOUT_OUTPUT_MAP_MODES = {
     "province_food_sales",
-    "province_food_purchase",
     "offset",
     "logistics",
     "manual_labor",

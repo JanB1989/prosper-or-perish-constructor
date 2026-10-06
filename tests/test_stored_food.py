@@ -23,7 +23,7 @@ DEFINES = MOD_ROOT / "loading_screen/common/defines/pp_defines_adjustments.txt"
 
 # Stored Food: the EU5 1.3 positive_province_food_growth values per stored year, growth included (the engine's storage
 # term NPop.FOOD_STORAGE_POP_GROWTH is 0 since growth moved onto the modifier). The storage legs it once carried
-# (Surplus Sales +8.0, Scarcity Premium -8.0 per year) are gone: the store lever (Low Stores / Full Stores) replaced them.
+# (Surplus Sales +8.0 per year) are gone: the store lever (Low Stores / Full Stores) replaced them.
 PAYLOAD_1_3 = {
     "local_population_growth": 0.006,   # 2026-10-03 Mini World calibration (was the 1.3 value 0.0075)
     "local_devastation_recovery": 0.003,
@@ -32,7 +32,6 @@ PAYLOAD_1_3 = {
 }
 FOOD = "local_local_food_output_modifier"
 SALES = "local_province_food_sales_output_modifier"
-PURCHASE = "local_province_food_purchase_output_modifier"
 
 
 def _config() -> stored_food.StoredFoodConfig:
@@ -123,9 +122,8 @@ def test_store_lever_moves_province_food_staples_and_surplus_sales() -> None:
     # the old staple_output switch stays available for the provisioned goods, but nothing uses it any more
     goods = stored_food.staple_goods()
     assert set(goods) == set(provisioning.PROVISIONED_GOOD_BY_BUILDING.values()) and len(goods) == len(set(goods))
-    # nothing of the old storage legs is left on Stored Food, and no Scarcity Premium anywhere
-    assert not {FOOD, SALES, PURCHASE} & set(stored_food.payload(config))
-    assert PURCHASE not in low and PURCHASE not in full
+    # nothing of the old storage legs is left on Stored Food
+    assert not {FOOD, SALES} & set(stored_food.payload(config))
 
 
 def test_one_step_modifier_per_stored_month_carries_every_effect() -> None:
@@ -175,9 +173,9 @@ def test_one_step_modifier_per_stored_month_carries_every_effect() -> None:
 
 
 def test_no_country_base_value_belongs_to_the_store_lever() -> None:
-    # the lever is zero at the pivot: the old constants (-1.0 sales, +15.0 purchase, +19.0 offset) must not come back
+    # the lever is zero at the pivot: the old constants (-1.0 sales, +19.0 offset) must not come back
     text = _read(MOD_ROOT / "in_game/common/auto_modifiers/pp_country_base_values.txt")
-    for good in ("province_food_sales", "province_food_purchase", "offset", "local_food"):
+    for good in ("province_food_sales", "offset", "local_food"):
         assert not re.search(rf"^\s*global_{good}_output_modifier\s*=", text, flags=re.MULTILINE), good
 
 

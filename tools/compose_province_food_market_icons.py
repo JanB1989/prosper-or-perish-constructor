@@ -117,7 +117,6 @@ def main() -> None:
     ILLUSTRATION_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     outputs = {
         "icon_goods_province_food_sales.png": _compose(sales=True),
-        "icon_goods_province_food_purchase.png": _compose(sales=False),
     }
     for name, image in outputs.items():
         image.save(OUTPUT_DIR / name)

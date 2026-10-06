@@ -841,7 +841,7 @@ def test_province_food_sales_output_modifier_values_use_three_decimal_precision(
     ]
     patterns = {
         good: re.compile(rf"\blocal_{good}_output_modifier\s*=\s*(-?\d+\.(\d+))\b")
-        for good in ("province_food_sales", "province_food_purchase")
+        for good in ("province_food_sales",)
     }
     values_by_good: dict[str, list[str]] = {}
 
@@ -854,13 +854,10 @@ def test_province_food_sales_output_modifier_values_use_three_decimal_precision(
         values_by_good[good] = matches
 
     assert values_by_good["province_food_sales"]
-    purchases = [abs(float(value)) for value in values_by_good["province_food_purchase"]]
     sales = [abs(float(value)) for value in values_by_good["province_food_sales"]]
-    # province_starving carries no purchase line any more (2026-10-02: the Tavern's Scarcity Premium is gone; starving
-    # raises the Province Food output instead). What is left are the commented-out price modifiers and the location
-    # ranks, where both goods keep equal values; the first sales value is province_starving's commented-out line.
+    # province_starving and the two price modifiers (commented out), then the location ranks
     assert sales[0] == 0.08
-    assert purchases == sales[1:]
+    assert sales[1:] == [0.30, 0.50, 0.10, 0.05, 0.025, 0.0]
 
 
 def test_production_throughput_prints_best_available_building_slot_sums(

@@ -42,7 +42,6 @@ METHOD_METADATA_KEYS = {
 }
 DISABLED_PRODUCTION_EXPERIMENTS = frozenset(
     {
-        "dummy_victuals_producer",
         "mining_village",
         "mining_village_blast_furnace",
         "mining_village_coke_blast_furnace",

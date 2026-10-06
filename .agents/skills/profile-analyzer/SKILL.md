@@ -28,6 +28,22 @@ For additional options, run the same command with `--help` instead of the input 
 - Each run creates a timestamped directory with an offline `index.html`, data exports, and input snapshots.
   Use existing snapshots when the game has overwritten a capture. Keep reports untracked.
 
+## Seconds per game year (always report it)
+
+Every report opens with a **seconds per game year** chart: wall-clock time between the game dates of
+`performance_degradation.log` rows and the session's autosaves (the `save games` folder next to `logs`;
+`--saves` for another). Only autosaves written after the session's launch count, and only the newest
+playthrough. Stretches more than 1.6x slower than their neighbours count as pauses and stay out of the
+average. Run the report while the session is still open (autosaves rotate, the log resets on relaunch);
+the speed log alone gives a row every few minutes. Always give Jan the clean seconds per game year and
+the per-decade figures with the report.
+
+For the running game without a profiler dump:
+
+```bash
+uvx --from https://github.com/JanB1989/profile-analyzer/archive/refs/heads/main.zip profile-analyzer speed "path/to/logs" --output "graphs/profiler" --label "game-speed"
+```
+
 ## Source graphs and comparisons
 
 For source context and inferred graph edges, add `--game-root "path/to/EU5"` and

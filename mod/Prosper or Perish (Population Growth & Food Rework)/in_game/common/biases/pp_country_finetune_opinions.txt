@@ -1,0 +1,7 @@
+﻿# Country finetune opinions (docs/country_finetunes.md), given at game start by on_action/pp_country_finetunes.txt.
+
+# Castile and Portugal: flat for 150 years, then gone (keeps the AI Castile from conquering Portugal).
+pp_opinion_iberian_concord = {
+	value = 100
+	years = 150
+}

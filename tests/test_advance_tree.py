@@ -78,7 +78,13 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
         {"global_disease_resistance = 0.12", "global_population_capacity_modifier = 0.08"},
     ),
     # institution spread (2026-10-04): research speed instead of max literacy, Print Culture growth halved
-    "printing_press_advance": ({"global_max_literacy = 10"}, {"research_speed_modifier = 0.05"}),
+    # trade (2026-10-07, Jan): a little cheaper merchants for the printing countries
+    "printing_press_advance": (
+        {"global_max_literacy = 10"},
+        {"research_speed_modifier = 0.05", "merchant_maintenance_efficiency = 0.1"},
+    ),
+    # trade (2026-10-07, Jan): Global Trade countries' long hauls use a bit less merchant capacity
+    "global_trade_advance": (set(), {"trade_sea_efficiency = 0.15", "trade_range_modifier = 0.1"}),
     "print_culture": ({"global_institution_growth_modifier = 0.2"}, {"global_institution_growth_modifier = 0.1"}),
     # New World branch (2026-10-04): Christian Iberian countries skip the institution gate, AI weight for them
     "new_world_advance": (

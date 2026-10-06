@@ -6,6 +6,7 @@ TRY_REPLACE:printing_press_advance = {
 	icon = printing_press_advance
 
 	research_speed_modifier = 0.05 # was global_max_literacy = 10
+	merchant_maintenance_efficiency = 0.10 # 2026-10-07, Jan: a little cheaper trade for the printing countries
 
 	depth = 0
 	allow = { has_embraced_institution = institution:printing_press }
@@ -76,4 +77,19 @@ TRY_REPLACE:explorer_commisions_advance = {
 			add = 100
 		}
 	}
+}
+
+# Global Trade (2026-10-07, Jan: adjust trade a little, not much): vanilla's advance (maintenance +20 %, tariffs and
+# subventions +10 %) plus sea efficiency and range, so the long hauls of the Global Trade countries use a bit less
+# merchant capacity. Range and efficiency only change the capacity a long trade costs, never its margin.
+TRY_REPLACE:global_trade_advance = {
+	age = age_4_reformation
+
+	merchant_maintenance_efficiency = 0.20
+	max_tariff = 0.1
+	max_trade_subventions = 0.1
+	trade_sea_efficiency = 0.15
+	trade_range_modifier = 0.10
+	depth = 0
+	allow = { has_embraced_institution = institution:global_trade }
 }

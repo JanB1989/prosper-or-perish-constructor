@@ -9,3 +9,5 @@ Hand-tuned changes for single countries, one entry each: what and why.
 - **Castile and Portugal +100 opinion of each other for 150 years** (2026-10-06, `biases/pp_country_finetune_opinions.txt`,
   given in `on_action/pp_country_finetunes.txt`; replaces vanilla's +50 good relations that fade by ~1387).
   Why: Castile conquered Portugal in every game.
+- **France +3 diplomatic reputation** (2026-10-06, `pp_estate_privilege_adjustments.txt`, Great Offices of the Crown).
+  Why: Jan's call, on the same privilege as the noble tax; vanilla privileges give at most +2.

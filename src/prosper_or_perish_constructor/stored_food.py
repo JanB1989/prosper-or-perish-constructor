@@ -23,10 +23,9 @@ growth included, come back through this carrier; the engine's own storage growth
   whole month (half rounds up), re-picked only when the store moved more than half a month + ``deadband_months``
   away from the carried step, so a store on a boundary does not flip. A province nobody eats in carries no step. The
   stored months themselves stay in ``pp_stored_food_months`` (re-set past the deadband) for the AI weights; variables
-  carry +100 (a variable at 0 counts as unset); a province never refreshed starts below every store.
-- old saves: the scaled version (2026-10-01..03: ``pp_stored_food``, ``pp_low_stores``, ``pp_full_stores``) and the
-  whole-month tier version (2026-10-01, ``pp_stored_food_tier_<t>``) stay defined without effects so saves load; the
-  first refresh removes them.
+  carry +100 (a variable at 0 counts as unset); a province never refreshed starts below every store. A step change
+  removes only the carried step's modifier and finds both steps by halving the 25 steps (5 comparisons each).
+  No old-save support (Jan, 2026-10-06: the shipped mod is not save compatible across versions).
 - display helpers (view only, location scope): ``pp_stored_food_years`` (the carried step's months / 12) and
   ``pp_province_food_storage_growth`` (its growth); the location view's Stored Food chip scales each Stored Food
   effect by the years (location_status.py).
@@ -35,7 +34,7 @@ growth included, come back through this carrier; the engine's own storage growth
 
 The refresh runs from ``in_game/common/on_action/pp_stored_food.txt`` (monthly country pulse, staggered over the month)
 and once at game start (pp_game_start.txt). ``ppc build`` / ``ppc sync`` write the generated files in their finalize
-step and delete the tier version's files; ``check`` reports files that differ from the configuration.
+step; ``check`` reports files that differ from the configuration.
 """
 
 from __future__ import annotations
@@ -49,9 +48,6 @@ CONFIG_SECTION = "stored_food"
 CURVE_SECTION = "curve"
 FOOD_KEY = "local_local_food_output_modifier"    # Province Food output of every maker (the store curve's main line)
 STAPLE_LINE_VALUE = "pp_stored_food_staple_line"  # location scope: the carried step's crop line (crop farm AI weights)
-MODIFIER = "pp_stored_food"
-LOW_MODIFIER = "pp_low_stores"
-FULL_MODIFIER = "pp_full_stores"
 STAPLE_KEY = "staple_output"   # in [stored_food.low] / [stored_food.full]: one line per provisioned good
 REFRESH_EFFECT = "pp_refresh_stored_food"
 MONTHS_VALUE = "pp_stored_food_province_months"
@@ -63,7 +59,6 @@ STEP_LOCAL = "pp_food_store_new"
 STEP_CHANGE_LOCAL = "pp_food_store_change"
 STEPS = 24                                      # the cap: NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX x 12 months
 NO_STEP = 99                                    # a province nobody eats in: no step
-OLD_SIZE_VARIABLE = "pp_stored_food_size"       # the single-modifier version's variable (2026-10-01), dropped once
 UNSET_VALUE = 50                                # "never refreshed": below every store (0 months = 100)
 CONSUMPTION_LOCAL = "pp_stored_food_consumption"
 TARGET_LOCAL = "pp_stored_food_target"
@@ -74,13 +69,6 @@ MONTHS_PER_YEAR = 12
 CAP_MONTHS = "{ value = define:NEconomy|GROWTH_FROM_FOOD_MULTIPLIER_MAX multiply = 12 }"
 EPSILON = 0.00001   # the engine's fixed-point step
 
-# The whole-month tier version (2026-10-01): modifier names and variables old saves still carry.
-LEGACY_TIERS = 24
-LEGACY_PREFIX = "pp_stored_food_tier_"
-LEGACY_VARIABLES = ("pp_stored_food_tier", "pp_stored_food_tier_next", "pp_stored_food_tier_change")
-# The scaled version (2026-10-01..03): one modifier at size = stored years plus Low / Full Stores.
-LEGACY_SCALED = ("pp_stored_food", "pp_low_stores", "pp_full_stores")
-
 STATIC_MODIFIERS = Path("in_game/common/static_modifiers/pp_stored_food.txt")
 SCRIPT_VALUES = Path("in_game/common/script_values/pp_stored_food.txt")
 SCRIPTED_EFFECTS = Path("in_game/common/scripted_effects/pp_stored_food.txt")
@@ -90,13 +78,6 @@ GENERATED_FILES = (STATIC_MODIFIERS, SCRIPT_VALUES, SCRIPTED_EFFECTS, LOCALIZATI
 # falls back to a generic icon; each step gets the location view's Stored Food chip icon.
 STEP_ICONS = Path("main_menu/gfx/interface/icons/modifiers")
 STEP_ICON_SOURCE = Path("main_menu/gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds")
-LEGACY_FILES = (
-    Path("in_game/common/static_modifiers/pp_stored_food_tiers.txt"),
-    Path("in_game/common/script_values/pp_stored_food_tiers.txt"),
-    Path("in_game/common/scripted_effects/pp_stored_food_tiers.txt"),
-    Path("in_game/common/customizable_localization/pp_stored_food_tiers.txt"),
-    Path("main_menu/localization/english/pp_stored_food_tiers_l_english.yml"),
-)
 
 
 GROWTH_KEY = "local_population_growth"
@@ -116,7 +97,6 @@ DESCRIPTION = (
     "their staple foods to market and the surplus is left to the granges. The effects follow the store month by month, "
     "up to a cap."
 )
-LEGACY_DESCRIPTION = "Replaced by the Stored Food modifier at the province's next monthly update."
 
 
 @dataclass(frozen=True)
@@ -297,10 +277,6 @@ def format_value(value: float) -> str:
     return "0.0" if text in {"-0.0", "0.0"} else text
 
 
-def legacy_name(tier: int) -> str:
-    return f"{LEGACY_PREFIX}{tier}"
-
-
 def growth_per_year(config: StoredFoodConfig) -> float:
     """The payload's population growth per stored year (0 when the payload has none)."""
     return dict(config.per_year).get(GROWTH_KEY, 0.0)
@@ -365,14 +341,6 @@ def render_static_modifiers(config: StoredFoodConfig) -> str:
         lines += [f"{step_name(step)} = {{", "\tgame_data = { category = province }"]
         lines += [f"\t{key} = {format_value(value)}" for key, value in step_payload(config, step).items()]
         lines.append("}")
-    lines += [
-        "",
-        "# Old saves: the names of the earlier versions stay defined, without effects, so those saves load;",
-        "# pp_refresh_stored_food removes them at the province's first refresh (scaled modifiers 2026-10-01..03,",
-        "# whole-month tiers 2026-10-01).",
-    ]
-    lines += [f"{name} = {{ game_data = {{ category = province }} }}" for name in LEGACY_SCALED]
-    lines += [f"{legacy_name(t)} = {{ game_data = {{ category = province }} }}" for t in range(1, LEGACY_TIERS + 1)]
     return "\n".join(lines) + "\n"
 
 
@@ -460,9 +428,33 @@ def render_staple_line_value(config: StoredFoodConfig) -> str:
     return "\n".join(lines) + "\n"
 
 
-def _remove_steps(indent: str) -> list[str]:
-    return [f"{indent}if = {{ limit = {{ has_province_modifier = {step_name(s)} }} remove_province_modifier = {step_name(s)} }}"
-            for s in range(STEPS + 1)]
+def _step_split(key: str, indent: str, leaf, low: int = 0, high: int = STEPS) -> list[str]:
+    """Picks step ``low`` .. ``high`` from ``key`` (a step + 100, whole numbers) by halving: about five comparisons
+    instead of a chain of up to 25. ``leaf(step)`` gives the line for one step."""
+    if low == high:
+        return [f"{indent}{leaf(low)}"]
+    middle = (low + high) // 2
+    return [
+        f"{indent}if = {{",
+        f"{indent}\tlimit = {{ {key} < {format_value(VARIABLE_OFFSET + middle + 0.5)} }}",
+        *_step_split(key, indent + "\t", leaf, low, middle),
+        f"{indent}}}",
+        f"{indent}else = {{",
+        *_step_split(key, indent + "\t", leaf, middle + 1, high),
+        f"{indent}}}",
+    ]
+
+
+def _remove_carried_step(indent: str) -> list[str]:
+    """Removes the step modifier the province carries: the one ``STEP_VARIABLE`` names (a province carries exactly
+    one, or none while the variable is below every step)."""
+    return [
+        f"{indent}if = {{",
+        f"{indent}\tlimit = {{ var:{STEP_VARIABLE} > {format_value(VARIABLE_OFFSET - 0.5)} }}",
+        *_step_split(f"var:{STEP_VARIABLE}", indent + "\t",
+                     lambda s: f"remove_province_modifier = {step_name(s)}"),
+        f"{indent}}}",
+    ]
 
 
 def render_scripted_effects(config: StoredFoodConfig) -> str:
@@ -483,24 +475,8 @@ def render_scripted_effects(config: StoredFoodConfig) -> str:
         f"# Variables and locals carry + {offset} (a variable at 0 counts as unset); `var:x = n` compares scopes, so only < / >",
         f"# ranges are used. A province never refreshed starts at {UNSET_VALUE}, below every store, so its first refresh applies;",
         f"# {NO_STEP} marks a province without a step.",
+        "# A step change removes only the carried step's modifier; both steps are found by halving the 25 steps.",
         f"{REFRESH_EFFECT} = {{",
-        "\t# old saves: drop the whole-month tier modifier and its variables once",
-        "\tif = {",
-        f"\t\tlimit = {{ has_variable = {LEGACY_VARIABLES[0]} }}",
-    ]
-    for tier in range(1, LEGACY_TIERS + 1):
-        name = legacy_name(tier)
-        lines.append(f"\t\tif = {{ limit = {{ has_province_modifier = {name} }} remove_province_modifier = {name} }}")
-    for variable in LEGACY_VARIABLES:
-        lines.append(f"\t\tif = {{ limit = {{ has_variable = {variable} }} remove_variable = {variable} }}")
-    lines += [
-        "\t}",
-        "\t# old saves: the scaled modifiers (2026-10-01..03) and the single-modifier version's months",
-    ]
-    for name in LEGACY_SCALED:
-        lines.append(f"\tif = {{ limit = {{ has_province_modifier = {name} }} remove_province_modifier = {name} }}")
-    lines += [
-        f"\tif = {{ limit = {{ has_variable = {OLD_SIZE_VARIABLE} }} remove_variable = {OLD_SIZE_VARIABLE} }}",
         f"\tset_local_variable = {{ name = {CONSUMPTION_LOCAL} value = {{ value = {CONSUMPTION_VALUE} add = {offset} }} }}",
         f"\tset_local_variable = {{ name = {TARGET_LOCAL} value = {offset} }}",
         "\tif = {",
@@ -547,14 +523,9 @@ def render_scripted_effects(config: StoredFoodConfig) -> str:
         f"\t\t\tset_local_variable = {{ name = {STEP_LOCAL} value = {{ value = local_var:{TARGET_LOCAL} add = 0.5 floor = yes "
         f"max = {offset + STEPS} }} }}",
     ]
-    lines += _remove_steps("\t\t\t")
-    for step in range(STEPS + 1):
-        if step < STEPS:
-            keyword = "if" if step == 0 else "else_if"
-            lines.append(f"\t\t\t{keyword} = {{ limit = {{ local_var:{STEP_LOCAL} < {format_value(offset + step + 0.5)} }} "
-                         f"add_province_modifier = {{ modifier = {step_name(step)} }} }}")
-        else:
-            lines.append(f"\t\t\telse = {{ add_province_modifier = {{ modifier = {step_name(step)} }} }}")
+    lines += _remove_carried_step("\t\t\t")
+    lines += _step_split(f"local_var:{STEP_LOCAL}", "\t\t\t",
+                         lambda s: f"add_province_modifier = {{ modifier = {step_name(s)} }}")
     lines += [
         f"\t\t\tset_variable = {{ name = {STEP_VARIABLE} value = local_var:{STEP_LOCAL} }}",
         "\t\t}",
@@ -563,7 +534,7 @@ def render_scripted_effects(config: StoredFoodConfig) -> str:
         "\telse_if = {",
         f"\t\tlimit = {{ var:{STEP_VARIABLE} > {format_value(NO_STEP + 0.5)} }}",
     ]
-    lines += _remove_steps("\t\t")
+    lines += _remove_carried_step("\t\t")
     lines += [
         f"\t\tset_variable = {{ name = {STEP_VARIABLE} value = {NO_STEP} }}",
         "\t}",
@@ -577,12 +548,6 @@ def render_localization(config: StoredFoodConfig) -> str:
     for step in range(STEPS + 1):
         lines.append(f'  STATIC_MODIFIER_NAME_{step_name(step)}: "Stored Food: {step_label(step)}"')
         lines.append(f'  STATIC_MODIFIER_DESC_{step_name(step)}: "{DESCRIPTION}"')
-    for name in LEGACY_SCALED:
-        lines.append(f'  STATIC_MODIFIER_NAME_{name}: "Stored Food"')
-        lines.append(f'  STATIC_MODIFIER_DESC_{name}: "{LEGACY_DESCRIPTION}"')
-    for tier in range(1, LEGACY_TIERS + 1):
-        lines.append(f'  STATIC_MODIFIER_NAME_{legacy_name(tier)}: "Stored Food"')
-        lines.append(f'  STATIC_MODIFIER_DESC_{legacy_name(tier)}: "{LEGACY_DESCRIPTION}"')
     return "\n".join(lines) + "\n"
 
 
@@ -615,8 +580,8 @@ def step_icon(step: int) -> Path:
 
 
 def apply(project: Path, mod_root: Path, *, write: bool = True, vanilla_game: Path | None = None) -> StoredFoodResult:
-    """Write (or with ``write=False`` only compare) the generated stored-food files, UTF-8 with BOM, and delete the
-    tier version's files. With ``vanilla_game`` (the folder holding main_menu/) each step modifier also gets the
+    """Write (or with ``write=False`` only compare) the generated stored-food files, UTF-8 with BOM.
+    With ``vanilla_game`` (the folder holding main_menu/) each step modifier also gets the
     food stockpile icon as its own icon file."""
     config = load_config(project)
     changed: list[Path] = []
@@ -639,10 +604,4 @@ def apply(project: Path, mod_root: Path, *, write: bool = True, vanilla_game: Pa
             if write:
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(icon)
-    for relative in LEGACY_FILES:
-        path = mod_root / relative
-        if path.is_file():
-            changed.append(relative)
-            if write:
-                path.unlink()
     return StoredFoodResult(files_changed=len(changed), changed=tuple(changed))

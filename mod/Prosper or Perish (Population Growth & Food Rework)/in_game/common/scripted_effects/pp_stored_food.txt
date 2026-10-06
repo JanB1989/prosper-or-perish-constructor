@@ -9,43 +9,8 @@
 # Variables and locals carry + 100 (a variable at 0 counts as unset); `var:x = n` compares scopes, so only < / >
 # ranges are used. A province never refreshed starts at 50, below every store, so its first refresh applies;
 # 99 marks a province without a step.
+# A step change removes only the carried step's modifier; both steps are found by halving the 25 steps.
 pp_refresh_stored_food = {
-	# old saves: drop the whole-month tier modifier and its variables once
-	if = {
-		limit = { has_variable = pp_stored_food_tier }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_1 } remove_province_modifier = pp_stored_food_tier_1 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_2 } remove_province_modifier = pp_stored_food_tier_2 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_3 } remove_province_modifier = pp_stored_food_tier_3 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_4 } remove_province_modifier = pp_stored_food_tier_4 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_5 } remove_province_modifier = pp_stored_food_tier_5 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_6 } remove_province_modifier = pp_stored_food_tier_6 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_7 } remove_province_modifier = pp_stored_food_tier_7 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_8 } remove_province_modifier = pp_stored_food_tier_8 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_9 } remove_province_modifier = pp_stored_food_tier_9 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_10 } remove_province_modifier = pp_stored_food_tier_10 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_11 } remove_province_modifier = pp_stored_food_tier_11 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_12 } remove_province_modifier = pp_stored_food_tier_12 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_13 } remove_province_modifier = pp_stored_food_tier_13 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_14 } remove_province_modifier = pp_stored_food_tier_14 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_15 } remove_province_modifier = pp_stored_food_tier_15 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_16 } remove_province_modifier = pp_stored_food_tier_16 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_17 } remove_province_modifier = pp_stored_food_tier_17 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_18 } remove_province_modifier = pp_stored_food_tier_18 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_19 } remove_province_modifier = pp_stored_food_tier_19 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_20 } remove_province_modifier = pp_stored_food_tier_20 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_21 } remove_province_modifier = pp_stored_food_tier_21 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_22 } remove_province_modifier = pp_stored_food_tier_22 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_23 } remove_province_modifier = pp_stored_food_tier_23 }
-		if = { limit = { has_province_modifier = pp_stored_food_tier_24 } remove_province_modifier = pp_stored_food_tier_24 }
-		if = { limit = { has_variable = pp_stored_food_tier } remove_variable = pp_stored_food_tier }
-		if = { limit = { has_variable = pp_stored_food_tier_next } remove_variable = pp_stored_food_tier_next }
-		if = { limit = { has_variable = pp_stored_food_tier_change } remove_variable = pp_stored_food_tier_change }
-	}
-	# old saves: the scaled modifiers (2026-10-01..03) and the single-modifier version's months
-	if = { limit = { has_province_modifier = pp_stored_food } remove_province_modifier = pp_stored_food }
-	if = { limit = { has_province_modifier = pp_low_stores } remove_province_modifier = pp_low_stores }
-	if = { limit = { has_province_modifier = pp_full_stores } remove_province_modifier = pp_full_stores }
-	if = { limit = { has_variable = pp_stored_food_size } remove_variable = pp_stored_food_size }
 	set_local_variable = { name = pp_stored_food_consumption value = { value = pp_stored_food_province_consumption add = 100 } }
 	set_local_variable = { name = pp_stored_food_target value = 100 }
 	if = {
@@ -88,87 +53,453 @@ pp_refresh_stored_food = {
 		if = {
 			limit = { OR = { local_var:pp_food_store_change > 100.55 local_var:pp_food_store_change < 99.45 } }
 			set_local_variable = { name = pp_food_store_new value = { value = local_var:pp_stored_food_target add = 0.5 floor = yes max = 124 } }
-			if = { limit = { has_province_modifier = pp_food_store_0 } remove_province_modifier = pp_food_store_0 }
-			if = { limit = { has_province_modifier = pp_food_store_1 } remove_province_modifier = pp_food_store_1 }
-			if = { limit = { has_province_modifier = pp_food_store_2 } remove_province_modifier = pp_food_store_2 }
-			if = { limit = { has_province_modifier = pp_food_store_3 } remove_province_modifier = pp_food_store_3 }
-			if = { limit = { has_province_modifier = pp_food_store_4 } remove_province_modifier = pp_food_store_4 }
-			if = { limit = { has_province_modifier = pp_food_store_5 } remove_province_modifier = pp_food_store_5 }
-			if = { limit = { has_province_modifier = pp_food_store_6 } remove_province_modifier = pp_food_store_6 }
-			if = { limit = { has_province_modifier = pp_food_store_7 } remove_province_modifier = pp_food_store_7 }
-			if = { limit = { has_province_modifier = pp_food_store_8 } remove_province_modifier = pp_food_store_8 }
-			if = { limit = { has_province_modifier = pp_food_store_9 } remove_province_modifier = pp_food_store_9 }
-			if = { limit = { has_province_modifier = pp_food_store_10 } remove_province_modifier = pp_food_store_10 }
-			if = { limit = { has_province_modifier = pp_food_store_11 } remove_province_modifier = pp_food_store_11 }
-			if = { limit = { has_province_modifier = pp_food_store_12 } remove_province_modifier = pp_food_store_12 }
-			if = { limit = { has_province_modifier = pp_food_store_13 } remove_province_modifier = pp_food_store_13 }
-			if = { limit = { has_province_modifier = pp_food_store_14 } remove_province_modifier = pp_food_store_14 }
-			if = { limit = { has_province_modifier = pp_food_store_15 } remove_province_modifier = pp_food_store_15 }
-			if = { limit = { has_province_modifier = pp_food_store_16 } remove_province_modifier = pp_food_store_16 }
-			if = { limit = { has_province_modifier = pp_food_store_17 } remove_province_modifier = pp_food_store_17 }
-			if = { limit = { has_province_modifier = pp_food_store_18 } remove_province_modifier = pp_food_store_18 }
-			if = { limit = { has_province_modifier = pp_food_store_19 } remove_province_modifier = pp_food_store_19 }
-			if = { limit = { has_province_modifier = pp_food_store_20 } remove_province_modifier = pp_food_store_20 }
-			if = { limit = { has_province_modifier = pp_food_store_21 } remove_province_modifier = pp_food_store_21 }
-			if = { limit = { has_province_modifier = pp_food_store_22 } remove_province_modifier = pp_food_store_22 }
-			if = { limit = { has_province_modifier = pp_food_store_23 } remove_province_modifier = pp_food_store_23 }
-			if = { limit = { has_province_modifier = pp_food_store_24 } remove_province_modifier = pp_food_store_24 }
-			if = { limit = { local_var:pp_food_store_new < 100.5 } add_province_modifier = { modifier = pp_food_store_0 } }
-			else_if = { limit = { local_var:pp_food_store_new < 101.5 } add_province_modifier = { modifier = pp_food_store_1 } }
-			else_if = { limit = { local_var:pp_food_store_new < 102.5 } add_province_modifier = { modifier = pp_food_store_2 } }
-			else_if = { limit = { local_var:pp_food_store_new < 103.5 } add_province_modifier = { modifier = pp_food_store_3 } }
-			else_if = { limit = { local_var:pp_food_store_new < 104.5 } add_province_modifier = { modifier = pp_food_store_4 } }
-			else_if = { limit = { local_var:pp_food_store_new < 105.5 } add_province_modifier = { modifier = pp_food_store_5 } }
-			else_if = { limit = { local_var:pp_food_store_new < 106.5 } add_province_modifier = { modifier = pp_food_store_6 } }
-			else_if = { limit = { local_var:pp_food_store_new < 107.5 } add_province_modifier = { modifier = pp_food_store_7 } }
-			else_if = { limit = { local_var:pp_food_store_new < 108.5 } add_province_modifier = { modifier = pp_food_store_8 } }
-			else_if = { limit = { local_var:pp_food_store_new < 109.5 } add_province_modifier = { modifier = pp_food_store_9 } }
-			else_if = { limit = { local_var:pp_food_store_new < 110.5 } add_province_modifier = { modifier = pp_food_store_10 } }
-			else_if = { limit = { local_var:pp_food_store_new < 111.5 } add_province_modifier = { modifier = pp_food_store_11 } }
-			else_if = { limit = { local_var:pp_food_store_new < 112.5 } add_province_modifier = { modifier = pp_food_store_12 } }
-			else_if = { limit = { local_var:pp_food_store_new < 113.5 } add_province_modifier = { modifier = pp_food_store_13 } }
-			else_if = { limit = { local_var:pp_food_store_new < 114.5 } add_province_modifier = { modifier = pp_food_store_14 } }
-			else_if = { limit = { local_var:pp_food_store_new < 115.5 } add_province_modifier = { modifier = pp_food_store_15 } }
-			else_if = { limit = { local_var:pp_food_store_new < 116.5 } add_province_modifier = { modifier = pp_food_store_16 } }
-			else_if = { limit = { local_var:pp_food_store_new < 117.5 } add_province_modifier = { modifier = pp_food_store_17 } }
-			else_if = { limit = { local_var:pp_food_store_new < 118.5 } add_province_modifier = { modifier = pp_food_store_18 } }
-			else_if = { limit = { local_var:pp_food_store_new < 119.5 } add_province_modifier = { modifier = pp_food_store_19 } }
-			else_if = { limit = { local_var:pp_food_store_new < 120.5 } add_province_modifier = { modifier = pp_food_store_20 } }
-			else_if = { limit = { local_var:pp_food_store_new < 121.5 } add_province_modifier = { modifier = pp_food_store_21 } }
-			else_if = { limit = { local_var:pp_food_store_new < 122.5 } add_province_modifier = { modifier = pp_food_store_22 } }
-			else_if = { limit = { local_var:pp_food_store_new < 123.5 } add_province_modifier = { modifier = pp_food_store_23 } }
-			else = { add_province_modifier = { modifier = pp_food_store_24 } }
+			if = {
+				limit = { var:pp_food_store_step > 99.5 }
+				if = {
+					limit = { var:pp_food_store_step < 112.5 }
+					if = {
+						limit = { var:pp_food_store_step < 106.5 }
+						if = {
+							limit = { var:pp_food_store_step < 103.5 }
+							if = {
+								limit = { var:pp_food_store_step < 101.5 }
+								if = {
+									limit = { var:pp_food_store_step < 100.5 }
+									remove_province_modifier = pp_food_store_0
+								}
+								else = {
+									remove_province_modifier = pp_food_store_1
+								}
+							}
+							else = {
+								if = {
+									limit = { var:pp_food_store_step < 102.5 }
+									remove_province_modifier = pp_food_store_2
+								}
+								else = {
+									remove_province_modifier = pp_food_store_3
+								}
+							}
+						}
+						else = {
+							if = {
+								limit = { var:pp_food_store_step < 105.5 }
+								if = {
+									limit = { var:pp_food_store_step < 104.5 }
+									remove_province_modifier = pp_food_store_4
+								}
+								else = {
+									remove_province_modifier = pp_food_store_5
+								}
+							}
+							else = {
+								remove_province_modifier = pp_food_store_6
+							}
+						}
+					}
+					else = {
+						if = {
+							limit = { var:pp_food_store_step < 109.5 }
+							if = {
+								limit = { var:pp_food_store_step < 108.5 }
+								if = {
+									limit = { var:pp_food_store_step < 107.5 }
+									remove_province_modifier = pp_food_store_7
+								}
+								else = {
+									remove_province_modifier = pp_food_store_8
+								}
+							}
+							else = {
+								remove_province_modifier = pp_food_store_9
+							}
+						}
+						else = {
+							if = {
+								limit = { var:pp_food_store_step < 111.5 }
+								if = {
+									limit = { var:pp_food_store_step < 110.5 }
+									remove_province_modifier = pp_food_store_10
+								}
+								else = {
+									remove_province_modifier = pp_food_store_11
+								}
+							}
+							else = {
+								remove_province_modifier = pp_food_store_12
+							}
+						}
+					}
+				}
+				else = {
+					if = {
+						limit = { var:pp_food_store_step < 118.5 }
+						if = {
+							limit = { var:pp_food_store_step < 115.5 }
+							if = {
+								limit = { var:pp_food_store_step < 114.5 }
+								if = {
+									limit = { var:pp_food_store_step < 113.5 }
+									remove_province_modifier = pp_food_store_13
+								}
+								else = {
+									remove_province_modifier = pp_food_store_14
+								}
+							}
+							else = {
+								remove_province_modifier = pp_food_store_15
+							}
+						}
+						else = {
+							if = {
+								limit = { var:pp_food_store_step < 117.5 }
+								if = {
+									limit = { var:pp_food_store_step < 116.5 }
+									remove_province_modifier = pp_food_store_16
+								}
+								else = {
+									remove_province_modifier = pp_food_store_17
+								}
+							}
+							else = {
+								remove_province_modifier = pp_food_store_18
+							}
+						}
+					}
+					else = {
+						if = {
+							limit = { var:pp_food_store_step < 121.5 }
+							if = {
+								limit = { var:pp_food_store_step < 120.5 }
+								if = {
+									limit = { var:pp_food_store_step < 119.5 }
+									remove_province_modifier = pp_food_store_19
+								}
+								else = {
+									remove_province_modifier = pp_food_store_20
+								}
+							}
+							else = {
+								remove_province_modifier = pp_food_store_21
+							}
+						}
+						else = {
+							if = {
+								limit = { var:pp_food_store_step < 123.5 }
+								if = {
+									limit = { var:pp_food_store_step < 122.5 }
+									remove_province_modifier = pp_food_store_22
+								}
+								else = {
+									remove_province_modifier = pp_food_store_23
+								}
+							}
+							else = {
+								remove_province_modifier = pp_food_store_24
+							}
+						}
+					}
+				}
+			}
+			if = {
+				limit = { local_var:pp_food_store_new < 112.5 }
+				if = {
+					limit = { local_var:pp_food_store_new < 106.5 }
+					if = {
+						limit = { local_var:pp_food_store_new < 103.5 }
+						if = {
+							limit = { local_var:pp_food_store_new < 101.5 }
+							if = {
+								limit = { local_var:pp_food_store_new < 100.5 }
+								add_province_modifier = { modifier = pp_food_store_0 }
+							}
+							else = {
+								add_province_modifier = { modifier = pp_food_store_1 }
+							}
+						}
+						else = {
+							if = {
+								limit = { local_var:pp_food_store_new < 102.5 }
+								add_province_modifier = { modifier = pp_food_store_2 }
+							}
+							else = {
+								add_province_modifier = { modifier = pp_food_store_3 }
+							}
+						}
+					}
+					else = {
+						if = {
+							limit = { local_var:pp_food_store_new < 105.5 }
+							if = {
+								limit = { local_var:pp_food_store_new < 104.5 }
+								add_province_modifier = { modifier = pp_food_store_4 }
+							}
+							else = {
+								add_province_modifier = { modifier = pp_food_store_5 }
+							}
+						}
+						else = {
+							add_province_modifier = { modifier = pp_food_store_6 }
+						}
+					}
+				}
+				else = {
+					if = {
+						limit = { local_var:pp_food_store_new < 109.5 }
+						if = {
+							limit = { local_var:pp_food_store_new < 108.5 }
+							if = {
+								limit = { local_var:pp_food_store_new < 107.5 }
+								add_province_modifier = { modifier = pp_food_store_7 }
+							}
+							else = {
+								add_province_modifier = { modifier = pp_food_store_8 }
+							}
+						}
+						else = {
+							add_province_modifier = { modifier = pp_food_store_9 }
+						}
+					}
+					else = {
+						if = {
+							limit = { local_var:pp_food_store_new < 111.5 }
+							if = {
+								limit = { local_var:pp_food_store_new < 110.5 }
+								add_province_modifier = { modifier = pp_food_store_10 }
+							}
+							else = {
+								add_province_modifier = { modifier = pp_food_store_11 }
+							}
+						}
+						else = {
+							add_province_modifier = { modifier = pp_food_store_12 }
+						}
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { local_var:pp_food_store_new < 118.5 }
+					if = {
+						limit = { local_var:pp_food_store_new < 115.5 }
+						if = {
+							limit = { local_var:pp_food_store_new < 114.5 }
+							if = {
+								limit = { local_var:pp_food_store_new < 113.5 }
+								add_province_modifier = { modifier = pp_food_store_13 }
+							}
+							else = {
+								add_province_modifier = { modifier = pp_food_store_14 }
+							}
+						}
+						else = {
+							add_province_modifier = { modifier = pp_food_store_15 }
+						}
+					}
+					else = {
+						if = {
+							limit = { local_var:pp_food_store_new < 117.5 }
+							if = {
+								limit = { local_var:pp_food_store_new < 116.5 }
+								add_province_modifier = { modifier = pp_food_store_16 }
+							}
+							else = {
+								add_province_modifier = { modifier = pp_food_store_17 }
+							}
+						}
+						else = {
+							add_province_modifier = { modifier = pp_food_store_18 }
+						}
+					}
+				}
+				else = {
+					if = {
+						limit = { local_var:pp_food_store_new < 121.5 }
+						if = {
+							limit = { local_var:pp_food_store_new < 120.5 }
+							if = {
+								limit = { local_var:pp_food_store_new < 119.5 }
+								add_province_modifier = { modifier = pp_food_store_19 }
+							}
+							else = {
+								add_province_modifier = { modifier = pp_food_store_20 }
+							}
+						}
+						else = {
+							add_province_modifier = { modifier = pp_food_store_21 }
+						}
+					}
+					else = {
+						if = {
+							limit = { local_var:pp_food_store_new < 123.5 }
+							if = {
+								limit = { local_var:pp_food_store_new < 122.5 }
+								add_province_modifier = { modifier = pp_food_store_22 }
+							}
+							else = {
+								add_province_modifier = { modifier = pp_food_store_23 }
+							}
+						}
+						else = {
+							add_province_modifier = { modifier = pp_food_store_24 }
+						}
+					}
+				}
+			}
 			set_variable = { name = pp_food_store_step value = local_var:pp_food_store_new }
 		}
 	}
 	# nobody eats here: no step
 	else_if = {
 		limit = { var:pp_food_store_step > 99.5 }
-		if = { limit = { has_province_modifier = pp_food_store_0 } remove_province_modifier = pp_food_store_0 }
-		if = { limit = { has_province_modifier = pp_food_store_1 } remove_province_modifier = pp_food_store_1 }
-		if = { limit = { has_province_modifier = pp_food_store_2 } remove_province_modifier = pp_food_store_2 }
-		if = { limit = { has_province_modifier = pp_food_store_3 } remove_province_modifier = pp_food_store_3 }
-		if = { limit = { has_province_modifier = pp_food_store_4 } remove_province_modifier = pp_food_store_4 }
-		if = { limit = { has_province_modifier = pp_food_store_5 } remove_province_modifier = pp_food_store_5 }
-		if = { limit = { has_province_modifier = pp_food_store_6 } remove_province_modifier = pp_food_store_6 }
-		if = { limit = { has_province_modifier = pp_food_store_7 } remove_province_modifier = pp_food_store_7 }
-		if = { limit = { has_province_modifier = pp_food_store_8 } remove_province_modifier = pp_food_store_8 }
-		if = { limit = { has_province_modifier = pp_food_store_9 } remove_province_modifier = pp_food_store_9 }
-		if = { limit = { has_province_modifier = pp_food_store_10 } remove_province_modifier = pp_food_store_10 }
-		if = { limit = { has_province_modifier = pp_food_store_11 } remove_province_modifier = pp_food_store_11 }
-		if = { limit = { has_province_modifier = pp_food_store_12 } remove_province_modifier = pp_food_store_12 }
-		if = { limit = { has_province_modifier = pp_food_store_13 } remove_province_modifier = pp_food_store_13 }
-		if = { limit = { has_province_modifier = pp_food_store_14 } remove_province_modifier = pp_food_store_14 }
-		if = { limit = { has_province_modifier = pp_food_store_15 } remove_province_modifier = pp_food_store_15 }
-		if = { limit = { has_province_modifier = pp_food_store_16 } remove_province_modifier = pp_food_store_16 }
-		if = { limit = { has_province_modifier = pp_food_store_17 } remove_province_modifier = pp_food_store_17 }
-		if = { limit = { has_province_modifier = pp_food_store_18 } remove_province_modifier = pp_food_store_18 }
-		if = { limit = { has_province_modifier = pp_food_store_19 } remove_province_modifier = pp_food_store_19 }
-		if = { limit = { has_province_modifier = pp_food_store_20 } remove_province_modifier = pp_food_store_20 }
-		if = { limit = { has_province_modifier = pp_food_store_21 } remove_province_modifier = pp_food_store_21 }
-		if = { limit = { has_province_modifier = pp_food_store_22 } remove_province_modifier = pp_food_store_22 }
-		if = { limit = { has_province_modifier = pp_food_store_23 } remove_province_modifier = pp_food_store_23 }
-		if = { limit = { has_province_modifier = pp_food_store_24 } remove_province_modifier = pp_food_store_24 }
+		if = {
+			limit = { var:pp_food_store_step > 99.5 }
+			if = {
+				limit = { var:pp_food_store_step < 112.5 }
+				if = {
+					limit = { var:pp_food_store_step < 106.5 }
+					if = {
+						limit = { var:pp_food_store_step < 103.5 }
+						if = {
+							limit = { var:pp_food_store_step < 101.5 }
+							if = {
+								limit = { var:pp_food_store_step < 100.5 }
+								remove_province_modifier = pp_food_store_0
+							}
+							else = {
+								remove_province_modifier = pp_food_store_1
+							}
+						}
+						else = {
+							if = {
+								limit = { var:pp_food_store_step < 102.5 }
+								remove_province_modifier = pp_food_store_2
+							}
+							else = {
+								remove_province_modifier = pp_food_store_3
+							}
+						}
+					}
+					else = {
+						if = {
+							limit = { var:pp_food_store_step < 105.5 }
+							if = {
+								limit = { var:pp_food_store_step < 104.5 }
+								remove_province_modifier = pp_food_store_4
+							}
+							else = {
+								remove_province_modifier = pp_food_store_5
+							}
+						}
+						else = {
+							remove_province_modifier = pp_food_store_6
+						}
+					}
+				}
+				else = {
+					if = {
+						limit = { var:pp_food_store_step < 109.5 }
+						if = {
+							limit = { var:pp_food_store_step < 108.5 }
+							if = {
+								limit = { var:pp_food_store_step < 107.5 }
+								remove_province_modifier = pp_food_store_7
+							}
+							else = {
+								remove_province_modifier = pp_food_store_8
+							}
+						}
+						else = {
+							remove_province_modifier = pp_food_store_9
+						}
+					}
+					else = {
+						if = {
+							limit = { var:pp_food_store_step < 111.5 }
+							if = {
+								limit = { var:pp_food_store_step < 110.5 }
+								remove_province_modifier = pp_food_store_10
+							}
+							else = {
+								remove_province_modifier = pp_food_store_11
+							}
+						}
+						else = {
+							remove_province_modifier = pp_food_store_12
+						}
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { var:pp_food_store_step < 118.5 }
+					if = {
+						limit = { var:pp_food_store_step < 115.5 }
+						if = {
+							limit = { var:pp_food_store_step < 114.5 }
+							if = {
+								limit = { var:pp_food_store_step < 113.5 }
+								remove_province_modifier = pp_food_store_13
+							}
+							else = {
+								remove_province_modifier = pp_food_store_14
+							}
+						}
+						else = {
+							remove_province_modifier = pp_food_store_15
+						}
+					}
+					else = {
+						if = {
+							limit = { var:pp_food_store_step < 117.5 }
+							if = {
+								limit = { var:pp_food_store_step < 116.5 }
+								remove_province_modifier = pp_food_store_16
+							}
+							else = {
+								remove_province_modifier = pp_food_store_17
+							}
+						}
+						else = {
+							remove_province_modifier = pp_food_store_18
+						}
+					}
+				}
+				else = {
+					if = {
+						limit = { var:pp_food_store_step < 121.5 }
+						if = {
+							limit = { var:pp_food_store_step < 120.5 }
+							if = {
+								limit = { var:pp_food_store_step < 119.5 }
+								remove_province_modifier = pp_food_store_19
+							}
+							else = {
+								remove_province_modifier = pp_food_store_20
+							}
+						}
+						else = {
+							remove_province_modifier = pp_food_store_21
+						}
+					}
+					else = {
+						if = {
+							limit = { var:pp_food_store_step < 123.5 }
+							if = {
+								limit = { var:pp_food_store_step < 122.5 }
+								remove_province_modifier = pp_food_store_22
+							}
+							else = {
+								remove_province_modifier = pp_food_store_23
+							}
+						}
+						else = {
+							remove_province_modifier = pp_food_store_24
+						}
+					}
+				}
+			}
+		}
 		set_variable = { name = pp_food_store_step value = 99 }
 	}
 }

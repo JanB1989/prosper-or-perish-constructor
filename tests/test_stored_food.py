@@ -171,9 +171,6 @@ def test_one_step_modifier_per_stored_month_carries_every_effect() -> None:
     cap = stored_food.step_payload(config, 24)
     assert cap == {**{k: 2 * v for k, v in PAYLOAD_1_3.items()}, **stored_food.full_payload(config),
                    **rounded(_curve_exact(config, 24))}
-    # the scaled carriers of 2026-10-01..03 are gone from the effects
-    for name in stored_food.LEGACY_SCALED:
-        assert f"\n{name} = {{ game_data = {{ category = province }} }}" in "\n" + text
     parse_file(MOD_ROOT / stored_food.STATIC_MODIFIERS)
 
 
@@ -184,22 +181,22 @@ def test_no_country_base_value_belongs_to_the_store_lever() -> None:
         assert not re.search(rf"^\s*global_{good}_output_modifier\s*=", text, flags=re.MULTILINE), good
 
 
-def test_old_save_tier_names_stay_defined_without_effects() -> None:
-    text = _read(MOD_ROOT / stored_food.STATIC_MODIFIERS)
-    names = re.findall(r"^(pp_stored_food_tier_\d+) = \{ game_data = \{ category = province \} \}$", text, flags=re.MULTILINE)
-    assert names == [f"pp_stored_food_tier_{t}" for t in range(1, 25)]
-    scaled = re.findall(r"^(pp_\w+) = \{ game_data = \{ category = province \} \}$", text, flags=re.MULTILINE)
-    assert set(stored_food.LEGACY_SCALED) <= set(scaled)
-    loc = _read(MOD_ROOT / stored_food.LOCALIZATION)
-    for name in [f"pp_stored_food_tier_{t}" for t in range(1, 25)] + list(stored_food.LEGACY_SCALED):
-        assert f"\n  STATIC_MODIFIER_NAME_{name}:" in loc
+def test_no_old_save_carriers_remain() -> None:
+    # 2026-10-06 (Jan): the mod is not save compatible across versions, so the earlier carriers (whole-month tiers,
+    # the scaled Stored Food / Low Stores / Full Stores and their variables) are neither defined nor cleaned up
+    modifiers = _read(MOD_ROOT / stored_food.STATIC_MODIFIERS)
+    names = re.findall(r"^(\w+) = \{", modifiers, flags=re.MULTILINE)
+    assert names == [stored_food.step_name(step) for step in range(stored_food.STEPS + 1)]
+    for path in (stored_food.SCRIPTED_EFFECTS, stored_food.LOCALIZATION, stored_food.SCRIPT_VALUES):
+        text = _read(MOD_ROOT / path)
+        for name in ("pp_stored_food_tier", "pp_low_stores", "pp_full_stores", "pp_stored_food_size"):
+            assert name not in text, (path, name)
+        assert not re.search(r"\bpp_stored_food\b", text), path
 
 
-def test_generated_files_match_the_configuration_and_the_tier_files_are_gone() -> None:
+def test_generated_files_match_the_configuration() -> None:
     result = stored_food.apply(PROJECT, MOD_ROOT, write=False)
     assert result.changed == ()
-    for path in stored_food.LEGACY_FILES:
-        assert not (MOD_ROOT / path).exists()
 
 
 def test_every_step_modifier_has_the_stored_food_icon() -> None:
@@ -219,9 +216,8 @@ def test_localization_names_each_step_without_numbers_in_the_description() -> No
     assert '  STATIC_MODIFIER_NAME_pp_food_store_24: "Stored Food: 24 months"' in loc
     for step in range(stored_food.STEPS + 1):
         assert f'\n  STATIC_MODIFIER_DESC_pp_food_store_{step}: "{stored_food.DESCRIPTION}"' in loc
-    for text in (stored_food.DESCRIPTION, stored_food.LEGACY_DESCRIPTION):
-        assert not re.search(r"\d", text)
-        assert "[" not in text and "#" not in text
+    assert not re.search(r"\d", stored_food.DESCRIPTION)
+    assert "[" not in stored_food.DESCRIPTION and "#" not in stored_food.DESCRIPTION
 
 
 def test_refresh_picks_the_nearest_step_with_hysteresis() -> None:
@@ -242,29 +238,31 @@ def test_refresh_picks_the_nearest_step_with_hysteresis() -> None:
     assert ("set_local_variable = { name = pp_food_store_new value = { value = local_var:pp_stored_food_target "
             "add = 0.5 floor = yes max = 124 } }") in effect
     change = effect[effect.index("local_var:pp_food_store_change > 100.55"):effect.index("# nobody eats here")]
-    adds = re.findall(r"(if|else_if|else) = \{ (?:limit = \{ local_var:pp_food_store_new < ([\d.]+) \} )?"
-                      r"add_province_modifier = \{ modifier = pp_food_store_(\d+) \} \}", change)
-    assert [int(step) for _, _, step in adds] == list(range(25))
-    assert [float(bound) for _, bound, _ in adds[:-1]] == [100.5 + s for s in range(24)]
-    assert adds[0][0] == "if" and adds[-1][0] == "else" and adds[-1][1] == ""
-    # every step is dropped before the new one is added, and the carried step is stored
-    first_add = change.index("add_province_modifier")
-    for step in range(25):
-        drop = f"if = {{ limit = {{ has_province_modifier = pp_food_store_{step} }} remove_province_modifier = pp_food_store_{step} }}"
-        assert change.index(drop) < first_add
+    # the carried step's modifier goes before the new one is added, and the carried step is stored
+    assert change.index("remove_province_modifier") < change.index("add_province_modifier")
     assert "set_variable = { name = pp_food_store_step value = local_var:pp_food_store_new }" in change
+    swap = _find_block(_effect_tree(), "pp_food_store_new")
+    for carried in range(25):
+        for new in (0, carried, 24 - carried):
+            values = {"var:pp_food_store_step": 100 + carried, "local_var:pp_food_store_new": 100 + new}
+            assert _walk(swap, values) == [("remove_province_modifier", f"pp_food_store_{carried}"),
+                                           ("add_province_modifier", f"pp_food_store_{new}")], values
+    # never refreshed (50) or no step (99): nothing to remove
+    for unset in (50, 99):
+        values = {"var:pp_food_store_step": unset, "local_var:pp_food_store_new": 107}
+        assert _walk(swap, values) == [("add_province_modifier", "pp_food_store_7")]
+    # halving: at most five comparisons deep for 25 steps (removal adds the "carries a step" guard)
+    assert _depth(swap, "local_var:pp_food_store_new") == 5
+    assert _depth(swap, "var:pp_food_store_step") == 1 + 5
     # only where people eat; elsewhere no step at all
     assert "limit = { local_var:pp_stored_food_consumption > 100 }\n\t\tset_local_variable = { name = pp_food_store_change" in effect
     nobody = effect[effect.index("# nobody eats here"):]
     assert "limit = { var:pp_food_store_step > 99.5 }" in nobody and "set_variable = { name = pp_food_store_step value = 99 }" in nobody
-    assert nobody.count("remove_province_modifier = pp_food_store_") == 25
+    assert nobody.count("remove_province_modifier = pp_food_store_") == 25   # one leaf per step, the carried one runs
     # never refreshed: below every store, so the first refresh applies both
     for variable in ("pp_stored_food_months", "pp_food_store_step"):
         assert f"limit = {{ NOT = {{ has_variable = {variable} }} }}\n\t\tset_variable = {{ name = {variable} value = 50 }}" in effect
-    # old saves: the scaled modifiers and the single-modifier version's variable go
-    for name in stored_food.LEGACY_SCALED:
-        assert f"if = {{ limit = {{ has_province_modifier = {name} }} remove_province_modifier = {name} }}" in effect
-    assert "if = { limit = { has_variable = pp_stored_food_size } remove_variable = pp_stored_food_size }" in effect
+    assert "has_province_modifier" not in effect   # no old-save cleanup, no check per step
     assert "size =" not in effect
     assert "pp_farm_produce" not in effect   # Farm Produce removed 2026-10-03 (the farm-based Cookshop cap is the reward)
     # +100 offsets (a variable at 0 counts as unset) and no `var:x = n` (a scope comparison in game)
@@ -287,16 +285,61 @@ def test_step_rule_rounds_to_the_nearest_month_and_holds_on_boundaries() -> None
     assert _step(0.0, 1) == 0 and _step(0.0, 24) == 0
 
 
-def test_refresh_clears_old_save_tiers_once() -> None:
-    effect = _block("\n" + _read(MOD_ROOT / stored_food.SCRIPTED_EFFECTS), "pp_refresh_stored_food")
-    legacy = effect[: effect.index("set_local_variable")]
-    assert "limit = { has_variable = pp_stored_food_tier }" in legacy
-    for tier in range(1, 25):
-        name = f"pp_stored_food_tier_{tier}"
-        assert f"if = {{ limit = {{ has_province_modifier = {name} }} remove_province_modifier = {name} }}" in legacy
-    for variable in stored_food.LEGACY_VARIABLES:
-        assert f"if = {{ limit = {{ has_variable = {variable} }} remove_variable = {variable} }}" in legacy
-    assert "add_province_modifier" not in legacy
+def _effect_tree() -> CList:
+    return parse_file(MOD_ROOT / stored_food.SCRIPTED_EFFECTS).values("pp_refresh_stored_food")[0]
+
+
+def _find_block(block: CList, local: str) -> CList | None:
+    """The block that sets the local ``local`` (the step swap) and then acts on it."""
+    for entry in block.entries:
+        if entry.key == "set_local_variable" and isinstance(entry.value, CList) and entry.value.first("name") == local:
+            return block
+        if isinstance(entry.value, CList):
+            found = _find_block(entry.value, local)
+            if found is not None:
+                return found
+    return None
+
+
+def _limit_holds(limit: CList, values: dict[str, float]) -> bool:
+    """A limit of plain `<key> < n` / `<key> > n` comparisons on the walked variables (anything else: not taken)."""
+    for entry in limit.entries:
+        if entry.key not in values or entry.op not in ("<", ">"):
+            return False
+        if not (values[entry.key] < float(entry.value) if entry.op == "<" else values[entry.key] > float(entry.value)):
+            return False
+    return True
+
+
+def _walk(block: CList, values: dict[str, float]) -> list[tuple[str, str]]:
+    """Runs the if / else trees of ``block`` on ``values``; the modifier effects reached, in order."""
+    hits: list[tuple[str, str]] = []
+    taken = True
+    for entry in block.entries:
+        if entry.key == "remove_province_modifier":
+            hits.append((entry.key, str(entry.value)))
+        elif entry.key == "add_province_modifier":
+            hits.append((entry.key, str(entry.value.first("modifier"))))
+        elif entry.key == "if":
+            taken = _limit_holds(entry.value.first("limit"), values)
+            if taken:
+                hits += _walk(entry.value, values)
+        elif entry.key == "else":
+            if not taken:
+                hits += _walk(entry.value, values)
+            taken = True
+    return hits
+
+
+def _depth(block: CList, key: str) -> int:
+    """The longest chain of nested comparisons on ``key`` in ``block``."""
+    best = 0
+    for entry in block.entries:
+        if entry.key in ("if", "else") and isinstance(entry.value, CList):
+            limit = entry.value.first("limit")
+            own = int(isinstance(limit, CList) and any(item.key == key for item in limit.entries))
+            best = max(best, own + _depth(entry.value, key))
+    return best
 
 
 def test_display_values_read_the_carried_step() -> None:

@@ -378,8 +378,9 @@ values (the list no longer skips it; the Stored Food chip stays).
   none. Against the continuous lever the effects sit at most about half a month off (Province Food output 3 %, Surplus
   Sales 1-12 %), the rest points of the buildings move in whole-month steps.
 - `pp_stored_food_months` keeps the continuous stored months (deadband 0.05) for the AI weights
-  (`pp_location_stored_months`); `pp_food_store_step` holds the carried step (+100). Old saves: the scaled modifiers
-  and the tier modifiers stay defined without effects and are removed at the province's first refresh.
+  (`pp_location_stored_months`); `pp_food_store_step` holds the carried step (+100). A step change removes only the
+  carried step's modifier and finds both steps by halving the 25 (2026-10-06). No old-save support since
+  2026-10-06 (Jan: the shipped mod is not save compatible across versions): the earlier carriers are gone.
 
 ### 6.6 Mini World growth calibration (2026-10-03, branch `province-food-store-lever`)
 

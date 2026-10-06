@@ -12,8 +12,7 @@
 # changes a month, 0.56 s per game year (about 12 us per province and month, at most 5 ms for one country). The scaled
 # modifier works out the consumption once per province (the tiers did it twice) and re-applies only when the stored
 # months moved by more than the deadband. Do not add further pulse scripts on this basis.
-# Game start: pp_stored_food_game_start (pp_game_start.txt) sets every province's modifier on day one. Old saves: the
-# first refresh replaces a province's whole-month tier modifier (within a month).
+# Game start: pp_stored_food_game_start (pp_game_start.txt) sets every province's modifier on day one.
 
 monthly_country_pulse = {
 	on_actions = {

@@ -540,34 +540,3 @@ pp_food_store_24 = {
 	local_fruit_output_modifier = 0.08077
 	local_olives_output_modifier = 0.15385
 }
-
-# Old saves: the names of the earlier versions stay defined, without effects, so those saves load;
-# pp_refresh_stored_food removes them at the province's first refresh (scaled modifiers 2026-10-01..03,
-# whole-month tiers 2026-10-01).
-pp_stored_food = { game_data = { category = province } }
-pp_low_stores = { game_data = { category = province } }
-pp_full_stores = { game_data = { category = province } }
-pp_stored_food_tier_1 = { game_data = { category = province } }
-pp_stored_food_tier_2 = { game_data = { category = province } }
-pp_stored_food_tier_3 = { game_data = { category = province } }
-pp_stored_food_tier_4 = { game_data = { category = province } }
-pp_stored_food_tier_5 = { game_data = { category = province } }
-pp_stored_food_tier_6 = { game_data = { category = province } }
-pp_stored_food_tier_7 = { game_data = { category = province } }
-pp_stored_food_tier_8 = { game_data = { category = province } }
-pp_stored_food_tier_9 = { game_data = { category = province } }
-pp_stored_food_tier_10 = { game_data = { category = province } }
-pp_stored_food_tier_11 = { game_data = { category = province } }
-pp_stored_food_tier_12 = { game_data = { category = province } }
-pp_stored_food_tier_13 = { game_data = { category = province } }
-pp_stored_food_tier_14 = { game_data = { category = province } }
-pp_stored_food_tier_15 = { game_data = { category = province } }
-pp_stored_food_tier_16 = { game_data = { category = province } }
-pp_stored_food_tier_17 = { game_data = { category = province } }
-pp_stored_food_tier_18 = { game_data = { category = province } }
-pp_stored_food_tier_19 = { game_data = { category = province } }
-pp_stored_food_tier_20 = { game_data = { category = province } }
-pp_stored_food_tier_21 = { game_data = { category = province } }
-pp_stored_food_tier_22 = { game_data = { category = province } }
-pp_stored_food_tier_23 = { game_data = { category = province } }
-pp_stored_food_tier_24 = { game_data = { category = province } }

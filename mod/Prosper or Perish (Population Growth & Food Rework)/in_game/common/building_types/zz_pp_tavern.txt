@@ -17,7 +17,10 @@ rural_settlement = yes
 town = yes
 city = yes
 megalopolis = yes
-location_potential = {
+# In allow, not location_potential (2026-10-06): the engine re-checks location_potential when a location changes
+# owner and removes the building (run 31ef07ce: 95 % of conquered non-capital and 49 % of conquered capital Taverns
+# gone); allow only gates new levels.
+allow = {
   is_province_capital = yes
 }
 # AI (2026-10-03): the Tavern is the fallback for a town whose province cannot feed itself; farms and Cookshops come

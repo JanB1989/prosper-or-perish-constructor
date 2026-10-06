@@ -475,6 +475,23 @@ def test_granary_storage_and_startup_placement_are_compatible() -> None:
         assert f"location_rank = location_rank:{rank}" in granary_text
 
 
+def test_no_blueprint_tests_the_province_capital_in_location_potential() -> None:
+    # The engine re-checks location_potential when a location changes owner and removes the building if it fails
+    # (run 31ef07ce, 2026-10-06: about half of the conquered Granaries and Taverns gone even where the location stayed
+    # the province capital). Capital tests belong in allow, which only gates new levels.
+    offenders = []
+    for path in sorted(BUILDING_BLUEPRINT_ROOT.glob("*.yml")):
+        text = re.sub(r"#[^\n]*", "", path.read_text(encoding="utf-8-sig"))
+        for match in re.finditer(r"location_potential\s*=\s*\{", text):
+            depth, end = 1, match.end()
+            while depth and end < len(text):
+                depth += {"{": 1, "}": -1}.get(text[end], 0)
+                end += 1
+            if "is_province_capital" in text[match.end():end]:
+                offenders.append(path.stem)
+    assert offenders == []
+
+
 def test_food_security_priority_syntax_matches_vanilla_employment_systems() -> None:
     load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
     vanilla_game = load_order.vanilla_root / "game"

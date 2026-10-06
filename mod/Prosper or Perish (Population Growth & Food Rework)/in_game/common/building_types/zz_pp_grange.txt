@@ -23,8 +23,12 @@ build_time = 365
 construction_demand = victuals_trade_construction
 # The overland twin of the Victualling Yard: the landowners gather the province's surplus at its capital and send it
 # to the regional markets. Harbour sites have the Victualling Yard instead (pp_victuals_site_triggers.txt).
-location_potential = {
+# The capital test sits in allow (2026-10-06): the engine re-checks location_potential when a location changes owner
+# and removes the building, so an owner- or capital-dependent test there loses the building on conquest.
+allow = {
   is_province_capital = yes
+}
+location_potential = {
   NOT = { pp_victualling_yard_site = yes }
 }
 # AI (2026-10-03): a new Grange only where it will pay and the food really piles up. Both terms are flat (vetoes):

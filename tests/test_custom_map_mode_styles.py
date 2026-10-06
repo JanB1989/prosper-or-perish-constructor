@@ -201,7 +201,7 @@ STRUCTURE_SNIPPETS = {
         "secondary_map_color = {",
         "province = { is_starving = yes }",
         "define:NMapColors|POPULATION_STARVING_COLOR_STRIPE",
-        "pp_province_food_storage_months >= @pp_province_food_storage_months_max",
+        "pp_stored_food_step > 23.5",
         "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STRIPED",
         "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STARVING",
         "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_TT_LAND",
@@ -635,23 +635,18 @@ def test_positive_province_food_growth_map_mode_reads_months_from_script_value()
     assert block.count("map_names = province") == 3
     assert block.count("tooltip_context = location") == 3
     assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_HIGH" in block
-    assert len(re.findall(r"(?<![@:\w])pp_province_food_storage_months\b", block)) == 9
+    assert len(re.findall(r"(?<![@:\w])pp_province_food_storage_months\b", block)) == 8
     assert "modifier:" not in block
     assert block.count("divide = @pp_province_food_storage_months_step") == 4
     assert "secondary_map_color = {" in block
-    assert (
-        "pp_province_food_storage_months "
-        ">= @pp_province_food_storage_months_max"
-    ) in block
+    # stripes = the top Stored Food step (months rounded to the cap), never the store's capacity (2026-10-06, Jan)
+    assert "pp_stored_food_step > 23.5" in block and "province_food_percentage" not in block
     assert "value = rgb { 35 35 42 }" in block
     assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STRIPED" in block
     assert "province = { is_starving = yes }" in block
     assert "define:NMapColors|POPULATION_STARVING_COLOR_STRIPE" in block
     assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STARVING" in block
-    assert block.index("province = { is_starving = yes }") < block.index(
-        "pp_province_food_storage_months "
-        ">= @pp_province_food_storage_months_max"
-    )
+    assert block.index("province = { is_starving = yes }") < block.index("pp_stored_food_step > 23.5")
     # EU5 1.4 deleted the engine-scaled positive_province_food_growth modifier that carried the months as a marker;
     # the months are a script value (province food / its monthly consumption, capped at the growth cap in months)
     assert "TRY_REPLACE:positive_province_food_growth" not in static_modifiers

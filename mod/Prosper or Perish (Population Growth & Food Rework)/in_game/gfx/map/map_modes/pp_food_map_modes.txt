@@ -445,14 +445,11 @@ pp_positive_province_food_growth = {
 			value = define:NMapColors|POPULATION_STARVING_COLOR_STRIPE
 		}
 		else_if = {
-			# store full: at the growth cap, or at the province's food capacity (2026-10-06: free capacity is about a
-			# year of consumption, so most full stores stop there; 95 %, the monthly decay keeps it below 100 %)
+			# the growth cap: the province carries the top Stored Food step (its stored months round to the cap,
+			# pp_food_store_24), the step whose growth it gets (2026-10-06, Jan)
 			limit = {
 				has_owner = yes
-				OR = {
-					pp_province_food_storage_months >= @pp_province_food_storage_months_max
-					province ?= { province_food_percentage >= 0.95 }
-				}
+				pp_stored_food_step > 23.5
 			}
 			value = rgb { 35 35 42 }
 		}

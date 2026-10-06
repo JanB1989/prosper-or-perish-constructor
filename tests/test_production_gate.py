@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONFIG = """
 [production_gate]
 threshold = 1.2
-dynamic_goods = ["province_food_sales", "province_food_purchase"]
+dynamic_goods = ["province_food_sales"]
 
 [blueprint_evaluation]
 base_method_input_goods = ["manual_labor"]
@@ -190,7 +190,7 @@ unique_production_methods = {
 LEG_CONFIG = """
 [production_gate]
 threshold = 1.2
-dynamic_goods = ["province_food_sales", "province_food_purchase"]
+dynamic_goods = ["province_food_sales"]
 pinned_goods = ["local_food", "offset", "logistics"]
 strategic_goods = ["stone"]
 

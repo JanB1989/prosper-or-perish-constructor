@@ -117,7 +117,6 @@ class FakeGoodsPressureData:
                 _market_good_row("s1", 1337, 1, 1, 1, "stone", 30.0, 10.0, 1.0, 1.0, 100.0),
                 _market_good_row("s1", 1337, 1, 1, 2, "stone", 15.0, 5.0, 1.0, 1.0, 50.0),
                 _market_good_row("s1", 1337, 1, 1, 1, "province_food_sales", 9999.0, 0.0, 1.0, 1.0, 0.0),
-                _market_good_row("s1", 1337, 1, 1, 1, "province_food_purchase", 9999.0, 0.0, 1.0, 1.0, 0.0),
                 _market_good_row("s1", 1337, 1, 1, 1, "offset", 9999.0, 0.0, 1.0, 1.0, 0.0),
                 _market_good_row("s2", 1338, 1, 1, 1, "wheat", 8.0, 24.0, 5.0, 2.0, 20.0),
                 _market_good_row("s2", 1338, 1, 1, 2, "wheat", 4.0, 6.0, 3.0, 2.0, 5.0),
@@ -131,7 +130,6 @@ class FakeGoodsPressureData:
                 {"good_id": "wheat", "good_label": "Wheat"},
                 {"good_id": "stone", "good_label": "Stone"},
                 {"good_id": "province_food_sales", "good_label": "Province Food Sales"},
-                {"good_id": "province_food_purchase", "good_label": "Province Food Purchase"},
                 {"good_id": "offset", "good_label": "Offset"},
             ]
         )
@@ -312,7 +310,6 @@ def test_goods_pressure_ranks_shortages_and_selected_good_details() -> None:
     assert result.problem_goods["good_id"].to_list()[0] == "wheat"
     assert result.global_shortages["good_id"].to_list()[0] == "wheat"
     assert "province_food_sales" not in result.summary["good_id"].to_list()
-    assert "province_food_purchase" not in result.summary["good_id"].to_list()
     assert "offset" not in result.summary["good_id"].to_list()
 
     latest = result.selected_good_global.sort("date_sort").to_dicts()[-1]

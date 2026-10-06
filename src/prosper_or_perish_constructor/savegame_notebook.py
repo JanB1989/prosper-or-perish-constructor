@@ -1356,7 +1356,7 @@ def goods_pressure(
     end_date: int | None = None,
     snapshot_date: int | None = None,
     top_n: int = 12,
-    exclude_goods: Sequence[str] = ("province_food_sales", "province_food_purchase", "offset", "logistics"),
+    exclude_goods: Sequence[str] = ("province_food_sales", "offset", "logistics"),
     min_global_flow: float = 100.0,
     min_market_flow: float = 1.0,
 ) -> GoodsPressureResult:
@@ -1458,7 +1458,7 @@ def show_goods_pressure(
     end_date: int | None = None,
     snapshot_date: int | None = None,
     top_n: int = 12,
-    exclude_goods: Sequence[str] = ("province_food_sales", "province_food_purchase", "offset", "logistics"),
+    exclude_goods: Sequence[str] = ("province_food_sales", "offset", "logistics"),
     min_global_flow: float = 100.0,
     min_market_flow: float = 1.0,
     display_tables: bool = True,

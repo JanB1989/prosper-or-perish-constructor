@@ -29,7 +29,7 @@ if TYPE_CHECKING:
     from prosper_or_perish_constructor.run_report import RunData
 
 # Mod bookkeeping goods without a real market (pinned 1-gold offsets, province food accounting, labour, logistics).
-DUMMY_GOODS = frozenset({"offset", "logistics", "local_food", "manual_labor", "province_food_sales", "province_food_purchase"})
+DUMMY_GOODS = frozenset({"offset", "logistics", "local_food", "manual_labor", "province_food_sales"})
 
 # Goods groups (display order): key, label, colour on a light surface, colour on the dark video map.
 GOODS_GROUPS: tuple[tuple[str, str, str, str], ...] = (

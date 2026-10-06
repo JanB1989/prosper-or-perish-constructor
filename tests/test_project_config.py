@@ -45,7 +45,6 @@ SOCIETAL_VALUE_ADJUSTMENTS = (
 )
 GOODS_CATEGORIES = ROOT / "config" / "goods_categories.csv"
 PROVINCE_FOOD_SALES_GOOD = MOD_ROOT / "in_game" / "common" / "goods" / "pp_goods_province_food_sales.txt"
-PROVINCE_FOOD_PURCHASE_GOOD = MOD_ROOT / "in_game" / "common" / "goods" / "pp_goods_province_food_purchase.txt"
 OFFSET_GOOD = MOD_ROOT / "in_game" / "common" / "goods" / "pp_goods_offset.txt"
 SCRIPT_VALUES_ROOT = MOD_ROOT / "in_game" / "common" / "script_values"
 BUILDING_CAPS = SCRIPT_VALUES_ROOT / "pp_building_caps.txt"
@@ -2805,10 +2804,6 @@ def test_victuals_pop_demand_modifier_type_is_registered() -> None:
     assert "global_province_food_sales_modifier" in modifier_icons
     assert "MODIFIER_TYPE_NAME_global_province_food_sales_modifier:" in localization_text
     assert "MODIFIER_TYPE_DESC_global_province_food_sales_modifier:" in localization_text
-    assert "global_province_food_purchase_modifier" in modifier_types
-    assert "global_province_food_purchase_modifier" in modifier_icons
-    assert "MODIFIER_TYPE_NAME_global_province_food_purchase_modifier:" in localization_text
-    assert "MODIFIER_TYPE_DESC_global_province_food_purchase_modifier:" in localization_text
     assert "global_offset_modifier" in modifier_types
     assert "global_offset_modifier" in modifier_icons
     assert "MODIFIER_TYPE_NAME_global_offset_modifier:" in localization_text
@@ -2821,7 +2816,7 @@ def test_victuals_pop_demand_modifier_type_is_registered() -> None:
 
 def test_province_food_market_goods_share_balance_values() -> None:
     goods = {}
-    for path in (PROVINCE_FOOD_SALES_GOOD, PROVINCE_FOOD_PURCHASE_GOOD, OFFSET_GOOD):
+    for path in (PROVINCE_FOOD_SALES_GOOD, OFFSET_GOOD):
         goods.update(
             {
                 entry.key: _entry_values(entry.value)
@@ -2831,15 +2826,11 @@ def test_province_food_market_goods_share_balance_values() -> None:
         )
 
     sales = dict(goods["province_food_sales"])
-    purchase = dict(goods["province_food_purchase"])
     offset = dict(goods["offset"])
     assert sales.pop("color") == "goods_province_food_sales"
-    assert purchase.pop("color") == "goods_province_food_purchase"
     assert offset.pop("color") == "goods_offset"
     assert offset["category"] == sales["category"]
     assert offset["transport_cost"] == sales["transport_cost"]
-    for key in ("category", "transport_cost", "base_production"):
-        assert purchase[key] == sales[key]
 
 
 def test_maintenance_efficiency_totals_never_sit_on_minus_one() -> None:
@@ -2860,7 +2851,7 @@ def test_internal_dummy_goods_are_never_traded() -> None:
     text = (MOD_ROOT / "in_game" / "common" / "auto_modifiers" / "pp_country_base_values.txt").read_text(
         encoding="utf-8-sig"
     )
-    for good in ("logistics", "manual_labor", "offset", "province_food_purchase", "province_food_sales"):
+    for good in ("logistics", "manual_labor", "offset", "province_food_sales"):
         for direction in ("exports", "imports"):
             key = f"ban_{direction}_of_{good}"
             assert re.search(rf"^[\t ]*{key}[\t ]*=[\t ]*yes\b", text, flags=re.MULTILINE), key
@@ -2915,11 +2906,10 @@ def test_retained_export_offsets_match_food_sales_values() -> None:
         # The disabled export blueprint leaves some old offset modifiers in place.
         # They must still match sales values; new sales sources need no inert clone.
         # The country base values carry no store constants any more (2026-10-02: the store lever is zero at the
-        # pivot, so -100 % Surplus Sales, +1500 % Scarcity Premium and +1900 % offset are gone).
+        # pivot, so -100 % Surplus Sales, and +1900 % offset are gone).
         from collections import Counter
         if scope == "global" and path.name == "pp_country_base_values.txt":
             assert offset == [] and sales == [], path
-            assert "province_food_purchase_output_modifier" not in text
             continue
         assert not (Counter(offset) - Counter(sales)), path
 
@@ -2928,15 +2918,12 @@ def test_internal_trade_good_icons_use_game_compatible_dds_layout() -> None:
     icon_root = MOD_ROOT / "main_menu" / "gfx" / "interface" / "icons"
     paths = (
         icon_root / "trade_goods" / "icon_goods_province_food_sales.dds",
-        icon_root / "trade_goods" / "icon_goods_province_food_purchase.dds",
         icon_root / "modifier_types" / "province_food_sales_positive.dds",
-        icon_root / "modifier_types" / "province_food_purchase_positive.dds",
         icon_root / "trade_goods" / "icon_goods_manual_labor.dds",
         icon_root / "modifier_types" / "manual_labor_positive.dds",
         icon_root / "trade_goods" / "icon_goods_offset.dds",
         icon_root / "modifier_types" / "offset_positive.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_province_food_sales.dds",
-        icon_root / "trade_goods" / "illustrations" / "icon_goods_province_food_purchase.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_manual_labor.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_offset.dds",
     )
@@ -2956,15 +2943,6 @@ def test_internal_trade_good_icons_use_game_compatible_dds_layout() -> None:
         else:
             assert dimensions == (128, 128), path
             assert mip_count == 8, path
-
-
-def test_dummy_victuals_producer_blueprint_uses_offset_good_key() -> None:
-    blueprint = (ROOT / "blueprints" / "accepted" / "buildings" / "dummy_victuals_producer.yml").read_text(
-        encoding="utf-8"
-    )
-
-    assert re.search(r"^[\t ]+offset[\t ]*=[\t ]*5(?:\.0)?$", blueprint, flags=re.MULTILINE)
-    assert not re.search(r"^[\t ]+goods_offset[\t ]*=", blueprint, flags=re.MULTILINE)
 
 
 def test_current_megalopolis_buildings_allow_megalopolis() -> None:
@@ -3418,3 +3396,11 @@ def _unique_production_method_names(block: CList) -> set[str]:
         if isinstance(value, CList):
             names.update(entry.key for entry in value.entries)
     return names
+
+
+def test_scarcity_premium_good_is_gone() -> None:
+    # 2026-10-06 (Jan): province_food_purchase (Scarcity Premium) had no producer since the store lever; removed outright
+    for path in MOD_ROOT.rglob("*"):
+        if path.is_file() and path.suffix in {".txt", ".yml", ".gui"}:
+            assert "province_food_purchase" not in path.read_text(encoding="utf-8-sig", errors="ignore"), path
+        assert "province_food_purchase" not in path.name, path

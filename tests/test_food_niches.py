@@ -102,7 +102,7 @@ def test_the_harbour_yard_ships_grain_and_takes_no_store_food() -> None:
     # further level ships 3 % more (2026-10-04, Jan; was -5 %)
     grain = shipments[0]["wheat"]
     assert abs(grain * 12.0 / 0.932 - 30.0) < 0.05
-    assert "local_victuals_output_modifier = 0.03" in text and "local_victuals_output_modifier = -" not in text
+    assert "local_victuals_output_modifier = 0.01" in text and "local_victuals_output_modifier = -" not in text
     assert "employment_size = 0.2" in text and "pop_type = burghers" in text
     assert "local_food_capacity" not in text and "local_sailors = 0.002" in text
     assert "increase_per_level_cost = 1.0" in text and "{gold = 50}" in text

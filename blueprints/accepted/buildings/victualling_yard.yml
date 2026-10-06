@@ -62,7 +62,7 @@ building:
     # 8 store food per level (River Barges, Merchantmen, Armed Convoy) is gone, so the Yard turns market staples into
     # victuals and nothing else. Per level: 2.33 staples (12 food each in the farms' Provisioning) -> 0.932 victuals,
     # which a Tavern turns back into 28 food: food-neutral, it only makes the food denser for trade. The raw_modifier's
-    # +3 % victuals per level (2026-10-04, Jan; was -5 %) makes a big harbour Yard pay better with every level.
+    # +1 % victuals per level (2026-10-06, Jan; +3 % since 2026-10-04, -5 % before) makes a big harbour Yard pay better with every level.
     # slot 0: food shipments, the long-distance staples the harbour receives (already packed, so no packing slot): grain,
     # dried pulses (ship's pease), salt fish (market fish is already cured, the fisheries buy the salt) and, since
     # 2026-10-04 (Jan), salt beef (livestock: Cork's salt beef, pork and butter for the plantations and the fleets; sheep
@@ -124,16 +124,16 @@ building:
     }
     # No storage leg (2026-09-26; no store food at all since 2026-10-03): the great harbours live on imported grain and
     # are short of food by nature, so the Yard's profit follows only the victuals price against the staple's. Per level
-    # at base prices (victuals 3, grain 1): about +0.3 gold at level 1, rising with the +3 % per level. The Market Sales
+    # at base prices (victuals 3, grain 1): about +0.3 gold at level 1, rising with the +1 % per level. The Market Sales
     # gate opens only above victuals 3.15 (level 1), so the AI adds Yards when victuals are dear.
 
-    # per Yard level, staffed or not: every level ships a little more (+3 % victuals; 2026-10-04, Jan: was -5 %), the
+    # per Yard level, staffed or not: every level ships a little more (+1 % victuals; 2026-10-06, Jan: was +3 %, -5 % before 2026-10-04), the
     # harbour's economies of scale (its free-building-level cost was removed 2026-09-30: supported levels come only from
     # location attributes and rank)
     # local_pp_victualling_yard_levels: every standing Yard level adds half a Cookshop level to its province
     # (cookshop_max_level, 2026-10-04, Jan): a harbour that packs food also cooks it
     raw_modifier = {
-      local_victuals_output_modifier = 0.03
+      local_victuals_output_modifier = 0.01
       local_pp_victualling_yard_levels = 1
     }
 

@@ -365,6 +365,8 @@ def test_speed_chart_from_save_times_leaves_pauses_out(tmp_path: Path) -> None:
     assert chart["section"] == "speed" and "25.0 s on average" in chart["caption"] and "1 stretch " in chart["caption"]
     # datasets without save file times get no chart
     assert not speed_segments(xaxis(run), snapshots.drop("mtime"))
+    # the Years tile carries the same average
+    assert rr.speed_average(segments) == 25.0
     trade = _trade_run()
     page = rr.write_page(trade, tmp_path, [], build_payload(trade)).read_text(encoding="utf-8")
-    assert "<h2 id=speed>" not in page
+    assert "<h2 id=speed>" not in page and "s per game year</div>" not in page

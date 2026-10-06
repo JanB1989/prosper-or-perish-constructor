@@ -1049,12 +1049,18 @@ def speed_running(segments: list[dict[str, Any]], window: float = SPEED_WINDOW) 
     return out
 
 
+def speed_average(segments: list[dict[str, Any]]) -> float | None:
+    """Seconds per game year over the whole run, pauses left out; None without save file times."""
+    kept = [s for s in segments if not s["pause"]]
+    return sum(s["seconds"] for s in kept) / sum(s["years"] for s in kept) if kept else None
+
+
 def speed_charts(run: RunData, x: pl.DataFrame) -> list[dict[str, Any]]:
     segments = speed_segments(x, run.snapshots)
     kept = [s for s in segments if not s["pause"]]
-    if not kept:
+    average = speed_average(segments)
+    if average is None:
         return []
-    average = sum(s["seconds"] for s in kept) / sum(s["years"] for s in kept)
     paused = sum(s["seconds"] - s["years"] * average for s in segments if s["pause"])
     running = speed_running(segments)
     # each stretch is a flat step from its start to its end; a pause leaves a gap

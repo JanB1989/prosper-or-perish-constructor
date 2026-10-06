@@ -47,8 +47,11 @@ from prosper_or_perish_constructor.run_report_charts import (
     land_region_expr,
     region_trade,
     region_trade_totals,
+    speed_average,
+    speed_segments,
     titleize,
     world_trade_share,
+    xaxis,
 )
 
 POP_TYPES = ("nobles", "clergy", "burghers", "laborers", "soldiers", "peasants", "slaves", "tribesmen")
@@ -1457,8 +1460,9 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
     change = (pop1 / pop0 - 1) * 100 if pop0 else 0.0
     esc = html.escape
     pct = lambda v: "–" if v is None else f"{float(v) * 100:.0f}%"  # noqa: E731
+    speed = speed_average(speed_segments(xaxis(run), run.snapshots))  # same average as the Game speed chart
     tiles = [
-        ("Years", f"{start}–{end}", f"{run.snapshots.height} saves"),
+        ("Years", f"{start}–{end}", f"{run.snapshots.height} saves" + (f" · {speed:.1f} s per game year" if speed is not None else "")),
         ("Population", _format_number(pop1), f"{change:+.1f}% since {start}"),
         ("Unemployment", pct(last.get("subsistence_share")), f"{pct(first.get('subsistence_share'))} in {start}"),  # type: ignore[union-attr]
         ("Countries", str(last.get("countries", "–")), f"{first.get('countries', '–')} in {start}"),  # type: ignore[union-attr]

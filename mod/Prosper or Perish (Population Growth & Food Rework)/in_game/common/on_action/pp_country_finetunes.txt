@@ -6,7 +6,7 @@ on_game_start = {
 	}
 }
 
-# Castile <-> Portugal: Iberian Concord (+100, 150 years) replaces vanilla's decaying +50 good relations.
+# Castile <-> Portugal: Iberian Concord (+200, 100 years) replaces vanilla's decaying +50 good relations.
 pp_country_finetune_opinions = {
 	effect = {
 		if = {

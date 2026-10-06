@@ -1154,12 +1154,15 @@ pp_llama_caravan_post = { slot = "Mountain Network", method = "Tambo Relay", des
 # Grange never packs a lean store. No country base values belong to this: at the pivot every line is zero.
 deadband_months = 0.05
 pivot_months = 12
+# Stored Food growth by stored month (2026-10-06, Jan): each step's local_population_growth, linear between the knots.
+# +0.05 %/yr per month up to 18 months (the growth law fitted 2026-10-03, 0.006 per stored year), then a slight
+# taper (+0.04, +0.04, then +0.03 per month) to a round 1.10 % at the 24-month cap (was 1.20 %).
+growth_by_month = { 0 = 0, 18 = 0.009, 19 = 0.0094, 20 = 0.0098, 21 = 0.0101, 22 = 0.0104, 23 = 0.0107, 24 = 0.011 }
 
 [stored_food.per_year]
-# Stored Food: per stored year
-# the PP growth law: +0.60 %/yr per stored year, 1.2 % at 24 months (2026-10-03, was 0.0075: the Mini World run
-# 1352-1392 grew +0.55 %/yr at a median store of 17 months, fit -0.34 + 0.63 x stored years; Jan's target ~0.3 %/yr)
-local_population_growth = 0.006
+# Stored Food: per stored year (population growth: growth_by_month above; the PP growth law +0.60 %/yr per stored
+# year up to 18 months, 2026-10-03, was 0.0075: the Mini World run 1352-1392 grew +0.55 %/yr at a median store of
+# 17 months, fit -0.34 + 0.63 x stored years; Jan's target ~0.3 %/yr)
 local_devastation_recovery = 0.003
 local_migration_attraction = 0.045
 local_monthly_prosperity = 0.0025

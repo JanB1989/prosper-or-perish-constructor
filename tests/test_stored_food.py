@@ -21,15 +21,19 @@ GAME_START = MOD_ROOT / "in_game/common/on_action/pp_game_start.txt"
 STORAGE_VALUES = MOD_ROOT / "in_game/common/script_values/pp_province_food_storage.txt"
 DEFINES = MOD_ROOT / "loading_screen/common/defines/pp_defines_adjustments.txt"
 
-# Stored Food: the EU5 1.3 positive_province_food_growth values per stored year, growth included (the engine's storage
-# term NPop.FOOD_STORAGE_POP_GROWTH is 0 since growth moved onto the modifier). The storage legs it once carried
-# (Surplus Sales +8.0 per year) are gone: the store lever (Low Stores / Full Stores) replaced them.
+# Stored Food: the EU5 1.3 positive_province_food_growth values per stored year (the engine's storage term
+# NPop.FOOD_STORAGE_POP_GROWTH is 0 since growth moved onto the modifier). The storage legs it once carried
+# (Surplus Sales +8.0 per year) are gone: the store lever (Low Stores / Full Stores) replaced them. Growth has its own
+# month table (growth_by_month, 2026-10-06).
 PAYLOAD_1_3 = {
-    "local_population_growth": 0.006,   # 2026-10-03 Mini World calibration (was the 1.3 value 0.0075)
     "local_devastation_recovery": 0.003,
     "local_migration_attraction": 0.045,
     "local_monthly_prosperity": 0.0025,
 }
+GROWTH = "local_population_growth"
+# growth by stored month (2026-10-06, Jan): +0.05 %/yr per month to 18 months (the 2026-10-03 law, 0.006 per stored
+# year), then +0.04, +0.04, +0.03 x 4 to a round 1.10 % at the 24-month cap
+GROWTH_BY_STEP = [round(0.0005 * s, 5) for s in range(19)] + [0.0094, 0.0098, 0.0101, 0.0104, 0.0107, 0.011]
 FOOD = "local_local_food_output_modifier"
 SALES = "local_province_food_sales_output_modifier"
 
@@ -66,10 +70,12 @@ def test_payload_is_the_1_3_stored_food_modifier() -> None:
 
 
 def test_growth_rides_the_modifier_and_the_engine_term_is_off() -> None:
-    # 0.006 per stored year = FOOD_STORAGE_POP_GROWTH 0.012 at the 2-year cap (the 1.3 law was 0.0075 = 0.015)
+    # the steps carry the growth table exactly; it never falls and tapers above 18 months
     config = _config()
-    cap_years = _define("GROWTH_FROM_FOOD_MULTIPLIER_MAX")
-    assert stored_food.growth_per_year(config) * cap_years == pytest.approx(0.012)
+    assert stored_food.growth_by_step(config) == GROWTH_BY_STEP
+    assert GROWTH not in dict(config.per_year)
+    increments = [round(b - a, 5) for a, b in zip(GROWTH_BY_STEP, GROWTH_BY_STEP[1:])]
+    assert increments[:18] == [0.0005] * 18 and all(0 < i < 0.0005 for i in increments[18:])
     # the engine's own storage term would add the growth a second time
     assert _define("FOOD_STORAGE_POP_GROWTH") == 0
     assert _define("FOOD_SURPLUS_POP_GROWTH") == 0
@@ -143,8 +149,8 @@ def test_one_step_modifier_per_stored_month_carries_every_effect() -> None:
         assert all(len(v.split(".")[1]) <= 5 for v in re.findall(r"= (-?[\d.]+)$", block, flags=re.MULTILINE))
         # every line within half a fixed-point step of the exact value
         curve = _curve_exact(config, step)
-        for key in set(per_year) | set(low) | set(full) | set(curve):
-            exact = per_year.get(key, 0.0) * step / 12
+        for key in set(per_year) | set(low) | set(full) | set(curve) | {GROWTH}:
+            exact = per_year.get(key, 0.0) * step / 12 + (GROWTH_BY_STEP[step] if key == GROWTH else 0.0)
             exact += low.get(key, 0.0) * max(pivot - step, 0) / 12 + full.get(key, 0.0) * max(step - pivot, 0) / 12
             exact += curve.get(key, 0.0)
             assert abs(values.get(key, 0.0) - exact) <= 0.000005 + 1e-12, (step, key)
@@ -156,7 +162,7 @@ def test_one_step_modifier_per_stored_month_carries_every_effect() -> None:
             assert (values.get(f"local_{good}_output_modifier", 0.0) > 0) == (step > pivot), (step, good)
         # the Stored Food lines only grow with the store; Province Food output only falls, the staples only rise
         if previous is not None:
-            for key in per_year:
+            for key in [*per_year, GROWTH]:
                 assert values[key] >= previous.get(key, 0.0), (step, key)
             assert values.get(FOOD, 0.0) < previous.get(FOOD, 0.0), step
             assert staples.pop() > previous.get(f"local_{farm[0]}_output_modifier", 0.0), step
@@ -165,9 +171,9 @@ def test_one_step_modifier_per_stored_month_carries_every_effect() -> None:
     # or curve line, the cap is two Stored Food years plus the whole Full Stores year plus the curve at 24
     rounded = lambda lines: {k: round(v, 5) for k, v in lines.items()}   # noqa: E731
     assert stored_food.step_payload(config, 0) == {**stored_food.low_payload(config), **rounded(_curve_exact(config, 0))}
-    assert stored_food.step_payload(config, pivot) == PAYLOAD_1_3
+    assert stored_food.step_payload(config, pivot) == {**PAYLOAD_1_3, GROWTH: 0.006}
     cap = stored_food.step_payload(config, 24)
-    assert cap == {**{k: 2 * v for k, v in PAYLOAD_1_3.items()}, **stored_food.full_payload(config),
+    assert cap == {**{k: 2 * v for k, v in PAYLOAD_1_3.items()}, GROWTH: 0.011, **stored_food.full_payload(config),
                    **rounded(_curve_exact(config, 24))}
     parse_file(MOD_ROOT / stored_food.STATIC_MODIFIERS)
 
@@ -349,7 +355,10 @@ def test_display_values_read_the_carried_step() -> None:
         years,
     )
     growth = _block(text, "pp_province_food_storage_growth")
-    assert "value = pp_stored_food_years" in growth and "multiply = 0.006" in growth
+    # one branch per step, the step's growth as written (growth_by_month)
+    assert "else_if = { limit = { var:pp_food_store_step < 118.5 } add = 0.009 }" in growth
+    assert "else_if = { limit = { var:pp_food_store_step < 119.5 } add = 0.0094 }" in growth
+    assert "else = { add = 0.011 }" in growth and growth.count("add = ") == stored_food.STEPS + 1
     assert "FOOD_STORAGE_POP_GROWTH" not in growth
     # the hand-written storage values no longer model an engine term
     storage = "\n" + _read(STORAGE_VALUES)

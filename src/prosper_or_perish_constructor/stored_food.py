@@ -9,8 +9,9 @@ growth included, come back through this carrier; the engine's own storage growth
   per whole month, so a province carries exactly one and it shows with its true values in the location view's
   province modifier list (Jan: one food storage modifier in its rightful place; the size-scaled carriers did not show
   their scaled values). Step s holds every stored-food effect at that store, worked out exactly and rounded once to
-  five decimals (``step_payload``): ``[stored_food.per_year]`` x s / 12 (growth, prosperity, migration, devastation
-  recovery), the store lever, ``[stored_food.low]`` x the years short of ``pivot_months`` or ``[stored_food.full]``
+  five decimals (``step_payload``): population growth from ``growth_by_month`` (linear between the knots; 2026-10-06,
+  Jan: a slight taper above 18 months to a round value at the cap), ``[stored_food.per_year]`` x s / 12 (prosperity,
+  migration, devastation recovery), the store lever, ``[stored_food.low]`` x the years short of ``pivot_months`` or ``[stored_food.full]``
   x the years above (the Grange's Surplus Sales), and the store curve ``[stored_food.curve]`` (2026-10-03, Jan's farm
   trade-off): the Province Food output of every maker follows ``province_food_share`` (its output as a share of the
   output at an empty store, linear between the knots, 0 at the pivot) and every staple food's output (``staple_foods.py``:
@@ -27,7 +28,7 @@ growth included, come back through this carrier; the engine's own storage growth
   removes only the carried step's modifier and finds both steps by halving the 25 steps (5 comparisons each).
   No old-save support (Jan, 2026-10-06: the shipped mod is not save compatible across versions).
 - display helpers (view only, location scope): ``pp_stored_food_years`` (the carried step's months / 12) and
-  ``pp_province_food_storage_growth`` (its growth); the location view's Stored Food chip scales each Stored Food
+  ``pp_province_food_storage_growth`` (the carried step's growth); the location view's Stored Food chip scales each Stored Food
   effect by the years (location_status.py).
 - ``pp_stored_food_staple_line`` (location scope): the crop line of the carried step; the crop farms'
   ``ai_construct_weight`` takes it out of the crop output modifier it reads as land quality (crop_farms.py).
@@ -111,6 +112,8 @@ class StoredFoodConfig:
     staple_factor: float = 0.0                 # a staple food's line = this x the Province Food line (the crop farm goods)
     staple_goods: tuple[str, ...] = ()         # the staple foods (staple_foods.py), every one on the curve
     staple_factor_by_good: tuple[tuple[str, float], ...] = ()   # goods with their own factor (fish, fruit, game, wool)
+    # growth_by_month: (stored months, local_population_growth); empty = the per_year growth x stored years
+    growth_curve: tuple[tuple[float, float], ...] = ()
 
     def factor(self, good: str) -> float:
         """The store curve factor of a staple food: its own, else ``staple_factor``."""
@@ -149,7 +152,38 @@ def load_config(project: Path) -> StoredFoodConfig:
         staple_factor=staple_factor,
         staple_goods=staple_goods_,
         staple_factor_by_good=by_good,
+        growth_curve=_growth_curve(section.get("growth_by_month"), per_year, f"{project}: [{CONFIG_SECTION}]"),
     )
+
+
+def _growth_curve(table: object, per_year: tuple[tuple[str, float], ...], where: str) -> tuple[tuple[float, float], ...]:
+    """``growth_by_month``: stored months -> the step's population growth (linear between the knots, 0 to the cap,
+    never falling). It replaces the per-year growth line, so ``[stored_food.per_year]`` must not carry one too."""
+    if table is None:
+        return ()
+    if not isinstance(table, dict) or len(table) < 2:
+        raise ValueError(f"{where} growth_by_month needs at least two knots (stored months = growth)")
+    if GROWTH_KEY in dict(per_year):
+        raise ValueError(f"{where} growth_by_month replaces [{CONFIG_SECTION}.per_year] {GROWTH_KEY}; keep one")
+    knots = tuple(sorted((float(months), float(growth)) for months, growth in table.items()))
+    if knots[0] != (0.0, 0.0) or knots[-1][0] != STEPS:
+        raise ValueError(f"{where} growth_by_month must run from 0 (= 0) to {STEPS} stored months")
+    if any(b[1] < a[1] for a, b in zip(knots, knots[1:])):
+        raise ValueError(f"{where} growth_by_month must never fall with the store")
+    return knots
+
+
+def growth_at(config: StoredFoodConfig, months: float | Decimal) -> Decimal:
+    """Population growth from Stored Food at ``months`` stored, exact: ``growth_by_month`` (linear between the knots)
+    or, without it, the per-year growth x stored years."""
+    months = Decimal(repr(float(months))) if not isinstance(months, Decimal) else months
+    if not config.growth_curve:
+        return Decimal(repr(dict(config.per_year).get(GROWTH_KEY, 0.0))) * months / MONTHS_PER_YEAR
+    knots = [(Decimal(repr(m)), Decimal(repr(g))) for m, g in config.growth_curve]
+    for (m0, g0), (m1, g1) in zip(knots, knots[1:]):
+        if months <= m1:
+            return g0 + (g1 - g0) * (max(months, m0) - m0) / (m1 - m0)
+    return knots[-1][1]
 
 
 def _curve(
@@ -277,9 +311,9 @@ def format_value(value: float) -> str:
     return "0.0" if text in {"-0.0", "0.0"} else text
 
 
-def growth_per_year(config: StoredFoodConfig) -> float:
-    """The payload's population growth per stored year (0 when the payload has none)."""
-    return dict(config.per_year).get(GROWTH_KEY, 0.0)
+def growth_by_step(config: StoredFoodConfig) -> list[float]:
+    """The population growth each step modifier carries (as written, five decimals)."""
+    return [step_payload(config, step).get(GROWTH_KEY, 0.0) for step in range(STEPS + 1)]
 
 
 def step_name(step: int) -> str:
@@ -302,6 +336,8 @@ def step_payload(config: StoredFoodConfig, step: int) -> dict[str, float]:
             total[key] = total.get(key, Decimal(0)) + Decimal(repr(value)) * years
 
     add(config.per_year, months / MONTHS_PER_YEAR)
+    if config.growth_curve:
+        total[GROWTH_KEY] = growth_at(config, months)
     if months < pivot:
         add(config.low, (pivot - months) / MONTHS_PER_YEAR)
     elif months > pivot:
@@ -329,8 +365,8 @@ def render_static_modifiers(config: StoredFoodConfig) -> str:
         HEADER,
         "# Stored Food (2026-10-03): one province modifier per whole month of stored food, 0 to the 24-month cap, so the",
         "# province carries exactly one and it shows with its true values in the location view's province modifier list.",
-        "# Each step holds every stored-food effect at that store: Stored Food ([stored_food.per_year], growth included;",
-        "# the engine's storage growth term is off, NPop.FOOD_STORAGE_POP_GROWTH = 0) x months / 12, the store lever:",
+        "# Each step holds every stored-food effect at that store: population growth (growth_by_month; the engine's storage",
+        "# growth term is off, NPop.FOOD_STORAGE_POP_GROWTH = 0), Stored Food ([stored_food.per_year]) x months / 12, the store lever:",
         f"# Low Stores ([stored_food.low]) x the years short of {pivot} months, Full Stores ([stored_food.full]) x the years",
         "# above, and the store curve ([stored_food.curve]): Province Food output of every maker by stored month, and the",
         "# crop farm goods' output moving the other way (farms feed a lean province, sell from a full one).",
@@ -375,15 +411,38 @@ def render_script_values(config: StoredFoodConfig) -> str:
         "\t\t}\n"
         "\t}\n"
         "}\n"
-        "\n"
-        f"# Location scope (display only): yearly population growth from the province's Stored Food step, its {GROWTH_KEY}.\n"
-        f"# It is part of modifier:{GROWTH_KEY}; the engine adds no storage term of its own.\n"
-        f"{GROWTH_VALUE} = {{\n"
-        f"\tvalue = {YEARS_VALUE}\n"
-        f"\tmultiply = {format_value(growth_per_year(config))}\n"
-        "}\n"
+        + _render_step_value(
+            GROWTH_VALUE,
+            [f"# Location scope (display only): yearly population growth from the province's Stored Food step, its {GROWTH_KEY}",
+             f"# (growth_by_month); 0 without a step. It is part of modifier:{GROWTH_KEY}; the engine adds no storage term."],
+            growth_by_step(config),
+        )
         + render_staple_line_value(config)
     )
+
+
+def _render_step_value(name: str, comment: list[str], values: list[float]) -> str:
+    """Location scope: ``values[s]`` for the Stored Food step s the province carries, 0 without a step. One branch per
+    step (``var:x = n`` compares scopes, so only < ranges), the values exactly as the steps carry them."""
+    offset = VARIABLE_OFFSET
+    lines = [
+        "",
+        *comment,
+        f"{name} = {{",
+        "\tvalue = 0",
+        "\tprovince ?= {",
+        "\t\tif = {",
+        f"\t\t\tlimit = {{ has_variable = {STEP_VARIABLE} var:{STEP_VARIABLE} > {format_value(offset - 0.5)} }}",
+    ]
+    for step, value in enumerate(values):
+        if step < STEPS:
+            keyword = "if" if step == 0 else "else_if"
+            lines.append(f"\t\t\t{keyword} = {{ limit = {{ var:{STEP_VARIABLE} < {format_value(offset + step + 0.5)} }} "
+                         f"add = {format_value(value)} }}")
+        else:
+            lines.append(f"\t\t\telse = {{ add = {format_value(value)} }}")
+    lines += ["\t\t}", "\t}", "}"]
+    return "\n".join(lines) + "\n"
 
 
 def staple_line_by_step(config: StoredFoodConfig) -> list[float]:
@@ -403,29 +462,14 @@ def staple_line_by_step(config: StoredFoodConfig) -> list[float]:
 
 def render_staple_line_value(config: StoredFoodConfig) -> str:
     """Location scope: the staple goods' crop line of the Stored Food step the province carries, 0 without a step.
-    One branch per step (``var:x = n`` compares scopes, so only < ranges), the values exactly as the steps carry them."""
-    offset = VARIABLE_OFFSET
-    lines = [
-        "",
-        "# Location scope: the crop line of the Stored Food step the province carries ([stored_food.curve], the same value",
-        "# as the step's local_<staple>_output_modifier); 0 without a step. The crop farms' ai_construct_weight takes it out",
-        "# of the crop output modifier it reads as land quality (crop_farms.py): the store is not the land.",
-        f"{STAPLE_LINE_VALUE} = {{",
-        "\tvalue = 0",
-        "\tprovince ?= {",
-        "\t\tif = {",
-        f"\t\t\tlimit = {{ has_variable = {STEP_VARIABLE} var:{STEP_VARIABLE} > {format_value(offset - 0.5)} }}",
-    ]
-    values = staple_line_by_step(config)
-    for step, value in enumerate(values):
-        if step < STEPS:
-            keyword = "if" if step == 0 else "else_if"
-            lines.append(f"\t\t\t{keyword} = {{ limit = {{ var:{STEP_VARIABLE} < {format_value(offset + step + 0.5)} }} "
-                         f"add = {format_value(value)} }}")
-        else:
-            lines.append(f"\t\t\telse = {{ add = {format_value(value)} }}")
-    lines += ["\t\t}", "\t}", "}"]
-    return "\n".join(lines) + "\n"
+    One branch per step, the values exactly as the steps carry them."""
+    return _render_step_value(
+        STAPLE_LINE_VALUE,
+        ["# Location scope: the crop line of the Stored Food step the province carries ([stored_food.curve], the same value",
+         "# as the step's local_<staple>_output_modifier); 0 without a step. The crop farms' ai_construct_weight takes it out",
+         "# of the crop output modifier it reads as land quality (crop_farms.py): the store is not the land."],
+        staple_line_by_step(config),
+    )
 
 
 def _step_split(key: str, indent: str, leaf, low: int = 0, high: int = STEPS) -> list[str]:

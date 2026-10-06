@@ -28,11 +28,40 @@ pp_stored_food_step = {
 	}
 }
 
-# Location scope (display only): yearly population growth from the province's Stored Food step, its local_population_growth.
-# It is part of modifier:local_population_growth; the engine adds no storage term of its own.
+# Location scope (display only): yearly population growth from the province's Stored Food step, its local_population_growth
+# (growth_by_month); 0 without a step. It is part of modifier:local_population_growth; the engine adds no storage term.
 pp_province_food_storage_growth = {
-	value = pp_stored_food_years
-	multiply = 0.006
+	value = 0
+	province ?= {
+		if = {
+			limit = { has_variable = pp_food_store_step var:pp_food_store_step > 99.5 }
+			if = { limit = { var:pp_food_store_step < 100.5 } add = 0.0 }
+			else_if = { limit = { var:pp_food_store_step < 101.5 } add = 0.0005 }
+			else_if = { limit = { var:pp_food_store_step < 102.5 } add = 0.001 }
+			else_if = { limit = { var:pp_food_store_step < 103.5 } add = 0.0015 }
+			else_if = { limit = { var:pp_food_store_step < 104.5 } add = 0.002 }
+			else_if = { limit = { var:pp_food_store_step < 105.5 } add = 0.0025 }
+			else_if = { limit = { var:pp_food_store_step < 106.5 } add = 0.003 }
+			else_if = { limit = { var:pp_food_store_step < 107.5 } add = 0.0035 }
+			else_if = { limit = { var:pp_food_store_step < 108.5 } add = 0.004 }
+			else_if = { limit = { var:pp_food_store_step < 109.5 } add = 0.0045 }
+			else_if = { limit = { var:pp_food_store_step < 110.5 } add = 0.005 }
+			else_if = { limit = { var:pp_food_store_step < 111.5 } add = 0.0055 }
+			else_if = { limit = { var:pp_food_store_step < 112.5 } add = 0.006 }
+			else_if = { limit = { var:pp_food_store_step < 113.5 } add = 0.0065 }
+			else_if = { limit = { var:pp_food_store_step < 114.5 } add = 0.007 }
+			else_if = { limit = { var:pp_food_store_step < 115.5 } add = 0.0075 }
+			else_if = { limit = { var:pp_food_store_step < 116.5 } add = 0.008 }
+			else_if = { limit = { var:pp_food_store_step < 117.5 } add = 0.0085 }
+			else_if = { limit = { var:pp_food_store_step < 118.5 } add = 0.009 }
+			else_if = { limit = { var:pp_food_store_step < 119.5 } add = 0.0094 }
+			else_if = { limit = { var:pp_food_store_step < 120.5 } add = 0.0098 }
+			else_if = { limit = { var:pp_food_store_step < 121.5 } add = 0.0101 }
+			else_if = { limit = { var:pp_food_store_step < 122.5 } add = 0.0104 }
+			else_if = { limit = { var:pp_food_store_step < 123.5 } add = 0.0107 }
+			else = { add = 0.011 }
+		}
+	}
 }
 
 # Location scope: the crop line of the Stored Food step the province carries ([stored_food.curve], the same value

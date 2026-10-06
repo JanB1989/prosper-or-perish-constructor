@@ -2,8 +2,8 @@
 
 # Stored Food (2026-10-03): one province modifier per whole month of stored food, 0 to the 24-month cap, so the
 # province carries exactly one and it shows with its true values in the location view's province modifier list.
-# Each step holds every stored-food effect at that store: Stored Food ([stored_food.per_year], growth included;
-# the engine's storage growth term is off, NPop.FOOD_STORAGE_POP_GROWTH = 0) x months / 12, the store lever:
+# Each step holds every stored-food effect at that store: population growth (growth_by_month; the engine's storage
+# growth term is off, NPop.FOOD_STORAGE_POP_GROWTH = 0), Stored Food ([stored_food.per_year]) x months / 12, the store lever:
 # Low Stores ([stored_food.low]) x the years short of 12.0 months, Full Stores ([stored_food.full]) x the years
 # above, and the store curve ([stored_food.curve]): Province Food output of every maker by stored month, and the
 # crop farm goods' output moving the other way (farms feed a lean province, sell from a full one).
@@ -29,10 +29,10 @@ pp_food_store_0 = {
 }
 pp_food_store_1 = {
 	game_data = { category = province }
-	local_population_growth = 0.0005
 	local_devastation_recovery = 0.00025
 	local_migration_attraction = 0.00375
 	local_monthly_prosperity = 0.00021
+	local_population_growth = 0.0005
 	local_province_food_sales_output_modifier = -2.75
 	local_defensive = -0.22
 	local_local_food_output_modifier = 0.48718
@@ -51,10 +51,10 @@ pp_food_store_1 = {
 }
 pp_food_store_2 = {
 	game_data = { category = province }
-	local_population_growth = 0.001
 	local_devastation_recovery = 0.0005
 	local_migration_attraction = 0.0075
 	local_monthly_prosperity = 0.00042
+	local_population_growth = 0.001
 	local_province_food_sales_output_modifier = -2.5
 	local_defensive = -0.2
 	local_local_food_output_modifier = 0.4359
@@ -73,10 +73,10 @@ pp_food_store_2 = {
 }
 pp_food_store_3 = {
 	game_data = { category = province }
-	local_population_growth = 0.0015
 	local_devastation_recovery = 0.00075
 	local_migration_attraction = 0.01125
 	local_monthly_prosperity = 0.00063
+	local_population_growth = 0.0015
 	local_province_food_sales_output_modifier = -2.25
 	local_defensive = -0.18
 	local_local_food_output_modifier = 0.38462
@@ -95,10 +95,10 @@ pp_food_store_3 = {
 }
 pp_food_store_4 = {
 	game_data = { category = province }
-	local_population_growth = 0.002
 	local_devastation_recovery = 0.001
 	local_migration_attraction = 0.015
 	local_monthly_prosperity = 0.00083
+	local_population_growth = 0.002
 	local_province_food_sales_output_modifier = -2.0
 	local_defensive = -0.16
 	local_local_food_output_modifier = 0.33333
@@ -117,10 +117,10 @@ pp_food_store_4 = {
 }
 pp_food_store_5 = {
 	game_data = { category = province }
-	local_population_growth = 0.0025
 	local_devastation_recovery = 0.00125
 	local_migration_attraction = 0.01875
 	local_monthly_prosperity = 0.00104
+	local_population_growth = 0.0025
 	local_province_food_sales_output_modifier = -1.75
 	local_defensive = -0.14
 	local_local_food_output_modifier = 0.28205
@@ -139,10 +139,10 @@ pp_food_store_5 = {
 }
 pp_food_store_6 = {
 	game_data = { category = province }
-	local_population_growth = 0.003
 	local_devastation_recovery = 0.0015
 	local_migration_attraction = 0.0225
 	local_monthly_prosperity = 0.00125
+	local_population_growth = 0.003
 	local_province_food_sales_output_modifier = -1.5
 	local_defensive = -0.12
 	local_local_food_output_modifier = 0.23077
@@ -161,10 +161,10 @@ pp_food_store_6 = {
 }
 pp_food_store_7 = {
 	game_data = { category = province }
-	local_population_growth = 0.0035
 	local_devastation_recovery = 0.00175
 	local_migration_attraction = 0.02625
 	local_monthly_prosperity = 0.00146
+	local_population_growth = 0.0035
 	local_province_food_sales_output_modifier = -1.25
 	local_defensive = -0.1
 	local_local_food_output_modifier = 0.19231
@@ -183,10 +183,10 @@ pp_food_store_7 = {
 }
 pp_food_store_8 = {
 	game_data = { category = province }
-	local_population_growth = 0.004
 	local_devastation_recovery = 0.002
 	local_migration_attraction = 0.03
 	local_monthly_prosperity = 0.00167
+	local_population_growth = 0.004
 	local_province_food_sales_output_modifier = -1.0
 	local_defensive = -0.08
 	local_local_food_output_modifier = 0.15385
@@ -205,10 +205,10 @@ pp_food_store_8 = {
 }
 pp_food_store_9 = {
 	game_data = { category = province }
-	local_population_growth = 0.0045
 	local_devastation_recovery = 0.00225
 	local_migration_attraction = 0.03375
 	local_monthly_prosperity = 0.00188
+	local_population_growth = 0.0045
 	local_province_food_sales_output_modifier = -0.75
 	local_defensive = -0.06
 	local_local_food_output_modifier = 0.11538
@@ -227,10 +227,10 @@ pp_food_store_9 = {
 }
 pp_food_store_10 = {
 	game_data = { category = province }
-	local_population_growth = 0.005
 	local_devastation_recovery = 0.0025
 	local_migration_attraction = 0.0375
 	local_monthly_prosperity = 0.00208
+	local_population_growth = 0.005
 	local_province_food_sales_output_modifier = -0.5
 	local_defensive = -0.04
 	local_local_food_output_modifier = 0.07692
@@ -249,10 +249,10 @@ pp_food_store_10 = {
 }
 pp_food_store_11 = {
 	game_data = { category = province }
-	local_population_growth = 0.0055
 	local_devastation_recovery = 0.00275
 	local_migration_attraction = 0.04125
 	local_monthly_prosperity = 0.00229
+	local_population_growth = 0.0055
 	local_province_food_sales_output_modifier = -0.25
 	local_defensive = -0.02
 	local_local_food_output_modifier = 0.03846
@@ -271,17 +271,17 @@ pp_food_store_11 = {
 }
 pp_food_store_12 = {
 	game_data = { category = province }
-	local_population_growth = 0.006
 	local_devastation_recovery = 0.003
 	local_migration_attraction = 0.045
 	local_monthly_prosperity = 0.0025
+	local_population_growth = 0.006
 }
 pp_food_store_13 = {
 	game_data = { category = province }
-	local_population_growth = 0.0065
 	local_devastation_recovery = 0.00325
 	local_migration_attraction = 0.04875
 	local_monthly_prosperity = 0.00271
+	local_population_growth = 0.0065
 	local_province_food_sales_output_modifier = 0.01083
 	local_defensive = 0.02
 	local_local_food_output_modifier = -0.03846
@@ -300,10 +300,10 @@ pp_food_store_13 = {
 }
 pp_food_store_14 = {
 	game_data = { category = province }
-	local_population_growth = 0.007
 	local_devastation_recovery = 0.0035
 	local_migration_attraction = 0.0525
 	local_monthly_prosperity = 0.00292
+	local_population_growth = 0.007
 	local_province_food_sales_output_modifier = 0.02167
 	local_defensive = 0.04
 	local_local_food_output_modifier = -0.07692
@@ -322,10 +322,10 @@ pp_food_store_14 = {
 }
 pp_food_store_15 = {
 	game_data = { category = province }
-	local_population_growth = 0.0075
 	local_devastation_recovery = 0.00375
 	local_migration_attraction = 0.05625
 	local_monthly_prosperity = 0.00313
+	local_population_growth = 0.0075
 	local_province_food_sales_output_modifier = 0.0325
 	local_defensive = 0.06
 	local_local_food_output_modifier = -0.11538
@@ -344,10 +344,10 @@ pp_food_store_15 = {
 }
 pp_food_store_16 = {
 	game_data = { category = province }
-	local_population_growth = 0.008
 	local_devastation_recovery = 0.004
 	local_migration_attraction = 0.06
 	local_monthly_prosperity = 0.00333
+	local_population_growth = 0.008
 	local_province_food_sales_output_modifier = 0.04333
 	local_defensive = 0.08
 	local_local_food_output_modifier = -0.15385
@@ -366,10 +366,10 @@ pp_food_store_16 = {
 }
 pp_food_store_17 = {
 	game_data = { category = province }
-	local_population_growth = 0.0085
 	local_devastation_recovery = 0.00425
 	local_migration_attraction = 0.06375
 	local_monthly_prosperity = 0.00354
+	local_population_growth = 0.0085
 	local_province_food_sales_output_modifier = 0.05417
 	local_defensive = 0.1
 	local_local_food_output_modifier = -0.19231
@@ -388,10 +388,10 @@ pp_food_store_17 = {
 }
 pp_food_store_18 = {
 	game_data = { category = province }
-	local_population_growth = 0.009
 	local_devastation_recovery = 0.0045
 	local_migration_attraction = 0.0675
 	local_monthly_prosperity = 0.00375
+	local_population_growth = 0.009
 	local_province_food_sales_output_modifier = 0.065
 	local_defensive = 0.12
 	local_local_food_output_modifier = -0.23077
@@ -410,10 +410,10 @@ pp_food_store_18 = {
 }
 pp_food_store_19 = {
 	game_data = { category = province }
-	local_population_growth = 0.0095
 	local_devastation_recovery = 0.00475
 	local_migration_attraction = 0.07125
 	local_monthly_prosperity = 0.00396
+	local_population_growth = 0.0094
 	local_province_food_sales_output_modifier = 0.07583
 	local_defensive = 0.14
 	local_local_food_output_modifier = -0.25641
@@ -432,10 +432,10 @@ pp_food_store_19 = {
 }
 pp_food_store_20 = {
 	game_data = { category = province }
-	local_population_growth = 0.01
 	local_devastation_recovery = 0.005
 	local_migration_attraction = 0.075
 	local_monthly_prosperity = 0.00417
+	local_population_growth = 0.0098
 	local_province_food_sales_output_modifier = 0.08667
 	local_defensive = 0.16
 	local_local_food_output_modifier = -0.28205
@@ -454,10 +454,10 @@ pp_food_store_20 = {
 }
 pp_food_store_21 = {
 	game_data = { category = province }
-	local_population_growth = 0.0105
 	local_devastation_recovery = 0.00525
 	local_migration_attraction = 0.07875
 	local_monthly_prosperity = 0.00438
+	local_population_growth = 0.0101
 	local_province_food_sales_output_modifier = 0.0975
 	local_defensive = 0.18
 	local_local_food_output_modifier = -0.30769
@@ -476,10 +476,10 @@ pp_food_store_21 = {
 }
 pp_food_store_22 = {
 	game_data = { category = province }
-	local_population_growth = 0.011
 	local_devastation_recovery = 0.0055
 	local_migration_attraction = 0.0825
 	local_monthly_prosperity = 0.00458
+	local_population_growth = 0.0104
 	local_province_food_sales_output_modifier = 0.10833
 	local_defensive = 0.2
 	local_local_food_output_modifier = -0.33333
@@ -498,10 +498,10 @@ pp_food_store_22 = {
 }
 pp_food_store_23 = {
 	game_data = { category = province }
-	local_population_growth = 0.0115
 	local_devastation_recovery = 0.00575
 	local_migration_attraction = 0.08625
 	local_monthly_prosperity = 0.00479
+	local_population_growth = 0.0107
 	local_province_food_sales_output_modifier = 0.11917
 	local_defensive = 0.22
 	local_local_food_output_modifier = -0.35897
@@ -520,10 +520,10 @@ pp_food_store_23 = {
 }
 pp_food_store_24 = {
 	game_data = { category = province }
-	local_population_growth = 0.012
 	local_devastation_recovery = 0.006
 	local_migration_attraction = 0.09
 	local_monthly_prosperity = 0.005
+	local_population_growth = 0.011
 	local_province_food_sales_output_modifier = 0.13
 	local_defensive = 0.24
 	local_local_food_output_modifier = -0.38462

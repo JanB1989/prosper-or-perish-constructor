@@ -1,12 +1,13 @@
 ﻿# >>> eu5-building-pipeline:lacquerware_manufactory:building
 REPLACE:lacquerware_manufactory = {
+# manufacturing tiers 2026-10-06: tier 3, own methods x1.7 goods in and out, margin +0.1
 audio_tier = 3
 is_foreign = no
 pop_type = burghers
 max_levels = manufactory_max_level
 startup_ramp_target = manufactory_startup_ramp_target
 category = consumer_goods_category
-employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
+employment_size = 0.325   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.3
 town = yes
 city = yes
 megalopolis = yes
@@ -16,12 +17,12 @@ unique_production_methods = {
     pp_lacquerware_manufactory_lacquerware_manufactory_maintenance = {
         icon_type = building_type
         icon = lacquerware_manufactory
-        lumber = 2.47
-        dyes = 0.99
-        tools = 0.25
-        manual_labor = 0.68
+        lumber = 4.199
+        dyes = 1.683
+        tools = 0.425
+        manual_labor = 1.156
         produced = lacquerware
-        output = 2.0
+        output = 3.732
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -41,8 +42,16 @@ custom_tags = {
 }
 construction_demand = manufactory_construction
 increase_per_level_cost = 0.19
-	raw_modifier = {
-		local_population_capacity = 0.165
-	}
+raw_modifier = {
+	local_population_capacity = 0.179
+    local_pp_lacquerware_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:lacquerware_guild } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:lacquerware_manufactory:building

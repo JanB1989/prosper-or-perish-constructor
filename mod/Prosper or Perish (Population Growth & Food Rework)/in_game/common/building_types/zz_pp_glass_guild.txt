@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:glass_guild:building
 REPLACE:glass_guild = {
+# manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
 audio_tier = 1
 is_foreign = no
 pop_type = burghers
@@ -18,26 +19,26 @@ unique_production_methods = {
     pp_glass_guild_glass_guild_maintenance = {
         icon_type = goods
         icon = glass
-        lumber = 0.58 # furnace fuel and wood ash for potash flux
-        sand = 0.94
-        tools = 0.07 # tools cut to a running cost (~10 %)
-        clay = 0.52 # clay crucibles (pots) for the melt
-        manual_labor = 0.31
+        lumber = 0.406 # furnace fuel and wood ash for potash flux
+        sand = 0.658
+        tools = 0.049 # tools cut to a running cost (~10 %)
+        clay = 0.364 # clay crucibles (pots) for the melt
+        manual_labor = 0.217
         produced = glass
-        output = 0.75
+        output = 0.525
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
     pp_glass_guild_metal_glass_guild_maintenance = {
         icon_type = goods
         icon = alum
-        lumber = 0.77 # furnace fuel and wood ash for potash flux
-        sand = 1.03
-        tools = 0.093 # tools cut to a running cost (~10 %)
-        lead = 0.22 # lead oxide flux for the lead glass
-        manual_labor = 0.44
+        lumber = 0.539 # furnace fuel and wood ash for potash flux
+        sand = 0.721
+        tools = 0.065 # tools cut to a running cost (~10 %)
+        lead = 0.154 # lead oxide flux for the lead glass
+        manual_labor = 0.308
         produced = glass
-        output = 1.0
+        output = 0.7
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -53,15 +54,18 @@ unique_production_methods = {
     }
 }
 construction_demand = guild_construction
-modifier = {}
+modifier = {
+    local_glass_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
 custom_tags = {
     guild
 }
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.34
 price = pp_glass_guild_price
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+raw_modifier = {
+	local_population_capacity = 0.225
+    local_pp_glass_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
 }
 # <<< eu5-building-pipeline:glass_guild:building

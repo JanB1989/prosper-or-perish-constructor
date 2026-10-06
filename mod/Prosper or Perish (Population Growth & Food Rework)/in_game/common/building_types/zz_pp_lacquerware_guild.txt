@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:lacquerware_guild:building
 REPLACE:lacquerware_guild = {
+# manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
 is_foreign = no
 pop_type = burghers
 max_levels = guild_max_level
@@ -14,12 +15,12 @@ unique_production_methods = {
     pp_lacquerware_guild_lacquerware_shop_maintenance = {
         icon_type = building_type
         icon = lacquerware_guild
-        lumber = 1.14
-        dyes = 0.47
-        tools = 0.11
-        manual_labor = 0.73
+        lumber = 0.798
+        dyes = 0.329
+        tools = 0.077
+        manual_labor = 0.511
         produced = lacquerware
-        output = 1.0
+        output = 0.7
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
@@ -41,8 +42,12 @@ construction_demand = guild_construction
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.56
 price = pp_lacquerware_guild_price
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+modifier = {
+    local_lacquerware_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
+raw_modifier = {
+	local_population_capacity = 0.225
+    local_pp_lacquerware_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
 }
 # <<< eu5-building-pipeline:lacquerware_guild:building

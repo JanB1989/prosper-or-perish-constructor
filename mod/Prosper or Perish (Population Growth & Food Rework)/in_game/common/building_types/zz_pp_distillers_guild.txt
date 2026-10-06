@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:distillers_guild:building
 REPLACE:distillers_guild = {
+# manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
 is_foreign = no
 pop_type = burghers
 max_levels = guild_max_level
@@ -15,66 +16,66 @@ unique_production_methods = {
     pp_distillers_guild_sugar_liquor_guild_maintenance = {
         icon_type = goods
         icon = sugar
-        sugar = 0.61
-        glass = 0.082
-        manual_labor = 0.35
+        sugar = 0.427
+        glass = 0.057
+        manual_labor = 0.245
         produced = liquor
-        output = 1.0
+        output = 0.7
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
     pp_distillers_guild_rice_liquor_guild_maintenance = {
         icon_type = goods
         icon = rice
-        rice = 1.78
-        glass = 0.1
-        manual_labor = 0.35
+        rice = 1.246
+        glass = 0.07
+        manual_labor = 0.245
         produced = liquor
-        output = 1.0
+        output = 0.7
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
     pp_distillers_guild_potato_liquor_guild_maintenance = {
         icon_type = goods
         icon = potato
-        potato = 1.78
-        glass = 0.1
-        manual_labor = 0.35
+        potato = 1.246
+        glass = 0.07
+        manual_labor = 0.245
         produced = liquor
-        output = 1.0
+        output = 0.7
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
     pp_distillers_guild_wheat_liquor_guild_maintenance = {
         icon_type = goods
         icon = wheat
-        wheat = 1.78
-        glass = 0.1
-        manual_labor = 0.35
+        wheat = 1.246
+        glass = 0.07
+        manual_labor = 0.245
         produced = liquor
-        output = 1.0
+        output = 0.7
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
     pp_distillers_guild_beer_liquor_guild_maintenance = {
         icon_type = goods
         icon = beer
-        beer = 0.89
-        glass = 0.1
-        manual_labor = 0.35
+        beer = 0.623
+        glass = 0.07
+        manual_labor = 0.245
         produced = liquor
-        output = 1.0
+        output = 0.7
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
     pp_distillers_guild_wine_liquor_guild_maintenance = {
         icon_type = goods
         icon = wine
-        wine = 0.89
-        glass = 0.1
-        manual_labor = 0.35
+        wine = 0.623
+        glass = 0.07
+        manual_labor = 0.245
         produced = liquor
-        output = 1.0
+        output = 0.7
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -95,8 +96,12 @@ custom_tags = {
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.34
 price = pp_distillers_guild_price
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+modifier = {
+    local_liquor_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
+raw_modifier = {
+	local_population_capacity = 0.225
+    local_pp_liquor_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
 }
 # <<< eu5-building-pipeline:distillers_guild:building

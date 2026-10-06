@@ -11,8 +11,8 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
-    - pp_printing_manufactory_printing_manufactory_maintenance
     - pp_printing_manufactory_printing_manufactory_leather_maintenance
+    - pp_printing_manufactory_printing_manufactory_maintenance
     - pp_printing_manufactory_legacy_scriptorium_leather_maintenance
     - pp_printing_manufactory_legacy_scriptorium_maintenance
   - name: slot_1
@@ -20,60 +20,61 @@ building:
     - pp_printing_manufactory_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 3, own methods x1.7 goods in and out, margin +0.1
     audio_tier = 3
     is_foreign = no
     pop_type = burghers
     max_levels = manufactory_max_level
     startup_ramp_target = manufactory_startup_ramp_target
     category = consumer_goods_category
-    employment_size = 0.3
+    employment_size = 0.325   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.3
     town = yes
     city = yes
     megalopolis = yes
     obsolete = printing_press_shop
     build_time = manufactory_build_time
     unique_production_methods = {
-        pp_printing_manufactory_printing_manufactory_maintenance = {
-            lead = 0.37
-            paper = 1.86
-            lumber = 0.49
-            manual_labor = 0.4
+        pp_printing_manufactory_printing_manufactory_leather_maintenance = {
+            lead = 0.629
+            paper = 3.162
+            leather = 0.416
+            manual_labor = 0.68
             produced = books
-            output = 2.0
+            output = 3.717
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
-        pp_printing_manufactory_printing_manufactory_leather_maintenance = {
-            lead = 0.37
-            paper = 1.86
-            leather = 0.245
-            manual_labor = 0.4
+        pp_printing_manufactory_printing_manufactory_maintenance = {
+            lead = 0.629
+            paper = 3.162
+            lumber = 0.833
+            manual_labor = 0.68
             produced = books
-            output = 2.0
+            output = 3.724
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
         pp_printing_manufactory_legacy_scriptorium_leather_maintenance = {
             icon_type = goods
             icon = leather
-            dyes = 0.18
-            paper = 0.72
-            leather = 0.18
-            manual_labor = 0.48
+            dyes = 0.31
+            paper = 1.23
+            leather = 0.31
+            manual_labor = 0.82
             produced = books
-            output = 1.13
+            output = 2.09
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
         pp_printing_manufactory_legacy_scriptorium_maintenance = {
             icon_type = building_type
             icon = scriptorium
-            dyes = 0.18
-            paper = 0.7
-            lumber = 0.36
-            manual_labor = 0.47
+            dyes = 0.3
+            paper = 1.2
+            lumber = 0.61
+            manual_labor = 0.8
             produced = books
-            output = 1.13
+            output = 2.09
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -88,14 +89,24 @@ building:
     }
     construction_demand = manufactory_construction
     increase_per_level_cost = 0.21
+    raw_modifier = {
+        local_pp_books_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:printing_press_shop } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 localization:
   entries:
     printing_manufactory_slot_0: Printing Manufactory Work
+    printing_manufactory_slot_1: Market
     pp_printing_manufactory_printing_manufactory_maintenance: Printing Manufactory Printing Manufactory Maintenance
     pp_printing_manufactory_printing_manufactory_leather_maintenance: $printing_manufactory_leather_maintenance$
     pp_printing_manufactory_market_sales: Market Sales
     pp_printing_manufactory_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    printing_manufactory_slot_1: Market
     pp_printing_manufactory_legacy_scriptorium_leather_maintenance: "$scriptorium_leather_maintenance$ (Old Ways)"
     pp_printing_manufactory_legacy_scriptorium_leather_maintenance_desc: "An older way of working, kept from the $scriptorium$. It still runs on its old materials, but turns out less per level than the methods of this age."
     pp_printing_manufactory_legacy_scriptorium_maintenance: "$scriptorium_maintenance$ (Old Ways)"

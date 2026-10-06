@@ -1,6 +1,22 @@
 ﻿# >>> eu5-building-pipeline:grand_marketplace:building
 INJECT:grand_marketplace = {
 # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+# trade buildings 2026-10-06: only countries that have embraced Global Trade build it (the AI and the player alike)
+allow = {
+	owner = { has_embraced_institution = institution:global_trade }
+}
+# trade buildings 2026-10-06: merchant capacity per level 2 -> 3, +50 % (adds to vanilla's line)
+modifier = {
+	local_merchant_capacity = 1.0
+}
+# trade buildings 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001; build the upgrade where its
+# predecessor stands and at the market centre, like the farm upgrades (/ (owner income + 10))
+ai_construct_weight = {
+	value = 0
+	if = { limit = { has_building = building_type:merchants_quarters } add = 200 }
+	if = { limit = { is_market_center = yes } add = 100 }
+	divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 	raw_modifier = {
 		local_population_capacity = 0.06
 	}

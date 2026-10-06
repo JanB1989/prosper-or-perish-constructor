@@ -17,25 +17,26 @@ building:
     - pp_porcelain_manufactory_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 3, own methods x1.7 goods in and out, margin +0.1
     audio_tier = 3
     is_foreign = no
     pop_type = burghers
     max_levels = manufactory_max_level
     startup_ramp_target = manufactory_startup_ramp_target
     category = consumer_goods_category
-    employment_size = 0.3
+    employment_size = 0.325   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.3
     town = yes
     city = yes
     megalopolis = yes
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_porcelain_manufactory_porcelain_manufactory_maintenance = {
-            clay = 6 # fireclay saggars to protect the ware in the kiln
-            coal = 0.91 # more fuel for the high-temperature firing
-            tools = 0.175 # tools cut to a running cost (~10 %)
-            manual_labor = 0.42
+            clay = 10.2 # fireclay saggars to protect the ware in the kiln
+            coal = 1.547 # more fuel for the high-temperature firing
+            tools = 0.297 # tools cut to a running cost (~10 %)
+            manual_labor = 0.714
             produced = porcelain
-            output = 2.0
+            output = 3.729
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -54,6 +55,16 @@ building:
     }
     construction_demand = manufactory_construction
     increase_per_level_cost = 0.25
+    raw_modifier = {
+        local_pp_porcelain_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:porcelain_guild } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 localization:
   entries:
     porcelain_manufactory_slot_0: Porcelain Manufactory Work

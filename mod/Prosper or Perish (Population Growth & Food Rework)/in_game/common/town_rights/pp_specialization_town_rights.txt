@@ -1,0 +1,2261 @@
+﻿# Prosper or Perish - specialization town rights, one per refined end good (manufacturing tiers 2026-10-06, Jan).
+# Charter: no institution, at least 3 levels of the good's line in the town; output +0.15, production efficiency -0.05.
+# Rights (upgrade of the charter): Printing Press embraced and the town rights advance of the Age of Discovery, at least
+# 8 levels (cloth, leather, pottery, glass, jewelry, books) or 5 (the other lines); output +0.35,
+# production efficiency -0.1. One specialization right per town. The AI values only the output line against what the
+# town already makes, so it takes a right where that line dominates the town.
+# The vanilla bundled specialization rights and charters are switched off below.
+
+pp_cloth_charter = {
+	is_specialization = yes
+	upgrades_to = pp_cloth_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_cloth_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_cloth_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_cloth
+}
+
+pp_cloth_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_cloth_line_levels >= 8
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_cloth_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_cloth
+}
+
+pp_fine_cloth_charter = {
+	is_specialization = yes
+	upgrades_to = pp_fine_cloth_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_fine_cloth_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_fine_cloth_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_fine_cloth
+}
+
+pp_fine_cloth_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_fine_cloth_line_levels >= 5
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_fine_cloth_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_fine_cloth
+}
+
+pp_leather_charter = {
+	is_specialization = yes
+	upgrades_to = pp_leather_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_leather_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_leather_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_leather
+}
+
+pp_leather_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_leather_line_levels >= 8
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_leather_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_leather
+}
+
+pp_pottery_charter = {
+	is_specialization = yes
+	upgrades_to = pp_pottery_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_pottery_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_pottery_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_pottery
+}
+
+pp_pottery_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_pottery_line_levels >= 8
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_pottery_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_pottery
+}
+
+pp_furniture_charter = {
+	is_specialization = yes
+	upgrades_to = pp_furniture_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_furniture_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_furniture_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_furniture
+}
+
+pp_furniture_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_furniture_line_levels >= 5
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_furniture_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_furniture
+}
+
+pp_glass_charter = {
+	is_specialization = yes
+	upgrades_to = pp_glass_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_glass_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_glass_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_glass
+}
+
+pp_glass_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_glass_line_levels >= 8
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_glass_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_glass
+}
+
+pp_jewelry_charter = {
+	is_specialization = yes
+	upgrades_to = pp_jewelry_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_jewelry_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_jewelry_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_jewelry
+}
+
+pp_jewelry_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_jewelry_line_levels >= 8
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_jewelry_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_jewelry
+}
+
+pp_porcelain_charter = {
+	is_specialization = yes
+	upgrades_to = pp_porcelain_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_porcelain_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_porcelain_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_porcelain
+}
+
+pp_porcelain_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_porcelain_line_levels >= 5
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_porcelain_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_porcelain
+}
+
+pp_lacquerware_charter = {
+	is_specialization = yes
+	upgrades_to = pp_lacquerware_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_lacquerware_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_lacquerware_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_lacquerware
+}
+
+pp_lacquerware_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_lacquerware_line_levels >= 5
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_lacquerware_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_lacquerware
+}
+
+pp_beer_charter = {
+	is_specialization = yes
+	upgrades_to = pp_beer_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_beer_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_beer_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_beer
+}
+
+pp_beer_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_beer_line_levels >= 5
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_beer_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_beer
+}
+
+pp_liquor_charter = {
+	is_specialization = yes
+	upgrades_to = pp_liquor_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_liquor_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_liquor_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_liquor
+}
+
+pp_liquor_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_liquor_line_levels >= 5
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_liquor_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_liquor
+}
+
+pp_books_charter = {
+	is_specialization = yes
+	upgrades_to = pp_books_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_books_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_books_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_books
+}
+
+pp_books_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_books_line_levels >= 8
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_books_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_books
+}
+
+pp_tools_charter = {
+	is_specialization = yes
+	upgrades_to = pp_tools_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_tools_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_tools_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_tools
+}
+
+pp_tools_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_tools_line_levels >= 5
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_tools_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_tools
+}
+
+pp_weaponry_charter = {
+	is_specialization = yes
+	upgrades_to = pp_weaponry_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_weaponry_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_weaponry_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_weaponry
+}
+
+pp_weaponry_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_weaponry_line_levels >= 5
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_weaponry_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_weaponry
+}
+
+pp_firearms_charter = {
+	is_specialization = yes
+	upgrades_to = pp_firearms_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_firearms_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_firearms_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_firearms
+}
+
+pp_firearms_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_firearms_line_levels >= 5
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_firearms_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_firearms
+}
+
+pp_cannons_charter = {
+	is_specialization = yes
+	upgrades_to = pp_cannons_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_cannons_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_cannons_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_cannons
+}
+
+pp_cannons_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_cannons_line_levels >= 5
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_cannons_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_cannons
+}
+
+pp_naval_supplies_charter = {
+	is_specialization = yes
+	upgrades_to = pp_naval_supplies_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_naval_supplies_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_naval_supplies_output_modifier = 0.15
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_naval_supplies
+}
+
+pp_naval_supplies_rights = {
+	is_specialization = yes
+
+	potential = {
+		has_advance = town_rights_enable
+		has_embraced_institution = institution:printing_press
+	}
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_naval_supplies_line_levels >= 5
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_naval_supplies_output_modifier = 0.35
+		local_production_efficiency = -0.1
+	}
+
+	color = goods_naval_supplies
+}
+
+# Vanilla bundled specialization rights: replaced by the per-good rights above (never available).
+REPLACE:royal_tooling_rights = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_tools
+}
+
+REPLACE:royal_jewelry_rights = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_jewelry
+}
+
+REPLACE:royal_naval_rights = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_naval_supplies
+}
+
+REPLACE:royal_textile_rights = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_fine_cloth
+}
+
+REPLACE:royal_weaponry_rights = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_weaponry
+}
+
+REPLACE:royal_book_rights = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_paper
+}
+
+REPLACE:royal_artisan_rights = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_pottery
+}
+
+REPLACE:royal_brewing_rights = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_liquor
+}
+
+REPLACE:royal_masonry_rights = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_masonry
+}
+
+REPLACE:tooling_charter = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_tools
+}
+
+REPLACE:jewelry_charter = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_jewelry
+}
+
+REPLACE:naval_charter = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_naval_supplies
+}
+
+REPLACE:textile_charter = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_fine_cloth
+}
+
+REPLACE:weaponry_charter = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_weaponry
+}
+
+REPLACE:book_charter = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_paper
+}
+
+REPLACE:artisan_charter = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_pottery
+}
+
+REPLACE:brewing_charter = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_liquor
+}
+
+REPLACE:masonry_charter = {
+	is_specialization = yes
+	potential = { always = no }
+	allow = { always = no }
+	location_modifier = {
+	}
+	color = goods_masonry
+}

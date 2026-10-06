@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:fine_cloth_mill:building
 REPLACE:fine_cloth_mill = {
+# manufacturing tiers 2026-10-06: tier 4, own methods x2.0 goods in and out, margin +0.12
 audio_tier = 5
 is_foreign = no
 pop_type = laborers
@@ -7,7 +8,7 @@ is_mill = yes
 max_levels = mills_max_level
 startup_ramp_target = mills_startup_ramp_target
 category = consumer_goods_category
-employment_size = 0.8   # [building_scaling.employment_cut] reference 1
+employment_size = 1.16   # manufacturing tiers 2026-10-06: 0.8 after the employment cut x1.45
 town = yes
 city = yes
 megalopolis = yes
@@ -17,20 +18,20 @@ unique_production_methods = {
     pp_fine_cloth_mill_dyeing_maintenance = {
         icon_type = goods
         icon = dyes
-        dyes = 0.47
-        manual_labor = 0.079
+        dyes = 0.94
+        manual_labor = 0.158
         produced = fine_cloth
-        output = 0.33
+        output = 0.738
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
     pp_fine_cloth_mill_legacy_fur_trim_workshop_maintenance = {
         icon_type = goods
         icon = fur
-        fur = 0.5
-        manual_labor = 0.1
+        fur = 1
+        manual_labor = 0.21
         produced = fine_cloth
-        output = 0.19
+        output = 0.42
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -39,30 +40,30 @@ unique_production_methods = {
     pp_fine_cloth_mill_fine_cloth_mill_maintenance = {
         icon_type = goods
         icon = cloth
-        cloth = 6.96
-        manual_labor = 0.87
+        cloth = 13.92
+        manual_labor = 1.74
         produced = fine_cloth
-        output = 3.67
+        output = 8.21
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
     pp_fine_cloth_mill_silk_cloth_mill_maintenance = {
         icon_type = goods
         icon = silk
-        silk = 5.22
-        manual_labor = 0.87
+        silk = 10.44
+        manual_labor = 1.74
         produced = fine_cloth
-        output = 3.67
+        output = 8.21
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
     pp_fine_cloth_mill_legacy_wool_weavers_workshop_maintenance = {
         icon_type = goods
         icon = wool
-        wool = 3.31
-        manual_labor = 0.9
+        wool = 6.62
+        manual_labor = 1.8
         produced = fine_cloth
-        output = 1.55
+        output = 3.46
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -82,9 +83,17 @@ custom_tags = {
 }
 construction_demand = mill_construction
 raw_modifier = {
-	local_population_capacity = 0.4
+	local_population_capacity = 0.464
+    local_pp_fine_cloth_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
     local_burghers_desired_pop = 0.05
 }
 increase_per_level_cost = 0.14
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:fine_cloth_manufactory } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:fine_cloth_mill:building

@@ -11,81 +11,82 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
+    - pp_distillers_workshop_beer_liquor_workshop_maintenance
+    - pp_distillers_workshop_wine_liquor_workshop_maintenance
     - pp_distillers_workshop_sugar_liquor_workshop_maintenance
     - pp_distillers_workshop_rice_liquor_workshop_maintenance
     - pp_distillers_workshop_potato_liquor_workshop_maintenance
     - pp_distillers_workshop_wheat_liquor_workshop_maintenance
-    - pp_distillers_workshop_beer_liquor_workshop_maintenance
-    - pp_distillers_workshop_wine_liquor_workshop_maintenance
   - name: slot_1
     methods:
     - pp_distillers_workshop_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 2, own methods x1.3 goods in and out, margin +0.05
     audio_tier = 2
     is_foreign = no
     pop_type = burghers
     max_levels = workshop_max_level
     startup_ramp_target = workshop_startup_ramp_target
     category = consumer_goods_category
-    employment_size = 0.3
+    employment_size = 0.287   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.15
     town = yes
     city = yes
     megalopolis = yes
     build_time = workshop_build_time
     construction_demand = workshop_construction
     unique_production_methods = {
-        pp_distillers_workshop_sugar_liquor_workshop_maintenance = {
-            sugar = 0.67
-            glass = 0.078
-            manual_labor = 0.25
-            produced = liquor
-            output = 1.1
-            debug_max_profit = workshop_profit_margin
-            category = workshop_input
-        }
-        pp_distillers_workshop_rice_liquor_workshop_maintenance = {
-            rice = 1.97
-            glass = 0.091
-            manual_labor = 0.25
-            produced = liquor
-            output = 1.1
-            debug_max_profit = workshop_profit_margin
-            category = workshop_input
-        }
-        pp_distillers_workshop_potato_liquor_workshop_maintenance = {
-            potato = 1.97
-            glass = 0.091
-            manual_labor = 0.25
-            produced = liquor
-            output = 1.1
-            debug_max_profit = workshop_profit_margin
-            category = workshop_input
-        }
-        pp_distillers_workshop_wheat_liquor_workshop_maintenance = {
-            wheat = 1.97
-            glass = 0.091
-            manual_labor = 0.25
-            produced = liquor
-            output = 1.1
-            debug_max_profit = workshop_profit_margin
-            category = workshop_input
-        }
         pp_distillers_workshop_beer_liquor_workshop_maintenance = {
-            beer = 0.95
-            glass = 0.11
-            manual_labor = 0.26
+            beer = 1.235
+            glass = 0.143
+            manual_labor = 0.338
             produced = liquor
-            output = 1.1
+            output = 1.495
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_distillers_workshop_wine_liquor_workshop_maintenance = {
-            wine = 0.95
-            glass = 0.11
-            manual_labor = 0.26
+            wine = 1.235
+            glass = 0.143
+            manual_labor = 0.338
             produced = liquor
-            output = 1.1
+            output = 1.495
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+        pp_distillers_workshop_sugar_liquor_workshop_maintenance = {
+            sugar = 0.871
+            glass = 0.101
+            manual_labor = 0.325
+            produced = liquor
+            output = 1.495
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+        pp_distillers_workshop_rice_liquor_workshop_maintenance = {
+            rice = 2.561
+            glass = 0.118
+            manual_labor = 0.325
+            produced = liquor
+            output = 1.495
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+        pp_distillers_workshop_potato_liquor_workshop_maintenance = {
+            potato = 2.561
+            glass = 0.118
+            manual_labor = 0.325
+            produced = liquor
+            output = 1.495
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+        pp_distillers_workshop_wheat_liquor_workshop_maintenance = {
+            wheat = 2.561
+            glass = 0.118
+            manual_labor = 0.325
+            produced = liquor
+            output = 1.495
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -103,9 +104,23 @@ building:
     }
     obsolete = distillers_guild
     increase_per_level_cost = 0.15
+    modifier = {
+        local_liquor_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
+    raw_modifier = {
+        local_pp_liquor_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:distillers_guild } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 localization:
   entries:
     distillers_workshop_slot_0: Distillers Workshop Work
+    distillers_workshop_slot_1: Market
     pp_distillers_workshop_sugar_liquor_workshop_maintenance: Distillers Workshop Sugar Liquor Workshop Maintenance
     pp_distillers_workshop_rice_liquor_workshop_maintenance: Distillers Workshop Rice Liquor Workshop Maintenance
     pp_distillers_workshop_potato_liquor_workshop_maintenance: Distillers Workshop Potato Liquor Workshop Maintenance
@@ -114,7 +129,6 @@ localization:
     pp_distillers_workshop_wine_liquor_workshop_maintenance: Distillers Workshop Wine Liquor Workshop Maintenance
     pp_distillers_workshop_market_sales: Market Sales
     pp_distillers_workshop_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    distillers_workshop_slot_1: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.

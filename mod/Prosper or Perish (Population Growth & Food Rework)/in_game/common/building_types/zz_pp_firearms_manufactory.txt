@@ -1,12 +1,13 @@
 ﻿# >>> eu5-building-pipeline:firearms_manufactory:building
 REPLACE:firearms_manufactory = {
+# manufacturing tiers 2026-10-06: tier 3, own methods x1.7 goods in and out, margin +0.1
 audio_tier = 3
 is_foreign = no
 pop_type = burghers
 max_levels = manufactory_max_level
 startup_ramp_target = manufactory_startup_ramp_target
 category = weapons_industry_category
-employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
+employment_size = 0.325   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.3
 town = yes
 city = yes
 megalopolis = yes
@@ -16,22 +17,22 @@ unique_production_methods = {
     pp_firearms_manufactory_ammunition_maintenance = {
         icon_type = goods
         icon = lead
-        lead = 0.12
-        saltpeter = 0.23
-        manual_labor = 0.052
+        lead = 0.204
+        saltpeter = 0.391
+        manual_labor = 0.088
         produced = firearms
-        output = 0.27
+        output = 0.502
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
     pp_firearms_manufactory_legacy_guns_workshop_ammunition_iron_maintenance = {
         icon_type = goods
         icon = iron
-        iron = 0.094
-        saltpeter = 0.094
-        manual_labor = 0.047
+        iron = 0.16
+        saltpeter = 0.16
+        manual_labor = 0.079
         produced = firearms
-        output = 0.2
+        output = 0.38
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -40,50 +41,50 @@ unique_production_methods = {
     pp_firearms_manufactory_firearms_manufactory_maintenance = {
         icon_type = building_type
         icon = firearms_manufactory
-        lumber = 0.35
-        coal = 0.35
-        iron = 0.94
-        manual_labor = 0.34
+        lumber = 0.595
+        coal = 0.595
+        iron = 1.598
+        manual_labor = 0.578
         category = manufactory_input
         produced = firearms
-        output = 1.73
+        output = 3.221
         debug_max_profit = manufactory_profit_margin
     }
     pp_firearms_manufactory_legacy_guns_guild_lumber_maintenance = {
         icon_type = goods
         icon = lumber
-        lumber = 0.12
-        iron = 0.033
-        tools = 0.014
-        manual_labor = 0.053
+        lumber = 0.2
+        iron = 0.056
+        tools = 0.026
+        manual_labor = 0.088
         produced = firearms
-        output = 0.15
+        output = 0.27
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
     pp_firearms_manufactory_legacy_hand_cannon_guild_maintenance = {
         icon_type = building_type
         icon = hand_cannon_guild
-        tools = 0.095
-        saltpeter = 0.25
-        copper = 0.25
-        tin = 0.1
-        manual_labor = 0.32
+        tools = 0.16
+        saltpeter = 0.42
+        copper = 0.42
+        tin = 0.18
+        manual_labor = 0.55
         produced = firearms
-        output = 0.73
+        output = 1.36
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
     pp_firearms_manufactory_legacy_guns_workshop_bronze_maintenance = {
         icon_type = goods
         icon = copper
-        copper = 0.61
-        tin = 0.13
-        tools = 0.17
-        lumber = 0.4
-        manual_labor = 0.36
+        copper = 1.04
+        tin = 0.21
+        tools = 0.29
+        lumber = 0.68
+        manual_labor = 0.62
         produced = firearms
-        output = 1.3
+        output = 2.42
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -103,8 +104,16 @@ custom_tags = {
 }
 construction_demand = manufactory_construction
 increase_per_level_cost = 0.19
-	raw_modifier = {
-		local_population_capacity = 0.165
-	}
+raw_modifier = {
+	local_population_capacity = 0.179
+    local_pp_firearms_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:guns_workshop } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:firearms_manufactory:building

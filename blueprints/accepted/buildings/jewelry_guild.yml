@@ -25,6 +25,7 @@ building:
     - pp_jewelry_guild_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
     audio_tier = 1
     is_foreign = no
     pop_type = burghers
@@ -38,60 +39,60 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_jewelry_guild_ivory_enhancement = {
-            ivory = 0.1
-            manual_labor = 0.064
+            ivory = 0.07
+            manual_labor = 0.045
             produced = jewelry
-            output = 0.1
+            output = 0.07
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
         pp_jewelry_guild_amber_enhancement = {
-            amber = 0.1
-            manual_labor = 0.064
+            amber = 0.07
+            manual_labor = 0.045
             produced = jewelry
-            output = 0.1
+            output = 0.07
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
         pp_jewelry_guild_gems_enhancement = {
-            gems = 0.1
-            manual_labor = 0.064
+            gems = 0.07
+            manual_labor = 0.045
             produced = jewelry
-            output = 0.1
+            output = 0.07
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
         pp_jewelry_guild_pearls_enhancement = {
-            pearls = 0.1
-            manual_labor = 0.064
+            pearls = 0.07
+            manual_labor = 0.045
             produced = jewelry
-            output = 0.1
+            output = 0.07
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
     }
     unique_production_methods = {
         pp_jewelry_guild_gold_base = {
-            goods_gold = 0.53
-            manual_labor = 0.82
+            goods_gold = 0.371
+            manual_labor = 0.574
             produced = jewelry
-            output = 1.0
+            output = 0.7
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
         pp_jewelry_guild_silver_base = {
-            silver = 0.71
-            manual_labor = 0.7
+            silver = 0.497
+            manual_labor = 0.49
             produced = jewelry
-            output = 1.0
+            output = 0.7
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
         pp_jewelry_guild_copper_base = {
-            copper = 1.42
-            manual_labor = 0.71
+            copper = 0.994
+            manual_labor = 0.497
             produced = jewelry
-            output = 1.0
+            output = 0.7
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
@@ -111,6 +112,12 @@ building:
     # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
     increase_per_level_cost = 0.75
     price = pp_jewelry_guild_price
+    modifier = {
+        local_jewelry_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
+    raw_modifier = {
+        local_pp_jewelry_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
 prices:
   - key: pp_jewelry_guild_price
     body: |2-

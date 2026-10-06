@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:pottery_mill:building
 REPLACE:pottery_mill = {
+# manufacturing tiers 2026-10-06: tier 4, own methods x2.0 goods in and out, margin +0.12
 audio_tier = 5
 is_foreign = no
 pop_type = laborers
@@ -7,7 +8,7 @@ is_mill = yes
 max_levels = mills_max_level
 startup_ramp_target = mills_startup_ramp_target
 category = consumer_goods_category
-employment_size = 0.8   # [building_scaling.employment_cut] reference 1
+employment_size = 1.16   # manufacturing tiers 2026-10-06: 0.8 after the employment cut x1.45
 town = yes
 city = yes
 megalopolis = yes
@@ -17,25 +18,25 @@ unique_production_methods = {
     pp_pottery_mill_pottery_mill_maintenance = {
         icon_type = building_type
         icon = pottery_mill
-        clay = 3.6
-        lumber = 0.32
-        tools = 0.092 # tools cut to a running cost (~10 %)
-        coal = 0.11 # coal-fired bottle kilns
-        manual_labor = 0.12
+        clay = 7.2
+        lumber = 0.64
+        tools = 0.184 # tools cut to a running cost (~10 %)
+        coal = 0.22 # coal-fired bottle kilns
+        manual_labor = 0.24
         produced = pottery
-        output = 3.25
-        debug_max_profit = mills_profit_margin
+        output = 7.22
+        debug_max_profit = 0.038
         category = mills_input
     }
     pp_pottery_mill_legacy_pottery_w_maintenance = {
         icon_type = building_type
         icon = pottery_workshop
-        clay = 1.81
-        lumber = 0.26
-        tools = 0.051
-        manual_labor = 0.16
+        clay = 3.63
+        lumber = 0.51
+        tools = 0.1
+        manual_labor = 0.33
         produced = pottery
-        output = 1.83
+        output = 4.06
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -52,9 +53,17 @@ unique_production_methods = {
 }
 construction_demand = mill_construction
 raw_modifier = {
-	local_population_capacity = 0.4
+	local_population_capacity = 0.464
+    local_pp_pottery_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
     local_burghers_desired_pop = 0.05
 }
 increase_per_level_cost = 0.11
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:pottery_manufactory } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:pottery_mill:building

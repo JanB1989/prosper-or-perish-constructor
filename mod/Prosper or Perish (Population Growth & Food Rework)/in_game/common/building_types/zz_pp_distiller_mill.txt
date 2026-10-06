@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:distiller_mill:building
 REPLACE:distiller_mill = {
+# manufacturing tiers 2026-10-06: tier 4, own methods x2.0 goods in and out, margin +0.12
 audio_tier = 5
 is_foreign = no
 pop_type = laborers
@@ -7,7 +8,7 @@ is_mill = yes
 max_levels = mills_max_level
 startup_ramp_target = mills_startup_ramp_target
 category = consumer_goods_category
-employment_size = 0.8   # [building_scaling.employment_cut] reference 1
+employment_size = 1.16   # manufacturing tiers 2026-10-06: 0.8 after the employment cut x1.45
 town = yes
 city = yes
 megalopolis = yes
@@ -17,77 +18,77 @@ unique_production_methods = {
     pp_distiller_mill_sugar_distillery_mill_maintenance = {
         icon_type = goods
         icon = sugar
-        sugar = 2.57
-        glass = 0.54
-        manual_labor = 0.38
+        sugar = 5.14
+        glass = 1.08
+        manual_labor = 0.76
         produced = liquor
-        output = 4.0
+        output = 8.932
         category = mills_input
         debug_max_profit = mills_profit_margin
     }
     pp_distiller_mill_rice_distillery_mill_maintenance = {
         icon_type = goods
         icon = rice
-        rice = 7.21
-        glass = 0.7
-        manual_labor = 0.4
+        rice = 14.42
+        glass = 1.4
+        manual_labor = 0.8
         produced = liquor
-        output = 4.0
+        output = 8.932
         category = mills_input
         debug_max_profit = mills_profit_margin
     }
     pp_distiller_mill_potato_distillery_mill_maintenance = {
         icon_type = goods
         icon = potato
-        potato = 7.27
-        glass = 0.68
-        manual_labor = 0.4
+        potato = 14.54
+        glass = 1.36
+        manual_labor = 0.8
         produced = liquor
-        output = 4.0
+        output = 8.932
         category = mills_input
         debug_max_profit = mills_profit_margin
     }
     pp_distiller_mill_wheat_distillery_mill_maintenance = {
         icon_type = goods
         icon = wheat
-        wheat = 7.27
-        glass = 0.68
-        manual_labor = 0.4
+        wheat = 14.54
+        glass = 1.36
+        manual_labor = 0.8
         produced = liquor
-        output = 4.0
+        output = 8.932
         category = mills_input
         debug_max_profit = mills_profit_margin
     }
     pp_distiller_mill_scottish_whisky_distillery_mill_maintenance = {
         icon_type = goods
         icon = millet
-        millet = 7.17
-        glass = 0.72
-        manual_labor = 0.38
+        millet = 14.34
+        glass = 1.44
+        manual_labor = 0.76
         produced = liquor
-        output = 4.0
+        output = 8.932
         category = mills_input
         debug_max_profit = mills_profit_margin
     }
     pp_distiller_mill_legacy_beer_liquor_workshop_maintenance = {
         icon_type = goods
         icon = beer
-        beer = 2.08
-        glass = 0.24
-        manual_labor = 0.57
+        beer = 4.17
+        glass = 0.48
+        manual_labor = 1.15
         produced = liquor
-        output = 2.25
+        output = 5.02
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
     pp_distiller_mill_legacy_wine_liquor_workshop_maintenance = {
         icon_type = goods
         icon = wine
-        wine = 2.08
-        glass = 0.24
-        manual_labor = 0.57
+        wine = 4.17
+        glass = 0.48
+        manual_labor = 1.15
         produced = liquor
-        output = 2.25
+        output = 5.02
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -107,9 +108,17 @@ custom_tags = {
 }
 construction_demand = mill_construction
 raw_modifier = {
-	local_population_capacity = 0.4
+	local_population_capacity = 0.464
+    local_pp_liquor_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
     local_burghers_desired_pop = 0.05
 }
 increase_per_level_cost = 0.11
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:distiller_manufactory } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:distiller_mill:building

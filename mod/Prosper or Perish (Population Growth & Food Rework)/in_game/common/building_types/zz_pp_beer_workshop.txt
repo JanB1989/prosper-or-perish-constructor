@@ -1,98 +1,99 @@
 ﻿# >>> eu5-building-pipeline:beer_workshop:building
 REPLACE:beer_workshop = {
+# manufacturing tiers 2026-10-06: tier 2, own methods x1.3 goods in and out, margin +0.05
 audio_tier = 2
 is_foreign = no
 pop_type = burghers
 max_levels = workshop_max_level
 startup_ramp_target = workshop_startup_ramp_target
 category = consumer_goods_category
-employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
+employment_size = 0.287   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.15
 town = yes
 city = yes
 megalopolis = yes
 build_time = workshop_build_time
 unique_production_methods = {
-    pp_beer_workshop_wheat_beer_workshop_maintenance = {
+    pp_beer_workshop_maize_beer_workshop_maintenance = {
         icon_type = goods
-        icon = wheat
-        wheat = 1.01
-        lumber = 0.32 # casks, mash tun and fuel for the boil
-        tools = 0.06 # tools cut to a running cost (~10 %)
-        manual_labor = 0.2
+        icon = maize
+        maize = 1.846
+        pottery = 0.429
+        manual_labor = 0.247
         produced = beer
-        output = 1.1
-        debug_max_profit = workshop_profit_margin
-        category = workshop_input
-    }
-    pp_beer_workshop_millet_beer_workshop_maintenance = {
-        icon_type = goods
-        icon = millet
-        millet = 1.01
-        lumber = 0.32 # casks, mash tun and fuel for the boil
-        tools = 0.06 # tools cut to a running cost (~10 %)
-        manual_labor = 0.2
-        produced = beer
-        output = 1.1
+        output = 1.493
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_beer_workshop_fruit_beer_workshop_maintenance = {
         icon_type = goods
         icon = fruit
-        fruit = 1.06
-        lumber = 0.3 # casks, vats and press timber
-        tools = 0.06 # tools cut to a running cost (~10 %)
-        manual_labor = 0.18
+        fruit = 1.378
+        lumber = 0.39 # casks, vats and press timber
+        tools = 0.078 # tools cut to a running cost (~10 %)
+        manual_labor = 0.234
         produced = beer
-        output = 1.1
+        output = 1.494
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
-    pp_beer_workshop_maize_beer_workshop_maintenance = {
+    pp_beer_workshop_wheat_beer_workshop_maintenance = {
         icon_type = goods
-        icon = maize
-        maize = 1.42
-        pottery = 0.33
-        manual_labor = 0.19
+        icon = wheat
+        wheat = 1.313
+        lumber = 0.416 # casks, mash tun and fuel for the boil
+        tools = 0.078 # tools cut to a running cost (~10 %)
+        manual_labor = 0.26
         produced = beer
-        output = 1.1
+        output = 1.494
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
-    pp_beer_workshop_honey_beer_workshop_maintenance = {
+    pp_beer_workshop_millet_beer_workshop_maintenance = {
         icon_type = goods
-        icon = beeswax
-        beeswax = 0.26
-        millet = 0.53
-        lumber = 0.3 # casks, vats and fuel for the boil
-        tools = 0.06 # tools cut to a running cost (~10 %)
-        manual_labor = 0.2
+        icon = millet
+        millet = 1.313
+        lumber = 0.416 # casks, mash tun and fuel for the boil
+        tools = 0.078 # tools cut to a running cost (~10 %)
+        manual_labor = 0.26
         produced = beer
-        output = 1.1
+        output = 1.494
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_beer_workshop_rice_beer_workshop_maintenance = {
         icon_type = goods
         icon = rice
-        rice = 1.01
-        lumber = 0.32 # casks, steaming fuel and vats
-        tools = 0.06 # tools cut to a running cost (~10 %)
-        manual_labor = 0.2
+        rice = 1.313
+        lumber = 0.416 # casks, steaming fuel and vats
+        tools = 0.078 # tools cut to a running cost (~10 %)
+        manual_labor = 0.26
         produced = beer
-        output = 1.1
+        output = 1.494
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_beer_workshop_honey_beer_workshop_maintenance = {
+        icon_type = goods
+        icon = beeswax
+        beeswax = 0.338
+        millet = 0.689
+        lumber = 0.39 # casks, vats and fuel for the boil
+        tools = 0.078 # tools cut to a running cost (~10 %)
+        manual_labor = 0.26
+        produced = beer
+        output = 1.494
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_beer_workshop_bavarian_beer_workshop_maintenance = {
         icon_type = goods
         icon = wheat
-        wheat = 1.32
-        lumber = 0.33 # casks, mash tun and fuel for the boil
-        tools = 0.072 # tools cut to a running cost (~10 %)
-        manual_labor = 0.24
+        wheat = 1.716
+        lumber = 0.429 # casks, mash tun and fuel for the boil
+        tools = 0.094 # tools cut to a running cost (~10 %)
+        manual_labor = 0.312
         produced = beer
-        output = 1.3
+        output = 1.767
         category = workshop_input
         debug_max_profit = workshop_profit_margin
     }
@@ -113,8 +114,19 @@ custom_tags = {
 }
 construction_demand = workshop_construction
 increase_per_level_cost = 0.11
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+modifier = {
+    local_beer_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
+raw_modifier = {
+	local_population_capacity = 0.215
+    local_pp_beer_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:brewery } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:beer_workshop:building

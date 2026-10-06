@@ -17,6 +17,7 @@ building:
     - pp_furniture_guild_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
     audio_tier = 1
     is_foreign = no
     pop_type = burghers
@@ -30,13 +31,13 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_furniture_guild_furniture_maintenance = {
-            lumber = 0.9
-            dyes = 0.14
-            tools = 0.09 # tools cut to a running cost (~10 %)
-            beeswax = 0.08 # wax polish for the finish
-            manual_labor = 0.38
+            lumber = 0.63
+            dyes = 0.098
+            tools = 0.063 # tools cut to a running cost (~10 %)
+            beeswax = 0.056 # wax polish for the finish
+            manual_labor = 0.266
             produced = furniture
-            output = 1.0
+            output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -53,6 +54,12 @@ building:
     # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
     increase_per_level_cost = 0.75
     price = pp_furniture_guild_price
+    modifier = {
+        local_furniture_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
+    raw_modifier = {
+        local_pp_furniture_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
 prices:
   - key: pp_furniture_guild_price
     body: |2-

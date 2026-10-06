@@ -24,6 +24,7 @@ building:
     - pp_gun_smith_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
     audio_tier = 1
     is_foreign = no
     pop_type = burghers
@@ -38,67 +39,67 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_gun_smith_guns_guild_ammunition_lead_maintenance = {
-            lead = 0.095
-            saltpeter = 0.095
-            manual_labor = 0.064
+            lead = 0.067
+            saltpeter = 0.067
+            manual_labor = 0.045
             produced = firearms
-            output = 0.16
+            output = 0.112
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_gun_smith_guns_guild_ammunition_iron_maintenance = {
-            iron = 0.088
-            saltpeter = 0.088
-            manual_labor = 0.077
+            iron = 0.062
+            saltpeter = 0.062
+            manual_labor = 0.054
             produced = firearms
-            output = 0.2
+            output = 0.14
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
     }
     unique_production_methods = {
         pp_gun_smith_guns_guild_lumber_maintenance = {
-            lumber = 0.12
-            iron = 0.034
-            tools = 0.015
-            manual_labor = 0.055
+            lumber = 0.084
+            iron = 0.024
+            tools = 0.011
+            manual_labor = 0.038
             produced = firearms
-            output = 0.15
+            output = 0.105
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
         pp_gun_smith_guns_guild_bronze_maintenance = {
-            copper = 0.49
-            tin = 0.098
-            tools = 0.14 # tools cut to a running cost (~15 %, arms making)
-            lumber = 0.28 # charcoal for the casting furnace, wooden stocks
-            manual_labor = 0.44
+            copper = 0.343
+            tin = 0.069
+            tools = 0.098 # tools cut to a running cost (~15 %, arms making)
+            lumber = 0.196 # charcoal for the casting furnace, wooden stocks
+            manual_labor = 0.308
             produced = firearms
-            output = 1.0
+            output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_gun_smith_guns_guild_iron_maintenance = {
-            iron = 0.48
-            tools = 0.14 # tools cut to a running cost (~15 %, arms making)
-            lumber = 0.15 # wooden stocks
-            coal = 0.11 # forge fuel for welding the barrels
-            manual_labor = 0.43
+            iron = 0.336
+            tools = 0.098 # tools cut to a running cost (~15 %, arms making)
+            lumber = 0.105 # wooden stocks
+            coal = 0.077 # forge fuel for welding the barrels
+            manual_labor = 0.301
             produced = firearms
-            output = 1.0
+            output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_gun_smith_legacy_hand_cannon_guild_maintenance = {
             icon_type = building_type
             icon = hand_cannon_guild
-            tools = 0.1
-            saltpeter = 0.27
-            copper = 0.27
-            tin = 0.11
-            manual_labor = 0.36
+            tools = 0.074
+            saltpeter = 0.19
+            copper = 0.19
+            tin = 0.079
+            manual_labor = 0.25
             produced = firearms
-            output = 0.75
+            output = 0.52
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -112,10 +113,15 @@ building:
         }
     }
     construction_demand = guild_construction
-    modifier = {}
+    modifier = {
+        local_firearms_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
     # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
     increase_per_level_cost = 0.75
     price = pp_gun_smith_price
+    raw_modifier = {
+        local_pp_firearms_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
 prices:
   - key: pp_gun_smith_price
     body: |2-

@@ -36,7 +36,8 @@ def test_compiled_buildings_carry_the_cut_with_its_reference() -> None:
         for match in re.finditer(r"employment_size = (\S+)\s+# \[building_scaling\.employment_cut\] reference (\S+)",
                                  path.read_text(encoding="utf-8-sig")):
             cut_lines.append((path.name, match.group(1), match.group(2)))
-    assert len(cut_lines) > 150
+    # > 150 before 2026-10-06; the manufacturing tiers 2+ of the refined end goods carry their own size since then
+    assert len(cut_lines) > 120
     assert {(new, ref) for _name, new, ref in cut_lines} <= {("0.8", "1"), ("0.25", "0.3")}
 
 

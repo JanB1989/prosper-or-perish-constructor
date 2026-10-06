@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:rural_glassmaker:building
 REPLACE:rural_glassmaker = {
+# manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
 audio_tier = 1
 is_foreign = no
 pop_type = laborers
@@ -19,10 +20,10 @@ unique_production_methods = {
     pp_rural_glassmaker_rural_glassmaker_maintenance = {
         icon_type = building_type
         icon = rural_glassmaker
-        sand = 0.79
-        manual_labor = 0.13
+        sand = 0.553
+        manual_labor = 0.091
         produced = glass
-        output = 0.2
+        output = 0.14
         debug_max_profit = rural_profit_margin
         category = guild_input
     }
@@ -38,12 +39,15 @@ unique_production_methods = {
     }
 }
 construction_demand = village_construction
-modifier = {}
+modifier = {
+    local_glass_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.34
 price = pp_rural_glassmaker_price
-	raw_modifier = {
-		local_population_capacity = 0.4
-	}
+raw_modifier = {
+	local_population_capacity = 0.4
+    local_pp_glass_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
 }
 # <<< eu5-building-pipeline:rural_glassmaker:building

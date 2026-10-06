@@ -23,6 +23,7 @@ building:
     - pp_market_village_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
     audio_tier = 1
     is_foreign = no
     max_levels = rural_building_cap
@@ -51,44 +52,44 @@ building:
     unique_production_methods = {
         pp_market_village_rural_pottery_maker = {
             produced = pottery
-            output = 0.2
-            clay = 0.25
-            manual_labor = 0.042
+            output = 0.14
+            clay = 0.175
+            manual_labor = 0.029
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }
         pp_market_village_rural_jewelry_carver = {
             produced = jewelry
-            output = 0.1
-            stone = 0.32
-            manual_labor = 0.11
+            output = 0.07
+            stone = 0.224
+            manual_labor = 0.077
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }
         pp_market_village_rural_weaponmaker = {
             produced = weaponry
-            output = 0.2
-            lumber = 0.25
-            manual_labor = 0.15
+            output = 0.14
+            lumber = 0.175
+            manual_labor = 0.105
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }
         pp_market_village_rural_millet_brewery = {
-            millet = 0.39
-            lumber = 0.1 # firewood for boiling the mash (was 0.079)
-            tools = 0.02 # 2026-10-05: tools an accelerant, village brewing needs few, was 0.056
-            pottery = 0.08 # brewing and storage jars
-            manual_labor = 0.24
+            millet = 0.273
+            lumber = 0.07 # firewood for boiling the mash (was 0.079)
+            tools = 0.014 # 2026-10-05: tools an accelerant, village brewing needs few, was 0.056
+            pottery = 0.056 # brewing and storage jars
+            manual_labor = 0.168
             produced = beer
-            output = 0.5
+            output = 0.35
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }
         pp_market_village_rural_blacksmith = {
             produced = tools
-            output = 0.4
-            iron = 0.31
-            manual_labor = 0.5
+            output = 0.28
+            iron = 0.217
+            manual_labor = 0.35
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }

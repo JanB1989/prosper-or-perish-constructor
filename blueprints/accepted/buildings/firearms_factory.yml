@@ -25,6 +25,7 @@ building:
     - pp_firearms_factory_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 4, own methods x2.0 goods in and out, margin +0.12
     audio_tier = 6
     is_foreign = no
     pop_type = laborers
@@ -32,7 +33,7 @@ building:
     max_levels = mills_max_level
     startup_ramp_target = mills_startup_ramp_target
     category = weapons_industry_category
-    employment_size = 1.0
+    employment_size = 1.16   # manufacturing tiers 2026-10-06: 0.8 after the employment cut x1.45
     town = yes
     city = yes
     megalopolis = yes
@@ -42,82 +43,82 @@ building:
         pp_firearms_factory_ammunition_maintenance = {
             icon_type = goods
             icon = lead
-            lead = 0.51
-            saltpeter = 0.85
-            manual_labor = 0.12
+            lead = 1.02
+            saltpeter = 1.7
+            manual_labor = 0.24
             produced = firearms
-            output = 0.97
+            output = 2.167
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
         pp_firearms_factory_legacy_guns_workshop_ammunition_iron_maintenance = {
             icon_type = goods
             icon = iron
-            iron = 0.27
-            saltpeter = 0.27
-            manual_labor = 0.13
+            iron = 0.53
+            saltpeter = 0.53
+            manual_labor = 0.26
             produced = firearms
-            output = 0.55
+            output = 1.22
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
     }
     unique_production_methods = {
         pp_firearms_factory_firearms_factory_maintenance = {
-            steel = 1.7
-            manual_labor = 0.37
+            steel = 3.4
+            manual_labor = 0.74
             produced = firearms
-            output = 3.03
+            output = 6.77
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
         pp_firearms_factory_legacy_guns_guild_lumber_maintenance = {
             icon_type = goods
             icon = lumber
-            lumber = 0.16
-            iron = 0.044
-            tools = 0.019
-            manual_labor = 0.071
+            lumber = 0.31
+            iron = 0.088
+            tools = 0.041
+            manual_labor = 0.14
             produced = firearms
-            output = 0.19
+            output = 0.43
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
         pp_firearms_factory_legacy_hand_cannon_guild_maintenance = {
             icon_type = building_type
             icon = hand_cannon_guild
-            tools = 0.13
-            saltpeter = 0.34
-            copper = 0.34
-            tin = 0.14
-            manual_labor = 0.44
+            tools = 0.26
+            saltpeter = 0.67
+            copper = 0.67
+            tin = 0.28
+            manual_labor = 0.87
             produced = firearms
-            output = 0.96
+            output = 2.14
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
         pp_firearms_factory_legacy_guns_workshop_bronze_maintenance = {
             icon_type = goods
             icon = copper
-            copper = 0.83
-            tin = 0.17
-            tools = 0.23
-            lumber = 0.54
-            manual_labor = 0.49
+            copper = 1.65
+            tin = 0.34
+            tools = 0.46
+            lumber = 1.07
+            manual_labor = 0.98
             produced = firearms
-            output = 1.7
+            output = 3.81
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
         pp_firearms_factory_legacy_firearms_manufactory_maintenance = {
             icon_type = building_type
             icon = firearms_manufactory
-            lumber = 0.47
-            coal = 0.47
-            iron = 1.27
-            manual_labor = 0.46
+            lumber = 0.94
+            coal = 0.94
+            iron = 2.53
+            manual_labor = 0.92
             produced = firearms
-            output = 2.27
+            output = 5.08
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -135,9 +136,17 @@ building:
     }
     construction_demand = mill_construction
     raw_modifier = {
+        local_pp_firearms_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
         local_burghers_desired_pop = 0.05
     }
     increase_per_level_cost = 0.25
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:firearms_manufactory } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 localization:
   entries:
     firearms_factory_slot_0: Ammunition

@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:printing_mill:building
 REPLACE:printing_mill = {
+# manufacturing tiers 2026-10-06: tier 4, own methods x2.0 goods in and out, margin +0.12
 audio_tier = 5
 is_foreign = no
 pop_type = laborers
@@ -7,58 +8,58 @@ is_mill = yes
 max_levels = mills_max_level
 startup_ramp_target = mills_startup_ramp_target
 category = consumer_goods_category
-employment_size = 0.8   # [building_scaling.employment_cut] reference 1
+employment_size = 1.16   # manufacturing tiers 2026-10-06: 0.8 after the employment cut x1.45
 town = yes
 city = yes
 megalopolis = yes
 obsolete = printing_manufactory
 build_time = mills_build_time
 unique_production_methods = {
-    pp_printing_mill_printing_mill_maintenance = {
-        icon_type = building_type
-        icon = printing_mill
-        lead = 0.71
-        paper = 3.92
-        lumber = 1.14
-        manual_labor = 0.47
-        produced = books
-        output = 4.0
-        debug_max_profit = mills_profit_margin
-        category = mills_input
-    }
     pp_printing_mill_printing_mill_leather_maintenance = {
         icon_type = goods
         icon = leather
-        lead = 0.71
-        paper = 3.92
-        leather = 0.57
-        manual_labor = 0.47
+        lead = 1.42
+        paper = 7.84
+        leather = 1.14
+        manual_labor = 0.94
         produced = books
-        output = 4.0
+        output = 8.915
+        debug_max_profit = 0.004
+        category = mills_input
+    }
+    pp_printing_mill_printing_mill_maintenance = {
+        icon_type = building_type
+        icon = printing_mill
+        lead = 1.42
+        paper = 7.84
+        lumber = 2.28
+        manual_labor = 0.94
+        produced = books
+        output = 8.938
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
     pp_printing_mill_legacy_scriptorium_leather_maintenance = {
         icon_type = goods
         icon = leather
-        dyes = 0.28
-        paper = 1.11
-        leather = 0.28
-        manual_labor = 0.74
+        dyes = 0.57
+        paper = 2.23
+        leather = 0.57
+        manual_labor = 1.5
         produced = books
-        output = 1.69
+        output = 3.77
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
     pp_printing_mill_legacy_scriptorium_maintenance = {
         icon_type = building_type
         icon = scriptorium
-        dyes = 0.28
-        paper = 1.08
-        lumber = 0.55
-        manual_labor = 0.72
+        dyes = 0.55
+        paper = 2.16
+        lumber = 1.1
+        manual_labor = 1.45
         produced = books
-        output = 1.69
+        output = 3.77
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -75,9 +76,17 @@ unique_production_methods = {
 }
 construction_demand = mill_construction
 raw_modifier = {
-	local_population_capacity = 0.4
+	local_population_capacity = 0.464
+    local_pp_books_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
     local_burghers_desired_pop = 0.05
 }
 increase_per_level_cost = 0.16
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:printing_manufactory } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:printing_mill:building

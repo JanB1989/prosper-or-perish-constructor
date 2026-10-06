@@ -22,13 +22,14 @@ building:
     - pp_cloth_manufactory_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 3, own methods x1.7 goods in and out, margin +0.1
     audio_tier = 3
     is_foreign = no
     pop_type = burghers
     max_levels = manufactory_max_level
     startup_ramp_target = manufactory_startup_ramp_target
     category = consumer_goods_category
-    employment_size = 0.3
+    employment_size = 0.325   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.3
     town = yes
     city = yes
     megalopolis = yes
@@ -36,59 +37,59 @@ building:
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_cloth_manufactory_wool_cloth_manufactory_maintenance = {
-            wool = 1.85
-            dyes = 0.17
-            manual_labor = 0.4
+            wool = 3.145
+            dyes = 0.289
+            manual_labor = 0.68
             produced = cloth
-            output = 2.0
+            output = 3.723
             category = guild_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_cloth_manufactory_cotton_cloth_manufactory_maintenance = {
             produced = cloth
-            output = 2.0
-            cotton = 1.54
-            dyes = 0.17
-            manual_labor = 0.41
+            output = 3.724
+            cotton = 2.618
+            dyes = 0.289
+            manual_labor = 0.697
             category = guild_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_cloth_manufactory_fiber_crops_cloth_manufactory_maintenance = {
             produced = cloth
-            fiber_crops = 2.51
-            dyes = 0.07
-            manual_labor = 0.41
-            output = 2.0
+            fiber_crops = 4.267
+            dyes = 0.119
+            manual_labor = 0.697
+            output = 3.724
             category = guild_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_cloth_manufactory_legacy_fiber_crops_cloth_workshop_maintenance = {
             icon_type = goods
             icon = fiber_crops
-            fiber_crops = 1.58
-            manual_labor = 0.34
+            fiber_crops = 2.68
+            manual_labor = 0.59
             produced = cloth
-            output = 1.23
+            output = 2.28
             debug_max_profit = manufactory_profit_margin
             category = guild_input
         }
         pp_cloth_manufactory_legacy_cotton_cloth_workshop_maintenance = {
             icon_type = goods
             icon = cotton
-            cotton = 1.28
-            manual_labor = 0.44
+            cotton = 2.18
+            manual_labor = 0.74
             produced = cloth
-            output = 1.5
+            output = 2.79
             debug_max_profit = manufactory_profit_margin
             category = guild_input
         }
         pp_cloth_manufactory_legacy_wool_cloth_workshop_maintenance = {
             icon_type = goods
             icon = wool
-            wool = 1.54
-            manual_labor = 0.44
+            wool = 2.61
+            manual_labor = 0.74
             produced = cloth
-            output = 1.5
+            output = 2.79
             debug_max_profit = manufactory_profit_margin
             category = guild_input
         }
@@ -106,6 +107,16 @@ building:
     }
     construction_demand = guild_construction
     increase_per_level_cost = 0.19
+    raw_modifier = {
+        local_pp_cloth_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:cloth_workshop } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 localization:
   entries:
     cloth_manufactory_slot_0: Cloth Manufactory Work

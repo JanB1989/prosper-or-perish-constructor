@@ -21,13 +21,14 @@ building:
     - pp_brewery_manufactory_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 3, own methods x1.7 goods in and out, margin +0.1
     audio_tier = 3
     is_foreign = no
     pop_type = burghers
     max_levels = manufactory_max_level
     startup_ramp_target = manufactory_startup_ramp_target
     category = consumer_goods_category
-    employment_size = 0.3
+    employment_size = 0.325   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.3
     town = yes
     city = yes
     megalopolis = yes
@@ -35,59 +36,59 @@ building:
     obsolete = beer_workshop
     unique_production_methods = {
         pp_brewery_manufactory_brewery_manufactory_maintenance = {
-            lumber = 0.45 # casks, malt kiln and copper fuel
-            wheat = 2.32
-            tools = 0.115 # tools cut to a running cost (~10 %)
-            manual_labor = 0.27
+            lumber = 0.765 # casks, malt kiln and copper fuel
+            wheat = 3.944
+            tools = 0.196 # tools cut to a running cost (~10 %)
+            manual_labor = 0.459
             produced = beer
-            output = 2.0
+            output = 3.719
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
         pp_brewery_manufactory_legacy_fruit_beer_workshop_maintenance = {
             icon_type = goods
             icon = fruit
-            fruit = 1.29
-            lumber = 0.36
-            tools = 0.073
-            manual_labor = 0.22
+            fruit = 2.19
+            lumber = 0.62
+            tools = 0.12
+            manual_labor = 0.37
             produced = beer
-            output = 1.27
+            output = 2.36
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
         pp_brewery_manufactory_legacy_maize_beer_workshop_maintenance = {
             icon_type = goods
             icon = maize
-            maize = 1.74
-            pottery = 0.4
-            manual_labor = 0.23
+            maize = 2.96
+            pottery = 0.69
+            manual_labor = 0.4
             produced = beer
-            output = 1.27
+            output = 2.36
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
         pp_brewery_manufactory_legacy_millet_beer_workshop_maintenance = {
             icon_type = goods
             icon = millet
-            millet = 1.22
-            lumber = 0.39
-            tools = 0.073
-            manual_labor = 0.24
+            millet = 2.08
+            lumber = 0.66
+            tools = 0.12
+            manual_labor = 0.41
             produced = beer
-            output = 1.27
+            output = 2.36
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
         pp_brewery_manufactory_legacy_rice_beer_workshop_maintenance = {
             icon_type = goods
             icon = rice
-            rice = 1.22
-            lumber = 0.39
-            tools = 0.073
-            manual_labor = 0.24
+            rice = 2.08
+            lumber = 0.66
+            tools = 0.12
+            manual_labor = 0.41
             produced = beer
-            output = 1.27
+            output = 2.36
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -105,6 +106,16 @@ building:
     }
     construction_demand = manufactory_construction
     increase_per_level_cost = 0.15
+    raw_modifier = {
+        local_pp_beer_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:beer_workshop } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 localization:
   entries:
     brewery_manufactory_slot_0: Brewery Manufactory Work

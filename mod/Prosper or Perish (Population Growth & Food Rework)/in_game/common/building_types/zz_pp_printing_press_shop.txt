@@ -1,63 +1,64 @@
 ﻿# >>> eu5-building-pipeline:printing_press_shop:building
 REPLACE:printing_press_shop = {
+# manufacturing tiers 2026-10-06: tier 2, own methods x1.3 goods in and out, margin +0.05
 audio_tier = 2
 is_foreign = no
 pop_type = burghers
 max_levels = workshop_max_level
 startup_ramp_target = workshop_startup_ramp_target
 category = consumer_goods_category
-employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
+employment_size = 0.287   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.15
 town = yes
 city = yes
 megalopolis = yes
 obsolete = scriptorium
 build_time = workshop_build_time
 unique_production_methods = {
-    pp_printing_press_shop_printing_press_maintenance = {
-        icon_type = building_type
-        icon = printing_press_shop
-        lead = 0.22
-        paper = 0.76
-        lumber = 0.27
-        manual_labor = 0.33
-        produced = books
-        output = 1.0
-        debug_max_profit = workshop_profit_margin
-        category = workshop_input
-    }
     pp_printing_press_shop_printing_press_leather_maintenance = {
         icon_type = goods
         icon = leather
-        lead = 0.22
-        paper = 0.76
-        leather = 0.135
-        manual_labor = 0.33
+        lead = 0.286
+        paper = 0.988
+        leather = 0.175
+        manual_labor = 0.429
         produced = books
-        output = 1.0
+        output = 1.358
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_printing_press_shop_printing_press_maintenance = {
+        icon_type = building_type
+        icon = printing_press_shop
+        lead = 0.286
+        paper = 0.988
+        lumber = 0.351
+        manual_labor = 0.429
+        produced = books
+        output = 1.36
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_printing_press_shop_legacy_scriptorium_leather_maintenance = {
         icon_type = goods
         icon = leather
-        dyes = 0.12
-        paper = 0.47
-        leather = 0.12
-        manual_labor = 0.31
+        dyes = 0.15
+        paper = 0.61
+        leather = 0.15
+        manual_labor = 0.4
         produced = books
-        output = 0.75
+        output = 1.02
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_printing_press_shop_legacy_scriptorium_maintenance = {
         icon_type = building_type
         icon = scriptorium
-        dyes = 0.12
-        paper = 0.45
-        lumber = 0.23
-        manual_labor = 0.3
+        dyes = 0.15
+        paper = 0.59
+        lumber = 0.3
+        manual_labor = 0.39
         produced = books
-        output = 0.75
+        output = 1.02
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -74,8 +75,19 @@ unique_production_methods = {
 }
 construction_demand = workshop_construction
 increase_per_level_cost = 0.16
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+modifier = {
+    local_books_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
+raw_modifier = {
+	local_population_capacity = 0.215
+    local_pp_books_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:scriptorium } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:printing_press_shop:building

@@ -263,7 +263,7 @@ REPLACE:rural_building_cap = {
 # Tooltip helpers of rural_building_cap (cap_tooltips.py): each is one row of the cap, read through this.
 rural_building_cap_building_level_development = {
 	value = development
-	multiply = 0.15
+	multiply = 0.25   # 2026-10-06, Jan: 0.15 -> 0.25, mines and rural works scale more with development
 }
 
 rural_building_cap_building_level_rgo_max = {

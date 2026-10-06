@@ -1,12 +1,13 @@
 ﻿# >>> eu5-building-pipeline:distiller_manufactory:building
 REPLACE:distiller_manufactory = {
+# manufacturing tiers 2026-10-06: tier 3, own methods x1.7 goods in and out, margin +0.1
 audio_tier = 3
 is_foreign = no
 pop_type = burghers
 max_levels = manufactory_max_level
 startup_ramp_target = manufactory_startup_ramp_target
 category = consumer_goods_category
-employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
+employment_size = 0.325   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.3
 town = yes
 city = yes
 megalopolis = yes
@@ -16,77 +17,77 @@ unique_production_methods = {
     pp_distiller_manufactory_sugar_distillery_maintenance = {
         icon_type = goods
         icon = sugar
-        sugar = 1.25
-        glass = 0.21
-        manual_labor = 0.33
+        sugar = 2.125
+        glass = 0.357
+        manual_labor = 0.561
         produced = liquor
-        output = 2.0
+        output = 3.72
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
     pp_distiller_manufactory_rice_distillery_maintenance = {
         icon_type = goods
         icon = rice
-        rice = 3.74
-        glass = 0.21
-        manual_labor = 0.34
+        rice = 6.358
+        glass = 0.357
+        manual_labor = 0.578
         produced = liquor
-        output = 2.0
+        output = 3.72
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
     pp_distiller_manufactory_potato_distillery_maintenance = {
         icon_type = goods
         icon = potato
-        potato = 3.74
-        glass = 0.21
-        manual_labor = 0.34
+        potato = 6.358
+        glass = 0.357
+        manual_labor = 0.578
         produced = liquor
-        output = 2.0
+        output = 3.72
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
     pp_distiller_manufactory_wheat_distillery_maintenance = {
         icon_type = goods
         icon = wheat
-        wheat = 3.74
-        glass = 0.21
-        manual_labor = 0.34
+        wheat = 6.358
+        glass = 0.357
+        manual_labor = 0.578
         produced = liquor
-        output = 2.0
+        output = 3.72
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
     pp_distiller_manufactory_scottish_whisky_distillery_maintenance = {
         icon_type = goods
         icon = millet
-        millet = 3.74
-        glass = 0.21
-        manual_labor = 0.34
+        millet = 6.358
+        glass = 0.357
+        manual_labor = 0.578
         produced = liquor
-        output = 2.0
+        output = 3.72
         category = manufactory_input
         debug_max_profit = manufactory_profit_margin
     }
     pp_distiller_manufactory_legacy_beer_liquor_workshop_maintenance = {
         icon_type = goods
         icon = beer
-        beer = 1.35
-        glass = 0.16
-        manual_labor = 0.37
+        beer = 2.29
+        glass = 0.27
+        manual_labor = 0.63
         produced = liquor
-        output = 1.5
+        output = 2.79
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
     pp_distiller_manufactory_legacy_wine_liquor_workshop_maintenance = {
         icon_type = goods
         icon = wine
-        wine = 1.35
-        glass = 0.16
-        manual_labor = 0.37
+        wine = 2.29
+        glass = 0.27
+        manual_labor = 0.63
         produced = liquor
-        output = 1.5
+        output = 2.79
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -106,8 +107,16 @@ custom_tags = {
 }
 construction_demand = manufactory_construction
 increase_per_level_cost = 0.11
-	raw_modifier = {
-		local_population_capacity = 0.165
-	}
+raw_modifier = {
+	local_population_capacity = 0.179
+    local_pp_liquor_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:distillers_workshop } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:distiller_manufactory:building

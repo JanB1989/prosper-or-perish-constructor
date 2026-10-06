@@ -54,7 +54,9 @@ def test_burgher_buildings_do_not_exceed_configured_employment_baseline() -> Non
         employment_size = Decimal(str(_last_value(block, "employment_size")))
         if employment_size == scaling.burgher_building_employment_size:
             baseline_count += 1
-        if employment_size > scaling.burgher_building_employment_size:
+        # manufacturing tiers (2026-10-06, Jan): tier 3 employs x1.3 of the cut size (0.25 -> 0.325)
+        tiered = "manufacturing tiers 2026-10-06" in template.building_body and employment_size <= Decimal("0.325")
+        if employment_size > scaling.burgher_building_employment_size and not tiered:
             offenders.append(
                 f"{template.key}: employment_size={employment_size} "
                 f"> burgher baseline {scaling.burgher_building_employment_size}"

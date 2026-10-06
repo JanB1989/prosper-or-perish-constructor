@@ -25,6 +25,7 @@ building:
     - pp_fine_cloth_guild_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
     is_foreign = no
     pop_type = burghers
     max_levels = fine_cloth_guild_max_level
@@ -38,44 +39,44 @@ building:
     unique_production_methods = {
         pp_fine_cloth_guild_standard_fine_cloth_guild_maintenance = {
             produced = fine_cloth
-            dyes = 0.12
-            manual_labor = 0.084
-            output = 0.1
+            dyes = 0.084
+            manual_labor = 0.059
+            output = 0.07
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
         pp_fine_cloth_guild_alum_fine_cloth_guild_maintenance = {
-            alum = 0.052
-            dyes = 0.21
-            manual_labor = 0.17
+            alum = 0.036
+            dyes = 0.147
+            manual_labor = 0.119
             produced = fine_cloth
-            output = 0.2
+            output = 0.14
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_fine_cloth_guild_fur_trim_guild_maintenance = {
-            fur = 0.5
-            manual_labor = 0.16
+            fur = 0.35
+            manual_labor = 0.112
             produced = fine_cloth
-            output = 0.2
+            output = 0.14
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
     }
     unique_production_methods = {
         pp_fine_cloth_guild_fine_cloth_guild_maintenance = {
-            cloth = 0.85
-            manual_labor = 0.41
+            cloth = 0.595
+            manual_labor = 0.287
             produced = fine_cloth
-            output = 0.5
+            output = 0.35
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_fine_cloth_guild_wool_weavers_maintenance = {
-            wool = 1.02
-            manual_labor = 0.42
+            wool = 0.714
+            manual_labor = 0.294
             produced = fine_cloth
-            output = 0.5
+            output = 0.35
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -86,18 +87,18 @@ building:
                     has_variable = spanish_cloth_industry
                 }
             }
-            wool = 1.02
-            manual_labor = 0.42
+            wool = 0.714
+            manual_labor = 0.294
             produced = fine_cloth
-            output = 0.5
+            output = 0.35
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
         pp_fine_cloth_guild_silk_weavers_maintenance = {
-            silk = 0.9
-            manual_labor = 0.56
+            silk = 0.63
+            manual_labor = 0.392
             produced = fine_cloth
-            output = 0.7
+            output = 0.49
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
@@ -117,6 +118,12 @@ building:
     # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
     increase_per_level_cost = 0.57
     price = pp_fine_cloth_guild_price
+    modifier = {
+        local_fine_cloth_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
+    raw_modifier = {
+        local_pp_fine_cloth_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
 prices:
   - key: pp_fine_cloth_guild_price
     body: |2-

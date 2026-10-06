@@ -18,6 +18,7 @@ building:
     - pp_scriptorium_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
     audio_tier = 1
     is_foreign = no
     pop_type = clergy
@@ -31,22 +32,22 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_scriptorium_scriptorium_maintenance = {
-            dyes = 0.046
-            paper = 0.18
-            lumber = 0.092
-            manual_labor = 0.12
+            dyes = 0.032
+            paper = 0.126
+            lumber = 0.064
+            manual_labor = 0.084
             produced = books
-            output = 0.3
+            output = 0.21
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_scriptorium_scriptorium_leather_maintenance = {
-            dyes = 0.046
-            paper = 0.18
-            leather = 0.046
-            manual_labor = 0.12
+            dyes = 0.032
+            paper = 0.126
+            leather = 0.032
+            manual_labor = 0.084
             produced = books
-            output = 0.3
+            output = 0.21
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -63,6 +64,12 @@ building:
     # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
     increase_per_level_cost = 0.63
     price = pp_scriptorium_price
+    modifier = {
+        local_books_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
+    raw_modifier = {
+        local_pp_books_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
 prices:
   - key: pp_scriptorium_price
     body: |2-

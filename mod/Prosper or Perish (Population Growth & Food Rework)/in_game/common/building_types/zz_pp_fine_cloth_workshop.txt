@@ -1,12 +1,13 @@
 ﻿# >>> eu5-building-pipeline:fine_cloth_workshop:building
 REPLACE:fine_cloth_workshop = {
+# manufacturing tiers 2026-10-06: tier 2, own methods x1.3 goods in and out, margin +0.05
 audio_tier = 2
 is_foreign = no
 pop_type = burghers
 max_levels = workshop_max_level
 startup_ramp_target = workshop_startup_ramp_target
 category = consumer_goods_category
-employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
+employment_size = 0.287   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.15
 town = yes
 city = yes
 megalopolis = yes
@@ -16,52 +17,42 @@ unique_production_methods = {
         icon_type = building_type
         icon = fine_cloth_workshop
         produced = fine_cloth
-        dyes = 0.13
-        manual_labor = 0.072
-        output = 0.12
+        dyes = 0.17
+        manual_labor = 0.09
+        output = 0.162
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_fine_cloth_workshop_alum_fine_cloth_workshop_maintenance = {
         icon_type = goods
         icon = alum
-        alum = 0.059
-        dyes = 0.26
-        manual_labor = 0.15
+        alum = 0.077
+        dyes = 0.338
+        manual_labor = 0.195
         produced = fine_cloth
-        output = 0.25
+        output = 0.34
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_fine_cloth_workshop_fur_trim_workshop_maintenance = {
         icon_type = goods
         icon = fur
-        fur = 0.62
-        manual_labor = 0.13
+        fur = 0.806
+        manual_labor = 0.169
         produced = fine_cloth
-        output = 0.25
+        output = 0.34
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
 }
 unique_production_methods = {
-    pp_fine_cloth_workshop_fine_cloth_workshop_maintenance = {
-        icon_type = goods
-        icon = cloth
-        cloth = 1.04
-        manual_labor = 0.35
-        produced = fine_cloth
-        output = 0.6
-        category = workshop_input
-        debug_max_profit = workshop_profit_margin
-    }
     pp_fine_cloth_workshop_wool_weavers_workshop_maintenance = {
         icon_type = goods
         icon = wool
-        wool = 1.25
-        manual_labor = 0.34
+        wool = 1.625
+        manual_labor = 0.442
         produced = fine_cloth
-        output = 0.6
+        output = 0.818
         category = workshop_input
         debug_max_profit = workshop_profit_margin
     }
@@ -74,20 +65,30 @@ unique_production_methods = {
                 has_variable = spanish_cloth_industry
             }
         }
-        wool = 1.25
-        manual_labor = 0.34
+        wool = 1.625
+        manual_labor = 0.442
         produced = fine_cloth
-        output = 0.6
+        output = 0.818
         debug_max_profit = workshop_profit_margin
         category = workshop_input
+    }
+    pp_fine_cloth_workshop_fine_cloth_workshop_maintenance = {
+        icon_type = goods
+        icon = cloth
+        cloth = 1.352
+        manual_labor = 0.455
+        produced = fine_cloth
+        output = 0.818
+        category = workshop_input
+        debug_max_profit = workshop_profit_margin
     }
     pp_fine_cloth_workshop_silk_weavers_workshop_maintenance = {
         icon_type = goods
         icon = silk
-        silk = 1.05
-        manual_labor = 0.47
+        silk = 1.365
+        manual_labor = 0.611
         produced = fine_cloth
-        output = 0.8
+        output = 1.091
         category = workshop_input
         debug_max_profit = workshop_profit_margin
     }
@@ -108,8 +109,19 @@ custom_tags = {
 }
 construction_demand = workshop_construction
 increase_per_level_cost = 0.14
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+modifier = {
+    local_fine_cloth_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
+raw_modifier = {
+	local_population_capacity = 0.215
+    local_pp_fine_cloth_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:fine_cloth_guild } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:fine_cloth_workshop:building

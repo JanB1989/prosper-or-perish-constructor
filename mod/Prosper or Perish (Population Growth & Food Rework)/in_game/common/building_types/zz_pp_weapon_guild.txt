@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:weapon_guild:building
 REPLACE:weapon_guild = {
+# manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
 is_foreign = no
 pop_type = burghers
 max_levels = guild_max_level
@@ -14,37 +15,37 @@ unique_production_methods = {
     pp_weapon_guild_pre_columbian_weapon_smith_maintenance = {
         icon_type = goods
         icon = stone
-        lumber = 0.06
-        stone = 0.86
-        manual_labor = 0.16
+        lumber = 0.042
+        stone = 0.602
+        manual_labor = 0.112
         produced = weaponry
-        output = 0.4
+        output = 0.28
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
     pp_weapon_guild_weapon_guild_obsidian_maintenance = {
         icon_type = goods
         icon = gems
-        lumber = 0.1
-        stone = 0.44
-        gems = 0.088
-        manual_labor = 0.16
+        lumber = 0.07
+        stone = 0.308
+        gems = 0.062
+        manual_labor = 0.112
         produced = weaponry
-        output = 0.4
+        output = 0.28
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
     pp_weapon_guild_weapon_smith_maintenance = {
         icon_type = goods
         icon = weaponry
-        lumber = 0.44 # hafts, shafts and bow staves
-        coal = 0.54 # forge fuel
-        tools = 0.14 # tools cut to a running cost (~15 %, arms making)
-        leather = 0.12 # grips, scabbards and straps
-        manual_labor = 0.41
+        lumber = 0.308 # hafts, shafts and bow staves
+        coal = 0.378 # forge fuel
+        tools = 0.098 # tools cut to a running cost (~15 %, arms making)
+        leather = 0.084 # grips, scabbards and straps
+        manual_labor = 0.287
         category = guild_input
         produced = weaponry
-        output = 1.0
+        output = 0.7
         debug_max_profit = guild_profit_margin
     }
 }
@@ -65,8 +66,12 @@ construction_demand = guild_construction
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.56
 price = pp_weapon_guild_price
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+modifier = {
+    local_weaponry_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
+raw_modifier = {
+	local_population_capacity = 0.225
+    local_pp_weaponry_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
 }
 # <<< eu5-building-pipeline:weapon_guild:building

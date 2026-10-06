@@ -1,81 +1,82 @@
 ﻿# >>> eu5-building-pipeline:distillers_workshop:building
 REPLACE:distillers_workshop = {
+# manufacturing tiers 2026-10-06: tier 2, own methods x1.3 goods in and out, margin +0.05
 audio_tier = 2
 is_foreign = no
 pop_type = burghers
 max_levels = workshop_max_level
 startup_ramp_target = workshop_startup_ramp_target
 category = consumer_goods_category
-employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
+employment_size = 0.287   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.15
 town = yes
 city = yes
 megalopolis = yes
 build_time = workshop_build_time
 construction_demand = workshop_construction
 unique_production_methods = {
-    pp_distillers_workshop_sugar_liquor_workshop_maintenance = {
-        icon_type = goods
-        icon = sugar
-        sugar = 0.67
-        glass = 0.078
-        manual_labor = 0.25
-        produced = liquor
-        output = 1.1
-        debug_max_profit = workshop_profit_margin
-        category = workshop_input
-    }
-    pp_distillers_workshop_rice_liquor_workshop_maintenance = {
-        icon_type = goods
-        icon = rice
-        rice = 1.97
-        glass = 0.091
-        manual_labor = 0.25
-        produced = liquor
-        output = 1.1
-        debug_max_profit = workshop_profit_margin
-        category = workshop_input
-    }
-    pp_distillers_workshop_potato_liquor_workshop_maintenance = {
-        icon_type = goods
-        icon = potato
-        potato = 1.97
-        glass = 0.091
-        manual_labor = 0.25
-        produced = liquor
-        output = 1.1
-        debug_max_profit = workshop_profit_margin
-        category = workshop_input
-    }
-    pp_distillers_workshop_wheat_liquor_workshop_maintenance = {
-        icon_type = goods
-        icon = wheat
-        wheat = 1.97
-        glass = 0.091
-        manual_labor = 0.25
-        produced = liquor
-        output = 1.1
-        debug_max_profit = workshop_profit_margin
-        category = workshop_input
-    }
     pp_distillers_workshop_beer_liquor_workshop_maintenance = {
         icon_type = goods
         icon = beer
-        beer = 0.95
-        glass = 0.11
-        manual_labor = 0.26
+        beer = 1.235
+        glass = 0.143
+        manual_labor = 0.338
         produced = liquor
-        output = 1.1
+        output = 1.495
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_distillers_workshop_wine_liquor_workshop_maintenance = {
         icon_type = goods
         icon = wine
-        wine = 0.95
-        glass = 0.11
-        manual_labor = 0.26
+        wine = 1.235
+        glass = 0.143
+        manual_labor = 0.338
         produced = liquor
-        output = 1.1
+        output = 1.495
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_distillers_workshop_sugar_liquor_workshop_maintenance = {
+        icon_type = goods
+        icon = sugar
+        sugar = 0.871
+        glass = 0.101
+        manual_labor = 0.325
+        produced = liquor
+        output = 1.495
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_distillers_workshop_rice_liquor_workshop_maintenance = {
+        icon_type = goods
+        icon = rice
+        rice = 2.561
+        glass = 0.118
+        manual_labor = 0.325
+        produced = liquor
+        output = 1.495
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_distillers_workshop_potato_liquor_workshop_maintenance = {
+        icon_type = goods
+        icon = potato
+        potato = 2.561
+        glass = 0.118
+        manual_labor = 0.325
+        produced = liquor
+        output = 1.495
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_distillers_workshop_wheat_liquor_workshop_maintenance = {
+        icon_type = goods
+        icon = wheat
+        wheat = 2.561
+        glass = 0.118
+        manual_labor = 0.325
+        produced = liquor
+        output = 1.495
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -95,8 +96,19 @@ custom_tags = {
 }
 obsolete = distillers_guild
 increase_per_level_cost = 0.11
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+modifier = {
+    local_liquor_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
+raw_modifier = {
+	local_population_capacity = 0.215
+    local_pp_liquor_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:distillers_guild } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:distillers_workshop:building

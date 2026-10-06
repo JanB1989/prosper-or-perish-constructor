@@ -20,54 +20,55 @@ building:
     - pp_tools_workshop_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 2, own methods x1.3 goods in and out, margin +0.05
     audio_tier = 2
     is_foreign = no
     pop_type = burghers
     max_levels = workshop_max_level
     startup_ramp_target = workshop_startup_ramp_target
     category = basic_industry_category
-    employment_size = 0.3
+    employment_size = 0.287   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.15
     town = yes
     city = yes
     megalopolis = yes
     build_time = workshop_build_time
     unique_production_methods = {
         pp_tools_workshop_metalwork_workshop_maintenance = {
-            iron = 0.79
-            manual_labor = 0.31
+            iron = 1.027
+            manual_labor = 0.403
             produced = tools
-            output = 1.1
+            output = 1.492
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_tools_workshop_legacy_stone_tools_guild_maintenance = {
             icon_type = goods
             icon = stone
-            stone = 0.49
-            manual_labor = 0.083
+            stone = 0.64
+            manual_labor = 0.11
             produced = tools
-            output = 0.21
+            output = 0.28
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_tools_workshop_legacy_copper_tools_guild_maintenance = {
             icon_type = goods
             icon = copper
-            copper = 0.37
-            manual_labor = 0.19
+            copper = 0.48
+            manual_labor = 0.24
             produced = tools
-            output = 0.46
+            output = 0.63
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_tools_workshop_legacy_bronze_tools_guild_maintenance = {
             icon_type = goods
             icon = tin
-            copper = 0.38
-            tin = 0.03
-            manual_labor = 0.19
+            copper = 0.49
+            tin = 0.04
+            manual_labor = 0.25
             produced = tools
-            output = 0.5
+            output = 0.67
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -83,6 +84,19 @@ building:
     construction_demand = workshop_construction
     obsolete = tools_guild
     increase_per_level_cost = 0.21
+    modifier = {
+        local_tools_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
+    raw_modifier = {
+        local_pp_tools_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:tools_guild } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 advancements:
 - key: TRY_INJECT:copperworking
   body: |-

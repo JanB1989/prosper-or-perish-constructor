@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:pottery_guild:building
 REPLACE:pottery_guild = {
+# manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
 is_foreign = no
 pop_type = burghers
 max_levels = guild_max_level
@@ -14,12 +15,12 @@ unique_production_methods = {
     pp_pottery_guild_pottery_maintenance = {
         icon_type = building_type
         icon = pottery_guild
-        clay = 0.93
-        lumber = 0.14 # kiln fuel
-        tools = 0.028 # tools cut to a running cost (~10 %)
-        manual_labor = 0.13
+        clay = 0.651
+        lumber = 0.098 # kiln fuel
+        tools = 0.02 # tools cut to a running cost (~10 %)
+        manual_labor = 0.091
         produced = pottery
-        output = 1.0
+        output = 0.7
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -38,8 +39,12 @@ construction_demand = guild_construction
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.34
 price = pp_pottery_guild_price
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+modifier = {
+    local_pottery_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
+raw_modifier = {
+	local_population_capacity = 0.225
+    local_pp_pottery_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
 }
 # <<< eu5-building-pipeline:pottery_guild:building

@@ -82,6 +82,35 @@
   ammunition, weaving and dyeing; the combined vanilla method split by goods cost, tin and lead restored); the leather
   line keeps tar in every tier (`labour.keep_goods: [tar]`: goods the labour pass never drops).
 
+## Manufacturing Tiers, Specialization Rights, Trade Buildings (2026-10-06, Jan)
+
+- Goal: production centres of institution countries out-produce old workshops and export; countries without the
+  institutions stay with small guilds and sell raw goods. Applied by hand-run one-off edits (no pass), tagged in every
+  touched body as `manufacturing tiers 2026-10-06` / `trade buildings 2026-10-06`.
+- The 16 refined end-good lines of `[legacy_methods.lines]` (all but dyes, paper, saltpeter, wine) plus the jewelry
+  guild, the rural cloth and glass makers: tier by max-level script value (guild-type = 1, `workshop_max_level` = 2,
+  `manufactory_max_level` = 3, `mills_max_level` = 4). Own methods (not legacy, not Market Sales) scaled goods in and
+  out: tier 1 x0.7, tier 2 x1.3 with margin +0.05, tier 3 x1.7 +0.10, tier 4 x2.0 +0.12 (default prices, labour 1).
+  Workers per level (after the employment cut): tier 2 x1.15 (0.287), tier 3 x1.3 (0.325 burghers, 1.04 laborers),
+  tier 4 x1.45 (1.16); these sizes are written directly, so the cut skips them. Stack malus in the staffed `modifier`:
+  `local_<good>_output_modifier` -0.005 (tier 1) / -0.0025 (tier 2) per level. The market village and the tatara
+  craft methods: x0.7 only.
+- Every line building counts its standing levels in `raw_modifier local_pp_<good>_line_levels` (modifier types
+  `pp_manufacturing_line_modifier_types.txt`). Tiers 2+ have `ai_construct_weight` 200 / (owner income + 10) where the
+  predecessor stands (the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001).
+- Specialization town rights (`town_rights/pp_specialization_town_rights.txt`): per good a charter (3 line levels, output
+  +0.15, efficiency -0.05) that upgrades to the rights (Printing Press embraced + `town_rights_enable`, 8 levels for
+  cloth / leather / pottery / glass / jewelry / books, 5 for the other lines; output +0.35, efficiency -0.10); one
+  specialization right per town (`pp_one_specialization_tt`). The AI values only the output line against the town's own
+  production, so it takes a right where that line dominates. The 18 vanilla bundled royal rights and charters are
+  `REPLACE`d with `potential = { always = no }`.
+- Trade buildings: merchants' quarters, customs house, entrepot need Printing Press embraced; grand marketplace,
+  commerce centre, trading hub, clearing house, stock exchange need Global Trade (`allow`, owner). Merchant capacity per
+  level: merchants' quarters 1.8 (+20 %), grand marketplace 3 (+50 %), commerce centre 7.2 (+80 %), added to vanilla's
+  line; their AI weight is 200 where the predecessor stands + 100 at the market centre, / (owner income + 10).
+- Also: `rural_building_cap` development term 0.15 -> 0.25 (mines, quarries, rural works); decentralization
+  `global_production_efficiency` -0.05 -> -0.07. Not tested in game.
+
 ## Store Lever
 
 - All stored-food effects ride ONE province modifier per whole stored month, `pp_food_store_0` .. `_24` ("Stored Food:

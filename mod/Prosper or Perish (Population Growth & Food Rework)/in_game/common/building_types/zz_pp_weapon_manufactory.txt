@@ -1,12 +1,13 @@
 ﻿# >>> eu5-building-pipeline:weapon_manufactory:building
 REPLACE:weapon_manufactory = {
+# manufacturing tiers 2026-10-06: tier 3, own methods x1.7 goods in and out, margin +0.1
 audio_tier = 3
 is_foreign = no
 pop_type = burghers
 max_levels = manufactory_max_level
 startup_ramp_target = manufactory_startup_ramp_target
 category = weapons_industry_category
-employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
+employment_size = 0.325   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.3
 town = yes
 city = yes
 megalopolis = yes
@@ -16,37 +17,37 @@ unique_production_methods = {
     pp_weapon_manufactory_weapon_manufactory_maintenance = {
         icon_type = building_type
         icon = weapon_manufactory
-        lumber = 0.73 # hafts and shafts
-        coal = 0.79 # forge and tempering fuel
-        iron = 0.47
-        tools = 0.27 # tools cut to a running cost (~15 %, arms making)
-        manual_labor = 0.45
+        lumber = 1.241 # hafts and shafts
+        coal = 1.343 # forge and tempering fuel
+        iron = 0.799
+        tools = 0.459 # tools cut to a running cost (~15 %, arms making)
+        manual_labor = 0.765
         category = manufactory_input
         produced = weaponry
-        output = 2.0
+        output = 3.73
         debug_max_profit = manufactory_profit_margin
     }
     pp_weapon_manufactory_legacy_pre_columbian_weapon_smith_maintenance = {
         icon_type = goods
         icon = stone
-        lumber = 0.07
-        stone = 1
-        manual_labor = 0.19
+        lumber = 0.12
+        stone = 1.7
+        manual_labor = 0.32
         produced = weaponry
-        output = 0.45
+        output = 0.84
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
     pp_weapon_manufactory_legacy_weapon_smith_maintenance = {
         icon_type = goods
         icon = weaponry
-        lumber = 0.47
-        coal = 0.58
-        tools = 0.15
-        leather = 0.13
-        manual_labor = 0.44
+        lumber = 0.8
+        coal = 0.98
+        tools = 0.25
+        leather = 0.22
+        manual_labor = 0.74
         produced = weaponry
-        output = 1.13
+        output = 2.1
         debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
@@ -66,8 +67,16 @@ custom_tags = {
 }
 construction_demand = manufactory_construction
 increase_per_level_cost = 0.19
-	raw_modifier = {
-		local_population_capacity = 0.165
-	}
+raw_modifier = {
+	local_population_capacity = 0.179
+    local_pp_weaponry_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:weapon_workshop } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:weapon_manufactory:building

@@ -17,6 +17,7 @@ building:
     - pp_porcelain_guild_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
     is_foreign = no
     pop_type = burghers
     max_levels = guild_max_level
@@ -29,12 +30,12 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_porcelain_guild_porcelain_guild_maintenance = {
-            clay = 2.62
-            coal = 0.52
-            tools = 0.052
-            manual_labor = 0.42
+            clay = 1.834
+            coal = 0.364
+            tools = 0.036
+            manual_labor = 0.294
             produced = porcelain
-            output = 1.0
+            output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -54,6 +55,12 @@ building:
     # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
     increase_per_level_cost = 0.75
     price = pp_porcelain_guild_price
+    modifier = {
+        local_porcelain_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
+    raw_modifier = {
+        local_pp_porcelain_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
 prices:
   - key: pp_porcelain_guild_price
     body: |2-

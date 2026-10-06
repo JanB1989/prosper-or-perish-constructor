@@ -17,13 +17,14 @@ building:
     - pp_naval_supplies_manufactory_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 3, own methods x1.7 goods in and out, margin +0.1
     audio_tier = 3
     is_foreign = no
     pop_type = burghers
     max_levels = manufactory_max_level
     startup_ramp_target = manufactory_startup_ramp_target
     category = weapons_industry_category
-    employment_size = 0.3
+    employment_size = 0.325   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.3
     town = yes
     city = yes
     megalopolis = yes
@@ -31,13 +32,13 @@ building:
     obsolete = naval_supplies_workshop
     unique_production_methods = {
         pp_naval_supplies_manufactory_naval_supplies_manufactory_maintenance = {
-            lumber = 0.97
-            fiber_crops = 0.72
-            tar = 0.72
-            cloth = 0.24
-            manual_labor = 0.41
+            lumber = 1.649
+            fiber_crops = 1.224
+            tar = 1.224
+            cloth = 0.408
+            manual_labor = 0.697
             produced = naval_supplies
-            output = 2.0
+            output = 3.723
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -55,6 +56,16 @@ building:
     }
     construction_demand = manufactory_construction
     increase_per_level_cost = 0.26
+    raw_modifier = {
+        local_pp_naval_supplies_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:naval_supplies_workshop } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 localization:
   entries:
     naval_supplies_manufactory_slot_0: Naval Supplies Manufactory Work

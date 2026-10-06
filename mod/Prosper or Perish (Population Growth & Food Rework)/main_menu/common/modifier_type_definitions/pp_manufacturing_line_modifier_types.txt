@@ -1,0 +1,123 @@
+﻿# Prosper or Perish - manufacturing line counters (manufacturing tiers 2026-10-06).
+# local_pp_<good>_line_levels: one per standing level of every building of that good's manufacturing line (guild,
+# workshop, manufactory, mill/factory; the rural cloth and glass makers; the jewelry guild), in raw_modifier. The
+# specialization town rights read it (pp_specialization_town_rights.txt).
+
+local_pp_cloth_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_fine_cloth_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_leather_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_pottery_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_furniture_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_glass_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_jewelry_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_porcelain_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_lacquerware_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_beer_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_liquor_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_books_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_tools_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_weaponry_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_firearms_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_cannons_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_naval_supplies_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}

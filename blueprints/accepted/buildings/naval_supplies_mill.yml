@@ -17,6 +17,7 @@ building:
     - pp_naval_supplies_mill_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 4, own methods x2.0 goods in and out, margin +0.12
     audio_tier = 5
     is_foreign = no
     pop_type = laborers
@@ -24,7 +25,7 @@ building:
     max_levels = mills_max_level
     startup_ramp_target = mills_startup_ramp_target
     category = weapons_industry_category
-    employment_size = 1.0
+    employment_size = 1.16   # manufacturing tiers 2026-10-06: 0.8 after the employment cut x1.45
     town = yes
     city = yes
     megalopolis = yes
@@ -32,13 +33,13 @@ building:
     obsolete = naval_supplies_manufactory
     unique_production_methods = {
         pp_naval_supplies_mill_naval_supplies_mill_maintenance = {
-            lumber = 2.19
-            fiber_crops = 1.64
-            tar = 1.64
-            cloth = 0.27
-            manual_labor = 0.51
+            lumber = 4.38
+            fiber_crops = 3.28
+            tar = 3.28
+            cloth = 0.54
+            manual_labor = 1.02
             produced = naval_supplies
-            output = 4.0
+            output = 8.937
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -56,9 +57,17 @@ building:
     }
     construction_demand = mill_construction
     raw_modifier = {
+        local_pp_naval_supplies_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
         local_burghers_desired_pop = 0.05
     }
     increase_per_level_cost = 0.26
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:naval_supplies_manufactory } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 localization:
   entries:
     naval_supplies_mill_slot_0: Naval Supplies Mill Work

@@ -21,12 +21,13 @@ building:
     - pp_iron_foundry_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 3, own methods x1.7 goods in and out, margin +0.1
     audio_tier = 3
     is_foreign = no
     pop_type = laborers
     max_levels = manufactory_max_level
     startup_ramp_target = manufactory_startup_ramp_target
-    employment_size = 1.0
+    employment_size = 1.04   # manufacturing tiers 2026-10-06: 0.8 after the employment cut x1.3
     category = basic_industry_category
     town = yes
     city = yes
@@ -34,52 +35,52 @@ building:
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_iron_foundry_iron_foundry_maintenance = {
-            iron = 1.33
-            coal = 0.33
-            manual_labor = 0.39
+            iron = 2.261
+            coal = 0.561
+            manual_labor = 0.663
             category = manufactory_input
             produced = tools
-            output = 2.0
+            output = 3.698
             debug_max_profit = manufactory_profit_margin
         }
         pp_iron_foundry_legacy_stone_tools_guild_maintenance = {
             icon_type = goods
             icon = stone
-            stone = 0.69
-            manual_labor = 0.12
+            stone = 1.17
+            manual_labor = 0.2
             produced = tools
-            output = 0.28
+            output = 0.52
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
         pp_iron_foundry_legacy_copper_tools_guild_maintenance = {
             icon_type = goods
             icon = copper
-            copper = 0.51
-            manual_labor = 0.26
+            copper = 0.87
+            manual_labor = 0.44
             produced = tools
-            output = 0.63
+            output = 1.16
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
         pp_iron_foundry_legacy_bronze_tools_guild_maintenance = {
             icon_type = goods
             icon = tin
-            copper = 0.52
-            tin = 0.042
-            manual_labor = 0.27
+            copper = 0.89
+            tin = 0.073
+            manual_labor = 0.45
             produced = tools
-            output = 0.67
+            output = 1.25
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
         pp_iron_foundry_legacy_metalwork_workshop_maintenance = {
             icon_type = building_type
             icon = tools_workshop
-            iron = 1.1
-            manual_labor = 0.43
+            iron = 1.87
+            manual_labor = 0.73
             produced = tools
-            output = 1.5
+            output = 2.77
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -95,6 +96,16 @@ building:
     obsolete = tools_workshop
     construction_demand = manufactory_construction
     increase_per_level_cost = 0.21
+    raw_modifier = {
+        local_pp_tools_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:tools_workshop } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 advancements:
 - key: TRY_INJECT:copperworking
   body: |-

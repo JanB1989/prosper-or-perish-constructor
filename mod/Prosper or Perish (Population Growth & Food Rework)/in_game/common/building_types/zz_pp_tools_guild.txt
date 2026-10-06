@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:tools_guild:building
 REPLACE:tools_guild = {
+# manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
 audio_tier = 1
 is_foreign = no
 pop_type = burghers
@@ -15,41 +16,41 @@ unique_production_methods = {
     pp_tools_guild_stone_tools_guild_maintenance = {
         icon_type = goods
         icon = stone
-        stone = 0.58
-        manual_labor = 0.098
+        stone = 0.406
+        manual_labor = 0.069
         produced = tools
-        output = 0.25
+        output = 0.175
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
     pp_tools_guild_copper_tools_guild_maintenance = {
         icon_type = goods
         icon = copper
-        copper = 0.45
-        manual_labor = 0.23
+        copper = 0.315
+        manual_labor = 0.161
         produced = tools
-        output = 0.56
+        output = 0.392
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
     pp_tools_guild_bronze_tools_guild_maintenance = {
         icon_type = goods
         icon = tin
-        copper = 0.47
-        tin = 0.038
-        manual_labor = 0.24
+        copper = 0.329
+        tin = 0.027
+        manual_labor = 0.168
         produced = tools
-        output = 0.6
+        output = 0.42
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
     pp_tools_guild_metalwork_guild_maintenance = {
         icon_type = goods
         icon = iron
-        iron = 0.72
-        manual_labor = 0.41
+        iron = 0.504
+        manual_labor = 0.287
         produced = tools
-        output = 1.0
+        output = 0.7
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -68,8 +69,12 @@ construction_demand = guild_construction
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.47
 price = pp_tools_guild_price
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+modifier = {
+    local_tools_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
+raw_modifier = {
+	local_population_capacity = 0.225
+    local_pp_tools_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
 }
 # <<< eu5-building-pipeline:tools_guild:building

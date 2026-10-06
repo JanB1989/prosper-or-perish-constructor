@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:hand_cannon_guild:building
 REPLACE:hand_cannon_guild = {
+# manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
 is_foreign = no
 pop_type = burghers
 max_levels = 1
@@ -13,13 +14,13 @@ unique_production_methods = {
     pp_hand_cannon_guild_hand_cannon_guild_maintenance = {
         icon_type = building_type
         icon = hand_cannon_guild
-        tools = 0.038 # tools cut to a running cost (~15 %, arms making)
-        saltpeter = 0.1
-        copper = 0.1
-        tin = 0.042 # more tin for a harder gunmetal bronze
-        manual_labor = 0.13
+        tools = 0.027 # tools cut to a running cost (~15 %, arms making)
+        saltpeter = 0.07
+        copper = 0.07
+        tin = 0.029 # more tin for a harder gunmetal bronze
+        manual_labor = 0.091
         produced = firearms
-        output = 0.3
+        output = 0.21
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -35,12 +36,15 @@ unique_production_methods = {
     }
 }
 construction_demand = guild_construction
-modifier = {}
+modifier = {
+    local_firearms_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.56
 price = pp_hand_cannon_guild_price
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+raw_modifier = {
+	local_population_capacity = 0.225
+    local_pp_firearms_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
 }
 # <<< eu5-building-pipeline:hand_cannon_guild:building

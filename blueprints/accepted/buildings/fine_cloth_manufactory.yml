@@ -24,13 +24,14 @@ building:
     - pp_fine_cloth_manufactory_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 3, own methods x1.7 goods in and out, margin +0.1
     audio_tier = 3
     is_foreign = no
     pop_type = burghers
     max_levels = manufactory_max_level
     startup_ramp_target = manufactory_startup_ramp_target
     category = consumer_goods_category
-    employment_size = 0.3
+    employment_size = 0.325   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.3
     town = yes
     city = yes
     megalopolis = yes
@@ -38,57 +39,57 @@ building:
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_fine_cloth_manufactory_standard_cloth_manufactory_maintenance = {
-            dyes = 0.24
-            manual_labor = 0.092
+            dyes = 0.408
+            manual_labor = 0.156
             produced = fine_cloth
-            output = 0.2
+            output = 0.37
             category = guild_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_fine_cloth_manufactory_alum_fine_cloth_manufactory_maintenance = {
             produced = fine_cloth
-            output = 0.4
-            dyes = 0.44
-            alum = 0.11
-            manual_labor = 0.16
+            output = 0.744
+            dyes = 0.748
+            alum = 0.187
+            manual_labor = 0.272
             category = guild_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_fine_cloth_manufactory_legacy_fur_trim_workshop_maintenance = {
             icon_type = goods
             icon = fur
-            fur = 0.76
-            manual_labor = 0.16
+            fur = 1.3
+            manual_labor = 0.27
             produced = fine_cloth
-            output = 0.3
+            output = 0.56
             debug_max_profit = manufactory_profit_margin
             category = guild_input
         }
     }
     unique_production_methods = {
         pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance = {
-            silk = 2.76
-            manual_labor = 0.81
+            silk = 4.692
+            manual_labor = 1.377
             produced = fine_cloth
-            output = 2.0
+            output = 3.736
             category = manufactory_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance = {
             produced = fine_cloth
-            cloth = 3.67
-            manual_labor = 0.84
-            output = 2.0
+            cloth = 6.239
+            manual_labor = 1.428
+            output = 3.736
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
         pp_fine_cloth_manufactory_legacy_wool_weavers_workshop_maintenance = {
             icon_type = goods
             icon = wool
-            wool = 2.4
-            manual_labor = 0.65
+            wool = 4.09
+            manual_labor = 1.1
             produced = fine_cloth
-            output = 1.12
+            output = 2.1
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -106,6 +107,16 @@ building:
     }
     construction_demand = guild_construction
     increase_per_level_cost = 0.19
+    raw_modifier = {
+        local_pp_fine_cloth_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:fine_cloth_workshop } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 localization:
   entries:
     fine_cloth_manufactory_slot_0: Fine Cloth Manufactory Work

@@ -70,11 +70,11 @@ def test_itinerant_court_seat_pays_jewelry_not_gold() -> None:
 
 
 def test_textile_mill_keeps_its_own_output() -> None:
-    # The mod balances the textile mill by profit per building at output 3 (cotton) / 2.5; EU5 1.4's output 4 is not
-    # merged.
+    # The mod balances the textile mill by profit per building (output 3 cotton / 2.5, then the manufacturing tiers of
+    # 2026-10-06: tier 4 x2.0 throughput, margin +0.12); EU5 1.4's output 4 is not merged.
     body = _blueprint("textile_mill")["building"]["body"]
     outputs = sorted(float(value) for value in re.findall(r"(?m)^\s*output = ([0-9.]+)\s*$", body))
-    assert outputs[-1] == 3.0
+    assert outputs[-1] == 6.697
 
 
 def test_maghreb_palm_irrigation_is_a_market_producer() -> None:

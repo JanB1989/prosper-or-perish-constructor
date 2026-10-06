@@ -21,6 +21,7 @@ building:
     - pp_brewery_mill_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 4, own methods x2.0 goods in and out, margin +0.12
     audio_tier = 5
     is_foreign = no
     pop_type = laborers
@@ -28,7 +29,7 @@ building:
     max_levels = mills_max_level
     startup_ramp_target = mills_startup_ramp_target
     category = consumer_goods_category
-    employment_size = 1.0
+    employment_size = 1.16   # manufacturing tiers 2026-10-06: 0.8 after the employment cut x1.45
     town = yes
     city = yes
     megalopolis = yes
@@ -36,59 +37,59 @@ building:
     obsolete = brewery_manufactory
     unique_production_methods = {
         pp_brewery_mill_brewery_mill_maintenance = {
-            lumber = 0.75 # casks, vats and malt kiln fuel
-            wheat = 5.4
-            tools = 0.24 # tools cut to a running cost (~10 %)
-            manual_labor = 0.3
+            lumber = 1.5 # casks, vats and malt kiln fuel
+            wheat = 10.8
+            tools = 0.48 # tools cut to a running cost (~10 %)
+            manual_labor = 0.6
             produced = beer
-            output = 4.0
+            output = 8.935
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
         pp_brewery_mill_legacy_fruit_beer_workshop_maintenance = {
             icon_type = goods
             icon = fruit
-            fruit = 2.01
-            lumber = 0.57
-            tools = 0.11
-            manual_labor = 0.34
+            fruit = 4.01
+            lumber = 1.13
+            tools = 0.23
+            manual_labor = 0.68
             produced = beer
-            output = 1.9
+            output = 4.25
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
         pp_brewery_mill_legacy_maize_beer_workshop_maintenance = {
             icon_type = goods
             icon = maize
-            maize = 2.71
-            pottery = 0.63
-            manual_labor = 0.36
+            maize = 5.42
+            pottery = 1.26
+            manual_labor = 0.73
             produced = beer
-            output = 1.9
+            output = 4.25
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
         pp_brewery_mill_legacy_millet_beer_workshop_maintenance = {
             icon_type = goods
             icon = millet
-            millet = 1.91
-            lumber = 0.6
-            tools = 0.11
-            manual_labor = 0.38
+            millet = 3.81
+            lumber = 1.21
+            tools = 0.23
+            manual_labor = 0.75
             produced = beer
-            output = 1.9
+            output = 4.25
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
         pp_brewery_mill_legacy_rice_beer_workshop_maintenance = {
             icon_type = goods
             icon = rice
-            rice = 1.91
-            lumber = 0.6
-            tools = 0.11
-            manual_labor = 0.38
+            rice = 3.81
+            lumber = 1.21
+            tools = 0.23
+            manual_labor = 0.75
             produced = beer
-            output = 1.9
+            output = 4.25
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -106,9 +107,17 @@ building:
     }
     construction_demand = mill_construction
     raw_modifier = {
+        local_pp_beer_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
         local_burghers_desired_pop = 0.05
     }
     increase_per_level_cost = 0.15
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:brewery_manufactory } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 localization:
   entries:
     brewery_mill_slot_0: Brewery Mill Work

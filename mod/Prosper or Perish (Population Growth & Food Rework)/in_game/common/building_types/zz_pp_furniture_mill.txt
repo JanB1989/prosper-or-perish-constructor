@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:furniture_mill:building
 REPLACE:furniture_mill = {
+# manufacturing tiers 2026-10-06: tier 4, own methods x2.0 goods in and out, margin +0.12
 audio_tier = 5
 is_foreign = no
 pop_type = laborers
@@ -7,7 +8,7 @@ is_mill = yes
 max_levels = mills_max_level
 startup_ramp_target = mills_startup_ramp_target
 category = consumer_goods_category
-employment_size = 0.8   # [building_scaling.employment_cut] reference 1
+employment_size = 1.16   # manufacturing tiers 2026-10-06: 0.8 after the employment cut x1.45
 town = yes
 city = yes
 megalopolis = yes
@@ -17,12 +18,12 @@ unique_production_methods = {
     pp_furniture_mill_furniture_mill_maintenance = {
         icon_type = building_type
         icon = furniture_mill
-        lumber = 4.66 # more timber per piece, machine offcuts
-        dyes = 0.51
-        tools = 0.36 # tools cut to a running cost (~10 %)
-        manual_labor = 0.48
+        lumber = 9.32 # more timber per piece, machine offcuts
+        dyes = 1.02
+        tools = 0.72 # tools cut to a running cost (~10 %)
+        manual_labor = 0.96
         produced = furniture
-        output = 4.0
+        output = 8.948
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -39,9 +40,17 @@ unique_production_methods = {
 }
 construction_demand = mill_construction
 raw_modifier = {
-	local_population_capacity = 0.4
+	local_population_capacity = 0.464
+    local_pp_furniture_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
     local_burghers_desired_pop = 0.05
 }
 increase_per_level_cost = 0.19
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:furniture_manufactory } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:furniture_mill:building

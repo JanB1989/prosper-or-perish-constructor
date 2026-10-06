@@ -23,6 +23,7 @@ building:
     - pp_brewery_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
     audio_tier = 1
     is_foreign = no
     pop_type = burghers
@@ -36,72 +37,72 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_brewery_wheat_brewery_maintenance = {
-            wheat = 0.95
-            lumber = 0.31 # casks, mash tun and fuel for the boil
-            tools = 0.06 # tools cut to a running cost (~10 %)
-            manual_labor = 0.28
+            wheat = 0.665
+            lumber = 0.217 # casks, mash tun and fuel for the boil
+            tools = 0.042 # tools cut to a running cost (~10 %)
+            manual_labor = 0.196
             produced = beer
-            output = 1.0
+            output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_brewery_millet_brewery_maintenance = {
-            millet = 0.95
-            lumber = 0.31 # casks, mash tun and fuel for the boil
-            tools = 0.06 # tools cut to a running cost (~10 %)
-            manual_labor = 0.28
+            millet = 0.665
+            lumber = 0.217 # casks, mash tun and fuel for the boil
+            tools = 0.042 # tools cut to a running cost (~10 %)
+            manual_labor = 0.196
             produced = beer
-            output = 1.0
+            output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_brewery_fruit_brewery_maintenance = {
-            fruit = 1
-            lumber = 0.27 # casks, vats and press timber
-            tools = 0.06 # tools cut to a running cost (~10 %)
-            manual_labor = 0.28
+            fruit = 0.7
+            lumber = 0.189 # casks, vats and press timber
+            tools = 0.042 # tools cut to a running cost (~10 %)
+            manual_labor = 0.196
             produced = beer
-            output = 1.0
+            output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_brewery_maize_brewery_maintenance = {
-            maize = 1.37
-            pottery = 0.29
-            manual_labor = 0.27
+            maize = 0.959
+            pottery = 0.203
+            manual_labor = 0.189
             produced = beer
-            output = 1.0
+            output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_brewery_honey_brewery_maintenance = {
-            beeswax = 0.25
-            millet = 0.5
-            lumber = 0.27 # casks, vats and fuel for the boil
-            tools = 0.06 # tools cut to a running cost (~10 %)
-            manual_labor = 0.28
+            beeswax = 0.175
+            millet = 0.35
+            lumber = 0.189 # casks, vats and fuel for the boil
+            tools = 0.042 # tools cut to a running cost (~10 %)
+            manual_labor = 0.196
             produced = beer
-            output = 1.0
+            output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_brewery_rice_brewery_maintenance = {
-            rice = 0.95
-            lumber = 0.31 # casks, steaming fuel and vats
-            tools = 0.06 # tools cut to a running cost (~10 %)
-            manual_labor = 0.28
+            rice = 0.665
+            lumber = 0.217 # casks, steaming fuel and vats
+            tools = 0.042 # tools cut to a running cost (~10 %)
+            manual_labor = 0.196
             produced = beer
-            output = 1.0
+            output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_brewery_bavarian_brewery_maintenance = {
-            wheat = 1.3
-            lumber = 0.29 # casks, mash tun and fuel for the boil
-            tools = 0.072 # tools cut to a running cost (~10 %)
-            manual_labor = 0.32
+            wheat = 0.91
+            lumber = 0.203 # casks, mash tun and fuel for the boil
+            tools = 0.05 # tools cut to a running cost (~10 %)
+            manual_labor = 0.224
             produced = beer
-            output = 1.2
+            output = 0.84
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
@@ -121,6 +122,12 @@ building:
     # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
     increase_per_level_cost = 0.45
     price = pp_brewery_price
+    modifier = {
+        local_beer_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
+    raw_modifier = {
+        local_pp_beer_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
 prices:
   - key: pp_brewery_price
     body: |2-

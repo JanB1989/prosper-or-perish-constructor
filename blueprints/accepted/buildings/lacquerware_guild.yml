@@ -17,6 +17,7 @@ building:
     - pp_lacquerware_guild_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
     is_foreign = no
     pop_type = burghers
     max_levels = guild_max_level
@@ -29,12 +30,12 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_lacquerware_guild_lacquerware_shop_maintenance = {
-            lumber = 1.14
-            dyes = 0.47
-            tools = 0.11
-            manual_labor = 0.73
+            lumber = 0.798
+            dyes = 0.329
+            tools = 0.077
+            manual_labor = 0.511
             produced = lacquerware
-            output = 1.0
+            output = 0.7
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
@@ -54,6 +55,12 @@ building:
     # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
     increase_per_level_cost = 0.75
     price = pp_lacquerware_guild_price
+    modifier = {
+        local_lacquerware_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
+    raw_modifier = {
+        local_pp_lacquerware_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
 prices:
   - key: pp_lacquerware_guild_price
     body: |2-

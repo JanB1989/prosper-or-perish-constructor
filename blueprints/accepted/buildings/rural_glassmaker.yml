@@ -17,6 +17,7 @@ building:
     - pp_rural_glassmaker_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
     audio_tier = 1
     is_foreign = no
     pop_type = laborers
@@ -34,10 +35,10 @@ building:
     build_time = rural_build_time
     unique_production_methods = {
         pp_rural_glassmaker_rural_glassmaker_maintenance = {
-            sand = 0.79
-            manual_labor = 0.13
+            sand = 0.553
+            manual_labor = 0.091
             produced = glass
-            output = 0.2
+            output = 0.14
             debug_max_profit = rural_profit_margin
             category = guild_input
         }
@@ -51,10 +52,15 @@ building:
         }
     }
     construction_demand = village_construction
-    modifier = {}
+    modifier = {
+        local_glass_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
     # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
     increase_per_level_cost = 0.45
     price = pp_rural_glassmaker_price
+    raw_modifier = {
+        local_pp_glass_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
 prices:
   - key: pp_rural_glassmaker_price
     body: |2-

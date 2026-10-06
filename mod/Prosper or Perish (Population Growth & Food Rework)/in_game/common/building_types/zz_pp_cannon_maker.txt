@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:cannon_maker:building
 REPLACE:cannon_maker = {
+# manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
 is_foreign = no
 pop_type = burghers
 max_levels = guild_max_level
@@ -14,33 +15,33 @@ unique_production_methods = {
     pp_cannon_maker_cannon_maker_ammunition_stone_maintenance = {
         icon_type = goods
         icon = stone
-        stone = 0.089
-        saltpeter = 0.089
-        manual_labor = 0.045
+        stone = 0.062
+        saltpeter = 0.062
+        manual_labor = 0.032
         produced = cannons
-        output = 0.087
+        output = 0.061
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
     pp_cannon_maker_cannon_maker_ammunition_lead_maintenance = {
         icon_type = goods
         icon = lead
-        lead = 0.095
-        saltpeter = 0.095
-        manual_labor = 0.064
+        lead = 0.067
+        saltpeter = 0.067
+        manual_labor = 0.045
         produced = cannons
-        output = 0.12
+        output = 0.084
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
     pp_cannon_maker_cannon_maker_ammunition_iron_maintenance = {
         icon_type = goods
         icon = iron
-        iron = 0.095
-        saltpeter = 0.095
-        manual_labor = 0.083
+        iron = 0.067
+        saltpeter = 0.067
+        manual_labor = 0.058
         produced = cannons
-        output = 0.16
+        output = 0.112
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -49,38 +50,38 @@ unique_production_methods = {
     pp_cannon_maker_cannon_maker_lumber_maintenance = {
         icon_type = goods
         icon = lumber
-        lumber = 0.092
-        iron = 0.034
-        tools = 0.015
-        manual_labor = 0.054
+        lumber = 0.064
+        iron = 0.024
+        tools = 0.011
+        manual_labor = 0.038
         produced = cannons
-        output = 0.1
+        output = 0.07
         category = guild_input
         debug_max_profit = guild_profit_margin
     }
     pp_cannon_maker_cannon_maker_bronze_maintenance = {
         icon_type = goods
         icon = copper
-        copper = 0.53
-        tin = 0.11
-        tools = 0.19 # tools cut to a running cost (~15 %, arms making)
-        lumber = 0.63 # charcoal for the casting furnace, mould frames and carriages
-        manual_labor = 0.58
+        copper = 0.371
+        tin = 0.077
+        tools = 0.133 # tools cut to a running cost (~15 %, arms making)
+        lumber = 0.441 # charcoal for the casting furnace, mould frames and carriages
+        manual_labor = 0.406
         produced = cannons
-        output = 1.0
+        output = 0.7
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
     pp_cannon_maker_cannon_maker_iron_maintenance = {
         icon_type = goods
         icon = iron
-        iron = 0.57
-        tools = 0.19 # tools cut to a running cost (~15 %, arms making)
-        coal = 0.3 # forge fuel for welding the hooped barrels
-        lumber = 0.18 # carriages and beds
-        manual_labor = 0.58
+        iron = 0.399
+        tools = 0.133 # tools cut to a running cost (~15 %, arms making)
+        coal = 0.21 # forge fuel for welding the hooped barrels
+        lumber = 0.126 # carriages and beds
+        manual_labor = 0.406
         produced = cannons
-        output = 1.0
+        output = 0.7
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
@@ -99,8 +100,12 @@ construction_demand = guild_construction
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.56
 price = pp_cannon_maker_price
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+modifier = {
+    local_cannons_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
+raw_modifier = {
+	local_population_capacity = 0.225
+    local_pp_cannons_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
 }
 # <<< eu5-building-pipeline:cannon_maker:building

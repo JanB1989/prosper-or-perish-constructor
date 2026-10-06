@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:textile_mill:building
 REPLACE:textile_mill = {
+# manufacturing tiers 2026-10-06: tier 4, own methods x2.0 goods in and out, margin +0.12
 audio_tier = 5
 is_foreign = no
 pop_type = laborers
@@ -7,7 +8,7 @@ is_mill = yes
 max_levels = mills_max_level
 startup_ramp_target = mills_startup_ramp_target
 category = consumer_goods_category
-employment_size = 0.8   # [building_scaling.employment_cut] reference 1
+employment_size = 1.16   # manufacturing tiers 2026-10-06: 0.8 after the employment cut x1.45
 town = yes
 city = yes
 megalopolis = yes
@@ -17,63 +18,63 @@ unique_production_methods = {
     pp_textile_mill_wool_mill_maintenance = {
         icon_type = goods
         icon = wool
-        wool = 2.28
-        dyes = 0.3
-        manual_labor = 0.31
+        wool = 4.56
+        dyes = 0.6
+        manual_labor = 0.62
         produced = cloth
-        output = 2.5
+        output = 5.577
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
     pp_textile_mill_fiber_crops_mill_maintenance = {
         icon_type = goods
         icon = fiber_crops
-        fiber_crops = 2.88
-        dyes = 0.29
-        manual_labor = 0.29
+        fiber_crops = 5.76
+        dyes = 0.58
+        manual_labor = 0.58
         produced = cloth
-        output = 2.5
+        output = 5.577
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
     pp_textile_mill_cotton_mill_maintenance = {
         icon_type = goods
         icon = cotton
-        cotton = 2.37
-        dyes = 0.32
-        manual_labor = 0.32
+        cotton = 4.74
+        dyes = 0.64
+        manual_labor = 0.64
         produced = cloth
-        output = 3.0
-        debug_max_profit = mills_profit_margin
+        output = 6.697
+        debug_max_profit = 0.006
         category = mills_input
     }
     pp_textile_mill_legacy_fiber_crops_cloth_workshop_maintenance = {
         icon_type = goods
         icon = fiber_crops
-        fiber_crops = 1.81
-        manual_labor = 0.39
+        fiber_crops = 3.61
+        manual_labor = 0.79
         produced = cloth
-        output = 1.38
+        output = 3.08
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
     pp_textile_mill_legacy_cotton_cloth_workshop_maintenance = {
         icon_type = goods
         icon = cotton
-        cotton = 1.47
-        manual_labor = 0.5
+        cotton = 2.93
+        manual_labor = 1
         produced = cloth
-        output = 1.69
+        output = 3.77
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
     pp_textile_mill_legacy_wool_cloth_workshop_maintenance = {
         icon_type = goods
         icon = wool
-        wool = 1.76
-        manual_labor = 0.5
+        wool = 3.52
+        manual_labor = 1
         produced = cloth
-        output = 1.69
+        output = 3.77
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -93,9 +94,17 @@ custom_tags = {
 }
 construction_demand = mill_construction
 raw_modifier = {
-	local_population_capacity = 0.4
+	local_population_capacity = 0.464
+    local_pp_cloth_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
     local_burghers_desired_pop = 0.05
 }
 increase_per_level_cost = 0.14
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:cloth_manufactory } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:textile_mill:building

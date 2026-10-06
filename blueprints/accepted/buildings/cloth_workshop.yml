@@ -12,20 +12,21 @@ building:
   - name: slot_0
     methods:
     - pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance
-    - pp_cloth_workshop_cotton_cloth_workshop_maintenance
     - pp_cloth_workshop_wool_cloth_workshop_maintenance
+    - pp_cloth_workshop_cotton_cloth_workshop_maintenance
   - name: slot_1
     methods:
     - pp_cloth_workshop_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 2, own methods x1.3 goods in and out, margin +0.05
     audio_tier = 2
     is_foreign = no
     pop_type = burghers
     max_levels = workshop_max_level
     startup_ramp_target = workshop_startup_ramp_target
     category = consumer_goods_category
-    employment_size = 0.3
+    employment_size = 0.287   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.15
     obsolete = cloth_guild
     town = yes
     city = yes
@@ -33,26 +34,26 @@ building:
     build_time = workshop_build_time
     unique_production_methods = {
         pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance = {
-            fiber_crops = 1.1
-            manual_labor = 0.24
+            fiber_crops = 1.43
+            manual_labor = 0.312
             produced = cloth
-            output = 0.9
+            output = 1.223
             category = workshop_input
             debug_max_profit = workshop_profit_margin
-        }
-        pp_cloth_workshop_cotton_cloth_workshop_maintenance = {
-            cotton = 0.91
-            manual_labor = 0.31
-            produced = cloth
-            output = 1.1
-            debug_max_profit = workshop_profit_margin
-            category = workshop_input
         }
         pp_cloth_workshop_wool_cloth_workshop_maintenance = {
-            wool = 1.09
-            manual_labor = 0.31
+            wool = 1.417
+            manual_labor = 0.403
             produced = cloth
-            output = 1.1
+            output = 1.496
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+        pp_cloth_workshop_cotton_cloth_workshop_maintenance = {
+            cotton = 1.183
+            manual_labor = 0.403
+            produced = cloth
+            output = 1.496
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -69,17 +70,29 @@ building:
     custom_tags = {
         workshop
     }
-    modifier = {}
+    modifier = {
+        local_cloth_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
     increase_per_level_cost = 0.19
+    raw_modifier = {
+        local_pp_cloth_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:cloth_guild } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 localization:
   entries:
     cloth_workshop_slot_0: Cloth Workshop Work
+    cloth_workshop_slot_1: Market
     pp_cloth_workshop_cotton_cloth_workshop_maintenance: Cloth Workshop Cotton Cloth Workshop Maintenance
     pp_cloth_workshop_wool_cloth_workshop_maintenance: Cloth Workshop Wool Cloth Workshop Maintenance
     pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance: Cloth Workshop Fiber Crops Cloth Workshop Maintenance
     pp_cloth_workshop_market_sales: Market Sales
     pp_cloth_workshop_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    cloth_workshop_slot_1: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.

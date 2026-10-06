@@ -19,6 +19,7 @@ building:
     - pp_tannery_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
     is_foreign = no
     pop_type = burghers
     max_levels = guild_max_level
@@ -31,24 +32,24 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_tannery_leather_guild_maintenance = {
-            livestock = 1.09
-            sand = 0.44
-            tar = 0.19 # birch tar and oils for currying the hides
-            tools = 0.09 # tools cut to a running cost (~10 %)
-            manual_labor = 0.44
+            livestock = 0.763
+            sand = 0.308
+            tar = 0.133 # birch tar and oils for currying the hides
+            tools = 0.063 # tools cut to a running cost (~10 %)
+            manual_labor = 0.308
             debug_max_profit = guild_profit_margin
             produced = leather
-            output = 1.0
+            output = 0.7
             category = guild_input
         }
         pp_tannery_tannery_maintenance = {
-            wild_game = 1.64
-            sand = 0.44
-            tar = 0.19 # birch tar and oils for currying the hides
-            tools = 0.09 # tools cut to a running cost (~10 %)
-            manual_labor = 0.43
+            wild_game = 1.148
+            sand = 0.308
+            tar = 0.133 # birch tar and oils for currying the hides
+            tools = 0.063 # tools cut to a running cost (~10 %)
+            manual_labor = 0.301
             produced = leather
-            output = 1.0
+            output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
@@ -68,6 +69,12 @@ building:
     # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
     increase_per_level_cost = 0.57
     price = pp_tannery_price
+    modifier = {
+        local_leather_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
+    raw_modifier = {
+        local_pp_leather_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
 prices:
   - key: pp_tannery_price
     body: |2-

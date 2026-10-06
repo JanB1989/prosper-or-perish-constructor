@@ -1,12 +1,13 @@
 ﻿# >>> eu5-building-pipeline:guns_workshop:building
 REPLACE:guns_workshop = {
+# manufacturing tiers 2026-10-06: tier 2, own methods x1.3 goods in and out, margin +0.05
 audio_tier = 2
 is_foreign = no
 pop_type = burghers
 max_levels = workshop_max_level
 startup_ramp_target = workshop_startup_ramp_target
 category = weapons_industry_category
-employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
+employment_size = 0.287   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.15
 town = yes
 city = yes
 megalopolis = yes
@@ -15,22 +16,22 @@ unique_production_methods = {
     pp_guns_workshop_guns_workshop_ammunition_lead_maintenance = {
         icon_type = goods
         icon = lead
-        lead = 0.11
-        saltpeter = 0.11
-        manual_labor = 0.04
+        lead = 0.143
+        saltpeter = 0.143
+        manual_labor = 0.052
         produced = firearms
-        output = 0.2
+        output = 0.27
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_guns_workshop_guns_workshop_ammunition_iron_maintenance = {
         icon_type = goods
         icon = iron
-        iron = 0.11
-        saltpeter = 0.11
-        manual_labor = 0.055
+        iron = 0.143
+        saltpeter = 0.143
+        manual_labor = 0.071
         produced = firearms
-        output = 0.25
+        output = 0.339
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -39,51 +40,51 @@ unique_production_methods = {
     pp_guns_workshop_guns_workshop_iron_maintenance = {
         icon_type = goods
         icon = iron
-        iron = 0.48
-        tools = 0.135 # tools cut to a running cost (~15 %, arms making)
-        lumber = 0.16 # wooden stocks
-        coal = 0.13 # forge fuel for welding the barrels
-        manual_labor = 0.3
+        iron = 0.624
+        tools = 0.175 # tools cut to a running cost (~15 %, arms making)
+        lumber = 0.208 # wooden stocks
+        coal = 0.169 # forge fuel for welding the barrels
+        manual_labor = 0.39
         produced = firearms
-        output = 1.0
+        output = 1.364
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_guns_workshop_guns_workshop_bronze_maintenance = {
         icon_type = goods
         icon = copper
-        copper = 0.54
-        tin = 0.11
-        tools = 0.15 # tools cut to a running cost (~15 %, arms making)
-        lumber = 0.35 # charcoal for the casting furnace, wooden stocks
-        manual_labor = 0.32
+        copper = 0.702
+        tin = 0.143
+        tools = 0.195 # tools cut to a running cost (~15 %, arms making)
+        lumber = 0.455 # charcoal for the casting furnace, wooden stocks
+        manual_labor = 0.416
         produced = firearms
-        output = 1.1
+        output = 1.501
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_guns_workshop_legacy_guns_guild_lumber_maintenance = {
         icon_type = goods
         icon = lumber
-        lumber = 0.1
-        iron = 0.029
-        tools = 0.013
-        manual_labor = 0.047
+        lumber = 0.13
+        iron = 0.038
+        tools = 0.017
+        manual_labor = 0.059
         produced = firearms
-        output = 0.12
+        output = 0.17
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_guns_workshop_legacy_hand_cannon_guild_maintenance = {
         icon_type = building_type
         icon = hand_cannon_guild
-        tools = 0.083
-        saltpeter = 0.22
-        copper = 0.22
-        tin = 0.092
-        manual_labor = 0.28
+        tools = 0.11
+        saltpeter = 0.28
+        copper = 0.28
+        tin = 0.12
+        manual_labor = 0.37
         produced = firearms
-        output = 0.62
+        output = 0.84
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -100,13 +101,23 @@ unique_production_methods = {
 }
 obsolete = gun_smith
 construction_demand = workshop_construction
-modifier = {}
+modifier = {
+    local_firearms_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
 custom_tags = {
     workshop
 }
 increase_per_level_cost = 0.19
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+raw_modifier = {
+	local_population_capacity = 0.215
+    local_pp_firearms_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:gun_smith } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:guns_workshop:building

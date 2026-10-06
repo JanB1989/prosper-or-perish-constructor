@@ -11,8 +11,8 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
-    - pp_iron_mill_iron_mill_maintenance
     - pp_iron_mill_steel_tools
+    - pp_iron_mill_iron_mill_maintenance
     - pp_iron_mill_legacy_stone_tools_guild_maintenance
     - pp_iron_mill_legacy_copper_tools_guild_maintenance
     - pp_iron_mill_legacy_bronze_tools_guild_maintenance
@@ -22,74 +22,75 @@ building:
     - pp_iron_mill_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 4, own methods x2.0 goods in and out, margin +0.12
     audio_tier = 5
     is_foreign = no
     pop_type = laborers
     is_mill = yes
     max_levels = mills_max_level
     startup_ramp_target = mills_startup_ramp_target
-    employment_size = 1.0
+    employment_size = 1.16   # manufacturing tiers 2026-10-06: 0.8 after the employment cut x1.45
     category = basic_industry_category
     town = yes
     city = yes
     megalopolis = yes
     build_time = mills_build_time
     unique_production_methods = {
-        pp_iron_mill_iron_mill_maintenance = {
-            iron = 2.81
-            coal = 0.7
-            manual_labor = 0.48
+        pp_iron_mill_steel_tools = {
+            steel = 4.5
+            manual_labor = 0.92
             category = mills_input
             produced = tools
-            output = 4.0
+            output = 8.865
             debug_max_profit = mills_profit_margin
         }
-        pp_iron_mill_steel_tools = {
-            steel = 2.25
-            manual_labor = 0.46
+        pp_iron_mill_iron_mill_maintenance = {
+            iron = 5.62
+            coal = 1.4
+            manual_labor = 0.96
             category = mills_input
             produced = tools
-            output = 4.0
+            output = 8.865
             debug_max_profit = mills_profit_margin
         }
         pp_iron_mill_legacy_stone_tools_guild_maintenance = {
             icon_type = goods
             icon = stone
-            stone = 1.06
-            manual_labor = 0.18
+            stone = 2.11
+            manual_labor = 0.36
             produced = tools
-            output = 0.42
+            output = 0.93
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
         pp_iron_mill_legacy_copper_tools_guild_maintenance = {
             icon_type = goods
             icon = copper
-            copper = 0.79
-            manual_labor = 0.4
+            copper = 1.58
+            manual_labor = 0.81
             produced = tools
-            output = 0.95
+            output = 2.09
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
         pp_iron_mill_legacy_bronze_tools_guild_maintenance = {
             icon_type = goods
             icon = tin
-            copper = 0.81
-            tin = 0.065
-            manual_labor = 0.41
+            copper = 1.61
+            tin = 0.13
+            manual_labor = 0.82
             produced = tools
-            output = 1.01
+            output = 2.24
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
         pp_iron_mill_legacy_metalwork_workshop_maintenance = {
             icon_type = building_type
             icon = tools_workshop
-            iron = 1.69
-            manual_labor = 0.66
+            iron = 3.38
+            manual_labor = 1.35
             produced = tools
-            output = 2.25
+            output = 4.99
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
@@ -105,9 +106,17 @@ building:
     obsolete = iron_foundry
     construction_demand = mill_construction
     raw_modifier = {
+        local_pp_tools_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
         local_burghers_desired_pop = 0.05
     }
     increase_per_level_cost = 0.21
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:iron_foundry } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 advancements:
 - key: TRY_INJECT:copperworking
   body: |-
@@ -115,11 +124,11 @@ advancements:
 localization:
   entries:
     iron_mill_slot_0: Iron Mill Work
+    iron_mill_slot_1: Market
     pp_iron_mill_iron_mill_maintenance: Iron Mill Iron Mill Maintenance
     pp_iron_mill_steel_tools: Iron Mill Steel Tools
     pp_iron_mill_market_sales: Market Sales
     pp_iron_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    iron_mill_slot_1: Market
     pp_iron_mill_legacy_bronze_tools_guild_maintenance: "$bronze_tools_guild_maintenance$ (Old Ways)"
     pp_iron_mill_legacy_bronze_tools_guild_maintenance_desc: "An older way of working, kept from the $tools_guild$. It still runs on its old materials, but turns out less per level than the methods of this age."
     pp_iron_mill_legacy_copper_tools_guild_maintenance: "$copper_tools_guild_maintenance$ (Old Ways)"

@@ -18,39 +18,40 @@ building:
     - pp_glass_workshop_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 2, own methods x1.3 goods in and out, margin +0.05
     audio_tier = 2
     is_foreign = no
     pop_type = burghers
     max_levels = workshop_max_level
     startup_ramp_target = workshop_startup_ramp_target
     category = basic_industry_category
-    employment_size = 0.3
+    employment_size = 0.287   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.15
     town = yes
     city = yes
     megalopolis = yes
     build_time = workshop_build_time
     unique_production_methods = {
         pp_glass_workshop_metal_glass_workshop_maintenance = {
-            lumber = 0.81 # furnace fuel and wood ash for potash flux
-            sand = 1.11
-            tools = 0.097 # tools cut to a running cost (~10 %)
-            lead = 0.27 # lead oxide flux for the lead glass
-            manual_labor = 0.33
+            lumber = 1.053 # furnace fuel and wood ash for potash flux
+            sand = 1.443
+            tools = 0.126 # tools cut to a running cost (~10 %)
+            lead = 0.351 # lead oxide flux for the lead glass
+            manual_labor = 0.429
             produced = glass
-            output = 1.1
+            output = 1.498
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_glass_workshop_legacy_glass_guild_maintenance = {
             icon_type = goods
             icon = glass
-            lumber = 0.45
-            sand = 0.73
-            tools = 0.054
-            clay = 0.4
-            manual_labor = 0.24
+            lumber = 0.59
+            sand = 0.95
+            tools = 0.071
+            clay = 0.53
+            manual_labor = 0.31
             produced = glass
-            output = 0.62
+            output = 0.84
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
@@ -69,6 +70,19 @@ building:
     }
     obsolete = glass_guild
     increase_per_level_cost = 0.15
+    modifier = {
+        local_glass_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
+    raw_modifier = {
+        local_pp_glass_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:glass_guild } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 localization:
   entries:
     glass_workshop_slot_0: Glass Workshop Work

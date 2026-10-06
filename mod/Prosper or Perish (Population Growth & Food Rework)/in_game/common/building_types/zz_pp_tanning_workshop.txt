@@ -1,40 +1,41 @@
 ﻿# >>> eu5-building-pipeline:tanning_workshop:building
 REPLACE:tanning_workshop = {
+# manufacturing tiers 2026-10-06: tier 2, own methods x1.3 goods in and out, margin +0.05
 audio_tier = 2
 is_foreign = no
 pop_type = burghers
 max_levels = workshop_max_level
 startup_ramp_target = workshop_startup_ramp_target
 category = basic_industry_category
-employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
+employment_size = 0.287   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.15
 town = yes
 city = yes
 megalopolis = yes
 build_time = workshop_build_time
 unique_production_methods = {
-    pp_tanning_workshop_leather_livestock_workshop_maintenance = {
-        icon_type = goods
-        icon = livestock
-        livestock = 1.19
-        sand = 0.46
-        tar = 0.24 # birch tar and oils for currying the hides
-        tools = 0.095 # tools cut to a running cost (~10 %)
-        manual_labor = 0.3
-        produced = leather
-        output = 1.1
-        debug_max_profit = workshop_profit_margin
-        category = workshop_input
-    }
     pp_tanning_workshop_leather_wildgame_workshop_maintenance = {
         icon_type = goods
         icon = wild_game
-        wild_game = 1.8
-        sand = 0.45
-        tar = 0.22 # birch tar and oils for currying the hides
-        tools = 0.095 # tools cut to a running cost (~10 %)
-        manual_labor = 0.32
+        wild_game = 2.34
+        sand = 0.585
+        tar = 0.286 # birch tar and oils for currying the hides
+        tools = 0.123 # tools cut to a running cost (~10 %)
+        manual_labor = 0.416
         produced = leather
-        output = 1.1
+        output = 1.497
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_tanning_workshop_leather_livestock_workshop_maintenance = {
+        icon_type = goods
+        icon = livestock
+        livestock = 1.547
+        sand = 0.598
+        tar = 0.312 # birch tar and oils for currying the hides
+        tools = 0.123 # tools cut to a running cost (~10 %)
+        manual_labor = 0.39
+        produced = leather
+        output = 1.497
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -55,8 +56,19 @@ custom_tags = {
 }
 construction_demand = workshop_construction
 increase_per_level_cost = 0.14
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+modifier = {
+    local_leather_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
+raw_modifier = {
+	local_population_capacity = 0.215
+    local_pp_leather_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:tannery } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:tanning_workshop:building

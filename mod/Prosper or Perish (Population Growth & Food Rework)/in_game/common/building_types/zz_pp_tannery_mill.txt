@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:tannery_mill:building
 REPLACE:tannery_mill = {
+# manufacturing tiers 2026-10-06: tier 4, own methods x2.0 goods in and out, margin +0.12
 audio_tier = 5
 is_foreign = no
 pop_type = laborers
@@ -7,7 +8,7 @@ is_mill = yes
 max_levels = mills_max_level
 startup_ramp_target = mills_startup_ramp_target
 category = basic_industry_category
-employment_size = 0.8   # [building_scaling.employment_cut] reference 1
+employment_size = 1.16   # manufacturing tiers 2026-10-06: 0.8 after the employment cut x1.45
 town = yes
 city = yes
 megalopolis = yes
@@ -16,26 +17,26 @@ unique_production_methods = {
     pp_tannery_mill_leather_mill_maintenance = {
         icon_type = goods
         icon = livestock
-        livestock = 5.33
-        sand = 2.22
-        tar = 0.55 # tar and oils for currying and waterproof finishes
-        tools = 0.36 # tools cut to a running cost (~10 %)
-        manual_labor = 0.48
+        livestock = 10.66
+        sand = 4.44
+        tar = 1.1 # tar and oils for currying and waterproof finishes
+        tools = 0.72 # tools cut to a running cost (~10 %)
+        manual_labor = 0.96
         produced = leather
-        output = 4.0
+        output = 8.948
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
     pp_tannery_mill_tannery_mill_maintenance = {
         icon_type = goods
         icon = wild_game
-        wild_game = 8.24
-        sand = 2.06
-        tar = 0.48 # tar and oils for currying and waterproof finishes
-        tools = 0.36 # tools cut to a running cost (~10 %)
-        manual_labor = 0.46
+        wild_game = 16.48
+        sand = 4.12
+        tar = 0.96 # tar and oils for currying and waterproof finishes
+        tools = 0.72 # tools cut to a running cost (~10 %)
+        manual_labor = 0.92
         produced = leather
-        output = 4.0
+        output = 8.949
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -56,9 +57,17 @@ custom_tags = {
 }
 construction_demand = mill_construction
 raw_modifier = {
-	local_population_capacity = 0.4
+	local_population_capacity = 0.464
+    local_pp_leather_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
     local_burghers_desired_pop = 0.05
 }
 increase_per_level_cost = 0.14
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:tannery_manufactory } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:tannery_mill:building

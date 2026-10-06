@@ -18,13 +18,14 @@ building:
     - pp_pottery_manufactory_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 3, own methods x1.7 goods in and out, margin +0.1
     audio_tier = 3
     is_foreign = no
     pop_type = burghers
     max_levels = manufactory_max_level
     startup_ramp_target = manufactory_startup_ramp_target
     category = basic_industry_category
-    employment_size = 0.3
+    employment_size = 0.325   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.3
     town = yes
     city = yes
     megalopolis = yes
@@ -32,25 +33,25 @@ building:
     obsolete = pottery_workshop
     unique_production_methods = {
         pp_pottery_manufactory_pottery_manufactory_maintenance = {
-            clay = 1.06
-            lumber = 0.2 # kiln fuel and drying racks
-            tools = 0.038 # tools cut to a running cost (~10 %)
-            coal = 0.08 # coal-fired kilns
-            manual_labor = 0.069
+            clay = 1.802
+            lumber = 0.34 # kiln fuel and drying racks
+            tools = 0.065 # tools cut to a running cost (~10 %)
+            coal = 0.136 # coal-fired kilns
+            manual_labor = 0.117
             produced = pottery
-            output = 1.5
+            output = 2.76
             category = manufactory_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_pottery_manufactory_legacy_pottery_w_maintenance = {
             icon_type = building_type
             icon = pottery_workshop
-            clay = 0.99
-            lumber = 0.14
-            tools = 0.028
-            manual_labor = 0.09
+            clay = 1.69
+            lumber = 0.24
+            tools = 0.047
+            manual_labor = 0.15
             produced = pottery
-            output = 1.13
+            output = 2.07
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
         }
@@ -65,6 +66,16 @@ building:
     }
     construction_demand = manufactory_construction
     increase_per_level_cost = 0.15
+    raw_modifier = {
+        local_pp_pottery_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:pottery_workshop } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 localization:
   entries:
     pottery_manufactory_slot_0: Pottery Manufactory Work

@@ -1,12 +1,13 @@
 ﻿# >>> eu5-building-pipeline:furniture_workshop:building
 REPLACE:furniture_workshop = {
+# manufacturing tiers 2026-10-06: tier 2, own methods x1.3 goods in and out, margin +0.05
 audio_tier = 2
 is_foreign = no
 pop_type = burghers
 max_levels = workshop_max_level
 startup_ramp_target = workshop_startup_ramp_target
 category = consumer_goods_category
-employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
+employment_size = 0.287   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.15
 town = yes
 city = yes
 megalopolis = yes
@@ -15,12 +16,12 @@ unique_production_methods = {
     pp_furniture_workshop_furniture_workshop_maintenance = {
         icon_type = building_type
         icon = furniture_workshop
-        lumber = 1.13 # finer timber and veneers, more offcuts
-        dyes = 0.13
-        tools = 0.095 # tools cut to a running cost (~10 %)
-        manual_labor = 0.28
+        lumber = 1.469 # finer timber and veneers, more offcuts
+        dyes = 0.169
+        tools = 0.123 # tools cut to a running cost (~10 %)
+        manual_labor = 0.364
         produced = furniture
-        output = 1.1
+        output = 1.497
         debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
@@ -38,8 +39,19 @@ unique_production_methods = {
 obsolete = furniture_guild
 construction_demand = workshop_construction
 increase_per_level_cost = 0.19
-	raw_modifier = {
-		local_population_capacity = 0.225
-	}
+modifier = {
+    local_furniture_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
+}
+raw_modifier = {
+	local_population_capacity = 0.215
+    local_pp_furniture_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+}
+# manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+# AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+ai_construct_weight = {
+    value = 0
+    if = { limit = { has_building = building_type:furniture_guild } add = 200 }
+    divide = { value = scope:owner.monthly_income_total add = 10 }
+}
 }
 # <<< eu5-building-pipeline:furniture_workshop:building

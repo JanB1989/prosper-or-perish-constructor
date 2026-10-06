@@ -16,22 +16,23 @@ building:
     - pp_fine_cloth_workshop_fur_trim_workshop_maintenance
   - name: slot_1
     methods:
-    - pp_fine_cloth_workshop_fine_cloth_workshop_maintenance
     - pp_fine_cloth_workshop_wool_weavers_workshop_maintenance
     - pp_fine_cloth_workshop_spanish_cloth_workshop_maintenance
+    - pp_fine_cloth_workshop_fine_cloth_workshop_maintenance
     - pp_fine_cloth_workshop_silk_weavers_workshop_maintenance
   - name: slot_2
     methods:
     - pp_fine_cloth_workshop_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 2, own methods x1.3 goods in and out, margin +0.05
     audio_tier = 2
     is_foreign = no
     pop_type = burghers
     max_levels = workshop_max_level
     startup_ramp_target = workshop_startup_ramp_target
     category = consumer_goods_category
-    employment_size = 0.3
+    employment_size = 0.287   # manufacturing tiers 2026-10-06: 0.25 after the employment cut x1.15
     town = yes
     city = yes
     megalopolis = yes
@@ -39,44 +40,36 @@ building:
     unique_production_methods = {
         pp_fine_cloth_workshop_standard_fine_cloth_workshop_maintenance = {
             produced = fine_cloth
-            dyes = 0.13
-            manual_labor = 0.072
-            output = 0.12
+            dyes = 0.17
+            manual_labor = 0.09
+            output = 0.162
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_fine_cloth_workshop_alum_fine_cloth_workshop_maintenance = {
-            alum = 0.059
-            dyes = 0.26
-            manual_labor = 0.15
+            alum = 0.077
+            dyes = 0.338
+            manual_labor = 0.195
             produced = fine_cloth
-            output = 0.25
+            output = 0.34
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_fine_cloth_workshop_fur_trim_workshop_maintenance = {
-            fur = 0.62
-            manual_labor = 0.13
+            fur = 0.806
+            manual_labor = 0.169
             produced = fine_cloth
-            output = 0.25
+            output = 0.34
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
     }
     unique_production_methods = {
-        pp_fine_cloth_workshop_fine_cloth_workshop_maintenance = {
-            cloth = 1.04
-            manual_labor = 0.35
-            produced = fine_cloth
-            output = 0.6
-            category = workshop_input
-            debug_max_profit = workshop_profit_margin
-        }
         pp_fine_cloth_workshop_wool_weavers_workshop_maintenance = {
-            wool = 1.25
-            manual_labor = 0.34
+            wool = 1.625
+            manual_labor = 0.442
             produced = fine_cloth
-            output = 0.6
+            output = 0.818
             category = workshop_input
             debug_max_profit = workshop_profit_margin
         }
@@ -87,18 +80,26 @@ building:
                     has_variable = spanish_cloth_industry
                 }
             }
-            wool = 1.25
-            manual_labor = 0.34
+            wool = 1.625
+            manual_labor = 0.442
             produced = fine_cloth
-            output = 0.6
+            output = 0.818
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
-        pp_fine_cloth_workshop_silk_weavers_workshop_maintenance = {
-            silk = 1.05
-            manual_labor = 0.47
+        pp_fine_cloth_workshop_fine_cloth_workshop_maintenance = {
+            cloth = 1.352
+            manual_labor = 0.455
             produced = fine_cloth
-            output = 0.8
+            output = 0.818
+            category = workshop_input
+            debug_max_profit = workshop_profit_margin
+        }
+        pp_fine_cloth_workshop_silk_weavers_workshop_maintenance = {
+            silk = 1.365
+            manual_labor = 0.611
+            produced = fine_cloth
+            output = 1.091
             category = workshop_input
             debug_max_profit = workshop_profit_margin
         }
@@ -117,10 +118,24 @@ building:
     }
     construction_demand = workshop_construction
     increase_per_level_cost = 0.19
+    modifier = {
+        local_fine_cloth_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
+    }
+    raw_modifier = {
+        local_pp_fine_cloth_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
+    }
+    # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
+    # AI barely upgraded; 200 / (income + 10) where the predecessor stands, like the farm upgrades
+    ai_construct_weight = {
+        value = 0
+        if = { limit = { has_building = building_type:fine_cloth_guild } add = 200 }
+        divide = { value = scope:owner.monthly_income_total add = 10 }
+    }
 localization:
   entries:
     fine_cloth_workshop_slot_0: Fine Cloth Workshop Work
     fine_cloth_workshop_slot_1: Fine Cloth Workshop Work
+    fine_cloth_workshop_slot_2: Market
     pp_fine_cloth_workshop_fine_cloth_workshop_maintenance: Fine Cloth Workshop Fine Cloth Workshop Maintenance
     pp_fine_cloth_workshop_wool_weavers_workshop_maintenance: Fine Cloth Workshop Wool Weavers Workshop Maintenance
     pp_fine_cloth_workshop_silk_weavers_workshop_maintenance: Fine Cloth Workshop Silk Weavers Workshop Maintenance
@@ -130,7 +145,6 @@ localization:
     pp_fine_cloth_workshop_fur_trim_workshop_maintenance: Fine Cloth Workshop Fur Trim Workshop Maintenance
     pp_fine_cloth_workshop_market_sales: Market Sales
     pp_fine_cloth_workshop_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    fine_cloth_workshop_slot_2: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.

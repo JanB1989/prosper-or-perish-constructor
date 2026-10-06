@@ -18,6 +18,7 @@ building:
     - pp_tatara_market_sales
   possible_production_methods: []
   body: |
+    # manufacturing tiers 2026-10-06: tier 1, own methods x0.7 goods in and out
     audio_tier = 2
     is_special = yes
     is_foreign = yes
@@ -60,17 +61,17 @@ building:
     unique_production_methods = {
         pp_tatara_tamagahane_bladesmith = {
             produced = weaponry
-            output = 0.2
-            iron = 0.13
-            manual_labor = 0.13
+            output = 0.14
+            iron = 0.088
+            manual_labor = 0.1
             debug_max_profit = rural_profit_margin
             category = guild_input
         }
         pp_tatara_tamagahane_blacksmith = {
             produced = tools
-            output = 0.5
-            iron = 0.31
-            manual_labor = 0.37
+            output = 0.35
+            iron = 0.217
+            manual_labor = 0.259
             debug_max_profit = rural_profit_margin
             category = guild_input
         }

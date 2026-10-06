@@ -77,6 +77,10 @@ NAI = {
 	TRADE_ORDER_FOOD_EXPORT_SELF_STOP_FRACTION = 0 # 0.5; a market's own-food exports never stop for a low market stock
 	TRADE_ORDER_FOOD_EXPORT_SELF_CANCEL_FRACTION = 0 # 0.25; a market's own-food exports are never cancelled for a low market stock
 	AI_SAVING_MODE_ALLOWED_INFLATION_MODIFIER_HIGH = 7 # Mult max allowed inflation by this much when in high saving mode
+	# Town rights test (2026-10-06, branch town-rights): the AI only swaps a held town right for a better one in a full
+	# location when this roll passes. Vanilla does not set it (0), so the AI never switched a right in 445 years of
+	# saves. 1.0 = always try the swap when it scores (best - 2 x worst held + revoke and grant costs > 0.25).
+	AI_TOWN_RIGHTS_REPLACE_CHANCE = 1.0 # not in vanilla (0)
 }
 
 NEconomy = {

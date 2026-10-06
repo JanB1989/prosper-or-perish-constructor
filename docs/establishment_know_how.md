@@ -81,3 +81,50 @@ Findings:
   RGO and estate buildings, and incumbents run at 1.08.
 - Engine values hold in the run: ~92 % of craft levels fully established, ~97 % at full output; the cap of 3 ramping
   buildings binds in 20-40 locations.
+
+## v2 (ef11fde2): mastery weight for the AI, craft output 0.8
+
+- Producing methods of the 64 craft buildings make 0.8 of the old output (mastered 0.96).
+-  on each of them, only where the location already has the building (expansion): 0.2 x best
+  own output x market price x min(market access, 1) x sqrt(owner gold + 100) x 0.2845. Script cannot read a
+  building's establishment (only interface data functions exist), so the weight goes to every standing building; ~89 %
+  of craft levels are fully established, so it is mostly the mastered ones.
+- K fitted in game on twin buildings (copies of six craft buildings with 1.2x output vs copies with the weight, same
+  location and pass): the AI values +20 % output at about +20 % of the candidate's own utility; median weight / true
+  value 1.08, Spearman 0.33 (country state dominates). .
+- Run D = v2 from the same start save as B, 1337-1612 (playthrough 057c295e).
+
+D vs B vs C at 1602:
+
+| metric | D | B | C | D vs C |
+| --- | --- | --- | --- | --- |
+| top-10 locations' share of staffed craft capacity | 11.5 % | 6.9 % | 9.8 % | +18 % |
+| craft levels in markets >= 2x world mix | 9.1 % | 6.4 % | 9.3 % | -2 % |
+| final craft goods traded between markets | 781 | 902 | 608 | +28 % |
+| traded / supply | 3.6 % | 3.1 % | 3.0 % | +21 % |
+| final craft goods supply | 21,870 | 29,451 | 20,590 | +6 % |
+| craft price / default | 1.09 | 1.08 | 1.05 | +4 % |
+| staffed craft capacity (k workers) | 5,164 | 6,846 | 4,728 | +9 % |
+| levels per craft building | 2.94 | 2.53 | 2.06 | +43 % |
+| new / gone craft buildings per 5 years (1582-1602) | 496 / 369 | 555 / 377 | 179 / 46 | |
+| location wealth per 1k people | 198 | 267 | 168 | +18 % |
+| burghers | 7.33 M | 9.17 M | 7.15 M | +3 % |
+| population | 554 | 533 | 536 | +3 % |
+
+Findings:
+- The economy no longer explodes: craft supply +6 %, staffed capacity +9 %, burghers +3 % (B: +43 %, +45 %, +28 %).
+  Wealth per capita +18 % (B +59 %); most of it is price, not output (1422: craft profit equal on 24 % fewer workers;
+  villages, RGO and rural workshops earn more on dearer cloth, glass, beer).
+- Concentration in locations holds all game (top-10 share +57 % 1422, +35 % 1482, +18 % 1602; B fell below the
+  baseline after 1480); workshops are deeper (2.94 levels). Market-level specialization stays at the baseline.
+- The AI reacts to the weight: a working mastered workshop gains a level within 5 years 45-65 % more often than in B
+  in the profitable half (2-3 % vs 1-2 %); new workshops expand far more often (~13 %) in both runs.
+- Churn stays: 4,956 of 8,888 new workshops gone by 1592, 2,886 of them at age 5-9 (right after the grace), 80 % with
+  no workers, median profit 0. The AI keeps founding level-1 workshops in markets that cannot carry them; without the
+  cleanup they would sit empty (baseline: ~2,500).
+- Trade: crafts traded +28 % (mass goods 3-6x: tools, weaponry, beer, wine, pottery, furniture); luxuries fell
+  (fine cloth 61 vs 137, porcelain and lacquerware supply a third of C's). Traded share follows the base price
+  (Spearman 0.54-0.68); every craft has transport cost 1 in PP (vanilla 0.5 for most). World merchant capacity grows
+  ~40 % over 260 years in C while goods supply doubles (capacity per 100 units of supply 5.0 -> 3.2), use 92-95 % by
+  1560: crafts compete with raw goods for a shrinking share; one unit = one capacity, the AI ranks trades by profit per
+  (transport cost x path cost), maintenance 0.25 flat per unit.

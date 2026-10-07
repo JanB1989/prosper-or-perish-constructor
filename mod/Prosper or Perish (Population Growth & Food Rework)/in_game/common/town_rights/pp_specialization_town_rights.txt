@@ -2,7 +2,7 @@
 # Charter: no institution, at least 3 levels of the good's line in the town; output +0.15, production efficiency -0.05.
 # Rights (upgrade of the charter): Printing Press embraced and the town rights advance of the Age of Discovery, at least
 # 8 levels (cloth, leather, pottery, glass, jewelry, books) or 5 (the other lines); output +0.35,
-# production efficiency -0.1. One specialization right per town. The AI values only the output line against what the
+# production efficiency -0.05. One specialization right per town. The AI values only the output line against what the
 # town already makes, so it takes a right where that line dominates the town.
 # The vanilla bundled specialization rights and charters are switched off below.
 
@@ -123,7 +123,7 @@ pp_cloth_rights = {
 
 	location_modifier = {
 		local_cloth_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_cloth
@@ -246,7 +246,7 @@ pp_fine_cloth_rights = {
 
 	location_modifier = {
 		local_fine_cloth_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_fine_cloth
@@ -369,7 +369,7 @@ pp_leather_rights = {
 
 	location_modifier = {
 		local_leather_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_leather
@@ -492,7 +492,7 @@ pp_pottery_rights = {
 
 	location_modifier = {
 		local_pottery_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_pottery
@@ -615,7 +615,7 @@ pp_furniture_rights = {
 
 	location_modifier = {
 		local_furniture_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_furniture
@@ -738,7 +738,7 @@ pp_glass_rights = {
 
 	location_modifier = {
 		local_glass_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_glass
@@ -861,7 +861,7 @@ pp_jewelry_rights = {
 
 	location_modifier = {
 		local_jewelry_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_jewelry
@@ -984,7 +984,7 @@ pp_porcelain_rights = {
 
 	location_modifier = {
 		local_porcelain_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_porcelain
@@ -1107,7 +1107,7 @@ pp_lacquerware_rights = {
 
 	location_modifier = {
 		local_lacquerware_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_lacquerware
@@ -1230,7 +1230,7 @@ pp_beer_rights = {
 
 	location_modifier = {
 		local_beer_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_beer
@@ -1353,7 +1353,7 @@ pp_liquor_rights = {
 
 	location_modifier = {
 		local_liquor_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_liquor
@@ -1476,7 +1476,7 @@ pp_books_rights = {
 
 	location_modifier = {
 		local_books_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_books
@@ -1599,7 +1599,7 @@ pp_tools_rights = {
 
 	location_modifier = {
 		local_tools_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_tools
@@ -1722,7 +1722,7 @@ pp_weaponry_rights = {
 
 	location_modifier = {
 		local_weaponry_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_weaponry
@@ -1845,7 +1845,7 @@ pp_firearms_rights = {
 
 	location_modifier = {
 		local_firearms_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_firearms
@@ -1968,7 +1968,7 @@ pp_cannons_rights = {
 
 	location_modifier = {
 		local_cannons_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_cannons
@@ -2091,7 +2091,7 @@ pp_naval_supplies_rights = {
 
 	location_modifier = {
 		local_naval_supplies_output_modifier = 0.35
-		local_production_efficiency = -0.1
+		local_production_efficiency = -0.05
 	}
 
 	color = goods_naval_supplies

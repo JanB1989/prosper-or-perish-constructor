@@ -12,7 +12,9 @@ writes `graphs/report/<run>/`:
   promotions, countries), drawn by Apache ECharts (loaded from
   jsDelivr) from the JSON embedded in the page. It only references files next to it and the chart library;
 - `icons/<good>.png` - the goods icons (the built mod's, else the game's DDS, 40 px): goods appear as icons in
-  heatmap axes, tables and the goods-group legends, with the name on hover.
+  heatmap axes, tables and the goods-group legends, with the name on hover;
+- `goods.html` + `goods/` - the goods page (`run_report_goods`): for every good, save and world region what makes it
+  and what uses it, by building and production method, as a flow chart and tables, linked from the report's nav.
 
 Before reading the run, the report brings two derived parts of the dataset up to date: the building investment
 table and the engine-only tables (trade routes, merchants, country economy) of snapshots ingested before the
@@ -1323,6 +1325,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
 td.wide{min-width:240px;color:var(--muted);font-size:12px} td.pos{color:var(--pos)} td.neg{color:var(--neg)}
 .more{display:block;margin:8px 16px 0;font:inherit;font-size:13px;background:none;border:none;color:var(--accent);cursor:pointer;padding:0}
 a{color:var(--accent)} footer{margin-top:40px;font-size:12px;color:var(--muted)}
+nav a.goodslink{background:var(--accent);color:#fff}
 img.gi{width:18px;height:18px;vertical-align:-4px} td.good{white-space:nowrap} td.good img.gi{margin-right:6px}
 td.goods{white-space:nowrap} td.goods .gv{display:inline-block;margin-right:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 td.goods .gv img.gi{margin-right:3px}
@@ -1607,6 +1610,7 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
     in_sections = {key for keys in section_videos.values() for key in keys}
     world_maps = "".join(_video_card(m) for m in maps if m["key"] not in in_sections)
     sections, nav = [], ["<a href='#maps'>Maps</a>"]
+    goods_link = "<a href='goods.html' class=goodslink>Goods: what makes and uses them →</a>" if (out / "goods.html").is_file() else ""
     for key, title, lead in SECTIONS:
         charts = [c for c in payload["charts"] if c["section"] == key]
         tables = [t for t in payload["tables"] if t["section"] == key]
@@ -1628,7 +1632,7 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
 <h1>{esc(run.name)}</h1>
 <div class=muted>Prosper or Perish · observer run {start}–{end} · {run.snapshots.height} saves</div>
 <div class=tiles>{tile_html}</div>
-<nav>{''.join(nav)}</nav>
+<nav>{goods_link}{''.join(nav)}</nav>
 <h2 id=maps>Maps</h2><p class=lead>One frame per save.</p><div class=grid>{world_maps}</div>
 {''.join(sections)}
 <footer>Generated {datetime.now().strftime('%Y-%m-%d %H:%M')} by <code>ppc report</code> from {run.snapshots.height} saves. Charts: Apache ECharts.</footer>
@@ -1691,11 +1695,16 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
                                       good_icon_sources(repo, project), out, log)
     payload = build_payload(run)
     log(f"charts: {len(payload['charts'])}, tables: {len(payload['tables'])}")
+    from prosper_or_perish_constructor.run_report_goods import write_goods_page  # imports this module
+
+    write_goods_page(run, out, repo=repo, project=project, dataset=dataset,
+                     cache=out_root / ".goods_cache" / run.playthrough_id, log=log)
     page = write_page(run, out, maps, payload)
     (out / "report.json").write_text(json.dumps({
         "playthrough_id": run.playthrough_id, "name": run.name, "years": run.years, "saves": run.snapshots.height,
         "maps": maps, "charts": [{"key": c["key"], "section": c["section"], "title": c["title"]} for c in payload["charts"]],
         "tables": [{"key": t["key"], "section": t["section"], "title": t["title"]} for t in payload["tables"]],
+        "goods_page": (out / "goods.html").is_file(),
     }, indent=2), encoding="utf-8")
     log(f"report written to {page} ({page.stat().st_size / 1e6:.1f} MB) in {time.perf_counter() - started:.1f}s")
     return page

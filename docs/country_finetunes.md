@@ -17,6 +17,16 @@ Hand-tuned changes for single countries, one entry each: what and why.
   Why: Castile conquered Portugal in every game; +100 opinion for 150 years and +200 for 100 years did not stop it.
 - **France +3 diplomatic reputation** (2026-10-06, `pp_estate_privilege_adjustments.txt`, Great Offices of the Crown).
   Why: Jan's call, on the same privilege as the noble tax; vanilla privileges give at most +2.
+- **Colonizers daisy-chain down Africa** (2026-10-07, `area_preferences/pp_colonizer_preferences.txt`,
+  `on_action/pp_country_finetunes.txt`, `scripted_effects/pp_area_preference_effects.txt`). For AI POR, CAS/SPA,
+  ENG/GBR, FRA, HOL/NED, one day after vanilla's setup at game start and every new age: vanilla's
+  `avoid_african_colonization` (all of continent Africa, which also holds the sea lanes along it) becomes
+  `pp_colonizer_avoid_africa` (-0.9 on the African land areas without the stations), plus +5 preferences by age:
+  POR route west + Madeira/Azores (age 2), route round the Cape + Cape Verde + St Helena (age 3); CAS/SPA Canaries
+  (age 2); ENG/FRA/HOL route west + round the Cape (age 4); ENG St Helena (age 4), the Cape (age 6); FRA Mascarenes
+  (age 5); HOL the Cape + Mascarenes (age 5). Why: no colonizer ever explored down Africa (in 1458 Portugal and Castile
+  had the exploration advances and idle explorers but explored nothing); the India and Asia events need the route
+  discovered. No events, only AI desire. Not tested in game.
 - **Ottomans recover from defeat; Anatolia before the Balkans** (2026-10-07, not tested in game).
   `advances/pp_country_advances_adjustments.txt`: Seljuk Heritage (age 1) +war exhaustion -0.05/month, stability cost
   efficiency +20 %, rebel growth -0.1 %/month; Timariots (age 2) and Ottoman Bureaucracy (age 3) +5 % max control each.

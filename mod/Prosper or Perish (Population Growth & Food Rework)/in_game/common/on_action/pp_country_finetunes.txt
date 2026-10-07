@@ -3,6 +3,128 @@ on_game_start = {
 	on_actions = {
 		pp_country_finetune_start_gold
 		pp_country_finetune_area_preferences
+		delay = { days = 1 }
+		pp_colonizer_area_preferences
+	}
+}
+
+# Vanilla's setup_area_preferences re-adds avoid_african_colonization at every new age; the day's delay runs this
+# after it.
+on_new_age_global = {
+	on_actions = {
+		delay = { days = 1 }
+		pp_colonizer_area_preferences
+	}
+}
+
+# Colonizers daisy-chain down Africa (area_preferences/pp_colonizer_preferences.txt): vanilla's avoid-all-Africa
+# (which also covers the sea lanes) becomes PP's land-only list without the stations; each nation gets its historical
+# sea route and island/Cape stations one age at a time.
+pp_colonizer_area_preferences = {
+	effect = {
+		every_country = {
+			limit = {
+				is_ai = yes
+				OR = {
+					tag = POR
+					tag = CAS
+					tag = SPA
+					tag = ENG
+					tag = GBR
+					tag = FRA
+					tag = HOL
+					tag = NED
+				}
+			}
+			if = {
+				limit = { has_area_preference = avoid_african_colonization }
+				remove_area_preference = avoid_african_colonization
+			}
+			pp_add_area_preference_once = { preference = pp_colonizer_avoid_africa }
+			# Portugal: Madeira and the Azores, then Cape Verde, St Helena and the Cape route to India.
+			if = {
+				limit = {
+					tag = POR
+					current_age_or_later = { age = age_2_renaissance }
+				}
+				pp_add_area_preference_once = { preference = pp_route_west_africa }
+				pp_add_area_preference_once = { preference = pp_station_madeira_azores }
+			}
+			if = {
+				limit = {
+					tag = POR
+					current_age_or_later = { age = age_3_discovery }
+				}
+				pp_add_area_preference_once = { preference = pp_route_cape_to_india }
+				pp_add_area_preference_once = { preference = pp_station_cape_verde }
+				pp_add_area_preference_once = { preference = pp_station_st_helena }
+			}
+			# Castile/Spain: the Canaries only (its way to Asia runs over the Americas and the Pacific).
+			if = {
+				limit = {
+					OR = {
+						tag = CAS
+						tag = SPA
+					}
+					current_age_or_later = { age = age_2_renaissance }
+				}
+				pp_add_area_preference_once = { preference = pp_station_canaries }
+			}
+			# England, France, Holland: the sea route to India from the Age of Reformation.
+			if = {
+				limit = {
+					NOR = {
+						tag = POR
+						tag = CAS
+						tag = SPA
+					}
+					current_age_or_later = { age = age_4_reformation }
+				}
+				pp_add_area_preference_once = { preference = pp_route_west_africa }
+				pp_add_area_preference_once = { preference = pp_route_cape_to_india }
+			}
+			# England/Great Britain: St Helena, then the Cape.
+			if = {
+				limit = {
+					OR = {
+						tag = ENG
+						tag = GBR
+					}
+					current_age_or_later = { age = age_4_reformation }
+				}
+				pp_add_area_preference_once = { preference = pp_station_st_helena }
+			}
+			if = {
+				limit = {
+					OR = {
+						tag = ENG
+						tag = GBR
+					}
+					current_age_or_later = { age = age_6_revolutions }
+				}
+				pp_add_area_preference_once = { preference = pp_station_cape }
+			}
+			# France: the Mascarenes.
+			if = {
+				limit = {
+					tag = FRA
+					current_age_or_later = { age = age_5_absolutism }
+				}
+				pp_add_area_preference_once = { preference = pp_station_mascarenes }
+			}
+			# Holland/the Netherlands: the Cape and Mauritius.
+			if = {
+				limit = {
+					OR = {
+						tag = HOL
+						tag = NED
+					}
+					current_age_or_later = { age = age_5_absolutism }
+				}
+				pp_add_area_preference_once = { preference = pp_station_cape }
+				pp_add_area_preference_once = { preference = pp_station_mascarenes }
+			}
+		}
 	}
 }
 

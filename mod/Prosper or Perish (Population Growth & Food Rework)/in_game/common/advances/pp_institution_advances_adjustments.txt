@@ -8,6 +8,26 @@ TRY_REPLACE:printing_press_advance = {
 	research_speed_modifier = 0.05 # was global_max_literacy = 10
 	merchant_maintenance_efficiency = 0.10 # 2026-10-07, Jan: a little cheaper trade for the printing countries
 
+	# specialization rights (2026-10-07): a rights type with no unlocking advance counts as unlocked from the start, and
+	# the engine never grants a charter whose upgrade is unlocked, so the charters were never granted (run 43dbb336)
+	unlock_town_rights = pp_cloth_rights
+	unlock_town_rights = pp_fine_cloth_rights
+	unlock_town_rights = pp_leather_rights
+	unlock_town_rights = pp_pottery_rights
+	unlock_town_rights = pp_furniture_rights
+	unlock_town_rights = pp_glass_rights
+	unlock_town_rights = pp_jewelry_rights
+	unlock_town_rights = pp_porcelain_rights
+	unlock_town_rights = pp_lacquerware_rights
+	unlock_town_rights = pp_beer_rights
+	unlock_town_rights = pp_liquor_rights
+	unlock_town_rights = pp_books_rights
+	unlock_town_rights = pp_tools_rights
+	unlock_town_rights = pp_weaponry_rights
+	unlock_town_rights = pp_firearms_rights
+	unlock_town_rights = pp_cannons_rights
+	unlock_town_rights = pp_naval_supplies_rights
+
 	depth = 0
 	allow = { has_embraced_institution = institution:printing_press }
 }

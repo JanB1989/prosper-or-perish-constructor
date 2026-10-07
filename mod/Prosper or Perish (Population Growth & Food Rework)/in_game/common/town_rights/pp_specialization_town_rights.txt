@@ -1,6 +1,7 @@
 ﻿# Prosper or Perish - specialization town rights, one per refined end good (manufacturing tiers 2026-10-06, Jan).
 # Charter: no institution, at least 3 levels of the good's line in the town; output +0.15, production efficiency -0.05.
-# Rights (upgrade of the charter): Printing Press embraced and the town rights advance of the Age of Discovery, at least
+# Rights (upgrade of the charter): unlocked by the Printing Press advance (Printing Press embraced); until then only the
+# charter can be granted, afterwards a charter upgrades and new towns take the rights directly. At least
 # 8 levels (cloth, leather, pottery, glass, jewelry, books) or 5 (the other lines); output +0.35,
 # production efficiency -0.05. One specialization right per town. The AI values only the output line against what the
 # town already makes, so it takes a right where that line dominates the town.
@@ -70,7 +71,6 @@ pp_cloth_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -193,7 +193,6 @@ pp_fine_cloth_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -316,7 +315,6 @@ pp_leather_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -439,7 +437,6 @@ pp_pottery_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -562,7 +559,6 @@ pp_furniture_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -685,7 +681,6 @@ pp_glass_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -808,7 +803,6 @@ pp_jewelry_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -931,7 +925,6 @@ pp_porcelain_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -1054,7 +1047,6 @@ pp_lacquerware_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -1177,7 +1169,6 @@ pp_beer_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -1300,7 +1291,6 @@ pp_liquor_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -1423,7 +1413,6 @@ pp_books_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -1546,7 +1535,6 @@ pp_tools_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -1669,7 +1657,6 @@ pp_weaponry_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -1792,7 +1779,6 @@ pp_firearms_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -1915,7 +1901,6 @@ pp_cannons_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 
@@ -2038,7 +2023,6 @@ pp_naval_supplies_rights = {
 	is_specialization = yes
 
 	potential = {
-		has_advance = town_rights_enable
 		has_embraced_institution = institution:printing_press
 	}
 

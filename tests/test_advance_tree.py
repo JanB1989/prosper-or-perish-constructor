@@ -81,7 +81,11 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
     # trade (2026-10-07, Jan): a little cheaper merchants for the printing countries
     "printing_press_advance": (
         {"global_max_literacy = 10"},
-        {"research_speed_modifier = 0.05", "merchant_maintenance_efficiency = 0.1"},
+        {"research_speed_modifier = 0.05", "merchant_maintenance_efficiency = 0.1"}
+        # specialization rights (2026-10-07): unlocked here, so their charters can be granted before
+        | {f"unlock_town_rights = pp_{good}_rights" for good in (
+            "cloth", "fine_cloth", "leather", "pottery", "furniture", "glass", "jewelry", "porcelain", "lacquerware",
+            "beer", "liquor", "books", "tools", "weaponry", "firearms", "cannons", "naval_supplies")},
     ),
     # trade (2026-10-07, Jan): Global Trade countries' long hauls use a bit less merchant capacity
     "global_trade_advance": (set(), {"trade_sea_efficiency = 0.15", "trade_range_modifier = 0.1"}),

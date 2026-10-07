@@ -210,8 +210,9 @@
 - Readers: the store curve (every staple food), `[logistics] bulky_staples` (one share per staple food; `ppc logistics
   check` reports a missing one), the crop allocation's staple crops (`grains` is gone), the Cookshop cap counters and
   the employment tag `pp_staple_food_priority`, Seasonal Harvests (`[exempt] staple_groups = ["animals"]` in
-  variable_harvests.toml: the harvests leave the staple animals alone; the generator's input file is gone, so the
-  generated modifiers were trimmed by hand), the Colonial Nation output bonus (every raw good but the staple foods).
+  variable_harvests.toml: the harvests leave the staple animals alone; the generator runs again without its old input file, the
+  reviewed tier overrides name every tier; strength since 2026-10-07: max_abs_output_modifier 0.33, a third of 1.00;
+  peasant food consumption unchanged), the Colonial Nation output bonus (every raw good but the staple foods).
 - Every building that makes a staple food runs Provisioning (`provisioning.py`): the flocks since 2026-10-04 (Provision
   with Mutton, buying their wool back at 2.5) and the Maghreb palm groves and the English royal forest at reference
   size (one-level specials without a base slot). `tests/test_staple_foods.py` pins the list, the makers (Provision,

@@ -115,6 +115,9 @@ def _regions_by_subcontinent(
 
 def _read_location_output_values(path: Path) -> dict[str, dict[str, float]]:
     location_values: dict[str, dict[str, float]] = {}
+    if not path.is_file():
+        # the old per-location output file is gone; [reviewed_tier_overrides] name every tier
+        return location_values
     current: str | None = None
     values: dict[str, float] = {}
     block_re = re.compile(r"^(pp_loc_[A-Za-z0-9_]+)\s*=\s*\{\s*$")

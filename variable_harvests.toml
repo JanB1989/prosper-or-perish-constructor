@@ -155,7 +155,8 @@ very_poor = 0.11
 abysmal = 0.20
 
 [output_scaling]
-max_abs_output_modifier = 1.00
+# 2026-10-07 (Jan): a third of the old 1.00; peasant food consumption unchanged
+max_abs_output_modifier = 0.33
 
 [exempt]
 # 2026-10-04 (Jan): the harvests do not touch the staple animals (livestock, fish, wild_game, wool: the staple_group
@@ -179,7 +180,7 @@ goods = ["fruit", "olives", "wine"]
 goods = ["cocoa", "coffee", "tea", "sugar", "silk", "incense", "saffron", "pepper", "cloves", "chili", "medicaments"]
 
 [families.resilient]
-goods = ["potato", "livestock", "wool", "beeswax", "horses", "elephants"]
+goods = ["potato", "livestock", "wool", "beeswax", "horses", "elephants", "camels"]
 
 [families.wild_coastal]
 goods = ["fish", "fur", "wild_game"]

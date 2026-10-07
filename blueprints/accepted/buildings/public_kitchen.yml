@@ -24,6 +24,7 @@ building:
         - pp_public_kitchen_kheer_serve
         - pp_public_kitchen_livestock_pottage_serve
         - pp_public_kitchen_pemmican_serve
+        - pp_public_kitchen_camel_stew_serve
         - pp_public_kitchen_labskaus_serve
         - pp_public_kitchen_khichdi_serve
         - pp_public_kitchen_fish_congee_serve
@@ -139,6 +140,15 @@ building:
     			output = 0.59
     			category = building_maintenance
     		}
+    		pp_public_kitchen_camel_stew_serve = {
+    			camels = 0.15
+    			salt = 0.014
+    			manual_labor = 0.039
+    			produced = offset
+    			output = 0.59
+    			category = building_maintenance
+    		}
+
     		pp_public_kitchen_labskaus_serve = {
     			potato = 0.069
     			fish = 0.11
@@ -148,7 +158,6 @@ building:
     			output = 0.592
     			category = building_maintenance
     		}
-
     		# --- ASIA ---
     		pp_public_kitchen_khichdi_serve = {
     			rice = 0.25
@@ -325,6 +334,7 @@ localization:
     pp_public_kitchen_desc: Towns organize large kitchens with kettles, stores and paid crews that feed workers and the poor every day.
     pp_public_kitchen_beer: Beer
     pp_public_kitchen_boreal_hunter_stew_serve: Serve Boreal Hunter's Stew
+    pp_public_kitchen_camel_stew_serve: Serve Camel Stew
     pp_public_kitchen_chocolate: Chocolate
     pp_public_kitchen_coffee: Coffee
     pp_public_kitchen_fish_congee_serve: Serve Fish Congee

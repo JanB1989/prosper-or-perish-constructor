@@ -1144,7 +1144,7 @@ bulky_half_goods = ["lumber"] # get half the class cut
 # new farms go to the quieter land around it. Grain and pulses are heavy sacks, potatoes heavier and quick to spoil,
 # fish travels in salt barrels, fruit bruises and spoils, game spoils unless smoked, olives travel as oil, wool in
 # light bales, livestock walks to market.
-bulky_staples = { wheat = 0.5, rice = 0.5, millet = 0.5, maize = 0.5, legumes = 0.5, potato = 0.75, olives = 0.35, livestock = 0.25, fish = 0.5, fruit = 0.6, wild_game = 0.4, wool = 0.25 }
+bulky_staples = { wheat = 0.5, rice = 0.5, millet = 0.5, maize = 0.5, legumes = 0.5, potato = 0.75, olives = 0.35, livestock = 0.25, fish = 0.5, fruit = 0.6, wild_game = 0.4, wool = 0.25, camels = 0.2 }
 pop_type = "laborers"
 employment_size = 1
 flavour = { local_institution_growth_modifier = 0.05, local_supply_limit_modifier = 0.05, local_disease_resistance = -0.05 }  # per level, in modifier
@@ -1234,5 +1234,5 @@ local_defensive = 0.24     # defensiveness: +24 % at 24 months, 2 % per month ab
 # takes the line out of the crop output modifier it reads as land quality (pp_stored_food_staple_line).
 province_food_share = { 0 = 1.0, 6 = 0.8, 12 = 0.65, 18 = 0.5, 24 = 0.4 }
 staple_per_province_food = -0.40
-staple_per_province_food_by_good = { fish = -0.20, fruit = -0.21, wild_game = -0.14, wool = -0.23 }
+staple_per_province_food_by_good = { fish = -0.20, fruit = -0.21, wild_game = -0.14, wool = -0.23, camels = -0.16 }
 

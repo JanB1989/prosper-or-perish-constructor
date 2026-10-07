@@ -104,6 +104,17 @@ increase_per_level_cost = 0.10
 			output = 0.59
 			category = building_maintenance
 		}
+		pp_public_kitchen_camel_stew_serve = {
+			icon_type = building_type
+			icon = public_kitchen
+			camels = 0.15
+			salt = 0.014
+			manual_labor = 0.039
+			produced = offset
+			output = 0.59
+			category = building_maintenance
+		}
+
 		pp_public_kitchen_labskaus_serve = {
 			icon_type = building_type
 			icon = public_kitchen
@@ -115,7 +126,6 @@ increase_per_level_cost = 0.10
 			output = 0.592
 			category = building_maintenance
 		}
-
 		# --- ASIA ---
 		pp_public_kitchen_khichdi_serve = {
 			icon_type = building_type

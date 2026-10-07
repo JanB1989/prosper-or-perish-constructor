@@ -90,6 +90,7 @@ PROVISIONED_GOOD_BY_FAMILY: dict[str, str] = {
     "fruit_orchard": "fruit",
     "forest_village": "wild_game",
     "sheep_farms": "wool",
+    "camel_herders": "camels",
     **CROP_FARM_FAMILY_GOODS,
 }
 
@@ -110,6 +111,9 @@ PROVISIONED_GOOD_BY_BUILDING: dict[str, str] = {
     "sheep_farms": "wool",
     "hurdled_sheepcotes": "wool",
     "enclosed_sheep_walks": "wool",
+    # camels are a staple animal since 2026-10-07 (Jan): pastoralists lived on camel milk and meat
+    "camel_herders": "camels",
+    "camel_stud": "camels",
     "maghreb_palm_irrigation": "fruit",
     "eng_royal_forest": "wild_game",
     **CROP_FARM_GOODS,
@@ -117,7 +121,8 @@ PROVISIONED_GOOD_BY_BUILDING: dict[str, str] = {
 PROVISIONING_BUILDINGS: tuple[str, ...] = tuple(PROVISIONED_GOOD_BY_BUILDING)
 
 # Market price of a provisioned good where it is not 1 (the Provision input is the same gold of the good per level).
-PROVISIONED_GOOD_PRICES: dict[str, Decimal] = {"livestock": Decimal("1.5"), "wool": Decimal("2.5")}
+PROVISIONED_GOOD_PRICES: dict[str, Decimal] = {
+    "livestock": Decimal("1.5"), "wool": Decimal("2.5"), "camels": Decimal("3")}
 
 
 def provisioned_good_price(good: str) -> Decimal:
@@ -129,6 +134,7 @@ GOOD_WORDS: dict[str, tuple[str, str]] = {
     "fruit": ("Fruit", "fruit"),
     "wild_game": ("Game", "game"),
     "wool": ("Mutton", "sheep"),
+    "camels": ("Camel", "camels"),
 }
 
 # One-level special buildings without a base slot (slot 0 is their whole output): they provision at the reference size

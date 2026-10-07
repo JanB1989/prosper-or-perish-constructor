@@ -61,9 +61,9 @@ def _staple_makers() -> dict[str, str]:
 
 def test_one_list_in_three_groups() -> None:
     assert staple_foods.goods_in_group("crops") == ("legumes", "maize", "millet", "potato", "rice", "wheat")
-    assert set(staple_foods.goods_in_group("animals")) == {"livestock", "fish", "wild_game", "wool"}
+    assert set(staple_foods.goods_in_group("animals")) == {"livestock", "fish", "wild_game", "wool", "camels"}
     assert set(staple_foods.goods_in_group("fruits")) == {"fruit", "olives"}
-    assert len(staple_foods.staple_foods()) == 12
+    assert len(staple_foods.staple_foods()) == 13
     # the category columns stay as they are: the staple crops are also the staple_crops subcategory
     assert {g for g in staple_foods.staple_foods() if staple_foods.staple_group(g) == "crops"} == set(
         staple_foods.goods_in_group("crops"))

@@ -23,6 +23,7 @@ building:
         - pp_cookshop_pemmican_serve
         - pp_cookshop_livestock_pottage_serve
         - pp_cookshop_honey_gruel_serve
+        - pp_cookshop_camel_stew_serve
         - pp_cookshop_mediterranean_fish_serve
         - pp_cookshop_ika_mata_serve
         - pp_cookshop_khichdi_serve
@@ -137,6 +138,14 @@ building:
     			output = 0.484
     			category = building_maintenance
     		}
+    		pp_cookshop_camel_stew_serve = {
+    			camels = 0.113
+    			salt = 0.011
+    			manual_labor = 0.065
+    			produced = offset
+    			output = 0.484
+    			category = building_maintenance
+    		}
     		pp_cookshop_mediterranean_fish_serve = {
     			fish = 0.28
     			olives = 0.085
@@ -146,6 +155,7 @@ building:
     			output = 0.485
     			category = building_maintenance
     		}
+
     		# --- OCEANIA (NEW) ---
     		pp_cookshop_ika_mata_serve = {
     			fish = 0.24
@@ -156,7 +166,6 @@ building:
     			output = 0.486
     			category = building_maintenance
     		}
-
     		# --- ASIA ---
     		pp_cookshop_khichdi_serve = {
     			rice = 0.19
@@ -176,6 +185,7 @@ building:
     			output = 0.487
     			category = building_maintenance
     		}
+
     		pp_cookshop_mutton_and_pease_serve = {
     			wool = 0.12
     			legumes = 0.057
@@ -185,7 +195,6 @@ building:
     			output = 0.487
     			category = building_maintenance
     		}
-
     		pp_cookshop_surstromming_serve = {
     			fish = 0.24
     			millet = 0.025
@@ -195,6 +204,7 @@ building:
     			output = 0.487
     			category = building_maintenance
     		}
+
     		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
     		pp_cookshop_kheer_serve = {
     			rice = 0.19
@@ -216,7 +226,6 @@ building:
     			output = 0.49
     			category = building_maintenance
     		}
-
     		pp_cookshop_boreal_hunter_stew_serve = {
     			fur = 0.12
     			millet = 0.1
@@ -327,6 +336,7 @@ localization:
     cookshop_slot_1: Drink
     pp_cookshop_beer: Beer
     pp_cookshop_boreal_hunter_stew_serve: Serve Boreal Hunter's Stew
+    pp_cookshop_camel_stew_serve: Serve Camel Stew
     pp_cookshop_chocolate: Chocolate
     pp_cookshop_coffee: Coffee
     pp_cookshop_fish_congee_serve: Serve Fish Congee

@@ -115,11 +115,11 @@ def test_store_lever_moves_province_food_staples_and_surplus_sales() -> None:
     # staple foods (the farm trade-off, Jan 2026-10-03; every staple food since 2026-10-04): one line per staple food,
     # opposite to Province Food; the crop farm goods share 0.40 of it, the buy-back goods have their own factor
     assert config.staple_factor == -0.40
-    assert config.staple_goods == staple_foods.staple_foods() and len(config.staple_goods) == 12
+    assert config.staple_goods == staple_foods.staple_foods() and len(config.staple_goods) == 13
     farm_goods = {crop["good"] for crop in tomllib.loads((ROOT / "config/crop_farms.toml").read_text())["crops"]}
     assert farm_goods < set(config.staple_goods) and "victuals" not in config.staple_goods
     assert {good: config.factor(good) for good in farm_goods} == dict.fromkeys(farm_goods, -0.40)
-    assert dict(config.staple_factor_by_good) == {"fish": -0.20, "fruit": -0.21, "wild_game": -0.14, "wool": -0.23}
+    assert dict(config.staple_factor_by_good) == {"fish": -0.20, "fruit": -0.21, "wild_game": -0.14, "wool": -0.23, "camels": -0.16}
     for months in range(25):
         assert stored_food.staple_line(config, months) == pytest.approx(-0.40 * stored_food.province_food_line(config, months))
         for good in config.staple_goods:

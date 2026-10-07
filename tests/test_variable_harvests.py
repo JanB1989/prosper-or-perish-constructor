@@ -80,7 +80,7 @@ def test_variable_harvest_modifiers_cover_all_farmed_goods() -> None:
     assert fallback_goods <= configured_goods
     # 2026-10-04 (Jan): the harvests leave the staple animals alone (they stay configured for their families' tiers)
     exempt = exempt_goods(config)
-    assert exempt == set(staple_foods.goods_in_group("animals")) == {"livestock", "fish", "wild_game", "wool"}
+    assert exempt == set(staple_foods.goods_in_group("animals")) == {"livestock", "fish", "wild_game", "wool", "camels"}
 
     entries = _modifier_entries()
     for subcontinent in config["subcontinents"]:

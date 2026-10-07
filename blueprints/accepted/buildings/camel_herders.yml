@@ -5,6 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_camel_herders_base_camels: base
+    pp_camel_herders_provision: keep
 gate_method: pp_camel_herders_market_sales
 upgrade_chain:
   family: camel_herders
@@ -28,6 +29,9 @@ building:
     - pp_camel_herders_dates_and_fish
   - name: slot_2
     methods:
+    - pp_camel_herders_provision
+  - name: slot_3
+    methods:
     - pp_camel_herders_market_sales
   possible_production_methods: []
   body: |-
@@ -35,9 +39,14 @@ building:
     increase_per_level_cost = 0.10
     pop_type = laborers
     max_levels = farm_capacity_max_camel_herders
-    employment_size = 1
+    employment_size = 1.25
     category = rgo_building_category
-    custom_tags = { farming_capacity }
+    custom_tags = { pp_food_security_priority pp_staple_food_priority farming_capacity }
+    # the AI answers a low province store (pp_food_urgency_weight, flat)
+    ai_construct_weight = {
+        value = 0
+        add = pp_food_urgency_weight
+    }
     icon = camel_herders
     rural_settlement = yes
     town = yes
@@ -93,6 +102,15 @@ building:
         }
     }
     unique_production_methods = {
+        pp_camel_herders_provision = {
+            camels = 0.038
+            produced = local_food
+            output = 1.36
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
         pp_camel_herders_market_sales = {
             offset = 0.012
             produced = camels
@@ -103,8 +121,13 @@ building:
 
     raw_modifier = {
       farm_capacity_from_camel_herders = -1
+      local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
       local_population_capacity = -2
       local_pp_farmland_used = 2
+    }
+
+    modifier = {
+        local_monthly_food = 0.25
     }
 localization:
   entries:
@@ -112,7 +135,10 @@ localization:
     camel_herders_desc: Herding families drive their camels between desert wells and thorn-scrub grazing, raising calves for the caravans, the armies and the saddle.
     camel_herders_slot_0: Desert Grazing
     camel_herders_slot_1: Herding and Feeding
-    camel_herders_slot_2: Market
+    camel_herders_slot_2: Provisioning
+    camel_herders_slot_3: Market
+    pp_camel_herders_provision: Provision with Camel
+    pp_camel_herders_provision_desc: The household buys its own camels back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_camel_herders_base_camels: Desert Grazing
     pp_camel_herders_free_range: Free-Ranging Herds
     pp_camel_herders_millet_fodder: Millet and Sorghum Fodder
@@ -134,12 +160,19 @@ evaluation:
   production_methods:
     pp_camel_herders_base_camels:
       production_efficiency: 1.0
+      allow_rules:
+        base_output_per_1k: Staple food buildings employ 1,250 per level (2026-10-05, Jan; camels a staple since 2026-10-07), same methods with more workers.
     pp_camel_herders_millet_fodder:
       production_efficiency: 1.05
     pp_camel_herders_well_circuits:
       production_efficiency: 1.05
     pp_camel_herders_dates_and_fish:
       production_efficiency: 1.05
+    pp_camel_herders_provision:
+      allow_rules:
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the province store moves its output.
+        input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+        output_throughput: Existing accepted output scale predates the global employment throughput baseline.
     pp_camel_herders_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

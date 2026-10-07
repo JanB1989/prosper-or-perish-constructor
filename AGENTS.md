@@ -126,7 +126,7 @@
   empty store's output at 0 / 6 / 12 / 18 / 24 months (+53.8 % .. 0 .. -38.5 %, was +-75 % linear), and one line per
   staple food (every one since 2026-10-04, see Staple Foods) = its factor x that: -0.40 for the crop farm goods
   (-21.5 % .. +15.4 %; `staple_per_province_food`), own factors for the buy-back goods (fish -0.20, fruit -0.21,
-  wild_game -0.14, wool -0.23; `staple_per_province_food_by_good`, the same food-for-goods balance, recomputed from the
+  wild_game -0.14, wool -0.23, camels -0.16; `staple_per_province_food_by_good`, the same food-for-goods balance, recomputed from the
   blueprints by `tests/test_staple_foods.py`): food makers feed a lean province and sell from a full one. Output
   modifiers are per good, so the line is the same for every tier, every RGO and every other producer of that good.
   `pp_stored_food_staple_line` (location scope) is the carried step's crop farm line for the farm weights. Exact values rounded once to five decimals; the pivot step has no lever or curve line, so there are no
@@ -207,7 +207,8 @@
 ## Staple Foods
 
 - One list (2026-10-04, Jan): staple crops (wheat, rice, millet, maize, potato, legumes), staple animals (livestock,
-  fish, wild_game, wool; wool stands for sheep, which were eaten) and staple fruits (fruit, olives). The source is the
+  fish, wild_game, wool; wool stands for sheep, which were eaten; camels since 2026-10-07, Jan: pastoralists lived on
+  camel milk and meat) and staple fruits (fruit, olives). The source is the
   `staple_group` column of `config/goods_categories.csv` (`crops` / `animals` / `fruits`, empty otherwise), read by
   `staple_foods.py`; category and subcategory stay as they are (production and RGO expansion cost). Nothing keeps a
   list of its own.
@@ -218,8 +219,10 @@
   reviewed tier overrides name every tier; strength since 2026-10-07: max_abs_output_modifier 0.33, a third of 1.00;
   peasant food consumption unchanged), the Colonial Nation output bonus (every raw good but the staple foods).
 - Every building that makes a staple food runs Provisioning (`provisioning.py`): the flocks since 2026-10-04 (Provision
-  with Mutton, buying their wool back at 2.5) and the Maghreb palm groves and the English royal forest at reference
-  size (one-level specials without a base slot). `tests/test_staple_foods.py` pins the list, the makers (Provision,
+  with Mutton, buying their wool back at 2.5), Camel Herders and Camel Stud since 2026-10-07 (Provision with Camel,
+  at 3; store curve factor -0.16, bulk share 0.2; the Cookshop and Public Kitchen serve Camel Stew, camels + a pinch
+  of salt; colonial nations lose their camel bonus) and the Maghreb palm groves and the English royal forest at
+  reference size (one-level specials without a base slot). `tests/test_staple_foods.py` pins the list, the makers (Provision,
   tag, counters), the curve factors, the bulk shares, the Yard's salt beef and the Cookshop cap's Yard term.
 - The crop farm tier advances' `crop_farm_output` (was `staple_output`) stays on the crop farm goods: farming advances.
 

@@ -1,0 +1,195 @@
+﻿# PP colonizer area preferences (docs/country_finetunes.md), set by on_action/pp_country_finetunes.txt.
+# Portugal, Castile/Spain, England/Great Britain, France and Holland/the Netherlands swap vanilla's
+# avoid_african_colonization (all of continent Africa, also the sea lanes along it) for pp_colonizer_avoid_africa:
+# the African land areas without the island and Cape stations. The sea lanes are no longer avoided, so the route
+# to India can be explored. Each nation then gets its historical stations one age at a time (daisy chain).
+
+pp_colonizer_avoid_africa = {
+	preference_type = exploration
+	modifier = -0.9
+
+	# central_africa_region
+	area = adamawa_area
+	area = cameroon_highlands_area
+	area = central_africa_area
+	area = logone_area
+	area = north_gabun_area
+	area = south_gabun_area
+	area = wadai_area
+	# kongo_region
+	area = east_kongo_area
+	area = east_lunda_area
+	area = kongo_area
+	area = maligo_area
+	area = moshiko_area
+	area = south_kongo_area
+	area = viye_area
+	area = west_kongo_area
+	area = west_lunda_area
+	# ethiopia_region
+	area = central_ethiopia_area
+	area = northern_ethiopia_area
+	area = southern_ethiopia_area
+	# great_lakes_region
+	area = egaso_ngiro_area
+	area = igombe_area
+	area = kasongo_area
+	area = malawi_area
+	area = rift_valley_area
+	area = victoria_area
+	# madagascar_region
+	area = east_madagascar_area
+	area = malagasy_highlands_area
+	area = north_madagascar_area
+	area = west_madagascar_area
+	# nubia_region
+	area = butana_area
+	area = darfur_area
+	area = equatoria_area
+	area = nubia_proper_area
+	# somalia_region
+	area = inner_somalia_area
+	area = northern_somalia_area
+	area = southern_somalia_area
+	# swahili_coast_region
+	area = east_african_island_area
+	area = mozambique_area
+	area = rufiji_area
+	area = ruvuma_lurio_area
+	area = tana_area
+	area = wami_area
+	# egypt_region
+	area = cyrenaica_area
+	area = lower_egypt_area
+	area = sinai_area
+	area = upper_egypt_area
+	# maghreb_region
+	area = algiers_area
+	area = atlas_high_plateau
+	area = desert_area
+	area = morocco_area
+	area = sus_area
+	area = tripolitania_area
+	area = tunis_area
+	area = western_sahara_area
+	# southern_africa_region
+	area = kalahari_area
+	area = karoo_area
+	area = namib_area
+	area = okavango_area
+	area = thaba_bosiu_area
+	area = tzaneen_area
+	area = umgungundlovu_area
+	# zimbabwe_region
+	area = limpopo_area
+	area = save_area
+	area = zambezi_area
+	# guinea_region
+	area = akan_area
+	area = benin_area
+	area = futa_tooro_area
+	area = gambia_area
+	area = gold_coast_area
+	area = gulf_of_guinea_area
+	area = gur_area
+	area = jolof_area
+	area = kong_area
+	area = kru_area
+	area = lower_niger_area
+	area = south_manding_area
+	area = upper_guinea_area
+	area = yoruba_area
+	# sahel_region
+	area = air_area
+	area = bornu_area
+	area = east_mossi_area
+	area = gao_area
+	area = ghana_area
+	area = kanem_area
+	area = mali_area
+	area = north_hausa_area
+	area = south_hausa_area
+	area = timbuktu_area
+	area = west_mossi_area
+	area = zarma_area
+}
+
+# Sea route, west coast of Africa: Morocco, Madeira, Azores, Canaries, Senegal to the Gulf of Guinea.
+pp_route_west_africa = {
+	preference_type = exploration
+	modifier = 5
+
+	area = nw_africa_coast_area
+	area = madeira_sea_area
+	area = azores_sea_area
+	area = west_africa_coastline
+	area = gulf_of_africa_sea
+}
+
+# Sea route round the Cape to India.
+pp_route_cape_to_india = {
+	preference_type = exploration
+	modifier = 5
+
+	area = central_africa_coastline_area
+	area = kongo_sea_zones_area
+	area = southern_africa_coast_area
+	area = karoo_coast_area
+	area = mozambique_channel_area
+	area = madagascar_sea_area
+	area = swahili_coast_sea_zones_area
+	area = somali_sea_area
+	area = indian_horn_area
+	area = western_india_sea_zones_area
+	area = deccan_sea_zones_area
+}
+
+# Stations, one small area each.
+# Portugal: Madeira (1420) and the Azores (1427).
+pp_station_madeira_azores = {
+	preference_type = exploration
+	modifier = 5
+
+	area = south_macaronesia_area
+	area = azores_area
+}
+
+# Castile: the Canaries (1402-1496).
+pp_station_canaries = {
+	preference_type = exploration
+	modifier = 5
+
+	area = canary_islands_area
+}
+
+# Portugal: Cape Verde (1462).
+pp_station_cape_verde = {
+	preference_type = exploration
+	modifier = 5
+
+	area = cape_verde_area
+}
+
+# St Helena: Portugal's secret watering stop (1502), English East India Company (1659).
+pp_station_st_helena = {
+	preference_type = exploration
+	modifier = 5
+
+	area = atlantic_saint_helena_area
+}
+
+# The Cape: Dutch (1652), British (1795).
+pp_station_cape = {
+	preference_type = exploration
+	modifier = 5
+
+	area = goringhaikona_area
+}
+
+# The Mascarenes: Dutch Mauritius (1638), French Reunion (1665) and Ile de France (1715).
+pp_station_mascarenes = {
+	preference_type = exploration
+	modifier = 5
+
+	area = mascarene_islands_area
+}

@@ -7,7 +7,8 @@ on_game_start = {
 }
 
 # Castile <-> Portugal: no conquest of each other (vanilla grants Castile's only after Rio Salado); the
-# Reconquista aim is in ai_scripted_expansion_score/target pp_reconquista.txt.
+# Reconquista aim is in ai_scripted_expansion_score/target pp_reconquista.txt. Muscovy: the Russian region
+# (pp_gathering_russian_lands.txt).
 pp_country_finetune_area_preferences = {
 	effect = {
 		c:CAS ?= {
@@ -18,6 +19,9 @@ pp_country_finetune_area_preferences = {
 		}
 		c:POR ?= {
 			add_area_preference = pp_portugal_no_castile_conquest
+		}
+		c:MOS ?= {
+			add_area_preference = pp_muscovy_gather_russian_lands
 		}
 	}
 }

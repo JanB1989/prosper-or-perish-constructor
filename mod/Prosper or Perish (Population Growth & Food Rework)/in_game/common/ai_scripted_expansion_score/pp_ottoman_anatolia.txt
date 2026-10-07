@@ -1,0 +1,40 @@
+﻿# Ottoman aim (docs/country_finetunes.md): Anatolia before the Balkans, Constantinople excepted. No single target country.
+
+# The Ottomans prefer every country that rules from Anatolia (not their own subjects).
+pp_ottoman_anatolia_first = {
+	attacker_potential = {
+		tag = TUR
+	}
+	target_trigger = {
+		NOT = { is_subject_of = scope:attacker }
+		capital ?= { region = region:anatolia_region }
+	}
+	score = {
+		add = 30
+	}
+}
+
+# While a country other than their subjects still rules from Anatolia, Balkan and Carpathian targets count a quarter;
+# whoever holds Constantinople is exempt.
+pp_ottoman_balkans_later = {
+	attacker_potential = {
+		tag = TUR
+		any_country = {
+			NOT = { this = root }
+			NOT = { is_subject_of = root }
+			capital ?= { region = region:anatolia_region }
+		}
+	}
+	target_trigger = {
+		NOT = { owns = location:constantinople }
+		capital ?= {
+			OR = {
+				region = region:balkan_region
+				region = region:carpathia_region
+			}
+		}
+	}
+	multiplier = {
+		add = -0.75
+	}
+}

@@ -1,0 +1,17 @@
+﻿# Gathering of the Russian Lands (docs/country_finetunes.md): Muscovy/Russia prefers every country that rules from
+# the Russian region (not its own subjects).
+pp_gathering_russian_lands_focus = {
+	attacker_potential = {
+		OR = {
+			tag = MOS
+			tag = RUS
+		}
+	}
+	target_trigger = {
+		NOT = { is_subject_of = scope:attacker }
+		capital ?= { region = region:russian_region }
+	}
+	score = {
+		add = 30
+	}
+}

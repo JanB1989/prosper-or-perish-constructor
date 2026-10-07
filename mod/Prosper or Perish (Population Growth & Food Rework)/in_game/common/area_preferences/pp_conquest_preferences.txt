@@ -21,3 +21,12 @@ pp_portugal_no_castile_conquest = {
 	area = andalusia_area
 	area = murcia_area
 }
+
+# Muscovy: the Gathering of the Russian Lands (ai_scripted_expansion_score/target pp_gathering_russian_lands.txt);
+# given at start, as strong as vanilla's Ottoman Anatolia preference.
+pp_muscovy_gather_russian_lands = {
+	preference_type = conquest
+	modifier = 2
+
+	region = russian_region
+}

@@ -1,0 +1,23 @@
+﻿# Ottoman aim (docs/country_finetunes.md): every country ruling from Anatolia is a war target, even where it is not a
+# land neighbour.
+pp_ottoman_anatolia_targets = {
+	attacker_potential = {
+		tag = TUR
+		months_since_war >= 36
+	}
+	candidate_list = {
+		every_country = {
+			limit = {
+				NOT = { this = root }
+				NOT = { is_subject_of = root }
+				capital ?= { region = region:anatolia_region }
+			}
+			add_to_list = source
+		}
+	}
+	score = {
+		add = scope:target.country_tax_base
+		multiply = 10
+		add = 30
+	}
+}

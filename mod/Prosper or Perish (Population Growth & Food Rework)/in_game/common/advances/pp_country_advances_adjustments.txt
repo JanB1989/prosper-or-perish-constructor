@@ -1,0 +1,21 @@
+﻿# Country finetunes on the countries' own advances (docs/country_finetunes.md); only the tag (or its successors) gets them.
+
+# Ottomans: recover from a lost war instead of 70 years at negative stability (run d3c30c7a: 1432 defeat, secession,
+# bankruptcy 1442, civil war 1447, stability -14 .. -46 until 1512).
+TRY_INJECT:seljuk_heritage = {
+	monthly_war_exhaustion = -0.05
+	stability_cost_efficiency = 0.2
+	monthly_rebel_growth = -0.001
+}
+TRY_INJECT:timariots = {
+	global_max_control = 0.05
+}
+TRY_INJECT:ottoman_bureaucracy = {
+	global_max_control = 0.05
+}
+
+# Muscovy: control 0.26-0.30 in run d3c30c7a, a third of its possible tax collected.
+TRY_INJECT:mos_skilled_tax_collectors = {
+	global_max_control = 0.05
+	global_max_rural_control = 0.05
+}

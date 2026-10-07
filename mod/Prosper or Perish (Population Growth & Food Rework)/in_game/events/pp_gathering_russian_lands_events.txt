@@ -1,0 +1,14 @@
+﻿namespace = pp_gathering_russian_lands
+
+# Gathering of the Russian Lands (docs/country_finetunes.md): Muscovy/Russia looks to Ruthenia and the Baltic from 1450
+# (vanilla grants the same preference only from 1600, ai_russia_conquest_area_events.1).
+pp_gathering_russian_lands.1 = {
+	type = country_event outcome = neutral title = empty_text desc = empty_text hidden = yes fire_only_once = yes
+	dynamic_historical_event = { tag = MOS tag = RUS from = 1450.1.1 to = 1600.1.1 monthly_chance = 10 }
+	trigger = {
+		NOT = { has_area_preference = russia_conquer_ruthenia_baltic }
+	}
+	immediate = {
+		add_area_preference = russia_conquer_ruthenia_baltic
+	}
+}

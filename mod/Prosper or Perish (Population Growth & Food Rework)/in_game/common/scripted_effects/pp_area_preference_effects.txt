@@ -1,0 +1,8 @@
+﻿# Country scope. Adds an AI area preference unless the country already has it (the colonizer setup runs at game
+# start and at every new age, so it must not stack copies). Usage: pp_add_area_preference_once = { preference = <key> }
+pp_add_area_preference_once = {
+	if = {
+		limit = { NOT = { has_area_preference = $preference$ } }
+		add_area_preference = $preference$
+	}
+}

@@ -2547,12 +2547,19 @@ def test_cookshop_building_line_has_resolved_prices() -> None:
 
 
 def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -> None:
+    from prosper_or_perish_constructor.provisioning import PROVISIONED_GOOD_BY_BUILDING
+
     scoped_blueprints = _normalized_production_site_blueprints()
     assert len(scoped_blueprints) == 132   # 102 before the crop farm split: 4 farm tiers became 32; +2 camel herders/stud
 
+    # the staple food buildings employ 1.25 per level, peasants and laborers alike (2026-10-05, Jan, early-game nerf;
+    # 1.25 is not the cut reference, so their laborer tiers keep it); every other site the unit size
+    def unit(building: str) -> float:
+        return 1.25 if building in PROVISIONED_GOOD_BY_BUILDING else 1.0
+
     for building, blueprint in scoped_blueprints:
         blueprint_values = _accepted_blueprint_building_values_from_path(blueprint)
-        assert blueprint_values["employment_size"] == 1, building
+        assert blueprint_values["employment_size"] == unit(building), building
 
     scoped_buildings = tuple(building for building, _blueprint in scoped_blueprints)
     data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
@@ -2565,7 +2572,7 @@ def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -
     _factor, braked = _price_brake(ROOT / "constructor.toml", accepted_blueprint_paths_by_building(ROOT))
     assert {"cloth_guild", "cookshop", "tools_guild"} <= braked and "mason" not in braked
     for building in scoped_buildings:
-        expected = _rendered_employment(buildings[building]["pop_type"], 1.0)
+        expected = _rendered_employment(buildings[building]["pop_type"], unit(building))
         assert buildings[building]["employment_size"] == expected, building
         if building in braked:
             assert buildings[building]["price"] == f"pp_{building}_price", building

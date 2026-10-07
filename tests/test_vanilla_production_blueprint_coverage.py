@@ -1,5 +1,6 @@
 ﻿from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import pytest
@@ -120,6 +121,11 @@ def test_constructor_output_preserves_vanilla_produced_good_coverage() -> None:
     assert missing == {}
 
 
+MANUFACTURING_TIER_EMPLOYMENT = re.compile(
+    r"^(?P<size>[0-9.]+)\s*#\s*manufacturing tiers 2026-10-06: (?P<base>[0-9.]+) after the employment cut x(?P<factor>[0-9.]+)$"
+)
+
+
 def test_vanilla_production_blueprint_employment_sizes_use_50_pop_steps() -> None:
     coverage = production_building_coverage(ROOT, load_order_path=LOAD_ORDER)
     invalid: dict[str, object] = {}
@@ -136,6 +142,14 @@ def test_vanilla_production_blueprint_employment_sizes_use_50_pop_steps() -> Non
             ),
             None,
         )
+        # manufacturing tiers (2026-10-06, Jan): tiers 2+ employ x1.15/1.3/1.45 of the cut size, written directly (the
+        # cut skips them); the cut size stays on the 50-pop steps and the value is that size x the tier factor
+        tier = MANUFACTURING_TIER_EMPLOYMENT.match(match or "")
+        if tier:
+            size, base, factor = (float(tier[k]) for k in ("size", "base", "factor"))
+            if not validate_employment_size_step(tier["base"]) or abs(size - base * factor) > 0.001:
+                invalid[building] = match
+            continue
         if not validate_employment_size_step(match):
             invalid[building] = match
 

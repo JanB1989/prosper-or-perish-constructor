@@ -104,8 +104,8 @@ GOODS_JS = r"""
   // ---------------------------------------------------------------- data
   function prepare(raw) {
     const n = IX.goods.length;
-    const by = Array.from({length: n}, () => ({p: [], c: [], d: [], s: [], m: []}));
-    for (const k of ['p', 'c', 'd', 's', 'm']) for (const r of raw[k] || []) if (by[r[0]]) by[r[0]][k].push(r);
+    const by = Array.from({length: n}, () => ({p: [], c: [], d: [], s: [], m: [], x: []}));
+    for (const k of ['p', 'c', 'd', 's', 'm', 'x']) for (const r of raw[k] || []) if (by[r[0]]) by[r[0]][k].push(r);
     const mIn = new Map(), mOut = new Map();
     for (const r of raw.c || []) if (r[2] >= 0) { if (!mIn.has(r[2])) mIn.set(r[2], []); mIn.get(r[2]).push(r); }
     for (const r of raw.p || []) if (r[2] >= 0) { if (!mOut.has(r[2])) mOut.set(r[2], []); mOut.get(r[2]).push(r); }
@@ -152,15 +152,17 @@ GOODS_JS = r"""
     const usedB = consumers.reduce((a, e) => a + (e.t.received || 0), 0);
     let usedD = 0, wanted = consumers.reduce((a, e) => a + (e.t.wanted || 0), 0);
     IX.demand.forEach((d, i) => { if (!TRADE.has(d.id)) { usedD += dem[i].received; wanted += dem[i].wanted; } });
-    const tradeIn = IX.supply.reduce((a, s, i) => a + sup[i], 0);
-    const tradeOut = IX.demand.reduce((a, d, i) => a + (TRADE.has(d.id) ? dem[i].received : 0), 0);
+    let imports = 0, exports = 0;
+    for (const r of rows.x) if (inRegion(r[1])) { imports += r[2] || 0; exports += r[3] || 0; }
+    const bIn = IX.supply.reduce((a, s, i) => a + (s.id === 'BurgherTrades' ? sup[i] : 0), 0);
+    const bOut = IX.demand.reduce((a, d, i) => a + (d.id === 'BurgherTrades' ? dem[i].received : 0), 0);
     const recipeMade = producers.filter(e => IX.buildings[e.b].id !== 'rgo' && IX.buildings[e.b].id !== '_other').reduce((a, e) => [a[0] + (e.t.amount || 0), a[1] + (e.t.recipe || 0)], [0, 0]);
-    return {g, producers, consumers, dem, sup, mk, made, used: usedB + usedD, usedB, usedD, wanted, tradeIn, tradeOut,
+    return {g, producers, consumers, dem, sup, mk, made, used: usedB + usedD, usedB, usedD, wanted, imports, exports, burgher: bIn - bOut,
             efficiency: recipeMade[1] > 0 ? recipeMade[0] / recipeMade[1] : null};
   }
 
   // ---------------------------------------------------------------- flow chart
-  const COL = {producer: '#2a78d6', rgo: '#c98a00', other: '#9a9a96', consumer: '#eb6834', trade: '#5fb8c4', stock: '#8c8c88'};
+  const COL = {producer: '#2a78d6', rgo: '#c98a00', other: '#9a9a96', consumer: '#eb6834', trade: '#5fb8c4', burgher: '#00a3a3', stock: '#8c8c88'};
   function flowOption(D, X) {
     const g = X.g, pg = goodPrice(g);
     const nodes = [], links = [], label = {}, title = {}, goodOf = {}, amounts = {};
@@ -200,18 +202,20 @@ GOODS_JS = r"""
     const dnodes = [];
     IX.demand.forEach((d, i) => { if (!TRADE.has(d.id) && X.dem[i].received > 0) dnodes.push({id: 'd' + i, text: d.name, amount: X.dem[i].received, color: d.color}); });
     dnodes.sort((a, b) => b.amount - a.amount);
-    // trade (a region only: net of in and out) and stock
+    // a region: trade across its border both ways (the routes that ran), burgher trade net; then the stockpiles
+    // close the balance (in the world view trade cancels out: every import is another market's export)
     const extraIn = [], extraOut = [];
     if (S.r >= 0) {
-      const net = X.tradeIn - X.tradeOut;
-      if (net > 0) extraIn.push({id: 'x_in', text: 'Imports (net)', amount: net, color: COL.trade});
-      else if (net < 0) extraOut.push({id: 'x_out', text: 'Exports (net)', amount: -net, color: COL.trade});
+      if (X.imports > 0) extraIn.push({id: 'x_in', text: 'Imports from other regions', amount: X.imports, color: COL.trade});
+      if (X.exports > 0) extraOut.push({id: 'x_out', text: 'Exports to other regions', amount: X.exports, color: COL.trade});
+      if (X.burgher > 0) extraIn.push({id: 'x_bin', text: 'Burgher trade in (net)', amount: X.burgher, color: COL.burgher});
+      else if (X.burgher < 0) extraOut.push({id: 'x_bout', text: 'Burgher trade out (net)', amount: -X.burgher, color: COL.burgher});
     }
     const inflow = X.made + extraIn.reduce((a, e) => a + e.amount, 0);
     const outflow = X.used + extraOut.reduce((a, e) => a + e.amount, 0);
     const diff = inflow - outflow;
-    if (diff > 0.005 * Math.max(inflow, 1e-9)) extraOut.push({id: 'x_stock', text: 'Not taken (stock, unsold)', amount: diff, color: COL.stock});
-    else if (diff < -0.005 * Math.max(outflow, 1e-9)) extraIn.push({id: 'x_from', text: 'From stock and trade', amount: -diff, color: COL.stock});
+    if (diff > 0.005 * Math.max(inflow, 1e-9)) extraOut.push({id: 'x_stock', text: 'Into stockpiles / unsold', amount: diff, color: COL.stock});
+    else if (diff < -0.005 * Math.max(outflow, 1e-9)) extraIn.push({id: 'x_from', text: 'From stockpiles', amount: -diff, color: COL.stock});
 
     // upstream: inputs of the producers' methods, the share that went into this good
     const ups = new Map();  // good -> Map(pnode -> value)
@@ -371,9 +375,8 @@ GOODS_JS = r"""
     X.consumers.forEach((e, k) => rows.push({kind: 'b', e, k, received: e.t.received || 0, wanted: e.t.wanted || 0}));
     IX.demand.forEach((d, i) => { if (!TRADE.has(d.id) && (X.dem[i].received > 0 || X.dem[i].wanted > 0)) rows.push({kind: 'd', d, received: X.dem[i].received, wanted: X.dem[i].wanted}); });
     if (S.r >= 0) {
-      const ex = IX.demand.reduce((a, d, i) => a + (TRADE.has(d.id) ? X.dem[i].received : 0), 0);
-      const exW = IX.demand.reduce((a, d, i) => a + (TRADE.has(d.id) ? X.dem[i].wanted : 0), 0);
-      if (ex > 0) rows.push({kind: 'x', received: ex, wanted: exW});
+      if (X.exports > 0) rows.push({kind: 'x', name: 'Exports to other regions', color: '#5fb8c4', received: X.exports, wanted: X.exports});
+      if (X.burgher < 0) rows.push({kind: 'x', name: 'Burgher trade out (net)', color: '#00a3a3', received: -X.burgher, wanted: -X.burgher});
     }
     rows.sort((a, b) => b.received - a.received);
     const total = rows.reduce((a, r) => a + r.received, 0) || 1;
@@ -384,7 +387,7 @@ GOODS_JS = r"""
       let h = '';
       const cells = `<td class=num>${num(r.received)}</td><td class=num>${num(r.received * pg)}</td><td class=num>${sbar(r.received / total)}${pct(r.received / total)}</td><td class=num>${num(r.wanted)}</td><td class=num>${pct(r.wanted > 0 ? r.received / r.wanted : null)}</td>`;
       if (r.kind === 'd') { groups.push(`<tr class="grp flat"><td><span class=tog></span><i class=dot style="background:${r.d.color}"></i>${esc(r.d.name)}</td>${cells}</tr>`); continue; }
-      if (r.kind === 'x') { groups.push(`<tr class="grp flat"><td><span class=tog></span><i class=dot style="background:#5fb8c4"></i>Exports and burgher trade out</td>${cells}</tr>`); continue; }
+      if (r.kind === 'x') { groups.push(`<tr class="grp flat"><td><span class=tog></span><i class=dot style="background:${r.color}"></i>${esc(r.name)}</td>${cells}</tr>`); continue; }
       const e = r.e, bid = IX.buildings[e.b].id;
       const methods = [...e.methods.values()].filter(me => me.m >= 0).sort((a, b) => (b.t.received || 0) - (a.t.received || 0));
       const flat = !methods.length;
@@ -540,7 +543,7 @@ GOODS_JS = r"""
       ['Markets', `${X.mk.short} short`, `${X.mk.surplus} in surplus of ${X.mk.markets}`],
       ['Stockpile', num(X.mk.stock), 'in the markets'],
     ];
-    if (S.r >= 0) t.push(['Trade', num(X.tradeIn - X.tradeOut) + ' net', `${num(X.tradeIn)} in · ${num(X.tradeOut)} out`]);
+    if (S.r >= 0) t.push(['Trade with other regions', `${num(X.imports - X.exports)} net`, `${num(X.imports)} in · ${num(X.exports)} out per month`]);
     return t.map(([a, b, c]) => `<div class=tile><div class=label>${esc(a)}</div><div class=value>${esc(b)}</div><div class=sub>${esc(c)}</div></div>`).join('');
   }
   let renderToken = 0;

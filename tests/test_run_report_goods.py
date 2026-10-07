@@ -29,6 +29,9 @@ def _dataset(root: Path) -> Path:
         "buildings": {"building_id": [10, 11, 12], "building_type": ["weaver", "weaver", "sheep_farm"], "location_id": [1, 2, 1],
                       "market_id": [1, 2, 1], "level": [2.0, 1.0, 1.0], "employed": [1.0, 0.25, 1.0]},
         "building_methods": {"building_id": [10, 11, 12], "production_method": ["weave", "weave", "graze"]},
+        # Paris sends 1 wool to London (it ran); a second route did not run
+        "trades": {"good_id": ["wool", "wool"], "from_market": [1, 1], "to_market": [2, 2], "cached": [1.0, 5.0],
+                   "happened": ["yes", "no"]},
         "market_goods": {
             "market_id": [1, 1, 2, 2], "good_id": ["cloth", "wool", "cloth", "wool"], "price": [3.0, 1.0, 3.5, 1.2],
             "default_price": [3.0, 1.0, 3.0, 1.0], "supply": [3.0, 10.0, 1.0, 1.0], "demand": [2.0, 4.0, 1.0, 1.0],
@@ -76,7 +79,11 @@ def test_save_flows_add_up_to_the_market_totals(tmp_path: Path) -> None:
     imports = flows["supply"].filter((pl.col("bucket") == "Trade") & (pl.col("good_id") == "wool"))
     assert imports.select("region", "amount").rows() == [("british_isles", 1.0)]
 
+    trade = {r["region"]: (r["imports"], r["exports"]) for r in flows["trade"].iter_rows(named=True)}
+    assert trade == {"british_isles": (1.0, 0.0), "western_europe": (0.0, 1.0)}
+
     encoded = rg.encode_save(flows, rg.Index())
+    assert len(encoded["x"]) == 2
     assert {k: len(v) for k, v in encoded.items()}["p"] == producers.height
 
 

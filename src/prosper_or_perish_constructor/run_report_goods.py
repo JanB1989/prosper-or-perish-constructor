@@ -6,9 +6,10 @@
   methods (name, building, recipe per level) and the demand types;
 - `goods/<n>.json`, one per save: producers ``p`` [good, building, method, region, amount, levels, buildings, workers,
   recipe], building inputs ``c`` [good, building, method, region, wanted, received, recipe], other demand ``d``
-  [good, bucket, region, wanted, received], trade and other supply ``s`` [good, bucket, region, amount] and market
+  [good, bucket, region, wanted, received], trade and other supply ``s`` [good, bucket, region, amount], market
   figures ``m`` [good, region, price x volume, volume, supply, demand, stockpile, markets short, markets in surplus,
-  markets]; amounts are goods per month, indices point into the index lists (-1 = none);
+  markets] and trade between world regions ``x`` [good, region, imports, exports] (the trade routes that ran and
+  cross the region's border); amounts are goods per month, indices point into the index lists (-1 = none);
 - `goods/summary.json`: per good and save the world production, use and price, and production / use by building
   type, for the charts over the run.
 
@@ -44,7 +45,7 @@ from prosper_or_perish_constructor.run_report_charts import (
 if TYPE_CHECKING:
     from prosper_or_perish_constructor.run_report import RunData
 
-CACHE_VERSION = "goods-1"
+CACHE_VERSION = "goods-2"
 RGO = "rgo"  # pseudo building of the RGO rows
 OTHER = "_other"  # pseudo building for market totals no recipe explains
 # demand that is not a building input: market bucket, label, colour
@@ -90,7 +91,7 @@ PAGE_GROUP_BY_SUBCATEGORY = {
     "luxury_crafts": "crafts", "books_and_paper": "crafts", "medicinals": "crafts",
     "metal_goods": "industry", "military_goods": "industry", "naval_goods": "industry", "industrial_inputs": "industry",
 }
-FLOW_TABLES = ("producers", "consumers", "demand", "supply", "market")
+FLOW_TABLES = ("producers", "consumers", "demand", "supply", "market", "trade")
 FACTOR_LIMITS = (0.02, 50.0)
 
 
@@ -277,7 +278,22 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
         ((pl.col("demand") > 0.01) & (pl.col("supply") < 0.9 * pl.col("demand"))).sum().alias("short"),
         ((pl.col("supplied_Production") > 0.01) & (pl.col("supply") > 1.1 * pl.col("demand"))).sum().alias("surplus"),
         ((pl.col("supply") + pl.col("demand")) > 0).sum().alias("markets"))
-    return {"producers": producers, "consumers": consumers, "demand": demand, "supply": supply, "market": market}
+    # trade between world regions: the routes that ran, by the regions of their two markets
+    routes = read("trades", ["good_id", "from_market", "to_market", "cached", "happened"])
+    trade = pl.DataFrame(schema={"good_id": pl.String, "region": pl.String, "imports": pl.Float64, "exports": pl.Float64})
+    if routes.height:
+        ran = (
+            routes.filter((pl.col("happened") == "yes") & ~pl.col("good_id").is_in(sorted(DUMMY_GOODS)))
+            .join(markets.rename({"market_id": "from_market", "region": "from_region"}), on="from_market", how="left")
+            .join(markets.rename({"market_id": "to_market", "region": "to_region"}), on="to_market", how="left")
+            .with_columns(pl.col("from_region", "to_region").fill_null(OTHER_REGION), pl.col("cached").cast(pl.Float64).fill_null(0.0))
+            .filter(pl.col("from_region") != pl.col("to_region"))
+        )
+        imports = ran.group_by("good_id", pl.col("to_region").alias("region")).agg(pl.col("cached").sum().alias("imports"))
+        exports = ran.group_by("good_id", pl.col("from_region").alias("region")).agg(pl.col("cached").sum().alias("exports"))
+        trade = imports.join(exports, on=["good_id", "region"], how="full", coalesce=True).with_columns(
+            pl.col("imports", "exports").fill_null(0.0)).filter(pl.col("imports") + pl.col("exports") > 0)
+    return {"producers": producers, "consumers": consumers, "demand": demand, "supply": supply, "market": market, "trade": trade}
 
 
 # --------------------------------------------------------------------------------------------------------
@@ -327,7 +343,9 @@ def encode_save(flows: dict[str, Any], index: Index) -> dict[str, list[list[Any]
     m = [[of("good", r["good_id"]), of("region", r["region"]), _sig(r["pv"]), _sig(r["volume"]), _sig(r["supply"]), _sig(r["demand"]),
           _sig(r["stockpile"]), r["short"], r["surplus"], r["markets"]]
          for r in flows["market"].iter_rows(named=True)]
-    return {"p": p, "c": c, "d": d, "s": s, "m": m}
+    x = [[of("good", r["good_id"]), of("region", r["region"]), _sig(r["imports"]), _sig(r["exports"])]
+         for r in flows["trade"].iter_rows(named=True)]
+    return {"p": p, "c": c, "d": d, "s": s, "m": m, "x": x}
 
 
 def _summary_rows(flows: dict[str, Any]) -> dict[str, dict[str, Any]]:

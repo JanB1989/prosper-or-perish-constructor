@@ -114,6 +114,15 @@ pp_colonizer_avoid_africa = {
 	area = zarma_area
 }
 
+# The colonizers leave the empty land of Europe (Lapland, Finland, Karelia, the Russian north, the Urals, the North
+# Atlantic islands) to its neighbours until the Age of Revolutions.
+pp_colonizer_avoid_europe = {
+	preference_type = exploration
+	modifier = -0.9
+
+	continent = europe
+}
+
 # Sea route, west coast of Africa: Morocco, Madeira, Azores, Canaries, Senegal to the Gulf of Guinea.
 pp_route_west_africa = {
 	preference_type = exploration

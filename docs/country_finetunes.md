@@ -27,6 +27,9 @@ Hand-tuned changes for single countries, one entry each: what and why.
   (age 5); HOL the Cape + Mascarenes (age 5). Why: no colonizer ever explored down Africa (in 1458 Portugal and Castile
   had the exploration advances and idle explorers but explored nothing); the India and Asia events need the route
   discovered. No events, only AI desire. Not tested in game.
+  Added the same day: `pp_colonizer_avoid_europe` (-0.9 on continent Europe) for the same colonizers until the Age of
+  Revolutions (removed at its start). Why: in run c4831a96 Castile ran two colonial charters in Arkhangelsk by 1497;
+  Europe's empty land (Lapland, Finland, the Russian north, the Urals, North Atlantic islands) is for its neighbours.
 - **Ottomans recover from defeat; Anatolia before the Balkans** (2026-10-07, not tested in game).
   `advances/pp_country_advances_adjustments.txt`: Seljuk Heritage (age 1) +war exhaustion -0.05/month, stability cost
   efficiency +20 %, rebel growth -0.1 %/month; Timariots (age 2) and Ottoman Bureaucracy (age 3) +5 % max control each.

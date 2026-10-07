@@ -19,7 +19,8 @@ on_new_age_global = {
 
 # Colonizers daisy-chain down Africa (area_preferences/pp_colonizer_preferences.txt): vanilla's avoid-all-Africa
 # (which also covers the sea lanes) becomes PP's land-only list without the stations; each nation gets its historical
-# sea route and island/Cape stations one age at a time.
+# sea route and island/Cape stations one age at a time. Europe's empty land stays off limits to them until the Age of
+# Revolutions.
 pp_colonizer_area_preferences = {
 	effect = {
 		every_country = {
@@ -41,6 +42,16 @@ pp_colonizer_area_preferences = {
 				remove_area_preference = avoid_african_colonization
 			}
 			pp_add_area_preference_once = { preference = pp_colonizer_avoid_africa }
+			if = {
+				limit = {
+					NOT = { current_age_or_later = { age = age_6_revolutions } }
+				}
+				pp_add_area_preference_once = { preference = pp_colonizer_avoid_europe }
+			}
+			else_if = {
+				limit = { has_area_preference = pp_colonizer_avoid_europe }
+				remove_area_preference = pp_colonizer_avoid_europe
+			}
 			# Portugal: Madeira and the Azores, then Cape Verde, St Helena and the Cape route to India.
 			if = {
 				limit = {

@@ -120,6 +120,34 @@ level_limit = 15
 local_migration_attraction = 0.3   # lakeshore settlement: fresh water, fish and easy transport
 local_defensive = 0.1              # the lake works as a moat
 
+# Hostile movement cost (2026-10-07, Jan): armies hostile to the location (at war with it, rebels, pirates) move slower
+# through rough home ground, the defender knows the paths. Classes add up; the worst stack on the map is +75 %
+# (mountains + jungle, wetlands + swamp + peat). Rivers, climate, fertility and shores carry none. Written into the
+# topography/vegetation class injects and the soil static modifiers (`ppc worldbuilder apply`).
+[worldbuilder.hostile_movement.topography]
+mountains = 0.30
+mountain_wasteland = 0.30
+wetlands = 0.20
+hills = 0.15
+valleys = 0.15                     # passes and defiles
+plateau = 0.05
+
+[worldbuilder.hostile_movement.vegetation]
+jungle = 0.30
+swamp = 0.25
+marsh = 0.20
+thicket = 0.15
+forest = 0.15
+mixed_forest = 0.15
+coniferous_forest = 0.15
+dry_forest = 0.10
+desert = 0.10
+woods = 0.05
+
+[worldbuilder.hostile_movement.soil_type]
+peat = 0.10                        # bog ground
+clay = 0.05                        # mud in the wet season
+
 [worldbuilder.buildings.map]
 # World Builder ledger type -> blueprint key
 clearing = "land_clearance"

@@ -190,6 +190,7 @@ pp_tt_vegetation_desert = {
 	free_building_levels = -6
 	local_build_buildings_efficiency = -0.2
 	local_construction_speed = -0.2
+	hostile_movement_cost = 0.1
 }
 
 pp_tt_vegetation_sparse = {
@@ -227,6 +228,7 @@ pp_tt_vegetation_woods = {
 	free_building_levels = -1
 	local_build_buildings_efficiency = -0.03
 	local_construction_speed = -0.03
+	hostile_movement_cost = 0.05
 }
 
 pp_tt_vegetation_forest = {
@@ -240,6 +242,7 @@ pp_tt_vegetation_forest = {
 	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
+	hostile_movement_cost = 0.15
 }
 
 pp_tt_vegetation_jungle = {
@@ -254,6 +257,7 @@ pp_tt_vegetation_jungle = {
 	free_building_levels = -6
 	local_build_buildings_efficiency = -0.2
 	local_construction_speed = -0.2
+	hostile_movement_cost = 0.3
 }
 
 pp_tt_vegetation_ha1300_veg_scrubland = {
@@ -273,6 +277,7 @@ pp_tt_vegetation_ha1300_veg_thicket = {
 	local_monthly_food_modifier = monthly_food_productivity_severe_bonus
 	blocks_vision_from_sea = yes
 	supply_limit = 2
+	hostile_movement_cost = 0.15
 }
 
 pp_tt_vegetation_ha1300_veg_savanna = {
@@ -301,6 +306,7 @@ pp_tt_vegetation_ha1300_veg_coniferous_forest = {
 	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
+	hostile_movement_cost = 0.15
 }
 
 pp_tt_vegetation_ha1300_veg_mixed_forest = {
@@ -314,6 +320,7 @@ pp_tt_vegetation_ha1300_veg_mixed_forest = {
 	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
+	hostile_movement_cost = 0.15
 }
 
 pp_tt_vegetation_ha1300_veg_dry_forest = {
@@ -328,6 +335,7 @@ pp_tt_vegetation_ha1300_veg_dry_forest = {
 	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
+	hostile_movement_cost = 0.1
 }
 
 pp_tt_vegetation_ha1300_veg_marsh = {
@@ -335,6 +343,7 @@ pp_tt_vegetation_ha1300_veg_marsh = {
 	local_population_capacity = 0.4
 	local_monthly_food_modifier = monthly_food_productivity_severe_bonus
 	supply_limit = 2
+	hostile_movement_cost = 0.2
 }
 
 pp_tt_vegetation_ha1300_veg_swamp = {
@@ -349,6 +358,7 @@ pp_tt_vegetation_ha1300_veg_swamp = {
 	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
+	hostile_movement_cost = 0.25
 }
 
 pp_tt_topography_flatland = {
@@ -370,6 +380,7 @@ pp_tt_topography_mountains = {
 	local_build_buildings_efficiency = -0.35
 	local_construction_speed = -0.35
 	local_tribesmen_pop_growth = -1
+	hostile_movement_cost = 0.3
 }
 
 pp_tt_topography_hills = {
@@ -386,6 +397,7 @@ pp_tt_topography_hills = {
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
 	local_tribesmen_pop_growth = -1
+	hostile_movement_cost = 0.15
 }
 
 pp_tt_topography_plateau = {
@@ -400,6 +412,7 @@ pp_tt_topography_plateau = {
 	local_build_buildings_efficiency = -0.15
 	local_construction_speed = -0.15
 	local_tribesmen_pop_growth = -1
+	hostile_movement_cost = 0.05
 }
 
 pp_tt_topography_wetlands = {
@@ -414,6 +427,7 @@ pp_tt_topography_wetlands = {
 	local_build_buildings_efficiency = -0.25
 	local_construction_speed = -0.25
 	local_tribesmen_pop_growth = -1
+	hostile_movement_cost = 0.2
 }
 
 pp_tt_topography_ocean = {
@@ -524,6 +538,7 @@ pp_tt_topography_mountain_wasteland = {
 	local_build_buildings_efficiency = -0.35
 	local_construction_speed = -0.35
 	local_tribesmen_pop_growth = -1
+	hostile_movement_cost = 0.3
 }
 
 pp_tt_topography_ocean_wasteland = {
@@ -543,6 +558,7 @@ pp_tt_topography_ha1300_topo_valleys = {
 	game_data = { category = location }
 	local_population_capacity = 2.5
 	local_tribesmen_pop_growth = -1
+	hostile_movement_cost = 0.15
 }
 
 pp_tt_topography_ha1300_topo_floodplains = {
@@ -597,11 +613,13 @@ pp_tt_fertility_very_low = {
 pp_tt_soil_clay = {
 	game_data = { category = location }
 	local_population_capacity = 1.1
+	hostile_movement_cost = 0.05
 }
 
 pp_tt_soil_peat = {
 	game_data = { category = location }
 	local_population_capacity = 1
+	hostile_movement_cost = 0.1
 }
 
 pp_tt_soil_sand = {

@@ -67,7 +67,8 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     cfg = dataclasses.replace(cfg, raw={**cfg.raw, "_water_access": water})
     report["water_access"] = {state: sum(1 for v in water.values() if v == state) for state in ("sea_coast", "waterway")}
     coast.write_runtime(mod_root)
-    report["class_injects"] = wb_modifiers.write_class_injects(contract, cfg.geography_export, mod_root, repo, vanilla_root(repo, project))
+    report["class_injects"] = wb_modifiers.write_class_injects(contract, cfg.geography_export, mod_root, repo, vanilla_root(repo, project),
+                                                               hostile_config=cfg.raw.get("hostile_movement"))
     if cfg.compat_files:
         families = wb_compat.load_families(cfg.geography_export)
         report["compat_patches"] = wb_compat.write_compat_patches(vanilla_root(repo, project), mod_root, repo, families, cfg.compat_files)

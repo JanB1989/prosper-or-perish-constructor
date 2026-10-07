@@ -618,3 +618,45 @@ def test_river_restore_sees_the_engine_river() -> None:
     mod = next((Path(__file__).resolve().parents[1] / "mod").glob("Prosper*Rework*"))
     text = (mod / "in_game/common/scripted_triggers/pp_navigation_rivers.txt").read_text(encoding="utf-8-sig")
     assert "pp_navigation_has_river = { OR = { has_river = yes" in text
+
+
+def test_hostile_movement_cost_lands_on_terrain_injects_and_soil_modifiers(tmp_path):
+    import dataclasses
+    base = _contract(tmp_path)
+    extra = pl.DataFrame({"attribute": ["topography", "soil_type"], "value": ["mountains", "peat"], "capacity_people": [-5000.0, -1000.0],
+                          "game_key": ["mountains", "ha1300_soil_is_peat"]})
+    rows = pl.concat([base.attribute_rows, extra], how="diagonal")
+    la = base.location_attributes.with_columns(pl.Series("topography", ["mountains", "flatland"]), pl.Series("soil_type", ["peat", "loam"]))
+    c = Contract(root=base.root, meta=base.meta, attribute_rows=rows, building_types=base.building_types, location_buildings=base.location_buildings,
+                 location_targets=base.location_targets, location_attributes=la, goods_floor=base.goods_floor)
+    export = tmp_path / "export"
+    for d in ("climates", "vegetation", "topography"):
+        (export / "in_game/common" / d).mkdir(parents=True)
+    wb_modifiers.write_class_injects(c, export, tmp_path, tmp_path, hostile_config={"topography": {"mountains": 0.3}})
+    topo = (tmp_path / "in_game/common/topography/pp_wb_attribute_rows.txt").read_text(encoding="utf-8-sig")
+    mountains = topo[topo.index("TRY_INJECT:mountains"):]
+    assert "hostile_movement_cost = 0.3" in mountains[: mountains.index("\n}")]
+    assert topo.count("hostile_movement_cost") == 1
+    vanilla = tmp_path / "vanilla"
+    (vanilla / "game/main_menu/common/static_modifiers").mkdir(parents=True)
+    (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("", encoding="utf-8")
+    cfg = dataclasses.replace(_cfg(tmp_path), raw={"hostile_movement": {"soil_type": {"peat": 0.1}}})
+    wb_modifiers.write_static_modifiers(c, cfg, tmp_path, vanilla)
+    statics = (tmp_path / wb_modifiers.STATIC_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
+    peat = statics.split("pp_wb_soil_peat = {")[1].split("\n}")[0]
+    assert "hostile_movement_cost = 0.1" in peat and statics.count("hostile_movement_cost") == 1
+    # rivers take none, unknown classes and classes without a row to carry the line are errors
+    with pytest.raises(ValueError, match="only topography"):
+        wb_modifiers.hostile_movement({"river_level": {"5": 0.1}}, c)
+    with pytest.raises(ValueError, match="unknown classes"):
+        wb_modifiers.hostile_movement({"topography": {"mountainz": 0.3}}, c)
+    with pytest.raises(ValueError, match="no attribute row"):
+        wb_modifiers.write_class_injects(c, export, tmp_path, tmp_path, hostile_config={"topography": {"flatland": 0.1}})
+
+
+def test_hostile_movement_config_matches_the_handover_classes():
+    import tomllib
+    repo = Path(__file__).resolve().parents[1]
+    config = tomllib.loads((repo / "constructor.toml").read_text(encoding="utf-8"))["worldbuilder"]["hostile_movement"]
+    assert set(config) == {"topography", "vegetation", "soil_type"}   # never rivers (Jan, 2026-10-07)
+    assert all(0 < v <= 0.30 for classes in config.values() for v in classes.values())

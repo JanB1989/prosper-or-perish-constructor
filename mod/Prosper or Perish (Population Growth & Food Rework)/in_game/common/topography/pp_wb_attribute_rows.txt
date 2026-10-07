@@ -55,6 +55,7 @@ TRY_INJECT:hills = {
 		local_build_buildings_efficiency = -0.08
 		local_construction_speed = -0.08
 		local_tribesmen_pop_growth = -1.0
+		hostile_movement_cost = 0.15
 	}
 }
 
@@ -65,6 +66,7 @@ TRY_INJECT:mountain_wasteland = {
 		local_build_buildings_efficiency = -0.35
 		local_construction_speed = -0.35
 		local_tribesmen_pop_growth = -1.0
+		hostile_movement_cost = 0.3
 	}
 }
 
@@ -92,6 +94,7 @@ TRY_INJECT:mountains = {
 		local_build_buildings_efficiency = -0.35
 		local_construction_speed = -0.35
 		local_tribesmen_pop_growth = -1.0
+		hostile_movement_cost = 0.3
 	}
 }
 
@@ -103,6 +106,7 @@ TRY_INJECT:plateau = {
 		local_build_buildings_efficiency = -0.15
 		local_construction_speed = -0.15
 		local_tribesmen_pop_growth = -1.0
+		hostile_movement_cost = 0.05
 	}
 }
 
@@ -126,6 +130,7 @@ TRY_INJECT:ha1300_topo_valleys = {
 		local_cotton_output_modifier = -0.07
 		local_sugar_output_modifier = -0.13
 		local_tribesmen_pop_growth = -1.0
+		hostile_movement_cost = 0.15
 	}
 }
 
@@ -139,6 +144,7 @@ TRY_INJECT:wetlands = {
 		local_build_buildings_efficiency = -0.25
 		local_construction_speed = -0.25
 		local_tribesmen_pop_growth = -1.0
+		hostile_movement_cost = 0.2
 	}
 }
 

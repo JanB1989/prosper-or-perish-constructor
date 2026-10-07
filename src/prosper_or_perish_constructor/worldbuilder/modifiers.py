@@ -42,6 +42,10 @@ CLASS_DIRS = {"climate": "climates", "vegetation": "vegetation", "topography": "
 # Every location has exactly one topography, owned or not (unowned land gets no rank or country modifiers), so the
 # tribesmen birth brake rides on it: -100 % births, the free-land modifiers give a little back (2026-09-26).
 TRIBESMEN_BRAKE = ("local_tribesmen_pop_growth", "-1.0")
+# Hostile movement cost (2026-10-07, Jan): hand-set per class in [worldbuilder.hostile_movement.<attribute>]; slows
+# only armies hostile to the location (at war with it, rebels, pirates). Rivers carry none.
+HOSTILE_MOVEMENT_KEY = "hostile_movement_cost"
+HOSTILE_MOVEMENT_ATTRIBUTES = ("topography", "vegetation", "soil_type")
 ASSIGNMENT_FILES = {
     "climate": ("climate_assignments.csv", "vanilla_climate", "game_climate"),
     "vegetation": ("vegetation_assignments.csv", "vanilla_vegetation", "applied_game_vegetation"),
@@ -246,6 +250,25 @@ def class_rows(contract: Contract) -> dict[tuple[str, str], dict[str, float]]:
     return out
 
 
+def hostile_movement(raw: Mapping[str, object] | None, contract: Contract) -> dict[tuple[str, str], float]:
+    """(attribute, class) -> hostile_movement_cost from ``[worldbuilder.hostile_movement]``; unknown attributes or
+    classes raise, so a renamed World Builder class cannot silently drop its value."""
+    out: dict[tuple[str, str], float] = {}
+    for attribute, classes in (raw or {}).items():
+        if attribute not in HOSTILE_MOVEMENT_ATTRIBUTES or not isinstance(classes, Mapping):
+            raise ValueError(f"[worldbuilder.hostile_movement.{attribute}]: only {', '.join(HOSTILE_MOVEMENT_ATTRIBUTES)} take a hostile movement cost")
+        known = {str(v) for v in contract.attribute_rows.filter(pl.col("attribute") == attribute)["value"].to_list()}
+        if attribute in contract.location_attributes.columns:
+            known |= {str(v) for v in contract.location_attributes[attribute].unique().to_list() if v}
+        unknown = sorted(str(c) for c in classes if str(c) not in known)
+        if unknown:
+            raise ValueError(f"[worldbuilder.hostile_movement.{attribute}]: unknown classes {unknown}")
+        for value, cost in classes.items():
+            if float(cost):
+                out[(attribute, str(value))] = float(cost)
+    return out
+
+
 def game_key_of(contract: Contract, attribute: str, value: str) -> str:
     rows = contract.attribute_rows.filter((pl.col("attribute") == attribute) & (pl.col("value") == value))
     if len(rows) and rows["game_key"][0]:
@@ -261,9 +284,12 @@ def render_block(header: str, lines: Mapping[str, str], *, nested: str | None = 
     return "\n".join([f"{header} = {{", *body, "}"])
 
 
-def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, repo: Path, vanilla_root: Path | None = None) -> dict[str, int]:
-    """One inject file per class directory, cancelling the effective vanilla capacity and food values and adding the rows."""
+def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, repo: Path, vanilla_root: Path | None = None,
+                        hostile_config: Mapping[str, object] | None = None) -> dict[str, int]:
+    """One inject file per class directory, cancelling the effective vanilla capacity and food values and adding the rows
+    (and the hand-set hostile movement cost, ``hostile_config`` = ``[worldbuilder.hostile_movement]``)."""
     rows = class_rows(contract)
+    hostile = hostile_movement(hostile_config, contract)
     written: dict[str, int] = {}
     script_values = numeric_script_values(Path(vanilla_root) / "game" if vanilla_root is not None else None, mod_root)
     for attribute, directory in CLASS_DIRS.items():
@@ -298,6 +324,8 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
                 lines.setdefault(name, v)
             if attribute == "topography":
                 lines[TRIBESMEN_BRAKE[0]] = TRIBESMEN_BRAKE[1]
+            if (attr, value) in hostile:
+                lines[HOSTILE_MOVEMENT_KEY] = _fmt(hostile[(attr, value)])
             if lines:
                 blocks.append(render_block(f"TRY_INJECT:{key}", lines, nested="location_modifier"))
         # classes the fit never saw (no ownable location) still need their vanilla capacity and food cancelled
@@ -322,6 +350,9 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
         path = mod_root / "in_game/common" / directory / "pp_wb_attribute_rows.txt"
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("﻿" + text, encoding="utf-8", newline="\n")
+        unwritten = sorted(v for (a, v) in hostile if a == attribute and (a, v) not in rows)
+        if unwritten:
+            raise ValueError(f"[worldbuilder.hostile_movement.{attribute}]: {unwritten} have no attribute row to carry the cost")
         written[attribute] = len(blocks)
     return written
 
@@ -399,6 +430,7 @@ def setup_modifier_keys(contract: Contract, navigation: Mapping[str, object] | N
 
 def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path, vanilla_root: Path) -> dict[str, object]:
     rows = class_rows(contract)
+    hostile = hostile_movement(cfg.raw.get("hostile_movement"), contract)
     names: dict[str, str] = {}
     blocks: list[str] = []
     per_location = setup_modifier_keys(contract, cfg.raw.get("_navigation"))   # location tag -> modifier keys
@@ -415,6 +447,8 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
             mods = rows.get((attribute, value), {})
             key = f"{prefix}{value}"
             names[key] = f"{pretty(value)} {'Fertility' if attribute == 'fertility' else 'Soil'}"
+            if (attribute, value) in hostile:
+                mods = {**mods, HOSTILE_MOVEMENT_KEY: hostile[(attribute, value)]}
             blocks.append(render_block(key, {"game_data": "{ category = location }", **{k: _fmt(v) for k, v in mods.items()}}))
     flavour = cfg.raw.get("flavour") if isinstance(cfg.raw.get("flavour"), dict) else {}
     for attribute, key, label in (("is_coastal", "pp_wb_coastal", "Sea Coast"), ("is_adjacent_to_lake", "pp_wb_lake", "Lakeside")):

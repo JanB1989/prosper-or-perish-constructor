@@ -120,6 +120,7 @@ pp_wb_soil_clay = {
 	local_saffron_output_modifier = -0.09
 	local_sugar_output_modifier = -0.1
 	local_wine_output_modifier = -0.06
+	hostile_movement_cost = 0.05
 }
 
 pp_wb_soil_loam = {
@@ -142,6 +143,7 @@ pp_wb_soil_peat = {
 	local_saffron_output_modifier = -0.09
 	local_silk_output_modifier = -0.14
 	local_wine_output_modifier = -0.14
+	hostile_movement_cost = 0.1
 }
 
 pp_wb_soil_sand = {

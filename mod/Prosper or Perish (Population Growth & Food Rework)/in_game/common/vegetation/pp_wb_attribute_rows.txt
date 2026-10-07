@@ -25,6 +25,7 @@ TRY_INJECT:ha1300_veg_coniferous_forest = {
 		free_building_levels = -3
 		local_build_buildings_efficiency = -0.08
 		local_construction_speed = -0.08
+		hostile_movement_cost = 0.15
 	}
 }
 
@@ -46,6 +47,7 @@ TRY_INJECT:desert = {
 		free_building_levels = -6
 		local_build_buildings_efficiency = -0.2
 		local_construction_speed = -0.2
+		hostile_movement_cost = 0.1
 	}
 }
 
@@ -69,6 +71,7 @@ TRY_INJECT:ha1300_veg_dry_forest = {
 		free_building_levels = -3
 		local_build_buildings_efficiency = -0.08
 		local_construction_speed = -0.08
+		hostile_movement_cost = 0.1
 	}
 }
 
@@ -96,6 +99,7 @@ TRY_INJECT:forest = {
 		free_building_levels = -3
 		local_build_buildings_efficiency = -0.08
 		local_construction_speed = -0.08
+		hostile_movement_cost = 0.15
 	}
 }
 
@@ -121,6 +125,7 @@ TRY_INJECT:jungle = {
 		free_building_levels = -6
 		local_build_buildings_efficiency = -0.2
 		local_construction_speed = -0.2
+		hostile_movement_cost = 0.3
 	}
 }
 
@@ -134,6 +139,7 @@ TRY_INJECT:ha1300_veg_marsh = {
 		local_potato_output_modifier = -0.06
 		local_silk_output_modifier = 0.12
 		local_tobacco_output_modifier = -0.09
+		hostile_movement_cost = 0.2
 	}
 }
 
@@ -163,6 +169,7 @@ TRY_INJECT:ha1300_veg_mixed_forest = {
 		free_building_levels = -3
 		local_build_buildings_efficiency = -0.08
 		local_construction_speed = -0.08
+		hostile_movement_cost = 0.15
 	}
 }
 
@@ -236,6 +243,7 @@ TRY_INJECT:ha1300_veg_swamp = {
 		free_building_levels = -3
 		local_build_buildings_efficiency = -0.08
 		local_construction_speed = -0.08
+		hostile_movement_cost = 0.25
 	}
 }
 
@@ -253,6 +261,7 @@ TRY_INJECT:ha1300_veg_thicket = {
 		local_silk_output_modifier = 0.09
 		local_sugar_output_modifier = -0.1
 		local_tea_output_modifier = -0.13
+		hostile_movement_cost = 0.15
 	}
 }
 
@@ -286,6 +295,7 @@ TRY_INJECT:woods = {
 		free_building_levels = -1
 		local_build_buildings_efficiency = -0.03
 		local_construction_speed = -0.03
+		hostile_movement_cost = 0.05
 	}
 }
 

@@ -11634,6 +11634,7 @@ building_manager = {
 	market_village = { tag = CHI level = 2 location = hongshui }
 	market_village = { tag = CHR level = 1 location = horodnia }
 	market_village = { tag = KIE level = 1 location = horoshino }
+	market_village = { tag = MUN level = 1 location = horstmar }
 	market_village = { tag = YOH level = 1 location = huajuapan }
 	market_village = { tag = URC level = 2 location = huaman_karpa }
 	market_village = { tag = MIX level = 1 location = huamelula }
@@ -12110,7 +12111,6 @@ building_manager = {
 	mason = { tag = DLH level = 2 location = bathinda }
 	mason = { tag = OTC level = 1 location = bayan_ula }
 	mason = { tag = BON level = 1 location = begho }
-	mason = { tag = HUN level = 1 location = belgrad }
 	mason = { tag = GLH level = 1 location = beljamen }
 	mason = { tag = ALS level = 2 location = benfeld }
 	mason = { tag = BEN level = 2 location = benin }
@@ -12307,7 +12307,6 @@ building_manager = {
 	mason = { tag = GRG level = 2 location = rudbar }
 	mason = { tag = HAL level = 2 location = rzeszow }
 	mason = { tag = DLH level = 2 location = saharanpur }
-	mason = { tag = SLZ level = 1 location = salzburg }
 	mason = { tag = YSU level = 2 location = samarkand }
 	mason = { tag = YEM level = 2 location = sana_yemen }
 	mason = { tag = BTG level = 2 location = sangme }
@@ -12380,9 +12379,9 @@ building_manager = {
 	mason = { tag = YOH level = 2 location = yohualtepec }
 	mason = { tag = CHI level = 2 location = yuyao }
 	mason = { tag = ZAT level = 2 location = zacatlan }
-	mason = { tag = HUN level = 1 location = zagreb }
+	mason = { tag = HUN level = 2 location = zagreb }
 	mason = { tag = CHI level = 2 location = zhuji }
-	mason = { tag = ZUR level = 1 location = zurich }
+	mason = { tag = ZUR level = 2 location = zurich }
 	millet_farm = { tag = DAN level = 1 location = aalborg }
 	millet_farm = { tag = FLA level = 1 location = aalst }
 	millet_farm = { tag = HAB level = 1 location = aarau }
@@ -16473,304 +16472,1742 @@ building_manager = {
 	stone_quarry = { tag = TZE level = 1 location = zinacantan }
 	stone_quarry = { tag = ETH level = 1 location = ziqwala }
 	stone_quarry = { tag = BCH level = 1 location = zuoz }
+	tavern = { tag = AAC level = 1 location = aachen }
+	tavern = { tag = ACO level = 1 location = aaku }
+	tavern = { tag = SCO level = 1 location = aberdeen }
+	tavern = { tag = SCO level = 1 location = aberfeldy }
+	tavern = { tag = DAJ level = 1 location = abesehir }
+	tavern = { tag = SWE level = 1 location = abo }
+	tavern = { tag = UMA level = 1 location = achacachi }
 	tavern = { tag = MAM level = 1 location = acre }
+	tavern = { tag = SBY level = 1 location = ad_dilam }
+	tavern = { tag = ETH level = 1 location = adigrat }
+	tavern = { tag = ADO level = 1 location = ado_ekiti }
+	tavern = { tag = AFA level = 1 location = afrera }
+	tavern = { tag = OYO level = 1 location = agbonle }
+	tavern = { tag = SBZ level = 1 location = agh_qala }
+	tavern = { tag = JAL level = 1 location = aghkand }
+	tavern = { tag = BQL level = 1 location = agordat }
+	tavern = { tag = KHU level = 1 location = ahel }
 	tavern = { tag = DLH level = 1 location = ahmednagar }
+	tavern = { tag = AHU level = 1 location = ahuacatlan }
+	tavern = { tag = TEO level = 1 location = ahuilizapan }
+	tavern = { tag = MDY level = 1 location = aklan }
+	tavern = { tag = DMB level = 1 location = akre }
+	tavern = { tag = KAR level = 1 location = aksaray }
+	tavern = { tag = MNL level = 1 location = aksu }
+	tavern = { tag = AKR level = 1 location = akure }
+	tavern = { tag = MDA level = 1 location = al_ais }
+	tavern = { tag = BNL level = 1 location = al_ajfar }
+	tavern = { tag = MUT level = 1 location = al_aythamah }
+	tavern = { tag = YEM level = 1 location = al_bayda_yemen }
+	tavern = { tag = MUT level = 1 location = al_ghazalah }
+	tavern = { tag = ZIB level = 1 location = al_ghrabah }
+	tavern = { tag = KLB level = 1 location = al_hajr }
+	tavern = { tag = QHT level = 1 location = al_husayniyah }
+	tavern = { tag = BNL level = 1 location = al_maghib }
+	tavern = { tag = DWS level = 1 location = al_majazah }
+	tavern = { tag = AAD level = 1 location = al_qaiyah }
+	tavern = { tag = SBY level = 1 location = al_quway }
+	tavern = { tag = JAL level = 1 location = al_sinn }
+	tavern = { tag = MDA level = 1 location = al_thamad }
+	tavern = { tag = FDL level = 1 location = al_thulayma }
+	tavern = { tag = MKR level = 1 location = al_tiz }
+	tavern = { tag = KLB level = 1 location = al_yamamah }
+	tavern = { tag = BYZ level = 1 location = alasehir }
+	tavern = { tag = YSU level = 1 location = alat }
+	tavern = { tag = CAS level = 1 location = albacete }
 	tavern = { tag = MAM level = 1 location = aleppo }
+	tavern = { tag = GEN level = 1 location = alghero }
+	tavern = { tag = TLE level = 1 location = algiers }
+	tavern = { tag = GOB level = 1 location = alkalawa }
+	tavern = { tag = CHG level = 1 location = almaliq }
+	tavern = { tag = CHG level = 1 location = almaty }
+	tavern = { tag = URI level = 1 location = altdorf }
+	tavern = { tag = HNZ level = 1 location = altit }
+	tavern = { tag = LIV level = 1 location = aluksne }
+	tavern = { tag = CHI level = 1 location = alyanbulag }
 	tavern = { tag = TDJ level = 1 location = amasya }
+	tavern = { tag = AMT level = 1 location = amaticoztitlan }
 	tavern = { tag = DHU level = 1 location = amber_loc }
+	tavern = { tag = PAL level = 1 location = amberg }
+	tavern = { tag = KHG level = 1 location = amchok }
+	tavern = { tag = BRL level = 1 location = amol_turkmenabad }
+	tavern = { tag = AML level = 1 location = amollan }
+	tavern = { tag = MUT level = 1 location = an_nakhil }
 	tavern = { tag = ANC level = 1 location = ancona }
+	tavern = { tag = KNW level = 1 location = andolo }
+	tavern = { tag = ANR level = 1 location = andorra_la_vella }
 	tavern = { tag = VEN level = 1 location = andros }
 	tavern = { tag = KHM level = 1 location = angkor }
+	tavern = { tag = SME level = 1 location = ani }
 	tavern = { tag = AHI level = 1 location = ankara }
 	tavern = { tag = BIJ level = 1 location = annaba }
 	tavern = { tag = MAM level = 1 location = antioch }
+	tavern = { tag = AHY level = 1 location = antsohihy }
 	tavern = { tag = CHI level = 1 location = anyang }
+	tavern = { tag = KHM level = 1 location = apui }
+	tavern = { tag = DWS level = 1 location = aqiq_banu_uqayi }
+	tavern = { tag = GLH level = 1 location = aqmecit_prybuzhzhya }
 	tavern = { tag = NAP level = 2 location = aquila }
+	tavern = { tag = AZF level = 1 location = ar_rabadha }
+	tavern = { tag = BNL level = 1 location = ar_rass }
+	tavern = { tag = ATQ level = 1 location = araban }
+	tavern = { tag = QUN level = 1 location = araska }
+	tavern = { tag = KKL level = 1 location = ardabil }
+	tavern = { tag = INJ level = 1 location = ardestan }
+	tavern = { tag = FLO level = 1 location = arezzo }
+	tavern = { tag = ARG level = 1 location = argos }
+	tavern = { tag = APD level = 1 location = arkhan }
+	tavern = { tag = NOV level = 1 location = arkhangelsk }
+	tavern = { tag = AMA level = 1 location = armagh }
+	tavern = { tag = CRA level = 1 location = arque }
 	tavern = { tag = ARS level = 1 location = arras }
+	tavern = { tag = AZF level = 1 location = as_suwaydirah }
+	tavern = { tag = HRB level = 1 location = as_suwayriqiyah }
 	tavern = { tag = ASC level = 3 location = ascolipiceno }
+	tavern = { tag = SWE level = 1 location = asele }
 	tavern = { tag = DLH level = 1 location = ashaval }
+	tavern = { tag = CHG level = 1 location = aspara }
+	tavern = { tag = ATI level = 1 location = asti }
 	tavern = { tag = GLH level = 1 location = astrakhan }
 	tavern = { tag = MAM level = 1 location = asyut }
+	tavern = { tag = ATP level = 1 location = atepec }
+	tavern = { tag = HYM level = 1 location = athlone }
+	tavern = { tag = CHJ level = 1 location = atico }
+	tavern = { tag = ATO level = 1 location = atocpan }
+	tavern = { tag = TOZ level = 1 location = atzaccan }
+	tavern = { tag = KKE level = 1 location = auccapana }
 	tavern = { tag = AGC level = 1 location = augsburg }
+	tavern = { tag = SWE level = 1 location = avesta }
+	tavern = { tag = PAP level = 1 location = avignon }
+	tavern = { tag = CHI level = 1 location = avraga }
 	tavern = { tag = DLH level = 1 location = awadh }
+	tavern = { tag = KLW level = 1 location = awaran }
 	tavern = { tag = BQA level = 1 location = awjila }
+	tavern = { tag = NRI level = 1 location = awka_etiti }
+	tavern = { tag = PCJ level = 1 location = axawiri }
+	tavern = { tag = AXC level = 1 location = axochiapan }
+	tavern = { tag = AXO level = 1 location = axocopan }
 	tavern = { tag = ETH level = 1 location = axum }
+	tavern = { tag = KNA level = 1 location = ayaviri }
 	tavern = { tag = TEP level = 1 location = azcapotzalco }
+	tavern = { tag = BOR level = 1 location = babana }
+	tavern = { tag = WUR level = 1 location = backnang }
 	tavern = { tag = CAS level = 2 location = badajoz }
+	tavern = { tag = CHG level = 1 location = badam }
+	tavern = { tag = MZF level = 1 location = bafq }
+	tavern = { tag = KRM level = 1 location = baft }
 	tavern = { tag = JAL level = 1 location = baghdad }
+	tavern = { tag = MDY level = 1 location = bago_negros }
+	tavern = { tag = CHI level = 1 location = baima_daming }
+	tavern = { tag = SWT level = 1 location = bajaur }
+	tavern = { tag = GLH level = 1 location = bakanas }
+	tavern = { tag = TKR level = 1 location = bakel }
+	tavern = { tag = CHG level = 1 location = balasagun }
+	tavern = { tag = BLE level = 1 location = bale }
+	tavern = { tag = SWT level = 1 location = baligram }
+	tavern = { tag = HOH level = 1 location = balingen }
 	tavern = { tag = SLD level = 1 location = balkh }
+	tavern = { tag = CHG level = 1 location = balykchy }
+	tavern = { tag = BAM level = 1 location = bamberg }
+	tavern = { tag = BMP level = 1 location = bampur }
+	tavern = { tag = DFN level = 1 location = banamba }
+	tavern = { tag = DGB level = 1 location = banda_ahenkro }
+	tavern = { tag = JSK level = 1 location = bandar_e_jask }
+	tavern = { tag = BLA level = 1 location = bannajbur }
+	tavern = { tag = BTE level = 1 location = bantayan }
+	tavern = { tag = TSK level = 1 location = baoning_maozhou }
+	tavern = { tag = UTB level = 1 location = barahrah }
+	tavern = { tag = ETH level = 1 location = barara }
 	tavern = { tag = ARA level = 1 location = barcelona }
+	tavern = { tag = KRM level = 1 location = bardsir }
+	tavern = { tag = SUT level = 1 location = bargiri }
 	tavern = { tag = NAP level = 5 location = bari }
+	tavern = { tag = KRP level = 1 location = barito }
+	tavern = { tag = BLD level = 1 location = barlad }
+	tavern = { tag = RRU level = 1 location = barru }
+	tavern = { tag = KTW level = 1 location = barza }
+	tavern = { tag = BMP level = 1 location = bashagard }
+	tavern = { tag = LST level = 1 location = bastak }
+	tavern = { tag = GRG level = 1 location = bastam }
+	tavern = { tag = LUX level = 1 location = bastogne }
+	tavern = { tag = BTG level = 1 location = batang }
+	tavern = { tag = ZZZ level = 1 location = bauchi }
+	tavern = { tag = BAD level = 1 location = baud }
 	tavern = { tag = CHI level = 1 location = baxian }
+	tavern = { tag = MYI level = 1 location = bay }
+	tavern = { tag = PGS level = 1 location = bayambang }
+	tavern = { tag = CHI level = 1 location = bayankhot }
+	tavern = { tag = AQN level = 1 location = bayonne }
+	tavern = { tag = TAT level = 1 location = bechar }
+	tavern = { tag = BSK level = 1 location = beeskow }
+	tavern = { tag = HZP level = 1 location = behbahan }
+	tavern = { tag = BHL level = 1 location = beichlingen }
 	tavern = { tag = BIJ level = 1 location = bejaia }
+	tavern = { tag = GLH level = 1 location = belaya_glina }
+	tavern = { tag = GLH level = 1 location = belaya_kalitva }
+	tavern = { tag = GLH level = 1 location = belen_ana }
+	tavern = { tag = HUN level = 1 location = belgrad }
+	tavern = { tag = LCA level = 1 location = bellinzona }
+	tavern = { tag = BLO level = 1 location = beloozero }
+	tavern = { tag = SMO level = 1 location = bely }
+	tavern = { tag = BMK level = 1 location = bemanevika }
+	tavern = { tag = ARA level = 1 location = benabarre }
 	tavern = { tag = BEN level = 1 location = benin }
+	tavern = { tag = BNT level = 1 location = bentheim }
 	tavern = { tag = NOR level = 1 location = berg }
+	tavern = { tag = WTG level = 1 location = berleburg }
+	tavern = { tag = BRN level = 1 location = bern }
+	tavern = { tag = BEI level = 1 location = berune }
+	tavern = { tag = ENG level = 1 location = berwick }
+	tavern = { tag = BSC level = 1 location = besancon }
+	tavern = { tag = KAR level = 1 location = beysehir }
+	tavern = { tag = MSN level = 1 location = bhadrachalam }
+	tavern = { tag = LIT level = 1 location = biala_podlaska }
+	tavern = { tag = BIB level = 1 location = biberach }
+	tavern = { tag = SMO level = 1 location = bibirevo }
 	tavern = { tag = NUP level = 1 location = bida }
 	tavern = { tag = DLH level = 1 location = bijapur }
+	tavern = { tag = KBO level = 1 location = bilma }
+	tavern = { tag = ENN level = 1 location = bilo }
+	tavern = { tag = BIN level = 1 location = bingol }
 	tavern = { tag = TUN level = 1 location = bir_el_alter }
+	tavern = { tag = HUT level = 1 location = bir_fajr }
+	tavern = { tag = KAN level = 1 location = biram }
+	tavern = { tag = ZAM level = 1 location = birnin_kebbi }
+	tavern = { tag = ZAM level = 1 location = birnin_zamfara }
+	tavern = { tag = LIT level = 1 location = birzai }
+	tavern = { tag = CHI level = 1 location = bishreit }
+	tavern = { tag = ZAB level = 1 location = biskra }
+	tavern = { tag = RKL level = 1 location = bisotun }
+	tavern = { tag = LUX level = 1 location = bitburg }
 	tavern = { tag = ZWE level = 1 location = bitche }
 	tavern = { tag = ARB level = 1 location = bitti }
+	tavern = { tag = BXN level = 1 location = bled }
+	tavern = { tag = MSP level = 1 location = bobbio }
+	tavern = { tag = DRU level = 1 location = bobr }
+	tavern = { tag = BZU level = 1 location = bochuan }
+	tavern = { tag = GRG level = 1 location = bojnord }
 	tavern = { tag = BLG level = 1 location = bologna }
+	tavern = { tag = SHP level = 1 location = bolvadin }
+	tavern = { tag = BON level = 1 location = bono_manso }
+	tavern = { tag = QAS level = 1 location = boorj }
+	tavern = { tag = NOV level = 1 location = borovichi }
+	tavern = { tag = CHG level = 1 location = bortala }
+	tavern = { tag = LCK level = 1 location = borujerd }
+	tavern = { tag = BLL level = 1 location = bouillon }
+	tavern = { tag = TFK level = 1 location = bourem }
+	tavern = { tag = FRA level = 1 location = bourges }
+	tavern = { tag = BSM level = 1 location = boussouma }
+	tavern = { tag = BZU level = 1 location = bozhou }
+	tavern = { tag = GLH level = 1 location = bozok_astana }
 	tavern = { tag = NOR level = 1 location = bragernes }
+	tavern = { tag = BRO level = 1 location = brecknock }
+	tavern = { tag = BRM level = 1 location = bremen }
 	tavern = { tag = VER level = 1 location = brescia }
+	tavern = { tag = BXN level = 1 location = brixen }
 	tavern = { tag = DLH level = 1 location = broach }
+	tavern = { tag = NOV level = 1 location = bronnitsa }
+	tavern = { tag = WBG level = 1 location = bruckenau }
 	tavern = { tag = FLA level = 1 location = bruges }
 	tavern = { tag = BRB level = 4 location = brussels }
+	tavern = { tag = WAL level = 1 location = bucharest }
+	tavern = { tag = TIB level = 1 location = buchu }
+	tavern = { tag = BUG level = 1 location = buganda }
+	tavern = { tag = HCN level = 1 location = buir_nuur }
 	tavern = { tag = YSU level = 1 location = bukhara }
+	tavern = { tag = BLA level = 1 location = buleda }
+	tavern = { tag = TRH level = 1 location = bulgan }
+	tavern = { tag = VUN level = 1 location = bungu_kongo }
+	tavern = { tag = UBV level = 1 location = burglengenfeld }
+	tavern = { tag = QTA level = 1 location = buri }
 	tavern = { tag = TUR level = 1 location = bursa }
+	tavern = { tag = ALB level = 1 location = butrint }
+	tavern = { tag = BTN level = 1 location = butung }
+	tavern = { tag = WAL level = 1 location = buzau }
+	tavern = { tag = AQU level = 1 location = buzet }
 	tavern = { tag = CAS level = 1 location = caceres }
 	tavern = { tag = ARA level = 4 location = cagliari }
+	tavern = { tag = CHK level = 1 location = cahokia }
+	tavern = { tag = BLD level = 1 location = cahul }
 	tavern = { tag = MAM level = 1 location = cairo }
+	tavern = { tag = ARA level = 1 location = calatayud }
+	tavern = { tag = CAV level = 1 location = calvas }
+	tavern = { tag = ONN level = 1 location = canadaigua }
+	tavern = { tag = KKA level = 1 location = canajoharie }
+	tavern = { tag = GRR level = 1 location = cangochamba }
+	tavern = { tag = CHI level = 1 location = cangxi }
+	tavern = { tag = NTA level = 1 location = cantamarca }
+	tavern = { tag = BEA level = 1 location = carbery }
+	tavern = { tag = SPO level = 1 location = castellaun }
+	tavern = { tag = ARA level = 1 location = castellon_de_la_plana }
+	tavern = { tag = MYO level = 1 location = castlebar }
+	tavern = { tag = CWM level = 1 location = castleconnell }
+	tavern = { tag = TNT level = 1 location = cavalese }
+	tavern = { tag = NLG level = 1 location = ceheng }
+	tavern = { tag = CEM level = 1 location = cemisgezek }
+	tavern = { tag = SIG level = 1 location = cenrana }
+	tavern = { tag = CEP level = 1 location = cephalonia }
+	tavern = { tag = HTN level = 1 location = cetatea_tetina }
+	tavern = { tag = CEV level = 1 location = ceva }
+	tavern = { tag = AMD level = 1 location = chabcha }
+	tavern = { tag = CTM level = 1 location = chactemal }
+	tavern = { tag = CHI level = 1 location = chagannur }
+	tavern = { tag = VTN level = 1 location = chaiyaphum }
 	tavern = { tag = CKP level = 1 location = chakan_putum }
+	tavern = { tag = KOW level = 1 location = chakanbakan }
+	tavern = { tag = CLC level = 1 location = chalco }
+	tavern = { tag = LBV level = 1 location = cham }
+	tavern = { tag = CAB level = 1 location = chamba_india }
 	tavern = { tag = GNJ level = 1 location = chamdo }
 	tavern = { tag = CMN level = 1 location = champaner }
+	tavern = { tag = KHM level = 1 location = champasak }
+	tavern = { tag = CHM level = 1 location = chan_chan }
+	tavern = { tag = ITU level = 1 location = changchun }
+	tavern = { tag = CHI level = 1 location = changhua }
 	tavern = { tag = CHI level = 1 location = changsha }
 	tavern = { tag = CHI level = 1 location = changshe }
+	tavern = { tag = CRA level = 1 location = charka }
+	tavern = { tag = QCH level = 1 location = charklik }
+	tavern = { tag = BLO level = 1 location = charonda }
 	tavern = { tag = CHI level = 1 location = chengdu }
 	tavern = { tag = CHI level = 1 location = chengji }
+	tavern = { tag = CHK level = 1 location = chepoussa }
+	tavern = { tag = TLE level = 1 location = cherchell }
+	tavern = { tag = PRM level = 1 location = cherdyn }
+	tavern = { tag = BLO level = 1 location = cherepoves }
+	tavern = { tag = GLH level = 1 location = chimgi_tura }
+	tavern = { tag = MMM level = 1 location = chinabajul }
+	tavern = { tag = CIC level = 1 location = chinchay }
 	tavern = { tag = BYZ level = 1 location = chios }
+	tavern = { tag = ZMW level = 1 location = chipukuswi }
+	tavern = { tag = HSC level = 1 location = chisinau }
+	tavern = { tag = CTR level = 1 location = chitral }
 	tavern = { tag = ARK level = 1 location = chittagong }
 	tavern = { tag = MEW level = 1 location = chittor }
+	tavern = { tag = POL level = 1 location = chodziez }
+	tavern = { tag = CRS level = 1 location = choigan }
+	tavern = { tag = LUP level = 1 location = chucuito }
+	tavern = { tag = NOV level = 1 location = chudovo }
+	tavern = { tag = ZAQ level = 1 location = chunsua }
+	tavern = { tag = CHI level = 1 location = chuqiu }
+	tavern = { tag = BCH level = 1 location = chur }
+	tavern = { tag = CRK level = 1 location = churumekua }
+	tavern = { tag = CAS level = 1 location = cieza }
+	tavern = { tag = VER level = 1 location = cividale }
+	tavern = { tag = CMA level = 1 location = clifden }
+	tavern = { tag = ORD level = 1 location = clonmel }
+	tavern = { tag = QIG level = 1 location = coatlan }
+	tavern = { tag = CFC level = 1 location = colmar }
 	tavern = { tag = KOL level = 1 location = cologne }
+	tavern = { tag = ERE level = 1 location = comana_cil }
 	tavern = { tag = BUL level = 1 location = constanta }
 	tavern = { tag = BIJ level = 1 location = constantine_ALG }
 	tavern = { tag = BYZ level = 1 location = constantinople }
 	tavern = { tag = CAS level = 1 location = cordoba }
+	tavern = { tag = ACH level = 1 location = corinth }
+	tavern = { tag = PLE level = 1 location = cork }
+	tavern = { tag = CSM level = 1 location = cosamaloapan }
+	tavern = { tag = GEO level = 1 location = costa }
+	tavern = { tag = ENG level = 1 location = coventry }
 	tavern = { tag = MLO level = 1 location = cremona }
+	tavern = { tag = QUA level = 1 location = cuauhtemallan }
+	tavern = { tag = UAU level = 1 location = cuauhteopan }
+	tavern = { tag = CTX level = 1 location = cuetlaxtlan }
+	tavern = { tag = CCN level = 1 location = cuicatlan }
+	tavern = { tag = OSS level = 1 location = cullahill }
+	tavern = { tag = SBL level = 1 location = cupar }
+	tavern = { tag = CUZ level = 1 location = cutzamala }
+	tavern = { tag = QHZ level = 1 location = cuyuxquihui }
+	tavern = { tag = CZL level = 1 location = cuzalapa }
+	tavern = { tag = DAI level = 1 location = da_giang }
 	tavern = { tag = CHI level = 1 location = dadu }
+	tavern = { tag = DHK level = 1 location = dahlak }
+	tavern = { tag = FLY level = 1 location = daingean }
+	tavern = { tag = CHA level = 1 location = dak_lak }
 	tavern = { tag = SWE level = 1 location = dalaborg }
+	tavern = { tag = QAS level = 1 location = dalai_nuur }
 	tavern = { tag = MAM level = 1 location = damascus }
 	tavern = { tag = MAM level = 1 location = damietta }
+	tavern = { tag = JUR level = 1 location = darab }
+	tavern = { tag = GLH level = 1 location = dardeling }
+	tavern = { tag = GOL level = 1 location = darlag }
+	tavern = { tag = CKL level = 1 location = dartsedo }
+	tavern = { tag = QCH level = 1 location = dashahai }
 	tavern = { tag = CHI level = 1 location = datong_datong }
+	tavern = { tag = LIV level = 1 location = daugavpils }
+	tavern = { tag = DUN level = 1 location = daun }
+	tavern = { tag = DAA level = 1 location = daura }
+	tavern = { tag = TGG level = 1 location = davos }
+	tavern = { tag = MED level = 1 location = debarwa }
 	tavern = { tag = GFS level = 1 location = debila }
+	tavern = { tag = BSD level = 1 location = deh_kundi }
+	tavern = { tag = MZF level = 1 location = dehshir }
 	tavern = { tag = DLH level = 1 location = delhi }
+	tavern = { tag = HDN level = 1 location = delijan }
+	tavern = { tag = SMO level = 1 location = demidov }
+	tavern = { tag = SON level = 1 location = deou }
+	tavern = { tag = GOB level = 1 location = deoule }
+	tavern = { tag = DRG level = 1 location = derge }
+	tavern = { tag = SGT level = 1 location = dharmasraya }
+	tavern = { tag = ZGH level = 1 location = dia }
+	tavern = { tag = BBK level = 1 location = diakha }
+	tavern = { tag = JOL level = 1 location = diakhao }
+	tavern = { tag = DFN level = 1 location = diara }
+	tavern = { tag = OUA level = 1 location = diebougou }
+	tavern = { tag = DPH level = 1 location = diepholz }
+	tavern = { tag = DIE level = 1 location = diez }
+	tavern = { tag = CDL level = 1 location = dingbian_shunning }
+	tavern = { tag = DFN level = 1 location = dioumara }
+	tavern = { tag = CRL level = 1 location = dir }
+	tavern = { tag = DIS level = 1 location = disentis }
 	tavern = { tag = SUT level = 1 location = diyarbekir }
+	tavern = { tag = BMR level = 1 location = djenne }
+	tavern = { tag = LIV level = 1 location = dobele }
+	tavern = { tag = TRY level = 1 location = donegal }
 	tavern = { tag = MAK level = 1 location = dongola }
+	tavern = { tag = BMR level = 1 location = douentza }
+	tavern = { tag = KHN level = 1 location = dowzdab }
+	tavern = { tag = WAL level = 1 location = dragasani }
+	tavern = { tag = DRU level = 1 location = drutsk }
+	tavern = { tag = PLE level = 1 location = dublin }
 	tavern = { tag = RAG level = 1 location = dubrovnik }
+	tavern = { tag = VOL level = 1 location = dubrovytsia }
+	tavern = { tag = SCO level = 1 location = dunfermline }
+	tavern = { tag = TYR level = 1 location = dungannon }
+	tavern = { tag = GYE level = 1 location = durgyeling }
+	tavern = { tag = ALB level = 1 location = durres }
+	tavern = { tag = CKL level = 1 location = dzogon }
+	tavern = { tag = ABW level = 1 location = ed_damer }
+	tavern = { tag = EIC level = 1 location = eichstatt }
+	tavern = { tag = THU level = 1 location = eisenach }
+	tavern = { tag = SWE level = 1 location = ekenas }
+	tavern = { tag = MOY level = 1 location = elgin }
+	tavern = { tag = ELL level = 1 location = ellwangen }
+	tavern = { tag = THO level = 1 location = ennis }
+	tavern = { tag = FMA level = 1 location = enniskillen }
+	tavern = { tag = NRI level = 1 location = enugu }
 	tavern = { tag = MTZ level = 1 location = epinal }
+	tavern = { tag = INJ level = 1 location = eqlid }
+	tavern = { tag = KIR level = 1 location = erbach_swabia }
+	tavern = { tag = MZJ level = 1 location = erbil }
+	tavern = { tag = CHI level = 1 location = erdao }
+	tavern = { tag = KAR level = 1 location = eregli_kar }
+	tavern = { tag = CHI level = 1 location = erenkhot }
 	tavern = { tag = ERF level = 1 location = erfurt }
 	tavern = { tag = ACH level = 1 location = ermioni }
+	tavern = { tag = MZF level = 1 location = ernan }
+	tavern = { tag = PAL level = 1 location = eschenbach }
+	tavern = { tag = SFR level = 1 location = esfarayen }
 	tavern = { tag = POR level = 4 location = evora }
+	tavern = { tag = EWY level = 1 location = ewyas }
+	tavern = { tag = ANZ level = 1 location = fadak }
+	tavern = { tag = MIH level = 1 location = farah }
+	tavern = { tag = OUA level = 1 location = faramana }
+	tavern = { tag = GRG level = 1 location = faraveh }
+	tavern = { tag = POR level = 1 location = faro }
 	tavern = { tag = DAU level = 1 location = faucigny }
+	tavern = { tag = HZP level = 1 location = fereydunshahr }
 	tavern = { tag = FER level = 1 location = ferrara }
 	tavern = { tag = MOR level = 1 location = fez }
+	tavern = { tag = INJ level = 1 location = firuzabad }
+	tavern = { tag = SMD level = 1 location = fischhausen }
 	tavern = { tag = NOR level = 1 location = flekkefjord }
 	tavern = { tag = FLO level = 1 location = florence }
+	tavern = { tag = FMB level = 1 location = fomin_gorodok }
+	tavern = { tag = KCH level = 1 location = fominichi }
+	tavern = { tag = FBG level = 1 location = freiburg }
+	tavern = { tag = SLZ level = 1 location = friesach }
+	tavern = { tag = TRN level = 1 location = frutigen }
+	tavern = { tag = CHI level = 1 location = fuchuan_ningxia }
 	tavern = { tag = CHI level = 1 location = fuliang }
+	tavern = { tag = FUR level = 1 location = furstenberg }
+	tavern = { tag = CHI level = 1 location = fuxin }
+	tavern = { tag = CHI level = 1 location = fuzhou }
+	tavern = { tag = MNZ level = 1 location = fuzhou_songpan }
+	tavern = { tag = PLK level = 1 location = gabin }
+	tavern = { tag = GFS level = 1 location = gafsa }
+	tavern = { tag = CHI level = 1 location = galbyn_gobi }
+	tavern = { tag = GLM level = 1 location = galich }
+	tavern = { tag = IFA level = 1 location = galkayo }
+	tavern = { tag = BYZ level = 1 location = gallipoli }
+	tavern = { tag = CLR level = 1 location = galway }
+	tavern = { tag = BRU level = 1 location = gandersheim }
+	tavern = { tag = KCN level = 1 location = gandzasar }
+	tavern = { tag = JAL level = 1 location = ganja }
+	tavern = { tag = HOR level = 1 location = ganze }
 	tavern = { tag = CHI level = 1 location = ganzhou }
+	tavern = { tag = SON level = 1 location = gao }
+	tavern = { tag = CHI level = 1 location = gaotai }
+	tavern = { tag = CHI level = 1 location = gapsan }
+	tavern = { tag = MAL level = 1 location = garalo }
+	tavern = { tag = GRL level = 1 location = gardr }
+	tavern = { tag = BAT level = 1 location = gaxun_gobi }
+	tavern = { tag = LGE level = 1 location = gayo_lues }
 	tavern = { tag = TEU level = 1 location = gdansk }
+	tavern = { tag = SWE level = 1 location = gefle }
+	tavern = { tag = GNV level = 1 location = geneve }
 	tavern = { tag = GEN level = 1 location = genoa }
+	tavern = { tag = LGK level = 1 location = gerik }
+	tavern = { tag = QCH level = 1 location = geziyandun }
 	tavern = { tag = DJE level = 1 location = ghadames }
+	tavern = { tag = MZB level = 1 location = ghardaia }
 	tavern = { tag = TRP level = 1 location = ghariyan }
+	tavern = { tag = KRG level = 1 location = gharm }
+	tavern = { tag = MOR level = 1 location = ghassasa }
 	tavern = { tag = NGD level = 1 location = ghazni }
 	tavern = { tag = FLA level = 2 location = ghent }
 	tavern = { tag = ETA level = 1 location = gien }
+	tavern = { tag = KLR level = 1 location = gilan_gharb }
+	tavern = { tag = GLI level = 1 location = gilgit }
+	tavern = { tag = WUY level = 1 location = girin_ula }
+	tavern = { tag = VDZ level = 1 location = gladzor }
+	tavern = { tag = HAB level = 1 location = glarus }
+	tavern = { tag = IMA level = 1 location = glendalough }
+	tavern = { tag = GLO level = 1 location = glogow }
+	tavern = { tag = KIE level = 1 location = glushkovo }
 	tavern = { tag = GOA level = 1 location = goa }
+	tavern = { tag = SWE level = 1 location = goksholm }
+	tavern = { tag = KRM level = 1 location = golashkerd }
+	tavern = { tag = NEY level = 1 location = golmin_salggiyan }
+	tavern = { tag = GLH level = 1 location = goly_karamysh }
+	tavern = { tag = CHR level = 1 location = gomel }
+	tavern = { tag = KHT level = 1 location = gonabad }
+	tavern = { tag = TIB level = 1 location = gongkar }
+	tavern = { tag = RAW level = 1 location = goniadz }
+	tavern = { tag = GNJ level = 1 location = gonjo }
+	tavern = { tag = SCI level = 1 location = gora }
+	tavern = { tag = GOR level = 1 location = gorizia }
+	tavern = { tag = GRS level = 1 location = gorodets }
+	tavern = { tag = GOS level = 1 location = goslar }
+	tavern = { tag = TFK level = 1 location = gourma_rharous }
+	tavern = { tag = GRF level = 1 location = grafenau }
 	tavern = { tag = GRA level = 1 location = granada }
 	tavern = { tag = ATH level = 1 location = gravia }
+	tavern = { tag = HAB level = 1 location = graz }
+	tavern = { tag = ZMW level = 1 location = great_zimbabwe }
 	tavern = { tag = DAU level = 1 location = grenoble }
+	tavern = { tag = LIV level = 1 location = grobina }
+	tavern = { tag = LIT level = 1 location = grodno }
+	tavern = { tag = STE level = 1 location = gryfow }
 	tavern = { tag = CHI level = 1 location = guancheng_zhengzhou }
+	tavern = { tag = JLR level = 1 location = gudamalani }
+	tavern = { tag = BIR level = 1 location = guide }
+	tavern = { tag = SYN level = 1 location = gummersbach }
 	tavern = { tag = GWA level = 1 location = gwalior }
+	tavern = { tag = GUG level = 1 location = gyanema }
+	tavern = { tag = TIB level = 1 location = gyantse }
 	tavern = { tag = KOR level = 1 location = gyeongju }
+	tavern = { tag = NSH level = 1 location = hadamar }
+	tavern = { tag = KHD level = 1 location = haerhhana }
+	tavern = { tag = AAD level = 1 location = hafar_al_batin }
+	tavern = { tag = SHM level = 1 location = hail }
+	tavern = { tag = SHB level = 1 location = hajjiabad_zarrindasht }
+	tavern = { tag = HKK level = 1 location = hakkari }
+	tavern = { tag = SWH level = 1 location = hall }
 	tavern = { tag = HDN level = 1 location = hamadan }
 	tavern = { tag = NOR level = 2 location = hamar }
 	tavern = { tag = HAM level = 1 location = hamburg }
 	tavern = { tag = CHI level = 1 location = handan }
 	tavern = { tag = CHI level = 1 location = hangzhou }
 	tavern = { tag = JRW level = 1 location = harad_al_ahsa }
+	tavern = { tag = HRL level = 1 location = harar }
+	tavern = { tag = MZF level = 1 location = harat }
+	tavern = { tag = SRB level = 1 location = haresabad }
+	tavern = { tag = SWE level = 1 location = harnosand }
+	tavern = { tag = ETH level = 1 location = harro_walabu }
+	tavern = { tag = KLR level = 1 location = harunabad }
+	tavern = { tag = HBN level = 1 location = hashtrud }
+	tavern = { tag = QUL level = 1 location = hatunqulla }
+	tavern = { tag = WAR level = 1 location = haylan }
+	tavern = { tag = CHI level = 1 location = hebin }
+	tavern = { tag = PAL level = 1 location = heidelberg }
+	tavern = { tag = HEH level = 1 location = heidenheim }
+	tavern = { tag = HBR level = 1 location = heilbronn }
+	tavern = { tag = HLF level = 1 location = helfenstein }
+	tavern = { tag = HLN level = 1 location = helong }
+	tavern = { tag = HQG level = 1 location = heqing }
 	tavern = { tag = KRT level = 1 location = herat }
+	tavern = { tag = ENG level = 1 location = hereford }
+	tavern = { tag = GRL level = 1 location = herjolfsnes }
+	tavern = { tag = HSF level = 1 location = hersfeld }
+	tavern = { tag = BRB level = 1 location = hertogenbosch }
+	tavern = { tag = CHI level = 1 location = hezhong }
+	tavern = { tag = HEZ level = 1 location = hezhou }
+	tavern = { tag = HAW level = 1 location = hilo }
+	tavern = { tag = HZN level = 1 location = hizan }
+	tavern = { tag = HHB level = 1 location = hohenberg }
+	tavern = { tag = ICE level = 1 location = holar }
+	tavern = { tag = SON level = 1 location = hombori }
+	tavern = { tag = HHB level = 1 location = horb }
 	tavern = { tag = ORM level = 1 location = hormuz }
+	tavern = { tag = HTN level = 1 location = hotin }
+	tavern = { tag = CHI level = 1 location = huaiji }
+	tavern = { tag = URC level = 1 location = huaman_karpa }
+	tavern = { tag = ARA level = 1 location = huesca }
+	tavern = { tag = QAS level = 1 location = hulun }
+	tavern = { tag = GLH level = 1 location = iagorlic }
+	tavern = { tag = TAO level = 1 location = ialophaybo }
+	tavern = { tag = IAS level = 1 location = iasi }
+	tavern = { tag = IBL level = 1 location = ibalong }
+	tavern = { tag = NOR level = 1 location = idre }
+	tavern = { tag = IFE level = 1 location = ife }
+	tavern = { tag = NRI level = 1 location = igbo_ukwu }
+	tavern = { tag = PRM level = 1 location = igra }
+	tavern = { tag = SHB level = 1 location = ij_iran }
+	tavern = { tag = IJE level = 1 location = ikere }
+	tavern = { tag = HLG level = 1 location = ilam }
+	tavern = { tag = HUR level = 1 location = ilan_hala }
+	tavern = { tag = CHG level = 1 location = ilanbalyk }
+	tavern = { tag = BLM level = 1 location = ilanz }
+	tavern = { tag = IJS level = 1 location = ilesa }
+	tavern = { tag = KIR level = 1 location = illereichen }
+	tavern = { tag = OYO level = 1 location = ilorin }
+	tavern = { tag = VBK level = 1 location = ilyino }
+	tavern = { tag = NOV level = 1 location = ilyinsko_podomskoye }
+	tavern = { tag = MBZ level = 1 location = immenstadt }
+	tavern = { tag = ZMW level = 1 location = impakwe }
+	tavern = { tag = SUR level = 1 location = incarraqay }
+	tavern = { tag = INI level = 1 location = inishowen }
+	tavern = { tag = TIR level = 1 location = innsbruck }
+	tavern = { tag = ZMW level = 1 location = inyanga }
+	tavern = { tag = GLH level = 1 location = irgiz }
+	tavern = { tag = IRD level = 1 location = irodo }
+	tavern = { tag = ICE level = 1 location = isafjordur }
 	tavern = { tag = INJ level = 1 location = isfahan }
+	tavern = { tag = ICM level = 1 location = ishma }
+	tavern = { tag = GLH level = 1 location = ismail }
+	tavern = { tag = YIM level = 1 location = itu_jilin }
+	tavern = { tag = ITZ level = 1 location = itzamkanac }
+	tavern = { tag = IXT level = 1 location = ixtacamaxtitlan }
+	tavern = { tag = HZP level = 1 location = izeh }
 	tavern = { tag = TUR level = 1 location = izmit }
+	tavern = { tag = IZC level = 1 location = iztachacalapan }
+	tavern = { tag = JLO level = 1 location = jailolo }
+	tavern = { tag = JSL level = 1 location = jaisalmer }
 	tavern = { tag = DLH level = 1 location = jalandhar }
+	tavern = { tag = JMB level = 1 location = jambi }
+	tavern = { tag = CHI level = 1 location = jangjin }
+	tavern = { tag = GEO level = 1 location = jariekhi }
+	tavern = { tag = ARA level = 1 location = jativa }
+	tavern = { tag = ARR level = 1 location = jekabpils }
+	tavern = { tag = OGE level = 1 location = jeminay }
 	tavern = { tag = KOR level = 1 location = jeonju }
+	tavern = { tag = CAS level = 1 location = jerez_de_la_frontera }
 	tavern = { tag = ENG level = 1 location = jersey }
+	tavern = { tag = CHI level = 1 location = jiajiang }
 	tavern = { tag = CHI level = 1 location = jiangdu }
 	tavern = { tag = CHI level = 1 location = jiangling }
 	tavern = { tag = CHI level = 1 location = jiangxia }
+	tavern = { tag = LGZ level = 1 location = jiangyou }
+	tavern = { tag = CHI level = 1 location = jiezhou }
+	tavern = { tag = CHI level = 1 location = jingbian }
+	tavern = { tag = CHI level = 1 location = jingning }
 	tavern = { tag = CHI level = 1 location = jingzhao }
 	tavern = { tag = KOR level = 1 location = jinju }
+	tavern = { tag = JIZ level = 1 location = jishi }
+	tavern = { tag = QAN level = 1 location = jolom_konob }
+	tavern = { tag = SHM level = 1 location = jubbah }
+	tavern = { tag = ARA level = 1 location = jumilla }
+	tavern = { tag = JUS level = 1 location = juxeri }
+	tavern = { tag = CRS level = 1 location = kaa }
+	tavern = { tag = BMR level = 1 location = kabara }
+	tavern = { tag = TKR level = 1 location = kaedi }
 	tavern = { tag = KOR level = 1 location = kaesong }
 	tavern = { tag = GAZ level = 1 location = kaffa }
+	tavern = { tag = AAR level = 1 location = kahari }
+	tavern = { tag = KIE level = 1 location = kaharlyk }
+	tavern = { tag = KRP level = 1 location = kahayan_hilir }
+	tavern = { tag = SYG level = 1 location = kaicheng }
 	tavern = { tag = CHI level = 1 location = kaifeng }
+	tavern = { tag = CNT level = 1 location = kainta }
+	tavern = { tag = ACH level = 1 location = kalamata }
+	tavern = { tag = KLA level = 1 location = kalat }
+	tavern = { tag = GLH level = 1 location = kalininskaya }
 	tavern = { tag = JJK level = 1 location = kalinjar }
+	tavern = { tag = KLS level = 1 location = kalisusu }
+	tavern = { tag = POL level = 1 location = kalisz }
+	tavern = { tag = SWE level = 1 location = kalmar }
+	tavern = { tag = MKR level = 1 location = kalmat }
 	tavern = { tag = DLH level = 1 location = kalyan }
 	tavern = { tag = JAP level = 1 location = kamakura }
 	tavern = { tag = KMA level = 1 location = kamatapur }
+	tavern = { tag = JAP level = 1 location = kamiagata }
+	tavern = { tag = ARU level = 1 location = kampar }
+	tavern = { tag = KEL level = 1 location = kamyaran }
 	tavern = { tag = KAN level = 1 location = kano }
+	tavern = { tag = CIL level = 1 location = kapan }
+	tavern = { tag = SYU level = 1 location = kapan_armenia }
+	tavern = { tag = GLH level = 1 location = karagau }
+	tavern = { tag = SHP level = 1 location = karahisar_i_sahib }
+	tavern = { tag = CYA level = 1 location = karajia }
+	tavern = { tag = CHI level = 1 location = karakorum }
+	tavern = { tag = KRK level = 1 location = karanka }
+	tavern = { tag = NOV level = 1 location = kargopol }
+	tavern = { tag = LST level = 1 location = kariyan }
+	tavern = { tag = GLH level = 1 location = karmakshi }
+	tavern = { tag = VEN level = 1 location = karpathos }
+	tavern = { tag = TWI level = 1 location = karpus_mahal }
+	tavern = { tag = GLH level = 1 location = kartaly }
 	tavern = { tag = SAO level = 1 location = karystos }
+	tavern = { tag = KSA level = 1 location = kashan }
+	tavern = { tag = SYU level = 1 location = kashatagh }
+	tavern = { tag = KAS level = 1 location = kashin }
+	tavern = { tag = YSU level = 1 location = kath }
 	tavern = { tag = KTS level = 1 location = katsina }
+	tavern = { tag = LIT level = 1 location = kaunas }
+	tavern = { tag = INJ level = 1 location = kavar }
+	tavern = { tag = CHG level = 1 location = kayalyk }
+	tavern = { tag = BBK level = 1 location = kayes }
 	tavern = { tag = ERE level = 1 location = kayseri }
+	tavern = { tag = KTS level = 1 location = kazaure }
+	tavern = { tag = INJ level = 1 location = kazerun }
+	tavern = { tag = CKL level = 1 location = kazhi }
+	tavern = { tag = TAZ level = 1 location = kedang }
+	tavern = { tag = MRP level = 1 location = kedang_pahu }
+	tavern = { tag = PLE level = 1 location = kells }
+	tavern = { tag = KMP level = 1 location = kempten }
+	tavern = { tag = KTG level = 1 location = kengtung }
+	tavern = { tag = BBK level = 1 location = kerbatch }
+	tavern = { tag = KRM level = 1 location = kerman }
 	tavern = { tag = RKL level = 1 location = kermanshah }
+	tavern = { tag = LHL level = 1 location = keylong }
+	tavern = { tag = CHI level = 1 location = khadat }
+	tavern = { tag = GLH level = 1 location = khaiylmysh }
+	tavern = { tag = HLG level = 1 location = khalafabad }
+	tavern = { tag = HRB level = 1 location = khalis_medina }
+	tavern = { tag = OTC level = 1 location = khalkh }
+	tavern = { tag = KKL level = 1 location = khalkhal }
+	tavern = { tag = KHD level = 1 location = khangal }
+	tavern = { tag = CRS level = 1 location = khar_balgas }
+	tavern = { tag = KHN level = 1 location = kharan }
+	tavern = { tag = KHF level = 1 location = khargerd }
+	tavern = { tag = KHN level = 1 location = khash }
+	tavern = { tag = KRM level = 1 location = khatunabad }
+	tavern = { tag = BQL level = 1 location = khawr_baraka }
+	tavern = { tag = NQS level = 1 location = khawr_nubt }
+	tavern = { tag = ANZ level = 1 location = khaybar }
+	tavern = { tag = ATZ level = 1 location = khor_virap }
+	tavern = { tag = KHM level = 1 location = khorat }
+	tavern = { tag = LCK level = 1 location = khorramabad }
+	tavern = { tag = DGH level = 1 location = khotan }
+	tavern = { tag = DML level = 1 location = khoy }
+	tavern = { tag = GEO level = 1 location = khunani }
+	tavern = { tag = KHU level = 1 location = khunj }
+	tavern = { tag = KHZ level = 1 location = khuzdar }
+	tavern = { tag = HZP level = 1 location = khwansar }
+	tavern = { tag = CRS level = 1 location = khyargas_nuur }
+	tavern = { tag = PLE level = 1 location = kilkenny }
+	tavern = { tag = MCM level = 1 location = killarney }
+	tavern = { tag = DMS level = 1 location = killmallock }
+	tavern = { tag = PRM level = 1 location = kilmez }
+	tavern = { tag = SYY level = 1 location = kirkuk }
+	tavern = { tag = PRM level = 1 location = kirs }
+	tavern = { tag = KSW level = 1 location = kishtwar }
+	tavern = { tag = DFN level = 1 location = kita }
+	tavern = { tag = HAB level = 1 location = klagenfurt }
+	tavern = { tag = SSK level = 1 location = kletsk }
+	tavern = { tag = LGC level = 1 location = kluczbork }
+	tavern = { tag = LIT level = 1 location = kobryn }
+	tavern = { tag = GLH level = 1 location = kodak }
+	tavern = { tag = CHG level = 1 location = koktal }
+	tavern = { tag = GDA level = 1 location = kolayat }
 	tavern = { tag = DLH level = 1 location = kolhapur }
 	tavern = { tag = VND level = 1 location = kollam }
+	tavern = { tag = KIE level = 1 location = kolomak }
+	tavern = { tag = HAL level = 1 location = kolomyia }
+	tavern = { tag = MKG level = 1 location = kolumba }
+	tavern = { tag = KNG level = 1 location = kong }
+	tavern = { tag = TEU level = 1 location = konigsberg }
+	tavern = { tag = POL level = 1 location = konin }
+	tavern = { tag = KNZ level = 1 location = konstanz }
 	tavern = { tag = KAR level = 1 location = konya }
+	tavern = { tag = NOV level = 1 location = koporye }
+	tavern = { tag = BMR level = 1 location = korientze }
+	tavern = { tag = SWE level = 1 location = korsholm }
+	tavern = { tag = KIE level = 1 location = korsun }
+	tavern = { tag = PRM level = 1 location = kortkeros }
+	tavern = { tag = ALO level = 1 location = kosa }
+	tavern = { tag = PRM level = 1 location = kosa_perm }
+	tavern = { tag = GLH level = 1 location = koshki }
+	tavern = { tag = HUN level = 1 location = kosice }
+	tavern = { tag = PLB level = 1 location = kotabumi }
+	tavern = { tag = WUN level = 1 location = kotano_muna }
+	tavern = { tag = GHA level = 1 location = koumbi_saleh }
+	tavern = { tag = PRM level = 1 location = koygorodok }
+	tavern = { tag = KZK level = 1 location = kozelsk }
 	tavern = { tag = ZMR level = 1 location = kozhikode }
+	tavern = { tag = DIL level = 1 location = kozluk }
+	tavern = { tag = POL level = 1 location = kozmin }
 	tavern = { tag = POL level = 1 location = krakow }
+	tavern = { tag = GLH level = 1 location = kremenskaya }
+	tavern = { tag = SPO level = 1 location = kreuznach }
+	tavern = { tag = INR level = 1 location = kuala_kampar }
+	tavern = { tag = TLE level = 1 location = kuku }
+	tavern = { tag = QUN level = 1 location = kulob }
+	tavern = { tag = HZR level = 1 location = kulp }
+	tavern = { tag = GLH level = 1 location = kumak }
+	tavern = { tag = QUN level = 1 location = kunduz }
 	tavern = { tag = LNG level = 1 location = kunming }
+	tavern = { tag = GLM level = 1 location = kunozh }
+	tavern = { tag = BIO level = 1 location = kuressaare }
+	tavern = { tag = KRP level = 1 location = kuripan }
+	tavern = { tag = QCH level = 1 location = kurla }
+	tavern = { tag = KUS level = 1 location = kuskatan }
+	tavern = { tag = VTN level = 1 location = kut_ling }
+	tavern = { tag = KKG level = 1 location = kutai_lama }
+	tavern = { tag = BOH level = 1 location = kutna_hora }
+	tavern = { tag = NOV level = 1 location = kuvshinovo }
+	tavern = { tag = CHI level = 1 location = kuyu_shazhou }
+	tavern = { tag = PMS level = 1 location = kwidzyn }
+	tavern = { tag = CHI level = 1 location = kyakhta }
 	tavern = { tag = JAP level = 1 location = kyoto }
 	tavern = { tag = VEN level = 1 location = kythira }
+	tavern = { tag = GLH level = 1 location = kyzylsay }
+	tavern = { tag = TLE level = 1 location = laghouat }
+	tavern = { tag = NAV level = 1 location = laguardia }
+	tavern = { tag = LHN level = 1 location = lahaina }
+	tavern = { tag = HSE level = 1 location = lai_hka }
+	tavern = { tag = DWS level = 1 location = laila }
+	tavern = { tag = TUV level = 1 location = lakhva }
+	tavern = { tag = ETH level = 1 location = lalibela }
+	tavern = { tag = VYT level = 1 location = lalsk }
+	tavern = { tag = LDA level = 1 location = landau_rhineland }
+	tavern = { tag = LST level = 1 location = lar }
+	tavern = { tag = LRT level = 1 location = larantuka }
+	tavern = { tag = WAR level = 1 location = las_khorey }
+	tavern = { tag = SLZ level = 1 location = laufen }
+	tavern = { tag = PIN level = 1 location = laungshe }
+	tavern = { tag = LSA level = 1 location = lausanne }
+	tavern = { tag = RDL level = 1 location = lauterbach }
+	tavern = { tag = INA level = 1 location = lazkiye }
+	tavern = { tag = TOD level = 1 location = lefu }
 	tavern = { tag = TIB level = 1 location = lhasa }
+	tavern = { tag = TIB level = 1 location = lho_taklung }
+	tavern = { tag = CHI level = 1 location = liangquan }
+	tavern = { tag = CHI level = 1 location = liangxian_ruzhou }
+	tavern = { tag = CHI level = 1 location = lianping }
+	tavern = { tag = CHI level = 1 location = liaocheng }
+	tavern = { tag = VEL level = 1 location = lichtenberg_veldenz }
+	tavern = { tag = LIT level = 1 location = lida }
+	tavern = { tag = MNZ level = 1 location = lidian }
+	tavern = { tag = LIE level = 1 location = liege }
+	tavern = { tag = LIM level = 1 location = limbourg }
+	tavern = { tag = PLE level = 1 location = limerick }
+	tavern = { tag = LGE level = 1 location = linge }
+	tavern = { tag = JOL level = 1 location = linguere }
+	tavern = { tag = CHI level = 1 location = linjiang_jurchen }
+	tavern = { tag = HAB level = 1 location = linz }
+	tavern = { tag = LTN level = 1 location = litang }
+	tavern = { tag = VOL level = 1 location = liubeshiv }
 	tavern = { tag = YAS level = 1 location = liwa }
 	tavern = { tag = SWE level = 2 location = ljungby }
+	tavern = { tag = HNK level = 1 location = llacsapallanca }
 	tavern = { tag = NOR level = 1 location = lofotr }
+	tavern = { tag = LOL level = 1 location = loloda }
 	tavern = { tag = ENG level = 1 location = london }
+	tavern = { tag = ANN level = 1 location = longford }
+	tavern = { tag = LGT level = 1 location = longtang }
+	tavern = { tag = CHI level = 1 location = longxi_gongchang }
+	tavern = { tag = AAI level = 1 location = lori }
+	tavern = { tag = CHL level = 1 location = lubawa }
 	tavern = { tag = LUB level = 1 location = lubeck }
 	tavern = { tag = LUC level = 1 location = lucca }
+	tavern = { tag = NAP level = 1 location = lucera }
+	tavern = { tag = LCU level = 1 location = lucerne }
+	tavern = { tag = MMA level = 1 location = luchuan_mangshi }
+	tavern = { tag = MAC level = 1 location = ludlow }
+	tavern = { tag = MLO level = 1 location = lugano }
+	tavern = { tag = LUN level = 1 location = luneburg }
+	tavern = { tag = PNK level = 1 location = luninets }
+	tavern = { tag = GNG level = 1 location = luoji }
+	tavern = { tag = MCI level = 1 location = lushan_yazhou }
+	tavern = { tag = KIE level = 1 location = lutava }
+	tavern = { tag = LUX level = 1 location = luxembourg }
+	tavern = { tag = CHI level = 1 location = luyang }
+	tavern = { tag = CDL level = 1 location = luzhang }
 	tavern = { tag = FRA level = 1 location = lyon }
+	tavern = { tag = KOS level = 1 location = lyubim }
+	tavern = { tag = VBG level = 1 location = maastricht }
+	tavern = { tag = MHU level = 1 location = mabian }
+	tavern = { tag = QUL level = 1 location = macaya }
+	tavern = { tag = POS level = 1 location = machynlleth }
+	tavern = { tag = KBR level = 1 location = macina }
+	tavern = { tag = ZIB level = 1 location = madin_bani_sulaym }
+	tavern = { tag = IFA level = 1 location = maduna }
 	tavern = { tag = MAB level = 1 location = madurai }
+	tavern = { tag = LNA level = 1 location = mae_hong_son }
+	tavern = { tag = TSK level = 1 location = maerkang }
 	tavern = { tag = MAG level = 1 location = magdeburg }
+	tavern = { tag = TYR level = 1 location = magherafelt }
+	tavern = { tag = MPE level = 1 location = maguela }
+	tavern = { tag = SLI level = 1 location = mahabad }
+	tavern = { tag = NTL level = 1 location = mahajanga }
+	tavern = { tag = KHM level = 1 location = mahaxay }
 	tavern = { tag = TUN level = 1 location = mahdia }
+	tavern = { tag = MHL level = 1 location = mahilaka }
 	tavern = { tag = JJK level = 1 location = mahoba }
+	tavern = { tag = SUL level = 1 location = maimbung }
+	tavern = { tag = MTO level = 1 location = maintirano }
 	tavern = { tag = MAI level = 1 location = mainz }
+	tavern = { tag = GLH level = 1 location = majar }
+	tavern = { tag = ATZ level = 1 location = maku }
+	tavern = { tag = MLT level = 1 location = malacatos }
 	tavern = { tag = GRA level = 1 location = malaga }
+	tavern = { tag = LUW level = 1 location = malangke }
 	tavern = { tag = ERE level = 1 location = malatya }
+	tavern = { tag = HBN level = 1 location = malekan }
+	tavern = { tag = MLN level = 1 location = malinalco }
+	tavern = { tag = GLH level = 1 location = malye_derbety }
+	tavern = { tag = DBE level = 1 location = manadeley }
+	tavern = { tag = BOW level = 1 location = manado }
 	tavern = { tag = XIU level = 1 location = mani }
+	tavern = { tag = SRU level = 1 location = manisa }
+	tavern = { tag = BHM level = 1 location = manmaw }
+	tavern = { tag = MNN level = 1 location = mann }
 	tavern = { tag = MAN level = 1 location = mantova }
+	tavern = { tag = CHI level = 1 location = manzushir }
+	tavern = { tag = CHI level = 1 location = maping }
 	tavern = { tag = FZA level = 1 location = maradah }
+	tavern = { tag = JAL level = 1 location = marand }
+	tavern = { tag = KRM level = 1 location = mardehek }
+	tavern = { tag = ATQ level = 1 location = mardin }
+	tavern = { tag = HCH level = 1 location = markahuamachuco }
 	tavern = { tag = MOR level = 1 location = marrakesh }
 	tavern = { tag = PRO level = 1 location = marseille }
+	tavern = { tag = KSW level = 1 location = marwah }
+	tavern = { tag = JKR level = 1 location = mashhad }
+	tavern = { tag = KHN level = 1 location = mastung }
+	tavern = { tag = KRK level = 1 location = matarjawira }
+	tavern = { tag = MUI level = 1 location = maui }
 	tavern = { tag = COC level = 1 location = mayapan }
+	tavern = { tag = LIT level = 1 location = mazeikiai }
+	tavern = { tag = KHT level = 1 location = mazhan }
+	tavern = { tag = KIE level = 1 location = mazyr }
+	tavern = { tag = VNA level = 1 location = mbanza_kongo }
+	tavern = { tag = MBT level = 1 location = mbanza_mbata }
+	tavern = { tag = MEC level = 1 location = mecca }
 	tavern = { tag = BQA level = 1 location = mechili }
+	tavern = { tag = MDA level = 1 location = medina }
+	tavern = { tag = VYA level = 1 location = medyn }
+	tavern = { tag = CHI level = 1 location = meizhou }
+	tavern = { tag = MHC level = 1 location = melahuacan }
+	tavern = { tag = MEM level = 1 location = memmingen }
+	tavern = { tag = BGT level = 1 location = menen }
+	tavern = { tag = MHA level = 1 location = mengding }
+	tavern = { tag = UTR level = 1 location = meppel }
+	tavern = { tag = CHK level = 1 location = meramec }
+	tavern = { tag = TEU level = 1 location = mergentheim }
+	tavern = { tag = MRV level = 1 location = merv }
+	tavern = { tag = LOR level = 1 location = merzig }
+	tavern = { tag = UGH level = 1 location = meshkan }
+	tavern = { tag = JKR level = 1 location = meshkan_khorasan }
+	tavern = { tag = BIJ level = 1 location = meskiana }
+	tavern = { tag = MSO level = 1 location = mesocco }
+	tavern = { tag = HCI level = 1 location = mesudiye }
+	tavern = { tag = CHT level = 1 location = metapan }
+	tavern = { tag = GOR level = 1 location = metlika }
 	tavern = { tag = MTZ level = 1 location = metz }
+	tavern = { tag = ATJ level = 1 location = meulaboh }
+	tavern = { tag = MXT level = 1 location = mextiacan }
+	tavern = { tag = SFR level = 1 location = meyami }
+	tavern = { tag = HAL level = 1 location = mezhybozhe }
+	tavern = { tag = MHT level = 1 location = miahuatlan }
+	tavern = { tag = CHI level = 1 location = miangu }
+	tavern = { tag = CHI level = 1 location = mianzhou }
+	tavern = { tag = NND level = 1 location = mictlan }
+	tavern = { tag = FRE level = 1 location = miesbach }
+	tavern = { tag = ZAN level = 1 location = mikindani }
 	tavern = { tag = MLO level = 1 location = milano }
+	tavern = { tag = GLH level = 1 location = milyutinskaya }
 	tavern = { tag = CHI level = 1 location = minxian }
+	tavern = { tag = MNZ level = 1 location = minzhou }
+	tavern = { tag = KBO level = 1 location = mir_loc }
+	tavern = { tag = MIT level = 1 location = mitic }
+	tavern = { tag = AXO level = 1 location = mixquiahuala }
+	tavern = { tag = MZT level = 1 location = mizantla }
 	tavern = { tag = BTL level = 1 location = mizda }
+	tavern = { tag = VEN level = 1 location = modon }
+	tavern = { tag = CHK level = 1 location = moingwena }
 	tavern = { tag = NOR level = 1 location = molde }
+	tavern = { tag = MOG level = 1 location = mologa }
+	tavern = { tag = BYZ level = 1 location = molyvos }
+	tavern = { tag = OIL level = 1 location = monaghan }
+	tavern = { tag = LNA level = 1 location = mong_hsat }
+	tavern = { tag = HSE level = 1 location = mong_yai }
+	tavern = { tag = CHH level = 1 location = mong_yang }
 	tavern = { tag = MTB level = 1 location = montbeliard }
+	tavern = { tag = VUD level = 1 location = monthey }
+	tavern = { tag = CHN level = 1 location = montmedy }
 	tavern = { tag = MLL level = 1 location = montpellier }
+	tavern = { tag = MLO level = 1 location = monza }
+	tavern = { tag = BLE level = 1 location = mormor }
+	tavern = { tag = MOO level = 1 location = moro }
 	tavern = { tag = MRT level = 1 location = mortain }
+	tavern = { tag = MSB level = 1 location = mosbach }
 	tavern = { tag = MOS level = 1 location = moscow }
 	tavern = { tag = SUT level = 1 location = mosul }
+	tavern = { tag = ELY level = 1 location = moycarn }
+	tavern = { tag = MSV level = 1 location = mstsislaw }
+	tavern = { tag = PHY level = 1 location = muang_ngao }
+	tavern = { tag = MRP level = 1 location = muarakaman }
+	tavern = { tag = KEL level = 1 location = muchesh }
+	tavern = { tag = MRM level = 1 location = murom }
 	tavern = { tag = FZA level = 1 location = murzuk }
+	tavern = { tag = MUS level = 1 location = mus }
+	tavern = { tag = HIY level = 1 location = musan }
+	tavern = { tag = PLB level = 1 location = musi }
+	tavern = { tag = SBY level = 1 location = muwayh }
+	tavern = { tag = AMD level = 1 location = muxihe }
+	tavern = { tag = SBY level = 1 location = muzahmiyah }
+	tavern = { tag = ZMW level = 1 location = mwenezi }
+	tavern = { tag = SAG level = 1 location = myedu }
 	tavern = { tag = HSL level = 1 location = mysore }
+	tavern = { tag = BYZ level = 1 location = mystras }
+	tavern = { tag = TLE level = 1 location = naama }
 	tavern = { tag = STN level = 1 location = nadia }
+	tavern = { tag = NAG level = 1 location = nagar }
+	tavern = { tag = KEL level = 1 location = nahavand }
+	tavern = { tag = MZF level = 1 location = nain }
+	tavern = { tag = YAM level = 1 location = najran }
+	tavern = { tag = JAL level = 1 location = nakhchivan }
 	tavern = { tag = GBS level = 1 location = nalut }
+	tavern = { tag = NOV level = 1 location = nalyuchi }
 	tavern = { tag = KOR level = 1 location = namgyeong }
+	tavern = { tag = TIB level = 1 location = namtso_doring }
 	tavern = { tag = NAM level = 3 location = namur }
+	tavern = { tag = NMS level = 1 location = namyslow }
 	tavern = { tag = CHI level = 1 location = nanchang }
+	tavern = { tag = CHI level = 1 location = nanliu }
+	tavern = { tag = BAT level = 1 location = naraan_chilaun }
 	tavern = { tag = NRB level = 1 location = narbonne }
 	tavern = { tag = SWE level = 2 location = nas }
+	tavern = { tag = NAX level = 1 location = naxos }
+	tavern = { tag = JOL level = 1 location = ndar }
+	tavern = { tag = MOR level = 1 location = nedroma }
+	tavern = { tag = NEG level = 1 location = negroponte }
+	tavern = { tag = MIH level = 1 location = nehbandan }
+	tavern = { tag = NEU level = 1 location = neuchatel }
+	tavern = { tag = VBK level = 1 location = nevel }
+	tavern = { tag = CLA level = 1 location = newtownards }
+	tavern = { tag = LNK level = 1 location = ngabang }
+	tavern = { tag = SAG level = 1 location = ngasingu }
+	tavern = { tag = BMB level = 1 location = ngazidja }
+	tavern = { tag = MAL level = 1 location = niagassola }
 	tavern = { tag = MAL level = 1 location = niani }
 	tavern = { tag = NOR level = 1 location = nidaros }
+	tavern = { tag = NID level = 1 location = nidda }
+	tavern = { tag = BRZ level = 1 location = niemcza }
+	tavern = { tag = NMD level = 1 location = niemodlin }
+	tavern = { tag = VYT level = 1 location = nikolsk }
+	tavern = { tag = CHI level = 1 location = ningchang }
+	tavern = { tag = CHI level = 1 location = ningpu }
 	tavern = { tag = CHI level = 1 location = ningxia }
+	tavern = { tag = CHI level = 1 location = ningyuan }
 	tavern = { tag = JKR level = 1 location = nishapur }
+	tavern = { tag = GYT level = 1 location = nixi }
+	tavern = { tag = NZH level = 1 location = nizhny_novgorod }
+	tavern = { tag = NOV level = 1 location = nizhnyaya_toyma }
+	tavern = { tag = OMA level = 1 location = nizwa }
+	tavern = { tag = KBO level = 1 location = njimi }
+	tavern = { tag = VUN level = 1 location = nogui }
 	tavern = { tag = ITZ level = 1 location = noh_peten }
+	tavern = { tag = ENG level = 1 location = nottingham }
+	tavern = { tag = MOR level = 1 location = noul_lamta }
 	tavern = { tag = NOV level = 1 location = novgorod }
+	tavern = { tag = NRK level = 1 location = novogrudok }
+	tavern = { tag = NWG level = 1 location = nowogard }
+	tavern = { tag = GOL level = 1 location = nubzur }
+	tavern = { tag = GUR level = 1 location = nungu }
+	tavern = { tag = NUR level = 1 location = nuremberg }
 	tavern = { tag = ATQ level = 1 location = nusaybin }
+	tavern = { tag = PIN level = 1 location = nwamethin }
+	tavern = { tag = NYA level = 1 location = nyarong }
+	tavern = { tag = LIT level = 1 location = nyasvizh }
+	tavern = { tag = NYS level = 1 location = nysa }
+	tavern = { tag = PRM level = 1 location = nytva }
+	tavern = { tag = GLH level = 1 location = nyzhnia_duvanka }
+	tavern = { tag = CHK level = 1 location = ochechiton }
+	tavern = { tag = MAL level = 1 location = odienne }
+	tavern = { tag = ISO level = 1 location = offa }
+	tavern = { tag = GLN level = 1 location = ohrdruf }
+	tavern = { tag = OKE level = 1 location = oke_ila }
+	tavern = { tag = NOV level = 1 location = okhona }
+	tavern = { tag = KIE level = 1 location = okhtyrka }
+	tavern = { tag = GLH level = 1 location = oleksandrivka }
+	tavern = { tag = GEO level = 1 location = omalo }
+	tavern = { tag = VYT level = 1 location = omutninsk }
+	tavern = { tag = OND level = 1 location = ondo }
+	tavern = { tag = ONY level = 1 location = onenioteke }
+	tavern = { tag = GLH level = 1 location = or_qapi }
 	tavern = { tag = TLE level = 1 location = oran }
+	tavern = { tag = LUX level = 1 location = orchimont }
+	tavern = { tag = GLH level = 1 location = orda_bazar }
+	tavern = { tag = VYA level = 1 location = orekhovna }
+	tavern = { tag = ORE level = 1 location = oreshek }
+	tavern = { tag = ARA level = 1 location = orihuela }
 	tavern = { tag = ARB level = 2 location = oristano }
+	tavern = { tag = ORK level = 1 location = orkney }
+	tavern = { tag = GRG level = 1 location = orta_kuyu }
+	tavern = { tag = IYA level = 1 location = oshogbo }
+	tavern = { tag = OSN level = 1 location = osnabruck }
+	tavern = { tag = MKW level = 1 location = osnavieh }
+	tavern = { tag = NOV level = 1 location = ostashkov }
+	tavern = { tag = TEU level = 1 location = ostroda }
+	tavern = { tag = RAW level = 1 location = ostroleka }
+	tavern = { tag = OUA level = 1 location = ouagadougou }
+	tavern = { tag = TFL level = 1 location = ouarzazate }
+	tavern = { tag = ZAB level = 1 location = ouled_djellal }
 	tavern = { tag = POR level = 2 location = ourique }
+	tavern = { tag = OWO level = 1 location = owo }
+	tavern = { tag = TTA level = 1 location = oxitlan }
 	tavern = { tag = OYO level = 1 location = oyo_ile }
+	tavern = { tag = OZT level = 1 location = oztoman }
+	tavern = { tag = OTO level = 1 location = pachyohcan }
+	tavern = { tag = PDB level = 1 location = paderborn }
 	tavern = { tag = PAD level = 1 location = padova }
 	tavern = { tag = PIN level = 1 location = pagan }
+	tavern = { tag = LIV level = 1 location = paide }
+	tavern = { tag = LGK level = 1 location = paka }
+	tavern = { tag = PLB level = 1 location = palembang }
 	tavern = { tag = SIC level = 2 location = palermo }
 	tavern = { tag = KPL level = 1 location = pallakolu }
+	tavern = { tag = KRT level = 1 location = pandjih }
+	tavern = { tag = PTP level = 1 location = pantepec }
+	tavern = { tag = PPT level = 1 location = papantla }
+	tavern = { tag = MYM level = 1 location = paqwayranra }
 	tavern = { tag = FRA level = 1 location = paris }
 	tavern = { tag = PAR level = 1 location = parma }
+	tavern = { tag = LIV level = 1 location = parnu }
+	tavern = { tag = LMN level = 1 location = paro }
+	tavern = { tag = UBV level = 1 location = parsberg }
+	tavern = { tag = PSA level = 1 location = pasai }
+	tavern = { tag = GNJ level = 1 location = pasho }
 	tavern = { tag = DLH level = 1 location = patna }
+	tavern = { tag = TAR level = 1 location = patzcuaro }
 	tavern = { tag = PAV level = 1 location = pavia }
 	tavern = { tag = RDY level = 1 location = pazhaverkadu }
+	tavern = { tag = CHK level = 1 location = peewareewa }
 	tavern = { tag = PEG level = 1 location = pegu }
+	tavern = { tag = CHI level = 1 location = pengshui }
+	tavern = { tag = GLH level = 1 location = perelyub }
+	tavern = { tag = MOS level = 1 location = pereyaslavl }
+	tavern = { tag = PER level = 1 location = perigueux }
+	tavern = { tag = SBL level = 1 location = perth }
 	tavern = { tag = PEA level = 1 location = perugia }
+	tavern = { tag = PRT level = 1 location = phalvardhika }
+	tavern = { tag = TIB level = 1 location = phari }
+	tavern = { tag = PHY level = 1 location = phayao }
+	tavern = { tag = MUA level = 1 location = phonsavan }
+	tavern = { tag = AQU level = 1 location = pieve }
+	tavern = { tag = PIG level = 1 location = pikillaqta }
+	tavern = { tag = KUR level = 1 location = piltene }
 	tavern = { tag = CHI level = 1 location = pingjin }
+	tavern = { tag = CHI level = 1 location = pingliang }
+	tavern = { tag = CHI level = 1 location = pingnan }
+	tavern = { tag = PNK level = 1 location = pinsk }
 	tavern = { tag = PIN level = 1 location = pinya }
+	tavern = { tag = SLI level = 1 location = piranshahr }
 	tavern = { tag = PIS level = 1 location = pisa }
+	tavern = { tag = AYA level = 1 location = pisaq }
 	tavern = { tag = KIC level = 1 location = pismachi }
+	tavern = { tag = PST level = 1 location = pistoia }
 	tavern = { tag = CAS level = 1 location = plasencia }
+	tavern = { tag = PLK level = 1 location = plock }
 	tavern = { tag = BYZ level = 2 location = plovdiv }
+	tavern = { tag = GLH level = 1 location = poganovka }
+	tavern = { tag = KCH level = 1 location = pogoreloye }
+	tavern = { tag = GLH level = 1 location = pokrovsk }
+	tavern = { tag = POK level = 1 location = polotsk }
+	tavern = { tag = KIE level = 1 location = poltava }
+	tavern = { tag = POO level = 1 location = pome }
+	tavern = { tag = TJP level = 1 location = pontianak }
+	tavern = { tag = PNC level = 1 location = poonch }
+	tavern = { tag = NOV level = 1 location = porkhov }
+	tavern = { tag = RSO level = 1 location = porog }
+	tavern = { tag = BLO level = 1 location = poshekhonye }
 	tavern = { tag = NAP level = 4 location = potenza }
+	tavern = { tag = POL level = 1 location = poznan }
+	tavern = { tag = KHM level = 1 location = prasat_thong_lang }
+	tavern = { tag = PRA level = 1 location = prato }
+	tavern = { tag = KHM level = 1 location = preah_ko }
+	tavern = { tag = PDK level = 1 location = prudnik }
+	tavern = { tag = APR level = 1 location = prum }
 	tavern = { tag = PSK level = 1 location = pskov }
+	tavern = { tag = PAH level = 1 location = pulai }
+	tavern = { tag = TDO level = 1 location = pulilan }
+	tavern = { tag = TAR level = 1 location = puruaran }
 	tavern = { tag = BPR level = 1 location = pyay }
+	tavern = { tag = KOR level = 1 location = pyeonggang }
+	tavern = { tag = BYZ level = 1 location = pyli }
+	tavern = { tag = KHT level = 1 location = qaen }
+	tavern = { tag = INJ level = 1 location = qala_safid }
+	tavern = { tag = ZBR level = 1 location = qaladiza }
+	tavern = { tag = BKH level = 1 location = qalai_khumb }
+	tavern = { tag = GLH level = 1 location = qalancaq }
+	tavern = { tag = SBY level = 1 location = qalat_bishah }
+	tavern = { tag = BMP level = 1 location = qaleh_ganj }
+	tavern = { tag = GLH level = 1 location = qarasuvbazar }
+	tavern = { tag = KRT level = 1 location = qasr_ahnaf }
+	tavern = { tag = KRI level = 1 location = qasr_shirin }
+	tavern = { tag = UGH level = 1 location = qatruyeh }
+	tavern = { tag = CHI level = 1 location = qianjiang_binzhou }
+	tavern = { tag = NPG level = 1 location = qijiang }
 	tavern = { tag = CHI level = 1 location = qingxiang }
+	tavern = { tag = HCN level = 1 location = qingzhou_mongol }
+	tavern = { tag = CHI level = 1 location = qixian_tongchuan }
+	tavern = { tag = QCH level = 1 location = qocho }
 	tavern = { tag = QOM level = 1 location = qom }
+	tavern = { tag = HCN level = 1 location = quanning }
+	tavern = { tag = JKR level = 1 location = quchan }
+	tavern = { tag = NGD level = 1 location = quetta }
 	tavern = { tag = CHI level = 1 location = qufu }
+	tavern = { tag = QHZ level = 1 location = quiahuiztlan }
+	tavern = { tag = CHI level = 1 location = qujiang }
 	tavern = { tag = MAM level = 1 location = qus }
+	tavern = { tag = CSU level = 1 location = qusqu }
 	tavern = { tag = MOR level = 1 location = rabat }
+	tavern = { tag = MAC level = 1 location = radnor }
 	tavern = { tag = VIJ level = 1 location = raichur }
+	tavern = { tag = RJR level = 1 location = rajouri }
+	tavern = { tag = BNL level = 1 location = ramah }
+	tavern = { tag = HZP level = 1 location = ramhormoz }
+	tavern = { tag = RAN level = 1 location = rano }
+	tavern = { tag = TLE level = 1 location = ras_al_ain }
+	tavern = { tag = RZB level = 1 location = ratzeburg }
+	tavern = { tag = SWE level = 1 location = raumo }
+	tavern = { tag = ARR level = 1 location = rauna }
+	tavern = { tag = KRM level = 1 location = ravar }
+	tavern = { tag = RVA level = 1 location = ravensburg }
+	tavern = { tag = SOH level = 1 location = rawanduz }
+	tavern = { tag = CHR level = 1 location = rechytsa }
 	tavern = { tag = FRA level = 1 location = reims }
+	tavern = { tag = GLH level = 1 location = remontnoye }
+	tavern = { tag = INR level = 1 location = rengat }
 	tavern = { tag = BDS level = 1 location = rey }
+	tavern = { tag = LIV level = 1 location = rezekne }
+	tavern = { tag = MUN level = 1 location = rheine }
+	tavern = { tag = LIT level = 1 location = rietavas }
+	tavern = { tag = RBG level = 1 location = rietberg }
 	tavern = { tag = RIG level = 1 location = riga }
+	tavern = { tag = KRM level = 1 location = rigan }
+	tavern = { tag = AQU level = 1 location = rijeka }
+	tavern = { tag = POO level = 1 location = rima }
+	tavern = { tag = RIM level = 1 location = rimini }
+	tavern = { tag = KNI level = 1 location = rodos }
+	tavern = { tag = IAS level = 1 location = roman }
 	tavern = { tag = PAP level = 1 location = rome }
+	tavern = { tag = TIB level = 1 location = rongpo }
+	tavern = { tag = RNG level = 1 location = rongxian }
+	tavern = { tag = CNN level = 1 location = roscommon }
+	tavern = { tag = RSO level = 1 location = rostov }
+	tavern = { tag = ROT level = 1 location = rothenburg }
+	tavern = { tag = NOV level = 1 location = rovdino }
+	tavern = { tag = GLH level = 1 location = rovenky }
+	tavern = { tag = VER level = 1 location = rovereto }
+	tavern = { tag = GLH level = 1 location = rozdory }
+	tavern = { tag = BUG level = 1 location = rubaga }
+	tavern = { tag = RZH level = 1 location = rzhev }
+	tavern = { tag = GLH level = 1 location = s_ezzaja }
+	tavern = { tag = SLZ level = 1 location = saalfelden }
+	tavern = { tag = GRY level = 1 location = saanen }
+	tavern = { tag = SAA level = 1 location = saarbrucken }
 	tavern = { tag = SAW level = 1 location = saarwerden }
+	tavern = { tag = SBZ level = 1 location = sabzevar }
+	tavern = { tag = CUT level = 1 location = sadiya }
+	tavern = { tag = SAG level = 1 location = sagaing }
+	tavern = { tag = MZF level = 1 location = saghand }
+	tavern = { tag = GRG level = 1 location = sagzabad }
+	tavern = { tag = HNY level = 1 location = sahrazur }
 	tavern = { tag = STP level = 1 location = saint_pol }
+	tavern = { tag = AAL level = 1 location = sakaka }
+	tavern = { tag = TIB level = 1 location = sakya }
+	tavern = { tag = KHF level = 1 location = salameh }
 	tavern = { tag = SLM level = 1 location = salm }
+	tavern = { tag = SLZ level = 1 location = salzburg }
+	tavern = { tag = QHT level = 1 location = samakh }
 	tavern = { tag = YSU level = 1 location = samarkand }
+	tavern = { tag = CHA level = 1 location = samriddhipuri }
+	tavern = { tag = TIB level = 1 location = samten }
+	tavern = { tag = ARD level = 1 location = sanandaj }
+	tavern = { tag = DFN level = 1 location = sandare }
+	tavern = { tag = CHK level = 1 location = sangamon }
+	tavern = { tag = SGU level = 1 location = sanggau }
+	tavern = { tag = BTG level = 1 location = sangme }
+	tavern = { tag = PEA level = 1 location = sansepolcro }
 	tavern = { tag = POR level = 1 location = santarem }
+	tavern = { tag = SBG level = 1 location = santubong }
+	tavern = { tag = SBY level = 1 location = saqra }
+	tavern = { tag = GLH level = 1 location = sarai_al_jadid }
+	tavern = { tag = BBK level = 1 location = saraya }
+	tavern = { tag = KHT level = 1 location = sarayan }
 	tavern = { tag = GLH level = 1 location = sarayjuk }
+	tavern = { tag = KHT level = 1 location = sarbisheh }
+	tavern = { tag = JAL level = 1 location = sarcham }
+	tavern = { tag = KTW level = 1 location = sardasht }
+	tavern = { tag = OBW level = 1 location = sarnen }
 	tavern = { tag = MTZ level = 1 location = sarrebourg }
 	tavern = { tag = LOR level = 1 location = sarreguemines }
+	tavern = { tag = OGE level = 1 location = sarybulak }
+	tavern = { tag = GLH level = 1 location = saryozen }
+	tavern = { tag = ARA level = 1 location = sassari }
 	tavern = { tag = STN level = 1 location = satgaon }
+	tavern = { tag = KNA level = 1 location = sausaya }
+	tavern = { tag = SAM level = 1 location = savaii }
+	tavern = { tag = PIN level = 1 location = saw }
+	tavern = { tag = SAY level = 1 location = sayula }
+	tavern = { tag = HAB level = 1 location = schaffhausen }
+	tavern = { tag = MDS level = 1 location = schleiden }
+	tavern = { tag = SYZ level = 1 location = schwyz }
+	tavern = { tag = BMR level = 1 location = segou }
+	tavern = { tag = CHI level = 1 location = selenge }
+	tavern = { tag = MAK level = 1 location = selima }
+	tavern = { tag = SBU level = 1 location = selimbau }
+	tavern = { tag = ARU level = 1 location = senapelan }
 	tavern = { tag = KOR level = 1 location = seogyeong }
+	tavern = { tag = KOR level = 1 location = seongju }
+	tavern = { tag = KHN level = 1 location = sepeh }
+	tavern = { tag = PRK level = 1 location = serebryanye_prudy }
+	tavern = { tag = TIB level = 1 location = serzhik }
+	tavern = { tag = WAL level = 1 location = severin }
 	tavern = { tag = CAS level = 1 location = sevilla }
+	tavern = { tag = GRM level = 1 location = seyitgazi }
+	tavern = { tag = GLH level = 1 location = shad_kirman }
+	tavern = { tag = INJ level = 1 location = shahr_meyan }
+	tavern = { tag = SKI level = 1 location = shaki }
+	tavern = { tag = NOV level = 1 location = shalakusha }
+	tavern = { tag = LAL level = 1 location = shangjing }
 	tavern = { tag = CHI level = 1 location = shangrao }
 	tavern = { tag = CHI level = 1 location = shangyuan }
+	tavern = { tag = CHI level = 1 location = shansu }
 	tavern = { tag = CHI level = 1 location = shaoxing }
+	tavern = { tag = ORM level = 1 location = shaqrud }
+	tavern = { tag = HCN level = 1 location = sharga_uul }
+	tavern = { tag = ORM level = 1 location = sharjah }
+	tavern = { tag = CHG level = 1 location = shavgar }
+	tavern = { tag = MAK level = 1 location = shemkhiya }
+	tavern = { tag = SYG level = 1 location = shenyang }
+	tavern = { tag = TIB level = 1 location = shigatse }
+	tavern = { tag = CHG level = 1 location = shilik }
+	tavern = { tag = TNQ level = 1 location = shimian }
+	tavern = { tag = KRT level = 1 location = shindand }
+	tavern = { tag = CHI level = 1 location = shiquan_maozhou }
 	tavern = { tag = INJ level = 1 location = shiraz }
+	tavern = { tag = SGZ level = 1 location = shixi }
+	tavern = { tag = CHI level = 1 location = shizhao }
+	tavern = { tag = CHI level = 1 location = shizhou }
+	tavern = { tag = GLH level = 1 location = shoptikol }
+	tavern = { tag = SZH level = 1 location = shuitejiang }
+	tavern = { tag = JAL level = 1 location = shusha }
+	tavern = { tag = NOV level = 1 location = shuya_karelia }
+	tavern = { tag = RSO level = 1 location = shuyskoye }
+	tavern = { tag = GLH level = 1 location = shyrokyne }
+	tavern = { tag = PCJ level = 1 location = sicasica }
+	tavern = { tag = LIG level = 1 location = sichon }
 	tavern = { tag = SIE level = 1 location = siena }
+	tavern = { tag = HUN level = 1 location = sighet }
+	tavern = { tag = BGG level = 1 location = sigi }
+	tavern = { tag = LIV level = 1 location = sigulda }
 	tavern = { tag = TFL level = 1 location = sijilmasa }
+	tavern = { tag = SLA level = 1 location = silat }
+	tavern = { tag = TKR level = 1 location = silla }
+	tavern = { tag = PSZ level = 1 location = simmern }
+	tavern = { tag = SIT level = 1 location = sion }
 	tavern = { tag = YAS level = 1 location = sir_bani_yas }
+	tavern = { tag = FAL level = 1 location = siraf }
+	tavern = { tag = KRM level = 1 location = sirjan }
 	tavern = { tag = ERE level = 1 location = sivas }
+	tavern = { tag = EGL level = 1 location = sivrice }
 	tavern = { tag = MAM level = 2 location = siwa }
+	tavern = { tag = GYO level = 1 location = skaniatares }
 	tavern = { tag = SWE level = 4 location = skara }
+	tavern = { tag = FRE level = 1 location = skofja_loka }
+	tavern = { tag = TGH level = 1 location = skreen }
+	tavern = { tag = SLN level = 1 location = sligo }
 	tavern = { tag = BUL level = 2 location = sliven }
+	tavern = { tag = NRK level = 1 location = slonim }
+	tavern = { tag = SSK level = 1 location = slutsk }
+	tavern = { tag = LIT level = 1 location = smalyavichy }
 	tavern = { tag = SMO level = 1 location = smolensk }
 	tavern = { tag = AYD level = 1 location = smyrna }
+	tavern = { tag = ALO level = 1 location = soba }
+	tavern = { tag = SWE level = 1 location = soderala }
+	tavern = { tag = SWE level = 1 location = soderkoping }
+	tavern = { tag = SFA level = 1 location = sofala }
+	tavern = { tag = GHA level = 1 location = sokolo }
+	tavern = { tag = GLH level = 1 location = soldaia }
 	tavern = { tag = GRG level = 1 location = soltaniyeh }
+	tavern = { tag = GLH level = 1 location = sonaly }
+	tavern = { tag = KHZ level = 1 location = sonamiani }
+	tavern = { tag = KHM level = 1 location = song_be }
+	tavern = { tag = CHI level = 1 location = songzhou }
+	tavern = { tag = SNP level = 1 location = songzhou_songpan }
+	tavern = { tag = JBL level = 1 location = soonpur }
+	tavern = { tag = SRA level = 1 location = soras }
+	tavern = { tag = HCN level = 1 location = sorin_nuur }
+	tavern = { tag = SRC level = 1 location = soroca }
+	tavern = { tag = GHA level = 1 location = sosso }
+	tavern = { tag = VDZ level = 1 location = sotk }
+	tavern = { tag = GLH level = 1 location = sozak }
 	tavern = { tag = BUL level = 1 location = sozopol }
 	tavern = { tag = SYE level = 1 location = speyer }
+	tavern = { tag = ORT level = 1 location = spittal }
 	tavern = { tag = PAP level = 3 location = spoleto }
+	tavern = { tag = GLH level = 1 location = srednyaya_akhtuba }
+	tavern = { tag = SUK level = 1 location = sri_thep }
 	tavern = { tag = KSH level = 1 location = srinagar }
+	tavern = { tag = STG level = 1 location = st_gallen }
+	tavern = { tag = PSS level = 1 location = st_polten }
+	tavern = { tag = LUX level = 1 location = st_vith }
+	tavern = { tag = NOV level = 1 location = staraya_russa }
 	tavern = { tag = NOR level = 2 location = stavanger }
+	tavern = { tag = STV level = 1 location = stavelot }
+	tavern = { tag = HAB level = 1 location = steinfeld }
+	tavern = { tag = PRM level = 1 location = stepanenki }
+	tavern = { tag = PNK level = 1 location = stolin }
+	tavern = { tag = SSI level = 1 location = storozhynets }
+	tavern = { tag = STZ level = 1 location = strzelce_opolskie }
+	tavern = { tag = WUR level = 1 location = stuttgart }
+	tavern = { tag = BIA level = 1 location = suceava }
+	tavern = { tag = CHI level = 1 location = suining_jing }
 	tavern = { tag = CHI level = 1 location = suiyang_guide }
 	tavern = { tag = SUK level = 1 location = sukhothai }
+	tavern = { tag = HDR level = 1 location = sulaymaniyah }
+	tavern = { tag = HOT level = 1 location = sunggari }
+	tavern = { tag = SUR level = 1 location = sura }
+	tavern = { tag = KLA level = 1 location = surab }
+	tavern = { tag = CHI level = 1 location = suriig }
+	tavern = { tag = BBK level = 1 location = sutuko }
+	tavern = { tag = LIT level = 1 location = suwalki }
+	tavern = { tag = KHM level = 1 location = suwannaphum }
+	tavern = { tag = SZL level = 1 location = suzdal }
+	tavern = { tag = BRA level = 1 location = swidwin }
+	tavern = { tag = GWI level = 1 location = sya }
+	tavern = { tag = WOL level = 1 location = szadzko }
+	tavern = { tag = SBY level = 1 location = tabalah }
+	tavern = { tag = KHT level = 1 location = tabas_al_tamr }
 	tavern = { tag = JAL level = 1 location = tabriz }
+	tavern = { tag = MOR level = 1 location = tadla }
+	tavern = { tag = FDL level = 1 location = tadmur }
+	tavern = { tag = MOR level = 1 location = tafedna }
+	tavern = { tag = GLH level = 1 location = tagatay }
+	tavern = { tag = GHA level = 1 location = taghaza }
+	tavern = { tag = TLE level = 1 location = tahert }
+	tavern = { tag = UTB level = 1 location = taif }
 	tavern = { tag = CDL level = 1 location = taihe_dali }
+	tavern = { tag = OTC level = 1 location = taizhou_jurchen }
+	tavern = { tag = SAG level = 1 location = takawng }
+	tavern = { tag = CHI level = 1 location = takhilyn }
+	tavern = { tag = JAL level = 1 location = takht_e_soleyman }
+	tavern = { tag = CHG level = 1 location = talas }
+	tavern = { tag = DAN level = 1 location = tallinn }
+	tavern = { tag = TRE level = 1 location = taman }
+	tavern = { tag = CHK level = 1 location = tamaroa }
+	tavern = { tag = ARU level = 1 location = tambusai }
+	tavern = { tag = TFL level = 1 location = tamdoult }
+	tavern = { tag = GAZ level = 1 location = tana }
+	tavern = { tag = SNG level = 1 location = tanjungpinang }
+	tavern = { tag = TJP level = 1 location = tanjungpura }
+	tavern = { tag = KRP level = 1 location = tanjungpuri }
+	tavern = { tag = AAD level = 1 location = tanumah }
+	tavern = { tag = FRA level = 1 location = tarbes }
+	tavern = { tag = WAL level = 1 location = targoviste }
+	tavern = { tag = BLD level = 1 location = targul_saratii }
+	tavern = { tag = BID level = 1 location = tartu }
+	tavern = { tag = QHT level = 1 location = tathlith }
+	tavern = { tag = BIT level = 1 location = tatvan }
+	tavern = { tag = MAI level = 1 location = tauberbischofsheim }
+	tavern = { tag = MRN level = 1 location = taubonto }
+	tavern = { tag = MOR level = 1 location = taunat }
+	tavern = { tag = CHI level = 1 location = tavan_tolgoi }
+	tavern = { tag = SWE level = 1 location = tavastehus }
+	tavern = { tag = TAX level = 1 location = taximaroa }
+	tavern = { tag = HUT level = 1 location = tayma }
+	tavern = { tag = MOR level = 1 location = taza }
 	tavern = { tag = GEO level = 1 location = tbilisi }
+	tavern = { tag = KHM level = 1 location = tboung_khmum }
+	tavern = { tag = TCK level = 1 location = tecklenburg }
+	tavern = { tag = TEO level = 1 location = tehuacan }
+	tavern = { tag = JKR level = 1 location = tejend }
+	tavern = { tag = XIU level = 1 location = telantunich }
+	tavern = { tag = SNG level = 1 location = temasek }
+	tavern = { tag = JMB level = 1 location = tembesi }
+	tavern = { tag = TNX level = 1 location = tenamaxtlan }
+	tavern = { tag = LAC level = 1 location = tenamitl }
+	tavern = { tag = BMR level = 1 location = tenenkou }
+	tavern = { tag = TNK level = 1 location = tenkasi }
+	tavern = { tag = TEN level = 1 location = tenkodogo }
 	tavern = { tag = TNC level = 1 location = tenochtitlan }
+	tavern = { tag = TEO level = 1 location = teotitlan }
+	tavern = { tag = TPN level = 1 location = tepactitlan }
+	tavern = { tag = TCC level = 1 location = tepecoacuilco }
+	tavern = { tag = TPY level = 1 location = tepeyacac }
+	tavern = { tag = TER level = 1 location = ternate }
+	tavern = { tag = HAL level = 1 location = ternopil }
+	tavern = { tag = ARA level = 1 location = terranova_pausania }
+	tavern = { tag = ARA level = 1 location = teruel }
+	tavern = { tag = TSE level = 1 location = tesechoacan }
+	tavern = { tag = TEE level = 1 location = tetela }
+	tavern = { tag = TZP level = 1 location = tetzapotitlan }
 	tavern = { tag = TTZ level = 1 location = tetzcoco }
+	tavern = { tag = TEL level = 1 location = teulinchan }
+	tavern = { tag = TTA level = 1 location = teutila }
+	tavern = { tag = BAT level = 1 location = tevsh_uul }
+	tavern = { tag = SNP level = 1 location = tewo }
+	tavern = { tag = TEY level = 1 location = teypana }
+	tavern = { tag = TLQ level = 1 location = teziutlan }
+	tavern = { tag = VTN level = 1 location = thakhek }
+	tavern = { tag = LIG level = 1 location = thalang }
 	tavern = { tag = DAI level = 1 location = thang_long }
 	tavern = { tag = MAB level = 1 location = thanjavur }
 	tavern = { tag = SND level = 1 location = thatta }
 	tavern = { tag = HOL level = 1 location = the_hague }
 	tavern = { tag = FEO level = 1 location = theodoro }
 	tavern = { tag = BYZ level = 2 location = thessaloniki }
+	tavern = { tag = VTN level = 1 location = thoulakhom }
+	tavern = { tag = KHM level = 1 location = thuan_binh }
+	tavern = { tag = CBK level = 1 location = thuan_chau }
+	tavern = { tag = DFN level = 1 location = tidjikja }
+	tavern = { tag = QCH level = 1 location = tikenliq }
+	tavern = { tag = NOV level = 1 location = tikhvin }
+	tavern = { tag = TEU level = 1 location = tilsit }
 	tavern = { tag = GHA level = 1 location = timbuktu }
+	tavern = { tag = TAT level = 1 location = timimoun }
+	tavern = { tag = CWM level = 1 location = tipperary }
+	tavern = { tag = WLD level = 1 location = tirschenreuth }
+	tavern = { tag = YDR level = 1 location = tirupati }
+	tavern = { tag = MOR level = 1 location = tit }
 	tavern = { tag = PAP level = 1 location = tivoli }
+	tavern = { tag = TLX level = 1 location = tizatlan }
+	tavern = { tag = AMP level = 1 location = tlacalahuastla }
 	tavern = { tag = TCP level = 1 location = tlacopan }
+	tavern = { tag = TZM level = 1 location = tlamazolan }
+	tavern = { tag = TLY level = 1 location = tlapacoya }
+	tavern = { tag = TCY level = 1 location = tlapacoyan }
+	tavern = { tag = CLM level = 1 location = tlayolan }
+	tavern = { tag = TLZ level = 1 location = tlazcozauhtitlan }
 	tavern = { tag = TLE level = 1 location = tlemcen }
+	tavern = { tag = TGG level = 1 location = toggenburg }
+	tavern = { tag = GLH level = 1 location = tokmak }
 	tavern = { tag = CAS level = 1 location = toledo }
+	tavern = { tag = GUG level = 1 location = toling }
+	tavern = { tag = AQU level = 1 location = tolmin }
+	tavern = { tag = TMT level = 1 location = tomatlan }
+	tavern = { tag = PJT level = 1 location = tomini }
+	tavern = { tag = TOG level = 1 location = tongatapu }
+	tavern = { tag = CHI level = 1 location = tongjiang }
+	tavern = { tag = CHI level = 1 location = tongshan }
+	tavern = { tag = CHI level = 1 location = tongwancheng }
+	tavern = { tag = KRT level = 1 location = torbat_e_jam }
+	tavern = { tag = NOR level = 1 location = torshavn }
+	tavern = { tag = TEU level = 1 location = torun }
+	tavern = { tag = NOV level = 1 location = totma }
+	tavern = { tag = TGT level = 1 location = touggourt }
 	tavern = { tag = FRA level = 1 location = toulouse }
 	tavern = { tag = FRA level = 1 location = tournai }
 	tavern = { tag = FRA level = 1 location = tours }
+	tavern = { tag = LIT level = 1 location = trakai }
+	tavern = { tag = LBV level = 1 location = traunstein }
+	tavern = { tag = SER level = 1 location = trebinje }
 	tavern = { tag = TRE level = 1 location = trebizond }
+	tavern = { tag = MLO level = 1 location = tresivio }
+	tavern = { tag = TRI level = 1 location = trier }
+	tavern = { tag = TTE level = 1 location = trieste }
+	tavern = { tag = BYZ level = 1 location = tripolitsa }
 	tavern = { tag = MAJ level = 1 location = trowulan }
 	tavern = { tag = FRA level = 1 location = troyes }
+	tavern = { tag = QAS level = 1 location = tsagaan }
+	tavern = { tag = OGE level = 1 location = tsagaan_usun }
+	tavern = { tag = BTG level = 1 location = tsakhalkho }
+	tavern = { tag = PCO level = 1 location = tucssa }
+	tavern = { tag = TST level = 1 location = tuf_shur_tia }
+	tavern = { tag = HCN level = 1 location = tuliemao }
+	tavern = { tag = FCL level = 1 location = tullamore }
+	tavern = { tag = MRM level = 1 location = tuma }
+	tavern = { tag = KRT level = 1 location = turaythith }
+	tavern = { tag = SBY level = 1 location = turbah }
+	tavern = { tag = MKR level = 1 location = turbat }
+	tavern = { tag = TUV level = 1 location = turov }
+	tavern = { tag = TUT level = 1 location = tutotepec }
+	tavern = { tag = SAM level = 1 location = tutuila }
+	tavern = { tag = TUZ level = 1 location = tuzantla }
 	tavern = { tag = TVE level = 1 location = tver }
+	tavern = { tag = TZZ level = 1 location = tzapotzingo }
+	tavern = { tag = TAR level = 1 location = tzintzuntzan }
+	tavern = { tag = TZI level = 1 location = tzitacuaro }
+	tavern = { tag = BNL level = 1 location = udakh }
+	tavern = { tag = CHI level = 1 location = ude_baikal }
+	tavern = { tag = VTN level = 1 location = udon_thani }
+	tavern = { tag = UGL level = 1 location = uglich }
+	tavern = { tag = BGT level = 1 location = uguumur }
+	tavern = { tag = HBN level = 1 location = ujan }
 	tavern = { tag = DLH level = 1 location = ujjain }
+	tavern = { tag = GLH level = 1 location = ukek }
+	tavern = { tag = PRM level = 1 location = ukhta }
+	tavern = { tag = CRS level = 1 location = ulaamgom }
+	tavern = { tag = CHI level = 1 location = ulan_hua }
+	tavern = { tag = CHG level = 1 location = ulan_us }
+	tavern = { tag = AYA level = 1 location = ullantaytampu }
+	tavern = { tag = HMD level = 1 location = uluborlu }
+	tavern = { tag = SWE level = 1 location = umea }
+	tavern = { tag = MAM level = 1 location = umluj }
+	tavern = { tag = KNW level = 1 location = unaaha }
+	tavern = { tag = BNL level = 1 location = unaizah }
+	tavern = { tag = CHI level = 1 location = ung }
+	tavern = { tag = URB level = 1 location = urbino }
 	tavern = { tag = DGE level = 1 location = urfa }
 	tavern = { tag = GLH level = 1 location = urgench }
+	tavern = { tag = CRL level = 1 location = urtsun }
+	tavern = { tag = NSW level = 1 location = usingen }
+	tavern = { tag = GLH level = 1 location = usivka }
+	tavern = { tag = CHG level = 1 location = utbulaq }
 	tavern = { tag = ARA level = 1 location = valencia }
+	tavern = { tag = LIV level = 1 location = valjala }
 	tavern = { tag = CAS level = 1 location = valladolid }
 	tavern = { tag = JLM level = 1 location = van }
+	tavern = { tag = INJ level = 1 location = vanak }
+	tavern = { tag = MUA level = 1 location = vang_vieng }
 	tavern = { tag = DLH level = 1 location = varanasi }
 	tavern = { tag = NOR level = 1 location = vardal }
+	tavern = { tag = SWE level = 1 location = vasteras }
+	tavern = { tag = PRM level = 1 location = vavozh_mozhga }
+	tavern = { tag = NRK level = 1 location = vawkavysk }
+	tavern = { tag = GLH level = 1 location = veesky }
+	tavern = { tag = RSO level = 1 location = vekshenga }
 	tavern = { tag = SER level = 1 location = velbuzd }
+	tavern = { tag = NOV level = 1 location = velikiye_luki }
+	tavern = { tag = NOV level = 1 location = velsk }
+	tavern = { tag = GLH level = 1 location = velyka_oleksandrivka }
 	tavern = { tag = VEN level = 1 location = venice }
+	tavern = { tag = GEL level = 1 location = venlo }
 	tavern = { tag = VER level = 1 location = verona }
+	tavern = { tag = NOV level = 1 location = ves_yogonskaya }
 	tavern = { tag = HAB level = 1 location = vienna }
+	tavern = { tag = VTN level = 1 location = vientiane }
 	tavern = { tag = CHA level = 1 location = vijaya }
 	tavern = { tag = VIJ level = 1 location = vijayanagar }
+	tavern = { tag = BAM level = 1 location = villach }
+	tavern = { tag = NOV level = 1 location = village_onega }
+	tavern = { tag = HAB level = 1 location = villingen }
+	tavern = { tag = LIT level = 1 location = vilnius }
+	tavern = { tag = DGE level = 1 location = viransehir }
+	tavern = { tag = SWE level = 1 location = visby }
+	tavern = { tag = VBK level = 1 location = vitebsk }
+	tavern = { tag = VLR level = 1 location = vladimir }
+	tavern = { tag = VYT level = 1 location = vokhma }
+	tavern = { tag = NOV level = 1 location = vologda }
+	tavern = { tag = VLT level = 1 location = volterra }
+	tavern = { tag = PSK level = 1 location = voronich }
+	tavern = { tag = ACH level = 1 location = vostitsa }
+	tavern = { tag = NOV level = 1 location = voznesenye }
+	tavern = { tag = VYA level = 1 location = vyazma }
+	tavern = { tag = SWE level = 1 location = vyborg }
+	tavern = { tag = POK level = 1 location = vydritsa }
+	tavern = { tag = NOV level = 1 location = vyshny_volochyok }
+	tavern = { tag = FRE level = 1 location = waidhofen }
+	tavern = { tag = MMA level = 1 location = waingmaw }
+	tavern = { tag = BRA level = 1 location = walcz }
+	tavern = { tag = HAB level = 1 location = waldsee }
+	tavern = { tag = CNC level = 1 location = waqrapukara }
+	tavern = { tag = PCR level = 1 location = wari_peru }
+	tavern = { tag = PLE level = 1 location = waterford }
+	tavern = { tag = HRN level = 1 location = weert }
+	tavern = { tag = WUR level = 1 location = welzheim }
+	tavern = { tag = MCI level = 1 location = wenchuan }
+	tavern = { tag = WMO level = 1 location = wenshan }
+	tavern = { tag = MNZ level = 1 location = wenxian_gongchang }
+	tavern = { tag = WER level = 1 location = werdenberg }
+	tavern = { tag = WGO level = 1 location = wernigerode }
+	tavern = { tag = PIN level = 1 location = wetwin }
+	tavern = { tag = WTZ level = 1 location = wetzlar }
+	tavern = { tag = POL level = 1 location = wielun }
+	tavern = { tag = NSI level = 1 location = wiesbaden }
+	tavern = { tag = MAC level = 1 location = wigmore }
+	tavern = { tag = KKE level = 1 location = willka_pampa }
+	tavern = { tag = TRI level = 1 location = wittlich }
+	tavern = { tag = BAM level = 1 location = wolfsberg }
+	tavern = { tag = WOL level = 1 location = wolgast }
+	tavern = { tag = KOR level = 1 location = wonju }
+	tavern = { tag = ETH level = 1 location = worabe }
+	tavern = { tag = WRC level = 1 location = wroclaw }
+	tavern = { tag = GLO level = 1 location = wschowa }
+	tavern = { tag = ANS level = 1 location = wunsiedel }
+	tavern = { tag = CHI level = 1 location = wushan }
 	tavern = { tag = CHI level = 1 location = wuxian }
+	tavern = { tag = XAL level = 1 location = xalisco }
+	tavern = { tag = XLT level = 1 location = xalostotitlan }
+	tavern = { tag = OTO level = 1 location = xaltocan }
 	tavern = { tag = CHI level = 1 location = xiangyang }
+	tavern = { tag = CHI level = 1 location = xiaogan }
+	tavern = { tag = CHI level = 1 location = xiaoxi }
+	tavern = { tag = TOH level = 1 location = xicaltepec }
+	tavern = { tag = XIC level = 1 location = xicochimalco }
+	tavern = { tag = TZM level = 1 location = xilotlan }
+	tavern = { tag = CHI level = 1 location = xingzhong }
+	tavern = { tag = CHI level = 1 location = xinning_dazhou }
+	tavern = { tag = XCP level = 1 location = xochiapa }
+	tavern = { tag = KOW level = 1 location = xpaicheil }
 	tavern = { tag = CHI level = 1 location = xuanhua_nanning }
+	tavern = { tag = CHI level = 1 location = xuzhou }
 	tavern = { tag = MRH level = 1 location = yabrin }
+	tavern = { tag = YAH level = 1 location = yahualican }
+	tavern = { tag = BGT level = 1 location = yakhi }
+	tavern = { tag = HMD level = 1 location = yalvac }
+	tavern = { tag = KKE level = 1 location = yanahuara }
+	tavern = { tag = CHI level = 1 location = yandao }
+	tavern = { tag = YNH level = 1 location = yanhe }
 	tavern = { tag = DGH level = 1 location = yarkand }
+	tavern = { tag = YAR level = 1 location = yaroslavl }
+	tavern = { tag = SMO level = 1 location = yartsevo }
+	tavern = { tag = VTN level = 1 location = yasothon }
+	tavern = { tag = YAT level = 1 location = yatenga }
 	tavern = { tag = MZF level = 1 location = yazd }
+	tavern = { tag = GLH level = 1 location = yegorlykskaya }
+	tavern = { tag = CHI level = 1 location = yiling }
+	tavern = { tag = CHI level = 1 location = yixingzhou }
 	tavern = { tag = CHI level = 1 location = yiyang }
+	tavern = { tag = YDZ level = 1 location = yodzocahi }
+	tavern = { tag = YOH level = 1 location = yohualtepec }
+	tavern = { tag = CDL level = 1 location = yongping_yongchang }
+	tavern = { tag = DMS level = 1 location = youghal }
+	tavern = { tag = CHI level = 1 location = yuanling }
+	tavern = { tag = ZAP level = 1 location = yucucui }
+	tavern = { tag = TPL level = 1 location = yucundaa }
+	tavern = { tag = YNL level = 1 location = yunlian }
+	tavern = { tag = YRV level = 1 location = yuryev_polsky }
+	tavern = { tag = ZAP level = 1 location = zaachila }
+	tavern = { tag = ZAT level = 1 location = zacatlan }
+	tavern = { tag = ZCZ level = 1 location = zacazonapan }
+	tavern = { tag = VEN level = 1 location = zadar }
+	tavern = { tag = CHI level = 1 location = zag_suujiyn_gobi }
+	tavern = { tag = HAL level = 1 location = zalishchyky }
+	tavern = { tag = GLH level = 1 location = zamyany }
+	tavern = { tag = RSO level = 1 location = zaostrovskoye }
+	tavern = { tag = ARA level = 1 location = zaragoza }
+	tavern = { tag = MIH level = 1 location = zaranj }
+	tavern = { tag = KRT level = 1 location = zaveh }
+	tavern = { tag = KHD level = 1 location = zavkhan }
 	tavern = { tag = ZZZ level = 1 location = zazzau }
+	tavern = { tag = TTZ level = 1 location = zempoala }
+	tavern = { tag = GLH level = 1 location = zhaldama }
+	tavern = { tag = OTC level = 1 location = zhalong }
+	tavern = { tag = GLH level = 1 location = zhamankul }
+	tavern = { tag = CKL level = 1 location = zhanggu }
+	tavern = { tag = GLH level = 1 location = zhanybek }
+	tavern = { tag = OTC level = 1 location = zhaozhou_jurchen }
+	tavern = { tag = MMA level = 1 location = zhenxi }
+	tavern = { tag = CHI level = 1 location = zhuanglang }
+	tavern = { tag = HAL level = 1 location = zhydachiv }
+	tavern = { tag = TUV level = 1 location = zhytkavichy }
 	tavern = { tag = CHI level = 1 location = zichuan }
+	tavern = { tag = ZIG level = 1 location = ziegenhain }
+	tavern = { tag = CHI level = 1 location = zigui }
+	tavern = { tag = KLW level = 1 location = zik }
+	tavern = { tag = ZIN level = 1 location = zinapecuaro }
 	tavern = { tag = BTL level = 1 location = zliten }
+	tavern = { tag = ZUR level = 1 location = zurich }
+	tavern = { tag = ZUT level = 1 location = zutphen }
 	tin_streamworks = { tag = AAC level = 1 location = aachen }
 	tin_streamworks = { tag = POR level = 1 location = aguiar }
 	tin_streamworks = { tag = JAP level = 1 location = amabe }
@@ -16825,7 +18262,6 @@ building_manager = {
 	tin_streamworks = { tag = BRI level = 1 location = vannes }
 	tin_streamworks = { tag = FRA level = 1 location = vodable }
 	tin_streamworks = { tag = CHI level = 1 location = yizhang }
-	tools_guild = { tag = AAC level = 1 location = aachen }
 	tools_guild = { tag = PRO level = 2 location = aix_en_provence }
 	tools_guild = { tag = JRW level = 1 location = al_ahsa }
 	tools_guild = { tag = MAM level = 2 location = aleppo }

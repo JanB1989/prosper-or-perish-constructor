@@ -1683,6 +1683,7 @@ class Simulation:
                 "covered": round(supply_after / demand_after, 3) if demand_after else None,
             }
         self.ensure_city_taverns(self.market_slack)
+        self.ensure_short_capital_taverns(self.market_slack)
         self.unallocated_yards = dict(self.market_slack)
 
     # ------------------------------------------------------------------ construction materials
@@ -1816,6 +1817,53 @@ class Simulation:
                 units[market] -= 1
             else:
                 self.city_tavern_minimum["idle"].append(tag)
+
+    def ensure_short_capital_taverns(self, units):
+        """Last step of the food chain (2026-10-07, Jan): every pool still short of food after farms, Cookshops and
+        Taverns gets one Tavern level at its province capital, also where the market has no victuals for it yet (trade
+        is expected to bring them). Like the city minimum: it is staffed and its food counted only while the market's
+        spare victuals (``units``) last, otherwise it stands idle; never in a province that packs victuals."""
+        key = self.TAVERN
+        report = {"pools_short": 0, "added": 0, "staffed": 0, "idle": [], "packing": [], "no_capital": [], "no_site": []}
+        self.short_capital_taverns = report
+        if key not in self.numbers:
+            return
+        budgets = self.budgets()
+        num = self.numbers[key]
+        for group in sorted(budgets, key=lambda g: (-budgets[g]["shortfall"], g)):
+            if budgets[group]["shortfall"] <= 1e-6:
+                continue
+            report["pools_short"] += 1
+            tags = self.groups[group]
+            capital = next((t for t in sorted(tags) if self.base[t].get("is_province_capital")), None)
+            if capital is None:
+                report["no_capital"].append(str(group))
+                continue
+            if any(self.counts[t][key] for t in tags):
+                continue
+            if self.yard_levels(tags):
+                report["packing"].append(capital)   # never both directions in one province
+                continue
+            if self.counts[capital][key] >= self.cap(capital, key):
+                report["no_site"].append(capital)
+                continue
+            self.counts[capital][key] += 1
+            # the shared caps (forest pressure, land) of every building here must still hold, as in ``add``
+            loc_state = self._cap_state(capital)
+            if any(n > self.cap(capital, k, gates=False, loc_state=loc_state) for k, n in list(self.counts[capital].items()) if n):
+                self.counts[capital][key] -= 1
+                report["no_site"].append(capital)
+                continue
+            self.placements.append(sp.Placement(capital, self.owners[capital], key, 1))
+            report["added"] += 1
+            market = self.catchments[group]
+            if units.get(market, 0) and self.pools[capital].levels(1, num["employment_size"], num["pop_type"]):
+                self.pools[capital].take(1, num["employment_size"], num["pop_type"], capital, self.conversions)
+                self.staffed[capital][key] += 1
+                units[market] -= 1
+                report["staffed"] += 1
+            else:
+                report["idle"].append(capital)
 
     def verify(self):
         failures = []
@@ -2350,6 +2398,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         "subsistence_sensitivity": sensitivity,
         "unallocated_yard_levels": sim.unallocated_yards,
         "city_tavern_minimum": sim.city_tavern_minimum,
+        "short_capital_taverns": {k: (v if isinstance(v, int) else len(v)) for k, v in sim.short_capital_taverns.items()},
         "unresolved_rules": dict(rules.unsupported),
         "placement_rejections": dict(sim.rejections),
         "pops": pop_report,

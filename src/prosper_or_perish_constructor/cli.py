@@ -74,12 +74,52 @@ WORLDBUILDER_CODE_AND_DATA = (
     "config",
     "data",
 )
+# The mod files the stage reads, measured by tracing every file it opens and every folder it lists during
+# `ppc worldbuilder apply` (`tools/trace_worldbuilder_inputs.py`, 2026-10-07). Map data and setup count whole. In
+# common/ only the folders the stage lists count whole; in folders it never lists it can only open files by name, so
+# only those files count. Everything else in common/ (advances, area preferences, on_actions, AI scripts, ...) is not
+# read, and editing it no longer reruns the start setup (it took 70-100 s per sync). Rerun the trace tool when the
+# stage starts reading something new.
 WORLDBUILDER_MOD_INPUTS = (
-    "in_game/common",
     "in_game/map_data",
-    "main_menu/common",
     "main_menu/setup",
-    "loading_screen/common",
+    "in_game/common/building_types",
+    "in_game/common/climates",
+    "in_game/common/diseases",
+    "in_game/common/generic_actions",
+    "in_game/common/goods",
+    "in_game/common/location_ranks",
+    "in_game/common/pop_types",
+    "in_game/common/script_values",
+    "in_game/common/scripted_triggers",
+    "in_game/common/static_modifiers",
+    "in_game/common/topography",
+    "in_game/common/vegetation",
+    "in_game/common/customizable_localization/ha1300_fertility.txt",
+    "in_game/common/customizable_localization/ha1300_global_soils.txt",
+    "in_game/common/customizable_localization/ha1300_native_geography.txt",
+    "in_game/common/decisions/generic_age_decisions.txt",
+    "in_game/common/decisions/manila_galleon_charter.txt",
+    "in_game/common/expedition_types/circumnavigation_expedition.txt",
+    "in_game/common/expedition_types/pacific_crossing.txt",
+    "in_game/common/expedition_types/treasure_fleet.txt",
+    "in_game/common/on_action/ha1300_fertility.txt",
+    "in_game/common/on_action/ha1300_global_soils.txt",
+    "in_game/common/religious_order_callings/00_iberian_military.txt",
+    "in_game/common/religious_order_zeal_modifiers/00_catholic.txt",
+    "in_game/common/scripted_effects/on_action_effects.txt",
+    "in_game/common/scripted_effects/pp_start_river_topup.txt",
+    "in_game/common/town_rights/13_serbian.txt",
+    "loading_screen/common/defines",
+    "main_menu/common/script_values",
+    "main_menu/common/static_modifiers",
+    "main_menu/common/game_concepts/ha1300_fertility.txt",
+    "main_menu/common/game_concepts/ha1300_soils.txt",
+    "main_menu/common/modifier_icons/ha1300_topography_compatibility.txt",
+    "main_menu/common/modifier_type_definitions/ha1300_topography_compatibility.txt",
+    "main_menu/common/named_colors/ha1300_climates.txt",
+    "main_menu/common/named_colors/ha1300_topography.txt",
+    "main_menu/common/named_colors/ha1300_vegetation.txt",
 )
 SAVEGAME_PURGE_PATHS = (
     SAVEGAME_ARTIFACT_DIR,

@@ -9,6 +9,10 @@
 - The constructor output mod root is `mod/Prosper or Perish (Population Growth & Food Rework)` under this repo, shown from Windows as `\\wsl$\Ubuntu\home\jan\development\ProsperOrPerishConstructor\mod\Prosper or Perish (Population Growth & Food Rework)`.
 - `uv run ppc sync --yes` first makes sure that repo-local output mod root is built/current, then copies that output to the configured live Paradox mod folder. Work either edits files directly in this repo-local output root, or edits source/config/blueprints that compile into that output root before sync copies it onward.
 - Do not look for or use a nested `Constructor/mod/...` path in this checkout; the repo-local compiled mod path is `mod/...`.
+- The sync reruns the World Builder start setup (70-100 s) only when one of its inputs changed. Its mod inputs are the
+  traced list `WORLDBUILDER_MOD_INPUTS` in `cli.py` (folders it lists, files it opens by name); edits elsewhere in the
+  mod (advances, on_actions, area preferences, AI scripts, localization) skip it. When the stage starts reading another
+  mod file, add it there; `uv run python tools/trace_worldbuilder_inputs.py` measures the reads and exits 1 on a miss.
 - Machine-local paths and deploy targets belong in ignored `constructor.local.toml`.
 - Keep game-install paths in tracked config/examples, not in conversation memory. `constructor.load_order.toml` accepts Windows paths such as `C:\Games\steamapps\common\Europa Universalis V`; parser tooling resolves those to `/mnt/c/...` under WSL/Linux.
 - Keep constructor mod roots relative to the repo where possible so the checkout can live on another native WSL/Linux path.

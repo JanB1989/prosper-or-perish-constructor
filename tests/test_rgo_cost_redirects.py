@@ -80,6 +80,7 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
         "victualling_yard": "pp_victualling_yard_price",
         "grange": "pp_grange_price",
         "tavern": "pp_tavern_price",
+        "granary": "pp_granary_price",   # own price since 2026-10-06 (af413ddc: 75 gold, province capitals only)
 
         "hired_labor_yard": "pp_hired_labor_yard_price",
         "rural_daywork_yard": "pp_rural_daywork_yard_price",

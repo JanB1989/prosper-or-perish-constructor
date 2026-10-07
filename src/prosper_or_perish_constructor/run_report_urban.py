@@ -7,8 +7,9 @@ is a specialization and what it upgrades to, and each industry type its goods li
 
 Fit is measured on production per location (buildings and RGOs, the save's nominal output, at base price):
 
-- a specialization right fits best when no generic specialization right (the charters and royal rights of
-  `01_discovery*`, open to every town) covers more of the town's production than the one it holds;
+- a specialization right fits best when no generic specialization right (a charter that upgrades, or the right a
+  charter upgrades to: the lines open to every town, not the country-specific rights) covers more of the town's
+  production than the one it holds;
 - a promotion's area is ranked among the promoting country's areas by the output of the industry's goods there.
 """
 
@@ -16,7 +17,7 @@ from __future__ import annotations
 
 import math
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -59,6 +60,8 @@ RAW_MODIFIERS = frozenset({"local_max_rgo_size_modifier", "local_raw_material_ou
 TRADE_MODIFIERS = frozenset({"local_marketplace_building_levels", "local_market_access", "local_trades_per_burgher",
                              "local_merchant_capacity_modifier", "harbor_suitability"})
 GOOD_MODIFIER = re.compile(r"^local_(\w+?)_(?:output_modifier|guild_building_levels)$")
+# a name function in a localized string, e.g. [ShowLocationNameWithNoTooltip('magdeburg')]
+LOC_NAME_CALL = re.compile(r"\[Show\w*?Name\w*\('(\w+)'\)\]")
 SEVERAL = "#9a9a96"  # a location whose owner promotes more than one industry in its area
 
 
@@ -68,7 +71,7 @@ class RightInfo:
     goods: tuple[str, ...]  # goods whose output (or guild) the right raises in its town
     upgrades_to: str | None = None
     specialization: bool = False
-    generic: bool = False  # a specialization open to every town (01_discovery*: charters and royal rights)
+    generic: bool = False  # a specialization open to every town: a charter that upgrades, or what a charter upgrades to
 
 
 @dataclass
@@ -115,8 +118,12 @@ def load_urban_catalog(repo: Path, project: Path) -> UrbanCatalog:
         upgrades = block.first("upgrades_to")
         catalog.rights[entry.key] = RightInfo(
             category=right_category(specialization, set(modifiers)), goods=tuple(goods),
-            upgrades_to=upgrades if isinstance(upgrades, str) else None, specialization=specialization,
-            generic=specialization and any(Path(s.file).name.startswith("01_discovery") for s in entry.source_history))
+            upgrades_to=upgrades if isinstance(upgrades, str) else None, specialization=specialization)
+    # the charter -> rights lines are open to every town; country-specific rights stand alone
+    chains = {k for k, v in catalog.rights.items() if v.upgrades_to} | {
+        v.upgrades_to for v in catalog.rights.values() if v.upgrades_to}
+    catalog.rights = {k: replace(v, generic=v.specialization and bool(v.goods) and k in chains)
+                      for k, v in catalog.rights.items()}
     for entry in load_merged_directory(profile, "industry_types", scope="in_game").entries:
         block = entry.value
         goods_block = block.first("goods") if isinstance(block, CList) else None
@@ -130,7 +137,8 @@ def load_urban_catalog(repo: Path, project: Path) -> UrbanCatalog:
 
 
 def right_label(run: RunData, key: str) -> str:
-    return run.labels._text(key) or titleize(key)
+    text = run.labels._text(key) or titleize(key)
+    return LOC_NAME_CALL.sub(lambda m: run.labels._text(m.group(1)) or titleize(m.group(1)), text)
 
 
 def industry_label(run: RunData, key: str) -> str:
@@ -391,8 +399,8 @@ def town_right_charts(run: RunData, x: pl.DataFrame) -> tuple[list[dict[str, Any
         charts.append(chart(
             "town_right_fit", SECTION, "Do specialization rights fit their towns?",
             "Every specialization right held, against what its town makes (buildings and RGO, nominal output at base "
-            "price). Best fit: no charter or royal right covers more of the town's production than the held one. Weaker "
-            "fit: another would cover more. Goods not made there: the town makes none of the right's goods. Share of town "
+            "price). Best fit: no charter or right of the specialization lines open to every town covers more of the "
+            "town's production than the held one. Weaker fit: another would cover more. Goods not made there: the town makes none of the right's goods. Share of town "
             "output: the part of all the holding towns' production in the held right's goods, against the best generic "
             "right's.",
             [view("Share of rights", "pct", line_option(xs, shares, unit="pct", stack=True, y_max=100)),
@@ -445,7 +453,7 @@ def town_right_table(run: RunData, x: pl.DataFrame, held: pl.DataFrame, fit: pl.
         {"key": "goods", "label": "Its goods made there", "kind": "goods", "unit": "gold",
          "title": "gold per month of the right's goods made in the towns holding it (base price)"},
         {"key": "best", "label": "Best fit", "kind": "num", "unit": "pct0",
-         "title": "specialization rights: share held where no charter or royal right would cover more of the town's production"},
+         "title": "specialization rights: share held where no other charter or right would cover more of the town's production"},
         {"key": "regions", "label": "Main world regions", "kind": "text", "wide": True},
     ]
     return {

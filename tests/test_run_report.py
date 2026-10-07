@@ -427,6 +427,19 @@ def test_town_rights_and_promotions_count_changes_fit_and_page(tmp_path: Path) -
     page = rr.write_page(run, tmp_path, [], payload).read_text(encoding="utf-8")
     assert "<h2 id=towns>" in page and ">Town rights<" in page
 
+    # the game's name functions in a right's name resolve to the named place
+    from prosper_or_perish_constructor.run_report_urban import right_label
+
+    class Resolver:
+        localization = {"magdeburg_rights_town_rights": "", "magdeburg": ""}
+
+        def label(self, key: str) -> str:
+            return {"magdeburg_rights_town_rights": "[ShowLocationNameWithNoTooltip('magdeburg')] Rights",
+                    "magdeburg": "Magdeburg"}[key]
+
+    run.labels.resolver = Resolver()
+    assert right_label(run, "magdeburg_rights_town_rights") == "Magdeburg Rights"
+
     if shutil.which("ffmpeg"):
         index = np.full((20, 40), -1, dtype=np.int32)
         index[4:16, 4:18], index[4:16, 18:30] = 0, 1

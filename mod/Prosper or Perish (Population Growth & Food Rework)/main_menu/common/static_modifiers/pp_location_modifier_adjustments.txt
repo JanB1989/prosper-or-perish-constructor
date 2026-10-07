@@ -173,7 +173,7 @@ TRY_REPLACE:rgo_level = {
 	local_laborers_desired_pop = 1.500
 	local_raw_material_output = -0.010
 	# local_food_capacity = 15
-	local_monthly_food = 1.5
+	local_monthly_food = 1.75 # 1.5 until 2026-10-07 (Jan: start food deficits)
 	local_rgo_build_time = 0.10
 }
 TRY_REPLACE:raised_levies = {

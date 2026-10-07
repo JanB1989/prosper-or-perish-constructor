@@ -1400,38 +1400,64 @@ class Simulation:
         return (self.food_per_level(key, self.food_mult.get(tag, 1.0))
                 - num["employment_size"] * self.location_yield(tag))
 
-    def deficit_farm(self, tag):
-        """The tier-0 crop farm a short pool gets its next level from at ``tag``: allowed here (native gates), room
-        under its live cap, best by the location's crop weight, livestock last; None when none adds enough food."""
-        cfg = self.crop_cfg
-        if cfg is None:
-            return None
-        weights = self.crop_weights.get(tag, {})
-        rank = {key: i for i, key in enumerate(cfg.buildings.values())}
-        goods = self.crop_candidates(tag) & self.crop_available.get(tag, frozenset())
+    def start_staple_buildings(self):
+        """The other staple food buildings of the game start (2026-10-07, Jan): the tier-0 building of every
+        Provisioning family whose good is a staple food (provisioning.PROVISIONED_GOOD_BY_FAMILY, staple_foods.py)
+        besides the crop farms: fishing villages, ocean fisheries, orchards, forest villages, sheep farms. Upgrades
+        need an advance and are never placed at start."""
+        from prosper_or_perish_constructor import provisioning, staple_foods
+
+        crops = set(self.crop_cfg.buildings.values()) if self.crop_cfg is not None else set()
+        return tuple(key for key, good in provisioning.PROVISIONED_GOOD_BY_FAMILY.items()
+                     if staple_foods.is_staple_food(good) and key not in crops and key in self.numbers)
+
+    def deficit_farms(self, tag):
+        """The start staple buildings a short pool may get its next level from at ``tag``, in order: the tier-0 crop
+        farms allowed here (native gates) with room under their live cap, best by the location's crop weight,
+        livestock last; then the other staple food buildings with room (start_staple_buildings), most food first.
+        Only those whose level adds at least ``deficit_farm_min_net_food``."""
         floor = float(self.food_model.deficit_farm_min_net_food)
-        for good in sorted(goods, key=lambda g: (g == ca.LIVESTOCK, -float(weights.get(g, 0.0)), rank[cfg.buildings[g]])):
-            key = cfg.buildings[good]
-            if self.farm_net_food(tag, key) >= floor:
-                return key
-        return None
+        out = []
+        cfg = self.crop_cfg
+        if cfg is not None:
+            weights = self.crop_weights.get(tag, {})
+            rank = {key: i for i, key in enumerate(cfg.buildings.values())}
+            goods = self.crop_candidates(tag) & self.crop_available.get(tag, frozenset())
+            for good in sorted(goods, key=lambda g: (g == ca.LIVESTOCK, -float(weights.get(g, 0.0)), rank[cfg.buildings[g]])):
+                key = cfg.buildings[good]
+                if self.farm_net_food(tag, key) >= floor:
+                    out.append(key)
+        others = [(self.farm_net_food(tag, key), key) for key in self.start_staple_buildings()
+                  if self.cap(tag, key) > self.counts[tag][key]]
+        out.extend(key for net, key in sorted(others, key=lambda x: (-x[0], x[1])) if net >= floor)
+        return out
+
+    def deficit_farm(self, tag):
+        """The first of ``deficit_farms``, None when no start staple building adds enough food here."""
+        return next(iter(self.deficit_farms(tag)), None)
 
     def _feed_with_farms(self, members, need):
-        """Crop farm levels in the pools with a need, one level at a time round the pool's locations (most people
-        first), each where a level adds at least ``deficit_farm_min_net_food`` (caps, workers and land through
-        ``add``), until the need is met or no location takes another level. Returns the levels placed."""
+        """Start staple building levels (crop farms first, then fisheries, orchards, forest villages, flocks) in the
+        pools with a need, one level at a time round the pool's locations (most people first), each where a level adds
+        at least ``deficit_farm_min_net_food`` (caps, workers and land through ``add``), until the need is met or no
+        location takes another level. Returns the levels placed."""
         placed = 0
+        crops = set(self.crop_cfg.buildings.values()) if self.crop_cfg is not None else set()
+        others = self.__dict__.setdefault("deficit_staple_levels", Counter())
         for group in sorted((g for g in members if need.get(g, 0.0) > 0), key=lambda g: (-need[g], g)):
             remaining = need[group]
             tags = sorted(self.groups[group], key=lambda t: (-self.base[t]["population"], t))
             open_ = list(tags)
             while remaining > 1e-6 and open_:
                 for tag in list(open_):
-                    key = self.deficit_farm(tag)
-                    if key is None or not self.add(tag, key, 1):
+                    key = next((k for k in self.deficit_farms(tag) if self.add(tag, k, 1)), None)
+                    if key is None:
                         open_.remove(tag)
                         continue
-                    self.__dict__.setdefault("crop_placed", defaultdict(Counter))[tag][key] += 1
+                    if key in crops:
+                        self.__dict__.setdefault("crop_placed", defaultdict(Counter))[tag][key] += 1
+                    else:
+                        others[key] += 1
                     remaining -= self.farm_net_food(tag, key)
                     placed += 1
                     if remaining <= 1e-6:
@@ -2278,6 +2304,8 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
             "supply": round(sum(c["victuals_supply"] for c in sim.victuals.values()), 1),
             "demand": round(sum(c["victuals_demand"] for c in sim.victuals.values()), 1),
             "deficit_farm_levels": sum(c.get("deficit_farm_levels", 0) for c in sim.victuals.values()),
+            # of these, the levels of the non-crop staple buildings (fisheries, orchards, forest villages, flocks)
+            "deficit_staple_levels": dict(sorted(getattr(sim, "deficit_staple_levels", Counter()).items())),
             "serve_cookshop_levels": sum(c["serve_cookshop_levels"] for c in sim.victuals.values()),
             "fallback_cookshop_levels": sum(c["fallback_cookshop_levels"] for c in sim.victuals.values()),
             "wanted_tavern_levels": sum(c["wanted_tavern_levels"] for c in sim.victuals.values()),

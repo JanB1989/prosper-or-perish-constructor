@@ -79,7 +79,7 @@ REPLACE:sheep_farms = {
     }
 
     modifier = {
-        local_monthly_food = 0.0
+        local_monthly_food = 0.25
         # local_food_capacity = 50
         # folding: the flock manures the field crops of the same location (cattle farms give +1 %)
         local_wheat_output_modifier = 0.0075

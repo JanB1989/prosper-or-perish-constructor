@@ -354,6 +354,10 @@ pp_start_topup_market_village_potential = {
 	always = yes
 }
 
+pp_start_topup_ocean_fishery_potential = {
+	pp_is_sea_coast = yes
+}
+
 pp_start_topup_paddy_water_control_potential = {
 	OR = {
 		climate = subtropical

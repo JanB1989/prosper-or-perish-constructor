@@ -1,0 +1,14 @@
+﻿namespace = pp_reconquista
+
+# Reconquista aim (docs/country_finetunes.md): no Muslim country rules from Iberia any more -> Castile/Spain looks to the Maghreb.
+pp_reconquista.1 = {
+	type = country_event outcome = neutral title = empty_text desc = empty_text hidden = yes fire_only_once = yes
+	dynamic_historical_event = { tag = CAS tag = SPA from = 1337.4.2 to = 1836.12.31 monthly_chance = 20 }
+	trigger = {
+		NOT = { has_area_preference = pp_castile_conquer_maghreb }
+		NOT = { pp_reconquista_iberia_open = yes }
+	}
+	immediate = {
+		add_area_preference = pp_castile_conquer_maghreb
+	}
+}

@@ -1,0 +1,50 @@
+﻿# Reconquista aim (docs/country_finetunes.md).
+
+# Castile/Spain and Portugal never plan a war on each other while the Reconquista and the Maghreb are still open.
+pp_iberian_peace = {
+	attacker_potential = {
+		OR = {
+			tag = CAS
+			tag = SPA
+			tag = POR
+		}
+	}
+	target_trigger = {
+		OR = {
+			tag = CAS
+			tag = SPA
+			tag = POR
+		}
+	}
+	never_attack = {
+		OR = {
+			pp_reconquista_iberia_open = yes
+			pp_reconquista_maghreb_open = yes
+		}
+	}
+}
+
+# Castile/Spain prefers Muslim Iberia, and the Maghreb once it has the Maghreb preference.
+pp_reconquista_focus = {
+	attacker_potential = {
+		OR = {
+			tag = CAS
+			tag = SPA
+		}
+	}
+	target_trigger = {
+		religion.group = religion_group:muslim
+		capital ?= {
+			OR = {
+				region = region:iberia_region
+				AND = {
+					region = region:maghreb_region
+					scope:attacker = { has_area_preference = pp_castile_conquer_maghreb }
+				}
+			}
+		}
+	}
+	score = {
+		add = 30
+	}
+}

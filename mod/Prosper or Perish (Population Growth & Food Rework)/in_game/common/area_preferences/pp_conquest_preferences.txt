@@ -1,0 +1,23 @@
+﻿# PP conquest preferences (docs/country_finetunes.md). Castile also gets vanilla's castile_no_portugal_conquest at start.
+
+# Castile/Spain, once no Muslim country rules from Iberia (events/pp_reconquista_events.txt): on to the Maghreb.
+pp_castile_conquer_maghreb = {
+	preference_type = conquest
+	modifier = 10.0
+
+	region = maghreb_region
+}
+
+# Portugal's mirror of castile_no_portugal_conquest: leave the Castilian heartland alone.
+pp_portugal_no_castile_conquest = {
+	preference_type = conquest
+	modifier = -0.9
+
+	area = galicia_area
+	area = leon_area
+	area = castile_area
+	area = extremadura_area
+	area = toledo_area
+	area = andalusia_area
+	area = murcia_area
+}

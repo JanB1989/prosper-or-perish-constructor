@@ -1,33 +1,23 @@
-﻿# Country finetunes at game start (docs/country_finetunes.md): one-off starting gold, starting opinions.
+﻿# Country finetunes at game start (docs/country_finetunes.md): one-off starting gold, conquest preferences.
 on_game_start = {
 	on_actions = {
 		pp_country_finetune_start_gold
-		pp_country_finetune_opinions
+		pp_country_finetune_area_preferences
 	}
 }
 
-# Castile <-> Portugal: Iberian Concord (+200, 100 years) replaces vanilla's decaying +50 good relations.
-pp_country_finetune_opinions = {
+# Castile <-> Portugal: no conquest of each other (vanilla grants Castile's only after Rio Salado); the
+# Reconquista aim is in ai_scripted_expansion_score/target pp_reconquista.txt.
+pp_country_finetune_area_preferences = {
 	effect = {
-		if = {
-			limit = {
-				exists = c:CAS
-				exists = c:POR
+		c:CAS ?= {
+			if = {
+				limit = { NOT = { has_area_preference = castile_no_portugal_conquest } }
+				add_area_preference = castile_no_portugal_conquest
 			}
-			c:CAS = {
-				if = {
-					limit = { has_opinion = { target = c:POR modifier = opinion_good_relations } }
-					remove_opinion = { target = c:POR modifier = opinion_good_relations }
-				}
-				add_opinion = { target = c:POR modifier = pp_opinion_iberian_concord }
-			}
-			c:POR = {
-				if = {
-					limit = { has_opinion = { target = c:CAS modifier = opinion_good_relations } }
-					remove_opinion = { target = c:CAS modifier = opinion_good_relations }
-				}
-				add_opinion = { target = c:CAS modifier = pp_opinion_iberian_concord }
-			}
+		}
+		c:POR ?= {
+			add_area_preference = pp_portugal_no_castile_conquest
 		}
 	}
 }

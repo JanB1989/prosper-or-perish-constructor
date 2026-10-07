@@ -94,16 +94,16 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
     "new_world_advance": (
         {"allow = {has_embraced_institution=institution:new_world}"},
         {
-            "allow = {OR={has_embraced_institution=institution:new_world AND={culture={has_culture_group="
-            "culture_group:iberian_group} religion.group=religion_group:christian}}}",
-            "ai_weight = {if={limit={culture={has_culture_group=culture_group:iberian_group} "
+            "allow = {OR={has_embraced_institution=institution:new_world AND={exists=culture "
+            "culture={has_culture_group=culture_group:iberian_group} religion.group=religion_group:christian}}}",
+            "ai_weight = {if={limit={exists=culture culture={has_culture_group=culture_group:iberian_group} "
             "religion.group=religion_group:christian} add=100}}",
         },
     ),
     "explorer_commisions_advance": (
         set(),
         {
-            "ai_weight = {if={limit={culture={has_culture_group=culture_group:iberian_group} "
+            "ai_weight = {if={limit={exists=culture culture={has_culture_group=culture_group:iberian_group} "
             "religion.group=religion_group:christian} add=100}}",
         },
     ),

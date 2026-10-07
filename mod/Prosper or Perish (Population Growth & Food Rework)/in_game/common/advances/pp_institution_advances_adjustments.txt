@@ -54,6 +54,7 @@ TRY_REPLACE:new_world_advance = {
 		OR = {
 			has_embraced_institution = institution:new_world
 			AND = {
+				exists = culture
 				culture = { has_culture_group = culture_group:iberian_group }
 				religion.group = religion_group:christian
 			}
@@ -71,6 +72,7 @@ TRY_REPLACE:new_world_advance = {
 	ai_weight = {
 		if = {
 			limit = {
+				exists = culture
 				culture = { has_culture_group = culture_group:iberian_group }
 				religion.group = religion_group:christian
 			}
@@ -91,6 +93,7 @@ TRY_REPLACE:explorer_commisions_advance = {
 	ai_weight = {
 		if = {
 			limit = {
+				exists = culture
 				culture = { has_culture_group = culture_group:iberian_group }
 				religion.group = religion_group:christian
 			}

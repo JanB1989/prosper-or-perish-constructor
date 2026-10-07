@@ -26,7 +26,11 @@ body{margin:0}
 .glist a{display:flex;align-items:center;gap:8px;padding:3px 6px;border-radius:6px;color:var(--ink);text-decoration:none;font-size:13px;line-height:22px}
 .glist a:hover{background:var(--chip)} .glist a.on{background:var(--accent);color:#fff} .glist a.on .badge{color:#fff}
 .glist img{width:20px;height:20px} .glist .noicon{display:inline-block;width:20px}
-.glist .badge{margin-left:auto;font-size:11px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.glist h4 .gshare{margin-left:auto;font-variant-numeric:tabular-nums;letter-spacing:0;text-transform:none}
+.glist .share{margin-left:auto;font-size:11px;font-variant-numeric:tabular-nums;color:var(--ink);min-width:38px;text-align:right}
+.glist .badge{font-size:11px;font-variant-numeric:tabular-nums;color:var(--muted);min-width:36px;text-align:right}
+.glist a.on .share{color:#fff} .glist .legend{display:flex;gap:6px;font-size:11px;color:var(--muted);margin:8px 6px 0}
+.glist .legend span:first-child{margin-left:auto;min-width:38px;text-align:right} .glist .legend span:last-child{min-width:36px;text-align:right}
 .badge.hi{color:var(--neg)!important} .badge.lo{color:var(--pos)!important}
 .main{padding:0 22px 48px;min-width:0}
 .bar{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;position:sticky;top:0;background:var(--bg);padding:12px 0 10px;z-index:5;border-bottom:1px solid var(--line);margin-bottom:16px;font-size:13px;color:var(--muted)}
@@ -486,27 +490,49 @@ GOODS_JS = r"""
       if (top < view + 60 || top > view + side.clientHeight - 60) side.scrollTop = top - side.clientHeight / 2;
     }
   }
+  // each good's share of all output (production value at base price) and its price ÷ base, in the chosen region
+  function outputShares(D) {
+    const n = IX.goods.length, made = new Array(n).fill(0), price = new Array(n).fill(null);
+    let total = 0;
+    for (let g = 0; g < n; g++) {
+      const pg = goodPrice(g);
+      for (const r of D.by[g].p) if (inRegion(r[3])) made[g] += (r[4] || 0) * pg;
+      total += made[g];
+      let pv = 0, vol = 0;
+      for (const r of D.by[g].m) if (inRegion(r[1])) { pv += r[2] || 0; vol += r[3] || 0; }
+      if (vol > 0) price[g] = pv / vol / pg;
+    }
+    return {share: made.map(v => total > 0 ? v / total : 0), price, total};
+  }
+  const shareText = f => f >= 0.0995 ? (f * 100).toFixed(0) + '%' : f >= 0.00095 ? (f * 100).toFixed(1) + '%' : f > 0 ? '<0.1%' : '–';
   function buildList(D) {
     const q = $('#search').value.trim().toLowerCase();
-    let h = '';
+    const where = S.r >= 0 ? IX.regions[S.r].name : 'the world';
+    const O = D ? outputShares(D) : null;
+    let h = `<div class=legend title="Share: the good's production value at base price ÷ the value of everything produced in ${esc(where)}. Price: price ÷ base price."><span>share</span><span>price</span></div>`;
     for (const grp of IX.groups) {
-      const items = IX.goodOrder.filter(i => IX.goods[i].group === grp.key && (!q || IX.goods[i].name.toLowerCase().includes(q)));
+      let items = IX.goodOrder.filter(i => IX.goods[i].group === grp.key && (!q || IX.goods[i].name.toLowerCase().includes(q)));
       if (!items.length) continue;
-      h += `<h4><i style="background:${grp.color}"></i>${esc(grp.label)}</h4>`;
+      if (O) items = items.slice().sort((a, b) => O.share[b] - O.share[a] || goodName(a).localeCompare(goodName(b)));
+      const gshare = O ? IX.goodOrder.filter(i => IX.goods[i].group === grp.key).reduce((a, i) => a + O.share[i], 0) : null;
+      h += `<h4><i style="background:${grp.color}"></i>${esc(grp.label)}<span class=gshare title="share of all output in ${esc(where)}">${gshare == null ? '' : shareText(gshare)}</span></h4>`;
       for (const i of items) {
-        const pr = D ? D.price[i] : null;
+        const pr = O ? O.price[i] : null, sh = O ? O.share[i] : null;
         const cls = pr == null ? '' : pr > 1.25 ? ' hi' : pr < 0.8 ? ' lo' : '';
-        h += `<a href="#" data-i="${i}" class="${i === S.g ? 'on' : ''}">${imgHtml(i) || '<span class=noicon></span>'}<span>${esc(IX.goods[i].name)}</span><span class="badge${cls}" title="world price ÷ base price">${pr == null ? '' : pr.toFixed(2) + '×'}</span></a>`;
+        h += `<a href="#" data-i="${i}" class="${i === S.g ? 'on' : ''}" title="${esc(goodName(i))}: ${sh == null ? '' : shareText(sh) + ' of all output in ' + esc(where) + ', '}price ${pr == null ? '–' : pr.toFixed(2) + '× base'}">` +
+          `${imgHtml(i) || '<span class=noicon></span>'}<span>${esc(IX.goods[i].name)}</span><span class=share>${sh == null ? '' : shareText(sh)}</span><span class="badge${cls}">${pr == null ? '' : pr.toFixed(2) + '×'}</span></a>`;
       }
     }
     $('#goodlist').innerHTML = h || '<div class=empty>No good matches.</div>';
   }
-  function tiles(X) {
+  function tiles(X, D) {
     const pg = goodPrice(X.g);
+    const O = outputShares(D);
     const priceRatio = X.mk.vol > 0 ? X.mk.pv / X.mk.vol / pg : null;
     const unmet = X.wanted > 0 ? 1 - X.used / X.wanted : null;
     const t = [
       ['Made', num(X.made) + ' / mo', num(X.made * pg) + ' gold at base price'],
+      ['Share of output', shareText(O.share[X.g]), `of everything made in ${S.r >= 0 ? IX.regions[S.r].name : 'the world'} (${num(O.total)} gold / mo)`],
       ['Used', num(X.used) + ' / mo', `${num(X.usedB)} by buildings · ${num(X.usedD)} other`],
       ['Unmet demand', pct(unmet), `${num(Math.max(0, X.wanted - X.used))} / mo wanted but not received`],
       ['Price ÷ base', ratio(priceRatio), `base price ${num(pg)} gold`],
@@ -534,7 +560,7 @@ GOODS_JS = r"""
     const g = S.g, X = compute(D, g), grp = groupOf(g);
     const where = S.r >= 0 ? IX.regions[S.r].name : 'World';
     document.title = `${goodName(g)} · Goods · ${IX.run}`;
-    $('#head').innerHTML = `<div class=ghead>${imgHtml(g)}<div><h1>${esc(goodName(g))}</h1><div class=muted><span class=chipg><i style="background:${grp.color}"></i>${esc(grp.label)}</span> · ${esc(where)} · save ${esc(IX.saves[S.s].label)}</div></div></div><div class=tiles>${tiles(X)}</div>`;
+    $('#head').innerHTML = `<div class=ghead>${imgHtml(g)}<div><h1>${esc(goodName(g))}</h1><div class=muted><span class=chipg><i style="background:${grp.color}"></i>${esc(grp.label)}</span> · ${esc(where)} · save ${esc(IX.saves[S.s].label)}</div></div></div><div class=tiles>${tiles(X, D)}</div>`;
     const flow = flowOption(D, X);
     const el = document.getElementById('sankey');
     el.style.height = flow.height + 'px';

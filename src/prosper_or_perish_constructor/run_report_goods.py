@@ -35,7 +35,6 @@ import polars as pl
 
 from prosper_or_perish_constructor.run_report_charts import (
     DUMMY_GOODS,
-    GOODS_GROUPS,
     OTHER_GREY,
     land_region_expr,
     region_palette,
@@ -64,6 +63,33 @@ SUPPLY_BUCKETS: tuple[tuple[str, str, str], ...] = (
     ("BurgherTrades", "Burgher trade in", "#00a3a3"),
 )
 OTHER_REGION = "other"
+# Goods page groups (display order): key, label, colour. A good's group comes from config/goods_categories.csv:
+# its staple_group first (staple foods), else its subcategory, else its category.
+PAGE_GROUPS: tuple[tuple[str, str, str], ...] = (
+    ("staple", "Staple foods", "#1baf7a"),
+    ("cash", "Cash crops", "#eda100"),
+    ("beasts", "Horses & beasts", "#a0522d"),
+    ("prepared", "Prepared food & drink", "#7d8b2a"),
+    ("building", "Building materials", "#8c8c88"),
+    ("minerals", "Metals, ores & minerals", "#4a3aa7"),
+    ("precious", "Precious & rare", "#e87ba4"),
+    ("textiles", "Textiles & leather", "#2a78d6"),
+    ("crafts", "Crafts & luxuries", "#00a3a3"),
+    ("industry", "Tools, arms & ships", "#e34948"),
+    ("other", "Other", "#9a9a96"),
+)
+PAGE_GROUP_BY_SUBCATEGORY = {
+    "industrial_crops": "cash", "plant_fibers": "cash", "spices": "cash", "stimulants": "cash", "sweeteners": "cash",
+    "tree_crops": "cash", "apiary": "cash",
+    "animal_husbandry": "beasts",
+    "prepared_food": "prepared", "beverages": "prepared",
+    "timber": "building", "earth_materials": "building", "construction_stone": "building", "construction_materials": "building",
+    "metal_ores": "minerals", "fuel": "minerals", "industrial_minerals": "minerals", "surface_minerals": "minerals",
+    "precious_minerals": "precious", "aquatic_resources": "precious", "wild_luxuries": "precious", "animal_products": "precious",
+    "textiles_and_leather": "textiles",
+    "luxury_crafts": "crafts", "books_and_paper": "crafts", "medicinals": "crafts",
+    "metal_goods": "industry", "military_goods": "industry", "naval_goods": "industry", "industrial_inputs": "industry",
+}
 FLOW_TABLES = ("producers", "consumers", "demand", "supply", "market")
 FACTOR_LIMITS = (0.02, 50.0)
 
@@ -386,7 +412,18 @@ def build_goods_data(run: RunData, dataset: Path, out: Path, recipes: Recipes, *
     return {"saves": saves, "index": index, "palette": palette}
 
 
-def index_payload(run: RunData, built: dict[str, Any], recipes: Recipes, dataset: Path) -> dict[str, Any]:
+def page_groups(repo: Path) -> dict[str, str]:
+    """good -> goods page group (PAGE_GROUPS) from config/goods_categories.csv."""
+    path = repo / "config" / "goods_categories.csv"
+    if not path.is_file():
+        return {}
+    out = {}
+    for good, subcategory, staple in pl.read_csv(path, infer_schema=False).select("good", "subcategory", "staple_group").iter_rows():
+        out[good] = "staple" if staple else PAGE_GROUP_BY_SUBCATEGORY.get(subcategory or "", "other")
+    return out
+
+
+def index_payload(run: RunData, built: dict[str, Any], recipes: Recipes, dataset: Path, repo: Path | None = None) -> dict[str, Any]:
     from prosper_or_perish_constructor.run_report_urban import LOC_NAME_CALL
 
     index: Index = built["index"]
@@ -408,15 +445,15 @@ def index_payload(run: RunData, built: dict[str, Any], recipes: Recipes, dataset
     building_names = catalog("building_catalog", "building_type", "building_name")
     method_names = catalog("production_method_catalog", "production_method", "production_method_name")
     # goods: every good any save has, in the report's order (group, then the most produced at the last save)
-    groups = {g: grp for g, grp in run.market_goods.select("good_id", "group").unique("good_id").iter_rows()} if not run.market_goods.is_empty() else {}
+    groups = page_groups(repo) if repo else {}
     prices = {g: p for g, p in run.market_goods.select("good_id", "default_price").unique("good_id").iter_rows()} if not run.market_goods.is_empty() else {}
-    order = {k: i for i, (k, _, _, _) in enumerate(GOODS_GROUPS)}
+    order = {k: i for i, (k, _, _) in enumerate(PAGE_GROUPS)}
     made_last = run.market_goods.filter(pl.col("snapshot_id") == last).group_by("good_id").agg(
         (pl.col("production") * pl.col("default_price")).sum().alias("v")) if not run.market_goods.is_empty() else pl.DataFrame()
     value = dict(made_last.iter_rows()) if made_last.height else {}
     goods = []
     for good in index.lists["good"]:
-        goods.append({"id": good, "name": labels.good(good), "group": groups.get(good, "produced"),
+        goods.append({"id": good, "name": labels.good(good), "group": groups.get(good, "other"),
                       "price": prices.get(good), "icon": run.good_icons.get(good)})
     good_order = sorted(range(len(goods)), key=lambda i: (order.get(goods[i]["group"], 99), -(value.get(goods[i]["id"]) or 0.0), goods[i]["name"]))
     buildings = []
@@ -439,7 +476,7 @@ def index_payload(run: RunData, built: dict[str, Any], recipes: Recipes, dataset
             regions.append({"id": key, "name": "Seas and other" if key == OTHER_REGION else titleize(key), "color": OTHER_GREY})
     return {
         "run": run.name, "years": list(run.years), "saves": built["saves"], "regions": regions, "goods": goods,
-        "goodOrder": good_order, "groups": [{"key": k, "label": label, "color": colour} for k, label, colour, _ in GOODS_GROUPS],
+        "goodOrder": good_order, "groups": [{"key": k, "label": label, "color": colour} for k, label, colour in PAGE_GROUPS],
         "buildings": buildings, "methods": methods,
         "demand": [{"id": b, "name": label, "color": colour} for b, label, colour in DEMAND_BUCKETS],
         "supply": [{"id": b, "name": label, "color": colour} for b, label, colour in SUPPLY_BUCKETS],
@@ -452,7 +489,7 @@ def write_goods_page(run: RunData, out: Path, *, repo: Path, project: Path, data
         return None
     recipes = Recipes(repo, project)
     built = build_goods_data(run, dataset, out, recipes, cache=cache, log=log)
-    payload = index_payload(run, built, recipes, dataset)
+    payload = index_payload(run, built, recipes, dataset, repo)
     (out / "goods" / "index.json").write_text(json.dumps(payload, separators=(",", ":"), allow_nan=False), encoding="utf-8")
     from prosper_or_perish_constructor.run_report_goods_page import goods_page_html
 

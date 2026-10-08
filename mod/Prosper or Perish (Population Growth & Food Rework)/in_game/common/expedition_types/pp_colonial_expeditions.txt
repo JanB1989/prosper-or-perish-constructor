@@ -30,7 +30,12 @@ pp_exp_gold_coast = {
 			}
 		}
 		gold >= pp_exp_reserve_light
-		at_war = no
+		NOT = {
+			any_country_at_war_with = {
+				capital ?= { continent = continent:europe }
+				is_great_power = yes
+			}
+		}
 	}
 
 	leader = { pp_exp_leader = yes }
@@ -155,7 +160,12 @@ pp_exp_india_armada = {
 			location:diu = { pp_exp_free_site = yes }
 		}
 		gold >= pp_exp_reserve_armada
-		at_war = no
+		NOT = {
+			any_country_at_war_with = {
+				capital ?= { continent = continent:europe }
+				is_great_power = yes
+			}
+		}
 	}
 
 	leader = { pp_exp_leader = yes }
@@ -498,7 +508,12 @@ pp_exp_spice_islands = {
 		}
 		navy_size >= 10
 		gold >= pp_exp_reserve_armada
-		at_war = no
+		NOT = {
+			any_country_at_war_with = {
+				capital ?= { continent = continent:europe }
+				is_great_power = yes
+			}
+		}
 	}
 
 	leader = { pp_exp_leader = yes }
@@ -638,7 +653,12 @@ pp_exp_china_embassy = {
 		}
 		NOT = { has_cooldown = pp_exp_china_cooldown }
 		gold >= pp_exp_reserve_armada
-		at_war = no
+		NOT = {
+			any_country_at_war_with = {
+				capital ?= { continent = continent:europe }
+				is_great_power = yes
+			}
+		}
 	}
 
 	leader = { pp_exp_leader = yes }
@@ -729,7 +749,12 @@ pp_exp_manila_galleon = {
 		location:maynila = { pp_exp_free_site = yes }
 		navy_size >= 15
 		gold >= pp_exp_reserve_armada
-		at_war = no
+		NOT = {
+			any_country_at_war_with = {
+				capital ?= { continent = continent:europe }
+				is_great_power = yes
+			}
+		}
 	}
 
 	leader = { pp_exp_leader = yes }
@@ -858,11 +883,16 @@ pp_exp_company_voyage = {
 		}
 		pp_exp_knows_cape_route = yes
 		pp_exp_company_target_available = yes
-		num_locations >= 25
+		num_locations >= 15
 		NOT = { has_cooldown = pp_exp_company_cooldown }
 		navy_size >= 15
 		gold >= pp_exp_reserve_company
-		at_war = no
+		NOT = {
+			any_country_at_war_with = {
+				capital ?= { continent = continent:europe }
+				is_great_power = yes
+			}
+		}
 	}
 
 	leader = { pp_exp_leader = yes }

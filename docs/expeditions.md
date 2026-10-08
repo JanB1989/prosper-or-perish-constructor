@@ -31,7 +31,7 @@ panel when the country meets the gates.
 | 5 | Voyage to the Spice Islands | foothold in the Indies; Malacca 5 years ago or Age of Reformation; a free harbour among Ternate, Tidore, Banda | that island | Fortaleza/Castle-Factory + company, or + claim; Spice Islands Trade |
 | 6 | Embassy to the Celestial Court | foothold in the Indies; Malacca 5 years ago, Spice Islands done or Age of Reformation; no foothold at Macau yet; 10-year cooldown | Xiangshan (Macau) | the owner decides (accepts 30 % before the Age of Reformation, 70 % after): Macau port + trade access + company + Licence to Trade with China, or refusal |
 | 7 | The Manila Galleon | Age of Reformation; 5 American locations or Spice Islands done; Maynila free | Maynila | unclaimed: harbour + Castle-Factory + market; native: Fortaleza + claim; Manila Galleon |
-| 8 | Company Voyage to the Indies | trade companies or chartered companies advance, cape route known, 25+ locations; repeatable, 15-year cooldown | the most populous South/South East Asian market centre where the country has no foothold | Fortaleza + company; optional trade war on a European rival already there; Chartered Company |
+| 8 | Company Voyage to the Indies | trade companies or chartered companies advance, cape route known, 15+ locations; repeatable, 15-year cooldown | the most populous South/South East Asian market centre where the country has no foothold | Fortaleza + company; optional trade war on a European rival already there; Chartered Company |
 
 A colonial power (`pp_exp_colonial_power`) owns a harbour on Europe's ocean coasts (Iberia, France, the British Isles,
 the Low Countries and North Germany, Scandinavia), at least 25 locations and 10 ships, and an ocean-going advance. A

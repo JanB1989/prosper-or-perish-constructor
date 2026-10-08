@@ -15,6 +15,7 @@ pp_expedition.1 = {
 
 	immediate = {
 		var:pp_exp_target_gold_coast = { save_scope_as = pp_exp_target }
+		pp_exp_retarget_effect = yes
 		set_variable = pp_exp_done_gold_coast
 		remove_variable = pp_exp_target_gold_coast
 	}
@@ -47,6 +48,7 @@ pp_expedition.2 = {
 
 	immediate = {
 		var:pp_exp_target_india = { save_scope_as = pp_exp_target }
+		pp_exp_retarget_effect = yes
 		set_variable = pp_exp_done_india
 		remove_variable = pp_exp_target_india
 		pp_exp_find_market_center_effect = yes
@@ -212,6 +214,7 @@ pp_expedition.5 = {
 
 	immediate = {
 		var:pp_exp_target_spice = { save_scope_as = pp_exp_target }
+		pp_exp_retarget_effect = yes
 		set_variable = pp_exp_done_spice
 		remove_variable = pp_exp_target_spice
 		pp_exp_find_market_center_effect = yes
@@ -329,6 +332,7 @@ pp_expedition.8 = {
 			second = root
 			type = relation_type:trade_access
 		}
+		scope:pp_exp_target = { save_scope_as = pp_exp_company_site }
 		pp_exp_trade_company_effect = yes
 		add_to_variable_list = {
 			name = pp_exp_footholds
@@ -373,6 +377,7 @@ pp_expedition.9 = {
 
 	immediate = {
 		var:pp_exp_target_manila = { save_scope_as = pp_exp_target }
+		pp_exp_retarget_effect = yes
 		set_variable = pp_exp_done_manila
 		remove_variable = pp_exp_target_manila
 		pp_exp_find_market_center_effect = yes
@@ -403,6 +408,7 @@ pp_expedition.10 = {
 		set_variable = pp_exp_done_company
 		remove_variable = pp_exp_target_company
 		pp_exp_find_rival_effect = yes
+		pp_exp_retarget_effect = yes
 	}
 
 	# Open the factory.

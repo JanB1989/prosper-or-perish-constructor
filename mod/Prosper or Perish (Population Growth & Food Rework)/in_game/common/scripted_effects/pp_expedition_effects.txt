@@ -155,7 +155,12 @@ pp_exp_foothold_effect = {
 				cost_multiplier_reason = "game_concept_event"
 			}
 		}
-		else = {
+		else_if = {
+			limit = {
+				NOT = {
+					any_buildings_in_location = { building_type = building_type:pp_fortaleza }
+				}
+			}
 			owner = { save_scope_as = pp_exp_host }
 			create_relation = {
 				first = scope:pp_exp_host
@@ -169,6 +174,7 @@ pp_exp_foothold_effect = {
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_concept_event"
 			}
+			save_scope_as = pp_exp_company_site
 		}
 	}
 	add_to_variable_list = {
@@ -219,12 +225,42 @@ pp_exp_rival_claim_effect = {
 	}
 }
 
+# Arrival: when another country raised its foothold at scope:pp_exp_target while the fleet was at sea, the fleet goes on
+# to the best free harbour of the same region (run pp_exp5: Castile's Spice fleet reached Ternate after Portugal's and
+# its Fortaleza replaced the Portuguese one, which ended Portugal's Moluccas company). Re-saves scope:pp_exp_target.
+pp_exp_retarget_effect = {
+	if = {
+		limit = {
+			scope:pp_exp_target = {
+				has_variable_list = pp_exp_foothold_owners
+				NOT = {
+					is_target_in_variable_list = {
+						name = pp_exp_foothold_owners
+						target = root
+					}
+				}
+			}
+		}
+		scope:pp_exp_target.region = {
+			ordered_location_in_region = {
+				limit = { pp_exp_free_site = yes }
+				order_by = population
+				max = 1
+				save_scope_as = pp_exp_target
+			}
+		}
+	}
+}
+
 # Trade company: in a foreign harbour the country founds a trade company, a subject that runs its buildings in that
 # region (as vanilla create_building_subject: the overlord ruler heads it, the region joins trade_company_regions).
-# Needs the Fortaleza and the trade access set by pp_exp_foothold_effect.
+# Needs the Fortaleza and the trade access set by pp_exp_foothold_effect: only where the country itself has just raised
+# its foreign building (scope:pp_exp_company_site), so a company never takes over another country's Fortaleza in the
+# same harbour (run pp_exp5: Castile's company at Ternate took Portugal's and ended the Moluccas company).
 pp_exp_trade_company_effect = {
 	if = {
 		limit = {
+			exists = scope:pp_exp_company_site
 			scope:pp_exp_target = {
 				has_owner = yes
 				NOT = { owner = root }

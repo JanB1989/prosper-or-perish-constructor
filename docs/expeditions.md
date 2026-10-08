@@ -22,20 +22,31 @@ panel when the country meets the gates.
 
 ## The eight expeditions
 
-| # | Type | Gate (besides gold, navy, peace) | Target | Outcome |
+| # | Type | Gate (besides gold reserve and peace) | Target | Outcome |
 | --- | --- | --- | --- | --- |
-| 1 | Gold Coast Factory | Atlantic power, Age of Discovery, naval-minded | unclaimed harbour in the Axim area, else Axim | harbour + Castle-Factory + market, or Fortaleza; Gold of Mina |
-| 2 | Armada to India | European seafarer, Age of Discovery, cape route known (Gold Coast done, cape route discovered or Cape of Good Hope known), exploration advance | Kochi, Kannur, Goa or Kozhikode (unclaimed or weakest owner) | Fortaleza + trade access + trade company, or Fortaleza + claim on the market centre; Carreira da India; marks the cape route discovered |
-| 3 | Armada of Conquest | Armada to India done; an Indian coastal market centre held by a fair target | that market centre (Goa, Kozhikode, Kochi, Diu or Surat market) | war with Seize the Market Centre, six regiments land there |
-| 4 | Armada to Malacca | foothold in the Indies; Malacca's market centre held by a fair target | Malacca's market centre | war + landing, Lord of the Straits; or factory + company |
-| 5 | Voyage to the Spice Islands | foothold in the Indies; Malacca done or Age of Reformation | Ternate, Tidore or Banda | Fortaleza/Castle-Factory + company, or + claim; Spice Islands Trade |
-| 6 | Embassy to the Celestial Court | foothold in the Indies; Malacca or Spice Islands done, or Age of Reformation; 10-year cooldown | Xiangshan (Macau) | the owner decides: Macau port + trade access + company + Licence to Trade with China, or refusal |
-| 7 | The Manila Galleon | Age of Reformation; 5 American locations or Spice Islands done | Maynila | harbour + Castle-Factory + market, or Fortaleza + claim; Manila Galleon |
-| 8 | Company Voyage to the Indies | trade companies or chartered companies advance, cape route known; repeatable, 15-year cooldown | richest South/South East Asian market centre where the country has no foothold | Fortaleza + company; optional trade war on a European rival already there; Chartered Company |
+| 1 | Gold Coast Factory | colonial power, Age of Discovery, naval-minded, a free harbour left on the Guinea coast | the best free Guinea harbour (unclaimed first, then the most populous) | unclaimed: the harbour + Castle-Factory + a market if none in the region; native: Fortaleza + trade access; Gold of Mina |
+| 2 | Armada to India | colonial power, exploration advance, 15 years after the own Gold Coast castle (or Age of Reformation once the cape route is known), a free harbour among Kochi, Kannur, Goa, Kozhikode, Diu | that harbour (unclaimed or weakest owner) | Fortaleza + trade access + trade company, or Fortaleza + claim on the market centre; Carreira da India; marks the cape route discovered |
+| 3 | Armada of Conquest | India done 8 years ago; an Indian coastal market centre held by a fair target | that market centre (Goa, Kozhikode, Kochi, Diu or Surat market) | war with Seize the Market Centre, six regiments land there |
+| 4 | Armada to Malacca | foothold in the Indies, India 10 years ago (or a company voyage); Malacca's market centre held by a fair target | Malacca's market centre | war + landing, Lord of the Straits; or factory + company |
+| 5 | Voyage to the Spice Islands | foothold in the Indies; Malacca 5 years ago or Age of Reformation; a free harbour among Ternate, Tidore, Banda | that island | Fortaleza/Castle-Factory + company, or + claim; Spice Islands Trade |
+| 6 | Embassy to the Celestial Court | foothold in the Indies; Malacca 5 years ago, Spice Islands done or Age of Reformation; no foothold at Macau yet; 10-year cooldown | Xiangshan (Macau) | the owner decides (accepts 30 % before the Age of Reformation, 70 % after): Macau port + trade access + company + Licence to Trade with China, or refusal |
+| 7 | The Manila Galleon | Age of Reformation; 5 American locations or Spice Islands done; Maynila free | Maynila | unclaimed: harbour + Castle-Factory + market; native: Fortaleza + claim; Manila Galleon |
+| 8 | Company Voyage to the Indies | trade companies or chartered companies advance, cape route known, 25+ locations; repeatable, 15-year cooldown | the most populous South/South East Asian market centre where the country has no foothold | Fortaleza + company; optional trade war on a European rival already there; Chartered Company |
 
-A fair target (`pp_exp_weak_market_owner`) is any other country that is not a great power, not our subject and not our
+A colonial power (`pp_exp_colonial_power`) owns a harbour on Europe's ocean coasts (Iberia, France, the British Isles,
+the Low Countries and North Germany, Scandinavia), at least 25 locations and 10 ships, and an ocean-going advance. A
+free site (`pp_exp_free_site`) is a harbour no European country owns and where no country has a foothold yet. A fair
+target (`pp_exp_weak_market_owner`) is any other country that is not a great power, not our subject and not our
 overlord. Costs are in vanilla scaled gold units (`pp_exp_gold_unit` = 1 + 0.2 capital wealth + 0.05 economic base, as
-`change_gold_effect`): light 4, armada 8, company 10; the treasury must hold 1.5 times the cost.
+`change_gold_effect`; Portugal 31, Castile 62, England 44 in 1452): light 4 (at least 150 gold), armada 8 (at least
+400), company 10 (at least 600); the treasury must hold 1.5 times the cost.
+
+Trade companies are created like vanilla's `create_building_subject` action: `create_building_country_in_location` with
+`subject_type:trade_company`, the overlord's ruler and the target's region; the new company takes over the country's
+Fortalezas in that region (1452 test: England's Moluccas company owns the Ternate and Tidore Fortalezas). Vanilla's
+Trade Company Headquarters `on_built` made plain vassals when the building was raised by script. Landings put six
+regiments (halberdiers in the Age of Discovery, pikemen later) ashore at the market centre right after the war
+declaration.
 
 ## AI
 
@@ -56,9 +67,12 @@ overlord. Costs are in vanilla scaled gold units (`pp_exp_gold_unit` = 1 + 0.2 c
 
 ## Testing trace
 
-Every start, end and failure writes `PPEXP;<stage>;<type>;<tag>;<date>` to error.log and sets the country variable
-`pp_exp_year_<stage>_<type>` = the year (save table `country_variables`). Console checks:
-`run pp_exp_dbg.txt` (gates per colonizer, `PPEXPDBG` lines), `run pp_exp_force.txt` (force-starts all eight).
+Every start, end and failure sets the country variable `pp_exp_year_<stage>_<type>` = the year (save table
+`country_variables`) and adds the country to the global list `pp_exp_log_<stage>` (error.log keeps only one line per
+script location, so it cannot trace repeated starts). Console checks (run files in `Documents/.../run/`, not in the
+repo): `pp_exp_dbg.txt` (gates per colonizer, `PPEXPDBG` lines in error.log), `pp_exp_chain.txt` (sets the earlier
+stages and force-starts India, Malabar war, Malacca, Spice Islands, China; `start_expedition` refuses a type whose
+potential or can_start fails), `pp_hist_personalities.txt` (restores vanilla's historical AI personalities).
 
 ## Pacing
 

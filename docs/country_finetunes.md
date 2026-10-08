@@ -2,6 +2,13 @@
 
 Hand-tuned changes for single countries, one entry each: what and why.
 
+Note for judging finetunes in observer runs (found 2026-10-08): new games take the game rules of the preset
+"LastAppliedRules", which holds `ai_personalities_random_per_age`; vanilla then re-rolls every AI personality at each age
+(1342, 1437, ...). Run 40148576 had the Ottomans cautious, Castile cautious and Portugal and England isolationist from
+1342 (vanilla setup: Ottomans aggressive, Castile/England/France/Muscovy expansionist, Portugal opportunistic), and new
+ones again from 1437. Cautious, isolationist and friendly personalities need a casus belli and wait 18-24 months
+between wars. Test runs should use `ai_personalities_historical`, or restore the historical personalities by console.
+
 - **France** (2026-10-05, `pp_estate_privilege_adjustments.txt`): Great Offices of the Crown +10 points noble max tax.
   Why: its powerful nobles were taxable at only 4-5 %, so the crown went bankrupt and France fell apart in observer runs.
 - **France +500, Ottomans +1,500, Byzantium -1,000 starting gold** (2026-10-05, `on_action/pp_country_finetunes.txt`).
@@ -58,7 +65,8 @@ Hand-tuned changes for single countries, one entry each: what and why.
   locations from 1337 to 1497 in every run; Ceuta (1415) and the Moroccan forts were its first expansion.
 - **Castile/Spain: the war for Granada** (2026-10-08, branch expeditions, `events/pp_reconquista_events.txt`
   pp_reconquista.2, `casus_belli/pp_reconquista.txt`, `ai_scripted_expansion_target/pp_reconquista.txt`): from 1475 a
-  hidden event gives CAS/SPA the Reconquista casus belli (take capital, 25 years, renewed every 20 years) on every
-  Muslim country still ruling from Iberia; a second expansion target uses it (+60, ignores antagonism, 24 months of
-  peace). Why: run c4831a96 still had Granada in 1497; run 40148576 had Castile at peace 1387-1402 next to a 16-location
-  Granada and never attacking it (the +30 target alone found no casus belli).
+  hidden event (once) gives CAS/SPA the Reconquista casus belli (conquer an Iberian province, 50 years) on every Muslim
+  country that holds land in Iberia, Granada or a Maghreb power that took it; a second expansion target uses it (+60,
+  ignores antagonism, 24 months of peace). Why: run c4831a96 still had Granada in 1497; run 40148576 had Castile at
+  peace 1387-1402 beside a 16-location Granada without attacking it, and by 1452 Morocco had taken Granada (15 Iberian
+  locations), which the capital-in-Iberia Reconquista target no longer saw.

@@ -13,26 +13,34 @@ pp_reconquista.1 = {
 	}
 }
 
-# The war for Granada (1482-1492): from 1475 Castile/Spain holds a casus belli on every Muslim country still ruling
-# from Iberia (once, for 50 years); ai_scripted_expansion_target/pp_reconquista.txt uses it.
+# The war for Granada (1482-1492): from 1475 Castile/Spain holds a casus belli on every Muslim country that still holds
+# land in Iberia (Granada, or Morocco after taking Granada), for an Iberian province (once, for 50 years);
+# ai_scripted_expansion_target/pp_reconquista.txt uses it.
 pp_reconquista.2 = {
 	type = country_event outcome = neutral title = empty_text desc = empty_text hidden = yes fire_only_once = yes
 	dynamic_historical_event = { tag = CAS tag = SPA from = 1475.1.1 to = 1700.12.31 monthly_chance = 20 }
 	trigger = {
-		pp_reconquista_iberia_open = yes
+		pp_reconquista_land_held = yes
 	}
 	immediate = {
 		every_country = {
 			limit = {
 				religion.group = religion_group:muslim
-				capital ?= { region = region:iberia_region }
 				NOT = { is_subject_of = root }
+				any_owned_location = { region = region:iberia_region }
 			}
 			save_scope_as = pp_reconquista_target
+			ordered_owned_location = {
+				limit = { region = region:iberia_region }
+				order_by = population
+				max = 1
+				province = { save_scope_as = pp_reconquista_province }
+			}
 			root = {
 				add_casus_belli = {
 					target = scope:pp_reconquista_target
 					type = casus_belli:cb_pp_reconquista
+					province = scope:pp_reconquista_province
 					years = 50
 				}
 			}

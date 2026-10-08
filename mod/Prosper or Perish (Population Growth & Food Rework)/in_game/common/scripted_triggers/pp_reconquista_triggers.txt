@@ -7,6 +7,14 @@ pp_reconquista_iberia_open = {
 	}
 }
 
+# Does a Muslim country still hold land in Iberia (Granada, or a Maghreb power that took it)?
+pp_reconquista_land_held = {
+	any_country = {
+		religion.group = religion_group:muslim
+		any_owned_location = { region = region:iberia_region }
+	}
+}
+
 pp_reconquista_maghreb_open = {
 	any_country = {
 		religion.group = religion_group:muslim

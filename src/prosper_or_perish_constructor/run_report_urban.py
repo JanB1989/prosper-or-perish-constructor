@@ -415,7 +415,7 @@ def town_right_table(run: RunData, x: pl.DataFrame, held: pl.DataFrame, fit: pl.
     per_type = held.group_by(keys).agg(pl.len().alias("towns"))
     snapshots = x["snapshot_id"].to_list()
     previous = dict(zip(snapshots[1:], snapshots[:-1]))
-    before = per_type.select(pl.col("snapshot_id").replace_strict({v: k for k, v in previous.items()}, default=None).alias("snapshot_id"),
+    before = per_type.select(pl.col("snapshot_id").replace_strict({v: k for k, v in previous.items()}, default=None, return_dtype=pl.String).alias("snapshot_id"),
                              "type", pl.col("towns").alias("before")).filter(pl.col("snapshot_id").is_not_null())
     per_type = per_type.join(before, on=keys, how="left")
     regions = _top_text(held.with_columns(pl.col("region").map_elements(titleize, return_dtype=pl.String)), keys, "region")

@@ -124,9 +124,14 @@ pp_exp_india_armada = {
 	can_start = {
 		current_age_or_later = { age = age_3_discovery }
 		OR = {
-			has_global_variable = cape_route_discovered
-			has_discovered = location:good_hope_cape
 			pp_exp_years_since_gold_coast >= 15
+			AND = {
+				current_age_or_later = { age = age_4_reformation }
+				OR = {
+					has_global_variable = cape_route_discovered
+					has_discovered = location:good_hope_cape
+				}
+			}
 		}
 		OR = {
 			has_advance = explorer_commisions_advance

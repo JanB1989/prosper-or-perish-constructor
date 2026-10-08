@@ -39,11 +39,16 @@ overlord. Costs are in vanilla scaled gold units (`pp_exp_gold_unit` = 1 + 0.2 c
 
 ## AI
 
-- The AI launches expeditions through `start_expedition` (vanilla generic action, monthly tick every 6 months): it
-  scores each type it can start with the type's `utility` (here 40, +20-30 for the countries that led the venture
-  historically) and checks a type with `ai_chance_to_check` (here 0.5). Vanilla needs 99 political influence
-  (`AI_PI_START_EXPEDITION_THRESHOLD`); AI countries sat at 100 in the test run, so gold, navy and peace are the
-  real gates.
+- How the AI launches an expedition (decoded from the 1.4 engine, 2026-10-08): once a month per AI country, if it
+  holds at least `AI_PI_START_EXPEDITION_THRESHOLD` (99) political influence and can pay the 25 of the
+  `start_expedition` price. Each type is looked at every third month and then only with its `ai_chance_to_check`
+  (here 0.5; vanilla default 0.05, about one try in five years). A type must pass ai/potential/unique/repeatable and
+  `can_start`, and needs a leader with `leader_utility` above 0 (here at least 1); `ai_leader_source_list` (every
+  character passing `pp_exp_leader`) makes the AI look at the whole court instead of a fifth of it per try. The
+  type's `utility` (here 40, +20-30 for the countries that led the venture historically) only ranks the types that
+  passed in the same month; anything above 0 can launch. Gold, debt, saving mode and war do not enter the AI's
+  choice, so the gold reserve in `can_start` is the only money gate. AI countries sat at 100 political influence in
+  the test run.
 - Outcome events pick options by `ai_chance` (factory and company first; claims and landings where they apply).
 - Claimed market centres: the owner goes into the country's `pp_market_war_targets` list;
   `ai_scripted_expansion_target/pp_market_center_wars.txt` makes it a war target with `cb_pp_market_center` (24 months
@@ -59,8 +64,9 @@ Every start, end and failure writes `PPEXP;<stage>;<type>;<tag>;<date>` to error
 
 The chain follows the historical gaps, counted from when the country itself finished the previous step
 (`pp_exp_years_since_*`, from the `pp_exp_year_end_<type>` variables): Armada to India 15 years after its Gold Coast
-castle (Mina 1482, Calicut 1498) unless the cape route is already known (another country reached India, or the Cape of
-Good Hope is discovered); Armada of Conquest 8 years after India (Goa 1510); Armada to Malacca 10 years after India
+castle (Mina 1482, Calicut 1498); a country without its own Gold Coast castle goes from the Age of Reformation once the
+cape route is known (another country reached India, or the Cape of Good Hope is discovered; EIC 1600, VOC 1602);
+Armada of Conquest 8 years after India (Goa 1510); Armada to Malacca 10 years after India
 (1511) or after a company voyage; Spice Islands and the China embassy 5 years after Malacca (Ternate 1522, Canton
 1517), or from the Age of Reformation.
 

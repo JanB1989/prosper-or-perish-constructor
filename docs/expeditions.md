@@ -147,3 +147,8 @@ first target was the biggest market (fixed: weakest owner). Landing tests from t
 Colonization in pp_exp4: Castile chartered Hispaniola, Venezuela and the Guianas, Portugal Brazil (Paraiba to the
 Amazon), Portugal's Cape Verde and Guinea colonial nations chartered the Guinea coast; no colonizer charter in Europe
 after the avoid-Europe change (Castile had chartered Kuloy, Mezen and Zavolochye until then).
+
+Run pp_exp5 (same 1452 start, all fixes; AI alone): Portugal Gold Coast 1458, India 1474, Armada to Malacca 1490 ->
+Temasek, the market centre of the straits, surrendered (Portugal's Castle-Factory there), Armada of Conquest 1492 ->
+Kozhikode, the Malabar market centre, surrendered (Castle-Factory); Aragon's Armada of Conquest 1499; Castile India
+1491. The market centres stay Portuguese (checked 1502).

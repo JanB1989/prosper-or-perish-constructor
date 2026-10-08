@@ -359,6 +359,14 @@ pp_exp_landing_effect = {
 					}
 				}
 			}
+			# New regiments start without men (run pp_exp4: Portugal's Malacca landing stood at 0-1.5 strength); the
+			# armada brings them at full strength.
+			every_unit_in_location = {
+				limit = { owner ?= root }
+				every_sub_unit = {
+					add_subunit_strength_percentage = 1
+				}
+			}
 		}
 	}
 }

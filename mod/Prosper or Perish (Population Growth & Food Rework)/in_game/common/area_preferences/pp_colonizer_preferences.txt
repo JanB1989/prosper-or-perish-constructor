@@ -116,9 +116,11 @@ pp_colonizer_avoid_africa = {
 
 # The colonizers leave the empty land of Europe (Lapland, Finland, Karelia, the Russian north, the Urals, the North
 # Atlantic islands) to its neighbours until the Age of Revolutions.
+# -2.0, not -0.9 (2026-10-08): the colony score adds score x the area value, and at -0.9 Castile still chartered
+# Kuloy, Mezen and Zavolochye (Arkhangelsk) through 1498 in run 40148576; -2 makes the score negative.
 pp_colonizer_avoid_europe = {
 	preference_type = exploration
-	modifier = -0.9
+	modifier = -2.0
 
 	continent = europe
 }

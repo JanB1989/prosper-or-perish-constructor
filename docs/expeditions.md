@@ -118,3 +118,32 @@ mod say:
   (routes, stations: +5) multiply the score of their areas several times.
 - Expeditions feed this: footholds extend presence and range (Castle-Factories, colonial range modifiers), so charters
   follow the stations the expeditions open.
+
+## Results (2026-10-08)
+
+Test setup: run 40148576 (`pp_exp1_*`, 1337-1452, observer, colonizers all alive in 1452: Castile 250 Iberian
+locations, Portugal 67, England 147, France 210, Holland 16), then from its 1452 save with this branch, historical AI
+personalities restored by console (the preset that new games inherit re-rolls them each age, see
+`country_finetunes.md`) and the Iberian truce applied by console. Expeditions were launched by the AI alone.
+
+Run pp_exp4 (1452-1582), year each expedition arrived:
+
+| Expedition | AI countries (year) | What they got |
+| --- | --- | --- |
+| Gold Coast Factory | Portugal 1458, Aragon 1460, Castile 1464, Brittany 1541, Holland 1565, England 1566, France 1571 | Fortalezas on the Benin and Senegambia coasts (Ughoton, Ikorundu, Cacheu, Tankular, Ikosi, Bintang, Bafata) |
+| Armada to India | Portugal 1474, Aragon 1490, Castile 1491, Brittany 1565, Holland 1573 (one Dutch armada lost 1570), England 1575 | Fortalezas at Kannur, Goa, Diu; Castile's Konkan trade company |
+| Armada to Malacca | Portugal 1490, Aragon 1503, Castile 1568, Brittany 1580 | Portugal's war on Temasek (SNG) and its allies, 1490 |
+| Armada of Conquest | Portugal 1495, Castile 1501, Aragon 1574, Brittany 1577 | wars for the Malabar/Gujarat market centres |
+| Voyage to the Spice Islands | Portugal 1501, Aragon 1532 | Ternate Fortaleza under Portugal's Moluccas trade company (still a trade company in 1582) |
+| Embassy to the Celestial Court | Portugal 1507 | Macau port granted, Portugal's Guangdong trade company (lost by 1547 when the Chinese owner changed) |
+| The Manila Galleon | Castile 1548 | Fortaleza at Maynila |
+| Company Voyage | none by 1582 (no AI had trade_companies_advance or chartered_companies yet) | |
+
+The armadas' wars in pp_exp4 won no market centre: the landed regiments spawned empty (fixed: full strength) and the
+first target was the biggest market (fixed: weakest owner). Landing tests from the 1487 save: against Jhalawad (Khambat,
+68 locations, six allies) the war ended without gain; with the weakest-owner target and the surrender rule
+(owner below half our tax base) Portugal took Kozhikode, the Malabar market centre, in 1487 and kept it.
+
+Colonization in pp_exp4: Castile chartered Hispaniola, Venezuela and the Guianas, Portugal Brazil (Paraiba to the
+Amazon), Portugal's Cape Verde and Guinea colonial nations chartered the Guinea coast; no colonizer charter in Europe
+after the avoid-Europe change (Castile had chartered Kuloy, Mezen and Zavolochye until then).

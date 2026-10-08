@@ -53,7 +53,7 @@ pp_reconquista_granada_war = {
 		}
 	}
 	casus_belli = casus_belli:cb_pp_reconquista
-	ignore_antagonism = yes
+	ignore_antagonism = { always = yes }
 	score = {
 		add = scope:target.country_tax_base
 		multiply = 10

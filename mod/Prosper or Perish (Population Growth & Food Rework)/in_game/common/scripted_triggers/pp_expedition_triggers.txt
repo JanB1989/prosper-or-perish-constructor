@@ -7,10 +7,46 @@ pp_exp_european_seafarer = {
 	capital ?= { continent = continent:europe }
 }
 
-# An Atlantic power: capital in Western Europe (Portugal, Castile/Spain, France, England, the Low Countries, ...).
+# An Atlantic power: a harbour on the ocean coasts of Europe (Iberia, France, the British Isles, the Low Countries and
+# North Germany, Scandinavia).
 pp_exp_atlantic_power = {
 	pp_exp_european_seafarer = yes
-	capital ?= { sub_continent = sub_continent:western_europe }
+	any_owned_location = {
+		is_port = yes
+		OR = {
+			region = region:iberia_region
+			region = region:france_region
+			region = region:great_britain_region
+			region = region:ireland_region
+			region = region:north_german_region
+			region = region:scandinavian_region
+		}
+	}
+}
+
+# A colonial power: an Atlantic power with a realm of some size, a real fleet and the ocean-going advances.
+pp_exp_colonial_power = {
+	pp_exp_atlantic_power = yes
+	num_locations >= 25
+	navy_size >= 10
+	OR = {
+		has_advance = por_pursuing_waves
+		has_advance = open_sea_exploration
+		has_advance = explorer_commisions_advance
+		has_advance = colonial_charters
+	}
+}
+
+# Location scope: a harbour an expedition may still claim: not held by a European country and no foothold of any
+# country there yet.
+pp_exp_free_site = {
+	is_port = yes
+	NOT = {
+		owner ?= {
+			capital ?= { continent = continent:europe }
+		}
+	}
+	NOT = { has_variable_list = pp_exp_foothold_owners }
 }
 
 # The country looks to the sea: a naval or outward-looking society, or an advance that commits it to the ocean.

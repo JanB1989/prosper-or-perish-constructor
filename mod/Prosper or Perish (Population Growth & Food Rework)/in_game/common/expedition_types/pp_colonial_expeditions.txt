@@ -22,8 +22,13 @@ pp_exp_gold_coast = {
 
 	can_start = {
 		current_age_or_later = { age = age_3_discovery }
+		pp_exp_colonial_power = yes
 		pp_exp_naval_minded = yes
-		navy_size >= 5
+		location:axim = {
+			region = {
+				any_location_in_region = { pp_exp_free_site = yes }
+			}
+		}
 		gold >= pp_exp_reserve_light
 		at_war = no
 	}
@@ -42,13 +47,16 @@ pp_exp_gold_coast = {
 		pp_exp_pay_effect = { COST = pp_exp_cost_light }
 		pp_exp_depart_effect = yes
 		location:axim = {
-			area = {
-				ordered_location_in_area = {
-					limit = {
-						is_port = yes
-						has_owner = no
+			region = {
+				ordered_location_in_region = {
+					limit = { pp_exp_free_site = yes }
+					order_by = {
+						value = population
+						if = {
+							limit = { has_owner = no }
+							add = 1000000
+						}
 					}
-					order_by = population
 					max = 1
 					save_scope_as = pp_exp_target
 				}
@@ -133,12 +141,19 @@ pp_exp_india_armada = {
 				}
 			}
 		}
+		pp_exp_colonial_power = yes
 		OR = {
 			has_advance = explorer_commisions_advance
 			has_advance = open_sea_exploration
 			has_advance = por_carreira_da_india
 		}
-		navy_size >= 10
+		OR = {
+			location:kochi = { pp_exp_free_site = yes }
+			location:kannur = { pp_exp_free_site = yes }
+			location:goa = { pp_exp_free_site = yes }
+			location:kozhikode = { pp_exp_free_site = yes }
+			location:diu = { pp_exp_free_site = yes }
+		}
 		gold >= pp_exp_reserve_armada
 		at_war = no
 	}
@@ -160,9 +175,11 @@ pp_exp_india_armada = {
 		location:kannur = { add_to_list = pp_exp_candidates }
 		location:goa = { add_to_list = pp_exp_candidates }
 		location:kozhikode = { add_to_list = pp_exp_candidates }
+		location:diu = { add_to_list = pp_exp_candidates }
 		ordered_in_list = {
 			list = pp_exp_candidates
 			limit = {
+				pp_exp_free_site = yes
 				OR = {
 					has_owner = no
 					owner = { NOT = { is_at_war_with = root } }
@@ -474,6 +491,11 @@ pp_exp_spice_islands = {
 			pp_exp_years_since_malacca >= 5
 			current_age_or_later = { age = age_4_reformation }
 		}
+		OR = {
+			location:ternate = { pp_exp_free_site = yes }
+			location:tidore = { pp_exp_free_site = yes }
+			location:banda_island = { pp_exp_free_site = yes }
+		}
 		navy_size >= 10
 		gold >= pp_exp_reserve_armada
 		at_war = no
@@ -498,6 +520,7 @@ pp_exp_spice_islands = {
 		ordered_in_list = {
 			list = pp_exp_candidates
 			limit = {
+				pp_exp_free_site = yes
 				OR = {
 					has_owner = no
 					owner = { NOT = { is_at_war_with = root } }
@@ -609,6 +632,7 @@ pp_exp_china_embassy = {
 		}
 		location:xiangshan_xinhui = {
 			has_owner = yes
+			NOT = { has_variable_list = pp_exp_foothold_owners }
 			NOT = { owner = root }
 			owner = { NOT = { is_at_war_with = root } }
 		}
@@ -702,6 +726,7 @@ pp_exp_manila_galleon = {
 			}
 			has_variable = pp_exp_done_spice
 		}
+		location:maynila = { pp_exp_free_site = yes }
 		navy_size >= 15
 		gold >= pp_exp_reserve_armada
 		at_war = no
@@ -833,6 +858,7 @@ pp_exp_company_voyage = {
 		}
 		pp_exp_knows_cape_route = yes
 		pp_exp_company_target_available = yes
+		num_locations >= 25
 		NOT = { has_cooldown = pp_exp_company_cooldown }
 		navy_size >= 15
 		gold >= pp_exp_reserve_company

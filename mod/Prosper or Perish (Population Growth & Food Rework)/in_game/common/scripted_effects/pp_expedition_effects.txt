@@ -1,9 +1,8 @@
 ﻿# PP colonial expeditions (docs/expeditions.md): shared effects. Root = the expedition's country.
 
-# Test trace in error.log ("PPEXP;<stage>;<type>;<tag>"): the record of which country ran which expedition when.
-# A global variable list per stage (pp_exp_log_start|end|fail) keeps the countries for console checks.
+# Trace for tests and saves: the year of each stage in the country variable pp_exp_year_<stage>_<type>, the countries in
+# the global lists pp_exp_log_start|end|fail. (error_log is useless here: the log keeps one line per script location.)
 pp_exp_log_effect = {
-	error_log = "PPEXP;$STAGE$;$TYPE$;[ROOT.GetCountry.GetTag];[GetCurrentDate.GetString]"
 	add_to_global_variable_list = {
 		name = pp_exp_log_$STAGE$
 		target = root
@@ -17,6 +16,7 @@ pp_exp_log_effect = {
 # Console check (run file): one error.log line per country with its gold, the expedition cost unit and which
 # expeditions it could start now (1 = no, 2 = yes; a variable at 0 reads as unset).
 pp_exp_debug_report_effect = {
+	save_scope_as = pp_dbg_c
 	set_global_variable = { name = pp_t_gold value = gold }
 	set_global_variable = { name = pp_t_unit value = pp_exp_gold_unit }
 	set_global_variable = { name = pp_t_sea value = 1 }
@@ -36,45 +36,45 @@ pp_exp_debug_report_effect = {
 	}
 	set_global_variable = { name = pp_t_gc value = 1 }
 	if = {
-		limit = { expedition_type:pp_exp_gold_coast = { can_start_expedition = root } }
+		limit = { expedition_type:pp_exp_gold_coast = { can_start_expedition = scope:pp_dbg_c } }
 		set_global_variable = { name = pp_t_gc value = 2 }
 	}
 	set_global_variable = { name = pp_t_in value = 1 }
 	if = {
-		limit = { expedition_type:pp_exp_india_armada = { can_start_expedition = root } }
+		limit = { expedition_type:pp_exp_india_armada = { can_start_expedition = scope:pp_dbg_c } }
 		set_global_variable = { name = pp_t_in value = 2 }
 	}
 	set_global_variable = { name = pp_t_mw value = 1 }
 	if = {
-		limit = { expedition_type:pp_exp_malabar_war = { can_start_expedition = root } }
+		limit = { expedition_type:pp_exp_malabar_war = { can_start_expedition = scope:pp_dbg_c } }
 		set_global_variable = { name = pp_t_mw value = 2 }
 	}
 	set_global_variable = { name = pp_t_ma value = 1 }
 	if = {
-		limit = { expedition_type:pp_exp_malacca_armada = { can_start_expedition = root } }
+		limit = { expedition_type:pp_exp_malacca_armada = { can_start_expedition = scope:pp_dbg_c } }
 		set_global_variable = { name = pp_t_ma value = 2 }
 	}
 	set_global_variable = { name = pp_t_sp value = 1 }
 	if = {
-		limit = { expedition_type:pp_exp_spice_islands = { can_start_expedition = root } }
+		limit = { expedition_type:pp_exp_spice_islands = { can_start_expedition = scope:pp_dbg_c } }
 		set_global_variable = { name = pp_t_sp value = 2 }
 	}
 	set_global_variable = { name = pp_t_ch value = 1 }
 	if = {
-		limit = { expedition_type:pp_exp_china_embassy = { can_start_expedition = root } }
+		limit = { expedition_type:pp_exp_china_embassy = { can_start_expedition = scope:pp_dbg_c } }
 		set_global_variable = { name = pp_t_ch value = 2 }
 	}
 	set_global_variable = { name = pp_t_mn value = 1 }
 	if = {
-		limit = { expedition_type:pp_exp_manila_galleon = { can_start_expedition = root } }
+		limit = { expedition_type:pp_exp_manila_galleon = { can_start_expedition = scope:pp_dbg_c } }
 		set_global_variable = { name = pp_t_mn value = 2 }
 	}
 	set_global_variable = { name = pp_t_co value = 1 }
 	if = {
-		limit = { expedition_type:pp_exp_company_voyage = { can_start_expedition = root } }
+		limit = { expedition_type:pp_exp_company_voyage = { can_start_expedition = scope:pp_dbg_c } }
 		set_global_variable = { name = pp_t_co value = 2 }
 	}
-	error_log = "PPEXPDBG;[ROOT.GetCountry.GetTag];gold=[GetGlobalVariable('pp_t_gold').GetValue|0];unit=[GetGlobalVariable('pp_t_unit').GetValue|1];sea=[GetGlobalVariable('pp_t_sea').GetValue|0];n5=[GetGlobalVariable('pp_t_n5').GetValue|0];n15=[GetGlobalVariable('pp_t_n15').GetValue|0];gc=[GetGlobalVariable('pp_t_gc').GetValue|0];in=[GetGlobalVariable('pp_t_in').GetValue|0];mw=[GetGlobalVariable('pp_t_mw').GetValue|0];ma=[GetGlobalVariable('pp_t_ma').GetValue|0];sp=[GetGlobalVariable('pp_t_sp').GetValue|0];ch=[GetGlobalVariable('pp_t_ch').GetValue|0];mn=[GetGlobalVariable('pp_t_mn').GetValue|0];co=[GetGlobalVariable('pp_t_co').GetValue|0]"
+	error_log = "PPEXPDBG;[SCOPE.sCountry('pp_dbg_c').GetTag];gold=[GetGlobalVariable('pp_t_gold').GetValue|0];unit=[GetGlobalVariable('pp_t_unit').GetValue|1];sea=[GetGlobalVariable('pp_t_sea').GetValue|0];n5=[GetGlobalVariable('pp_t_n5').GetValue|0];n15=[GetGlobalVariable('pp_t_n15').GetValue|0];gc=[GetGlobalVariable('pp_t_gc').GetValue|0];in=[GetGlobalVariable('pp_t_in').GetValue|0];mw=[GetGlobalVariable('pp_t_mw').GetValue|0];ma=[GetGlobalVariable('pp_t_ma').GetValue|0];sp=[GetGlobalVariable('pp_t_sp').GetValue|0];ch=[GetGlobalVariable('pp_t_ch').GetValue|0];mn=[GetGlobalVariable('pp_t_mn').GetValue|0];co=[GetGlobalVariable('pp_t_co').GetValue|0]"
 }
 
 # Pay the fitting-out cost ($COST$ = a pp_exp_cost_* script value).
@@ -135,6 +135,8 @@ pp_exp_foothold_effect = {
 				create_market = {
 					builder = root
 					location = scope:pp_exp_target
+					price = price:create_market
+					price_modifier = 0
 					instant = yes
 				}
 			}
@@ -217,22 +219,57 @@ pp_exp_rival_claim_effect = {
 	}
 }
 
-# Trade company: in a foreign harbour the country raises a Trade Company Headquarters; vanilla's on_built turns it into
-# a trade company subject that owns the building (needs the trade access set by pp_exp_foothold_effect).
+# Trade company: in a foreign harbour the country founds a trade company, a subject that runs its buildings in that
+# region (as vanilla create_building_subject: the overlord ruler heads it, the region joins trade_company_regions).
+# Needs the Fortaleza and the trade access set by pp_exp_foothold_effect.
 pp_exp_trade_company_effect = {
-	scope:pp_exp_target = {
-		if = {
-			limit = {
+	if = {
+		limit = {
+			scope:pp_exp_target = {
 				has_owner = yes
 				NOT = { owner = root }
 				NOT = { owner = { is_subject_of = root } }
 			}
-			construct_building = {
-				building_type = building_type:trade_company_headquarters
-				owner = root
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_concept_event"
+			NOT = {
+				AND = {
+					has_variable_list = trade_company_regions
+					is_target_in_variable_list = {
+						name = trade_company_regions
+						target = scope:pp_exp_target.region
+					}
+				}
+			}
+		}
+		ruler ?= { save_scope_as = pp_exp_tc_ruler }
+		scope:pp_exp_target.region = { save_scope_as = pp_exp_tc_region }
+		scope:pp_exp_target = {
+			create_building_country_in_location = {
+				region = scope:pp_exp_tc_region
+				ruler = scope:pp_exp_tc_ruler
+				subject_type = subject_type:trade_company
+				overlord = root
+				save_scope_as = pp_exp_tc
+			}
+		}
+		if = {
+			limit = { exists = scope:pp_exp_tc }
+			scope:pp_exp_tc = {
+				set_variable = {
+					name = trade_company_home_region
+					value = scope:pp_exp_tc_region
+				}
+				add_to_variable_list = {
+					name = trade_company_regions
+					target = scope:pp_exp_tc_region
+				}
+			}
+			add_to_variable_list = {
+				name = trade_company_regions
+				target = scope:pp_exp_tc_region
+			}
+			add_to_variable_list = {
+				name = trade_company_subjects
+				target = scope:pp_exp_tc
 			}
 		}
 	}
@@ -301,7 +338,7 @@ pp_exp_landing_effect = {
 				if = {
 					limit = { current_age_or_later = { age = age_5_absolutism } }
 					create_sub_unit_with_owner = {
-						type = unit_type:a_age_5_absolutism_heavy_infantry
+						type = a_pikemen
 						owner = root
 						origin = scope:pp_exp_home
 					}
@@ -309,14 +346,14 @@ pp_exp_landing_effect = {
 				else_if = {
 					limit = { current_age_or_later = { age = age_4_reformation } }
 					create_sub_unit_with_owner = {
-						type = unit_type:a_age_4_reformation_heavy_infantry
+						type = a_pikemen
 						owner = root
 						origin = scope:pp_exp_home
 					}
 				}
 				else = {
 					create_sub_unit_with_owner = {
-						type = unit_type:a_age_3_discovery_heavy_infantry
+						type = a_halberdiers
 						owner = root
 						origin = scope:pp_exp_home
 					}

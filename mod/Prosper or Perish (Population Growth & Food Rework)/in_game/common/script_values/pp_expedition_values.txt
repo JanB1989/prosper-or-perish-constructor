@@ -18,14 +18,17 @@ pp_exp_gold_unit = {
 pp_exp_cost_light = {
 	value = pp_exp_gold_unit
 	multiply = 4
+	min = 150
 }
 pp_exp_cost_armada = {
 	value = pp_exp_gold_unit
 	multiply = 8
+	min = 400
 }
 pp_exp_cost_company = {
 	value = pp_exp_gold_unit
 	multiply = 10
+	min = 600
 }
 
 # Gold the treasury must hold before the AI or player can launch (the cost plus a reserve of half of it).

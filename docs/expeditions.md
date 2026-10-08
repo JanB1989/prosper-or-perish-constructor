@@ -22,7 +22,7 @@ panel when the country meets the gates.
 
 ## The eight expeditions
 
-| # | Type | Gate (besides gold reserve and peace) | Target | Outcome |
+| # | Type | Gate (besides the gold reserve; see War below) | Target | Outcome |
 | --- | --- | --- | --- | --- |
 | 1 | Gold Coast Factory | colonial power, Age of Discovery, naval-minded, a free harbour left on the Guinea coast | the best free Guinea harbour (unclaimed first, then the most populous) | unclaimed: the harbour + Castle-Factory + a market if none in the region; native: Fortaleza + trade access; Gold of Mina |
 | 2 | Armada to India | colonial power, exploration advance, 15 years after the own Gold Coast castle (or Age of Reformation once the cape route is known), a free harbour among Kochi, Kannur, Goa, Kozhikode, Diu | that harbour (unclaimed or weakest owner) | Fortaleza + trade access + trade company, or Fortaleza + claim on the market centre; Carreira da India; marks the cape route discovered |
@@ -41,10 +41,19 @@ overlord. Costs are in vanilla scaled gold units (`pp_exp_gold_unit` = 1 + 0.2 c
 `change_gold_effect`; Portugal 31, Castile 62, England 44 in 1452): light 4 (at least 150 gold), armada 8 (at least
 400), company 10 (at least 600); the treasury must hold 1.5 times the cost.
 
+War: the commercial and diplomatic voyages (1, 2, 5, 6, 7, 8) only wait while the country is at war with a European
+great power; the two war armadas (3, 4) need full peace. (In the first proof run Portugal fought Morocco for the
+Strait coast from 1472 to 1482 and could not send its India armada while any war ran.)
+
 Trade companies are created like vanilla's `create_building_subject` action: `create_building_country_in_location` with
 `subject_type:trade_company`, the overlord's ruler and the target's region; the new company takes over the country's
-Fortalezas in that region (1452 test: England's Moluccas company owns the Ternate and Tidore Fortalezas). Vanilla's
-Trade Company Headquarters `on_built` made plain vassals when the building was raised by script. Landings put six
+Fortalezas in that region (1452 test: England's Moluccas company owns the Ternate and Tidore Fortalezas). EU5 1.4 keeps a subject type only while the overlord has an
+advance that unlocks it (vanilla: `trade_companies_advance`, Age of Reformation, only); without it the engine turns the
+company into a plain vassal at its next validity check (on province owner changes, abandoned locations, revolts), and
+a vassal with no land disappeared within a few years (Castile's Malabar company, 1478-1487). So
+`advances/pp_expedition_advances_adjustments.txt` lets `open_sea_exploration`, `explorer_commisions_advance` and
+`por_carreira_da_india` unlock `trade_company` too (tested: Portugal's Konkan company kept its type through a province
+transfer and six months). Vanilla's Trade Company Headquarters `on_built` made the same vassals for the same reason. Landings put six
 regiments (halberdiers in the Age of Discovery, pikemen later) ashore at the market centre right after the war
 declaration.
 
@@ -99,5 +108,10 @@ mod say:
   preferences (`colonize_bias`; PP's colonizer preferences in `area_preferences/pp_colonizer_preferences.txt` push the
   African stations, the route round the Cape and keep them out of Africa's interior and Europe). Colonial range limits
   the reach; `AI_COLONIAL_RANGE_UTILITY` makes the AI value range modifiers.
+- How strong an area preference is in the colony score (decoded, partly inferred): the score adds score x the area's
+  preference value; the `colonize_bias` trigger read Castile's "avoid Europe" value in Arkhangelsk at 0.05 or below,
+  yet at -0.9 Castile kept chartering Kuloy, Mezen and Zavolochye through 1498. `pp_colonizer_avoid_europe` is now
+  -2.0, which makes the score negative there whichever way the value is stored. The other exploration preferences
+  (routes, stations: +5) multiply the score of their areas several times.
 - Expeditions feed this: footholds extend presence and range (Castle-Factories, colonial range modifiers), so charters
   follow the stations the expeditions open.

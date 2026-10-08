@@ -152,3 +152,21 @@ Run pp_exp5 (same 1452 start, all fixes; AI alone): Portugal Gold Coast 1458, In
 Temasek, the market centre of the straits, surrendered (Portugal's Castle-Factory there), Armada of Conquest 1492 ->
 Kozhikode, the Malabar market centre, surrendered (Castle-Factory); Aragon's Armada of Conquest 1499; Castile India
 1491. The market centres stay Portuguese (checked 1502).
+By 1532 in pp_exp5: Portugal's Spice Islands 1508 (Moluccas trade company at Ternate, a `trade_company` in 1512) and
+China embassy 1510; Castile's Malacca 1503, Malabar war 1505, Spice Islands 1509 and China embassy 1509; both China
+embassies were refused (30 % before the Age of Reformation). Castile took Granada (Reconquista casus belli). Portugal
+kept Kozhikode; Temasek fell to a Johor splinter in a 1528 war.
+
+## Open points
+
+- Portugal's Moluccas company dissolved between 1512 and 1517 in pp_exp5 (reproduced within 30 days of loading the 1512
+  save); a second, Castilian Fortaleza stood in the same harbour then. Fixed since: one foothold per harbour, fleets
+  re-target, companies only on their own Fortaleza. The dissolution itself is not explained (a war with the host
+  breaking trade access is the likeliest cause; check with a save where the company's overlord goes to war with the
+  harbour's owner).
+- The Macau port depends on the host: in pp_exp4 the Guangdong company and the port were gone by 1547 after the Chinese
+  owner of Xiangshan changed.
+- No AI made a Company Voyage by 1582 (no AI had `trade_companies_advance` or `chartered_companies`); test from a later
+  save or with the advances given by console.
+- Landing wars against large owners end in white peace; only the surrender rule (owner below half our tax base) takes
+  market centres so far.

@@ -1,0 +1,62 @@
+﻿# Trade range (2026-10-08, Jan): the five generic age advances added +1150 trade range on top of the 300 base, more
+# than the longest trade route in the world (raw route cost ~1450, Asia - Europe ~1000), so by the 1500s every trade
+# was inside range and paid no distance cost (run 40148576: all 7,135 trades in 1837). Each now adds +50, so the base
+# grows 300 -> 550; the percentage modifiers (laws, reforms, Trade Envoys, choices) stay. Distance divisor: NCountry
+# MERCHANT_DISTANCE_COST_DIVISOR in pp_defines_adjustments.txt. Blocks are vanilla 1.4 apart from trade_range.
+
+TRY_REPLACE:merchants_and_trade = {
+	age = age_2_renaissance
+	icon = global_trade_routes_advance
+
+	requires = banking_advance
+
+	naval_range = 250
+	trade_range = 50 # 250
+	colonial_range = 250
+
+	max_tariff = 0.05
+	max_trade_subventions = 0.05
+
+	ai_preference_tags = {
+		exploration
+	}
+}
+
+TRY_REPLACE:trade_range_advance_age_2 = {
+	age = age_2_renaissance
+	icon = zmw_merchant_taxes
+
+	requires = standardized_coins
+
+	trade_range = 50 # 250
+}
+
+TRY_REPLACE:trade_range_advance_age_3 = {
+	age = age_3_discovery
+	icon = ship_building_advance
+	requires = maritime_advance_age_3
+
+	trade_range = 50 # 250
+}
+
+TRY_REPLACE:chartered_companies = {
+	age = age_4_reformation
+	icon = merchant_power_from_maritime_reformation_advance
+
+	requires = safe_exploration_techniques_advance
+
+	trade_range = 50 # 200
+	colonial_range = 1000
+
+	unlock_casus_belli = cb_exploration
+}
+
+TRY_REPLACE:joint_stock_companies = {
+	age = age_6_revolutions
+	icon = merchant_power_from_maritime_reformation_advance
+	global_merchant_power = 0.2
+	trade_company_headquarters_level = 1
+	trade_range = 50 # 200
+	requires = urbanization
+	max_bonds_modifier = 0.25
+}

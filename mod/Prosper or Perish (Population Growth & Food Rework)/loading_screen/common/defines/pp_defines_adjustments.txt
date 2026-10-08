@@ -194,4 +194,10 @@ NCountry = {
 	INSTITUTION_MINIMUM_PERCENT = 0.4 # 0.2
 	INSTITUTION_TRADE_SPREAD_RANGE_HALFCOST = 25 # 50
 	INSTITUTION_TRADE_MIN_VOLUME = 20 # 10
+	# 2026-10-08 (Jan, trade range): a trade past the trader's trade range uses 1 + (route cost - range) / this as
+	# much merchant capacity per unit. The engine measures that route cost without TRADE_PATH_TRAVEL_COST_MULT (10),
+	# so the vanilla 1200 let Beijing -> Paris cost only ~1.6x the capacity in 1342 and nothing once ranges grew.
+	# /10 restores the travel-cost scale for the part beyond the range. Range growth is cut in
+	# pp_trade_range_advances_adjustments.txt.
+	MERCHANT_DISTANCE_COST_DIVISOR = 120 # 1200
 }

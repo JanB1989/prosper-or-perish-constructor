@@ -50,6 +50,11 @@ NAI = {
 	POP_MISSING_GOODS_UTILITY_FACTOR = 0.25 # 0.02
 	INPUT_GOODS_SHORTAGE_UTILITY_FACTOR = 0.1 # 0.02
 	PROFITABLE_EXPORT_GOODS_UTILITY_FACTOR = 1.0 # 0.5
+	# Specialization (2026-10-08): keep the export bonus alive once a market already exports the good, so exporters deepen.
+	PROFITABLE_EXPORT_GOODS_REDUCE_PRICE_UTILITY_FACTOR = 0.1 # 0.05
+	AI_EXPORT_GOODS_SURPLUS_GRADIENT_CAP = 0.75 # 0.5; projected surplus at which the export bonus bottoms out
+	AI_TRADE_SURPLUS_CUSHION_PROFIT_UTILITY_FACTOR = 0.75 # 0.5; trade AI: extra utility for exporting from a market with surplus
+	AI_TRADE_SURPLUS_CUSHION_FULL_COVERAGE = 7.5 # 10; surplus/trade-size ratio for the full cushion (lower = reached sooner)
 	# Nudge so eligible AI colonizers start and maintain charters earlier (exploration gate: scripted_triggers/pp_colonization_triggers.txt).
 	# The mod's economy leaves countries with a smaller tax base than vanilla, so the AI reached vanilla's colonization gate
 	# decades late. EU5 1.4 moved that gate from the scripted ai_country_should_colonize and the create_colonial_charter

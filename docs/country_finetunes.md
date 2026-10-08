@@ -75,3 +75,7 @@ between wars. Test runs should use `ai_personalities_historical`, or restore the
   or the Maghreb), AI CAS/SPA and AI Portugal get a mutual 100-year truce; never when either is played. Why: the
   never_attack score only zeroes planned wars; in run pp_exp3 (from 1452, historical personalities) Castile still
   declared war on Portugal in 1470 and took the Algarve and Alentejo (Portugal 78 -> 37 locations by 1477).
+- **France: the Pyrenees as the frontier** (2026-10-08, branch expeditions, `area_preferences/pp_conquest_preferences.txt`
+  pp_france_pyrenees_frontier, `on_action/pp_country_finetunes.txt` pp_france_pyrenees): AI France gets a conquest
+  preference of -0.9 on the Iberia region at game start and every new age. Why: run pp_exp4 (from 1452) had France take
+  47 Iberian locations from Castile in 1552-1562 (26 -> 73; Castile 301 -> 213).

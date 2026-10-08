@@ -14,12 +14,12 @@
  pp_exp_malabar_war: "Armada of Conquest"
  pp_exp_malabar_war_desc: "Our factories on the Indian coast live at the mercy of the rulers who host them. A fleet carrying soldiers can take a market centre outright and make it the capital of our trade in the East."
  pp_exp_malabar_war_historical_info: "Afonso de Albuquerque took Goa from the Sultanate of Bijapur in 1510 with a few thousand men, lost it and retook it within the year. Goa became the capital of the Estado da Índia, the hub of a chain of fortresses from Mozambique to Macau."
- pp_exp_malabar_war_outcome_overview: "$BULLET$War on the ruler of an Indian coastal [market|e] centre, with a [casus_belli|e] for its province.\n$BULLET$Soldiers land at the market centre.\n$BULLET$The [ShowModifier('pp_exp_armada_of_conquest')] [modifier|e] for some years."
+ pp_exp_malabar_war_outcome_overview: "$BULLET$A ruler far weaker than us yields the [market|e] centre to the armada.\n$BULLET$Otherwise war on the ruler of an Indian coastal [market|e] centre, with a [casus_belli|e] for its province.\n$BULLET$Soldiers land at the market centre.\n$BULLET$The [ShowModifier('pp_exp_armada_of_conquest')] [modifier|e] for some years."
 
  pp_exp_malacca_armada: "Armada to Malacca"
  pp_exp_malacca_armada_desc: "Whoever holds Malacca holds the gate between the Indian Ocean and the China Sea. Send an armada to the straits, by force if the sultan will not deal with us."
  pp_exp_malacca_armada_historical_info: "In 1511 Albuquerque sailed to Malacca with eighteen ships and about a thousand Portuguese soldiers, stormed the city after a month and built the fortress of A Famosa. Malacca stayed Portuguese until the Dutch took it in 1641."
- pp_exp_malacca_armada_outcome_overview: "$BULLET$War on the ruler of the [market|e] centre of the straits, with soldiers landing there.\n$BULLET$Or, where no fair target holds it, a fortified factory and a trade company.\n$BULLET$The permanent [ShowModifier('pp_exp_lord_of_the_straits')] [modifier|e]."
+ pp_exp_malacca_armada_outcome_overview: "$BULLET$A ruler far weaker than us yields the [market|e] centre of the straits to the armada.\n$BULLET$Otherwise war on the ruler of the [market|e] centre of the straits, with soldiers landing there.\n$BULLET$Or, where no fair target holds it, a fortified factory and a trade company.\n$BULLET$The permanent [ShowModifier('pp_exp_lord_of_the_straits')] [modifier|e]."
 
  pp_exp_spice_islands: "Voyage to the Spice Islands"
  pp_exp_spice_islands_desc: "Cloves grow on a handful of islands in the Moluccas and nutmeg on the Banda Islands alone. A fortress among them would put the rarest spices of the world in our holds."
@@ -58,11 +58,13 @@
  pp_expedition.3.desc: "Our armada lies off [pp_exp_target.GetName], the centre of the trade of this coast. Its ruler has treated our factors with contempt. The soldiers aboard are ready to land."
  pp_expedition.3.a: "Land the soldiers and take the city."
  pp_expedition.3.b: "Exact tribute and return with a larger force."
+ pp_expedition.3.c: "The city cannot resist our guns: it opens its gates."
 
  pp_expedition.4.title: "The Gate of the East"
  pp_expedition.4.desc: "Our fleet has reached [pp_exp_target.GetName], where every ship between India and China must pass. Its merchants have no wish to share their trade with us."
  pp_expedition.4.a: "Storm the straits."
  pp_expedition.4.b: "Build a factory under the ruler's protection."
+ pp_expedition.4.c: "The sultan flees: the city is ours."
 
  pp_expedition.5.title: "The Spice Islands"
  pp_expedition.5.desc: "Our ships have reached [pp_exp_target.GetName]. The scent of cloves drifts over the water, and the island's lords are eager for allies against their neighbours."

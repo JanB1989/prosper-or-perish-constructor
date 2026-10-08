@@ -6,6 +6,7 @@ on_game_start = {
 		pp_iberian_truce
 		delay = { days = 1 }
 		pp_colonizer_area_preferences
+		pp_france_pyrenees
 	}
 }
 
@@ -16,6 +17,20 @@ on_new_age_global = {
 		pp_iberian_truce
 		delay = { days = 1 }
 		pp_colonizer_area_preferences
+		pp_france_pyrenees
+	}
+}
+
+# France keeps to the north of the Pyrenees (area_preferences/pp_conquest_preferences.txt), set one day after vanilla's
+# area preference setup at game start and every new age.
+pp_france_pyrenees = {
+	effect = {
+		c:FRA ?= {
+			if = {
+				limit = { is_ai = yes }
+				pp_add_area_preference_once = { preference = pp_france_pyrenees_frontier }
+			}
+		}
 	}
 }
 

@@ -98,12 +98,28 @@ pp_expedition.3 = {
 		pp_exp_find_market_center_effect = yes
 	}
 
+	# The city surrenders to the armada.
+	option = {
+		name = pp_expedition.3.c
+		trigger = {
+			exists = scope:pp_exp_market_owner
+			scope:pp_exp_market_owner = { country_tax_base < pp_exp_half_tax_base }
+		}
+		pp_exp_surrender_effect = yes
+		add_country_modifier = {
+			modifier = pp_exp_armada_of_conquest
+			years = 10
+		}
+		add_prestige = prestige_severe_bonus
+		ai_chance = { base = 300 }
+	}
+
 	# Storm the city.
 	option = {
 		name = pp_expedition.3.a
 		trigger = { exists = scope:pp_exp_market_owner }
 		pp_exp_market_claim_effect = yes
-		pp_exp_landing_effect = { REGIMENTS = 6 }
+		pp_exp_landing_effect = { REGIMENTS = 5 }
 		add_country_modifier = {
 			modifier = pp_exp_armada_of_conquest
 			years = 10
@@ -137,12 +153,29 @@ pp_expedition.4 = {
 		pp_exp_find_market_center_effect = yes
 	}
 
+	# The city surrenders to the armada.
+	option = {
+		name = pp_expedition.4.c
+		trigger = {
+			exists = scope:pp_exp_market_owner
+			scope:pp_exp_market_owner = { country_tax_base < pp_exp_half_tax_base }
+		}
+		pp_exp_surrender_effect = yes
+		add_country_modifier = {
+			modifier = pp_exp_armada_of_conquest
+			years = 10
+		}
+		add_country_modifier = { modifier = pp_exp_lord_of_the_straits }
+		add_prestige = prestige_severe_bonus
+		ai_chance = { base = 300 }
+	}
+
 	# Take the straits by force.
 	option = {
 		name = pp_expedition.4.a
 		trigger = { exists = scope:pp_exp_market_owner }
 		pp_exp_market_claim_effect = yes
-		pp_exp_landing_effect = { REGIMENTS = 6 }
+		pp_exp_landing_effect = { REGIMENTS = 5 }
 		add_country_modifier = {
 			modifier = pp_exp_armada_of_conquest
 			years = 10

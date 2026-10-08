@@ -326,7 +326,8 @@ pp_exp_malabar_war = {
 			list = pp_exp_candidates
 			limit = { pp_exp_india_war_site = yes }
 			order_by = {
-				value = market.location.population
+				value = 0
+				subtract = market.location.owner.country_tax_base
 			}
 			max = 1
 			market = {

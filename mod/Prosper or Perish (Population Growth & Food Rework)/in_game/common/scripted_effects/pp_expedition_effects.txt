@@ -315,8 +315,8 @@ pp_exp_market_claim_effect = {
 	}
 }
 
-# Landing: war on the market centre's owner, and $REGIMENTS$ regiments of the age's infantry put ashore at the market
-# centre.
+# Landing: war on the market centre's owner, and $REGIMENTS$ heavy and $REGIMENTS$ light infantry regiments of the age
+# put ashore at the market centre.
 pp_exp_landing_effect = {
 	if = {
 		limit = {
@@ -342,6 +342,11 @@ pp_exp_landing_effect = {
 						owner = root
 						origin = scope:pp_exp_home
 					}
+					create_sub_unit_with_owner = {
+						type = a_arquebusiers
+						owner = root
+						origin = scope:pp_exp_home
+					}
 				}
 				else_if = {
 					limit = { current_age_or_later = { age = age_4_reformation } }
@@ -350,10 +355,20 @@ pp_exp_landing_effect = {
 						owner = root
 						origin = scope:pp_exp_home
 					}
+					create_sub_unit_with_owner = {
+						type = a_arquebusiers
+						owner = root
+						origin = scope:pp_exp_home
+					}
 				}
 				else = {
 					create_sub_unit_with_owner = {
 						type = a_halberdiers
+						owner = root
+						origin = scope:pp_exp_home
+					}
+					create_sub_unit_with_owner = {
+						type = a_early_arquebusiers
 						owner = root
 						origin = scope:pp_exp_home
 					}
@@ -367,6 +382,32 @@ pp_exp_landing_effect = {
 					add_subunit_strength_percentage = 1
 				}
 			}
+		}
+	}
+}
+
+# Surrender: the market centre's owner is too weak to resist the armada (less than half our tax base) and yields the city
+# (Goa 1510, Malacca 1511): the country takes the market centre location and raises a Castle-Factory there.
+pp_exp_surrender_effect = {
+	if = {
+		limit = { exists = scope:pp_exp_market_center }
+		scope:pp_exp_market_center = {
+			change_location_owner = root
+			construct_building = {
+				building_type = building_type:pp_castle_factory
+				owner = root
+				instant = yes
+				cost_multiplier = 0
+				cost_multiplier_reason = "game_concept_event"
+			}
+			add_to_variable_list = {
+				name = pp_exp_foothold_owners
+				target = root
+			}
+		}
+		add_to_variable_list = {
+			name = pp_exp_footholds
+			target = scope:pp_exp_market_center
 		}
 	}
 }

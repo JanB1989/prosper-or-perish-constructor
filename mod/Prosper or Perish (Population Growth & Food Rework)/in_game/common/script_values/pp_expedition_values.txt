@@ -82,3 +82,9 @@ pp_exp_years_since_malacca = {
 		subtract = var:pp_exp_year_end_pp_exp_malacca_armada
 	}
 }
+
+# Half the expedition country's tax base (root): a market centre owner below it surrenders the city to an armada.
+pp_exp_half_tax_base = {
+	value = root.country_tax_base
+	multiply = 0.5
+}

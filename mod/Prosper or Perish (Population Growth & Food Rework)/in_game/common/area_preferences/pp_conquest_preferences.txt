@@ -30,3 +30,12 @@ pp_muscovy_gather_russian_lands = {
 
 	region = russian_region
 }
+
+# France: the Pyrenees as the frontier (on_action/pp_country_finetunes.txt, game start and every new age). Run pp_exp4
+# (2026-10-08): France took 47 Iberian locations from Castile in 1552-1562 (26 -> 73).
+pp_france_pyrenees_frontier = {
+	preference_type = conquest
+	modifier = -0.9
+
+	region = iberia_region
+}

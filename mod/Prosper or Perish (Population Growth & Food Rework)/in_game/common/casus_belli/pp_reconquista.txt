@@ -1,0 +1,14 @@
+﻿#root is country
+#scope:target is the target
+
+# Reconquista (docs/country_finetunes.md): Castile/Spain against Muslim rulers still in Iberia, granted by
+# events/pp_reconquista_events.txt (pp_reconquista.2). Never created by hand.
+cb_pp_reconquista = {
+	create_visible = {
+		always = no
+	}
+	create_enabled = {
+		always = no
+	}
+	war_goal_type = take_capital
+}

@@ -56,3 +56,9 @@ Hand-tuned changes for single countries, one entry each: what and why.
   `ai_scripted_expansion_target/pp_portuguese_morocco.txt`): from 1410 the owners of Ceuta, Tangier, Asilah and Tetouan
   are Portugal war targets (+20, after 36 months of peace; never Castile/Spain). Why: Portugal sat at 67 Iberian
   locations from 1337 to 1497 in every run; Ceuta (1415) and the Moroccan forts were its first expansion.
+- **Castile/Spain: the war for Granada** (2026-10-08, branch expeditions, `events/pp_reconquista_events.txt`
+  pp_reconquista.2, `casus_belli/pp_reconquista.txt`, `ai_scripted_expansion_target/pp_reconquista.txt`): from 1475 a
+  hidden event gives CAS/SPA the Reconquista casus belli (take capital, 25 years, renewed every 20 years) on every
+  Muslim country still ruling from Iberia; a second expansion target uses it (+60, ignores antagonism, 24 months of
+  peace). Why: run c4831a96 still had Granada in 1497; run 40148576 had Castile at peace 1387-1402 next to a 16-location
+  Granada and never attacking it (the +30 target alone found no casus belli).

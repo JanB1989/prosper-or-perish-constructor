@@ -31,3 +31,32 @@ pp_reconquista_targets = {
 		add = 30
 	}
 }
+
+# The war for Granada: with the Reconquista casus belli (pp_reconquista.2), Muslim Iberia is a target whatever the
+# antagonism, after 24 months of peace.
+pp_reconquista_granada_war = {
+	attacker_potential = {
+		OR = {
+			tag = CAS
+			tag = SPA
+		}
+		months_since_war >= 24
+	}
+	candidate_list = {
+		every_country = {
+			limit = {
+				religion.group = religion_group:muslim
+				capital ?= { region = region:iberia_region }
+				NOT = { is_subject_of = root }
+			}
+			add_to_list = source
+		}
+	}
+	casus_belli = casus_belli:cb_pp_reconquista
+	ignore_antagonism = yes
+	score = {
+		add = scope:target.country_tax_base
+		multiply = 10
+		add = 60
+	}
+}

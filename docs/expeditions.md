@@ -47,15 +47,18 @@ Strait coast from 1472 to 1482 and could not send its India armada while any war
 
 Trade companies are created like vanilla's `create_building_subject` action: `create_building_country_in_location` with
 `subject_type:trade_company`, the overlord's ruler and the target's region; the new company takes over the country's
-Fortalezas in that region (1452 test: England's Moluccas company owns the Ternate and Tidore Fortalezas). EU5 1.4 keeps a subject type only while the overlord has an
-advance that unlocks it (vanilla: `trade_companies_advance`, Age of Reformation, only); without it the engine turns the
-company into a plain vassal at its next validity check (on province owner changes, abandoned locations, revolts), and
-a vassal with no land disappeared within a few years (Castile's Malabar company, 1478-1487). So
-`advances/pp_expedition_advances_adjustments.txt` lets `open_sea_exploration`, `explorer_commisions_advance` and
-`por_carreira_da_india` unlock `trade_company` too (tested: Portugal's Konkan company kept its type through a province
-transfer and six months). Vanilla's Trade Company Headquarters `on_built` made the same vassals for the same reason. Landings put six
-regiments (halberdiers in the Age of Discovery, pikemen later) ashore at the market centre right after the war
-declaration.
+Fortalezas in that region (1452 test: England's Moluccas company owns the Ternate and Tidore Fortalezas).
+
+EU5 1.4 keeps a subject type only while the overlord has an advance that unlocks it (vanilla: `trade_companies_advance`,
+Age of Reformation, only); without it the engine turns the company into a plain vassal at its next validity check (on
+province owner changes, abandoned locations, revolts), and a vassal with no land disappeared within a few years
+(Castile's Malabar company, 1478-1487). So `advances/pp_expedition_advances_adjustments.txt` lets
+`open_sea_exploration`, `explorer_commisions_advance` and `por_carreira_da_india` unlock `trade_company` too (tested:
+Portugal's Konkan company kept its type through a province transfer and six months). Vanilla's Trade Company
+Headquarters `on_built` made the same vassals for the same reason.
+
+Landings put six regiments (halberdiers in the Age of Discovery, pikemen later) ashore at the market centre right after
+the war declaration.
 
 ## AI
 

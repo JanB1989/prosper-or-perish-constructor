@@ -123,7 +123,11 @@ pp_exp_india_armada = {
 
 	can_start = {
 		current_age_or_later = { age = age_3_discovery }
-		pp_exp_knows_cape_route = yes
+		OR = {
+			has_global_variable = cape_route_discovered
+			has_discovered = location:good_hope_cape
+			pp_exp_years_since_gold_coast >= 15
+		}
 		OR = {
 			has_advance = explorer_commisions_advance
 			has_advance = open_sea_exploration
@@ -261,6 +265,7 @@ pp_exp_malabar_war = {
 	}
 
 	can_start = {
+		pp_exp_years_since_india >= 8
 		pp_exp_india_war_target_available = yes
 		navy_size >= 15
 		gold >= pp_exp_reserve_armada
@@ -364,6 +369,10 @@ pp_exp_malacca_armada = {
 	}
 
 	can_start = {
+		OR = {
+			pp_exp_years_since_india >= 10
+			has_variable = pp_exp_done_company
+		}
 		location:malacca = { pp_exp_war_site = yes }
 		navy_size >= 15
 		gold >= pp_exp_reserve_armada
@@ -457,7 +466,7 @@ pp_exp_spice_islands = {
 
 	can_start = {
 		OR = {
-			has_variable = pp_exp_done_malacca
+			pp_exp_years_since_malacca >= 5
 			current_age_or_later = { age = age_4_reformation }
 		}
 		navy_size >= 10
@@ -589,7 +598,7 @@ pp_exp_china_embassy = {
 
 	can_start = {
 		OR = {
-			has_variable = pp_exp_done_malacca
+			pp_exp_years_since_malacca >= 5
 			has_variable = pp_exp_done_spice
 			current_age_or_later = { age = age_4_reformation }
 		}

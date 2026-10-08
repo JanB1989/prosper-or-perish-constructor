@@ -52,3 +52,30 @@ pp_exp_utility_base = {
 pp_exp_ai_check_chance = {
 	value = 0.5
 }
+
+# Years since the country completed an expedition (0 if it never did): paces the chain like the historical ventures
+# (Mina 1482 -> Calicut 1498 -> Goa 1510 / Malacca 1511 -> Ternate 1522 / Canton 1517).
+pp_exp_years_since_gold_coast = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_exp_year_end_pp_exp_gold_coast }
+		value = current_year
+		subtract = var:pp_exp_year_end_pp_exp_gold_coast
+	}
+}
+pp_exp_years_since_india = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_exp_year_end_pp_exp_india_armada }
+		value = current_year
+		subtract = var:pp_exp_year_end_pp_exp_india_armada
+	}
+}
+pp_exp_years_since_malacca = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_exp_year_end_pp_exp_malacca_armada }
+		value = current_year
+		subtract = var:pp_exp_year_end_pp_exp_malacca_armada
+	}
+}

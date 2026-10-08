@@ -54,3 +54,30 @@ overlord. Costs are in vanilla scaled gold units (`pp_exp_gold_unit` = 1 + 0.2 c
 Every start, end and failure writes `PPEXP;<stage>;<type>;<tag>;<date>` to error.log and sets the country variable
 `pp_exp_year_<stage>_<type>` = the year (save table `country_variables`). Console checks:
 `run pp_exp_dbg.txt` (gates per colonizer, `PPEXPDBG` lines), `run pp_exp_force.txt` (force-starts all eight).
+
+## Pacing
+
+The chain follows the historical gaps, counted from when the country itself finished the previous step
+(`pp_exp_years_since_*`, from the `pp_exp_year_end_<type>` variables): Armada to India 15 years after its Gold Coast
+castle (Mina 1482, Calicut 1498) unless the cape route is already known (another country reached India, or the Cape of
+Good Hope is discovered); Armada of Conquest 8 years after India (Goa 1510); Armada to Malacca 10 years after India
+(1511) or after a company voyage; Spice Islands and the China embassy 5 years after Malacca (Ternate 1522, Canton
+1517), or from the Age of Reformation.
+
+## Where the AI colonizes (colonial charters)
+
+Charters are an engine decision (EU5 1.4 removed the scripted `ai_country_should_colonize`). What the defines and the
+mod say:
+
+- Who: a country with a tax base of at least `AI_COLONIZE_TAX_BASE_THRESHOLD` (PP 60, vanilla 100; `AI_EAGER_COLONIZER_TAGS`
+  SWE/POR/KUR skip it) and 5 population, evaluated every `AI_COLONIAL_CHARTER_TICK_MONTHS` (6). Under the default game
+  rule only capitals in Europe colonize (not the Papacy, not AI preference tag `warfare`).
+- Where: each candidate province scores `AI_BASE_COLONY_UTILITY` (3) plus goods price x population
+  (`COLONY_GOODS_PRICE_UTILITY_MODIFIER`), small-population bonus / large-population penalty, +10 next to own land
+  (`COLONY_NEIGHBORING_UTILITY_BONUS`), +5 next to an own charter, a multiplier for the share of the region already held
+  (`COLONY_REGION_COMPLETION_UTILITY_BONUS`), -50 for disease-endemic land unless migration is high, and the area
+  preferences (`colonize_bias`; PP's colonizer preferences in `area_preferences/pp_colonizer_preferences.txt` push the
+  African stations, the route round the Cape and keep them out of Africa's interior and Europe). Colonial range limits
+  the reach; `AI_COLONIAL_RANGE_UTILITY` makes the AI value range modifiers.
+- Expeditions feed this: footholds extend presence and range (Castle-Factories, colonial range modifiers), so charters
+  follow the stations the expeditions open.

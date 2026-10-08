@@ -1,0 +1,130 @@
+﻿l_english:
+
+ # PP colonial expeditions (in_game/common/expedition_types/pp_colonial_expeditions.txt, events/pp_expedition_events.txt)
+ pp_exp_gold_coast: "Gold Coast Factory"
+ pp_exp_gold_coast_desc: "Fit out a squadron of caravels to sail down the African coast to the Gold Coast, where the gold of the interior reaches the sea. A castle on an empty harbour, or a fortified factory beside a native town, would turn that gold towards our ports."
+ pp_exp_gold_coast_historical_info: "In 1482 a Portuguese fleet under Diogo de Azambuja landed prefabricated stones and timber at the Gold Coast and raised the castle of São Jorge da Mina in a few weeks. For a century it shipped gold, ivory and later slaves to Lisbon and anchored the Portuguese route along Africa."
+ pp_exp_gold_coast_outcome_overview: "$BULLET$On an unclaimed harbour: the [location|e], a [ShowBuildingTypeName('pp_castle_factory')] and a new [market|e] if none lies in the region.\n$BULLET$Beside a native town: a [ShowBuildingTypeName('pp_fortaleza')] and trade access with its ruler.\n$BULLET$The permanent [ShowModifier('pp_exp_mina_gold_trade')] [modifier|e]."
+
+ pp_exp_india_armada: "Armada to India"
+ pp_exp_india_armada_desc: "Send a great fleet round the Cape to the pepper coast of Malabar. The ships that return will carry the spices of the East without a single Venetian or Mamluk toll, and the factory they leave behind will keep the trade flowing."
+ pp_exp_india_armada_historical_info: "Vasco da Gama reached Calicut in 1498; two years later Pedro Álvares Cabral's armada of thirteen ships quarrelled with the Zamorin, bombarded Calicut and opened factories at Cochin and Cannanore, whose rulers welcomed an ally against Calicut. The yearly Carreira da Índia sailed from Lisbon for the next three centuries."
+ pp_exp_india_armada_outcome_overview: "$BULLET$A [ShowBuildingTypeName('pp_fortaleza')] in a harbour on the Malabar coast, trade access with its ruler, and a trade company to run the factory.\n$BULLET$Or the same fortress and a [casus_belli|e] on the [market|e] centre of that coast.\n$BULLET$The permanent [ShowModifier('pp_exp_carreira_da_india')] [modifier|e]; the sea road round the Cape becomes known."
+
+ pp_exp_malabar_war: "Armada of Conquest"
+ pp_exp_malabar_war_desc: "Our factories on the Indian coast live at the mercy of the rulers who host them. A fleet carrying soldiers can take a market centre outright and make it the capital of our trade in the East."
+ pp_exp_malabar_war_historical_info: "Afonso de Albuquerque took Goa from the Sultanate of Bijapur in 1510 with a few thousand men, lost it and retook it within the year. Goa became the capital of the Estado da Índia, the hub of a chain of fortresses from Mozambique to Macau."
+ pp_exp_malabar_war_outcome_overview: "$BULLET$War on the ruler of an Indian coastal [market|e] centre, with a [casus_belli|e] for its province.\n$BULLET$Soldiers land at the market centre.\n$BULLET$The [ShowModifier('pp_exp_armada_of_conquest')] [modifier|e] for some years."
+
+ pp_exp_malacca_armada: "Armada to Malacca"
+ pp_exp_malacca_armada_desc: "Whoever holds Malacca holds the gate between the Indian Ocean and the China Sea. Send an armada to the straits, by force if the sultan will not deal with us."
+ pp_exp_malacca_armada_historical_info: "In 1511 Albuquerque sailed to Malacca with eighteen ships and about a thousand Portuguese soldiers, stormed the city after a month and built the fortress of A Famosa. Malacca stayed Portuguese until the Dutch took it in 1641."
+ pp_exp_malacca_armada_outcome_overview: "$BULLET$War on the ruler of the [market|e] centre of the straits, with soldiers landing there.\n$BULLET$Or, where no fair target holds it, a fortified factory and a trade company.\n$BULLET$The permanent [ShowModifier('pp_exp_lord_of_the_straits')] [modifier|e]."
+
+ pp_exp_spice_islands: "Voyage to the Spice Islands"
+ pp_exp_spice_islands_desc: "Cloves grow on a handful of islands in the Moluccas and nutmeg on the Banda Islands alone. A fortress among them would put the rarest spices of the world in our holds."
+ pp_exp_spice_islands_historical_info: "The Portuguese built a fortress on Ternate in 1522 and held the clove trade until the sultan expelled them in 1575. The Dutch East India Company seized the Banda Islands in 1621 and held the world's nutmeg for two centuries."
+ pp_exp_spice_islands_outcome_overview: "$BULLET$A fortress on a clove or nutmeg island, and a trade company where a native ruler holds it.\n$BULLET$Or a [casus_belli|e] on the island's [market|e] centre.\n$BULLET$The permanent [ShowModifier('pp_exp_spice_monopoly')] [modifier|e]."
+
+ pp_exp_china_embassy: "Embassy to the Celestial Court"
+ pp_exp_china_embassy_desc: "Ask the rulers of the China coast for a harbour where our merchants may live and trade. They may refuse; the embassy can be sent again after some years."
+ pp_exp_china_embassy_historical_info: "Tomé Pires reached Canton in 1517 as the first Portuguese ambassador to the Ming court; the embassy failed and he died in prison. Forty years later local officials let the Portuguese settle at Macau, which they held until 1999."
+ pp_exp_china_embassy_outcome_overview: "$BULLET$If the court agrees: the [ShowBuildingTypeName('chi_macau_port')], trade access and a trade company on the China coast, and the permanent [ShowModifier('pp_exp_canton_licence')] [modifier|e].\n$BULLET$If it refuses: some [prestige|e] lost."
+
+ pp_exp_manila_galleon: "The Manila Galleon"
+ pp_exp_manila_galleon_desc: "Sail across the Pacific to Manila Bay, where Chinese junks bring silk and porcelain to trade for silver. A harbour there would link our American silver to the markets of China."
+ pp_exp_manila_galleon_historical_info: "Miguel López de Legazpi sailed from New Spain in 1564 and founded Manila in 1571. From 1565 to 1815 the Manila galleons crossed the Pacific each year between Acapulco and Manila, carrying silver west and silk and porcelain east."
+ pp_exp_manila_galleon_outcome_overview: "$BULLET$On an unclaimed bay: the [location|e], a [ShowBuildingTypeName('pp_castle_factory')] and a [market|e].\n$BULLET$Under a native ruler: a [ShowBuildingTypeName('pp_fortaleza')] and a [casus_belli|e] on the bay's [market|e] centre.\n$BULLET$The permanent [ShowModifier('pp_exp_manila_galleon')] [modifier|e]."
+
+ pp_exp_company_voyage: "Company Voyage to the Indies"
+ pp_exp_company_voyage_desc: "Our chartered company sends a fleet to the richest market of the Indies where we have no factory yet. Where a rival company already trades, our merchants may decide to drive it out."
+ pp_exp_company_voyage_historical_info: "The English East India Company (1600), the Dutch Vereenigde Oostindische Compagnie (1602) and the French Compagnie des Indes (1664) were joint-stock companies with royal charters to trade, fortify and make war in the East. Their factories at Surat, Bantam, Batavia, Madras and Pondicherry grew into colonial capitals."
+ pp_exp_company_voyage_outcome_overview: "$BULLET$A [ShowBuildingTypeName('pp_fortaleza')], trade access and a trade company in the target [market|e] centre.\n$BULLET$Optionally a trade-war [casus_belli|e] on a European rival already trading there.\n$BULLET$The permanent [ShowModifier('pp_exp_company_charter')] [modifier|e] after the first voyage."
+
+ pp_exp_china_cooldown: "Embassy to China sent"
+ pp_exp_company_cooldown: "Company voyage sent"
+
+ pp_expedition.1.title: "A Castle on the Gold Coast"
+ pp_expedition.1.desc: "Our squadron has dropped anchor off [pp_exp_target.GetName]. The coast trades gold dust brought down from the forests for cloth, brass and horses, and the ship's carpenters say the stones and timber in the holds would raise a castle within weeks."
+ pp_expedition.1.a: "Raise the castle and open the factory."
+ pp_expedition.1.b: "Trade from the ships and sail home."
+
+ pp_expedition.2.title: "The Armada Reaches India"
+ pp_expedition.2.desc: "After months at sea our fleet has anchored off [pp_exp_target.GetName]. The harbour is crowded with ships from Arabia, Gujarat and the Spice Islands, and the local ruler is willing to let us build a factory, though the merchants who already control the pepper trade look on with open hostility."
+ pp_expedition.2.a: "Build a fortified factory and found a company to run it."
+ pp_expedition.2.b: "Build the factory and claim the market centre by right of arms."
+
+ pp_expedition.3.title: "Before the Walls of [pp_exp_target.GetName]"
+ pp_expedition.3.desc: "Our armada lies off [pp_exp_target.GetName], the centre of the trade of this coast. Its ruler has treated our factors with contempt. The soldiers aboard are ready to land."
+ pp_expedition.3.a: "Land the soldiers and take the city."
+ pp_expedition.3.b: "Exact tribute and return with a larger force."
+
+ pp_expedition.4.title: "The Gate of the East"
+ pp_expedition.4.desc: "Our fleet has reached [pp_exp_target.GetName], where every ship between India and China must pass. Its merchants have no wish to share their trade with us."
+ pp_expedition.4.a: "Storm the straits."
+ pp_expedition.4.b: "Build a factory under the ruler's protection."
+
+ pp_expedition.5.title: "The Spice Islands"
+ pp_expedition.5.desc: "Our ships have reached [pp_exp_target.GetName]. The scent of cloves drifts over the water, and the island's lords are eager for allies against their neighbours."
+ pp_expedition.5.a: "Raise a fortress and found a company to buy the harvest."
+ pp_expedition.5.b: "Raise a fortress and claim the islands' market."
+
+ pp_expedition.6.title: "Envoys to the Celestial Court"
+ pp_expedition.6.desc: "Our envoys have reached [pp_exp_target.GetName] and asked the officials of [pp_exp_host.GetName] for leave to settle and trade."
+ pp_expedition.6.a: "Await the court's answer."
+
+ pp_expedition.7.title: "Foreign Envoys at [pp_exp_target.GetName]"
+ pp_expedition.7.desc: "Envoys from the distant [pp_exp_envoy.GetName] have arrived at [pp_exp_target.GetName] and ask for a harbour where their merchants may live and trade under our laws."
+ pp_expedition.7.a: "Grant them a harbour on a lease."
+ pp_expedition.7.b: "The barbarians may go home."
+
+ pp_expedition.8.title: "A Harbour on the China Coast"
+ pp_expedition.8.desc: "The court of [pp_exp_host.GetName] has agreed: our merchants may settle at [pp_exp_target.GetName] and trade with the markets of China."
+ pp_expedition.8.a: "Found a company to run the trade."
+
+ pp_expedition.11.title: "Turned Away"
+ pp_expedition.11.desc: "The court of [pp_exp_host.GetName] has refused our envoys and ordered our ships to leave. In some years we may try again."
+ pp_expedition.11.a: "We will return."
+
+ pp_expedition.9.title: "Manila Bay"
+ pp_expedition.9.desc: "Our fleet has entered the great bay of [pp_exp_target.GetName]. Chinese junks lie at anchor, loaded with silk and porcelain, and their captains ask only for silver."
+ pp_expedition.9.a: "Make this the harbour of the galleons."
+
+ pp_expedition.10.title: "The Company Fleet Arrives"
+ pp_expedition.10.desc: "The company's ships have reached [pp_exp_target.GetName]. Its factors can open a factory at once."
+ pp_expedition.10.a: "Open the factory."
+ pp_expedition.10.b: "Open the factory and drive the rival company out."
+
+ pp_expedition.20.title: "An Expedition Lost"
+ pp_expedition.20.desc: "News has reached us that one of our expeditions was lost at sea or turned back before reaching its goal. The money spent on it is gone."
+ pp_expedition.20.a: "The sea takes its share."
+
+ pp_fortaleza: "Fortaleza"
+ pp_fortaleza_desc: "A fortified factory in a foreign harbour: warehouses, a chapel and a gun battery behind stone walls, where our factors buy and store the goods of the land."
+ pp_fortaleza_maintenance: "Fortaleza Upkeep"
+ pp_castle_factory: "Castle-Factory"
+ pp_castle_factory_desc: "A stone castle guarding a harbour we hold, with a factory inside its walls. It shelters our ships, protects the trade and draws merchants from the whole coast."
+ pp_castle_factory_maintenance: "Castle-Factory Upkeep"
+
+ STATIC_MODIFIER_NAME_pp_exp_mina_gold_trade: "Gold of Mina"
+ STATIC_MODIFIER_DESC_pp_exp_mina_gold_trade: "Our castle on the Gold Coast buys the gold of the African interior."
+ STATIC_MODIFIER_NAME_pp_exp_carreira_da_india: "Carreira da Índia"
+ STATIC_MODIFIER_DESC_pp_exp_carreira_da_india: "Our fleets sail the sea road round the Cape to the spice markets of India every year."
+ STATIC_MODIFIER_NAME_pp_exp_armada_of_conquest: "Armada of Conquest"
+ STATIC_MODIFIER_DESC_pp_exp_armada_of_conquest: "Our soldiers and captains in the East are hardened by war far from home."
+ STATIC_MODIFIER_NAME_pp_exp_lord_of_the_straits: "Lord of the Straits"
+ STATIC_MODIFIER_DESC_pp_exp_lord_of_the_straits: "Our ships command the passage between the Indian Ocean and the China Sea."
+ STATIC_MODIFIER_NAME_pp_exp_spice_monopoly: "Spice Islands Trade"
+ STATIC_MODIFIER_DESC_pp_exp_spice_monopoly: "Our factors buy the cloves and nutmeg of the Spice Islands at the source."
+ STATIC_MODIFIER_NAME_pp_exp_canton_licence: "Licence to Trade with China"
+ STATIC_MODIFIER_DESC_pp_exp_canton_licence: "Our merchants hold a harbour on the China coast and trade with the markets of China."
+ STATIC_MODIFIER_NAME_pp_exp_manila_galleon: "Manila Galleon"
+ STATIC_MODIFIER_DESC_pp_exp_manila_galleon: "Our galleons carry silver to Manila and bring back the silk and porcelain of China."
+ STATIC_MODIFIER_NAME_pp_exp_company_charter: "Chartered Company"
+ STATIC_MODIFIER_DESC_pp_exp_company_charter: "Our chartered company trades, fortifies and fights in the Indies under a royal charter."
+
+ cb_pp_market_center: "Seize the Market Centre"
+ cb_pp_market_center_PROV: "Seize the Market Centre of $PROVINCE$"
+ cb_pp_market_center_desc: "Our expedition was refused fair trade at this market centre; we will take it by force."
+ pp_take_market_center: "Seize the Market Centre"
+ pp_take_market_center_desc: "Take the province of the market centre."

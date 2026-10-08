@@ -1,0 +1,12 @@
+﻿# PP colonial expeditions (docs/expeditions.md): take the market centre's province; cheap to take in the peace.
+pp_take_market_center = {
+	type = take_province
+
+	attacker = {
+		conquer_cost = 0.5
+		subjugate_cost = 1.0
+	}
+	defender = {
+	}
+	ticking_war_score = 0.5
+}

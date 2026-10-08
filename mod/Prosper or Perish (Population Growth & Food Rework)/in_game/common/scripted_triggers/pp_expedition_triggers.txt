@@ -1,0 +1,113 @@
+﻿# PP colonial expeditions (docs/expeditions.md): shared gates.
+
+# A seafaring European power: ports and a capital in Europe.
+pp_exp_european_seafarer = {
+	has_ports = yes
+	has_non_rural_port = yes
+	capital ?= { continent = continent:europe }
+}
+
+# An Atlantic power: capital in Western Europe (Portugal, Castile/Spain, France, England, the Low Countries, ...).
+pp_exp_atlantic_power = {
+	pp_exp_european_seafarer = yes
+	capital ?= { sub_continent = sub_continent:western_europe }
+}
+
+# The country looks to the sea: a naval or outward-looking society, or an advance that commits it to the ocean.
+pp_exp_naval_minded = {
+	OR = {
+		societal_value:land_vs_naval > 0
+		societal_value:outward_vs_inward < 0
+		has_advance = por_pursuing_waves
+		has_advance = open_sea_exploration
+		has_advance = explorer_commisions_advance
+	}
+}
+
+# The sea road round Africa is known to the country.
+pp_exp_knows_cape_route = {
+	OR = {
+		has_variable = pp_exp_done_gold_coast
+		has_global_variable = cape_route_discovered
+		has_discovered = location:good_hope_cape
+	}
+}
+
+# The country holds a foothold in the Indies (Armada to India, or a later company voyage).
+pp_exp_has_indies_foothold = {
+	OR = {
+		has_variable = pp_exp_done_india
+		has_variable = pp_exp_done_company
+	}
+}
+
+# Who may lead an expedition: a free adult who is not the ruler.
+pp_exp_leader = {
+	is_adult = yes
+	is_ruler = no
+	is_expedition_leader = no
+	has_exploration = no
+}
+
+# A target owner the expedition may fight for its market: not ourselves, our subject or overlord, not a great power.
+pp_exp_weak_market_owner = {
+	NOT = { this = root }
+	NOT = { is_subject_of = root }
+	NOT = { any_subject = { this = root } }
+	is_great_power = no
+}
+
+# Location scope: this location's market centre is a harbour owned by a fair war target.
+pp_exp_war_site = {
+	market ?= {
+		location ?= {
+			is_port = yes
+			has_owner = yes
+			owner = { pp_exp_weak_market_owner = yes }
+		}
+	}
+}
+
+# Location scope: an Indian coastal market fit for the Armada of Conquest.
+pp_exp_india_war_site = {
+	pp_exp_war_site = yes
+}
+
+pp_exp_india_war_target_available = {
+	OR = {
+		location:goa = { pp_exp_india_war_site = yes }
+		location:kozhikode = { pp_exp_india_war_site = yes }
+		location:kochi = { pp_exp_india_war_site = yes }
+		location:diu = { pp_exp_india_war_site = yes }
+		location:surat = { pp_exp_india_war_site = yes }
+	}
+}
+
+# Location scope: a market centre harbour in South or South East Asia, owned by another country, where root holds no
+# foothold yet.
+pp_exp_company_site = {
+	is_port = yes
+	has_owner = yes
+	NOT = { owner = root }
+	NOT = { owner = { is_subject_of = root } }
+	OR = {
+		sub_continent = sub_continent:south_asia
+		sub_continent = sub_continent:south_east_asia
+	}
+	is_discovered_by = root
+	NOT = {
+		AND = {
+			has_variable_list = pp_exp_foothold_owners
+			is_target_in_variable_list = {
+				name = pp_exp_foothold_owners
+				target = root
+			}
+		}
+	}
+}
+
+pp_exp_company_target_available = {
+	any_market_in_world = {
+		location ?= { pp_exp_company_site = yes }
+	}
+}

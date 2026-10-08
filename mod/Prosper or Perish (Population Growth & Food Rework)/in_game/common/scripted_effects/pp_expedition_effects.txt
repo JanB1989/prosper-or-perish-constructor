@@ -1,0 +1,327 @@
+﻿# PP colonial expeditions (docs/expeditions.md): shared effects. Root = the expedition's country.
+
+# Test trace in error.log ("PPEXP;<stage>;<type>;<tag>"): the record of which country ran which expedition when.
+# A global variable list per stage (pp_exp_log_start|end|fail) keeps the countries for console checks.
+pp_exp_log_effect = {
+	error_log = "PPEXP;$STAGE$;$TYPE$;[ROOT.GetCountry.GetTag];[GetCurrentDate.GetString]"
+	add_to_global_variable_list = {
+		name = pp_exp_log_$STAGE$
+		target = root
+	}
+	set_variable = {
+		name = pp_exp_year_$STAGE$_$TYPE$
+		value = current_year
+	}
+}
+
+# Console check (run file): one error.log line per country with its gold, the expedition cost unit and which
+# expeditions it could start now (1 = no, 2 = yes; a variable at 0 reads as unset).
+pp_exp_debug_report_effect = {
+	set_global_variable = { name = pp_t_gold value = gold }
+	set_global_variable = { name = pp_t_unit value = pp_exp_gold_unit }
+	set_global_variable = { name = pp_t_sea value = 1 }
+	if = {
+		limit = { pp_exp_naval_minded = yes }
+		set_global_variable = { name = pp_t_sea value = 2 }
+	}
+	set_global_variable = { name = pp_t_n5 value = 1 }
+	if = {
+		limit = { navy_size >= 5 }
+		set_global_variable = { name = pp_t_n5 value = 2 }
+	}
+	set_global_variable = { name = pp_t_n15 value = 1 }
+	if = {
+		limit = { navy_size >= 15 }
+		set_global_variable = { name = pp_t_n15 value = 2 }
+	}
+	set_global_variable = { name = pp_t_gc value = 1 }
+	if = {
+		limit = { expedition_type:pp_exp_gold_coast = { can_start_expedition = root } }
+		set_global_variable = { name = pp_t_gc value = 2 }
+	}
+	set_global_variable = { name = pp_t_in value = 1 }
+	if = {
+		limit = { expedition_type:pp_exp_india_armada = { can_start_expedition = root } }
+		set_global_variable = { name = pp_t_in value = 2 }
+	}
+	set_global_variable = { name = pp_t_mw value = 1 }
+	if = {
+		limit = { expedition_type:pp_exp_malabar_war = { can_start_expedition = root } }
+		set_global_variable = { name = pp_t_mw value = 2 }
+	}
+	set_global_variable = { name = pp_t_ma value = 1 }
+	if = {
+		limit = { expedition_type:pp_exp_malacca_armada = { can_start_expedition = root } }
+		set_global_variable = { name = pp_t_ma value = 2 }
+	}
+	set_global_variable = { name = pp_t_sp value = 1 }
+	if = {
+		limit = { expedition_type:pp_exp_spice_islands = { can_start_expedition = root } }
+		set_global_variable = { name = pp_t_sp value = 2 }
+	}
+	set_global_variable = { name = pp_t_ch value = 1 }
+	if = {
+		limit = { expedition_type:pp_exp_china_embassy = { can_start_expedition = root } }
+		set_global_variable = { name = pp_t_ch value = 2 }
+	}
+	set_global_variable = { name = pp_t_mn value = 1 }
+	if = {
+		limit = { expedition_type:pp_exp_manila_galleon = { can_start_expedition = root } }
+		set_global_variable = { name = pp_t_mn value = 2 }
+	}
+	set_global_variable = { name = pp_t_co value = 1 }
+	if = {
+		limit = { expedition_type:pp_exp_company_voyage = { can_start_expedition = root } }
+		set_global_variable = { name = pp_t_co value = 2 }
+	}
+	error_log = "PPEXPDBG;[ROOT.GetCountry.GetTag];gold=[GetGlobalVariable('pp_t_gold').GetValue|0];unit=[GetGlobalVariable('pp_t_unit').GetValue|1];sea=[GetGlobalVariable('pp_t_sea').GetValue|0];n5=[GetGlobalVariable('pp_t_n5').GetValue|0];n15=[GetGlobalVariable('pp_t_n15').GetValue|0];gc=[GetGlobalVariable('pp_t_gc').GetValue|0];in=[GetGlobalVariable('pp_t_in').GetValue|0];mw=[GetGlobalVariable('pp_t_mw').GetValue|0];ma=[GetGlobalVariable('pp_t_ma').GetValue|0];sp=[GetGlobalVariable('pp_t_sp').GetValue|0];ch=[GetGlobalVariable('pp_t_ch').GetValue|0];mn=[GetGlobalVariable('pp_t_mn').GetValue|0];co=[GetGlobalVariable('pp_t_co').GetValue|0]"
+}
+
+# Pay the fitting-out cost ($COST$ = a pp_exp_cost_* script value).
+pp_exp_pay_effect = {
+	add_gold = {
+		value = $COST$
+		multiply = -1
+	}
+}
+
+# Departure: the most populous owned port is the first waypoint; the leader leaves any command he holds.
+pp_exp_depart_effect = {
+	ordered_owned_location = {
+		limit = { is_port = yes }
+		order_by = population
+		max = 1
+		save_scope_as = pp_exp_departure
+	}
+	scope:expedition = {
+		if = {
+			limit = { exists = expedition_leader }
+			remove_commander = expedition_leader
+		}
+		if = {
+			limit = { exists = scope:pp_exp_departure }
+			add_new_waypoint = scope:pp_exp_departure
+		}
+		else = {
+			add_new_waypoint = root.capital
+		}
+	}
+}
+
+# Foothold at scope:pp_exp_target.
+# Unclaimed harbour: the country takes it, raises a Castle-Factory and, where no market centre lies in the same
+# region, founds a market there. Own or subject harbour: a Castle-Factory. Foreign harbour: the host grants trade
+# access and the country raises a Fortaleza (a foreign building it owns).
+pp_exp_foothold_effect = {
+	scope:pp_exp_target = {
+		if = {
+			limit = { has_owner = no }
+			change_location_owner = root
+			construct_building = {
+				building_type = building_type:pp_castle_factory
+				owner = root
+				instant = yes
+				cost_multiplier = 0
+				cost_multiplier_reason = "game_concept_event"
+			}
+			if = {
+				limit = {
+					NOT = {
+						market ?= {
+							location ?= { region = scope:pp_exp_target.region }
+						}
+					}
+				}
+				create_market = {
+					builder = root
+					location = scope:pp_exp_target
+					instant = yes
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					owner = root
+					owner = { is_subject_of = root }
+				}
+			}
+			construct_building = {
+				building_type = building_type:pp_castle_factory
+				instant = yes
+				cost_multiplier = 0
+				cost_multiplier_reason = "game_concept_event"
+			}
+		}
+		else = {
+			owner = { save_scope_as = pp_exp_host }
+			create_relation = {
+				first = scope:pp_exp_host
+				second = root
+				type = relation_type:trade_access
+			}
+			construct_building = {
+				building_type = building_type:pp_fortaleza
+				owner = root
+				instant = yes
+				cost_multiplier = 0
+				cost_multiplier_reason = "game_concept_event"
+			}
+		}
+	}
+	add_to_variable_list = {
+		name = pp_exp_footholds
+		target = scope:pp_exp_target
+	}
+	scope:pp_exp_target = {
+		add_to_variable_list = {
+			name = pp_exp_foothold_owners
+			target = root
+		}
+	}
+}
+
+# A European rival that already holds a foothold at scope:pp_exp_target, saved as scope:pp_exp_rival.
+pp_exp_find_rival_effect = {
+	scope:pp_exp_target = {
+		if = {
+			limit = { has_variable_list = pp_exp_foothold_owners }
+			ordered_in_list = {
+				variable = pp_exp_foothold_owners
+				limit = {
+					NOT = { this = root }
+					NOT = { is_subject_of = root }
+					capital ?= { continent = continent:europe }
+				}
+				order_by = country_tax_base
+				max = 1
+				save_scope_as = pp_exp_rival
+			}
+		}
+	}
+}
+
+# Trade war on the rival: a 25-year trade-war casus belli, and the rival joins the country's trade war targets.
+pp_exp_rival_claim_effect = {
+	if = {
+		limit = { exists = scope:pp_exp_rival }
+		add_casus_belli = {
+			target = scope:pp_exp_rival
+			type = casus_belli:cb_trade_war_triggered
+			years = 25
+		}
+		add_to_variable_list = {
+			name = pp_trade_war_targets
+			target = scope:pp_exp_rival
+		}
+	}
+}
+
+# Trade company: in a foreign harbour the country raises a Trade Company Headquarters; vanilla's on_built turns it into
+# a trade company subject that owns the building (needs the trade access set by pp_exp_foothold_effect).
+pp_exp_trade_company_effect = {
+	scope:pp_exp_target = {
+		if = {
+			limit = {
+				has_owner = yes
+				NOT = { owner = root }
+				NOT = { owner = { is_subject_of = root } }
+			}
+			construct_building = {
+				building_type = building_type:trade_company_headquarters
+				owner = root
+				instant = yes
+				cost_multiplier = 0
+				cost_multiplier_reason = "game_concept_event"
+			}
+		}
+	}
+}
+
+# The market centre of scope:pp_exp_target's market and its owner, saved as scope:pp_exp_market_center and
+# scope:pp_exp_market_owner when that owner is a fair target (pp_exp_weak_market_owner).
+pp_exp_find_market_center_effect = {
+	scope:pp_exp_target = {
+		market ?= {
+			location ?= { save_scope_as = pp_exp_market_center }
+		}
+	}
+	if = {
+		limit = {
+			exists = scope:pp_exp_market_center
+			scope:pp_exp_market_center = {
+				has_owner = yes
+				owner = { pp_exp_weak_market_owner = yes }
+			}
+		}
+		scope:pp_exp_market_center = {
+			owner = { save_scope_as = pp_exp_market_owner }
+		}
+	}
+}
+
+# Claim on the market centre: a 25-year casus belli for its province, and the owner joins the country's market war
+# targets (ai_scripted_expansion_target/pp_market_center_wars.txt).
+pp_exp_market_claim_effect = {
+	if = {
+		limit = { exists = scope:pp_exp_market_owner }
+		add_casus_belli = {
+			target = scope:pp_exp_market_owner
+			type = casus_belli:cb_pp_market_center
+			province = scope:pp_exp_market_center.province
+			years = 25
+		}
+		add_to_variable_list = {
+			name = pp_market_war_targets
+			target = scope:pp_exp_market_owner
+		}
+	}
+}
+
+# Landing: war on the market centre's owner, and $REGIMENTS$ regiments of the age's infantry put ashore at the market
+# centre.
+pp_exp_landing_effect = {
+	if = {
+		limit = {
+			exists = scope:pp_exp_market_owner
+			NOT = { is_at_war_with = scope:pp_exp_market_owner }
+		}
+		declare_war_with_cb = {
+			target = scope:pp_exp_market_owner
+			type = casus_belli:cb_pp_market_center
+			target_province = scope:pp_exp_market_center.province
+		}
+	}
+	if = {
+		limit = { exists = scope:pp_exp_market_owner }
+		root.capital = { save_scope_as = pp_exp_home }
+		scope:pp_exp_market_center = {
+			while = {
+				count = $REGIMENTS$
+				if = {
+					limit = { current_age_or_later = { age = age_5_absolutism } }
+					create_sub_unit_with_owner = {
+						type = unit_type:a_age_5_absolutism_heavy_infantry
+						owner = root
+						origin = scope:pp_exp_home
+					}
+				}
+				else_if = {
+					limit = { current_age_or_later = { age = age_4_reformation } }
+					create_sub_unit_with_owner = {
+						type = unit_type:a_age_4_reformation_heavy_infantry
+						owner = root
+						origin = scope:pp_exp_home
+					}
+				}
+				else = {
+					create_sub_unit_with_owner = {
+						type = unit_type:a_age_3_discovery_heavy_infantry
+						owner = root
+						origin = scope:pp_exp_home
+					}
+				}
+			}
+		}
+	}
+}

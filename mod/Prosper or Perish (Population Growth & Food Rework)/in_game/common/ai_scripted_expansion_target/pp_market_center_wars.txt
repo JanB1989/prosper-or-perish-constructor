@@ -1,0 +1,48 @@
+﻿# PP colonial expeditions (docs/expeditions.md): owners of market centres an expedition claimed, and rivals of a company
+# voyage, are war targets wherever they are, with the expedition's casus belli.
+pp_market_center_war_targets = {
+	attacker_potential = {
+		has_variable_list = pp_market_war_targets
+		months_since_war >= 24
+	}
+	candidate_list = {
+		every_in_list = {
+			variable = pp_market_war_targets
+			limit = {
+				exists = capital
+				NOT = { is_subject_of = root }
+			}
+			add_to_list = source
+		}
+	}
+	casus_belli = casus_belli:cb_pp_market_center
+	ignore_antagonism = yes
+	score = {
+		add = scope:target.country_tax_base
+		multiply = 10
+		add = 40
+	}
+}
+
+pp_trade_war_targets = {
+	attacker_potential = {
+		has_variable_list = pp_trade_war_targets
+		months_since_war >= 36
+	}
+	candidate_list = {
+		every_in_list = {
+			variable = pp_trade_war_targets
+			limit = {
+				exists = capital
+				NOT = { is_subject_of = root }
+			}
+			add_to_list = source
+		}
+	}
+	casus_belli = casus_belli:cb_trade_war_triggered
+	score = {
+		add = scope:target.country_tax_base
+		multiply = 10
+		add = 20
+	}
+}

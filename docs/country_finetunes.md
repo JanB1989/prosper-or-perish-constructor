@@ -47,3 +47,12 @@ Hand-tuned changes for single countries, one entry each: what and why.
   1600). Skilled Tax Collectors (age 1) +5 % max control, +5 % max rural control. Why: run d3c30c7a, Muscovy grew
   steadily (26 -> 199 locations) but in 1512 Novgorod still held 128 and Smolensk 137, Kiev took Ruthenia, and Muscovy's
   control sat at 0.26-0.30 (159 of 496 possible tax).
+- **Ottomans: Mamluk Egypt and the Levant after Constantinople** (2026-10-08, branch expeditions,
+  `ai_scripted_expansion_target/pp_ottoman_mamluks.txt`): from 1490, once TUR owns Constantinople and no rival rules
+  from Anatolia, every country ruling from Egypt or the Fertile Crescent is a war target (+30, after 36 months of peace).
+  Why: in run c4831a96 the Mamluks still held Egypt and Syria in 1836 (340 locations); the Ottoman conquest of 1516-17
+  never came.
+- **Portugal: the Strait coast of Morocco** (2026-10-08, branch expeditions,
+  `ai_scripted_expansion_target/pp_portuguese_morocco.txt`): from 1410 the owners of Ceuta, Tangier, Asilah and Tetouan
+  are Portugal war targets (+20, after 36 months of peace; never Castile/Spain). Why: Portugal sat at 67 Iberian
+  locations from 1337 to 1497 in every run; Ceuta (1415) and the Moroccan forts were its first expansion.

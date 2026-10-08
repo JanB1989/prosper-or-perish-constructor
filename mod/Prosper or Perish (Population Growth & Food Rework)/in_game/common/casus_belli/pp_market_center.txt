@@ -1,0 +1,24 @@
+﻿#root is country
+#scope:target is the target
+
+# PP colonial expeditions (docs/expeditions.md): war for a market centre, granted by an expedition (never created by
+# hand). The province is the market centre's province.
+cb_pp_market_center = {
+	trade = yes
+	allow_ports_for_reach_ai = yes
+
+	create_visible = {
+		always = no
+	}
+	create_enabled = {
+		always = no
+	}
+
+	province = {
+		any_location_in_province = {
+			is_market_center = yes
+		}
+	}
+
+	war_goal_type = pp_take_market_center
+}

@@ -1,0 +1,421 @@
+﻿namespace = pp_expedition
+
+# PP colonial expeditions (docs/expeditions.md): outcome events. Root = the expedition's country; the target location
+# comes from the country variable the expedition type set at its start.
+
+# 1. Gold Coast Factory: the squadron reaches the Gold Coast.
+pp_expedition.1 = {
+	type = country_event
+	title = pp_expedition.1.title
+	desc = pp_expedition.1.desc
+	outcome = positive
+	illustration_tags = { 10 = regular }
+
+	trigger = { has_variable = pp_exp_target_gold_coast }
+
+	immediate = {
+		var:pp_exp_target_gold_coast = { save_scope_as = pp_exp_target }
+		set_variable = pp_exp_done_gold_coast
+		remove_variable = pp_exp_target_gold_coast
+	}
+
+	option = {
+		name = pp_expedition.1.a
+		pp_exp_foothold_effect = yes
+		add_country_modifier = { modifier = pp_exp_mina_gold_trade }
+		add_prestige = prestige_mild_bonus
+		ai_chance = { base = 100 }
+	}
+
+	option = {
+		name = pp_expedition.1.b
+		change_gold_effect = { scale = 2 }
+		add_prestige = prestige_weak_bonus
+		ai_chance = { base = 0 }
+	}
+}
+
+# 2. Armada to India: the fleet anchors off the Malabar coast.
+pp_expedition.2 = {
+	type = country_event
+	title = pp_expedition.2.title
+	desc = pp_expedition.2.desc
+	outcome = positive
+	illustration_tags = { 10 = regular }
+
+	trigger = { has_variable = pp_exp_target_india }
+
+	immediate = {
+		var:pp_exp_target_india = { save_scope_as = pp_exp_target }
+		set_variable = pp_exp_done_india
+		remove_variable = pp_exp_target_india
+		pp_exp_find_market_center_effect = yes
+	}
+
+	# Factory, fortress and a company to run them.
+	option = {
+		name = pp_expedition.2.a
+		pp_exp_foothold_effect = yes
+		pp_exp_trade_company_effect = yes
+		add_country_modifier = { modifier = pp_exp_carreira_da_india }
+		add_prestige = prestige_severe_bonus
+		ai_chance = { base = 70 }
+	}
+
+	# Factory and fortress, and a claim on the market centre whose ruler favours the Arab merchants.
+	option = {
+		name = pp_expedition.2.b
+		trigger = { exists = scope:pp_exp_market_owner }
+		pp_exp_foothold_effect = yes
+		pp_exp_market_claim_effect = yes
+		add_country_modifier = { modifier = pp_exp_carreira_da_india }
+		add_prestige = prestige_severe_bonus
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 2
+				pp_exp_naval_minded = yes
+				navy_size >= 25
+			}
+		}
+	}
+}
+
+# 3. Armada of Conquest: the fleet and its soldiers stand before an Indian market centre.
+pp_expedition.3 = {
+	type = country_event
+	title = pp_expedition.3.title
+	desc = pp_expedition.3.desc
+	outcome = positive
+	illustration_tags = { 10 = regular }
+
+	trigger = { has_variable = pp_exp_target_malabar_war }
+
+	immediate = {
+		var:pp_exp_target_malabar_war = { save_scope_as = pp_exp_target }
+		set_variable = pp_exp_done_malabar_war
+		remove_variable = pp_exp_target_malabar_war
+		pp_exp_find_market_center_effect = yes
+	}
+
+	# Storm the city.
+	option = {
+		name = pp_expedition.3.a
+		trigger = { exists = scope:pp_exp_market_owner }
+		pp_exp_market_claim_effect = yes
+		pp_exp_landing_effect = { REGIMENTS = 6 }
+		add_country_modifier = {
+			modifier = pp_exp_armada_of_conquest
+			years = 10
+		}
+		ai_chance = { base = 100 }
+	}
+
+	# Take tribute and a claim, and come back with a larger force.
+	option = {
+		name = pp_expedition.3.b
+		pp_exp_market_claim_effect = yes
+		change_gold_effect = { scale = 3 }
+		ai_chance = { base = 0 }
+	}
+}
+
+# 4. Armada to Malacca: the fleet reaches the straits.
+pp_expedition.4 = {
+	type = country_event
+	title = pp_expedition.4.title
+	desc = pp_expedition.4.desc
+	outcome = positive
+	illustration_tags = { 10 = regular }
+
+	trigger = { has_variable = pp_exp_target_malacca }
+
+	immediate = {
+		var:pp_exp_target_malacca = { save_scope_as = pp_exp_target }
+		set_variable = pp_exp_done_malacca
+		remove_variable = pp_exp_target_malacca
+		pp_exp_find_market_center_effect = yes
+	}
+
+	# Take the straits by force.
+	option = {
+		name = pp_expedition.4.a
+		trigger = { exists = scope:pp_exp_market_owner }
+		pp_exp_market_claim_effect = yes
+		pp_exp_landing_effect = { REGIMENTS = 6 }
+		add_country_modifier = {
+			modifier = pp_exp_armada_of_conquest
+			years = 10
+		}
+		add_country_modifier = { modifier = pp_exp_lord_of_the_straits }
+		ai_chance = { base = 100 }
+	}
+
+	# A factory under the sultan's protection.
+	option = {
+		name = pp_expedition.4.b
+		pp_exp_foothold_effect = yes
+		pp_exp_trade_company_effect = yes
+		add_country_modifier = { modifier = pp_exp_lord_of_the_straits }
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				NOT = { exists = scope:pp_exp_market_owner }
+			}
+		}
+	}
+}
+
+# 5. Voyage to the Spice Islands.
+pp_expedition.5 = {
+	type = country_event
+	title = pp_expedition.5.title
+	desc = pp_expedition.5.desc
+	outcome = positive
+	illustration_tags = { 10 = regular }
+
+	trigger = { has_variable = pp_exp_target_spice }
+
+	immediate = {
+		var:pp_exp_target_spice = { save_scope_as = pp_exp_target }
+		set_variable = pp_exp_done_spice
+		remove_variable = pp_exp_target_spice
+		pp_exp_find_market_center_effect = yes
+	}
+
+	# A fortress among the clove trees, and a company to buy the harvest.
+	option = {
+		name = pp_expedition.5.a
+		pp_exp_foothold_effect = yes
+		pp_exp_trade_company_effect = yes
+		add_country_modifier = { modifier = pp_exp_spice_monopoly }
+		add_prestige = prestige_mild_bonus
+		ai_chance = { base = 70 }
+	}
+
+	# A fortress, and a claim on the island's market centre.
+	option = {
+		name = pp_expedition.5.b
+		trigger = { exists = scope:pp_exp_market_owner }
+		pp_exp_foothold_effect = yes
+		pp_exp_market_claim_effect = yes
+		add_country_modifier = { modifier = pp_exp_spice_monopoly }
+		ai_chance = { base = 30 }
+	}
+}
+
+# 6. Embassy to the Celestial Court: the envoys reach the China coast and ask for a harbour.
+pp_expedition.6 = {
+	type = country_event
+	title = pp_expedition.6.title
+	desc = pp_expedition.6.desc
+	outcome = neutral
+	illustration_tags = { 10 = regular }
+
+	trigger = { has_variable = pp_exp_target_china }
+
+	immediate = {
+		var:pp_exp_target_china = { save_scope_as = pp_exp_target }
+		remove_variable = pp_exp_target_china
+		save_scope_as = pp_exp_envoy
+		scope:pp_exp_target = {
+			owner ?= { save_scope_as = pp_exp_host }
+		}
+	}
+
+	option = {
+		name = pp_expedition.6.a
+		if = {
+			limit = { exists = scope:pp_exp_host }
+			scope:pp_exp_host = { trigger_event_non_silently = pp_expedition.7 }
+		}
+		ai_chance = { base = 100 }
+	}
+}
+
+# 7. The host court weighs the foreign request for a harbour.
+pp_expedition.7 = {
+	type = country_event
+	title = pp_expedition.7.title
+	desc = pp_expedition.7.desc
+	outcome = neutral
+	illustration_tags = { 10 = interior }
+
+	# Grant the lease.
+	option = {
+		name = pp_expedition.7.a
+		scope:pp_exp_target = {
+			construct_building = {
+				building_type = building_type:chi_macau_port
+				owner = scope:pp_exp_envoy
+				instant = yes
+				cost_multiplier = 0
+				cost_multiplier_reason = "game_concept_event"
+			}
+		}
+		change_societal_value = {
+			type = outward_vs_inward
+			value = societal_value_minor_move_to_left
+		}
+		scope:pp_exp_envoy = { trigger_event_non_silently = pp_expedition.8 }
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				current_age_or_later = { age = age_4_reformation }
+			}
+		}
+	}
+
+	# Turn them away.
+	option = {
+		name = pp_expedition.7.b
+		add_prestige = prestige_weak_bonus
+		scope:pp_exp_envoy = { trigger_event_non_silently = pp_expedition.11 }
+		ai_chance = { base = 70 }
+	}
+}
+
+# 8. The harbour lease is granted.
+pp_expedition.8 = {
+	type = country_event
+	title = pp_expedition.8.title
+	desc = pp_expedition.8.desc
+	outcome = positive
+	illustration_tags = { 10 = regular }
+
+	immediate = {
+		set_variable = pp_exp_done_china
+	}
+
+	option = {
+		name = pp_expedition.8.a
+		create_relation = {
+			first = scope:pp_exp_host
+			second = root
+			type = relation_type:trade_access
+		}
+		pp_exp_trade_company_effect = yes
+		add_to_variable_list = {
+			name = pp_exp_footholds
+			target = scope:pp_exp_target
+		}
+		scope:pp_exp_target = {
+			add_to_variable_list = {
+				name = pp_exp_foothold_owners
+				target = root
+			}
+		}
+		add_country_modifier = { modifier = pp_exp_canton_licence }
+		add_prestige = prestige_severe_bonus
+		ai_chance = { base = 100 }
+	}
+}
+
+# 11. The envoys are turned away (the embassy can be sent again later).
+pp_expedition.11 = {
+	type = country_event
+	title = pp_expedition.11.title
+	desc = pp_expedition.11.desc
+	outcome = negative
+	illustration_tags = { 10 = regular }
+
+	option = {
+		name = pp_expedition.11.a
+		add_prestige = prestige_weak_penalty
+		ai_chance = { base = 100 }
+	}
+}
+
+# 9. The Manila Galleon: the fleet reaches Manila Bay.
+pp_expedition.9 = {
+	type = country_event
+	title = pp_expedition.9.title
+	desc = pp_expedition.9.desc
+	outcome = positive
+	illustration_tags = { 10 = regular }
+
+	trigger = { has_variable = pp_exp_target_manila }
+
+	immediate = {
+		var:pp_exp_target_manila = { save_scope_as = pp_exp_target }
+		set_variable = pp_exp_done_manila
+		remove_variable = pp_exp_target_manila
+		pp_exp_find_market_center_effect = yes
+	}
+
+	option = {
+		name = pp_expedition.9.a
+		pp_exp_foothold_effect = yes
+		pp_exp_market_claim_effect = yes
+		add_country_modifier = { modifier = pp_exp_manila_galleon }
+		add_prestige = prestige_severe_bonus
+		ai_chance = { base = 100 }
+	}
+}
+
+# 10. Company Voyage: the company fleet reaches the market.
+pp_expedition.10 = {
+	type = country_event
+	title = pp_expedition.10.title
+	desc = pp_expedition.10.desc
+	outcome = positive
+	illustration_tags = { 10 = regular }
+
+	trigger = { has_variable = pp_exp_target_company }
+
+	immediate = {
+		var:pp_exp_target_company = { save_scope_as = pp_exp_target }
+		set_variable = pp_exp_done_company
+		remove_variable = pp_exp_target_company
+		pp_exp_find_rival_effect = yes
+	}
+
+	# Open the factory.
+	option = {
+		name = pp_expedition.10.a
+		pp_exp_foothold_effect = yes
+		pp_exp_trade_company_effect = yes
+		if = {
+			limit = { NOT = { has_country_modifier = pp_exp_company_charter } }
+			add_country_modifier = { modifier = pp_exp_company_charter }
+		}
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0.5
+				exists = scope:pp_exp_rival
+			}
+		}
+	}
+
+	# Open the factory and break the rival's hold on the market.
+	option = {
+		name = pp_expedition.10.b
+		trigger = { exists = scope:pp_exp_rival }
+		pp_exp_foothold_effect = yes
+		pp_exp_trade_company_effect = yes
+		pp_exp_rival_claim_effect = yes
+		if = {
+			limit = { NOT = { has_country_modifier = pp_exp_company_charter } }
+			add_country_modifier = { modifier = pp_exp_company_charter }
+		}
+		ai_chance = { base = 50 }
+	}
+}
+
+# 20. An expedition is lost at sea or turned back.
+pp_expedition.20 = {
+	type = country_event
+	title = pp_expedition.20.title
+	desc = pp_expedition.20.desc
+	outcome = negative
+	illustration_tags = { 10 = regular }
+
+	option = {
+		name = pp_expedition.20.a
+		add_prestige = prestige_weak_penalty
+		ai_chance = { base = 100 }
+	}
+}

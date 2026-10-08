@@ -1,0 +1,925 @@
+﻿# PP colonial expeditions (docs/expeditions.md). Eight expensive, gated voyages that give the colonial powers
+# footholds, trade companies and wars for market centres on the road to the Indies and China. Open to every country
+# that meets the gates (player included); the historical leaders of each venture score higher for the AI.
+# Each type stores its target location in a country variable at the start; the outcome event (events/
+# pp_expedition_events.txt) reads it when the fleet arrives.
+
+# 1. Gold Coast Factory (Sao Jorge da Mina, 1482).
+pp_exp_gold_coast = {
+	unique = yes
+	repeatable = no
+	travel_speed = 1
+	dynamic_first_waypoint = yes
+	origin = none
+	travel_mode = sea
+	category = commercial
+	show_end_message = no
+
+	potential = {
+		pp_exp_atlantic_power = yes
+		NOT = { has_variable = pp_exp_done_gold_coast }
+	}
+
+	can_start = {
+		current_age_or_later = { age = age_3_discovery }
+		pp_exp_naval_minded = yes
+		navy_size >= 5
+		gold >= pp_exp_reserve_light
+		at_war = no
+	}
+
+	leader = { pp_exp_leader = yes }
+
+	ai_leader_source_list = {
+		every_character = {
+			limit = { pp_exp_leader = yes }
+			add_to_list = source
+		}
+	}
+
+	on_start = {
+		pp_exp_log_effect = { STAGE = start TYPE = pp_exp_gold_coast }
+		pp_exp_pay_effect = { COST = pp_exp_cost_light }
+		pp_exp_depart_effect = yes
+		location:axim = {
+			area = {
+				ordered_location_in_area = {
+					limit = {
+						is_port = yes
+						has_owner = no
+					}
+					order_by = population
+					max = 1
+					save_scope_as = pp_exp_target
+				}
+			}
+		}
+		if = {
+			limit = { NOT = { exists = scope:pp_exp_target } }
+			location:axim = { save_scope_as = pp_exp_target }
+		}
+		set_variable = { name = pp_exp_target_gold_coast value = scope:pp_exp_target }
+		scope:expedition = {
+			add_new_waypoint = location:northern_fuerteventura_coast
+			add_new_waypoint = location:senegal_coast
+			add_new_waypoint = location:cape_mount
+			add_new_waypoint = scope:pp_exp_target
+		}
+	}
+
+	on_arrive_to_new_location = {
+		discover_area = scope:location.area
+	}
+
+	on_end = {
+		pp_exp_log_effect = { STAGE = end TYPE = pp_exp_gold_coast }
+		trigger_event_non_silently = pp_expedition.1
+	}
+
+	on_fail = {
+		pp_exp_log_effect = { STAGE = fail TYPE = pp_exp_gold_coast }
+		remove_variable = pp_exp_target_gold_coast
+		trigger_event_non_silently = pp_expedition.20
+	}
+
+	ai_chance_to_check = { value = pp_exp_ai_check_chance }
+
+	utility = {
+		value = pp_exp_utility_base
+		if = {
+			limit = { tag = POR }
+			add = 30
+		}
+	}
+
+	leader_utility = {
+		value = 1
+		if = {
+			limit = { is_explorer = yes }
+			add = 5
+		}
+		if = {
+			limit = { is_admiral = yes }
+			add = 3
+		}
+	}
+}
+
+# 2. Armada to India (da Gama 1498, Cabral 1500: factories at Cochin and Cannanore).
+pp_exp_india_armada = {
+	unique = yes
+	repeatable = no
+	travel_speed = 0.9
+	dynamic_first_waypoint = yes
+	origin = none
+	travel_mode = sea
+	category = commercial
+	show_end_message = no
+
+	potential = {
+		pp_exp_european_seafarer = yes
+		NOT = { has_variable = pp_exp_done_india }
+	}
+
+	can_start = {
+		current_age_or_later = { age = age_3_discovery }
+		pp_exp_knows_cape_route = yes
+		OR = {
+			has_advance = explorer_commisions_advance
+			has_advance = open_sea_exploration
+			has_advance = por_carreira_da_india
+		}
+		navy_size >= 10
+		gold >= pp_exp_reserve_armada
+		at_war = no
+	}
+
+	leader = { pp_exp_leader = yes }
+
+	ai_leader_source_list = {
+		every_character = {
+			limit = { pp_exp_leader = yes }
+			add_to_list = source
+		}
+	}
+
+	on_start = {
+		pp_exp_log_effect = { STAGE = start TYPE = pp_exp_india_armada }
+		pp_exp_pay_effect = { COST = pp_exp_cost_armada }
+		pp_exp_depart_effect = yes
+		location:kochi = { add_to_list = pp_exp_candidates }
+		location:kannur = { add_to_list = pp_exp_candidates }
+		location:goa = { add_to_list = pp_exp_candidates }
+		location:kozhikode = { add_to_list = pp_exp_candidates }
+		ordered_in_list = {
+			list = pp_exp_candidates
+			limit = {
+				OR = {
+					has_owner = no
+					owner = { NOT = { is_at_war_with = root } }
+				}
+			}
+			order_by = {
+				value = 100000
+				if = {
+					limit = { has_owner = yes }
+					subtract = owner.country_tax_base
+				}
+			}
+			max = 1
+			save_scope_as = pp_exp_target
+		}
+		if = {
+			limit = { NOT = { exists = scope:pp_exp_target } }
+			location:kochi = { save_scope_as = pp_exp_target }
+		}
+		set_variable = { name = pp_exp_target_india value = scope:pp_exp_target }
+		scope:expedition = {
+			add_new_waypoint = location:northern_fuerteventura_coast
+			add_new_waypoint = location:cape_mount
+			add_new_waypoint = location:sao_tome
+			add_new_waypoint = location:walvis_bay
+			add_new_waypoint = location:good_hope_cape
+			add_new_waypoint = location:mozambique
+			add_new_waypoint = location:malindi
+			add_new_waypoint = scope:pp_exp_target
+		}
+	}
+
+	on_monthly = {
+		if = {
+			limit = {
+				scope:expedition = {
+					expedition_is_traveling = yes
+					NOT = { expedition_is_paused = yes }
+				}
+			}
+			random = {
+				chance = 1
+				fail_expedition = scope:expedition
+			}
+		}
+	}
+
+	on_arrive_to_new_location = {
+		discover_area = scope:location.area
+	}
+
+	on_end = {
+		pp_exp_log_effect = { STAGE = end TYPE = pp_exp_india_armada }
+		if = {
+			limit = { NOT = { has_global_variable = cape_route_discovered } }
+			set_global_variable = { name = cape_route_discovered value = 1 }
+		}
+		trigger_event_non_silently = pp_expedition.2
+	}
+
+	on_fail = {
+		pp_exp_log_effect = { STAGE = fail TYPE = pp_exp_india_armada }
+		remove_variable = pp_exp_target_india
+		trigger_event_non_silently = pp_expedition.20
+	}
+
+	ai_chance_to_check = { value = pp_exp_ai_check_chance }
+
+	utility = {
+		value = pp_exp_utility_base
+		if = {
+			limit = { tag = POR }
+			add = 30
+		}
+	}
+
+	leader_utility = {
+		value = 1
+		if = {
+			limit = { is_explorer = yes }
+			add = 5
+		}
+		if = {
+			limit = { is_admiral = yes }
+			add = 3
+		}
+	}
+}
+
+# 3. Armada of Conquest (Albuquerque: Goa 1510). War for a market centre on the Indian coasts.
+pp_exp_malabar_war = {
+	unique = yes
+	repeatable = no
+	travel_speed = 1
+	dynamic_first_waypoint = yes
+	origin = none
+	travel_mode = sea
+	category = military
+	show_end_message = no
+
+	potential = {
+		pp_exp_european_seafarer = yes
+		has_variable = pp_exp_done_india
+		NOT = { has_variable = pp_exp_done_malabar_war }
+	}
+
+	can_start = {
+		pp_exp_india_war_target_available = yes
+		navy_size >= 15
+		gold >= pp_exp_reserve_armada
+		at_war = no
+	}
+
+	leader = { pp_exp_leader = yes }
+
+	ai_leader_source_list = {
+		every_character = {
+			limit = { pp_exp_leader = yes }
+			add_to_list = source
+		}
+	}
+
+	on_start = {
+		pp_exp_log_effect = { STAGE = start TYPE = pp_exp_malabar_war }
+		pp_exp_pay_effect = { COST = pp_exp_cost_armada }
+		pp_exp_depart_effect = yes
+		location:goa = { add_to_list = pp_exp_candidates }
+		location:kozhikode = { add_to_list = pp_exp_candidates }
+		location:kochi = { add_to_list = pp_exp_candidates }
+		location:diu = { add_to_list = pp_exp_candidates }
+		location:surat = { add_to_list = pp_exp_candidates }
+		ordered_in_list = {
+			list = pp_exp_candidates
+			limit = { pp_exp_india_war_site = yes }
+			order_by = {
+				value = market.location.population
+			}
+			max = 1
+			market = {
+				location = { save_scope_as = pp_exp_target }
+			}
+		}
+		if = {
+			limit = { NOT = { exists = scope:pp_exp_target } }
+			location:goa = { save_scope_as = pp_exp_target }
+		}
+		set_variable = { name = pp_exp_target_malabar_war value = scope:pp_exp_target }
+		scope:expedition = {
+			add_new_waypoint = location:good_hope_cape
+			add_new_waypoint = location:malindi
+			add_new_waypoint = scope:pp_exp_target
+		}
+	}
+
+	on_arrive_to_new_location = {
+		discover_area = scope:location.area
+	}
+
+	on_end = {
+		pp_exp_log_effect = { STAGE = end TYPE = pp_exp_malabar_war }
+		trigger_event_non_silently = pp_expedition.3
+	}
+
+	on_fail = {
+		pp_exp_log_effect = { STAGE = fail TYPE = pp_exp_malabar_war }
+		remove_variable = pp_exp_target_malabar_war
+		trigger_event_non_silently = pp_expedition.20
+	}
+
+	ai_chance_to_check = { value = pp_exp_ai_check_chance }
+
+	utility = {
+		value = pp_exp_utility_base
+		if = {
+			limit = { tag = POR }
+			add = 20
+		}
+	}
+
+	leader_utility = {
+		value = 1
+		if = {
+			limit = { is_admiral = yes }
+			add = 5
+		}
+		if = {
+			limit = { is_explorer = yes }
+			add = 2
+		}
+	}
+}
+
+# 4. Armada to Malacca (1511). War for the market centre of the straits.
+pp_exp_malacca_armada = {
+	unique = yes
+	repeatable = no
+	travel_speed = 1
+	dynamic_first_waypoint = yes
+	origin = none
+	travel_mode = sea
+	category = military
+	show_end_message = no
+
+	potential = {
+		pp_exp_european_seafarer = yes
+		pp_exp_has_indies_foothold = yes
+		NOT = { has_variable = pp_exp_done_malacca }
+	}
+
+	can_start = {
+		location:malacca = { pp_exp_war_site = yes }
+		navy_size >= 15
+		gold >= pp_exp_reserve_armada
+		at_war = no
+	}
+
+	leader = { pp_exp_leader = yes }
+
+	ai_leader_source_list = {
+		every_character = {
+			limit = { pp_exp_leader = yes }
+			add_to_list = source
+		}
+	}
+
+	on_start = {
+		pp_exp_log_effect = { STAGE = start TYPE = pp_exp_malacca_armada }
+		pp_exp_pay_effect = { COST = pp_exp_cost_armada }
+		pp_exp_depart_effect = yes
+		location:malacca = {
+			market ?= {
+				location ?= { save_scope_as = pp_exp_target }
+			}
+		}
+		if = {
+			limit = { NOT = { exists = scope:pp_exp_target } }
+			location:malacca = { save_scope_as = pp_exp_target }
+		}
+		set_variable = { name = pp_exp_target_malacca value = scope:pp_exp_target }
+		scope:expedition = {
+			add_new_waypoint = location:good_hope_cape
+			add_new_waypoint = location:galle
+			add_new_waypoint = scope:pp_exp_target
+		}
+	}
+
+	on_arrive_to_new_location = {
+		discover_area = scope:location.area
+	}
+
+	on_end = {
+		pp_exp_log_effect = { STAGE = end TYPE = pp_exp_malacca_armada }
+		trigger_event_non_silently = pp_expedition.4
+	}
+
+	on_fail = {
+		pp_exp_log_effect = { STAGE = fail TYPE = pp_exp_malacca_armada }
+		remove_variable = pp_exp_target_malacca
+		trigger_event_non_silently = pp_expedition.20
+	}
+
+	ai_chance_to_check = { value = pp_exp_ai_check_chance }
+
+	utility = {
+		value = pp_exp_utility_base
+		if = {
+			limit = { tag = POR }
+			add = 20
+		}
+	}
+
+	leader_utility = {
+		value = 1
+		if = {
+			limit = { is_admiral = yes }
+			add = 5
+		}
+		if = {
+			limit = { is_explorer = yes }
+			add = 2
+		}
+	}
+}
+
+# 5. Voyage to the Spice Islands (Ternate 1522, Banda 1621). Foothold among the clove and nutmeg islands.
+pp_exp_spice_islands = {
+	unique = yes
+	repeatable = no
+	travel_speed = 0.9
+	dynamic_first_waypoint = yes
+	origin = none
+	travel_mode = sea
+	category = commercial
+	show_end_message = no
+
+	potential = {
+		pp_exp_european_seafarer = yes
+		pp_exp_has_indies_foothold = yes
+		NOT = { has_variable = pp_exp_done_spice }
+	}
+
+	can_start = {
+		OR = {
+			has_variable = pp_exp_done_malacca
+			current_age_or_later = { age = age_4_reformation }
+		}
+		navy_size >= 10
+		gold >= pp_exp_reserve_armada
+		at_war = no
+	}
+
+	leader = { pp_exp_leader = yes }
+
+	ai_leader_source_list = {
+		every_character = {
+			limit = { pp_exp_leader = yes }
+			add_to_list = source
+		}
+	}
+
+	on_start = {
+		pp_exp_log_effect = { STAGE = start TYPE = pp_exp_spice_islands }
+		pp_exp_pay_effect = { COST = pp_exp_cost_armada }
+		pp_exp_depart_effect = yes
+		location:ternate = { add_to_list = pp_exp_candidates }
+		location:tidore = { add_to_list = pp_exp_candidates }
+		location:banda_island = { add_to_list = pp_exp_candidates }
+		ordered_in_list = {
+			list = pp_exp_candidates
+			limit = {
+				OR = {
+					has_owner = no
+					owner = { NOT = { is_at_war_with = root } }
+				}
+			}
+			order_by = {
+				value = 100000
+				if = {
+					limit = { has_owner = yes }
+					subtract = owner.country_tax_base
+				}
+			}
+			max = 1
+			save_scope_as = pp_exp_target
+		}
+		if = {
+			limit = { NOT = { exists = scope:pp_exp_target } }
+			location:ternate = { save_scope_as = pp_exp_target }
+		}
+		set_variable = { name = pp_exp_target_spice value = scope:pp_exp_target }
+		scope:expedition = {
+			add_new_waypoint = location:good_hope_cape
+			add_new_waypoint = location:malacca
+			add_new_waypoint = scope:pp_exp_target
+		}
+	}
+
+	on_monthly = {
+		if = {
+			limit = {
+				scope:expedition = {
+					expedition_is_traveling = yes
+					NOT = { expedition_is_paused = yes }
+				}
+			}
+			random = {
+				chance = 1
+				fail_expedition = scope:expedition
+			}
+		}
+	}
+
+	on_arrive_to_new_location = {
+		discover_area = scope:location.area
+	}
+
+	on_end = {
+		pp_exp_log_effect = { STAGE = end TYPE = pp_exp_spice_islands }
+		trigger_event_non_silently = pp_expedition.5
+	}
+
+	on_fail = {
+		pp_exp_log_effect = { STAGE = fail TYPE = pp_exp_spice_islands }
+		remove_variable = pp_exp_target_spice
+		trigger_event_non_silently = pp_expedition.20
+	}
+
+	ai_chance_to_check = { value = pp_exp_ai_check_chance }
+
+	utility = {
+		value = pp_exp_utility_base
+		if = {
+			limit = {
+				OR = {
+					tag = POR
+					tag = HOL
+					tag = NED
+				}
+			}
+			add = 20
+		}
+	}
+
+	leader_utility = {
+		value = 1
+		if = {
+			limit = { is_explorer = yes }
+			add = 5
+		}
+		if = {
+			limit = { is_admiral = yes }
+			add = 3
+		}
+	}
+}
+
+# 6. Embassy to the Celestial Court (Tome Pires 1517, Macau 1557). A harbour licence on the China coast.
+pp_exp_china_embassy = {
+	unique = yes
+	repeatable = yes
+	travel_speed = 1
+	dynamic_first_waypoint = yes
+	origin = none
+	travel_mode = sea
+	category = diplomatic
+	show_end_message = no
+
+	potential = {
+		pp_exp_european_seafarer = yes
+		pp_exp_has_indies_foothold = yes
+		NOT = { has_variable = pp_exp_done_china }
+	}
+
+	can_start = {
+		OR = {
+			has_variable = pp_exp_done_malacca
+			has_variable = pp_exp_done_spice
+			current_age_or_later = { age = age_4_reformation }
+		}
+		location:xiangshan_xinhui = {
+			has_owner = yes
+			NOT = { owner = root }
+			owner = { NOT = { is_at_war_with = root } }
+		}
+		NOT = { has_cooldown = pp_exp_china_cooldown }
+		gold >= pp_exp_reserve_armada
+		at_war = no
+	}
+
+	leader = { pp_exp_leader = yes }
+
+	ai_leader_source_list = {
+		every_character = {
+			limit = { pp_exp_leader = yes }
+			add_to_list = source
+		}
+	}
+
+	on_start = {
+		pp_exp_log_effect = { STAGE = start TYPE = pp_exp_china_embassy }
+		add_cooldown = {
+			type = pp_exp_china_cooldown
+			years = 10
+		}
+		pp_exp_pay_effect = { COST = pp_exp_cost_armada }
+		pp_exp_depart_effect = yes
+		location:xiangshan_xinhui = { save_scope_as = pp_exp_target }
+		set_variable = { name = pp_exp_target_china value = scope:pp_exp_target }
+		scope:expedition = {
+			add_new_waypoint = location:good_hope_cape
+			add_new_waypoint = location:malacca
+			add_new_waypoint = scope:pp_exp_target
+		}
+	}
+
+	on_arrive_to_new_location = {
+		discover_area = scope:location.area
+	}
+
+	on_end = {
+		pp_exp_log_effect = { STAGE = end TYPE = pp_exp_china_embassy }
+		trigger_event_non_silently = pp_expedition.6
+	}
+
+	on_fail = {
+		pp_exp_log_effect = { STAGE = fail TYPE = pp_exp_china_embassy }
+		remove_variable = pp_exp_target_china
+		trigger_event_non_silently = pp_expedition.20
+	}
+
+	ai_chance_to_check = { value = pp_exp_ai_check_chance }
+
+	utility = {
+		value = pp_exp_utility_base
+		if = {
+			limit = { tag = POR }
+			add = 20
+		}
+	}
+
+	leader_utility = {
+		value = 1
+		if = {
+			limit = { is_explorer = yes }
+			add = 3
+		}
+	}
+}
+
+# 7. The Manila Galleon (Legazpi 1565-1571). A Pacific harbour linking American silver to Chinese silk.
+pp_exp_manila_galleon = {
+	unique = yes
+	repeatable = no
+	travel_speed = 0.9
+	dynamic_first_waypoint = yes
+	origin = none
+	travel_mode = sea
+	category = commercial
+	show_end_message = no
+
+	potential = {
+		pp_exp_european_seafarer = yes
+		NOT = { has_variable = pp_exp_done_manila }
+	}
+
+	can_start = {
+		current_age_or_later = { age = age_4_reformation }
+		OR = {
+			any_owned_location = {
+				count >= 5
+				continent = continent:america
+			}
+			has_variable = pp_exp_done_spice
+		}
+		navy_size >= 15
+		gold >= pp_exp_reserve_armada
+		at_war = no
+	}
+
+	leader = { pp_exp_leader = yes }
+
+	ai_leader_source_list = {
+		every_character = {
+			limit = { pp_exp_leader = yes }
+			add_to_list = source
+		}
+	}
+
+	on_start = {
+		pp_exp_log_effect = { STAGE = start TYPE = pp_exp_manila_galleon }
+		pp_exp_pay_effect = { COST = pp_exp_cost_armada }
+		ordered_owned_location = {
+			limit = {
+				is_port = yes
+				continent = continent:america
+			}
+			order_by = population
+			max = 1
+			save_scope_as = pp_exp_departure
+		}
+		scope:expedition = {
+			if = {
+				limit = { exists = expedition_leader }
+				remove_commander = expedition_leader
+			}
+		}
+		if = {
+			limit = { exists = scope:pp_exp_departure }
+			scope:expedition = { add_new_waypoint = scope:pp_exp_departure }
+		}
+		else = {
+			pp_exp_depart_effect = yes
+			scope:expedition = {
+				add_new_waypoint = location:good_hope_cape
+				add_new_waypoint = location:malacca
+			}
+		}
+		location:maynila = { save_scope_as = pp_exp_target }
+		set_variable = { name = pp_exp_target_manila value = scope:pp_exp_target }
+		scope:expedition = {
+			add_new_waypoint = scope:pp_exp_target
+		}
+	}
+
+	on_monthly = {
+		if = {
+			limit = {
+				scope:expedition = {
+					expedition_is_traveling = yes
+					NOT = { expedition_is_paused = yes }
+				}
+			}
+			random = {
+				chance = 1
+				fail_expedition = scope:expedition
+			}
+		}
+	}
+
+	on_arrive_to_new_location = {
+		discover_area = scope:location.area
+	}
+
+	on_end = {
+		pp_exp_log_effect = { STAGE = end TYPE = pp_exp_manila_galleon }
+		trigger_event_non_silently = pp_expedition.9
+	}
+
+	on_fail = {
+		pp_exp_log_effect = { STAGE = fail TYPE = pp_exp_manila_galleon }
+		remove_variable = pp_exp_target_manila
+		trigger_event_non_silently = pp_expedition.20
+	}
+
+	ai_chance_to_check = { value = pp_exp_ai_check_chance }
+
+	utility = {
+		value = pp_exp_utility_base
+		if = {
+			limit = {
+				OR = {
+					tag = CAS
+					tag = SPA
+				}
+			}
+			add = 30
+		}
+	}
+
+	leader_utility = {
+		value = 1
+		if = {
+			limit = { is_explorer = yes }
+			add = 5
+		}
+		if = {
+			limit = { is_admiral = yes }
+			add = 3
+		}
+	}
+}
+
+# 8. Company Voyage to the Indies (EIC 1600, VOC 1602, Compagnie des Indes 1664). Repeatable: each voyage opens a
+# company factory in the richest Asian market centre where the country has none yet, and may fight a rival for it.
+pp_exp_company_voyage = {
+	unique = yes
+	repeatable = yes
+	travel_speed = 1
+	dynamic_first_waypoint = yes
+	origin = none
+	travel_mode = sea
+	category = commercial
+	show_end_message = no
+
+	potential = {
+		pp_exp_european_seafarer = yes
+	}
+
+	can_start = {
+		OR = {
+			has_advance = trade_companies_advance
+			has_advance = chartered_companies
+		}
+		pp_exp_knows_cape_route = yes
+		pp_exp_company_target_available = yes
+		NOT = { has_cooldown = pp_exp_company_cooldown }
+		navy_size >= 15
+		gold >= pp_exp_reserve_company
+		at_war = no
+	}
+
+	leader = { pp_exp_leader = yes }
+
+	ai_leader_source_list = {
+		every_character = {
+			limit = { pp_exp_leader = yes }
+			add_to_list = source
+		}
+	}
+
+	on_start = {
+		pp_exp_log_effect = { STAGE = start TYPE = pp_exp_company_voyage }
+		add_cooldown = {
+			type = pp_exp_company_cooldown
+			years = 15
+		}
+		pp_exp_pay_effect = { COST = pp_exp_cost_company }
+		pp_exp_depart_effect = yes
+		ordered_market_in_world = {
+			limit = {
+				location ?= { pp_exp_company_site = yes }
+			}
+			order_by = {
+				value = location.population
+			}
+			max = 1
+			location = { save_scope_as = pp_exp_target }
+		}
+		if = {
+			limit = { NOT = { exists = scope:pp_exp_target } }
+			location:surat = { save_scope_as = pp_exp_target }
+		}
+		set_variable = { name = pp_exp_target_company value = scope:pp_exp_target }
+		scope:expedition = {
+			add_new_waypoint = location:good_hope_cape
+			add_new_waypoint = scope:pp_exp_target
+		}
+	}
+
+	on_monthly = {
+		if = {
+			limit = {
+				scope:expedition = {
+					expedition_is_traveling = yes
+					NOT = { expedition_is_paused = yes }
+				}
+			}
+			random = {
+				chance = 1
+				fail_expedition = scope:expedition
+			}
+		}
+	}
+
+	on_arrive_to_new_location = {
+		discover_area = scope:location.area
+	}
+
+	on_end = {
+		pp_exp_log_effect = { STAGE = end TYPE = pp_exp_company_voyage }
+		trigger_event_non_silently = pp_expedition.10
+	}
+
+	on_fail = {
+		pp_exp_log_effect = { STAGE = fail TYPE = pp_exp_company_voyage }
+		remove_variable = pp_exp_target_company
+		trigger_event_non_silently = pp_expedition.20
+	}
+
+	ai_chance_to_check = { value = pp_exp_ai_check_chance }
+
+	utility = {
+		value = pp_exp_utility_base
+		if = {
+			limit = {
+				OR = {
+					tag = ENG
+					tag = GBR
+					tag = HOL
+					tag = NED
+					tag = FRA
+				}
+			}
+			add = 30
+		}
+	}
+
+	leader_utility = {
+		value = 1
+		if = {
+			limit = { is_explorer = yes }
+			add = 3
+		}
+		if = {
+			limit = { is_admiral = yes }
+			add = 3
+		}
+	}
+}

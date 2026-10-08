@@ -1,0 +1,76 @@
+﻿# PP colonial expeditions (docs/expeditions.md): country modifiers granted by expedition outcomes. Permanent unless
+# the event gives a duration.
+
+pp_exp_mina_gold_trade = {
+	game_data = {
+		category = country
+		decaying = no
+	}
+	import_efficiency = 0.05
+	colonial_range_modifier = 0.1
+}
+
+pp_exp_carreira_da_india = {
+	game_data = {
+		category = country
+		decaying = no
+	}
+	selling_efficiency = 0.05
+	import_efficiency = 0.05
+	naval_range_modifier = 0.1
+}
+
+pp_exp_armada_of_conquest = {
+	game_data = {
+		category = country
+		decaying = no
+	}
+	global_garrison_size_modifier = 0.1
+	monthly_prestige = 0.1
+}
+
+pp_exp_lord_of_the_straits = {
+	game_data = {
+		category = country
+		decaying = no
+	}
+	global_merchant_capacity_modifier = 0.1
+	selling_efficiency = 0.05
+}
+
+pp_exp_spice_monopoly = {
+	game_data = {
+		category = country
+		decaying = no
+	}
+	selling_efficiency = 0.05
+	global_merchant_capacity_modifier = 0.05
+}
+
+pp_exp_canton_licence = {
+	game_data = {
+		category = country
+		decaying = no
+	}
+	import_efficiency = 0.1
+	global_merchant_capacity_modifier = 0.05
+}
+
+pp_exp_manila_galleon = {
+	game_data = {
+		category = country
+		decaying = no
+	}
+	selling_efficiency = 0.05
+	import_efficiency = 0.05
+	colonial_range_modifier = 0.1
+}
+
+pp_exp_company_charter = {
+	game_data = {
+		category = country
+		decaying = no
+	}
+	global_merchant_capacity_modifier = 0.1
+	naval_range_modifier = 0.1
+}

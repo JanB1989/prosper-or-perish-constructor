@@ -1,0 +1,54 @@
+﻿# PP colonial expeditions (docs/expeditions.md): costs and AI utility. Country scope.
+
+# One unit of scaled gold, as vanilla's change_gold_effect = { scale = 1 }.
+pp_exp_gold_unit = {
+	value = 1
+	add = {
+		value = capital_wealth
+		multiply = 0.2
+	}
+	add = {
+		value = country_economical_base
+		multiply = 0.05
+	}
+	min = 20
+}
+
+# Fitting out: a light squadron, a war fleet with soldiers, a company fleet.
+pp_exp_cost_light = {
+	value = pp_exp_gold_unit
+	multiply = 4
+}
+pp_exp_cost_armada = {
+	value = pp_exp_gold_unit
+	multiply = 8
+}
+pp_exp_cost_company = {
+	value = pp_exp_gold_unit
+	multiply = 10
+}
+
+# Gold the treasury must hold before the AI or player can launch (the cost plus a reserve of half of it).
+pp_exp_reserve_light = {
+	value = pp_exp_cost_light
+	multiply = 1.5
+}
+pp_exp_reserve_armada = {
+	value = pp_exp_cost_armada
+	multiply = 1.5
+}
+pp_exp_reserve_company = {
+	value = pp_exp_cost_company
+	multiply = 1.5
+}
+
+# AI utility: every expedition starts from the same base; the colonial powers that historically led each venture
+# score higher, so the right country moves first when several qualify.
+pp_exp_utility_base = {
+	value = 40
+}
+
+# Monthly chance that the AI looks at one of these expeditions once its gates are open.
+pp_exp_ai_check_chance = {
+	value = 0.5
+}

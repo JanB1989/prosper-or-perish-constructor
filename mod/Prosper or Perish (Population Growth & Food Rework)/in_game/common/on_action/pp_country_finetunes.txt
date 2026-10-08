@@ -3,6 +3,7 @@ on_game_start = {
 	on_actions = {
 		pp_country_finetune_start_gold
 		pp_country_finetune_area_preferences
+		pp_iberian_truce
 		delay = { days = 1 }
 		pp_colonizer_area_preferences
 	}
@@ -12,8 +13,48 @@ on_game_start = {
 # after it.
 on_new_age_global = {
 	on_actions = {
+		pp_iberian_truce
 		delay = { days = 1 }
 		pp_colonizer_area_preferences
+	}
+}
+
+# Iberian truce (docs/country_finetunes.md): while the Reconquista is open, AI Castile/Spain and AI Portugal hold a
+# mutual truce for the age (100 years, renewed at each new age while it stays open). The never_attack expansion score
+# (ai_scripted_expansion_score/pp_reconquista.txt) only zeroes planned wars; run pp_exp3 (2026-10-08) still had Castile
+# declare war on Portugal in 1470 and take the Algarve and Alentejo. A human ruler of either is never bound.
+pp_iberian_truce = {
+	effect = {
+		if = {
+			limit = {
+				exists = c:POR
+				c:POR = { is_ai = yes }
+				OR = {
+					pp_reconquista_iberia_open = yes
+					pp_reconquista_maghreb_open = yes
+				}
+			}
+			c:CAS ?= {
+				if = {
+					limit = { is_ai = yes }
+					add_truce_with = {
+						target = c:POR
+						mutual = yes
+						years = 100
+					}
+				}
+			}
+			c:SPA ?= {
+				if = {
+					limit = { is_ai = yes }
+					add_truce_with = {
+						target = c:POR
+						mutual = yes
+						years = 100
+					}
+				}
+			}
+		}
 	}
 }
 

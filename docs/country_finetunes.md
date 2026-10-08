@@ -70,3 +70,8 @@ between wars. Test runs should use `ai_personalities_historical`, or restore the
   ignores antagonism, 24 months of peace). Why: run c4831a96 still had Granada in 1497; run 40148576 had Castile at
   peace 1387-1402 beside a 16-location Granada without attacking it, and by 1452 Morocco had taken Granada (15 Iberian
   locations), which the capital-in-Iberia Reconquista target no longer saw.
+- **Castile/Spain and Portugal: Iberian truce** (2026-10-08, branch expeditions, `on_action/pp_country_finetunes.txt`
+  pp_iberian_truce): at game start and each new age, while the Reconquista is open (a Muslim country ruling from Iberia
+  or the Maghreb), AI CAS/SPA and AI Portugal get a mutual 100-year truce; never when either is played. Why: the
+  never_attack score only zeroes planned wars; in run pp_exp3 (from 1452, historical personalities) Castile still
+  declared war on Portugal in 1470 and took the Algarve and Alentejo (Portugal 78 -> 37 locations by 1477).

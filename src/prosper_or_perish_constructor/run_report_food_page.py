@@ -233,9 +233,11 @@ FOOD_JS = r"""
       const total = [...packers.values()].reduce((a, v) => a + v, 0);
       if (total > 0) for (const [b, amount] of packers) {
         const share = amount / total, id = 'vp' + b, kind = (GI.buildings[b] || {}).id, grange = kind === 'grange';
-        node(id, grange ? 'Granges (from the stores)' : kind === '_other' ? 'Victuals from elsewhere (no recipe)' : bName(b), 1, grange ? '#a0522d' : kind === '_other' ? '#9a9a96' : '#7d8b2a');
-        link(id, label['g2_' + vi] != null ? 'g2_' + vi : 'g2_rest', used * share, `${num(amount)} victuals packed per month`);
-        if (!grange) for (const [g, sh, am] of inputShares(D.bIn.get(b))) {
+        const idle = kind === '_idle', other = kind === '_other';
+        node(id, grange ? 'Granges (from the stores)' : idle ? 'Idle peasants (base production)' : other ? 'Victuals from elsewhere (no recipe)' : bName(b), 1,
+             grange ? '#a0522d' : idle ? '#9c7a3c' : other ? '#9a9a96' : '#7d8b2a');
+        link(id, label['g2_' + vi] != null ? 'g2_' + vi : 'g2_rest', used * share, `${num(amount)} victuals ${idle ? 'made' : 'packed'} per month`);
+        if (!grange && !idle) for (const [g, sh, am] of inputShares(D.bIn.get(b))) {
           const gid = 'g0_' + g;
           node(gid, goodName(g), 0, goodColor(g)); goodOf[gid] = g;
           link(gid, id, used * share * sh, `${num(am)} ${goodName(g)} bought per month`);
@@ -266,7 +268,7 @@ FOOD_JS = r"""
         link('grange', 'vict', T.taken, `${num(packed)} victuals packed per month`);
       }
     }
-    if (T.unexplained > 0) { node('unexpl', 'Unexplained loss', 6, '#d8c9c6'); link('store', 'unexpl', T.unexplained); }
+    if (T.unexplained > 0) { node('unexpl', 'Other draws (armies, unexplained)', 6, '#d8c9c6'); link('store', 'unexpl', T.unexplained); }
 
     // merge parallel links, drop unused nodes, close the gaps between columns
     const merged = new Map();

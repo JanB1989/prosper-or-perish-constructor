@@ -15,16 +15,18 @@ def _recipes() -> rg.Recipes:
     recipes.workers = pl.DataFrame({"building_type": ["weaver", "sheep_farm"], "workers_per_level": [0.5, 1.0]})
     recipes.method_building = {"weave": "weaver", "graze": "sheep_farm"}
     recipes.categories = {"weaver": "crafts_category", "sheep_farm": "farm_category"}
+    recipes.base_production = {"wool": 0.5}
     recipes.digest = "test"
     return recipes
 
 
 def _dataset(root: Path) -> Path:
-    """One save, two markets: Paris (western_europe) weaves cloth from its wool RGO and a sheep farm, London weaves
-    at half staffing and imports wool."""
+    """One save, two markets: Paris (western_europe) weaves cloth from its wool RGO, a sheep farm and its 2k idle
+    peasants' base production (0.5 wool per 1,000), London weaves at half staffing and imports wool."""
     tables = {
         "locations": {"location_id": [1, 2], "slug": ["paris", "london"], "market_id": [1, 2], "raw_material": ["wool", None],
-                      "rgo_employed": [2.0, 0.0], "macro_region": ["western_europe", "british_isles"], "super_region": ["europe", "europe"]},
+                      "rgo_employed": [2.0, 0.0], "macro_region": ["western_europe", "british_isles"], "super_region": ["europe", "europe"],
+                      "unemployed_peasants": [2.0, 0.0]},
         "markets": {"market_id": [1, 2], "center_location_id": [1, 2]},
         "buildings": {"building_id": [10, 11, 12], "building_type": ["weaver", "weaver", "sheep_farm"], "location_id": [1, 2, 1],
                       "market_id": [1, 2, 1], "level": [2.0, 1.0, 1.0], "employed": [1.0, 0.25, 1.0]},
@@ -69,8 +71,11 @@ def test_save_flows_add_up_to_the_market_totals(tmp_path: Path) -> None:
     assert cloth["western_europe"]["recipe"] == pytest.approx(2.0) and cloth["western_europe"]["amount"] == pytest.approx(3.0)
     assert cloth["british_isles"]["recipe"] == pytest.approx(0.5) and cloth["british_isles"]["amount"] == pytest.approx(1.0)
     wool = {r["building_type"]: r for r in producers.filter(pl.col("good_id") == "wool").iter_rows(named=True)}
-    assert set(wool) == {"sheep_farm", rg.RGO} and all(r["amount"] > 0 for r in wool.values())
+    assert set(wool) == {"sheep_farm", rg.RGO, rg.IDLE} and all(r["amount"] > 0 for r in wool.values())
     assert wool[rg.RGO]["workers"] == pytest.approx(2.0) and wool["sheep_farm"]["levels"] == pytest.approx(1.0)
+    # the idle peasants' base production comes off first: 2k x 0.5; the farm and the RGO share the other 9
+    assert wool[rg.IDLE]["amount"] == pytest.approx(1.0) and wool[rg.IDLE]["workers"] == pytest.approx(2.0)
+    assert wool["sheep_farm"]["amount"] + wool[rg.RGO]["amount"] == pytest.approx(9.0)
     used = {r["region"]: r for r in flows["consumers"].iter_rows(named=True)}
     assert used["western_europe"]["wanted"] == pytest.approx(4.0) and used["western_europe"]["received"] == pytest.approx(3.0)
     assert used["british_isles"]["received"] == pytest.approx(1.0)

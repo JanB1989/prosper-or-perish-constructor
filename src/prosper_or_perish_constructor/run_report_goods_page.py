@@ -156,13 +156,13 @@ GOODS_JS = r"""
     for (const r of rows.x) if (inRegion(r[1])) { imports += r[2] || 0; exports += r[3] || 0; }
     const bIn = IX.supply.reduce((a, s, i) => a + (s.id === 'BurgherTrades' ? sup[i] : 0), 0);
     const bOut = IX.demand.reduce((a, d, i) => a + (d.id === 'BurgherTrades' ? dem[i].received : 0), 0);
-    const recipeMade = producers.filter(e => IX.buildings[e.b].id !== 'rgo' && IX.buildings[e.b].id !== '_other').reduce((a, e) => [a[0] + (e.t.amount || 0), a[1] + (e.t.recipe || 0)], [0, 0]);
+    const recipeMade = producers.filter(e => !['rgo', '_other', '_idle'].includes(IX.buildings[e.b].id)).reduce((a, e) => [a[0] + (e.t.amount || 0), a[1] + (e.t.recipe || 0)], [0, 0]);
     return {g, producers, consumers, dem, sup, mk, made, used: usedB + usedD, usedB, usedD, wanted, imports, exports, burgher: bIn - bOut,
             efficiency: recipeMade[1] > 0 ? recipeMade[0] / recipeMade[1] : null};
   }
 
   // ---------------------------------------------------------------- flow chart
-  const COL = {producer: '#2a78d6', rgo: '#c98a00', other: '#9a9a96', consumer: '#eb6834', trade: '#5fb8c4', burgher: '#00a3a3', stock: '#8c8c88'};
+  const COL = {producer: '#2a78d6', rgo: '#c98a00', idle: '#9c7a3c', other: '#9a9a96', consumer: '#eb6834', trade: '#5fb8c4', burgher: '#00a3a3', stock: '#8c8c88'};
   function flowOption(D, X) {
     const g = X.g, pg = goodPrice(g);
     const nodes = [], links = [], label = {}, title = {}, goodOf = {}, amounts = {};
@@ -176,7 +176,7 @@ GOODS_JS = r"""
     // producer nodes
     let pnodes = [];
     for (const e of X.producers) {
-      const bid = IX.buildings[e.b].id, kind = bid === 'rgo' ? 'rgo' : bid === '_other' ? 'other' : 'producer';
+      const bid = IX.buildings[e.b].id, kind = bid === 'rgo' ? 'rgo' : bid === '_other' ? 'other' : bid === '_idle' ? 'idle' : 'producer';
       if (byMethod && kind === 'producer') for (const me of e.methods.values()) pnodes.push({id: 'pm' + me.m, text: mName(me.m), full: `${mName(me.m)} (${bName(e.b)})`, methods: [me.m], amount: me.t.amount || 0, color: COL.producer});
       else pnodes.push({id: 'pb' + e.b, text: bName(e.b), methods: [...e.methods.keys()].filter(m => m >= 0), amount: e.t.amount || 0, color: COL[kind]});
     }
@@ -352,13 +352,13 @@ GOODS_JS = r"""
     let h = `<table class=gt><thead><tr><th>Producer</th><th class=num>Per month</th><th class=num>Value</th><th class=num>Share</th><th class=num title="Building levels running these methods">Levels</th><th class=num>Buildings</th><th class=num title="Workers, thousands">Workers</th><th class=num title="What they made ÷ their recipe (output per level × levels × staffing): production efficiency, output modifiers, throughput, input shortages and market access, roughly">Output ÷ recipe</th></tr></thead><tbody>`;
     X.producers.forEach((e, k) => {
       let h = '';
-      const bid = IX.buildings[e.b].id, rgo = bid === 'rgo', other = bid === '_other';
+      const bid = IX.buildings[e.b].id, rgo = bid === 'rgo', idle = bid === '_idle', other = bid === '_other' || idle;
       const t = e.t, methods = [...e.methods.values()].filter(me => me.m >= 0).sort((a, b) => (b.t.amount || 0) - (a.t.amount || 0));
       const flat = !methods.length;
       const cat = IX.buildings[e.b].cat ? `<span class=cat>${esc(IX.buildings[e.b].cat.replace(/_/g, ' '))}</span>` : '';
       h += `<tr class="grp${flat ? ' flat' : ''}" data-k="p${k}"><td><span class=tog>${flat ? '' : '▸'}</span>${esc(bName(e.b))}${rgo ? `<span class=cat>raw material, ${esc(goodName(X.g))}</span>` : cat}</td>` +
         `<td class=num>${num(t.amount)}</td><td class=num>${num((t.amount || 0) * pg)}</td><td class=num>${sbar((t.amount || 0) / total)}${pct((t.amount || 0) / total)}</td>` +
-        `<td class=num>${rgo || other ? '–' : num(t.levels)}</td><td class=num>${other ? '–' : num(t.count)}${rgo ? '<span class=cat>locations</span>' : ''}</td><td class=num>${other ? '–' : num(t.workers)}</td>` +
+        `<td class=num>${rgo || other ? '–' : num(t.levels)}</td><td class=num>${other ? '–' : num(t.count)}${rgo ? '<span class=cat>locations</span>' : ''}</td><td class=num>${other && !idle ? '–' : num(t.workers)}${idle ? '<span class=cat>idle peasants</span>' : ''}</td>` +
         `<td class=num title="${rgo ? 'per 1,000 RGO workers' : ''}">${other ? '–' : ratio(t.recipe > 0 ? t.amount / t.recipe : null)}</td></tr>`;
       for (const me of methods) {
         const mt = me.t;

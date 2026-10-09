@@ -14,7 +14,9 @@
   type, for the charts over the run.
 
 How production is split. A market's totals per good are exact (`supplied_Production`, `demanded_Building`,
-`taken_Building`). The save does not say which building made how much, so every producer gets a recipe estimate =
+`taken_Building`). A good's `base_production` x the market's idle peasants (thousands) is part of that production
+and comes off first ("Idle peasants (base production)"; the saves match it to the fifth digit). The save does not
+say which building made how much of the rest, so every producer gets a recipe estimate =
 its active method's output per level x level x staffing (workers / (workers per level x level)); RGOs get their
 workers (one unit per 1,000 workers). The recipe misses production efficiency, output modifiers, throughput, input
 shortages and market access, so per good one factor for buildings and one for RGOs is fitted over all markets
@@ -45,9 +47,10 @@ from prosper_or_perish_constructor.run_report_charts import (
 if TYPE_CHECKING:
     from prosper_or_perish_constructor.run_report import RunData
 
-CACHE_VERSION = "goods-2"
+CACHE_VERSION = "goods-4"
 RGO = "rgo"  # pseudo building of the RGO rows
 OTHER = "_other"  # pseudo building for market totals no recipe explains
+IDLE = "_idle"  # pseudo building of the goods' base production by idle peasants
 # demand that is not a building input: market bucket, label, colour
 DEMAND_BUCKETS: tuple[tuple[str, str, str], ...] = (
     ("Pops", "Pops", "#1baf7a"),
@@ -104,12 +107,15 @@ class Recipes:
 
     def __init__(self, repo: Path, project: Path):
         from eu5gameparser.domain.buildings import load_building_data
+        from eu5gameparser.domain.goods import load_goods_data
 
         from prosper_or_perish_constructor.free_building_levels import resolve_parser_config
+        from prosper_or_perish_constructor.pp_production_sheet import _base_production
 
         config = resolve_parser_config(repo, project)
-        data = load_building_data(profile=str(config.get("profile") or "constructor"),
-                                  load_order_path=repo / str(config.get("load_order") or "constructor.load_order.toml"))
+        profile = str(config.get("profile") or "constructor")
+        load_order = repo / str(config.get("load_order") or "constructor.load_order.toml")
+        data = load_building_data(profile=profile, load_order_path=load_order)
         methods = data.production_methods
         self.outputs = methods.filter(pl.col("produced").is_not_null() & (pl.col("output") > 0)).select(
             pl.col("name").alias("method"), pl.col("produced").alias("good_id"), pl.col("output").alias("per_level"))
@@ -122,9 +128,14 @@ class Recipes:
         self.method_building = dict(methods.select("name", "building").iter_rows())
         self.workers = data.buildings.select(pl.col("name").alias("building_type"), pl.col("employment_size").alias("workers_per_level"))
         self.categories = dict(data.buildings.select("name", "category").iter_rows())
+        # goods' base_production: what every 1,000 idle peasants of a market add to its production
+        goods = load_goods_data(profile=profile, load_order_path=load_order).goods
+        self.base_production = {name: value for name, raw in goods.select("name", "data").iter_rows()
+                                if (value := _base_production(raw))}
         digest = hashlib.sha1()
         for frame in (self.outputs.sort("method", "good_id"), self.inputs.sort("method", "good_id"), self.workers.sort("building_type")):
             digest.update(frame.write_csv().encode())
+        digest.update(json.dumps(self.base_production, sort_keys=True).encode())
         self.digest = digest.hexdigest()[:12]
 
     def recipe(self, method: str) -> dict[str, list[list[Any]]]:
@@ -185,7 +196,7 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
     goods = goods.filter(~pl.col("good_id").is_in(sorted(DUMMY_GOODS)) & (pl.col("default_price") > 0)).with_columns(
         pl.exclude("market_id", "good_id").cast(pl.Float64).fill_null(0.0))
     locations = read("locations", ["location_id", "slug", "market_id", "raw_material", "rgo_employed", "macro_region",
-                                   "super_region"])
+                                   "super_region", "unemployed_peasants"])
     locations = locations.with_columns(pl.when(land_region_expr()).then(pl.col("macro_region")).otherwise(pl.lit(OTHER_REGION)).alias("region"))
     region_of_location = locations.select("location_id", "region")
     markets = read("markets", ["market_id", "center_location_id"]).join(
@@ -218,10 +229,26 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
         pl.lit(None, dtype=pl.String).alias("method"), pl.col("rgo_employed").alias("recipe"), pl.lit(0.0).alias("levels"),
         pl.col("rgo_employed").alias("workers"), pl.lit(1.0).alias("count"))
 
-    # -- producers: fit building / RGO factors per good, split each market's production
+    # -- base production: a good's base_production per 1,000 idle peasants of the market comes first (exact in the
+    # saves, e.g. 0.003 victuals); the buildings and RGOs share the rest
     keys = ["market_id", "good_id"]
+    rates = pl.DataFrame({"good_id": list(recipes.base_production), "rate": list(recipes.base_production.values())},
+                         schema={"good_id": pl.String, "rate": pl.Float64})
+    idle = locations.filter(pl.col("market_id").is_not_null()).group_by("market_id", "region").agg(
+        pl.col("unemployed_peasants").cast(pl.Float64).fill_null(0.0).sum().alias("workers"))
+    base = (
+        idle.join(rates, how="cross").with_columns((pl.col("rate") * pl.col("workers")).alias("recipe"))
+        .filter(pl.col("recipe") > 0)
+        .join(goods.select(*keys, "supplied_Production"), on=keys, how="inner")
+        .with_columns((pl.col("supplied_Production") / pl.col("recipe").sum().over(keys)).clip(upper_bound=1.0).alias("cover"))
+        .with_columns((pl.col("recipe") * pl.col("cover")).alias("amount"))
+    )
+    base_total = base.group_by(keys).agg(pl.col("amount").sum().alias("base"))
+
+    # -- producers: fit building / RGO factors per good, split each market's production
     nominal = (
-        goods.select(*keys, pl.col("supplied_Production").alias("actual"))
+        goods.select(*keys, "supplied_Production").join(base_total, on=keys, how="left")
+        .select(*keys, (pl.col("supplied_Production") - pl.col("base").fill_null(0.0)).clip(lower_bound=0.0).alias("actual"))
         .join(made.group_by(keys).agg(pl.col("recipe").sum().alias("b")), on=keys, how="full", coalesce=True)
         .join(rgo.group_by(keys).agg(pl.col("recipe").sum().alias("r")), on=keys, how="full", coalesce=True)
         .with_columns(pl.col("actual", "b", "r").fill_null(0.0))
@@ -245,17 +272,21 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
     unexplained = scale.filter((pl.col("weighted") <= 0) & (pl.col("actual") > 0)).join(markets, on="market_id", how="left").select(
         "good_id", pl.col("region").fill_null(OTHER_REGION), pl.lit(OTHER).alias("building_type"), pl.lit(None, dtype=pl.String).alias("method"),
         pl.col("actual").alias("amount"), pl.lit(0.0).alias("recipe"), pl.lit(0.0).alias("levels"), pl.lit(0.0).alias("workers"), pl.lit(0.0).alias("count"))
+    idle_rows = base.select("good_id", "region", pl.lit(IDLE).alias("building_type"), pl.lit(None, dtype=pl.String).alias("method"),
+                            "amount", "recipe", pl.lit(0.0).alias("levels"), "workers", pl.lit(0.0).alias("count"))
     group = ["good_id", "building_type", "method", "region"]
     producers = pl.concat([
         producers.group_by(group).agg(pl.col("amount", "levels", "workers", "count", "recipe").sum()),
         unexplained.group_by(group).agg(pl.col("amount", "levels", "workers", "count", "recipe").sum()),
+        idle_rows.group_by(group).agg(pl.col("amount", "levels", "workers", "count", "recipe").sum()),
     ], how="diagonal_relaxed").filter(pl.col("amount") > 0)
 
     # -- building inputs: split what the market's buildings wanted and received over the recipe inputs
     need = used.group_by(keys).agg(pl.col("recipe").sum().alias("total"))
     consumers = (
         used.join(need, on=keys).join(goods.select(*keys, "demanded_Building", "taken_Building"), on=keys, how="inner")
-        .with_columns((pl.col("recipe") / pl.col("total")).alias("w"))
+        # every user of the good in the market unstaffed (recipe 0): split evenly
+        .with_columns(pl.when(pl.col("total") > 0).then(pl.col("recipe") / pl.col("total")).otherwise(1.0 / pl.len().over(keys)).alias("w"))
         .with_columns((pl.col("w") * pl.col("demanded_Building")).alias("wanted"), (pl.col("w") * pl.col("taken_Building")).alias("received"))
         .group_by(group).agg(pl.col("wanted", "received", "recipe").sum())
     )
@@ -479,7 +510,9 @@ def index_payload(run: RunData, built: dict[str, Any], recipes: Recipes, dataset
         if key == RGO:
             buildings.append({"id": key, "name": "RGO", "cat": "rgo"})
         elif key == OTHER:
-            buildings.append({"id": key, "name": "Base production & other sources", "cat": "other"})
+            buildings.append({"id": key, "name": "Other sources (no recipe)", "cat": "other"})
+        elif key == IDLE:
+            buildings.append({"id": key, "name": "Idle peasants (base production)", "cat": "base"})
         else:
             buildings.append({"id": key, "name": clean(building_names.get(key), key),
                               "cat": (recipes.categories.get(key) or "").replace("_category", "")})

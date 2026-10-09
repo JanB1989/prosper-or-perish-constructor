@@ -11,6 +11,7 @@ def _food() -> rf.FoodRecipes:
     """Provisioning makes 2 Province Food per level (wheat farm), Cookshops 15 flat, Granges take 24 per level."""
     food = object.__new__(rf.FoodRecipes)
     food.methods = pl.DataFrame({"method": ["provision_wheat"], "per_level": [2.0]})
+    food.inputs = pl.DataFrame({"method": ["provision_wheat"], "good_id": ["wheat"], "per_level": [0.5]})
     food.workers = pl.DataFrame({"building_type": ["wheat_farm", "cookshop", "grange"], "workers_per_level": [1.0, 0.5, 0.1]})
     food.flat = pl.DataFrame({"building_type": ["cookshop", "grange"], "flat": [15.0, -24.0]})
     food.rgo_food = 1.75
@@ -21,9 +22,10 @@ def _food() -> rf.FoodRecipes:
     return food
 
 
-def _dataset(root: Path, made: float) -> Path:
+def _dataset(root: Path, made: float, wheat_taken: float | None = None) -> Path:
     """One pool (province 7, two locations in Paris): 10k idle peasants, 2 RGO levels, a wheat farm (2 levels, full
-    staff), a Cookshop (1 level, half staffed) and a Grange (1 level)."""
+    staff, Provisioning buys 0.5 wheat per level), a Cookshop (1 level, half staffed) and a Grange (1 level); with
+    `wheat_taken` the market's buildings received that much wheat."""
     pops = {f"population_{p}": [0.0, 0.0] for p in rf.POP_TYPES}
     pops["population_peasants"] = [10.0, 5.0]
     pops["population_nobles"] = [0.5, 0.0]
@@ -36,9 +38,11 @@ def _dataset(root: Path, made: float) -> Path:
                       "total_population": [10.5, 5.0], "unemployed_peasants": [8.0, 2.0], "unemployed_slaves": [0.0, 0.0],
                       "max_raw_material_workers": [2.0, 0.0], **pops},
         "buildings": {"building_id": [1, 2, 3], "building_type": ["wheat_farm", "cookshop", "grange"], "location_id": [1, 1, 2],
-                      "level": [2.0, 1.0, 1.0], "employed": [2.0, 0.25, 0.1], "last_months_profit": [1.0, 0.5, -0.2]},
+                      "market_id": [1, 1, 1], "level": [2.0, 1.0, 1.0], "employed": [2.0, 0.25, 0.1], "last_months_profit": [1.0, 0.5, -0.2]},
         "building_methods": {"building_id": [1, 2], "production_method": ["provision_wheat", "serve_stew"]},
     }
+    if wheat_taken is not None:
+        tables["market_goods"] = {"market_id": [1], "good_id": ["wheat"], "taken_Building": [wheat_taken]}
     dataset = root / "dataset"
     for table, columns in tables.items():
         folder = dataset / "tables" / table / "playthrough_id=run"
@@ -79,6 +83,14 @@ def test_food_sources_fit_the_exact_store_totals(tmp_path: Path) -> None:
     provinces.maps.update({"province": {}, "country": {}})
     encoded = rf.encode_food(flows, index, provinces)
     assert len(encoded["pools"][0]) == len(rf.POOL_COLUMNS)  # one value per pool column the page reads (it adds up "made" itself)
+
+
+def test_province_food_follows_the_inputs_the_market_delivered(tmp_path: Path) -> None:
+    # the farm's Provisioning asks for 2 x 0.5 = 1 wheat; the market's buildings got 0.5, so it makes 4 x 0.5 = 2
+    estimate = 10 * rf.SUBSISTENCE_RATE + 3.5 + 2.0 + 7.5 - 24.0
+    flows = rf.save_food(_dataset(tmp_path, estimate, wheat_taken=0.5), "run", "s1", _food())
+    pool = flows["pools"].row(0, named=True)
+    assert pool["factor"] == pytest.approx(1.0) and pool["farms_pf"] == pytest.approx(2.0)
 
 
 def test_a_pool_beyond_the_factor_limits_keeps_the_rest_as_other_sources(tmp_path: Path) -> None:

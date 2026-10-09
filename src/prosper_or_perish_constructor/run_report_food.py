@@ -11,8 +11,9 @@ The save does not split it, so every source gets an estimate and the estimates a
 
 - subsistence: SUBSISTENCE_RATE per 1,000 idle peasants and slaves;
 - RGOs: the `rgo_level` static modifier's `local_monthly_food` per RGO level (the location's RGO size);
-- Province Food (`local_food`) from buildings: the active methods' output per level x levels x staffing (farms'
-  Provisioning, Taverns' Serve Victuals and Common Table);
+- Province Food (`local_food`) from buildings: the active methods' output per level x levels x staffing x the share
+  of their market inputs that the market's buildings received (farms' Provisioning, Taverns' Serve Victuals and
+  Common Table);
 - flat building food: the building's `local_monthly_food` x levels x staffing (farms' per-level food, Cookshops 15,
   Public Kitchens 18; Granges -24, which is how a Grange takes food from the store to pack victuals).
 
@@ -42,13 +43,13 @@ from typing import TYPE_CHECKING, Any, Callable
 import numpy as np
 import polars as pl
 
-from prosper_or_perish_constructor.run_report_charts import land_region_expr, titleize
+from prosper_or_perish_constructor.run_report_charts import DUMMY_GOODS, land_region_expr, titleize
 
 if TYPE_CHECKING:
     from prosper_or_perish_constructor.run_report import MapCanvas, RunData
     from prosper_or_perish_constructor.run_report_goods import Index, Recipes
 
-CACHE_VERSION = "food-3"
+CACHE_VERSION = "food-5"
 FOOD_GOOD = "local_food"
 SUBSISTENCE_RATE = 1.487  # food per month per 1,000 idle peasants or slaves (decompiled, memory location-food-production-formula)
 FACTOR_LIMITS = (0.25, 4.0)
@@ -94,6 +95,8 @@ class FoodRecipes:
         profile = load_profile(str(config.get("profile") or "constructor"),
                                repo / str(config.get("load_order") or "constructor.load_order.toml"))
         self.methods = recipes.outputs.filter(pl.col("good_id") == FOOD_GOOD).select("method", "per_level")
+        # market inputs of every method (the dummy goods are always there)
+        self.inputs = recipes.inputs.filter(~pl.col("good_id").is_in(sorted(DUMMY_GOODS)))
         self.workers = recipes.workers
         flat: dict[str, float] = {}
         for entry in load_merged_directory(profile, "building_types", scope="in_game").entries:
@@ -185,7 +188,7 @@ def save_food(dataset: Path, playthrough: str, snapshot: str, food: FoodRecipes)
     )
 
     # food buildings: recipe estimates per pool
-    buildings = read("buildings", ["building_id", "building_type", "location_id", "level", "employed", "last_months_profit"])
+    buildings = read("buildings", ["building_id", "building_type", "location_id", "market_id", "level", "employed", "last_months_profit"])
     methods = read("building_methods", ["building_id", "production_method"]).rename({"production_method": "method"})
     staffed = (
         buildings.filter(pl.col("level") > 0)
@@ -196,8 +199,30 @@ def save_food(dataset: Path, playthrough: str, snapshot: str, food: FoodRecipes)
             .then((pl.col("employed").fill_null(0.0) / (pl.col("level") * pl.col("workers_per_level"))).clip(0.0, 1.0))
             .otherwise(1.0).alias("staffing"))
     )
-    made = methods.join(staffed, on="building_id").join(food.methods, on="method").with_columns(
-        (pl.col("per_level") * pl.col("level") * pl.col("staffing")).alias("food"))
+    # Province Food follows the inputs a method gets: its share of what the market's buildings received
+    # (taken_Building / every building's recipe inputs there, as the goods page splits them); Taverns get about 80 %
+    # of the victuals their staffing asks for
+    used = methods.join(staffed, on="building_id").join(food.inputs, on="method").with_columns(
+        (pl.col("per_level") * pl.col("level") * pl.col("staffing")).alias("need"))
+    market_taken = read("market_goods", ["market_id", "good_id", "taken_Building"])
+    fed = pl.DataFrame(schema={"building_id": methods.schema["building_id"], "method": pl.String, "fed": pl.Float64})
+    if not market_taken.is_empty() and not used.is_empty():
+        got = (
+            used.group_by("market_id", "good_id").agg(pl.col("need").sum().alias("total"))
+            .join(market_taken, on=["market_id", "good_id"], how="inner")
+            .with_columns(pl.when(pl.col("total") > 0).then(pl.col("taken_Building").cast(pl.Float64).fill_null(0.0) / pl.col("total"))
+                          .otherwise(1.0).clip(0.0, 1.0).alias("got"))
+        )
+        fed = (
+            used.filter(pl.col("method").is_in(food.methods["method"].implode()))
+            .join(got.select("market_id", "good_id", "got"), on=["market_id", "good_id"], how="left")
+            .group_by("building_id", "method")
+            .agg(((pl.col("need") * pl.col("got").fill_null(1.0)).sum() / pl.col("need").sum()).alias("fed"))
+        )
+    made = (
+        methods.join(staffed, on="building_id").join(food.methods, on="method").join(fed, on=["building_id", "method"], how="left")
+        .with_columns((pl.col("per_level") * pl.col("level") * pl.col("staffing") * pl.col("fed").fill_nan(1.0).fill_null(1.0)).alias("food"))
+    )
     flat = staffed.join(food.flat, on="building_type").with_columns(
         (pl.col("flat") * pl.col("level") * pl.col("staffing")).alias("food"), pl.lit(None, dtype=pl.String).alias("method"))
     parts = ["province_id", "region", "building_type", "method", "food"]
@@ -210,7 +235,9 @@ def save_food(dataset: Path, playthrough: str, snapshot: str, food: FoodRecipes)
         pools.join(est, on="province_id", how="left")
         .with_columns(pl.col("pos", "neg").fill_null(0.0))
         .with_columns(
-            (pl.col("cached_structural_food_change") + pl.col("base_food_consumption")).clip(lower_bound=0.0).alias("made"),
+            # made can come out below 0 where something besides consumption and spoilage draws on the store (armies,
+            # occupation): the fit then leaves that draw as "unexplained", so every store balances exactly
+            (pl.col("cached_structural_food_change") + pl.col("base_food_consumption")).alias("made"),
             (pl.col("idle") * SUBSISTENCE_RATE).alias("sub_est"), (pl.col("rgo_levels") * food.rgo_food).alias("rgo_est"))
         .with_columns((pl.col("sub_est") + pl.col("rgo_est") + pl.col("pos") + pl.col("neg")).alias("estimate"))
         .with_columns(pl.when(pl.col("estimate") > 0).then((pl.col("made") / pl.col("estimate")).clip(low, high)).otherwise(1.0).alias("factor"))

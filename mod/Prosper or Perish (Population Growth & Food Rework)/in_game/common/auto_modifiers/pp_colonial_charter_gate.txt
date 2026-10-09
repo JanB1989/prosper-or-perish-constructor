@@ -1,0 +1,36 @@
+﻿# Colonial charter gate (2026-10-09, Jan): the AI founds colonial charters only as a colonial subject, as a large
+# country (150+ owned locations) or as a maritime one (8+ ports on its capital's continent that face open sea: ocean,
+# coastal ocean, narrows or inland sea; river channels, lakes, the Black Sea and the Caspian do not count).
+# Every other AI country gets its charter cap (base 2, kingdom 4, empire 6) cut to 0 or below; the AI scores every
+# colony target 0 once the cap is <= its ongoing charters. Charters already running continue. AI only.
+# Sample of 23 saves from three runs (1346-1837): keeps Portugal, Castile, England, France, Denmark, Sweden, Holland,
+# Genoa, Muscovy (by size) and colonial nations; blocks one-province and inland duchies, the Hanse cities and mid
+# inland kingdoms. Big landlocked kingdoms (Bohemia, Hungary) pass by size.
+pp_colonial_charter_gate = {
+	hide_effects = yes
+	potential_trigger = {
+		is_ai = yes
+		has_advance = colonies
+		is_colonial_subject = no
+		num_locations < 150
+		exists = capital
+		NOT = {
+			any_port_in_country = {
+				count >= 8
+				continent = root.capital.continent
+				any_neighbor_location = {
+					OR = {
+						topography = ocean
+						topography = deep_ocean
+						topography = coastal_ocean
+						topography = narrows
+						topography = inland_sea
+					}
+					NOT = { area = area:black_sea_area }
+					NOT = { area = area:caspian_sea_area }
+				}
+			}
+		}
+	}
+	ai_amount_of_parallel_charters = -6
+}

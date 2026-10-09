@@ -57,7 +57,7 @@ When editing the Europedia GUI or concept definitions, preserve this order:
 12. Building Capacity (done)
 13. Building Output (done)
 14. Variable Harvests (done)
-15. Population Capacity
+15. Arable Land (was Population Capacity)
 16. Population Growth
 17. Population Distribution
 18. Other Changes
@@ -84,7 +84,7 @@ Each Europedia card has exactly one game concept file. Filename = card name (sna
 | 12 | Building Capacity | pp_farm_capacity.txt |
 | 13 | Building Output | pp_farm_output.txt |
 | 14 | Variable Harvests | pp_variable_harvests.txt |
-| 15 | Population Capacity | pp_population_capacity.txt |
+| 15 | Arable Land | pp_arable_land.txt (also Settled Land, Overpopulation) |
 | 16 | Population Growth | pp_population_growth.txt |
 | 17 | Population Distribution | pp_population_distribution.txt |
 | 18 | Other Changes | other_changes_pp_buildings_in_location.txt, other_changes_pp_available_free_land.txt, other_changes_pp_abundant_free_land.txt, other_changes_pp_prosperity.txt, other_changes_pp_devastation.txt, other_changes_pp_cheap_food.txt, other_changes_pp_expensive_food.txt, other_changes_pp_province_current_food_storage.txt, other_changes_pp_starvation.txt |
@@ -98,3 +98,4 @@ Linked support concepts without top-level Europedia cards:
 | Fishing Capacity | pp_fish_capacity.txt |
 | Forest Capacity | pp_forest_capacity.txt |
 | Province Food Growth from Storage | pp_positive_province_food_growth.txt |
+| Subsistence Land (old Population Capacity card; still linked until the rename) | pp_population_capacity.txt |

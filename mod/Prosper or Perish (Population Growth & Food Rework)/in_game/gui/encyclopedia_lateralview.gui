@@ -533,7 +533,7 @@
                                 }
                                 button_regular = {
                                     layoutpolicy_horizontal = expanding
-                                    raw_text = "Population Capacity"
+                                    raw_text = "Arable Land"
                                     onclick = "[GetVariableSystem.Set('pp_filter', 'pop_capacity')]"
                                     down = "[GetVariableSystem.HasValue('pp_filter', 'pop_capacity')]"
                                     action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
@@ -1225,41 +1225,196 @@
                                             }
                                         }
 
-	                                        # ---- Population Capacity ----
-	                                        vbox = {
-	                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'pop_capacity'))]"
-	                                            set_parent_size_to_minimum = yes
-	                                            margin = { 0 10 }
-	                                            vbox = {
-	                                                layoutpolicy_horizontal = expanding
-	                                                spacing = 10
-	                                                using = bg_paper_card
-	                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
-	                                                max_width = 1450
-	                                                min_width = 1450
-	                                                icon = {
-	                                                    layoutpolicy_horizontal = expanding
-	                                                    using = button_main_tab_texture
-	                                                    frame = 4
-	                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
-	                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
-	                                                    hbox = {
-	                                                        margin = { 40 0 }
-	                                                        margin_top = 8
-	                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-	                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_population_capacity" }
-	                                                    }
-	                                                }
-	                                                TooltipListScrollArea = {
-	                                                    blockoverride "scrollarea_content" {
-	                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-	                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_population_capacity_desc" margin = { 40 10 } }
-	                                                        }
-	                                                    }
-	                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
-	                                                }
-	                                            }
-	                                        }
+                                        # ---- Arable Land ----
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'pop_capacity'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                margin_bottom = 24
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/map_modes/pp_population_capacity.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_arable_land" }
+                                                    }
+                                                }
+
+                                                pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_arable_land.dds" } }
+                                                pp_eu_lead = { text = "game_concept_pp_arable_land_desc" }
+
+                                                # Your capital's land: the location view's land chip states (markers in pp_capacity_pressure_effects.txt)
+                                                hbox = {
+                                                    visible = "[GetPlayer.IsValid]"
+                                                    spacing = 14
+                                                    widget = {
+                                                        size = { 64 64 }
+                                                        widget = { size = { 100% 100% }
+                                                            visible = "[GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')]"
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" }
+                                                        }
+                                                        widget = { size = { 100% 100% }
+                                                            visible = "[And(Not(GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_abundant')), '(float)0'))]"
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_bountiful.dds" }
+                                                        }
+                                                        widget = { size = { 100% 100% }
+                                                            visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_abundant')), '(float)0')), GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_available')), '(float)0'))]"
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_good.dds" }
+                                                        }
+                                                        widget = { size = { 100% 100% }
+                                                            visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_abundant')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_available')), '(float)0')))]"
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                        }
+                                                        pp_eu_medallion_goods = { texture = "gfx/interface/icons/map_modes/pp_population_capacity.dds" }
+                                                    }
+                                                    text_multi = {
+                                                        visible = "[GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')]"
+                                                        max_width = 700 autoresize = yes text = "PP_EU_LAND_CAPITAL_OVERPOPULATION"
+                                                    }
+                                                    text_multi = {
+                                                        visible = "[And(Not(GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_abundant')), '(float)0'))]"
+                                                        max_width = 700 autoresize = yes text = "PP_EU_LAND_CAPITAL_ABUNDANT"
+                                                    }
+                                                    text_multi = {
+                                                        visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_abundant')), '(float)0')), GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_available')), '(float)0'))]"
+                                                        max_width = 700 autoresize = yes text = "PP_EU_LAND_CAPITAL_AVAILABLE"
+                                                    }
+                                                    text_multi = {
+                                                        visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_abundant')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(GetPlayer.GetCapital.GetModifierValueFixed('pp_land_available')), '(float)0')))]"
+                                                        max_width = 700 autoresize = yes text = "PP_EU_LAND_CAPITAL_SETTLED"
+                                                    }
+                                                }
+
+                                                # ---- Where arable land comes from ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/location_icons/terrain.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_LAND_SOURCES" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 24
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/location_icons/climate.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LAND_SOURCE_NATURAL" }
+                                                        blockoverride "step_text" { text = "PP_EU_LAND_SOURCE_NATURAL_DESC" }
+                                                    }
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/land_clearance.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LAND_SOURCE_IMPROVEMENTS" }
+                                                        blockoverride "step_text" { text = "PP_EU_LAND_SOURCE_IMPROVEMENTS_DESC" }
+                                                    }
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/guild_hall.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LAND_SOURCE_BUILDINGS" }
+                                                        blockoverride "step_text" { text = "PP_EU_LAND_SOURCE_BUILDINGS_DESC" }
+                                                    }
+                                                }
+                                                vbox = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    margin = { 40 0 }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_LAND_IMPROVEMENTS_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/land_clearance.dds" tooltip = "land_clearance" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/field_drainage.dds" tooltip = "field_drainage" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/field_management.dds" tooltip = "field_management" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/irrigation_systems.dds" tooltip = "irrigation_systems" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/irrigated_fields.dds" tooltip = "irrigated_fields" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/paddy_water_control.dds" tooltip = "paddy_water_control" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/bund.dds" tooltip = "bund" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/terraces.dds" tooltip = "terraces" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/polders.dds" tooltip = "polders" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/qanats.dds" tooltip = "qanats" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/khmer_baray.dds" tooltip = "khmer_baray" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/incamisana.dds" tooltip = "incamisana" }
+                                                        }
+                                                    }
+                                                }
+
+                                                # ---- What uses it ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/location_icons/population.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_LAND_USES" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 24
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/location_icons/population.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LAND_USE_PEOPLE" }
+                                                        blockoverride "step_text" { text = "PP_EU_LAND_USE_PEOPLE_DESC" }
+                                                    }
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/wheat_farm.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LAND_USE_FARMS" }
+                                                        blockoverride "step_text" { text = "PP_EU_LAND_USE_FARMS_DESC" }
+                                                    }
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/eng_royal_forest.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LAND_USE_GROUNDS" }
+                                                        blockoverride "step_text" { text = "PP_EU_LAND_USE_GROUNDS_DESC" }
+                                                    }
+                                                }
+
+                                                # ---- Free land and crowding: the four states, emptiest to most crowded ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/location_icons/migration.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_LAND_STATES" }
+                                                }
+                                                hbox = {
+                                                    spacing = 10
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_bountiful.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/location_icons/monthly_growth.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_LAND_STATE_ABUNDANT" }
+                                                    }
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_good.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/modifier_types/total_population_capacity_modifier.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_LAND_STATE_AVAILABLE" }
+                                                    }
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/location_icons/population.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_LAND_STATE_SETTLED" }
+                                                    }
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/modifiers/overpopulation.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_LAND_STATE_OVERPOPULATION" }
+                                                    }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_LAND_STATES_DESC" }
+
+                                                # ---- Where to see it ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/location_modifiers.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_LAND_WHERE" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_LAND_WHERE_DESC" }
+                                            }
+                                        }
 
 	                                        # ---- Population Growth ----
 	                                        vbox = {

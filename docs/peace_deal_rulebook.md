@@ -121,7 +121,10 @@ number is per run, from each run's own 1341.4.1 save to 1357.4.1.
   and become cross-regional realms instead of scattered pieces, and those realms run at lower control.
 - Region by region (49 regions over 500k people, six runs each, population-weighted control 1357): Hindustan is the
   only one that differs beyond chance (t = -4.2, 7 % of the world population); five regions pass |t| > 2 where 2.5
-  are expected by chance. No narrow lever for Hindustan was found: it follows from conquests there staying connected.
+  are expected by chance. Land changing owner inside Hindustan is the same (300 vs 298 locations per run) and
+  detached gains there are few in both (6 vs 11), so the region trades as much land as before; what differs is who
+  ends up holding it (cross-regional, war-worn neighbours). No narrow lever was found that would not touch the
+  conquest behaviour itself.
 - With three runs per setting the largest empires looked more stable under the new defines; the fourth and fifth pair
   reversed that (a giant broke up in a new run, none in a vanilla one). The 10 largest countries end the same size.
 - The standing map changes less than the deals: exclave fragments in 1357 average 244 (vanilla) vs 222 (new),

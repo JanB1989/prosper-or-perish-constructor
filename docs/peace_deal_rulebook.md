@@ -54,6 +54,9 @@ AI_CONQUER_TREATY_DESIRE_ADJECENT = 100001        # 5
 AI_CONQUER_TREATY_DESIRE_FROM_WORTH_MULT = 0.00025  # 5
 ```
 
+plus `in_game/common/peace_treaties/expand_clan_influence.txt` (vanilla copy, one added block: no clan-influence term
+against an imperial court during the first five years of the Nanbokucho; see Measured effect, Japan).
+
 Above 100,000 the 1 / ADJECENT step is exactly 0 in the engine's fixed point (5 decimals), so a deal only takes land
 that connects to the taker's land, directly or through other land in the same deal. FROM_WORTH_MULT scales every
 location's desire: 0.00025 x 100,001 = 25 = vanilla 5 x 5, so connected land keeps its vanilla value against gold,
@@ -94,12 +97,17 @@ number is per run, from each run's own 1341.4.1 save to 1357.4.1.
   settings. The situation itself ends 1344.1.1 / 1344.12.1 (vanilla) vs 1340.2.1 / 1339.8.1 (new defines), read
   from the saves (engine table situations). In every run, vanilla and new, the Southern Court loses the emperor status
   and the Northern Court prevails (engine table io_special_status) - the historical outcome; only the timing moves.
-  The court loses the status because it drops out of the shogunate (engine table io_special_status, member rows:
-  member in 1339 / 1343, gone a year later; the status is rescinded automatically, the shogunate itself has no leave
-  rule). The abdication peace term is not the path: a same-name copy of its file that forbids it during the first
-  six years left the end date unchanged to the day (1340.2.1, one run), as did cutting its AI desire. A candidate is
-  the term peace_expand_clan_influence on the Southern Court's seat (location 8968), which shows up in the AI's
-  Nanbokucho deals; not tested. No change to Japan was made. No other region showed this.
+  The court loses the status because it drops out of the shogunate when a clan wins a Nanbokucho war and takes the
+  term peace_expand_clan_influence on the court's seat: the court's palace (gosho) is destroyed and replaced by the
+  winner's yakata, and a court without its palace leaves the shogunate (status rescinded automatically). Without
+  scattered daimyo land in the deal, clans pick that term years earlier. The abdication term is not the path (a
+  same-name copy that forbids it changed nothing).
+- Japan fix (shipped, in_game/common/peace_treaties/expand_clan_influence.txt, vanilla copy plus one block; a test
+  keeps it vanilla otherwise): the term cannot target an imperial court during the first five years of the
+  Nanbokucho. Vanilla courts first fell 6.7 years in, so the block does not bind in vanilla dynamics. With the new
+  defines, 1337-1347, one run per gate: no gate ends 1340.2.1 with 57 Nanbokucho wars; 3 years 1341.3.1 / 79;
+  5 years 1345.3.1 / 166; 6 years 1346.12.18 / 198; vanilla 1344.1.1 and 1344.12.1 / 147. All new wars with the
+  5-year gate 392 (vanilla 389). No other region showed this.
 - Population-weighted control is 0.02 lower (six runs each: 0.424 -> 0.407), almost all of it in Hindustan
   (0.43 -> 0.32, consistent across runs); east China (0.36 -> 0.33) is within the spread, Europe, Africa and America
   are unchanged, and control per location is the same (0.456 both). Delhi collapses in every run. Under the new

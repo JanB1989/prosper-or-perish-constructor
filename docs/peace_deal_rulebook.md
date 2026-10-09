@@ -97,6 +97,14 @@ number is per run, from each run's own 1341.4.1 save to 1357.4.1.
   next long run; five runs of a chaotic region are not proof.
 - With three runs per setting the largest empires looked more stable under the new defines; the fourth and fifth pair
   reversed that (a giant broke up in a new run, none in a vanilla one). The 10 largest countries end the same size.
+- The standing map changes less than the deals: exclave fragments in 1357 average 244 (vanilla) vs 222 (new),
+  exclaves of countries with at least 20 locations 88 vs 70, small ones (<= 3 locations) 207 vs 196. The 1337 map
+  already has ~195 exclaves, and most of the stock comes from the start map, civil wars, inheritance and annexation.
+  Vanilla's pocket bonus (+5/+10 on the selection factor for land the loser would keep with 0-1 neighbours) is
+  negligible next to ADJECENT 100001; enclave clean-up through deals still gets the neighbour-share factor (up to x2)
+  and the conquer-desire exclave bonus. A faster clean-up is the next lever to test.
+- One pair continued 1357-1387: detached share 6.4 % -> 2.2 % (partial cessions 6.1 % -> 1.2 %), land changing
+  owner 9,543 -> 11,062, wars started 905 -> 1,050; exclaves in 1387 264 vs 256.
 - Late game (observer run a3e3bb2a, 1837.4.1, two years each way): 84 vs 102 locations changed owner, about 1 %
   detached in both; the late game is too static to show the overseas consequence (no first foothold from a deal).
 

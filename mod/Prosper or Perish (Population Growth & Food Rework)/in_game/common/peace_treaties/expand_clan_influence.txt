@@ -38,14 +38,14 @@
 			}
 		}
 		scope:loser = { is_member_of_international_organization = international_organization:japanese_shogunate }
-		# PP: a court keeps its palace during the first five years of the Nanbokucho (keeps vanilla timing with connected-land
+		# PP: a court keeps its palace during the first four years of the Nanbokucho (keeps vanilla timing with connected-land
 		# peace deals, docs/peace_deal_rulebook.md)
 		trigger_if = {
 			limit = {
 				scope:loser = { has_reform = government_reform:japanese_imperial_family }
 				situation:nanbokuchou = { situation_is_active = yes }
 			}
-			situation:nanbokuchou = { years_since_situation_start >= 5 }
+			situation:nanbokuchou = { years_since_situation_start >= 4 }
 		}
 	}
 

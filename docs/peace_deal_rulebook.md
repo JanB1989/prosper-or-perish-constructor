@@ -55,7 +55,7 @@ AI_CONQUER_TREATY_DESIRE_FROM_WORTH_MULT = 0.00025  # 5
 ```
 
 plus `in_game/common/peace_treaties/expand_clan_influence.txt` (vanilla copy, one added block: no clan-influence term
-against an imperial court during the first five years of the Nanbokucho; see Measured effect, Japan).
+against an imperial court during the first four years of the Nanbokucho; see Measured effect, Japan).
 
 Above 100,000 the 1 / ADJECENT step is exactly 0 in the engine's fixed point (5 decimals), so a deal only takes land
 that connects to the taker's land, directly or through other land in the same deal. FROM_WORTH_MULT scales every
@@ -103,12 +103,14 @@ number is per run, from each run's own 1341.4.1 save to 1357.4.1.
   scattered daimyo land in the deal, clans pick that term years earlier. The abdication term is not the path (a
   same-name copy that forbids it changed nothing).
 - Japan fix (shipped, in_game/common/peace_treaties/expand_clan_influence.txt, vanilla copy plus one block; a test
-  keeps it vanilla otherwise): the term cannot target an imperial court during the first five years of the
-  Nanbokucho. Vanilla courts first fell 6.7 years in, so the block does not bind in vanilla dynamics. With the new
-  defines, 1337-1347, one run per gate: no gate ends 1340.2.1 with 57 Nanbokucho wars; 3 years 1341.3.1 / 79;
-  5 years 1345.3.1 / 166; 6 years 1346.12.18 / 198; vanilla 1344.1.1 and 1344.12.1 / 147. All new wars with the
-  5-year gate 392 (vanilla 389). Same window 1338.4-1347.4 for every run that covers it: vanilla 137 / 142
-  Nanbokucho wars, new defines without the gate 43 / 35, with the gate 152. No other region showed this.
+  keeps it vanilla otherwise): the term cannot target an imperial court during the first four years of the
+  Nanbokucho. Vanilla courts first fell 6.7 years in, so the block does not bind in vanilla dynamics. Window
+  1338.4-1347.4, Nanbokucho wars and end date: vanilla 137 (1344.1.1) / 142 (1344.12.1); new defines without the
+  gate 43 (1340.2.1) / 35 (1339.8.1); 3-year gate 79 (1341.3.1, one run); 4-year gate 156 (1345.3.1) / 192 (still
+  running 1347.4); 5-year gate 152 (1345.3.1) / 192 (still running); 6-year gate 198 (1346.12.18). All new wars with
+  the 4-year gate 365 / 405 (vanilla 357 / 361). The gate restores most of the timing; once it opens, the end waits
+  for the next clan win against a court, so it runs a little long, and exact vanilla timing is not reachable with a
+  date gate (vanilla's own runs are 11 months apart). No other region showed this.
 - Population-weighted control is 0.02 lower (six runs each: 0.424 -> 0.407), almost all of it in Hindustan
   (0.43 -> 0.32, consistent across runs); east China (0.36 -> 0.33) is within the spread, Europe, Africa and America
   are unchanged, and control per location is the same (0.456 both). Delhi collapses in every run. Under the new

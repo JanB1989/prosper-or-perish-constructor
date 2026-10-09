@@ -2,7 +2,7 @@
 
 expand_clan_influence.txt: with connected-land peace deals (docs/peace_deal_rulebook.md) Japanese clans took the
 Southern Court's palace years earlier and ended the Nanbokucho around 1340 instead of 1344. PP forbids the term
-against an imperial court during the first five years of the situation; everything else is vanilla, so a game
+against an imperial court during the first four years of the situation; everything else is vanilla, so a game
 update to the vanilla file fails here and must be merged.
 """
 
@@ -17,14 +17,14 @@ LOAD_ORDER = ROOT / "constructor.load_order.toml"
 MOD_TREATIES = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "in_game" / "common" / "peace_treaties"
 
 PP_COURT_GATE = [
-    "\t\t# PP: a court keeps its palace during the first five years of the Nanbokucho (keeps vanilla timing with connected-land",
+    "\t\t# PP: a court keeps its palace during the first four years of the Nanbokucho (keeps vanilla timing with connected-land",
     "\t\t# peace deals, docs/peace_deal_rulebook.md)",
     "\t\ttrigger_if = {",
     "\t\t\tlimit = {",
     "\t\t\t\tscope:loser = { has_reform = government_reform:japanese_imperial_family }",
     "\t\t\t\tsituation:nanbokuchou = { situation_is_active = yes }",
     "\t\t\t}",
-    "\t\t\tsituation:nanbokuchou = { years_since_situation_start >= 5 }",
+    "\t\t\tsituation:nanbokuchou = { years_since_situation_start >= 4 }",
     "\t\t}",
 ]
 

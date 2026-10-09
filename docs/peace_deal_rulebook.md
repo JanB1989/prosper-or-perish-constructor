@@ -117,6 +117,11 @@ number is per run, from each run's own 1341.4.1 save to 1357.4.1.
   owner while it kept them 1,240 -> 1,172 (after a cession to an existing country ~270, after a loss to a new country
   ~520 - revolts, independence, releases - and ~430 when an owner's main body moves). The loser side is the larger
   source and the new defines do not touch it.
+- The Japan and Hindustan effects come with removing detached land, not with this particular pair: every tested
+  variant that zeroes non-adjacent land moves both (Nanbokucho ends 1339.8-1342.4 instead of 1344.1, always the
+  Northern Court; Hindustan control 0.36-0.40 instead of 0.44, one run each). ADJECENT alone moves them least but
+  costs ~20 % of the vassalisations, adds ~14 % wars between neighbours and leaves more exclaves (below), so the
+  shipped pair has the smallest side effects overall among the tested options.
 - Tested and not adopted: `AI_CONQUER_TREATY_DESIRE_POTENTIAL_BORDERGORE = 0` (deals may never split the loser's
   remaining land) on top of the new defines, one 1337-1357 run: cut-offs after cessions 432 (new-define runs 254 +- 53),
   exclave stock 791 (721 +- 135), detached gains 78, land exchange and wars unchanged. No gain, so it stays at 0.005.

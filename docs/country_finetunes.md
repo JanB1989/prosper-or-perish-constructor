@@ -67,6 +67,9 @@ Hand-tuned changes for single countries, one entry each: what and why.
   `pp_ottoman_crush_mamluks` (Egypt + Levant, x5). Why: run ac0ccc76, the Ottomans grew to 32 M people but left the
   Mamluks' 143 locations untouched until 1612 and then only took them as a tributary (Egypt frozen to 1837); vanilla's
   Egypt preference comes only 1475-1525 at x1, the same as Persia and the Caucasus.
+  `casus_belli/pp_make_tributary_cb.txt` (REPLACE of vanilla `cb_make_tributary`, re-check after game updates): TUR
+  never gets the make-tributary CB against MAM (the only way to a tributary is its `force_tributary` peace), so Egypt is
+  conquered, not frozen as a tributary.
 - **Serbia and Bulgaria look north to Hungary** (2026-10-09, Jan, not tested in game).
   `ai_scripted_expansion_score/target pp_balkans_north.txt`: SER/BUL +30 target score on every country ruling from the
   Carpathians (Hungary, Wallachia, Moldavia; war targets even if not neighbours, after 36 months of peace); the

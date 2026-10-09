@@ -91,7 +91,8 @@ number is per run, from each run's own 1341.4.1 save to 1357.4.1.
 - Japan: the Nanbokucho wars die out about four years earlier (none after year 5-6 of the runs instead of year 8-9;
   93 -> 43 such wars). Their deals use the scripted term peace_expand_clan_influence (it targets one location) and
   gold; the stored ideal offers never contain the abdication term, and both courts still exist in 1342 under both
-  settings, so how the situation ends sooner is not established. No other region showed this.
+  settings. The situation itself ends 1344.1.1 / 1344.12.1 (vanilla) vs 1340.2.1 / 1339.8.1 (new defines), read
+  from the saves (engine table situations); which outcome fired is not saved, so the cause is not established. No other region showed this.
 - Population-weighted control is 0.02 lower (six runs each: 0.424 -> 0.407), almost all of it in Hindustan
   (0.43 -> 0.32, consistent across runs); east China (0.36 -> 0.33) is within the spread, Europe, Africa and America
   are unchanged, and control per location is the same (0.456 both). Delhi collapses in every run. Under the new

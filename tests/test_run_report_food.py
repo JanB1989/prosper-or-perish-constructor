@@ -15,6 +15,7 @@ def _food() -> rf.FoodRecipes:
     food.flat = pl.DataFrame({"building_type": ["cookshop", "grange"], "flat": [15.0, -24.0]})
     food.rgo_food = 1.75
     food.rates = {"peasants": 1.0, "nobles": 20.0, "laborers": 1.0}
+    food.eat_modifiers = pl.DataFrame({"building_type": ["cookshop"], "pop_type": ["peasants"], "modifier": [-0.01]})
     food.food_buildings = {"wheat_farm", "cookshop", "grange", "granary"}
     food.digest = "test"
     return food
@@ -54,12 +55,15 @@ def test_food_sources_fit_the_exact_store_totals(tmp_path: Path) -> None:
     pool = flows["pools"].row(0, named=True)
     assert pool["made"] == pytest.approx(made) and pool["factor"] == pytest.approx(2.0)
     assert pool["sub"] == pytest.approx(2 * 10 * rf.SUBSISTENCE_RATE) and pool["rgos"] == pytest.approx(7.0)
-    assert pool["farms"] == pytest.approx(8.0) and pool["kitchens"] == pytest.approx(15.0) and pool["taken"] == pytest.approx(48.0)
+    assert pool["farms_pf"] == pytest.approx(8.0) and pool["farms_flat"] == 0.0
+    assert pool["kitchens"] == pytest.approx(15.0) and pool["taken"] == pytest.approx(48.0)
     assert pool["other"] == pytest.approx(0.0) and pool["unexplained"] == pytest.approx(0.0)
     assert pool["spoil"] == pytest.approx(6.0)  # structural 10 - change 4
     # inflow = outflow: sources = made + taken; consumption + spoilage + Granges + into the store = made + taken
-    sources = pool["sub"] + pool["rgos"] + pool["farms"] + pool["kitchens"] + pool["taverns"] + pool["other"]
+    sources = pool["sub"] + pool["rgos"] + pool["farms_pf"] + pool["farms_flat"] + pool["kitchens"] + pool["taverns"] + pool["other"]
     assert sources == pytest.approx(pool["base"] + pool["spoil"] + pool["taken"] + pool["change"] + pool["unexplained"])
+    # need: 15k peasants x 1 + 0.5k nobles x 20; the half-staffed Cookshop in Paris saves 1 % x 0.5 of its 10k peasants
+    assert pool["need"] == pytest.approx(25.0) and pool["cook_saving"] == pytest.approx(0.01 * 0.5 * 10.0)
     eat = dict(flows["eat"].select("pop_type", "food").iter_rows())
     # 15k peasants x 1 and 0.5k nobles x 20 eat in the ratio 15 : 10
     assert eat["peasants"] == pytest.approx(pool["base"] * 15 / 25) and eat["nobles"] == pytest.approx(pool["base"] * 10 / 25)

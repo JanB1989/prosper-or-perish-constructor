@@ -18,7 +18,13 @@ The save does not split it, so every source gets an estimate and the estimates a
 
 One factor per pool (made / estimate, kept within FACTOR_LIMITS) scales them; it stands for the pool's food modifiers.
 What the fit cannot place is "Other sources" (base food, foraging, static modifiers) or "Unexplained loss".
-Consumption is split by pop type with the pop types' `pop_food_consumption`.
+The page groups them as the engine does: Province Food (the good: farms' Provisioning, Taverns), monthly food (flat:
+RGO levels, farms' and Cookshops' food per level, other) and subsistence.
+
+The save's consumption already holds the consumption modifiers. It is split by pop type with the pop types'
+`pop_food_consumption`; "need" is pops x those rates, and the Cookshops' and Public Kitchens' share of the
+difference is their `local_<pop>_food_consumption` x staffed levels x the location's pops (the rest is land,
+overpopulation, devastation and country modifiers).
 
 Written next to the goods data (the page reads both; building, method, region and good indices are the goods
 page's): `food/index.json`, `food/<n>.json` per save (pools, makers per world region, consumption per pop type,
@@ -42,7 +48,7 @@ if TYPE_CHECKING:
     from prosper_or_perish_constructor.run_report import MapCanvas, RunData
     from prosper_or_perish_constructor.run_report_goods import Index, Recipes
 
-CACHE_VERSION = "food-2"
+CACHE_VERSION = "food-3"
 FOOD_GOOD = "local_food"
 SUBSISTENCE_RATE = 1.487  # food per month per 1,000 idle peasants or slaves (decompiled, memory location-food-production-formula)
 FACTOR_LIMITS = (0.25, 4.0)
@@ -62,7 +68,8 @@ TAVERNS = frozenset({"tavern", "pirate_tavern"})
 FOOD_BUILDINGS_EXTRA = frozenset({"victualling_yard", "granary", "village_granary", "fortress_granary", "grange"})
 MONTH_BANDS = (0.0, 3.0, 6.0, 12.0, 18.0, 24.0)  # people by months stored: [0,3) [3,6) [6,12) [12,18) [18,24) [24,..)
 POOL_COLUMNS = ("province", "country", "region", "pop", "stock", "cap", "change", "structural", "base", "spoil", "sub",
-                "rgos", "farms", "kitchens", "taverns", "other", "taken", "unexplained", "factor", "growth_storage", "growth_surplus")
+                "rgos", "farms_pf", "farms_flat", "kitchens", "taverns", "other", "taken", "unexplained", "factor", "growth_storage",
+                "growth_surplus", "need", "cook_saving")
 FLOW_TABLES = ("pools", "makers", "takers", "eat", "buildings", "locations")
 
 
@@ -102,6 +109,19 @@ class FoodRecipes:
                 flat[entry.key] = total
         self.flat = pl.DataFrame({"building_type": list(flat), "flat": list(flat.values())},
                                  schema={"building_type": pl.String, "flat": pl.Float64})
+        # buildings' local_<pop>_food_consumption (Cookshops, Public Kitchens: peasants -0.01 per staffed level)
+        eats: list[tuple[str, str, float]] = []
+        for entry in load_merged_directory(profile, "building_types", scope="in_game").entries:
+            block = entry.value.first("modifier") if isinstance(entry.value, CList) else None
+            if not isinstance(block, CList):
+                continue
+            for item in block.entries:
+                if item.key.startswith("local_") and item.key.endswith("_food_consumption") and isinstance(item.value, (int, float)):
+                    pop = item.key.removeprefix("local_").removesuffix("_food_consumption")
+                    if pop in POP_TYPES:
+                        eats.append((entry.key, pop, float(item.value)))
+        self.eat_modifiers = pl.DataFrame(eats, schema={"building_type": pl.String, "pop_type": pl.String, "modifier": pl.Float64},
+                                          orient="row")
         # flat food per RGO level: the rgo_level static modifier (main_menu)
         self.rgo_food = 0.0
         for entry in load_merged_directory(profile, "static_modifiers", scope="main_menu").entries:
@@ -119,6 +139,7 @@ class FoodRecipes:
         digest = hashlib.sha1()
         digest.update(recipes.digest.encode())
         digest.update(self.flat.sort("building_type").write_csv().encode())
+        digest.update(self.eat_modifiers.sort("building_type", "pop_type").write_csv().encode())
         digest.update(json.dumps({**self.rates, "_rgo": self.rgo_food}, sort_keys=True).encode())
         self.digest = digest.hexdigest()[:12]
 
@@ -199,11 +220,13 @@ def save_food(dataset: Path, playthrough: str, snapshot: str, food: FoodRecipes)
         (pl.col("food") * pl.col("factor")).alias("food"),
         pl.col("building_type").map_elements(category_of, return_dtype=pl.String).alias("category"))
     by_category = scaled.filter(pl.col("food") > 0).group_by("province_id").agg(
-        *[pl.col("food").filter(pl.col("category") == c).sum().alias(c) for c in ("farms", "kitchens", "taverns")])
+        pl.col("food").filter((pl.col("category") == "farms") & pl.col("method").is_not_null()).sum().alias("farms_pf"),
+        pl.col("food").filter((pl.col("category") == "farms") & pl.col("method").is_null()).sum().alias("farms_flat"),
+        *[pl.col("food").filter(pl.col("category") == c).sum().alias(c) for c in ("kitchens", "taverns")])
     taken = scaled.filter(pl.col("food") < 0).group_by("province_id").agg((-pl.col("food").sum()).alias("taken"))
     pools = (
         pools.join(by_category, on="province_id", how="left").join(taken, on="province_id", how="left")
-        .with_columns(pl.col("farms", "kitchens", "taverns", "taken").fill_null(0.0))
+        .with_columns(pl.col("farms_pf", "farms_flat", "kitchens", "taverns", "taken").fill_null(0.0))
         .with_columns(
             (pl.col("sub_est") * pl.col("factor")).alias("sub"),
             (pl.col("rgo_est") * pl.col("factor")).alias("rgos"),
@@ -237,6 +260,25 @@ def save_food(dataset: Path, playthrough: str, snapshot: str, food: FoodRecipes)
         .group_by("region", "pop_type").agg(pl.col("food").sum())
         .filter(pl.col("food") > 0)
     )
+    # consumption: need (pops x rates) and what the buildings' consumption modifiers save (per location's pops)
+    rates = {p: food.rates.get(p, 0.0) for p in POP_TYPES}
+    need = locations.group_by(pl.col("province").alias("province_id")).agg(
+        sum(pl.col(f"population_{p}") * rates[p] for p in POP_TYPES).sum().alias("need"))
+    saving = pl.DataFrame(schema={"province_id": pl.Int64, "cook_saving": pl.Float64})
+    if food.eat_modifiers.height:
+        staffed_levels = staffed.join(food.eat_modifiers, on="building_type").with_columns(
+            (pl.col("level") * pl.col("staffing") * pl.col("modifier")).alias("share"))
+        per_location = staffed_levels.group_by("location_id", "pop_type").agg(pl.col("share").sum())
+        pops_long = locations.select("location_id", *[pl.col(f"population_{p}").alias(p) for p in POP_TYPES]).unpivot(
+            index="location_id", variable_name="pop_type", value_name="pops")
+        saving = (
+            per_location.join(pops_long, on=["location_id", "pop_type"])
+            .with_columns((-pl.col("share") * pl.col("pops") * pl.col("pop_type").replace_strict(rates, default=0.0)).alias("cook_saving"))
+            .join(locations.select("location_id", pl.col("province").alias("province_id")), on="location_id")
+            .group_by("province_id").agg(pl.col("cook_saving").sum())
+        )
+    pools = pools.join(need, on="province_id", how="left").join(saving, on="province_id", how="left").with_columns(
+        pl.col("need", "cook_saving").fill_null(0.0))
     food_buildings = (
         staffed.filter(pl.col("building_type").is_in(sorted(food.food_buildings)))
         .group_by("region", "building_type")
@@ -246,7 +288,8 @@ def save_food(dataset: Path, playthrough: str, snapshot: str, food: FoodRecipes)
     months = pools.select("province_id", pl.when(pl.col("base") > 0).then(pl.col("stock") / pl.col("base")).alias("months"))
     location_months = locations.select("slug", pl.col("province").alias("province_id")).join(months, on="province_id").select("slug", "months")
     keep = ["province_id", "slug", "tag", "region", "pop", "stock", "cap", "change", "structural", "base", "spoil", "made", "sub",
-            "rgos", "farms", "kitchens", "taverns", "other", "taken", "unexplained", "factor", "growth_storage", "growth_surplus"]
+            "rgos", "farms_pf", "farms_flat", "kitchens", "taverns", "other", "taken", "unexplained", "factor", "growth_storage",
+            "growth_surplus", "need", "cook_saving"]
     return {"pools": pools.select(keep), "makers": makers, "takers": takers, "eat": eat, "buildings": food_buildings,
             "locations": location_months}
 
@@ -268,9 +311,9 @@ def encode_food(flows: dict[str, pl.DataFrame], index: Index, provinces: Index) 
     categories = {k: i for i, (k, _, _) in enumerate(CATEGORIES)}
     pops = {p: i for i, p in enumerate(POP_TYPES)}
     pools = [[provinces.of("province", r["slug"]), provinces.of("country", r["tag"]), of("region", r["region"]), _sig(r["pop"]),
-              *[_sig(r[c]) for c in ("stock", "cap", "change", "structural", "base", "spoil", "sub", "rgos", "farms", "kitchens", "taverns",
-                                    "other", "taken", "unexplained")], _sig(r["factor"], 3), _sig(r["growth_storage"], 3),
-              _sig(r["growth_surplus"], 3)]
+              *[_sig(r[c]) for c in ("stock", "cap", "change", "structural", "base", "spoil", "sub", "rgos", "farms_pf", "farms_flat",
+                                    "kitchens", "taverns", "other", "taken", "unexplained")], _sig(r["factor"], 3), _sig(r["growth_storage"], 3),
+              _sig(r["growth_surplus"], 3), _sig(r["need"]), _sig(r["cook_saving"])]
              for r in flows["pools"].iter_rows(named=True)]
     makers = [[of("region", r["region"]), categories[r["category"]], of("building", r["building_type"]), of("method", r["method"]), _sig(r["food"])]
               for r in flows["makers"].iter_rows(named=True)]
@@ -283,8 +326,9 @@ def encode_food(flows: dict[str, pl.DataFrame], index: Index, provinces: Index) 
 
 def _series_row(pools: pl.DataFrame) -> dict[str, Any]:
     """World or region figures of one save for the charts over the run."""
-    sums = pools.select(pl.col("pop", "stock", "cap", "made", "base", "spoil", "taken", "change", "sub", "rgos", "farms", "kitchens",
-                               "taverns", "other").sum()).row(0, named=True)
+    sums = pools.with_columns((pl.col("farms_pf") + pl.col("farms_flat")).alias("farms")).select(
+        pl.col("pop", "stock", "cap", "made", "base", "spoil", "taken", "change", "sub", "rgos", "farms", "kitchens", "taverns", "other",
+               "need", "cook_saving").sum()).row(0, named=True)
     months = pools.with_columns(pl.when(pl.col("base") > 0).then(pl.col("stock") / pl.col("base")).alias("months"))
     bands = [0.0] * len(MONTH_BANDS)
     for value, people in months.select("months", "pop").iter_rows():
@@ -350,7 +394,7 @@ def build_food_data(run: RunData, dataset: Path, out: Path, food: FoodRecipes, i
     def series(rows: list[dict[str, Any] | None]) -> dict[str, Any]:
         out_rows: dict[str, Any] = {}
         for key in ("pop", "stock", "cap", "made", "base", "spoil", "taken", "change", "sub", "rgos", "farms", "kitchens", "taverns", "other",
-                    "months"):
+                    "months", "need", "cook_saving"):
             out_rows[key] = [None if r is None else _sig(r[key]) for r in rows]
         out_rows["bands"] = [[None if r is None else _sig(r["bands"][b]) for r in rows] for b in range(len(MONTH_BANDS))]
         return out_rows

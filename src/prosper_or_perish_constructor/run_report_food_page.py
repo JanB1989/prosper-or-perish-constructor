@@ -1,13 +1,18 @@
-"""The food page of the run report (`food.html`): how food reaches the province stores and where it goes.
+"""The food page of the run report (`food.html`): how food reaches the province food stores and where it goes.
 
 Static HTML + one script, data fetched when needed: `food/index.json`, `food/summary.json`, `food/<n>.json` per save,
 `food/provinces.json` (when a province is opened) and the goods page's `goods/index.json` and `goods/<n>.json` (the
-buildings, methods, goods and regions, and what each method bought and made). Layout: the scope list on the left
-(world, world regions, a province search), save picker and Categories / Buildings / Recipes on top, then the
-figures, the flow chart (what the makers use -> who makes food -> the province stores -> who eats it, spoilage,
-Granges -> victuals; categories and buildings open on click, Cookshops into their recipes), the months-stored map,
-the stores over the run, the provinces and the food buildings. State lives in the URL hash (#s=12&r=<region> or
-#s=12&p=<province>).
+buildings, methods, goods and regions, and what each method bought and made).
+
+The flow chart has the province food store in the middle and reads in two layers:
+- left, what fills it: its three sources as the engine adds them (Province Food the good, monthly food flat, subsistence),
+  behind them who makes each (farms' Provisioning and Taverns; RGO levels, farms' and Cookshops' food per level;
+  idle peasants and slaves), behind those what they buy (goods), and behind victuals who packs them (Victualling Yards,
+  Granges) and what the Yards buy; Cookshops open into their recipes;
+- right, what empties it: consumption (by pop type), spoilage, and the Granges with the victuals they pack.
+Below it: consumption from need (pops x food rate) through the Cookshops' and the other modifiers to what was eaten,
+the months-stored map, the stores over the run, the provinces and the food buildings. State lives in the URL hash
+(#s=12&r=<region> or #s=12&p=<province>).
 """
 
 from __future__ import annotations
@@ -32,6 +37,9 @@ table.gt th.sortable{cursor:pointer} table.gt tr.click{cursor:pointer} table.gt 
 .vid video{display:block;width:100%;height:auto;background:#12161c}
 a.chip{display:inline-flex;align-items:center;gap:3px;color:var(--ink);text-decoration:none;margin-right:8px;font-variant-numeric:tabular-nums}
 a.chip:hover{text-decoration:underline} a.chip img.gi{width:16px;height:16px}
+.scroll{overflow-x:auto} .scroll .chart{min-width:980px}
+.legend2{display:flex;flex-wrap:wrap;gap:4px 18px;padding:0 16px 8px;font-size:12px;color:var(--muted)}
+.legend2 b{color:var(--ink);font-weight:600}
 """
 
 FOOD_JS = r"""
@@ -51,16 +59,20 @@ FOOD_JS = r"""
     if (a >= 1e3) return (v / 1e3).toFixed(1) + 'k';
     return a >= 100 ? v.toFixed(0) : a >= 10 ? v.toFixed(1) : v.toFixed(2);
   };
+  const signed = v => (v > 0 ? '+' : '') + num(v);
   const pct = f => (f == null || !isFinite(f)) ? '–' : (f * 100).toFixed(Math.abs(f) < 0.1 ? 1 : 0) + '%';
   const months = v => (v == null || !isFinite(v)) ? '–' : v.toFixed(v < 10 ? 1 : 0);
   const mClass = v => v == null ? '' : v < 3 ? 'm-low' : v >= 12 ? 'm-high' : 'm-ok';
   const people = k => num((k || 0) * 1000);
-  // goods that are bookkeeping, not food inputs
+  // goods that are bookkeeping, not inputs worth showing
   const DUMMY = new Set(['offset', 'logistics', 'local_food', 'manual_labor', 'province_food_sales', 'province_food_purchase']);
+  const SRC = {pf: {id: 'src_pf', name: 'Province Food (the good)', color: '#1baf7a'},
+               flat: {id: 'src_flat', name: 'Monthly food (flat)', color: '#c98a00'},
+               sub: {id: 'src_sub', name: 'Subsistence', color: '#9c7a3c'}};
 
   let GI, FI, FS = null, FP = null;
   const SAVES = new Map();
-  const S = {s: 0, r: -1, p: -1, open: new Set(), tv: 0, sort: 'months', asc: true, all: false, query: ''};
+  const S = {s: 0, r: -1, p: -1, recipes: false, tv: 0, sort: 'months', asc: true, all: false, query: ''};
   let goodIdx = new Map(), regionIdx = new Map(), P = {}, charts = {};
   const goodName = i => (GI.goods[i] || {}).name || '?';
   const goodPrice = i => (GI.goods[i] || {}).price || 1;
@@ -68,13 +80,9 @@ FOOD_JS = r"""
   const goodColor = i => (GI.groups.find(g => g.key === (GI.goods[i] || {}).group) || {}).color || '#9a9a96';
   const bName = i => i < 0 ? '' : (GI.buildings[i] || {}).name || '?';
   const mName = i => i < 0 ? 'Food per level (flat)' : (GI.methods[i] || {}).name || '?';
-  const cat = i => FI.categories[i];
   const catIdx = id => FI.categories.findIndex(c => c.id === id);
   const imgHtml = i => goodIcon(i) ? `<img class=gi src="${esc(goodIcon(i))}" alt="">` : '';
-  const shade = (hex, k) => {  // lighten a colour (k 0..1) for the nodes under a category
-    const n = parseInt(hex.slice(1), 16), mix = c => Math.round(c + (255 - c) * k);
-    return '#' + [mix(n >> 16 & 255), mix(n >> 8 & 255), mix(n & 255)].map(c => c.toString(16).padStart(2, '0')).join('');
-  };
+  const isDummy = g => DUMMY.has((GI.goods[g] || {}).id);
 
   // ---------------------------------------------------------------- data
   function loadSave(i) {
@@ -87,191 +95,194 @@ FOOD_JS = r"""
   }
   function prepare(f, g) {
     if (!f) return null;
-    const cIn = new Map(), pOut = new Map();  // method -> goods rows (inputs received, outputs made) from the goods data
-    for (const r of (g && g.c) || []) if (r[2] >= 0) { if (!cIn.has(r[2])) cIn.set(r[2], []); cIn.get(r[2]).push(r); }
-    for (const r of (g && g.p) || []) { const k = r[1]; if (!pOut.has(k)) pOut.set(k, []); pOut.get(k).push(r); }
-    const byBuildingIn = new Map();
-    for (const r of (g && g.c) || []) { const k = r[1]; if (!byBuildingIn.has(k)) byBuildingIn.set(k, []); byBuildingIn.get(k).push(r); }
-    return {...f, cIn, pOut, byBuildingIn};
+    const bIn = new Map(), bOut = new Map(), mIn = new Map();  // building -> inputs / outputs, method -> inputs (goods data)
+    const push = (map, k, r) => { if (!map.has(k)) map.set(k, []); map.get(k).push(r); };
+    for (const r of (g && g.c) || []) { push(bIn, r[1], r); if (r[2] >= 0) push(mIn, r[2], r); }
+    for (const r of (g && g.p) || []) push(bOut, r[1], r);
+    return {...f, bIn, bOut, mIn};
   }
   const inScope = reg => S.r < 0 || reg === S.r;
-  function poolsInScope(D) {
-    if (S.p >= 0) return D.pools.filter(r => r[P.province] === S.p);
-    return D.pools.filter(r => inScope(r[P.region]));
-  }
+  const poolsInScope = D => S.p >= 0 ? D.pools.filter(r => r[P.province] === S.p) : D.pools.filter(r => inScope(r[P.region]));
+  const SUMS = ['pop', 'stock', 'cap', 'change', 'structural', 'base', 'spoil', 'sub', 'rgos', 'farms_pf', 'farms_flat', 'kitchens', 'taverns',
+                'other', 'taken', 'unexplained', 'need', 'cook_saving'];
   function totals(rows) {
     const t = {};
-    for (const k of FI.poolColumns.slice(3)) t[k] = 0;
+    for (const k of SUMS) t[k] = 0;
     let fw = 0;
-    for (const r of rows) {
-      for (const k of FI.poolColumns.slice(3)) if (k !== 'factor' && k !== 'growth_storage' && k !== 'growth_surplus') t[k] += r[P[k]] || 0;
-      fw += (r[P.factor] || 0) * (r[P.pop] || 0);
-    }
+    for (const r of rows) { for (const k of SUMS) t[k] += r[P[k]] || 0; fw += (r[P.factor] || 0) * (r[P.pop] || 0); }
     t.factor = t.pop > 0 ? fw / t.pop : null;
-    t.made = t.sub + t.rgos + t.farms + t.kitchens + t.taverns + t.other - t.taken - t.unexplained;
+    t.pf = t.farms_pf + t.taverns;
+    t.flat = t.rgos + t.farms_flat + t.kitchens + t.other;
+    t.made = t.pf + t.flat + t.sub;
     t.months = t.base > 0 ? t.stock / t.base : null;
     t.pools = rows.length;
     return t;
   }
-
-  // ---------------------------------------------------------------- the makers tree (world / region)
-  // categories -> buildings -> methods; Cookshop and Public Kitchen food (flat per level) split over their recipes
-  // by the value of what each recipe bought
-  function makersTree(D) {
-    const tree = new Map();
-    for (const r of D.makers) {
-      if (!inScope(r[0])) continue;
-      const c = r[1];
-      if (!tree.has(c)) tree.set(c, {c, food: 0, buildings: new Map()});
-      const ct = tree.get(c);
-      ct.food += r[4] || 0;
-      if (r[2] < 0) continue;
-      if (!ct.buildings.has(r[2])) ct.buildings.set(r[2], {b: r[2], food: 0, methods: new Map()});
-      const bt = ct.buildings.get(r[2]);
-      bt.food += r[4] || 0;
-      bt.methods.set(r[3], (bt.methods.get(r[3]) || 0) + (r[4] || 0));
+  // a building's inputs (non-bookkeeping goods) in scope, as shares of their value: [[good, share, amount]]
+  function inputShares(rows) {
+    const by = new Map();
+    for (const r of rows || []) if (inScope(r[3]) && !isDummy(r[0])) {
+      const e = by.get(r[0]) || {v: 0, a: 0};
+      e.v += (r[5] || 0) * goodPrice(r[0]); e.a += r[5] || 0; by.set(r[0], e);
     }
-    const kitchens = catIdx('kitchens');
-    if (tree.has(kitchens)) for (const bt of tree.get(kitchens).buildings.values()) {
-      const flat = bt.methods.get(-1) || 0;
-      if (!flat) continue;
-      const recipes = new Map();
-      for (const r of D.byBuildingIn.get(bt.b) || []) {
-        if (!inScope(r[3]) || r[2] < 0 || DUMMY.has(GI.goods[r[0]].id)) continue;
-        recipes.set(r[2], (recipes.get(r[2]) || 0) + (r[5] || 0) * goodPrice(r[0]));
-      }
-      const total = [...recipes.values()].reduce((a, v) => a + v, 0);
-      if (total <= 0) continue;
-      bt.methods.delete(-1);
-      for (const [m, v] of recipes) bt.methods.set(m, (bt.methods.get(m) || 0) + flat * v / total);
-    }
-    return tree;
-  }
-  // what a method bought, as food: its food split over its (non-bookkeeping) inputs by value
-  function inputsOf(D, m, food) {
-    const rows = (D.cIn.get(m) || []).filter(r => inScope(r[3]) && !DUMMY.has(GI.goods[r[0]].id));
-    const total = rows.reduce((a, r) => a + (r[5] || 0) * goodPrice(r[0]), 0);
-    if (total <= 0) return [];
-    return rows.map(r => ({g: r[0], food: food * (r[5] || 0) * goodPrice(r[0]) / total, amount: (r[5] || 0)}));
+    const total = [...by.values()].reduce((a, e) => a + e.v, 0);
+    return total > 0 ? [...by.entries()].map(([g, e]) => [g, e.v / total, e.a]) : [];
   }
 
   // ---------------------------------------------------------------- flow chart
-  function flowOption(D, rows, T) {
+  // columns: 0 what the Yards buy, 1 who packs victuals / recipe inputs, 2 goods the makers buy / recipes, 3 makers,
+  // 4 the three sources, 5 the store, 6 consumption / spoilage / Granges, 7 pop types / victuals packed
+  function flowOption(D, T) {
     const nodes = [], links = [], label = {}, title = {}, goodOf = {}, toggles = {};
-    const node = (id, text, depth, color, full) => { if (label[id] != null) return; label[id] = text; title[id] = full || text; nodes.push({name: id, depth, itemStyle: {color}}); };
-    const link = (source, target, value, extra) => { if (value > 1e-6) links.push({source, target, value, ...(extra || {})}); };
+    const node = (id, text, col, color, full) => { if (label[id] != null) return; label[id] = text; title[id] = full || text; nodes.push({name: id, depth: col, itemStyle: {color}}); };
+    const link = (source, target, value, note) => { if (value > 1e-6) links.push({source, target, value, note}); };
     const province = S.p >= 0;
-    // makers
-    const makers = [];  // {id, text, full, color, food, methods: [[m, food]], toggle}
+    for (const k of ['pf', 'flat', 'sub']) node(SRC[k].id, SRC[k].name, 4, SRC[k].color);
+    const makers = [];  // {id, text, full, color, src, food, inputs: [[good, share, amount]], kitchen}
     if (province) {
-      for (const c of FI.categories) {
-        const food = c.id === 'subsistence' ? T.sub : T[c.id] || 0;
-        if (food > 0) makers.push({id: 'c' + c.id, text: c.name, color: c.color, food, methods: [], sub: c.id === 'subsistence'});
-      }
+      makers.push({id: 'mk_farms_pf', text: 'Farms (Provisioning)', src: 'pf', food: T.farms_pf, color: '#1baf7a'});
+      makers.push({id: 'mk_taverns', text: 'Taverns', src: 'pf', food: T.taverns, color: '#2a78d6'});
+      makers.push({id: 'mk_rgos', text: 'RGO levels', src: 'flat', food: T.rgos, color: '#c98a00'});
+      makers.push({id: 'mk_farms_flat', text: 'Farms (food per level)', src: 'flat', food: T.farms_flat, color: '#5fd1a2'});
+      makers.push({id: 'mk_kitchens', text: 'Cookshops & kitchens', src: 'flat', food: T.kitchens, color: '#e8692e'});
+      makers.push({id: 'mk_other', text: 'Other flat food & modifiers', src: 'flat', food: T.other, color: '#9a9a96'});
+      makers.push({id: 'mk_idle', text: 'Idle peasants & slaves', src: 'sub', food: T.sub, color: '#c8b27a'});
     } else {
-      const tree = makersTree(D);
-      for (let ci = 0; ci < FI.categories.length; ci++) {
-        const ct = tree.get(ci);
-        if (!ct || ct.food <= 0) continue;
-        const c = cat(ci), bs = [...ct.buildings.values()].sort((a, b) => b.food - a.food);
-        if (!S.open.has('c' + ci) || !bs.length) {
-          makers.push({id: 'c' + ci, text: c.name, color: c.color, food: ct.food, toggle: bs.length ? 'c' + ci : null,
-                       methods: bs.flatMap(bt => [...bt.methods.entries()]), sub: c.id === 'subsistence'});
-          continue;
-        }
-        const LIMIT = 10;
-        bs.forEach((bt, k) => {
-          if (k >= LIMIT) return;
-          const key = 'b' + bt.b, methods = [...bt.methods.entries()].sort((a, b) => b[1] - a[1]);
-          if (S.open.has(key) && methods.length > 1) {
-            const MLIMIT = 14;
-            for (const [m, f] of methods.slice(0, MLIMIT)) makers.push({id: 'm' + m + '_' + bt.b, text: mName(m), full: `${mName(m)} (${bName(bt.b)})`, color: shade(c.color, 0.35), food: f, methods: [[m, f]], toggle: key});
-            if (methods.length > MLIMIT) {
-              const rest = methods.slice(MLIMIT);
-              makers.push({id: 'mr_' + bt.b, text: `Other recipes (${rest.length})`, full: `Other recipes of ${bName(bt.b)} (${rest.length})`, color: shade(c.color, 0.55),
-                           food: rest.reduce((a, e) => a + e[1], 0), methods: rest, toggle: key});
-            }
-          } else {
-            makers.push({id: key, text: bName(bt.b), color: shade(c.color, 0.15), food: bt.food, methods, toggle: methods.length > 1 ? key : null});
+      const pf = new Map(), fl = new Map(), ck = new Map();
+      let rgos = 0, other = 0, sub = 0;
+      const cSub = catIdx('subsistence'), cRgo = catIdx('rgos'), cOther = catIdx('other'), cKit = catIdx('kitchens');
+      for (const r of D.makers) {
+        if (!inScope(r[0])) continue;
+        const v = r[4] || 0;
+        if (r[1] === cSub) sub += v;
+        else if (r[1] === cRgo) rgos += v;
+        else if (r[1] === cOther) other += v;
+        else if (r[1] === cKit) ck.set(r[2], (ck.get(r[2]) || 0) + v);
+        else if (r[3] >= 0) pf.set(r[2], (pf.get(r[2]) || 0) + v);
+        else fl.set(r[2], (fl.get(r[2]) || 0) + v);
+      }
+      const top = (map, n, idOf, textOf, color, src, restText, withInputs) => {
+        const list = [...map.entries()].sort((a, b) => b[1] - a[1]);
+        list.slice(0, n).forEach(([b, v]) => makers.push({id: idOf(b), text: textOf(b), src, food: v, color, b, inputs: withInputs ? inputShares(D.bIn.get(b)) : null}));
+        const rest = list.slice(n);
+        if (rest.length) {
+          const restInputs = new Map();
+          let total = rest.reduce((a, e) => a + e[1], 0);
+          if (withInputs) for (const [b, v] of rest) for (const [g, sh, am] of inputShares(D.bIn.get(b))) {
+            const e = restInputs.get(g) || [0, 0]; e[0] += sh * v / total; e[1] += am; restInputs.set(g, e);
           }
-        });
-        if (bs.length > LIMIT) {
-          const rest = bs.slice(LIMIT);
-          makers.push({id: 'r' + ci, text: `Other ${c.name.toLowerCase()} (${rest.length})`, color: shade(c.color, 0.5), food: rest.reduce((a, b) => a + b.food, 0),
-                       methods: rest.flatMap(bt => [...bt.methods.entries()])});
+          makers.push({id: idOf('rest'), text: `${restText} (${rest.length})`, src, food: total, color: '#9a9a96',
+                       inputs: withInputs ? [...restInputs.entries()].map(([g, e]) => [g, e[0], e[1]]) : null});
         }
+      };
+      top(pf, 10, b => 'pf' + b, b => bName(b), '#1baf7a', 'pf', 'Other buildings', true);
+      if (rgos > 0) makers.push({id: 'mk_rgos', text: 'RGO levels', src: 'flat', food: rgos, color: '#c98a00'});
+      top(fl, 6, b => 'fl' + b, b => bName(b) + ' (per level)', '#5fd1a2', 'flat', 'Other buildings per level', false);
+      for (const [b, v] of [...ck.entries()].sort((a, c) => c[1] - a[1])) {
+        makers.push({id: 'ck' + b, text: bName(b), src: 'flat', food: v, color: '#e8692e', b, kitchen: true, inputs: inputShares(D.bIn.get(b))});
+        toggles['ck' + b] = 'recipes';
       }
+      if (other > 0) makers.push({id: 'mk_other', text: 'Other flat food & modifiers', src: 'flat', food: other, color: '#9a9a96'});
+      if (sub > 0) makers.push({id: 'mk_idle', text: 'Idle peasants & slaves', src: 'sub', food: sub, color: '#c8b27a'});
     }
-    // inputs of the makers (goods bought, as food made from them)
-    const ins = new Map();
+    for (const mk of makers) if (mk.food > 0) { node(mk.id, mk.text, 3, mk.color, mk.full); link(mk.id, SRC[mk.src].id, mk.food); }
+
+    // goods the makers buy (column 2) and Cookshop recipes (column 2, their inputs in column 1)
+    const goods2 = new Map();  // good -> Map(maker -> food)
+    const add = (map, g, target, v, amount) => { if (!map.has(g)) map.set(g, new Map()); const t = map.get(g); const e = t.get(target) || [0, 0]; e[0] += v; e[1] += amount || 0; t.set(target, e); };
+    const goods1 = new Map();
     for (const mk of makers) {
-      if (mk.sub) { ins.set('idle', (ins.get('idle') || new Map()).set(mk.id, T.sub)); continue; }
-      for (const [m, f] of mk.methods) {
-        if (m < 0) continue;
-        for (const it of inputsOf(D, m, f)) {
-          if (!ins.has(it.g)) ins.set(it.g, new Map());
-          const t = ins.get(it.g); t.set(mk.id, (t.get(mk.id) || 0) + it.food);
+      if (!mk.inputs || !mk.food) continue;
+      if (mk.kitchen && S.recipes) {
+        // the Cookshop's food split over its recipes by the value each bought
+        const recipes = new Map();
+        for (const r of D.bIn.get(mk.b) || []) if (inScope(r[3]) && r[2] >= 0 && !isDummy(r[0])) recipes.set(r[2], (recipes.get(r[2]) || 0) + (r[5] || 0) * goodPrice(r[0]));
+        const total = [...recipes.values()].reduce((a, v) => a + v, 0);
+        const sorted = [...recipes.entries()].sort((a, b) => b[1] - a[1]);
+        sorted.forEach(([m, v], k) => {
+          const rid = k < 12 ? 'rc' + m : 'rc_rest' + mk.b;
+          const food = mk.food * v / total;
+          node(rid, k < 12 ? mName(m) : `Other recipes (${sorted.length - 12})`, 2, '#f39a5b', k < 12 ? `${mName(m)} (${bName(mk.b)})` : null);
+          toggles[rid] = 'recipes';
+          link(rid, mk.id, food);
+          for (const [g, sh, am] of inputShares((D.mIn.get(m) || []))) add(goods1, g, rid, food * sh, am);
+        });
+      } else {
+        for (const [g, sh, am] of mk.inputs) add(goods2, g, mk.id, mk.food * sh, am);
+      }
+    }
+    const placeGoods = (map, col, prefix, limit) => {
+      const totals_ = [...map.entries()].map(([g, t]) => [g, [...t.values()].reduce((a, e) => a + e[0], 0)]).sort((a, b) => b[1] - a[1]);
+      const keep = new Set(totals_.slice(0, limit).map(e => e[0]));
+      for (const [g, t] of map) {
+        const id = keep.has(g) ? prefix + g : prefix + 'rest';
+        if (keep.has(g)) { node(id, goodName(g), col, goodColor(g)); goodOf[id] = g; }
+        else node(id, `Other goods (${totals_.length - keep.size})`, col, '#9a9a96');
+        for (const [target, [v, am]] of t) link(id, target, v, keep.has(g) ? `${num(am)} ${goodName(g)} bought per month` : null);
+      }
+    };
+    placeGoods(goods2, 2, 'g2_', 12);
+    placeGoods(goods1, 1, 'g1_', 10);
+
+    // victuals: who packed them (column 1) and what the Victualling Yards bought (column 0)
+    const vi = goodIdx.get('victuals');
+    if (!province && vi != null && goods2.has(vi)) {
+      const used = [...goods2.get(vi).values()].reduce((a, e) => a + e[0], 0);
+      const packers = new Map();
+      for (const [b, rows] of D.bOut) for (const r of rows) if (r[0] === vi && inScope(r[3])) packers.set(b, (packers.get(b) || 0) + (r[4] || 0));
+      const total = [...packers.values()].reduce((a, v) => a + v, 0);
+      if (total > 0) for (const [b, amount] of packers) {
+        const share = amount / total, id = 'vp' + b, kind = (GI.buildings[b] || {}).id, grange = kind === 'grange';
+        node(id, grange ? 'Granges (from the stores)' : kind === '_other' ? 'Victuals from elsewhere (no recipe)' : bName(b), 1, grange ? '#a0522d' : kind === '_other' ? '#9a9a96' : '#7d8b2a');
+        link(id, label['g2_' + vi] != null ? 'g2_' + vi : 'g2_rest', used * share, `${num(amount)} victuals packed per month`);
+        if (!grange) for (const [g, sh, am] of inputShares(D.bIn.get(b))) {
+          const gid = 'g0_' + g;
+          node(gid, goodName(g), 0, goodColor(g)); goodOf[gid] = g;
+          link(gid, id, used * share * sh, `${num(am)} ${goodName(g)} bought per month`);
         }
       }
     }
-    const inTotals = [...ins.entries()].map(([g, t]) => [g, [...t.values()].reduce((a, v) => a + v, 0)]).sort((a, b) => b[1] - a[1]);
-    const inTop = new Set(inTotals.slice(0, 10).map(e => e[0]));
-    const hasIn = inTotals.length > 0;
-    const dIn = hasIn ? 0 : -1, dM = dIn + 1, dS = dM + 1, dO = dS + 1, dV = dO + 1;
-    for (const [g] of inTotals) {
-      if (!inTop.has(g)) continue;
-      if (g === 'idle') node('in_idle', 'Idle peasants & slaves', dIn, '#c8b27a');
-      else { node('in' + g, goodName(g), dIn, goodColor(g)); goodOf['in' + g] = g; }
+
+    // the store and what empties it
+    node('store', province ? 'Province food store' : 'Province food stores', 5, '#8c6d3f');
+    for (const k of ['pf', 'flat', 'sub']) link(SRC[k].id, 'store', k === 'sub' ? T.sub : T[k]);
+    node('cons', 'Consumption', 6, '#1baf7a');
+    link('store', 'cons', T.base);
+    if (!province) {
+      const eat = new Map();
+      for (const r of D.eat) if (inScope(r[0])) eat.set(r[1], (eat.get(r[1]) || 0) + (r[2] || 0));
+      const PCOL = ['#e87ba4', '#4a3aa7', '#eda100', '#2a78d6', '#e34948', '#5fd1a2', '#7d5a5a', '#9c7a3c'];
+      for (const [t, v] of [...eat.entries()].sort((a, b) => b[1] - a[1])) if (v > 0) { node('pt' + t, FI.popTypes[t].name, 7, PCOL[t % PCOL.length]); link('cons', 'pt' + t, v); }
     }
-    if (inTotals.length > inTop.size) node('in_rest', `Other inputs (${inTotals.length - inTop.size})`, dIn, '#9a9a96');
-    if (T.change < 0) node('from_store', 'Drawn from the stores', dM, '#5fb8c4');
-    for (const mk of makers) { node(mk.id, mk.text, dM, mk.color, mk.full); if (mk.toggle) toggles[mk.id] = mk.toggle; }
-    const where = S.p >= 0 ? 'Province store' : 'Province stores';
-    node('store', where, dS, '#8c6d3f');
-    // outflows
-    const eat = new Map();
-    if (province) eat.set(-1, T.base);
-    else for (const r of D.eat) if (inScope(r[0])) eat.set(r[1], (eat.get(r[1]) || 0) + (r[2] || 0));
-    const PCOL = ['#e87ba4', '#4a3aa7', '#eda100', '#2a78d6', '#e34948', '#1baf7a', '#7d5a5a', '#9c7a3c'];
-    const eats = [...eat.entries()].filter(e => e[1] > 0).sort((a, b) => b[1] - a[1]);
-    for (const [t] of eats) node('e' + t, t < 0 ? 'Eaten by pops' : FI.popTypes[t].name, dO, t < 0 ? '#1baf7a' : PCOL[t % PCOL.length]);
-    node('spoil', 'Spoilage & overflow', dO, '#9a9a96');
-    if (T.taken > 0) { node('grange', 'Granges (packing)', dO, '#a0522d'); }
-    if (T.change > 0) node('into_store', 'Into the stores', dO, '#5fb8c4');
-    if (T.unexplained > 0) node('unexpl', 'Unexplained loss', dO, '#d8c9c6');
-    // Granges' victuals (goods data, world / region only)
-    let victuals = null;
-    const vi = goodIdx.get('victuals');
-    if (T.taken > 0 && vi != null && !province) {
-      const grange = GI.buildings.findIndex(b => b.id === 'grange');
-      victuals = (D.pOut.get(grange) || []).filter(r => r[0] === vi && inScope(r[3])).reduce((a, r) => a + (r[4] || 0), 0);
-      node('victuals', 'Victuals', dV, goodColor(vi)); goodOf.victuals = vi;
-    }
-    // links
-    for (const [g, t] of ins) for (const [mid, v] of t) {
-      const src = inTop.has(g) ? (g === 'idle' ? 'in_idle' : 'in' + g) : 'in_rest';
-      link(src, mid, v);
-    }
-    if (T.change < 0) link('from_store', 'store', -T.change);
-    for (const mk of makers) link(mk.id, 'store', mk.food);
-    for (const [t, v] of eats) link('store', 'e' + t, v);
+    node('spoil', 'Spoilage & overflow', 6, '#9a9a96');
     link('store', 'spoil', T.spoil);
-    if (T.taken > 0) link('store', 'grange', T.taken);
-    if (T.change > 0) link('store', 'into_store', T.change);
-    if (T.unexplained > 0) link('store', 'unexpl', T.unexplained);
-    if (victuals != null) link('grange', 'victuals', T.taken, {note: `${num(victuals)} victuals packed per month`});
-    // merge parallel links, drop unused nodes
+    if (T.taken > 0) {
+      node('grange', 'Granges (packing)', 6, '#a0522d');
+      link('store', 'grange', T.taken);
+      if (!province && vi != null) {
+        const g = GI.buildings.findIndex(b => b.id === 'grange');
+        const packed = (D.bOut.get(g) || []).filter(r => r[0] === vi && inScope(r[3])).reduce((a, r) => a + (r[4] || 0), 0);
+        node('vict', 'Victuals', 7, goodColor(vi)); goodOf.vict = vi;
+        link('grange', 'vict', T.taken, `${num(packed)} victuals packed per month`);
+      }
+    }
+    if (T.unexplained > 0) { node('unexpl', 'Unexplained loss', 6, '#d8c9c6'); link('store', 'unexpl', T.unexplained); }
+
+    // merge parallel links, drop unused nodes, close the gaps between columns
     const merged = new Map();
     for (const l of links) { const k = l.source + '|' + l.target; if (merged.has(k)) merged.get(k).value += l.value; else merged.set(k, {...l}); }
-    const used = new Set(); for (const l of merged.values()) { used.add(l.source); used.add(l.target); }
-    const keep = nodes.filter(n => used.has(n.name));
+    const usedIds = new Set(); for (const l of merged.values()) { usedIds.add(l.source); usedIds.add(l.target); }
+    const keep = nodes.filter(n => usedIds.has(n.name));
+    const cols = [...new Set(keep.map(n => n.depth))].sort((a, b) => a - b);
+    const remap = new Map(cols.map((c, i) => [c, i]));
+    for (const n of keep) n.depth = remap.get(n.depth);
     const flow = id => Math.max([...merged.values()].filter(l => l.target === id).reduce((a, l) => a + l.value, 0),
                                 [...merged.values()].filter(l => l.source === id).reduce((a, l) => a + l.value, 0));
     const store = Math.max(1e-9, flow('store'));
-    const lastDepth = Math.max(...keep.map(n => n.depth));
-    for (const n of keep) if (n.name !== 'store') n.label = {width: n.depth === lastDepth ? 140 : 190, overflow: 'truncate', show: flow(n.name) >= 0.004 * store};
+    const last = cols.length - 1;
+    for (const n of keep) if (n.name !== 'store') n.label = {width: n.depth === last ? 120 : 165, overflow: 'truncate', show: flow(n.name) >= 0.004 * store};
     const per = {}; for (const n of keep) per[n.depth] = (per[n.depth] || 0) + 1;
-    const height = Math.max(420, Math.max(...Object.values(per), 1) * 36 + 70);
+    const height = Math.max(440, Math.max(...Object.values(per), 1) * 34 + 80);
     const option = {
       backgroundColor: 'transparent',
       tooltip: {trigger: 'item', confine: true, formatter: p => {
@@ -279,17 +290,20 @@ FOOD_JS = r"""
           const d = p.data;
           return `${esc(title[d.source])} → ${esc(title[d.target])}<br><b>${num(d.value)}</b> food / month${d.note ? '<br>' + esc(d.note) : ''}`;
         }
-        const hint = toggles[p.name] ? `<br><span style="opacity:.7">click to ${S.open.has(toggles[p.name]) ? 'close' : 'open'}</span>` :
+        let extra = '';
+        if (p.name === 'store') extra = `<br>stock ${num(T.stock)} of ${num(T.cap)} · ${months(T.months)} months<br>${T.change >= 0 ? 'grows' : 'shrinks'} ${num(Math.abs(T.change))} / month after spoilage`;
+        if (p.name === 'cons') extra = `<br>need (pops × food rate) ${num(T.need)}<br>Cookshops & kitchens −${num(T.cook_saving)}<br>other modifiers ${signed(T.base - T.need + T.cook_saving)}`;
+        if (p.name === 'src_pf' || p.name === 'src_flat' || p.name === 'src_sub') extra = `<br>${pct(T.made > 0 ? flow(p.name) / T.made : null)} of the food made`;
+        const hint = toggles[p.name] ? `<br><span style="opacity:.7">click to ${S.recipes ? 'close' : 'open'} the recipes</span>` :
           goodOf[p.name] != null ? '<br><span style="opacity:.7">click to open this good on the goods page</span>' : '';
-        const extra = p.name === 'store' ? `<br>stock ${num(T.stock)} of ${num(T.cap)} · ${months(T.months)} months` : '';
         return `<b>${esc(title[p.name])}</b><br>${num(flow(p.name))} food / month${extra}${hint}`;
       }},
       series: [{
-        type: 'sankey', left: 4, right: 160, top: 8, bottom: 8, nodeWidth: 12, nodeGap: 12, layoutIterations: 0,
+        type: 'sankey', left: 4, right: 130, top: 8, bottom: 8, nodeWidth: 12, nodeGap: 12, layoutIterations: 0,
         draggable: false, emphasis: {focus: 'adjacency'},
         label: {color: INK, fontSize: 11, formatter: p => p.name === 'store'
-          ? `{b|${label.store}}\n${num(T.stock)} stored · ${months(T.months)} months`
-          : `${num(flow(p.name))}  ${label[p.name]}${toggles[p.name] ? (S.open.has(toggles[p.name]) ? '  ▾' : '  ▸') : ''}`,
+          ? `{b|${label.store}}\n${num(T.stock)} stored · ${months(T.months)} months\n${signed(T.change)} / month`
+          : `${num(flow(p.name))}  ${label[p.name]}${toggles[p.name] ? (S.recipes ? '  ▾' : '  ▸') : ''}`,
           rich: {b: {fontWeight: 'bold', fontSize: 13, color: INK}}},
         lineStyle: {color: 'gradient', curveness: 0.5, opacity: dark ? 0.45 : 0.32},
         data: keep, links: [...merged.values()],
@@ -298,11 +312,37 @@ FOOD_JS = r"""
     return {option, height, goodOf, toggles};
   }
 
+  // ---------------------------------------------------------------- consumption: need -> modifiers -> eaten
+  function consumptionOption(T) {
+    const other = T.base - T.need + T.cook_saving;
+    const afterCook = T.need - T.cook_saving;
+    const steps = [
+      ['Need (pops × food rate)', 0, T.need, '#9a9a96'],
+      ['Cookshops & kitchens', afterCook, T.cook_saving, '#1baf7a'],
+      [other >= 0 ? 'Other modifiers (more)' : 'Other modifiers (less)', other >= 0 ? afterCook : afterCook + other, Math.abs(other), other >= 0 ? '#e34948' : '#1baf7a'],
+      ['Eaten', 0, T.base, '#2a78d6'],
+    ];
+    const labels = [num(T.need), '−' + num(T.cook_saving), signed(other), num(T.base)];
+    return {
+      backgroundColor: 'transparent', grid: {left: 8, right: 60, top: 8, bottom: 8, containLabel: true},
+      tooltip: {trigger: 'axis', axisPointer: {type: 'shadow'}, confine: true, formatter: ps => {
+        const i = ps[0].dataIndex;
+        return `<b>${esc(steps[i][0])}</b><br>${labels[i]} food / month` + (i === 2 ? '<br>land (abundant, available, overpopulation), devastation, laws, advances' : '');
+      }},
+      xAxis: {type: 'value', axisLabel: {formatter: v => num(v)}},
+      yAxis: {type: 'category', inverse: true, data: steps.map(s => s[0]), axisLabel: {color: INK}},
+      series: [
+        {type: 'bar', stack: 'w', itemStyle: {color: 'transparent'}, emphasis: {disabled: true}, data: steps.map(s => s[1])},
+        {type: 'bar', stack: 'w', barMaxWidth: 22, data: steps.map((s, i) => ({value: s[2], itemStyle: {color: s[3]}, label: {show: true, position: 'right', color: INK, formatter: labels[i]}}))},
+      ],
+    };
+  }
+
   // ---------------------------------------------------------------- tables
   function mainSource(r) {
-    let best = null, v = 0;
-    for (const c of FI.categories) { const x = r[P[c.id === 'subsistence' ? 'sub' : c.id]] || 0; if (x > v) { v = x; best = c; } }
-    return best;
+    const parts = [['Subsistence', r[P.sub], '#9c7a3c'], ['RGO levels', r[P.rgos], '#c98a00'], ['Farms', (r[P.farms_pf] || 0) + (r[P.farms_flat] || 0), '#1baf7a'],
+                   ['Cookshops', r[P.kitchens], '#e8692e'], ['Taverns', r[P.taverns], '#2a78d6'], ['Other', r[P.other], '#9a9a96']];
+    return parts.reduce((a, p) => (p[1] || 0) > (a ? a[1] : 0) ? p : a, null);
   }
   function provinceTable(D) {
     if (S.p >= 0) return '';
@@ -315,23 +355,21 @@ FOOD_JS = r"""
     rows.sort((a, b) => { const x = key(a), y = key(b); const c = typeof x === 'string' ? x.localeCompare(y) : (x || 0) - (y || 0); return S.asc ? c : -c; });
     const total = rows.length;
     if (!S.all) rows = rows.slice(0, 40);
-    const th = (k, text, num_, tip) => `<th class="sortable${num_ ? ' num' : ''}${S.sort === k ? ' sorted' + (S.asc ? ' asc' : '') : ''}" data-sort="${k}"${tip ? ` title="${esc(tip)}"` : ''}>${text}</th>`;
+    const th = (k, text, isNum, tip) => `<th class="sortable${isNum ? ' num' : ''}${S.sort === k ? ' sorted' + (S.asc ? ' asc' : '') : ''}" data-sort="${k}"${tip ? ` title="${esc(tip)}"` : ''}>${text}</th>`;
     let h = `<table class=gt><thead><tr>${th('province', 'Province')}<th>Owner</th>${th('people', 'People', 1)}${th('months', 'Months', 1, 'stock ÷ monthly consumption')}${th('fill', 'Store', 1, 'stock ÷ capacity')}` +
       `${th('made', 'Made', 1)}${th('eaten', 'Eaten', 1)}${th('net', 'Net', 1, 'change of the store per month (after spoilage)')}<th>Main source</th>${th('taken', 'Granges', 1, 'food the Granges take to pack victuals')}${th('factor', 'Food modifier', 1, 'fitted: actual ÷ estimate (climate, arid rows, store lever, other modifiers)')}</tr></thead><tbody>`;
     for (const {r, m} of rows) {
       const src = mainSource(r), fill = r[P.cap] > 0 ? r[P.stock] / r[P.cap] : 0;
       h += `<tr class=click data-province="${r[P.province]}"><td>${esc(FI.provinces[r[P.province]])}</td><td>${esc(FI.countries[r[P.country]] || '')}</td><td class=num>${people(r[P.pop])}</td>` +
         `<td class="num months ${mClass(m)}">${months(m)}</td><td class=num><span class=fill><i style="width:${(Math.min(1, fill) * 100).toFixed(0)}%"></i></span>${pct(fill)}</td>` +
-        `<td class=num>${num(r[P.structural] + r[P.base])}</td><td class=num>${num(r[P.base])}</td><td class="num ${r[P.change] < 0 ? 'neg' : 'pos'}">${(r[P.change] > 0 ? '+' : '') + num(r[P.change])}</td>` +
-        `<td>${src ? `<i class=dot style="background:${src.color}"></i>${esc(src.name)}` : ''}</td><td class=num>${num(r[P.taken])}</td><td class=num>${r[P.factor] == null ? '–' : r[P.factor].toFixed(2) + '×'}</td></tr>`;
+        `<td class=num>${num(r[P.structural] + r[P.base])}</td><td class=num>${num(r[P.base])}</td><td class="num ${r[P.change] < 0 ? 'neg' : 'pos'}">${signed(r[P.change])}</td>` +
+        `<td>${src ? `<i class=dot style="background:${src[2]}"></i>${esc(src[0])}` : ''}</td><td class=num>${num(r[P.taken])}</td><td class=num>${r[P.factor] == null ? '–' : r[P.factor].toFixed(2) + '×'}</td></tr>`;
     }
     h += '</tbody></table>';
     if (total > 40) h += `<button type=button class=more data-all>${S.all ? 'Show fewer' : `Show all ${total}`}</button>`;
     return h;
   }
-  function chipList(list) {
-    return list.slice(0, 4).map(([g, v]) => `<a href="goods.html#g=${encodeURIComponent(GI.goods[g].id)}" title="${esc(goodName(g))}" class=chip>${imgHtml(g)}${num(v)}</a>`).join(' ');
-  }
+  const chipList = list => list.slice(0, 4).map(([g, v]) => `<a href="goods.html#g=${encodeURIComponent(GI.goods[g].id)}" title="${esc(goodName(g))}" class=chip>${imgHtml(g)}${num(v)}</a>`).join(' ');
   function buildingsTable(D) {
     if (S.p >= 0) return '';
     const by = new Map();
@@ -343,11 +381,11 @@ FOOD_JS = r"""
     let h = `<table class=gt><thead><tr><th>Building</th><th class=num>Levels</th><th class=num>Buildings</th><th class=num title="thousands">Workers</th><th class=num title="food added to (+) or taken from (−) the stores per month">Food</th><th>Buys</th><th>Makes</th><th class=num title="last month, all levels">Profit</th><th class=num>Per level</th></tr></thead><tbody>`;
     for (const e of rows) {
       const buys = new Map(), makes = new Map();
-      for (const r of D.byBuildingIn.get(e.b) || []) if (inScope(r[3]) && !DUMMY.has(GI.goods[r[0]].id)) buys.set(r[0], (buys.get(r[0]) || 0) + (r[5] || 0));
-      for (const r of D.pOut.get(e.b) || []) if (inScope(r[3]) && !DUMMY.has(GI.goods[r[0]].id)) makes.set(r[0], (makes.get(r[0]) || 0) + (r[4] || 0));
+      for (const r of D.bIn.get(e.b) || []) if (inScope(r[3]) && !isDummy(r[0])) buys.set(r[0], (buys.get(r[0]) || 0) + (r[5] || 0));
+      for (const r of D.bOut.get(e.b) || []) if (inScope(r[3]) && !isDummy(r[0])) makes.set(r[0], (makes.get(r[0]) || 0) + (r[4] || 0));
       const sorted = m => [...m.entries()].sort((a, b) => b[1] - a[1]);
       h += `<tr><td>${esc(bName(e.b))}</td><td class=num>${num(e.levels)}</td><td class=num>${num(e.count)}</td><td class=num>${num(e.workers)}</td>` +
-        `<td class="num ${e.food < 0 ? 'neg' : ''}">${e.food ? (e.food > 0 ? '+' : '') + num(e.food) : '–'}</td><td class=goods>${chipList(sorted(buys))}</td><td class=goods>${chipList(sorted(makes))}</td>` +
+        `<td class="num ${e.food < 0 ? 'neg' : ''}">${e.food ? signed(e.food) : '–'}</td><td class=goods>${chipList(sorted(buys))}</td><td class=goods>${chipList(sorted(makes))}</td>` +
         `<td class="num ${e.profit < 0 ? 'neg' : ''}">${num(e.profit)}</td><td class=num>${e.levels ? num(e.profit / e.levels) : '–'}</td></tr>`;
     }
     return h + '</tbody></table>';
@@ -358,7 +396,7 @@ FOOD_JS = r"""
   function timeOption() {
     const xs = GI.saves.map((s, i) => saveTime(i));
     const marker = {silent: true, symbol: 'none', label: {show: false}, lineStyle: {type: 'dashed', color: MUTED, width: 1}, data: [{xAxis: xs[S.s]}]};
-    const line = (name, values, color, extra) => ({type: 'line', name, showSymbol: false, color, connectNulls: false, lineStyle: {width: 2}, emphasis: {focus: 'series'}, data: values.map((v, j) => [xs[j], v]), ...(extra || {})});
+    const line = (name, values, color, extra) => ({type: 'line', name, showSymbol: xs.length <= 3, color, connectNulls: false, lineStyle: {width: 2}, emphasis: {focus: 'series'}, data: values.map((v, j) => [xs[j], v]), ...(extra || {})});
     const area = (name, values, color) => line(name, values, color, {stack: 'total', areaStyle: {opacity: 0.85}, lineStyle: {width: 0.6}});
     const base = {backgroundColor: 'transparent', tooltip: {trigger: 'axis', confine: true, valueFormatter: v => num(v)},
                   legend: {type: 'scroll', top: 0, left: 0, right: 0, textStyle: {color: INK}}, grid: {left: 8, right: 16, top: 40, bottom: 30, containLabel: true},
@@ -385,7 +423,8 @@ FOOD_JS = r"""
          series: e.bands.map((vals, b) => area(bandName(b), vals, BAND[b]))},
         {...base, yAxis: {type: 'value', name: 'months'}, series: [line('Months stored', e.months, '#1baf7a'), line('Capacity in months', capMonths, MUTED, {lineStyle: {type: 'dashed', width: 1.5}})]},
         {...base, series: FI.categories.map(c => area(c.name, e[c.id === 'subsistence' ? 'sub' : c.id], c.color))},
-        {...base, series: [line('Made', e.made, '#2a78d6'), line('Eaten', e.base, '#eb6834'), line('Spoiled', e.spoil, '#9a9a96'), line('Taken by Granges', e.taken, '#a0522d')]},
+        {...base, series: [line('Made', e.made, '#2a78d6'), line('Eaten', e.base, '#eb6834'), line('Need (pops × food rate)', e.need, MUTED, {lineStyle: {type: 'dashed', width: 1.5}}),
+                           line('Spoiled', e.spoil, '#9a9a96'), line('Taken by Granges', e.taken, '#a0522d')]},
       ];
     }
     const option = views[Math.min(S.tv, views.length - 1)];
@@ -410,7 +449,7 @@ FOOD_JS = r"""
   }
   function readHash() {
     const p = new URLSearchParams(location.hash.slice(1));
-    if (p.has('s')) { const s = Number(p.get('s')); if (s >= 0 && s < GI.saves.length) S.s = s; }
+    if (p.has('s')) { const s = Number(p.get('s')); if (s >= 0 && s < GI.saves.length && FI.saves[s]) S.s = s; }
     S.p = p.has('p') ? Number(p.get('p')) : -1;
     S.r = p.has('r') && regionIdx.has(p.get('r')) ? regionIdx.get(p.get('r')) : -1;
   }
@@ -434,22 +473,22 @@ FOOD_JS = r"""
     for (const r of D.pools) {
       const name = FI.provinces[r[P.province]];
       if (seen.has(r[P.province]) || !name.toLowerCase().includes(q)) continue;
-      seen.add(r[P.province]);
-      out.push(r);
+      seen.add(r[P.province]); out.push(r);
       if (out.length >= 14) break;
     }
     $('#results').innerHTML = out.map(r => `<a href="#" data-province="${r[P.province]}">${esc(FI.provinces[r[P.province]])} <small>${esc(FI.countries[r[P.country]] || '')} · ${months(r[P.base] ? r[P.stock] / r[P.base] : null)} mo</small></a>`).join('') || '<small>No province matches.</small>';
   }
   function tiles(T) {
+    const mods = T.need > 0 ? T.base / T.need - 1 : null;
     const t = [
-      ['Made', num(T.made) + ' / mo', `${num(T.sub)} subsistence · ${num(T.rgos)} RGOs · ${num(T.farms + T.kitchens + T.taverns)} buildings`],
-      ['Eaten', num(T.base) + ' / mo', `${people(T.pop)} people`],
+      ['Made', num(T.made) + ' / mo', `${num(T.pf)} Province Food · ${num(T.flat)} flat · ${num(T.sub)} subsistence`],
+      ['Eaten', num(T.base) + ' / mo', `need ${num(T.need)}, modifiers ${mods == null ? '–' : (mods > 0 ? '+' : '') + pct(mods)}`],
       ['Spoilage & overflow', num(T.spoil) + ' / mo', `${pct(T.stock > 0 ? T.spoil / T.stock : null)} of the stock`],
-      [T.change >= 0 ? 'Into the stores' : 'Drawn from the stores', num(Math.abs(T.change)) + ' / mo', 'after spoilage'],
-      ['Stock', num(T.stock), `${pct(T.cap > 0 ? T.stock / T.cap : null)} of ${num(T.cap)} capacity`],
-      ['Months stored', months(T.months), 'stock ÷ monthly consumption'],
       ['Granges', num(T.taken) + ' / mo', 'food packed into victuals'],
-      ['Food modifier', T.factor == null ? '–' : T.factor.toFixed(2) + '×', 'fitted, people-weighted: climate, store lever, other modifiers'],
+      ['Store change', signed(T.change) + ' / mo', 'made − eaten − spoiled − Granges'],
+      ['Stock', num(T.stock), `${pct(T.cap > 0 ? T.stock / T.cap : null)} of ${num(T.cap)} capacity`],
+      ['Months stored', months(T.months), `${people(T.pop)} people`],
+      ['Food modifier', T.factor == null ? '–' : T.factor.toFixed(2) + '×', 'fitted on the sources, people-weighted'],
     ];
     return t.map(([a, b, c]) => `<div class=tile><div class=label>${esc(a)}</div><div class=value>${esc(b)}</div><div class=sub>${esc(c)}</div></div>`).join('');
   }
@@ -471,21 +510,21 @@ FOOD_JS = r"""
     const title = S.p >= 0 ? FI.provinces[S.p] : S.r >= 0 ? GI.regions[S.r].name : 'World';
     document.title = `Food · ${title} · ${GI.run}`;
     $('#head').innerHTML = `<div class=ghead><div><h1>${esc(title)}</h1><div class=muted>${S.p >= 0 ? esc(owners) + ' · ' : ''}${T.pools} province store${T.pools === 1 ? '' : 's'} · save ${esc(GI.saves[S.s].label)}${S.p >= 0 ? ' · <a href="#" data-scope="-1">back to the world</a>' : ''}</div></div></div><div class=tiles>${tiles(T)}</div>`;
-    document.querySelectorAll('#detail button').forEach(b => b.disabled = S.p >= 0);
+    document.querySelectorAll('#detail button').forEach(b => { b.disabled = S.p >= 0; b.classList.toggle('on', (b.dataset.v === 'recipes') === S.recipes); });
     if (!rows.length) { $('#sankey').style.height = '120px'; chart('sankey').clear(); }
     else {
-      const flow = flowOption(D, rows, T);
+      const flow = flowOption(D, T);
       $('#sankey').style.height = flow.height + 'px';
       const sk = chart('sankey'); sk.resize(); sk.setOption(flow.option, true);
       sk.off('click');
       sk.on('click', p => {
         if (p.dataType !== 'node') return;
-        const key = flow.toggles[p.name];
-        if (key) { if (S.open.has(key)) S.open.delete(key); else S.open.add(key); render(); return; }
+        if (flow.toggles[p.name]) { S.recipes = !S.recipes; render(); return; }
         if (flow.goodOf[p.name] != null) window.location.href = 'goods.html#g=' + encodeURIComponent(GI.goods[flow.goodOf[p.name]].id);
       });
+      const c = chart('consumption'); c.resize(); c.setOption(consumptionOption(T), true);
     }
-    $('#sankeynote').textContent = S.p >= 0 ? 'A single province shows its sources by category; open a world region for buildings and recipes.' : '';
+    $('#sankeynote').textContent = S.p >= 0 ? 'One province shows its sources without the goods behind them; open a world region for buildings, goods, recipes and victuals.' : '';
     $('#ptable').innerHTML = provinceTable(D);
     $('#pcard').hidden = S.p >= 0;
     $('#btable').innerHTML = buildingsTable(D);
@@ -494,8 +533,8 @@ FOOD_JS = r"""
     if (S.p >= 0 && !FP) { FP = await fetch('food/provinces.json').then(r => r.json()).catch(() => ({})); if (my !== token) return; }
     const opt = FS ? timeOption() : null;
     if (opt) chart('time').setOption(opt, true); else chart('time').clear();
-    if (S.s > 0) loadSave(S.s - 1);
-    if (S.s < GI.saves.length - 1) loadSave(S.s + 1);
+    if (S.s > 0 && FI.saves[S.s - 1]) loadSave(S.s - 1);
+    if (S.s < GI.saves.length - 1 && FI.saves[S.s + 1]) loadSave(S.s + 1);
   }
 
   async function init() {
@@ -506,7 +545,6 @@ FOOD_JS = r"""
       return;
     }
     FI.poolColumns.forEach((c, i) => { P[c] = i; });
-    P.province = 0; P.country = 1; P.region = 2;
     GI.goods.forEach((g, i) => goodIdx.set(g.id, i));
     GI.regions.forEach((r, i) => regionIdx.set(r.id, i));
     S.s = GI.saves.length - 1;
@@ -518,21 +556,16 @@ FOOD_JS = r"""
     $('#save').addEventListener('change', e => { S.s = Number(e.target.value); render(); });
     $('#prev').addEventListener('click', () => { let s = S.s - 1; while (s >= 0 && !FI.saves[s]) s--; if (s >= 0) { S.s = s; render(); } });
     $('#next').addEventListener('click', () => { let s = S.s + 1; while (s < GI.saves.length && !FI.saves[s]) s++; if (s < GI.saves.length) { S.s = s; render(); } });
-    document.querySelectorAll('#detail button').forEach(b => b.addEventListener('click', () => {
-      S.open.clear();
-      if (b.dataset.v !== 'categories') FI.categories.forEach((c, i) => S.open.add('c' + i));
-      if (b.dataset.v === 'recipes') GI.buildings.forEach((x, i) => S.open.add('b' + i));
-      render();
-    }));
+    document.querySelectorAll('#detail button').forEach(b => b.addEventListener('click', () => { S.recipes = b.dataset.v === 'recipes'; render(); }));
     $('#psearch').addEventListener('input', () => loadSave(S.s).then(D => D && searchResults(D)));
     $('#pfilter').addEventListener('input', e => { S.query = e.target.value; loadSave(S.s).then(D => { if (D) $('#ptable').innerHTML = provinceTable(D); }); });
     document.addEventListener('click', e => {
       const sc = e.target.closest('[data-scope]');
-      if (sc) { e.preventDefault(); const r = Number(sc.dataset.scope); setScope(r, -1); return; }
+      if (sc) { e.preventDefault(); setScope(Number(sc.dataset.scope), -1); return; }
       const pr = e.target.closest('[data-province]');
       if (pr) { e.preventDefault(); $('#psearch').value = ''; setScope(S.r, Number(pr.dataset.province)); return; }
       const so = e.target.closest('th[data-sort]');
-      if (so) { const k = so.dataset.sort; if (S.sort === k) S.asc = !S.asc; else { S.sort = k; S.asc = k === 'months' || k === 'province' || k === 'fill' || k === 'net'; } loadSave(S.s).then(D => { if (D) $('#ptable').innerHTML = provinceTable(D); }); return; }
+      if (so) { const k = so.dataset.sort; if (S.sort === k) S.asc = !S.asc; else { S.sort = k; S.asc = ['months', 'province', 'fill', 'net'].includes(k); } loadSave(S.s).then(D => { if (D) $('#ptable').innerHTML = provinceTable(D); }); return; }
       if (e.target.closest('[data-all]')) { S.all = !S.all; loadSave(S.s).then(D => { if (D) $('#ptable').innerHTML = provinceTable(D); }); return; }
       const tv = e.target.closest('[data-tv]');
       if (tv) { S.tv = Number(tv.dataset.tv); timeButtons(); const opt = FS ? timeOption() : null; if (opt) chart('time').setOption(opt, true); }
@@ -568,18 +601,25 @@ def food_page_html(run_name: str, years: tuple[int, int]) -> str:
 <div class=main>
   <div class=bar>
     <label>Save <button id=prev type=button title="Previous save">‹</button><select id=save></select><button id=next type=button title="Next save">›</button></label>
-    <label>Show <span class=seg id=detail><button type=button data-v=categories>Categories</button><button type=button data-v=buildings>Buildings</button><button type=button data-v=recipes>Recipes</button></span></label>
-    <span class=muted>or click a source in the chart to open it</span>
+    <label>Cookshops <span class=seg id=detail><button type=button data-v=buildings>as buildings</button><button type=button data-v=recipes>by recipe</button></span></label>
   </div>
   <section id=head></section>
-  <section class=card><header><h3>Where the food comes from and where it goes</h3></header>
-    <div id=sankey class=chart style="height:460px"></div>
+  <section class=card><header><h3>Province food: where it comes from and where it goes</h3></header>
+    <div class=legend2><span><b>Left:</b> what fills the stores, read right to left: the three sources the engine adds (Province Food,
+    monthly food, subsistence), who makes each, what they buy, and who packs the victuals the Taverns buy.</span>
+    <span><b>Right:</b> what empties them: consumption by pop type, spoilage, and the Granges with the victuals they pack.</span></div>
+    <div class=scroll><div id=sankey class=chart style="height:480px"></div></div>
     <p class=note id=sankeynote></p>
-    <p class=caption>Food per month. Left to right: what the makers bought (as the food made from it), who makes food (click a
-    category or building to open it; Cookshops and Public Kitchens open into their recipes), the province stores, and who eats it,
-    what spoils and what the Granges take to pack victuals. The stores' figures are exact from the save; the split between the
-    sources is an estimate (subsistence, RGO levels, the buildings' recipes and flat food per level, by staffing) fitted to each
-    store's exact total with one factor per province, which stands for its food modifiers.</p></section>
+    <p class=caption>Food per month. The stores' figures are exact from the save (made, eaten, spoiled, stock); the split of what was
+    made between the sources is an estimate (subsistence per idle peasant, food per RGO level, the buildings' recipes and food per
+    level, by staffing) fitted to each store's exact total with one factor per province, its food modifiers. Goods count as the food
+    made from them (a building's food split over what it bought, by value); hover for the amounts bought. Click a Cookshop to see its
+    recipes, a good to open it on the goods page.</p></section>
+  <section class=card><header><h3>Consumption: need, modifiers, eaten</h3></header>
+    <div id=consumption class=chart style="height:220px"></div>
+    <p class=caption>Need: the pops times their food rate. Cookshops and Public Kitchens lower peasants' consumption by 1 % per staffed
+    level in their location; the rest of the difference to what was eaten (exact from the save) is the other modifiers: abundant or
+    available land, overpopulation, devastation, laws and advances.</p></section>
   <div id=video></div>
   <section class=card><header><h3>The stores over the run</h3><div class=views id=timeviews></div></header>
     <div id=time class=chart style="height:400px"></div>

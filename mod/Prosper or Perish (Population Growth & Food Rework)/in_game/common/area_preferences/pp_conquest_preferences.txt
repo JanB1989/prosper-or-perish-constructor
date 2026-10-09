@@ -48,6 +48,14 @@ pp_kiev_go_west = {
 	region = carpathia_region
 }
 
+# Serbia and Bulgaria look north to Hungary instead of south to the Ottomans (pp_balkans_north.txt).
+pp_balkans_go_north = {
+	preference_type = conquest
+	modifier = 2
+
+	region = carpathia_region
+}
+
 pp_hungary_go_east = {
 	preference_type = conquest
 	modifier = 2

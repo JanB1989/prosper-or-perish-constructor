@@ -1,0 +1,37 @@
+﻿# Serbia and Bulgaria look north to Hungary, not south to the Ottomans (docs/country_finetunes.md).
+
+# They prefer every country that rules from the Carpathians (Hungary, Wallachia, Moldavia).
+pp_balkans_north_focus = {
+	attacker_potential = {
+		OR = {
+			tag = SER
+			tag = BUL
+		}
+	}
+	target_trigger = {
+		NOT = { is_subject_of = scope:attacker }
+		capital ?= { region = region:carpathia_region }
+	}
+	score = {
+		add = 30
+	}
+}
+
+# The Ottomans and every country ruling from Anatolia count a quarter.
+pp_balkans_not_ottomans = {
+	attacker_potential = {
+		OR = {
+			tag = SER
+			tag = BUL
+		}
+	}
+	target_trigger = {
+		OR = {
+			tag = TUR
+			capital ?= { region = region:anatolia_region }
+		}
+	}
+	multiplier = {
+		add = -0.75
+	}
+}

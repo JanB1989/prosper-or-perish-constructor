@@ -1,0 +1,26 @@
+﻿# Serbia and Bulgaria look north to Hungary (docs/country_finetunes.md): countries ruling from the Carpathians are
+# war targets even where they are not land neighbours.
+pp_balkans_north_targets = {
+	attacker_potential = {
+		OR = {
+			tag = SER
+			tag = BUL
+		}
+		months_since_war >= 36
+	}
+	candidate_list = {
+		every_country = {
+			limit = {
+				NOT = { this = root }
+				NOT = { is_subject_of = root }
+				capital ?= { region = region:carpathia_region }
+			}
+			add_to_list = source
+		}
+	}
+	score = {
+		add = scope:target.country_tax_base
+		multiply = 10
+		add = 30
+	}
+}

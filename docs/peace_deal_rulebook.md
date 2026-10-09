@@ -107,7 +107,8 @@ number is per run, from each run's own 1341.4.1 save to 1357.4.1.
   Nanbokucho. Vanilla courts first fell 6.7 years in, so the block does not bind in vanilla dynamics. With the new
   defines, 1337-1347, one run per gate: no gate ends 1340.2.1 with 57 Nanbokucho wars; 3 years 1341.3.1 / 79;
   5 years 1345.3.1 / 166; 6 years 1346.12.18 / 198; vanilla 1344.1.1 and 1344.12.1 / 147. All new wars with the
-  5-year gate 392 (vanilla 389). No other region showed this.
+  5-year gate 392 (vanilla 389). Same window 1338.4-1347.4 for every run that covers it: vanilla 137 / 142
+  Nanbokucho wars, new defines without the gate 43 / 35, with the gate 152. No other region showed this.
 - Population-weighted control is 0.02 lower (six runs each: 0.424 -> 0.407), almost all of it in Hindustan
   (0.43 -> 0.32, consistent across runs); east China (0.36 -> 0.33) is within the spread, Europe, Africa and America
   are unchanged, and control per location is the same (0.456 both). Delhi collapses in every run. Under the new

@@ -113,6 +113,9 @@ number is per run, from each run's own 1341.4.1 save to 1357.4.1.
 - Tested and not adopted: `AI_CONQUER_TREATY_DESIRE_POTENTIAL_BORDERGORE = 0` (deals may never split the loser's
   remaining land) on top of the new defines, one 1337-1357 run: cut-offs after cessions 432 (new-define runs 254 +- 53),
   exclave stock 791 (721 +- 135), detached gains 78, land exchange and wars unchanged. No gain, so it stays at 0.005.
+- Tested and not adopted: `AI_CONQUER_TREATY_DESIRE_SAME_PROVINCE = 10` (vanilla 3; prefer completing provinces) on
+  top of the new defines, one run: exclave stock 798, border edges per location 0.742 (new-define runs 721 and
+  0.721 +- 0.026), partial cessions 1,534 locations (1,925): tidier borders did not follow, land exchange fell.
 - One pair continued 1357-1387: detached share 6.4 % -> 2.2 % (partial cessions 6.1 % -> 1.2 %), land changing
   owner 9,543 -> 11,062, wars started 905 -> 1,050; exclaves in 1387 264 vs 256.
 - Late game (observer run a3e3bb2a, 1837.4.1, two years each way): 84 vs 102 locations changed owner, about 1 %

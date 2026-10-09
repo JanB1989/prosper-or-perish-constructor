@@ -356,6 +356,10 @@
 - Use plain text in situation panes and generated static-modifier descriptions unless that target UI is verified to support inline concept links; unsupported formatter tags spam `error.log`.
 - Situation map legends should use mod-owned plain localization keys, not inherited or generic `LEGEND_KEY_*` keys, because legend UI is sensitive to formatter syntax.
 - In GUI files, do not put `#` formatter markers in `default_format` style names; use the raw style key such as `yellow_titles`.
+  Exception found 2026-10-10: EU5 1.4 vanilla writes `default_format = "#yellow_titles"` (382 times, never bare), and the
+  Europedia style types' bare `yellow_titles` titles drew magenta in game, so `pp_europedia_style.gui` uses the `#` form.
+  The card headers in `encyclopedia_lateralview.gui` still use the bare form (enforced by a test); check them in game
+  before changing that.
 
 ## Workers per level and estates (2026-10-03, Jan)
 

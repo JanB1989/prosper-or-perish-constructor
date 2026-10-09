@@ -45,7 +45,7 @@ types pp_europedia_style
 		text_single = {
 			using = Font_Type_Headers
 			fontsize = 19
-			default_format = "yellow_titles"
+			default_format = "#yellow_titles"   # vanilla form; without the # it draws magenta (seen 2026-10-10)
 			autoresize = yes
 			block "section_title" { text = "" }
 		}
@@ -85,7 +85,7 @@ types pp_europedia_style
 		text_single = {
 			using = Font_Type_Headers
 			fontsize = 16
-			default_format = "yellow_titles"
+			default_format = "#yellow_titles"   # vanilla form; without the # it draws magenta (seen 2026-10-10)
 			autoresize = yes
 			block "step_title" { text = "" }
 		}

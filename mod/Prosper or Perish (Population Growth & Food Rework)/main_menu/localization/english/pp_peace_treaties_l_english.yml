@@ -1,0 +1,5 @@
+﻿l_english:
+ pp_cede_preferred_location: "Cede Distant Land"
+ pp_cede_preferred_location_desc: "We will take land far from our borders that our ambitions have long set their sights on."
+ pp_cede_preferred_location_entry: "[target.GetOwner.GetFlagIcon] Cede [target.GetName]"
+ pp_cede_preferred_location_entry_short: "@[target.GetOwner.GetFlag]! Cede [target.GetNameWithNoTooltip]"

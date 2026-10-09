@@ -1,0 +1,52 @@
+﻿# PP: AI peace deals take only land connected to the winner (AI_CONQUER_TREATY_DESIRE_ADJECENT in
+# pp_defines_adjustments.txt, docs/peace_deal_rulebook.md). This term is the one exception: an AI winner may take a
+# location away from its land where it has a conquest preference (common/area_preferences, multiplier > 1) outside
+# its capital's region. To allow more, give the country a conquest preference; nothing else needs changing.
+pp_cede_preferred_location = {
+	cost = {
+		add = {
+			desc = "DIPLOREASON_BASE"
+			value = "scope:target.location_peace_cost(scope:loser|scope:winner)"
+		}
+	}
+
+	# the engine's land antagonism without its log2(development) term
+	base_antagonism = {
+		value = scope:target.development
+		multiply = 0.04
+		add = 0.4
+	}
+	antagonism_type = antagonism_taking_land
+
+	are_targets_exclusive = yes
+
+	potential = {
+		scope:winner = { is_ai = yes }
+	}
+
+	select_trigger = {
+		looking_for_a = location
+		source = recipient
+		target_flag = target
+		visible = {
+			owner ?= scope:recipient
+			NOT = { is_neighbor_of = scope:actor }
+			NOT = { region = scope:actor.capital.region }
+			area = { scope:actor = { "conquer_area_preference(prev)" > 1 } }
+		}
+	}
+
+	allow = {
+	}
+
+	effect = {
+		scope:target = { change_location_owner = scope:winner }
+	}
+
+	ai_desire = {
+		add = {
+			desc = "BASE"
+			value = 10
+		}
+	}
+}

@@ -62,9 +62,34 @@ nothing measurable, because non-adjacent land still scored above zero.
 
 Consequences: no partial cession of land that does not touch the taker; a war goal that does not border the attacker
 is only taken when the deal reaches it through connected land; allies far away get no land; an overseas foothold
-comes only next to existing holdings (whole-country annexation and vassalisation are unchanged). The "Recipient's
+comes only next to existing holdings or through the exception below (whole-country annexation and vassalisation are
+unchanged). The "Recipient's
 Desire" tooltip in the peace screen shows the desire without the selection factor, so its numbers are 20,000 x
 smaller than in vanilla (often 0.00); the ranking between locations is the same.
+
+### The one exception: conquest preferences outside the home region (2026-10-09)
+
+`in_game/common/peace_treaties/pp_cede_preferred_location.txt`, AI winners only: a location that does not touch the
+winner may be taken when the winner has a conquest preference on its area (`common/area_preferences`, multiplier
+above 1) and it lies outside the winner's capital region. It costs the engine's own cession cost
+(`location_peace_cost`). To allow more distant land, give the country a conquest preference; the term never changes.
+
+Why this rule (all detached gains in the five vanilla runs, flags read from the save before each transfer, per run;
+overseas = a landmass where the winner held nothing, same land = behind a third country or a gap):
+
+| Rule | Overseas cessions allowed (of 17.8) | Same-land gore allowed (of 160.6) |
+| --- | --- | --- |
+| Conquest preference outside the home region (shipped) | 6.6 | 1.8 |
+| Conquest preference anywhere | 12.4 | 17.8 |
+| Cores | 0.8 | 6.2 |
+| Claims (casus belli on the province) | 0.6 | 1.8 |
+| War goal | 9 % | 9 % |
+
+Home-region preferences are mostly gore (vanilla gives `russia_conquer_region` to every Russian principality, China's
+unification preference to its warlords); war goals do not separate the two at all. Kept: England in France, and
+whatever vanilla's or PP's preferences name (Aragon's islands, Venice, the Ottomans' Balkans, Castile's Maghreb).
+Blocked: Majapahit on Borneo (its home region), Tunis on Sardinia, England on the Hanse, Naples in Greece, Sweden in
+Livonia (no preference behind them).
 
 ## Measured effect (1341-1357, high aggression, five runs per setting)
 

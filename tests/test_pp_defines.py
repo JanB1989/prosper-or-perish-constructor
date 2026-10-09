@@ -78,3 +78,6 @@ def test_peace_deals_take_connected_land_only() -> None:
     worth_mult = float(values[("NAI", "AI_CONQUER_TREATY_DESIRE_FROM_WORTH_MULT")])
     assert adjacent > 100000
     assert abs(adjacent * worth_mult - 25) < 0.05
+    # the one exception (conquest preferences outside the home region) is a scripted peace term
+    assert (ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "in_game" / "common"
+            / "peace_treaties" / "pp_cede_preferred_location.txt").exists()

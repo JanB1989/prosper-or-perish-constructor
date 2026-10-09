@@ -59,6 +59,14 @@ Hand-tuned changes for single countries, one entry each: what and why.
 - **Ottomans +5 culture capacity** (2026-10-09, Jan, `advances/pp_country_advances_adjustments.txt`): all on
   Seljuk Heritage, researched at game start. Why: in run
   a3e3bb2a the Greek majority (353 k Greeks vs 220 k Turks at start) sat at satisfaction 0.02 and broke away in 1347.
+- **Ottomans crush the Mamluks once their power base stands** (2026-10-10, Jan, not tested in game). Power base =
+  owns Constantinople and no other country (Ottoman subjects aside) rules from Anatolia
+  (`scripted_triggers/pp_ottoman_triggers.txt`). Then `ai_scripted_expansion_score/pp_ottoman_anatolia.txt` gives
+  +60 and x2 on every country ruling from the Levant or Egypt, `ai_scripted_expansion_target/pp_ottoman_anatolia.txt`
+  makes them war targets after 24 months of peace, and `events/pp_ottoman_events.txt` adds the conquest preference
+  `pp_ottoman_crush_mamluks` (Egypt + Levant, x5). Why: run ac0ccc76, the Ottomans grew to 32 M people but left the
+  Mamluks' 143 locations untouched until 1612 and then only took them as a tributary (Egypt frozen to 1837); vanilla's
+  Egypt preference comes only 1475-1525 at x1, the same as Persia and the Caucasus.
 - **Serbia and Bulgaria look north to Hungary** (2026-10-09, Jan, not tested in game).
   `ai_scripted_expansion_score/target pp_balkans_north.txt`: SER/BUL +30 target score on every country ruling from the
   Carpathians (Hungary, Wallachia, Moldavia; war targets even if not neighbours, after 36 months of peace); the

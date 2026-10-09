@@ -31,6 +31,15 @@ pp_muscovy_gather_russian_lands = {
 	region = russian_region
 }
 
+# Ottomans, once they hold Constantinople and Anatolia (events/pp_ottoman_events.txt): the Levant and Egypt.
+pp_ottoman_crush_mamluks = {
+	preference_type = conquest
+	modifier = 5
+
+	region = egypt_region
+	region = crescent_region
+}
+
 # Muscovy: the steppe and the Volga, the Golden Horde's lands (Kiev is held back from them, pp_kiev_hungary.txt).
 pp_muscovy_conquer_steppe = {
 	preference_type = conquest

@@ -21,3 +21,33 @@ pp_ottoman_anatolia_targets = {
 		add = 30
 	}
 }
+
+# Once the power base stands (Constantinople + Anatolia, scripted_triggers/pp_ottoman_triggers.txt): every country
+# ruling from the Levant or Egypt (the Mamluks) is a war target.
+pp_ottoman_mamluk_targets = {
+	attacker_potential = {
+		tag = TUR
+		months_since_war >= 24
+		pp_ottoman_power_base = yes
+	}
+	candidate_list = {
+		every_country = {
+			limit = {
+				NOT = { this = root }
+				NOT = { is_subject_of = root }
+				capital ?= {
+					OR = {
+						region = region:egypt_region
+						region = region:crescent_region
+					}
+				}
+			}
+			add_to_list = source
+		}
+	}
+	score = {
+		add = scope:target.country_tax_base
+		multiply = 10
+		add = 60
+	}
+}

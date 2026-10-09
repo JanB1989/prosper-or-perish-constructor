@@ -1,0 +1,12 @@
+﻿# Ottoman aim (docs/country_finetunes.md): the power base is complete once the Ottomans hold Constantinople and no
+# other country (their own subjects aside) rules from Anatolia. Scope: the Ottoman country.
+pp_ottoman_power_base = {
+	owns = location:constantinople
+	NOT = {
+		any_country = {
+			NOT = { this = root }
+			NOT = { is_subject_of = root }
+			capital ?= { region = region:anatolia_region }
+		}
+	}
+}

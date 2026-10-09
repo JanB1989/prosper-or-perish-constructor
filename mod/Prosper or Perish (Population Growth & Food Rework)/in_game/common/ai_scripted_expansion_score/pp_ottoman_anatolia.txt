@@ -38,3 +38,27 @@ pp_ottoman_balkans_later = {
 		add = -0.75
 	}
 }
+
+# Once the power base stands (Constantinople + Anatolia, scripted_triggers/pp_ottoman_triggers.txt): crush the
+# Mamluks. Every country ruling from the Levant or Egypt scores +60 and counts double.
+pp_ottoman_crush_mamluks = {
+	attacker_potential = {
+		tag = TUR
+		pp_ottoman_power_base = yes
+	}
+	target_trigger = {
+		NOT = { is_subject_of = scope:attacker }
+		capital ?= {
+			OR = {
+				region = region:egypt_region
+				region = region:crescent_region
+			}
+		}
+	}
+	score = {
+		add = 60
+	}
+	multiplier = {
+		add = 1
+	}
+}

@@ -1,0 +1,15 @@
+﻿namespace = pp_ottoman
+
+# Ottoman aim (docs/country_finetunes.md): once the power base stands (Constantinople + Anatolia), the Ottomans want the
+# Levant and Egypt (vanilla's own Egypt preference comes only from 1475, at x1).
+pp_ottoman.1 = {
+	type = country_event outcome = neutral title = empty_text desc = empty_text hidden = yes fire_only_once = yes
+	dynamic_historical_event = { tag = TUR from = 1337.4.2 to = 1836.12.31 monthly_chance = 20 }
+	trigger = {
+		NOT = { has_area_preference = pp_ottoman_crush_mamluks }
+		pp_ottoman_power_base = yes
+	}
+	immediate = {
+		add_area_preference = pp_ottoman_crush_mamluks
+	}
+}

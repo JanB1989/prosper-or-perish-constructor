@@ -47,3 +47,12 @@ Hand-tuned changes for single countries, one entry each: what and why.
   1600). Skilled Tax Collectors (age 1) +5 % max control, +5 % max rural control. Why: run d3c30c7a, Muscovy grew
   steadily (26 -> 199 locations) but in 1512 Novgorod still held 128 and Smolensk 137, Kiev took Ruthenia, and Muscovy's
   control sat at 0.26-0.30 (159 of 496 possible tax).
+- **Kiev west, Hungary east; Muscovy into the steppe** (2026-10-09, Jan, not tested in game).
+  `ai_scripted_expansion_score/target pp_kiev_hungary.txt`: KIE +30 target score on every country ruling from the
+  Carpathians (Hungary, Wallachia, Moldavia), and targets ruling from the steppe, the Volga or Russia count x0.25; HUN
+  +30 on every country ruling from Ruthenia (Kiev, Halych); MOS/RUS +30 on every country ruling from the steppe or the
+  Volga (the Golden Horde and its heirs); all of them war targets even if not neighbours (after 36 months of peace).
+  At start the conquest preferences `pp_kiev_go_west` (Carpathians), `pp_hungary_go_east` (Ruthenia) and
+  `pp_muscovy_conquer_steppe` (steppe + Volga), x2 each, and Muscovy +500 starting gold
+  (`on_action/pp_country_finetunes.txt`). Why: Kiev grew to 250-1,260 locations in most runs by eating the Golden
+  Horde's steppe while Muscovy stayed small; Jan: Kiev and Hungary should fight each other, and Muscovy needs a push.

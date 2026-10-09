@@ -155,6 +155,14 @@ pp_country_finetune_area_preferences = {
 		}
 		c:MOS ?= {
 			add_area_preference = pp_muscovy_gather_russian_lands
+			add_area_preference = pp_muscovy_conquer_steppe
+		}
+		# Kiev and Hungary face each other (ai_scripted_expansion_score/target pp_kiev_hungary.txt).
+		c:KIE ?= {
+			add_area_preference = pp_kiev_go_west
+		}
+		c:HUN ?= {
+			add_area_preference = pp_hungary_go_east
 		}
 	}
 }
@@ -172,6 +180,10 @@ pp_country_finetune_start_gold = {
 		if = {
 			limit = { exists = c:FRA }
 			c:FRA = { add_gold = 500 }
+		}
+		if = {
+			limit = { exists = c:MOS }
+			c:MOS = { add_gold = 500 }
 		}
 	}
 }

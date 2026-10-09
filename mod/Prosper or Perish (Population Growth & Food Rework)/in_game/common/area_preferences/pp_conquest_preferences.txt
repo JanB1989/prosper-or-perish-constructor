@@ -30,3 +30,27 @@ pp_muscovy_gather_russian_lands = {
 
 	region = russian_region
 }
+
+# Muscovy: the steppe and the Volga, the Golden Horde's lands (Kiev is held back from them, pp_kiev_hungary.txt).
+pp_muscovy_conquer_steppe = {
+	preference_type = conquest
+	modifier = 2
+
+	region = steppes_region
+	region = ural_region
+}
+
+# Kiev looks west to the Carpathians and Hungary east to Ruthenia, so they meet each other.
+pp_kiev_go_west = {
+	preference_type = conquest
+	modifier = 2
+
+	region = carpathia_region
+}
+
+pp_hungary_go_east = {
+	preference_type = conquest
+	modifier = 2
+
+	region = ruthenia_region
+}

@@ -1,0 +1,70 @@
+﻿# Kiev west, Hungary east, Muscovy into the steppe (docs/country_finetunes.md).
+
+# Kiev prefers every country that rules from the Carpathians (Hungary, Wallachia, Moldavia).
+pp_kiev_west_focus = {
+	attacker_potential = {
+		tag = KIE
+	}
+	target_trigger = {
+		NOT = { is_subject_of = scope:attacker }
+		capital ?= { region = region:carpathia_region }
+	}
+	score = {
+		add = 30
+	}
+}
+
+# Kiev leaves the steppe, the Volga and Russia to Muscovy: targets ruling from there count a quarter.
+pp_kiev_not_east = {
+	attacker_potential = {
+		tag = KIE
+	}
+	target_trigger = {
+		capital ?= {
+			OR = {
+				region = region:steppes_region
+				region = region:ural_region
+				region = region:russian_region
+			}
+		}
+	}
+	multiplier = {
+		add = -0.75
+	}
+}
+
+# Hungary prefers every country that rules from Ruthenia (Kiev, Halych).
+pp_hungary_east_focus = {
+	attacker_potential = {
+		tag = HUN
+	}
+	target_trigger = {
+		NOT = { is_subject_of = scope:attacker }
+		capital ?= { region = region:ruthenia_region }
+	}
+	score = {
+		add = 30
+	}
+}
+
+# Muscovy/Russia prefers every country that rules from the steppe or the Volga (the Golden Horde and its heirs).
+pp_muscovy_steppe_focus = {
+	attacker_potential = {
+		OR = {
+			tag = MOS
+			tag = RUS
+		}
+	}
+	target_trigger = {
+		NOT = { is_subject_of = scope:attacker }
+		capital ?= {
+			OR = {
+				region = region:steppes_region
+				region = region:ural_region
+			}
+		}
+	}
+	score = {
+		add = 30
+	}
+}

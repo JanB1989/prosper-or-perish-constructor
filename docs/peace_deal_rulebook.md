@@ -93,7 +93,11 @@ number is per run, from each run's own 1341.4.1 save to 1357.4.1.
   gold; the stored ideal offers never contain the abdication term, and both courts still exist in 1342 under both
   settings. The situation itself ends 1344.1.1 / 1344.12.1 (vanilla) vs 1340.2.1 / 1339.8.1 (new defines), read
   from the saves (engine table situations). In every run, vanilla and new, the Southern Court loses the emperor status
-  and the Northern Court prevails (engine table io_special_status) - the historical outcome; only the timing moves. No other region showed this.
+  and the Northern Court prevails (engine table io_special_status) - the historical outcome; only the timing moves.
+  The only script that removes the Japanese emperor status is peace_nanbokuchou_force_imperial_abdication (AI desire
+  +1000 for the shogun and the courts). Cutting that desire to 200 (test, new defines, one run) left the end date
+  unchanged to the day (1340.2.1), so the date is not set by that desire; delaying it would need a real change to
+  the situation, not done. No other region showed this.
 - Population-weighted control is 0.02 lower (six runs each: 0.424 -> 0.407), almost all of it in Hindustan
   (0.43 -> 0.32, consistent across runs); east China (0.36 -> 0.33) is within the spread, Europe, Africa and America
   are unchanged, and control per location is the same (0.456 both). Delhi collapses in every run. Under the new

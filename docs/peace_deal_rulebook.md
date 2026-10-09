@@ -91,10 +91,11 @@ number is per run, from each run's own 1341.4.1 save to 1357.4.1.
 - Japan: the Nanbokucho situation ends about four years earlier (around 1340 instead of 1344-1345). It ends with the
   peace term that makes a court abdicate (AI desire +1000 for the shogun and the courts); without scattered daimyo
   land in the deal the winner takes that term sooner. Fewer Nanbokucho wars follow; no other region showed this.
-- Population-weighted control is 0.02 lower, all of it in Asia (Hindustan 0.43 -> 0.33, east China 0.37 -> 0.32;
-  Europe, Africa and America unchanged; control per location unchanged). Delhi collapses in every run; in the new runs
-  bigger successor states tend to hold Hindustan, and control falls with distance from the capital. Watch it in the
-  next long run; five runs of a chaotic region are not proof.
+- Population-weighted control is 0.02 lower (six runs each: 0.424 -> 0.407), almost all of it in Hindustan
+  (0.43 -> 0.32, consistent across runs); east China (0.36 -> 0.33) is within the spread, Europe, Africa and America
+  are unchanged, and control per location is the same (0.456 both). Delhi collapses in every run; under the new
+  defines its land ends with owners that hold it at lower control (similar number of owners, slightly larger ones;
+  not explained by recent conquest). Watch Hindustan in the next long run.
 - With three runs per setting the largest empires looked more stable under the new defines; the fourth and fifth pair
   reversed that (a giant broke up in a new run, none in a vanilla one). The 10 largest countries end the same size.
 - The standing map changes less than the deals: exclave fragments in 1357 average 244 (vanilla) vs 222 (new),

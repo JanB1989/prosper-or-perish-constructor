@@ -110,7 +110,7 @@ number is per run, from each run's own 1341.4.1 save to 1357.4.1.
   owner while it kept them 1,240 -> 1,172 (after a cession to an existing country ~270, after a loss to a new country
   ~520 - revolts, independence, releases - and ~430 when an owner's main body moves). The loser side is the larger
   source and the new defines do not touch it.
-- Tested and not adopted:  (deals may never split the loser's
+- Tested and not adopted: `AI_CONQUER_TREATY_DESIRE_POTENTIAL_BORDERGORE = 0` (deals may never split the loser's
   remaining land) on top of the new defines, one 1337-1357 run: cut-offs after cessions 432 (new-define runs 254 +- 53),
   exclave stock 791 (721 +- 135), detached gains 78, land exchange and wars unchanged. No gain, so it stays at 0.005.
 - One pair continued 1357-1387: detached share 6.4 % -> 2.2 % (partial cessions 6.1 % -> 1.2 %), land changing

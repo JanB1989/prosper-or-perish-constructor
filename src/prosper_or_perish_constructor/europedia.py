@@ -29,6 +29,18 @@ class GuiCard:
     title_key: str
     body_key: str
     icon_texture: str | None
+    # further texts of a styled card (pp_europedia_style.gui), in card order: (role, key); role is the
+    # blockoverride name ("section_title", "step_text", ...) or "text"
+    parts: tuple[tuple[str, str], ...] = ()
+
+
+# texts of a card in reading order: plain text_multi bodies, the style's lead/text types and its blockoverrides
+_CARD_TEXT = re.compile(
+    r"pp_eu_(?:lead|text)\s*=\s*\{\s*text\s*=\s*\"(?P<styled>[^\"]+)\""
+    r"|text_multi\s*=\s*\{[^{}]*?text\s*=\s*\"(?P<plain>[^\"]+)\""
+    r"|blockoverride\s+\"(?P<role>section_title|step_title|step_text|scale_label|row_label)\"\s*\{\s*text\s*=\s*\"(?P<part>[^\"]+)\""
+)
+_TITLE_ROLES = ("section_title", "step_title")
 
 
 @dataclass(frozen=True)
@@ -92,8 +104,12 @@ def build_europedia_payload(mod_root: Path) -> dict[str, Any]:
             missing_keys.append(card.title_key)
         if body is None:
             missing_keys.append(card.body_key)
+        missing_keys += [key for _, key in card.parts if key not in localization]
         if title is None or body is None:
             continue
+        # live lines (the player's own game) have nothing to show outside it
+        body = _join_parts(body, [(role, localization[key]) for role, key in card.parts
+                                  if key in localization and "GetPlayer" not in localization[key]])
 
         concept_key = _concept_key_from_title_key(card.title_key)
         definition = concepts.get(concept_key)
@@ -161,37 +177,48 @@ def build_europedia_payload(mod_root: Path) -> dict[str, Any]:
 
 
 def _extract_gui_cards(text: str) -> list[GuiCard]:
-    pattern = re.compile(
-        r"visible\s*=\s*\"\[Or\(GetVariableSystem\.HasValue\('pp_filter', 'all'\),\s*"
-        r"GetVariableSystem\.HasValue\('pp_filter', '(?P<filter>[^']+)'\)\)\]\""
-        r"(?P<body>.*?text_multi\s*=\s*\{.*?text\s*=\s*\"(?P<body_key>[^\"]+)\")",
-        flags=re.DOTALL,
-    )
+    starts = re.compile(r"visible\s*=\s*\"\[Or\(GetVariableSystem\.HasValue\('pp_filter', 'all'\)")
     cards: list[GuiCard] = []
-    for index, match in enumerate(pattern.finditer(text), start=1):
-        body = match.group("body")
-        title_match = re.search(
-            r"text_single\s*=\s*\{[^{}]*?text\s*=\s*\"(?P<title_key>[^\"]+)\"",
-            body,
-            flags=re.DOTALL,
+    for start in starts.finditer(text):
+        following = starts.search(text, start.end())
+        span = text[start.start():following.start() if following else len(text)]
+        match = re.match(
+            r"visible\s*=\s*\"\[Or\(GetVariableSystem\.HasValue\('pp_filter', 'all'\),\s*"
+            r"GetVariableSystem\.HasValue\('pp_filter', '(?P<filter>[^']+)'\)\)\]\"",
+            span,
         )
-        if title_match is None:
+        title_match = re.search(r"text_single\s*=\s*\{[^{}]*?text\s*=\s*\"(?P<title_key>[^\"]+)\"", span, flags=re.DOTALL)
+        texts = [(m.group("role") or "text", m.group("styled") or m.group("plain") or m.group("part"))
+                 for m in _CARD_TEXT.finditer(span)]
+        if match is None or title_match is None or not texts:
             continue
-        icon_match = re.search(
-            r"icon\s*=\s*\{[^{}]*?texture\s*=\s*\"(?P<texture>[^\"]+)\"",
-            body,
-            flags=re.DOTALL,
-        )
+        icon_match = re.search(r"icon\s*=\s*\{[^{}]*?texture\s*=\s*\"(?P<texture>[^\"]+)\"", span, flags=re.DOTALL)
         cards.append(
             GuiCard(
-                order=index,
+                order=len(cards) + 1,
                 filter_id=match.group("filter"),
                 title_key=title_match.group("title_key"),
-                body_key=match.group("body_key"),
+                body_key=texts[0][1],
                 icon_texture=icon_match.group("texture") if icon_match else None,
+                parts=tuple(texts[1:]),
             )
         )
     return cards
+
+
+def _join_parts(body: str, parts: list[tuple[str, str]]) -> str:
+    """A styled card's texts as one Europedia body: headings as titles, a scale's labels on one line."""
+    out = [body]
+    scale = False
+    for role, text in parts:
+        if role == "scale_label" and scale:
+            out[-1] += f" · {text}"
+        elif role in _TITLE_ROLES:
+            out.append(f"#T {text}#!")
+        else:
+            out.append(text)
+        scale = role == "scale_label"
+    return "\n\n".join(out)
 
 
 def _extract_filter_labels(text: str) -> dict[str, str]:

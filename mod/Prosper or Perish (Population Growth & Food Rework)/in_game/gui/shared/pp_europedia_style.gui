@@ -1,0 +1,163 @@
+﻿# Prosper or Perish Europedia card style (hand-kept). The cards in encyclopedia_lateralview.gui build from these types;
+# the layout rules are in main_menu/common/game_concepts/Ingame_Documentation_Rules.md ("Card style").
+# A card is 1450 wide: header tab, banner, lead, then sections (heading + body) indented 40 on both sides.
+
+types pp_europedia_style
+{
+	# Wide illustration under the card header: a vanilla 1080x440 picture scaled to card width, cropped to the
+	# banner's height and soft at both ends. Override "banner_texture"; "banner_offset" moves the crop up or down.
+	type pp_eu_banner = widget {
+		size = { 1450 250 }
+		scissor = yes
+
+		icon = {
+			size = { 1450 591 }
+			block "banner_offset" { position = { 0 -150 } }
+			block "banner_texture" { texture = "gfx/interface/icons/trade_goods/illustrations/icon_goods_wheat.dds" }
+			modify_texture = {
+				texture = "gfx/interface/component_masks/mask_fade_horizontal_middle.dds"
+				blend_mode = alphamultiply
+			}
+		}
+	}
+
+	# Lead paragraph under the banner: the card's one-paragraph summary in the flavour type, centred.
+	type pp_eu_lead = text_multi {
+		max_width = 1450
+		min_width = 1450
+		autoresize = yes
+		margin = { 140 6 }
+		align = hcenter|nobaseline
+		using = Font_Type_Flavor
+		fontsize = 17
+	}
+
+	# Section heading: an icon, a gold title and a gold rule fading out to the right.
+	# Override "section_icon" (a texture line) and "section_title" (a text line).
+	type pp_eu_section = hbox {
+		layoutpolicy_horizontal = expanding
+		margin = { 40 0 }
+		margin_top = 16
+		spacing = 10
+
+		icon = {
+			size = { 34 34 }
+			block "section_icon" { texture = "gfx/interface/icons/flat_icons/effect.dds" }
+		}
+		text_single = {
+			using = Font_Type_Headers
+			fontsize = 19
+			default_format = "yellow_titles"
+			autoresize = yes
+			block "section_title" { text = "" }
+		}
+		icon = {
+			layoutpolicy_horizontal = expanding
+			size = { 20 2 }
+			using = color_gold_texture
+			alpha = 0.7
+			modify_texture = {
+				texture = "gfx/interface/component_masks/mask_fade_horizontal_right.dds"
+				blend_mode = alphamultiply
+			}
+		}
+	}
+
+	# Body text of a section, indented like the heading.
+	type pp_eu_text = text_multi {
+		max_width = 1450
+		min_width = 1450
+		autoresize = yes
+		margin = { 40 4 }
+	}
+
+	# One step of a flow diagram: a paper panel with an icon, a title and a short text. Four steps and three
+	# pp_eu_arrow fit a card row (hbox, margin { 40 0 }, spacing 8). Override "step_icon", "step_title", "step_text".
+	type pp_eu_step = vbox {
+		minimumsize = { 305 236 }
+		maximumsize = { 305 -1 }
+		margin = { 14 14 }
+		spacing = 8
+		using = bg_paper_card
+
+		icon = {
+			size = { 60 60 }
+			block "step_icon" { texture = "gfx/interface/icons/flat_icons/effect.dds" }
+		}
+		text_single = {
+			using = Font_Type_Headers
+			fontsize = 16
+			default_format = "yellow_titles"
+			autoresize = yes
+			block "step_title" { text = "" }
+		}
+		text_multi = {
+			max_width = 277
+			min_width = 277
+			autoresize = yes
+			align = hcenter|nobaseline
+			block "step_text" { text = "" }
+		}
+		expand = {}
+	}
+
+	# The arrow between two flow steps.
+	type pp_eu_arrow = icon {
+		size = { 30 30 }
+		texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+		using = color_gold
+	}
+
+	# One step of a scale (worst to best, left to right): a 64 px medallion over a label. Seven fit a card row
+	# (hbox, spacing 10). Override "medallion" (widgets drawn in a 64 x 64 box) and "scale_label" (a text line,
+	# usually a concept link that holds the details).
+	type pp_eu_scale_step = vbox {
+		minimumsize = { 180 -1 }
+		maximumsize = { 180 -1 }
+		spacing = 6
+
+		widget = {
+			size = { 64 64 }
+			block "medallion" {}
+		}
+		text_multi = {
+			max_width = 176
+			min_width = 176
+			autoresize = yes
+			align = hcenter|nobaseline
+			block "scale_label" { text = "" }
+		}
+	}
+
+	# A round frame around a goods icon, the medallion of the scale steps.
+	type pp_eu_medallion_frame = icon {
+		size = { 100% 100% }
+		parentanchor = center
+	}
+	type pp_eu_medallion_goods = icon {
+		size = { 80% 80% }
+		parentanchor = center
+	}
+
+	# A labelled row of goods icons: a fixed-width label, then the icons (each with the goods name as tooltip).
+	# Override "row_label" (a text line) and "row_goods" (pp_eu_goods icons).
+	type pp_eu_goods_row = hbox {
+		layoutpolicy_horizontal = expanding
+		spacing = 12
+
+		text_multi = {
+			max_width = 230
+			min_width = 230
+			autoresize = yes
+			block "row_label" { text = "" }
+		}
+		hbox = {
+			spacing = 4
+			block "row_goods" {}
+		}
+		expand = {}
+	}
+	type pp_eu_goods = icon {
+		size = { 40 40 }
+	}
+}

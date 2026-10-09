@@ -265,9 +265,12 @@ def test_variable_harvest_localization_is_player_facing_and_value_free() -> None
     assert "Localization is player-facing in-game text" in rule_text
     assert "Do not hardcode balance values in localization" in rule_text
     assert "unsupported formatter tags spam" in rule_text
-    assert "broad harvest areas" in europedia_text
-    assert "each [region|e] inside it still receives its own harvest result" in europedia_text
-    assert "without forcing every region to share the same outcome" in europedia_text
+    assert "Neighbouring regions tend to share their luck" in europedia_text
+    assert "Every [region|e] of the area then draws its own harvest" in europedia_text
+    assert "leans toward its own last harvest" in europedia_text
+    # each severity's numbers are its modifiers' own tooltips, one hover link per broad harvest area
+    for severity in ACTIVE_SEVERITIES:
+        assert f"$PP_HARVEST_BY_AREA_{severity.upper()}$" in europedia_text
 
 
 def test_variable_harvest_situation_text_uses_plain_formatter_text() -> None:
@@ -377,6 +380,8 @@ def _harvest_localization_lines(path: Path) -> list[str]:
         "game_concept_good_harvest_desc:",
         "game_concept_very_good_harvest_desc:",
         "game_concept_bountiful_harvest_desc:",
+        "game_concept_average_harvest_desc:",
+        "PP_EU_HARVEST_",   # the Europedia card (encyclopedia_lateralview.gui)
     )
     return [
         line

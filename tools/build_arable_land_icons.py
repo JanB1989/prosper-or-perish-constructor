@@ -1,7 +1,15 @@
-"""Build the three arable-land state icons (location view land chip, Europedia, concepts) from vanilla icon parts.
+"""Build every Arable Land icon (the population capacity, renamed 2026-10-10) into the mod.
 
-Each icon is the land and its people: vanilla land plates (fresh green, plain, dry brown), the peasants (few, more, a
-crowd) and vanilla's strength chevrons (two green, one green, two red). Rerun after a game update:
+- Arable Land itself: the tilled-field painting (assets/icons/arable_land/arable_land.png). It replaces vanilla's
+  population capacity concept icon (modifier_types/total_population_capacity_modifier.dds) and the map mode icon.
+- Arable Land modifiers: the field with vanilla's capacity symbol (an arrow up to a bar, as on vanilla's capacity
+  icons), in vanilla's shared slot modifier_types/global_population_capacity_modifier.dds, which every population
+  capacity modifier type points at.
+- The three states (location view land chip, Europedia, concepts, strength markers), from vanilla icon parts: land
+  plates (fresh green, plain, dry brown), the peasants (few, more, a crowd) and vanilla's strength chevrons (two green,
+  one green, two red).
+
+Rerun after a game update:
 
     uv run python tools/build_arable_land_icons.py                  # write the DDS into the mod
     uv run python tools/build_arable_land_icons.py --preview X.png  # also a sheet at full and chip size
@@ -12,14 +20,49 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from PIL import Image, ImageEnhance
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 ROOT = Path(__file__).resolve().parents[1]
 MOD = ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)"
+FIELD = ROOT / "assets/icons/arable_land/arable_land.png"
 ICONS_DIR = "gfx/interface/icons/pp_arable_land"   # under the mod's main_menu: abundant.dds, available.dds, overused.dds
+BASE_TARGETS = {   # under the mod's main_menu/gfx/interface/icons -> "field" or "modifier"
+    "modifier_types/total_population_capacity_modifier.dds": "field",
+    "map_modes/pp_population_capacity.dds": "field",
+    "modifier_types/global_population_capacity_modifier.dds": "modifier",
+}
 SIZE = 128
+
+
+def _field() -> Image.Image:
+    with Image.open(FIELD) as source:
+        return source.convert("RGBA").resize((SIZE, SIZE), Image.LANCZOS)
+
+
+def _capacity_symbol() -> Image.Image:
+    """Vanilla's capacity mark, redrawn at this size: a pale bar with an arrow pointing up to it, dark outline."""
+    sym = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    d = ImageDraw.Draw(sym)
+    fill, line = (228, 222, 204, 255), (48, 42, 34, 255)
+    d.rectangle((80, 70, 124, 79), fill=fill, outline=line, width=3)
+    d.polygon([(102, 84), (82, 104), (93, 104), (93, 124), (111, 124), (111, 104), (122, 104)], fill=fill, outline=line)
+    d.line([(102, 84), (82, 104), (93, 104), (93, 124), (111, 124), (111, 104), (122, 104), (102, 84)], fill=line, width=3)
+    shadow = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    shadow.putalpha(sym.getchannel("A").point(lambda a: int(a * 0.55)).filter(ImageFilter.GaussianBlur(2)))
+    out = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    out.alpha_composite(shadow, (2, 2))
+    out.alpha_composite(sym)
+    return out
+
+
+def base_icons() -> dict[str, Image.Image]:
+    field = _field()
+    modifier = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    modifier.alpha_composite(field.resize((104, 104), Image.LANCZOS), (0, 0))
+    modifier.alpha_composite(_capacity_symbol())
+    return {"field": field, "modifier": modifier}
 
 
 def _load(icons: Path, rel: str, size: int) -> Image.Image:
@@ -66,11 +109,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--no-write", action="store_true", help="only the preview")
     args = parser.parse_args(argv)
     built = icons(vanilla_root(ROOT, ROOT / "constructor.toml") / "game/main_menu/gfx/interface/icons")
+    base = base_icons()
     if args.preview:
-        sheet = Image.new("RGBA", (3 * 150 + 3 * 50, 150), (52, 60, 74, 255))
-        for i, im in enumerate(built.values()):
+        shown = [base["field"], base["modifier"], *built.values()]
+        sheet = Image.new("RGBA", (len(shown) * 150 + len(shown) * 50, 150), (52, 60, 74, 255))
+        for i, im in enumerate(shown):
             sheet.alpha_composite(im, (i * 150 + 10, 10))
-            sheet.alpha_composite(im.resize((30, 30), Image.LANCZOS), (450 + i * 50 + 10, 60))
+            sheet.alpha_composite(im.resize((30, 30), Image.LANCZOS), (len(shown) * 150 + i * 50 + 10, 60))
         sheet.save(args.preview)
     if not args.no_write:
         target = MOD / "main_menu" / ICONS_DIR
@@ -78,6 +123,11 @@ def main(argv: list[str] | None = None) -> int:
         for name, im in built.items():
             im.save(target / f"{name}.dds", format="DDS", pixel_format="DXT5")
             print((target / f"{name}.dds").relative_to(ROOT))
+        for rel, kind in BASE_TARGETS.items():
+            path = MOD / "main_menu/gfx/interface/icons" / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            base[kind].save(path, format="DDS", pixel_format="DXT5")
+            print(path.relative_to(ROOT))
     return 0
 
 

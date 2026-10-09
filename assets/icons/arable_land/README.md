@@ -1,9 +1,17 @@
-# Subsistence Land icon
+# Arable Land icon
 
-Generated with the built-in image-generation tool. The transparent PNG is the
-source artwork; `tools/build_subsistence_land_icons.py` exports 64-pixel BC3/DXT5
-DDS textures for the shared capacity modifier, base concept, and mod map picker.
-`preview.png` shows the exported texture at 32, 64, and 128 pixels.
+The tilled-field painting for **Arable Land** (the engine's population capacity; called Subsistence Land until
+2026-10-10). Generated with the built-in image-generation tool; `arable_land.png` is the transparent source artwork.
+
+`tools/build_arable_land_icons.py` exports it at 128 px (BC3/DXT5) into:
+
+- `modifier_types/total_population_capacity_modifier.dds`: vanilla's population capacity concept icon;
+- `map_modes/pp_population_capacity.dds`: the Arable Land map mode and the Europedia card header;
+- `modifier_types/global_population_capacity_modifier.dds`: with vanilla's capacity mark (an arrow up to a bar), the
+  icon every population capacity modifier type points at.
+
+The same tool builds the three state icons (Abundant / Available / Overused Arable Land) from vanilla parts.
+`preview.png` is the old 64 px export sheet.
 
 ## Generation prompt
 

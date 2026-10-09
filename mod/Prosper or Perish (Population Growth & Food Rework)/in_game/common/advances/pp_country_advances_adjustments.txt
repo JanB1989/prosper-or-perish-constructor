@@ -6,6 +6,7 @@ TRY_INJECT:seljuk_heritage = {
 	monthly_war_exhaustion = -0.05
 	stability_cost_efficiency = 0.2
 	monthly_rebel_growth = -0.001
+	cultures_capacity = 5 # 2026-10-09, Jan; researched at game start
 }
 TRY_INJECT:timariots = {
 	global_max_control = 0.05

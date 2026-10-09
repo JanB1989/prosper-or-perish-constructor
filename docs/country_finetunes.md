@@ -56,6 +56,9 @@ Hand-tuned changes for single countries, one entry each: what and why.
   `pp_muscovy_conquer_steppe` (steppe + Volga), x2 each, and Muscovy +500 starting gold
   (`on_action/pp_country_finetunes.txt`). Why: Kiev grew to 250-1,260 locations in most runs by eating the Golden
   Horde's steppe while Muscovy stayed small; Jan: Kiev and Hungary should fight each other, and Muscovy needs a push.
+- **Ottomans +5 culture capacity** (2026-10-09, Jan, `advances/pp_country_advances_adjustments.txt`): all on
+  Seljuk Heritage, researched at game start. Why: in run
+  a3e3bb2a the Greek majority (353 k Greeks vs 220 k Turks at start) sat at satisfaction 0.02 and broke away in 1347.
 - **Serbia and Bulgaria look north to Hungary** (2026-10-09, Jan, not tested in game).
   `ai_scripted_expansion_score/target pp_balkans_north.txt`: SER/BUL +30 target score on every country ruling from the
   Carpathians (Hungary, Wallachia, Moldavia; war targets even if not neighbours, after 36 months of peace); the

@@ -44,7 +44,9 @@
   updates the leg (body block, slot list, localization, evaluation allow rules); the labour pass skips it. Buildings
   without a market good, gates on a store-following good (the Grange's Surplus Sales, the Tavern's Common Table: 0.1 offset -> 0.852 Province Food, so it passes 1.05 up to ~6 stored
   months whatever victuals cost, 2026-10-04),
-  buildings that sell only for `offset` (the Cookshop line) and `strategic_goods` get none. Never gate on a method that
+  buildings that sell only for `offset` (the Cookshop line) get none. No good carries `ai_rgo_expansion_priority` > 0
+  (`pp_goods_adjustments.txt` sets vanilla's seven to 0, 2026-10-09; a test guards it): an output good with it skips
+  the margin check, so masons and quarries were built against the price. Never gate on a method that
   buys the building's own main good (inverts the AI's price response), except a token amount:
 - Crop farms (farm v3, 2026-10-02): Provision takes a token of the crop (`crop_provision_input_gold` in
   `[building_scaling]`) and makes a fixed Province Food amount per level, so it is the farm's gate (margin about 15 at

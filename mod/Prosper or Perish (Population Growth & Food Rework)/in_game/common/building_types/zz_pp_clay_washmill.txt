@@ -84,6 +84,16 @@ unique_production_methods = {
         category = building_maintenance
     }
 }
+unique_production_methods = {
+    pp_clay_washmill_market_sales = {
+        icon_type = goods
+        icon = clay
+        offset = 0.01
+        produced = clay
+        output = 0.02
+        category = building_maintenance
+    }
+}
 
 raw_modifier = {
 	local_population_capacity = 0.35

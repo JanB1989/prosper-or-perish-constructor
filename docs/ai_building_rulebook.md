@@ -739,8 +739,11 @@ The **"Too low profit margin"** gate (utility × 0) hits about half of all candi
   good (cookshops, logistics), storage-leg gates (grange, tavern) and goods the gate never applies to keep their own
   gate. Evaluator check (300 places of h02, wheat price scaled): old gate 7 % gated at 0.6x, 85 % at 2x; leg 73 % at
   0.6x, 27 % at 1x, 5 % at 2x.
-- A building never gets gated when an output good has `ai_rgo_expansion_priority` (clay, iron, gold, silver, stone,
-  ivory, masonry). Only output goods count, never inputs.
+- A building never gets gated when an output good has `ai_rgo_expansion_priority` > 0 (vanilla: clay, iron, gold,
+  silver, stone, lumber, masonry). Only output goods count, never inputs. The same setting adds a shortage bonus
+  ("Producing <good> used in construction": (local demand / supply - 0.8) x priority per unit, when positive) and an
+  extra AI value for `global_<good>_output_modifier` (last month's production x priority). It does not touch RGO
+  expansion. PP sets all seven to 0 (2026-10-09), so every producer follows its Market leg.
 - This predicts the gate for 90 % of candidates. Taverns are the main exception (half of them are gated and the rule
   does not tell which).
 

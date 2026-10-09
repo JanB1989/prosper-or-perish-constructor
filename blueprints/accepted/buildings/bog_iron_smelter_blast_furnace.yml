@@ -3,7 +3,7 @@ tag: bog_iron_smelter_blast_furnace
 footprint: mill_works
 labour:
   class: primary_discovery
-gate_method: pp_bog_iron_smelter_blast_furnace_finery
+gate_method: pp_bog_iron_smelter_blast_furnace_market_sales
 upgrade_chain:
   family: bog_iron_smelter
   tier: 1
@@ -19,6 +19,9 @@ building:
       methods:
         - pp_bog_iron_smelter_blast_furnace_maintenance
         - pp_bog_iron_smelter_blast_furnace_finery
+    - name: slot_1
+      methods:
+        - pp_bog_iron_smelter_blast_furnace_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -75,6 +78,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_bog_iron_smelter_blast_furnace_market_sales = {
+            offset = 0.014
+            produced = iron
+            output = 0.004
+            category = building_maintenance
+        }
+    }
 
     construction_demand = workshop_construction
     raw_modifier = {
@@ -86,6 +97,9 @@ localization:
     bog_iron_smelter_blast_furnace_desc: Blast furnaces and finery hearths let wetland ironworks smelt more bog ore with steadier heat and larger crews.
     pp_bog_iron_smelter_blast_furnace_maintenance: Bog Iron Furnace Work
     pp_bog_iron_smelter_blast_furnace_finery: Bog Iron Finery Hearths
+    bog_iron_smelter_blast_furnace_slot_1: Market
+    pp_bog_iron_smelter_blast_furnace_market_sales: Market Sales
+    pp_bog_iron_smelter_blast_furnace_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
 icon:
   source_png: ../assets/icons/bog_iron_smelter_blast_furnace.png
   output_dds: bog_iron_smelter_blast_furnace.dds
@@ -103,3 +117,8 @@ evaluation:
       production_efficiency: 1.05
       allow_rules:
         input_throughput: Finery hearths improve output while staying below deposit-mine scale.
+    pp_bog_iron_smelter_blast_furnace_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

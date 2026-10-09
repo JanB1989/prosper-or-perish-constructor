@@ -105,6 +105,16 @@ unique_production_methods = {
         category = building_maintenance
     }
 }
+unique_production_methods = {
+    pp_iron_mine_improved_market_sales = {
+        icon_type = goods
+        icon = iron
+        offset = 0.014
+        produced = iron
+        output = 0.004
+        category = building_maintenance
+    }
+}
 
 raw_modifier = {
 	local_population_capacity = 0.15

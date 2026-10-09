@@ -23,8 +23,7 @@ Gate leg (``[production_gate.leg]``, 2026-09-30): a building with a market main 
 slot ``pp_<building>_market_sales`` that makes a little of that good for a floor-pinned dummy at ``leg.margin``. It is
 always read, so the check follows the main good's market price for new buildings, whatever is
 researched or supplied. ``apply`` adds, updates or drops the leg (body block, slot list, localization, evaluation
-allow rules) and flags it; buildings without a market good, storage-leg gates and ``strategic_goods`` keep the rule
-below. The old Provision gate bought the building's own crop, so the AI stopped building farms when the crop was dear.
+allow rules) and flags it; buildings without a market good and storage-leg gates keep the rule below. The old Provision gate bought the building's own crop, so the AI stopped building farms when the crop was dear.
 
 ``ppc gate apply`` rewrites the body so the flagged method gates: its slot becomes the last unique block and the method
 is listed last in it. Everything else is ordered by importance, bottom = most important:
@@ -100,7 +99,6 @@ class GateConfig:
     base_inputs: frozenset[str] = frozenset({"manual_labor"})
     price_overrides: Mapping[str, float] = field(default_factory=dict)
     pinned_goods: frozenset[str] = frozenset({"local_food", "offset", "logistics"})
-    strategic_goods: frozenset[str] = frozenset()
     leg: LegConfig | None = None
 
 
@@ -143,7 +141,6 @@ def load_config(project: Path) -> GateConfig:
         base_inputs=frozenset(str(g) for g in evaluation.get("base_method_input_goods", default.base_inputs)),
         price_overrides={str(k): float(v) for k, v in dict(evaluation.get("price_overrides") or {}).items()},
         pinned_goods=frozenset(str(g) for g in section.get("pinned_goods", default.pinned_goods)),
-        strategic_goods=frozenset(str(g) for g in section.get("strategic_goods", default.strategic_goods)),
         leg=LegConfig(**{k: (float(v) if k in {"margin", "value"} else str(v)) for k, v in dict(leg).items()}) if isinstance(leg, dict) else None,
     )
 
@@ -377,8 +374,8 @@ def plan_leg(building: str, slots: Sequence[Slot], flag: str | None, config: Gat
     The AI's margin check reads the last method it looks at that has an output. A one-method slot is always looked at
     (no research, potential, allow or input check), so a leg as the last slot decides the check for new buildings and new
     levels alike: its margin is (1 + output modifiers) x the main good's market price / its base price x ``leg.margin``.
-    None for buildings without a market good (services, floor-pinned dummies), whose main good the AI never gates
-    (``strategic_goods``: ai_rgo_expansion_priority > 0), and deliberate storage gates (a flag on a storage-leg good)."""
+    None for buildings without a market good (services, floor-pinned dummies) and deliberate storage gates (a flag on a
+    storage-leg good)."""
     if config.leg is None:
         return None
     real = without_legs(slots)
@@ -387,7 +384,7 @@ def plan_leg(building: str, slots: Sequence[Slot], flag: str | None, config: Gat
         if where is not None and real[where[0]].methods[where[1]].produced in config.dynamic_goods:
             return None
     good = main_good(real, config, prices)
-    if good is None or good in config.strategic_goods:
+    if good is None:
         return None
     price = float(prices.get(good, 0.0))
     input_price = float(prices.get(config.leg.input, 0.0))

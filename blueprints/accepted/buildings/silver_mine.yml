@@ -6,7 +6,7 @@ labour:
   methods:
     pp_silver_mine_fire_setting: hand_work
     pp_silver_mine_base_silver: base
-gate_method: pp_silver_mine_silver
+gate_method: pp_silver_mine_market_sales
 upgrade_chain:
   family: silver_mine
   tier: 0
@@ -31,6 +31,9 @@ building:
         - pp_silver_mine_no_primary
         - pp_silver_mine_fire_setting
         - pp_silver_mine_silver
+    - name: slot_3
+      methods:
+        - pp_silver_mine_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -110,6 +113,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_silver_mine_market_sales = {
+            offset = 0.012
+            produced = silver
+            output = 0.002
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -133,6 +144,9 @@ localization:
     pp_silver_mine_no_secondary: No Associated Recovery
     pp_silver_mine_lead: Argentiferous Galena Picking
     pp_silver_mine_gold: Auriferous Ore Picking
+    silver_mine_slot_3: Market
+    pp_silver_mine_market_sales: Market Sales
+    pp_silver_mine_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
 icon:
   source_png: ../assets/icons/silver_mine.png
   output_dds: silver_mine.dds
@@ -176,3 +190,8 @@ evaluation:
         input_throughput: Auriferous ore picking is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
         output_throughput: Auriferous ore picking is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
         amortization_months: Auriferous ore picking is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+    pp_silver_mine_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

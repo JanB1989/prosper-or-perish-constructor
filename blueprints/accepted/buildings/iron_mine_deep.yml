@@ -6,7 +6,7 @@ labour:
   methods:
     pp_iron_mine_deep_base_iron: base
 output_tag: iron_mine_improved_deep
-gate_method: pp_iron_mine_deep_slitting_ore
+gate_method: pp_iron_mine_deep_market_sales
 upgrade_chain:
   family: iron_mine
   tier: 2
@@ -32,6 +32,9 @@ building:
         - pp_iron_mine_deep_horse_whim_haulage
         - pp_iron_mine_deep_drainage_workings
         - pp_iron_mine_deep_slitting_ore
+    - name: slot_3
+      methods:
+        - pp_iron_mine_deep_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -123,6 +126,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_iron_mine_deep_market_sales = {
+            offset = 0.014
+            produced = iron
+            output = 0.004
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -147,6 +158,9 @@ localization:
     pp_iron_mine_deep_ore_dressing_floors: Ore Dressing Floors
     pp_iron_mine_deep_no_secondary: No Ochre Recovery
     pp_iron_mine_deep_ochre: Deep Ochre Washing
+    iron_mine_deep_slot_3: Market
+    pp_iron_mine_deep_market_sales: Market Sales
+    pp_iron_mine_deep_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
 icon:
   source_png: ../assets/icons/iron_mine_deep.png
   output_dds: iron_mine_deep.dds
@@ -193,3 +207,8 @@ evaluation:
       allow_rules:
         input_throughput: Ochre washing is an ancillary iron ore byproduct, intentionally less profitable than primary iron extraction.
         output_throughput: Ochre washing is an ancillary iron ore byproduct, intentionally less profitable than primary iron extraction.
+    pp_iron_mine_deep_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

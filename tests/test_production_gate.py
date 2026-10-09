@@ -192,7 +192,6 @@ LEG_CONFIG = """
 threshold = 1.2
 dynamic_goods = ["province_food_sales"]
 pinned_goods = ["local_food", "offset", "logistics"]
-strategic_goods = ["stone"]
 
 [blueprint_evaluation]
 base_method_input_goods = ["manual_labor"]
@@ -343,7 +342,6 @@ unique_production_methods = {
     assert pg.main_good(slots, config, {"olives": 1.0, "beeswax": 5.0, "manual_labor": 1.0}) == "olives"
     leg = pg.plan_leg("x", slots, None, config, {"olives": 1.0, "beeswax": 5.0, "manual_labor": 1.0, "offset": 1.0})
     assert leg is not None and leg.good == "olives"
-    assert pg.plan_leg("x", slots, None, pg.GateConfig(leg=pg.LegConfig(), strategic_goods=frozenset({"olives"})), {"olives": 1.0, "offset": 1.0}) is None
 
 
 def test_the_gate_leg_is_a_labour_free_technical_method() -> None:
@@ -398,3 +396,21 @@ def test_every_market_good_building_gates_on_its_leg_and_no_gate_buys_its_main_g
     assert by_name["wheat_farm"].gate == "pp_wheat_farm_provision" and by_name["wheat_farm"].leg is None
     assert by_name["fishing_village"].gate == "pp_fishing_village_market_sales"
     assert by_name["grange"].gate == "pp_grange_surplus_sales" and by_name["tavern"].leg is None
+    assert by_name["mason"].gate == "pp_mason_market_sales"  # masonry no longer skips the check (2026-10-09)
+
+
+def test_no_good_skips_the_margin_check() -> None:
+    """Engine (1.4 decompile 2026-10-09): a building that outputs a good with ai_rgo_expansion_priority > 0 skips the
+    profit-margin check and gets a construction-shortage bonus; vanilla gives it to seven goods. pp_goods_adjustments
+    sets them to 0, so every producer follows its Market leg. The last entry wins (TRY_INJECT replaces scalars)."""
+    import json
+
+    from eu5gameparser.domain.eu5 import load_eu5_data
+
+    data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
+    exempt = {}
+    for name, raw in data.goods.select("name", "data").iter_rows():
+        values = [e["value"] for e in json.loads(raw or "{}").get("entries", []) if e["key"] == "ai_rgo_expansion_priority"]
+        if values and float(values[-1]) > 0:
+            exempt[name] = values[-1]
+    assert exempt == {}

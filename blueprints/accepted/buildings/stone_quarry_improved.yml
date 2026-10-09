@@ -5,7 +5,7 @@ labour:
   class: primary_discovery
   methods:
     pp_stone_quarry_improved_base_stone: base
-gate_method: pp_stone_quarry_improved_crane_winch_quarrying
+gate_method: pp_stone_quarry_improved_market_sales
 upgrade_chain:
   family: stone_quarry
   tier: 1
@@ -29,6 +29,9 @@ building:
         - pp_stone_quarry_improved_no_primary
         - pp_stone_quarry_improved_ox_haulage
         - pp_stone_quarry_improved_crane_winch_quarrying
+    - name: slot_3
+      methods:
+        - pp_stone_quarry_improved_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -113,6 +116,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_stone_quarry_improved_market_sales = {
+            offset = 0.01
+            produced = stone
+            output = 0.01
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -145,6 +156,9 @@ localization:
     pp_stone_quarry_improved_rubble_breaking: Rubble Breaking
     pp_stone_quarry_improvements: Quarry Dressing
     pp_stone_quarry_improvements_desc: Better quarry logistics, block hoists, skids, and dressing benches let stone yards square larger blocks before transport.
+    stone_quarry_improved_slot_3: Market
+    pp_stone_quarry_improved_market_sales: Market Sales
+    pp_stone_quarry_improved_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
 icon:
   source_png: ../assets/icons/stone_quarry_improved.png
   output_dds: stone_quarry_improved.dds
@@ -178,3 +192,8 @@ evaluation:
         input_throughput: Rubble breaking is an ancillary quarry byproduct, intentionally smaller than primary block dressing.
         output_throughput: Rubble breaking is an ancillary quarry byproduct, intentionally smaller than primary block dressing.
         amortization_months: Rubble breaking is an ancillary quarry byproduct, intentionally smaller than primary block dressing.
+    pp_stone_quarry_improved_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

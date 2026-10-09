@@ -5,7 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_ivory_hunting_camp_base_ivory: base
-gate_method: pp_ivory_hunting_camp_caravan_hunts
+gate_method: pp_ivory_hunting_camp_market_sales
 building:
   key: ivory_hunting_camp
   mode: CREATE
@@ -18,6 +18,9 @@ building:
       methods:
         - pp_ivory_hunting_camp_scavenged_tusks
         - pp_ivory_hunting_camp_caravan_hunts
+    - name: slot_2
+      methods:
+        - pp_ivory_hunting_camp_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -64,6 +67,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_ivory_hunting_camp_market_sales = {
+            offset = 0.012
+            produced = ivory
+            output = 0.003
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -80,6 +91,9 @@ localization:
     pp_ivory_hunting_camp_base_ivory: Ivory Grounds
     pp_ivory_hunting_camp_scavenged_tusks: Ivory Gathering
     pp_ivory_hunting_camp_caravan_hunts: Caravan Hunts
+    ivory_hunting_camp_slot_2: Market
+    pp_ivory_hunting_camp_market_sales: Market Sales
+    pp_ivory_hunting_camp_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
 icon:
   source_png: ../assets/icons/ivory_hunting_camp.png
   output_dds: ivory_hunting_camp.dds
@@ -99,3 +113,8 @@ evaluation:
       production_efficiency: 1.05
       allow_rules:
         amortization_months: Valuable raw ivory deposits repay faster than the generic amortization window at the standard small raw-site price.
+    pp_ivory_hunting_camp_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

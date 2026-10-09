@@ -57,6 +57,16 @@ unique_production_methods = {
         category = building_maintenance
     }
 }
+unique_production_methods = {
+    pp_stone_quarry_market_sales = {
+        icon_type = goods
+        icon = stone
+        offset = 0.01
+        produced = stone
+        output = 0.01
+        category = building_maintenance
+    }
+}
 
 build_time = rural_build_time
 construction_demand = basic_construction_needs

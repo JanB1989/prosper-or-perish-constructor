@@ -43,6 +43,16 @@ unique_production_methods = {
         category = guild_input
     }
 }
+unique_production_methods = {
+    pp_elephant_hunting_grounds_market_sales = {
+        icon_type = goods
+        icon = ivory
+        offset = 0.012
+        produced = ivory
+        output = 0.003
+        category = building_maintenance
+    }
+}
 raw_modifier = {
 	local_population_capacity = -0.25
     local_nobles_desired_pop = 0.01

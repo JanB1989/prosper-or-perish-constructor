@@ -3,7 +3,7 @@ tag: bog_iron_smelter
 footprint: mill_works
 labour:
   class: primary_medieval
-gate_method: pp_bog_iron_maintenance
+gate_method: pp_bog_iron_smelter_market_sales
 upgrade_chain:
   family: bog_iron_smelter
   tier: 0
@@ -18,6 +18,9 @@ building:
     - name: slot_0
       methods:
         - pp_bog_iron_maintenance
+    - name: slot_1
+      methods:
+        - pp_bog_iron_smelter_market_sales
   possible_production_methods: []
   body: |2-
     audio_tier = 1
@@ -66,6 +69,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_bog_iron_smelter_market_sales = {
+            offset = 0.014
+            produced = iron
+            output = 0.004
+            category = building_maintenance
+        }
+    }
 
     construction_demand = basic_construction_needs
     raw_modifier = {
@@ -76,6 +87,9 @@ localization:
     bog_iron_smelter: Bog Iron Smelter
     bog_iron_smelter_desc: A small wetland ironworks that gathers, roasts, and smelts bog iron where conventional ore deposits are absent.
     pp_bog_iron_maintenance: Bog Iron Smelter
+    bog_iron_smelter_slot_1: Market
+    pp_bog_iron_smelter_market_sales: Market Sales
+    pp_bog_iron_smelter_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
 icon:
   source_dds: /mnt/c/Games/steamapps/common/Europa Universalis V/game/main_menu/gfx/interface/icons/buildings/bog_iron_smelter.dds
   output_dds: bog_iron_smelter.dds
@@ -89,3 +103,8 @@ evaluation:
       production_efficiency: 1.05
       allow_rules:
         input_throughput: Small wetland bloomeries remain below the generic raw-site input baseline.
+    pp_bog_iron_smelter_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

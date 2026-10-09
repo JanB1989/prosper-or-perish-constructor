@@ -1050,8 +1050,9 @@ threshold = 1.2               # fallback only: the gate reads NAI.AI_BUILDING_PR
 dynamic_goods = ["province_food_sales", "local_food"]
 # floor-pinned dummy goods: their price never moves, so they are never a building's main (market) good
 pinned_goods = ["local_food", "offset", "logistics"]
-# goods with ai_rgo_expansion_priority > 0 (vanilla goods files): a building that outputs one skips the margin check
-strategic_goods = ["clay", "iron", "goods_gold", "silver", "stone", "ivory", "masonry"]
+# No good may carry ai_rgo_expansion_priority > 0: a building that outputs one skips the margin check (and gets a
+# construction-shortage bonus), so masons and quarries were built against the price. pp_goods_adjustments.txt sets the
+# seven vanilla goods to 0 (2026-10-09); every market-good building gets the Market leg.
 
 [production_gate.leg]
 # Gate leg (2026-09-30): every building with a market main good gets a last slot with one method that makes a little of

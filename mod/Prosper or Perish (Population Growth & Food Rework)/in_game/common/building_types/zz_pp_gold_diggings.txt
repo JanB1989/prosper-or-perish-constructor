@@ -89,6 +89,16 @@ unique_production_methods = {
         category = building_maintenance
     }
 }
+unique_production_methods = {
+    pp_gold_diggings_market_sales = {
+        icon_type = goods
+        icon = goods_gold
+        offset = 0.018
+        produced = goods_gold
+        output = 0.002
+        category = building_maintenance
+    }
+}
 
 raw_modifier = {
 	local_population_capacity = 0.05

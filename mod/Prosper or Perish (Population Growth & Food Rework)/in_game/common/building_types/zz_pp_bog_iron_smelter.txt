@@ -48,6 +48,16 @@ unique_production_methods = {
         category = building_maintenance
     }
 }
+unique_production_methods = {
+    pp_bog_iron_smelter_market_sales = {
+        icon_type = goods
+        icon = iron
+        offset = 0.014
+        produced = iron
+        output = 0.004
+        category = building_maintenance
+    }
+}
 
 construction_demand = basic_construction_needs
 raw_modifier = {

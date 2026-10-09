@@ -5,7 +5,7 @@ labour:
   class: primary_reformation
   methods:
     pp_gold_stamp_mill_base_gold: base
-gate_method: pp_gold_stamp_mill_gold
+gate_method: pp_gold_stamp_mill_market_sales
 upgrade_chain:
   family: gold_mine
   tier: 1
@@ -29,6 +29,9 @@ building:
       methods:
         - pp_gold_stamp_mill_no_primary
         - pp_gold_stamp_mill_gold
+    - name: slot_3
+      methods:
+        - pp_gold_stamp_mill_market_sales
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -103,6 +106,14 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_gold_stamp_mill_market_sales = {
+            offset = 0.018
+            produced = goods_gold
+            output = 0.002
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -125,6 +136,9 @@ localization:
     pp_gold_stamp_mill_no_secondary: No Assay Sorting
     pp_gold_stamp_mill_silver: Assay Silver Recovery
     pp_gold_stamp_mill_copper: Copper Sulphide Sorting
+    gold_stamp_mill_slot_3: Market
+    pp_gold_stamp_mill_market_sales: Market Sales
+    pp_gold_stamp_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
 icon:
   source_png: ../assets/icons/gold_stamp_mill.png
   output_dds: gold_stamp_mill.dds
@@ -159,3 +173,8 @@ evaluation:
         input_throughput: Copper sulfide sorting is an ancillary associated-ore byproduct, intentionally less profitable than primary gold amalgamation.
         output_throughput: Copper sulfide sorting is an ancillary associated-ore byproduct, intentionally less profitable than primary gold amalgamation.
         amortization_months: Copper sulfide sorting is an ancillary associated-ore byproduct, intentionally less profitable than primary gold amalgamation.
+    pp_gold_stamp_mill_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

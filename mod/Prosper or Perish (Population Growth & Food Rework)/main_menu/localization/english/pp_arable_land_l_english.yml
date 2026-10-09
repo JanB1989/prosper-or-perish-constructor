@@ -1,0 +1,26 @@
+﻿l_english:
+  # Arable Land = the engine's population capacity (renamed 2026-10-10); the Europedia card concept is
+  # pp_population_capacity, links in text use the vanilla concept population_capacity (no P&P: prefix).
+  game_concept_population_capacity: "Arable Land"
+  game_concept_population_capacity_desc: "$game_concept_pp_population_capacity_desc$"
+  MODIFIER_TYPE_NAME_local_population_capacity: "Local Arable Land"
+  MODIFIER_TYPE_DESC_local_population_capacity: "Changes the [population_capacity|e] of this [location|e], counted in the people it can feed."
+  MODIFIER_TYPE_NAME_local_population_capacity_modifier: "Local Arable Land %"
+  MODIFIER_TYPE_DESC_local_population_capacity_modifier: "Changes the [population_capacity|e] of this [location|e] by a percentage."
+  MODIFIER_TYPE_NAME_global_population_capacity_modifier: "Arable Land %"
+  MODIFIER_TYPE_DESC_global_population_capacity_modifier: "Changes the [population_capacity|e] across this [country|e] by a percentage."
+  MODIFIER_TYPE_NAME_total_population_capacity_modifier: "Arable Land"
+  MODIFIER_TYPE_DESC_total_population_capacity_modifier: "Changes the [population_capacity|e] across this [country|e]."
+  POPULATION_CAPACITY_TITLE: "[population_capacity|e]\nThis is due to the following factors:\n"
+  POP_CAP_DUE_TO: "[population_capacity|e] of [Location.GetPopulationCapacity|Y] is due to:"
+  # The engine's land states (static modifiers; descriptions plain text, the modifier tooltip shows no links)
+  STATIC_MODIFIER_NAME_abundant_free_land: "Abundant Arable Land"
+  STATIC_MODIFIER_DESC_abundant_free_land: "Almost all the arable land here is still free: settlers pick the best ground and live partly off what they gather. The effects shrink as the land fills."
+  STATIC_MODIFIER_NAME_available_free_land: "Available Arable Land"
+  STATIC_MODIFIER_DESC_available_free_land: "Part of the arable land here is still free. The effects shrink as the land fills and are gone when it is full."
+  STATIC_MODIFIER_NAME_overpopulation: "Overused Arable Land"
+  STATIC_MODIFIER_DESC_overpopulation: "More people live here than the arable land can feed. The effects grow the further people outnumber the land."
+  STATIC_MODIFIER_NAME_overpopulation_growth: "Overused Arable Land"
+  STATIC_MODIFIER_DESC_overpopulation_growth: "More people live here than the arable land can feed."
+  STATIC_MODIFIER_NAME_approaching_capacity: "Nearly Full Arable Land"
+  STATIC_MODIFIER_DESC_approaching_capacity: "Little of the arable land here is still free."

@@ -31,8 +31,13 @@ CARDS = {
     "harvest": ("# ---- Variable Harvests ----", "# ---- Arable Land ----",
                 tuple(f"game_concept_{s}_harvest_desc" for s in (*SEVERITIES, "average"))),
     "arable_land": ("# ---- Arable Land ----", "# ---- Population Growth ----",
-                    ("game_concept_pp_settled_land_desc", "game_concept_pp_overpopulation_desc")),
+                    ("game_concept_pp_population_capacity_desc", "game_concept_pp_overused_arable_land_desc",
+                     "game_concept_pp_abundant_free_land_desc", "game_concept_pp_available_free_land_desc")),
 }
+# Retired player-facing names of the population capacity and its states (renamed to Arable Land 2026-10-10).
+# "Farmland Vegetation" and lower-case "farmland" (the vegetation type, prose about fields) stay.
+OLD_LAND_NAMES = re.compile(r"Subsistence Land|subsistence land|Free Land|Overpopulation|Location Potential|Settled Land"
+                            r"|\bFarmland\b(?! Vegetation)|\[pp_farmland\|e\]|\[pp_arable_land\|e\]|pp_settled_land")
 _CONCEPT_LINK = re.compile(r"\[(\w+)\|[eE]\]|\[Concept\('(\w+)'")
 
 
@@ -176,6 +181,27 @@ def test_arable_land_improvements_row_shows_land_improvements():
     sources = {path.stem for path in (ROOT / "blueprints/accepted").rglob("*.yml")
                if re.search(r"(?m)^footprint:\s*capacity_source\s*$", path.read_text(encoding="utf-8"))}
     assert shown and not sorted(set(shown) - sources)
+
+
+def test_old_land_names_are_gone():
+    """No player text uses the retired names: Arable Land; Abundant, Available and Overused Arable Land."""
+    found = []
+    for path in sorted((MOD_ROOT / "main_menu/localization/english").glob("*.yml")):
+        for line in path.read_text(encoding="utf-8-sig").splitlines():
+            if line.strip().startswith("#"):
+                continue
+            hit = OLD_LAND_NAMES.search(line)
+            if hit:
+                found.append(f"{path.name}: {hit.group(0)}: {line.strip()[:80]}")
+    assert not found, "\n".join(found)
+
+
+def test_land_state_icons_exist():
+    """The chip, the concepts and the card draw the states with tools/build_arable_land_icons.py's icons."""
+    for name in ("abundant", "available", "overused"):
+        assert (MOD_ROOT / "main_menu" / f"gfx/interface/icons/{location_status.LAND_ICONS}/{name}.dds").is_file()
+    status = location_status.status_row(location_status.Harvests())
+    assert all(f"{location_status.LAND_ICONS}/{n}.dds" in status for n in ("abundant", "available", "overused"))
 
 
 def test_capital_medallions_read_the_capital():

@@ -350,6 +350,14 @@
 - Do not hardcode balance values in localization when a modifier, scripted value, building tooltip, or generated modifier effect can display the current value.
 - Explain what the player should understand and where to inspect effects; let modifiers carry exact changing numbers.
 - When a linked modifier or concept tooltip already displays food-storage modifier effects, do not restate those values in Europedia prose.
+- Player-facing names of the population capacity (Jan, 2026-10-10): **Arable Land** (the total: what a location's land
+  can feed, in people; farms take from it, improvements and buildings add to it); its states **Abundant Arable Land**
+  (`abundant_free_land`), **Available Arable Land** (`available_free_land`), **Overused Arable Land** (`overpopulation`);
+  the World Builder baseline is **Natural Arable Land**. Engine and script keys stay. Link Arable Land in text with
+  `[population_capacity|e]` (vanilla concept, no prefix); the card concept is `pp_population_capacity` (it also gives the
+  arable land map mode its icon). "Subsistence Land", "Farmland" (as a capacity term), "Free Land", "Overpopulation"
+  and "Settled Land" are retired; `tests/test_europedia_style.py` fails if they come back. State icons:
+  `tools/build_arable_land_icons.py`.
 - Europedia cards use the card style in `in_game/gui/shared/pp_europedia_style.gui` (banner, lead, sections with flows,
   scales and goods rows; rules in `main_menu/common/game_concepts/Ingame_Documentation_Rules.md`, first card Variable
   Harvests, 2026-10-09). Their text has no numbers at all: values sit behind concept, modifier and goods links.

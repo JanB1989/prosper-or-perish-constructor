@@ -1822,8 +1822,8 @@ def _write_farming_capacity_modifier_localization(
         lines.append(
             f'  MODIFIER_TYPE_DESC_{modifier_key}: "Shows how {building_link} changes Farming Capacity in this location."'
         )
-    lines.append('  MODIFIER_TYPE_NAME_local_pp_farmland_used: "Farmland Used"')
-    lines.append('  MODIFIER_TYPE_DESC_local_pp_farmland_used: "The [pp_farmland|e] this building takes from the location."')
+    lines.append('  MODIFIER_TYPE_NAME_local_pp_farmland_used: "Arable Land Used"')
+    lines.append('  MODIFIER_TYPE_DESC_local_pp_farmland_used: "The [population_capacity|e] this building takes from the location."')
     _write_text_if_changed(
         mod_root / FARMING_CAPACITY_MODIFIER_LOCALIZATION,
         "\n".join(lines).rstrip() + "\n",

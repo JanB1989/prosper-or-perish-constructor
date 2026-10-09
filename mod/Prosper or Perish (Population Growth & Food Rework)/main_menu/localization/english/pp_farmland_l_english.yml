@@ -1,6 +1,4 @@
 ﻿l_english:
-  # Farm max-level tooltip rows (scripts/generate_rural_capacity_values.py) and the Farmland concept they link to.
-  PP_BUILDING_LEVEL_FARMLAND: "[pp_farmland|e] for this farm"
+  # Farm max-level tooltip rows (scripts/generate_rural_capacity_values.py); the rows link Arable Land.
+  PP_BUILDING_LEVEL_FARMLAND: "[population_capacity|e] for this farm"
   PP_BUILDING_LEVEL_FARMLAND_OTHER_FARMS: "Used by other farms"
-  game_concept_pp_farmland: "Farmland"
-  game_concept_pp_farmland_desc: "A location can only hold as many farms as its farmland allows. Its farmland is its population capacity, so anything that raises population capacity, like land clearance, drainage or irrigation, adds farmland. Each farm level uses a fixed share, larger farms a larger share, and a little always stays free."

@@ -1,5 +1,8 @@
-﻿# Prosper or Perish — Population Capacity (food self-sufficiency potential)
+﻿# Arable Land (the population capacity): the Europedia card and the arable land map mode icon; the overused state.
 pp_population_capacity = {
 	family = food
 	texture = "map_modes/pp_population_capacity"
+}
+pp_overused_arable_land = {
+	texture = "pp_arable_land/overused"
 }

@@ -326,7 +326,7 @@ def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> d
     # tooltip rows for the cap values and the farm values
     keys = sorted(set(re.findall(r'desc = "(BUILDING_LEVEL_WB_[A-Z0-9_]+)"', text)))
     loc = ["l_english:", '  BUILDING_LEVEL_WB_BASE: "Base levels"', '  BUILDING_LEVEL_WB_DEVELOPMENT: "From [development|e]"',
-           '  BUILDING_LEVEL_WB_FREE_FARMLAND: "Available Subsistence Land"', '  BUILDING_LEVEL_WB_MINIMUM: "Minimum"',
+           '  BUILDING_LEVEL_WB_FREE_FARMLAND: "Free Arable Land"', '  BUILDING_LEVEL_WB_MINIMUM: "Minimum"',
            '  BUILDING_LEVEL_WB_MAXIMUM: "Upper limit"', '  BUILDING_LEVEL_WB_FAMILY: "Capacity shared with related buildings"']
     fixed = ("BUILDING_LEVEL_WB_BASE", "BUILDING_LEVEL_WB_DEVELOPMENT", "BUILDING_LEVEL_WB_FREE_FARMLAND",
              "BUILDING_LEVEL_WB_MINIMUM", "BUILDING_LEVEL_WB_MAXIMUM", "BUILDING_LEVEL_WB_FAMILY")

@@ -166,5 +166,5 @@
   MODIFIER_TYPE_DESC_farm_capacity_from_tea_sorting_garden: "Shows how [ShowBuildingTypeName('tea_sorting_garden')|e] changes Farming Capacity in this location."
   MODIFIER_TYPE_NAME_farm_capacity_from_vineyard_estate: "Farming Capacity from [ShowBuildingTypeName('vineyard_estate')|e]"
   MODIFIER_TYPE_DESC_farm_capacity_from_vineyard_estate: "Shows how [ShowBuildingTypeName('vineyard_estate')|e] changes Farming Capacity in this location."
-  MODIFIER_TYPE_NAME_local_pp_farmland_used: "Farmland Used"
-  MODIFIER_TYPE_DESC_local_pp_farmland_used: "The [pp_farmland|e] this building takes from the location."
+  MODIFIER_TYPE_NAME_local_pp_farmland_used: "Arable Land Used"
+  MODIFIER_TYPE_DESC_local_pp_farmland_used: "The [population_capacity|e] this building takes from the location."

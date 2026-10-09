@@ -97,12 +97,12 @@ def test_every_land_farm_records_the_land_it_uses() -> None:
     assert len(found) >= 60
 
 
-def test_farmland_labels_and_concept_are_localized() -> None:
+def test_farm_cap_rows_link_arable_land() -> None:
+    """The farm max-level rows speak of Arable Land (the population capacity, renamed 2026-10-10; the Farmland concept
+    is gone): the row label links the vanilla concept, which reads "Arable Land"."""
     text = "".join(p.read_text(encoding="utf-8-sig") for p in LOCALIZATION.glob("*.yml"))
-    for key in ("PP_BUILDING_LEVEL_FARMLAND", "PP_BUILDING_LEVEL_FARMLAND_OTHER_FARMS", "game_concept_pp_farmland",
-                "game_concept_pp_farmland_desc", "MODIFIER_TYPE_NAME_local_pp_farmland_used"):
+    for key in ("PP_BUILDING_LEVEL_FARMLAND", "PP_BUILDING_LEVEL_FARMLAND_OTHER_FARMS", "MODIFIER_TYPE_NAME_local_pp_farmland_used"):
         assert f"\n  {key}:" in text, key
-    assert "[pp_farmland|e]" in re.search(r'PP_BUILDING_LEVEL_FARMLAND: "([^"]*)"', text).group(1)
-    desc = re.search(r'game_concept_pp_farmland_desc: "([^"]*)"', text).group(1)
-    assert not re.search(r"\d", desc) and "Subsistence" not in desc
-    assert (MOD_ROOT / "main_menu/common/game_concepts/pp_farmland.txt").is_file()
+    assert "[population_capacity|e]" in re.search(r'PP_BUILDING_LEVEL_FARMLAND: "([^"]*)"', text).group(1)
+    assert re.search(r'game_concept_population_capacity: "Arable Land"', text)
+    assert not (MOD_ROOT / "main_menu/common/game_concepts/pp_farmland.txt").exists()

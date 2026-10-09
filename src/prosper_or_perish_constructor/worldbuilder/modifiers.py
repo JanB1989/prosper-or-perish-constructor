@@ -394,7 +394,7 @@ def river_bodies(vanilla_root: Path) -> dict[int, list[str]]:
 # capacity line by the mod's hand-authored pp_location_modifier_adjustments.txt, so no percentage remains.
 
 
-ATTRIBUTE_DESCRIPTION = "Subsistence land and goods output from this attribute, fitted from geography and historical land use."
+ATTRIBUTE_DESCRIPTION = "Arable land and goods output from this attribute, fitted from geography and historical land use."
 # the shore modifiers carry no land; they mark direct access to the water (pp_wb_coastal follows the game's sea coast)
 SHORE_DESCRIPTIONS = {
     "pp_wb_coastal": "This location borders the open sea. Goods output that sea access brings, fitted from geography and historical land use.",

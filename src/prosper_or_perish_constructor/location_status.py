@@ -68,6 +68,7 @@ _SPLIT = len("\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n")   # after the IO/peri
 _CARD_SIZE = "{ 120 46 }"
 _LOC = "LocationView.GetLocation"
 _ICONS = "gfx/interface/icons"
+LAND_ICONS = "pp_arable_land"   # abundant / available / overused .dds under _ICONS (tools/build_arable_land_icons.py)
 
 
 def harvest_modifiers(text: str) -> list[str]:
@@ -481,14 +482,15 @@ def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stor
                   _text("PP_FOOD_CHIP_STARVING") + " " + _row("province_starving"))
 
     over, abundant, available = (_marker(key) for key in LAND_MARKERS)
-    land = _chip("pp_status_land_overpopulation", over, f"{_ICONS}/modifiers/overpopulation.dds",
-                 "PP_LAND_CHIP_OVERPOPULATION_TITLE", "population_capacity",
+    # the arable land states' own icons (tools/build_arable_land_icons.py)
+    land = _chip("pp_status_land_overpopulation", over, f"{_ICONS}/{LAND_ICONS}/overused.dds",
+                 "PP_LAND_CHIP_OVERPOPULATION_TITLE", "pp_overused_arable_land",
                  _text("PP_LAND_CHIP_OVERPOPULATION") + " " + land_rows["overpopulation"])
-    land += _chip("pp_status_land_abundant", f"And(Not({over}), {abundant})", f"{_ICONS}/location_icons/monthly_growth.dds",
+    land += _chip("pp_status_land_abundant", f"And(Not({over}), {abundant})", f"{_ICONS}/{LAND_ICONS}/abundant.dds",
                   "PP_LAND_CHIP_ABUNDANT_TITLE", "pp_abundant_free_land",
                   _text("PP_LAND_CHIP_ABUNDANT") + " " + land_rows["abundant_free_land"])
     land += _chip("pp_status_land_available", f"And3(Not({over}), Not({abundant}), {available})",
-                  f"{_ICONS}/modifier_types/total_population_capacity_modifier.dds",
+                  f"{_ICONS}/{LAND_ICONS}/available.dds",
                   "PP_LAND_CHIP_AVAILABLE_TITLE", "pp_available_free_land",
                   _text("PP_LAND_CHIP_AVAILABLE") + " " + land_rows["available_free_land"])
     land += _chip("pp_status_land_settled", f"And3(Not({over}), Not({abundant}), Not({available}))",

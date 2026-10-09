@@ -415,7 +415,7 @@ def test_population_capacity_scale_keeps_high_capacity_locations_distinguishable
     assert "modifier:local_population_capacity" not in block
     assert "MAPMODE_PP_POPULATION_CAPACITY_RANGE_125_155" in text
     assert "MAPMODE_PP_POPULATION_CAPACITY_RANGE_155_200" in text
-    assert f"{int(thresholds[-1])}+ subsistence land" in text
+    assert f"{int(thresholds[-1])}+ arable land" in text
     assert "GetPopulationCapacity|0" in text
     assert "GetModifierValue('local_population_capacity')" not in text
 

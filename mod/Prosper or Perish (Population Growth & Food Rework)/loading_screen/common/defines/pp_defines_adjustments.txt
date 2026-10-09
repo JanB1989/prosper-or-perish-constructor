@@ -86,6 +86,16 @@ NAI = {
 	# location when this roll passes. Vanilla does not set it (0), so the AI never switched a right in 445 years of
 	# saves. 1.0 = always try the swap when it scores (best - 2 x worst held + revoke and grant costs > 0.25).
 	AI_TOWN_RIGHTS_REPLACE_CHANCE = 1.0 # not in vanilla (0)
+	# Peace deals without border gore (2026-10-09, docs/peace_deal_rulebook.md): every location the AI may take scores
+	# x ADJECENT when it borders the taker's land or land already in the deal, else x 1/ADJECENT, and the deal keeps
+	# everything that scores above zero. Above 100000 the 1/ADJECENT step is exactly 0 (fixed point), so a deal only
+	# takes land connected to the taker; chains through the deal still count. FROM_WORTH_MULT scales every location:
+	# 0.00025 x 100001 = 25 = vanilla 5 x 5, so connected land keeps its value against gold, vassals and other terms.
+	# A test keeps the two coupled. ADJECENT 25 or 50 alone changed nothing (non-adjacent land still scored above 0).
+	# High aggression 1339-1357, 3 runs each: detached land gained 257-365 -> 69-174 locations, partial cessions
+	# 8-10 % -> 1-4 % detached; land exchange and wars within run noise; Japan's Nanbokucho ends ~4 years earlier.
+	AI_CONQUER_TREATY_DESIRE_ADJECENT = 100001 # 5
+	AI_CONQUER_TREATY_DESIRE_FROM_WORTH_MULT = 0.00025 # 5
 }
 
 NEconomy = {

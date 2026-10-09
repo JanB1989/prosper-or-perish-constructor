@@ -33,8 +33,12 @@ def _mod_keys() -> list[tuple[str, str, str]]:
     return keys
 
 
+# Defines the engine registers and reads although vanilla's files do not set them (EU5 1.4, checked 2026-10-06).
+HIDDEN_ENGINE_DEFINES = {("NAI", "AI_TOWN_RIGHTS_REPLACE_CHANCE")}
+
+
 def test_every_define_the_mod_sets_exists_in_vanilla() -> None:
-    vanilla = _vanilla_keys()
+    vanilla = _vanilla_keys() | HIDDEN_ENGINE_DEFINES
     assert vanilla, "no vanilla defines loaded"
     keys = _mod_keys()
     assert keys, "no mod defines found"
@@ -63,3 +67,14 @@ def test_building_profit_gates_use_the_1_4_names() -> None:
     """1.4: the margin gate is AI_BUILDING_PROFIT_MARGIN_THRESHOLD; AI_BUILDING_PROFIT_THRESHOLD is a raw-profit floor."""
     set_keys = {(group, key) for _, group, key in _mod_keys()}
     assert ("NAI", "AI_BUILDING_PROFIT_MARGIN_THRESHOLD") in set_keys
+
+
+def test_peace_deals_take_connected_land_only() -> None:
+    """Border gore (docs/peace_deal_rulebook.md): a location that does not touch the taker's land (or land already in
+    the deal) scores x 1/ADJECENT, which is exactly 0 only above 100000 (fixed point, 5 decimals). FROM_WORTH_MULT
+    scales every location so connected land keeps vanilla's value of 5 x 5."""
+    values = _mod_values()
+    adjacent = float(values[("NAI", "AI_CONQUER_TREATY_DESIRE_ADJECENT")])
+    worth_mult = float(values[("NAI", "AI_CONQUER_TREATY_DESIRE_FROM_WORTH_MULT")])
+    assert adjacent > 100000
+    assert abs(adjacent * worth_mult - 25) < 0.05

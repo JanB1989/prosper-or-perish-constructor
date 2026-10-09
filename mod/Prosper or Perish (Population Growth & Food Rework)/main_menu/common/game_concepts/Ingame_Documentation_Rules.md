@@ -15,9 +15,11 @@ Instructions for Cursor when editing game concept definitions or the Europedia.
 
 The types live in `in_game/gui/shared/pp_europedia_style.gui`; a card is the usual header tab, then:
 
-1. `pp_eu_banner` - a vanilla illustration (1080x440) at card width, soft at both ends. Pick a picture that shows the
-   topic (goods illustrations `icons/trade_goods/illustrations/`, situations, events); move the crop with
-   `blockoverride "banner_offset"`.
+1. `pp_eu_banner` - an edge-to-edge picture, 2900 x 500 DDS shown at 1450 x 250 (sharp at large UI scales).
+   Vanilla has nothing that wide (its illustrations are 1080 x 440 and look soft stretched), so each banner is
+   composed by `tools/build_europedia_banners.py`: the location view's 2654 px panorama layers as a landscape,
+   graded to the topic, with a vanilla illustration of the topic at its own size in the middle, faded in. Override
+   `blockoverride "banner_texture"` with the card's banner.
 2. `pp_eu_lead` - one short paragraph in the flavour type: what the mechanic is, in plain words. It is also the
    concept's own tooltip text, so it must read well alone. It is the first text of the card (the web export starts there).
 3. Optional live line (`visible = "[GetPlayer.IsValid]"`): the mechanic in the player's own game, e.g. the capital's

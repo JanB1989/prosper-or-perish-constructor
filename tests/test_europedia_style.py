@@ -67,6 +67,17 @@ def test_every_texture_exists():
     assert used and not missing
 
 
+def test_banners_are_double_size():
+    """Banners are drawn at 1450 x 250 from 2900 x 500 pictures (tools/build_europedia_banners.py)."""
+    from PIL import Image
+
+    banners = set(re.findall(r'texture = "(gfx/interface/illustrations/pp_europedia/[^"]+)"', STYLE.read_text(encoding="utf-8-sig") + _card()))
+    assert banners
+    for banner in banners:
+        with Image.open(MOD_ROOT / "main_menu" / banner) as image:
+            assert image.size == (2900, 500), banner
+
+
 def test_every_text_key_exists():
     keys = set(re.findall(r'(?:text|tooltip) = "(\w+)"', _card()))
     missing = sorted(keys - set(_all_loc()))

@@ -4,20 +4,18 @@
 
 types pp_europedia_style
 {
-	# Wide illustration under the card header: a vanilla 1080x440 picture scaled to card width, cropped to the
-	# banner's height and soft at both ends. Override "banner_texture"; "banner_offset" moves the crop up or down.
-	type pp_eu_banner = widget {
-		size = { 1450 250 }
-		scissor = yes
-
+	# Wide illustration under the card header, edge to edge, with a thin gold rule below. The pictures are composed
+	# at twice the shown size (2900 x 500 DDS, tools/build_europedia_banners.py) so they stay sharp at large UI
+	# scales; vanilla has none that wide. Override "banner_texture" with the card's own banner.
+	type pp_eu_banner = vbox {
 		icon = {
-			size = { 1450 591 }
-			block "banner_offset" { position = { 0 -150 } }
-			block "banner_texture" { texture = "gfx/interface/icons/trade_goods/illustrations/icon_goods_wheat.dds" }
-			modify_texture = {
-				texture = "gfx/interface/component_masks/mask_fade_horizontal_middle.dds"
-				blend_mode = alphamultiply
-			}
+			size = { 1450 250 }
+			block "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_harvest.dds" }
+		}
+		icon = {
+			size = { 1450 2 }
+			using = color_gold_texture
+			alpha = 0.6
 		}
 	}
 

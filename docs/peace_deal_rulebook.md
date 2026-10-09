@@ -113,6 +113,11 @@ number is per run, from each run's own 1341.4.1 save to 1357.4.1.
 - Tested and not adopted: `AI_CONQUER_TREATY_DESIRE_POTENTIAL_BORDERGORE = 0` (deals may never split the loser's
   remaining land) on top of the new defines, one 1337-1357 run: cut-offs after cessions 432 (new-define runs 254 +- 53),
   exclave stock 791 (721 +- 135), detached gains 78, land exchange and wars unchanged. No gain, so it stays at 0.005.
+- Why FROM_WORTH_MULT has to move with ADJECENT (one run with ADJECENT 100001 and vanilla FROM_WORTH_MULT 5):
+  detached gains 72 as well, but connected land is then worth 20,000 x more against the other terms. New vassal
+  links fell to 130 (vanilla 166 +- 11, new defines 162 +- 8), wars between neighbours rose to 242 (211 / 212),
+  wars without Nanbokucho to 397 (370 / 369), and the exclave stock to 973 (795 / 721). With the compensation all
+  of these stay at vanilla level.
 - Tested and not adopted: `AI_CONQUER_TREATY_DESIRE_SAME_PROVINCE = 10` (vanilla 3; prefer completing provinces) on
   top of the new defines, one run: exclave stock 798, border edges per location 0.742 (new-define runs 721 and
   0.721 +- 0.026), partial cessions 1,534 locations (1,925): tidier borders did not follow, land exchange fell.

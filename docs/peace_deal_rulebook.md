@@ -106,6 +106,13 @@ number is per run, from each run's own 1341.4.1 save to 1357.4.1.
   Vanilla's pocket bonus (+5/+10 on the selection factor for land the loser would keep with 0-1 neighbours) is
   negligible next to ADJECENT 100001; enclave clean-up through deals still gets the neighbour-share factor (up to x2)
   and the conquer-desire exclave bonus. A faster clean-up is the next lever to test.
+- Where exclaves come from (five runs each, 1341-1357, locations): gained detached 397 -> 285; cut off from their
+  owner while it kept them 1,240 -> 1,172 (after a cession to an existing country ~270, after a loss to a new country
+  ~520 - revolts, independence, releases - and ~430 when an owner's main body moves). The loser side is the larger
+  source and the new defines do not touch it.
+- Tested and not adopted:  (deals may never split the loser's
+  remaining land) on top of the new defines, one 1337-1357 run: cut-offs after cessions 432 (new-define runs 254 +- 53),
+  exclave stock 791 (721 +- 135), detached gains 78, land exchange and wars unchanged. No gain, so it stays at 0.005.
 - One pair continued 1357-1387: detached share 6.4 % -> 2.2 % (partial cessions 6.1 % -> 1.2 %), land changing
   owner 9,543 -> 11,062, wars started 905 -> 1,050; exclaves in 1387 264 vs 256.
 - Late game (observer run a3e3bb2a, 1837.4.1, two years each way): 84 vs 102 locations changed owner, about 1 %

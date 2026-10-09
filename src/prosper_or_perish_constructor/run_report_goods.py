@@ -502,11 +502,17 @@ def index_payload(run: RunData, built: dict[str, Any], recipes: Recipes, dataset
 
 
 def write_goods_page(run: RunData, out: Path, *, repo: Path, project: Path, dataset: Path, cache: Path | None = None,
-                     log: Callable[[str], None] = print) -> Path | None:
+                     canvas: Any = None, fps: int = 6, log: Callable[[str], None] = print) -> Path | None:
+    """The goods page and, when the dataset has province food, the food page (run_report_food), which shares the
+    goods page's index of buildings, methods and regions."""
     if run.market_goods.is_empty():
         return None
     recipes = Recipes(repo, project)
     built = build_goods_data(run, dataset, out, recipes, cache=cache, log=log)
+    from prosper_or_perish_constructor.run_report_food import write_food
+
+    write_food(run, out, repo=repo, project=project, dataset=dataset, recipes=recipes, index=built["index"], canvas=canvas,
+               fps=fps, cache=cache.parent / f"{cache.name}.food" if cache else None, log=log)
     payload = index_payload(run, built, recipes, dataset, repo)
     (out / "goods" / "index.json").write_text(json.dumps(payload, separators=(",", ":"), allow_nan=False), encoding="utf-8")
     from prosper_or_perish_constructor.run_report_goods_page import goods_page_html

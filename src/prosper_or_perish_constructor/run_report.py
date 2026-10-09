@@ -14,7 +14,9 @@ writes `graphs/report/<run>/`:
 - `icons/<good>.png` - the goods icons (the built mod's, else the game's DDS, 40 px): goods appear as icons in
   heatmap axes, tables and the goods-group legends, with the name on hover;
 - `goods.html` + `goods/` - the goods page (`run_report_goods`): for every good, save and world region what makes it
-  and what uses it, by building and production method, as a flow chart and tables, linked from the report's nav.
+  and what uses it, by building and production method, as a flow chart and tables, linked from the report's nav;
+- `food.html` + `food/` - the food page (`run_report_food`): how food reaches the province stores (subsistence, RGOs,
+  farms, Cookshops by recipe, Taverns) and where it goes (pops, spoilage, Granges), months stored, every province.
 
 Before reading the run, the report brings two derived parts of the dataset up to date: the building investment
 table and the engine-only tables (trade routes, merchants, country economy) of snapshots ingested before the
@@ -1611,6 +1613,8 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
     world_maps = "".join(_video_card(m) for m in maps if m["key"] not in in_sections)
     sections, nav = [], ["<a href='#maps'>Maps</a>"]
     goods_link = "<a href='goods.html' class=goodslink>Goods: what makes and uses them →</a>" if (out / "goods.html").is_file() else ""
+    if (out / "food.html").is_file():
+        goods_link += "<a href='food.html' class=goodslink>Food: stores, sources and eaters →</a>"
     for key, title, lead in SECTIONS:
         charts = [c for c in payload["charts"] if c["section"] == key]
         tables = [t for t in payload["tables"] if t["section"] == key]
@@ -1698,13 +1702,14 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
     from prosper_or_perish_constructor.run_report_goods import write_goods_page  # imports this module
 
     write_goods_page(run, out, repo=repo, project=project, dataset=dataset,
-                     cache=out_root / ".goods_cache" / run.playthrough_id, log=log)
+                     cache=out_root / ".goods_cache" / run.playthrough_id, canvas=canvas, fps=fps, log=log)
     page = write_page(run, out, maps, payload)
     (out / "report.json").write_text(json.dumps({
         "playthrough_id": run.playthrough_id, "name": run.name, "years": run.years, "saves": run.snapshots.height,
         "maps": maps, "charts": [{"key": c["key"], "section": c["section"], "title": c["title"]} for c in payload["charts"]],
         "tables": [{"key": t["key"], "section": t["section"], "title": t["title"]} for t in payload["tables"]],
         "goods_page": (out / "goods.html").is_file(),
+        "food_page": (out / "food.html").is_file(),
     }, indent=2), encoding="utf-8")
     log(f"report written to {page} ({page.stat().st_size / 1e6:.1f} MB) in {time.perf_counter() - started:.1f}s")
     return page

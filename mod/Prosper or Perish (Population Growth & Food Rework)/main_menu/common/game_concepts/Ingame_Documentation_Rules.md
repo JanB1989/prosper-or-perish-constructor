@@ -17,9 +17,9 @@ The types live in `in_game/gui/shared/pp_europedia_style.gui`; a card is the usu
 
 1. `pp_eu_banner` - an edge-to-edge picture, 2900 x 500 DDS shown at 1450 x 250 (sharp at large UI scales).
    Vanilla has nothing that wide (its illustrations are 1080 x 440 and look soft stretched), so each banner is
-   composed by `tools/build_europedia_banners.py`: the location view's 2654 px panorama layers as a landscape,
-   graded to the topic, with a vanilla illustration of the topic at its own size in the middle, faded in. Override
-   `blockoverride "banner_texture"` with the card's banner.
+   composed by `tools/build_europedia_banners.py` from the location view's 2654 px panorama layers, graded to the
+   topic. Landscape only: a vanilla illustration laid over it never matched its horizon or style (Jan, 2026-10-09).
+   Override `blockoverride "banner_texture"` with the card's banner.
 2. `pp_eu_lead` - one short paragraph in the flavour type: what the mechanic is, in plain words. It is also the
    concept's own tooltip text, so it must read well alone. It is the first text of the card (the web export starts there).
 3. Optional live line (`visible = "[GetPlayer.IsValid]"`): the mechanic in the player's own game, e.g. the capital's
@@ -31,8 +31,9 @@ The types live in `in_game/gui/shared/pp_europedia_style.gui`; a card is the usu
      concept link whose tooltip holds the details;
    - goods rows: `pp_eu_goods_row` with a two-line label (`#T name#!\nverdict`) and `pp_eu_goods` icons (tooltip = the
      goods key; alpha 0.55 for goods the mechanic leaves alone).
-5. Section order that reads well: what happens (flow) -> how strong (scale) -> what it touches -> where it leads
-   (flow into the neighbouring mechanics, with links to their cards) -> where to see it in game.
+5. Section order that reads well: what happens (flow) -> how strong (scale) -> what it touches -> where to see it in
+   game. Keep a card on its own mechanic; the neighbouring mechanics get a link in the text, not a section of their
+   own (Jan dropped the harvest card's "Where It Leads" flow, 2026-10-09).
 
 Use the mod's own visual language where one exists (harvest medallions = the location view's harvest chip frames).
 `tests/test_europedia_style.py` checks textures, keys, links, data functions and that the text has no numbers; extend

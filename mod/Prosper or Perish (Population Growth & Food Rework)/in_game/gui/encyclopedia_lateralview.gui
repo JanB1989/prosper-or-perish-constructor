@@ -1216,39 +1216,6 @@
                                                     text_multi = { max_width = 1290 min_width = 1290 autoresize = yes text = "PP_EU_HARVEST_PEASANTS" }
                                                 }
 
-                                                # ---- Where it leads: harvest to growth as a flow ----
-                                                pp_eu_section = {
-                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/location_icons/food.dds" }
-                                                    blockoverride "section_title" { text = "PP_EU_HARVEST_LEADS" }
-                                                }
-                                                hbox = {
-                                                    margin = { 40 0 }
-                                                    spacing = 8
-                                                    pp_eu_step = {
-                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" }
-                                                        blockoverride "step_title" { text = "PP_EU_HARVEST_LEADS_CROPS" }
-                                                        blockoverride "step_text" { text = "PP_EU_HARVEST_LEADS_CROPS_DESC" }
-                                                    }
-                                                    pp_eu_arrow = {}
-                                                    pp_eu_step = {
-                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/location_icons/subsistence_agriculture.dds" }
-                                                        blockoverride "step_title" { text = "PP_EU_HARVEST_LEADS_FOOD" }
-                                                        blockoverride "step_text" { text = "PP_EU_HARVEST_LEADS_FOOD_DESC" }
-                                                    }
-                                                    pp_eu_arrow = {}
-                                                    pp_eu_step = {
-                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
-                                                        blockoverride "step_title" { text = "PP_EU_HARVEST_LEADS_STORE" }
-                                                        blockoverride "step_text" { text = "PP_EU_HARVEST_LEADS_STORE_DESC" }
-                                                    }
-                                                    pp_eu_arrow = {}
-                                                    pp_eu_step = {
-                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/location_icons/monthly_growth.dds" }
-                                                        blockoverride "step_title" { text = "PP_EU_HARVEST_LEADS_GROWTH" }
-                                                        blockoverride "step_text" { text = "PP_EU_HARVEST_LEADS_GROWTH_DESC" }
-                                                    }
-                                                }
-
                                                 # ---- Where to see it ----
                                                 pp_eu_section = {
                                                     blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/location_modifiers.dds" }

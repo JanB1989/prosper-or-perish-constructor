@@ -1,9 +1,8 @@
 """Build the Europedia card banners (2x resolution DDS; the card shows them at 1450 x 250, pp_europedia_style.gui).
 
-Vanilla has no harvest picture wider than 1080 px, which looks soft stretched over a 1450 px card. The banner is
-composed instead: a wide landscape from the location view's panorama layers (2654 px, sharp), graded to late summer,
-with the vanilla wheat-harvest painting in the middle at its own resolution, fading into the landscape at the sides
-and the top. Rerun after a game update:
+Vanilla has no harvest picture wider than 1080 px, which looks soft stretched over a 1450 px card. The banner is a
+wide landscape from the location view's panorama layers instead (2654 px, sharp), graded to late summer. Rerun after
+a game update:
 
     uv run python tools/build_europedia_banners.py             # write the DDS into the mod
     uv run python tools/build_europedia_banners.py --preview X.png   # also a 1x PNG to look at
@@ -33,25 +32,8 @@ PANORAMA = (
     "illustrations/location/settlement1/north_german/rural/north_german_rural11_metadata_os2654x440_d0x92.dds",
     "illustrations/location/ground1/continental/continental_grassland_ground1_metadata_os2654x440_d0x310.dds",
 )
-PAINTING = "icons/trade_goods/illustrations/icon_goods_wheat.dds"
-PANO_SCALE = 1.76      # x the banner height: puts the panorama's horizon level with the painting's
+PANO_SCALE = 1.76      # x the banner height: the middle of the panorama, horizon about a quarter down
 PANO_TOP = 0           # rows cut from the scaled panorama's top
-CROP = (300, 40)       # px cut off the scaled painting left / right (the left sheaf would fade into a ghost)
-FADE = (200, 150)      # px over which the painting fades into the landscape at the left / right
-TOP_FADE = 150         # px over which its sky fades into the landscape's
-
-
-def _smooth(t: float) -> float:
-    t = max(0.0, min(1.0, t))
-    return t * t * (3 - 2 * t)
-
-
-def _ramp(length: int, start: int, end: int = 0) -> Image.Image:
-    """A 1-px line mask: 0 at the edges, 255 inside, smoothstep over ``start`` / ``end`` px (0: no fade)."""
-    line = Image.new("L", (length, 1))
-    line.putdata([int(255 * _smooth(min(i / start if start else 1.0, (length - 1 - i) / end if end else 1.0)))
-                  for i in range(length)])
-    return line
 
 
 def panorama(interface: Path) -> Image.Image:
@@ -78,22 +60,8 @@ def late_summer(im: Image.Image) -> Image.Image:
     return ImageEnhance.Contrast(out).enhance(1.05)
 
 
-def painting(interface: Path) -> Image.Image:
-    with Image.open(interface / PAINTING) as source:
-        paint = source.convert("RGBA")
-    paint = paint.resize((round(paint.width * H / paint.height), H), Image.LANCZOS)
-    paint = paint.crop((CROP[0], 0, paint.width - CROP[1], H))
-    sides = _ramp(paint.width, *FADE).resize(paint.size)
-    top = _ramp(paint.height, TOP_FADE).rotate(-90, expand=True).transpose(Image.FLIP_LEFT_RIGHT).resize(paint.size)
-    paint.putalpha(ImageChops.multiply(paint.getchannel("A"), ImageChops.multiply(sides, top)))
-    return paint
-
-
 def banner(interface: Path) -> Image.Image:
-    out = late_summer(panorama(interface)).convert("RGBA")
-    paint = painting(interface)
-    out.alpha_composite(paint, ((W - paint.width) // 2, 0))
-    return out
+    return late_summer(panorama(interface)).convert("RGBA")
 
 
 def main(argv: list[str] | None = None) -> int:

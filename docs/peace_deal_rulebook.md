@@ -1,7 +1,7 @@
 # Peace deals and border gore (EU5 1.4)
 
 How the AI picks the land it takes in a peace deal, why it produced border gore (detached, scattered holdings), what PP
-changes, and how to measure it. Behaviour only; measured on 2026-10-09 in high-aggression observer runs on 0.10.
+changes, and how to measure it. Behaviour only; measured on 2026-10-09 in high-aggression observer runs on 0.10 (ten 1337-1357 runs, a 1837 check, console scenarios).
 
 ## How the AI picks locations
 
@@ -66,34 +66,39 @@ comes only next to existing holdings (whole-country annexation and vassalisation
 Desire" tooltip in the peace screen shows the desire without the selection factor, so its numbers are 20,000 x
 smaller than in vanilla (often 0.00); the ranking between locations is the same.
 
-## Measured effect (1339-1357, high aggression, three runs per setting)
+## Measured effect (1341-1357, high aggression, five runs per setting)
 
-Each setting ran from the same 1337 start; two more runs per setting were relaunched from its 1338/1339 saves (runs
-diverge within a year, so these show the chance spread). Every number is per run, 1339.4.1 to 1357.4.1.
+Each setting ran from the same 1337 start; four more runs per setting were relaunched from its 1338-1341 saves (runs
+diverge within a year, so these show the chance spread; a relaunch from the same save repeats itself exactly). Every
+number is per run, from each run's own 1341.4.1 save to 1357.4.1.
 
-| | vanilla defines | connected land only |
+| | vanilla defines (5 runs) | connected land only (5 runs) |
 |---|---|---|
-| detached locations gained | 257 / 335 / 365 | 69 / 118 / 174 |
-| detached share of partial cessions | 8.4 / 10.0 / 9.7 % | 0.7 / 2.3 / 4.3 % |
-| partial cessions from a loser the gainer did not border | 138 / 182 / 206 locations | 21 / 37 / 9 |
-| deals with detached land | 59 / 59 / 72 | 23 / 30 / 32 |
-| locations changing owner | 4,236 / 4,461 / 4,158 | 4,505 / 3,901 / 3,940 |
-| wars started between neighbours | 285 / 286 / 275 | 286 / 251 / 311 |
-| wars started, without Nanbokucho | 444 / 450 / 450 | 447 / 388 / 463 |
-| Nanbokucho wars (Japan) | 151 / 152 / 142 | 74 / 46 / 82 |
-| control of gained land | 0.33 / 0.32 / 0.33 | 0.32 / 0.32 / 0.33 |
-| mean control of all land, 1357 | 0.447 / 0.458 / 0.458 | 0.459 / 0.450 / 0.456 |
+| detached locations gained | 249 / 308 / 321 / 333 / 279 (mean 298) | 67 / 112 / 169 / 70 / 93 (102) |
+| detached share of partial cessions | 7.0-11.6 % (mean 9.2) | 0.7-4.5 % (2.1) |
+| partial cessions from a loser the gainer did not border | 136-194 locations (168) | 6-56 (31) |
+| deals with detached land | 48-62 (56) | 21-28 (24) |
+| locations changing owner | 3,412-4,255 (3,851) | 3,483-4,859 (4,024) |
+| wars started between neighbours | 200-221 (211) | 191-231 (212) |
+| wars started, without Nanbokucho | 353-382 (370) | 323-384 (369) |
+| Nanbokucho wars (Japan) | 73-104 (93) | 30-59 (43) |
+| control of all land, 1357 (mean per location) | 0.447-0.466 (0.456) | 0.450-0.468 (0.458) |
+| control, population-weighted, 1357 | 0.419-0.433 (0.426) | 0.399-0.417 (0.407) |
+| locations of the 10 largest countries, 1357 | 2,828-3,481 (3,181) | 2,808-3,398 (3,243) |
 
 - What is left of the detached land is not peace-deal land: civil-war reconquest (a country retaking land from its
   own rebels), inheritance and diplomatic annexation, subjects annexed.
-- Japan: the Nanbokucho situation ended about four years earlier (around 1340 instead of 1344-1345). It ends with the
-  peace term that makes a court abdicate; without scattered daimyo land in the AI's deal the winner takes that term
-  sooner. Fewer Nanbokucho wars follow; no other region showed this.
-- The eight largest countries lost less land to neighbours in partial cessions (642 / 684 / 777 -> 457 / 305 / 521:
-  fewer lost wars, slightly smaller cessions), the other countries traded about 8 % more land among themselves;
-  in total -4 %, inside the run-to-run spread (about +-7 %). In two of three vanilla runs a giant broke up (Golden Horde
-  civil war, Yuan losing Chagatai) and in none of the three new runs, which can still be chance at three runs each.
-  Watch the giants in the next long observer run.
+- Japan: the Nanbokucho situation ends about four years earlier (around 1340 instead of 1344-1345). It ends with the
+  peace term that makes a court abdicate (AI desire +1000 for the shogun and the courts); without scattered daimyo
+  land in the deal the winner takes that term sooner. Fewer Nanbokucho wars follow; no other region showed this.
+- Population-weighted control is 0.02 lower, all of it in Asia (Hindustan 0.43 -> 0.33, east China 0.37 -> 0.32;
+  Europe, Africa and America unchanged; control per location unchanged). Delhi collapses in every run; in the new runs
+  bigger successor states tend to hold Hindustan, and control falls with distance from the capital. Watch it in the
+  next long run; five runs of a chaotic region are not proof.
+- With three runs per setting the largest empires looked more stable under the new defines; the fourth and fifth pair
+  reversed that (a giant broke up in a new run, none in a vanilla one). The 10 largest countries end the same size.
+- Late game (observer run a3e3bb2a, 1837.4.1, two years each way): 84 vs 102 locations changed owner, about 1 %
+  detached in both; the late game is too static to show the overseas consequence (no first foothold from a deal).
 
 ## How to measure
 

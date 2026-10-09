@@ -92,8 +92,8 @@ NAI = {
 	# takes land connected to the taker; chains through the deal still count. FROM_WORTH_MULT scales every location:
 	# 0.00025 x 100001 = 25 = vanilla 5 x 5, so connected land keeps its value against gold, vassals and other terms.
 	# A test keeps the two coupled. ADJECENT 25 or 50 alone changed nothing (non-adjacent land still scored above 0).
-	# High aggression 1339-1357, 3 runs each: detached land gained 257-365 -> 69-174 locations, partial cessions
-	# 8-10 % -> 1-4 % detached; land exchange and wars within run noise; Japan's Nanbokucho ends ~4 years earlier.
+	# High aggression 1341-1357, 5 runs each: detached land gained 298 -> 102 locations (means), partial cessions
+	# 9.2 % -> 2.1 % detached; land exchange and wars within run noise; Japan's Nanbokucho ends ~4 years earlier.
 	AI_CONQUER_TREATY_DESIRE_ADJECENT = 100001 # 5
 	AI_CONQUER_TREATY_DESIRE_FROM_WORTH_MULT = 0.00025 # 5
 }

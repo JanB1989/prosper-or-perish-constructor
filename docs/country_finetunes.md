@@ -47,3 +47,10 @@ Hand-tuned changes for single countries, one entry each: what and why.
   1600). Skilled Tax Collectors (age 1) +5 % max control, +5 % max rural control. Why: run d3c30c7a, Muscovy grew
   steadily (26 -> 199 locations) but in 1512 Novgorod still held 128 and Smolensk 137, Kiev took Ruthenia, and Muscovy's
   control sat at 0.26-0.30 (159 of 496 possible tax).
+- **Japan: the imperial courts keep their palaces for the first four years of the Nanbokucho** (2026-10-09,
+  `in_game/common/peace_treaties/expand_clan_influence.txt`, vanilla copy plus one block, guarded by
+  `tests/test_peace_treaty_overrides.py`): the clan-influence peace term cannot target a country with the
+  japanese_imperial_family reform while the situation is in its first four years. Why: with connected-land peace deals
+  (`docs/peace_deal_rulebook.md`) clans took the Southern Court's palace sooner, it left the shogunate, lost the
+  emperor status and the Nanbokucho ended around 1340 instead of 1344 (43 instead of ~140 civil-war wars). With the
+  gate: ends 1345.3 or later (156 / 192 wars in two runs).

@@ -104,4 +104,9 @@ Hand-tuned changes for single countries, one entry each: what and why.
   v1 d2733167 206/246, 177/336, 153/267, 35/47, 149/294, 67/64, 277/277;
   v2 5e45c44e 248/243, 141/249, 166/233, 27/51, 88/114, 48/11, 314/344;
   v3 cacbb6a6 192/302, 187/158, 164/286, 38/55, 159/230, 67/68, 309/349;
-  v4 5f9f0232 211/236, 209/299, 99/255, 38/94, 110/262, 67/68, 322/228.
+  v4 5f9f0232 211/236, 209/299, 99/255, 38/94, 110/262, 67/68, 322/228;
+  v6 d6dc966a (final: v5 England x4 + Ireland, v6 France spares Iberia) 251/274, 169/240, 159/239, 28/54, 3/39,
+  67/73, 330/348.
+  Thriving at 1437 (grown, never below 80 % of start): baseline 4 of 7, v1 5, v2 5, v3-v6 6 each. The misses that aims
+  cannot fix: Ottoman revolts (v2 rebels took 55 locations in 1397; v6 the Akhis rose from 1 to 52 locations in 1357,
+  Ottoman stability -12), France's dips from England's 1350s invasions (it recovers by 1437 in every run but v3).

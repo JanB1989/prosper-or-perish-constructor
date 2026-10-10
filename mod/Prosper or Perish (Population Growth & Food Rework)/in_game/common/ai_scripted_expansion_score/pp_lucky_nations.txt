@@ -67,6 +67,36 @@ pp_muscovy_smolensk_peace = {
 	}
 }
 
+# France consolidates its own kingdom first: every country ruling from the France region (Bourbon, Armagnac, Brittany,
+# Foix, England's Aquitaine ...).
+pp_france_realm_focus = {
+	attacker_potential = {
+		tag = FRA
+	}
+	target_trigger = {
+		NOT = { is_subject_of = scope:attacker }
+		capital ?= { region = region:france_region }
+	}
+	score = {
+		add = 30
+	}
+}
+
+# Portugal looks across the strait once Morocco is the weaker side (the strength rule above), from 1400 (Ceuta 1415).
+pp_portugal_morocco_focus = {
+	attacker_potential = {
+		tag = POR
+		current_year >= 1400
+	}
+	target_trigger = {
+		NOT = { is_subject_of = scope:attacker }
+		capital ?= { region = region:maghreb_region }
+	}
+	score = {
+		add = 20
+	}
+}
+
 # Brandenburg prefers the small countries of its own marches: Brandenburg, Pomerania, Mecklenburg.
 pp_brandenburg_marches_focus = {
 	attacker_potential = {

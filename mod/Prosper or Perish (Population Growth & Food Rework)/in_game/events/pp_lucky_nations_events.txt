@@ -1,0 +1,13 @@
+﻿namespace = pp_lucky_nations
+
+# Lucky nations (docs/country_finetunes.md): Portugal looks across the strait to Morocco from 1400 (Ceuta 1415).
+pp_lucky_nations.1 = {
+	type = country_event outcome = neutral title = empty_text desc = empty_text hidden = yes fire_only_once = yes
+	dynamic_historical_event = { tag = POR from = 1400.1.1 to = 1600.1.1 monthly_chance = 10 }
+	trigger = {
+		NOT = { has_area_preference = pp_portugal_morocco }
+	}
+	immediate = {
+		add_area_preference = pp_portugal_morocco
+	}
+}

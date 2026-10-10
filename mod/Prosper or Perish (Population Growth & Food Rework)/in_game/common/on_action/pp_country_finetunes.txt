@@ -164,6 +164,22 @@ pp_country_finetune_area_preferences = {
 		c:HUN ?= {
 			add_area_preference = pp_hungary_go_east
 		}
+		# England: the Angevin lands where it still holds land, not all of France (pp_conquest_preferences.txt).
+		c:ENG ?= {
+			if = {
+				limit = { has_area_preference = england_conquer_france }
+				remove_area_preference = england_conquer_france
+			}
+			add_area_preference = pp_england_french_claims
+		}
+		# France: its own kingdom first.
+		c:FRA ?= {
+			add_area_preference = pp_france_consolidate_realm
+		}
+		# Castile: no French land.
+		c:CAS ?= {
+			add_area_preference = pp_castile_no_france_conquest
+		}
 		# Brandenburg: its marches (pp_lucky_nations.txt).
 		c:BRA ?= {
 			add_area_preference = pp_brandenburg_marches

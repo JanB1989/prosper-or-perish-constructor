@@ -40,6 +40,55 @@ pp_ottoman_crush_mamluks = {
 	region = crescent_region
 }
 
+# England: instead of vanilla's england_conquer_france (x15 on all of France, removed at start), only the old Angevin
+# lands, and only an area where England or its subjects still hold land (the Hundred Years' War front).
+pp_england_french_claims = {
+	preference_type = conquest
+	modifier = 15
+
+	area = gascony_area
+	area = guyenne_area
+	area = poitou_area
+	area = normandy_area
+	area = picardy_area
+	allow = {
+		country_exists = c:ENG
+		any_location_in_area = {
+			is_ownable = yes
+			owner ?= {
+				OR = {
+					this = c:ENG
+					is_subject_or_below_of = c:ENG
+				}
+			}
+		}
+	}
+}
+
+# Castile leaves France to the French (its land goes to Iberia and the Maghreb).
+pp_castile_no_france_conquest = {
+	preference_type = conquest
+	modifier = -0.9
+
+	region = france_region
+}
+
+# France: its own kingdom first (pp_lucky_nations.txt); vanilla's france_english_holdings (x100) stays on top.
+pp_france_consolidate_realm = {
+	preference_type = conquest
+	modifier = 5
+
+	region = france_region
+}
+
+# Portugal, from 1400 (events/pp_lucky_nations_events.txt): the Moroccan coast across the strait.
+pp_portugal_morocco = {
+	preference_type = conquest
+	modifier = 3
+
+	area = morocco_area
+}
+
 # Brandenburg: its own marches first (ai_scripted_expansion_score/target pp_lucky_nations.txt).
 pp_brandenburg_marches = {
 	preference_type = conquest

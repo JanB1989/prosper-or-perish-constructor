@@ -25,6 +25,11 @@ situation_panel = {
 
 	blockoverride "situation_subheader_content" {}
 
+	# The harvests have no actions. Vanilla's action list (situations_actions) evaluates every situation action in the
+	# game with the player as actor to find this situation's; without a player country (observing) each one logged
+	# "scope:actor returned an invalid object", 77 errors per opening (error.log, 2026-10-10).
+	blockoverride "situation_panel_main_actions" {}
+
 	##################################### MAIN CONTENT #####################################
 
 	blockoverride "situation_panel_main_content" {

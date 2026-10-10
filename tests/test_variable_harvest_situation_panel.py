@@ -46,6 +46,10 @@ def test_panel_is_a_situation_panel_overriding_only_blocks_it_has():
     # vanilla's blocks: picture, start date banner, subheader, main content
     for block in ("situation_panel_image", "situation_start_date", "situation_subheader_content", "situation_panel_main_content"):
         assert f'blockoverride "{block}"' in text
+    # no action list: the harvests have no actions, and vanilla's list evaluates every situation action with the player
+    # as actor, which logged errors on every opening without a player country (2026-10-10)
+    assert re.search(r'blockoverride "situation_panel_main_actions" \{\s*\}', text)
+    assert "GetActionGroups" not in text
 
 
 def test_every_texture_and_text_key_exists():

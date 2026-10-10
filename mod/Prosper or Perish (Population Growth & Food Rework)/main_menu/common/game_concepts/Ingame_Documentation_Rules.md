@@ -30,10 +30,17 @@ The types live in `in_game/gui/shared/pp_europedia_style.gui`; a card is the usu
    - a scale: an hbox (`spacing = 10`) of up to seven `pp_eu_scale_step`, worst to best, each a medallion and a
      concept link whose tooltip holds the details;
    - goods rows: `pp_eu_goods_row` with a two-line label (`#T name#!\nverdict`) and `pp_eu_goods` icons (tooltip = the
-     goods key; alpha 0.55 for goods the mechanic leaves alone).
+     goods key; alpha 0.55 for goods the mechanic leaves alone);
+   - a comparison: an hbox (`margin = { 40 0 }`) of two `pp_eu_panel` (icons, title, text) with a `pp_eu_sign`
+     ("or", "+") or a two-way arrow between them, e.g. store running low vs store full;
+   - an equation: `pp_eu_step`s with `pp_eu_sign` "–" and "=" between, e.g. grows – eats = surplus;
+   - a list: a vbox (`margin = { 40 0 } spacing = 8`) of `pp_eu_entry`, each a fixed icon column (a small
+     input -> building -> output flow of `pp_eu_icon` and `pp_eu_arrow`, or a row of buildings) next to a title and text.
 5. Section order that reads well: what happens (flow) -> how strong (scale) -> what it touches -> where to see it in
    game. Keep a card on its own mechanic; the neighbouring mechanics get a link in the text, not a section of their
    own (Jan dropped the harvest card's "Where It Leads" flow, 2026-10-09).
+6. Cards need not look alike (Jan, 2026-10-10): banner, lead and section headings stay, the rest is whatever explains
+   the mechanic best (Food: comparisons; Food Production: an equation and a building list). Concise wins.
 
 Use the mod's own visual language where one exists (harvest medallions = the location view's harvest chip frames).
 `tests/test_europedia_style.py` checks textures, keys, links, data functions and that the text has no numbers; extend
@@ -49,7 +56,7 @@ When editing the Europedia GUI or concept definitions, preserve this order:
 4. Update 0.9
 5. Overview (done)
 6. Food (was Food in EU5; card style)
-7. Food Production (done)
+7. Food Production (card style)
 8. Food Consumption
 9. New Trade Goods (done)
 10. New Buildings (done)
@@ -98,3 +105,4 @@ Linked support concepts without top-level Europedia cards:
 | Fishing Capacity | pp_fish_capacity.txt |
 | Forest Capacity | pp_forest_capacity.txt |
 | Province Food Growth from Storage | pp_positive_province_food_growth.txt |
+| Staple Foods (the goods list follows `config/goods_categories.csv` staple_group; a test keeps them equal) | pp_staple_foods.txt |

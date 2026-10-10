@@ -158,4 +158,86 @@ types pp_europedia_style
 	type pp_eu_goods = icon {
 		size = { 40 40 }
 	}
+
+	# A bigger icon for panels and entries (tooltip = the building or goods key).
+	type pp_eu_icon = icon {
+		size = { 52 52 }
+	}
+
+	# A wide paper panel for side-by-side comparisons: two fit a card row (hbox, margin { 40 0 }), with a pp_eu_sign
+	# between them. Override "panel_icons" (icons in a row), "panel_title" and "panel_text".
+	type pp_eu_panel = vbox {
+		minimumsize = { 640 200 }
+		maximumsize = { 640 -1 }
+		margin = { 18 14 }
+		spacing = 8
+		using = bg_paper_card
+
+		hbox = {
+			spacing = 10
+			block "panel_icons" {}
+		}
+		text_single = {
+			using = Font_Type_Headers
+			fontsize = 17
+			default_format = "#yellow_titles"
+			autoresize = yes
+			block "panel_title" { text = "" }
+		}
+		text_multi = {
+			max_width = 604
+			min_width = 604
+			autoresize = yes
+			align = hcenter|nobaseline
+			block "panel_text" { text = "" }
+		}
+		expand = {}
+	}
+
+	# A big gold sign between panels or flow steps ("or", "+", "-", "="). Override "sign_text" (a text or raw_text line).
+	type pp_eu_sign = text_single {
+		minimumsize = { 50 -1 }
+		align = hcenter|nobaseline
+		using = Font_Type_Headers
+		fontsize = 30
+		default_format = "#yellow_titles"
+		autoresize = yes
+		block "sign_text" { raw_text = "" }
+	}
+
+	# One entry of a list (e.g. the food buildings): a paper strip with a fixed icon column on the left (a small
+	# input -> building -> output flow, or a row of buildings) and a gold title over the text on the right. Entries
+	# stack in a vbox (margin { 40 0 }, spacing 8). Override "entry_icons", "entry_title" and "entry_text".
+	type pp_eu_entry = hbox {
+		margin = { 18 12 }
+		spacing = 20
+		using = bg_paper_card
+
+		hbox = {
+			minimumsize = { 300 -1 }
+			maximumsize = { 300 -1 }
+			spacing = 6
+			expand = {}
+			block "entry_icons" {}
+			expand = {}
+		}
+		vbox = {
+			spacing = 4
+			text_single = {
+				size = { 1010 26 }
+				align = left|nobaseline
+				using = Font_Type_Headers
+				fontsize = 17
+				default_format = "#yellow_titles"
+				autoresize = no
+				block "entry_title" { text = "" }
+			}
+			text_multi = {
+				max_width = 1010
+				min_width = 1010
+				autoresize = yes
+				block "entry_text" { text = "" }
+			}
+		}
+	}
 }

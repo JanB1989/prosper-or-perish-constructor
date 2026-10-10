@@ -5,7 +5,8 @@ landscape from the location view's panorama layers instead (2654 px, sharp), gra
 
 - harvest: farmland under a late-summer grade (Variable Harvests);
 - arable_land: forest on the left giving way to cleared fields and farmsteads on the right (Arable Land);
-- food: a market town among its fields on a river (Food).
+- food: a market town among its fields on a river (Food);
+- food_production: farmsteads among their fields above a fishing coast (Food Production).
 
 Rerun after a game update:
 
@@ -38,6 +39,7 @@ PANO_SCALE = 1.76      # x the banner height: the middle of the panorama, horizo
 class Layer:
     path: str                                  # under illustrations/location/, offset in the name: _d<x>x<y>
     fade_left: tuple[int, int] | None = None   # fade the layer out toward the left between these x (2654 canvas)
+    dx: int = 0                                # move the layer sideways (2654 canvas), e.g. a dock into the crop
 
 
 def _late_summer(im: Image.Image) -> Image.Image:
@@ -58,8 +60,15 @@ def _natural(im: Image.Image) -> Image.Image:
     return ImageEnhance.Contrast(ImageEnhance.Color(warm).enhance(1.05)).enhance(1.04)
 
 
-BANNERS: dict[str, tuple[tuple[Layer, ...], Callable[[Image.Image], Image.Image]]] = {
-    "harvest": ((
+@dataclass(frozen=True)
+class Banner:
+    layers: tuple[Layer, ...]
+    grade: Callable[[Image.Image], Image.Image]
+    pano_scale: float = PANO_SCALE   # smaller shows more of the panorama (a shore lies low in it)
+
+
+BANNERS: dict[str, Banner] = {
+    "harvest": Banner((
         Layer("sky/sky_regular_metadata_os2654x440_d0x0.dds"),
         Layer("topology/hills/hills_metadata_os2654x440_d0x15.dds"),
         Layer("ground3/continental/continental_grassland_ground3_metadata_os2654x440_d0x66.dds"),
@@ -67,7 +76,7 @@ BANNERS: dict[str, tuple[tuple[Layer, ...], Callable[[Image.Image], Image.Image]
         Layer("settlement1/north_german/rural/north_german_rural11_metadata_os2654x440_d0x92.dds"),
         Layer("ground1/continental/continental_grassland_ground1_metadata_os2654x440_d0x310.dds"),
     ), _late_summer),
-    "arable_land": ((
+    "arable_land": Banner((
         Layer("sky/sky_regular2_metadata_os2654x440_d0x0.dds"),
         Layer("topology/hills/hills_metadata_os2654x440_d0x15.dds"),
         Layer("ground3/continental/continental_forest_ground3_metadata_os2654x440_d0x62.dds"),
@@ -76,7 +85,7 @@ BANNERS: dict[str, tuple[tuple[Layer, ...], Callable[[Image.Image], Image.Image]
         Layer("settlement1/north_german/rural/north_german_rural11_metadata_os2654x440_d0x92.dds", (1000, 1200)),
         Layer("ground1/continental/continental_grassland_ground1_metadata_os2654x440_d0x310.dds"),
     ), _natural),
-    "food": ((
+    "food": Banner((
         Layer("sky/sky_regular_metadata_os2654x440_d0x0.dds"),
         Layer("topology/hills/hills_metadata_os2654x440_d0x15.dds"),
         Layer("ground3/continental/continental_grassland_ground3_metadata_os2654x440_d0x66.dds"),
@@ -86,14 +95,23 @@ BANNERS: dict[str, tuple[tuple[Layer, ...], Callable[[Image.Image], Image.Image]
         Layer("water/river/river_metadata_os2654x440_d0x190.dds"),
         Layer("ground1/continental/continental_grassland_ground1_metadata_os2654x440_d0x310.dds"),
     ), _natural),
+    "food_production": Banner((
+        Layer("sky/sky_regular2_metadata_os2654x440_d0x0.dds"),
+        Layer("topology/hills/hills_metadata_os2654x440_d0x15.dds"),
+        Layer("ground3/oceanic/oceanic_grassland_ground3_metadata_os2654x440_d0x68.dds"),
+        Layer("ground3/farmlands_metadata_os2654x440_d0x102.dds"),
+        Layer("settlement1/north_german/rural/north_german_rural11_metadata_os2654x440_d0x92.dds"),
+        Layer("water/river_ocean/river_ocean_metadata_os2654x440_d0x208.dds"),
+        Layer("ground1/oceanic/oceanic_grassland_ground1_metadata_os2654x440_d0x288.dds"),
+    ), _natural, pano_scale=1.4),
 }
 
 
 def _layer(interface: Path, layer: Layer) -> Image.Image:
-    x, y = map(int, re.search(r"_d(\d+)x(\d+)\.dds$", layer.path).groups())
+    x, y = map(int, re.search(r"_d(\d+)x(\d+)(?:_t)?\.dds$", layer.path).groups())
     canvas = Image.new("RGBA", (2654, 440), (0, 0, 0, 0))
     with Image.open(interface / LOCATION / layer.path) as source:
-        canvas.alpha_composite(source.convert("RGBA"), (x, y))
+        canvas.alpha_composite(source.convert("RGBA"), (x + layer.dx, y))
     if layer.fade_left:
         start, end = layer.fade_left
         ramp = Image.new("L", (2654, 1))
@@ -103,14 +121,14 @@ def _layer(interface: Path, layer: Layer) -> Image.Image:
 
 
 def banner(interface: Path, name: str) -> Image.Image:
-    layers, grade = BANNERS[name]
+    spec = BANNERS[name]
     pano = Image.new("RGBA", (2654, 440), (0, 0, 0, 0))
-    for layer in layers:
+    for layer in spec.layers:
         pano.alpha_composite(_layer(interface, layer))
-    scale = H / 440 * PANO_SCALE
+    scale = H / 440 * spec.pano_scale
     pano = pano.resize((round(2654 * scale), round(440 * scale)), Image.LANCZOS)
     left = (pano.width - W) // 2
-    return grade(pano.crop((left, 0, left + W, H)).convert("RGB")).convert("RGBA")
+    return spec.grade(pano.crop((left, 0, left + W, H)).convert("RGB")).convert("RGBA")
 
 
 def main(argv: list[str] | None = None) -> int:

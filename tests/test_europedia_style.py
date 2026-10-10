@@ -15,6 +15,7 @@ from pathlib import Path
 import pytest
 
 from prosper_or_perish_constructor import location_status
+from prosper_or_perish_constructor.staple_foods import GROUPS, goods_in_group, staple_foods
 from scripts.generate_variable_harvests import exempt_goods
 from test_gui_blocks import _calls, _vanilla
 
@@ -33,7 +34,8 @@ CARDS = {
     "arable_land": ("# ---- Arable Land ----", "# ---- Population Growth ----",
                     ("game_concept_pp_population_capacity_desc", "game_concept_pp_overused_arable_land_desc",
                      "game_concept_pp_abundant_free_land_desc", "game_concept_pp_available_free_land_desc")),
-    "food": ("# ---- Food ----", "# ---- Food Production ----", ()),
+    "food": ("# ---- Food ----", "# ---- Food Production ----", ("game_concept_pp_staple_foods_desc",)),
+    "food_production": ("# ---- Food Production ----", "# ---- Food Consumption ----", ("game_concept_pp_staple_foods_desc",)),
 }
 # Retired player-facing names of the population capacity and its states (renamed to Arable Land 2026-10-10).
 # "Farmland Vegetation" and lower-case "farmland" (the vegetation type, prose about fields) stay.
@@ -75,10 +77,13 @@ def _texture_exists(texture: str) -> bool:
 
 
 def _concepts() -> set[str]:
+    """Every concept name and alias (`pop = { alias = { pops } }` links as [pops|e] too)."""
     concepts = set()
     for root in (_vanilla(), MOD_ROOT):
         for path in (root / "main_menu/common/game_concepts").glob("*.txt"):
-            concepts |= set(re.findall(r"(?m)^(\w+)\s*=\s*\{", path.read_text(encoding="utf-8-sig", errors="replace")))
+            text = path.read_text(encoding="utf-8-sig", errors="replace")
+            concepts |= set(re.findall(r"(?m)^(\w+)\s*=\s*\{", text))
+            concepts |= {a for aliases in re.findall(r"\balias\s*=\s*\{([^}]*)\}", text) for a in aliases.split()}
     return concepts
 
 
@@ -138,13 +143,23 @@ def test_embedded_keys_resolve(name):
 
 
 @pytest.mark.parametrize("name", CARDS)
+def test_named_goods_buildings_and_pops_exist(name):
+    """[ShowGoodsName('x')], [ShowBuildingTypeName('x')] and [ShowPopTypeName('x')] name real keys (a typo shows raw)."""
+    named = {k for value in _card_loc(name).values()
+             for k in re.findall(r"Show(?:GoodsName|BuildingTypeName|PopTypeName)\('(\w+)'\)", value)}
+    assert not sorted(named - set(_all_loc()))
+
+
+@pytest.mark.parametrize("name", CARDS)
 def test_data_functions_exist_in_the_game(name):
     used = _calls(_card(name)) | _calls(GENERATED.read_text(encoding="utf-8-sig"))
     used |= {fn for value in _card_loc(name).values() for fn in _calls(value)}
     vanilla = set()
     for path in [*_vanilla().glob("*/gui/**/*.gui"), *_vanilla().glob("main_menu/localization/english/**/*.yml")]:
         vanilla |= _calls(path.read_text(encoding="utf-8-sig", errors="replace"))
-    assert {"GetPlayer", "GetCapital", "IsValid"} <= used
+    assert used
+    if "[GetPlayer.IsValid]" in _card(name):   # the live line reads the player's capital
+        assert {"GetPlayer", "GetCapital", "IsValid"} <= used
     assert not sorted(used - vanilla)
 
 
@@ -183,6 +198,32 @@ def test_arable_land_improvements_row_shows_land_improvements():
     sources = {path.stem for path in (ROOT / "blueprints/accepted").rglob("*.yml")
                if re.search(r"(?m)^footprint:\s*capacity_source\s*$", path.read_text(encoding="utf-8"))}
     assert shown and not sorted(set(shown) - sources)
+
+
+def test_staple_foods_follow_the_staple_list():
+    """The Food card's Staple Foods row and the Staple Foods concept list every staple food (staple_foods.py), the
+    concept by group."""
+    assert sorted(_rows("food")["PP_EU_FOOD_STAPLES_ROW"]) == sorted(staple_foods())
+    desc = _loc(MOD_ROOT)["game_concept_pp_staple_foods_desc"]
+    for group in GROUPS:
+        line = re.search(rf"#T Staple {group}:#!(.*?)(?:\\n|$)", desc).group(1)
+        assert sorted(re.findall(r"ShowGoodsName\('(\w+)'\)", line)) == sorted(goods_in_group(group)), group
+
+
+def test_staple_food_farms_provision():
+    """The farms the Food Production card shows feed their province (a Provisioning method) and the entries show the
+    food buildings it explains."""
+    entries = re.findall(r'blockoverride "entry_icons" \{(.*?)\n\s*\}\s*blockoverride "entry_title" \{ text = "(\w+)" \}',
+                         _card("food_production"), flags=re.DOTALL)
+    icons = {title: re.findall(r'tooltip = "(\w+)"', body) for body, title in entries}
+    blueprints = {path.stem: path for path in (ROOT / "blueprints/accepted").rglob("*.yml")}
+    farms = icons["PP_EU_PROD_FARMS"]
+    assert len(farms) >= 4
+    for farm in farms:
+        assert re.search(rf"\bpp_{farm}_provision\b", blueprints[farm].read_text(encoding="utf-8")), farm
+    shown = {key for row in icons.values() for key in row}
+    assert {"cookshop", "public_kitchen", "grange", "victualling_yard", "tavern"} <= shown <= set(blueprints) | {
+        "local_food", "victuals", "PP_EU_FOOD_TT_STAPLES"}
 
 
 def test_old_land_names_are_gone():

@@ -38,9 +38,9 @@ class GuiCard:
 _CARD_TEXT = re.compile(
     r"pp_eu_(?:lead|text)\s*=\s*\{\s*text\s*=\s*\"(?P<styled>[^\"]+)\""
     r"|text_multi\s*=\s*\{[^{}]*?text\s*=\s*\"(?P<plain>[^\"]+)\""
-    r"|blockoverride\s+\"(?P<role>section_title|step_title|step_text|scale_label|row_label)\"\s*\{\s*text\s*=\s*\"(?P<part>[^\"]+)\""
+    r"|blockoverride\s+\"(?P<role>section_title|step_title|step_text|panel_title|panel_text|entry_title|entry_text|scale_label|row_label)\"\s*\{\s*text\s*=\s*\"(?P<part>[^\"]+)\""
 )
-_TITLE_ROLES = ("section_title", "step_title")
+_TITLE_ROLES = ("section_title", "step_title", "panel_title", "entry_title")
 
 
 @dataclass(frozen=True)
@@ -349,16 +349,20 @@ _INLINE_FUNCTIONS = (
     "ShowModifier",
     "ShowModifierEffect",
     "ShowPopTypeName",
+    "ShowModifierTypeName",
     "ScriptValue",
     "GetVariable",
 )
 _INLINE_FUNCTION_PATTERN = "|".join(_INLINE_FUNCTIONS)
+# a concept link with its own text: [Concept('pp_abundant_free_land', 'Abundant Arable Land')|e]
+_NAMED_CONCEPT = re.compile(r"\[Concept\('([A-Za-z0-9_]+)',\s*'([^']+)'\)\|[eE]\]")
 _INLINE_TOKEN = re.compile(
     rf"(?P<bracket_func>\[(?P<bracket_func_name>{_INLINE_FUNCTION_PATTERN})"
     r"\('(?P<bracket_func_arg>[^']+)'\)(?:\|e)?\])"
     rf"|(?P<func>(?P<func_name>{_INLINE_FUNCTION_PATTERN})"
     r"\('(?P<func_arg>[^']+)'\))"
     r"|(?P<link>\[(?P<concept>[A-Za-z0-9_]+)\|e\])"
+    r"|(?P<named>\[Concept\('(?P<named_key>[A-Za-z0-9_]+)',\s*'(?P<named_text>[^']+)'\)\|[eE]\])"
 )
 
 
@@ -381,6 +385,8 @@ def _format_inline_plain(text: str, anchors: dict[str, dict[str, str]]) -> str:
         out.append(html.escape(text[position : match.start()]))
         if match.group("concept"):
             out.append(_format_concept_link(match.group("concept"), anchors))
+        elif match.group("named"):
+            out.append(_format_concept_link(match.group("named_key"), anchors, match.group("named_text")))
         else:
             name = match.group("bracket_func_name") or match.group("func_name")
             arg = match.group("bracket_func_arg") or match.group("func_arg")
@@ -390,13 +396,13 @@ def _format_inline_plain(text: str, anchors: dict[str, dict[str, str]]) -> str:
     return "".join(out)
 
 
-def _format_concept_link(concept: str, anchors: dict[str, dict[str, str]]) -> str:
+def _format_concept_link(concept: str, anchors: dict[str, dict[str, str]], label: str | None = None) -> str:
     target = anchors.get(concept)
     if target is None:
-        return f'<span class="concept-ref">{html.escape(_display_key(concept))}</span>'
+        return f'<span class="concept-ref">{html.escape(label or _display_key(concept))}</span>'
     return (
         f'<a class="concept-link" href="#{html.escape(target["id"])}">'
-        f'{html.escape(target["title"])}</a>'
+        f'{html.escape(label or target["title"])}</a>'
     )
 
 
@@ -422,6 +428,7 @@ def _plain_text(text: str) -> str:
     text = re.sub(r"#T\s*(.*?)#!", r"\1", text)
     text = re.sub(r"#[A-Za-z_]+\s*(.*?)#!", r"\1", text)
     text = text.replace("$BULLET$", "- ")
+    text = _NAMED_CONCEPT.sub(r"\2", text)
     text = re.sub(
         rf"\[(?:{_INLINE_FUNCTION_PATTERN})\('([^']+)'\)(?:\|e)?\]",
         lambda m: _display_key(m.group(1)),
@@ -437,7 +444,7 @@ def _plain_text(text: str) -> str:
 
 
 def _concept_refs(text: str) -> list[str]:
-    return re.findall(r"\[([A-Za-z0-9_]+)\|e\]", text)
+    return re.findall(r"\[([A-Za-z0-9_]+)\|e\]", text) + [key for key, _ in _NAMED_CONCEPT.findall(text)]
 
 
 def _display_key(key: str) -> str:

@@ -1,6 +1,7 @@
 """Build the art of the Variable Harvests situation (harvest_situation): its panel picture and its icon.
 
-- Panel picture: the harvest card's late-summer farmland (tools/build_europedia_banners.py, banner "harvest") cut to
+- Panel picture: the harvest card's fat year, lean year farmland (tools/build_europedia_banners.py, banner "harvest";
+  the cut holds the turn from the sunlit harvest into the storm) cut to
   vanilla's situation picture size, 1080 x 440 (shown about 540 x 220 at the top of the situation panel,
   in_game/gui/panels/situation/harvest_situation.gui). Without it the panel showed vanilla's default picture, a
   burning town.
@@ -31,7 +32,7 @@ PICTURE = "gfx/interface/illustrations/situation/harvest_situation.dds"   # unde
 ICON = "gfx/interface/icons/situations/harvest_situation.dds"             # under the mod's in_game, like the welcome icon
 ICON_SOURCE = "game/main_menu/gfx/interface/icons/alerts_icons/weather_system.dds"
 SIZE = (1080, 440)
-# the part of the 2900 x 500 banner the picture shows: the same aspect as SIZE, two farmsteads in the fields
+# the part of the 2900 x 500 banner the picture shows: the same aspect as SIZE, two farmsteads, sun turning to storm
 CROP_LEFT = 1080
 
 

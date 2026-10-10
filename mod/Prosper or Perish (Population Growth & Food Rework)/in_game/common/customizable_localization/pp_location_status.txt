@@ -163,3 +163,127 @@ pp_harvest_region = {
 	text = { localization_key = PP_HARVEST_REGION_WESTERN_EUROPE trigger = { OR = { region ?= region:france_region region ?= region:great_britain_region region ?= region:iberia_region region ?= region:ireland_region region ?= region:italy_region region ?= region:north_atlantic_islands_region region ?= region:north_german_region region ?= region:scandinavian_region region ?= region:south_german_region } } }
 	text = { localization_key = PP_HARVEST_REGION_NONE fallback = yes }
 }
+
+pp_harvest_link = {
+	type = location
+	text = { localization_key = PP_HARVEST_LINK_WESTERN_EUROPE_ABYSMAL trigger = { has_location_modifier = pp_harvest_western_europe_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_WESTERN_EUROPE_VERY_POOR trigger = { has_location_modifier = pp_harvest_western_europe_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_WESTERN_EUROPE_POOR trigger = { has_location_modifier = pp_harvest_western_europe_poor } }
+	text = { localization_key = PP_HARVEST_LINK_WESTERN_EUROPE_GOOD trigger = { has_location_modifier = pp_harvest_western_europe_good } }
+	text = { localization_key = PP_HARVEST_LINK_WESTERN_EUROPE_VERY_GOOD trigger = { has_location_modifier = pp_harvest_western_europe_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_WESTERN_EUROPE_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_western_europe_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_EASTERN_EUROPE_ABYSMAL trigger = { has_location_modifier = pp_harvest_eastern_europe_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_EASTERN_EUROPE_VERY_POOR trigger = { has_location_modifier = pp_harvest_eastern_europe_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_EASTERN_EUROPE_POOR trigger = { has_location_modifier = pp_harvest_eastern_europe_poor } }
+	text = { localization_key = PP_HARVEST_LINK_EASTERN_EUROPE_GOOD trigger = { has_location_modifier = pp_harvest_eastern_europe_good } }
+	text = { localization_key = PP_HARVEST_LINK_EASTERN_EUROPE_VERY_GOOD trigger = { has_location_modifier = pp_harvest_eastern_europe_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_EASTERN_EUROPE_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_eastern_europe_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_ASIA_ABYSMAL trigger = { has_location_modifier = pp_harvest_north_asia_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_ASIA_VERY_POOR trigger = { has_location_modifier = pp_harvest_north_asia_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_ASIA_POOR trigger = { has_location_modifier = pp_harvest_north_asia_poor } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_ASIA_GOOD trigger = { has_location_modifier = pp_harvest_north_asia_good } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_ASIA_VERY_GOOD trigger = { has_location_modifier = pp_harvest_north_asia_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_ASIA_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_north_asia_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_CENTRAL_ASIA_ABYSMAL trigger = { has_location_modifier = pp_harvest_central_asia_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_CENTRAL_ASIA_VERY_POOR trigger = { has_location_modifier = pp_harvest_central_asia_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_CENTRAL_ASIA_POOR trigger = { has_location_modifier = pp_harvest_central_asia_poor } }
+	text = { localization_key = PP_HARVEST_LINK_CENTRAL_ASIA_GOOD trigger = { has_location_modifier = pp_harvest_central_asia_good } }
+	text = { localization_key = PP_HARVEST_LINK_CENTRAL_ASIA_VERY_GOOD trigger = { has_location_modifier = pp_harvest_central_asia_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_CENTRAL_ASIA_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_central_asia_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_EAST_ASIA_ABYSMAL trigger = { has_location_modifier = pp_harvest_east_asia_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_EAST_ASIA_VERY_POOR trigger = { has_location_modifier = pp_harvest_east_asia_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_EAST_ASIA_POOR trigger = { has_location_modifier = pp_harvest_east_asia_poor } }
+	text = { localization_key = PP_HARVEST_LINK_EAST_ASIA_GOOD trigger = { has_location_modifier = pp_harvest_east_asia_good } }
+	text = { localization_key = PP_HARVEST_LINK_EAST_ASIA_VERY_GOOD trigger = { has_location_modifier = pp_harvest_east_asia_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_EAST_ASIA_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_east_asia_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_ASIA_ABYSMAL trigger = { has_location_modifier = pp_harvest_south_asia_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_ASIA_VERY_POOR trigger = { has_location_modifier = pp_harvest_south_asia_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_ASIA_POOR trigger = { has_location_modifier = pp_harvest_south_asia_poor } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_ASIA_GOOD trigger = { has_location_modifier = pp_harvest_south_asia_good } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_ASIA_VERY_GOOD trigger = { has_location_modifier = pp_harvest_south_asia_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_ASIA_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_south_asia_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_EAST_ASIA_ABYSMAL trigger = { has_location_modifier = pp_harvest_south_east_asia_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_EAST_ASIA_VERY_POOR trigger = { has_location_modifier = pp_harvest_south_east_asia_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_EAST_ASIA_POOR trigger = { has_location_modifier = pp_harvest_south_east_asia_poor } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_EAST_ASIA_GOOD trigger = { has_location_modifier = pp_harvest_south_east_asia_good } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_EAST_ASIA_VERY_GOOD trigger = { has_location_modifier = pp_harvest_south_east_asia_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_EAST_ASIA_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_south_east_asia_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_MIDDLE_EAST_ABYSMAL trigger = { has_location_modifier = pp_harvest_middle_east_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_MIDDLE_EAST_VERY_POOR trigger = { has_location_modifier = pp_harvest_middle_east_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_MIDDLE_EAST_POOR trigger = { has_location_modifier = pp_harvest_middle_east_poor } }
+	text = { localization_key = PP_HARVEST_LINK_MIDDLE_EAST_GOOD trigger = { has_location_modifier = pp_harvest_middle_east_good } }
+	text = { localization_key = PP_HARVEST_LINK_MIDDLE_EAST_VERY_GOOD trigger = { has_location_modifier = pp_harvest_middle_east_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_MIDDLE_EAST_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_middle_east_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_AFRICA_ABYSMAL trigger = { has_location_modifier = pp_harvest_north_africa_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_AFRICA_VERY_POOR trigger = { has_location_modifier = pp_harvest_north_africa_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_AFRICA_POOR trigger = { has_location_modifier = pp_harvest_north_africa_poor } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_AFRICA_GOOD trigger = { has_location_modifier = pp_harvest_north_africa_good } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_AFRICA_VERY_GOOD trigger = { has_location_modifier = pp_harvest_north_africa_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_AFRICA_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_north_africa_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_WEST_AFRICA_ABYSMAL trigger = { has_location_modifier = pp_harvest_west_africa_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_WEST_AFRICA_VERY_POOR trigger = { has_location_modifier = pp_harvest_west_africa_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_WEST_AFRICA_POOR trigger = { has_location_modifier = pp_harvest_west_africa_poor } }
+	text = { localization_key = PP_HARVEST_LINK_WEST_AFRICA_GOOD trigger = { has_location_modifier = pp_harvest_west_africa_good } }
+	text = { localization_key = PP_HARVEST_LINK_WEST_AFRICA_VERY_GOOD trigger = { has_location_modifier = pp_harvest_west_africa_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_WEST_AFRICA_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_west_africa_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_EAST_AFRICA_ABYSMAL trigger = { has_location_modifier = pp_harvest_east_africa_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_EAST_AFRICA_VERY_POOR trigger = { has_location_modifier = pp_harvest_east_africa_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_EAST_AFRICA_POOR trigger = { has_location_modifier = pp_harvest_east_africa_poor } }
+	text = { localization_key = PP_HARVEST_LINK_EAST_AFRICA_GOOD trigger = { has_location_modifier = pp_harvest_east_africa_good } }
+	text = { localization_key = PP_HARVEST_LINK_EAST_AFRICA_VERY_GOOD trigger = { has_location_modifier = pp_harvest_east_africa_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_EAST_AFRICA_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_east_africa_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_CENTRAL_AFRICA_ABYSMAL trigger = { has_location_modifier = pp_harvest_central_africa_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_CENTRAL_AFRICA_VERY_POOR trigger = { has_location_modifier = pp_harvest_central_africa_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_CENTRAL_AFRICA_POOR trigger = { has_location_modifier = pp_harvest_central_africa_poor } }
+	text = { localization_key = PP_HARVEST_LINK_CENTRAL_AFRICA_GOOD trigger = { has_location_modifier = pp_harvest_central_africa_good } }
+	text = { localization_key = PP_HARVEST_LINK_CENTRAL_AFRICA_VERY_GOOD trigger = { has_location_modifier = pp_harvest_central_africa_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_CENTRAL_AFRICA_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_central_africa_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTHERN_AFRICA_ABYSMAL trigger = { has_location_modifier = pp_harvest_southern_africa_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTHERN_AFRICA_VERY_POOR trigger = { has_location_modifier = pp_harvest_southern_africa_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTHERN_AFRICA_POOR trigger = { has_location_modifier = pp_harvest_southern_africa_poor } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTHERN_AFRICA_GOOD trigger = { has_location_modifier = pp_harvest_southern_africa_good } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTHERN_AFRICA_VERY_GOOD trigger = { has_location_modifier = pp_harvest_southern_africa_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTHERN_AFRICA_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_southern_africa_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_AMERICA_ABYSMAL trigger = { has_location_modifier = pp_harvest_north_america_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_AMERICA_VERY_POOR trigger = { has_location_modifier = pp_harvest_north_america_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_AMERICA_POOR trigger = { has_location_modifier = pp_harvest_north_america_poor } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_AMERICA_GOOD trigger = { has_location_modifier = pp_harvest_north_america_good } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_AMERICA_VERY_GOOD trigger = { has_location_modifier = pp_harvest_north_america_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_NORTH_AMERICA_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_north_america_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_AMERICA_ABYSMAL trigger = { has_location_modifier = pp_harvest_south_america_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_AMERICA_VERY_POOR trigger = { has_location_modifier = pp_harvest_south_america_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_AMERICA_POOR trigger = { has_location_modifier = pp_harvest_south_america_poor } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_AMERICA_GOOD trigger = { has_location_modifier = pp_harvest_south_america_good } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_AMERICA_VERY_GOOD trigger = { has_location_modifier = pp_harvest_south_america_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_SOUTH_AMERICA_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_south_america_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_AUSTRALASIA_ABYSMAL trigger = { has_location_modifier = pp_harvest_australasia_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_AUSTRALASIA_VERY_POOR trigger = { has_location_modifier = pp_harvest_australasia_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_AUSTRALASIA_POOR trigger = { has_location_modifier = pp_harvest_australasia_poor } }
+	text = { localization_key = PP_HARVEST_LINK_AUSTRALASIA_GOOD trigger = { has_location_modifier = pp_harvest_australasia_good } }
+	text = { localization_key = PP_HARVEST_LINK_AUSTRALASIA_VERY_GOOD trigger = { has_location_modifier = pp_harvest_australasia_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_AUSTRALASIA_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_australasia_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_PACIFIC_ISLANDS_ABYSMAL trigger = { has_location_modifier = pp_harvest_pacific_islands_abysmal } }
+	text = { localization_key = PP_HARVEST_LINK_PACIFIC_ISLANDS_VERY_POOR trigger = { has_location_modifier = pp_harvest_pacific_islands_very_poor } }
+	text = { localization_key = PP_HARVEST_LINK_PACIFIC_ISLANDS_POOR trigger = { has_location_modifier = pp_harvest_pacific_islands_poor } }
+	text = { localization_key = PP_HARVEST_LINK_PACIFIC_ISLANDS_GOOD trigger = { has_location_modifier = pp_harvest_pacific_islands_good } }
+	text = { localization_key = PP_HARVEST_LINK_PACIFIC_ISLANDS_VERY_GOOD trigger = { has_location_modifier = pp_harvest_pacific_islands_very_good } }
+	text = { localization_key = PP_HARVEST_LINK_PACIFIC_ISLANDS_BOUNTIFUL trigger = { has_location_modifier = pp_harvest_pacific_islands_bountiful } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_AUSTRALASIA trigger = { OR = { region ?= region:australia_region region ?= region:new_zealand_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_CENTRAL_AFRICA trigger = { OR = { region ?= region:central_africa_region region ?= region:kongo_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_CENTRAL_ASIA trigger = { OR = { region ?= region:khorasan_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_EAST_AFRICA trigger = { OR = { region ?= region:ethiopia_region region ?= region:great_lakes_region region ?= region:madagascar_region region ?= region:nubia_region region ?= region:somalia_region region ?= region:swahili_coast_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_EAST_ASIA trigger = { OR = { region ?= region:east_china_region region ?= region:japan_region region ?= region:korea_region region ?= region:manchuria_region region ?= region:mongolia_region region ?= region:north_china_region region ?= region:south_china_region region ?= region:tibet_region region ?= region:west_china_region region ?= region:xinjiang_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_EASTERN_EUROPE trigger = { OR = { region ?= region:balkan_region region ?= region:baltic_region region ?= region:carpathia_region region ?= region:caucasus_region region ?= region:russian_region region ?= region:ruthenia_region region ?= region:steppes_region region ?= region:ural_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_MIDDLE_EAST trigger = { OR = { region ?= region:anatolia_region region ?= region:arabia_region region ?= region:crescent_region region ?= region:persia_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_NORTH_AFRICA trigger = { OR = { region ?= region:egypt_region region ?= region:macaronesia_region region ?= region:maghreb_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_NORTH_AMERICA trigger = { OR = { region ?= region:alaska_region region ?= region:aridoamerica_region region ?= region:canada_region region ?= region:caribbean_region region ?= region:central_america_region region ?= region:east_coast_region region ?= region:great_plains_region region ?= region:mesoamerica_region region ?= region:west_coast_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_NORTH_ASIA trigger = { OR = { region ?= region:east_siberia_region region ?= region:west_siberia_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_PACIFIC_ISLANDS trigger = { OR = { region ?= region:melanesia_region region ?= region:micronesia_region region ?= region:polynesia_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_SOUTH_AMERICA trigger = { OR = { region ?= region:andes_region region ?= region:brazil_region region ?= region:chaco_region region ?= region:colombia_region region ?= region:la_plata_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_SOUTH_ASIA trigger = { OR = { region ?= region:bengal_region region ?= region:central_india_region region ?= region:deccan_region region ?= region:hindustan_region region ?= region:western_india_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_SOUTH_EAST_ASIA trigger = { OR = { region ?= region:indochina_region region ?= region:indonesia_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_SOUTHERN_AFRICA trigger = { OR = { region ?= region:southern_africa_islands_region region ?= region:southern_africa_region region ?= region:zimbabwe_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_WEST_AFRICA trigger = { OR = { region ?= region:guinea_region region ?= region:sahel_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE_WESTERN_EUROPE trigger = { OR = { region ?= region:france_region region ?= region:great_britain_region region ?= region:iberia_region region ?= region:ireland_region region ?= region:italy_region region ?= region:north_atlantic_islands_region region ?= region:north_german_region region ?= region:scandinavian_region region ?= region:south_german_region } } }
+	text = { localization_key = PP_HARVEST_LINK_AVERAGE fallback = yes }
+}

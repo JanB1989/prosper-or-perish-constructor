@@ -8,7 +8,14 @@ landscape from the location view's panorama layers instead (2654 px, sharp), gra
 - food: a Deccan town with its domed stores among its fields on a plateau (Food);
 - food_production: rice paddies and a temple town in wet lowland (Food Production);
 - labor: a busy city with mill chimneys smoking between its houses (Labor);
-- logistics: a crowded bazaar city on a river in dry hills (Logistics (Market Access)).
+- logistics: a crowded bazaar city on a river in dry hills (Logistics (Market Access));
+- population_growth: an Ashanti town spreading into its fields and farm compounds before the rainforest, in a golden
+  morning haze (Population Growth);
+- trade_goods: an East Asian harbour city on a bay under mountains, junks at its quays (New Trade Goods);
+- food_consumption: a crowded Aztec city round its great temple in a dry highland basin under twin volcanoes (Food
+  Consumption);
+- rural_capacities: a fishing harbour and a net shed on a northern firth below conifer forest and heath, in a cool
+  light (Rural Capacities).
 
 Every card gets its own landscape (Jan, 2026-10-10): a culture, climate and scene no other banner uses.
 
@@ -62,6 +69,21 @@ def _natural(im: Image.Image) -> Image.Image:
     """The panorama's own colours, a touch warmer and fuller."""
     warm = Image.blend(im, ImageChops.multiply(im, Image.new("RGB", im.size, (255, 236, 200))), 0.12)
     return ImageEnhance.Contrast(ImageEnhance.Color(warm).enhance(1.05)).enhance(1.04)
+
+
+def _harmattan_morning(im: Image.Image) -> Image.Image:
+    """Lush greens under a soft golden morning haze, the distance paler (population_growth)."""
+    gold = Image.blend(im, ImageChops.multiply(im, Image.new("RGB", im.size, (255, 226, 170))), 0.30)
+    haze = Image.new("RGB", im.size, (246, 228, 196))
+    depth = Image.linear_gradient("L").resize(im.size).point(lambda v: max(0, min(255, int((150 - v) * 1.1))))
+    out = Image.composite(Image.blend(gold, haze, 0.22), gold, depth)
+    return ImageEnhance.Contrast(ImageEnhance.Color(out).enhance(1.12)).enhance(1.05)
+
+
+def _northern(im: Image.Image) -> Image.Image:
+    """A cool northern light: a blue-grey cast, a touch less colour, a little more contrast (rural_capacities)."""
+    cool = Image.blend(im, ImageChops.multiply(im, Image.new("RGB", im.size, (200, 222, 255))), 0.22)
+    return ImageEnhance.Contrast(ImageEnhance.Color(cool).enhance(0.92)).enhance(1.06)
 
 
 @dataclass(frozen=True)
@@ -130,6 +152,48 @@ BANNERS: dict[str, Banner] = {
         Layer("water/river/river_metadata_os2654x440_d0x190.dds"),
         Layer("ground1/arid/arid_sparse_ground1_metadata_os2654x440_d0x304.dds"),
     ), _natural),
+    "population_growth": Banner((
+        Layer("sky/sky_regular_metadata_os2654x440_d0x0.dds"),
+        Layer("topology/flatlands/flatlands_metadata_os2654x440_d0x60.dds"),
+        Layer("ground3/tropical/tropical_jungle_ground3_metadata_os2654x440_d0x58.dds"),
+        Layer("ground3/farmlands_metadata_os2654x440_d0x102.dds"),
+        Layer("settlement2/ashanti/rural/ashanti_rural2_metadata_os2654x440_d250x92.dds"),
+        Layer("settlement1/ashanti/rural/ashanti_rural1_metadata_os2654x440_d210x66.dds"),
+        Layer("settlement2/ashanti/town/ashanti_town2_metadata_os2654x440_d0x86.dds", (1150, 1450)),
+        Layer("religious_buildings/ashanti/ashanti_religious2_metadata_os2654x440_d0x100.dds", dx=1640),
+        Layer("settlement1/ashanti/town/ashanti_town1_metadata_os2654x440_d0x106.dds", (1250, 1550)),
+        Layer("ground1/tropical/tropical_grassland_ground1_metadata_os2654x440_d0x288.dds"),
+    ), _harmattan_morning, 1.6),
+    "trade_goods": Banner((
+        Layer("sky/sky_regular_metadata_os2654x440_d0x0.dds"),
+        Layer("topology/mountains/mountains_metadata_os2654x440_d0x0.dds"),
+        Layer("ground3/oceanic/oceanic_woods_ground3_metadata_os2654x440_d0x64.dds"),
+        Layer("settlement2/asian/city/asian_city2_metadata_os2654x440_d0x44.dds"),
+        Layer("settlement1/asian/city/asian_city1_metadata_os2654x440_d0x132.dds"),
+        Layer("water/ocean/ocean_metadata_os2654x440_d0x254.dds"),
+        Layer("dock/asian/asian_dock3_metadata_os2654x440_d426x140_t.dds", dx=500),
+        Layer("dock/asian/asian_dock2_metadata_os2654x440_d426x140_t.dds", dx=1300),
+    ), _natural, 1.12),
+    "food_consumption": Banner((
+        Layer("sky/sky_regular_metadata_os2654x440_d0x0.dds"),
+        Layer("topology/volcano/volcano_metadata_os2654x440_d890x56.dds", dx=-560),
+        Layer("topology/volcano/volcano_metadata_os2654x440_d890x56.dds", dx=420),
+        Layer("ground3/mediterranean/mediterranean_sparse_ground3_metadata_os2654x440_d0x78.dds"),
+        Layer("settlement2/aztec/city/aztec_city2_metadata_os2654x440_d0x70.dds"),
+        Layer("religious_buildings/aztec/aztec_religious1_metadata_os2654x440_d0x80.dds", dx=800),
+        Layer("religious_buildings/aztec/aztec_religious2_metadata_os2654x440_d0x80.dds", dx=1760),
+        Layer("religious_buildings/aztec/aztec_religious3_metadata_os2654x440_d0x60.dds", dx=1225),
+        Layer("settlement1/aztec/city/aztec_city1_metadata_os2654x440_d0x116.dds"),
+        Layer("ground1/mediterranean/mediterranean_sparse_ground1_metadata_os2654x440_d0x288.dds"),
+    ), _natural, 1.6),
+    "rural_capacities": Banner((
+        Layer("sky/sky_regular2_metadata_os2654x440_d0x0.dds"),
+        Layer("topology/flatlands/flatlands_metadata_os2654x440_d0x60.dds"),
+        Layer("ground3/arctic/arctic_forest_ground3_metadata_os2654x440_d0x34.dds"),
+        Layer("water/river_ocean/river_ocean_metadata_os2654x440_d0x208.dds"),
+        Layer("dock/north_german/north_german_dock1_metadata_os2654x440_d426x140_t.dds", dx=1250),
+        Layer("dock/north_german/north_german_dock2_metadata_os2654x440_d426x140_t.dds", dx=150),
+    ), _northern, 1.3),
 }
 
 

@@ -1,7 +1,7 @@
 ﻿l_english:
   pp_granary_maintenance: "Granaries"
   victuals: "Victuals"
-  victuals_desc: "Preserved rations and travel food packed from full province stores in the [ShowBuildingTypeName('victualling_yard')|e]. Victuals keep and travel, so they are traded through the goods market, supply armies, fleets and workshops, and are turned back into food by the [ShowBuildingTypeName('tavern')|e]."
+  victuals_desc: "Preserved rations and travel food: the [ShowBuildingTypeName('grange')|e] packs them from a full province store, the [ShowBuildingTypeName('victualling_yard')|e] from staple foods bought on the market. Victuals keep and travel, so they are traded through the goods market. The buildings of armies and fleets, carriers and work crews use them, and the [ShowBuildingTypeName('tavern')|e] turns them back into food."
   province_food_sales: "Surplus Sales"
   province_food_sales_desc: "Internal value: what the Grange earns from the surplus of a well-stocked province. It pays nothing once the province store runs low and can otherwise be ignored."
   local_food: "Province Food"

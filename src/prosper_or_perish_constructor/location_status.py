@@ -16,7 +16,10 @@ How each state is read:
 - harvest: the modifiers are script-applied, so customizable localizations test `has_location_modifier` and return
   the active modifier's display name (title and effect rows), its trend (the tooltip text) and its severity (the
   frame's colour and the signed badge); a fourth tests region membership, so the chip shows the harvest region's
-  crop in average years too.
+  crop in average years too. A fifth (`pp_harvest_link`) returns the active modifier as a hover link
+  (`[ShowModifier(...)]`, its tooltip lists the live effects) or the Average Harvest concept: the Variable Harvests
+  situation panel (in_game/gui/panels/situation/harvest_situation.gui) names the harvest of the player's capital and
+  provinces with it.
 
 The Stored Food step itself shows in the province modifier list beside the chips with its full effects (2026-10-03:
 the list no longer skips it).
@@ -140,8 +143,20 @@ def custom_localization(harvests: Harvests) -> str:
     lines.append("pp_harvest_region = {\n\ttype = location")
     for sub, regions in harvests.regions.items():
         lines.append(f"\ttext = {{ localization_key = PP_HARVEST_REGION_{sub.upper()} trigger = {{ {_in_regions(regions)} }} }}")
-    lines.append("\ttext = { localization_key = PP_HARVEST_REGION_NONE fallback = yes }\n}")
+    lines.append("\ttext = { localization_key = PP_HARVEST_REGION_NONE fallback = yes }\n}\n")
+    # the harvest as a hover link (the situation panel): the modifier itself, or the Average Harvest concept
+    lines.append("pp_harvest_link = {\n\ttype = location")
+    for key in keys:
+        lines.append(f"\ttext = {{ localization_key = {harvest_link_key(key)} trigger = {{ has_location_modifier = {key} }} }}")
+    for sub, regions in harvests.regions.items():
+        lines.append(f"\ttext = {{ localization_key = PP_HARVEST_LINK_AVERAGE_{sub.upper()} trigger = {{ {_in_regions(regions)} }} }}")
+    lines.append("\ttext = { localization_key = PP_HARVEST_LINK_AVERAGE fallback = yes }\n}")
     return "\n".join(lines) + "\n"
+
+
+def harvest_link_key(key: str) -> str:
+    """`pp_harvest_<region>_<severity>` -> the localization key of its hover link (upper case, like the other keys)."""
+    return "PP_HARVEST_LINK_" + key.removeprefix("pp_harvest_").upper()
 
 
 def harvest_localization(harvests: Harvests) -> str:
@@ -160,6 +175,13 @@ def harvest_localization(harvests: Harvests) -> str:
     for sev in SEVERITY_COLOURS:
         links = "\\n".join(f"$BULLET$ [ShowModifier('{key}')]" for key in harvests.keys if severity(key) == sev)
         lines.append(f'  PP_HARVEST_BY_AREA_{sev.upper()}: "{links}"')
+    # pp_harvest_link's texts: the active harvest modifier as a hover link, the Average Harvest concept otherwise
+    for key in harvests.keys:
+        lines.append(f'  {harvest_link_key(key)}: "[ShowModifier(\'{key}\')]"')
+    for sub in harvests.regions:
+        name = harvests.names.get(sub, sub.replace("_", " ").title())
+        lines.append(f'  PP_HARVEST_LINK_AVERAGE_{sub.upper()}: "[Concept(\'average_harvest\', \'Average Harvest\')|e]: {name}"')
+    lines.append("  PP_HARVEST_LINK_AVERAGE: \"[average_harvest|e]\"")
     return "\n".join(lines) + "\n"
 
 

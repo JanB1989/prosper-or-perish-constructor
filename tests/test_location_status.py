@@ -43,10 +43,17 @@ def test_harvest_keys_regions_and_states_come_from_the_harvest_files():
     assert "localization_key = PP_HARVEST_AVERAGE_WESTERN_EUROPE trigger = { OR = { region ?= region:r1 region ?= region:r2 } }" in loc
     assert "localization_key = PP_HARVEST_REGION_PACIFIC_ISLANDS trigger = { OR = { region ?= region:r3 } }" in loc
     assert "localization_key = PP_HARVEST_SEVERITY_VERY_GOOD trigger = { OR = { has_location_modifier = pp_harvest_x_very_good } }" in loc
-    assert loc.count("fallback = yes") == 4 and loc.count("{") == loc.count("}")
+    assert loc.count("fallback = yes") == 5 and loc.count("{") == loc.count("}")
     generated = location_status.harvest_localization(HARVESTS)
     assert 'PP_HARVEST_AVERAGE_WESTERN_EUROPE: "Average Harvest: Region X"' in generated
     assert 'PP_HARVEST_REGION_PACIFIC_ISLANDS: "Pacific Islands"' in generated   # fallback name when the loc has none
+    # the harvest as a hover link (the situation panel): the active modifier itself, else the Average Harvest concept
+    assert "localization_key = PP_HARVEST_LINK_Y_POOR trigger = { has_location_modifier = pp_harvest_y_poor }" in loc
+    assert "localization_key = PP_HARVEST_LINK_AVERAGE_WESTERN_EUROPE trigger = { OR = { region ?= region:r1 region ?= region:r2 } }" in loc
+    assert "localization_key = PP_HARVEST_LINK_AVERAGE fallback = yes" in loc
+    assert "  PP_HARVEST_LINK_Y_POOR: \"[ShowModifier('pp_harvest_y_poor')]\"" in generated
+    assert "  PP_HARVEST_LINK_AVERAGE_WESTERN_EUROPE: \"[Concept('average_harvest', 'Average Harvest')|e]: Region X\"" in generated
+    assert '  PP_HARVEST_LINK_AVERAGE: "[average_harvest|e]"' in generated
 
 
 def test_harvest_chip_layers_crop_in_a_severity_frame_with_a_signed_badge():

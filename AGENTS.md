@@ -362,6 +362,12 @@
   scales and goods rows; rules in `main_menu/common/game_concepts/Ingame_Documentation_Rules.md`, first card Variable
   Harvests, 2026-10-09). Their text has no numbers at all: values sit behind concept, modifier and goods links.
 - Use plain text in situation panes and generated static-modifier descriptions unless that target UI is verified to support inline concept links; unsupported formatter tags spam `error.log`.
+- Situation panels: the game opens `gui/panels/situation/<situation key>.gui` when a situation is clicked. The Variable
+  Harvests panel (`in_game/gui/panels/situation/harvest_situation.gui`, 2026-10-10, not yet seen in game) is vanilla's
+  `situation_panel` with `situation_card_common` sections; its texts (`PP_HARVEST_SIT_*`, pp_situations_l_english.yml)
+  sit in its own `text_multi` widgets like the Europedia cards and carry links. The situation's tooltip texts
+  (`harvest_situation_desc` / `_monthly`), its map tooltip and its legend stay plain. Picture and icon:
+  `tools/build_harvest_situation_art.py`; tests: `tests/test_variable_harvest_situation_panel.py`.
 - Situation map legends should use mod-owned plain localization keys, not inherited or generic `LEGEND_KEY_*` keys, because legend UI is sensitive to formatter syntax.
 - In GUI files, do not put `#` formatter markers in `default_format` style names; use the raw style key such as `yellow_titles`.
   Exception found 2026-10-10: EU5 1.4 vanilla writes `default_format = "#yellow_titles"` (382 times, never bare), and the

@@ -457,7 +457,7 @@
                                 }
                             }
 
-                            # Filter buttons — row 2 (target order 9-14)
+                            # Filter buttons — row 2 (target order 9-12)
                             hbox = {
                                 layoutpolicy_horizontal = expanding
                                 margin = { 10 3 }
@@ -468,16 +468,6 @@
                                     raw_text = "New Trade Goods"
                                     onclick = "[GetVariableSystem.Set('pp_filter', 'victuals')]"
                                     down = "[GetVariableSystem.HasValue('pp_filter', 'victuals')]"
-                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
-                                    tooltipwidget = { BasicFunctionalTooltip = {} }
-
-                                    blockoverride "background" {}
-                                }
-                                button_regular = {
-                                    layoutpolicy_horizontal = expanding
-                                    raw_text = "New Buildings"
-                                    onclick = "[GetVariableSystem.Set('pp_filter', 'new_buildings')]"
-                                    down = "[GetVariableSystem.HasValue('pp_filter', 'new_buildings')]"
                                     action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
                                     tooltipwidget = { BasicFunctionalTooltip = {} }
 
@@ -505,16 +495,6 @@
                                 }
                                 button_regular = {
                                     layoutpolicy_horizontal = expanding
-                                    raw_text = "Building Output"
-                                    onclick = "[GetVariableSystem.Set('pp_filter', 'farm_output')]"
-                                    down = "[GetVariableSystem.HasValue('pp_filter', 'farm_output')]"
-                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
-                                    tooltipwidget = { BasicFunctionalTooltip = {} }
-
-                                    blockoverride "background" {}
-                                }
-                                button_regular = {
-                                    layoutpolicy_horizontal = expanding
                                     raw_text = "Labor"
                                     onclick = "[GetVariableSystem.Set('pp_filter', 'labor')]"
                                     down = "[GetVariableSystem.HasValue('pp_filter', 'labor')]"
@@ -525,7 +505,7 @@
                                 }
                             }
 
-                            # Filter buttons — row 3 (target order 15-19)
+                            # Filter buttons — row 3 (target order 13-16)
                             hbox = {
                                 layoutpolicy_horizontal = expanding
                                 margin = { 10 3 }
@@ -556,16 +536,6 @@
                                     raw_text = "Population Growth"
                                     onclick = "[GetVariableSystem.Set('pp_filter', 'pop_growth')]"
                                     down = "[GetVariableSystem.HasValue('pp_filter', 'pop_growth')]"
-                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
-                                    tooltipwidget = { BasicFunctionalTooltip = {} }
-
-                                    blockoverride "background" {}
-                                }
-                                button_regular = {
-                                    layoutpolicy_horizontal = expanding
-                                    raw_text = "Population Distribution"
-                                    onclick = "[GetVariableSystem.Set('pp_filter', 'pop_dist')]"
-                                    down = "[GetVariableSystem.HasValue('pp_filter', 'pop_dist')]"
                                     action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
                                     tooltipwidget = { BasicFunctionalTooltip = {} }
 
@@ -1165,6 +1135,7 @@
                                         }
 
                                         # ---- Food Consumption ----
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'food_consumption'))]"
                                             set_parent_size_to_minimum = yes
@@ -1172,6 +1143,7 @@
                                             vbox = {
                                                 layoutpolicy_horizontal = expanding
                                                 spacing = 10
+                                                margin_bottom = 24
                                                 using = bg_paper_card
                                                 blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
                                                 max_width = 1450
@@ -1189,18 +1161,252 @@
                                                         text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_food_consumption" }
                                                     }
                                                 }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_food_consumption_desc" margin = { 40 10 } }
+
+                                                pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_food_consumption.dds" } }
+                                                pp_eu_lead = { text = "game_concept_pp_food_consumption_desc" }
+
+                                                # Your capital's province: what it eats a month and how many months of that its store holds
+                                                hbox = {
+                                                    visible = "[GetPlayer.IsValid]"
+                                                    spacing = 14
+                                                    widget = {
+                                                        size = { 64 64 }
+                                                        pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                        pp_eu_medallion_goods = { texture = "gfx/interface/icons/location_icons/food.dds" }
+                                                    }
+                                                    text_multi = { max_width = 900 autoresize = yes text = "PP_EU_CONS_CAPITAL" }
+                                                }
+
+                                                # ---- From the store, month by month: a flow ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/location_icons/food.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_CONS_FLOW" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/location_icons/population.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[pop_food_consumption|e]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_CONS_STEP_EAT" }
+                                                        blockoverride "step_text" { text = "PP_EU_CONS_STEP_EAT_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('pp_food_storage', 'Province Store')|e]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_CONS_STEP_STORE" }
+                                                        blockoverride "step_text" { text = "PP_EU_CONS_STEP_STORE_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_local_food.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowGoodsName('local_food')|e]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_CONS_STEP_BALANCE" }
+                                                        blockoverride "step_text" { text = "PP_EU_CONS_STEP_BALANCE_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowModifier('province_starving')]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_CONS_STEP_EMPTY" }
+                                                        blockoverride "step_text" { text = "PP_EU_CONS_STEP_EMPTY_DESC" }
+                                                    }
+                                                }
+
+                                                # ---- Who eats how much: the pop types, hungriest to most frugal (pop_food_consumption, pop_types/pp_pop_adjustments.txt) ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/location_icons/population.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_CONS_WHO" }
+                                                }
+                                                hbox = {
+                                                    spacing = 10
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/pops/nobles.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_CONS_POP_NOBLES" }
+                                                    }
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/pops/clergy.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_CONS_POP_CLERGY" }
+                                                    }
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/pops/burghers.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_CONS_POP_BURGHERS" }
+                                                    }
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/pops/soldiers.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_CONS_POP_SOLDIERS" }
+                                                    }
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/pops/laborers.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_CONS_POP_LABORERS" }
+                                                    }
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/pops/peasants.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_CONS_POP_PEASANTS" }
+                                                    }
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/pops/slaves.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_CONS_POP_SLAVES" }
+                                                    }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_CONS_WHO_DESC" }
+
+                                                # ---- Everyone eats more in winter and in good times: two panels ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/winter.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_CONS_EVERYONE" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 50
+                                                    pp_eu_panel = {
+                                                        blockoverride "panel_icons" {
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/winter/mild.dds" }
+                                                                blockoverride "item_link" { raw_text = "[ShowModifier('winter_mild')]" }
+                                                            }
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/winter/normal.dds" }
+                                                                blockoverride "item_link" { raw_text = "[ShowModifier('winter_normal')]" }
+                                                            }
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/winter/severe.dds" }
+                                                                blockoverride "item_link" { raw_text = "[ShowModifier('winter_severe')]" }
+                                                            }
+                                                        }
+                                                        blockoverride "panel_title" { text = "PP_EU_CONS_WINTER" }
+                                                        blockoverride "panel_text" { text = "PP_EU_CONS_WINTER_DESC" }
+                                                    }
+                                                    pp_eu_panel = {
+                                                        blockoverride "panel_icons" {
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/map_modes/prosperity.dds" }
+                                                                blockoverride "item_link" { raw_text = "[ShowModifier('prosperity')]" }
+                                                            }
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/location_icons/prosperity_low.dds" }
+                                                                blockoverride "item_link" { raw_text = "[ShowModifier('devastation')]" }
+                                                            }
+                                                        }
+                                                        blockoverride "panel_title" { text = "PP_EU_CONS_PROSPERITY" }
+                                                        blockoverride "panel_text" { text = "PP_EU_CONS_PROSPERITY_DESC" }
+                                                    }
+                                                }
+
+                                                # ---- The peasants' share: what lowers and what raises only their food (goods rows) ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/pops/peasants.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_CONS_PEASANTS" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_CONS_PEASANTS_DESC" }
+                                                vbox = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_CONS_PEASANTS_LESS" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/pp_harvest/frame_good.dds" }
+                                                                blockoverride "item_overlay" { pp_eu_medallion_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" } }
+                                                                blockoverride "item_link" { raw_text = "[good_harvest|e]" }
+                                                            }
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/pp_arable_land/abundant.dds" }
+                                                                blockoverride "item_link" { raw_text = "[ShowModifier('abundant_free_land')]" }
+                                                            }
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/pp_arable_land/available.dds" }
+                                                                blockoverride "item_link" { raw_text = "[ShowModifier('available_free_land')]" }
+                                                            }
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/cookshop.dds" }
+                                                                blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('cookshop')|e]" }
+                                                            }
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/public_kitchen.dds" }
+                                                                blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('public_kitchen')|e]" }
+                                                            }
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" }
+                                                                blockoverride "item_link" { raw_text = "[ShowModifier('pp_rgo_bonus_wheat')]" }
+                                                            }
                                                         }
                                                     }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_CONS_PEASANTS_MORE" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/pp_harvest/frame_poor.dds" }
+                                                                blockoverride "item_overlay" { pp_eu_medallion_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" } }
+                                                                blockoverride "item_link" { raw_text = "[poor_harvest|e]" }
+                                                            }
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/pp_arable_land/overused.dds" }
+                                                                blockoverride "item_link" { raw_text = "[ShowModifier('overpopulation')]" }
+                                                            }
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_sugar.dds" }
+                                                                blockoverride "item_link" { raw_text = "[ShowModifier('pp_rgo_bonus_sugar')]" }
+                                                            }
+                                                        }
+                                                    }
                                                 }
+                                                pp_eu_text = { text = "PP_EU_CONS_PEASANTS_WHY" }
+
+                                                # ---- One estate at a time: laws, privileges and estate buildings ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/laws.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_CONS_ESTATES" }
+                                                }
+                                                vbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_entry_wide = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/flat_icons/laws.dds" } blockoverride "item_link" { raw_text = "[law|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/flat_icons/privilege.dds" } blockoverride "item_link" { raw_text = "[estate_privilege|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/nobles_mansion.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('nobles_mansion')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/peasants_hunting_grounds.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('peasants_hunting_grounds')|e]" } }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_CONS_CHOICES" }
+                                                        blockoverride "entry_text" { text = "PP_EU_CONS_CHOICES_DESC" }
+                                                    }
+                                                }
+
+                                                # ---- Where to see it ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/location_modifiers.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_CONS_WHERE" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_CONS_WHERE_DESC" }
                                             }
                                         }
 
                                         # ---- New Trade Goods (Victuals) ----
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'victuals'))]"
                                             set_parent_size_to_minimum = yes
@@ -1208,6 +1414,7 @@
                                             vbox = {
                                                 layoutpolicy_horizontal = expanding
                                                 spacing = 10
+                                                margin_bottom = 24
                                                 using = bg_paper_card
                                                 blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
                                                 max_width = 1450
@@ -1225,50 +1432,242 @@
                                                         text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_victuals" }
                                                     }
                                                 }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_victuals_desc" margin = { 40 10 } }
-                                                        }
-                                                    }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
-                                                }
-                                            }
-                                        }
 
-                                        # ---- New Buildings ----
-                                        vbox = {
-                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'new_buildings'))]"
-                                            set_parent_size_to_minimum = yes
-                                            margin = { 0 10 }
-                                            vbox = {
-                                                layoutpolicy_horizontal = expanding
-                                                spacing = 10
-                                                using = bg_paper_card
-                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                max_width = 1450
-                                                min_width = 1450
-                                                icon = {
-                                                    layoutpolicy_horizontal = expanding
-                                                    using = button_main_tab_texture
-                                                    frame = 4
-                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
-                                                    hbox = {
-                                                        margin = { 40 0 }
-                                                        margin_top = 8
-                                                        icon = { texture = "gfx/interface/icons/flat_icons/balance/buildings_abroad.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_new_buildings" }
+                                                pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_trade_goods.dds" } }
+                                                pp_eu_lead = { text = "game_concept_pp_victuals_desc" }
+
+                                                # Your capital's market: the victuals price (the Victuals Price map mode's script value)
+                                                hbox = {
+                                                    visible = "[GetPlayer.IsValid]"
+                                                    spacing = 14
+                                                    widget = {
+                                                        size = { 64 64 }
+                                                        pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                        pp_eu_medallion_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_victuals.dds" }
+                                                    }
+                                                    text_multi = { max_width = 900 autoresize = yes text = "PP_EU_GOODS_CAPITAL" }
+                                                }
+
+                                                # ---- Victuals: packed from a full store or from the market, traded, food again in a Tavern ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_victuals.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_GOODS_VICTUALS" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_GOODS_VICTUALS_DESC" }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 6
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/grange.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowBuildingTypeName('grange')|e]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_GOODS_STEP_GRANGE" }
+                                                        blockoverride "step_text" { text = "PP_EU_GOODS_STEP_GRANGE_DESC" }
+                                                    }
+                                                    pp_eu_sign = { blockoverride "sign_text" { text = "PP_EU_GOODS_OR" } }
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/victualling_yard.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowBuildingTypeName('victualling_yard')|e]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_GOODS_STEP_YARD" }
+                                                        blockoverride "step_text" { text = "PP_EU_GOODS_STEP_YARD_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_victuals.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowGoodsName('victuals')|e]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_GOODS_STEP_TRADED" }
+                                                        blockoverride "step_text" { text = "PP_EU_GOODS_STEP_TRADED_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/tavern.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowBuildingTypeName('tavern')|e]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_GOODS_STEP_FOOD" }
+                                                        blockoverride "step_text" { text = "PP_EU_GOODS_STEP_FOOD_DESC" }
                                                     }
                                                 }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_new_buildings_desc" margin = { 40 10 } }
+
+                                                # ---- Who else buys victuals: every building whose methods take them, and every pop ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/demand.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_GOODS_USERS" }
+                                                }
+                                                vbox = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_GOODS_MILITARY_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/barracks.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('barracks')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/armory.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('armory')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/regimental_camp.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('regimental_camp')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/training_fields.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('training_fields')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/conscription_center.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('conscription_center')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/dock.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('dock')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/dry_dock.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('dry_dock')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/shipyard.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('shipyard')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/grand_shipyard.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('grand_shipyard')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/naval_base.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('naval_base')|e]" } }
                                                         }
                                                     }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_GOODS_CARRIERS_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/river_boatmen_yard.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('river_boatmen_yard')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/coastal_shipping_office.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('coastal_shipping_office')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/transport_office.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('transport_office')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/carrier_inn.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('carrier_inn')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/pp_caravanserai.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('pp_caravanserai')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/pp_oasis_caravan_station.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('pp_oasis_caravan_station')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/pp_yam_station.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('pp_yam_station')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/pp_banjara_tanda.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('pp_banjara_tanda')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/pp_llama_caravan_post.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('pp_llama_caravan_post')|e]" } }
+                                                        }
+                                                    }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_GOODS_CREWS_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/lumber_mill.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('lumber_mill')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/water_sawmill.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('water_sawmill')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/lumber_mill_improved.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('lumber_mill_improved')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/managed_forest_village.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('managed_forest_village')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/offshore_fishery.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('offshore_fishery')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/pearl_fishery.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('pearl_fishery')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/hurdled_sheepcotes.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('hurdled_sheepcotes')|e]" } }
+                                                        }
+                                                    }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_GOODS_POPS_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/pops/nobles.dds" } blockoverride "item_link" { raw_text = "[ShowPopTypeName('nobles')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/pops/clergy.dds" } blockoverride "item_link" { raw_text = "[ShowPopTypeName('clergy')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/pops/burghers.dds" } blockoverride "item_link" { raw_text = "[ShowPopTypeName('burghers')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/pops/soldiers.dds" } blockoverride "item_link" { raw_text = "[ShowPopTypeName('soldiers')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/pops/laborers.dds" } blockoverride "item_link" { raw_text = "[ShowPopTypeName('laborers')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/pops/peasants.dds" } blockoverride "item_link" { raw_text = "[ShowPopTypeName('peasants')]" } }
+                                                        }
+                                                    }
                                                 }
+                                                pp_eu_text = { text = "PP_EU_GOODS_USERS_DESC" }
+
+                                                # ---- Manual Labor: the short version, the Labor card has the rest ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_manual_labor.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_GOODS_LABOR" }
+                                                }
+                                                vbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/pops/peasants.dds" } blockoverride "item_link" { raw_text = "[ShowPopTypeName('peasants')]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_manual_labor.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('manual_labor')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/production_methods/_default.dds" } blockoverride "item_link" { raw_text = "[production_method|e]" } }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_GOODS_LABOR_TITLE" }
+                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_LABOR_DESC" }
+                                                    }
+                                                }
+
+                                                # ---- Bookkeeping goods: fixed low price, safe to ignore (the dummy goods files) ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/goods_balance.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_GOODS_DUMMY" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_GOODS_DUMMY_DESC" }
+                                                vbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/cookshop.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('cookshop')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_offset.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('offset')|e]" } }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_GOODS_DUMMY_OFFSET" }
+                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_DUMMY_OFFSET_DESC" }
+                                                    }
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/carrier_inn.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('carrier_inn')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_logistics.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('logistics')|e]" } }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_GOODS_DUMMY_LOGISTICS" }
+                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_DUMMY_LOGISTICS_DESC" }
+                                                    }
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/grange.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('grange')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_province_food_sales.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('province_food_sales')|e]" } }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_GOODS_DUMMY_SALES" }
+                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_DUMMY_SALES_DESC" }
+                                                    }
+                                                }
+
+                                                # ---- Odd-looking production methods, and why they are there ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/production_methods/_default.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_GOODS_ODD" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_GOODS_ODD_DESC" }
+                                                vbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_offset.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('offset')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/tools_workshop.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('tools_workshop')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_tools.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('tools')|e]" } }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_GOODS_ODD_MARKET" }
+                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_ODD_MARKET_DESC" }
+                                                    }
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('wheat')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/wheat_farm.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('wheat_farm')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_local_food.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('local_food')|e]" } }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_GOODS_ODD_PROVISION" }
+                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_ODD_PROVISION_DESC" }
+                                                    }
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_rice.dds" } blockoverride "item_link" { raw_text = "[pp_staple_foods|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/cookshop.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('cookshop')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_offset.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('offset')|e]" } }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_GOODS_ODD_MEALS" }
+                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_ODD_MEALS_DESC" }
+                                                    }
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/tools_guild.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('tools_guild')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/tools_workshop.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('tools_workshop')|e]" } }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_GOODS_ODD_OLD" }
+                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_ODD_OLD_DESC" }
+                                                    }
+                                                }
+
+                                                # ---- Where to see it ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/pp_victuals_price.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_GOODS_WHERE" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_GOODS_WHERE_DESC" }
                                             }
                                         }
 
@@ -1630,6 +2029,7 @@
                                         }
 
                                         # ---- Farming/Fishing/Forest Capacities ----
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'farm_capacity'))]"
                                             set_parent_size_to_minimum = yes
@@ -1637,6 +2037,7 @@
                                             vbox = {
                                                 layoutpolicy_horizontal = expanding
                                                 spacing = 10
+                                                margin_bottom = 24
                                                 using = bg_paper_card
                                                 blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
                                                 max_width = 1450
@@ -1654,50 +2055,227 @@
                                                         text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_farm_capacity" }
                                                     }
                                                 }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_farm_capacity_desc" margin = { 40 10 } }
-                                                        }
-                                                    }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
-                                                }
-                                            }
-                                        }
 
-	                                        # ---- Building Output ----
-	                                        vbox = {
-	                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'farm_output'))]"
-                                            set_parent_size_to_minimum = yes
-                                            margin = { 0 10 }
-                                            vbox = {
-                                                layoutpolicy_horizontal = expanding
-                                                spacing = 10
-                                                using = bg_paper_card
-                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                max_width = 1450
-                                                min_width = 1450
-                                                icon = {
-                                                    layoutpolicy_horizontal = expanding
-                                                    using = button_main_tab_texture
-                                                    frame = 4
-                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
-                                                    hbox = {
-                                                        margin = { 40 0 }
-                                                        margin_top = 8
-                                                        icon = { texture = "gfx/interface/icons/modifier_types/wheat_positive.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_farm_output" }
+                                                pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_rural_capacities.dds" } }
+                                                pp_eu_lead = { text = "game_concept_pp_farm_capacity_desc" }
+
+                                                # Your capital: room left for farms, fishing and forest buildings (the three map modes' script values)
+                                                hbox = {
+                                                    visible = "[GetPlayer.IsValid]"
+                                                    spacing = 14
+                                                    icon = { texture = "gfx/interface/icons/map_modes/pp_farming_village_capacity.dds" size = { 56 56 } }
+                                                    text_multi = { max_width = 1000 autoresize = yes text = "PP_EU_RURAL_CAPITAL" }
+                                                }
+
+                                                # ---- Farms take arable land: a farm's maximum level as its tooltip adds it up ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/pp_farming_village_capacity.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_RURAL_FARMS" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_RURAL_FARMS_DESC" }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/map_modes/pp_population_capacity.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[population_capacity|e]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_RURAL_FARM_LAND" }
+                                                        blockoverride "step_text" { text = "PP_EU_RURAL_FARM_LAND_DESC" }
+                                                    }
+                                                    pp_eu_sign = { blockoverride "sign_text" { raw_text = "–" } }
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/modifier_types/global_population_capacity_modifier.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowModifierTypeName('local_pp_farmland_used')]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_RURAL_FARM_OTHERS" }
+                                                        blockoverride "step_text" { text = "PP_EU_RURAL_FARM_OTHERS_DESC" }
+                                                    }
+                                                    pp_eu_sign = { blockoverride "sign_text" { raw_text = "=" } }
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/wheat_farm.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowBuildingTypeName('wheat_farm')|e]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_RURAL_FARM_MAX" }
+                                                        blockoverride "step_text" { text = "PP_EU_RURAL_FARM_MAX_DESC" }
                                                     }
                                                 }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_farm_output_desc" margin = { 40 10 } }
+
+                                                # The farms by the land a level takes (worldbuilder.farm_land in constructor.toml); first tier of each line
+                                                vbox = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_RURAL_FIELDS_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            vbox = {
+                                                                spacing = 6
+                                                                hbox = {
+                                                                    spacing = 4
+                                                                    layoutpolicy_horizontal = expanding
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/wheat_farm.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('wheat_farm')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/rice_farm.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('rice_farm')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/millet_farm.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('millet_farm')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/maize_farm.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('maize_farm')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/legume_farm.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('legume_farm')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/potato_farm.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('potato_farm')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/olive_farm.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('olive_farm')|e]" } }
+                                                                    expand = {}
+                                                                }
+                                                                hbox = {
+                                                                    spacing = 4
+                                                                    layoutpolicy_horizontal = expanding
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/fruit_orchard.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('fruit_orchard')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/vineyard_estate.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('vineyard_estate')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/fiber_crops_farm.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('fiber_crops_farm')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/sericulture_farm.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('sericulture_farm')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/incense_grove.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('incense_grove')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/simplers_grove.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('simplers_grove')|e]" } }
+                                                                    expand = {}
+                                                                }
+                                                            }
                                                         }
                                                     }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_RURAL_HERDS_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/cattle_farm.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('cattle_farm')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/sheep_farms.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('sheep_farms')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/horse_breeders.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('horse_breeders')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/camel_herders.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('camel_herders')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/elephant_kraal.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('elephant_kraal')|e]" } }
+                                                        }
+                                                    }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_RURAL_PLANTATIONS_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            vbox = {
+                                                                spacing = 6
+                                                                hbox = {
+                                                                    spacing = 4
+                                                                    layoutpolicy_horizontal = expanding
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/sugar_plantation.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('sugar_plantation')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/sugarcane_farm.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('sugarcane_farm')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/cotton_plantation.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('cotton_plantation')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/cotton_farm.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('cotton_farm')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/tobacco_plantation.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('tobacco_plantation')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/tobacco_farm.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('tobacco_farm')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/dye_plantation.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('dye_plantation')|e]" } }
+                                                                    expand = {}
+                                                                }
+                                                                hbox = {
+                                                                    spacing = 4
+                                                                    layoutpolicy_horizontal = expanding
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/coffee_grove.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('coffee_grove')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/cocoa_grove.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('cocoa_grove')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/tea_garden.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('tea_garden')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/pepper_garden.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('pepper_garden')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/clove_grove.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('clove_grove')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/chili_plantation.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('chili_plantation')|e]" } }
+                                                                    pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/saffron_croft.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('saffron_croft')|e]" } }
+                                                                    expand = {}
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 }
+                                                pp_eu_text = { text = "PP_EU_RURAL_FARMS_NOTES" }
+
+                                                # ---- Fishing capacity: the grounds that give it, the buildings that use it up ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/pp_fishing_village_capacity.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_RURAL_FISH" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_RURAL_FISH_DESC" }
+                                                vbox = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_RURAL_GROUNDS_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/location_icons/coastal.dds" } blockoverride "item_link" { raw_text = "[coastal|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_sea.dds" } blockoverride "item_link" { raw_text = "[lake|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/map_modes/rivers.dds" } blockoverride "item_link" { raw_text = "[river|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/topography/wetlands.dds" } blockoverride "item_link" { raw_text = "[ShowTopographyName('wetlands')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_fish.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('fish')|e]" } }
+                                                        }
+                                                    }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_RURAL_FISHERS_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/fishing_village.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('fishing_village')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/net_curing_yard.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('net_curing_yard')|e]" } }
+                                                            widget = { size = { 40 10 } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/ocean_fishery.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('ocean_fishery')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/drift_net_fishery.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('drift_net_fishery')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/offshore_fishery.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('offshore_fishery')|e]" } }
+                                                        }
+                                                    }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_RURAL_FISH_NOTES" }
+
+                                                # ---- Forest capacity: the woodland that gives it, what clears it, the buildings that use it up ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_RURAL_FOREST" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_RURAL_FOREST_DESC" }
+                                                vbox = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_RURAL_WOODLAND_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/vegetation/forest.dds" } blockoverride "item_link" { raw_text = "[ShowVegetationName('forest')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/vegetation/ha1300_veg_coniferous_forest.dds" } blockoverride "item_link" { raw_text = "[ShowVegetationName('ha1300_veg_coniferous_forest')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/vegetation/ha1300_veg_mixed_forest.dds" } blockoverride "item_link" { raw_text = "[ShowVegetationName('ha1300_veg_mixed_forest')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/vegetation/ha1300_veg_swamp.dds" } blockoverride "item_link" { raw_text = "[ShowVegetationName('ha1300_veg_swamp')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/vegetation/woods.dds" } blockoverride "item_link" { raw_text = "[ShowVegetationName('woods')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/vegetation/ha1300_veg_thicket.dds" } blockoverride "item_link" { raw_text = "[ShowVegetationName('ha1300_veg_thicket')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/vegetation/ha1300_veg_dry_forest.dds" } blockoverride "item_link" { raw_text = "[ShowVegetationName('ha1300_veg_dry_forest')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/vegetation/jungle.dds" } blockoverride "item_link" { raw_text = "[ShowVegetationName('jungle')]" } }
+                                                        }
+                                                    }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_RURAL_FOREST_RGO_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('lumber')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_fur.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('fur')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_wild_game.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('wild_game')|e]" } }
+                                                        }
+                                                    }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_RURAL_CLEARED_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/location_icons/city.dds" } blockoverride "item_link" { raw_text = "[location_rank|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/map_modes/building_based.dds" } blockoverride "item_link" { raw_text = "[building|e]" } }
+                                                        }
+                                                    }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_RURAL_FORESTERS_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/forest_village.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('forest_village')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/managed_forest_village.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('managed_forest_village')|e]" } }
+                                                            widget = { size = { 40 10 } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/lumber_mill.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('lumber_mill')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/water_sawmill.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('water_sawmill')|e]" } }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/lumber_mill_improved.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('lumber_mill_improved')|e]" } }
+                                                        }
+                                                    }
+                                                }
+
+                                                # ---- Where to see it ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/building_based.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_RURAL_WHERE" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_RURAL_WHERE_DESC" }
                                             }
                                         }
 
@@ -2342,14 +2920,16 @@
                                             }
                                         }
 
-	                                        # ---- Population Growth ----
-	                                        vbox = {
-	                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'pop_growth'))]"
+                                        # ---- Population Growth ----
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'pop_growth'))]"
                                             set_parent_size_to_minimum = yes
                                             margin = { 0 10 }
                                             vbox = {
                                                 layoutpolicy_horizontal = expanding
                                                 spacing = 10
+                                                margin_bottom = 24
                                                 using = bg_paper_card
                                                 blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
                                                 max_width = 1450
@@ -2363,54 +2943,164 @@
                                                     hbox = {
                                                         margin = { 40 0 }
                                                         margin_top = 8
-                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
+                                                        icon = { texture = "gfx/interface/icons/location_icons/new/population_growth.dds" size = { 45 45 } }
                                                         text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_population_growth" }
                                                     }
                                                 }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_population_growth_desc" margin = { 40 10 } }
-                                                        }
-                                                    }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
-                                                }
-                                            }
-                                        }
+                                                pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_population_growth.dds" } }
+                                                pp_eu_lead = { text = "game_concept_pp_population_growth_desc" }
 
-                                        # ---- Population Distribution ----
-                                        vbox = {
-                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'pop_dist'))]"
-                                            set_parent_size_to_minimum = yes
-                                            margin = { 0 10 }
-                                            vbox = {
-                                                layoutpolicy_horizontal = expanding
-                                                spacing = 10
-                                                using = bg_paper_card
-                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                max_width = 1450
-                                                min_width = 1450
-                                                icon = {
-                                                    layoutpolicy_horizontal = expanding
-                                                    using = button_main_tab_texture
-                                                    frame = 4
-                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
-                                                    hbox = {
-                                                        margin = { 40 0 }
-                                                        margin_top = 8
-                                                        icon = { texture = "gfx/interface/icons/flat_icons/building_panel/employees.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_population_distribution" }
-                                                    }
-                                                }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_population_distribution_desc" margin = { 40 10 } }
+                                                # Your capital's province: its store (the Food card's months value, the store's fill) and the capital's growth
+                                                # (the population growth map mode's value)
+                                                hbox = {
+                                                    visible = "[GetPlayer.IsValid]"
+                                                    spacing = 14
+                                                    widget = {
+                                                        size = { 64 64 }
+                                                        widget = { size = { 100% 100% }
+                                                            visible = "[GetPlayer.GetCapital.GetProvince.IsStarving]"
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds" }
+                                                        }
+                                                        widget = { size = { 100% 100% }
+                                                            visible = "[Not(GetPlayer.GetCapital.GetProvince.IsStarving)]"
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/location_icons/new/population_growth.dds" }
                                                         }
                                                     }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                    text_multi = { max_width = 900 autoresize = yes text = "PP_EU_GROWTH_CAPITAL" }
                                                 }
+
+                                                # ---- What fills the store and what empties it: food in - food eaten = months in store ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_GROWTH_STORE" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_local_food.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowGoodsName('local_food')|e]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_GROWTH_IN" }
+                                                        blockoverride "step_text" { text = "PP_EU_GROWTH_IN_DESC" }
+                                                    }
+                                                    pp_eu_sign = { blockoverride "sign_text" { raw_text = "–" } }
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/location_icons/food.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('pp_food_consumption', 'Food Consumption')|e]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_GROWTH_EATEN" }
+                                                        blockoverride "step_text" { text = "PP_EU_GROWTH_EATEN_DESC" }
+                                                    }
+                                                    pp_eu_sign = { blockoverride "sign_text" { raw_text = "=" } }
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('pp_food_storage', 'Province Store')|e]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_GROWTH_MONTHS" }
+                                                        blockoverride "step_text" { text = "PP_EU_GROWTH_MONTHS_DESC" }
+                                                    }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_GROWTH_STORE_DESC" }
+
+                                                # ---- From starving to full: the store steps, worst to best (tests/test_europedia_style.py ties them to
+                                                # pp_stored_food.txt and the location ranks' decline) ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/location_icons/new/population_growth.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_GROWTH_SCALE" }
+                                                }
+                                                hbox = {
+                                                    spacing = 10
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_GROWTH_SCALE_STARVING" }
+                                                    }
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_very_poor.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/alerts_icons/low_food_stockpile.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_GROWTH_SCALE_EMPTY" }
+                                                    }
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_poor.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_GROWTH_SCALE_VILLAGES" }
+                                                    }
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_GROWTH_SCALE_TOWNS" }
+                                                    }
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_good.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/location_icons/new/population_growth.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_GROWTH_SCALE_GROWING" }
+                                                    }
+                                                    pp_eu_scale_step = {
+                                                        blockoverride "medallion" {
+                                                            pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_bountiful.dds" }
+                                                            pp_eu_medallion_goods = { texture = "gfx/interface/icons/location_icons/new/population_growth.dds" }
+                                                        }
+                                                        blockoverride "scale_label" { text = "PP_EU_GROWTH_SCALE_FULL" }
+                                                    }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_GROWTH_SCALE_DESC" }
+
+                                                # ---- Room in the store: the province's own room + Granaries ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/buildings/granary.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_GROWTH_ROOM" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 10
+                                                    pp_eu_panel = {
+                                                        blockoverride "panel_icons" {
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
+                                                                blockoverride "item_link" { raw_text = "[food_capacity|e]" }
+                                                            }
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/location_icons/new/population.dds" }
+                                                                blockoverride "item_link" { raw_text = "[pop|e]" }
+                                                            }
+                                                        }
+                                                        blockoverride "panel_title" { text = "PP_EU_GROWTH_ROOM_OWN" }
+                                                        blockoverride "panel_text" { text = "PP_EU_GROWTH_ROOM_OWN_DESC" }
+                                                    }
+                                                    pp_eu_sign = { blockoverride "sign_text" { raw_text = "+" } }
+                                                    pp_eu_panel = {
+                                                        blockoverride "panel_icons" {
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/granary.dds" }
+                                                                blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('granary')|e]" }
+                                                            }
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/pp_harvest/frame_bountiful.dds" }
+                                                                blockoverride "item_overlay" { pp_eu_medallion_goods = { texture = "gfx/interface/icons/location_icons/new/population_growth.dds" } }
+                                                                blockoverride "item_link" { raw_text = "[ShowModifier('pp_food_store_24')]" }
+                                                            }
+                                                        }
+                                                        blockoverride "panel_title" { text = "PP_EU_GROWTH_ROOM_GRANARY" }
+                                                        blockoverride "panel_text" { text = "PP_EU_GROWTH_ROOM_GRANARY_DESC" }
+                                                    }
+                                                }
+
+                                                # ---- Where to see it ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/location_modifiers.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_GROWTH_WHERE" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_GROWTH_WHERE_DESC" }
                                             }
                                         }
 

@@ -1,0 +1,354 @@
+﻿# Prosper or Perish: the Variable Harvests situation panel (hand-kept). The game opens gui/panels/situation/<situation
+# key>.gui when the player clicks a situation; without this file the harvests had no panel of their own.
+# Built from vanilla's situation_panel (panels/situation/common.gui) and situation_card_common like vanilla's panels;
+# the harvest medallions are the location view's harvest chip frames (location_status.py, pp_europedia_style.gui).
+# Texts: PP_HARVEST_SIT_* in pp_situations_l_english.yml, no numbers (they sit behind the links);
+# tests/test_variable_harvest_situation_panel.py.
+
+situation_panel = {
+
+	##################################### MAIN IMAGE #####################################
+
+	# late-summer farmland (tools/build_harvest_situation_art.py), the harvest card's landscape
+	blockoverride "situation_panel_image" {
+		background = {
+			texture = "gfx/interface/illustrations/situation/harvest_situation.dds"
+		}
+
+		using = scene_fade_vertical_up
+	}
+
+	# the harvests run the whole game: no start date banner over the picture
+	blockoverride "situation_start_date" {}
+
+	##################################### SUBHEADER #####################################
+
+	blockoverride "situation_subheader_content" {}
+
+	##################################### MAIN CONTENT #####################################
+
+	blockoverride "situation_panel_main_content" {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 10
+
+			# what the harvests are (the Europedia card's lead, also the concept's tooltip)
+			text_multi = {
+				max_width = 480
+				min_width = 480
+				autoresize = yes
+				margin = { 10 4 }
+				align = hcenter|nobaseline
+				using = Font_Type_Flavor
+				fontsize = 15
+				text = "game_concept_pp_variable_harvests_desc"
+			}
+
+			# ---- This year in the player's realm: the capital, the starving provinces, every province off average ----
+			situation_card_common = {
+				visible = "[GetPlayer.IsValid]"
+				blockoverride "common_header_icon_texture" {
+					texture = "gfx/interface/icons/alerts_icons/weather_system.dds"
+				}
+				blockoverride "common_header_text" {
+					text = "PP_HARVEST_SIT_THIS_YEAR"
+				}
+				blockoverride "common_bottom_content" {
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 8
+
+						# the capital, drawn like the location view's harvest chip
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 12
+							pp_eu_capital_harvest = {}
+							text_multi = {
+								max_width = 370
+								min_width = 370
+								autoresize = yes
+								text = "PP_HARVEST_SIT_CAPITAL"
+							}
+							expand = {}
+						}
+
+						# starving provinces, listed on hover (as vanilla's Little Ice Age panel)
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 8
+							icon = {
+								size = { 30 30 }
+								texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds"
+							}
+							text_single = {
+								autoresize = yes
+								align = left|nobaseline
+								text = "PP_HARVEST_SIT_STARVING"
+							}
+							text_single = {
+								autoresize = yes
+								align = left|nobaseline
+								text = "[GetPlayer.GetStarvingProvincesAmount]"
+								tooltipwidget = {
+									ContextualTooltipType = {
+										blockoverride "title_text" {
+											text = "STARVING_PROVINCES"
+										}
+										blockoverride "title_icon" {
+											icon = {
+												using = tooltip_title_icon_size
+												texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds"
+											}
+										}
+										blockoverride "concept_link" {
+											text = "[pp_starvation|e]"
+										}
+										blockoverride "tooltip_content" {
+											TooltipScrolledStringPairList = {
+												blockoverride "block_scrollarea" { maximumsize = { -1 300 } }
+												textcontext = "[GetPlayer.GetStarvingProvinces]"
+											}
+										}
+									}
+								}
+							}
+							expand = {}
+						}
+
+						# every province with a lean harvest, then every province with a good one (average years left out)
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							align = left|nobaseline
+							text = "PP_HARVEST_SIT_LEAN"
+						}
+						dynamicgridbox = {
+							layoutpolicy_horizontal = expanding
+							datamodel = "[GetPlayer.GetProvinces]"
+							ignoreinvisible = yes
+							item = {
+								widget = {
+									size = { 450 24 }
+									visible = "[EqualTo_string(Province.GetCapital.Custom('pp_harvest_trend'), Localize('PP_HARVEST_TREND_BAD'))]"
+									hbox = {
+										size = { 100% 100% }
+										margin_left = 12
+										spacing = 6
+										text_single = {
+											maximumsize = { 190 24 }
+											autoresize = yes
+											elide = right
+											align = left|nobaseline
+											text = "[Province.GetName]"
+										}
+										expand = {}
+										text_single = {
+											autoresize = yes
+											align = right|nobaseline
+											text = "[Province.GetCapital.Custom('pp_harvest_link')]"
+										}
+									}
+								}
+							}
+						}
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							align = left|nobaseline
+							text = "PP_HARVEST_SIT_FAT"
+						}
+						dynamicgridbox = {
+							layoutpolicy_horizontal = expanding
+							datamodel = "[GetPlayer.GetProvinces]"
+							ignoreinvisible = yes
+							item = {
+								widget = {
+									size = { 450 24 }
+									visible = "[EqualTo_string(Province.GetCapital.Custom('pp_harvest_trend'), Localize('PP_HARVEST_TREND_GOOD'))]"
+									hbox = {
+										size = { 100% 100% }
+										margin_left = 12
+										spacing = 6
+										text_single = {
+											maximumsize = { 190 24 }
+											autoresize = yes
+											elide = right
+											align = left|nobaseline
+											text = "[Province.GetName]"
+										}
+										expand = {}
+										text_single = {
+											autoresize = yes
+											align = right|nobaseline
+											text = "[Province.GetCapital.Custom('pp_harvest_link')]"
+										}
+									}
+								}
+							}
+						}
+						text_multi = {
+							max_width = 450
+							min_width = 450
+							autoresize = yes
+							text = "PP_HARVEST_SIT_PROVINCE_NOTE"
+						}
+					}
+				}
+			}
+
+			# ---- Each September: season, harvest, modifier ----
+			situation_card_common = {
+				blockoverride "common_header_icon_texture" {
+					texture = "gfx/interface/icons/flat_icons/situations.dds"
+				}
+				blockoverride "common_header_text" {
+					text = "PP_HARVEST_SIT_SEPTEMBER"
+				}
+				blockoverride "common_bottom_content" {
+					text_multi = {
+						max_width = 450
+						min_width = 450
+						autoresize = yes
+						text = "PP_HARVEST_SIT_SEPTEMBER_DESC"
+					}
+				}
+			}
+
+			# ---- Lean years and fat years: the scale, worst to best (labels link the harvest concepts) ----
+			situation_card_common = {
+				blockoverride "common_header_icon_texture" {
+					texture = "gfx/interface/icons/map_modes/food_productivity.dds"
+				}
+				blockoverride "common_header_text" {
+					text = "PP_HARVEST_SIT_SCALE"
+				}
+				blockoverride "common_bottom_content" {
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 8
+						hbox = {
+							spacing = 0
+							vbox = {
+								minimumsize = { 64 -1 }
+								maximumsize = { 64 -1 }
+								spacing = 2
+								widget = {
+									size = { 44 44 }
+									pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" }
+									pp_eu_medallion_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" }
+								}
+								text_single = { autoresize = yes align = hcenter|nobaseline fontsize = 12 text = "PP_HARVEST_SIT_SCALE_ABYSMAL" }
+							}
+							vbox = {
+								minimumsize = { 64 -1 }
+								maximumsize = { 64 -1 }
+								spacing = 2
+								widget = {
+									size = { 44 44 }
+									pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_very_poor.dds" }
+									pp_eu_medallion_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" }
+								}
+								text_single = { autoresize = yes align = hcenter|nobaseline fontsize = 12 text = "PP_HARVEST_SIT_SCALE_VERY_POOR" }
+							}
+							vbox = {
+								minimumsize = { 64 -1 }
+								maximumsize = { 64 -1 }
+								spacing = 2
+								widget = {
+									size = { 44 44 }
+									pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_poor.dds" }
+									pp_eu_medallion_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" }
+								}
+								text_single = { autoresize = yes align = hcenter|nobaseline fontsize = 12 text = "PP_HARVEST_SIT_SCALE_POOR" }
+							}
+							vbox = {
+								minimumsize = { 64 -1 }
+								maximumsize = { 64 -1 }
+								spacing = 2
+								widget = {
+									size = { 44 44 }
+									pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+									pp_eu_medallion_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" }
+								}
+								text_single = { autoresize = yes align = hcenter|nobaseline fontsize = 12 text = "PP_HARVEST_SIT_SCALE_AVERAGE" }
+							}
+							vbox = {
+								minimumsize = { 64 -1 }
+								maximumsize = { 64 -1 }
+								spacing = 2
+								widget = {
+									size = { 44 44 }
+									pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_good.dds" }
+									pp_eu_medallion_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" }
+								}
+								text_single = { autoresize = yes align = hcenter|nobaseline fontsize = 12 text = "PP_HARVEST_SIT_SCALE_GOOD" }
+							}
+							vbox = {
+								minimumsize = { 64 -1 }
+								maximumsize = { 64 -1 }
+								spacing = 2
+								widget = {
+									size = { 44 44 }
+									pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_very_good.dds" }
+									pp_eu_medallion_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" }
+								}
+								text_single = { autoresize = yes align = hcenter|nobaseline fontsize = 12 text = "PP_HARVEST_SIT_SCALE_VERY_GOOD" }
+							}
+							vbox = {
+								minimumsize = { 64 -1 }
+								maximumsize = { 64 -1 }
+								spacing = 2
+								widget = {
+									size = { 44 44 }
+									pp_eu_medallion_frame = { texture = "gfx/interface/icons/pp_harvest/frame_bountiful.dds" }
+									pp_eu_medallion_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" }
+								}
+								text_single = { autoresize = yes align = hcenter|nobaseline fontsize = 12 text = "PP_HARVEST_SIT_SCALE_BOUNTIFUL" }
+							}
+						}
+						text_multi = {
+							max_width = 450
+							min_width = 450
+							autoresize = yes
+							text = "PP_HARVEST_SIT_SCALE_DESC"
+						}
+					}
+				}
+			}
+
+			# ---- What a harvest changes: the fields and the villages ----
+			situation_card_common = {
+				blockoverride "common_header_icon_texture" {
+					texture = "gfx/interface/icons/flat_icons/raw_goods.dds"
+				}
+				blockoverride "common_header_text" {
+					text = "PP_HARVEST_SIT_CHANGES"
+				}
+				blockoverride "common_bottom_content" {
+					text_multi = {
+						max_width = 450
+						min_width = 450
+						autoresize = yes
+						text = "PP_HARVEST_SIT_CHANGES_DESC"
+					}
+				}
+			}
+
+			# ---- Where to see it ----
+			situation_card_common = {
+				blockoverride "common_header_icon_texture" {
+					texture = "gfx/interface/icons/map_modes/location_modifiers.dds"
+				}
+				blockoverride "common_header_text" {
+					text = "PP_HARVEST_SIT_WHERE"
+				}
+				blockoverride "common_bottom_content" {
+					text_multi = {
+						max_width = 450
+						min_width = 450
+						autoresize = yes
+						text = "PP_HARVEST_SIT_WHERE_DESC"
+					}
+				}
+			}
+		}
+	}
+}

@@ -485,6 +485,16 @@
                                 }
                                 button_regular = {
                                     layoutpolicy_horizontal = expanding
+                                    raw_text = "Navigable Rivers"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'navigable_rivers')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'navigable_rivers')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
                                     raw_text = "Rural Capacities"
                                     onclick = "[GetVariableSystem.Set('pp_filter', 'farm_capacity')]"
                                     down = "[GetVariableSystem.HasValue('pp_filter', 'farm_capacity')]"
@@ -2025,6 +2035,147 @@
                                                     blockoverride "section_title" { text = "PP_EU_LOGI_WHERE" }
                                                 }
                                                 pp_eu_text = { text = "PP_EU_LOGI_WHERE_DESC" }
+                                            }
+                                        }
+
+                                        # ---- Navigable Rivers ----
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'navigable_rivers'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                margin_bottom = 24
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/map_modes/pp_river_navigation.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_navigable_rivers" }
+                                                    }
+                                                }
+
+                                                pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_navigable_rivers.dds" } }
+                                                pp_eu_lead = { text = "game_concept_pp_navigable_rivers_desc" }
+
+                                                # ---- A river and a coast at once: the banks keep their river and gain a coast ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/rivers.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_NAV_BOTH" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 10
+                                                    pp_eu_panel = {
+                                                        blockoverride "panel_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/map_modes/rivers.dds" } blockoverride "item_link" { raw_text = "[river|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/river_boatmen_yard.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('river_boatmen_yard')|e]" } }
+                                                        }
+                                                        blockoverride "panel_title" { text = "PP_EU_NAV_RIVER" }
+                                                        blockoverride "panel_text" { text = "PP_EU_NAV_RIVER_DESC" }
+                                                    }
+                                                    pp_eu_sign = { blockoverride "sign_text" { raw_text = "+" } }
+                                                    pp_eu_panel = {
+                                                        blockoverride "panel_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/topography/pp_river_channel.dds" } blockoverride "item_link" { raw_text = "[ShowTopographyName('pp_river_channel')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/flat_icons/geopolitics/accessible_coasts.dds" } blockoverride "item_link" { raw_text = "[port|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/shipyard.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('shipyard')|e]" } }
+                                                        }
+                                                        blockoverride "panel_title" { text = "PP_EU_NAV_COAST" }
+                                                        blockoverride "panel_text" { text = "PP_EU_NAV_COAST_DESC" }
+                                                    }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_NAV_BOTH_DESC" }
+
+                                                # ---- Not every reach is open: the four kinds of waterway ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/pp_river_navigation.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_NAV_REACHES" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_NAV_REACHES_DESC" }
+                                                vbox = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/topography/pp_river_channel.dds" } blockoverride "item_link" { raw_text = "[ShowTopographyName('pp_river_channel')]" } }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_NAV_OPEN" }
+                                                        blockoverride "entry_text" { text = "PP_EU_NAV_OPEN_DESC" }
+                                                    }
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/topography/pp_river_channel.dds" } blockoverride "item_link" { raw_text = "[ShowTopographyName('pp_river_channel')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/climate/tropical.dds" } blockoverride "item_link" { raw_text = "[ShowClimateName('tropical')]" } }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_NAV_DIFFICULT" }
+                                                        blockoverride "entry_text" { text = "PP_EU_NAV_DIFFICULT_DESC" }
+                                                    }
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/topography/pp_river_shallows.dds" } blockoverride "item_link" { raw_text = "[ShowTopographyName('pp_river_shallows')]" } }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_NAV_SHALLOWS" }
+                                                        blockoverride "entry_text" { text = "PP_EU_NAV_SHALLOWS_DESC" }
+                                                    }
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/topography/pp_river_falls.dds" } blockoverride "item_link" { raw_text = "[ShowTopographyName('pp_river_falls')]" } }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_NAV_FALLS" }
+                                                        blockoverride "entry_text" { text = "PP_EU_NAV_FALLS_DESC" }
+                                                    }
+                                                }
+
+                                                # ---- Opening the shallows: shallows -> River Navigation Canal -> Canal Passage ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/buildings/river_navigation_canal.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_NAV_CANAL" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/topography/pp_river_shallows.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowTopographyName('pp_river_shallows')]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_NAV_STEP_SHALLOWS" }
+                                                        blockoverride "step_text" { text = "PP_EU_NAV_STEP_SHALLOWS_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/river_navigation_canal.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowBuildingTypeName('river_navigation_canal')|e]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_NAV_STEP_BUILD" }
+                                                        blockoverride "step_text" { text = "PP_EU_NAV_STEP_BUILD_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/topography/pp_river_channel.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowModifier('pp_river_canal_open')]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_NAV_STEP_OPEN" }
+                                                        blockoverride "step_text" { text = "PP_EU_NAV_STEP_OPEN_DESC" }
+                                                    }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_NAV_CANAL_DESC" }
+
+                                                # ---- Where to see it ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/location_modifiers.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_NAV_WHERE" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_NAV_WHERE_DESC" }
                                             }
                                         }
 

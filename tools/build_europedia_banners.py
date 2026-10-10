@@ -45,6 +45,7 @@ PAINTINGS: dict[str, int] = {
     "rural_capacities": 165,
     "trade_goods": 165,
     "population_growth": 165,
+    "navigable_rivers": 140,   # the haulers on the towpath, the river running into the distance
 }
 
 

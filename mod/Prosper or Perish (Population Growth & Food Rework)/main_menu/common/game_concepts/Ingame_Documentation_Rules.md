@@ -70,12 +70,13 @@ When editing the Europedia GUI or concept definitions, preserve this order:
 8. Food Consumption (card style)
 9. New Trade Goods (card style)
 10. Logistics (Market Access) (was Building Limits; card style)
-11. Rural Capacities (was Building Capacity; card style)
-12. Labor (card style)
-13. Variable Harvests (done)
-14. Arable Land (was Population Capacity)
-15. Population Growth (card style)
-16. Other Changes
+11. Navigable Rivers (card style)
+12. Rural Capacities (was Building Capacity; card style)
+13. Labor (card style)
+14. Variable Harvests (done)
+15. Arable Land (was Population Capacity)
+16. Population Growth (card style)
+17. Other Changes
 
 More concepts may be added later.
 

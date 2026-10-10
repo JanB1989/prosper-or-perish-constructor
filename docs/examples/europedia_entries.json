@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Prosper or Perish Europedia",
-    "entry_count": 23,
+    "entry_count": 24,
     "sources": {
       "gui": "in_game/gui/encyclopedia_lateralview.gui",
       "localization": "main_menu/localization/english/pp_europedia_l_english.yml",
@@ -12,7 +12,7 @@
     {
       "id": "all",
       "label": "All",
-      "count": 23
+      "count": 24
     },
     {
       "id": "getting_started",
@@ -57,6 +57,11 @@
     {
       "id": "building_limits",
       "label": "Logistics",
+      "count": 1
+    },
+    {
+      "id": "navigable_rivers",
+      "label": "Navigable Rivers",
       "count": 1
     },
     {
@@ -402,8 +407,42 @@
       "body_html": "<p>Every <span class=\"concept-ref\">Location</span> can keep only so many <span class=\"concept-ref\">Building</span> levels supplied before its carters, boatmen and harbors are stretched thin. Build past that limit and its goods reach the market worse: its <span class=\"concept-ref\">Market Access</span> falls. Logistics buildings win the access back, but they use goods you could put to other work. How much access you buy is your choice.</p>\n<h3>What Sets the Limit</h3>\n<p>Each location&#x27;s limit, its <span class=\"concept-ref\">Supported Building Levels</span>, comes from its attributes. Open, mild country is easy to supply. <span class=\"concept-ref\">Topography</span> such as mountains, wetlands and hills, <span class=\"concept-ref\">Vegetation</span> such as desert, jungle and forest, and a harsh <span class=\"concept-ref\">Climate</span> all lower the limit. A <span class=\"concept-ref\">River</span> raises it, the more the bigger the river, and so do a <span class=\"concept-ref\">Port</span> and a <span class=\"concept-ref\">Road</span>. Towns and cities hold more than the countryside (<span class=\"concept-ref\">Location Rank</span>), every point of <span class=\"concept-ref\">Development</span> adds a little, and a <span class=\"concept-ref\">Province Capital</span>, the <span class=\"concept-ref\">Capital</span> or a <span class=\"concept-ref\">Market Center</span> adds more. Land improvements and foreign buildings bring their own support.</p>\n<h3>Easier to supply</h3>\n<p>hover for what they are</p>\n<h3>Harder to supply</h3>\n<p>hover for what they are</p>\n<h3>Over the Limit</h3>\n<h3>Building Levels</h3>\n<p>Every level counts toward the limit: farms and workshops alike, those under construction and those without workers.</p>\n<h3>Stretched Thin</h3>\n<p>Each level above the limit gives the location <span class=\"token token-modifier\">Unsupported Building Levels</span>: more goods to move than its carriers can handle.</p>\n<h3>Market Access Falls</h3>\n<p>Its goods reach the market worse, so its <span class=\"concept-ref\">Market Access</span> drops a little with every level more.</p>\n<h3>Less Trade</h3>\n<p>Its buildings buy and sell less of what they use and make, so they earn less, and the location is served late when its <span class=\"concept-ref\">Market</span> runs short.</p>\n<h3>Logistics Buildings</h3>\n<p>Once a location&#x27;s <span class=\"concept-ref\">Market Access</span> has fallen low and enough buildings stand there to need them, it can build logistics buildings; their requirements show the exact line. Each level carries goods to the market and gives market access back. Which one a location can build depends on where it lies:</p>\n<h3>On a River</h3>\n<p>The <span class=\"token token-building\">River Boatmen Yard</span>: barges, towpaths and landings. The bigger the river, the more levels it takes.</p>\n<h3>In a Port</h3>\n<p>The <span class=\"token token-building\">Coastal Shipping Office</span>: coasters and pilots. A port with good <span class=\"concept-ref\">Natural Harbor Suitability</span> takes more levels.</p>\n<h3>In a City</h3>\n<p>The <span class=\"token token-building\">Transport Office</span>: carts, porters and clerks, in cities and developed towns.</p>\n<h3>Along a Road</h3>\n<p>The <span class=\"token token-building\">Carrier Inn</span>: carriers and pack animals wherever a <span class=\"concept-ref\">Road</span> runs.</p>\n<h3>Local carriers</h3>\n<p>in the Carrier Inn&#x27;s place</p>\n<p>Where the land has its own carriers, they take the Carrier Inn&#x27;s place and need no road: the <span class=\"token token-building\">Pp Caravanserai</span> in the dry lands from the Maghreb to Central Asia, the <span class=\"token token-building\">Pp Oasis Caravan Station</span> in the Sahara and the Sahel, the <span class=\"token token-building\">Pp Yam Station</span> from Russia to Mongolia, the <span class=\"token token-building\">Pp Banjara Tanda</span> in South Asia and the <span class=\"token token-building\">Pp Llama Caravan Post</span> in the Andes.</p>\n<h3>Your Choice</h3>\n<h3>What They Use</h3>\n<p>Timber, tools, victuals, pack animals and more: every level buys its inputs on the market like any workshop.</p>\n<h3>What They Make</h3>\n<p><span class=\"token token-good\">Logistics</span>, a good that only pays their way: it makes them profitable and tells the AI they are worth building.</p>\n<h3>What They Give Back</h3>\n<p><span class=\"concept-ref\">Market Access</span> for the location, level by level. Part of it stays even when the building cannot buy its inputs.</p>\n<h3>What they use</h3>\n<p>each building its own mix</p>\n<p>With enough logistics buildings any location can keep its market access high. But the goods they use are goods your workshops, fleets and armies could have had, and the haulage costs the location&#x27;s bulky trades a little of their output (see below). Build them where access pays: crowded towns, rich mines and busy workshops. A quiet farming location can live with a little less. It is your choice.</p>\n<h3>The Haulage Has a Price</h3>\n<p>Logistics buildings carry a location&#x27;s goods to the market at a cost: every level slightly lowers the output, and with it the profit, of the location&#x27;s buildings that make bulky goods. The heavier and bulkier the good, the more it loses. Boats carry bulk more cheaply than carts and pack animals, so river and port buildings cost the bulky trades the least. Hover a logistics building for its exact cut.</p>\n<h3>Stone, ores and salt</h3>\n<p>lose the most</p>\n<h3>Timber</h3>\n<p>loses half as much</p>\n<h3>Bulky staples</h3>\n<p>lose less, by their bulk</p>\n<h3>Where to See It</h3>\n<ul><li><strong>The location view:</strong> hover the building levels for the limit and what sets it, and the market access for what moves it.</li><li><strong>The map:</strong> the Supported Building Levels map mode shows each location&#x27;s limit, the Unsupported Building Levels map mode how far it is over, and the Market Access map mode the result.</li><li><strong>The build menu:</strong> a logistics building&#x27;s requirements show when a location can take one.</li></ul>"
     },
     {
-      "id": "pp-farm-capacity",
+      "id": "pp-navigable-rivers",
       "order": 10,
+      "filter": "navigable_rivers",
+      "filter_label": "Navigable Rivers",
+      "concept_key": "pp_navigable_rivers",
+      "title_key": "game_concept_pp_navigable_rivers",
+      "body_key": "game_concept_pp_navigable_rivers_desc",
+      "title": "Navigable Rivers",
+      "body_raw": "The great rivers are roads for ships. [navies|E] sail them far inland, goods travel them more cheaply than over land, and the towns on their banks build ports and shipyards like any coast. Not every reach is open: shallows slow boats until a canal is built, and falls stop them.\n\n#T A River and a Coast#!\n\n#T Still a River#!\n\nThe banks keep their [river|e]: its bonuses, the buildings that need a river and the boatmen who work it.\n\n#T Also a Coast#!\n\n[navies|E] sail the waterway, and every bank counts as [coastal|e]: shipyards and the other coastal buildings can stand there. Banks with a landing can hold a [port|e].\n\nA waterway is not the sea. Buildings that need the open sea stay on the sea coast, and so do the sea's richer fishing grounds. A few waterways never reach the open sea: their fleets cannot sail out of them.\n\n#T Not Every Reach Is Open#!\n\nFleets move quickly along a waterway and goods travel it far more cheaply than over land, which raises the [market_access|e] of every bank. But each reach is only as good as its water.\n\n#T Navigable River#!\n\nOpen water for fleets and for trade. Most of the great rivers of Europe, Asia and the Americas have long navigable reaches.\n\n#T Difficult Waterway#!\n\nA great tropical or strongly seasonal river. Floods, low water and sandbars make it slow and dear to use, though boats still get through.\n\n#T Shallows#!\n\nShoals, rapids and mill weirs. Boats get through slowly and at a cost until a River Navigation Canal opens them.\n\n#T Falls#!\n\nFalls and great rapids that no boat passes and no canal opens. Here the waterway ends for boats.\n\n#T Opening the Shallows#!\n\n#T Shallows#!\n\nBoats pass slowly and at a cost.\n\n#T Build a Canal#!\n\nOn any bank of the shallows: weirs with locks, dredged channels and towpaths.\n\n#T Canal Passage#!\n\nThe shallows become the easiest waterway of all, for fleets and for trade.\n\nThe canal comes with the Road Building [advance|e]. It takes long to build, needs a little lumber, tools and stone to keep up and never closes. The passage stays open while any bank of the shallows keeps its canal. China starts with its Grand Canal open.\n\n#T Where to See It#!\n\n$BULLET$ #T The map:#! the Rivers and Navigation map mode shows every waterway, what kind it is and whether it reaches the open sea.\n$BULLET$ #T The location view:#! it says whether a location lies on a sea coast, on a waterway or inland.",
+      "body_plain": "The great rivers are roads for ships. [navies|E] sail them far inland, goods travel them more cheaply than over land, and the towns on their banks build ports and shipyards like any coast. Not every reach is open: shallows slow boats until a canal is built, and falls stop them.\n\nA River and a Coast\n\nStill a River\n\nThe banks keep their River: its bonuses, the buildings that need a river and the boatmen who work it.\n\nAlso a Coast\n\n[navies|E] sail the waterway, and every bank counts as Coastal: shipyards and the other coastal buildings can stand there. Banks with a landing can hold a Port.\n\nA waterway is not the sea. Buildings that need the open sea stay on the sea coast, and so do the sea's richer fishing grounds. A few waterways never reach the open sea: their fleets cannot sail out of them.\n\nNot Every Reach Is Open\n\nFleets move quickly along a waterway and goods travel it far more cheaply than over land, which raises the Market Access of every bank. But each reach is only as good as its water.\n\nNavigable River\n\nOpen water for fleets and for trade. Most of the great rivers of Europe, Asia and the Americas have long navigable reaches.\n\nDifficult Waterway\n\nA great tropical or strongly seasonal river. Floods, low water and sandbars make it slow and dear to use, though boats still get through.\n\nShallows\n\nShoals, rapids and mill weirs. Boats get through slowly and at a cost until a River Navigation Canal opens them.\n\nFalls\n\nFalls and great rapids that no boat passes and no canal opens. Here the waterway ends for boats.\n\nOpening the Shallows\n\nShallows\n\nBoats pass slowly and at a cost.\n\nBuild a Canal\n\nOn any bank of the shallows: weirs with locks, dredged channels and towpaths.\n\nCanal Passage\n\nThe shallows become the easiest waterway of all, for fleets and for trade.\n\nThe canal comes with the Road Building Advance. It takes long to build, needs a little lumber, tools and stone to keep up and never closes. The passage stays open while any bank of the shallows keeps its canal. China starts with its Grand Canal open.\n\nWhere to See It\n\n-  The map: the Rivers and Navigation map mode shows every waterway, what kind it is and whether it reaches the open sea.\n-  The location view: it says whether a location lies on a sea coast, on a waterway or inland.",
+      "icon_texture": "gfx/interface/icons/map_modes/pp_river_navigation.dds",
+      "definition": {
+        "key": "pp_navigable_rivers",
+        "file": "main_menu/common/game_concepts/pp_navigable_rivers.txt",
+        "line": 2,
+        "family": "food",
+        "texture": "map_modes/pp_river_navigation",
+        "aliases": []
+      },
+      "source": {
+        "gui": "in_game/gui/encyclopedia_lateralview.gui",
+        "localization": "main_menu/localization/english/pp_europedia_l_english.yml",
+        "concept": "main_menu/common/game_concepts/pp_navigable_rivers.txt"
+      },
+      "links": [
+        "advance",
+        "coastal",
+        "market_access",
+        "port",
+        "river"
+      ],
+      "body_html": "<p>The great rivers are roads for ships. [navies|E] sail them far inland, goods travel them more cheaply than over land, and the towns on their banks build ports and shipyards like any coast. Not every reach is open: shallows slow boats until a canal is built, and falls stop them.</p>\n<h3>A River and a Coast</h3>\n<h3>Still a River</h3>\n<p>The banks keep their <span class=\"concept-ref\">River</span>: its bonuses, the buildings that need a river and the boatmen who work it.</p>\n<h3>Also a Coast</h3>\n<p>[navies|E] sail the waterway, and every bank counts as <span class=\"concept-ref\">Coastal</span>: shipyards and the other coastal buildings can stand there. Banks with a landing can hold a <span class=\"concept-ref\">Port</span>.</p>\n<p>A waterway is not the sea. Buildings that need the open sea stay on the sea coast, and so do the sea&#x27;s richer fishing grounds. A few waterways never reach the open sea: their fleets cannot sail out of them.</p>\n<h3>Not Every Reach Is Open</h3>\n<p>Fleets move quickly along a waterway and goods travel it far more cheaply than over land, which raises the <span class=\"concept-ref\">Market Access</span> of every bank. But each reach is only as good as its water.</p>\n<h3>Navigable River</h3>\n<p>Open water for fleets and for trade. Most of the great rivers of Europe, Asia and the Americas have long navigable reaches.</p>\n<h3>Difficult Waterway</h3>\n<p>A great tropical or strongly seasonal river. Floods, low water and sandbars make it slow and dear to use, though boats still get through.</p>\n<h3>Shallows</h3>\n<p>Shoals, rapids and mill weirs. Boats get through slowly and at a cost until a River Navigation Canal opens them.</p>\n<h3>Falls</h3>\n<p>Falls and great rapids that no boat passes and no canal opens. Here the waterway ends for boats.</p>\n<h3>Opening the Shallows</h3>\n<h3>Shallows</h3>\n<p>Boats pass slowly and at a cost.</p>\n<h3>Build a Canal</h3>\n<p>On any bank of the shallows: weirs with locks, dredged channels and towpaths.</p>\n<h3>Canal Passage</h3>\n<p>The shallows become the easiest waterway of all, for fleets and for trade.</p>\n<p>The canal comes with the Road Building <span class=\"concept-ref\">Advance</span>. It takes long to build, needs a little lumber, tools and stone to keep up and never closes. The passage stays open while any bank of the shallows keeps its canal. China starts with its Grand Canal open.</p>\n<h3>Where to See It</h3>\n<ul><li><strong>The map:</strong> the Rivers and Navigation map mode shows every waterway, what kind it is and whether it reaches the open sea.</li><li><strong>The location view:</strong> it says whether a location lies on a sea coast, on a waterway or inland.</li></ul>"
+    },
+    {
+      "id": "pp-farm-capacity",
+      "order": 11,
       "filter": "farm_capacity",
       "filter_label": "Rural Capacities",
       "concept_key": "pp_farm_capacity",
@@ -442,7 +481,7 @@
     },
     {
       "id": "pp-labor",
-      "order": 11,
+      "order": 12,
       "filter": "labor",
       "filter_label": "Labor",
       "concept_key": "pp_labor",
@@ -476,7 +515,7 @@
     },
     {
       "id": "pp-variable-harvests",
-      "order": 12,
+      "order": 13,
       "filter": "harvest",
       "filter_label": "Variable Harvests",
       "concept_key": "pp_variable_harvests",
@@ -516,7 +555,7 @@
     },
     {
       "id": "pp-population-capacity",
-      "order": 13,
+      "order": 14,
       "filter": "pop_capacity",
       "filter_label": "Arable Land",
       "concept_key": "pp_population_capacity",
@@ -554,7 +593,7 @@
     },
     {
       "id": "pp-population-growth",
-      "order": 14,
+      "order": 15,
       "filter": "pop_growth",
       "filter_label": "Population Growth",
       "concept_key": "pp_population_growth",
@@ -594,7 +633,7 @@
     },
     {
       "id": "pp-buildings-in-location",
-      "order": 15,
+      "order": 16,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_buildings_in_location",
@@ -627,7 +666,7 @@
     },
     {
       "id": "pp-available-free-land",
-      "order": 16,
+      "order": 17,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_available_free_land",
@@ -658,7 +697,7 @@
     },
     {
       "id": "pp-abundant-free-land",
-      "order": 17,
+      "order": 18,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_abundant_free_land",
@@ -689,7 +728,7 @@
     },
     {
       "id": "pp-prosperity",
-      "order": 18,
+      "order": 19,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_prosperity",
@@ -720,7 +759,7 @@
     },
     {
       "id": "pp-devastation",
-      "order": 19,
+      "order": 20,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_devastation",
@@ -750,7 +789,7 @@
     },
     {
       "id": "pp-province-current-food-storage",
-      "order": 20,
+      "order": 21,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_province_current_food_storage",
@@ -782,7 +821,7 @@
     },
     {
       "id": "pp-cheap-food",
-      "order": 21,
+      "order": 22,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_cheap_food",
@@ -812,7 +851,7 @@
     },
     {
       "id": "pp-expensive-food",
-      "order": 22,
+      "order": 23,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_expensive_food",
@@ -842,7 +881,7 @@
     },
     {
       "id": "pp-starvation",
-      "order": 23,
+      "order": 24,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_starvation",

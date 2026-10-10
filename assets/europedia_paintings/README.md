@@ -84,3 +84,16 @@ No text, letters, logos, UI, frames, borders, watermarks or anything modern.
 ## When you are done
 List the ten files with their paths and one line per picture on what it shows. If a picture came out with text,
 modern objects or a style far from the loading screens, make it again before you report.
+
+---
+
+## Added later: navigable_rivers (2026-10-10)
+Painted by Codex (GPT-6.1 Sol, high, its image generation) with four of the paintings above (logistics, harvest,
+population_growth, trade_goods) as style references; variant a of two.
+
+**navigable_rivers**: rivers as roads for ships. Great rivers carry fleets and trade deep inland, and their banks get
+ports and shipyards like a coast; shallows and mill weirs slow boats until locks and towpaths are built, and falls stop
+them. Scene: the Volga below a river town on a high bank (late sixteenth or seventeenth century). In the middle band a
+team of barge haulers on the towpath drags a loaded barge upstream through the shallows; behind them sailing river
+ships and broad barges, a busy timber wharf, a wooden kremlin with onion domes; the river runs from the foreground into
+the far distance.

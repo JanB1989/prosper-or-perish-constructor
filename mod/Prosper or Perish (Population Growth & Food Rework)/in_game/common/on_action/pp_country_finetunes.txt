@@ -164,6 +164,10 @@ pp_country_finetune_area_preferences = {
 		c:HUN ?= {
 			add_area_preference = pp_hungary_go_east
 		}
+		# Brandenburg: its marches (pp_lucky_nations.txt).
+		c:BRA ?= {
+			add_area_preference = pp_brandenburg_marches
+		}
 		# Serbia and Bulgaria look north to Hungary (pp_balkans_north.txt).
 		c:SER ?= {
 			add_area_preference = pp_balkans_go_north

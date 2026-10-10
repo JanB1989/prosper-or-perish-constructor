@@ -40,6 +40,16 @@ pp_ottoman_crush_mamluks = {
 	region = crescent_region
 }
 
+# Brandenburg: its own marches first (ai_scripted_expansion_score/target pp_lucky_nations.txt).
+pp_brandenburg_marches = {
+	preference_type = conquest
+	modifier = 3
+
+	area = brandenburg_area
+	area = pomerania_area
+	area = mecklenburg_area
+}
+
 # Muscovy: the steppe and the Volga, the Golden Horde's lands (Kiev is held back from them, pp_kiev_hungary.txt).
 pp_muscovy_conquer_steppe = {
 	preference_type = conquest

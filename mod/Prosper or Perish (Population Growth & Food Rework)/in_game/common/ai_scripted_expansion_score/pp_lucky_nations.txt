@@ -1,0 +1,91 @@
+﻿# Lucky nations (docs/country_finetunes.md): England, France, Muscovy, Brandenburg, the Ottomans, Portugal, Castile
+# (and their successors) get their first century through without throwing themselves at stronger enemies.
+
+# A target whose army is clearly larger counts a quarter.
+pp_lucky_avoid_stronger = {
+	attacker_potential = {
+		OR = {
+			tag = ENG
+			tag = GBR
+			tag = FRA
+			tag = MOS
+			tag = RUS
+			tag = BRA
+			tag = PRU
+			tag = TUR
+			tag = POR
+			tag = CAS
+			tag = SPA
+		}
+	}
+	target_trigger = {
+		army_size > {
+			value = scope:attacker.army_size
+			multiply = 1.25
+		}
+	}
+	multiplier = {
+		add = -0.75
+	}
+}
+
+# France and the Papacy (Avignon sits inside France) never plan a war on each other.
+pp_france_papacy_peace = {
+	attacker_potential = {
+		OR = {
+			tag = FRA
+			tag = PAP
+		}
+	}
+	target_trigger = {
+		OR = {
+			tag = FRA
+			tag = PAP
+		}
+	}
+	never_attack = {
+		always = yes
+	}
+}
+
+# Muscovy and Smolensk leave each other alone until 1400, so Muscovy grows on the small principalities first.
+pp_muscovy_smolensk_peace = {
+	attacker_potential = {
+		OR = {
+			tag = MOS
+			tag = SMO
+		}
+	}
+	target_trigger = {
+		OR = {
+			tag = MOS
+			tag = SMO
+		}
+	}
+	never_attack = {
+		current_year < 1400
+	}
+}
+
+# Brandenburg prefers the small countries of its own marches: Brandenburg, Pomerania, Mecklenburg.
+pp_brandenburg_marches_focus = {
+	attacker_potential = {
+		OR = {
+			tag = BRA
+			tag = PRU
+		}
+	}
+	target_trigger = {
+		NOT = { is_subject_of = scope:attacker }
+		capital ?= {
+			OR = {
+				area = area:brandenburg_area
+				area = area:pomerania_area
+				area = area:mecklenburg_area
+			}
+		}
+	}
+	score = {
+		add = 30
+	}
+}

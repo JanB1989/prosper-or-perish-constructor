@@ -1,0 +1,32 @@
+﻿# Lucky nations (docs/country_finetunes.md): Brandenburg's marches are war targets even where they are not land
+# neighbours.
+pp_brandenburg_marches_targets = {
+	attacker_potential = {
+		OR = {
+			tag = BRA
+			tag = PRU
+		}
+		months_since_war >= 36
+	}
+	candidate_list = {
+		every_country = {
+			limit = {
+				NOT = { this = root }
+				NOT = { is_subject_of = root }
+				capital ?= {
+					OR = {
+						area = area:brandenburg_area
+						area = area:pomerania_area
+						area = area:mecklenburg_area
+					}
+				}
+			}
+			add_to_list = source
+		}
+	}
+	score = {
+		add = scope:target.country_tax_base
+		multiply = 10
+		add = 30
+	}
+}

@@ -1917,50 +1917,32 @@ def test_capacity_map_mode_europedia_links_have_game_concepts() -> None:
 
 
 def test_building_capacity_europedia_explains_capacity_pools_and_rural_cap() -> None:
-    localization_text = (LOCALIZATION_ROOT / "pp_europedia_l_english.yml").read_text(
-        encoding="utf-8-sig"
+    """The Rural Capacities card (2026-10-10): farms take Arable Land, fishing and forest buildings share their own
+    capacities, other rural works have their own cap. The card's rows are tied to their sources in
+    tests/test_europedia_style.py."""
+    localization = dict(
+        re.findall(
+            r'(?m)^\s*(\w+):\d*\s*"(.*)"\s*$',
+            (LOCALIZATION_ROOT / "pp_europedia_l_english.yml").read_text(encoding="utf-8-sig"),
+        )
     )
-    capacity_desc = localization_text.split("game_concept_pp_farm_capacity_desc:", 1)[1].split(
-        "\ngame_concept_pp_fish_capacity:",
-        1,
-    )[0]
-    assert 'game_concept_pp_farm_capacity: "P&P: Farming/Fishing/Forest Capacities"' in localization_text
-
-    required_terms = (
-        "Geography map-mode group",
-        "#T Farming Capacity:#!",
-        "#T Fishing Capacity:#!",
-        "#T Forest Capacity:#!",
-        "#T Other Raw Material Buildings:#!",
-        "Rural Building Capacity",
-        "Maximum RGO Size",
-        "[pp_population_capacity|e]",
-        "building levels in the location",
-        "Farming Capacity is one current sum",
-        "existing farming-capacity buildings",
-        "the matching capacity map mode show the same current value",
-        "maximum-level tooltip lists the active sources",
-        "river size",
-        "Manorial Customals",
-        "development",
-        "ShowBuildingTypeName('wheat_farm')",
-        "ShowBuildingTypeName('wheat_model_farm')",
-        "ShowBuildingTypeName('fishing_village')",
-        "ShowBuildingTypeName('net_curing_yard')",
-        "ShowBuildingTypeName('drift_net_fishery')",
-        "ShowBuildingTypeName('forest_village')",
-        "mines, quarries, saltworks, pearl fisheries, charcoal makers, ivory hunting camps",
+    assert localization["game_concept_pp_farm_capacity"] == "P&P: Rural Capacities"
+    lead = localization["game_concept_pp_farm_capacity_desc"]
+    for link in ("[population_capacity|e]", "[pp_fish_capacity|e]", "[pp_forest_capacity|e]"):
+        assert link in lead
+    assert "[population_capacity|e]" in localization["PP_EU_RURAL_FARMS_DESC"]
+    assert "ShowModifierTypeName('local_pp_farmland_used')" in localization["PP_EU_RURAL_FARMS_NOTES"]
+    assert "ShowBuildingTypeName('pearl_fishery')" in localization["PP_EU_RURAL_FISH_NOTES"]
+    where = localization["PP_EU_RURAL_WHERE_DESC"]
+    for term in ("Geography group", "mines, quarries", "$mapmode_pp_farming_village_capacity_name$"):
+        assert term in where
+    card_text = " ".join(
+        value
+        for key, value in localization.items()
+        if key.startswith(("PP_EU_RURAL_", "game_concept_pp_farm_capacity", "game_concept_pp_fish_capacity", "game_concept_pp_forest_capacity"))
     )
-    missing = [term for term in required_terms if term not in capacity_desc]
-
-    assert not missing
-    for forbidden in (
-        "Available Farming Capacity starts from Gross Capacity",
-        "used Farming Capacity",
-        "capacity already used by farming-capacity buildings",
-        "map mode shows available capacity, gross capacity",
-    ):
-        assert forbidden not in capacity_desc
+    for forbidden in ("[pp_farm_output|e]", "Gross Capacity", "Farming Capacity is one current sum"):
+        assert forbidden not in card_text
 
 
 def test_game_loaded_text_files_are_finalized_with_utf8_bom() -> None:

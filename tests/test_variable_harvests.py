@@ -295,7 +295,14 @@ def test_variable_harvest_situation_text_uses_plain_formatter_text() -> None:
     assert "pp_harvest_province_is_starving_tt" in situation_text
     assert "PP_HARVEST_LEGEND_KEY_ABYSMAL" in situation_text
     assert "PP_HARVEST_LEGEND_KEY_AVERAGE" in situation_text
-    assert "PP_HARVEST_LEGEND_KEY_FOOD_NEG" in situation_text
+    # 2026-10-10: the map tooltip names the location's harvest (the customizable localization the chip reads); the
+    # market food line and its legend entry went (markets hold no food in the mod; no location was ever coloured
+    # for it, and the legend gave it the Weak Harvest colour)
+    assert "custom_tooltip = pp_harvest_map_state_tt" in situation_script
+    assert "pp_harvest_map_state_tt: \"[ROOT.GetLocation.Custom('pp_harvest_state')]\"" in situation_text
+    assert "market_monthly_food_balance" not in situation_script and "FOOD_NEG" not in situation_script
+    legend = re.findall(r'desc = "PP_HARVEST_LEGEND_KEY_(\w+)"', situation_script)
+    assert legend == ["ABYSMAL", "VERY_POOR", "POOR", "AVERAGE", "GOOD", "VERY_GOOD", "BOUNTIFUL", "STARVING"]
 
 
 def test_variable_harvest_situation_gui_does_not_use_formatter_as_default_style() -> None:
@@ -394,8 +401,8 @@ def _situation_localization_lines(path: Path) -> list[str]:
     prefixes = (
         "pp_mod_welcome_situation:",
         "pp_mod_welcome_situation_desc:",
+        "pp_harvest_map_state_tt:",
         "pp_harvest_province_is_starving_tt:",
-        "pp_harvest_market_negative_food_balance_tt:",
         "pp_harvest_affected_by_extended_winters_tt:",
         "PP_HARVEST_LEGEND_KEY_ABYSMAL:",
         "PP_HARVEST_LEGEND_KEY_VERY_POOR:",
@@ -405,7 +412,6 @@ def _situation_localization_lines(path: Path) -> list[str]:
         "PP_HARVEST_LEGEND_KEY_BOUNTIFUL:",
         "PP_HARVEST_LEGEND_KEY_AVERAGE:",
         "PP_HARVEST_LEGEND_KEY_STARVING:",
-        "PP_HARVEST_LEGEND_KEY_FOOD_NEG:",
         "harvest_situation:",
         "harvest_situation_desc:",
         "harvest_situation_monthly:",

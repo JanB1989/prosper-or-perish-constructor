@@ -67,18 +67,15 @@ When editing the Europedia GUI or concept definitions, preserve this order:
 5. Overview (done)
 6. Food (was Food in EU5; card style)
 7. Food Production (card style)
-8. Food Consumption
-9. New Trade Goods (done)
-10. New Buildings (done)
-11. Logistics (Market Access) (was Building Limits; card style)
-12. Building Capacity (done)
-13. Building Output (done)
-14. Labor (card style)
-15. Variable Harvests (done)
-16. Arable Land (was Population Capacity)
-17. Population Growth
-18. Population Distribution
-19. Other Changes
+8. Food Consumption (card style)
+9. New Trade Goods (card style)
+10. Logistics (Market Access) (was Building Limits; card style)
+11. Rural Capacities (was Building Capacity; card style)
+12. Labor (card style)
+13. Variable Harvests (done)
+14. Arable Land (was Population Capacity)
+15. Population Growth (card style)
+16. Other Changes
 
 More concepts may be added later.
 
@@ -97,16 +94,13 @@ Each Europedia card has exactly one game concept file. Filename = card name (sna
 | 7 | Food Production | pp_food_production.txt |
 | 8 | Food Consumption | pp_food_consumption.txt |
 | 9 | New Trade Goods | pp_new_trade_goods.txt |
-| 10 | New Buildings | pp_new_buildings.txt |
-| 11 | Logistics (Market Access) | pp_building_limits.txt |
-| 12 | Building Capacity | pp_farm_capacity.txt |
-| 13 | Building Output | pp_farm_output.txt |
-| 14 | Labor | pp_labor.txt |
-| 15 | Variable Harvests | pp_variable_harvests.txt |
-| 16 | Arable Land | pp_population_capacity.txt (card concept, also the map mode icon; plus Overused Arable Land) |
-| 17 | Population Growth | pp_population_growth.txt |
-| 18 | Population Distribution | pp_population_distribution.txt |
-| 19 | Other Changes | other_changes_pp_buildings_in_location.txt, other_changes_pp_available_free_land.txt, other_changes_pp_abundant_free_land.txt, other_changes_pp_prosperity.txt, other_changes_pp_devastation.txt, other_changes_pp_cheap_food.txt, other_changes_pp_expensive_food.txt, other_changes_pp_province_current_food_storage.txt, other_changes_pp_starvation.txt |
+| 10 | Logistics (Market Access) | pp_building_limits.txt |
+| 11 | Rural Capacities | pp_farm_capacity.txt (farms on Arable Land; fishing and forest capacity) |
+| 12 | Labor | pp_labor.txt |
+| 13 | Variable Harvests | pp_variable_harvests.txt |
+| 14 | Arable Land | pp_population_capacity.txt (card concept, also the map mode icon; plus Overused Arable Land) |
+| 15 | Population Growth | pp_population_growth.txt |
+| 16 | Other Changes | other_changes_pp_buildings_in_location.txt, other_changes_pp_available_free_land.txt, other_changes_pp_abundant_free_land.txt, other_changes_pp_prosperity.txt, other_changes_pp_devastation.txt, other_changes_pp_cheap_food.txt, other_changes_pp_expensive_food.txt, other_changes_pp_province_current_food_storage.txt, other_changes_pp_starvation.txt |
 
 Other Changes sub-cards use the `other_changes_` prefix so they group together when browsing the folder.
 

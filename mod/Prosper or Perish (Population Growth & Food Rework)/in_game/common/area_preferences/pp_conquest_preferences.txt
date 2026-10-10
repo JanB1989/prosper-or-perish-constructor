@@ -74,6 +74,15 @@ pp_castile_no_france_conquest = {
 	region = france_region
 }
 
+# France takes no Iberian land before 1450 (France and Castile both thrive; France's land comes from its own realm);
+# removed in 1450 by events/pp_lucky_nations_events.txt.
+pp_france_spare_iberia = {
+	preference_type = conquest
+	modifier = -1
+
+	region = iberia_region
+}
+
 # Castile takes no Portuguese land before 1450 (vanilla's castile_no_portugal_conquest is -0.9, x0.1, which the peace
 # AI still takes); removed in 1450 by events/pp_lucky_nations_events.txt.
 pp_castile_spare_portugal = {

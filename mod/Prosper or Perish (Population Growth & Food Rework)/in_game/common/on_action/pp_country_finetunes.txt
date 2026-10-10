@@ -180,6 +180,7 @@ pp_country_finetune_area_preferences = {
 		# France: its own kingdom first.
 		c:FRA ?= {
 			add_area_preference = pp_france_consolidate_realm
+			add_area_preference = pp_france_spare_iberia
 		}
 		# Castile: no French land.
 		c:CAS ?= {

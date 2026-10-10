@@ -185,6 +185,12 @@ pp_country_finetune_area_preferences = {
 		# Castile: no French land.
 		c:CAS ?= {
 			add_area_preference = pp_castile_no_france_conquest
+			# until 1450 the -1 replaces vanilla's -0.9 on Portugal (if the engine keeps the stronger of two preferences,
+			# the -0.9 would leave x0.1); events/pp_lucky_nations_events.txt restores the vanilla one in 1450
+			if = {
+				limit = { has_area_preference = castile_no_portugal_conquest }
+				remove_area_preference = castile_no_portugal_conquest
+			}
 			add_area_preference = pp_castile_spare_portugal
 		}
 		# Brandenburg: its marches (pp_lucky_nations.txt).

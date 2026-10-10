@@ -33,5 +33,9 @@ pp_lucky_nations.2 = {
 	}
 	immediate = {
 		remove_area_preference = pp_castile_spare_portugal
+		if = {
+			limit = { NOT = { has_area_preference = castile_no_portugal_conquest } }
+			add_area_preference = castile_no_portugal_conquest
+		}
 	}
 }

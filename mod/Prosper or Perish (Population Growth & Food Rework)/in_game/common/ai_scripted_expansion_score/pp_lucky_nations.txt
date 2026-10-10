@@ -155,7 +155,24 @@ pp_france_realm_focus = {
 		capital ?= { region = region:france_region }
 	}
 	score = {
-		add = 30
+		add = 10
+	}
+}
+
+# Castile/Spain plans no war on a country ruling from France before 1450 (run d6dc966a: Castile took Armagnac although
+# its French land desire was -1; the war's own target province is always taken).
+pp_castile_not_into_france = {
+	attacker_potential = {
+		OR = {
+			tag = CAS
+			tag = SPA
+		}
+	}
+	target_trigger = {
+		capital ?= { region = region:france_region }
+	}
+	never_attack = {
+		current_year < 1450
 	}
 }
 

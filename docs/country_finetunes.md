@@ -113,3 +113,8 @@ Hand-tuned changes for single countries, one entry each: what and why.
   Second sample of the final version, cf982ee6 (stopped at 1392 for the deadline): ENG 235, FRA 105, MOS 136, BRA 27,
   TUR 172, POR 1, CAS 329: Castile took Portugal despite the -1 preference, so -1 does not reliably zero the peace
   desire (the war likely came from vanilla's Portuguese succession events); France fell from 163 to 105. Open.
+  v7 (2026-10-10 after the deadline, NOT tested in game, not deployed): Castile's vanilla -0.9 on Portugal is removed
+  while the -1 is active (if the engine keeps the stronger preference, the -0.9 left x0.1) and restored in 1450;
+  Castile plans no war on a country ruling from France before 1450 (the war target's province is taken regardless of
+  the -1); France's realm aim softened to +10 / x2 (runs 5e45c44e, cacbb6a6, cf982ee6: France lost land to Brittany,
+  Bourbon, Foix in those wars).

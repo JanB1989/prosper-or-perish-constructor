@@ -96,7 +96,7 @@ pp_castile_spare_portugal = {
 # France: its own kingdom first (pp_lucky_nations.txt); vanilla's france_english_holdings (x100) stays on top.
 pp_france_consolidate_realm = {
 	preference_type = conquest
-	modifier = 5
+	modifier = 2
 
 	region = france_region
 }

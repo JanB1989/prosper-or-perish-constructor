@@ -6,7 +6,8 @@ landscape from the location view's panorama layers instead (2654 px, sharp), gra
 - harvest: farmland under a late-summer grade (Variable Harvests);
 - arable_land: forest on the left giving way to cleared fields and farmsteads on the right (Arable Land);
 - food: a market town among its fields on a river (Food);
-- food_production: farmsteads among their fields above a fishing coast (Food Production).
+- food_production: farmsteads among their fields above a fishing coast (Food Production);
+- logistics: a crowded bazaar city on a river in dry hills (Logistics (Market Access)).
 
 Rerun after a game update:
 
@@ -104,6 +105,15 @@ BANNERS: dict[str, Banner] = {
         Layer("water/river_ocean/river_ocean_metadata_os2654x440_d0x208.dds"),
         Layer("ground1/oceanic/oceanic_grassland_ground1_metadata_os2654x440_d0x288.dds"),
     ), _natural, pano_scale=1.4),
+    "logistics": Banner((
+        Layer("sky/sky_regular2_metadata_os2654x440_d0x0.dds"),
+        Layer("topology/hills/hills_arid_metadata_os2654x440_d0x40.dds"),
+        Layer("ground3/arid/arid_grassland_ground3_metadata_os2654x440_d0x80.dds"),
+        Layer("settlement2/syrian/city/syrian_city2_metadata_os2654x440_d0x62.dds"),
+        Layer("settlement1/syrian/city/syrian_city1_metadata_os2654x440_d0x124.dds"),
+        Layer("water/river/river_metadata_os2654x440_d0x190.dds"),
+        Layer("ground1/arid/arid_sparse_ground1_metadata_os2654x440_d0x304.dds"),
+    ), _natural),
 }
 
 

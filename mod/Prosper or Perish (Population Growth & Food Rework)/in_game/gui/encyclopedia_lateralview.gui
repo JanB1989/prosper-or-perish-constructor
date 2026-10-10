@@ -485,7 +485,7 @@
                                 }
                                 button_regular = {
                                     layoutpolicy_horizontal = expanding
-                                    raw_text = "Building Limits"
+                                    raw_text = "Logistics"
                                     onclick = "[GetVariableSystem.Set('pp_filter', 'building_limits')]"
                                     down = "[GetVariableSystem.HasValue('pp_filter', 'building_limits')]"
                                     action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
@@ -1159,7 +1159,8 @@
                                             }
                                         }
 
-                                        # ---- Building Limits ----
+                                        # ---- Logistics (Market Access) ----
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'building_limits'))]"
                                             set_parent_size_to_minimum = yes
@@ -1167,6 +1168,7 @@
                                             vbox = {
                                                 layoutpolicy_horizontal = expanding
                                                 spacing = 10
+                                                margin_bottom = 24
                                                 using = bg_paper_card
                                                 blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
                                                 max_width = 1450
@@ -1180,18 +1182,209 @@
                                                     hbox = {
                                                         margin = { 40 0 }
                                                         margin_top = 8
-                                                        icon = { texture = "gfx/interface/icons/flat_icons/balance/buildings_abroad.dds" size = { 45 45 } }
+                                                        icon = { texture = "gfx/interface/icons/location_icons/market_access.dds" size = { 45 45 } }
                                                         text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_building_limits" }
                                                     }
                                                 }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_building_limits_desc" margin = { 40 10 } }
+
+                                                pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_logistics.dds" } }
+                                                pp_eu_lead = { text = "game_concept_pp_building_limits_desc" }
+
+                                                # Your capital: building levels against its limit, and its market access
+                                                hbox = {
+                                                    visible = "[GetPlayer.IsValid]"
+                                                    spacing = 14
+                                                    icon = { texture = "gfx/interface/icons/modifier_types/free_building_levels.dds" size = { 56 56 } }
+                                                    text_multi = { max_width = 800 autoresize = yes text = "PP_EU_LOGI_CAPITAL" }
+                                                }
+
+                                                # ---- What sets the limit: the location's attributes ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/modifier_types/free_building_levels.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_LOGI_LIMIT" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_LOGI_LIMIT_DESC" }
+                                                vbox = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_LOGI_EASY_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/map_modes/rivers.dds" tooltip = "game_concept_river" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/flat_icons/geopolitics/accessible_coasts.dds" tooltip = "game_concept_port" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/map_modes/roads.dds" tooltip = "game_concept_road" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/location_icons/city.dds" tooltip = "game_concept_location_rank" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/location_icons/development.dds" tooltip = "game_concept_development" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/location_icons/market.dds" tooltip = "game_concept_market_center" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/location_icons/province_capital.dds" tooltip = "game_concept_province_capital" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/location_icons/capital.dds" tooltip = "game_concept_capital" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/climate/mediterranean.dds" tooltip = "mediterranean" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/climate/oceanic.dds" tooltip = "oceanic" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/climate/subtropical.dds" tooltip = "subtropical" }
                                                         }
                                                     }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_LOGI_HARD_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_goods = { texture = "gfx/interface/topography/mountains.dds" tooltip = "mountains" }
+                                                            pp_eu_goods = { texture = "gfx/interface/topography/wetlands.dds" tooltip = "wetlands" }
+                                                            pp_eu_goods = { texture = "gfx/interface/topography/ha1300_topo_deltas.dds" tooltip = "ha1300_topo_deltas" }
+                                                            pp_eu_goods = { texture = "gfx/interface/topography/atoll.dds" tooltip = "atoll" }
+                                                            pp_eu_goods = { texture = "gfx/interface/topography/plateau.dds" tooltip = "plateau" }
+                                                            pp_eu_goods = { texture = "gfx/interface/topography/hills.dds" tooltip = "hills" }
+                                                            pp_eu_goods = { texture = "gfx/interface/vegetation/desert.dds" tooltip = "desert" }
+                                                            pp_eu_goods = { texture = "gfx/interface/vegetation/jungle.dds" tooltip = "jungle" }
+                                                            pp_eu_goods = { texture = "gfx/interface/vegetation/sparse.dds" tooltip = "sparse" }
+                                                            pp_eu_goods = { texture = "gfx/interface/vegetation/ha1300_veg_scrubland.dds" tooltip = "ha1300_veg_scrubland" }
+                                                            pp_eu_goods = { texture = "gfx/interface/vegetation/ha1300_veg_tundra.dds" tooltip = "ha1300_veg_tundra" }
+                                                            pp_eu_goods = { texture = "gfx/interface/vegetation/forest.dds" tooltip = "forest" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/climate/arctic.dds" tooltip = "arctic" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/climate/subpolar.dds" tooltip = "subpolar" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/climate/cold_arid.dds" tooltip = "cold_arid" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/climate/arid.dds" tooltip = "arid" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/climate/tropical.dds" tooltip = "tropical" }
+                                                        }
+                                                    }
                                                 }
+
+                                                # ---- Over the limit: a flow from building levels to market access ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/pp_unsupported_building_levels.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_LOGI_OVER" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/map_modes/building_based.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LOGI_STEP_LEVELS" }
+                                                        blockoverride "step_text" { text = "PP_EU_LOGI_STEP_LEVELS_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/map_modes/pp_unsupported_building_levels.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LOGI_STEP_OVER" }
+                                                        blockoverride "step_text" { text = "PP_EU_LOGI_STEP_OVER_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/location_icons/market_access.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LOGI_STEP_ACCESS" }
+                                                        blockoverride "step_text" { text = "PP_EU_LOGI_STEP_ACCESS_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/location_icons/market_price_difference_down.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LOGI_STEP_TRADE" }
+                                                        blockoverride "step_text" { text = "PP_EU_LOGI_STEP_TRADE_DESC" }
+                                                    }
+                                                }
+
+                                                # ---- Logistics buildings: which one where ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_logistics.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_LOGI_BUILDINGS" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_LOGI_BUILDINGS_DESC" }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 24
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/river_boatmen_yard.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LOGI_RIVER" }
+                                                        blockoverride "step_text" { text = "PP_EU_LOGI_RIVER_DESC" }
+                                                    }
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/coastal_shipping_office.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LOGI_PORT" }
+                                                        blockoverride "step_text" { text = "PP_EU_LOGI_PORT_DESC" }
+                                                    }
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/transport_office.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LOGI_CITY" }
+                                                        blockoverride "step_text" { text = "PP_EU_LOGI_CITY_DESC" }
+                                                    }
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/carrier_inn.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LOGI_ROAD" }
+                                                        blockoverride "step_text" { text = "PP_EU_LOGI_ROAD_DESC" }
+                                                    }
+                                                }
+                                                vbox = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    margin = { 40 0 }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_LOGI_LOCAL_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/pp_caravanserai.dds" tooltip = "pp_caravanserai" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/pp_oasis_caravan_station.dds" tooltip = "pp_oasis_caravan_station" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/pp_yam_station.dds" tooltip = "pp_yam_station" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/pp_banjara_tanda.dds" tooltip = "pp_banjara_tanda" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/pp_llama_caravan_post.dds" tooltip = "pp_llama_caravan_post" }
+                                                        }
+                                                    }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_LOGI_LOCAL_DESC" }
+
+                                                # ---- Your choice: what they use, what they make, what they give back ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/location_icons/wealth.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_LOGI_CHOICE" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LOGI_STEP_USE" }
+                                                        blockoverride "step_text" { text = "PP_EU_LOGI_STEP_USE_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_logistics.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LOGI_STEP_MAKE" }
+                                                        blockoverride "step_text" { text = "PP_EU_LOGI_STEP_MAKE_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/location_icons/market_access.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LOGI_STEP_BACK" }
+                                                        blockoverride "step_text" { text = "PP_EU_LOGI_STEP_BACK_DESC" }
+                                                    }
+                                                }
+                                                vbox = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    margin = { 40 0 }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_LOGI_INPUTS_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds" tooltip = "lumber" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_tools.dds" tooltip = "tools" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_victuals.dds" tooltip = "victuals" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_naval_supplies.dds" tooltip = "naval_supplies" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_tar.dds" tooltip = "tar" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_paper.dds" tooltip = "paper" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_cloth.dds" tooltip = "cloth" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_leather.dds" tooltip = "leather" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds" tooltip = "horses" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_camels.dds" tooltip = "camels" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_livestock.dds" tooltip = "livestock" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_wool.dds" tooltip = "wool" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_fur.dds" tooltip = "fur" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_salt.dds" tooltip = "salt" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_maize.dds" tooltip = "maize" }
+                                                        }
+                                                    }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_LOGI_CHOICE_DESC" }
+
+                                                # ---- Where to see it ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/location_modifiers.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_LOGI_WHERE" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_LOGI_WHERE_DESC" }
                                             }
                                         }
 

@@ -60,7 +60,7 @@ When editing the Europedia GUI or concept definitions, preserve this order:
 8. Food Consumption
 9. New Trade Goods (done)
 10. New Buildings (done)
-11. Building Limits
+11. Logistics (Market Access) (was Building Limits; card style)
 12. Building Capacity (done)
 13. Building Output (done)
 14. Variable Harvests (done)
@@ -87,7 +87,7 @@ Each Europedia card has exactly one game concept file. Filename = card name (sna
 | 8 | Food Consumption | pp_food_consumption.txt |
 | 9 | New Trade Goods | pp_new_trade_goods.txt |
 | 10 | New Buildings | pp_new_buildings.txt |
-| 11 | Building Limits | pp_building_limits.txt |
+| 11 | Logistics (Market Access) | pp_building_limits.txt |
 | 12 | Building Capacity | pp_farm_capacity.txt |
 | 13 | Building Output | pp_farm_output.txt |
 | 14 | Variable Harvests | pp_variable_harvests.txt |

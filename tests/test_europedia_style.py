@@ -36,6 +36,8 @@ CARDS = {
                      "game_concept_pp_abundant_free_land_desc", "game_concept_pp_available_free_land_desc")),
     "food": ("# ---- Food ----", "# ---- Food Production ----", ("game_concept_pp_staple_foods_desc",)),
     "food_production": ("# ---- Food Production ----", "# ---- Food Consumption ----", ("game_concept_pp_staple_foods_desc",)),
+    "logistics": ("# ---- Logistics (Market Access) ----", "# ---- Farming/Fishing/Forest Capacities ----",
+                  ("game_concept_supported_building_levels_desc",)),
 }
 # Retired player-facing names of the population capacity and its states (renamed to Arable Land 2026-10-10).
 # "Farmland Vegetation" and lower-case "farmland" (the vegetation type, prose about fields) stay.

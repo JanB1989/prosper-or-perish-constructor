@@ -1,7 +1,7 @@
 ﻿# Lucky nations (docs/country_finetunes.md): England, France, Muscovy, Brandenburg, the Ottomans, Portugal, Castile
 # (and their successors) get their first century through without throwing themselves at stronger enemies.
 
-# A target whose army is clearly larger counts a quarter.
+# A target whose army, or whose overlord's army, is clearly larger counts a quarter.
 pp_lucky_avoid_stronger = {
 	attacker_potential = {
 		OR = {
@@ -19,13 +19,68 @@ pp_lucky_avoid_stronger = {
 		}
 	}
 	target_trigger = {
-		army_size > {
-			value = scope:attacker.army_size
-			multiply = 1.25
+		OR = {
+			army_size > {
+				value = scope:attacker.army_size
+				multiply = 1.25
+			}
+			overlord ?= {
+				army_size > {
+					value = scope:attacker.army_size
+					multiply = 1.25
+				}
+			}
 		}
 	}
 	multiplier = {
 		add = -0.75
+	}
+}
+
+# One war at a time: while at war, every new target counts a quarter.
+pp_lucky_one_war_at_a_time = {
+	attacker_potential = {
+		OR = {
+			tag = ENG
+			tag = GBR
+			tag = FRA
+			tag = MOS
+			tag = RUS
+			tag = BRA
+			tag = PRU
+			tag = TUR
+			tag = POR
+			tag = CAS
+			tag = SPA
+		}
+		at_war = yes
+	}
+	target_trigger = {
+		always = yes
+	}
+	multiplier = {
+		add = -0.75
+	}
+}
+
+# France and Castile (allies in the Hundred Years' War) never plan a war on each other before 1450.
+pp_franco_castilian_peace = {
+	attacker_potential = {
+		OR = {
+			tag = FRA
+			tag = CAS
+			tag = SPA
+		}
+	}
+	target_trigger = {
+		OR = {
+			tag = FRA
+			tag = CAS
+			tag = SPA
+		}
+	}
+	never_attack = {
+		current_year < 1450
 	}
 }
 
@@ -89,14 +144,14 @@ pp_muscovy_smolensk_peace = {
 	}
 }
 
-# France consolidates its own kingdom first: every country ruling from the France region (Bourbon, Armagnac, Brittany,
-# Foix, England's Aquitaine ...).
+# France consolidates its own kingdom first: every independent country ruling from the France region (Bourbon,
+# Armagnac, Brittany, Foix ...); a vassal such as England's Aquitaine would mean war with its overlord.
 pp_france_realm_focus = {
 	attacker_potential = {
 		tag = FRA
 	}
 	target_trigger = {
-		NOT = { is_subject_of = scope:attacker }
+		is_subject = no
 		capital ?= { region = region:france_region }
 	}
 	score = {

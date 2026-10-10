@@ -33,6 +33,7 @@ CARDS = {
     "arable_land": ("# ---- Arable Land ----", "# ---- Population Growth ----",
                     ("game_concept_pp_population_capacity_desc", "game_concept_pp_overused_arable_land_desc",
                      "game_concept_pp_abundant_free_land_desc", "game_concept_pp_available_free_land_desc")),
+    "food": ("# ---- Food ----", "# ---- Food Production ----", ()),
 }
 # Retired player-facing names of the population capacity and its states (renamed to Arable Land 2026-10-10).
 # "Farmland Vegetation" and lower-case "farmland" (the vegetation type, prose about fields) stay.
@@ -118,9 +119,10 @@ def test_card_types_are_defined(name):
 
 @pytest.mark.parametrize("name", CARDS)
 def test_card_text_has_no_numbers(name):
-    """Numbers live behind the links (modifier and concept tooltips), never in the text."""
+    """Numbers live behind the links (modifier and concept tooltips), never in the text. Live values the game fills
+    in (`[...]` data functions, e.g. the capital's months of food) are not written numbers."""
     for key, value in _card_loc(name).items():
-        assert not re.search(r"\d", value), key
+        assert not re.search(r"\d", re.sub(r"\[[^\[\]]*\]", "", value)), key
 
 
 @pytest.mark.parametrize("name", CARDS)

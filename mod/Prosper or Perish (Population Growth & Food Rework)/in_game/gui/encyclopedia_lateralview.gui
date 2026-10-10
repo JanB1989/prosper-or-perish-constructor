@@ -427,7 +427,7 @@
                                 }
                                 button_regular = {
                                     layoutpolicy_horizontal = expanding
-                                    raw_text = "Food in EU5"
+                                    raw_text = "Food"
                                     onclick = "[GetVariableSystem.Set('pp_filter', 'food_in_eu5')]"
                                     down = "[GetVariableSystem.HasValue('pp_filter', 'food_in_eu5')]"
                                     action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
@@ -724,14 +724,16 @@
                                             }
                                         }
 
-	                                        # ---- Food in EU5 ----
-	                                        vbox = {
+                                        # ---- Food ----
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'food_in_eu5'))]"
                                             set_parent_size_to_minimum = yes
                                             margin = { 0 10 }
                                             vbox = {
                                                 layoutpolicy_horizontal = expanding
                                                 spacing = 10
+                                                margin_bottom = 24
                                                 using = bg_paper_card
                                                 blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
                                                 max_width = 1450
@@ -749,14 +751,123 @@
                                                         text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_food_in_eu5" }
                                                     }
                                                 }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_food_in_eu5_desc" margin = { 40 10 } }
+
+                                                pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_food.dds" } }
+                                                pp_eu_lead = { text = "game_concept_pp_food_in_eu5_desc" }
+
+                                                # Your capital's province store (the stored food chip's script value)
+                                                hbox = {
+                                                    visible = "[GetPlayer.IsValid]"
+                                                    spacing = 14
+                                                    widget = {
+                                                        size = { 64 64 }
+                                                        pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                        pp_eu_medallion_goods = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
+                                                    }
+                                                    text_multi = { max_width = 700 autoresize = yes text = "PP_EU_FOOD_CAPITAL" }
+                                                }
+
+                                                # ---- How food reaches people ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/location_icons/food.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_FOOD_FLOW" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_FOOD_STEP_GOODS" }
+                                                        blockoverride "step_text" { text = "PP_EU_FOOD_STEP_GOODS_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_local_food.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_FOOD_STEP_PROVINCE_FOOD" }
+                                                        blockoverride "step_text" { text = "PP_EU_FOOD_STEP_PROVINCE_FOOD_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_FOOD_STEP_STORE" }
+                                                        blockoverride "step_text" { text = "PP_EU_FOOD_STEP_STORE_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/location_icons/population.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_FOOD_STEP_PEOPLE" }
+                                                        blockoverride "step_text" { text = "PP_EU_FOOD_STEP_PEOPLE_DESC" }
+                                                    }
+                                                }
+
+                                                # ---- Victuals: the one food that travels ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_victuals.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_FOOD_TRAVEL" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/grange.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_FOOD_TRAVEL_PACK" }
+                                                        blockoverride "step_text" { text = "PP_EU_FOOD_TRAVEL_PACK_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_victuals.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_FOOD_TRAVEL_TRADE" }
+                                                        blockoverride "step_text" { text = "PP_EU_FOOD_TRAVEL_TRADE_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/tavern.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_FOOD_TRAVEL_SERVE" }
+                                                        blockoverride "step_text" { text = "PP_EU_FOOD_TRAVEL_SERVE_DESC" }
+                                                    }
+                                                }
+
+                                                # ---- Other food in the store ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/buildings/cookshop.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_FOOD_OTHER" }
+                                                }
+                                                vbox = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    margin = { 40 0 }
+                                                    pp_eu_goods_row = {
+                                                        blockoverride "row_label" { text = "PP_EU_FOOD_OTHER_ROW" }
+                                                        blockoverride "row_goods" {
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/cookshop.dds" tooltip = "cookshop" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/public_kitchen.dds" tooltip = "public_kitchen" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/buildings/wheat_farm.dds" tooltip = "wheat_farm" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/location_icons/subsistence_agriculture.dds" tooltip = "PP_EU_FOOD_TT_SUBSISTENCE" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/pp_arable_land/abundant.dds" tooltip = "STATIC_MODIFIER_NAME_abundant_free_land" }
                                                         }
                                                     }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
                                                 }
+                                                pp_eu_text = { text = "PP_EU_FOOD_OTHER_DESC" }
+
+                                                # ---- The store steers the province ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/location_icons/monthly_growth.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_FOOD_STORE" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_FOOD_STORE_DESC" }
+
+                                                # ---- Unlike vanilla ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/market.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_FOOD_VANILLA" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_FOOD_VANILLA_DESC" }
+
+                                                # ---- Where to see it ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/location_modifiers.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_FOOD_WHERE" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_FOOD_WHERE_DESC" }
                                             }
                                         }
 

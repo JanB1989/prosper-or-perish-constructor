@@ -4,7 +4,8 @@ Vanilla has no topic picture wider than 1080 px, which looks soft stretched over
 landscape from the location view's panorama layers instead (2654 px, sharp), graded to its topic:
 
 - harvest: farmland under a late-summer grade (Variable Harvests);
-- arable_land: forest on the left giving way to cleared fields and farmsteads on the right (Arable Land).
+- arable_land: forest on the left giving way to cleared fields and farmsteads on the right (Arable Land);
+- food: a market town among its fields on a river (Food).
 
 Rerun after a game update:
 
@@ -73,6 +74,16 @@ BANNERS: dict[str, tuple[tuple[Layer, ...], Callable[[Image.Image], Image.Image]
         Layer("ground3/continental/continental_grassland_ground3_metadata_os2654x440_d0x66.dds", (950, 1500)),
         Layer("ground3/farmlands_metadata_os2654x440_d0x102.dds", (1000, 1550)),
         Layer("settlement1/north_german/rural/north_german_rural11_metadata_os2654x440_d0x92.dds", (1000, 1200)),
+        Layer("ground1/continental/continental_grassland_ground1_metadata_os2654x440_d0x310.dds"),
+    ), _natural),
+    "food": ((
+        Layer("sky/sky_regular_metadata_os2654x440_d0x0.dds"),
+        Layer("topology/hills/hills_metadata_os2654x440_d0x15.dds"),
+        Layer("ground3/continental/continental_grassland_ground3_metadata_os2654x440_d0x66.dds"),
+        Layer("ground3/farmlands_metadata_os2654x440_d0x102.dds"),
+        Layer("settlement2/north_german/town/north_german_town2_metadata_os2654x440_d0x54.dds"),
+        Layer("settlement1/north_german/town/north_german_town1_metadata_os2654x440_d0x106.dds"),
+        Layer("water/river/river_metadata_os2654x440_d0x190.dds"),
         Layer("ground1/continental/continental_grassland_ground1_metadata_os2654x440_d0x310.dds"),
     ), _natural),
 }

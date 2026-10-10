@@ -48,7 +48,7 @@ When editing the Europedia GUI or concept definitions, preserve this order:
 3. F.A.Q.
 4. Update 0.9
 5. Overview (done)
-6. Food in EU5
+6. Food (was Food in EU5; card style)
 7. Food Production (done)
 8. Food Consumption
 9. New Trade Goods (done)
@@ -75,7 +75,7 @@ Each Europedia card has exactly one game concept file. Filename = card name (sna
 | 3 | F.A.Q. | pp_faq.txt |
 | 4 | Update 0.9 | pp_update_0_9.txt |
 | 5 | Overview | pp_overview.txt |
-| 6 | Food in EU5 | pp_food_in_eu5.txt |
+| 6 | Food | pp_food_in_eu5.txt |
 | 7 | Food Production | pp_food_production.txt |
 | 8 | Food Consumption | pp_food_consumption.txt |
 | 9 | New Trade Goods | pp_new_trade_goods.txt |

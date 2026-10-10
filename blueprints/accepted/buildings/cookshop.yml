@@ -67,13 +67,13 @@ building:
     	town = yes
     	city = yes
     	megalopolis = yes
-    	# towns and up, or the province capital (2026-10-03, as the Public Kitchen). An allow, not a location_potential:
-    	# a rank change would delete the building
+    	# the province capital only (2026-10-10, Jan; was towns and up or the province capital, which gave every town the
+    	# province's whole cap). Every owner of a split province has its own capital and store. The cap is one budget
+    	# per province: kitchens left behind when the engine moves the capital keep working and count against it, so a
+    	# new capital only builds what is left. An allow, not a location_potential: the engine re-checks the potential
+    	# on an owner change and would delete the building.
     	allow = {
-    		OR = {
-    			NOT = { location_rank = location_rank:rural_settlement }
-    			is_province_capital = yes
-    		}
+    		is_province_capital = yes
     	}
     	# AI (2026-10-03, farm reward): build them up to the cap wherever the farms allow, store or not. The AI values
     	# their food only while the province loses food, so elsewhere this positive weight carries them past their cost;
@@ -331,7 +331,7 @@ localization:
   entries:
     cookshop: Cookshop
     pp_cookshop_price: Cookshop Price
-    cookshop_desc: A street kitchen that cooks a little of the farms' produce into hot meals and sells them with a drink at its door. Only towns and the province capital keep one, and the more farm land the province works, the more kitchens it can hold. What it serves adds to the province's food, and less food spoils while people eat it fresh.
+    cookshop_desc: A street kitchen that cooks a little of the farms' produce into hot meals and sells them with a drink at its door. Only the province capital builds them, and the more farm land the province works, the more kitchens it can hold. What it serves adds to the province's food, and less food spoils while people eat it fresh.
     cookshop_slot_0: Main Dish
     cookshop_slot_1: Drink
     pp_cookshop_beer: Beer

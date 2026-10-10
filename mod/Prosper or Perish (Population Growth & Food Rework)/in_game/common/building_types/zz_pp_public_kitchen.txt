@@ -13,14 +13,11 @@ increase_per_level_cost = 0.10
 	town = yes
 	city = yes
 	megalopolis = yes
-	# towns and up, or the province capital (every owner of a split province has one). An allow, not a
-	# location_potential, so the tier keeps the Cookshop's visibility (vanilla: the armory's allow on top of
-	# the provincial garrison it makes obsolete)
+	# the province capital only, as the Cookshop (2026-10-10, Jan; every owner of a split province has one). An
+	# allow, not a location_potential, so the tier keeps the Cookshop's visibility (vanilla: the armory's allow on
+	# top of the provincial garrison it makes obsolete)
 	allow = {
-		OR = {
-			NOT = { location_rank = location_rank:rural_settlement }
-			is_province_capital = yes
-		}
+		is_province_capital = yes
 	}
 	# AI (2026-10-03, farm reward): as the Cookshop. Build them up to the cap wherever the farms allow, store or
 	# not; the AI values their food only while the province loses food, so elsewhere this positive weight carries

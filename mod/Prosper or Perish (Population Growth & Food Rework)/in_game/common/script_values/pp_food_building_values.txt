@@ -49,6 +49,37 @@ pp_location_province_victualling_yard_levels = {
 	}
 }
 
+# Location scope: the location's own standing kitchen levels (Cookshop and Public Kitchen). Building levels, not a
+# raw_modifier counter: the engine scales raw_modifier by the building's input fulfilment, and the cap needs whole levels.
+pp_location_kitchen_levels = {
+	value = 0
+	if = {
+		limit = { has_building = building_type:cookshop }
+		add = "location_building_level(building_type:cookshop)"
+	}
+	if = {
+		limit = { has_building = building_type:public_kitchen }
+		add = "location_building_level(building_type:public_kitchen)"
+	}
+}
+
+# Province scope: the standing kitchen levels in the province (2026-10-10, Jan). The Cookshop cap is one budget per
+# province: kitchens left in a former province capital count against it.
+pp_province_kitchen_levels = {
+	value = 0
+	every_location_in_province = {
+		add = pp_location_kitchen_levels
+	}
+}
+
+# Location scope: the standing kitchen levels in the location's province.
+pp_location_province_kitchen_levels = {
+	value = 0
+	province ?= {
+		add = pp_province_kitchen_levels
+	}
+}
+
 # Province scope: the food the province gains per month (its locations' food production plus their food consumption,
 # which the engine reports as negative). Above 0 the store grows. Read by the Grange's AI weight.
 pp_province_food_balance = {

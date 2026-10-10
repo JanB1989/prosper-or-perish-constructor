@@ -391,6 +391,10 @@ PROVINCE_FARM_LEVELS_VALUE = "pp_location_province_farm_levels"
 # (raw_modifier local_pp_victualling_yard_levels, script value pp_location_province_victualling_yard_levels).
 YARD_LEVELS_MODIFIER = "local_pp_victualling_yard_levels"
 PROVINCE_YARD_LEVELS_VALUE = "pp_location_province_victualling_yard_levels"
+# Kitchen levels (2026-10-10): the Cookshop cap is one budget per province, less the kitchens standing in its other
+# locations (script value pp_location_province_kitchen_levels: Cookshop and Public Kitchen building levels).
+KITCHEN_BUILDINGS = {"cookshop": 1.0, "public_kitchen": 1.0}
+PROVINCE_KITCHEN_LEVELS_VALUE = "pp_location_province_kitchen_levels"
 
 class Simulation:
     # Engine start state per location (filled in __init__; empty means "as the pops file says").
@@ -470,6 +474,8 @@ class Simulation:
                                  if (v := counter(k, FARM_LEVELS_MODIFIER) + counter(k, STAPLE_LEVELS_MODIFIER))}
         # and the Victualling Yard levels (half a Cookshop level each)
         self.yard_counters = {k: v for k in rules.buildings if (v := counter(k, YARD_LEVELS_MODIFIER))}
+        # and less the kitchens in the province's other locations (one budget per province)
+        self.cookshop_counters = {k: v for k, v in KITCHEN_BUILDINGS.items() if k in rules.buildings}
         self.base = {}
         self.neighbors = defaultdict(list)
         self.navigation = cfg.raw.get("_navigation", {})
@@ -694,8 +700,14 @@ class Simulation:
         # ``counts``, not ``levels``: None takes the cached province sums (the plan's own levels)
         province_farms = self.province_farm_levels(tag, counts, others)
         province_yards = self.province_yard_levels(tag, counts, others)
+        province_kitchens = self.province_kitchen_levels(tag, counts, others)
         return {**base, "buildings": levels, "modifiers": dict(mods), PROVINCE_FARM_LEVELS_VALUE: province_farms,
-                PROVINCE_YARD_LEVELS_VALUE: province_yards}
+                PROVINCE_YARD_LEVELS_VALUE: province_yards, PROVINCE_KITCHEN_LEVELS_VALUE: province_kitchens}
+
+    def province_kitchen_levels(self, tag, levels=None, others=None):
+        """Cookshop and Public Kitchen levels placed in the location's province pool, its own included (the Cookshop cap
+        subtracts the ones in the other locations: one budget per province)."""
+        return self._province_levels(tag, getattr(self, "cookshop_counters", {}), levels, others)
 
     def province_farm_levels(self, tag, levels=None, others=None):
         """Farm, orchard, fishery and sheep levels placed in the location's province pool (``levels``: this location's
@@ -833,10 +845,10 @@ class Simulation:
         return placed
 
     def _cap_state(self, tag):
-        """The part of the cap memo key that belongs to the location: its levels and its province's farm and Yard
-        levels. One placement re-checks every building of the location against the same state."""
+        """The part of the cap memo key that belongs to the location: its levels and its province's farm, Yard and
+        kitchen levels. One placement re-checks every building of the location against the same state."""
         return (tuple(sorted((k, n) for k, n in self.counts[tag].items() if n)),
-                self.province_farm_levels(tag), self.province_yard_levels(tag))
+                self.province_farm_levels(tag), self.province_yard_levels(tag), self.province_kitchen_levels(tag))
 
     def cap(self, tag, key, gates=True, loc_state=None):
         """``Rules.cap`` on the location's current state. Between navigation refreshes the context depends on the

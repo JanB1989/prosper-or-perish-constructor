@@ -72,13 +72,47 @@ def test_the_cookshop_line_only_feeds_the_province() -> None:
             assert out > cost, name                                                                 # never below its labour
 
 
-def test_the_public_kitchen_needs_a_town_or_the_province_capital() -> None:
-    text = (BLUEPRINTS / "public_kitchen.yml").read_text(encoding="utf-8-sig")
-    gate = text[text.index("allow = {"):]
-    gate = gate[: gate.index("build_time")]
-    assert "is_province_capital = yes" in gate
-    assert "NOT = { location_rank = location_rank:rural_settlement }" in gate
-    assert "obsolete = cookshop" in text
+def test_kitchens_rise_only_in_the_province_capital() -> None:
+    # 2026-10-10 (Jan): the province capital only (was towns and up or the capital: every town got the whole cap)
+    for key in ("cookshop", "public_kitchen"):
+        text = (BLUEPRINTS / f"{key}.yml").read_text(encoding="utf-8-sig")
+        gate = re.search(r"\ballow = \{(.*?)\n    \t\}", text, re.S)
+        assert gate and gate.group(1).split() == ["is_province_capital", "=", "yes"], key
+        assert "location_potential = {" not in text, key   # an owner change would delete the building
+    assert "obsolete = cookshop" in (BLUEPRINTS / "public_kitchen.yml").read_text(encoding="utf-8-sig")
+
+
+def test_the_kitchen_cap_is_one_budget_per_province() -> None:
+    # 2026-10-10 (Jan): the engine moves province capitals; kitchens left behind keep counting, so a new capital only
+    # builds what is left. Whole building levels, not a raw_modifier counter (that one follows input fulfilment).
+    caps = (MOD_ROOT / "in_game/common/script_values/pp_building_caps.txt").read_text(encoding="utf-8-sig")
+    cap = caps[caps.index("cookshop_max_level = {"):]
+    cap = cap[: cap.index("\n}")]
+    assert "subtract = {" in cap and "this.cookshop_max_level_pp_building_level_province_kitchens_elsewhere" in cap
+    assert 'min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }' in cap
+    helper = caps[caps.index("cookshop_max_level_pp_building_level_province_kitchens_elsewhere = {"):]
+    helper = helper[: helper.index("\n}")]
+    assert "value = pp_location_province_kitchen_levels" in helper and "subtract = pp_location_kitchen_levels" in helper
+    values = (MOD_ROOT / "in_game/common/script_values/pp_food_building_values.txt").read_text(encoding="utf-8-sig")
+    own = values[values.index("pp_location_kitchen_levels = {"):]
+    own = own[: own.index("\n}")]
+    for key in ("cookshop", "public_kitchen"):
+        assert f'"location_building_level(building_type:{key})"' in own
+    province = values[values.index("pp_province_kitchen_levels = {"):]
+    assert "every_location_in_province = {\n\t\tadd = pp_location_kitchen_levels" in province[: province.index("\n}")]
+
+
+def test_the_start_planner_gives_a_province_one_kitchen_budget() -> None:
+    from prosper_or_perish_constructor.worldbuilder.start_rules import Rules
+
+    rules = Rules(ROOT, ROOT / "constructor.toml")
+    capital = {"location_rank": "town", "is_province_capital": True, "buildings": {"cookshop": 2},
+               "modifiers": {}, "pp_location_province_farm_levels": 50, "pp_location_province_victualling_yard_levels": 0,
+               "pp_location_province_kitchen_levels": 2 + 7}
+    # 50 farm levels / 5 = 10, less the 7 kitchen levels left in a former capital
+    assert rules.cap("cookshop", capital) == 3
+    town = {**capital, "is_province_capital": False}
+    assert rules.cap("cookshop", town) == 0
 
 
 def _method(text, key):

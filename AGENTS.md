@@ -164,7 +164,12 @@
   Victualling Yard level in the province (2026-10-04, Jan: raw `local_pp_victualling_yard_levels`,
   `pp_location_province_victualling_yard_levels`; the start planner counts it, and Yard levels its river top-up adds at
   game start are re-checked like farm levels, written first in `pp_start_river_topup`); no base, development,
-  population or rank levels; the `allow` town-or-province-capital rule stays. Small recipes (dish about 0.45 gold of staples + labour at margin
+  population or rank levels. Since 2026-10-10 (Jan) the `allow` is the province capital only, and the cap is one
+  budget per province: it subtracts the kitchen levels standing in the province's other locations
+  (`pp_location_province_kitchen_levels` minus `pp_location_kitchen_levels`, building levels, not a raw counter, which
+  input fulfilment would scale). The engine moves province capitals (highest rank, then most populous; about a quarter
+  of provinces in a 500-year run), so kitchens left behind keep working and a new capital builds only what is left; no
+  cull. Every owner of a split province has its own capital, store and budget. Small recipes (dish about 0.45 gold of staples + labour at margin
   1.08, drink about 0.23 at 1.2; Public Kitchen 0.55 / 0.28) sell their meals for `offset`, so profit is thin and
   store-independent; the food is the flat `local_monthly_food` (15 / 18 per staffed level, scaled by input
   fulfilment), plus `local_food_preservation_efficiency_modifier` +0.04 (Public Kitchen +0.05) and

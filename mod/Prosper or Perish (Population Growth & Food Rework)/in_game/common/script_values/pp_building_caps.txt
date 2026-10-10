@@ -11,6 +11,13 @@
 		desc = "PP_BUILDING_LEVEL_PROVINCE_VICTUALLING_YARDS"
 		value = this.cookshop_max_level_pp_building_level_province_victualling_yards
 	}
+	# 2026-10-10 (Jan): one budget per province. Kitchens only rise in the province capital, but the engine moves the
+	# capital (to the highest-ranked, then most populous location); kitchens left elsewhere keep working and count here.
+	subtract = {
+		desc = "PP_BUILDING_LEVEL_PROVINCE_KITCHENS_ELSEWHERE"
+		value = this.cookshop_max_level_pp_building_level_province_kitchens_elsewhere
+	}
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 # Tooltip helpers of cookshop_max_level (cap_tooltips.py): each is one row of the cap, read through this.
@@ -22,6 +29,11 @@ cookshop_max_level_pp_building_level_province_farms = {
 cookshop_max_level_pp_building_level_province_victualling_yards = {
 	value = pp_location_province_victualling_yard_levels
 	multiply = 0.5
+}
+
+cookshop_max_level_pp_building_level_province_kitchens_elsewhere = {
+	value = pp_location_province_kitchen_levels
+	subtract = pp_location_kitchen_levels
 }
 
 pp_granary_cap = {

@@ -11,3 +11,15 @@ pp_lucky_nations.1 = {
 		add_area_preference = pp_portugal_morocco
 	}
 }
+
+# From 1450 Castile/Spain may take Portuguese land again (vanilla's -0.9 preference stays).
+pp_lucky_nations.2 = {
+	type = country_event outcome = neutral title = empty_text desc = empty_text hidden = yes fire_only_once = yes
+	dynamic_historical_event = { tag = CAS tag = SPA from = 1450.1.1 to = 1836.12.31 monthly_chance = 20 }
+	trigger = {
+		has_area_preference = pp_castile_spare_portugal
+	}
+	immediate = {
+		remove_area_preference = pp_castile_spare_portugal
+	}
+}

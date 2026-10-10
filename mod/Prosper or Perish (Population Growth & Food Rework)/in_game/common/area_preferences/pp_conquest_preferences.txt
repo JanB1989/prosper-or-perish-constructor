@@ -65,12 +65,23 @@ pp_england_french_claims = {
 	}
 }
 
-# Castile leaves France to the French (its land goes to Iberia and the Maghreb).
+# Castile leaves France to the French (its land goes to Iberia and the Maghreb). -1 zeroes the desire: the peace AI
+# keeps every location that scores above zero, so vanilla's -0.9 still let Castile take land in any war.
 pp_castile_no_france_conquest = {
 	preference_type = conquest
-	modifier = -0.9
+	modifier = -1
 
 	region = france_region
+}
+
+# Castile takes no Portuguese land before 1450 (vanilla's castile_no_portugal_conquest is -0.9, x0.1, which the peace
+# AI still takes); removed in 1450 by events/pp_lucky_nations_events.txt.
+pp_castile_spare_portugal = {
+	preference_type = conquest
+	modifier = -1
+
+	area = north_portugal_area
+	area = south_portugal_area
 }
 
 # France: its own kingdom first (pp_lucky_nations.txt); vanilla's france_english_holdings (x100) stays on top.

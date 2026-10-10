@@ -179,6 +179,7 @@ pp_country_finetune_area_preferences = {
 		# Castile: no French land.
 		c:CAS ?= {
 			add_area_preference = pp_castile_no_france_conquest
+			add_area_preference = pp_castile_spare_portugal
 		}
 		# Brandenburg: its marches (pp_lucky_nations.txt).
 		c:BRA ?= {

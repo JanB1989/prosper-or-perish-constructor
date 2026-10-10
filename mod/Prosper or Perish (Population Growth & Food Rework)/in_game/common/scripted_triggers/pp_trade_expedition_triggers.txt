@@ -1,0 +1,284 @@
+﻿# PP trade expeditions (docs/trade_expeditions.md): shared gates. Country scope unless noted; root = the expedition's
+# country.
+
+# A colonial power: a sovereign country with colonial charters and a sea-going realm: 150+ locations or 8+ ports on its
+# capital's continent that face open sea (the same test as the AI colonial charter gate, auto_modifiers/
+# pp_colonial_charter_gate.txt; river channels, lakes, the Black Sea and the Caspian do not count) and a tax base of
+# 75+ (run cf982ee6: the colonizers of 1652 ran 110-1,893; the one-province colonizers 9-26).
+pp_te_colonial_power = {
+	is_subject = no
+	has_advance = colonies
+	has_ports = yes
+	exists = capital
+	country_tax_base >= 75
+	OR = {
+		num_locations >= 150
+		any_port_in_country = {
+			count >= 8
+			continent = root.capital.continent
+			any_neighbor_location = {
+				OR = {
+					topography = ocean
+					topography = deep_ocean
+					topography = coastal_ocean
+					topography = narrows
+					topography = inland_sea
+				}
+				NOT = { area = area:black_sea_area }
+				NOT = { area = area:caspian_sea_area }
+			}
+		}
+	}
+}
+
+# The fleet sails only when the treasury is sound and no great power is at war with the country (a fleet and a
+# garrison cannot be spared then). Applies to the AI and the player alike.
+pp_te_free_to_sail = {
+	NOT = {
+		any_country_at_war_with = { is_great_power = yes }
+	}
+}
+
+# The expedition's leader: an adult of the court who holds no other post at sea.
+pp_te_leader = {
+	is_adult = yes
+	is_ruler = no
+	is_expedition_leader = no
+	has_exploration = no
+}
+
+# Host (country scope) far weaker than the buyer (root): not a great power, under half its tax base.
+pp_te_weak_host = {
+	is_great_power = no
+	country_tax_base < pp_te_root_half_tax_base
+}
+
+# Host (country scope) strong enough to grant only a licence: a great power, or richer than the buyer.
+pp_te_strong_host = {
+	OR = {
+		is_great_power = yes
+		country_tax_base > root.country_tax_base
+	}
+}
+
+# Location scope: a harbour a trade expedition may still go for: a port, not held by root or its subjects, not held by
+# a European country or one of its subjects (Europeans do not sell each other their stations), and no trade-expedition
+# foothold of any country there yet.
+pp_te_site_free = {
+	is_port = yes
+	NOT = { has_variable = pp_te_foothold_of }
+	NOT = { has_variable = pp_te_reserved }
+	NOT = { owner ?= root }
+	NOT = {
+		owner ?= { is_subject_of = root }
+	}
+	NOT = {
+		owner ?= {
+			OR = {
+				capital ?= { continent = continent:europe }
+				overlord ?= { capital ?= { continent = continent:europe } }
+			}
+		}
+	}
+	NOT = {
+		owner ?= { is_at_war_with = root }
+	}
+}
+
+# The Cape route is open to the country: the Cape of Good Hope discovered, or the Age of Reformation.
+pp_te_cape_route_known = {
+	OR = {
+		has_discovered = location:good_hope_cape
+		current_age_or_later = { age = age_4_reformation }
+	}
+}
+
+# Location scope: the historical sites of each expedition (docs/trade_expeditions.md lists the history behind each).
+# West and Central Africa: Arguin 1445, Cacheu 1588, Bissau, the Gambia (James Island 1651), Axim 1515, Accra
+# (Christiansborg 1661), Benin's port Ughoton, the Calabars, Sao Tome 1493, Mpinda/Soyo, Loango, Cabinda, Luanda 1576.
+pp_te_africa_atlantic_site = {
+	OR = {
+		this = location:arguin
+		this = location:gambia
+		this = location:cacheu
+		this = location:bissau
+		this = location:axim
+		this = location:accra
+		this = location:ughoton
+		this = location:new_calabar
+		this = location:calabar
+		this = location:sao_tome
+		this = location:soyo
+		this = location:loango
+		this = location:cabinda_kongo
+		this = location:luanda
+	}
+}
+
+# East Africa: Sofala 1505, Kilwa 1505, Mozambique Island 1507, Mombasa (Fort Jesus 1593), Malindi, Zanzibar,
+# Quelimane, Inhambane, Lamu and Pate.
+pp_te_africa_indian_site = {
+	OR = {
+		this = location:sofala
+		this = location:kilwa_kisiwani
+		this = location:mozambique
+		this = location:mombasa
+		this = location:malindi
+		this = location:zanzibar
+		this = location:quelimane
+		this = location:inhambane
+		this = location:lamu
+		this = location:pate
+	}
+}
+
+# India and Ceylon: Goa 1510, Cochin 1503, Calicut, Cannanore, Cranganore, Quilon, Mangalore, Bhatkal, Bombay 1534/1661,
+# Bassein, Daman, Diu 1535, Surat 1612, Madras 1639, Pondicherry 1674, Karaikal 1739, Negapatam, Masulipatnam, Galle,
+# Colombo (Kotte), Jaffna, Balasore, Hooghly (Satgaon) 1579, Chittagong.
+pp_te_india_site = {
+	OR = {
+		this = location:goa
+		this = location:kochi
+		this = location:kozhikode
+		this = location:kannur
+		this = location:kodungallur
+		this = location:kollam
+		this = location:mangalore
+		this = location:bhatkal
+		this = location:bombay
+		this = location:bassein
+		this = location:daman
+		this = location:diu
+		this = location:surat
+		this = location:madras
+		this = location:pondicherry
+		this = location:karaikal
+		this = location:nagapattinam
+		this = location:masulipatnam
+		this = location:galle
+		this = location:kotte
+		this = location:jaffna
+		this = location:balasore
+		this = location:satgaon
+		this = location:chittagong
+	}
+}
+
+# The Far East: Macau 1557 (Xiangshan), Canton, Quanzhou, Amoy (Tong'an), Ningbo (Yin) and Liampo on the Zhoushan
+# islands (Dinghai), Fort Zeelandia 1624 (Siraya), Keelung 1626 (Ketagalan), Nagasaki 1571 (Nishisonogi), Hirado 1609
+# (Minamimatsuura), Manila 1571, Malacca 1511, Banten and Sunda Kelapa (Batavia 1619).
+pp_te_far_east_site = {
+	OR = {
+		this = location:xiangshan_xinhui
+		this = location:guangzhou
+		this = location:nanan_quanzhou
+		this = location:tongan
+		this = location:yinxian
+		this = location:dinghai
+		this = location:siraya
+		this = location:ketagalan
+		this = location:nishisonogi
+		this = location:minamimatsuura
+		this = location:maynila
+		this = location:malacca
+		this = location:banten
+		this = location:sunda_kelapa
+	}
+}
+
+# A free site of each expedition exists (country scope, root = the country).
+pp_te_any_africa_site = {
+	OR = {
+		location:arguin = { pp_te_site_free = yes }
+		location:gambia = { pp_te_site_free = yes }
+		location:cacheu = { pp_te_site_free = yes }
+		location:bissau = { pp_te_site_free = yes }
+		location:axim = { pp_te_site_free = yes }
+		location:accra = { pp_te_site_free = yes }
+		location:ughoton = { pp_te_site_free = yes }
+		location:new_calabar = { pp_te_site_free = yes }
+		location:calabar = { pp_te_site_free = yes }
+		location:sao_tome = { pp_te_site_free = yes }
+		location:soyo = { pp_te_site_free = yes }
+		location:loango = { pp_te_site_free = yes }
+		location:cabinda_kongo = { pp_te_site_free = yes }
+		location:luanda = { pp_te_site_free = yes }
+		AND = {
+			pp_te_cape_route_known = yes
+			OR = {
+				location:sofala = { pp_te_site_free = yes }
+				location:kilwa_kisiwani = { pp_te_site_free = yes }
+				location:mozambique = { pp_te_site_free = yes }
+				location:mombasa = { pp_te_site_free = yes }
+				location:malindi = { pp_te_site_free = yes }
+				location:zanzibar = { pp_te_site_free = yes }
+				location:quelimane = { pp_te_site_free = yes }
+				location:inhambane = { pp_te_site_free = yes }
+				location:lamu = { pp_te_site_free = yes }
+				location:pate = { pp_te_site_free = yes }
+			}
+		}
+	}
+}
+
+pp_te_any_india_site = {
+	OR = {
+		location:goa = { pp_te_site_free = yes }
+		location:kochi = { pp_te_site_free = yes }
+		location:kozhikode = { pp_te_site_free = yes }
+		location:kannur = { pp_te_site_free = yes }
+		location:kodungallur = { pp_te_site_free = yes }
+		location:kollam = { pp_te_site_free = yes }
+		location:mangalore = { pp_te_site_free = yes }
+		location:bhatkal = { pp_te_site_free = yes }
+		location:bombay = { pp_te_site_free = yes }
+		location:bassein = { pp_te_site_free = yes }
+		location:daman = { pp_te_site_free = yes }
+		location:diu = { pp_te_site_free = yes }
+		location:surat = { pp_te_site_free = yes }
+		location:madras = { pp_te_site_free = yes }
+		location:pondicherry = { pp_te_site_free = yes }
+		location:karaikal = { pp_te_site_free = yes }
+		location:nagapattinam = { pp_te_site_free = yes }
+		location:masulipatnam = { pp_te_site_free = yes }
+		location:galle = { pp_te_site_free = yes }
+		location:kotte = { pp_te_site_free = yes }
+		location:jaffna = { pp_te_site_free = yes }
+		location:balasore = { pp_te_site_free = yes }
+		location:satgaon = { pp_te_site_free = yes }
+		location:chittagong = { pp_te_site_free = yes }
+	}
+}
+
+pp_te_any_far_east_site = {
+	OR = {
+		location:xiangshan_xinhui = { pp_te_site_free = yes }
+		location:guangzhou = { pp_te_site_free = yes }
+		location:nanan_quanzhou = { pp_te_site_free = yes }
+		location:tongan = { pp_te_site_free = yes }
+		location:yinxian = { pp_te_site_free = yes }
+		location:dinghai = { pp_te_site_free = yes }
+		location:siraya = { pp_te_site_free = yes }
+		location:ketagalan = { pp_te_site_free = yes }
+		location:nishisonogi = { pp_te_site_free = yes }
+		location:minamimatsuura = { pp_te_site_free = yes }
+		location:maynila = { pp_te_site_free = yes }
+		location:malacca = { pp_te_site_free = yes }
+		location:banten = { pp_te_site_free = yes }
+		location:sunda_kelapa = { pp_te_site_free = yes }
+	}
+}
+
+# Location scope: a foothold of a trade expedition that its founder still holds (owner, or the owner of the factory).
+pp_te_foothold_held = {
+	has_variable = pp_te_foothold_of
+	OR = {
+		owner ?= var:pp_te_foothold_of
+		any_buildings_in_location = {
+			OR = {
+				building_type = building_type:pp_te_factory
+				building_type = building_type:pp_te_lodge
+			}
+		}
+	}
+}

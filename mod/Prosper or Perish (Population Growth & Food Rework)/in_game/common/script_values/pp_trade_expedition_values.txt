@@ -1,0 +1,171 @@
+﻿# PP trade expeditions (docs/trade_expeditions.md): costs, prices and AI weights. Country scope unless noted.
+#
+# Costs follow the country's own yearly income (yearly_gold), so they stay just as heavy when the colonial powers
+# grow rich later in the game (run cf982ee6: Portugal 113 gold a month in 1452, 254 in 1602, 670 in 1837; England
+# 222 in 1577, 2,537 in 1802). The floors keep a poor or broke country from buying a fortress for loose change.
+
+# Fitting out the fleet (ships, soldiers, masons and the prefabricated stone of the fort), paid at departure.
+pp_te_cost_africa = {
+	value = yearly_gold
+	multiply = 0.35
+	min = 300
+}
+pp_te_cost_india = {
+	value = yearly_gold
+	multiply = 0.5
+	min = 600
+}
+pp_te_cost_far_east = {
+	value = yearly_gold
+	multiply = 0.6
+	min = 900
+}
+
+# Gold the treasury must hold to launch: the fitting out plus the price of the land and a reserve.
+pp_te_reserve_africa = {
+	value = pp_te_cost_africa
+	multiply = 1.6
+}
+pp_te_reserve_india = {
+	value = pp_te_cost_india
+	multiply = 1.6
+}
+pp_te_reserve_far_east = {
+	value = pp_te_cost_far_east
+	multiply = 1.6
+}
+
+# Price paid to the ruler who cedes or leases the site (Christiansborg 3,200 florins 1661, Serampore Rs 50,000 1755,
+# Karaikal 40,000 chakras 1739): a quarter of the buyer's yearly income, at least 150. Root = buyer.
+pp_te_land_price = {
+	value = root.yearly_gold
+	multiply = 0.25
+	min = 150
+}
+
+# Gifts for a licence (firman) to trade from a factory in a great ruler's port.
+pp_te_licence_price = {
+	value = root.yearly_gold
+	multiply = 0.1
+	min = 60
+}
+
+# AI: chance per check that a country whose gates are open looks at a trade expedition (each type is checked every
+# third month; 0.25 = about once a year).
+pp_te_ai_check_chance = {
+	value = 0.25
+}
+
+# AI: every trade expedition starts from the same utility; it only ranks the types that passed in the same month.
+pp_te_utility_base = {
+	value = 30
+}
+
+# Footholds the country holds through trade expeditions (country variable list pp_te_footholds), any region.
+pp_te_num_footholds = {
+	value = 0
+	every_in_list = {
+		variable = pp_te_footholds
+		add = 1
+	}
+}
+
+# Years since this country's last trade expedition of a kind ended (99 if never).
+pp_te_years_since_africa = {
+	value = 99
+	if = {
+		limit = { has_variable = pp_te_last_africa }
+		value = current_year
+		subtract = var:pp_te_last_africa
+	}
+}
+pp_te_years_since_india = {
+	value = 99
+	if = {
+		limit = { has_variable = pp_te_last_india }
+		value = current_year
+		subtract = var:pp_te_last_india
+	}
+}
+pp_te_years_since_far_east = {
+	value = 99
+	if = {
+		limit = { has_variable = pp_te_last_far_east }
+		value = current_year
+		subtract = var:pp_te_last_far_east
+	}
+}
+
+# Regiments the fleet puts ashore as the foothold's garrison (Elmina 1482: about 600 men, half of them soldiers).
+pp_te_garrison_regiments = {
+	value = 2
+	if = {
+		limit = { current_age_or_later = { age = age_4_reformation } }
+		value = 3
+	}
+}
+
+# Site choice (location scope; root = the expedition country): a free coast first, then a weak host, then the
+# richest port; a site next to the country's own footholds counts double (stations follow each other).
+pp_te_site_score = {
+	value = population
+	add = 100
+	if = {
+		limit = { has_owner = no }
+		add = 2000
+	}
+	else_if = {
+		limit = { owner = { pp_te_weak_host = yes } }
+		add = 600
+	}
+	if = {
+		limit = {
+			any_neighbor_location = {
+				owner ?= root
+			}
+		}
+		multiply = 2
+	}
+	if = {
+		limit = {
+			region = { any_location_in_region = { owner ?= root } }
+		}
+		multiply = 1.5
+	}
+}
+
+# Half the buyer's tax base (root): a host below it is a weak host (scripted_triggers pp_te_weak_host).
+pp_te_root_half_tax_base = {
+	value = root.country_tax_base
+	multiply = 0.5
+}
+
+# Chance (percent, before the expedition's own factor) that the host cedes the site for the price. Root = buyer,
+# scope:pp_te_host = the owner, scope:pp_te_target = the site. Weak hosts and hosts at war need the gold (Thanjavur,
+# Fetu, the Ga); great powers and richer hosts rarely sell; never the host's capital or one of its last two towns.
+pp_te_cede_chance = {
+	value = 30
+	if = {
+		limit = { scope:pp_te_host = { pp_te_weak_host = yes } }
+		add = 30
+	}
+	if = {
+		limit = { scope:pp_te_host = { at_war = yes } }
+		add = 15
+	}
+	if = {
+		limit = { scope:pp_te_host = { pp_te_strong_host = yes } }
+		multiply = 0.3
+	}
+	if = {
+		limit = {
+			scope:pp_te_host = {
+				OR = {
+					capital ?= scope:pp_te_target
+					num_locations < 3
+				}
+			}
+		}
+		value = 0
+	}
+}

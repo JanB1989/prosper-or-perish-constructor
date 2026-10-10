@@ -1,0 +1,95 @@
+﻿# PP trade expeditions (docs/trade_expeditions.md): a landing war for a coastal town (scripted_effects/
+# pp_trade_expedition_effects.txt, pp_te_war_effect) gives the attacker a conquest preference for that region. It lets the
+# AI peace deal take the town although it lies away from the attacker's land (peace_treaties/
+# pp_cede_preferred_location.txt needs a preference above 1) and keeps the company's interest in the coast after the war.
+
+pp_te_hold_sahel = {
+	preference_type = conquest
+	modifier = 2.0
+
+	region = sahel_region
+}
+
+pp_te_hold_guinea = {
+	preference_type = conquest
+	modifier = 2.0
+
+	region = guinea_region
+}
+
+pp_te_hold_kongo = {
+	preference_type = conquest
+	modifier = 2.0
+
+	region = kongo_region
+}
+
+pp_te_hold_swahili = {
+	preference_type = conquest
+	modifier = 2.0
+
+	region = swahili_coast_region
+}
+
+pp_te_hold_zimbabwe = {
+	preference_type = conquest
+	modifier = 2.0
+
+	region = zimbabwe_region
+}
+
+pp_te_hold_deccan = {
+	preference_type = conquest
+	modifier = 2.0
+
+	region = deccan_region
+}
+
+pp_te_hold_western_india = {
+	preference_type = conquest
+	modifier = 2.0
+
+	region = western_india_region
+}
+
+pp_te_hold_bengal = {
+	preference_type = conquest
+	modifier = 2.0
+
+	region = bengal_region
+}
+
+pp_te_hold_indochina = {
+	preference_type = conquest
+	modifier = 2.0
+
+	region = indochina_region
+}
+
+pp_te_hold_indonesia = {
+	preference_type = conquest
+	modifier = 2.0
+
+	region = indonesia_region
+}
+
+pp_te_hold_south_china = {
+	preference_type = conquest
+	modifier = 2.0
+
+	region = south_china_region
+}
+
+pp_te_hold_east_china = {
+	preference_type = conquest
+	modifier = 2.0
+
+	region = east_china_region
+}
+
+pp_te_hold_japan = {
+	preference_type = conquest
+	modifier = 2.0
+
+	region = japan_region
+}

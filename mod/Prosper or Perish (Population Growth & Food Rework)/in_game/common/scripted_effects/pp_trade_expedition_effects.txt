@@ -1,0 +1,720 @@
+﻿# PP trade expeditions (docs/trade_expeditions.md): shared effects. Root = the expedition's country.
+# $KIND$ is one of africa, india, far_east.
+
+# Trace for tests and saves: the year of each stage in the country variable pp_te_year_<stage>_<kind>, and the country
+# in the global list pp_te_log_<stage>_<kind> (error.log keeps one line per script location, useless as a trace).
+pp_te_log_effect = {
+	add_to_global_variable_list = {
+		name = pp_te_log_$STAGE$_$KIND$
+		target = root
+	}
+	set_variable = {
+		name = pp_te_year_$STAGE$_$KIND$
+		value = current_year
+	}
+}
+
+# Fitting-out cost, paid at departure.
+pp_te_pay_effect = {
+	add_gold = {
+		value = $COST$
+		multiply = -1
+	}
+}
+
+# Departure: the most populous owned port is the first waypoint; the leader leaves any command he holds.
+pp_te_depart_effect = {
+	ordered_owned_location = {
+		limit = { is_port = yes }
+		order_by = population
+		max = 1
+		save_scope_as = pp_te_departure
+	}
+	scope:expedition = {
+		if = {
+			limit = { exists = expedition_leader }
+			remove_commander = expedition_leader
+		}
+		if = {
+			limit = { exists = scope:pp_te_departure }
+			add_new_waypoint = scope:pp_te_departure
+		}
+		else = {
+			add_new_waypoint = root.capital
+		}
+	}
+}
+
+# Candidate sites of each expedition into the list pp_te_candidates.
+pp_te_build_list_africa = {
+	location:arguin = { add_to_list = pp_te_candidates }
+	location:gambia = { add_to_list = pp_te_candidates }
+	location:cacheu = { add_to_list = pp_te_candidates }
+	location:bissau = { add_to_list = pp_te_candidates }
+	location:axim = { add_to_list = pp_te_candidates }
+	location:accra = { add_to_list = pp_te_candidates }
+	location:ughoton = { add_to_list = pp_te_candidates }
+	location:new_calabar = { add_to_list = pp_te_candidates }
+	location:calabar = { add_to_list = pp_te_candidates }
+	location:sao_tome = { add_to_list = pp_te_candidates }
+	location:soyo = { add_to_list = pp_te_candidates }
+	location:loango = { add_to_list = pp_te_candidates }
+	location:cabinda_kongo = { add_to_list = pp_te_candidates }
+	location:luanda = { add_to_list = pp_te_candidates }
+	if = {
+		limit = { pp_te_cape_route_known = yes }
+		location:sofala = { add_to_list = pp_te_candidates }
+		location:kilwa_kisiwani = { add_to_list = pp_te_candidates }
+		location:mozambique = { add_to_list = pp_te_candidates }
+		location:mombasa = { add_to_list = pp_te_candidates }
+		location:malindi = { add_to_list = pp_te_candidates }
+		location:zanzibar = { add_to_list = pp_te_candidates }
+		location:quelimane = { add_to_list = pp_te_candidates }
+		location:inhambane = { add_to_list = pp_te_candidates }
+		location:lamu = { add_to_list = pp_te_candidates }
+		location:pate = { add_to_list = pp_te_candidates }
+	}
+}
+
+pp_te_build_list_india = {
+	location:goa = { add_to_list = pp_te_candidates }
+	location:kochi = { add_to_list = pp_te_candidates }
+	location:kozhikode = { add_to_list = pp_te_candidates }
+	location:kannur = { add_to_list = pp_te_candidates }
+	location:kodungallur = { add_to_list = pp_te_candidates }
+	location:kollam = { add_to_list = pp_te_candidates }
+	location:mangalore = { add_to_list = pp_te_candidates }
+	location:bhatkal = { add_to_list = pp_te_candidates }
+	location:bombay = { add_to_list = pp_te_candidates }
+	location:bassein = { add_to_list = pp_te_candidates }
+	location:daman = { add_to_list = pp_te_candidates }
+	location:diu = { add_to_list = pp_te_candidates }
+	location:surat = { add_to_list = pp_te_candidates }
+	location:madras = { add_to_list = pp_te_candidates }
+	location:pondicherry = { add_to_list = pp_te_candidates }
+	location:karaikal = { add_to_list = pp_te_candidates }
+	location:nagapattinam = { add_to_list = pp_te_candidates }
+	location:masulipatnam = { add_to_list = pp_te_candidates }
+	location:galle = { add_to_list = pp_te_candidates }
+	location:kotte = { add_to_list = pp_te_candidates }
+	location:jaffna = { add_to_list = pp_te_candidates }
+	location:balasore = { add_to_list = pp_te_candidates }
+	location:satgaon = { add_to_list = pp_te_candidates }
+	location:chittagong = { add_to_list = pp_te_candidates }
+}
+
+pp_te_build_list_far_east = {
+	location:xiangshan_xinhui = { add_to_list = pp_te_candidates }
+	location:guangzhou = { add_to_list = pp_te_candidates }
+	location:nanan_quanzhou = { add_to_list = pp_te_candidates }
+	location:tongan = { add_to_list = pp_te_candidates }
+	location:yinxian = { add_to_list = pp_te_candidates }
+	location:dinghai = { add_to_list = pp_te_candidates }
+	location:siraya = { add_to_list = pp_te_candidates }
+	location:ketagalan = { add_to_list = pp_te_candidates }
+	location:nishisonogi = { add_to_list = pp_te_candidates }
+	location:minamimatsuura = { add_to_list = pp_te_candidates }
+	location:maynila = { add_to_list = pp_te_candidates }
+	location:malacca = { add_to_list = pp_te_candidates }
+	location:banten = { add_to_list = pp_te_candidates }
+	location:sunda_kelapa = { add_to_list = pp_te_candidates }
+}
+
+# Pick the target among the free candidate sites (pp_te_site_score: free coast first, then weak hosts, then rich
+# ports, next to own stations), save it as scope:pp_te_target. Called after pp_te_build_list_$KIND$.
+pp_te_pick_target_effect = {
+	ordered_in_list = {
+		list = pp_te_candidates
+		limit = { pp_te_site_free = yes }
+		order_by = pp_te_site_score
+		max = 1
+		save_scope_as = pp_te_target
+	}
+}
+
+# Start: pay, leave port, choose the site, reserve it, and route the fleet (round the Cape for the Indian Ocean).
+pp_te_start_effect = {
+	pp_te_log_effect = { STAGE = start KIND = $KIND$ }
+	pp_te_pay_effect = { COST = pp_te_cost_$KIND$ }
+	pp_te_depart_effect = yes
+	pp_te_build_list_$KIND$ = yes
+	pp_te_pick_target_effect = yes
+	if = {
+		limit = { exists = scope:pp_te_target }
+		set_variable = {
+			name = pp_te_target_$KIND$
+			value = scope:pp_te_target
+		}
+		scope:pp_te_target = {
+			set_variable = {
+				name = pp_te_reserved
+				value = root
+			}
+		}
+		scope:expedition = {
+			if = {
+				limit = {
+					scope:pp_te_target = {
+						NOT = { region = region:guinea_region }
+						NOT = { region = region:sahel_region }
+						NOT = { region = region:kongo_region }
+					}
+					NOT = { root.capital ?= { continent = continent:asia } }
+				}
+				add_new_waypoint = location:good_hope_cape
+			}
+			add_new_waypoint = scope:pp_te_target
+		}
+	}
+	else = {
+		scope:expedition = { add_new_waypoint = root.capital }
+	}
+}
+
+# Location scope: free the reservation of a site.
+pp_te_unreserve_effect = {
+	if = {
+		limit = { has_variable = pp_te_reserved }
+		remove_variable = pp_te_reserved
+	}
+}
+
+# Arrival. Root = the expedition country. Takes the target the expedition stored at its start; when that harbour was
+# taken meanwhile (another country's foothold, or its owner is now at war with us), the fleet sails on to the best free
+# site of the same expedition. Then the host decides:
+#   no owner                  -> the expedition settles the coast and builds the Castle and Factory
+#   the host cedes the site   -> bought for gold, a 20-year treaty (truce), Castle and Factory, garrison
+#   a far weaker host refuses -> landing and war for the town (some of the time)
+#   the host licenses trade   -> a Factory in its port and trade access; in India and the Far East a trade company
+#   the host refuses          -> the fleet trades its cargo and comes home with nothing
+# CEDE = chance factor for a sale, WAR = chance of a landing against a weak host that will not sell, LICENCE = chance a
+# host grants a factory when it will not sell.
+pp_te_arrive_effect = {
+	if = {
+		limit = { has_variable = pp_te_last_site }
+		remove_variable = pp_te_last_site
+	}
+	if = {
+		limit = { has_variable = pp_te_last_host }
+		remove_variable = pp_te_last_host
+	}
+	if = {
+		limit = { has_variable = pp_te_target_$KIND$ }
+		var:pp_te_target_$KIND$ = {
+			pp_te_unreserve_effect = yes
+			save_scope_as = pp_te_target
+		}
+		remove_variable = pp_te_target_$KIND$
+	}
+	if = {
+		limit = {
+			OR = {
+				NOT = { exists = scope:pp_te_target }
+				scope:pp_te_target = { NOT = { pp_te_site_free = yes } }
+			}
+		}
+		pp_te_build_list_$KIND$ = yes
+		pp_te_pick_target_effect = yes
+	}
+	set_variable = {
+		name = pp_te_last_$KIND$
+		value = current_year
+	}
+	set_variable = {
+		name = pp_te_outcome
+		value = 5
+	}
+	if = {
+		limit = {
+			exists = scope:pp_te_target
+			scope:pp_te_target = { pp_te_site_free = yes }
+		}
+		set_variable = {
+			name = pp_te_last_site
+			value = scope:pp_te_target
+		}
+		scope:pp_te_target = {
+			if = {
+				limit = { has_owner = yes }
+				owner = { save_scope_as = pp_te_host }
+			}
+		}
+		if = {
+			limit = { NOT = { exists = scope:pp_te_host } }
+			set_variable = { name = pp_te_outcome value = 1 }
+			scope:pp_te_target = { pp_te_settle_effect = yes }
+		}
+		else = {
+			set_variable = {
+				name = pp_te_last_host
+				value = scope:pp_te_host
+			}
+			random = {
+				chance = {
+					value = pp_te_cede_chance
+					multiply = $CEDE$
+					max = 90
+				}
+				set_variable = { name = pp_te_outcome value = 2 }
+			}
+			if = {
+				limit = {
+					var:pp_te_outcome > 4.5
+					scope:pp_te_host = { pp_te_weak_host = yes }
+					pp_te_free_to_sail = yes
+					NOT = { has_truce_with = scope:pp_te_host }
+					NOT = { is_at_war_with = scope:pp_te_host }
+				}
+				random = {
+					chance = $WAR$
+					set_variable = { name = pp_te_outcome value = 3 }
+				}
+			}
+			if = {
+				limit = { var:pp_te_outcome > 4.5 }
+				random = {
+					chance = {
+						value = $LICENCE$
+						if = {
+							limit = { scope:pp_te_host = { pp_te_strong_host = no } }
+							add = 15
+						}
+						max = 95
+					}
+					set_variable = { name = pp_te_outcome value = 4 }
+				}
+			}
+			if = {
+				limit = {
+					var:pp_te_outcome > 1.5
+					var:pp_te_outcome < 2.5
+				}
+				pp_te_cede_effect = yes
+			}
+			else_if = {
+				limit = {
+					var:pp_te_outcome > 2.5
+					var:pp_te_outcome < 3.5
+				}
+				pp_te_war_effect = yes
+			}
+			else_if = {
+				limit = {
+					var:pp_te_outcome > 3.5
+					var:pp_te_outcome < 4.5
+				}
+				pp_te_licence_effect = { KIND = $KIND$ }
+			}
+		}
+	}
+	if = {
+		limit = {
+			var:pp_te_outcome > 0.5
+			var:pp_te_outcome < 4.5
+		}
+		pp_te_log_effect = { STAGE = gain KIND = $KIND$ }
+		change_variable = {
+			name = pp_te_n_$KIND$
+			add = 1
+		}
+	}
+	else = {
+		pp_te_log_effect = { STAGE = refused KIND = $KIND$ }
+	}
+	if = {
+		limit = { var:pp_te_outcome < 1.5 }
+		trigger_event_non_silently = pp_trade_expedition.1
+	}
+	else_if = {
+		limit = { var:pp_te_outcome < 2.5 }
+		trigger_event_non_silently = pp_trade_expedition.2
+	}
+	else_if = {
+		limit = { var:pp_te_outcome < 3.5 }
+		trigger_event_non_silently = pp_trade_expedition.3
+	}
+	else_if = {
+		limit = { var:pp_te_outcome < 4.5 }
+		trigger_event_non_silently = pp_trade_expedition.4
+	}
+	else = {
+		trigger_event_non_silently = pp_trade_expedition.5
+	}
+}
+
+# Location scope (the target). Root takes an unclaimed coast.
+pp_te_settle_effect = {
+	change_location_owner = root
+	pp_te_fortify_effect = yes
+}
+
+# Root buys the site from scope:pp_te_host: the price goes to the host, a 20-year treaty of peace (truce) binds both,
+# and the Castle and Factory goes up.
+pp_te_cede_effect = {
+	save_scope_as = pp_te_buyer
+	set_variable = {
+		name = pp_te_price
+		value = pp_te_land_price
+	}
+	add_gold = {
+		value = var:pp_te_price
+		multiply = -1
+	}
+	scope:pp_te_host = {
+		add_gold = root.var:pp_te_price
+	}
+	add_truce_with = {
+		target = scope:pp_te_host
+		years = 20
+		mutual = yes
+	}
+	scope:pp_te_target = {
+		change_location_owner = root
+		pp_te_fortify_effect = yes
+	}
+}
+
+# Location scope: Castle and Factory, the garrison the fleet brought, and the trace. The location's owner is root.
+pp_te_fortify_effect = {
+	construct_building = {
+		building_type = building_type:pp_te_factory
+		instant = yes
+		cost_multiplier = 0
+		cost_multiplier_reason = "game_concept_event"
+	}
+	set_variable = {
+		name = pp_te_foothold_of
+		value = root
+	}
+	set_variable = {
+		name = pp_te_foothold_year
+		value = current_year
+	}
+	add_to_global_variable_list = {
+		name = pp_te_all_footholds
+		target = this
+	}
+	save_scope_as = pp_te_fort_site
+	root = {
+		add_to_variable_list = {
+			name = pp_te_footholds
+			target = scope:pp_te_fort_site
+		}
+	}
+	pp_te_garrison_effect = { COUNT = pp_te_garrison_regiments }
+}
+
+# Location scope: $COUNT$ regiments of root put ashore here at full strength (heavy infantry and shot of the age).
+pp_te_garrison_effect = {
+	root.capital = { save_scope_as = pp_te_home }
+	while = {
+		count = $COUNT$
+		if = {
+			limit = { root = { current_age_or_later = { age = age_4_reformation } } }
+			create_sub_unit_with_owner = {
+				type = a_pikemen
+				owner = root
+				origin = scope:pp_te_home
+			}
+			create_sub_unit_with_owner = {
+				type = a_arquebusiers
+				owner = root
+				origin = scope:pp_te_home
+			}
+		}
+		else = {
+			create_sub_unit_with_owner = {
+				type = a_halberdiers
+				owner = root
+				origin = scope:pp_te_home
+			}
+			create_sub_unit_with_owner = {
+				type = a_early_arquebusiers
+				owner = root
+				origin = scope:pp_te_home
+			}
+		}
+	}
+	# New regiments start without men (old expeditions branch, run pp_exp4); the fleet brings them at full strength.
+	every_unit_in_location = {
+		limit = { owner ?= root }
+		every_sub_unit = {
+			add_subunit_strength_percentage = 1
+		}
+	}
+}
+
+# Landing (Goa 1510): a casus belli on the host for the target's province, war, a conquest preference for the region
+# (so the AI peace deal may take a town away from its own land: peace_treaties/pp_cede_preferred_location.txt), and
+# twice the garrison put ashore at the target.
+pp_te_war_effect = {
+	add_casus_belli = {
+		target = scope:pp_te_host
+		type = casus_belli:cb_conquer_province
+		province = scope:pp_te_target.province
+		years = 20
+	}
+	declare_war_with_cb = {
+		target = scope:pp_te_host
+		type = casus_belli:cb_conquer_province
+		target_province = scope:pp_te_target.province
+	}
+	pp_te_conquest_preference_effect = yes
+	scope:pp_te_target = {
+		set_variable = {
+			name = pp_te_war_of
+			value = root
+		}
+		pp_te_garrison_effect = { COUNT = pp_te_garrison_regiments }
+		pp_te_garrison_effect = { COUNT = pp_te_garrison_regiments }
+	}
+	add_to_global_variable_list = {
+		name = pp_te_all_war_sites
+		target = scope:pp_te_target
+	}
+}
+
+# Licence (Surat 1612, Canton, Hirado): gifts to the host, trade access, a Factory in its port and, in India and the
+# Far East, a trade company that runs the country's factories in that region.
+pp_te_licence_effect = {
+	set_variable = {
+		name = pp_te_price
+		value = pp_te_licence_price
+	}
+	add_gold = {
+		value = var:pp_te_price
+		multiply = -1
+	}
+	scope:pp_te_host = {
+		add_gold = root.var:pp_te_price
+	}
+	create_relation = {
+		first = scope:pp_te_host
+		second = root
+		type = relation_type:trade_access
+	}
+	scope:pp_te_target = {
+		construct_building = {
+			building_type = building_type:pp_te_lodge
+			owner = root
+			instant = yes
+			cost_multiplier = 0
+			cost_multiplier_reason = "game_concept_event"
+		}
+		set_variable = {
+			name = pp_te_foothold_of
+			value = root
+		}
+		set_variable = {
+			name = pp_te_foothold_year
+			value = current_year
+		}
+		add_to_global_variable_list = {
+			name = pp_te_all_footholds
+			target = this
+		}
+	}
+	add_to_variable_list = {
+		name = pp_te_footholds
+		target = scope:pp_te_target
+	}
+	pp_te_company_after_licence_$KIND$ = yes
+}
+
+# Africa: factories stay with the crown; India and the Far East: a trade company runs them.
+pp_te_company_after_licence_africa = {
+	set_variable = { name = pp_te_company_none value = 1 }
+}
+pp_te_company_after_licence_india = {
+	pp_te_trade_company_effect = yes
+}
+pp_te_company_after_licence_far_east = {
+	pp_te_trade_company_effect = yes
+}
+
+# Trade company (as vanilla create_building_subject): a subject that runs the country's foreign buildings in the
+# target's region, headed by the overlord's ruler; one per region. Needs the Factory and trade access the licence set.
+# EU5 1.4 keeps the subject type only while the overlord has an advance that unlocks it (advances/
+# pp_trade_expedition_advances_adjustments.txt).
+pp_te_trade_company_effect = {
+	if = {
+		limit = {
+			scope:pp_te_target = {
+				has_owner = yes
+				NOT = { owner = root }
+			}
+			NOT = {
+				AND = {
+					has_variable_list = trade_company_regions
+					is_target_in_variable_list = {
+						name = trade_company_regions
+						target = scope:pp_te_target.region
+					}
+				}
+			}
+		}
+		ruler ?= { save_scope_as = pp_te_tc_ruler }
+		scope:pp_te_target.region = { save_scope_as = pp_te_tc_region }
+		scope:pp_te_target = {
+			create_building_country_in_location = {
+				region = scope:pp_te_tc_region
+				ruler = scope:pp_te_tc_ruler
+				subject_type = subject_type:trade_company
+				overlord = root
+				save_scope_as = pp_te_tc
+			}
+		}
+		if = {
+			limit = { exists = scope:pp_te_tc }
+			scope:pp_te_tc = {
+				set_variable = {
+					name = trade_company_home_region
+					value = scope:pp_te_tc_region
+				}
+				add_to_variable_list = {
+					name = trade_company_regions
+					target = scope:pp_te_tc_region
+				}
+			}
+			add_to_variable_list = {
+				name = trade_company_regions
+				target = scope:pp_te_tc_region
+			}
+			add_to_variable_list = {
+				name = trade_company_subjects
+				target = scope:pp_te_tc
+			}
+			add_to_global_variable_list = {
+				name = pp_te_all_companies
+				target = scope:pp_te_tc
+			}
+		}
+	}
+}
+
+# A conquest preference for the target's region (area_preferences/pp_trade_expedition_preferences.txt), once.
+pp_te_conquest_preference_effect = {
+	scope:pp_te_target = {
+		if = {
+			limit = { region = region:sahel_region }
+			root = { pp_add_area_preference_once = { preference = pp_te_hold_sahel } }
+		}
+		else_if = {
+			limit = { region = region:guinea_region }
+			root = { pp_add_area_preference_once = { preference = pp_te_hold_guinea } }
+		}
+		else_if = {
+			limit = { region = region:kongo_region }
+			root = { pp_add_area_preference_once = { preference = pp_te_hold_kongo } }
+		}
+		else_if = {
+			limit = { region = region:swahili_coast_region }
+			root = { pp_add_area_preference_once = { preference = pp_te_hold_swahili } }
+		}
+		else_if = {
+			limit = { region = region:zimbabwe_region }
+			root = { pp_add_area_preference_once = { preference = pp_te_hold_zimbabwe } }
+		}
+		else_if = {
+			limit = { region = region:deccan_region }
+			root = { pp_add_area_preference_once = { preference = pp_te_hold_deccan } }
+		}
+		else_if = {
+			limit = { region = region:western_india_region }
+			root = { pp_add_area_preference_once = { preference = pp_te_hold_western_india } }
+		}
+		else_if = {
+			limit = { region = region:bengal_region }
+			root = { pp_add_area_preference_once = { preference = pp_te_hold_bengal } }
+		}
+		else_if = {
+			limit = { region = region:indochina_region }
+			root = { pp_add_area_preference_once = { preference = pp_te_hold_indochina } }
+		}
+		else_if = {
+			limit = { region = region:indonesia_region }
+			root = { pp_add_area_preference_once = { preference = pp_te_hold_indonesia } }
+		}
+		else_if = {
+			limit = { region = region:south_china_region }
+			root = { pp_add_area_preference_once = { preference = pp_te_hold_south_china } }
+		}
+		else_if = {
+			limit = { region = region:east_china_region }
+			root = { pp_add_area_preference_once = { preference = pp_te_hold_east_china } }
+		}
+		else_if = {
+			limit = { region = region:japan_region }
+			root = { pp_add_area_preference_once = { preference = pp_te_hold_japan } }
+		}
+	}
+}
+
+# Lost at sea: the reservation is freed, the cooldown runs from now.
+pp_te_fail_effect = {
+	if = {
+		limit = { has_variable = pp_te_target_$KIND$ }
+		var:pp_te_target_$KIND$ = { pp_te_unreserve_effect = yes }
+		remove_variable = pp_te_target_$KIND$
+	}
+	set_variable = {
+		name = pp_te_last_$KIND$
+		value = current_year
+	}
+	trigger_event_non_silently = pp_trade_expedition.20
+}
+
+# Console check (run file pp_te_dbg.txt, not in the repo): one error.log line per country with its gold, yearly income,
+# the three reserves and which expeditions it could start now (1 = no, 2 = yes; a variable at 0 reads as unset).
+pp_te_debug_report_effect = {
+	save_scope_as = pp_te_dbg_c
+	set_global_variable = { name = pp_te_t_gold value = gold }
+	set_global_variable = { name = pp_te_t_year value = yearly_gold }
+	set_global_variable = { name = pp_te_t_tax value = country_tax_base }
+	set_global_variable = { name = pp_te_t_cp value = 1 }
+	if = {
+		limit = { pp_te_colonial_power = yes }
+		set_global_variable = { name = pp_te_t_cp value = 2 }
+	}
+	set_global_variable = { name = pp_te_t_af value = 1 }
+	if = {
+		limit = { expedition_type:pp_te_africa = { can_start_expedition = scope:pp_te_dbg_c } }
+		set_global_variable = { name = pp_te_t_af value = 2 }
+	}
+	set_global_variable = { name = pp_te_t_in value = 1 }
+	if = {
+		limit = { expedition_type:pp_te_india = { can_start_expedition = scope:pp_te_dbg_c } }
+		set_global_variable = { name = pp_te_t_in value = 2 }
+	}
+	set_global_variable = { name = pp_te_t_fe value = 1 }
+	if = {
+		limit = { expedition_type:pp_te_far_east = { can_start_expedition = scope:pp_te_dbg_c } }
+		set_global_variable = { name = pp_te_t_fe value = 2 }
+	}
+	set_global_variable = { name = pp_te_t_site value = 1 }
+	if = {
+		limit = { pp_te_any_africa_site = yes }
+		set_global_variable = { name = pp_te_t_site value = 2 }
+	}
+	error_log = "PPTEDBG;[SCOPE.sCountry('pp_te_dbg_c').GetTag];gold=[GetGlobalVariable('pp_te_t_gold').GetValue|0];yearly=[GetGlobalVariable('pp_te_t_year').GetValue|0];tax=[GetGlobalVariable('pp_te_t_tax').GetValue|0];cp=[GetGlobalVariable('pp_te_t_cp').GetValue|0];afsite=[GetGlobalVariable('pp_te_t_site').GetValue|0];af=[GetGlobalVariable('pp_te_t_af').GetValue|0];in=[GetGlobalVariable('pp_te_t_in').GetValue|0];fe=[GetGlobalVariable('pp_te_t_fe').GetValue|0]"
+}
+
+# Console trace (run file pp_te_trace.txt): one error.log line per foothold: founder, current owner, year founded, and
+# whether the founder still holds it (2) or not (1).
+pp_te_trace_effect = {
+	save_scope_as = pp_te_tr_l
+	var:pp_te_foothold_of = { save_scope_as = pp_te_tr_f }
+	owner ?= { save_scope_as = pp_te_tr_o }
+	set_global_variable = { name = pp_te_t_held value = 1 }
+	if = {
+		limit = { pp_te_foothold_held = yes }
+		set_global_variable = { name = pp_te_t_held value = 2 }
+	}
+	set_global_variable = { name = pp_te_t_fy value = var:pp_te_foothold_year }
+	set_global_variable = { name = pp_te_t_fort value = 1 }
+	if = {
+		limit = { any_buildings_in_location = { building_type = building_type:pp_te_factory } }
+		set_global_variable = { name = pp_te_t_fort value = 2 }
+	}
+	error_log = "PPTETR;[SCOPE.sLocation('pp_te_tr_l').GetName];founder=[SCOPE.sCountry('pp_te_tr_f').GetTag];owner=[SCOPE.sCountry('pp_te_tr_o').GetTag];year=[GetGlobalVariable('pp_te_t_fy').GetValue|0];held=[GetGlobalVariable('pp_te_t_held').GetValue|0];castle=[GetGlobalVariable('pp_te_t_fort').GetValue|0]"
+}

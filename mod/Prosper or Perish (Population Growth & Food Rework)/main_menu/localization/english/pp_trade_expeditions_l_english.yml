@@ -1,0 +1,43 @@
+﻿l_english:
+
+ # PP trade expeditions (in_game/common/expedition_types/pp_trade_expeditions.txt, events/pp_trade_expedition_events.txt)
+ pp_te_africa: "Castle on the African Coast"
+ pp_te_africa_desc: "Send a squadron with soldiers, masons and dressed stone down the African coast. Where no ruler holds the shore we raise a castle of our own; where one does, we offer gold for the ground, ask leave to trade, or take the town."
+ pp_te_africa_historical_info: "Portugal built the first stone fort on Arguin in 1445 and raised São Jorge da Mina on the Gold Coast in 1482 from stones shipped from Lisbon. The Danes bought the ground for Christiansborg from the Ga king in 1661, the Swedes and Brandenburgers bought theirs from the Fetu and Ahanta chiefs, and Portugal took Kilwa and Mombasa by force. Most of these castles changed hands between Europeans; the strongest stood for centuries."
+ pp_te_africa_outcome_overview: "$BULLET$On an unclaimed coast: the [location|e], a [ShowBuildingTypeName('pp_te_factory')] and soldiers to hold it.\n$BULLET$If the local ruler sells: the [location|e] for gold, a treaty of peace with the seller, the castle and its garrison.\n$BULLET$If a weak ruler refuses: sometimes a landing and war for the town.\n$BULLET$Otherwise leave to trade: a [ShowBuildingTypeName('pp_te_lodge')] and trade access, or nothing."
+
+ pp_te_india: "Factory in the Indies"
+ pp_te_india_desc: "Charter a fleet round the Cape to the coasts of India and Ceylon. A weak raja may sell us a harbour for a fortified factory, a great one may license a trading house in his port, and a stubborn one may be made to yield his town."
+ pp_te_india_historical_info: "The Raja of Cochin welcomed the Portuguese in 1503 as allies against Calicut, and Goa was stormed in 1510. The English traded at Surat by the emperor's farman from 1612, the Danes leased Tranquebar from the Nayak of Thanjavur in 1620, the English received Madras from a local nayak in 1639 and the French bought Pondicherry in 1674."
+ pp_te_india_outcome_overview: "$BULLET$If the local ruler sells: the [location|e], a treaty of peace with the seller, a [ShowBuildingTypeName('pp_te_factory')] and its garrison.\n$BULLET$If a weak ruler refuses: sometimes a landing and war for the town.\n$BULLET$If the ruler licenses trade: a [ShowBuildingTypeName('pp_te_lodge')], trade access and a trade company for the region.\n$BULLET$Or a refusal, and the fleet comes home with its cargo."
+
+ pp_te_far_east: "Embassy to the Far East"
+ pp_te_far_east_desc: "Send an embassy and a fleet to the China Sea. The great courts of the East seldom cede land, but they may lease a peninsula, license a factory in a port or refuse us outright; an island no state rules can be settled and fortified."
+ pp_te_far_east_historical_info: "Portugal stormed Malacca in 1511 and was driven from the Chinese coast in 1521, then leased Macau from 1557 for a yearly ground rent. Nagasaki was opened to the Portuguese by a Christian daimyo in 1571, the Dutch and English traded at Hirado from 1609, and the Dutch built Fort Zeelandia on Taiwan in 1624, where no Chinese state ruled. Later Europeans traded at Canton under licence."
+ pp_te_far_east_outcome_overview: "$BULLET$On a coast no state rules: the [location|e], a [ShowBuildingTypeName('pp_te_factory')] and soldiers to hold it.\n$BULLET$Rarely, a lease of the [location|e] with a treaty of peace, the castle and its garrison.\n$BULLET$More often a licence: a [ShowBuildingTypeName('pp_te_lodge')], trade access and a trade company.\n$BULLET$Or a refusal, and the embassy comes home with nothing."
+
+ pp_te_factory: "Castle and Factory"
+ pp_te_factory_desc: "A stone castle on a harbour we hold, with warehouses, a chapel and a gun battery inside its walls. It shelters the garrison and our ships and draws the trade of the whole coast."
+ pp_te_factory_maintenance: "Castle and Factory Upkeep"
+ pp_te_lodge: "Factory"
+ pp_te_lodge_desc: "A licensed trading house in a foreign ruler's port, where our factors live, buy and store the goods of the land."
+ pp_te_lodge_maintenance: "Factory Upkeep"
+
+ pp_trade_expedition.1.title: "A Castle on a Free Coast"
+ pp_trade_expedition.1.desc: "Our fleet has landed at [pp_te_site.GetName], where no ruler claims the shore. The masons have raised the castle walls from the stone in our holds, the soldiers have taken up their posts and the factors are already trading with the people of the coast."
+ pp_trade_expedition.1.a: "Hoist our flag."
+ pp_trade_expedition.2.title: "A Harbour Bought"
+ pp_trade_expedition.2.desc: "The ruler of [pp_te_host.GetName] has sold us the ground of [pp_te_site.GetName] for a chest of gold and sworn a treaty of peace with us. Our castle and factory stand there now, and its garrison keeps watch over the harbour."
+ pp_trade_expedition.2.a: "A bargain at any price."
+ pp_trade_expedition.3.title: "A Landing at [pp_te_site.GetName]"
+ pp_trade_expedition.3.desc: "The ruler of [pp_te_host.GetName] would neither sell nor let us trade at [pp_te_site.GetName]. Our captain has put the soldiers ashore and we are at war: the town will be ours if the troops can hold out until it falls."
+ pp_trade_expedition.3.a: "To arms."
+ pp_trade_expedition.4.title: "Leave to Trade"
+ pp_trade_expedition.4.desc: "The ruler of [pp_te_host.GetName] will not part with any land, but has granted our merchants leave to trade at [pp_te_site.GetName] and to keep a factory there, in return for gifts and the customs dues."
+ pp_trade_expedition.4.a: "Open the factory."
+ pp_trade_expedition.5.title: "Turned Away"
+ pp_trade_expedition.5.desc: "Our fleet found no harbour that would receive it. The rulers of the coast refused to sell, to lease or to license, and the captain has sold the cargo where he could and turned for home."
+ pp_trade_expedition.5.a: "Another year, another fleet."
+ pp_trade_expedition.20.title: "An Expedition Lost"
+ pp_trade_expedition.20.desc: "News has reached us that our trading fleet was lost at sea or turned back before it reached its goal. The money spent on it is gone."
+ pp_trade_expedition.20.a: "The sea takes its share."

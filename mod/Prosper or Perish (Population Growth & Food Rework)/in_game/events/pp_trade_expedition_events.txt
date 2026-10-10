@@ -1,0 +1,146 @@
+﻿namespace = pp_trade_expedition
+
+# PP trade expeditions (docs/trade_expeditions.md): outcome events. Root = the expedition's country; the site and its
+# former host come from the country variables pp_te_last_site / pp_te_last_host set on arrival
+# (scripted_effects/pp_trade_expedition_effects.txt). The outcome itself is already applied when the event fires.
+
+# 1. Outcome: settle.
+pp_trade_expedition.1 = {
+	type = country_event
+	title = pp_trade_expedition.1.title
+	desc = pp_trade_expedition.1.desc
+	outcome = positive
+	illustration_tags = { 10 = regular }
+
+	immediate = {
+		if = {
+			limit = { has_variable = pp_te_last_site }
+			var:pp_te_last_site = { save_scope_as = pp_te_site }
+		}
+	}
+
+	option = {
+		name = pp_trade_expedition.1.a
+		add_prestige = prestige_mild_bonus
+		ai_chance = { base = 100 }
+	}
+}
+
+# 2. Outcome: cede.
+pp_trade_expedition.2 = {
+	type = country_event
+	title = pp_trade_expedition.2.title
+	desc = pp_trade_expedition.2.desc
+	outcome = positive
+	illustration_tags = { 10 = regular }
+
+	immediate = {
+		if = {
+			limit = { has_variable = pp_te_last_site }
+			var:pp_te_last_site = { save_scope_as = pp_te_site }
+		}
+		if = {
+			limit = { has_variable = pp_te_last_host }
+			var:pp_te_last_host = { save_scope_as = pp_te_host }
+		}
+	}
+
+	option = {
+		name = pp_trade_expedition.2.a
+		add_prestige = prestige_mild_bonus
+		ai_chance = { base = 100 }
+	}
+}
+
+# 3. Outcome: war.
+pp_trade_expedition.3 = {
+	type = country_event
+	title = pp_trade_expedition.3.title
+	desc = pp_trade_expedition.3.desc
+	outcome = neutral
+	illustration_tags = { 10 = regular }
+
+	immediate = {
+		if = {
+			limit = { has_variable = pp_te_last_site }
+			var:pp_te_last_site = { save_scope_as = pp_te_site }
+		}
+		if = {
+			limit = { has_variable = pp_te_last_host }
+			var:pp_te_last_host = { save_scope_as = pp_te_host }
+		}
+	}
+
+	option = {
+		name = pp_trade_expedition.3.a
+		add_prestige = prestige_mild_bonus
+		ai_chance = { base = 100 }
+	}
+}
+
+# 4. Outcome: licence.
+pp_trade_expedition.4 = {
+	type = country_event
+	title = pp_trade_expedition.4.title
+	desc = pp_trade_expedition.4.desc
+	outcome = positive
+	illustration_tags = { 10 = regular }
+
+	immediate = {
+		if = {
+			limit = { has_variable = pp_te_last_site }
+			var:pp_te_last_site = { save_scope_as = pp_te_site }
+		}
+		if = {
+			limit = { has_variable = pp_te_last_host }
+			var:pp_te_last_host = { save_scope_as = pp_te_host }
+		}
+	}
+
+	option = {
+		name = pp_trade_expedition.4.a
+		add_prestige = prestige_mild_bonus
+		ai_chance = { base = 100 }
+	}
+}
+
+# 5. Outcome: refused.
+pp_trade_expedition.5 = {
+	type = country_event
+	title = pp_trade_expedition.5.title
+	desc = pp_trade_expedition.5.desc
+	outcome = negative
+	illustration_tags = { 10 = regular }
+
+	immediate = {
+		if = {
+			limit = { has_variable = pp_te_last_site }
+			var:pp_te_last_site = { save_scope_as = pp_te_site }
+		}
+		if = {
+			limit = { has_variable = pp_te_last_host }
+			var:pp_te_last_host = { save_scope_as = pp_te_host }
+		}
+	}
+
+	option = {
+		name = pp_trade_expedition.5.a
+		add_prestige = prestige_weak_penalty
+		ai_chance = { base = 100 }
+	}
+}
+
+# 20. The fleet is lost at sea.
+pp_trade_expedition.20 = {
+	type = country_event
+	title = pp_trade_expedition.20.title
+	desc = pp_trade_expedition.20.desc
+	outcome = negative
+	illustration_tags = { 10 = regular }
+
+	option = {
+		name = pp_trade_expedition.20.a
+		add_prestige = prestige_weak_penalty
+		ai_chance = { base = 100 }
+	}
+}

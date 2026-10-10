@@ -1,0 +1,251 @@
+﻿# PP trade expeditions (docs/trade_expeditions.md). Three expensive, gated voyages any colonial power can send (AI and
+# player alike) for a station on the coasts of Africa, India and the Far East. Each picks the best free historical
+# site when it sails; on arrival the host decides whether the station is bought, licensed, fought for or refused
+# (scripted_effects/pp_trade_expedition_effects.txt, pp_te_arrive_effect). Outcome events: events/
+# pp_trade_expedition_events.txt.
+
+# 1. Castle on the African Coast (Arguin 1445, Elmina 1482, Christiansborg 1661, Fort Jesus 1593).
+pp_te_africa = {
+	unique = yes
+	repeatable = yes
+	travel_speed = 1
+	dynamic_first_waypoint = yes
+	origin = none
+	travel_mode = sea
+	category = commercial
+	show_end_message = no
+
+	potential = {
+		has_advance = colonies
+		has_ports = yes
+		is_subject = no
+	}
+
+	can_start = {
+		current_age_or_later = { age = age_3_discovery }
+		pp_te_colonial_power = yes
+		NOT = { capital ?= { continent = continent:africa } }
+		pp_te_years_since_africa >= 15
+		OR = {
+			NOT = { has_variable = pp_te_n_africa }
+			var:pp_te_n_africa < 2.5
+		}
+		gold >= pp_te_reserve_africa
+		pp_te_free_to_sail = yes
+		pp_te_any_africa_site = yes
+	}
+
+	leader = { pp_te_leader = yes }
+
+	ai_leader_source_list = {
+		every_character = {
+			limit = { pp_te_leader = yes }
+			add_to_list = source
+		}
+	}
+
+	on_start = {
+		pp_te_start_effect = { KIND = africa }
+	}
+
+	on_arrive_to_new_location = {
+		discover_area = scope:location.area
+	}
+
+	on_end = {
+		pp_te_log_effect = { STAGE = end KIND = africa }
+		pp_te_arrive_effect = { KIND = africa CEDE = 1 WAR = 25 LICENCE = 60 }
+	}
+
+	on_fail = {
+		pp_te_log_effect = { STAGE = fail KIND = africa }
+		pp_te_fail_effect = { KIND = africa }
+	}
+
+	ai_chance_to_check = { value = pp_te_ai_check_chance }
+
+	utility = { value = pp_te_utility_base }
+
+	leader_utility = {
+		value = 1
+		if = {
+			limit = { is_explorer = yes }
+			add = 5
+		}
+		if = {
+			limit = { is_admiral = yes }
+			add = 3
+		}
+	}
+}
+
+# 2. Factory in the Indies (Cochin 1503, Goa 1510, Surat 1612, Tranquebar 1620, Madras 1639, Pondicherry 1674).
+pp_te_india = {
+	unique = yes
+	repeatable = yes
+	travel_speed = 0.9
+	dynamic_first_waypoint = yes
+	origin = none
+	travel_mode = sea
+	category = commercial
+	show_end_message = no
+
+	potential = {
+		has_advance = colonies
+		has_ports = yes
+		is_subject = no
+	}
+
+	can_start = {
+		current_age_or_later = { age = age_3_discovery }
+		pp_te_colonial_power = yes
+		NOT = { capital ?= { continent = continent:asia } }
+		pp_te_cape_route_known = yes
+		OR = {
+			AND = {
+				has_variable = pp_te_n_africa
+				var:pp_te_n_africa > 0.5
+			}
+			current_age_or_later = { age = age_4_reformation }
+		}
+		pp_te_years_since_india >= 20
+		OR = {
+			NOT = { has_variable = pp_te_n_india }
+			var:pp_te_n_india < 2.5
+		}
+		gold >= pp_te_reserve_india
+		pp_te_free_to_sail = yes
+		pp_te_any_india_site = yes
+	}
+
+	leader = { pp_te_leader = yes }
+
+	ai_leader_source_list = {
+		every_character = {
+			limit = { pp_te_leader = yes }
+			add_to_list = source
+		}
+	}
+
+	on_start = {
+		pp_te_start_effect = { KIND = india }
+	}
+
+	on_arrive_to_new_location = {
+		discover_area = scope:location.area
+	}
+
+	on_end = {
+		pp_te_log_effect = { STAGE = end KIND = india }
+		pp_te_arrive_effect = { KIND = india CEDE = 0.8 WAR = 35 LICENCE = 75 }
+	}
+
+	on_fail = {
+		pp_te_log_effect = { STAGE = fail KIND = india }
+		pp_te_fail_effect = { KIND = india }
+	}
+
+	ai_chance_to_check = { value = pp_te_ai_check_chance }
+
+	utility = { value = pp_te_utility_base }
+
+	leader_utility = {
+		value = 1
+		if = {
+			limit = { is_explorer = yes }
+			add = 5
+		}
+		if = {
+			limit = { is_admiral = yes }
+			add = 3
+		}
+	}
+}
+
+# 3. Embassy to the Far East (Malacca 1511, Macau 1557, Nagasaki 1571, Hirado 1609, Zeelandia 1624, Canton).
+pp_te_far_east = {
+	unique = yes
+	repeatable = yes
+	travel_speed = 0.85
+	dynamic_first_waypoint = yes
+	origin = none
+	travel_mode = sea
+	category = commercial
+	show_end_message = no
+
+	potential = {
+		has_advance = colonies
+		has_ports = yes
+		is_subject = no
+	}
+
+	can_start = {
+		current_age_or_later = { age = age_3_discovery }
+		pp_te_colonial_power = yes
+		NOT = { capital ?= { continent = continent:asia } }
+		pp_te_cape_route_known = yes
+		OR = {
+			AND = {
+				has_variable = pp_te_n_india
+				var:pp_te_n_india > 0.5
+			}
+			AND = {
+				current_age_or_later = { age = age_4_reformation }
+				has_variable = pp_te_n_africa
+				var:pp_te_n_africa > 0.5
+			}
+			current_age_or_later = { age = age_5_absolutism }
+		}
+		pp_te_years_since_far_east >= 25
+		OR = {
+			NOT = { has_variable = pp_te_n_far_east }
+			var:pp_te_n_far_east < 1.5
+		}
+		gold >= pp_te_reserve_far_east
+		pp_te_free_to_sail = yes
+		pp_te_any_far_east_site = yes
+	}
+
+	leader = { pp_te_leader = yes }
+
+	ai_leader_source_list = {
+		every_character = {
+			limit = { pp_te_leader = yes }
+			add_to_list = source
+		}
+	}
+
+	on_start = {
+		pp_te_start_effect = { KIND = far_east }
+	}
+
+	on_arrive_to_new_location = {
+		discover_area = scope:location.area
+	}
+
+	on_end = {
+		pp_te_log_effect = { STAGE = end KIND = far_east }
+		pp_te_arrive_effect = { KIND = far_east CEDE = 0.4 WAR = 15 LICENCE = 55 }
+	}
+
+	on_fail = {
+		pp_te_log_effect = { STAGE = fail KIND = far_east }
+		pp_te_fail_effect = { KIND = far_east }
+	}
+
+	ai_chance_to_check = { value = pp_te_ai_check_chance }
+
+	utility = { value = pp_te_utility_base }
+
+	leader_utility = {
+		value = 1
+		if = {
+			limit = { is_explorer = yes }
+			add = 5
+		}
+		if = {
+			limit = { is_admiral = yes }
+			add = 3
+		}
+	}
+}

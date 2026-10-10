@@ -1,0 +1,101 @@
+﻿# PP trade expeditions (docs/trade_expeditions.md): buildings raised only by trade expedition outcomes
+# (scripted_effects/pp_trade_expedition_effects.txt). Never buildable by hand.
+
+# Castle and Factory: the walled trading station on a harbour the expedition's country holds (Elmina, Fort Jesus,
+# Fort St George, Fort Zeelandia). A fort (fort level 3, between a castle and a bastion; indestructible, because forts
+# are what the AI demolishes when it saves money) and a trading house that gives the owner merchant capacity and
+# presence on the coast.
+pp_te_factory = {
+	audio_tier = 3
+	is_special = yes
+	is_indestructible = yes
+	max_levels = 1
+	pop_type = burghers
+	category = trade_category
+
+	employment_size = foreign_trade_employment
+	pop_size_created = foreign_trade_employment
+
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	country_potential = {
+		always = no
+	}
+	allow = {
+		always = no
+	}
+
+	build_time = trade_post_build_time
+
+	unique_production_methods = {
+		pp_te_factory_maintenance = {
+			icon_type = building_type
+			icon = por_feitoria
+			masonry = 0.5
+			naval_supplies = 0.3
+			category = building_maintenance
+		}
+	}
+
+	modifier = {
+		local_merchant_capacity = 1
+		merchant_power_from_building = 2
+		local_maritime_presence = 0.5
+		local_defensive = 0.5
+		local_garrison_size = 1
+	}
+
+	raw_modifier = {
+		fort_level = 3
+		propagating_zone_of_control = yes
+		local_monthly_development = 0.01
+		local_market_access = 0.1
+	}
+}
+
+# Factory: a licensed trading house in a foreign ruler's port (Surat 1612, the Canton factories, Hirado), owned by the
+# expedition's country; the host keeps the town.
+pp_te_lodge = {
+	audio_tier = 3
+	is_special = yes
+	is_foreign = yes
+	max_levels = 1
+	pop_type = burghers
+	category = trade_category
+
+	employment_size = foreign_trade_employment
+	pop_size_created = foreign_trade_employment
+
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	country_potential = {
+		always = no
+	}
+	allow = {
+		always = no
+	}
+
+	build_time = trade_post_build_time
+
+	unique_production_methods = {
+		pp_te_lodge_maintenance = {
+			icon_type = building_type
+			icon = por_feitoria
+			masonry = 0.2
+			naval_supplies = 0.2
+			category = building_maintenance
+		}
+	}
+
+	modifier = {
+		building_owner_maritime_presence = 0.03
+		merchant_capacity_from_building = 0.75
+		merchant_power_from_building = 2
+	}
+}

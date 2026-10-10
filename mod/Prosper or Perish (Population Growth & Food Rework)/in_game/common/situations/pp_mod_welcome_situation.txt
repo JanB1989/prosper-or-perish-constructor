@@ -1,14 +1,14 @@
-﻿# Year-one onboarding: from game start, ends after one in-game year (once per campaign).
+﻿# Welcome: starts at game start for the human players and never ends (the player closes it when done reading).
+# Its panel (gui/panels/situation/pp_mod_welcome_situation.gui) opens the Prosper or Perish section of the Europedia.
 pp_mod_welcome_situation = {
 	monthly_spawn_chance = monthly_spawn_chance_unique
 
 	can_start = {
 		has_global_variable = pp_mod_welcome_situation_pending
-		NOT = { has_global_variable = pp_mod_welcome_situation_completed }
 	}
 
 	can_end = {
-		years_since_situation_start >= 1
+		always = no
 	}
 
 	visible = {
@@ -17,13 +17,6 @@ pp_mod_welcome_situation = {
 
 	on_start = {
 		remove_global_variable = pp_mod_welcome_situation_pending
-	}
-
-	on_ended = {
-		set_global_variable = {
-			name = pp_mod_welcome_situation_completed
-			value = yes
-		}
 	}
 
 	map_color = {

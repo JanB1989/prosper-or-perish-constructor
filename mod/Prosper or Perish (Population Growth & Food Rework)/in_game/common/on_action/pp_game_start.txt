@@ -134,12 +134,10 @@ pp_reduce_specific_rgo = {
 }
 
 # Flags the welcome situation to spawn on the next monthly situation check (once per campaign).
-# Do not re-set pending while the situation is already active (e.g. loading a save mid year-one).
 pp_mod_welcome_situation_game_start = {
 	effect = {
 		if = {
 			limit = {
-				NOT = { has_global_variable = pp_mod_welcome_situation_completed }
 				situation:pp_mod_welcome_situation = {
 					situation_is_active = no
 				}

@@ -1,0 +1,68 @@
+﻿# Prosper or Perish: the welcome situation panel (hand-kept). The game opens gui/panels/situation/<situation key>.gui
+# when the player clicks a situation. An introduction and one button that opens the Prosper or Perish section of the
+# Europedia (encyclopedia_lateralview.gui shows it when pp_encyclopedia_active is yes; pp_filter picks its cards).
+# Built like harvest_situation.gui; texts PP_WELCOME_SIT_* in pp_situations_l_english.yml, no numbers;
+# tests/test_welcome_situation_panel.py.
+
+situation_panel = {
+
+	##################################### MAIN IMAGE #####################################
+
+	# a growing town (tools/build_harvest_situation_art.py), the Population Growth card's painting
+	blockoverride "situation_panel_image" {
+		background = {
+			texture = "gfx/interface/illustrations/situation/pp_mod_welcome_situation.dds"
+		}
+
+		using = scene_fade_vertical_up
+	}
+
+	# the welcome stays until the player closes it: no start date banner over the picture
+	blockoverride "situation_start_date" {}
+
+	##################################### SUBHEADER #####################################
+
+	blockoverride "situation_subheader_content" {}
+
+	# no actions: vanilla's action list evaluates every situation action with the player as actor
+	blockoverride "situation_panel_main_actions" {}
+
+	##################################### MAIN CONTENT #####################################
+
+	blockoverride "situation_panel_main_content" {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 14
+			margin_bottom = 10
+
+			text_multi = {
+				max_width = 480
+				min_width = 480
+				autoresize = yes
+				margin = { 10 4 }
+				align = hcenter|nobaseline
+				using = Font_Type_Flavor
+				fontsize = 15
+				text = "PP_WELCOME_SIT_LEAD"
+			}
+
+			text_multi = {
+				max_width = 460
+				min_width = 460
+				autoresize = yes
+				margin = { 10 0 }
+				text = "PP_WELCOME_SIT_BODY"
+			}
+
+			# the call to action: the Europedia opens on the Prosper or Perish section, all cards
+			button_regular = {
+				size = { 360 44 }
+				text = "PP_WELCOME_SIT_CTA"
+				onclick = "[OpenLateralView('encyclopedia')]"
+				onclick = "[GetVariableSystem.Set('pp_encyclopedia_active', 'yes')]"
+				onclick = "[GetVariableSystem.Set('pp_filter', 'all')]"
+				tooltip = "PP_WELCOME_SIT_CTA_TT"
+			}
+		}
+	}
+}

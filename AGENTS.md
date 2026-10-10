@@ -373,6 +373,10 @@
   sit in its own `text_multi` widgets like the Europedia cards and carry links. The situation's tooltip texts
   (`harvest_situation_desc` / `_monthly`), its map tooltip and its legend stay plain. Picture and icon:
   `tools/build_harvest_situation_art.py`; tests: `tests/test_variable_harvest_situation_panel.py`.
+  The welcome panel (`pp_mod_welcome_situation.gui`, 2026-10-10, not yet seen in game) is an introduction
+  (`PP_WELCOME_SIT_*`) and one button that opens the Europedia on its Prosper or Perish section
+  (`OpenLateralView('encyclopedia')` + the variables `pp_encyclopedia_active` = yes, `pp_filter` = all); the situation
+  never ends, the player closes it. Picture from the same tool; tests: `tests/test_welcome_situation_panel.py`.
 - Situation map legends should use mod-owned plain localization keys, not inherited or generic `LEGEND_KEY_*` keys, because legend UI is sensitive to formatter syntax.
 - In GUI files, do not put `#` formatter markers in `default_format` style names; use the raw style key such as `yellow_titles`.
   Exception found 2026-10-10: EU5 1.4 vanilla writes `default_format = "#yellow_titles"` (382 times, never bare), and the

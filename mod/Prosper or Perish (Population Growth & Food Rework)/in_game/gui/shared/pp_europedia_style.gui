@@ -69,8 +69,9 @@ types pp_europedia_style
 		margin = { 40 4 }
 	}
 
-	# One step of a flow diagram: a paper panel with an icon, a title and a short text. Four steps and three
-	# pp_eu_arrow fit a card row (hbox, margin { 40 0 }, spacing 8). Override "step_icon", "step_title", "step_text".
+	# One step of a flow diagram: a paper panel with an icon, its link caption, a title and a short text. Four steps
+	# and three pp_eu_arrow fit a card row (hbox, margin { 40 0 }, spacing 8). Override "step_icon", "step_link" (a
+	# pp_eu_link naming what the icon shows: the good, building, pop, modifier or concept), "step_title", "step_text".
 	type pp_eu_step = vbox {
 		minimumsize = { 305 236 }
 		maximumsize = { 305 -1 }
@@ -82,6 +83,7 @@ types pp_europedia_style
 			size = { 60 60 }
 			block "step_icon" { texture = "gfx/interface/icons/flat_icons/effect.dds" }
 		}
+		block "step_link" {}
 		text_single = {
 			using = Font_Type_Headers
 			fontsize = 16
@@ -104,6 +106,56 @@ types pp_europedia_style
 		size = { 30 30 }
 		texture = "gfx/interface/buttons/flats/button_simple_right.dds"
 		using = color_gold
+	}
+
+	# Every icon on a card names what it shows with a hoverable game link under it (Jan, 2026-10-10: the blue or golden
+	# text players know they can hover): [ShowGoodsName('x')|e], [ShowBuildingTypeName('x')|e], [ShowPopTypeName('x')],
+	# [ShowModifier('x')] (the actual modifier, its tooltip lists the live effects) or a concept link. Set raw_text.
+	type pp_eu_link = text_multi {
+		max_width = 277
+		autoresize = yes
+		align = hcenter|nobaseline
+		fontsize = 15
+		raw_text = ""
+	}
+
+	# An icon with its link caption, for rows, panels and entries (fixed 100 wide, icon on top). Override
+	# "item_icon" (texture, optionally alpha), "item_overlay" (e.g. a pp_eu_medallion_goods when the icon is a
+	# medallion frame), "item_size" (the icon's size inside its 48 box, e.g. to show more or less) and "item_link".
+	type pp_eu_item = vbox {
+		minimumsize = { 100 -1 }
+		maximumsize = { 100 -1 }
+		layoutpolicy_vertical = expanding
+		spacing = 4
+
+		widget = {
+			size = { 48 48 }
+			icon = {
+				parentanchor = center
+				block "item_size" { size = { 100% 100% } }
+				block "item_icon" { texture = "gfx/interface/icons/flat_icons/effect.dds" }
+			}
+			block "item_overlay" {}
+		}
+		text_multi = {
+			max_width = 100
+			min_width = 100
+			autoresize = yes
+			align = hcenter|nobaseline
+			fontsize = 14
+			block "item_link" { raw_text = "" }
+		}
+		expand = {}
+	}
+
+	# The arrow between items (input -> building -> output), level with their icons.
+	type pp_eu_item_arrow = vbox {
+		layoutpolicy_vertical = expanding
+		widget = {
+			size = { 30 48 }
+			pp_eu_arrow = { parentanchor = center }
+		}
+		expand = {}
 	}
 
 	# One step of a scale (worst to best, left to right): a 64 px medallion over a label. Seven fit a card row
@@ -137,8 +189,8 @@ types pp_europedia_style
 		parentanchor = center
 	}
 
-	# A labelled row of goods icons: a fixed-width label, then the icons (each with the goods name as tooltip).
-	# Override "row_label" (a text line) and "row_goods" (pp_eu_goods icons).
+	# A labelled row of goods or buildings: a fixed-width label, then pp_eu_item (ten fit a line; a longer row puts
+	# a vbox of hbox lines in "row_goods"). Override "row_label" (a text line) and "row_goods".
 	type pp_eu_goods_row = hbox {
 		layoutpolicy_horizontal = expanding
 		spacing = 12
@@ -155,17 +207,16 @@ types pp_europedia_style
 		}
 		expand = {}
 	}
+	# Bare icons without a link caption: only for decoration that names nothing (cards use pp_eu_item for icons).
 	type pp_eu_goods = icon {
 		size = { 40 40 }
 	}
-
-	# A bigger icon for panels and entries (tooltip = the building or goods key).
 	type pp_eu_icon = icon {
 		size = { 52 52 }
 	}
 
 	# A wide paper panel for side-by-side comparisons: two fit a card row (hbox, margin { 40 0 }), with a pp_eu_sign
-	# between them. Override "panel_icons" (icons in a row), "panel_title" and "panel_text".
+	# between them. Override "panel_icons" (pp_eu_item, pp_eu_item_arrow), "panel_title" and "panel_text".
 	type pp_eu_panel = vbox {
 		minimumsize = { 640 200 }
 		maximumsize = { 640 -1 }
@@ -206,16 +257,17 @@ types pp_europedia_style
 	}
 
 	# One entry of a list (e.g. the food buildings): a paper strip with a fixed icon column on the left (a small
-	# input -> building -> output flow, or a row of buildings) and a gold title over the text on the right. Entries
-	# stack in a vbox (margin { 40 0 }, spacing 8). Override "entry_icons", "entry_title" and "entry_text".
+	# input -> building -> output flow of pp_eu_item and pp_eu_item_arrow, at most three items, or a row of up to
+	# three buildings) and a gold title over the text on the right. Entries stack in a vbox (margin { 40 0 },
+	# spacing 8). Override "entry_icons", "entry_title" and "entry_text".
 	type pp_eu_entry = hbox {
 		margin = { 18 12 }
 		spacing = 20
 		using = bg_paper_card
 
 		hbox = {
-			minimumsize = { 300 -1 }
-			maximumsize = { 300 -1 }
+			minimumsize = { 390 -1 }
+			maximumsize = { 390 -1 }
 			spacing = 6
 			expand = {}
 			block "entry_icons" {}
@@ -224,7 +276,7 @@ types pp_europedia_style
 		vbox = {
 			spacing = 4
 			text_single = {
-				size = { 1010 26 }
+				size = { 920 26 }
 				align = left|nobaseline
 				using = Font_Type_Headers
 				fontsize = 17
@@ -233,8 +285,42 @@ types pp_europedia_style
 				block "entry_title" { text = "" }
 			}
 			text_multi = {
-				max_width = 1010
-				min_width = 1010
+				max_width = 920
+				min_width = 920
+				autoresize = yes
+				block "entry_text" { text = "" }
+			}
+		}
+	}
+
+	# pp_eu_entry with room for four items and two arrows (two inputs -> building -> output). Keep one width per list.
+	type pp_eu_entry_wide = hbox {
+		margin = { 18 12 }
+		spacing = 20
+		using = bg_paper_card
+
+		hbox = {
+			minimumsize = { 500 -1 }
+			maximumsize = { 500 -1 }
+			spacing = 6
+			expand = {}
+			block "entry_icons" {}
+			expand = {}
+		}
+		vbox = {
+			spacing = 4
+			text_single = {
+				size = { 810 26 }
+				align = left|nobaseline
+				using = Font_Type_Headers
+				fontsize = 17
+				default_format = "#yellow_titles"
+				autoresize = no
+				block "entry_title" { text = "" }
+			}
+			text_multi = {
+				max_width = 810
+				min_width = 810
 				autoresize = yes
 				block "entry_text" { text = "" }
 			}

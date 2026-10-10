@@ -4,11 +4,13 @@ Vanilla has no topic picture wider than 1080 px, which looks soft stretched over
 landscape from the location view's panorama layers instead (2654 px, sharp), graded to its topic:
 
 - harvest: farmland under a late-summer grade (Variable Harvests);
-- arable_land: forest on the left giving way to cleared fields and farmsteads on the right (Arable Land);
-- food: a market town among its fields on a river (Food);
-- food_production: farmsteads among their fields above a fishing coast (Food Production);
+- arable_land: forest under mountains giving way to cleared fields and longhouses on the right (Arable Land);
+- food: a Deccan town with its domed stores among its fields on a plateau (Food);
+- food_production: rice paddies and a temple town in wet lowland (Food Production);
 - labor: a busy city with mill chimneys smoking between its houses (Labor);
 - logistics: a crowded bazaar city on a river in dry hills (Logistics (Market Access)).
+
+Every card gets its own landscape (Jan, 2026-10-10): a culture, climate and scene no other banner uses.
 
 Rerun after a game update:
 
@@ -80,32 +82,32 @@ BANNERS: dict[str, Banner] = {
     ), _late_summer),
     "arable_land": Banner((
         Layer("sky/sky_regular2_metadata_os2654x440_d0x0.dds"),
-        Layer("topology/hills/hills_metadata_os2654x440_d0x15.dds"),
+        Layer("topology/mountains/mountains_metadata_os2654x440_d0x0.dds"),
         Layer("ground3/continental/continental_forest_ground3_metadata_os2654x440_d0x62.dds"),
-        Layer("ground3/continental/continental_grassland_ground3_metadata_os2654x440_d0x66.dds", (950, 1500)),
-        Layer("ground3/farmlands_metadata_os2654x440_d0x102.dds", (1000, 1550)),
-        Layer("settlement1/north_german/rural/north_german_rural11_metadata_os2654x440_d0x92.dds", (1000, 1200)),
+        Layer("ground3/farmlands_metadata_os2654x440_d0x102.dds", (1000, 1500)),
+        Layer("settlement1/iroquois/rural/iroquois_rural1_metadata_os2654x440_d190x140.dds", dx=1150),
+        Layer("settlement2/iroquois/rural/iroquois_rural2_metadata_os2654x440_d346x108.dds", dx=1250),
         Layer("ground1/continental/continental_grassland_ground1_metadata_os2654x440_d0x310.dds"),
     ), _natural),
     "food": Banner((
-        Layer("sky/sky_regular_metadata_os2654x440_d0x0.dds"),
-        Layer("topology/hills/hills_metadata_os2654x440_d0x15.dds"),
-        Layer("ground3/continental/continental_grassland_ground3_metadata_os2654x440_d0x66.dds"),
+        Layer("sky/sky_regular2_metadata_os2654x440_d0x0.dds"),
+        Layer("topology/plateau/plateau_metadata_os2654x440_d0x62.dds"),
+        Layer("ground3/subtropical/subtropical_grassland_ground3_metadata_os2654x440_d0x76.dds"),
         Layer("ground3/farmlands_metadata_os2654x440_d0x102.dds"),
-        Layer("settlement2/north_german/town/north_german_town2_metadata_os2654x440_d0x54.dds"),
-        Layer("settlement1/north_german/town/north_german_town1_metadata_os2654x440_d0x106.dds"),
-        Layer("water/river/river_metadata_os2654x440_d0x190.dds"),
-        Layer("ground1/continental/continental_grassland_ground1_metadata_os2654x440_d0x310.dds"),
+        Layer("settlement2/deccan/town/deccan_town2_metadata_os2654x440_d0x44.dds"),
+        Layer("settlement1/deccan/town/deccan_town1_metadata_os2654x440_d0x124.dds"),
+        Layer("ground1/subtropical/subtropical_grassland_ground1_metadata_os2654x440_d0x288.dds"),
     ), _natural),
     "food_production": Banner((
         Layer("sky/sky_regular2_metadata_os2654x440_d0x0.dds"),
         Layer("topology/hills/hills_metadata_os2654x440_d0x15.dds"),
-        Layer("ground3/oceanic/oceanic_grassland_ground3_metadata_os2654x440_d0x68.dds"),
+        Layer("ground3/subtropical/subtropical_grassland_ground3_metadata_os2654x440_d0x76.dds"),
         Layer("ground3/farmlands_metadata_os2654x440_d0x102.dds"),
-        Layer("settlement1/north_german/rural/north_german_rural11_metadata_os2654x440_d0x92.dds"),
-        Layer("water/river_ocean/river_ocean_metadata_os2654x440_d0x208.dds"),
-        Layer("ground1/oceanic/oceanic_grassland_ground1_metadata_os2654x440_d0x288.dds"),
-    ), _natural, pano_scale=1.4),
+        Layer("settlement2/asian/rural/asian_rural2_metadata_os2654x440_d100x94.dds"),
+        Layer("settlement1/asian/town/asian_town1_metadata_os2654x440_d0x86.dds"),
+        Layer("water/river_wetlands/river_wetlands_metadata_os2654x440_d0x108.dds"),
+        Layer("ground1/subtropical/subtropical_grassland_ground1_metadata_os2654x440_d0x288.dds"),
+    ), _natural),
     "labor": Banner((
         Layer("sky/sky_regular_metadata_os2654x440_d0x0.dds"),
         Layer("topology/hills/hills_metadata_os2654x440_d0x15.dds"),

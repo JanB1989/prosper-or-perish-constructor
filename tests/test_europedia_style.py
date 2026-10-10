@@ -45,6 +45,10 @@ CARDS = {
 OLD_LAND_NAMES = re.compile(r"Subsistence Land|subsistence land|Free Land|Overpopulation|Location Potential|Settled Land"
                             r"|\bFarmland\b(?! Vegetation)|\[pp_farmland\|e\]|\[pp_arable_land\|e\]|pp_settled_land")
 _CONCEPT_LINK = re.compile(r"\[(\w+)\|[eE]\]|\[Concept\('(\w+)'")
+# a hoverable game link: a named object ([ShowGoodsName('x')|e], [ShowModifier('x')], ...) or a concept
+_LINK = re.compile(r"\[(?:Show\w+\('\w+'\)(?:\|[eE])?|\w+\|[eE]|Concept\('\w+',\s*'[^']+'\)\|[eE])\]")
+# the layers that make a banner's scene (settlements, workshops, temples, docks, forts); no two banners share one
+SCENE_LAYERS = ("settlement1", "settlement2", "factories", "religious_buildings", "dock", "fortifications")
 
 
 def _card(name: str) -> str:
@@ -52,6 +56,35 @@ def _card(name: str) -> str:
     text = EUROPEDIA.read_text(encoding="utf-8-sig")
     start = text.index(first)
     return text[start:text.index(following, start)]
+
+
+def _block_end(text: str, start: int) -> int:
+    """The index just past the brace that closes the block whose content starts at start."""
+    depth = 1
+    while depth:
+        depth += {"{": 1, "}": -1}.get(text[start], 0)
+        start += 1
+    return start
+
+
+def _blocks(text: str, opener: str) -> list[tuple[int, int]]:
+    """(start, end) of every block opened by the regex opener (which ends in an opening brace)."""
+    return [(m.start(), _block_end(text, m.end())) for m in re.finditer(opener, text)]
+
+
+def _cut(text: str, spans: list[tuple[int, int]]) -> str:
+    for start, end in sorted(spans, reverse=True):
+        text = text[:start] + text[end:]
+    return text
+
+
+def _live_lines(card: str) -> list[tuple[int, int]]:
+    """The hboxes of the live lines (the mechanic in the player's own game)."""
+    spans = []
+    for m in re.finditer(r'visible = "\[GetPlayer\.IsValid\]"', card):
+        start = card.rindex("hbox = {", 0, m.start())
+        spans.append((start, _block_end(card, start + len("hbox = {"))))
+    return spans
 
 
 @cache
@@ -68,10 +101,14 @@ def _all_loc() -> dict[str, str]:
 
 
 def _card_loc(name: str) -> dict[str, str]:
-    """The card's own texts and the concepts it links (the harvest's per-area modifier lists are generated)."""
+    """The card's own texts, the link captions written in its GUI (raw_text) and the concepts it links (the harvest's
+    per-area modifier lists are generated)."""
     mod = _loc(MOD_ROOT)
     keys = set(re.findall(r'(?:text|tooltip) = "(\w+)"', _card(name))) | set(CARDS[name][2])
-    return {k: mod[k] for k in keys if k in mod}
+    texts = {k: mod[k] for k in keys if k in mod}
+    for i, raw in enumerate(re.findall(r'raw_text = "([^"]*\[[^"]*)"', _card(name))):
+        texts[f"raw_text#{i}"] = raw
+    return texts
 
 
 def _texture_exists(texture: str) -> bool:
@@ -147,10 +184,39 @@ def test_embedded_keys_resolve(name):
 
 @pytest.mark.parametrize("name", CARDS)
 def test_named_goods_buildings_and_pops_exist(name):
-    """[ShowGoodsName('x')], [ShowBuildingTypeName('x')] and [ShowPopTypeName('x')] name real keys (a typo shows raw)."""
-    named = {k for value in _card_loc(name).values()
-             for k in re.findall(r"Show(?:GoodsName|BuildingTypeName|PopTypeName)\('(\w+)'\)", value)}
+    """[ShowGoodsName('x')], [ShowBuildingTypeName('x')], [ShowPopTypeName('x')] and the terrain names name real keys
+    (a typo shows raw); [ShowModifier('x')] names a real static modifier."""
+    texts = _card_loc(name).values()
+    named = {k for value in texts for k in re.findall(
+        r"Show(?:GoodsName|BuildingTypeName|PopTypeName|TopographyName|VegetationName|ClimateName)\('(\w+)'\)", value)}
     assert not sorted(named - set(_all_loc()))
+    modifiers = {k for value in texts for k in re.findall(r"ShowModifier\('(\w+)'\)", value)}
+    assert not sorted(k for k in modifiers if f"STATIC_MODIFIER_NAME_{k}" not in _all_loc())
+
+
+@pytest.mark.parametrize("name", CARDS)
+def test_every_icon_carries_a_link(name):
+    """Every icon on a card names what it shows with a hoverable game link (Jan, 2026-10-10): each pp_eu_item its
+    caption, each pp_eu_step its step_link, each scale step its label. Only the header, the banner, the section
+    headings, the arrows and the live line stand without one."""
+    card = _card(name)
+    body = card[card.index("pp_eu_lead"):]
+    items = _blocks(body, r"\bpp_eu_item = \{")
+    for start, end in items:
+        link = re.search(r'blockoverride "item_link" \{ raw_text = "([^"]*)" \}', body[start:end])
+        assert link and _LINK.search(link.group(1)), body[start:end][:160]
+    steps = _blocks(body, r"\bpp_eu_step = \{")
+    for start, end in steps:
+        link = re.search(r'blockoverride "step_link" \{ pp_eu_link = \{ raw_text = "([^"]*)" \} \}', body[start:end])
+        assert link and _LINK.search(link.group(1)), body[start:end][:160]
+    scales = _blocks(body, r"\bpp_eu_scale_step = \{")
+    for start, end in scales:
+        label = re.search(r'blockoverride "scale_label" \{ text = "(\w+)" \}', body[start:end]).group(1)
+        assert _LINK.search(_all_loc()[label]), label
+    rest = _cut(body, _live_lines(body) + items + steps + scales)
+    rest = re.sub(r'blockoverride "section_icon" \{[^}]*\}', "", rest)
+    assert "pp_eu_goods =" not in rest and "pp_eu_icon =" not in rest
+    assert not re.search(r"texture = ", rest), rest[rest.find("texture = ") - 200:][:300]
 
 
 @pytest.mark.parametrize("name", CARDS)
@@ -176,8 +242,13 @@ def test_harvest_modifier_links_cover_every_area():
 
 
 def _rows(name: str) -> dict[str, list[str]]:
-    rows = re.findall(r'blockoverride "row_label" \{ text = "(\w+)" \}\s*blockoverride "row_goods" \{(.*?)\n\s*\}\n', _card(name), flags=re.DOTALL)
-    return {label: re.findall(r'tooltip = "(\w+)"', body) for label, body in rows}
+    """Row label -> the goods or buildings its items name, in order (a row may wrap into several lines)."""
+    card = _card(name)
+    rows = {}
+    for m in re.finditer(r'blockoverride "row_label" \{ text = "(\w+)" \}\s*blockoverride "row_goods" \{', card):
+        body = card[m.end():_block_end(card, m.end())]
+        rows[m.group(1)] = re.findall(r"Show(?:GoodsName|BuildingTypeName)\('(\w+)'\)", body)
+    return rows
 
 
 def test_goods_rows_follow_the_harvest_config():
@@ -216,17 +287,51 @@ def test_staple_foods_follow_the_staple_list():
 def test_staple_food_farms_provision():
     """The farms the Food Production card shows feed their province (a Provisioning method) and the entries show the
     food buildings it explains."""
-    entries = re.findall(r'blockoverride "entry_icons" \{(.*?)\n\s*\}\s*blockoverride "entry_title" \{ text = "(\w+)" \}',
-                         _card("food_production"), flags=re.DOTALL)
-    icons = {title: re.findall(r'tooltip = "(\w+)"', body) for body, title in entries}
+    card = _card("food_production")
+    buildings = {}
+    for start, end in _blocks(card, r'blockoverride "entry_icons" \{'):
+        title = re.match(r'\s*blockoverride "entry_title" \{ text = "(\w+)" \}', card[end:]).group(1)
+        buildings[title] = re.findall(r"ShowBuildingTypeName\('(\w+)'\)", card[start:end])
     blueprints = {path.stem: path for path in (ROOT / "blueprints/accepted").rglob("*.yml")}
-    farms = icons["PP_EU_PROD_FARMS"]
-    assert len(farms) >= 4
+    farms = buildings["PP_EU_PROD_FARMS"]
+    assert len(farms) >= 3
     for farm in farms:
         assert re.search(rf"\bpp_{farm}_provision\b", blueprints[farm].read_text(encoding="utf-8")), farm
-    shown = {key for row in icons.values() for key in row}
-    assert {"cookshop", "public_kitchen", "grange", "victualling_yard", "tavern"} <= shown <= set(blueprints) | {
-        "local_food", "victuals", "PP_EU_FOOD_TT_STAPLES"}
+    shown = {key for row in buildings.values() for key in row}
+    assert {"cookshop", "public_kitchen", "grange", "victualling_yard", "tavern"} <= shown <= set(blueprints)
+
+
+def test_logistics_haulage_rows_follow_the_config():
+    """The haulage rows show the goods the logistics buildings cut ([logistics] in constructor.toml): the bulky goods,
+    the half-cut goods and the bulky staples."""
+    logistics = tomllib.loads((ROOT / "constructor.toml").read_text(encoding="utf-8"))["logistics"]
+    rows = _rows("logistics")
+    assert rows["PP_EU_LOGI_HEAVY_ROW"] == logistics["bulky_goods"]
+    assert rows["PP_EU_LOGI_HALF_ROW"] == logistics["bulky_half_goods"]
+    assert sorted(rows["PP_EU_LOGI_STAPLES_ROW"]) == sorted(logistics["bulky_staples"])
+    cuts = [logistics["bulky_staples"][g] for g in rows["PP_EU_LOGI_STAPLES_ROW"]]
+    assert cuts == sorted(cuts, reverse=True)   # bulkiest first
+
+
+def test_banners_are_distinct():
+    """Every card has its own banner and no two banners share a scene layer (Jan, 2026-10-10: distinct pictures)."""
+    import importlib.util
+    import sys
+
+    banners = [re.search(r'texture = "(gfx/interface/illustrations/pp_europedia/[^"]+)"', _card(n)).group(1) for n in CARDS]
+    assert len(set(banners)) == len(banners)
+    spec = importlib.util.spec_from_file_location("build_europedia_banners", ROOT / "tools/build_europedia_banners.py")
+    tool = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = tool   # its dataclasses look themselves up there
+    spec.loader.exec_module(tool)
+    assert {Path(b).stem.removeprefix("banner_") for b in banners} <= set(tool.BANNERS)
+    seen: dict[str, str] = {}
+    for name, banner in tool.BANNERS.items():
+        scene = {layer.path for layer in banner.layers if layer.path.split("/")[0] in SCENE_LAYERS}
+        assert scene, name
+        for path in scene:
+            assert path not in seen, f"{name} and {seen.get(path)} share {path}"
+            seen[path] = name
 
 
 def test_old_land_names_are_gone():

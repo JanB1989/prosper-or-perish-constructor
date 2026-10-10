@@ -19,6 +19,8 @@ The types live in `in_game/gui/shared/pp_europedia_style.gui`; a card is the usu
    Vanilla has nothing that wide (its illustrations are 1080 x 440 and look soft stretched), so each banner is
    composed by `tools/build_europedia_banners.py` from the location view's 2654 px panorama layers, graded to the
    topic. Landscape only: a vanilla illustration laid over it never matched its horizon or style (Jan, 2026-10-09).
+   Every card has its own landscape (Jan, 2026-10-10): pick a culture, climate and scene no other banner uses (the
+   test refuses two banners sharing a settlement, workshop, temple, dock or fort layer).
    Override `blockoverride "banner_texture"` with the card's banner.
 2. `pp_eu_lead` - one short paragraph in the flavour type: what the mechanic is, in plain words. It is also the
    concept's own tooltip text, so it must read well alone. It is the first text of the card (the web export starts there).
@@ -29,13 +31,21 @@ The types live in `in_game/gui/shared/pp_europedia_style.gui`; a card is the usu
    - a flow: an hbox (`margin = { 40 0 } spacing = 8`) of up to four `pp_eu_step` with `pp_eu_arrow` between;
    - a scale: an hbox (`spacing = 10`) of up to seven `pp_eu_scale_step`, worst to best, each a medallion and a
      concept link whose tooltip holds the details;
-   - goods rows: `pp_eu_goods_row` with a two-line label (`#T name#!\nverdict`) and `pp_eu_goods` icons (tooltip = the
-     goods key; alpha 0.55 for goods the mechanic leaves alone);
-   - a comparison: an hbox (`margin = { 40 0 }`) of two `pp_eu_panel` (icons, title, text) with a `pp_eu_sign`
+   - goods rows: `pp_eu_goods_row` with a two-line label (`#T name#!\nverdict`) and `pp_eu_item`s (ten to a line; a
+     longer row wraps into a vbox of hbox lines; alpha 0.55 on the icon for goods the mechanic leaves alone);
+   - a comparison: an hbox (`margin = { 40 0 }`) of two `pp_eu_panel` (items, title, text) with a `pp_eu_sign`
      ("or", "+") or a two-way arrow between them, e.g. store running low vs store full;
    - an equation: `pp_eu_step`s with `pp_eu_sign` "–" and "=" between, e.g. grows – eats = surplus;
-   - a list: a vbox (`margin = { 40 0 } spacing = 8`) of `pp_eu_entry`, each a fixed icon column (a small
-     input -> building -> output flow of `pp_eu_icon` and `pp_eu_arrow`, or a row of buildings) next to a title and text.
+   - a list: a vbox (`margin = { 40 0 } spacing = 8`) of `pp_eu_entry` (up to three items) or `pp_eu_entry_wide`
+     (four), each a fixed icon column (a small input -> building -> output flow of `pp_eu_item` and
+     `pp_eu_item_arrow`, or a row of buildings) next to a title and text.
+   **Every icon carries a hoverable game link** (Jan, 2026-10-10: the blue or golden text players know they can
+   hover, not an icon with a plain tooltip): a `pp_eu_item` shows its link under the icon (`item_link`), a
+   `pp_eu_step` under its icon (`step_link` with a `pp_eu_link`), a scale step in its label. Link the real thing:
+   `[ShowGoodsName('x')|e]`, `[ShowBuildingTypeName('x')|e]`, `[ShowPopTypeName('x')]`, the terrain names
+   (`ShowTopographyName`, `ShowVegetationName`, `ShowClimateName`), `[ShowModifier('x')]` for a state the game
+   applies as a modifier (its tooltip lists the live effects), else a concept. Only the header, banner, section
+   headings, arrows and the live line stand without one; the test enforces it.
 5. Section order that reads well: what happens (flow) -> how strong (scale) -> what it touches -> where to see it in
    game. Keep a card on its own mechanic; the neighbouring mechanics get a link in the text, not a section of their
    own (Jan dropped the harvest card's "Where It Leads" flow, 2026-10-09).
@@ -43,8 +53,8 @@ The types live in `in_game/gui/shared/pp_europedia_style.gui`; a card is the usu
    the mechanic best (Food: comparisons; Food Production: an equation and a building list). Concise wins.
 
 Use the mod's own visual language where one exists (harvest medallions = the location view's harvest chip frames).
-`tests/test_europedia_style.py` checks textures, keys, links, data functions and that the text has no numbers; extend
-it when a new card adopts the style.
+`tests/test_europedia_style.py` checks textures, keys, links, data functions, that every icon carries a link, that
+banners differ and that the text has no numbers; add a new card to its CARDS when it adopts the style.
 
 ## Concept display order
 

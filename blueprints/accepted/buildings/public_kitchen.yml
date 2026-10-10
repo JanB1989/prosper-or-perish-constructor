@@ -22,6 +22,7 @@ building:
         - pp_public_kitchen_boreal_hunter_stew_serve
         - pp_public_kitchen_ika_mata_serve
         - pp_public_kitchen_kheer_serve
+        - pp_public_kitchen_khong_bah_png_serve
         - pp_public_kitchen_livestock_pottage_serve
         - pp_public_kitchen_pemmican_serve
         - pp_public_kitchen_camel_stew_serve
@@ -118,6 +119,17 @@ building:
     			output = 0.586
     			category = building_maintenance
     		}
+    		# Hokkien braised pork on rice (Fujian, Taiwan): pork, soy sauce, a little rock sugar
+    		pp_public_kitchen_khong_bah_png_serve = {
+    			rice = 0.25
+    			livestock = 0.1
+    			legumes = 0.065
+    			sugar = 0.013
+    			manual_labor = 0.039
+    			produced = offset
+    			output = 0.586
+    			category = building_maintenance
+    		}
     		# --- EUROPE ---
     		pp_public_kitchen_livestock_pottage_serve = {
     			wheat = 0.22
@@ -137,6 +149,7 @@ building:
     			output = 0.59
     			category = building_maintenance
     		}
+
     		pp_public_kitchen_camel_stew_serve = {
     			camels = 0.15
     			salt = 0.014
@@ -145,7 +158,6 @@ building:
     			output = 0.59
     			category = building_maintenance
     		}
-
     		pp_public_kitchen_labskaus_serve = {
     			potato = 0.069
     			fish = 0.11
@@ -338,6 +350,7 @@ localization:
     pp_public_kitchen_honey_gruel_serve: Serve Honeyed Gruel
     pp_public_kitchen_ika_mata_serve: Serve Ika Mata
     pp_public_kitchen_kheer_serve: Serve Kheer
+    pp_public_kitchen_khong_bah_png_serve: Serve Khong Bah Png
     pp_public_kitchen_khichdi_serve: Serve Khichdi
     pp_public_kitchen_labskaus_serve: Serve Labskaus
     pp_public_kitchen_liquor: Liquor

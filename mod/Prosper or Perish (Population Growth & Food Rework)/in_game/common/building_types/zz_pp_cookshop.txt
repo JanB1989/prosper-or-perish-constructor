@@ -157,7 +157,6 @@ price = pp_cookshop_price
 			output = 0.487
 			category = building_maintenance
 		}
-
 		pp_cookshop_mutton_and_pease_serve = {
 			icon_type = building_type
 			icon = cookshop
@@ -169,6 +168,7 @@ price = pp_cookshop_price
 			output = 0.487
 			category = building_maintenance
 		}
+
 		pp_cookshop_surstromming_serve = {
 			icon_type = building_type
 			icon = cookshop
@@ -178,6 +178,19 @@ price = pp_cookshop_price
 			manual_labor = 0.061
 			produced = offset
 			output = 0.487
+			category = building_maintenance
+		}
+		# Hokkien braised pork on rice (Fujian, Taiwan): pork, soy sauce, a little rock sugar
+		pp_cookshop_khong_bah_png_serve = {
+			icon_type = building_type
+			icon = cookshop
+			rice = 0.19
+			livestock = 0.08
+			legumes = 0.05
+			sugar = 0.01
+			manual_labor = 0.062
+			produced = offset
+			output = 0.488
 			category = building_maintenance
 		}
 

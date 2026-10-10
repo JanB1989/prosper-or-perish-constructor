@@ -78,6 +78,19 @@ increase_per_level_cost = 0.10
 			output = 0.586
 			category = building_maintenance
 		}
+		# Hokkien braised pork on rice (Fujian, Taiwan): pork, soy sauce, a little rock sugar
+		pp_public_kitchen_khong_bah_png_serve = {
+			icon_type = building_type
+			icon = public_kitchen
+			rice = 0.25
+			livestock = 0.1
+			legumes = 0.065
+			sugar = 0.013
+			manual_labor = 0.039
+			produced = offset
+			output = 0.586
+			category = building_maintenance
+		}
 		# --- EUROPE ---
 		pp_public_kitchen_livestock_pottage_serve = {
 			icon_type = building_type
@@ -101,6 +114,7 @@ increase_per_level_cost = 0.10
 			output = 0.59
 			category = building_maintenance
 		}
+
 		pp_public_kitchen_camel_stew_serve = {
 			icon_type = building_type
 			icon = public_kitchen
@@ -111,7 +125,6 @@ increase_per_level_cost = 0.10
 			output = 0.59
 			category = building_maintenance
 		}
-
 		pp_public_kitchen_labskaus_serve = {
 			icon_type = building_type
 			icon = public_kitchen

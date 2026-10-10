@@ -30,6 +30,7 @@ building:
         - pp_cookshop_fish_congee_serve
         - pp_cookshop_mutton_and_pease_serve
         - pp_cookshop_surstromming_serve
+        - pp_cookshop_khong_bah_png_serve
         - pp_cookshop_kheer_serve
         - pp_cookshop_meat_tajine_serve
         - pp_cookshop_boreal_hunter_stew_serve
@@ -185,7 +186,6 @@ building:
     			output = 0.487
     			category = building_maintenance
     		}
-
     		pp_cookshop_mutton_and_pease_serve = {
     			wool = 0.12
     			legumes = 0.057
@@ -195,6 +195,7 @@ building:
     			output = 0.487
     			category = building_maintenance
     		}
+
     		pp_cookshop_surstromming_serve = {
     			fish = 0.24
     			millet = 0.025
@@ -202,6 +203,17 @@ building:
     			manual_labor = 0.061
     			produced = offset
     			output = 0.487
+    			category = building_maintenance
+    		}
+    		# Hokkien braised pork on rice (Fujian, Taiwan): pork, soy sauce, a little rock sugar
+    		pp_cookshop_khong_bah_png_serve = {
+    			rice = 0.19
+    			livestock = 0.08
+    			legumes = 0.05
+    			sugar = 0.01
+    			manual_labor = 0.062
+    			produced = offset
+    			output = 0.488
     			category = building_maintenance
     		}
 
@@ -343,6 +355,7 @@ localization:
     pp_cookshop_honey_gruel_serve: Serve Honeyed Gruel
     pp_cookshop_ika_mata_serve: Serve Ika Mata
     pp_cookshop_kheer_serve: Serve Kheer
+    pp_cookshop_khong_bah_png_serve: Serve Khong Bah Png
     pp_cookshop_khichdi_serve: Serve Khichdi
     pp_cookshop_labskaus_serve: Serve Labskaus
     pp_cookshop_liquor: Liquor

@@ -48,6 +48,28 @@ pp_france_papacy_peace = {
 	}
 }
 
+# Castile/Spain and Portugal never plan a war on each other before 1450 (on top of pp_iberian_peace, which holds only
+# while the Reconquista or the Maghreb is open).
+pp_iberian_early_peace = {
+	attacker_potential = {
+		OR = {
+			tag = CAS
+			tag = SPA
+			tag = POR
+		}
+	}
+	target_trigger = {
+		OR = {
+			tag = CAS
+			tag = SPA
+			tag = POR
+		}
+	}
+	never_attack = {
+		current_year < 1450
+	}
+}
+
 # Muscovy and Smolensk leave each other alone until 1400, so Muscovy grows on the small principalities first.
 pp_muscovy_smolensk_peace = {
 	attacker_potential = {

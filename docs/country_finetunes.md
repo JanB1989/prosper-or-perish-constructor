@@ -93,4 +93,15 @@ Hand-tuned changes for single countries, one entry each: what and why.
     `england_conquer_ireland` from the start (vanilla 1450);
   - Castile: `pp_castile_no_france_conquest` and, until 1450, `pp_castile_spare_portugal` at -1 (zero desire: the peace
     AI keeps every location scoring above zero, so vanilla's -0.9 `castile_no_portugal_conquest` still let Castile take
-    Portuguese land, run 5e45c44e: Portugal 67 -> 11 by 1437).
+    Portuguese land, run 5e45c44e: Portugal 67 -> 11 by 1437); France likewise `pp_france_spare_iberia` (-1 on Iberia)
+    until 1450 (run 5f9f0232: France took 48 Castilian locations in an alliance war despite the planning peace). The
+    1450 removals are in events/pp_lucky_nations_events.txt.
+  Never-attack rules only stop planned wars; alliance and event wars still happen, so the land a winner may take is
+  steered by the -1 preferences.
+  Observer runs 1337-1437 (historical personalities, normal aggression), locations at 1387/1437 (start ENG 138,
+  FRA 163, MOS 26, BRA 27, TUR 23, POR 67, CAS 244):
+  baseline 3610b1ce ENG 245/229, FRA 158/228, MOS 28/125, BRA 44/28, TUR 134/185, POR 67/68, CAS 318/337;
+  v1 d2733167 206/246, 177/336, 153/267, 35/47, 149/294, 67/64, 277/277;
+  v2 5e45c44e 248/243, 141/249, 166/233, 27/51, 88/114, 48/11, 314/344;
+  v3 cacbb6a6 192/302, 187/158, 164/286, 38/55, 159/230, 67/68, 309/349;
+  v4 5f9f0232 211/236, 209/299, 99/255, 38/94, 110/262, 67/68, 322/228.

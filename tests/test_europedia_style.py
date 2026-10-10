@@ -55,8 +55,6 @@ OLD_LAND_NAMES = re.compile(r"Subsistence Land|subsistence land|Free Land|Overpo
 _CONCEPT_LINK = re.compile(r"\[(\w+)\|[eE]\]|\[Concept\('(\w+)'")
 # a hoverable game link: a named object ([ShowGoodsName('x')|e], [ShowModifier('x')], ...) or a concept
 _LINK = re.compile(r"\[(?:Show\w+\('\w+'\)(?:\|[eE])?|\w+\|[eE]|Concept\('\w+',\s*'[^']+'\)\|[eE])\]")
-# the layers that make a banner's scene (settlements, workshops, temples, docks, forts); no two banners share one
-SCENE_LAYERS = ("settlement1", "settlement2", "factories", "religious_buildings", "dock", "fortifications")
 
 
 def _card(name: str) -> str:
@@ -613,25 +611,23 @@ def test_population_growth_scale_follows_the_store():
     assert float(re.search(r"\blocal_population_growth = (-?[\d.]+)", block).group(1)) < decline["town"]
 
 
-def test_banners_are_distinct():
-    """Every card has its own banner and no two banners share a scene layer (Jan, 2026-10-10: distinct pictures)."""
+def test_banners_are_paintings_of_their_own():
+    """Every card's banner is cut from its own painting (assets/europedia_paintings, Jan 2026-10-10: a picture of the
+    page's topic in the loading screens' style, no stitched landscapes), and every strip fits its painting."""
     import importlib.util
-    import sys
+
+    from PIL import Image
 
     banners = [re.search(r'texture = "(gfx/interface/illustrations/pp_europedia/[^"]+)"', _card(n)).group(1) for n in CARDS]
     assert len(set(banners)) == len(banners)
     spec = importlib.util.spec_from_file_location("build_europedia_banners", ROOT / "tools/build_europedia_banners.py")
     tool = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = tool   # its dataclasses look themselves up there
     spec.loader.exec_module(tool)
-    assert {Path(b).stem.removeprefix("banner_") for b in banners} <= set(tool.BANNERS)
-    seen: dict[str, str] = {}
-    for name, banner in tool.BANNERS.items():
-        scene = {layer.path for layer in banner.layers if layer.path.split("/")[0] in SCENE_LAYERS}
-        assert scene, name
-        for path in scene:
-            assert path not in seen, f"{name} and {seen.get(path)} share {path}"
-            seen[path] = name
+    assert {Path(b).stem.removeprefix("banner_") for b in banners} <= set(tool.PAINTINGS)
+    for name, top in tool.PAINTINGS.items():
+        with Image.open(tool.PAINTINGS_DIR / f"{name}.jpg") as painting:
+            assert painting.width >= 1450, name   # sharp at the card's width
+            assert top + round(painting.width * tool.H / tool.W) <= painting.height, name
 
 
 def test_old_land_names_are_gone():

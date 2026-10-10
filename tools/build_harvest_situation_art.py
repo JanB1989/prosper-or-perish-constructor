@@ -1,7 +1,7 @@
 """Build the art of the Variable Harvests situation (harvest_situation): its panel picture and its icon.
 
-- Panel picture: the harvest card's fat year, lean year farmland (tools/build_europedia_banners.py, banner "harvest";
-  the cut holds the turn from the sunlit harvest into the storm) cut to
+- Panel picture: the Variable Harvests painting (assets/europedia_paintings/harvest.jpg, the harvest card's banner:
+  harvesters binding sheaves while a storm front rolls in) cut to
   vanilla's situation picture size, 1080 x 440 (shown about 540 x 220 at the top of the situation panel,
   in_game/gui/panels/situation/harvest_situation.gui). Without it the panel showed vanilla's default picture, a
   burning town.
@@ -32,23 +32,22 @@ PICTURE = "gfx/interface/illustrations/situation/harvest_situation.dds"   # unde
 ICON = "gfx/interface/icons/situations/harvest_situation.dds"             # under the mod's in_game, like the welcome icon
 ICON_SOURCE = "game/main_menu/gfx/interface/icons/alerts_icons/weather_system.dds"
 SIZE = (1080, 440)
-# the part of the 2900 x 500 banner the picture shows: the same aspect as SIZE, two farmsteads, sun turning to storm
-CROP_LEFT = 1080
+# where the picture starts in the painting (full height, the same aspect as SIZE): the storm, the harvesters, the cart
+CROP_LEFT = 160
 
 
 def _banners():
     spec = importlib.util.spec_from_file_location("build_europedia_banners", ROOT / "tools/build_europedia_banners.py")
     tool = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = tool   # its dataclasses look themselves up there
+    sys.modules[spec.name] = tool
     spec.loader.exec_module(tool)
     return tool
 
 
-def picture(vanilla: Path) -> Image.Image:
-    tool = _banners()
-    wide = tool.banner(vanilla / tool.INTERFACE, "harvest")
-    width = round(wide.height * SIZE[0] / SIZE[1])
-    return wide.crop((CROP_LEFT, 0, CROP_LEFT + width, wide.height)).resize(SIZE, Image.LANCZOS)
+def picture() -> Image.Image:
+    full = _banners().painting("harvest")
+    width = round(full.height * SIZE[0] / SIZE[1])
+    return full.crop((CROP_LEFT, 0, CROP_LEFT + width, full.height)).resize(SIZE, Image.LANCZOS).convert("RGBA")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -57,7 +56,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--no-write", action="store_true", help="only the preview")
     args = parser.parse_args(argv)
     vanilla = vanilla_root(ROOT, ROOT / "constructor.toml")
-    image = picture(vanilla)
+    image = picture()
     if args.preview:
         args.preview.mkdir(parents=True, exist_ok=True)
         image.convert("RGB").save(args.preview / "harvest_situation.png")

@@ -15,12 +15,12 @@ Instructions for Cursor when editing game concept definitions or the Europedia.
 
 The types live in `in_game/gui/shared/pp_europedia_style.gui`; a card is the usual header tab, then:
 
-1. `pp_eu_banner` - an edge-to-edge picture, 2900 x 500 DDS shown at 1450 x 250 (sharp at large UI scales).
-   Vanilla has nothing that wide (its illustrations are 1080 x 440 and look soft stretched), so each banner is
-   composed by `tools/build_europedia_banners.py` from the location view's 2654 px panorama layers, graded to the
-   topic. Landscape only: a vanilla illustration laid over it never matched its horizon or style (Jan, 2026-10-09).
-   Every card has its own landscape (Jan, 2026-10-10): pick a culture, climate and scene no other banner uses (the
-   test refuses two banners sharing a settlement, workshop, temple, dock or fort layer).
+1. `pp_eu_banner` - an edge-to-edge picture, 2900 x 500 DDS shown at 1450 x 250. Every banner is a painting of the
+   page's topic in the style of the game's loading screens: people doing the thing the page explains, each card its
+   own culture and scene (Jan, 2026-10-10: no stitched landscapes; a landscape says nothing about labor). The
+   paintings are in the constructor's `assets/europedia_paintings/` (its README has the brief they were painted from,
+   by Codex's image generation with the loading screens as style references); `tools/build_europedia_banners.py`
+   cuts each card's strip (the start row is set per painting so faces stay in frame) and writes the DDS.
    Override `blockoverride "banner_texture"` with the card's banner.
 2. `pp_eu_lead` - one short paragraph in the flavour type: what the mechanic is, in plain words. It is also the
    concept's own tooltip text, so it must read well alone. It is the first text of the card (the web export starts there).

@@ -76,3 +76,21 @@ Hand-tuned changes for single countries, one entry each: what and why.
   Ottomans and every country ruling from Anatolia count x0.25. At start the conquest preference `pp_balkans_go_north`
   (Carpathians, x2; `on_action/pp_country_finetunes.txt`). Why: Jan, tired of the Ottomans dying; Hungary gets a
   second front while it pushes east into Kiev.
+- **Lucky nations: expansion aims for the first century** (2026-10-10, Jan, branch `lucky-nations-expansion`, tested in
+  observer runs, see below). England, France, Muscovy, Brandenburg, the Ottomans, Portugal, Castile (and successors).
+  `ai_scripted_expansion_score/target pp_lucky_nations.txt`:
+  - all seven: a target whose army, or whose overlord's army, is over 1.25x their own counts x0.25; while at war every
+    new target counts x0.25 (one war at a time);
+  - France and the Papacy never plan a war on each other (run 3610b1ce: France lost 31 locations to the Papacy);
+    France and Castile, and Castile and Portugal, not before 1450; Muscovy and Smolensk not before 1400 (3610b1ce:
+    Muscovy lost 24 of 40 locations to Smolensk by 1357);
+  - France +30 on every independent country ruling from the France region (Bourbon, Armagnac, Brittany, Foix ...;
+    conquest preference `pp_france_consolidate_realm` x5); Brandenburg +30 on every country ruling from the
+    Brandenburg, Pomerania and Mecklenburg areas (`pp_brandenburg_marches` x3); Portugal +20 on countries ruling from
+    the Maghreb from 1400 (`pp_portugal_morocco` x3 on the Moroccan core, events/pp_lucky_nations_events.txt);
+  - England: vanilla's `england_conquer_france` (x15 on all of France) is removed at start for `pp_england_french_claims`
+    (x4 on Gascony, Guyenne, Poitou, Normandy, Picardy, only where England or its subjects still hold land) and vanilla's
+    `england_conquer_ireland` from the start (vanilla 1450);
+  - Castile: `pp_castile_no_france_conquest` and, until 1450, `pp_castile_spare_portugal` at -1 (zero desire: the peace
+    AI keeps every location scoring above zero, so vanilla's -0.9 `castile_no_portugal_conquest` still let Castile take
+    Portuguese land, run 5e45c44e: Portugal 67 -> 11 by 1437).

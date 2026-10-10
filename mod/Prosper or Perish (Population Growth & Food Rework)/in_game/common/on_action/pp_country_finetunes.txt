@@ -171,6 +171,11 @@ pp_country_finetune_area_preferences = {
 				remove_area_preference = england_conquer_france
 			}
 			add_area_preference = pp_england_french_claims
+			# vanilla's Ireland preference from the start (vanilla: from 1450)
+			if = {
+				limit = { NOT = { has_area_preference = england_conquer_ireland } }
+				add_area_preference = england_conquer_ireland
+			}
 		}
 		# France: its own kingdom first.
 		c:FRA ?= {

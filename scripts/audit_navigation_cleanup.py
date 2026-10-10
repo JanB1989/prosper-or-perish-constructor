@@ -49,7 +49,7 @@ def main():
              *MOD.glob('in_game/common/scripted_effects/pp_navigation*.txt'),
              *MOD.glob('in_game/common/scripted_triggers/pp_navigation*.txt'),
              *MOD.glob('in_game/common/on_action/pp_navigation*.txt'),
-             MOD/'in_game/gfx/map/map_modes/pp_river_navigation.txt']
+             MOD/'in_game/gfx/map/map_modes/pp_navigable_rivers.txt']
     for path in scripts:parse_file(path)
     roads=parse_file(MOD/'in_game/common/road_types/pp_navigation.txt')
     levels={e.key:next(v.value for v in e.value.entries if v.key=='level') for e in roads.entries}

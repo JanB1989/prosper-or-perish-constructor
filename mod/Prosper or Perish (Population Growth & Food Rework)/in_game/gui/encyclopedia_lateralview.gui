@@ -2061,7 +2061,7 @@
                                                     hbox = {
                                                         margin = { 40 0 }
                                                         margin_top = 8
-                                                        icon = { texture = "gfx/interface/icons/map_modes/pp_river_navigation.dds" size = { 45 45 } }
+                                                        icon = { texture = "gfx/interface/icons/map_modes/pp_navigable_rivers.dds" size = { 45 45 } }
                                                         text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_navigable_rivers" }
                                                     }
                                                 }
@@ -2100,7 +2100,7 @@
 
                                                 # ---- Not every reach is open: the four kinds of waterway ----
                                                 pp_eu_section = {
-                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/pp_river_navigation.dds" }
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/pp_navigable_rivers.dds" }
                                                     blockoverride "section_title" { text = "PP_EU_NAV_REACHES" }
                                                 }
                                                 pp_eu_text = { text = "PP_EU_NAV_REACHES_DESC" }

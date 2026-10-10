@@ -88,13 +88,13 @@ def test_legacy_compensation_contract_requires_rebuild(tmp_path):
 def test_map_mode_emits_only_documented_refresh_counters_and_native_levels(tmp_path):
     from prosper_or_perish_constructor.worldbuilder.navigation_map_modes import write_map_modes
     write_map_modes(tmp_path,{'tiles':{'water':{'state':'improvable'}},'edges':[{'from':'water','to':'bank','shore':True,'state':'improvable'}]})
-    text=(tmp_path/'in_game/gfx/map/map_modes/pp_river_navigation.txt').read_text()
+    text=(tmp_path/'in_game/gfx/map/map_modes/pp_navigable_rivers.txt').read_text()
     assert 'LocationRoadsChanged' in text
     assert 'LocationBuildingChanged' not in text
-    assert 'has_location_modifier = river_flowing_through_5' in text
+    assert 'pp_navigation_has_river = yes' in text
     assert 'is_port = yes' in text
 
-    loc=(tmp_path/'main_menu/localization/english/pp_river_navigation_map_l_english.yml').read_text()
+    loc=(tmp_path/'main_menu/localization/english/pp_navigable_rivers_map_l_english.yml').read_text()
     assert chr(92)*2+'n' not in loc
 
     effects=(tmp_path/'in_game/common/scripted_effects/pp_navigation_map.txt').read_text()
@@ -143,5 +143,29 @@ def test_map_mode_difficult_routes_count_both_water_endpoints(tmp_path):
     effects=(tmp_path/'in_game/common/scripted_effects/pp_navigation_map.txt').read_text()
     assert 'location:b = { set_variable = { name = pp_navigation_map_state value = 5 }' in effects
     assert 'else = { set_variable = { name = pp_navigation_map_state value = 5 } }' in effects.split('pp_navigation_map_refresh_b = {')[1]
-    loc=(tmp_path/'main_menu/localization/english/pp_river_navigation_map_l_english.yml').read_text()
-    assert 'existing coastal port may face the sea' in loc
+    loc=(tmp_path/'main_menu/localization/english/pp_navigable_rivers_map_l_english.yml').read_text()
+    assert 'PP_NAVMAP_DIFFICULT_OPEN_TT' in loc and 'PP_NAVMAP_DIFFICULT_INLAND_TT' in loc
+
+
+def test_navigable_rivers_map_mode_ships_for_players():
+    """The shipped map mode: in Geography beside vanilla's Rivers (no index = Rivers' group), its own icon, the concept
+    of the same key points at it, every tooltip and legend key has a text, the old debug view is gone, and the cut-off
+    waterways are striped."""
+    import re
+    from pathlib import Path
+    from PIL import Image
+    from prosper_or_perish_constructor.worldbuilder.navigation_map_modes import MAP_MODE
+    mod=Path(__file__).resolve().parents[1]/'mod/Prosper or Perish (Population Growth & Food Rework)'
+    text=(mod/f'in_game/gfx/map/map_modes/{MAP_MODE}.txt').read_text(encoding='utf-8-sig')
+    assert text.count('{')==text.count('}')
+    assert 'category = geography' in text and 'index =' not in text
+    assert 'secondary_map_color = {' in text and 'var:pp_navigation_ocean_connected = 1' in text
+    loc=(mod/f'main_menu/localization/english/{MAP_MODE}_map_l_english.yml').read_text(encoding='utf-8-sig')
+    keys=set(re.findall(r'value = (PP_NAVMAP_\w+)',text))|set(re.findall(r'desc = "(PP_NAVMAP_\w+)"',text))
+    assert len(keys)>20 and not sorted(k for k in keys if f' {k}:' not in loc)
+    assert f'mapmode_{MAP_MODE}_name:' in loc and f'MAPMODE_{MAP_MODE.upper()}:' in loc
+    with Image.open(mod/f'main_menu/gfx/interface/icons/map_modes/{MAP_MODE}.dds') as icon:
+        assert icon.size==(128,128)
+    concept=(mod/f'main_menu/common/game_concepts/{MAP_MODE}.txt').read_text(encoding='utf-8-sig')
+    assert f'texture = "map_modes/{MAP_MODE}"' in concept
+    assert not (mod/'in_game/gfx/map/map_modes/pp_river_navigation.txt').exists()

@@ -1,0 +1,63 @@
+﻿pp_navigable_rivers = {
+ map_color = {
+  if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 } value = rgb { 40 200 170 } }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 } value = rgb { 40 200 170 } }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 } value = rgb { 30 140 230 } }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 } value = rgb { 150 90 200 } }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 } value = rgb { 240 165 40 } }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 } value = rgb { 215 45 45 } }
+  else_if = { limit = { has_variable = pp_navigation_bank is_port = yes } value = rgb { 245 205 70 } }
+  else_if = { limit = { has_variable = pp_navigation_bank } value = rgb { 205 185 140 } }
+  else_if = { limit = { is_land = yes pp_navigation_has_river = yes } value = rgb { 110 140 130 } }
+  else_if = { limit = { is_land = no } value = rgb { 50 68 88 } }
+  else = { value = rgb { 88 84 78 } }
+ }
+ secondary_map_color = {
+  if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 } value = rgb { 240 165 40 } }
+  else_if = { limit = { has_variable = pp_navigation_map_state NOT = { var:pp_navigation_map_state = 3 } NOT = { has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } } value = rgb { 20 30 50 } }
+ }
+ tooltip_key = {
+  if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAVMAP_CANAL_OPEN_TT }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 } value = PP_NAVMAP_CANAL_INLAND_TT }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAVMAP_PARTIAL_OPEN_TT }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 } value = PP_NAVMAP_PARTIAL_INLAND_TT }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAVMAP_NAVIGABLE_OPEN_TT }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 } value = PP_NAVMAP_NAVIGABLE_INLAND_TT }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAVMAP_DIFFICULT_OPEN_TT }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 } value = PP_NAVMAP_DIFFICULT_INLAND_TT }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAVMAP_SHALLOWS_OPEN_TT }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 } value = PP_NAVMAP_SHALLOWS_INLAND_TT }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 } value = PP_NAVMAP_FALLS_TT }
+  else_if = { limit = { has_variable = pp_navigation_bank is_port = yes } value = PP_NAVMAP_PORT_TT }
+  else_if = { limit = { has_variable = pp_navigation_bank } value = PP_NAVMAP_BANK_TT }
+  else_if = { limit = { is_land = yes pp_navigation_has_river = yes } value = PP_NAVMAP_RIVER_TT }
+  else_if = { limit = { is_land = no } value = PP_NAVMAP_WATER_TT }
+  else = { value = PP_NAVMAP_NONE_TT }
+ }
+ legend_key = { desc = "PP_NAVMAP_LEGEND_NAVIGABLE" color = rgb { 30 140 230 } }
+ legend_key = { desc = "PP_NAVMAP_LEGEND_DIFFICULT" color = rgb { 150 90 200 } }
+ legend_key = { desc = "PP_NAVMAP_LEGEND_SHALLOWS" color = rgb { 240 165 40 } }
+ legend_key = { desc = "PP_NAVMAP_LEGEND_CANAL" color = rgb { 40 200 170 } }
+ legend_key = { desc = "PP_NAVMAP_LEGEND_PARTIAL" color = rgb { 240 165 40 } }
+ legend_key = { desc = "PP_NAVMAP_LEGEND_FALLS" color = rgb { 215 45 45 } }
+ legend_key = { desc = "PP_NAVMAP_LEGEND_CUT_OFF" color = rgb { 20 30 50 } }
+ legend_key = { desc = "PP_NAVMAP_LEGEND_PORT" color = rgb { 245 205 70 } }
+ legend_key = { desc = "PP_NAVMAP_LEGEND_BANK" color = rgb { 205 185 140 } }
+ legend_key = { desc = "PP_NAVMAP_LEGEND_RIVER" color = rgb { 110 140 130 } }
+ small_map_names = location
+ medium_map_names = none
+ large_map_names = none
+ small_tooltip_context = location
+ medium_tooltip_context = location
+ large_tooltip_context = location
+ fill_in_impassable = yes
+ enable_snow = no
+ enable_rivers = no
+ flatmap_behaviour = always
+ use_fow = no
+ category = geography
+ allow_allocate_hotkey = yes
+ map_markers = { all = no }
+ gradient_parameters = { zoom_step = 2 gradient_alpha_inside = 1 gradient_alpha_outside = 1 gradient_width = 0.25 gradient_color_mult = 0.9 edge_width = 0 edge_sharpness = 0.01 edge_alpha = 0 edge_color_mult = 0 before_lighting_blend = 0.5 after_lighting_blend = 0.5 }
+ color_refresh_counters = { LocationRoadsChanged LocationOwnerChanged Day }
+}

@@ -153,7 +153,7 @@ def test_river_surfaces_do_not_hide_the_channel_colours():
     modes = (MOD / "in_game/gfx/map/map_modes/map_modes.txt").read_text(encoding="utf-8-sig")
     block = modes[modes.index("topography = {\n\tcolor_mode = topography"):]
     assert "\tenable_rivers = no\n" in block[:block.index("\n}")]
-    nav = (MOD / "in_game/gfx/map/map_modes/pp_river_navigation.txt").read_text(encoding="utf-8-sig")
+    nav = (MOD / "in_game/gfx/map/map_modes/pp_navigable_rivers.txt").read_text(encoding="utf-8-sig")
     assert "enable_rivers = no" in nav and "enable_rivers = yes" not in nav
 
 

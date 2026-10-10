@@ -1,5 +1,6 @@
-﻿# Prosper or Perish navigable rivers Europedia page
+﻿# Prosper or Perish navigable rivers: the Europedia card and the map mode of the same key (picker icon).
+# DDS: main_menu/gfx/interface/icons/map_modes/pp_navigable_rivers.dds (tools/build_navigable_rivers_icon.py)
 pp_navigable_rivers = {
 	family = food
-	texture = "map_modes/pp_river_navigation"
+	texture = "map_modes/pp_navigable_rivers"
 }

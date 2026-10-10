@@ -252,7 +252,7 @@ PP_EU_NAV_STEP_OPEN: "Canal Passage"
 PP_EU_NAV_STEP_OPEN_DESC: "The shallows become the easiest waterway of all, for fleets and for trade."
 PP_EU_NAV_CANAL_DESC: "The canal comes with the Road Building [advance|e]. It takes long to build, needs a little lumber, tools and stone to keep up and never closes. The passage stays open while any bank of the shallows keeps its canal. China starts with its Grand Canal open."
 PP_EU_NAV_WHERE: "Where to See It"
-PP_EU_NAV_WHERE_DESC: "$BULLET$ #T The map:#! the Rivers and Navigation map mode shows every waterway, what kind it is and whether it reaches the open sea.\n$BULLET$ #T The location view:#! it says whether a location lies on a sea coast, on a waterway or inland."
+PP_EU_NAV_WHERE_DESC: "$BULLET$ #T The map:#! the $mapmode_pp_navigable_rivers_name$ map mode, next to Rivers, shows every waterway, what kind it is and whether it reaches the open sea, and which banks have a port.\n$BULLET$ #T The location view:#! it says whether a location lies on a sea coast, on a waterway or inland."
 game_concept_pp_food_in_eu5: "P&P: Food"
 game_concept_pp_food_in_eu5_desc: "There is no food market. Everything hinges on the province store: food exists only as [ShowGoodsName('local_food')|e] in a [province|e]'s store or as a trade good on the goods market."
 # Food card (encyclopedia_lateralview.gui, card style pp_europedia_style.gui)

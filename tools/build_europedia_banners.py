@@ -7,6 +7,7 @@ landscape from the location view's panorama layers instead (2654 px, sharp), gra
 - arable_land: forest on the left giving way to cleared fields and farmsteads on the right (Arable Land);
 - food: a market town among its fields on a river (Food);
 - food_production: farmsteads among their fields above a fishing coast (Food Production);
+- labor: a town of smoking mills behind a peasant village and its fields (Labor);
 - logistics: a crowded bazaar city on a river in dry hills (Logistics (Market Access)).
 
 Rerun after a game update:
@@ -105,6 +106,18 @@ BANNERS: dict[str, Banner] = {
         Layer("water/river_ocean/river_ocean_metadata_os2654x440_d0x208.dds"),
         Layer("ground1/oceanic/oceanic_grassland_ground1_metadata_os2654x440_d0x288.dds"),
     ), _natural, pano_scale=1.4),
+    "labor": Banner((
+        Layer("sky/sky_regular_metadata_os2654x440_d0x0.dds"),
+        Layer("topology/flatlands/flatlands_metadata_os2654x440_d0x60.dds"),
+        Layer("ground3/continental/continental_grassland_ground3_metadata_os2654x440_d0x66.dds"),
+        Layer("settlement2/north_german/town/north_german_town2_metadata_os2654x440_d0x54.dds"),
+        Layer("ground3/farmlands_metadata_os2654x440_d0x102.dds"),
+        Layer("factories/north_german_factory_metadata_os2654x440_d0x35.dds", dx=820),
+        Layer("factories/north_german_factory_metadata_os2654x440_d0x35.dds", dx=1180),
+        Layer("factories/north_german_factory_metadata_os2654x440_d0x35.dds", dx=1640),
+        Layer("settlement1/north_german/rural/north_german_rural11_metadata_os2654x440_d0x92.dds"),
+        Layer("ground1/continental/continental_grassland_ground1_metadata_os2654x440_d0x310.dds"),
+    ), _natural),
     "logistics": Banner((
         Layer("sky/sky_regular2_metadata_os2654x440_d0x0.dds"),
         Layer("topology/hills/hills_arid_metadata_os2654x440_d0x40.dds"),

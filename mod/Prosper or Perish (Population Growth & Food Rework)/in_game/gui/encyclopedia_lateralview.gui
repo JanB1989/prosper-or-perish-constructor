@@ -457,7 +457,7 @@
                                 }
                             }
 
-                            # Filter buttons — row 2 (target order 9-13)
+                            # Filter buttons — row 2 (target order 9-14)
                             hbox = {
                                 layoutpolicy_horizontal = expanding
                                 margin = { 10 3 }
@@ -513,9 +513,19 @@
 
                                     blockoverride "background" {}
                                 }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "Labor"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'labor')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'labor')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
                             }
 
-                            # Filter buttons — row 3 (target order 14-18)
+                            # Filter buttons — row 3 (target order 15-19)
                             hbox = {
                                 layoutpolicy_horizontal = expanding
                                 margin = { 10 3 }
@@ -1457,6 +1467,201 @@
                                                     }
                                                     block "block_scrollarea" { maximumsize = { -1 800 } }
                                                 }
+                                            }
+                                        }
+
+                                        # ---- Labor ----
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'labor'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                margin_bottom = 24
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/trade_goods/icon_goods_manual_labor.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_labor" }
+                                                    }
+                                                }
+
+                                                pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_labor.dds" } }
+                                                pp_eu_lead = { text = "game_concept_pp_labor_desc" }
+
+                                                # Your capital's market: the labor price (the Manual Labor Price map mode's script value)
+                                                hbox = {
+                                                    visible = "[GetPlayer.IsValid]"
+                                                    spacing = 14
+                                                    widget = {
+                                                        size = { 64 64 }
+                                                        pp_eu_medallion_frame = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                                                        pp_eu_medallion_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_manual_labor.dds" }
+                                                    }
+                                                    text_multi = { max_width = 900 autoresize = yes text = "PP_EU_LABOR_CAPITAL" }
+                                                }
+
+                                                # ---- Where labor comes from and where it goes: a flow ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_manual_labor.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_LABOR_FLOW" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/flat_icons/unemploy.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LABOR_STEP_IDLE" }
+                                                        blockoverride "step_text" { text = "PP_EU_LABOR_STEP_IDLE_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_manual_labor.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LABOR_STEP_GOOD" }
+                                                        blockoverride "step_text" { text = "PP_EU_LABOR_STEP_GOOD_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/production_methods/_default.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LABOR_STEP_BUILDINGS" }
+                                                        blockoverride "step_text" { text = "PP_EU_LABOR_STEP_BUILDINGS_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/highest_market_price.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LABOR_STEP_PRICE" }
+                                                        blockoverride "step_text" { text = "PP_EU_LABOR_STEP_PRICE_DESC" }
+                                                    }
+                                                }
+
+                                                # ---- Newer methods need fewer hands: one manufacturing line, oldest to newest ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/production_methods/_default.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_LABOR_AGES" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/tools_guild.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LABOR_AGE_GUILD" }
+                                                        blockoverride "step_text" { text = "PP_EU_LABOR_AGE_GUILD_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/tools_workshop.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LABOR_AGE_WORKSHOP" }
+                                                        blockoverride "step_text" { text = "PP_EU_LABOR_AGE_WORKSHOP_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/iron_foundry.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LABOR_AGE_MANUFACTORY" }
+                                                        blockoverride "step_text" { text = "PP_EU_LABOR_AGE_MANUFACTORY_DESC" }
+                                                    }
+                                                    pp_eu_arrow = {}
+                                                    pp_eu_step = {
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/iron_mill.dds" }
+                                                        blockoverride "step_title" { text = "PP_EU_LABOR_AGE_MILL" }
+                                                        blockoverride "step_text" { text = "PP_EU_LABOR_AGE_MILL_DESC" }
+                                                    }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_LABOR_AGES_DESC" }
+
+                                                # ---- When labor gets dear: the buildings that supply it ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/highest_market_price.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_LABOR_DEAR" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_LABOR_DEAR_DESC" }
+                                                vbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 8
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_beer.dds" tooltip = "beer" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds" tooltip = "horses" }
+                                                            pp_eu_arrow = {}
+                                                            pp_eu_icon = { texture = "gfx/interface/icons/buildings/hired_labor_yard.dds" tooltip = "hired_labor_yard" }
+                                                            pp_eu_arrow = {}
+                                                            pp_eu_icon = { texture = "gfx/interface/icons/trade_goods/icon_goods_manual_labor.dds" tooltip = "manual_labor" }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_LABOR_PORTERS" }
+                                                        blockoverride "entry_text" { text = "PP_EU_LABOR_PORTERS_DESC" }
+                                                    }
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_livestock.dds" tooltip = "livestock" }
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_clay.dds" tooltip = "clay" }
+                                                            pp_eu_arrow = {}
+                                                            pp_eu_icon = { texture = "gfx/interface/icons/buildings/rural_daywork_yard.dds" tooltip = "rural_daywork_yard" }
+                                                            pp_eu_arrow = {}
+                                                            pp_eu_icon = { texture = "gfx/interface/icons/trade_goods/icon_goods_manual_labor.dds" tooltip = "manual_labor" }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_LABOR_HIRING_FAIR" }
+                                                        blockoverride "entry_text" { text = "PP_EU_LABOR_HIRING_FAIR_DESC" }
+                                                    }
+                                                    pp_eu_entry = {
+                                                        blockoverride "entry_icons" {
+                                                            pp_eu_goods = { texture = "gfx/interface/icons/trade_goods/icon_goods_slaves_goods.dds" tooltip = "slaves_goods" }
+                                                            pp_eu_arrow = {}
+                                                            pp_eu_icon = { texture = "gfx/interface/icons/buildings/slave_labor_yard.dds" tooltip = "slave_labor_yard" }
+                                                            pp_eu_arrow = {}
+                                                            pp_eu_icon = { texture = "gfx/interface/icons/trade_goods/icon_goods_manual_labor.dds" tooltip = "manual_labor" }
+                                                        }
+                                                        blockoverride "entry_title" { text = "PP_EU_LABOR_SLAVE_GANGS" }
+                                                        blockoverride "entry_text" { text = "PP_EU_LABOR_SLAVE_GANGS_DESC" }
+                                                    }
+                                                }
+
+                                                # ---- Cheap labor or dear labor: the trade-off ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/market.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_LABOR_TRADEOFF" }
+                                                }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 10
+                                                    pp_eu_panel = {
+                                                        blockoverride "panel_icons" {
+                                                            pp_eu_icon = { texture = "gfx/interface/icons/pops/peasants.dds" tooltip = "PP_EU_LABOR_TT_MANY_HANDS" }
+                                                            pp_eu_icon = { texture = "gfx/interface/icons/flat_icons/trade_market/lowest_market_price.dds" tooltip = "PP_EU_LABOR_TT_CHEAP" }
+                                                            pp_eu_icon = { texture = "gfx/interface/icons/buildings/tools_guild.dds" tooltip = "tools_guild" }
+                                                        }
+                                                        blockoverride "panel_title" { text = "PP_EU_LABOR_CHEAP" }
+                                                        blockoverride "panel_text" { text = "PP_EU_LABOR_CHEAP_DESC" }
+                                                    }
+                                                    pp_eu_sign = { blockoverride "sign_text" { text = "PP_EU_LABOR_OR" } }
+                                                    pp_eu_panel = {
+                                                        blockoverride "panel_icons" {
+                                                            pp_eu_icon = { texture = "gfx/interface/icons/pops/burghers.dds" tooltip = "PP_EU_LABOR_TT_CITIES" }
+                                                            pp_eu_icon = { texture = "gfx/interface/icons/flat_icons/trade_market/highest_market_price.dds" tooltip = "PP_EU_LABOR_TT_DEAR" }
+                                                            pp_eu_icon = { texture = "gfx/interface/icons/trade_goods/icon_goods_tools.dds" tooltip = "tools" }
+                                                        }
+                                                        blockoverride "panel_title" { text = "PP_EU_LABOR_DEAR_PANEL" }
+                                                        blockoverride "panel_text" { text = "PP_EU_LABOR_DEAR_PANEL_DESC" }
+                                                    }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_LABOR_TRADEOFF_DESC" }
+
+                                                # ---- Where to see it ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/supply.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_LABOR_WHERE" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_LABOR_WHERE_DESC" }
                                             }
                                         }
 

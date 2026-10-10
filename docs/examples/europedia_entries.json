@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Prosper or Perish Europedia",
-    "entry_count": 25,
+    "entry_count": 26,
     "sources": {
       "gui": "in_game/gui/encyclopedia_lateralview.gui",
       "localization": "main_menu/localization/english/pp_europedia_l_english.yml",
@@ -12,7 +12,7 @@
     {
       "id": "all",
       "label": "All",
-      "count": 25
+      "count": 26
     },
     {
       "id": "getting_started",
@@ -72,6 +72,11 @@
     {
       "id": "farm_output",
       "label": "Building Output",
+      "count": 1
+    },
+    {
+      "id": "labor",
+      "label": "Labor",
       "count": 1
     },
     {
@@ -498,8 +503,42 @@
       "body_html": "<p>This entry is about how much rural raw-material buildings produce—their productivity—not how many you can build. For quantity, see <a class=\"concept-link\" href=\"#pp-farm-capacity\">P&amp;P: Farming/Fishing/Forest Capacities</a>.</p>\n<p>Over Europa Universalis 5&#x27;s timeframe, rural productivity rose sharply. The mod reflects this by replacing vanilla&#x27;s flat food modifier with per-good output modifiers. Each raw material can now gain or lose output independently.</p>\n<p>Building Output is affected by both inert and dynamic factors. Any of these can be beneficial or detrimental.</p>\n<h3>Component one:</h3>\n<p>Dynamic factors that change over the game. Some regions or countries may gain access to productivity improvements earlier or later than others:</p>\n<ul><li>Advances</li><li>Societal choices</li><li>Development</li><li>Government reforms</li><li><span class=\"token token-building\">Irrigation Systems</span></li></ul>\n<h3>Component two:</h3>\n<p>Inert factors tied to geography and location. Every location has a unique set of local output modifiers estimated from historical and geographic evidence:</p>\n<ul><li>Rainfall and water availability</li><li>Soil quality</li><li>Climate</li><li>Topography</li><li>Vegetation</li><li>The location&#x27;s RGO</li></ul>\n<h3>Harvest:</h3>\n<p>Yearly harvest outcomes vary by region and can further boost or reduce agricultural output beyond the factors above. For full details on harvest levels and how they affect food production, see <a class=\"concept-link\" href=\"#pp-variable-harvests\">P&amp;P: Variable Harvests</a>.</p>"
     },
     {
-      "id": "pp-variable-harvests",
+      "id": "pp-labor",
       "order": 13,
+      "filter": "labor",
+      "filter_label": "Labor",
+      "concept_key": "pp_labor",
+      "title_key": "game_concept_pp_labor",
+      "body_key": "game_concept_pp_labor_desc",
+      "title": "P&P: Labor",
+      "body_raw": "Every building pays part of its costs in [ShowGoodsName('manual_labor')|e], a trade good that idle peasants supply to their own [market|e]. Where hands are plentiful labor is cheap; where towns crowd a market it gets dear, and buildings answer by switching to methods that need fewer hands.\n\n#T Where Labor Comes From#!\n\n#T Idle Peasants#!\n\nEvery [Concept('unemploy', 'unemployed')|e] [ShowPopTypeName('peasants')] supplies a fixed amount of labor to its market, whether anyone needs it or not.\n\n#T Manual Labor#!\n\n[ShowGoodsName('manual_labor')|e] is bought and sold like any good, but it never leaves its market: hands are hired where they live.\n\n#T Every Building#!\n\nEvery [production_method|e] pays part of its input cost in labor: older methods a large part, newer ones a small part.\n\n#T The Wage#!\n\nSupply and demand set labor's [market_price|e]. With idle hands to spare, labor sits at its lowest price; once buildings want more than the peasants supply, it climbs.\n\n#T Newer Methods Need Fewer Hands#!\n\n#T Guilds#!\n\nHand work: labor is a large part of the cost.\n\n#T Workshops#!\n\nBetter tools and divided work: less labor for the same goods.\n\n#T Manufactories#!\n\nWater power and large halls: labor is a modest part of the cost.\n\n#T Mills and Factories#!\n\nMachines do most of the work: labor is only a small part of the cost.\n\nThe tools line above stands for all of them, farms, mines and fisheries included: each [age|e] brings methods that pay less of their cost in labor and more in goods such as [ShowGoodsName('tools')|e]. Hover a building's methods to see the labor among their inputs.\n\n#T When Labor Gets Dear#!\n\nOver the game some markets fill with towns and buildings while their idle peasants grow few, above all in highly urbanized lands. Their labor gets dearer, and two things follow: buildings that hire out labor start to pay, and buildings switch to methods that need less of it (see the trade-off below). The labor buildings lose money while labor sits at its lowest price, so they only spread where hands are truly scarce.\n\n#T Hired Hands in Towns#!\n\nA [ShowBuildingTypeName('hired_labor_yard')|e] gathers porters, carters and other hired hands in towns and cities. Its [ShowPopTypeName('laborers')] are kept in beer, sacks, horses and carts.\n\n#T Day Work in the Countryside#!\n\nAt a [ShowBuildingTypeName('rural_daywork_yard')|e] peasant households take paid day work with their oxen, in the fields and at ditches and dykes. It stands in villages as well as towns.\n\n#T Slave Gangs#!\n\nA [ShowBuildingTypeName('slave_labor_yard')|e] hires out enslaved people in work gangs, in cities where the slave trade is established. It is the cheapest labor of the three.\n\n#T Cheap Labor or Dear Labor: a Trade-off#!\n\n#T Many Hands, Cheap Labor#!\n\nPopulous, rural, lower-tech countries have labor to spare. Labor-heavy buildings and methods stay profitable there, so they keep them. But money paid for labor just leaves the economy: it buys no goods, so the trades that would supply tools and other goods stay small.\n\n#T Crowded Cities, Dear Labor#!\n\nHighly urbanized countries pay more for labor and lose some profit, but their buildings switch on their own to methods with a smaller labor share. They buy [ShowGoodsName('tools')|e] and other goods instead, and that money keeps circulating: every tool bought keeps a toolmaker in business.\n\nNeither path is simply better. Cheap labor pays well today; dear labor drains less money from the economy and keeps more trades busy.\n\n#T Where to See It#!\n\n$BULLET$ #T The map:#! the $mapmode_pp_manual_labor_market_price_name$ map mode colors every market by what labor costs there.\n$BULLET$ #T The market:#! [ShowGoodsName('manual_labor')|e] in the market view shows who supplies labor and who buys it.\n$BULLET$ #T Buildings:#! every production method lists its labor among its inputs.",
+      "body_plain": "Every building pays part of its costs in Manual Labor, a trade good that idle peasants supply to their own Market. Where hands are plentiful labor is cheap; where towns crowd a market it gets dear, and buildings answer by switching to methods that need fewer hands.\n\nWhere Labor Comes From\n\nIdle Peasants\n\nEvery unemployed Peasants supplies a fixed amount of labor to its market, whether anyone needs it or not.\n\nManual Labor\n\nManual Labor is bought and sold like any good, but it never leaves its market: hands are hired where they live.\n\nEvery Building\n\nEvery Production Method pays part of its input cost in labor: older methods a large part, newer ones a small part.\n\nThe Wage\n\nSupply and demand set labor's Market Price. With idle hands to spare, labor sits at its lowest price; once buildings want more than the peasants supply, it climbs.\n\nNewer Methods Need Fewer Hands\n\nGuilds\n\nHand work: labor is a large part of the cost.\n\nWorkshops\n\nBetter tools and divided work: less labor for the same goods.\n\nManufactories\n\nWater power and large halls: labor is a modest part of the cost.\n\nMills and Factories\n\nMachines do most of the work: labor is only a small part of the cost.\n\nThe tools line above stands for all of them, farms, mines and fisheries included: each Age brings methods that pay less of their cost in labor and more in goods such as Tools. Hover a building's methods to see the labor among their inputs.\n\nWhen Labor Gets Dear\n\nOver the game some markets fill with towns and buildings while their idle peasants grow few, above all in highly urbanized lands. Their labor gets dearer, and two things follow: buildings that hire out labor start to pay, and buildings switch to methods that need less of it (see the trade-off below). The labor buildings lose money while labor sits at its lowest price, so they only spread where hands are truly scarce.\n\nHired Hands in Towns\n\nA Hired Labor Yard gathers porters, carters and other hired hands in towns and cities. Its Laborers are kept in beer, sacks, horses and carts.\n\nDay Work in the Countryside\n\nAt a Rural Daywork Yard peasant households take paid day work with their oxen, in the fields and at ditches and dykes. It stands in villages as well as towns.\n\nSlave Gangs\n\nA Slave Labor Yard hires out enslaved people in work gangs, in cities where the slave trade is established. It is the cheapest labor of the three.\n\nCheap Labor or Dear Labor: a Trade-off\n\nMany Hands, Cheap Labor\n\nPopulous, rural, lower-tech countries have labor to spare. Labor-heavy buildings and methods stay profitable there, so they keep them. But money paid for labor just leaves the economy: it buys no goods, so the trades that would supply tools and other goods stay small.\n\nCrowded Cities, Dear Labor\n\nHighly urbanized countries pay more for labor and lose some profit, but their buildings switch on their own to methods with a smaller labor share. They buy Tools and other goods instead, and that money keeps circulating: every tool bought keeps a toolmaker in business.\n\nNeither path is simply better. Cheap labor pays well today; dear labor drains less money from the economy and keeps more trades busy.\n\nWhere to See It\n\n-  The map: the $mapmode_pp_manual_labor_market_price_name$ map mode colors every market by what labor costs there.\n-  The market: Manual Labor in the market view shows who supplies labor and who buys it.\n-  Buildings: every production method lists its labor among its inputs.",
+      "icon_texture": "gfx/interface/icons/trade_goods/icon_goods_manual_labor.dds",
+      "definition": {
+        "key": "pp_labor",
+        "file": "main_menu/common/game_concepts/pp_labor.txt",
+        "line": 2,
+        "family": "market",
+        "texture": "trade_goods/icon_goods_manual_labor",
+        "aliases": []
+      },
+      "source": {
+        "gui": "in_game/gui/encyclopedia_lateralview.gui",
+        "localization": "main_menu/localization/english/pp_europedia_l_english.yml",
+        "concept": "main_menu/common/game_concepts/pp_labor.txt"
+      },
+      "links": [
+        "age",
+        "market",
+        "market_price",
+        "production_method",
+        "unemploy"
+      ],
+      "body_html": "<p>Every building pays part of its costs in <span class=\"token token-good\">Manual Labor</span>, a trade good that idle peasants supply to their own <span class=\"concept-ref\">Market</span>. Where hands are plentiful labor is cheap; where towns crowd a market it gets dear, and buildings answer by switching to methods that need fewer hands.</p>\n<h3>Where Labor Comes From</h3>\n<h3>Idle Peasants</h3>\n<p>Every <span class=\"concept-ref\">unemployed</span> <span class=\"token token-pop\">Peasants</span> supplies a fixed amount of labor to its market, whether anyone needs it or not.</p>\n<h3>Manual Labor</h3>\n<p><span class=\"token token-good\">Manual Labor</span> is bought and sold like any good, but it never leaves its market: hands are hired where they live.</p>\n<h3>Every Building</h3>\n<p>Every <span class=\"concept-ref\">Production Method</span> pays part of its input cost in labor: older methods a large part, newer ones a small part.</p>\n<h3>The Wage</h3>\n<p>Supply and demand set labor&#x27;s <span class=\"concept-ref\">Market Price</span>. With idle hands to spare, labor sits at its lowest price; once buildings want more than the peasants supply, it climbs.</p>\n<h3>Newer Methods Need Fewer Hands</h3>\n<h3>Guilds</h3>\n<p>Hand work: labor is a large part of the cost.</p>\n<h3>Workshops</h3>\n<p>Better tools and divided work: less labor for the same goods.</p>\n<h3>Manufactories</h3>\n<p>Water power and large halls: labor is a modest part of the cost.</p>\n<h3>Mills and Factories</h3>\n<p>Machines do most of the work: labor is only a small part of the cost.</p>\n<p>The tools line above stands for all of them, farms, mines and fisheries included: each <span class=\"concept-ref\">Age</span> brings methods that pay less of their cost in labor and more in goods such as <span class=\"token token-good\">Tools</span>. Hover a building&#x27;s methods to see the labor among their inputs.</p>\n<h3>When Labor Gets Dear</h3>\n<p>Over the game some markets fill with towns and buildings while their idle peasants grow few, above all in highly urbanized lands. Their labor gets dearer, and two things follow: buildings that hire out labor start to pay, and buildings switch to methods that need less of it (see the trade-off below). The labor buildings lose money while labor sits at its lowest price, so they only spread where hands are truly scarce.</p>\n<h3>Hired Hands in Towns</h3>\n<p>A <span class=\"token token-building\">Hired Labor Yard</span> gathers porters, carters and other hired hands in towns and cities. Its <span class=\"token token-pop\">Laborers</span> are kept in beer, sacks, horses and carts.</p>\n<h3>Day Work in the Countryside</h3>\n<p>At a <span class=\"token token-building\">Rural Daywork Yard</span> peasant households take paid day work with their oxen, in the fields and at ditches and dykes. It stands in villages as well as towns.</p>\n<h3>Slave Gangs</h3>\n<p>A <span class=\"token token-building\">Slave Labor Yard</span> hires out enslaved people in work gangs, in cities where the slave trade is established. It is the cheapest labor of the three.</p>\n<h3>Cheap Labor or Dear Labor: a Trade-off</h3>\n<h3>Many Hands, Cheap Labor</h3>\n<p>Populous, rural, lower-tech countries have labor to spare. Labor-heavy buildings and methods stay profitable there, so they keep them. But money paid for labor just leaves the economy: it buys no goods, so the trades that would supply tools and other goods stay small.</p>\n<h3>Crowded Cities, Dear Labor</h3>\n<p>Highly urbanized countries pay more for labor and lose some profit, but their buildings switch on their own to methods with a smaller labor share. They buy <span class=\"token token-good\">Tools</span> and other goods instead, and that money keeps circulating: every tool bought keeps a toolmaker in business.</p>\n<p>Neither path is simply better. Cheap labor pays well today; dear labor drains less money from the economy and keeps more trades busy.</p>\n<h3>Where to See It</h3>\n<ul><li><strong>The map:</strong> the $mapmode_pp_manual_labor_market_price_name$ map mode colors every market by what labor costs there.</li><li><strong>The market:</strong> <span class=\"token token-good\">Manual Labor</span> in the market view shows who supplies labor and who buys it.</li><li><strong>Buildings:</strong> every production method lists its labor among its inputs.</li></ul>"
+    },
+    {
+      "id": "pp-variable-harvests",
+      "order": 14,
       "filter": "harvest",
       "filter_label": "Variable Harvests",
       "concept_key": "pp_variable_harvests",
@@ -539,7 +578,7 @@
     },
     {
       "id": "pp-population-capacity",
-      "order": 14,
+      "order": 15,
       "filter": "pop_capacity",
       "filter_label": "Arable Land",
       "concept_key": "pp_population_capacity",
@@ -577,7 +616,7 @@
     },
     {
       "id": "pp-population-growth",
-      "order": 15,
+      "order": 16,
       "filter": "pop_growth",
       "filter_label": "Population Growth",
       "concept_key": "pp_population_growth",
@@ -613,7 +652,7 @@
     },
     {
       "id": "pp-population-distribution",
-      "order": 16,
+      "order": 17,
       "filter": "pop_dist",
       "filter_label": "Population Distribution",
       "concept_key": "pp_population_distribution",
@@ -641,7 +680,7 @@
     },
     {
       "id": "pp-buildings-in-location",
-      "order": 17,
+      "order": 18,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_buildings_in_location",
@@ -674,7 +713,7 @@
     },
     {
       "id": "pp-available-free-land",
-      "order": 18,
+      "order": 19,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_available_free_land",
@@ -705,7 +744,7 @@
     },
     {
       "id": "pp-abundant-free-land",
-      "order": 19,
+      "order": 20,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_abundant_free_land",
@@ -736,7 +775,7 @@
     },
     {
       "id": "pp-prosperity",
-      "order": 20,
+      "order": 21,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_prosperity",
@@ -767,7 +806,7 @@
     },
     {
       "id": "pp-devastation",
-      "order": 21,
+      "order": 22,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_devastation",
@@ -797,7 +836,7 @@
     },
     {
       "id": "pp-province-current-food-storage",
-      "order": 22,
+      "order": 23,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_province_current_food_storage",
@@ -829,7 +868,7 @@
     },
     {
       "id": "pp-cheap-food",
-      "order": 23,
+      "order": 24,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_cheap_food",
@@ -859,7 +898,7 @@
     },
     {
       "id": "pp-expensive-food",
-      "order": 24,
+      "order": 25,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_expensive_food",
@@ -889,7 +928,7 @@
     },
     {
       "id": "pp-starvation",
-      "order": 25,
+      "order": 26,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_starvation",

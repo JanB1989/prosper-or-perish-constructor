@@ -110,3 +110,6 @@ Hand-tuned changes for single countries, one entry each: what and why.
   Thriving at 1437 (grown, never below 80 % of start): baseline 4 of 7, v1 5, v2 5, v3-v6 6 each. The misses that aims
   cannot fix: Ottoman revolts (v2 rebels took 55 locations in 1397; v6 the Akhis rose from 1 to 52 locations in 1357,
   Ottoman stability -12), France's dips from England's 1350s invasions (it recovers by 1437 in every run but v3).
+  Second sample of the final version, cf982ee6 (stopped at 1392 for the deadline): ENG 235, FRA 105, MOS 136, BRA 27,
+  TUR 172, POR 1, CAS 329: Castile took Portugal despite the -1 preference, so -1 does not reliably zero the peace
+  desire (the war likely came from vanilla's Portuguese succession events); France fell from 163 to 105. Open.

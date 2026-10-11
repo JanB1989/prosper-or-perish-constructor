@@ -11,12 +11,13 @@ the `start_expedition` generic action), so the AI launches them on its own.
 | File | What |
 | --- | --- |
 | `in_game/common/expedition_types/pp_trade_expeditions.txt` | the three types: gates, start, arrival, AI weights |
-| `in_game/common/scripted_effects/pp_trade_expedition_effects.txt` | site choice, arrival decision, settle/buy/war/licence, castle and garrison, trade company, traces |
+| `in_game/common/scripted_effects/pp_trade_expedition_effects.txt` | site choice, arrival decision, settle/buy/war/licence, castle and garrison, owner-change hook, traces |
+| `in_game/common/on_action/pp_trade_expedition_on_actions.txt` | `on_location_changed_owner`: castle for a town won in a landing war, station change log |
+| `main_menu/common/static_modifiers/pp_trade_expedition_modifiers.txt` | bastion / star-fort / fortress works of a castle by age |
 | `in_game/common/scripted_triggers/pp_trade_expedition_triggers.txt` | colonial power, free site, hosts, the site lists |
 | `in_game/common/script_values/pp_trade_expedition_values.txt` | costs (scaled by yearly income), prices, chances, site score |
 | `in_game/common/building_types/pp_trade_expedition_buildings.txt` | Castle and Factory (own harbour), Factory (licence in a host's port) |
 | `in_game/common/area_preferences/pp_trade_expedition_preferences.txt` | conquest preference per region after a landing war |
-| `in_game/common/advances/pp_trade_expedition_advances_adjustments.txt` | Age of Discovery ocean advances also unlock the trade company subject type |
 | `in_game/events/pp_trade_expedition_events.txt` | outcome events (`pp_trade_expedition.1`-`.5`, `.20` lost at sea) |
 | `main_menu/localization/english/pp_trade_expeditions_l_english.yml` | all text |
 | `tests/test_trade_expeditions.py` | every reference exists, site lists agree, costs scale with income, no numbers in text |
@@ -25,9 +26,9 @@ the `start_expedition` generic action), so the AI launches them on its own.
 
 | Type | Opens | Sites (historical) | Outcomes |
 | --- | --- | --- | --- |
-| Castle on the African Coast (`pp_te_africa`) | Age of Discovery; East Africa once the Cape route is known (Cape of Good Hope discovered or Age of Reformation) | Arguin, the Gambia, Cacheu, Bissau, Axim, Accra, Ughoton, the Calabars, Sao Tome, Soyo, Loango, Cabinda, Luanda; Sofala, Kilwa, Mozambique, Mombasa, Malindi, Zanzibar, Quelimane, Inhambane, Lamu, Pate | settle / buy / war / licence (no company) / refusal |
-| Factory in the Indies (`pp_te_india`) | Age of Discovery with the Cape route known and an own African station, or the Age of Reformation; tax base 200+ | Goa, Cochin, Calicut, Cannanore, Cranganore, Quilon, Mangalore, Bhatkal, Bombay, Bassein, Daman, Diu, Surat, Madras, Pondicherry, Karaikal, Negapatam, Masulipatnam, Galle, Colombo (Kotte), Jaffna, Balasore, Hooghly (Satgaon), Chittagong | buy / war / licence + trade company / refusal |
-| Embassy to the Far East (`pp_te_far_east`) | an own Indian station, or the Age of Reformation with an African one, or the Age of Absolutism; Cape route; tax base 300+ | Macau (Xiangshan), Canton, Quanzhou, Amoy (Tong'an), Ningbo (Yin), Liampo (Dinghai), Zeelandia (Siraya), Keelung (Ketagalan), Nagasaki (Nishisonogi), Hirado (Minamimatsuura), Manila, Malacca, Banten, Sunda Kelapa | settle (Taiwan) / lease (rare) / war (rare) / licence + trade company / refusal |
+| Castle on the African Coast (`pp_te_africa`) | Age of Discovery; East Africa once the Cape route is known (Cape of Good Hope discovered or Age of Reformation) | Arguin, the Gambia, Cacheu, Bissau, Axim, Accra, Ughoton, the Calabars, Sao Tome, Soyo, Loango, Cabinda, Luanda; Sofala, Kilwa, Mozambique, Mombasa, Malindi, Zanzibar, Quelimane, Inhambane, Lamu, Pate | settle / buy / war / licence / refusal |
+| Factory in the Indies (`pp_te_india`) | Age of Discovery with the Cape route known and an own African station, or the Age of Reformation; tax base 200+ | Goa, Cochin, Calicut, Cannanore, Cranganore, Quilon, Mangalore, Bhatkal, Bombay, Bassein, Daman, Diu, Surat, Madras, Pondicherry, Karaikal, Negapatam, Masulipatnam, Galle, Colombo (Kotte), Jaffna, Balasore, Hooghly (Satgaon), Chittagong | buy / war / licence / refusal |
+| Embassy to the Far East (`pp_te_far_east`) | an own Indian station, or the Age of Reformation with an African one, or the Age of Absolutism; Cape route; tax base 300+ | Macau (Xiangshan), Canton, Quanzhou, Amoy (Tong'an), Ningbo (Yin), Liampo (Dinghai), Zeelandia (Siraya), Keelung (Ketagalan), Nagasaki (Nishisonogi), Hirado (Minamimatsuura), Manila, Malacca, Banten, Sunda Kelapa | settle (Taiwan) / lease (rare) / war (rare) / licence / refusal |
 
 All three: `unique = yes`, `repeatable = yes`, at most three African, three Indian and two Far Eastern stations per
 country, 15/20/25 years between voyages of one kind (counted from the arrival), never while a great power is at war
@@ -76,9 +77,9 @@ expedition. Then:
    preference for the region (`pp_te_hold_<region>`, needed by `peace_treaties/pp_cede_preferred_location.txt` to let
    the AI take a town away from its own land).
 4. **The host licenses trade** (Surat 1612, Hirado 1609, Canton): Africa 60 %, India 75 %, Far East 55 % (+15 for a
-   host that is not strong): gifts, `trade_access`, a Factory (foreign building) in the port and, in India and the Far
-   East, a trade company for the region (as vanilla `create_building_subject`; it runs the country's foreign
-   buildings there).
+   host that is not strong): gifts, `trade_access` and a Factory (foreign building of the crown) in the port. The
+   Factory stands while the host grants trade access (`own_or_overlord_relation_needed = trade_access`); a war between
+   them closes it.
 5. **Refused** (Tuen Mun 1521): the cost is lost, the cooldown runs.
 
 ## Holding the station
@@ -88,6 +89,9 @@ expedition. Then:
   merchant capacity, merchant power, maritime presence, market access and development growth.
 - **Garrison**: two regiments (three from the Age of Reformation) of heavy infantry and shot, landed at full strength.
 - **Treaty**: a bought site comes with a 20-year mutual truce with the seller.
+- **No trade company subject.** Script-made trade companies (building subjects, as vanilla `create_building_subject`)
+  died within three months in Indian regions in every test and took their Factory with them, while crown Factories in
+  the same ports stood (see Results, runs 3 and 5). The licence therefore keeps the Factory under the crown everywhere.
 - **Peace deals**: PP's AI peace deals only take land connected to the winner (`AI_CONQUER_TREATY_DESIRE_ADJECENT`), so a
   European rival at war in Europe does not take a station overseas unless it holds land next to it; the threat is the
   station's neighbours.
@@ -182,3 +186,17 @@ Gate check before the ocean-advance test: Denmark, Norway, Novgorod, Holland, Ca
 the Teutonic Order could all send African voyages in 1487, Portugal not (no gold). Only Portugal, Castile and Aragon
 had an ocean-going advance (open-sea exploration, explorer commissions, colonial charters); with that test added only
 Castile and Aragon pass in 1487 (Portugal again short of gold).
+
+Run 4, 1487-1517 (AI alone, all fixes up to the ocean-advance gate):
+
+| Year | Station | Founder | How | 1517 |
+| --- | --- | --- | --- | --- |
+| 1490 | Cacheu | Aragon | licence (Factory) | held (town passed to Mali 1494, the Factory stayed) |
+| 1494 | Ughoton | Portugal | bought (castle) | held |
+| 1509 | Mombasa | Portugal | licence | held |
+| 1511 | Bissau | Aragon | licence | held |
+
+- Only the Iberian crowns acted in 30 years: Portugal, Aragon (as in run cf982ee6 itself, where Aragon became the West
+  African colonizer), Castile (refused 1505). Portugal reached India in 1496 and was refused (da Gama 1498), and sailed
+  again in 1516.
+- All 4 stations held for up to 27 years; no local attacked them.

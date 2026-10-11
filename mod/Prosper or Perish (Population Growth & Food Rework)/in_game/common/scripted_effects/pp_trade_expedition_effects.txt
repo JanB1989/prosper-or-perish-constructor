@@ -316,7 +316,7 @@ pp_te_arrive_effect = {
 					var:pp_te_outcome > 3.5
 					var:pp_te_outcome < 4.5
 				}
-				pp_te_licence_effect = { KIND = $KIND$ }
+				pp_te_licence_effect = yes
 			}
 		}
 	}
@@ -520,8 +520,10 @@ pp_te_war_effect = {
 	}
 }
 
-# Licence (Surat 1612, Canton, Hirado): gifts to the host, trade access, a Factory in its port and, in India and the
-# Far East, a trade company that runs the country's factories in that region.
+# Licence (Surat 1612, Canton, Hirado): gifts to the host, trade access and a Factory in its port, kept by the crown.
+# No trade company subject: script-made trade companies (building subjects, as vanilla create_building_subject) died
+# within three months in Indian regions in every test, taking the Factory with them, while crown Factories there stood
+# (1712 test save of run cf982ee6, side by side; docs/trade_expeditions.md).
 pp_te_licence_effect = {
 	set_variable = {
 		name = pp_te_price
@@ -563,89 +565,6 @@ pp_te_licence_effect = {
 	add_to_variable_list = {
 		name = pp_te_footholds
 		target = scope:pp_te_target
-	}
-	pp_te_company_after_licence_$KIND$ = yes
-}
-
-# Africa: factories stay with the crown; India and the Far East: a trade company runs them.
-pp_te_company_after_licence_africa = {
-	set_variable = { name = pp_te_company_none value = 1 }
-}
-pp_te_company_after_licence_india = {
-	pp_te_trade_company_effect = yes
-}
-pp_te_company_after_licence_far_east = {
-	pp_te_trade_company_effect = yes
-}
-
-# Trade company (as vanilla create_building_subject): a subject that runs the country's foreign buildings in the
-# target's region; one per region. Needs the Factory and trade access the licence set. EU5 1.4 keeps the subject type
-# only while the overlord has an advance that unlocks it (advances/pp_trade_expedition_advances_adjustments.txt); a
-# country without one keeps its Factory under the crown. The company gets its own governor: in the 1712 test save a
-# company created without a valid ruler died within 150 days and took its Factory with it (the overlord's ruler is
-# missing during a regency), while one with a newly created governor lived on (tested 300 days).
-pp_te_trade_company_effect = {
-	if = {
-		limit = {
-			OR = {
-				has_advance = trade_companies_advance
-				has_advance = open_sea_exploration
-				has_advance = explorer_commisions_advance
-				has_advance = por_carreira_da_india
-			}
-			scope:pp_te_target = {
-				has_owner = yes
-				NOT = { owner = root }
-			}
-			NOT = {
-				AND = {
-					has_variable_list = trade_company_regions
-					is_target_in_variable_list = {
-						name = trade_company_regions
-						target = scope:pp_te_target.region
-					}
-				}
-			}
-		}
-		create_character = {
-			age = { 30 45 }
-			save_scope_as = pp_te_tc_ruler
-		}
-		scope:pp_te_target.region = { save_scope_as = pp_te_tc_region }
-		scope:pp_te_target = {
-			create_building_country_in_location = {
-				region = scope:pp_te_tc_region
-				ruler = scope:pp_te_tc_ruler
-				subject_type = subject_type:trade_company
-				overlord = root
-				save_scope_as = pp_te_tc
-			}
-		}
-		if = {
-			limit = { exists = scope:pp_te_tc }
-			scope:pp_te_tc = {
-				set_variable = {
-					name = trade_company_home_region
-					value = scope:pp_te_tc_region
-				}
-				add_to_variable_list = {
-					name = trade_company_regions
-					target = scope:pp_te_tc_region
-				}
-			}
-			add_to_variable_list = {
-				name = trade_company_regions
-				target = scope:pp_te_tc_region
-			}
-			add_to_variable_list = {
-				name = trade_company_subjects
-				target = scope:pp_te_tc
-			}
-			add_to_global_variable_list = {
-				name = pp_te_all_companies
-				target = scope:pp_te_tc
-			}
-		}
 	}
 }
 

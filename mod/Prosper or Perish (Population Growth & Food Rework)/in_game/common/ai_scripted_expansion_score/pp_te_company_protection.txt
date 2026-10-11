@@ -1,0 +1,15 @@
+﻿# PP trade expeditions (docs/trade_expeditions.md): attacking a Chartered Company (subject_types/pp_te_company.txt)
+# means war with its crown, which joins every defensive war of the company. The AI rates the one-town company like a
+# lone town on its own and attacked it at once (test run from 1712, run cf982ee6: Orissa took Portugal's new company at
+# Hooghly within a year, while crown-held castles survived such wars). Every attacker counts it at a quarter.
+pp_te_company_crown_protection = {
+	attacker_potential = {
+		always = yes
+	}
+	target_trigger = {
+		is_subject_type = pp_te_company
+	}
+	multiplier = {
+		add = -0.75
+	}
+}

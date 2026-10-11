@@ -1,0 +1,51 @@
+﻿# PP trade expeditions (docs/trade_expeditions.md): a chartered company that holds the expedition's castle town in
+# India or the Far East (the English company at Madras 1639, the Dutch at Batavia 1619, the French at Pondicherry 1674).
+# Land-holding, unlike vanilla's trade_company (a building subject): script-made trade_company subjects died within
+# three months in Indian regions in every test and took their buildings with them. Founded only by the expedition
+# (scripted_effects/pp_trade_expedition_effects.txt); never offered, released or demanded in diplomacy.
+pp_te_company = {
+	color = subject_trade_company
+	level = 1
+	annullment_favours_required = 10
+	subject_pays = subject_pays_trade_company
+	join_defensive_wars_always = {
+		scope:actor ?= {
+			is_subject_of = scope:recipient
+		}
+	}
+	has_overlords_ruler = no
+	can_be_annexed = no
+	subject_can_cancel = no
+	overlord_can_cancel = yes
+	will_join_independence_wars = no
+	fleet_basing_rights = yes
+	has_limited_diplomacy = yes
+	can_change_rank = no
+	can_change_heir_selection = no
+	strength_vs_overlord = -0.1
+	diplomatic_capacity_cost_scale = 0.5
+	government = republic
+	minimum_opinion_for_offer = 100
+	great_power_score_transfer = 0.75
+	institution_spread_to_overlord = monthly_institution_spread_severe
+	institution_spread_to_subject = monthly_institution_spread_severe
+	can_overlord_build_buildings = yes
+	allow_declaring_wars = {
+		always = no
+	}
+	overlord_modifier = {
+	}
+	subject_modifier = {
+		export_efficiency = tiny_trade_efficiency_bonus
+		max_tariff = 0.05
+	}
+	creation_visible = {
+		always = no
+	}
+	visible_through_diplomacy = {
+		always = no
+	}
+	visible_through_treaty = {
+		always = no
+	}
+}

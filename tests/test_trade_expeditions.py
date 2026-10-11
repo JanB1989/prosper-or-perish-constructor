@@ -164,3 +164,17 @@ def test_fort_works_modifiers_exist_with_text() -> None:
         body = text[text.index(f"{name} = {{"):]
         assert re.search(r"fort_level = \d", body[: body.index("\n}")]), name
         assert f"STATIC_MODIFIER_NAME_{name}" in loc and f"STATIC_MODIFIER_DESC_{name}" in loc, name
+
+
+def test_chartered_company_subject_type() -> None:
+    """Asian castle towns go to a land-holding chartered company: the subject type exists, is never offered in
+    diplomacy, and has a name."""
+    path = COMMON / "subject_types" / "pp_te_company.txt"
+    text = _text(path)
+    assert "pp_te_company = {" in text
+    assert "type = building" not in text  # land-holding; script-made building companies died in Asia
+    for key in ("creation_visible", "visible_through_diplomacy", "visible_through_treaty"):
+        start = text.index(f"{key} = {{")
+        assert "always = no" in text[start: text.index("}", start)], key
+    assert "subject_type:pp_te_company" in _text(EFFECTS)
+    assert "pp_te_company" in _loc_keys()

@@ -433,6 +433,7 @@ pp_te_fortify_effect = {
 			target = scope:pp_te_fort_site
 		}
 	}
+	pp_te_charter_company_effect = yes
 	if = {
 		limit = { scope:pp_te_holder = { current_age_or_later = { age = age_6_revolutions } } }
 		add_location_modifier = { modifier = pp_te_works_fortress days = -1 mode = replace }
@@ -446,6 +447,82 @@ pp_te_fortify_effect = {
 		add_location_modifier = { modifier = pp_te_works_bastion days = -1 mode = replace }
 	}
 	pp_te_garrison_effect = { COUNT = pp_te_garrison_regiments }
+}
+
+# Location scope (a castle town of scope:pp_te_holder in India or the Far East): the town goes to the country's chartered
+# company for that region (subject type pp_te_company, subject_types/pp_te_company.txt; the English company at Madras,
+# the Dutch at Batavia), founded with its own governor if there is none yet; later towns in the region join it. The
+# company then holds the garrison (scope:pp_te_holder is re-saved as the company). Africa's castles stay with the crown.
+pp_te_charter_company_effect = {
+	if = {
+		limit = {
+			OR = {
+				region = region:deccan_region
+				region = region:western_india_region
+				region = region:bengal_region
+				region = region:hindustan_region
+				region = region:indochina_region
+				region = region:indonesia_region
+				region = region:south_china_region
+				region = region:east_china_region
+				region = region:japan_region
+			}
+			owner ?= scope:pp_te_holder
+			scope:pp_te_holder = { is_subject = no }
+		}
+		save_scope_as = pp_te_co_site
+		# the owner change below is a hand-over inside the realm, not a loss (pp_te_owner_change_effect skips it)
+		set_variable = {
+			name = pp_te_chartering
+			value = 1
+		}
+		scope:pp_te_holder = {
+			save_scope_as = pp_te_co_crown
+			ordered_subject = {
+				limit = {
+					is_subject_type = pp_te_company
+					capital ?= { region = scope:pp_te_co_site.region }
+				}
+				order_by = num_locations
+				max = 1
+				save_scope_as = pp_te_co
+			}
+		}
+		if = {
+			limit = { exists = scope:pp_te_co }
+			change_location_owner = scope:pp_te_co
+		}
+		else = {
+			scope:pp_te_co_crown = {
+				create_character = {
+					age = { 30 45 }
+					save_scope_as = pp_te_co_ruler
+				}
+			}
+			create_country_from_location = {
+				overlord = scope:pp_te_co_crown
+				subject_type = subject_type:pp_te_company
+				set_capital = prev
+				set_new_ruler = scope:pp_te_co_ruler
+				save_scope_as = pp_te_co
+			}
+			if = {
+				limit = { exists = scope:pp_te_co }
+				add_to_global_variable_list = {
+					name = pp_te_all_companies
+					target = scope:pp_te_co
+				}
+				scope:pp_te_co_crown = {
+					pp_te_log_effect = { STAGE = company KIND = charter }
+				}
+			}
+		}
+		if = {
+			limit = { exists = scope:pp_te_co }
+			scope:pp_te_co = { save_scope_as = pp_te_holder }
+		}
+		remove_variable = pp_te_chartering
+	}
 }
 
 # Location scope: $COUNT$ regiments of scope:pp_te_holder put ashore here at full strength (heavy infantry and shot of the
@@ -784,7 +861,15 @@ pp_te_owner_change_effect = {
 		}
 	}
 	else_if = {
-		limit = { has_variable = pp_te_foothold_of }
+		limit = {
+			has_variable = pp_te_foothold_of
+			NOT = { has_variable = pp_te_chartering }
+			# a hand-over inside the founder's realm (its chartered company or colonial subject) is no loss
+			NOT = {
+				scope:winner ?= { is_subject_of = prev.var:pp_te_foothold_of }
+			}
+			NOT = { scope:winner ?= var:pp_te_foothold_of }
+		}
 		set_variable = {
 			name = pp_te_changed_year
 			value = current_year

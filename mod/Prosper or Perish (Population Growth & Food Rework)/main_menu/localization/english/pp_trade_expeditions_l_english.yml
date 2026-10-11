@@ -9,12 +9,12 @@
  pp_te_india: "Factory in the Indies"
  pp_te_india_desc: "Charter a fleet round the Cape to the coasts of India and Ceylon. A weak raja may sell us a harbour for a fortified factory, a great one may license a trading house in his port, and a stubborn one may be made to yield his town."
  pp_te_india_historical_info: "The Raja of Cochin welcomed the Portuguese in 1503 as allies against Calicut, and Goa was stormed in 1510. The English traded at Surat by the emperor's farman from 1612, the Danes leased Tranquebar from the Nayak of Thanjavur in 1620, the English received Madras from a local nayak in 1639 and the French bought Pondicherry in 1674."
- pp_te_india_outcome_overview: "$BULLET$If the local ruler sells: the [location|e], a treaty of peace with the seller, a [ShowBuildingTypeName('pp_te_factory')] and its garrison.\n$BULLET$If a weak ruler refuses: sometimes a landing and war for the town.\n$BULLET$If the ruler licenses trade: a [ShowBuildingTypeName('pp_te_lodge')] in his port and trade access.\n$BULLET$Or a refusal, and the fleet comes home with its cargo."
+ pp_te_india_outcome_overview: "$BULLET$If the local ruler sells: the [location|e] for a chartered company of ours, a treaty of peace with the seller, a [ShowBuildingTypeName('pp_te_factory')] and its garrison.\n$BULLET$If a weak ruler refuses: sometimes a landing and war for the town.\n$BULLET$If the ruler licenses trade: a [ShowBuildingTypeName('pp_te_lodge')] in his port and trade access.\n$BULLET$Or a refusal, and the fleet comes home with its cargo."
 
  pp_te_far_east: "Embassy to the Far East"
  pp_te_far_east_desc: "Send an embassy and a fleet to the China Sea. The great courts of the East seldom cede land, but they may lease a peninsula, license a factory in a port or refuse us outright; an island no state rules can be settled and fortified."
  pp_te_far_east_historical_info: "Portugal stormed Malacca in 1511 and was driven from the Chinese coast in 1521, then leased Macau from 1557 for a yearly ground rent. Nagasaki was opened to the Portuguese by a Christian daimyo in 1571, the Dutch and English traded at Hirado from 1609, and the Dutch built Fort Zeelandia on Taiwan in 1624, where no Chinese state ruled. Later Europeans traded at Canton under licence."
- pp_te_far_east_outcome_overview: "$BULLET$On a coast no state rules: the [location|e], a [ShowBuildingTypeName('pp_te_factory')] and soldiers to hold it.\n$BULLET$Rarely, a lease of the [location|e] with a treaty of peace, the castle and its garrison.\n$BULLET$More often a licence: a [ShowBuildingTypeName('pp_te_lodge')] in the port and trade access.\n$BULLET$Or a refusal, and the embassy comes home with nothing."
+ pp_te_far_east_outcome_overview: "$BULLET$On a coast no state rules: the [location|e] for a chartered company of ours, a [ShowBuildingTypeName('pp_te_factory')] and soldiers to hold it.\n$BULLET$Rarely, a lease of the [location|e] with a treaty of peace, the castle and its garrison.\n$BULLET$More often a licence: a [ShowBuildingTypeName('pp_te_lodge')] in the port and trade access.\n$BULLET$Or a refusal, and the embassy comes home with nothing."
 
  pp_te_factory: "Castle and Factory"
  pp_te_factory_desc: "A stone castle on a harbour we hold, with warehouses, a chapel and a gun battery inside its walls. It shelters the garrison and our ships and draws the trade of the whole coast."
@@ -48,3 +48,8 @@
  STATIC_MODIFIER_DESC_pp_te_works_star_fort: "Ravelins and a glacis surround the castle of this trading station."
  STATIC_MODIFIER_NAME_pp_te_works_fortress: "Fortress Station"
  STATIC_MODIFIER_DESC_pp_te_works_fortress: "This trading station is one of the great coastal fortresses of its age."
+
+ pp_te_company: "Chartered Company"
+ pp_te_company_desc: "A company of merchants chartered by its crown to hold a fortified station on a distant coast, raise its own garrison and trade in the crown's name."
+ LEAD_pp_te_company: "Governor"
+ AM_pp_te_company: "Company"

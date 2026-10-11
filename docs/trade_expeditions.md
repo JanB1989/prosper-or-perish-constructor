@@ -16,6 +16,7 @@ the `start_expedition` generic action), so the AI launches them on its own.
 | `main_menu/common/static_modifiers/pp_trade_expedition_modifiers.txt` | bastion / star-fort / fortress works of a castle by age |
 | `in_game/common/scripted_triggers/pp_trade_expedition_triggers.txt` | colonial power, free site, hosts, the site lists |
 | `in_game/common/script_values/pp_trade_expedition_values.txt` | costs (scaled by yearly income), prices, chances, site score |
+| `in_game/common/subject_types/pp_te_company.txt` | Chartered Company: land-holding company subject that holds castle towns in India and the Far East |
 | `in_game/common/building_types/pp_trade_expedition_buildings.txt` | Castle and Factory (own harbour), Factory (licence in a host's port) |
 | `in_game/common/area_preferences/pp_trade_expedition_preferences.txt` | conquest preference per region after a landing war |
 | `in_game/events/pp_trade_expedition_events.txt` | outcome events (`pp_trade_expedition.1`-`.5`, `.20` lost at sea) |
@@ -93,9 +94,13 @@ expedition. Then:
   landed at full strength. A town won by a landing war gets the castle and garrison when it changes owner
   (`on_location_changed_owner`).
 - **Treaty**: a bought site comes with a 20-year mutual truce with the seller.
-- **No trade company subject.** Script-made trade companies (building subjects, as vanilla `create_building_subject`)
-  died within three months in Indian regions in every test and took their Factory with them, while crown Factories in
-  the same ports stood (see Results, runs 3 and 5). The licence therefore keeps the Factory under the crown everywhere.
+- **Chartered companies** (`subject_types/pp_te_company.txt`): a castle town in India or the Far East (bought, settled
+  or won) goes to the country's Chartered Company for that region, a land-holding subject with its own governor
+  (the English company at Madras, the Dutch at Batavia); later towns in the region join it, and the company holds the
+  garrison. Its overlord joins its defensive wars; it cannot declare wars, be annexed or be offered in diplomacy.
+  African castles stay with the crown. Vanilla's `trade_company` (a building subject, as `create_building_subject`)
+  was tried first: script-made ones died within three months in Indian regions in every test and took their Factory
+  with them (runs 3 and 5), so licences keep their Factory under the crown.
 - **Peace deals**: PP's AI peace deals only take land connected to the winner (`AI_CONQUER_TREATY_DESIRE_ADJECENT`), so a
   European rival at war in Europe does not take a station overseas unless it holds land next to it; the threat is the
   station's neighbours.
@@ -259,6 +264,30 @@ Run 4, 1487-1517 (AI alone, all fixes up to the ocean-advance gate):
 - Trade out of station markets in 1632: England 7 routes (size 11.9), Castile 6 (6.4), Brittany 3 (2.5), Portugal 3
   (2.4), Ireland 2 (2.3), Mecklenburg 2 (1.3).
 
+### Chartered companies and a European war (1632 save of run 7, console set-up, 8 years)
+
+- Four land-holding chartered companies made by console at the castle towns Diu (Brittany), Dinghai (Mecklenburg),
+  Jaffna (Castile) and Madras (France): all four were still companies of their crowns in 1640. Jaffna was taken by
+  rebels in 1638 and was back with its company by 1640.
+- Forced war Castile on Portugal (`cb_war_from_event`): over within two years; neither side's overseas stations
+  changed hands (Portugal kept Lamu and Pate). This is PP's peace rule at work (`AI_CONQUER_TREATY_DESIRE_ADJECENT`,
+  already in 0.10): a winner takes only land connected to its own.
+- Player side: `tag POR` and the outcome event fired for the player; the console showed "Portugal gets the Event
+  'A Harbour Bought'" (title localized). The event window itself did not show in that debug session, so the
+  event and panel texts are still unseen in game.
+
+### Runs 8 and 9: 1712 with chartered companies (AI alone)
+
+- Run 8 (stopped at 1722): France's company at Madras formed in 1719 and held. Portugal's castle at Hooghly (Satgaon)
+  went to its new company in 1716, and Orissa attacked the company in February 1717 and took the town the same year:
+  the one-town company is the war target and makes its own peace, while crown-held castles survived such wars (run 5).
+- Since then `ai_scripted_expansion_score/pp_te_company_protection.txt` makes every AI attacker count a chartered
+  company at a quarter (attacking it means war with its crown).
+- Run 9 (1712-1727, with that weight): 11 countries, 22 voyages (11 African, 8 Indian, 3 Far Eastern); 19 stations,
+  18 held. Chartered companies: France at Madras (1717, held ten years), Mecklenburg at Chittagong (1723), Sweden at
+  Colombo (1726) held; Brittany's at Hooghly (1721) fell to Orissa again in 1722. Orissa (tax base about 2,500)
+  next to Hooghly is the one place where a company does not last.
+
 ## Conclusions
 
 - **Used by the AI, several but not too many.** 1480s: only the Iberian crowns (the ocean-advance gate). 1610s-1730s:
@@ -280,6 +309,10 @@ Run 4, 1487-1517 (AI alone, all fixes up to the ocean-advance gate):
 - **Trade builds up.** Every founder trades out of its station\x27s market within a few years (up to 11 routes for
   England), and the host towns of licensed Factories keep growing (Satgaon, Malindi, Chittagong 170-250 building
   levels).
-- **Open:** script-made trade company subjects die in Asian regions (cause unknown; the licence keeps the Factory under
-  the crown instead). Landing wars rarely take the town (2 of 7 won: Portugal at Zanzibar, Ireland at Mombasa). Far East: a strong Chinese owner mostly refuses or
+- **Trade companies:** castle towns in India and the Far East go to a land-holding Chartered Company of the crown
+  (one per region). 3 of 4 AI companies held in run 9 and all 4 console-made ones in the 1632 test; a very strong
+  neighbour (Orissa at Hooghly) takes a fresh company within a year. If that is too weak, the alternative is to keep
+  castles under the crown, as in runs 2-7, where they held better.
+- **Open:** script-made vanilla trade companies (building subjects) die in Asian regions (cause unknown); licences keep
+  their Factory under the crown. Landing wars rarely take the town (2 of 7 won: Portugal at Zanzibar, Ireland at Mombasa). Far East: a strong Chinese owner mostly refuses or
   licenses, as intended. No player-side check of the events and panel texts in game yet.

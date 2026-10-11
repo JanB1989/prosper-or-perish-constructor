@@ -1,7 +1,8 @@
 ﻿# Castile/Spain and Portugal never fight each other (docs/country_finetunes.md, Jan 2026-10-11): neither joins a war as
-# an ally when the other leads the side it would fight. Covers player and AI alike.
+# an ally when the other leads the side it would fight. AI only: a player may join.
 pp_iberian_peace_war_rule = {
 	join_war_disabled_trigger = {
+		is_ai = yes
 		OR = {
 			AND = {
 				OR = {

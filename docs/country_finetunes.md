@@ -29,9 +29,13 @@ Hand-tuned changes for single countries, one entry each: what and why.
   for areas the other holds: the in-game tooltip (1337) put every area under it, so `allow` does not filter areas; `pp_iberian_peace` never_attack
   always (was: while the Reconquista/Maghreb is open; the pre-1450 `pp_iberian_early_peace` and the 1450 event
   `pp_lucky_nations.2` are gone). Same day: `pp_castile_no_france_conquest` and `pp_france_spare_iberia` -1 -> -2.
-  `join_war_rules/pp_iberian_peace.txt` (same day): Castile/Spain cannot join a war as an ally against a side Portugal
-  leads, nor Portugal against Castile/Spain (player and AI). Not covered: wars where the other is a non-leading
-  participant, direct wars from events, inheritance/union.
+  `join_war_rules/pp_iberian_peace.txt` (same day): an AI Castile/Spain cannot join a war as an ally against a side
+  Portugal leads, nor an AI Portugal against Castile/Spain (players may). `on_took_location_in_peace_treaty`
+  (`on_action/pp_country_finetunes.txt`, `pp_iberian_return_peace_location`): a location an AI Castile/Spain takes from
+  Portugal in a peace deal, or an AI Portugal from Castile/Spain, goes straight back to the loser. Iberian Concord is
+  back (`biases/pp_country_finetune_opinions.txt`): +200 opinion of each other for 100 years from game start, replacing
+  vanilla's decaying +50 good relations (note: high opinion also raises the AI's wish to ally). Not covered:
+  inheritance/union.
   Check in game: Castile's conquest tooltip on a Portuguese location shows the preference line and no positive desire.
 - **France +3 diplomatic reputation** (2026-10-06, `pp_estate_privilege_adjustments.txt`, Great Offices of the Crown).
   Why: Jan's call, on the same privilege as the noble tax; vanilla privileges give at most +2.

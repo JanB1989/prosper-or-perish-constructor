@@ -1,7 +1,9 @@
-﻿# Country finetunes at game start (docs/country_finetunes.md): one-off starting gold, conquest preferences.
+﻿# Country finetunes at game start (docs/country_finetunes.md): one-off starting gold, starting opinions, conquest
+# preferences.
 on_game_start = {
 	on_actions = {
 		pp_country_finetune_start_gold
+		pp_country_finetune_opinions
 		pp_country_finetune_area_preferences
 		delay = { days = 1 }
 		pp_colonizer_area_preferences
@@ -191,6 +193,72 @@ pp_country_finetune_area_preferences = {
 		}
 		c:BUL ?= {
 			add_area_preference = pp_balkans_go_north
+		}
+	}
+}
+
+# Castile <-> Portugal: Iberian Concord (+200, 100 years) replaces vanilla's decaying +50 good relations.
+pp_country_finetune_opinions = {
+	effect = {
+		if = {
+			limit = {
+				exists = c:CAS
+				exists = c:POR
+			}
+			c:CAS = {
+				if = {
+					limit = { has_opinion = { target = c:POR modifier = opinion_good_relations } }
+					remove_opinion = { target = c:POR modifier = opinion_good_relations }
+				}
+				add_opinion = { target = c:POR modifier = pp_opinion_iberian_concord }
+			}
+			c:POR = {
+				if = {
+					limit = { has_opinion = { target = c:CAS modifier = opinion_good_relations } }
+					remove_opinion = { target = c:CAS modifier = opinion_good_relations }
+				}
+				add_opinion = { target = c:CAS modifier = pp_opinion_iberian_concord }
+			}
+		}
+	}
+}
+
+# Castile/Spain and Portugal never conquer each other: a location an AI winner takes from the other in a peace deal goes
+# straight back to the loser. The peace AI ignores conquest preferences for border land (it floors every location's
+# desire), so this is the only hard stop.
+on_took_location_in_peace_treaty = {
+	on_actions = {
+		pp_iberian_return_peace_location
+	}
+}
+
+pp_iberian_return_peace_location = {
+	trigger = {
+		scope:winner = { is_ai = yes }
+		OR = {
+			AND = {
+				scope:winner = {
+					OR = {
+						tag = CAS
+						tag = SPA
+					}
+				}
+				scope:loser = { tag = POR }
+			}
+			AND = {
+				scope:winner = { tag = POR }
+				scope:loser = {
+					OR = {
+						tag = CAS
+						tag = SPA
+					}
+				}
+			}
+		}
+	}
+	effect = {
+		scope:location = {
+			change_location_owner = scope:loser
 		}
 	}
 }

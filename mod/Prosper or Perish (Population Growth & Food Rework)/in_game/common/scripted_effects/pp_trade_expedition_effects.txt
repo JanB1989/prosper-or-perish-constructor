@@ -198,7 +198,7 @@ pp_te_unreserve_effect = {
 #   no owner                  -> the expedition settles the coast and builds the Castle and Factory
 #   the host cedes the site   -> bought for gold, a 20-year treaty (truce), Castle and Factory, garrison
 #   a far weaker host refuses -> landing and war for the town (some of the time)
-#   the host licenses trade   -> a Factory in its port and trade access; in India and the Far East a trade company
+#   the host licenses trade   -> a Factory of the crown in its port and trade access
 #   the host refuses          -> the fleet trades its cargo and comes home with nothing
 # CEDE = chance factor for a sale, WAR = chance of a landing against a weak host that will not sell, LICENCE = chance a
 # host grants a factory when it will not sell.

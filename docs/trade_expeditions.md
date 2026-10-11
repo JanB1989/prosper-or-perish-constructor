@@ -32,11 +32,12 @@ the `start_expedition` generic action), so the AI launches them on its own.
 
 All three: `unique = yes`, `repeatable = yes`, at most three African, three Indian and two Far Eastern stations per
 country, 15/20/25 years between voyages of one kind (counted from the arrival), never while a great power is at war
-with the country.
+with the country. A fleet that finds no free site at departure sails for the Cape and looks again on arrival.
 
 ### Who may send them (`pp_te_colonial_power`)
 
-A sovereign country with a capital in Europe and the `colonies` advance, a harbour on the Atlantic, North Sea or
+A sovereign country with a capital in Europe, the `colonies` advance and an ocean-going advance (open-sea exploration,
+explorer commissions, Portugal's pursuing the waves, colonial charters), a harbour on the Atlantic, North Sea or
 Baltic coasts of the west (Iberia, France, the British Isles, the Low Countries and North Germany, Scandinavia, the
 Atlantic islands), a sea-going realm (150+ locations or 8+ ports on its capital's continent facing open sea, the test of
 the AI colonial charter gate) and a tax base of 75+. In the 1612 save of run cf982ee6 this admits Portugal, England,
@@ -84,10 +85,13 @@ expedition. Then:
 
 ## Holding the station
 
-- **Castle and Factory** (`pp_te_factory`): fort level 3 (between castle and bastion), `local_garrison_size`,
+- **Castle and Factory** (`pp_te_factory`): fort level 3 (between castle and bastion; + bastion, star-fort or fortress
+  works when founded in the Ages of Reformation, Absolutism or Revolutions: fort level 4, 6, 8), `local_garrison_size`,
   `local_defensive`, zone of control, `is_indestructible` (the AI demolishes forts to save money; this one stays), plus
   merchant capacity, merchant power, maritime presence, market access and development growth.
-- **Garrison**: two regiments (three from the Age of Reformation) of heavy infantry and shot, landed at full strength.
+- **Garrison**: two regiments (three from the Age of Reformation, four from Absolutism) of heavy infantry and shot,
+  landed at full strength. A town won by a landing war gets the castle and garrison when it changes owner
+  (`on_location_changed_owner`).
 - **Treaty**: a bought site comes with a 20-year mutual truce with the seller.
 - **No trade company subject.** Script-made trade companies (building subjects, as vanilla `create_building_subject`)
   died within three months in Indian regions in every test and took their Factory with them, while crown Factories in
@@ -215,3 +219,67 @@ Run 4, 1487-1517 (AI alone, all fixes up to the ocean-advance gate):
   crown Factories (no company) at Kochi and Mangalore and a company at Sofala lived on. The engine\x27s own test
   \x60subject_can_be_created_by\x60 said yes for France in the Deccan. Cause not found; the licence now keeps the Factory
   under the crown everywhere (no company).
+
+### Run 6: 1712-1737 (crown Factories, no companies; with the later reverted treasury check on purchases)
+
+- 11 countries, 21 voyages (11 African, 8 Indian, 2 Far Eastern); **19 stations, all 19 held in 1737** (Zanzibar\x27s town
+  changed hands in 1735, the Factory stayed). The Asian crown Factories that used to die with their companies all
+  stood: Chittagong, Madras, Galle, Satgaon, Kotte, Daman, and France\x27s Far East licence at Dinghai (Liampo, 1721);
+  Mecklenburg was refused in the Far East (1722).
+- Trade (1732 save): founders run trade routes out of their station markets - Castile 9 routes (size 18.2), England 11
+  (15.3), Portugal 11 (12.0), France 4 (8.5), Sweden 3 (4.1), Brittany 3 (2.7), Mecklenburg 2 (2.0); founder merchant
+  capacity there 0.6-1.6 per station. The hosts keep building in licensed towns (Satgaon 246 building levels, Malindi
+  217, Chittagong 178).
+- Only 2 of 18 stations were castles: a purchase also had to find its price in the treasury on arrival, and the
+  fitting out had already taken most of it. That check was reverted (purchases may take the buyer into debt, as in
+  runs 2-5, where 8 of 14 and 11 of 21 stations were castles).
+
+### Run 7: 1612-1632, final code (confirmation)
+
+| Year | Station | Founder | How |
+| --- | --- | --- | --- |
+| 1613 | Diu | Brittany | castle |
+| 1613 | Galle | Portugal | Factory |
+| 1614 | Lamu | Portugal | castle |
+| 1616 | Satgaon (Hooghly) | Mecklenburg | Factory |
+| 1616 | Ughoton | Mecklenburg | castle |
+| 1617 | Mombasa | Ulster | Factory |
+| 1619 | Dinghai (Liampo, Zhoushan) | Mecklenburg | castle |
+| 1619 | Zanzibar | Brittany | Factory |
+| 1620 | Cacheu | Castile | Factory (town passed to Mali 1622, Factory stayed) |
+| 1623 | Yin (Ningbo) | Portugal | Factory |
+| 1624 | Jaffna | Castile | castle |
+| 1625 | Madras | France | castle |
+| 1625 | Malindi | Denmark | Factory |
+| 1629 | Pate | Portugal | castle |
+| 1629 | Bissau | England | castle |
+
+- 9 countries, 17 voyages (9 African, 5 Indian, 3 Far Eastern); refusals: Pomerania-Wolgast (Africa 1613), Brittany (Far
+  East 1618), France (Africa 1622). **15 stations, 8 castles and 7 Factories, all 15 held in 1632.**
+- Trade out of station markets in 1632: England 7 routes (size 11.9), Castile 6 (6.4), Brittany 3 (2.5), Portugal 3
+  (2.4), Ireland 2 (2.3), Mecklenburg 2 (1.3).
+
+## Conclusions
+
+- **Used by the AI, several but not too many.** 1480s: only the Iberian crowns (the ocean-advance gate). 1610s-1730s:
+  9-12 countries per 20-25 years, i.e. every Atlantic and Baltic power of this world with an ocean advance, a tax base
+  of 75+ (200 for India, 300 for the Far East) and a full treasury, about one voyage per country every five years. In
+  this world that includes the mid-sized northern states (Mecklenburg, Pomerania-Wolgast, Frisia, Brittany), the
+  analogues of Brandenburg, Courland and the Ostend Company. If that is too many, raise the African tax base or lower
+  the per-country caps (3/3/2).
+- **Costs follow wealth.** A quarter of a year\x27s income for Africa and India, 0.3 for the Far East, plus the land
+  price (a quarter) on a purchase: Portugal\x27s African voyage costs about 430 gold in 1487, 810 in 1612, 1,410 in 1712;
+  France\x27s about 4,300 in 1712. The treasury gate (1.25 x the cost) opens only at a treasury peak.
+- **Staying power without define changes.** Across all runs (roughly a thousand station-years), no station fell to a
+  local power except in the forced wars; the saves checked (1632, 1636, 1732) show no war between a founder and a local
+  host. Castles were lost only to a home rebellion (Ireland\x27s Mombasa) or a forced war before the age works
+  (Madras, fort level 3); under forced wars Lamu, Ughoton and the star-fort Satgaon held. Licensed Factories stand while
+  the host grants trade access. What protects them: the castle of its age and the landed garrison, the 20-year truce
+  with the seller, and PP\x27s existing peace define \x60AI_CONQUER_TREATY_DESIRE_ADJECENT\x60 (0.10), which keeps a far-away
+  European winner from taking a station in a peace deal. No new define was needed.
+- **Trade builds up.** Every founder trades out of its station\x27s market within a few years (up to 11 routes for
+  England), and the host towns of licensed Factories keep growing (Satgaon, Malindi, Chittagong 170-250 building
+  levels).
+- **Open:** script-made trade company subjects die in Asian regions (cause unknown; the licence keeps the Factory under
+  the crown instead). Landing wars rarely take the town (2 of 7 won: Portugal at Zanzibar, Ireland at Mombasa). Far East: a strong Chinese owner mostly refuses or
+  licenses, as intended. No player-side check of the events and panel texts in game yet.

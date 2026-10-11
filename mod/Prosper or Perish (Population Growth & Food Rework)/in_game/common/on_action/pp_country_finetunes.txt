@@ -139,17 +139,11 @@ pp_colonizer_area_preferences = {
 	}
 }
 
-# Castile <-> Portugal: no conquest of each other (vanilla grants Castile's only after Rio Salado); the
-# Reconquista aim is in ai_scripted_expansion_score/target pp_reconquista.txt. Muscovy: the Russian region
-# (pp_gathering_russian_lands.txt).
+# Castile/Spain <-> Portugal: never conquer each other, the whole game (pp_conquest_preferences.txt; vanilla's Rio Salado
+# event adds castile_no_portugal_conquest, which PP replaces with the same -1000); never plan a war on each other
+# (ai_scripted_expansion_score pp_reconquista.txt). Muscovy: the Russian region (pp_gathering_russian_lands.txt).
 pp_country_finetune_area_preferences = {
 	effect = {
-		c:CAS ?= {
-			if = {
-				limit = { NOT = { has_area_preference = castile_no_portugal_conquest } }
-				add_area_preference = castile_no_portugal_conquest
-			}
-		}
 		c:POR ?= {
 			add_area_preference = pp_portugal_no_castile_conquest
 		}
@@ -182,15 +176,9 @@ pp_country_finetune_area_preferences = {
 			add_area_preference = pp_france_consolidate_realm
 			add_area_preference = pp_france_spare_iberia
 		}
-		# Castile: no French land.
+		# Castile: no French land, no Portuguese land.
 		c:CAS ?= {
 			add_area_preference = pp_castile_no_france_conquest
-			# until 1450 the -1 replaces vanilla's -0.9 on Portugal (if the engine keeps the stronger of two preferences,
-			# the -0.9 would leave x0.1); events/pp_lucky_nations_events.txt restores the vanilla one in 1450
-			if = {
-				limit = { has_area_preference = castile_no_portugal_conquest }
-				remove_area_preference = castile_no_portugal_conquest
-			}
 			add_area_preference = pp_castile_spare_portugal
 		}
 		# Brandenburg: its marches (pp_lucky_nations.txt).

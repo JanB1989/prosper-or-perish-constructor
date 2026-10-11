@@ -15,6 +15,18 @@ Hand-tuned changes for single countries, one entry each: what and why.
   the conquest preference `pp_castile_conquer_maghreb` (x10). At start CAS gets vanilla's `castile_no_portugal_conquest`
   (vanilla: only after Rio Salado) and POR the mirror `pp_portugal_no_castile_conquest` (`on_action/pp_country_finetunes.txt`).
   Why: Castile conquered Portugal in every game; +100 opinion for 150 years and +200 for 100 years did not stop it.
+- **Castile/Spain and Portugal never conquer each other, the whole game** (2026-10-11, Jan; NOT tested in game).
+  Supersedes the Castile-Portugal parts of the 2026-10-07 entry and of the lucky-nations entry below (no 1450 end).
+  Found: Castile's conquest tooltip on Viseu (save 1367) listed no preference line and 71 % desire although CAS held
+  `pp_castile_spare_portugal` (-1). Reading: the engine stores 1 + modifier and treats 0 as no preference, so every -1
+  preference did nothing (also run cf982ee6: Portugal 67 -> 1 at -1); -2 worked for the colonizer preferences.
+  Now: `pp_castile_spare_portugal` and `pp_portugal_no_castile_conquest` -1000, each on the other's heartland areas and,
+  via `allow`, every area where the other or its subjects hold land (all five continents); vanilla's Rio Salado
+  preference `castile_no_portugal_conquest` (-0.9, x0.1) REPLACEd with the same -1000; `pp_iberian_peace` never_attack
+  always (was: while the Reconquista/Maghreb is open; the pre-1450 `pp_iberian_early_peace` and the 1450 event
+  `pp_lucky_nations.2` are gone). Same day: `pp_castile_no_france_conquest` and `pp_france_spare_iberia` -1 -> -2.
+  Check in game: Castile's conquest tooltip on a Portuguese location shows the preference line and no positive desire.
+  Not covered: inheritance/union (not conquest).
 - **France +3 diplomatic reputation** (2026-10-06, `pp_estate_privilege_adjustments.txt`, Great Offices of the Crown).
   Why: Jan's call, on the same privilege as the noble tax; vanilla privileges give at most +2.
 - **Colonizers daisy-chain down Africa** (2026-10-07, `area_preferences/pp_colonizer_preferences.txt`,

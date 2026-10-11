@@ -1,6 +1,6 @@
 ﻿# Reconquista aim (docs/country_finetunes.md).
 
-# Castile/Spain and Portugal never plan a war on each other while the Reconquista and the Maghreb are still open.
+# Castile/Spain and Portugal never plan a war on each other, the whole game (Jan, 2026-10-11).
 pp_iberian_peace = {
 	attacker_potential = {
 		OR = {
@@ -17,10 +17,7 @@ pp_iberian_peace = {
 		}
 	}
 	never_attack = {
-		OR = {
-			pp_reconquista_iberia_open = yes
-			pp_reconquista_maghreb_open = yes
-		}
+		always = yes
 	}
 }
 

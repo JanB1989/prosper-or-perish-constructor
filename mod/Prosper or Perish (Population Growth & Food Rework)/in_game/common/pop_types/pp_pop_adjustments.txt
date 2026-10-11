@@ -90,6 +90,7 @@ TRY_INJECT:slaves = {
 # free-land modifiers +75 % x the free share); on unowned land (no gate, no store) nothing moves.
 # Tribal land develops and takes up institutions slowly.
 TRY_INJECT:tribesmen = {
+	power_per_pop = 0.5 # 2026-10-11 (Jan): 50x vanilla 0.01
 	pop_food_consumption = 0
 	pop_percentage_impact = {
 		local_monthly_food = 2

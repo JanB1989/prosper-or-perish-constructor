@@ -192,16 +192,13 @@ pp_te_any_far_east_site = {
 	}
 }
 
-# Location scope: a foothold of a trade expedition that its founder still holds (owner, or the owner of the factory).
+# Location scope: a station its founder still holds: the town belongs to the founder or one of its subjects (a colonial
+# nation or company formed around it), or a Factory still stands in the host's town.
 pp_te_foothold_held = {
 	has_variable = pp_te_foothold_of
 	OR = {
 		owner ?= var:pp_te_foothold_of
-		any_buildings_in_location = {
-			OR = {
-				building_type = building_type:pp_te_factory
-				building_type = building_type:pp_te_lodge
-			}
-		}
+		owner ?= { is_subject_of = prev.var:pp_te_foothold_of }
+		any_buildings_in_location = { building_type = building_type:pp_te_lodge }
 	}
 }

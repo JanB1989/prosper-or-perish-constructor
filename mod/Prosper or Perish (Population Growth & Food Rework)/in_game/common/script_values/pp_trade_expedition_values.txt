@@ -12,17 +12,18 @@ pp_te_cost_africa = {
 }
 pp_te_cost_india = {
 	value = yearly_gold
-	multiply = 0.4
+	multiply = 0.3
 	min = 600
 }
 pp_te_cost_far_east = {
 	value = yearly_gold
-	multiply = 0.5
+	multiply = 0.35
 	min = 900
 }
 
 # Gold the treasury must hold to launch: the fitting out plus a quarter more for the land and the gifts (run cf982ee6,
-# 1612: the colonial powers held 0.2 to 0.9 of a year's income in the treasury).
+# 1612: the colonial powers held 0.2 to 0.9 of a year's income in the treasury, most 0.35-0.5; at 0.4 and 0.5 of a
+# year for India and the Far East no Far East voyage sailed in 25 years from 1612).
 pp_te_reserve_africa = {
 	value = pp_te_cost_africa
 	multiply = 1.25

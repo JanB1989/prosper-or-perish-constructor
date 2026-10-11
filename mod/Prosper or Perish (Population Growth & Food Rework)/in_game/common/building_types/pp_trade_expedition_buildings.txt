@@ -57,12 +57,15 @@ pp_te_factory = {
 }
 
 # Factory: a licensed trading house in a foreign ruler's port (Surat 1612, the Canton factories, Hirado), owned by the
-# expedition's country; the host keeps the town.
+# expedition's country or its trade company; the host keeps the town. It stands while the host grants trade access to the
+# owner or its overlord (as vanilla's Rock of Monaco); a war between them breaks the access and closes it, as the
+# Mughals closed the English factories in 1686. need_good_relation lost a company's Factory at Diu within six years
+# (test run from 1612, cf982ee6); stronger_power_projection stopped the script from building it at all.
 pp_te_lodge = {
 	audio_tier = 3
 	is_special = yes
 	is_foreign = yes
-	need_good_relation = yes
+	own_or_overlord_relation_needed = trade_access
 	max_levels = 1
 	pop_type = burghers
 	category = trade_category

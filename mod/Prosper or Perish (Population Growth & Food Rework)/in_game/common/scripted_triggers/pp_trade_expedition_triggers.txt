@@ -7,10 +7,18 @@
 # that face open sea, the test of the AI colonial charter gate, auto_modifiers/pp_colonial_charter_gate.txt) and a tax
 # base of 75+ (run cf982ee6: the colonizers of 1652 ran 110-1,893; the one-province colonizers 9-26). In the 1612 save
 # of that run the first draft without the Europe and ocean test let the Ottomans, Ming, Korea, Vijayanagara and the
-# Papacy in.
+# Papacy in. An ocean-going advance (open-sea exploration, explorer commissions, colonial charters) keeps the 1480s to
+# the Iberian crowns: in the 1487 save of run cf982ee6 only Portugal, Castile and Aragon had one, while Denmark, Norway,
+# Novgorod, Holland, Brittany, England and the Teutonic Order passed every other test.
 pp_te_colonial_power = {
 	is_subject = no
 	has_advance = colonies
+	OR = {
+		has_advance = open_sea_exploration
+		has_advance = explorer_commisions_advance
+		has_advance = por_pursuing_waves
+		has_advance = colonial_charters
+	}
 	has_ports = yes
 	exists = capital
 	capital = { continent = continent:europe }

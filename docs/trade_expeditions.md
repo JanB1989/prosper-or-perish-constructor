@@ -147,3 +147,38 @@ Mecklenburg. AI check chance 0.5, India and Far East still at 0.4/0.5 of a year 
   Aragon 4.2, Portugal 2.4, Mecklenburg 1.3, Brittany 1.0); founder merchant capacity in station markets 0.6-1.6.
 - The hosts keep building in station towns (Madras 59 -> 71 building levels, Bissau 7 -> 18, Cacheu 10 -> 24 from 1620
   to 1636); castle towns stay at very low control (0.0-0.13) as far exclaves.
+
+### Run 3: 1712-1732 (base autosave _27, Age of Absolutism), with a forced attack in 1720
+
+Gates at the start: Africa Portugal, Novgorod, Mecklenburg, France, Frisia, Castile, Ireland; India Portugal,
+Mecklenburg, France (after the India cost went down to a quarter of a year; at 0.3 none passed). Great Britain held
+only 0.21 of a year in the treasury.
+
+- 12 countries sent 23 voyages (12 African, 9 Indian, 2 Far Eastern); 21 stations by 1732. Far East: France refused
+  1716; Mecklenburg\x27s 1719 fleet vanished without arriving (it had found no free site and its fallback waypoint was the
+  inland capital; fixed: it now sails for the Cape and looks again there).
+- New castles: Lamu, Ughoton, Madras, Satgaon (Hooghly, Portugal), Pate, Kozhikode (Great Britain), Kotte (Colombo,
+  Brandenburg), Bissau, Kilwa, Quelimane, Cacheu. Licences: Zanzibar, Mombasa, Malindi, Mozambique, Inhambane, Sofala,
+  the Gambia, and in India Galle, Jaffna, Daman.
+- **Forced attack 1720** (console : each castle\x27s non-European neighbour declares war on its
+  owner with a casus belli on the station\x27s province): Ajuran on Mecklenburg\x27s Lamu - war over by 1723, castle kept;
+  Benin on France\x27s Ughoton - war over, castle kept (in 1726 the town passed to France\x27s own new subject); SMV on
+  France\x27s Madras (fort level 3, three regiments) - occupied by 1723, ceded in 1726. So 2 of 3 held a full war against
+  a neighbour with no help from home. Since then the castle is built to the standard of its age (bastion works from the
+  Age of Reformation, star-fort works from Absolutism, a fortress in the Age of Revolutions) and the Absolutism garrison
+  is four regiments.
+- **All three Indian licences died with their trade company** (Galle and Jaffna within a year, Daman), while all seven
+  African licences (no company) stood. Side-by-side test in the same session: three companies made by console at
+  Zanzibar, Mombasa and Malindi - the one given the overlord\x27s ruler lived, the two created without a ruler died within
+  150 days and took their Factories with them; a company with a newly created governor (Mozambique) and one whose
+  shared ruler was killed (Inhambane) both lived 300+ days. The effect passed the overlord\x27s ruler with , which
+  is empty in a regency or for some republics. Fixed: every company gets its own governor, and only a country with an
+  advance that unlocks the type founds one (Pomerania-Wolgast\x27s test company lost its type after a year without it).
+- Natural attacks by locals: none in 20 years (45 run-years so far over runs 2 and 3).
+
+### Run 4: 1487 (base autosave _72, early Age of Discovery)
+
+Gate check before the ocean-advance test: Denmark, Norway, Novgorod, Holland, Castile, Aragon, Brittany, England and
+the Teutonic Order could all send African voyages in 1487, Portugal not (no gold). Only Portugal, Castile and Aragon
+had an ocean-going advance (open-sea exploration, explorer commissions, colonial charters); with that test added only
+Castile and Aragon pass in 1487 (Portugal again short of gold).

@@ -1,0 +1,51 @@
+﻿# Mazalim Court: vanilla block, maintenance 2.5x.
+TRY_REPLACE:mazalim_court_bureaucracy = {
+	implementation_price = price:implement_bureaucracy_price
+	maintenance_price = price:maintain_bureaucracy_price
+	removal_price = price:remove_bureaucracy_price
+	maintenance_price_modifier = {
+		value = country_economical_base
+		multiply = 0.01 # vanilla 0.004 (Jan 2026-10-11: 2.5x)
+	}
+
+	potential = {
+		religion.group = religion_group:muslim
+	}
+
+	estates_that_like = {
+		crown_estate
+		burghers_estate
+		peasants_estate
+	}
+	estates_that_dislike = {
+		nobles_estate
+	}
+
+	#neutral
+	neutral_modifier = {
+		monthly_legitimacy = 0.05
+	}
+
+	#positive
+	positive_modifier = {
+		scale = {
+			value = scope:maintenance
+		}
+		global_max_control = 0.05
+		monthly_towards_jurisprudence = societal_value_monthly_move
+	}
+
+	#negative
+	negative_modifier = {
+		scale = {
+			value = 1
+			subtract = scope:maintenance
+			if = {
+				limit = { root ?= { has_estate_privilege = estate_privilege:dhimmi_mazalim_court } }
+				multiply = 0.8
+			}
+		}
+		nobles_estate_target_satisfaction = -0.1
+		monthly_towards_mysticism = societal_value_monthly_move
+	}
+}

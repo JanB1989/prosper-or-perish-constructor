@@ -770,6 +770,70 @@ pp_te_trace_effect = {
 	owner ?= {
 		error_log = "PPTETO;i=[GetGlobalVariable('pp_te_t_i').GetValue|0];owner=[THIS.GetCountry.GetTag]"
 	}
+	pp_te_trace_forces_effect = yes
+}
+
+# Console trace (part of pp_te_trace_effect; location scope = one station): the founder's forces (its own and its
+# subjects', e.g. a chartered company) in the town, in the neighbouring land and sea locations, and anywhere on land in
+# the station's region: regiments, their strength (thousands), ships. One PPTETU line with the same index.
+pp_te_trace_forces_effect = {
+	var:pp_te_foothold_of = { save_scope_as = pp_te_tr_f }
+	set_global_variable = { name = pp_te_u_here value = 0 }
+	set_global_variable = { name = pp_te_u_here_str value = 0 }
+	set_global_variable = { name = pp_te_u_near value = 0 }
+	set_global_variable = { name = pp_te_u_ships value = 0 }
+	set_global_variable = { name = pp_te_u_region value = 0 }
+	every_unit_in_location = {
+		limit = {
+			is_navy = no
+			owner ?= {
+				OR = {
+					this = scope:pp_te_tr_f
+					is_subject_of = scope:pp_te_tr_f
+				}
+			}
+		}
+		every_sub_unit = {
+			change_global_variable = { name = pp_te_u_here add = 1 }
+			change_global_variable = { name = pp_te_u_here_str add = subunit_strength }
+		}
+	}
+	every_neighbor_location = {
+		every_unit_in_location = {
+			limit = {
+				owner ?= {
+					OR = {
+						this = scope:pp_te_tr_f
+						is_subject_of = scope:pp_te_tr_f
+					}
+				}
+			}
+			if = {
+				limit = { is_navy = yes }
+				every_sub_unit = { change_global_variable = { name = pp_te_u_ships add = 1 } }
+			}
+			else = {
+				every_sub_unit = { change_global_variable = { name = pp_te_u_near add = 1 } }
+			}
+		}
+	}
+	region = {
+		every_location_in_region = {
+			every_unit_in_location = {
+				limit = {
+					is_navy = no
+					owner ?= {
+						OR = {
+							this = scope:pp_te_tr_f
+							is_subject_of = scope:pp_te_tr_f
+						}
+					}
+				}
+				every_sub_unit = { change_global_variable = { name = pp_te_u_region add = 1 } }
+			}
+		}
+	}
+	error_log = "PPTETU;i=[GetGlobalVariable('pp_te_t_i').GetValue|0];here=[GetGlobalVariable('pp_te_u_here').GetValue|0];here_str=[GetGlobalVariable('pp_te_u_here_str').GetValue|0];near=[GetGlobalVariable('pp_te_u_near').GetValue|0];ships_near=[GetGlobalVariable('pp_te_u_ships').GetValue|0];region=[GetGlobalVariable('pp_te_u_region').GetValue|0]"
 }
 
 # Console trace of starts and outcomes (run file pp_te_trace.txt; country scope): one line per country that sent a trade

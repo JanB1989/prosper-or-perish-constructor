@@ -288,6 +288,34 @@ Run 4, 1487-1517 (AI alone, all fixes up to the ocean-advance gate):
   Colombo (1726) held; Brittany's at Hooghly (1721) fell to Orissa again in 1722. Orissa (tax base about 2,500)
   next to Hooghly is the one place where a company does not last.
 
+### Run 10: run 9 continued 1727-1767 - do the colonizers station or ferry forces?
+
+The yearly trace now counts, per station, the founder's (and its subjects') regiments in the town, in the
+neighbouring land and sea locations, and anywhere on land in the station's region, and its ships next to the station
+(`pp_te_trace_forces_effect`, `PPTETU` lines).
+
+| Year | Stations (held) | Castles | Regiments at stations | Stations with troops | Regiments in the regions | Ships next to stations |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1728 | 20 (19) | 9 | 25 | 5 | 25 | 0 |
+| 1730 | 22 (21) | 11 | 36 | 7 | 44 | 16 |
+| 1735 | 22 (20) | 11 | 15 | 5 | 15 | 0 |
+| 1739 | 23 (21) | 12 | 41 | 6 | 41 | 0 |
+| 1745 | 28 (26) | 12 | 5 | 4 | 5 | 0 |
+| 1755 | 32 (30) | 13 | 10 | 4 | 13 | 1 |
+| 1760 | 32 (30) | 13 | 8 | 3 | 8 | 16 |
+| 1767 | 34 (32) | 13 | 3 | 2 | 3 | 1 |
+
+- **No.** The AI neither keeps the landed garrisons nor sends troops. Regiments appear only when a new expedition lands
+  (1730, 1738) and are gone within one to three years (disbanded or withdrawn); the chartered companies own no regiments
+  at all within a few years (1727 save: none). Regiments in the station regions equal those in the station towns: no
+  field army is ever moved into a region with a station. A founder fleet lay off a station twice for two years (1730-1732,
+  1760-1761); otherwise no ships.
+- The stations still hold (32 of 34 in 1767, 13 castles) because nobody attacks them: the castle, the truce, PP's
+  connected-land peace rule and their small value make them poor targets, not their defence.
+- Possible fix (not built): defenders that do not depend on an AI decision, e.g. a much larger fort garrison on the
+  Castle and Factory (`local_garrison_size`, regenerating), or locally raised soldiers (the castle employing soldier
+  pops).
+
 ## Conclusions
 
 - **Used by the AI, several but not too many.** 1480s: only the Iberian crowns (the ocean-advance gate). 1610s-1730s:

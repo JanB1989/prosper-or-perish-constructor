@@ -84,3 +84,20 @@ TRY_REPLACE:great_offices_of_the_crown_of_france = {
 		diplomatic_reputation = 3
 	}
 }
+
+# Local Tribal Strongholds (Maghreb): vanilla block with the tribes' power doubled (+50 % -> +100 %) and a lower tribes
+# tax cap (Jan 2026-10-11).
+TRY_REPLACE:local_tribal_strongholds = {
+	estate = tribes_estate
+
+	potential = {
+		capital ?= { region = region:maghreb_region }
+		"estate_power(estate_type:tribes_estate)" > 0
+	}
+
+	country_modifier = {
+		global_max_rural_control = 0.05
+		global_tribes_estate_power = 1.0
+		tribes_estate_max_tax = -0.075
+	}
+}

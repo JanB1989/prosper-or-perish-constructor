@@ -20,9 +20,10 @@ Hand-tuned changes for single countries, one entry each: what and why.
   Found: Castile's conquest tooltip on Viseu (save 1367) listed no preference line and 71 % desire although CAS held
   `pp_castile_spare_portugal` (-1). Reading: the engine stores 1 + modifier and treats 0 as no preference, so every -1
   preference did nothing (also run cf982ee6: Portugal 67 -> 1 at -1); -2 worked for the colonizer preferences.
-  Now: `pp_castile_spare_portugal` and `pp_portugal_no_castile_conquest` -1000, each on the other's heartland areas and,
-  via `allow`, every area where the other or its subjects hold land (all five continents); vanilla's Rio Salado
-  preference `castile_no_portugal_conquest` (-0.9, x0.1) REPLACEd with the same -1000; `pp_iberian_peace` never_attack
+  Now: `pp_castile_spare_portugal` (North/South Portugal) and `pp_portugal_no_castile_conquest` (Galicia, Leon, Castile,
+  Extremadura, Toledo, Andalusia, Murcia) -1000; vanilla's Rio Salado preference `castile_no_portugal_conquest`
+  (-0.9, x0.1) REPLACEd with -1000 on Portugal. A first version (1c32d7c6) listed all five continents with an `allow`
+  for areas the other holds: the in-game tooltip (1337) put every area under it, so `allow` does not filter areas; `pp_iberian_peace` never_attack
   always (was: while the Reconquista/Maghreb is open; the pre-1450 `pp_iberian_early_peace` and the 1450 event
   `pp_lucky_nations.2` are gone). Same day: `pp_castile_no_france_conquest` and `pp_france_spare_iberia` -1 -> -2.
   Check in game: Castile's conquest tooltip on a Portuguese location shows the preference line and no positive desire.

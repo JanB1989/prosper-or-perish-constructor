@@ -10,42 +10,19 @@ pp_castile_conquer_maghreb = {
 
 # Castile/Spain and Portugal never conquer each other (Jan, 2026-10-11), for the whole game. -1 does nothing: the engine
 # stores 1 + modifier and reads 0 as "no preference" (the conquest tooltip showed no preference line at -1, and Castile
-# took Portugal in run cf982ee6); -1000 makes the desire negative. Each covers the other's heartland and every area
-# where the other or its subjects hold land.
+# took Portugal in run cf982ee6); -1000 makes the desire negative. Fixed area lists only: an `allow` with continents
+# put every listed area under the preference (in-game tooltip 1337), so `allow` does not filter areas.
 pp_portugal_no_castile_conquest = {
 	preference_type = conquest
 	modifier = -1000
 
-	continent = europe
-	continent = africa
-	continent = asia
-	continent = america
-	continent = oceania
-	allow = {
-		OR = {
-			this = area:galicia_area
-			this = area:leon_area
-			this = area:castile_area
-			this = area:extremadura_area
-			this = area:toledo_area
-			this = area:andalusia_area
-			this = area:murcia_area
-			any_location_in_area = {
-				owner ?= {
-					OR = {
-						tag = CAS
-						tag = SPA
-						any_overlord_or_above = {
-							OR = {
-								tag = CAS
-								tag = SPA
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	area = galicia_area
+	area = leon_area
+	area = castile_area
+	area = extremadura_area
+	area = toledo_area
+	area = andalusia_area
+	area = murcia_area
 }
 
 # Muscovy: the Gathering of the Russian Lands (ai_scripted_expansion_score/target pp_gathering_russian_lands.txt);
@@ -115,25 +92,8 @@ pp_castile_spare_portugal = {
 	preference_type = conquest
 	modifier = -1000
 
-	continent = europe
-	continent = africa
-	continent = asia
-	continent = america
-	continent = oceania
-	allow = {
-		OR = {
-			this = area:north_portugal_area
-			this = area:south_portugal_area
-			any_location_in_area = {
-				owner ?= {
-					OR = {
-						tag = POR
-						any_overlord_or_above = { tag = POR }
-					}
-				}
-			}
-		}
-	}
+	area = north_portugal_area
+	area = south_portugal_area
 }
 
 # Vanilla's Rio Salado event (flavor_cas_rio_salado) gives Castile castile_no_portugal_conquest (-0.9, x0.1, still
@@ -142,25 +102,8 @@ REPLACE:castile_no_portugal_conquest = {
 	preference_type = conquest
 	modifier = -1000
 
-	continent = europe
-	continent = africa
-	continent = asia
-	continent = america
-	continent = oceania
-	allow = {
-		OR = {
-			this = area:north_portugal_area
-			this = area:south_portugal_area
-			any_location_in_area = {
-				owner ?= {
-					OR = {
-						tag = POR
-						any_overlord_or_above = { tag = POR }
-					}
-				}
-			}
-		}
-	}
+	area = north_portugal_area
+	area = south_portugal_area
 }
 
 # France: its own kingdom first (pp_lucky_nations.txt); vanilla's france_english_holdings (x100) stays on top.

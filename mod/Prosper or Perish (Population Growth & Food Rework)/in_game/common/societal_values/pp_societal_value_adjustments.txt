@@ -172,7 +172,7 @@ TRY_INJECT:centralization_vs_decentralization = {
 		global_tribes_estate_power = -0.5 # 2026-10-11, Jan, after MEIOU and Taxes
 	}
 	right_modifier = {
-		global_tribes_estate_power = 0.5
+		global_tribes_estate_power = 2.0 # 2026-10-11, Jan: 0.5 -> 2.0
 		global_rural_build_buildings_efficiency = 0.20
 		raw_material_in_province_impact = 0.075
 		global_production_efficiency = -0.07   # 2026-10-06, Jan: -0.05 -> -0.07

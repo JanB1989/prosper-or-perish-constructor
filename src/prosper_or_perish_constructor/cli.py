@@ -366,6 +366,18 @@ def _build_parser() -> argparse.ArgumentParser:
         choices=("apply", "check"),
         help="apply rewrites the listed blueprints and the age advances (then run ppc crop-farms, labour, gate); check lists what is off.",
     )
+    ship_upkeep = _add_command(
+        subcommands,
+        "ship-upkeep",
+        "Ship upkeep = the value of the goods it consumes: one price add per navy unit type (in_game/common/prices/pp_ship_upkeep.txt).",
+        _ship_upkeep,
+    )
+    ship_upkeep.add_argument(
+        "action",
+        choices=("apply", "check"),
+        help="apply writes the price file from vanilla unit types, goods demands and default prices; check reports whether it is current.",
+    )
+    ship_upkeep.add_argument("--verbose", action="store_true", help="also print every ship with its old and new base upkeep.")
     gate = _add_command(
         subcommands,
         "gate",
@@ -1184,6 +1196,20 @@ def _age_food(args: argparse.Namespace, extra: Sequence[str], repo: Path, projec
     verb = "rewritten" if args.action == "apply" else "off"
     print(f"age food: {len(changes)} files {verb}.")
     return 0 if args.action == "apply" or not changes else 1
+
+
+def _ship_upkeep(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("ship-upkeep does not accept extra arguments.")
+    from prosper_or_perish_constructor import ship_upkeep
+
+    ships, changed = ship_upkeep.apply(repo, project, write=args.action == "apply")
+    if args.verbose:
+        for ship in sorted(ships, key=lambda s: (s.category, s.age_index, s.unit)):
+            print(f"{ship.unit:40s} {ship.category:16s} age {ship.age_index + 1}: {ship.old_base:7.2f} -> {ship.new_base:6.2f}")
+    state = ("written" if changed else "unchanged") if args.action == "apply" else ("OFF (run ppc ship-upkeep apply)" if changed else "current")
+    print(f"ship upkeep: {len(ships)} navy unit types, {ship_upkeep.OUTPUT} {state}.")
+    return 0 if args.action == "apply" or not changed else 1
 
 
 def _print_age_food_check(repo: Path, project: Path) -> None:

@@ -337,6 +337,21 @@
   records its land per level as `raw_modifier local_pp_farmland_used` (`crop_farms.py` and worldbuilder
   `patch_farm_blueprints`), shown as "Farmland Used"; the Farmland concept (`pp_farmland`) explains it on hover.
 
+## Ship Upkeep (2026-10-11, Jan)
+
+- A ship's monthly upkeep is the value of its maintenance goods at default market prices. Vanilla charges the category
+  price (prices/02_units.txt: heavy 1, light, galley and transport 0.5) doubled every age of the ship type
+  (`NUnit.BASE_SCALE_SHIP_DOUBLE_PER_AGE`, an integer multiplier: 0 makes ships free, no other growth rate exists), so an
+  age-6 three-decker cost 32 for goods worth ~11.5 and an age-1 ship less than its goods; the goods only moved it by
+  their market price deviation.
+- `uv run ppc ship-upkeep apply` writes `in_game/common/prices/pp_ship_upkeep.txt`: one `<unit_type>_maintenance` add
+  per navy unit type (vanilla unit-specific prices add to the category price before the age doubling), so that
+  (category gold + add) x 2^(age index) = the basket value; units vanilla already prices get `TRY_REPLACE:` with their
+  sailors kept. The define stays 1. `ppc ship-upkeep check` must report the file current (`tests/test_ship_upkeep.py`);
+  rerun apply after a game update or a goods price change.
+- The goods market percentage and maintenance efficiency still apply on top. The AI spends a fixed share of income on
+  its navy, so cheaper late ships mean larger AI navies. Not tested in game.
+
 ## Release Checklist
 
 - Treat an explicit request to create or publish a release as authorization for the one final guarded live sync required by this checklist. Confirm the exact `constructor.local.toml` deploy target before running it.

@@ -1,0 +1,29 @@
+﻿# PP trade expeditions (docs/trade_expeditions.md): the Castle and Factory is built to the standard of its age
+# (scripted_effects/pp_trade_expedition_effects.txt, pp_te_fortify_effect). The building alone is fort level 3
+# (between castle and bastion); a station founded in the Age of Reformation gets bastion works (4), in the Age of
+# Absolutism star-fort works (6), in the Age of Revolutions a fortress (8), as vanilla's forts of those ages. In the
+# 1712 test save a fort-level-3 Madras fell to a neighbouring Indian state within six years of a war.
+
+pp_te_works_bastion = {
+	game_data = {
+		category = location
+	}
+	fort_level = 1
+	local_garrison_size = 0.5
+}
+
+pp_te_works_star_fort = {
+	game_data = {
+		category = location
+	}
+	fort_level = 3
+	local_garrison_size = 1
+}
+
+pp_te_works_fortress = {
+	game_data = {
+		category = location
+	}
+	fort_level = 5
+	local_garrison_size = 2
+}

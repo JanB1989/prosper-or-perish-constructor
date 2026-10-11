@@ -150,3 +150,17 @@ def test_localization_has_no_balance_numbers() -> None:
             continue
         value = line.split(":", 1)[1]
         assert not re.search(r"\d+ ?%|[+-]\d", value), line
+
+
+def test_fort_works_modifiers_exist_with_text() -> None:
+    """The castle is built to the standard of its age: every works modifier it adds exists, raises the fort level and has text."""
+    modifiers_path = MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_trade_expedition_modifiers.txt"
+    modifiers = _top_keys(modifiers_path)
+    text = _text(modifiers_path)
+    loc = _loc_keys()
+    used = set(re.findall(r"modifier = (pp_te_works_[a-z_]+)", _text(EFFECTS)))
+    assert used and used <= modifiers, used - modifiers
+    for name in modifiers:
+        body = text[text.index(f"{name} = {{"):]
+        assert re.search(r"fort_level = \d", body[: body.index("\n}")]), name
+        assert f"STATIC_MODIFIER_NAME_{name}" in loc and f"STATIC_MODIFIER_DESC_{name}" in loc, name

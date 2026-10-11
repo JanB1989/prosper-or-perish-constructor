@@ -51,12 +51,14 @@ Costs follow the country's own yearly income (`yearly_gold`), so they stay as he
 | | Fitting out (paid at departure) | Treasury needed | Floor |
 | --- | --- | --- | --- |
 | Africa | a quarter of a year's income | 1.25 x the cost | 300 |
-| India | 0.4 of a year's income | 1.25 x the cost | 600 |
-| Far East | half a year's income | 1.25 x the cost | 900 |
+| India | a quarter of a year's income | 1.25 x the cost | 600 |
+| Far East | 0.3 of a year's income | 1.25 x the cost | 900 |
 
 On arrival the price of the land (a quarter of a year's income, at least 150) or the licence gifts (a tenth, at least
-60) go to the host. In the 1612 save the colonial powers held 0.2-0.9 of a year's income in the treasury, so a voyage
-empties most of it.
+60) go to the host. The AI treasuries of run cf982ee6 hold about 0.2-0.5 of a year's income (1612: Portugal 0.42, England
+0.49, France 0.36; 1712: Portugal 0.35, France 0.37, Great Britain 0.21), so the treasury gate (0.31 of a year for Africa
+and India, 0.375 for the Far East) opens only when a treasury runs high, and a voyage takes most of it. At 0.4 and 0.5
+of a year for India and the Far East (first draft) no Far East voyage sailed in 25 years from 1612.
 
 ## Arrival: the host decides (`pp_te_arrive_effect`)
 
@@ -112,4 +114,36 @@ name, founder and year, held, castle standing, current owner; `PPTETC` per count
 
 ## Results
 
-(filled in below as the tests run)
+All runs: observer, PP Main Test playset (PP + Observer Auto Pause), loaded from copies of run cf982ee6's autosaves
+with autosave switched off; the AI alone launches (no forced starts unless noted).
+
+### Run 2: 1612-1637 (base autosave _47, Age of Reformation)
+
+Gates open at the start: Africa Portugal, Pomerania-Wolgast, Mecklenburg, France, Brittany, Ulster, England; India
+Mecklenburg. AI check chance 0.5, India and Far East still at 0.4/0.5 of a year (so no Far East voyage).
+
+| Year | Station | Founder | How | 1637 |
+| --- | --- | --- | --- | --- |
+| 1612 | Ughoton (Benin) | France | licence (Factory) | held |
+| 1613 | Lamu | Brittany | bought (castle) | held |
+| 1613 | Mombasa | Pomerania-Wolgast | licence | held |
+| 1613 | Zanzibar | Portugal | landing war, won the same year (castle on capture) | held |
+| 1614 | Cacheu | Mecklenburg | bought (castle) | held: 1637 Mecklenburg's new colonial subject (capital Cacheu) |
+| 1615 | Bissau | Frisia | bought (castle) | held |
+| 1618 | Madras | France | bought (castle) | held |
+| 1618 | Diu | Mecklenburg | licence + trade company (Saurashtra) | lost by 1624: the company and its Factory were gone |
+| 1621 | Galle | Castile | licence + trade company (Sailan) | lost 1636 when the town changed hands |
+| 1627 | Jaffna | Novgorod | bought (castle) | held |
+| 1628 | Malindi | Portugal | licence | held |
+| 1629 | Pate | England | bought (castle) | held |
+| 1631 | Inhambane | Mecklenburg | licence | held |
+| 1632 | Quelimane | Aragon | licence | held |
+
+- 11 countries sent 15 voyages (11 African, 4 Indian); 14 stations, 12 held after up to 25 years; every castle stayed in
+  its founder's realm. Refused: Ulster 1616, Ireland 1631. Landing wars: Portugal 1613 (won), Novgorod 1629, Castile and
+  Frisia 1632 (all three ended without the town).
+- No local power attacked a station in 25 years.
+- Trade: each founder trades out of its station's market (1636: England 10 routes of size 22 through Pate's market,
+  Aragon 4.2, Portugal 2.4, Mecklenburg 1.3, Brittany 1.0); founder merchant capacity in station markets 0.6-1.6.
+- The hosts keep building in station towns (Madras 59 -> 71 building levels, Bissau 7 -> 18, Cacheu 10 -> 24 from 1620
+  to 1636); castle towns stay at very low control (0.0-0.13) as far exclaves.

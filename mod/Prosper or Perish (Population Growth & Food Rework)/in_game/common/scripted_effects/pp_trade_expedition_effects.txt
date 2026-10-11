@@ -178,7 +178,9 @@ pp_te_start_effect = {
 		}
 	}
 	else = {
-		scope:expedition = { add_new_waypoint = root.capital }
+		# No free site at departure (another fleet reserved the last one): sail for the Cape and look again on arrival.
+		# A waypoint at the inland capital lost Mecklenburg's Far East fleet without a trace (1712 test save).
+		scope:expedition = { add_new_waypoint = location:good_hope_cape }
 	}
 }
 
@@ -431,6 +433,18 @@ pp_te_fortify_effect = {
 			target = scope:pp_te_fort_site
 		}
 	}
+	if = {
+		limit = { scope:pp_te_holder = { current_age_or_later = { age = age_6_revolutions } } }
+		add_location_modifier = { modifier = pp_te_works_fortress days = -1 mode = replace }
+	}
+	else_if = {
+		limit = { scope:pp_te_holder = { current_age_or_later = { age = age_5_absolutism } } }
+		add_location_modifier = { modifier = pp_te_works_star_fort days = -1 mode = replace }
+	}
+	else_if = {
+		limit = { scope:pp_te_holder = { current_age_or_later = { age = age_4_reformation } } }
+		add_location_modifier = { modifier = pp_te_works_bastion days = -1 mode = replace }
+	}
 	pp_te_garrison_effect = { COUNT = pp_te_garrison_regiments }
 }
 
@@ -565,12 +579,20 @@ pp_te_company_after_licence_far_east = {
 }
 
 # Trade company (as vanilla create_building_subject): a subject that runs the country's foreign buildings in the
-# target's region, headed by the overlord's ruler; one per region. Needs the Factory and trade access the licence set.
-# EU5 1.4 keeps the subject type only while the overlord has an advance that unlocks it (advances/
-# pp_trade_expedition_advances_adjustments.txt).
+# target's region; one per region. Needs the Factory and trade access the licence set. EU5 1.4 keeps the subject type
+# only while the overlord has an advance that unlocks it (advances/pp_trade_expedition_advances_adjustments.txt); a
+# country without one keeps its Factory under the crown. The company gets its own governor: in the 1712 test save a
+# company created without a valid ruler died within 150 days and took its Factory with it (the overlord's ruler is
+# missing during a regency), while one with a newly created governor lived on (tested 300 days).
 pp_te_trade_company_effect = {
 	if = {
 		limit = {
+			OR = {
+				has_advance = trade_companies_advance
+				has_advance = open_sea_exploration
+				has_advance = explorer_commisions_advance
+				has_advance = por_carreira_da_india
+			}
 			scope:pp_te_target = {
 				has_owner = yes
 				NOT = { owner = root }
@@ -585,7 +607,10 @@ pp_te_trade_company_effect = {
 				}
 			}
 		}
-		ruler ?= { save_scope_as = pp_te_tc_ruler }
+		create_character = {
+			age = { 30 45 }
+			save_scope_as = pp_te_tc_ruler
+		}
 		scope:pp_te_target.region = { save_scope_as = pp_te_tc_region }
 		scope:pp_te_target = {
 			create_building_country_in_location = {

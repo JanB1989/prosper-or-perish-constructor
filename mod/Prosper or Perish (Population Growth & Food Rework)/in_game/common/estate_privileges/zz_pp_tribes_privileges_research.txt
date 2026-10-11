@@ -1,6 +1,6 @@
 ﻿# Every tribes estate privilege costs flat monthly research progress (Jan 2026-10-11): a country that grants its tribes
-# rights pays for them in learning. Loaded last (zz_) so it also lands on privileges PP replaces elsewhere (Local Tribal
-# Strongholds in pp_estate_privilege_adjustments.txt, Pasture Access in the generated pp_rgo_building_cost_redirects.txt).
+# rights pays for them in learning. An inject misses a block a mod replaces, so Local Tribal Strongholds and Pasture
+# Access carry the row in their replacements (pp_estate_privilege_adjustments.txt).
 
 TRY_INJECT:tribes_land_rights = {
 	country_modifier = {
@@ -8,11 +8,6 @@ TRY_INJECT:tribes_land_rights = {
 	}
 }
 TRY_INJECT:tribes_allow_gatherings = {
-	country_modifier = {
-		research_speed = -0.10
-	}
-}
-TRY_INJECT:tribes_pasture_access = {
 	country_modifier = {
 		research_speed = -0.10
 	}
@@ -68,11 +63,6 @@ TRY_INJECT:jaysh_armies = {
 	}
 }
 TRY_INJECT:tribes_in_administration = {
-	country_modifier = {
-		research_speed = -0.10
-	}
-}
-TRY_INJECT:local_tribal_strongholds = {
 	country_modifier = {
 		research_speed = -0.10
 	}

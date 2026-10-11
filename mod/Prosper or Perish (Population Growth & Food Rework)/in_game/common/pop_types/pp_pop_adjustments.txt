@@ -14,7 +14,11 @@ TRY_INJECT:burghers = {
 		local_pop_promotion_speed = 0.001
 	}
 }
+# Political power per pop (2026-10-11, Jan, after MEIOU and Taxes): the peasants estate's pops x6 (MEIOU raised the
+# whole estate 0.025 -> 0.15), tribesmen x20 (0.01 -> 0.2; also the Cossacks, who are tribesmen). EU5 1.4 keeps
+# power on the pop type, so dhimmi pops follow their type.
 TRY_INJECT:laborers = {
+	power_per_pop = 0.225 # vanilla 0.0375
 	pop_food_consumption = 1.75 # 1.5 until 2026-10-05 (Jan: early-game nerf)
 	promotion_factor = 4
 	upper = yes
@@ -27,6 +31,7 @@ TRY_INJECT:laborers = {
 	}
 }
 TRY_INJECT:soldiers = {
+	power_per_pop = 0.375 # vanilla 0.0625
 	pop_food_consumption = 4.0
 	promotion_factor = 1
 	upper = yes
@@ -35,6 +40,7 @@ TRY_INJECT:soldiers = {
 	}
 }
 TRY_INJECT:peasants = {
+	power_per_pop = 0.15 # vanilla 0.025
 	pop_food_consumption = 1.0 # 1.0
 	promotion_factor = 0.5
 	pop_percentage_impact = {
@@ -90,7 +96,7 @@ TRY_INJECT:slaves = {
 # free-land modifiers +75 % x the free share); on unowned land (no gate, no store) nothing moves.
 # Tribal land develops and takes up institutions slowly.
 TRY_INJECT:tribesmen = {
-	power_per_pop = 0.5 # 2026-10-11 (Jan): 50x vanilla 0.01
+	power_per_pop = 0.2 # vanilla 0.01
 	pop_food_consumption = 0
 	pop_percentage_impact = {
 		local_monthly_food = 2

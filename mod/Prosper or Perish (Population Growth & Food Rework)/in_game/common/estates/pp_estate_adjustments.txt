@@ -8,6 +8,11 @@ TRY_INJECT:crown_estate = {
 	}
 }
 
+# Tribes estate taxed like the peasants (2026-10-11, Jan, after MEIOU and Taxes)
+TRY_INJECT:tribes_estate = {
+	tax_per_pop = 1 # vanilla 0.01
+}
+
 # Peasants estate: replace global_monthly_food_modifier with per-good output bonuses in satisfaction
 TRY_INJECT:peasants_estate = {
 	satisfaction = {

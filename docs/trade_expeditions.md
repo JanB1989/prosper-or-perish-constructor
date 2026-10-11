@@ -316,6 +316,26 @@ neighbouring land and sea locations, and anywhere on land in the station's regio
   Castle and Factory (`local_garrison_size`, regenerating), or locally raised soldiers (the castle employing soldier
   pops).
 
+### Run 11: forced wars on every station (1767 save of run 10, 12 years)
+
+Console `run pp_te_attack2.txt` (not in the repo): for each castle town a neighbouring independent non-European country
+declares war on the town's owner (crown or chartered company) with a claim on its province; for each licensed Factory
+the host declares war on the European owner. The trace logs owner, controller (occupation), whether the war is on, and
+the founder's regiments and ships at the station and in its region.
+
+- **7 castles attacked** (Lamu by Ajuran, Pate by Ajuran, Kollam (England's company) by SMV, Ughoton by Sokoto(?) SKO,
+  the Gambia, Cacheu and Bissau by Mali): none was ever occupied; the wars ended within one to two years; in 1779 all
+  seven were still in their founders' realms (France turned Ughoton and the Gambia into fiefdoms of its own, Ondo and
+  Jolof, in 1770-1775).
+- **13 Factories whose host went to war** with their owner (Pondicherry, Kannur, Macau/Xiangshan, Mombasa, Surat,
+  Malindi, Goa, Thana, Inhambane, Kozhikode, Hirado, Daman, Manila): all 13 still stood in 1779; the war did not close
+  them.
+- **No colonizer defended actively:** not one regiment or ship was moved to an attacked station in 12 years; the only
+  troops near one were Mecklenburg's four regiments already in the Guinea region (Cacheu).
+- So the stations survive forced wars passively: the attackers did not even besiege the castles (the earlier run 3,
+  where SMV took a fort-level-3 Madras, was the one case of a siege). Wars the AI plans itself are more dangerous
+  (Orissa took the Hooghly company twice, runs 8 and 9).
+
 ## Conclusions
 
 - **Used by the AI, several but not too many.** 1480s: only the Iberian crowns (the ocean-advance gate). 1610s-1730s:

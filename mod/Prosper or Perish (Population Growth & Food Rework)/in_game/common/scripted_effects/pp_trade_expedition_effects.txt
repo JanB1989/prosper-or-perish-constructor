@@ -834,6 +834,28 @@ pp_te_trace_forces_effect = {
 		}
 	}
 	error_log = "PPTETU;i=[GetGlobalVariable('pp_te_t_i').GetValue|0];here=[GetGlobalVariable('pp_te_u_here').GetValue|0];here_str=[GetGlobalVariable('pp_te_u_here_str').GetValue|0];near=[GetGlobalVariable('pp_te_u_near').GetValue|0];ships_near=[GetGlobalVariable('pp_te_u_ships').GetValue|0];region=[GetGlobalVariable('pp_te_u_region').GetValue|0]"
+	# who holds the town now (occupation), and the forced-war test (console run file pp_te_attack.txt)
+	controller ?= {
+		error_log = "PPTETX;i=[GetGlobalVariable('pp_te_t_i').GetValue|0];controller=[THIS.GetCountry.GetTag]"
+	}
+	if = {
+		limit = { has_variable = pp_te_attacker }
+		set_global_variable = { name = pp_te_u_war value = 1 }
+		if = {
+			limit = {
+				var:pp_te_attacker = {
+					OR = {
+						is_at_war_with = scope:pp_te_tr_f
+						any_country_at_war_with = { is_subject_of = scope:pp_te_tr_f }
+					}
+				}
+			}
+			set_global_variable = { name = pp_te_u_war value = 2 }
+		}
+		var:pp_te_attacker = {
+			error_log = "PPTETW;i=[GetGlobalVariable('pp_te_t_i').GetValue|0];attacker=[THIS.GetCountry.GetTag];at_war=[GetGlobalVariable('pp_te_u_war').GetValue|0]"
+		}
+	}
 }
 
 # Console trace of starts and outcomes (run file pp_te_trace.txt; country scope): one line per country that sent a trade

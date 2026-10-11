@@ -1,102 +1,94 @@
-﻿# Every tribes estate privilege costs research speed (Jan 2026-10-11): a country that grants its tribes rights pays
-# for them in learning. Loaded last (zz_) so it also lands on privileges PP replaces elsewhere (Local Tribal
+﻿# Every tribes estate privilege costs flat monthly research progress (Jan 2026-10-11): a country that grants its tribes
+# rights pays for them in learning. Loaded last (zz_) so it also lands on privileges PP replaces elsewhere (Local Tribal
 # Strongholds in pp_estate_privilege_adjustments.txt, Pasture Access in the generated pp_rgo_building_cost_redirects.txt).
-
-# Fosterage carried +2 % research in vanilla; replaced so the block holds one research row (+0.02 - 0.10).
-TRY_REPLACE:tribes_fosterage = {
-	estate = tribes_estate
-
-	potential = { culture ?= { has_culture_group = culture_group:scottish_group } }
-
-	country_modifier = {
-		tribes_estate_target_satisfaction = small_privilege_target_satisfaction
-		research_speed_modifier = -0.08
-		global_tribes_estate_power = 0.5
-	}
-}
 
 TRY_INJECT:tribes_land_rights = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:tribes_allow_gatherings = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:tribes_pasture_access = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:tribes_tribal_levies = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:tribes_tribal_registry = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:tribes_protected_faith = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:tribes_respect_tribal_traditions = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:tribes_creach = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
+	}
+}
+TRY_INJECT:tribes_fosterage = {
+	country_modifier = {
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:tribes_manrent = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:tribes_scotland_gaelic_heritage = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:autonomous_tribes_scotland_gaelic_heritage = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:jaysh_armies = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:tribes_in_administration = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:local_tribal_strongholds = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:mch_tribal_favor = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:tun_arab_bedouins = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }
 TRY_INJECT:desert_power = {
 	country_modifier = {
-		research_speed_modifier = -0.10
+		research_speed = -0.10
 	}
 }

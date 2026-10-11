@@ -96,9 +96,10 @@ def test_active_rgo_cost_assignments_are_generated_redirect_dependencies() -> No
     generated = _generated_redirect_blocks()
 
     # EU5 1.4 added 15 country/culture advances and two static modifiers that cut RGO expansion cost.
-    assert len(assignments) == 75
+    # Pasture Access is redirected by hand since 2026-10-11 (pp_estate_privilege_adjustments.txt).
+    assert len(assignments) == 74
     assert Counter(assignment.method for assignment in assignments) == {
-        "farming": 36,
+        "farming": 35,
         "mining": 24,
         "forestry": 6,
         "hunting": 5,
@@ -224,15 +225,24 @@ def test_generated_estate_privilege_rgo_cost_redirects_replace_instead_of_inject
     assert "TRY_INJECT:" not in text
     assert {entry.key for entry in parse_file(path).entries} == {
         "TRY_REPLACE:hab_tractatus_incorporalibus",
-        "TRY_REPLACE:tribes_pasture_access",
     }
     assert "estate = peasants_estate" in text
-    assert "estate = tribes_estate" in text
     assert "global_peasants_estate_power" in text
-    assert "global_tribes_estate_power" in text
     assert "expand_rgo_farming_cost_modifier" not in text
     assert "pp_irrigated_fields_price_cost_modifier" not in text
     assert RGO_COST_REDIRECT_REPLACE_COLLECTIONS == frozenset({"estate_privileges", "laws"})
+
+
+def test_pasture_access_is_redirected_by_hand() -> None:
+    # Tribes privileges carry a research row that an inject cannot add to a replaced block, so Pasture Access is
+    # replaced by hand with the redirect already applied; the generator must find no cost modifier left in it.
+    path = MOD_ROOT / "in_game" / "common" / "estate_privileges" / "pp_estate_privilege_adjustments.txt"
+    text = path.read_text(encoding="utf-8-sig")
+    block = text[text.index("TRY_REPLACE:tribes_pasture_access"):]
+    block = block[: block.index("\n}") + 2]
+    assert "expand_rgo_farming_cost_modifier" not in block
+    assert "global_rural_build_buildings_efficiency = 0.01" in block
+    assert "research_speed = -0.10" in block
 
 
 def test_rural_efficiency_fallback_is_half_magnitude_rounded_to_two_decimals() -> None:

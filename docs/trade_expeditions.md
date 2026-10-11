@@ -336,6 +336,33 @@ the founder's regiments and ships at the station and in its region.
   where SMV took a fort-level-3 Madras, was the one case of a siege). Wars the AI plans itself are more dangerous
   (Orissa took the Hooghly company twice, runs 8 and 9).
 
+### Run 12: do colonizers ship troops to India for their own war? (console, 1767-1776)
+
+Console set-ups on the 1767 save of run 10 (run files not in the repo): the attacker gets a 20-year claim (conquer-province
+casus belli) on a coastal province, that region's conquest preference, and declares war. A trace every 60 days logs where
+its regiments stand (Europe, at sea, Africa, India), their destination, its ships, war score, occupation and owner. The
+two crowns owned 6 (France) and 8 (Britain) transports; the console added 12 transports and 6 warships each before the
+first wars and 60 more transports before the last pair.
+
+| Attacker -> target | Transports | Defender regiments (mobilised) | Shipped | Outcome |
+| --- | --- | --- | --- | --- |
+| France -> Vijayanagar (Chaul) | 18 | ~1,250-1,380 | none | war over after ~1.5 years, nothing taken |
+| Britain -> Orissa (Tamluk) | 20 | ~1,250-1,570 | none | same |
+| Britain -> Jangladesh (Kapilkot) | 20 | ~20 | 13 regiments round the Cape, landed at the target after ~300 days with 9 | Britain took Kapilkot and the rest of Jangladesh (4 locations) |
+| France -> Bengal (Sonargaon) | 18 | ~57 | none | war over after ~16 months |
+| France -> Bengal (Bikrampur) | 78 | ~58 | 16 regiments | at the Cape when peace came (~14 months), sailed home |
+| Britain -> Orissa (Rajmahal) | 79 | ~1,100-1,300 | 16 regiments | reached the Coromandel coast with 7 after ~18 months, peace, back to Gujarat |
+
+- The AI does ship armies to India for its own wars; the defence rule that keeps troops away from stations does not
+  apply to attacks.
+- Once at war the Indian states raise 1,100-1,570 regiments of levies against 200-340 for the European crowns, so a
+  "stronger" colonizer is weaker in the field.
+- Shipping started only with enough transports; the AI's own transport fleets (6-8) are tiny.
+- The landing force does not follow the enemy's size (16 regiments against 1,100).
+- The voyage round the Cape takes 10-18 months and costs about half the regiments to attrition; the defender's ticking
+  war score ends these wars after 14-20 months, so only the tiny target was won.
+- After the peace the ferried regiments are disbanded within two months; the conquered town keeps no garrison.
+
 ## Conclusions
 
 - **Used by the AI, several but not too many.** 1480s: only the Iberian crowns (the ocean-advance gate). 1610s-1730s:

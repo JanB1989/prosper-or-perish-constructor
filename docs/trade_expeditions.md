@@ -200,3 +200,18 @@ Run 4, 1487-1517 (AI alone, all fixes up to the ocean-advance gate):
   African colonizer), Castile (refused 1505). Portugal reached India in 1496 and was refused (da Gama 1498), and sailed
   again in 1516.
 - All 4 stations held for up to 27 years; no local attacked them.
+
+### Run 5: 1712-1733 again (company governor, castles of their age), forced attack in 1721
+
+- 10 countries, 21 voyages (9 African, 7 Indian, 3 Far Eastern); Far East voyages now land: France licensed at Manila
+  1716, Mecklenburg at Hirado 1720, Pomerania-Wolgast at Nagasaki 1725.
+- **Forced attack 1721:** Bhopal on Portugal\x27s Satgaon (Hooghly; castle with star-fort works, four regiments). Held for
+  the 12 years of the run.
+- Ireland\x27s Mombasa castle (1714) went in 1729 to an Irish revolt country: a rebellion at home took the overseas
+  station with it.
+- **Every Asian licence still died with its trade company** (Chittagong, Galle, Kotte, Madras, Manila, Hirado, Nagasaki),
+  even with the governor fix, while the African Factories held. Side-by-side test in the same session: a company with a
+  new governor at Surat and one made 30 days after its Factory at Goa both died within 90 days with their Factories;
+  crown Factories (no company) at Kochi and Mangalore and a company at Sofala lived on. The engine\x27s own test
+  \x60subject_can_be_created_by\x60 said yes for France in the Deccan. Cause not found; the licence now keeps the Factory
+  under the crown everywhere (no company).

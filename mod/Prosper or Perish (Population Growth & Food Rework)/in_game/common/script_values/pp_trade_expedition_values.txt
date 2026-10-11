@@ -151,7 +151,8 @@ pp_te_root_half_tax_base = {
 
 # Chance (percent, before the expedition's own factor) that the host cedes the site for the price. Root = buyer,
 # scope:pp_te_host = the owner, scope:pp_te_target = the site. Weak hosts and hosts at war need the gold (Thanjavur,
-# Fetu, the Ga); great powers and richer hosts rarely sell; never the host's capital or one of its last two towns.
+# Fetu, the Ga); great powers and richer hosts rarely sell; never the host's capital or one of its last two towns, and
+# never when the buyer cannot pay the price on arrival (the fitting out took most of the treasury).
 pp_te_cede_chance = {
 	value = 30
 	if = {
@@ -175,6 +176,10 @@ pp_te_cede_chance = {
 				}
 			}
 		}
+		value = 0
+	}
+	if = {
+		limit = { gold < pp_te_land_price }
 		value = 0
 	}
 }

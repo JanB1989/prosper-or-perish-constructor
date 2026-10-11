@@ -18,16 +18,21 @@ Hand-tuned changes for single countries, one entry each: what and why.
 - **Castile/Spain and Portugal never conquer each other, the whole game** (2026-10-11, Jan; NOT tested in game).
   Supersedes the Castile-Portugal parts of the 2026-10-07 entry and of the lucky-nations entry below (no 1450 end).
   Found: Castile's conquest tooltip on Viseu (save 1367) listed no preference line and 71 % desire although CAS held
-  `pp_castile_spare_portugal` (-1). Reading: the engine stores 1 + modifier and treats 0 as no preference, so every -1
-  preference did nothing (also run cf982ee6: Portugal 67 -> 1 at -1); -2 worked for the colonizer preferences.
+  `pp_castile_spare_portugal` (-1). Decompile (1.4, same day): the conquer desire is multiplied by (1 + modifier) per
+  matching preference and clamped at 0, so -1 already gives 0; the missing line means the preference check did not run
+  in that game (it needs the historical AI choices rule and a per-area check). The peace AI floors every location's
+  cede desire at 1.0 afterwards and never filters adjacent land, so no conquest preference stops a winner taking
+  border land; preferences only stop planned wars for that land.
   Now: `pp_castile_spare_portugal` (North/South Portugal) and `pp_portugal_no_castile_conquest` (Galicia, Leon, Castile,
   Extremadura, Toledo, Andalusia, Murcia) -1000; vanilla's Rio Salado preference `castile_no_portugal_conquest`
   (-0.9, x0.1) REPLACEd with -1000 on Portugal. A first version (1c32d7c6) listed all five continents with an `allow`
   for areas the other holds: the in-game tooltip (1337) put every area under it, so `allow` does not filter areas; `pp_iberian_peace` never_attack
   always (was: while the Reconquista/Maghreb is open; the pre-1450 `pp_iberian_early_peace` and the 1450 event
   `pp_lucky_nations.2` are gone). Same day: `pp_castile_no_france_conquest` and `pp_france_spare_iberia` -1 -> -2.
+  `join_war_rules/pp_iberian_peace.txt` (same day): Castile/Spain cannot join a war as an ally against a side Portugal
+  leads, nor Portugal against Castile/Spain (player and AI). Not covered: wars where the other is a non-leading
+  participant, direct wars from events, inheritance/union.
   Check in game: Castile's conquest tooltip on a Portuguese location shows the preference line and no positive desire.
-  Not covered: inheritance/union (not conquest).
 - **France +3 diplomatic reputation** (2026-10-06, `pp_estate_privilege_adjustments.txt`, Great Offices of the Crown).
   Why: Jan's call, on the same privilege as the noble tax; vanilla privileges give at most +2.
 - **Colonizers daisy-chain down Africa** (2026-10-07, `area_preferences/pp_colonizer_preferences.txt`,

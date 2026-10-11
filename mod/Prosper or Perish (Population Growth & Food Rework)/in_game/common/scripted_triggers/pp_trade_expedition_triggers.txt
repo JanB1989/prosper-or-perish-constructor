@@ -1,16 +1,32 @@
 ﻿# PP trade expeditions (docs/trade_expeditions.md): shared gates. Country scope unless noted; root = the expedition's
 # country.
 
-# A colonial power: a sovereign country with colonial charters and a sea-going realm: 150+ locations or 8+ ports on its
-# capital's continent that face open sea (the same test as the AI colonial charter gate, auto_modifiers/
-# pp_colonial_charter_gate.txt; river channels, lakes, the Black Sea and the Caspian do not count) and a tax base of
-# 75+ (run cf982ee6: the colonizers of 1652 ran 110-1,893; the one-province colonizers 9-26).
+# A colonial power: a sovereign European country with colonial charters that faces the ocean: a harbour on the Atlantic,
+# the North Sea or the Baltic coasts of the west (Iberia, France, the British Isles, the Low Countries and North
+# Germany, Scandinavia, the Atlantic islands), a sea-going realm (150+ locations or 8+ ports on its capital's continent
+# that face open sea, the test of the AI colonial charter gate, auto_modifiers/pp_colonial_charter_gate.txt) and a tax
+# base of 75+ (run cf982ee6: the colonizers of 1652 ran 110-1,893; the one-province colonizers 9-26). In the 1612 save
+# of that run the first draft without the Europe and ocean test let the Ottomans, Ming, Korea, Vijayanagara and the
+# Papacy in.
 pp_te_colonial_power = {
 	is_subject = no
 	has_advance = colonies
 	has_ports = yes
 	exists = capital
+	capital = { continent = continent:europe }
 	country_tax_base >= 75
+	any_owned_location = {
+		is_port = yes
+		OR = {
+			region = region:iberia_region
+			region = region:france_region
+			region = region:great_britain_region
+			region = region:ireland_region
+			region = region:north_german_region
+			region = region:scandinavian_region
+			region = region:north_atlantic_islands_region
+		}
+	}
 	OR = {
 		num_locations >= 150
 		any_port_in_country = {
@@ -90,99 +106,6 @@ pp_te_cape_route_known = {
 	OR = {
 		has_discovered = location:good_hope_cape
 		current_age_or_later = { age = age_4_reformation }
-	}
-}
-
-# Location scope: the historical sites of each expedition (docs/trade_expeditions.md lists the history behind each).
-# West and Central Africa: Arguin 1445, Cacheu 1588, Bissau, the Gambia (James Island 1651), Axim 1515, Accra
-# (Christiansborg 1661), Benin's port Ughoton, the Calabars, Sao Tome 1493, Mpinda/Soyo, Loango, Cabinda, Luanda 1576.
-pp_te_africa_atlantic_site = {
-	OR = {
-		this = location:arguin
-		this = location:gambia
-		this = location:cacheu
-		this = location:bissau
-		this = location:axim
-		this = location:accra
-		this = location:ughoton
-		this = location:new_calabar
-		this = location:calabar
-		this = location:sao_tome
-		this = location:soyo
-		this = location:loango
-		this = location:cabinda_kongo
-		this = location:luanda
-	}
-}
-
-# East Africa: Sofala 1505, Kilwa 1505, Mozambique Island 1507, Mombasa (Fort Jesus 1593), Malindi, Zanzibar,
-# Quelimane, Inhambane, Lamu and Pate.
-pp_te_africa_indian_site = {
-	OR = {
-		this = location:sofala
-		this = location:kilwa_kisiwani
-		this = location:mozambique
-		this = location:mombasa
-		this = location:malindi
-		this = location:zanzibar
-		this = location:quelimane
-		this = location:inhambane
-		this = location:lamu
-		this = location:pate
-	}
-}
-
-# India and Ceylon: Goa 1510, Cochin 1503, Calicut, Cannanore, Cranganore, Quilon, Mangalore, Bhatkal, Bombay 1534/1661,
-# Bassein, Daman, Diu 1535, Surat 1612, Madras 1639, Pondicherry 1674, Karaikal 1739, Negapatam, Masulipatnam, Galle,
-# Colombo (Kotte), Jaffna, Balasore, Hooghly (Satgaon) 1579, Chittagong.
-pp_te_india_site = {
-	OR = {
-		this = location:goa
-		this = location:kochi
-		this = location:kozhikode
-		this = location:kannur
-		this = location:kodungallur
-		this = location:kollam
-		this = location:mangalore
-		this = location:bhatkal
-		this = location:bombay
-		this = location:bassein
-		this = location:daman
-		this = location:diu
-		this = location:surat
-		this = location:madras
-		this = location:pondicherry
-		this = location:karaikal
-		this = location:nagapattinam
-		this = location:masulipatnam
-		this = location:galle
-		this = location:kotte
-		this = location:jaffna
-		this = location:balasore
-		this = location:satgaon
-		this = location:chittagong
-	}
-}
-
-# The Far East: Macau 1557 (Xiangshan), Canton, Quanzhou, Amoy (Tong'an), Ningbo (Yin) and Liampo on the Zhoushan
-# islands (Dinghai), Fort Zeelandia 1624 (Siraya), Keelung 1626 (Ketagalan), Nagasaki 1571 (Nishisonogi), Hirado 1609
-# (Minamimatsuura), Manila 1571, Malacca 1511, Banten and Sunda Kelapa (Batavia 1619).
-pp_te_far_east_site = {
-	OR = {
-		this = location:xiangshan_xinhui
-		this = location:guangzhou
-		this = location:nanan_quanzhou
-		this = location:tongan
-		this = location:yinxian
-		this = location:dinghai
-		this = location:siraya
-		this = location:ketagalan
-		this = location:nishisonogi
-		this = location:minamimatsuura
-		this = location:maynila
-		this = location:malacca
-		this = location:banten
-		this = location:sunda_kelapa
 	}
 }
 

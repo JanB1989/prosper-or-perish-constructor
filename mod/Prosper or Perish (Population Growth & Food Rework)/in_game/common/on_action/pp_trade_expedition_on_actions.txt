@@ -1,0 +1,17 @@
+﻿# PP trade expeditions (docs/trade_expeditions.md): a station that changes owner (landing war won, station lost or
+# retaken). Event-driven, no pulse; scripted_effects/pp_trade_expedition_effects.txt, pp_te_owner_change_effect.
+on_location_changed_owner = {
+	on_actions = { pp_te_on_location_changed_owner }
+}
+
+pp_te_on_location_changed_owner = {
+	trigger = {
+		OR = {
+			has_variable = pp_te_war_of
+			has_variable = pp_te_foothold_of
+		}
+	}
+	effect = {
+		pp_te_owner_change_effect = yes
+	}
+}

@@ -6,7 +6,7 @@
 pp_te_log_effect = {
 	add_to_global_variable_list = {
 		name = pp_te_log_$STAGE$_$KIND$
-		target = root
+		target = this
 	}
 	set_variable = {
 		name = pp_te_year_$STAGE$_$KIND$
@@ -45,7 +45,12 @@ pp_te_depart_effect = {
 	}
 }
 
-# Candidate sites of each expedition into the list pp_te_candidates.
+# Candidate sites of each expedition into the list pp_te_candidates (the same places as pp_te_any_<kind>_site in
+# scripted_triggers/pp_trade_expedition_triggers.txt; docs/trade_expeditions.md has the history).
+# West and Central Africa: Arguin 1445, the Gambia (James Island 1651), Cacheu 1588, Bissau, Axim 1515, Accra
+# (Christiansborg 1661), Benin's port Ughoton, the Calabars, Sao Tome 1493, Mpinda/Soyo, Loango, Cabinda, Luanda 1576;
+# East Africa once the Cape route is known: Sofala 1505, Kilwa 1505, Mozambique Island 1507, Mombasa (Fort Jesus 1593),
+# Malindi, Zanzibar, Quelimane, Inhambane, Lamu and Pate.
 pp_te_build_list_africa = {
 	location:arguin = { add_to_list = pp_te_candidates }
 	location:gambia = { add_to_list = pp_te_candidates }
@@ -76,6 +81,9 @@ pp_te_build_list_africa = {
 	}
 }
 
+# India and Ceylon: Goa 1510, Cochin 1503, Calicut, Cannanore, Cranganore, Quilon, Mangalore, Bhatkal, Bombay 1534/1661,
+# Bassein, Daman, Diu 1535, Surat 1612, Madras 1639, Pondicherry 1674, Karaikal 1739, Negapatam, Masulipatnam, Galle,
+# Colombo (Kotte), Jaffna, Balasore, Hooghly (Satgaon) 1579, Chittagong.
 pp_te_build_list_india = {
 	location:goa = { add_to_list = pp_te_candidates }
 	location:kochi = { add_to_list = pp_te_candidates }
@@ -103,6 +111,9 @@ pp_te_build_list_india = {
 	location:chittagong = { add_to_list = pp_te_candidates }
 }
 
+# The Far East: Macau 1557 (Xiangshan), Canton, Quanzhou, Amoy (Tong'an), Ningbo (Yin) and Liampo on the Zhoushan
+# islands (Dinghai), Fort Zeelandia 1624 (Siraya), Keelung 1626 (Ketagalan), Nagasaki 1571 (Nishisonogi), Hirado 1609
+# (Minamimatsuura), Manila 1571, Malacca 1511, Banten and Sunda Kelapa (Batavia 1619).
 pp_te_build_list_far_east = {
 	location:xiangshan_xinhui = { add_to_list = pp_te_candidates }
 	location:guangzhou = { add_to_list = pp_te_candidates }
@@ -309,13 +320,29 @@ pp_te_arrive_effect = {
 	}
 	if = {
 		limit = {
+			var:pp_te_outcome > 2.5
+			var:pp_te_outcome < 3.5
+		}
+		pp_te_log_effect = { STAGE = war KIND = $KIND$ }
+	}
+	else_if = {
+		limit = {
 			var:pp_te_outcome > 0.5
 			var:pp_te_outcome < 4.5
 		}
 		pp_te_log_effect = { STAGE = gain KIND = $KIND$ }
-		change_variable = {
-			name = pp_te_n_$KIND$
-			add = 1
+		if = {
+			limit = { has_variable = pp_te_n_$KIND$ }
+			change_variable = {
+				name = pp_te_n_$KIND$
+				add = 1
+			}
+		}
+		else = {
+			set_variable = {
+				name = pp_te_n_$KIND$
+				value = 1
+			}
 		}
 	}
 	else = {
@@ -345,6 +372,7 @@ pp_te_arrive_effect = {
 # Location scope (the target). Root takes an unclaimed coast.
 pp_te_settle_effect = {
 	change_location_owner = root
+	root = { save_scope_as = pp_te_holder }
 	pp_te_fortify_effect = yes
 }
 
@@ -368,13 +396,15 @@ pp_te_cede_effect = {
 		years = 20
 		mutual = yes
 	}
+	root = { save_scope_as = pp_te_holder }
 	scope:pp_te_target = {
 		change_location_owner = root
 		pp_te_fortify_effect = yes
 	}
 }
 
-# Location scope: Castle and Factory, the garrison the fleet brought, and the trace. The location's owner is root.
+# Location scope: Castle and Factory, the garrison the fleet brought, and the trace. The location's owner is
+# scope:pp_te_holder (the expedition's country, or the winner of a landing war).
 pp_te_fortify_effect = {
 	construct_building = {
 		building_type = building_type:pp_te_factory
@@ -384,7 +414,7 @@ pp_te_fortify_effect = {
 	}
 	set_variable = {
 		name = pp_te_foothold_of
-		value = root
+		value = scope:pp_te_holder
 	}
 	set_variable = {
 		name = pp_te_foothold_year
@@ -395,7 +425,7 @@ pp_te_fortify_effect = {
 		target = this
 	}
 	save_scope_as = pp_te_fort_site
-	root = {
+	scope:pp_te_holder = {
 		add_to_variable_list = {
 			name = pp_te_footholds
 			target = scope:pp_te_fort_site
@@ -404,40 +434,41 @@ pp_te_fortify_effect = {
 	pp_te_garrison_effect = { COUNT = pp_te_garrison_regiments }
 }
 
-# Location scope: $COUNT$ regiments of root put ashore here at full strength (heavy infantry and shot of the age).
+# Location scope: $COUNT$ regiments of scope:pp_te_holder put ashore here at full strength (heavy infantry and shot of the
+# age).
 pp_te_garrison_effect = {
-	root.capital = { save_scope_as = pp_te_home }
+	scope:pp_te_holder.capital = { save_scope_as = pp_te_home }
 	while = {
 		count = $COUNT$
 		if = {
-			limit = { root = { current_age_or_later = { age = age_4_reformation } } }
+			limit = { scope:pp_te_holder = { current_age_or_later = { age = age_4_reformation } } }
 			create_sub_unit_with_owner = {
 				type = a_pikemen
-				owner = root
+				owner = scope:pp_te_holder
 				origin = scope:pp_te_home
 			}
 			create_sub_unit_with_owner = {
 				type = a_arquebusiers
-				owner = root
+				owner = scope:pp_te_holder
 				origin = scope:pp_te_home
 			}
 		}
 		else = {
 			create_sub_unit_with_owner = {
 				type = a_halberdiers
-				owner = root
+				owner = scope:pp_te_holder
 				origin = scope:pp_te_home
 			}
 			create_sub_unit_with_owner = {
 				type = a_early_arquebusiers
-				owner = root
+				owner = scope:pp_te_holder
 				origin = scope:pp_te_home
 			}
 		}
 	}
 	# New regiments start without men (old expeditions branch, run pp_exp4); the fleet brings them at full strength.
 	every_unit_in_location = {
-		limit = { owner ?= root }
+		limit = { owner ?= scope:pp_te_holder }
 		every_sub_unit = {
 			add_subunit_strength_percentage = 1
 		}
@@ -460,6 +491,7 @@ pp_te_war_effect = {
 		target_province = scope:pp_te_target.province
 	}
 	pp_te_conquest_preference_effect = yes
+	root = { save_scope_as = pp_te_holder }
 	scope:pp_te_target = {
 		set_variable = {
 			name = pp_te_war_of
@@ -664,18 +696,13 @@ pp_te_fail_effect = {
 	trigger_event_non_silently = pp_trade_expedition.20
 }
 
-# Console check (run file pp_te_dbg.txt, not in the repo): one error.log line per country with its gold, yearly income,
-# the three reserves and which expeditions it could start now (1 = no, 2 = yes; a variable at 0 reads as unset).
+# Console check (run file pp_te_dbg.txt, not in the repo): one error.log line per country (country scope) with its gold,
+# yearly income, tax base and which expeditions it could start now (1 = no, 2 = yes; a variable at 0 reads as unset).
 pp_te_debug_report_effect = {
 	save_scope_as = pp_te_dbg_c
 	set_global_variable = { name = pp_te_t_gold value = gold }
 	set_global_variable = { name = pp_te_t_year value = yearly_gold }
 	set_global_variable = { name = pp_te_t_tax value = country_tax_base }
-	set_global_variable = { name = pp_te_t_cp value = 1 }
-	if = {
-		limit = { pp_te_colonial_power = yes }
-		set_global_variable = { name = pp_te_t_cp value = 2 }
-	}
 	set_global_variable = { name = pp_te_t_af value = 1 }
 	if = {
 		limit = { expedition_type:pp_te_africa = { can_start_expedition = scope:pp_te_dbg_c } }
@@ -691,30 +718,143 @@ pp_te_debug_report_effect = {
 		limit = { expedition_type:pp_te_far_east = { can_start_expedition = scope:pp_te_dbg_c } }
 		set_global_variable = { name = pp_te_t_fe value = 2 }
 	}
-	set_global_variable = { name = pp_te_t_site value = 1 }
-	if = {
-		limit = { pp_te_any_africa_site = yes }
-		set_global_variable = { name = pp_te_t_site value = 2 }
-	}
-	error_log = "PPTEDBG;[SCOPE.sCountry('pp_te_dbg_c').GetTag];gold=[GetGlobalVariable('pp_te_t_gold').GetValue|0];yearly=[GetGlobalVariable('pp_te_t_year').GetValue|0];tax=[GetGlobalVariable('pp_te_t_tax').GetValue|0];cp=[GetGlobalVariable('pp_te_t_cp').GetValue|0];afsite=[GetGlobalVariable('pp_te_t_site').GetValue|0];af=[GetGlobalVariable('pp_te_t_af').GetValue|0];in=[GetGlobalVariable('pp_te_t_in').GetValue|0];fe=[GetGlobalVariable('pp_te_t_fe').GetValue|0]"
+	error_log = "PPTEDBG;[THIS.GetCountry.GetTag];gold=[GetGlobalVariable('pp_te_t_gold').GetValue|0];yearly=[GetGlobalVariable('pp_te_t_year').GetValue|0];tax=[GetGlobalVariable('pp_te_t_tax').GetValue|0];af=[GetGlobalVariable('pp_te_t_af').GetValue|0];in=[GetGlobalVariable('pp_te_t_in').GetValue|0];fe=[GetGlobalVariable('pp_te_t_fe').GetValue|0]"
 }
 
-# Console trace (run file pp_te_trace.txt): one error.log line per foothold: founder, current owner, year founded, and
-# whether the founder still holds it (2) or not (1).
+# Console trace (run file pp_te_trace.txt; location scope = one foothold): two error.log lines with the same index, one
+# from the founder (year founded, castle standing, founder still holds it: 2 = yes, 1 = no) and one from the current
+# owner of the location.
 pp_te_trace_effect = {
-	save_scope_as = pp_te_tr_l
-	var:pp_te_foothold_of = { save_scope_as = pp_te_tr_f }
-	owner ?= { save_scope_as = pp_te_tr_o }
+	change_global_variable = { name = pp_te_t_i add = 1 }
 	set_global_variable = { name = pp_te_t_held value = 1 }
 	if = {
 		limit = { pp_te_foothold_held = yes }
 		set_global_variable = { name = pp_te_t_held value = 2 }
 	}
 	set_global_variable = { name = pp_te_t_fy value = var:pp_te_foothold_year }
+	set_global_variable = { name = pp_te_t_chg value = 0 }
+	if = {
+		limit = { has_variable = pp_te_changed_year }
+		set_global_variable = { name = pp_te_t_chg value = var:pp_te_changed_year }
+	}
 	set_global_variable = { name = pp_te_t_fort value = 1 }
 	if = {
 		limit = { any_buildings_in_location = { building_type = building_type:pp_te_factory } }
 		set_global_variable = { name = pp_te_t_fort value = 2 }
 	}
-	error_log = "PPTETR;[SCOPE.sLocation('pp_te_tr_l').GetName];founder=[SCOPE.sCountry('pp_te_tr_f').GetTag];owner=[SCOPE.sCountry('pp_te_tr_o').GetTag];year=[GetGlobalVariable('pp_te_t_fy').GetValue|0];held=[GetGlobalVariable('pp_te_t_held').GetValue|0];castle=[GetGlobalVariable('pp_te_t_fort').GetValue|0]"
+	error_log = "PPTETL;i=[GetGlobalVariable('pp_te_t_i').GetValue|0];loc=[THIS.GetLocation.GetName]"
+	var:pp_te_foothold_of = {
+		error_log = "PPTETF;i=[GetGlobalVariable('pp_te_t_i').GetValue|0];founder=[THIS.GetCountry.GetTag];year=[GetGlobalVariable('pp_te_t_fy').GetValue|0];held=[GetGlobalVariable('pp_te_t_held').GetValue|0];castle=[GetGlobalVariable('pp_te_t_fort').GetValue|0];changed=[GetGlobalVariable('pp_te_t_chg').GetValue|0]"
+	}
+	owner ?= {
+		error_log = "PPTETO;i=[GetGlobalVariable('pp_te_t_i').GetValue|0];owner=[THIS.GetCountry.GetTag]"
+	}
+}
+
+# Console trace of starts and outcomes (run file pp_te_trace.txt; country scope): one line per country that sent a trade
+# expedition, with the year of its last start, gain (foothold or factory) and refusal per kind (0 = never).
+pp_te_trace_country_effect = {
+	set_global_variable = { name = pp_te_t_af_start value = 0 }
+	if = {
+		limit = { has_variable = pp_te_year_start_africa }
+		set_global_variable = { name = pp_te_t_af_start value = var:pp_te_year_start_africa }
+	}
+	set_global_variable = { name = pp_te_t_af_gain value = 0 }
+	if = {
+		limit = { has_variable = pp_te_year_gain_africa }
+		set_global_variable = { name = pp_te_t_af_gain value = var:pp_te_year_gain_africa }
+	}
+	set_global_variable = { name = pp_te_t_af_refused value = 0 }
+	if = {
+		limit = { has_variable = pp_te_year_refused_africa }
+		set_global_variable = { name = pp_te_t_af_refused value = var:pp_te_year_refused_africa }
+	}
+	set_global_variable = { name = pp_te_t_af_fail value = 0 }
+	if = {
+		limit = { has_variable = pp_te_year_fail_africa }
+		set_global_variable = { name = pp_te_t_af_fail value = var:pp_te_year_fail_africa }
+	}
+	set_global_variable = { name = pp_te_t_in_start value = 0 }
+	if = {
+		limit = { has_variable = pp_te_year_start_india }
+		set_global_variable = { name = pp_te_t_in_start value = var:pp_te_year_start_india }
+	}
+	set_global_variable = { name = pp_te_t_in_gain value = 0 }
+	if = {
+		limit = { has_variable = pp_te_year_gain_india }
+		set_global_variable = { name = pp_te_t_in_gain value = var:pp_te_year_gain_india }
+	}
+	set_global_variable = { name = pp_te_t_in_refused value = 0 }
+	if = {
+		limit = { has_variable = pp_te_year_refused_india }
+		set_global_variable = { name = pp_te_t_in_refused value = var:pp_te_year_refused_india }
+	}
+	set_global_variable = { name = pp_te_t_in_fail value = 0 }
+	if = {
+		limit = { has_variable = pp_te_year_fail_india }
+		set_global_variable = { name = pp_te_t_in_fail value = var:pp_te_year_fail_india }
+	}
+	set_global_variable = { name = pp_te_t_fe_start value = 0 }
+	if = {
+		limit = { has_variable = pp_te_year_start_far_east }
+		set_global_variable = { name = pp_te_t_fe_start value = var:pp_te_year_start_far_east }
+	}
+	set_global_variable = { name = pp_te_t_fe_gain value = 0 }
+	if = {
+		limit = { has_variable = pp_te_year_gain_far_east }
+		set_global_variable = { name = pp_te_t_fe_gain value = var:pp_te_year_gain_far_east }
+	}
+	set_global_variable = { name = pp_te_t_fe_refused value = 0 }
+	if = {
+		limit = { has_variable = pp_te_year_refused_far_east }
+		set_global_variable = { name = pp_te_t_fe_refused value = var:pp_te_year_refused_far_east }
+	}
+	set_global_variable = { name = pp_te_t_fe_fail value = 0 }
+	if = {
+		limit = { has_variable = pp_te_year_fail_far_east }
+		set_global_variable = { name = pp_te_t_fe_fail value = var:pp_te_year_fail_far_east }
+	}
+	error_log = "PPTETC;[THIS.GetCountry.GetTag];af_start=[GetGlobalVariable('pp_te_t_af_start').GetValue|0];af_gain=[GetGlobalVariable('pp_te_t_af_gain').GetValue|0];af_refused=[GetGlobalVariable('pp_te_t_af_refused').GetValue|0];af_fail=[GetGlobalVariable('pp_te_t_af_fail').GetValue|0];in_start=[GetGlobalVariable('pp_te_t_in_start').GetValue|0];in_gain=[GetGlobalVariable('pp_te_t_in_gain').GetValue|0];in_refused=[GetGlobalVariable('pp_te_t_in_refused').GetValue|0];in_fail=[GetGlobalVariable('pp_te_t_in_fail').GetValue|0];fe_start=[GetGlobalVariable('pp_te_t_fe_start').GetValue|0];fe_gain=[GetGlobalVariable('pp_te_t_fe_gain').GetValue|0];fe_refused=[GetGlobalVariable('pp_te_t_fe_refused').GetValue|0];fe_fail=[GetGlobalVariable('pp_te_t_fe_fail').GetValue|0]"
+}
+
+# on_location_changed_owner (root = the location, scope:winner = new owner, scope:loser = old owner;
+# on_action/pp_trade_expedition_on_actions.txt). A town fought for by a landing war gets the Castle and Factory when the
+# attacker takes it; a station that changes hands records when and to whom (staying power in tests and saves).
+pp_te_owner_change_effect = {
+	if = {
+		limit = {
+			has_variable = pp_te_war_of
+			exists = scope:winner
+			scope:winner = var:pp_te_war_of
+		}
+		remove_variable = pp_te_war_of
+		scope:winner = { save_scope_as = pp_te_holder }
+		if = {
+			limit = {
+				NOT = { any_buildings_in_location = { building_type = building_type:pp_te_factory } }
+			}
+			pp_te_fortify_effect = yes
+		}
+		scope:winner = {
+			pp_te_log_effect = { STAGE = won KIND = war }
+		}
+	}
+	else_if = {
+		limit = { has_variable = pp_te_foothold_of }
+		set_variable = {
+			name = pp_te_changed_year
+			value = current_year
+		}
+		if = {
+			limit = { exists = scope:winner }
+			set_variable = {
+				name = pp_te_changed_to
+				value = scope:winner
+			}
+		}
+		add_to_global_variable_list = {
+			name = pp_te_changed_hands
+			target = this
+		}
+	}
 }

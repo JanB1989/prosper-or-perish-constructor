@@ -109,6 +109,7 @@ pp_te_india = {
 			current_age_or_later = { age = age_4_reformation }
 		}
 		pp_te_years_since_india >= 20
+		country_tax_base >= 200
 		OR = {
 			NOT = { has_variable = pp_te_n_india }
 			var:pp_te_n_india < 2.5
@@ -197,6 +198,7 @@ pp_te_far_east = {
 			current_age_or_later = { age = age_5_absolutism }
 		}
 		pp_te_years_since_far_east >= 25
+		country_tax_base >= 300
 		OR = {
 			NOT = { has_variable = pp_te_n_far_east }
 			var:pp_te_n_far_east < 1.5

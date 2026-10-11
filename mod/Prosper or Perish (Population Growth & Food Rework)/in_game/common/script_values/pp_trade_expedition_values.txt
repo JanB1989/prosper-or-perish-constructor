@@ -7,32 +7,33 @@
 # Fitting out the fleet (ships, soldiers, masons and the prefabricated stone of the fort), paid at departure.
 pp_te_cost_africa = {
 	value = yearly_gold
-	multiply = 0.35
+	multiply = 0.25
 	min = 300
 }
 pp_te_cost_india = {
 	value = yearly_gold
-	multiply = 0.5
+	multiply = 0.4
 	min = 600
 }
 pp_te_cost_far_east = {
 	value = yearly_gold
-	multiply = 0.6
+	multiply = 0.5
 	min = 900
 }
 
-# Gold the treasury must hold to launch: the fitting out plus the price of the land and a reserve.
+# Gold the treasury must hold to launch: the fitting out plus a quarter more for the land and the gifts (run cf982ee6,
+# 1612: the colonial powers held 0.2 to 0.9 of a year's income in the treasury).
 pp_te_reserve_africa = {
 	value = pp_te_cost_africa
-	multiply = 1.6
+	multiply = 1.25
 }
 pp_te_reserve_india = {
 	value = pp_te_cost_india
-	multiply = 1.6
+	multiply = 1.25
 }
 pp_te_reserve_far_east = {
 	value = pp_te_cost_far_east
-	multiply = 1.6
+	multiply = 1.25
 }
 
 # Price paid to the ruler who cedes or leases the site (Christiansborg 3,200 florins 1661, Serampore Rs 50,000 1755,
@@ -51,9 +52,11 @@ pp_te_licence_price = {
 }
 
 # AI: chance per check that a country whose gates are open looks at a trade expedition (each type is checked every
-# third month; 0.25 = about once a year).
+# third month). The engine then also needs 99 political influence and a free leader: in the 1612 test save (run
+# cf982ee6) only about one check in four or five got that far, so at 0.15 the eligible colonial powers sailed about
+# once in ten years; 0.5 gives about once in five.
 pp_te_ai_check_chance = {
-	value = 0.25
+	value = 0.5
 }
 
 # AI: every trade expedition starts from the same utility; it only ranks the types that passed in the same month.

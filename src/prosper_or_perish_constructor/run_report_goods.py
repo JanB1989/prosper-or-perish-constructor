@@ -47,7 +47,7 @@ from prosper_or_perish_constructor.run_report_charts import (
 if TYPE_CHECKING:
     from prosper_or_perish_constructor.run_report import RunData
 
-CACHE_VERSION = "goods-4"
+CACHE_VERSION = "goods-5"
 RGO = "rgo"  # pseudo building of the RGO rows
 OTHER = "_other"  # pseudo building for market totals no recipe explains
 IDLE = "_idle"  # pseudo building of the goods' base production by idle peasants
@@ -269,7 +269,8 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
         .join(scale.select(*keys, "fb", "fr", "s"), on=keys, how="inner")
         .with_columns((pl.col("recipe") * pl.when(pl.col("kind") == "b").then(pl.col("fb")).otherwise(pl.col("fr")) * pl.col("s")).alias("amount"))
     )
-    unexplained = scale.filter((pl.col("weighted") <= 0) & (pl.col("actual") > 0)).join(markets, on="market_id", how="left").select(
+    # above rounding noise: production minus base production leaves ~1e-15 in markets where the idle peasants make it all
+    unexplained = scale.filter((pl.col("weighted") <= 0) & (pl.col("actual") > 1e-6)).join(markets, on="market_id", how="left").select(
         "good_id", pl.col("region").fill_null(OTHER_REGION), pl.lit(OTHER).alias("building_type"), pl.lit(None, dtype=pl.String).alias("method"),
         pl.col("actual").alias("amount"), pl.lit(0.0).alias("recipe"), pl.lit(0.0).alias("levels"), pl.lit(0.0).alias("workers"), pl.lit(0.0).alias("count"))
     idle_rows = base.select("good_id", "region", pl.lit(IDLE).alias("building_type"), pl.lit(None, dtype=pl.String).alias("method"),
@@ -395,6 +396,81 @@ def _summary_rows(flows: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return out
 
 
+# --------------------------------------------------------------------------------------------------------
+# Per-save flows in parallel: each save is independent, and one save's queries are many small polars calls that use
+# few cores, so worker processes fill the per-save caches and the page builders below only read them.
+
+PARALLEL_WORKERS = 8
+WORKER_POLARS_THREADS = 4
+_worker_state: dict[str, Any] = {}
+
+
+def _init_worker(recipes: Recipes, food: Any) -> None:
+    _worker_state["recipes"], _worker_state["food"] = recipes, food
+
+
+def _write_flows(folder: Path, flows: dict[str, pl.DataFrame], tables: tuple[str, ...]) -> None:
+    folder.mkdir(parents=True, exist_ok=True)
+    for k in tables:
+        flows[k].write_parquet(folder / f"{k}.parquet")
+    (folder / "done").write_text("", encoding="utf-8")
+
+
+def _fill_save(job: tuple[Path, str, str, Path | None, Path | None]) -> str:
+    from prosper_or_perish_constructor import run_report_food as rf
+
+    dataset, playthrough, snapshot, goods_dir, food_dir = job
+    if goods_dir is not None:
+        _write_flows(goods_dir, save_flows(dataset, playthrough, snapshot, _worker_state["recipes"]), FLOW_TABLES)
+    if food_dir is not None:
+        flows = rf.save_food(dataset, playthrough, snapshot, _worker_state["food"])
+        if flows is not None:
+            _write_flows(food_dir, flows, rf.FLOW_TABLES)
+    return snapshot
+
+
+def fill_caches(playthrough: str, snapshots: list[str], dataset: Path, recipes: Recipes, food: Any, *, goods_cache: Path,
+                food_cache: Path | None, workers: int = PARALLEL_WORKERS, log: Callable[[str], None] = print) -> None:
+    """Compute the goods (and food) flows of every save that has no cache yet, in worker processes. A save a worker
+    could not do stays uncached and the page builders compute it themselves."""
+    import os
+    import time
+    from concurrent.futures import ProcessPoolExecutor, as_completed
+    from multiprocessing import get_context
+
+    from prosper_or_perish_constructor import run_report_food as rf
+
+    jobs = []
+    for snapshot in snapshots:
+        goods_dir = goods_cache / f"{snapshot}.{recipes.digest}.{CACHE_VERSION}"
+        food_dir = food_cache / f"{snapshot}.{food.digest}.{rf.CACHE_VERSION}" if food_cache is not None and food is not None else None
+        goods_dir = None if (goods_dir / "done").is_file() else goods_dir
+        food_dir = None if food_dir is None or (food_dir / "done").is_file() else food_dir
+        if goods_dir is not None or food_dir is not None:
+            jobs.append((dataset, playthrough, snapshot, goods_dir, food_dir))
+    workers = min(workers, len(jobs), max(1, (os.cpu_count() or 1) // WORKER_POLARS_THREADS))
+    if workers <= 1:
+        return
+    started = time.perf_counter()
+    previous = os.environ.get("POLARS_MAX_THREADS")
+    os.environ["POLARS_MAX_THREADS"] = str(WORKER_POLARS_THREADS)  # read by polars when a spawned worker imports it
+    failed = 0
+    try:
+        with ProcessPoolExecutor(workers, mp_context=get_context("spawn"), initializer=_init_worker, initargs=(recipes, food)) as pool:
+            for future in as_completed([pool.submit(_fill_save, job) for job in jobs]):
+                try:
+                    future.result()
+                except Exception as error:  # noqa: BLE001 - the page builders redo the save serially
+                    failed += 1
+                    log(f"goods/food flows: a worker failed ({type(error).__name__}: {error}); computed serially instead")
+    finally:
+        if previous is None:
+            os.environ.pop("POLARS_MAX_THREADS", None)
+        else:
+            os.environ["POLARS_MAX_THREADS"] = previous
+    log(f"goods/food flows: {len(jobs) - failed} saves in {workers} workers, {time.perf_counter() - started:.1f}s")
+
+
 def build_goods_data(run: RunData, dataset: Path, out: Path, recipes: Recipes, *, cache: Path | None = None,
                      log: Callable[[str], None] = print) -> dict[str, Any]:
     """Write goods/<n>.json per save and goods/summary.json; returns the index payload (written by the caller)."""
@@ -421,10 +497,7 @@ def build_goods_data(run: RunData, dataset: Path, out: Path, recipes: Recipes, *
         if flows is None:
             flows = save_flows(dataset, run.playthrough_id, snapshot, recipes)
             if cached:
-                cached.mkdir(parents=True, exist_ok=True)
-                for k in FLOW_TABLES:
-                    flows[k].write_parquet(cached / f"{k}.parquet")
-                (cached / "done").write_text("", encoding="utf-8")
+                _write_flows(cached, flows, FLOW_TABLES)
         name = f"goods/{n:03d}.json"
         (out / name).write_text(json.dumps(encode_save(flows, index), separators=(",", ":"), allow_nan=False), encoding="utf-8")
         summaries.append(_summary_rows(flows))
@@ -534,18 +607,38 @@ def index_payload(run: RunData, built: dict[str, Any], recipes: Recipes, dataset
     }
 
 
+def _food_cache(cache: Path | None) -> Path | None:
+    return cache.parent / f"{cache.name}.food" if cache else None
+
+
+def prepare_goods_flows(playthrough: str, snapshots: list[str], *, repo: Path, project: Path, dataset: Path,
+                        cache: Path | None = None, log: Callable[[str], None] = print) -> tuple[Recipes, Any]:
+    """The goods and food recipes, with every save's flows computed into the caches (worker processes). Needs only
+    the dataset, so the report runs it before it loads the run: the workers' memory never adds to the run's."""
+    from prosper_or_perish_constructor.run_report_food import FoodRecipes
+
+    recipes = Recipes(repo, project)
+    food = FoodRecipes(recipes, repo, project)
+    if cache is not None and (dataset / "tables" / "market_goods" / f"playthrough_id={playthrough}").is_dir():
+        fill_caches(playthrough, snapshots, dataset, recipes, food, goods_cache=cache, food_cache=_food_cache(cache), log=log)
+    return recipes, food
+
+
 def write_goods_page(run: RunData, out: Path, *, repo: Path, project: Path, dataset: Path, cache: Path | None = None,
-                     canvas: Any = None, fps: int = 6, log: Callable[[str], None] = print) -> Path | None:
+                     canvas: Any = None, fps: int = 6, prepared: tuple[Recipes, Any] | None = None,
+                     log: Callable[[str], None] = print) -> Path | None:
     """The goods page and, when the dataset has province food, the food page (run_report_food), which shares the
-    goods page's index of buildings, methods and regions."""
+    goods page's index of buildings, methods and regions. `prepared` is prepare_goods_flows' result, if it ran."""
     if run.market_goods.is_empty():
         return None
-    recipes = Recipes(repo, project)
-    built = build_goods_data(run, dataset, out, recipes, cache=cache, log=log)
     from prosper_or_perish_constructor.run_report_food import write_food
 
+    recipes, food = prepared or prepare_goods_flows(run.playthrough_id, run.snapshots["snapshot_id"].to_list(), repo=repo,
+                                                    project=project, dataset=dataset, cache=cache, log=log)
+    food_cache = _food_cache(cache)
+    built = build_goods_data(run, dataset, out, recipes, cache=cache, log=log)
     write_food(run, out, repo=repo, project=project, dataset=dataset, recipes=recipes, index=built["index"], canvas=canvas,
-               fps=fps, cache=cache.parent / f"{cache.name}.food" if cache else None, log=log)
+               fps=fps, cache=food_cache, food=food, log=log)
     payload = index_payload(run, built, recipes, dataset, repo)
     (out / "goods" / "index.json").write_text(json.dumps(payload, separators=(",", ":"), allow_nan=False), encoding="utf-8")
     from prosper_or_perish_constructor.run_report_goods_page import goods_page_html

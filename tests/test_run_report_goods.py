@@ -92,6 +92,24 @@ def test_save_flows_add_up_to_the_market_totals(tmp_path: Path) -> None:
     assert {k: len(v) for k, v in encoded.items()}["p"] == producers.height
 
 
+def test_worker_processes_fill_the_same_flows_as_one_save_at_a_time(tmp_path: Path) -> None:
+    import shutil
+
+    dataset = _dataset(tmp_path)
+    for folder in (dataset / "tables").iterdir():  # a second save, a copy of the first
+        part = folder / "playthrough_id=run"
+        shutil.copy(part / "s1.parquet", part / "s2.parquet")
+    recipes, cache = _recipes(), tmp_path / "cache"
+    rg.fill_caches("run", ["s1", "s2"], dataset, recipes, None, goods_cache=cache, food_cache=None, workers=2, log=lambda _: None)
+    for snapshot in ("s1", "s2"):
+        folder = cache / f"{snapshot}.{recipes.digest}.{rg.CACHE_VERSION}"
+        assert (folder / "done").is_file()
+        direct = rg.save_flows(dataset, "run", snapshot, recipes)
+        for table in rg.FLOW_TABLES:
+            keys = [c for c in direct[table].columns if direct[table].schema[c] == pl.String]
+            assert pl.read_parquet(folder / f"{table}.parquet").sort(keys).equals(direct[table].sort(keys)), table
+
+
 def test_goods_page_reads_its_data_files() -> None:
     from prosper_or_perish_constructor.run_report_goods_page import goods_page_html
 

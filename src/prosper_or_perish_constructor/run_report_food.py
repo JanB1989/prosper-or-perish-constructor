@@ -245,7 +245,9 @@ def save_food(dataset: Path, playthrough: str, snapshot: str, food: FoodRecipes)
     )
     scaled = comps.join(pools.select("province_id", "factor"), on="province_id").with_columns(
         (pl.col("food") * pl.col("factor")).alias("food"),
-        pl.col("building_type").map_elements(category_of, return_dtype=pl.String).alias("category"))
+        pl.when(pl.col("building_type").is_in(sorted(KITCHENS))).then(pl.lit("kitchens"))
+        .when(pl.col("building_type").is_in(sorted(TAVERNS))).then(pl.lit("taverns"))
+        .otherwise(pl.lit("farms")).alias("category"))  # category_of, vectorised
     by_category = scaled.filter(pl.col("food") > 0).group_by("province_id").agg(
         pl.col("food").filter((pl.col("category") == "farms") & pl.col("method").is_not_null()).sum().alias("farms_pf"),
         pl.col("food").filter((pl.col("category") == "farms") & pl.col("method").is_null()).sum().alias("farms_flat"),
@@ -391,10 +393,9 @@ def build_food_data(run: RunData, dataset: Path, out: Path, food: FoodRecipes, i
         if flows is None:
             flows = save_food(dataset, run.playthrough_id, snapshot, food)
             if flows is not None and cached:
-                cached.mkdir(parents=True, exist_ok=True)
-                for k in FLOW_TABLES:
-                    flows[k].write_parquet(cached / f"{k}.parquet")
-                (cached / "done").write_text("", encoding="utf-8")
+                from prosper_or_perish_constructor.run_report_goods import _write_flows
+
+                _write_flows(cached, flows, FLOW_TABLES)
         if flows is None:
             saves.append(None)
             world.append(None)
@@ -407,9 +408,9 @@ def build_food_data(run: RunData, dataset: Path, out: Path, food: FoodRecipes, i
         world.append(_series_row(pools))
         for (region,), part in pools.partition_by("region", as_dict=True).items():
             regions.setdefault(region, {})[n] = _series_row(part)
-        for slug, part in pools.partition_by("slug", as_dict=True).items():
-            sums = part.select(pl.col("stock", "cap", "made", "base").sum()).row(0, named=True)
-            per_province.setdefault(slug[0], {})[n] = sums
+        # one grouped query per save (a select per province was ~80,000 tiny queries over a run)
+        for row in pools.group_by("slug").agg(pl.col("stock", "cap", "made", "base").sum()).iter_rows(named=True):
+            per_province.setdefault(row.pop("slug"), {})[n] = row
         map_frames.append(flows["locations"])
     have = [i for i, s in enumerate(saves) if s]
     if not have:
@@ -512,10 +513,10 @@ def render_food_map(run: RunData, canvas: MapCanvas, out: Path, frames: list[pl.
 
 
 def write_food(run: RunData, out: Path, *, repo: Path, project: Path, dataset: Path, recipes: Recipes, index: Index,
-               canvas: MapCanvas | None = None, fps: int = 6, cache: Path | None = None,
+               canvas: MapCanvas | None = None, fps: int = 6, cache: Path | None = None, food: FoodRecipes | None = None,
                log: Callable[[str], None] = print) -> Path | None:
     """Food data, map video and page; None when the run's dataset has no province food."""
-    food = FoodRecipes(recipes, repo, project)
+    food = food or FoodRecipes(recipes, repo, project)
     built = build_food_data(run, dataset, out, food, index, cache=cache, log=log)
     if built is None:
         log("food page: no province food in the dataset; skipped")

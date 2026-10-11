@@ -35,6 +35,7 @@ import re
 import shutil
 import subprocess
 import time
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -61,6 +62,7 @@ from prosper_or_perish_constructor.run_report_charts import (
 from prosper_or_perish_constructor.run_report_urban import UrbanCatalog, industry_colours, industry_label, load_urban_catalog
 
 POP_TYPES = ("nobles", "clergy", "burghers", "laborers", "soldiers", "peasants", "slaves", "tribesmen")
+MAP_THREADS = 4  # map videos rendered at a time
 # Categorical order (fixed, never cycled), light and dark chart surfaces.
 CATEGORICAL = ("#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948")
 OTHER_GREY = "#9a9a96"
@@ -185,14 +187,19 @@ def latest_playthrough(dataset: Path) -> str:
     return str(latest["playthrough_id"])
 
 
-def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | None = None) -> RunData:
-    playthrough = playthrough or latest_playthrough(dataset)
+def run_snapshots(dataset: Path, playthrough: str) -> pl.DataFrame:
+    """The run's saves in date order, from the dataset manifest."""
     manifest = pl.read_parquet(dataset / "manifest.parquet").filter(pl.col("playthrough_id") == playthrough)
-    snapshots = (
+    return (
         manifest.select("snapshot_id", "date", "year", "date_sort", "mtime", "playthrough_name")
         .unique("snapshot_id")
         .sort("date_sort")
     )
+
+
+def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | None = None) -> RunData:
+    playthrough = playthrough or latest_playthrough(dataset)
+    snapshots = run_snapshots(dataset, playthrough)
     # the game writes playthrough_name only for some starts (e.g. "England #7558ddce"); else the id's first block
     name = next((n for n in snapshots["playthrough_name"].to_list() if n), f"Run {playthrough[:8]}")
     # a reloaded older save is a branch `<id>_r<yyyy_mm_dd>` of its run (eu5gameparser dataset ingest)
@@ -783,10 +790,10 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
     world_by = {r["snapshot_id"]: r for r in world.to_dicts()}
     tags = sorted(t for t in run.locations["country_tag"].unique().to_list() if t)
     colours = _country_colours(repo, project, tags)
-    results = []
     duration = len(snapshots) / fps
     max_kbps = int(MAX_VIDEO_BYTES * 8 / 1000 / (duration + 2.0))
-    for spec in specs:
+
+    def render(spec: MapSpec) -> dict[str, str]:
         started = time.perf_counter()
         frames: list[tuple[dict, pl.DataFrame]] = []
         for snap in snapshots:
@@ -839,9 +846,12 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
         writer.close()
         size = video.stat().st_size
         log(f"map {spec.key}: {len(frames)} frames, {size / 1e6:.1f} MB, {time.perf_counter() - started:.1f}s")
-        results.append({"key": spec.key, "title": spec.title, "subtitle": spec.subtitle,
-                        "video": f"maps/{spec.key}.mp4", "poster": f"maps/{spec.key}.png", "bytes": str(size)})
-    return results
+        return {"key": spec.key, "title": spec.title, "subtitle": spec.subtitle,
+                "video": f"maps/{spec.key}.mp4", "poster": f"maps/{spec.key}.png", "bytes": str(size)}
+
+    # a few maps at a time: numpy, PIL and polars release the GIL and each video has its own ffmpeg
+    with ThreadPoolExecutor(max(1, min(MAP_THREADS, len(specs)))) as pool:
+        return list(pool.map(render, specs))
 
 
 # --------------------------------------------------------------------------------------------------------
@@ -867,7 +877,8 @@ def render_promotion_map(run: RunData, canvas: MapCanvas, out: Path, *, fps: int
     duration = run.snapshots.height / fps
     video = out / "industry_promotions.mp4"
     writer = VideoWriter(video, composer.width, composer.height, fps, int(MAX_VIDEO_BYTES * 8 / 1000 / (duration + 2.0)))
-    by_snapshot = run.locations.partition_by("snapshot_id", as_dict=True)
+    # only the columns used here: a split of the whole locations table is a copy of it
+    by_snapshot = run.locations.select("snapshot_id", "slug", "owner_country_id", "area").partition_by("snapshot_id", as_dict=True)
     promotions = run.promotions.group_by("snapshot_id", "country_id", "area").agg(pl.col("type").unique())
     by_promotion = promotions.partition_by("snapshot_id", as_dict=True)
     last = None
@@ -1044,6 +1055,19 @@ def _draw_labels(rgb: np.ndarray, labels: list[tuple[float, float, str, str]]) -
     return np.asarray(image)
 
 
+def _in_order(pool: ThreadPoolExecutor, fn: Callable[[Any], Any], items: list[Any], *, window: int) -> Any:
+    """fn over items in a thread pool, results in item order, at most `window` results held at once."""
+    from collections import deque
+
+    pending: deque = deque()
+    for item in items:
+        pending.append(pool.submit(fn, item))
+        if len(pending) >= window:
+            yield pending.popleft().result()
+    while pending:
+        yield pending.popleft().result()
+
+
 def render_trade_maps(run: RunData, canvas: MapCanvas, out: Path, *, fps: int,
                       log: Callable[[str], None] = print) -> list[dict[str, str]]:
     """Three videos: trade between world regions (in, out and the largest flows), the largest trade routes between
@@ -1055,7 +1079,8 @@ def render_trade_maps(run: RunData, canvas: MapCanvas, out: Path, *, fps: int,
     out.mkdir(parents=True, exist_ok=True)
     centroids = _location_centroids(canvas)
     snapshots = run.snapshots.to_dicts()
-    by_snapshot = run.locations.partition_by("snapshot_id", as_dict=True)
+    # only the columns used here: a split of the whole locations table is a copy of it
+    by_snapshot = run.locations.select("snapshot_id", "slug", "market_id").partition_by("snapshot_id", as_dict=True)
     prices = run.market_goods.group_by("snapshot_id", "good_id").agg(pl.col("default_price").first(), pl.col("group").first())
     routes = (
         run.trades.join(prices, on=["snapshot_id", "good_id"], how="left")
@@ -1105,7 +1130,9 @@ def render_trade_maps(run: RunData, canvas: MapCanvas, out: Path, *, fps: int,
         "trade_balance": (balance_composer, VideoWriter(out / "trade_balance.mp4", balance_composer.width, balance_composer.height, fps, max_kbps)),
     }
     last: dict[str, bytes] = {}
-    for snap in snapshots:
+
+    def draw(snap: dict[str, Any]) -> dict[str, Any]:
+        """The three maps of one save (threads: numpy, PIL and polars release the GIL); composed in save order below."""
         snapshot = snap["snapshot_id"]
         locs = by_snapshot.get((snapshot,), pl.DataFrame())
         raster = _market_raster(canvas, locs)
@@ -1139,12 +1166,9 @@ def render_trade_maps(run: RunData, canvas: MapCanvas, out: Path, *, fps: int,
         dots = [(centre[m][0], centre[m][1], radius.get(m, 2.0)) for m in on_routes if m in centre]
         traded = float(frame_routes["value"].sum() or 0.0)
         top_share = float(top_routes["value"].sum() or 0.0) / traded if traded else 0.0
-        composer = writers["trade_routes"][0]
-        frame = composer.compose(_draw_trade(base, lines, dots), year,
-                                 [("traded per month", f"{_format_number(traded)} gold"), ("market pairs", str(frame_routes.height)),
-                                  (f"top {TOP_ROUTES} carry", f"{top_share * 100:.0f}%")])
-        writers["trade_routes"][1].write(frame)
-        last["trade_routes"] = frame
+        parts = {"trade_routes": (_draw_trade(base, lines, dots),
+                                  [("traded per month", f"{_format_number(traded)} gold"), ("market pairs", str(frame_routes.height)),
+                                   (f"top {TOP_ROUTES} carry", f"{top_share * 100:.0f}%")])}
         # world regions filled by net trade with other regions, the largest flows between them, labels in / out
         region_frame = region_totals.filter(pl.col("snapshot_id") == snapshot)
         net = np.full(len(regions) + 1, np.nan)
@@ -1176,20 +1200,25 @@ def render_trade_maps(run: RunData, canvas: MapCanvas, out: Path, *, fps: int,
             arrows.append((a[0], a[1], 26.0, b[0], b[1], 26.0, 1.5 + 9.0 * t, (*rgb, int(150 + 105 * t))))
         region_map = _draw_labels(_draw_trade(region_rgb, arrows, []), labels)
         inside_total = float(region_frame["inside"].sum() or 0.0)
-        frame = writers["trade_regions"][0].compose(region_map, year, [
+        parts["trade_regions"] = (region_map, [
             ("between regions", f"{_format_number(cross_total)} gold"), ("inside regions", f"{_format_number(inside_total)} gold")])
-        writers["trade_regions"][1].write(frame)
-        last["trade_regions"] = frame
         # every location in its market's colour: net exporter blue, net importer red
         values = locs.select("slug", "market_id").join(total.select("market_id", pl.col("net_share").alias("value")), on="market_id",
                                                        how="left") if not locs.is_empty() else pl.DataFrame(schema={"slug": pl.String, "value": pl.Float64})
         rgb_map = _paint(canvas, balance_scale.colours(_values_array(canvas, values)))
         rgb_map[borders] = BALANCE_BORDER
         share = share_by_snapshot.get(snapshot, 0.0)
-        frame = writers["trade_balance"][0].compose(rgb_map, year, [("imported share", f"{share * 100:.1f}%"),
-                                                                    ("markets", str(total.height))])
-        writers["trade_balance"][1].write(frame)
-        last["trade_balance"] = frame
+        parts["trade_balance"] = (rgb_map, [("imported share", f"{share * 100:.1f}%"), ("markets", str(total.height))])
+        return {"year": year, "parts": parts}
+
+    with ThreadPoolExecutor(MAP_THREADS) as pool:
+        for drawn in _in_order(pool, draw, snapshots, window=2 * MAP_THREADS):
+            for key in ("trade_routes", "trade_regions", "trade_balance"):
+                composer, writer = writers[key]
+                rgb, stats = drawn["parts"][key]
+                frame = composer.compose(rgb, drawn["year"], stats)
+                writer.write(frame)
+                last[key] = frame
     results = []
     titles = {"trade_regions": ("Trade between world regions", "World regions coloured by exports − imports as a share of "
                                                                "their trade with other regions (blue: exporter, red: importer); "
@@ -1683,6 +1712,13 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
     )
     playthrough = playthrough or latest_playthrough(dataset)
     _backfill_engine_tables(repo, project, dataset, playthrough, log)
+    from prosper_or_perish_constructor.run_report_goods import prepare_goods_flows, write_goods_page  # imports this module
+
+    # first, while this process is still small: every save's goods and food flows, in worker processes (the loaded
+    # run takes ~9 GB at 100 saves; workers on top of it broke the 12 GB cap)
+    goods_cache = out_root / ".goods_cache" / playthrough
+    prepared = prepare_goods_flows(playthrough, run_snapshots(dataset, playthrough)["snapshot_id"].to_list(), repo=repo,
+                                   project=project, dataset=dataset, cache=goods_cache, log=log)
     run = load_run(dataset, playthrough, labels=load_labels(repo, project))
     if run.urban_saves:
         run.urban = load_urban_catalog(repo, project)
@@ -1692,17 +1728,20 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
         shutil.rmtree(out)
     out.mkdir(parents=True)
     canvas = build_canvas(repo, project, width)
-    maps = render_maps(run, canvas, out / "maps", repo=repo, project=project, fps=fps, log=log)
-    maps += render_trade_maps(run, canvas, out / "maps", fps=fps, log=log)
-    maps += render_promotion_map(run, canvas, out / "maps", fps=fps, log=log)
     run.good_icons = write_good_icons(run.market_goods["good_id"].to_list() if not run.market_goods.is_empty() else [],
                                       good_icon_sources(repo, project), out, log)
-    payload = build_payload(run)
-    log(f"charts: {len(payload['charts'])}, tables: {len(payload['tables'])}")
-    from prosper_or_perish_constructor.run_report_goods import write_goods_page  # imports this module
-
-    write_goods_page(run, out, repo=repo, project=project, dataset=dataset,
-                     cache=out_root / ".goods_cache" / run.playthrough_id, canvas=canvas, fps=fps, log=log)
+    # independent steps side by side: the goods and food pages (from the flows above), the map videos, the trade and
+    # promotion maps, and the charts here
+    with ThreadPoolExecutor(4) as pool:
+        pages = pool.submit(write_goods_page, run, out, repo=repo, project=project, dataset=dataset, cache=goods_cache,
+                            canvas=canvas, fps=fps, prepared=prepared, log=log)
+        location_maps = pool.submit(render_maps, run, canvas, out / "maps", repo=repo, project=project, fps=fps, log=log)
+        trade_maps = pool.submit(render_trade_maps, run, canvas, out / "maps", fps=fps, log=log)
+        promotion_map = pool.submit(render_promotion_map, run, canvas, out / "maps", fps=fps, log=log)
+        payload = build_payload(run)
+        log(f"charts: {len(payload['charts'])}, tables: {len(payload['tables'])}")
+        maps = location_maps.result() + trade_maps.result() + promotion_map.result()
+        pages.result()
     page = write_page(run, out, maps, payload)
     (out / "report.json").write_text(json.dumps({
         "playthrough_id": run.playthrough_id, "name": run.name, "years": run.years, "saves": run.snapshots.height,

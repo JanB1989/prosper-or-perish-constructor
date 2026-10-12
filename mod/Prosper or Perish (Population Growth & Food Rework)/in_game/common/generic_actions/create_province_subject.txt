@@ -1,11 +1,10 @@
 ﻿# PP copy of vanilla create_province_subject (2026-10-12, docs/peace_deal_rulebook.md "Enclaves").
 # Vanilla never lets the AI use this action (ai_tick = never). PP lets an AI nation that is broken into 4+ pieces on
-# its home continent release a small landlocked enclave as a tributary or vassal (the whole enclave as one subject):
-# land not connected to the capital by land or strait, no location of it on the sea coast (river channels and lakes do
-# not count), at most about 6 locations (a bigger piece is a second part of the country). A nation with fewer pieces keeps its exclaves.
-# Footholds reached by sea keep their owner. Not for HRE members (Imperial gore stays), subjects, or countries at war
-# (a war may still reconnect the land).
-# The player's use of the action is unchanged.
+# its home continent release its small enclaves without sea coast, each whole enclave as one tributary or vassal:
+# land not connected to the capital by land or strait, no location of it on the sea coast (river channels and lakes
+# do not count as sea), at most about 6 locations (a bigger piece is a second part of the country).
+# Kept: sea footholds, bigger pieces, the exclaves of nations in fewer than 4 pieces (border gore), HRE members,
+# subjects, nations at war (a war may still reconnect the land). The player's use of the action is unchanged.
 create_province_subject = {
 	type = owncountry
 

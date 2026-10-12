@@ -1,0 +1,10 @@
+﻿# Prosper or Perish: AI subjects that may let an enclave go (pp_release_enclave_independence.txt).
+pp_enclave_release_list = {
+	potential = {
+		is_ai = yes
+		is_subject = yes
+	}
+	actions = {
+		pp_release_enclave_independence
+	}
+}

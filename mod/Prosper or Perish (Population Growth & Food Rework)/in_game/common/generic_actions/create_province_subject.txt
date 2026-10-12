@@ -3,8 +3,9 @@
 # its home continent release its small enclaves, each whole enclave as one tributary or vassal: land not connected to
 # the capital by land or strait, at most about 6 locations (a bigger piece is a second part of the country), not held
 # by an enemy. Kept: footholds reached by sea outside the capital's region (river channels and lakes are not sea),
-# bigger pieces, the exclaves of nations in fewer than 4 pieces (border gore), HRE members. Subjects cannot create
-# subjects; their enclaves break away through pp_release_enclave_independence. The player's action is unchanged.
+# bigger pieces, the exclaves of nations in fewer than 4 pieces (border gore), HRE members. An enclave that borders
+# one of the nation's subjects joins that subject instead of becoming a new country. Subjects cannot create subjects;
+# their enclaves break away through pp_release_enclave_independence. The player's action is unchanged.
 create_province_subject = {
 	type = owncountry
 

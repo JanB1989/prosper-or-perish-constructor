@@ -189,50 +189,55 @@ can tell them apart.
 
 PP changes (branch `enclave-release`, tested in game on loaded saves, not merged):
 
-- `CONQUER_DESIRE_EXCLAVED_BONUS = 300` (vanilla 50). This is a neighbour's conquer desire for a location whose
-  surroundings are all its own (or its subjects', or impassable). The engine adds it before the threat and distance
-  factors and clamps the total at `AI_CONQUER_DESIRE_MAX` (100); at 300 an enclave sits at or near the cap even
-  against a much stronger owner (threat factor down to 0.2). It steers the war goal; the peace picks above floor
-  every location's desire at 1.0, so it does not order the land taken.
 - `generic_actions/create_province_subject.txt` (same-name copy of vanilla, which bans the AI with `ai_tick = never`).
-  Once a year an AI nation that is independent, at peace, not in the HRE and broken into 4+ pieces on its home
-  continent releases its small enclaves without sea coast, each whole enclave as one subject: land not connected to
-  the capital by land or strait (`every_connected_location` from the capital), no location on the sea coast
-  (`pp_is_sea_coast`: river channels and lakes are not sea), at most about 6 locations. Subject type: tributary where
-  the government allows one (tribe, horde, Middle Kingdom), else vassal; a march cannot be created from a province
-  (no `creation_visible`) and a fiefdom is meant for annexation. Kept by design: sea footholds, bigger pieces, the
-  exclaves of nations in fewer than 4 pieces (border gore), HRE members, subjects. The player's action is unchanged.
+  Once a year an AI nation that is independent, not in the HRE and broken into 4+ pieces on its home continent
+  releases its small enclaves, each whole enclave as one subject: land not connected to the capital by land or strait
+  (`every_connected_location` from the capital), at most about 6 locations, not held by an enemy. Kept by design:
+  footholds reached by sea outside the capital's region (`pp_is_sea_coast`: river channels and lakes are not sea),
+  bigger pieces, the exclaves of nations in fewer than 4 pieces (border gore), HRE members. Subject type: tributary
+  where the government allows one (tribe, horde, Middle Kingdom), else vassal; a march cannot be created from a
+  province (no `creation_visible`) and a fiefdom is meant for annexation. An enclave that borders one of the nation's
+  subjects joins that subject instead of becoming a new country. The player's action is unchanged.
+- `generic_actions/pp_release_enclave_independence.txt` (+ AI list, localization): no subject type may create subjects,
+  so an AI subject in 4+ pieces lets each such enclave go as an independent nation (AI only, not in the GUI).
+- `CONQUER_DESIRE_EXCLAVED_BONUS` stays vanilla (50). It is the only define built for enclaves (a neighbour's conquer
+  desire for a location whose surroundings are all its own, its subjects' or impassable; clamped at 100 with the
+  rest). At 300 it removed no more splintered nations than at 50, and neighbours took Austria's HRE enclaves in both
+  1537 runs with it (none at 50, none in the baselines).
 
-Tests (2026-10-12): saves of run 075b0d4e loaded in observer mode (PP Main Test), 25 years from 1537 and 15 years from
-1737, the same save with and without the change, a noise twin (the baseline relaunched from its own 1542 save):
+Tests (2026-10-12/13): saves of run 075b0d4e loaded in observer mode (PP Main Test), 25 years from 1537 and 15 years
+from 1737, with and without the change. Spread without a change: the baseline, a twin relaunched from its own first
+save, and a placebo (+1 gold to Great Britain at day 1). Land classes from the start save (kept = still the owner's):
 
-| | baseline | noise twin | final (v6) |
-|---|---|---|---|
-| splintered nations, 1562 (1537 start: 42) | 41 | 43 | 19 |
-| splintered nations, 1752 (1737 start: 35) | 33 | | 20 |
-| target land still the owner's, 1562 / 1752 | 66 / 84 % | 71 % | 16 / 13 % (64 / 71 % its subject) |
-| sea footholds still the owner's, 1562 / 1752 | 92 / 86 % | 86 % | 87 / 84 % |
-| bigger pieces still the owner's, 1562 / 1752 | 72 / 80 % | 64 % | 59 / 91 % |
-| exclaves of nations in < 4 pieces kept, 1562 / 1752 | 81 / 71 % | 78 % | 84 / 63 % |
-| countries, 1562 / 1752 | 853 / 632 | 854 | 994 / 872 |
-| ticks of 5 years, 1537 / 1737 start (clean runs) | 101 / 116 s | | 105 / 119 s |
+| | baseline / twin / placebo | final |
+|---|---|---|
+| splintered nations 1562 (start 42) | 41 / 43 / 41 | 5 |
+| splintered nations 1752 (start 35) | 33 / 34 / 35 | 10 |
+| target enclaves of independent nations kept, 1562 | 70 / 77 / - % | 24 % (55 % its subject) |
+| sea footholds kept, 1562 / 1752 | 95 / 79 / 95, 89 / 91 / 89 % | 95, 85 % |
+| bigger pieces kept, 1562 / 1752 | 79 / 76 / 77, 75 / 80 / 78 % | 73, 80 % |
+| exclaves of nations in < 4 pieces kept, 1562 / 1752 | 85 / 86 / 82, 83 / 80 / 80 % | 82, 73 % (8 % own subjects) |
+| HRE land kept, 1562 / 1752 | 100 / 98 / 100, 100 / 100 / 98 % | 98, 100 % |
+| countries 1562 / 1752 | 853, 632 | 1,031, 905 |
+| 5-year ticks 1537 / 1737 start | about 101 / 113 s | 111 / 126 s |
 
-Target land = small pieces without sea coast of nations in 4+ pieces in the start save. The protected classes move
-within the noise between the two baselines. Released subjects stay: of those released by 1542, 88 of 119 were still
-subjects of the same overlord in 1562, 14 of another overlord, 7 independent, 7 taken, 3 annexed back (the AI annexes
-only subjects it borders, and an enclave does not border its overlord). Left splintered in 1562: Japanese clans with
-sea-coast pieces, subjects, nations at war. Cost: about +15 % (1537) to +38 % (1737) countries and 3-5 % longer ticks
-in the 16th century (within noise in the 18th), plus vanilla error noise from the new micro-countries (coat of arms of
-rulers without dynasty, `frustrate_annexation`, reformation situation).
+Released subjects stay: of those released by 1542, 83 of 128 were still subjects of the same overlord in 1562, 17 of
+another overlord, 7 independent, 19 taken, 2 annexed back (the AI annexes only subjects it borders). The 1752 sea-
+foothold loss is Poland's footholds to Halych, a war the baseline has too. Left splintered: nations at war (an
+occupied enclave waits), Hungary's bigger pieces. Cost: about +180 (1537) to +270 (1737) countries, 1-2 locations
+each, and about 10 % longer ticks; vanilla error noise from the new countries (coat of arms of rulers without
+dynasty, `frustrate_annexation`, reformation situation).
 
-Tuning steps: v1 released every landlocked enclave province (Pegu's 27-location and Dai's 47-location halves too),
-and only countries that may hold tributaries released at all (a march cannot be created from a province); v2/v3 added
-the size cap and the vassal fallback; v4 made the whole enclave one subject (21 enclaves had been split into 46
-subjects); v5 limited it to nations in 4+ pieces (v3 raised the 1737 country count from 660 to 940: every nation
-released its single exclave); v6 stopped counting river channels and lakes as sea (18 river enclaves had stayed).
+Tuning steps: v1 released every landlocked enclave province (Pegu's and Dai's halves too) and only countries that may
+hold tributaries released (a march cannot be created from a province); v2/v3 size cap and vassal fallback; v4 whole
+enclave as one subject; v5 only nations in 4+ pieces (every nation had released its single exclave: 660 -> 940
+countries); v6 river channels and lakes are not sea; v7 coastal splinters inside the home region, releases in war
+unless occupied, subjects let enclaves go (splintered 19 -> 8); v8 an enclave next to an own subject joins it; the
+exclave bonus back to 50.
 
 Metric: `~/pp_ai_run/splinter/scripts/splinter2.py <playthrough>` (stuck splinter episodes, how they end); test kit
-`enc_measure.py`, `enc_fates.py`, `enc_followup.py` there (runner `~/pp_ai_run/splinter/runner/enc_variant.ps1`).
+`enc_measure.py`, `enc_fates.py`, `enc_summary.py`, `enc_followup.py` there (runner
+`~/pp_ai_run/splinter/runner/enc_variant.ps1`).
 
 ## How to measure
 

@@ -142,6 +142,12 @@ to the target and 20 regiments):
 | --- | --- | --- |
 | Brittany -> MDY (Visayas, 7 locations, no joiners) | 21 | occupied 3 locations in ~4 months (war score +94); peace after ~8 months: Brittany took 4 locations on Panay (Araut, Aklan, Irong-Irong, Malandog), all connected to the foothold; MDY kept Negros |
 | Spain -> MSN (Deccan, 9 locations) | 46-67 | Spain's 20 regiments lost within 6 months; peace gave the foothold back |
+| nv17: Brittany -> MDY with 10 regiments (topped up once) | 22-27 | the same: target occupied in month 7, 4 Panay locations at the peace in month 8 |
+| nv17: Spain -> MSN with 60-64 regiments | 6-34 | never attacked in 12 months (war score -15): MSN was joined by BND, a Deccan state of 323 locations |
+
+A foothold does not make the AI choose such a target by itself: in these saves neither Brittany (after taking Panay)
+nor Spain (beside MSN) had any conquest desire for the neighbouring locations, because the desire's distance is
+measured from the capital.
 
 - The local army is assigned and fights like any army at home: from the foothold, distance no longer counts against
   it.

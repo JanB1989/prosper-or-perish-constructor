@@ -1,10 +1,10 @@
 ﻿# PP copy of vanilla create_province_subject (2026-10-12, docs/peace_deal_rulebook.md "Enclaves").
 # Vanilla never lets the AI use this action (ai_tick = never). PP lets an AI nation that is broken into 4+ pieces on
-# its home continent release its small enclaves without sea coast, each whole enclave as one tributary or vassal:
-# land not connected to the capital by land or strait, no location of it on the sea coast (river channels and lakes
-# do not count as sea), at most about 6 locations (a bigger piece is a second part of the country).
-# Kept: sea footholds, bigger pieces, the exclaves of nations in fewer than 4 pieces (border gore), HRE members,
-# subjects, nations at war (a war may still reconnect the land). The player's use of the action is unchanged.
+# its home continent release its small enclaves, each whole enclave as one tributary or vassal: land not connected to
+# the capital by land or strait, at most about 6 locations (a bigger piece is a second part of the country), not held
+# by an enemy. Kept: footholds reached by sea outside the capital's region (river channels and lakes are not sea),
+# bigger pieces, the exclaves of nations in fewer than 4 pieces (border gore), HRE members. Subjects cannot create
+# subjects; their enclaves break away through pp_release_enclave_independence. The player's action is unchanged.
 create_province_subject = {
 	type = owncountry
 
@@ -22,7 +22,6 @@ create_province_subject = {
 
 	ai_prerequisite = {
 		is_subject = no
-		at_war = no
 		num_locations > 1
 		trigger_if = {
 			limit = { exists = international_organization:hre }
@@ -50,6 +49,7 @@ create_province_subject = {
 						add_to_temporary_list = pp_counted
 						every_connected_location = { add_to_temporary_list = pp_connected_to_capital }
 						continent = { save_scope_as = pp_home_continent }
+						region = { save_scope_as = pp_home_region }
 					}
 					set_local_variable = { name = pp_pieces value = 1 }
 					while = {
@@ -85,11 +85,19 @@ create_province_subject = {
 										owner = scope:actor
 										OR = {
 											is_in_list = pp_connected_to_capital
-											# sea footholds stay; river channels and lakes do not count as sea
-											pp_is_sea_coast = yes
-											any_connected_location = { pp_is_sea_coast = yes }
-											# a bigger landlocked piece is a second part of the country, not a splinter
+											# a foothold reached by sea outside the home region stays (river channels and
+											# lakes are not sea); a coastal splinter inside the home region does not
+											AND = {
+												NOT = { region ?= { this = scope:pp_home_region } }
+												OR = {
+													pp_is_sea_coast = yes
+													any_connected_location = { pp_is_sea_coast = yes }
+												}
+											}
+											# a bigger piece is a second part of the country, not a splinter
 											any_connected_location = { count >= 6 }
+											# not while an enemy holds it
+											NOT = { controller ?= scope:actor }
 										}
 									}
 								}

@@ -1,0 +1,151 @@
+﻿# PP (2026-10-12, docs/peace_deal_rulebook.md "Enclaves"): a subject cannot create subjects, so an AI subject broken
+# into 4+ pieces on its home continent lets its small enclaves go as independent nations, by the same rule as
+# create_province_subject (whole enclave, at most about 6 locations, not held by an enemy, sea footholds outside the
+# home region kept). AI only; not offered to players.
+pp_release_enclave_independence = {
+	type = owncountry
+	show_in_gui_list = no
+	show_message = no
+
+	potential = {
+		scope:actor = {
+			is_ai = yes
+			is_subject = yes
+		}
+	}
+
+	allow = {
+	}
+
+	ai_prerequisite = {
+		is_subject = yes
+		num_locations > 1
+		trigger_if = {
+			limit = { exists = international_organization:hre }
+			NOT = { is_member_of_international_organization = international_organization:hre }
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = province
+		interaction_source_list = {
+			scope:actor = {
+				if = {
+					limit = { exists = capital }
+					capital = {
+						add_to_temporary_list = pp_connected_to_capital
+						add_to_temporary_list = pp_counted
+						every_connected_location = { add_to_temporary_list = pp_connected_to_capital }
+						continent = { save_scope_as = pp_home_continent }
+						region = { save_scope_as = pp_home_region }
+					}
+					set_local_variable = { name = pp_pieces value = 1 }
+					while = {
+						limit = {
+							local_var:pp_pieces < 4
+							any_owned_location = {
+								NOT = { is_in_list = pp_connected_to_capital }
+								NOT = { is_in_list = pp_counted }
+								continent ?= { this = scope:pp_home_continent }
+							}
+						}
+						random_owned_location = {
+							limit = {
+								NOT = { is_in_list = pp_connected_to_capital }
+								NOT = { is_in_list = pp_counted }
+								continent ?= { this = scope:pp_home_continent }
+							}
+							add_to_temporary_list = pp_counted
+							every_connected_location = { add_to_temporary_list = pp_counted }
+						}
+						change_local_variable = { name = pp_pieces add = 1 }
+					}
+					if = {
+						limit = { local_var:pp_pieces > 3.5 }
+						every_province = {
+							limit = {
+								any_location_in_province = {
+									owner = scope:actor
+									continent ?= { this = scope:pp_home_continent }
+								}
+								NOT = {
+									any_location_in_province = {
+										owner = scope:actor
+										OR = {
+											is_in_list = pp_connected_to_capital
+											# a foothold reached by sea outside the home region stays (river channels and
+											# lakes are not sea); a coastal splinter inside the home region does not
+											AND = {
+												NOT = { region ?= { this = scope:pp_home_region } }
+												OR = {
+													pp_is_sea_coast = yes
+													any_connected_location = { pp_is_sea_coast = yes }
+												}
+											}
+											# a bigger piece is a second part of the country, not a splinter
+											any_connected_location = { count >= 6 }
+											# not while an enemy holds it
+											NOT = { controller ?= scope:actor }
+										}
+									}
+								}
+							}
+							add_to_list = source
+						}
+					}
+				}
+			}
+		}
+		target_flag = target_province
+		name = "create_province_subject_select_province"
+		none_available_msg_key = "create_province_subject_no_province"
+		column = {
+			data = name
+		}
+		visible = {
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				exists = scope:target_province
+				scope:target_province = { any_location_in_province = { owner = scope:actor } }
+			}
+			scope:target_province = {
+				random_location_in_province = {
+					limit = { owner = scope:actor }
+					save_scope_as = pp_enclave_seat
+					add_to_temporary_list = pp_enclave_piece
+					every_connected_location = { add_to_temporary_list = pp_enclave_piece }
+				}
+			}
+			scope:pp_enclave_seat = {
+				create_country_from_location = {
+					save_scope_as = pp_enclave_country
+					set_capital = scope:pp_enclave_seat
+				}
+			}
+			if = {
+				limit = { exists = scope:pp_enclave_country }
+				every_in_list = {
+					list = pp_enclave_piece
+					limit = { owner = scope:actor }
+					change_location_owner = scope:pp_enclave_country
+					add_core = scope:pp_enclave_country
+				}
+			}
+		}
+	}
+
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	maximum_targets_in_one_tick = 5
+	disallowed_duplicates_of_targets_for_ai = { target_province }
+	ai_will_do = {
+		add = 100
+	}
+
+	automation_tick = never
+	automation_tick_frequency = 12
+}

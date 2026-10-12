@@ -232,7 +232,7 @@ subjects); v5 limited it to nations in 4+ pieces (v3 raised the 1737 country cou
 released its single exclave); v6 stopped counting river channels and lakes as sea (18 river enclaves had stayed).
 
 Metric: `~/pp_ai_run/splinter/scripts/splinter2.py <playthrough>` (stuck splinter episodes, how they end); test kit
-`enc_measure.py`, `enc_fates.py`, `enc_followup.py` there (runner scripts in the session scratchpad `enc/`).
+`enc_measure.py`, `enc_fates.py`, `enc_followup.py` there (runner `~/pp_ai_run/splinter/runner/enc_variant.ps1`).
 
 ## How to measure
 

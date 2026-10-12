@@ -131,8 +131,10 @@ Why (AI war tasks, read from saves and measured with the probe):
   not a search that ran out of budget). The AI's army route search does not find a way across the sea to these
   targets, so the siege task never comes to asking for ships. The budget defines are not the lever. The war
   tasks called that route search without its options (nv25, 26 calls in 45 days), and the one call from the AI's
-  transport-planning code, with a different flag set, found no route to China either. Why no sea route is found
-  was not decoded.
+  transport-planning code, with a different flag set, found no route to China either. Read in the code: for an
+  army, the route search lets it enter a sea location only where a friendly fleet able to carry it already is (or
+  the fleet assigned to transport it). The war tasks search first and do not bring a fleet to the army beforehand,
+  so with the transports lying in other ports an overseas target has no route (the last step is inferred).
 - The whole world of run 112ad572 shows the same: the AI holds 4,000-4,800 siege tasks at a time but only 9-24
   "friendly naval transport" tasks (the AI's sea-transport task), with 0-4 fleets assigned to them in all
   (autosaves 1642, 1742, 1837). AI armies seldom cross water anywhere in PP 0.10 on EU5 1.4.

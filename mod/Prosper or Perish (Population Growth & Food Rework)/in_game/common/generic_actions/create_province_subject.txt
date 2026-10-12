@@ -248,82 +248,109 @@ create_province_subject = {
 				}
 			}
 		}
+		# PP: an enclave next to one of the actor's subjects joins that subject; no new country
 		if = {
 			limit = {
+				scope:actor = { is_ai = yes }
 				exists = scope:target_province
-				exists = scope:ruler
 				scope:target_province = { any_location_in_province = { owner = scope:actor } }
-			}
-
-			scope:target_province = {
-				create_location_country_from_province = {
-					ruler = scope:ruler
-					subject_type = scope:subject_type
-
-					capital = {
-						province = {
-							save_scope_as = new_province
-						}
-					}
-					add_truce_with = {
-						target = scope:actor
-						mutual = yes
-					}
+				any_in_list = {
+					list = pp_enclave_piece
+					any_neighbor_location = { owner ?= { is_subject_of = scope:actor } }
 				}
+			}
+			random_in_list = {
+				list = pp_enclave_piece
+				limit = { any_neighbor_location = { owner ?= { is_subject_of = scope:actor } } }
+				random_neighbor_location = {
+					limit = { owner ?= { is_subject_of = scope:actor } }
+					owner = { save_scope_as = pp_enclave_heir }
+				}
+			}
+			every_in_list = {
+				list = pp_enclave_piece
+				limit = { owner = scope:actor }
+				change_location_owner = scope:pp_enclave_heir
 			}
 		}
-		else_if = {
-			limit = {
-				exists = scope:target_province
-				scope:target_province = { any_location_in_province = { owner = scope:actor } }
-			}
-
+		else = {
 			if = {
 				limit = {
-					scope:subject_type = {
-						has_overlords_ruler = yes
+					exists = scope:target_province
+					exists = scope:ruler
+					scope:target_province = { any_location_in_province = { owner = scope:actor } }
+				}
+
+				scope:target_province = {
+					create_location_country_from_province = {
+						ruler = scope:ruler
+						subject_type = scope:subject_type
+
+						capital = {
+							province = {
+								save_scope_as = new_province
+							}
+						}
+						add_truce_with = {
+							target = scope:actor
+							mutual = yes
+						}
 					}
 				}
-				#using overlord's ruler
-				scope:actor = {
+			}
+			else_if = {
+				limit = {
+					exists = scope:target_province
+					scope:target_province = { any_location_in_province = { owner = scope:actor } }
+				}
+
+				if = {
+					limit = {
+						scope:subject_type = {
+							has_overlords_ruler = yes
+						}
+					}
+					#using overlord's ruler
+					scope:actor = {
+						ruler = {
+							save_scope_as = ruler
+						}
+					}
+				}
+
+				scope:target_province = {
+					create_location_country_from_province = {
+						ruler = scope:ruler
+						subject_type = scope:subject_type
+
+						capital = {
+							province = {
+								save_scope_as = new_province
+							}
+						}
+
+						save_scope_as = new_country
+
+						add_truce_with = {
+							target = scope:actor
+							mutual = yes
+						}
+					}
+				}
+
+				scope:new_country = {
 					ruler = {
 						save_scope_as = ruler
 					}
 				}
-			}
-
-			scope:target_province = {
-				create_location_country_from_province = {
-					ruler = scope:ruler
-					subject_type = scope:subject_type
-
-					capital = {
-						province = {
-							save_scope_as = new_province
-						}
+				# PP: the rest of the enclave goes to the same subject
+				if = {
+					limit = { scope:actor = { is_ai = yes } }
+					every_in_list = {
+						list = pp_enclave_piece
+						limit = { owner = scope:actor }
+						change_location_owner = scope:new_country
 					}
-
-					save_scope_as = new_country
-
-					add_truce_with = {
-						target = scope:actor
-						mutual = yes
-					}
-				}
-			}
-
-			scope:new_country = {
-				ruler = {
-					save_scope_as = ruler
-				}
-			}
-			# PP: the rest of the enclave goes to the same subject
-			if = {
-				limit = { scope:actor = { is_ai = yes } }
-				every_in_list = {
-					list = pp_enclave_piece
-					limit = { owner = scope:actor }
-					change_location_owner = scope:new_country
 				}
 			}
 		}

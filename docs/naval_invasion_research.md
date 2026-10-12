@@ -169,9 +169,14 @@ Why (AI war tasks, read from saves and measured with the probe):
   army and its destination as a transport need, grouped by destination, and hands that to the AI's logistics
   pass, which drives the transport side. So Spain's 153 failed searches (nv24) should have recorded needs; the
   logistics pass then turned none of them into a request. Its own route search also runs with the sea mode off
-  (read in the code), which would explain that; how the AI's repatriation requests from America get through
-  regardless is the open end of this research. (Not via the repatriation task: that one sends stranded armies
-  home with a "force exile" command, without ships.) The
+  (read in the code), which would explain that. The home-defence, coast-defence and army-hunting tasks record
+  needs the same way (same move step, same sea mode off), so the AI's requests from America to Europe are most
+  likely colonial armies called home through this same pass; why those needs become requests and the war needs
+  for Asia do not is the open end of this research. (Not via the repatriation task: that one sends stranded
+  armies home with a "force exile" command, without ships.) A fleet takes a transport only when its ships
+  average at least 0.0004 x the distance in strength, clamped to 10-95 %
+  (`AI_TRANSPORT_STRENGTH_THRESHOLD_PER_DISTANCE`): on a trip to Asia that means a 95 % repaired fleet, which a
+  fleet in port has, so this define is not the blocker. The
   vanilla comment on `CARPET_SIEGE_SEARCH_DEPTHS` fits: siege armies that find no target "get moved to logistics
   to get them somewhere near". A separate "transport troops" task type exists in the game but appeared in no save
   of this run.

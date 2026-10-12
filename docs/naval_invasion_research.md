@@ -165,10 +165,12 @@ Why (AI war tasks, read from saves and measured with the probe):
   task records a transport need with an embark and a disembark point; an AI routine posts it as a request about
   monthly; fleets pick open requests up as their "friendly naval transport" task (that task can also serve another
   country's troops). Spain and Brittany placed no request in any of these wars, not even with a foothold on the
-  target's landmass (nv20), which fits the route search finding no sea route. Which step records the need
-  for an army is the open end of this research. The likeliest place is the army logistics task: the vanilla
-  comment on `CARPET_SIEGE_SEARCH_DEPTHS` says siege armies that find no target "get moved to logistics to get them
-  somewhere near". A separate "transport troops" task type exists in the game but appeared in no save of this run.
+  target's landmass (nv20), which fits the route search finding no sea route. The need is recorded by the war
+  tasks themselves: each task hands its transport needs to the AI's logistics pass, which drives the transport
+  side (structure read in the code; that a failed route search means no recorded need is inferred). The vanilla
+  comment on `CARPET_SIEGE_SEARCH_DEPTHS` points the same way: siege armies that find no target "get moved to
+  logistics to get them somewhere near". A separate "transport troops" task type exists in the game but appeared in
+  no save of this run.
 - The whole world of run 112ad572 shows the same: the AI holds 4,000-4,800 siege tasks at a time but only 9-24
   "friendly naval transport" tasks (the AI's sea-transport task), with 0-4 fleets assigned to them in all
   (autosaves 1642, 1742, 1837). AI armies seldom cross water anywhere in PP 0.10 on EU5 1.4.

@@ -137,8 +137,10 @@ Why (AI war tasks, read from saves and measured with the probe):
   the fleet assigned to transport it). The war tasks search first and do not bring a fleet to the army beforehand,
   so with the transports lying in other ports an overseas target has no route (the last step is inferred).
   A test with 40 brigs placed at sea right beside a 20-regiment army on Ibiza (nv26, 60 days) did not change that:
-  the army's searches still failed and nothing sailed. Whether the fleet went back to port before the searches,
-  or a carrying fleet is needed along more of the way, was not settled.
+  the army's searches still failed and nothing sailed. The search code has a mode in which sea counts as passable
+  (planning with transports), but the war tasks don't use it; without it every sea step needs a carrying fleet
+  already in place, so (inferred) a route to China would need fleets along the whole way. Which AI code uses the
+  transport mode, and why it never acted in these wars, is the open end of this research.
 - The whole world of run 112ad572 shows the same: the AI holds 4,000-4,800 siege tasks at a time but only 9-24
   "friendly naval transport" tasks (the AI's sea-transport task), with 0-4 fleets assigned to them in all
   (autosaves 1642, 1742, 1837). AI armies seldom cross water anywhere in PP 0.10 on EU5 1.4.

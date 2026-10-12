@@ -288,8 +288,8 @@ same term can pull scattered land from a coalition in any preferred region.
 - Define variants in the test mod's `variants\` (`vanilla_peace_defines.txt`, `assignment_proximity_defines.txt`,
   `pathfind_budget_defines.txt`), copied to `loading_screen\common\defines\zz_pp_nv_defines.txt` for one launch
   each; the folder is empty now.
-- Saves `save games\pp_nv_*.eu5` (62, incl. `pp_nv_base_1742`, `pp_nv_war_start` and the runs `pp_nv_nv4*` to
-  `pp_nv_nv23*`); left for Jan to decide.
+- Saves `save games\pp_nv_*.eu5` (62, incl. `pp_nv_base_1742`, `pp_nv_war_start` and the runs `pp_nv_nv1*` to
+  `pp_nv_nv24*`); left for Jan to decide.
 - Test launches from `pp_nv_base_1742` must run on the test playset with autosave off: that save carries the
   playthrough id of run 112ad572, so an autosave would overwrite the real one.
 - The AI's war tasks are in the save (`military_objective`, `strategic_military_objective`); the private kit reads

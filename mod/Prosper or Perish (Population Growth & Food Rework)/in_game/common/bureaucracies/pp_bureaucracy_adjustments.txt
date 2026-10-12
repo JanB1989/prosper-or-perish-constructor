@@ -1,11 +1,11 @@
-﻿# Mazalim Court: vanilla block, maintenance 2.5x.
+﻿# Mazalim Court: vanilla block, maintenance 1.75x.
 TRY_REPLACE:mazalim_court_bureaucracy = {
 	implementation_price = price:implement_bureaucracy_price
 	maintenance_price = price:maintain_bureaucracy_price
 	removal_price = price:remove_bureaucracy_price
 	maintenance_price_modifier = {
 		value = country_economical_base
-		multiply = 0.01 # vanilla 0.004 (Jan 2026-10-11: 2.5x)
+		multiply = 0.007 # vanilla 0.004 (Jan 2026-10-12: 1.75x; 2.5x on 10-11)
 	}
 
 	potential = {

@@ -99,7 +99,7 @@ TRY_REPLACE:local_tribal_strongholds = {
 		global_max_rural_control = 0.05
 		global_tribes_estate_power = 1.0
 		tribes_estate_max_tax = -0.075
-		research_speed = -0.10 # every tribes privilege (zz_pp_tribes_privileges_research.txt; an inject misses a replaced block)
+		research_speed = -0.075 # every tribes privilege (zz_pp_tribes_privileges_research.txt; an inject misses a replaced block)
 	}
 }
 
@@ -111,6 +111,6 @@ TRY_REPLACE:tribes_pasture_access = {
 	country_modifier = {
 		global_rural_build_buildings_efficiency = 0.01
 		global_tribes_estate_power = 0.2
-		research_speed = -0.10
+		research_speed = -0.075
 	}
 }

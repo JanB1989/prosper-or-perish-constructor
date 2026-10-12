@@ -242,7 +242,7 @@ def test_pasture_access_is_redirected_by_hand() -> None:
     block = block[: block.index("\n}") + 2]
     assert "expand_rgo_farming_cost_modifier" not in block
     assert "global_rural_build_buildings_efficiency = 0.01" in block
-    assert "research_speed = -0.10" in block
+    assert "research_speed = -0.075" in block
 
 
 def test_rural_efficiency_fallback_is_half_magnitude_rounded_to_two_decimals() -> None:

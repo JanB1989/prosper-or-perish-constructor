@@ -147,9 +147,10 @@ Why (AI war tasks, read from saves and measured with the probe):
   so with the transports lying in other ports an overseas target has no route (the last step is inferred).
   A test with 40 brigs placed at sea right beside a 20-regiment army on Ibiza (nv26, 60 days) did not change that:
   the army's searches still failed and nothing sailed. The search code has a mode in which sea counts as passable
-  (planning with transports), but the war tasks don't use it; without it every sea step needs a carrying fleet
-  already in place, so (inferred) a route to China would need fleets along the whole way. A census of every AI
-  route search world-wide over one month (war-start save) found the transport switch set by nobody. The only army
+  (planning with transports); without it every sea step needs a carrying fleet already in place, so (inferred) a
+  route to China would need fleets along the whole way. A census of every AI route search world-wide over one month
+  (war-start save) found the search option that seems to switch that mode on set by nobody (the link between the
+  option and the mode is inferred, not read). The only army
   searches with a special flag came from the AI's unit-merging logic, which works only between units within 200 map
   pixels (`AI_PERFORMANCE_ATTACH_UNIT_MAX_DISTANCE`).
 - Sea transport is requested separately: the AI places a "naval transport request" (from, to, cost limit; kept in

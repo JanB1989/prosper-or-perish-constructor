@@ -129,7 +129,10 @@ Why (AI war tasks, read from saves and measured with the probe):
   raised tenfold and its accurate search extended to 10,000 px by test-mod defines): Spain's armies, now assigned to
   the China sieges, asked for a route 153 times in 4 months and got none each time, at once (under a millisecond, so
   not a search that ran out of budget). The AI's army route search does not find a way across the sea to these
-  targets, so the siege task never comes to asking for ships. The budget defines are not the lever.
+  targets, so the siege task never comes to asking for ships. The budget defines are not the lever. The war
+  tasks called that route search without its options (nv25, 26 calls in 45 days), and the one call from the AI's
+  transport-planning code, with a different flag set, found no route to China either. Why no sea route is found
+  was not decoded.
 - The whole world of run 112ad572 shows the same: the AI holds 4,000-4,800 siege tasks at a time but only 9-24
   "friendly naval transport" tasks (the AI's sea-transport task), with 0-4 fleets assigned to them in all
   (autosaves 1642, 1742, 1837). AI armies seldom cross water anywhere in PP 0.10 on EU5 1.4.

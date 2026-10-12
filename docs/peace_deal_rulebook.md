@@ -65,8 +65,7 @@ is only taken when the deal reaches it through connected land; allies far away g
 comes only next to existing holdings or through the exception below (whole-country annexation and vassalisation are
 unchanged). The "Recipient's
 Desire" tooltip in the peace screen shows the desire without the selection factor, so its numbers are 20,000 x
-smaller than in vanilla (often 0.00). The engine floors the desire at 1.0 (decompiled 2026-10-11), so in PP it
-no longer ranks the locations (war goal and conquer desire included); the selection factors do.
+smaller than in vanilla (often 0.00); the ranking between locations is the same.
 
 ### The one exception: conquest preferences outside the home region (2026-10-09)
 
@@ -177,34 +176,6 @@ number is per run, from each run's own 1341.4.1 save to 1357.4.1.
   owner 9,543 -> 11,062, wars started 905 -> 1,050; exclaves in 1387 264 vs 256.
 - Late game (observer run a3e3bb2a, 1837.4.1, two years each way): 84 vs 102 locations changed owner, about 1 %
   detached in both; the late game is too static to show the overseas consequence (no first foothold from a deal).
-
-## Enclaves (2026-10-12)
-
-Observer run 075b0d4e (1342-1837) ended with 29 nations in 4+ pieces of home land (most in China and Japan). Half of
-their cut-off land had been cut off for 100+ years. Within 25 years only 8 % of cut-off land became a new nation and
-under 7 % reconnected. Cut-off land is badly held (control 0.17 vs 0.43 in the capital's piece, 16 % rebel support vs
-6 %), but its nationalist movements are mostly under the 5,000 supporters a revolt needs, and the owner never aims at
-the land between its pieces. Landlocked enclaves and sea footholds have the same control and proximity, so no define
-can tell them apart.
-
-PP changes:
-
-- `CONQUER_DESIRE_EXCLAVED_BONUS = 300` (vanilla 50). This is a neighbour's conquer desire for a location whose
-  surroundings are all its own (or its subjects', or impassable). The engine adds it before the threat and distance
-  factors and clamps the total at `AI_CONQUER_DESIRE_MAX` (100); at 300 an enclave sits at or near the cap even
-  against a much stronger owner (threat factor down to 0.2). It steers
-  the war goal; the peace picks above floor every location's desire at 1.0, so it does not order the land taken.
-- `generic_actions/create_province_subject.txt` (same-name copy of vanilla, which bans the AI with `ai_tick = never`).
-  An AI country that is independent, at peace and not in the HRE releases, once a year, up to five provinces as
-  marches (tributary where a march is not possible). It does this only where all of its land in the province is a
-  landlocked enclave: not connected to the capital by land or strait (`every_connected_location` from the capital),
-  and no location of that enclave on a coast or river channel (`is_coastal`). Sea footholds stay. Marches and
-  tributaries cannot be annexed, so the land does not return. The player's action is unchanged.
-- In the 1837 save this would release 455 provinces (762 locations, 48 countries; 351 provinces in the 29 splintered
-  nations). Not tested in game. Watch: diplomatic capacity of countries that release many marches, and whether
-  `create_location_country_from_province` works for the AI without a chosen ruler.
-
-Metric: `~/pp_ai_run/splinter/scripts/splinter2.py <playthrough>` (stuck splinter episodes, how they end).
 
 ## How to measure
 

@@ -10,9 +10,10 @@ Answer: with PP 0.10 as shipped it does not happen, and no number of ships or re
 
 - Seven gates stop the AI before it picks an Asian target. Even with every gate opened by console it declares only
   while a large extra army is kept topped up; Spain declared on CMO by itself once.
-- In the war the AI never sends an army from Europe (tested with up to 111 transports). Its armies weigh distance
-  against task priority, and a task 4,000-6,000 map pixels away always loses to any task at home. With that weight
-  cut tenfold a second, undecoded step still keeps them home.
+- In the war the AI never sends an army from Europe: 4 attackers, 6 targets in India, Burma, Indonesia and China,
+  11-111 transports, up to 16 months each. Its armies weigh distance against task priority, and a task 4,000-6,000
+  map pixels away always loses to any task at home. With that weight cut tenfold a second, undecoded step still
+  keeps them home.
 - What does work is a foothold next to the target with an army standing in it. Brittany, with one location beside
   MDY (Visayas, no joined states) and 20 regiments against 21, took 4 locations on Panay within 8 months under PP's
   rules. Spain with 20 regiments beside CMO occupied 3 of CMO's 9 locations by itself. 20 regiments against 40-100
@@ -37,8 +38,11 @@ The details below say which gate does what and what it would take to open each o
   (`add_casus_belli`), diplomatic range, regiments, warships, transports, diplomats, gold.
 - Measured with an in-game trace (script values `conquer_desire`, `within_diplomatic_range`,
   `any_potential_expansion_target`, `country_strength`, `navy_size`, army positions, war score, ownership), the
-  AI conquer-desire map and `potential_expansion_targets` from saves, and a probe on the AI's own target scoring
-  and declaration check (private notes). Ten launches, about 12 game years in total.
+  AI conquer-desire map, `potential_expansion_targets`, the AI's war tasks and the war records from saves, and
+  probes on the AI's own target scoring, declaration check and army assignment (private notes). 19 launches, about
+  25 game years in total. Later launches add footholds (a location next to the target, given by console) and
+  isolated targets: Brittany -> MDY (Visayas), Spain -> MSN (Deccan), Britain -> the Irrawaddy-delta state,
+  Portugal -> DOM (Sumbawa).
 
 ## The chain the AI walks, and where Asia drops out
 
@@ -117,9 +121,15 @@ Why (AI war tasks, read from saves and measured with the probe):
   now and then, but they never moved and were dropped again; no transport task was ever created and the 111
   transports stayed idle. Brittany (111 transports) the same. 8 months, nothing at sea. A second rule after the
   assignment (the army's request for a transport fleet) stops the move overseas; it was not decoded.
+- Fleet size is not that rule on its own: a separate 20-regiment army (strength 40) with its own new 40-brig fleet
+  in the same Spanish port (Ibiza), distance weight -0.1, stayed home for 10 months (nv18).
 
-(The 1767 test of the trade-expedition branch, run 12, did see 13-16 regiments shipped to India with 20 and 78-79
-transports; why those armies scored their Indian task above everything at home was not measured.)
+The 1767 test of the trade-expedition branch (run 12, another game with trade stations) did see 13-16 regiments
+shipped to India with 20 and 78-79 transports. A replay in this 1742 game did not reproduce it (nv19, vanilla AI
+defines, console wars, no footholds): Britain against the Irrawaddy-delta state (8 locations, 55 regiments) with 103
+transports, 80 of them a new fleet in a home port, and Portugal against DOM (Sumbawa, 6 locations, 19 regiments)
+with 92 transports (80 new at Lisbon) shipped nothing in 16 months. In this game no European army ever left Europe
+for Asia: 4 attackers, 6 targets, 11-111 transports, 5-16 months each.
 
 ## Foothold: an army standing next to the target does fight
 

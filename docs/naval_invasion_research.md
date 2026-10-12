@@ -158,6 +158,10 @@ to the target and 20 regiments):
 | nv17: Brittany -> MDY with 10 regiments (topped up once) | 22-27 | the same: target occupied in month 7, 4 Panay locations at the peace in month 8 |
 | nv17: Spain -> MSN with 60-64 regiments | 6-34 | never attacked in 12 months (war score -15): MSN was joined by BND, a Deccan state of 323 locations |
 
+In peacetime the AI does not keep such a garrison (nv21, 12 months, no war): within 3 months Brittany's 20 regiments
+at Batan fell to 8 and Spain's 20 at Gaomi to 2, the budget's whole army (both also disbanded their regiments at
+home). The garrison stayed at the foothold; it was not shipped home.
+
 A foothold does not make the AI choose such a target by itself: in these saves neither Brittany (after taking Panay)
 nor Spain (beside MSN) had any conquest desire for the neighbouring locations, because the desire's distance is
 measured from the capital.

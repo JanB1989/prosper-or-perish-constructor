@@ -13,13 +13,14 @@ Answer: with PP 0.10 as shipped it does not happen, and no number of ships or re
 - In the war the AI never sends an army from Europe (tested with up to 111 transports). Its armies weigh distance
   against task priority, and a task 4,000-6,000 map pixels away always loses to any task at home. With that weight
   cut tenfold a second, undecoded step still keeps them home.
-- What does work is a foothold next to the target with an army standing in it. Spain with one location beside CMO
-  and 20 regiments took 3 of CMO's 9 locations by itself. Brittany with 60 regiments beside Kobirhat took the target
-  port once the defenders fell to about 60 regiments. 20 regiments against about 100 did nothing.
-- The peace is the last gap. With a conquest preference the peace gave Spain 7 scattered locations of the joined
-  Chinese states, none of CMO's (PP's preference exception). Without one it gave nothing, with PP's peace define and
-  with vanilla's alike, although Spain held 3 CMO towns next to the foothold and its own ideal deal listed 9. Why was
-  not found.
+- What does work is a foothold next to the target with an army standing in it. Brittany, with one location beside
+  MDY (Visayas, no joined states) and 20 regiments against 21, took 4 locations on Panay within 8 months under PP's
+  rules. Spain with 20 regiments beside CMO occupied 3 of CMO's 9 locations by itself. 20 regiments against 40-100
+  did nothing or lost.
+- Against a single state the peace gives the land connected to the foothold, PP's adjacency rule included. Against
+  a coalition it does not. CMO led seven joined Chinese states, so Spain's overall war score stayed at 7-10 while it
+  held 3 CMO towns. Without a conquest preference the peace gave nothing, under PP's peace define and vanilla's alike.
+  With one it gave 7 scattered locations of the joined states, none of CMO's (PP's preference exception).
 
 The details below say which gate does what and what it would take to open each one.
 
@@ -134,6 +135,14 @@ CMO's Jiaoxi; Agartala beside the Kobirhat port. This stands in for a trade stat
 | nv14 | Brittany (60), Bengal preference | 60-104 | took the target port once the defenders fell to about 60 | after ~18 months, nothing; Agartala returned |
 | nv15 | as nv14 (Spain without preference, Brittany 60), vanilla peace define | 18 / 35-104 | Spain the same 3 CMO locations (+81); Brittany held the port for 3 months, then lost it (-21) | both after ~18 months, in the same month as nv14: nothing for either |
 
+Targets without joiners (nv16, 1742 base save, console wars, PP defines, no conquest preference, a foothold next
+to the target and 20 regiments):
+
+| Attacker -> target | Enemy regiments in the region | Result |
+| --- | --- | --- |
+| Brittany -> MDY (Visayas, 7 locations, no joiners) | 21 | occupied 3 locations in ~4 months (war score +94); peace after ~8 months: Brittany took 4 locations on Panay (Araut, Aklan, Irong-Irong, Malandog), all connected to the foothold; MDY kept Negros |
+| Spain -> MSN (Deccan, 9 locations) | 46-67 | Spain's 20 regiments lost within 6 months; peace gave the foothold back |
+
 - The local army is assigned and fights like any army at home: from the foothold, distance no longer counts against
   it.
 - Force size: about as many regiments as the enemy has in the region (20 against 18 worked; 20 against 40-100 never
@@ -141,9 +150,12 @@ CMO's Jiaoxi; Agartala beside the Kobirhat port. This stands in for a trade stat
 - Spain's own ideal deal before both peaces listed 9 CMO towns beside the foothold (CMO led the defending side).
 - All six foothold wars ended 17-20 months after the declaration; in nv14 and nv15 both wars ended in the same month.
   With vanilla's peace define the outcome was the same as with PP's, so the missing CMO land is not PP's adjacency
-  rule. Spain held only 3 of CMO's 9 locations (war score about 80, never 100). What closes these wars, and why the
-  occupied towns next to the foothold were not taken, was not identified. The only land in all foothold runs came
-  from the conquest-preference exception (nv13).
+  rule.
+- The reason is the coalition: Spain's +72 to +82 was its score against CMO alone. The war's overall score (read
+  from the save) stayed at 7 (nv14, nv15) and 10 (nv13), because CMO led seven joined Chinese states and Spain fought
+  only CMO. Spain's war goal (Jiaoxi and its two neighbours) was never fully held either. A peace with the war leader
+  pays for towns out of the overall score, so the 3 occupied CMO towns were out of reach. The land in nv13 came only
+  through the preference exception on the joined states' locations (7 locations at an overall score of 10).
 
 ## Peace after a full occupation (console)
 
@@ -179,7 +191,8 @@ same term can pull scattered land from a coalition in any preferred region.
 6. Peace: the adjacency define is global (no per-war setting). The preference exception does give overseas land but
    picks scattered locations of every losing participant (each is a recipient of the term); restricting it to the
    war's original target and the war goal's area would make it a foothold rule. Not built. In the foothold wars the
-   occupied land next to the foothold was not taken under either define (cause open, see the foothold section).
+   occupied land next to the foothold was not taken under either define: against a coalition the overall war score
+   stays low however well the attacker does against the target itself.
 
 ## Kit and saves
 

@@ -152,10 +152,10 @@ Why (AI war tasks, read from saves and measured with the probe):
   (planning with transports); without it every sea step needs a carrying fleet already in place, so (inferred) a
   route to China would need fleets along the whole way. The route search used by the war tasks never turns that
   mode on (it stays at its default, off). The player's automatic transport suggestion turns it on, and so does the
-  AI's sea-transport executor, but that runs only once a sea-transport task exists (all read in the code). A census of every AI route search world-wide over one month
-  (war-start save) fits: no war-task search used a transport option. The only army
-  searches with a special flag came from the AI's unit-merging logic, which works only between units within 200 map
-  pixels (`AI_PERFORMANCE_ATTACH_UNIT_MAX_DISTANCE`).
+  AI's sea-transport executor, but that runs only once a sea-transport task exists (all read in the code). A
+  census of every AI route search world-wide over one month (war-start save) fits: no war-task search used a
+  transport option. The only army searches with a special flag came from the AI's unit-merging logic, which works
+  only between units within 200 map pixels (`AI_PERFORMANCE_ATTACH_UNIT_MAX_DISTANCE`).
 - Sea transport is requested separately: the AI places a "naval transport request" (from, to, cost limit; kept in
   the save), and fleets then pick it up. Run 112ad572 holds 9-16 open requests world-wide at a time. In the 1837
   autosave they are troops going home from the colonies (Brittany: Brazil -> Nantes; Portugal: Colombia -> Lisbon),

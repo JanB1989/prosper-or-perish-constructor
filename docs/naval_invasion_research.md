@@ -172,9 +172,9 @@ Why (AI war tasks, read from saves and measured with the probe):
   (read in the code), which would explain that; how the AI's repatriation requests from America get through
   regardless is the open end of this research. A lead: the repatriation task hands its move to the game as a
   command, while the war tasks stop at their own failed route search before issuing any move (unverified). The
-  vanilla comment on `CARPET_SIEGE_SEARCH_DEPTHS` fits: siege armies that find no target "get moved to logistics to get them
-  somewhere near". A separate "transport troops" task type exists in the game but appeared in
-  no save of this run.
+  vanilla comment on `CARPET_SIEGE_SEARCH_DEPTHS` fits: siege armies that find no target "get moved to logistics
+  to get them somewhere near". A separate "transport troops" task type exists in the game but appeared in no save
+  of this run.
 - The whole world of run 112ad572 shows the same: the AI holds 4,000-4,800 siege tasks at a time but only 9-24
   "friendly naval transport" tasks (the AI's sea-transport task), with 0-4 fleets assigned to them in all
   (autosaves 1642, 1742, 1837). AI armies seldom cross water anywhere in PP 0.10 on EU5 1.4.

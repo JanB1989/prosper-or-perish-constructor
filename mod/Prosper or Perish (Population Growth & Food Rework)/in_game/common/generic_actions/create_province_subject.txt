@@ -1,10 +1,10 @@
 ﻿# PP copy of vanilla create_province_subject (2026-10-12, docs/peace_deal_rulebook.md "Enclaves").
-# Vanilla never lets the AI use this action (ai_tick = never). PP lets an AI country release a province as a march
-# when all of its land in that province is a small landlocked enclave: not connected to the capital by land or strait,
-# no location of that enclave on a coast or navigable river, and the enclave holds at most about 6 locations (a bigger
-# piece is a second part of the country).
+# Vanilla never lets the AI use this action (ai_tick = never). PP lets an AI country release a province as a tributary
+# or vassal when all of its land in that province is a small landlocked enclave: not connected to the capital by land
+# or strait, no location of that enclave on a coast or navigable river, and the enclave holds at most about 6
+# locations (a bigger piece is a second part of the country).
 # Footholds reached by sea keep their owner. Not for HRE members (Imperial gore stays), subjects, or countries at war
-# (a war may still reconnect the land). Marches cannot be annexed, so the land does not come back.
+# (a war may still reconnect the land).
 # The player's use of the action is unchanged.
 create_province_subject = {
 	type = owncountry
@@ -89,9 +89,22 @@ create_province_subject = {
 		}
 		column = { data = subject_type_icon }
 		visible = {
-			trigger_if = { # PP: the AI releases enclaves as marches only (checked first: vanilla's tributary check errors)
+			trigger_if = { # PP: the AI releases enclaves as tributaries where it may have them, else as vassals
 				limit = { scope:actor = { is_ai = yes } }
-				root = subject_type:march
+				OR = {
+					root = subject_type:vassal
+					AND = {
+						root = subject_type:tributary
+						# checked here first: vanilla's tributary check errors on a situation missing from the save
+						scope:actor = {
+							OR = {
+								government_type = government_type:steppe_horde
+								government_type = government_type:tribe
+								modifier:allow_tributary_subject = yes
+							}
+						}
+					}
+				}
 			}
 			subject_can_be_created_by = {
 				country = scope:actor
@@ -251,7 +264,10 @@ create_province_subject = {
 	}
 
 	# PP: vanilla had ai_tick = never and ai_will_do = 0. The province list above already holds only small landlocked
-	# enclaves; the AI picks a march. Never a vassal or fiefdom: those can be annexed and the enclave would come back.
+	# enclaves. A march cannot be created from a province (no creation_visible), a fiefdom is meant for annexation, so
+	# the AI picks a tributary where its government allows one, else a vassal. The AI annexes only subjects it borders
+	# with enough control (AI_ANNEX_SUBJECT_BORDERING_CONTROL_NEEDED), so an enclave vassal stays unless the overlord
+	# reconnects to it.
 	ai_tick = monthly
 	ai_tick_frequency = 12
 	maximum_targets_in_one_tick = 5
@@ -259,8 +275,12 @@ create_province_subject = {
 	ai_will_do = {
 		value = 0
 		if = {
-			limit = { scope:subject_type ?= subject_type:march }
+			limit = { scope:subject_type ?= subject_type:tributary }
 			add = 100
+		}
+		else_if = {
+			limit = { scope:subject_type ?= subject_type:vassal }
+			add = 50
 		}
 	}
 

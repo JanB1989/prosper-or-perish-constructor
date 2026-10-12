@@ -17,9 +17,9 @@ Answer: with PP 0.10 as shipped it does not happen, and no number of ships or re
   11-111 transports, up to 16 months each. Its armies weigh distance against task priority, and a task 4,000-6,000
   map pixels away always loses to any task at home. With that weight cut tenfold the armies get those tasks, but
   the AI's route search finds no way across the sea: an army may only enter sea where a fleet that can carry it
-  already sits, and the war tasks don't bring one first. The search's "plan with transports" mode is used by the
-  player's automatic transport and the AI's transport executor, never by the war tasks, and no define reaches it.
-  So more ships in port change nothing.
+  already sits (the search's "plan with transports" mode is never used by the war tasks). The failed search does
+  record a transport need, but the AI's logistics pass never turned one into a transport request for Asia; why
+  not is the open end. No define tested reached it, and more ships in port changed nothing.
 - What does work is a foothold next to the target with an army standing in it. Brittany, with one location beside
   MDY (Visayas, no joined states) and 20 regiments against 21, took 4 locations on Panay within 8 months under PP's
   rules. Spain with 20 regiments beside CMO occupied 3 of CMO's 9 locations by itself. 20 regiments against 40-100
@@ -165,11 +165,13 @@ Why (AI war tasks, read from saves and measured with the probe):
   task records a transport need with an embark and a disembark point; an AI routine posts it as a request about
   monthly; fleets pick open requests up as their "friendly naval transport" task (that task can also serve another
   country's troops). Spain and Brittany placed no request in any of these wars, not even with a foothold on the
-  target's landmass (nv20), which fits the route search finding no sea route. The need is recorded by the war
-  tasks themselves: each task hands its transport needs to the AI's logistics pass, which drives the transport
-  side (structure read in the code; that a failed route search means no recorded need is inferred). The vanilla
-  comment on `CARPET_SIEGE_SEARCH_DEPTHS` points the same way: siege armies that find no target "get moved to
-  logistics to get them somewhere near". A separate "transport troops" task type exists in the game but appeared in
+  target's landmass (nv20). Read in the code: when a war task's route search fails, its move step records the
+  army and its destination as a transport need, grouped by destination, and hands that to the AI's logistics
+  pass, which drives the transport side. So Spain's 153 failed searches (nv24) should have recorded needs; the
+  logistics pass then turned none of them into a request. Why it declines targets this far away (sea range, days
+  at sea, fleet condition or cost) is the open end of this research. The vanilla comment on
+  `CARPET_SIEGE_SEARCH_DEPTHS` fits: siege armies that find no target "get moved to logistics to get them
+  somewhere near". A separate "transport troops" task type exists in the game but appeared in
   no save of this run.
 - The whole world of run 112ad572 shows the same: the AI holds 4,000-4,800 siege tasks at a time but only 9-24
   "friendly naval transport" tasks (the AI's sea-transport task), with 0-4 fleets assigned to them in all

@@ -1,0 +1,47 @@
+﻿# Rank upgrades (Jan, 2026-10-12): every rank upgrade needs prestige > 25 (vanilla kingdom 50, empire 70; duchy was
+# already 25). Everything else is vanilla's (country_triggers.txt).
+REPLACE:can_upgrade_country_rank_empire = {
+	is_great_power = yes
+	trigger_if = {
+		limit = {
+			country_exists = c:PAP
+			NOT = { tag = PAP }
+			religion = religion:catholic
+		}
+		c:PAP = {
+			opinion = { target = root value > 100 }
+		}
+	}
+	OR = {
+		total_population > 10000
+		total_true_faith_population > 7500
+		total_accepted_culture_population > 5000
+	}
+	prestige > 25
+	is_subject = no
+}
+
+REPLACE:can_upgrade_country_rank_kingdom = {
+	OR = {
+		total_population > 2000
+		total_true_faith_population > 1500
+		total_accepted_culture_population > 1000
+		AND = {
+			has_game_rule = rank_restriction_by_numbers
+			is_member_of_international_organization = international_organization:hre
+			OR = {
+				total_population > 2000
+				total_true_faith_population > 1500
+				total_accepted_culture_population > 1000
+			}
+			international_organization:hre = {
+				any_international_organization_member = {
+					country_rank_level = 3
+					count < 6
+				}
+			}
+		}
+	}
+	prestige > 25
+	is_subject = no
+}

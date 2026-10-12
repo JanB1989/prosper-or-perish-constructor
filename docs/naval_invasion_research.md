@@ -6,9 +6,11 @@ Question (Jan): which casus belli, claims, cores and conquest desire do European
 war on a decently strong coastal state in India or China and actually take a location, and how many ships and
 troops do they need in Europe for it.
 
-Answer in one line: with PP 0.10 as shipped it cannot happen. Five independent gates stop it before any army moves,
-two more stop the declaration, the AI ships no troops even with 71 transports, and PP's peace rule blocks the land.
-The details below say which gate does what and what it would take to open each one.
+Answer in one line: with PP 0.10 as shipped it does not happen. Five independent gates stop it before any army
+moves, two more stop the declaration, and the AI ships no troops even with 71 transports. If a war is forced and
+won anyway, PP's peace rule gives land only through the conquest-preference exception, and then scattered land of
+the whole defending coalition rather than the war target. The details below say which gate does what and what it
+would take to open each one.
 
 ## Set-up
 
@@ -85,11 +87,15 @@ Same war-start save, both targets fully occupied by console, +100 war score for 
 
 | Peace define | Spain -> CMO (North-China preference) | Brittany -> Kobirhat (preference removed) |
 | --- | --- | --- |
-| PP 0.10 (`AI_CONQUER_TREATY_DESIRE_ADJECENT` 100001, `FROM_WORTH_MULT` 0.00025) | no peace in 10 months at war score 99; its ideal deal held 19 `pp_cede_preferred_location` terms | peace after ~5 months, no land (its ideal deal held only gold, reparations and annulled treaties) |
+| PP 0.10 (`AI_CONQUER_TREATY_DESIRE_ADJECENT` 100001, `FROM_WORTH_MULT` 0.00025) | peace after ~13 months (still at war score 99 after 10); its ideal deal held 19 `pp_cede_preferred_location` terms; took 15 locations of the joined Chinese states across three areas of the preferred region (Dadu = Beijing and its prefectures, the Shandong peninsula from Penglai to Muping, one in Datong), none of CMO's own | peace after ~5 months, no land (its ideal deal held only gold, reparations and annulled treaties) |
 | Vanilla (5 / 5) | took all 9 CMO locations within ~2 months | took 6 Kobirhat locations after ~5 months |
 
-Under PP's rule a first foothold overseas needs a conquest preference, and in this one test the preference route
-put the land into the AI's wish list but the war did not close. With vanilla's define the AI takes the land at once.
+Under PP's rule a first foothold overseas needs a conquest preference. With one, the exception term
+(`peace_treaties/pp_cede_preferred_location.txt`) accepts any location of any losing participant inside the preferred
+areas that does not border the winner and is outside its capital region; here that was Beijing and a scattered
+band of northern China, not the war goal, and the war took six times longer to close than under vanilla's define.
+With vanilla's define the AI takes the war target's land at once. Worth a look independently of overseas wars: the
+same term can pull scattered land from a coalition in any preferred region.
 
 ## What would have to change (levers, none built)
 
@@ -101,8 +107,9 @@ put the land into the AI's wish list but the war did not close. With vanilla's d
 4. Forces: a peacetime army and navy the AI can afford, or a lower `win_war_chance_threshold` for colonizers.
    Lowering the threshold acts world-wide.
 5. Execution: unsolved; even 71 transports did not make the AI ship troops in 1742.
-6. Peace: either revert the adjacency define for overseas wars (not possible per war: one global define), or find
-   out why the preference term does not close the war (next test: watch the peace offers being sent and refused).
+6. Peace: the adjacency define is global (no per-war setting). The preference exception does give overseas land but
+   picks scattered locations of every losing participant (each is a recipient of the term); restricting it to the
+   war's original target and the war goal's area would make it a foothold rule. Not built.
 
 ## Kit and saves
 

@@ -12,8 +12,8 @@ Answer: with PP 0.10 as shipped it does not happen, and no number of ships or re
   while a large extra army is kept topped up; Spain declared on CMO by itself once.
 - In the war the AI never sends an army from Europe: 4 attackers, 6 targets in India, Burma, Indonesia and China,
   11-111 transports, up to 16 months each. Its armies weigh distance against task priority, and a task 4,000-6,000
-  map pixels away always loses to any task at home. With that weight cut tenfold a second, undecoded step still
-  keeps them home.
+  map pixels away always loses to any task at home. With that weight cut tenfold the armies get those tasks, but
+  the AI's route search finds no way across the sea to them, so they never ask for ships.
 - What does work is a foothold next to the target with an army standing in it. Brittany, with one location beside
   MDY (Visayas, no joined states) and 20 regiments against 21, took 4 locations on Panay within 8 months under PP's
   rules. Spain with 20 regiments beside CMO occupied 3 of CMO's 9 locations by itself. 20 regiments against 40-100
@@ -125,6 +125,11 @@ Why (AI war tasks, read from saves and measured with the probe):
   assignment (the army's request for a transport fleet) stops the move overseas; it was not decoded.
 - Fleet size is not that rule on its own: a separate 20-regiment army (strength 40) with its own new 40-brig fleet
   in the same Spanish port (Ibiza), distance weight -0.1, stayed home for 10 months (nv18).
+- The blocking step is the route search (nv24, distance weight -0.1, 111 transports, the AI's pathfinding budget
+  raised tenfold and its accurate search extended to 10,000 px by test-mod defines): Spain's armies, now assigned to
+  the China sieges, asked for a route 153 times in 4 months and got none each time, at once (under a millisecond, so
+  not a search that ran out of budget). The AI's army route search does not find a way across the sea to these
+  targets, so the siege task never comes to asking for ships. The budget defines are not the lever.
 
 The 1767 test of the trade-expedition branch (run 12, another game with trade stations) did see 13-16 regiments
 shipped to India with 20 and 78-79 transports. A replay in this 1742 game did not reproduce it (nv19, vanilla AI
@@ -173,7 +178,13 @@ be reached by land. From Brittany's home that is impossible, so the target is dr
 reachable-without-ships 0). The foothold blocks the AI's own war on its neighbour. The same set-up without the
 foothold (nv22b) made MDY Brittany's target within two months (border check 0, so the naval checks ran and passed:
 navy comparison 1, reachable by sea 1). Brittany then waited 10 months for a casus belli: the cores gave it none.
-Given one, it would still face the execution gap above (no army ships).
+
+With a console casus belli on top (nv23) Brittany declared war on MDY by itself in month 4. Its declaration check
+said "declare" three times (win estimate 0.999, navy 1.0); it needed no extra army against a 7-location target
+without joiners. The foothold at Batan with 20 regiments was added by console the moment the war began. That
+garrison then sat for 12 months: its task was to chase an MDY army, apparently across the strait on Negros. The
+two siege tasks on Panay and Negros had no troops. War score fell from +23 to +13, nothing occupied, nothing
+taken. In the console wars (nv16, nv17) the same garrison took Panay. So even a short sea hop never happens.
 
 A foothold does not make the AI choose such a target by itself: in these saves neither Brittany (after taking Panay)
 nor Spain (beside MSN) had any conquest desire for the neighbouring locations, because the desire's distance is
@@ -221,7 +232,9 @@ same term can pull scattered land from a coalition in any preferred region.
    Lowering the threshold acts world-wide.
 5. Execution: the AI does not send armies from Europe, whatever the transports (up to 111). Distance counts against
    every task (`AI_MILITARY_ARMY_ASSIGNMENT_PROXIMITY_FACTOR` -1 per pixel against 100 per priority point); at -0.1
-   the armies were assigned but still never sailed (an undecoded transport step). The working path is a foothold
+   the armies were assigned but their route search found no way across the sea (the pathfinding budget defines do
+   not change that; no define lever found). Even a garrison next to the target did not cross a strait. The working
+   path is a foothold
    with a standing army: a station or colony next to the target and regiments kept there, about as many as the
    enemy has in that region. Two problems remain. The AI cuts such a garrison to its budget in peacetime (20 -> 8
    or 2). And a foothold makes the AI treat the target as a land neighbour, which drops overseas targets from its own

@@ -17,7 +17,9 @@ Answer: with PP 0.10 as shipped it does not happen, and no number of ships or re
   11-111 transports, up to 16 months each. Its armies weigh distance against task priority, and a task 4,000-6,000
   map pixels away always loses to any task at home. With that weight cut tenfold the armies get those tasks, but
   the AI's route search finds no way across the sea: an army may only enter sea where a fleet that can carry it
-  already sits, and the war tasks don't bring one first. So more ships in port change nothing.
+  already sits, and the war tasks don't bring one first. The search's "plan with transports" mode is used only by
+  the AI's transport executor, never by the war tasks, and no define reaches it. So more ships in port change
+  nothing.
 - What does work is a foothold next to the target with an army standing in it. Brittany, with one location beside
   MDY (Visayas, no joined states) and 20 regiments against 21, took 4 locations on Panay within 8 months under PP's
   rules. Spain with 20 regiments beside CMO occupied 3 of CMO's 9 locations by itself. 20 regiments against 40-100

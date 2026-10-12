@@ -1,0 +1,16 @@
+﻿# PP (2026-10-13, docs/peace_deal_rulebook.md "Enclaves"), country scope: the country may not create subjects, so its
+# enclaves go through pp_release_enclave_independence instead of create_province_subject. Same rule as vanilla
+# create_province_subject: a subject (no subject type allows subject creation), or a union member under another
+# country's seniority (create_province_subject_union_tt).
+pp_cannot_create_subjects = {
+	OR = {
+		is_subject = yes
+		AND = {
+			exists = union
+			union ?= {
+				has_active_senior_partner = yes
+				NOT = { country_is_senior_partner = { country = prev } }
+			}
+		}
+	}
+}

@@ -1,5 +1,6 @@
-﻿# PP (2026-10-12, docs/peace_deal_rulebook.md "Enclaves"): a subject cannot create subjects, so an AI subject broken
-# into 4+ pieces on its home continent lets its small enclaves go as independent nations, by the same rule as
+﻿# PP (2026-10-12, docs/peace_deal_rulebook.md "Enclaves"): a subject or union junior cannot create subjects
+# (pp_cannot_create_subjects), so such an AI nation broken into 4+ pieces on its home continent lets its small enclaves
+# go as independent nations, by the same rule as
 # create_province_subject (whole enclave, at most about 6 locations, not held by an enemy, sea footholds outside the
 # home region kept). AI only; not offered to players.
 pp_release_enclave_independence = {
@@ -10,7 +11,7 @@ pp_release_enclave_independence = {
 	potential = {
 		scope:actor = {
 			is_ai = yes
-			is_subject = yes
+			pp_cannot_create_subjects = yes
 		}
 	}
 
@@ -18,7 +19,7 @@ pp_release_enclave_independence = {
 	}
 
 	ai_prerequisite = {
-		is_subject = yes
+		pp_cannot_create_subjects = yes
 		num_locations > 1
 		trigger_if = {
 			limit = { exists = international_organization:hre }
@@ -73,10 +74,13 @@ pp_release_enclave_independence = {
 										owner = scope:actor
 										OR = {
 											is_in_list = pp_connected_to_capital
-											# a foothold reached by sea outside the home region stays (river channels and
-											# lakes are not sea); a coastal splinter inside the home region does not
+											# a foothold reached by sea that reaches outside the home region stays (river
+											# channels and lakes are not sea); a coastal splinter wholly inside it does not
 											AND = {
-												NOT = { region ?= { this = scope:pp_home_region } }
+												OR = {
+													NOT = { region ?= { this = scope:pp_home_region } }
+													any_connected_location = { NOT = { region ?= { this = scope:pp_home_region } } }
+												}
 												OR = {
 													pp_is_sea_coast = yes
 													any_connected_location = { pp_is_sea_coast = yes }

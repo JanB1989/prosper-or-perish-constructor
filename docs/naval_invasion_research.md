@@ -162,6 +162,17 @@ In peacetime the AI does not keep such a garrison (nv21, 12 months, no war): wit
 at Batan fell to 8 and Spain's 20 at Gaomi to 2, the budget's whole army (both also disbanded their regiments at
 home). The garrison stayed at the foothold; it was not shipped home.
 
+Can the AI do it alone? (nv22, no console war.) Brittany got the foothold at Batan with 20 regiments (kept at least
+10 by console), cores on all of MDY, an Indonesia conquest preference, diplomatic range, 20 new brigs, diplomats and
+gold. Desire for MDY was 100, MDY was in range, and the target scorer rated it Brittany's best candidate every month
+(score ~1,966, win estimate 0.999, navy share 1.0, no joiners). It still never became a target. The foothold makes
+Brittany border MDY, and for a bordering target the AI skips its naval checks and asks only whether the target can
+be reached by land. From Brittany's home that is impossible, so the target is dropped (probe: borders 1,
+reachable-without-ships 0). The foothold blocks the AI's own war on its neighbour. The same set-up without the
+foothold (nv22b) made MDY Brittany's target within two months (border check 0, so the naval checks ran and passed:
+navy comparison 1, reachable by sea 1). Brittany then waited 10 months for a casus belli: the cores gave it none.
+Given one, it would still face the execution gap above (no army ships).
+
 A foothold does not make the AI choose such a target by itself: in these saves neither Brittany (after taking Panay)
 nor Spain (beside MSN) had any conquest desire for the neighbouring locations, because the desire's distance is
 measured from the capital.
@@ -210,7 +221,11 @@ same term can pull scattered land from a coalition in any preferred region.
    every task (`AI_MILITARY_ARMY_ASSIGNMENT_PROXIMITY_FACTOR` -1 per pixel against 100 per priority point); at -0.1
    the armies were assigned but still never sailed (an undecoded transport step). The working path is a foothold
    with a standing army: a station or colony next to the target and regiments kept there, about as many as the
-   enemy has in that region. Keeping them there costs maintenance the AI would otherwise cut.
+   enemy has in that region. Two problems remain. The AI cuts such a garrison to its budget in peacetime (20 -> 8
+   or 2). And a foothold makes the AI treat the target as a land neighbour, which drops overseas targets from its own
+   selection (nv22). So the foothold works only for wars that are started for it (script or player), not for AI
+   wars.
+7. Casus belli: cores on the target gave Brittany no CB in 10 months (nv22b); the AI waits for one.
 6. Peace: the adjacency define is global (no per-war setting). The preference exception does give overseas land but
    picks scattered locations of every losing participant (each is a recipient of the term); restricting it to the
    war's original target and the war goal's area would make it a foothold rule. Not built. In the foothold wars the
@@ -220,11 +235,11 @@ same term can pull scattered land from a coalition in any preferred region.
 ## Kit and saves
 
 - Run files `Documents\...\Europa Universalis V\run\pp_nv*.txt` (set-ups, traces, top-ups, peace test).
-- Test mod `mod\PP Naval Invasion Test` (inert; `variants\vanilla_peace_defines.txt`), playset mode
+- Test mod `mod\PP Naval Invasion Test` (inert: conquest preferences incl. Indonesia, a range modifier), playset mode
   `eu5_playset.ps1 -Mode nv`.
 - Define variants in the test mod's `variants\` (`vanilla_peace_defines.txt`, `assignment_proximity_defines.txt`),
   copied to `loading_screen\common\defines\zz_pp_nv_defines.txt` for one launch each.
 - Saves `save games\pp_nv_*.eu5` (incl. `pp_nv_base_1742`, `pp_nv_war_start`, the foothold runs `pp_nv_nv13*`,
-  `pp_nv_nv14*`, `pp_nv_nv15*`); left for Jan to decide.
+  `pp_nv_nv14*` to `pp_nv_nv22*`); left for Jan to decide.
 - The AI's war tasks are in the save (`military_objective`, `strategic_military_objective`); the private kit reads
   them. Scripts and the AI probes are in the private engine-research repo (`naval/`).

@@ -193,10 +193,26 @@ create_province_subject = {
 	}
 
 	effect = {
+		# PP: the AI releases the whole landlocked enclave as one subject. Note its piece before the release (another
+		# target of the same tick from the same piece finds no land of the actor left in its province and is skipped).
+		if = {
+			limit = {
+				scope:actor = { is_ai = yes }
+				exists = scope:target_province
+			}
+			scope:target_province = {
+				random_location_in_province = {
+					limit = { owner = scope:actor }
+					add_to_temporary_list = pp_enclave_piece
+					every_connected_location = { add_to_temporary_list = pp_enclave_piece }
+				}
+			}
+		}
 		if = {
 			limit = {
 				exists = scope:target_province
 				exists = scope:ruler
+				scope:target_province = { any_location_in_province = { owner = scope:actor } }
 			}
 
 			scope:target_province = {
@@ -219,6 +235,7 @@ create_province_subject = {
 		else_if = {
 			limit = {
 				exists = scope:target_province
+				scope:target_province = { any_location_in_province = { owner = scope:actor } }
 			}
 
 			if = {
@@ -258,6 +275,15 @@ create_province_subject = {
 			scope:new_country = {
 				ruler = {
 					save_scope_as = ruler
+				}
+			}
+			# PP: the rest of the enclave goes to the same subject
+			if = {
+				limit = { scope:actor = { is_ai = yes } }
+				every_in_list = {
+					list = pp_enclave_piece
+					limit = { owner = scope:actor }
+					change_location_owner = scope:new_country
 				}
 			}
 		}

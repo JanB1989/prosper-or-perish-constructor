@@ -10,3 +10,11 @@ TRY_REPLACE:exploration_maintenance_mod = {
 	}
 	exploration_mission_speed_modifier = 0.5
 }
+
+# Average control: no research speed (vanilla +-25 % around 50 % control). Crown power from population stays vanilla.
+TRY_REPLACE:average_control_50 = {
+	game_data = {
+		category = country
+	}
+	crown_power_from_population = 0.5
+}

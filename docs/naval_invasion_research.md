@@ -130,8 +130,8 @@ Why (AI war tasks, read from saves and measured with the probe):
   tasks scored positive (CMO siege +36 to +64, chasing CMO's army +1,030 to +1,060) and the tasks did want troops
   (CMO siege 1 army, the joiners' sieges 3-8). The assignment then put Spain's 36-regiment armies on the CMO siege
   now and then, but they never moved and were dropped again; no transport task was ever created and the 111
-  transports stayed idle. Brittany (111 transports) the same. 8 months, nothing at sea. A second rule after the
-  assignment (the army's request for a transport fleet) stops the move overseas; it was not decoded.
+  transports stayed idle. Brittany (111 transports) the same. 8 months, nothing at sea. A second step after the
+  assignment stops the move overseas: the route search (below).
 - Fleet size is not that rule on its own: a separate 20-regiment army (strength 40) with its own new 40-brig fleet
   in the same Spanish port (Ibiza), distance weight -0.1, stayed home for 10 months (nv18).
 - The blocking step is the route search (nv24, distance weight -0.1, 111 transports, the AI's pathfinding budget
@@ -139,8 +139,8 @@ Why (AI war tasks, read from saves and measured with the probe):
   the China sieges, asked for a route 153 times in 4 months and got none each time, at once (under a millisecond, so
   not a search that ran out of budget). The AI's army route search does not find a way across the sea to these
   targets, so the siege task never comes to asking for ships. The budget defines are not the lever. The war
-  tasks called that route search without its options (nv25, 26 calls in 45 days), and the one call from the AI's
-  transport-planning code, with a different flag set, found no route to China either. Read in the code: for an
+  tasks called that route search without its options (nv25, 26 calls in 45 days); the one call with another flag
+  set came from the unit-merging logic (below) and found no route either. Read in the code: for an
   army, the route search lets it enter a sea location only where a friendly fleet able to carry it already is (or
   the fleet assigned to transport it). The war tasks search first and do not bring a fleet to the army beforehand,
   so with the transports lying in other ports an overseas target has no route (the last step is inferred).
@@ -227,7 +227,8 @@ measured from the capital.
 - Force size: about as many regiments as the enemy has in the region (20 against 18 worked; 20 against 40-100 never
   attacked; 60 took the target port only when the defenders fell to about 60, and could not hold it).
 - Spain's own ideal deal before both peaces listed 9 CMO towns beside the foothold (CMO led the defending side).
-- All six foothold wars ended 17-20 months after the declaration; in nv14 and nv15 both wars ended in the same month.
+- All six wars of the first table ended 17-20 months after the declaration; in nv14 and nv15 both wars ended in the
+  same month.
   With vanilla's peace define the outcome was the same as with PP's, so the missing CMO land is not PP's adjacency
   rule.
 - The reason is the coalition: Spain's +72 to +82 was its score against CMO alone. The war's overall score (read
@@ -246,7 +247,8 @@ then the AI decides:
 | PP 0.10 (`AI_CONQUER_TREATY_DESIRE_ADJECENT` 100001, `FROM_WORTH_MULT` 0.00025) | peace after ~13 months (still at war score 99 after 10); its ideal deal held 19 `pp_cede_preferred_location` terms; took 15 locations of the joined Chinese states across three areas of the preferred region (Dadu = Beijing and its prefectures, the Shandong peninsula from Penglai to Muping, one in Datong), none of CMO's own | peace after ~5 months, no land (its ideal deal held only gold, reparations and annulled treaties) |
 | Vanilla (5 / 5) | took all 9 CMO locations within ~2 months | took 6 Kobirhat locations after ~5 months |
 
-Under PP's rule a first foothold overseas needs a conquest preference. With one, the exception term
+Without own land next to the target, PP's rule gives overseas land only through a conquest preference (with a
+foothold beside an isolated target the connected land is taken, nv16). With a preference, the exception term
 (`peace_treaties/pp_cede_preferred_location.txt`) accepts any location of any losing participant inside the preferred
 areas that does not border the winner and is outside its capital region; here that was Beijing and a scattered
 band of northern China, not the war goal, and the war took six times longer to close than under vanilla's define.
@@ -266,14 +268,13 @@ same term can pull scattered land from a coalition in any preferred region.
    every task (`AI_MILITARY_ARMY_ASSIGNMENT_PROXIMITY_FACTOR` -1 per pixel against 100 per priority point); at -0.1
    the armies were assigned but their route search found no way across the sea (the pathfinding budget defines do
    not change that; no define lever found). Even a garrison next to the target did not cross a strait. The working
-   path is a foothold
-   with a standing army: a station or colony next to the target and regiments kept there, about as many as the
-   enemy has in that region. Two problems remain. The AI cuts such a garrison to its budget in peacetime (20 -> 8
-   or 2). And a foothold makes the AI treat the target as a land neighbour, which drops overseas targets from its own
-   selection (nv22). So the foothold works only for wars that are started for it (script or player), not for AI
-   wars.
-7. Casus belli: cores on the target gave Brittany no CB in 10 months (nv22b); the AI waits for one.
-6. Peace: the adjacency define is global (no per-war setting). The preference exception does give overseas land but
+   path is a foothold with a standing army: a station or colony next to the target and regiments kept there, about
+   as many as the enemy has in that region. Two problems remain. The AI cuts such a garrison to its budget in
+   peacetime (20 -> 8 or 2). And a foothold makes the AI treat the target as a land neighbour, which drops overseas
+   targets from its own selection (nv22). So the foothold works only for wars that are started for it (script or
+   player), not for AI wars.
+6. Casus belli: cores on the target gave Brittany no CB in 10 months (nv22b); the AI waits for one.
+7. Peace: the adjacency define is global (no per-war setting). The preference exception does give overseas land but
    picks scattered locations of every losing participant (each is a recipient of the term); restricting it to the
    war's original target and the war goal's area would make it a foothold rule. Not built. In the foothold wars the
    occupied land next to the foothold was not taken under either define: against a coalition the overall war score
@@ -284,9 +285,12 @@ same term can pull scattered land from a coalition in any preferred region.
 - Run files `Documents\...\Europa Universalis V\run\pp_nv*.txt` (set-ups, traces, top-ups, peace test).
 - Test mod `mod\PP Naval Invasion Test` (inert: conquest preferences incl. Indonesia, a range modifier), playset mode
   `eu5_playset.ps1 -Mode nv`.
-- Define variants in the test mod's `variants\` (`vanilla_peace_defines.txt`, `assignment_proximity_defines.txt`),
-  copied to `loading_screen\common\defines\zz_pp_nv_defines.txt` for one launch each.
-- Saves `save games\pp_nv_*.eu5` (incl. `pp_nv_base_1742`, `pp_nv_war_start`, the foothold runs `pp_nv_nv13*`,
-  `pp_nv_nv14*` to `pp_nv_nv22*`); left for Jan to decide.
+- Define variants in the test mod's `variants\` (`vanilla_peace_defines.txt`, `assignment_proximity_defines.txt`,
+  `pathfind_budget_defines.txt`), copied to `loading_screen\common\defines\zz_pp_nv_defines.txt` for one launch
+  each; the folder is empty now.
+- Saves `save games\pp_nv_*.eu5` (62, incl. `pp_nv_base_1742`, `pp_nv_war_start` and the runs `pp_nv_nv4*` to
+  `pp_nv_nv23*`); left for Jan to decide.
+- Test launches from `pp_nv_base_1742` must run on the test playset with autosave off: that save carries the
+  playthrough id of run 112ad572, so an autosave would overwrite the real one.
 - The AI's war tasks are in the save (`military_objective`, `strategic_military_objective`); the private kit reads
   them. Scripts and the AI probes are in the private engine-research repo (`naval/`).

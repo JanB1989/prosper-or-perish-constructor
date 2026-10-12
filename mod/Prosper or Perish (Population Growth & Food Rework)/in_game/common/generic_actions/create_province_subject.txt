@@ -1,8 +1,8 @@
 ﻿# PP copy of vanilla create_province_subject (2026-10-12, docs/peace_deal_rulebook.md "Enclaves").
 # Vanilla never lets the AI use this action (ai_tick = never). PP lets an AI nation that is broken into 4+ pieces on
 # its home continent release a small landlocked enclave as a tributary or vassal (the whole enclave as one subject):
-# land not connected to the capital by land or strait, no location of it on a coast or navigable river, at most about
-# 6 locations (a bigger piece is a second part of the country). A nation with fewer pieces keeps its exclaves.
+# land not connected to the capital by land or strait, no location of it on the sea coast (river channels and lakes do
+# not count), at most about 6 locations (a bigger piece is a second part of the country). A nation with fewer pieces keeps its exclaves.
 # Footholds reached by sea keep their owner. Not for HRE members (Imperial gore stays), subjects, or countries at war
 # (a war may still reconnect the land).
 # The player's use of the action is unchanged.
@@ -41,7 +41,7 @@ create_province_subject = {
 			}
 		}
 		# AI: only nations broken into 4+ pieces on their home continent, and only provinces whose land of the actor is a
-		# small landlocked enclave there. One flood from the capital, then at most 3 more floods to count the pieces.
+		# small enclave without sea coast there. One flood from the capital, then at most 3 more floods to count the pieces.
 		ai_interaction_source_list = {
 			scope:actor = {
 				if = {
@@ -86,8 +86,9 @@ create_province_subject = {
 										owner = scope:actor
 										OR = {
 											is_in_list = pp_connected_to_capital
-											is_coastal = yes
-											any_connected_location = { is_coastal = yes }
+											# sea footholds stay; river channels and lakes do not count as sea
+											pp_is_sea_coast = yes
+											any_connected_location = { pp_is_sea_coast = yes }
 											# a bigger landlocked piece is a second part of the country, not a splinter
 											any_connected_location = { count >= 6 }
 										}

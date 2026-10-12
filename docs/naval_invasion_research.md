@@ -100,8 +100,8 @@ own forces; estimate = the AI's own number before its threshold.
 | Brittany -> Kobirhat (20 locations + joiners) | 11 regiments, 52 ships | 0.009 own | 0.38 |
 | Brittany -> MDY (7 locations, no joiners) | 11 regiments, 52 ships + 20 brigs | 0.999 own | 1.0 |
 
-So to declare, a European crown needs a standing army of nothing extra (a small isolated state), several dozen
-regiments (a small Chinese state with joiners) or a few hundred (Korea, Bengal), plus a navy at least half the
+So to declare, a European crown needs no extra army against a small isolated state, several dozen extra regiments
+against a small Chinese state with joiners, and a few hundred against Korea or Bengal, plus a navy at least half the
 defender side's, transports, a free diplomat and a war chest, all kept for the months the declaration takes. The
 AI's budget does not keep such an army. And none of it helps to take land: the army stays in Europe (below).
 
@@ -111,7 +111,8 @@ Wars declared by console and then run by the AI (Spain -> CMO, Brittany -> Kobir
 (Spain ~450 army size) and shipped nothing in 12 months with 11 transports each, nor in 5 more months after +60
 transports each (71). Both wars ended after 17-18 months on the defenders' ticking war score with no land taken.
 The war Spain declared by itself (1743) went the same way: 30 transports, 130-140 regiments in Europe, nothing
-shipped in about 15 months, peace on ticking war score (-13) without land.
+shipped in about 15 months, peace on ticking war score (-13) without land. So did Brittany's own war on MDY (nv23,
+1742-1743): no army left Europe in 12 months.
 
 Why (AI war tasks, read from saves and measured with the probe):
 

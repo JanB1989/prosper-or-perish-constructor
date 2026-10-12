@@ -45,10 +45,10 @@ The details below say which gate does what and what it would take to open each o
 - Measured with an in-game trace (script values `conquer_desire`, `within_diplomatic_range`,
   `any_potential_expansion_target`, `country_strength`, `navy_size`, army positions, war score, ownership), the
   AI conquer-desire map, `potential_expansion_targets`, the AI's war tasks and the war records from saves, and
-  probes on the AI's own target scoring, declaration check and army assignment (private notes). 20 launches, about
-  27 game years in total. Later launches add footholds (a location next to the target, given by console) and
-  isolated targets: Brittany -> MDY (Visayas), Spain -> MSN (Deccan), Britain -> the Irrawaddy-delta state,
-  Portugal -> DOM (Sumbawa).
+  probes on the AI's own target scoring, declaration check, army assignment and route search (private notes).
+  About 30 launches (nv1 to nv26 plus a route-search census), roughly 35 game years in total. Later launches add
+  footholds (a location next to the target, given by console) and isolated targets: Brittany -> MDY (Visayas),
+  Spain -> MSN (Deccan), Britain -> the Irrawaddy-delta state, Portugal -> DOM (Sumbawa).
 
 ## The chain the AI walks, and where Asia drops out
 

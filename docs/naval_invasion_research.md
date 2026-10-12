@@ -130,6 +130,9 @@ Why (AI war tasks, read from saves and measured with the probe):
   the China sieges, asked for a route 153 times in 4 months and got none each time, at once (under a millisecond, so
   not a search that ran out of budget). The AI's army route search does not find a way across the sea to these
   targets, so the siege task never comes to asking for ships. The budget defines are not the lever.
+- The whole world of run 112ad572 shows the same: the AI holds 4,000-4,800 siege tasks at a time but only 9-24
+  "friendly naval transport" tasks (the AI's sea-transport task), with 0-4 fleets assigned to them in all
+  (autosaves 1642, 1742, 1837). AI armies seldom cross water anywhere in PP 0.10 on EU5 1.4.
 
 The 1767 test of the trade-expedition branch (run 12, another game with trade stations) did see 13-16 regiments
 shipped to India with 20 and 78-79 transports. A replay in this 1742 game did not reproduce it (nv19, vanilla AI

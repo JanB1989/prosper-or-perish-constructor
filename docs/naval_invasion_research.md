@@ -17,7 +17,9 @@ Answer: with PP 0.10 as shipped it does not happen, and no number of ships or re
 - What does work is a foothold next to the target with an army standing in it. Brittany, with one location beside
   MDY (Visayas, no joined states) and 20 regiments against 21, took 4 locations on Panay within 8 months under PP's
   rules. Spain with 20 regiments beside CMO occupied 3 of CMO's 9 locations by itself. 20 regiments against 40-100
-  did nothing or lost.
+  did nothing or lost. But the war has to be started for it: the AI does not pick such a target itself, because a
+  foothold makes the target a "land neighbour" and the AI then finds no land route from home. In peacetime it also
+  cuts the garrison to its budget (20 -> 8 or 2), and a foothold without troops draws no army from Europe.
 - Against a single state the peace gives the land connected to the foothold, PP's adjacency rule included. Against
   a coalition it does not. CMO led seven joined Chinese states, so Spain's overall war score stayed at 7-10 while it
   held 3 CMO towns. Without a conquest preference the peace gave nothing, under PP's peace define and vanilla's alike.

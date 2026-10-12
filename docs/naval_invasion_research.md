@@ -8,8 +8,11 @@ troops do they need in Europe for it.
 
 Answer: with PP 0.10 as shipped it does not happen, and no number of ships or regiments in Europe makes it happen.
 
-- Seven gates stop the AI before it picks an Asian target. Even with every gate opened by console it declares only
-  while a large extra army is kept topped up; Spain declared on CMO by itself once.
+- Seven gates stop the AI before it picks an Asian target. Opened by console, the AI does declare by itself: what it
+  needs is cores on the target plus a conquest preference (for desire), diplomatic range, a casus belli (cores give
+  none), a navy at least half the defender side's with transports, a free diplomat and a war chest, and a win
+  estimate above its threshold. Brittany declared on MDY (7 locations, no joiners) with no extra army. Spain
+  declared on CMO (9 locations, 7 joined Chinese states) only while 45+ extra regiments were kept topped up.
 - In the war the AI never sends an army from Europe: 4 attackers, 6 targets in India, Burma, Indonesia and China,
   11-111 transports, up to 16 months each. Its armies weigh distance against task priority, and a task 4,000-6,000
   map pixels away always loses to any task at home. With that weight cut tenfold the armies get those tasks, but
@@ -78,8 +81,11 @@ least half the estimated war cost), and the win estimate and navy share again on
 - When the console kept the extra army present (+45 regiments topped up every 5 days, plus galleons, 15 transports,
   diplomats and gold), the check returned "declare" three months in a row (estimate 0.77-0.80, navy 0.61-0.68) and
   **Spain declared war on CMO by itself** about three months after the first "declare" (the AI first raises its
-  maintenance, `MONTHS_TO_WAIT_FOR_MAINTENANCE` = 3). That is the only AI-declared European war on an Asian target
-  in these tests, and it needed every gate above opened by console.
+  maintenance, `MONTHS_TO_WAIT_FOR_MAINTENANCE` = 3). It needed every gate above opened by console.
+- Brittany -> MDY (nv23, a 7-location state in the Visayas without joiners) needed no extra army: with cores, the
+  Indonesia preference, range, a console CB, 20 new brigs, diplomats and gold it returned "declare" three times
+  (estimate 0.999, navy 1.0) and declared in month 4. These are the only two AI-declared European wars on Asian
+  targets in these tests.
 
 ## Forces needed in Europe (1742 save)
 
@@ -92,10 +98,12 @@ own forces; estimate = the AI's own number before its threshold.
 | Portugal -> Korea (rank 14) | 6 regiments, 59 ships | 0.013 own, +50: 0.64, +150: 0.98, +350: 0.997 | 0.41 own; +30 galleons 0.51, +90 0.64 |
 | Portugal -> Bengal (rank 5) | 6 regiments, 59 ships | +350 regiments: 0.97 (threshold not swept) | +90 galleons 0.56 |
 | Brittany -> Kobirhat (20 locations + joiners) | 11 regiments, 52 ships | 0.009 own | 0.38 |
+| Brittany -> MDY (7 locations, no joiners) | 11 regiments, 52 ships + 20 brigs | 0.999 own | 1.0 |
 
-So a European crown needs a standing army of several dozen (small Chinese state) to a few hundred (Korea, Bengal)
-regiments in peacetime, a navy at least as strong as the defender side's, transports, a free diplomat and a war
-chest, all kept for the months the declaration takes. The AI's budget does not keep such an army.
+So to declare, a European crown needs a standing army of nothing extra (a small isolated state), several dozen
+regiments (a small Chinese state with joiners) or a few hundred (Korea, Bengal), plus a navy at least half the
+defender side's, transports, a free diplomat and a war chest, all kept for the months the declaration takes. The
+AI's budget does not keep such an army. And none of it helps to take land: the army stays in Europe (below).
 
 ## Execution: the armies never leave Europe
 

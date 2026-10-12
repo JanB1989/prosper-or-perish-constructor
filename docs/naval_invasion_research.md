@@ -39,8 +39,8 @@ The details below say which gate does what and what it would take to open each o
 - Measured with an in-game trace (script values `conquer_desire`, `within_diplomatic_range`,
   `any_potential_expansion_target`, `country_strength`, `navy_size`, army positions, war score, ownership), the
   AI conquer-desire map, `potential_expansion_targets`, the AI's war tasks and the war records from saves, and
-  probes on the AI's own target scoring, declaration check and army assignment (private notes). 19 launches, about
-  25 game years in total. Later launches add footholds (a location next to the target, given by console) and
+  probes on the AI's own target scoring, declaration check and army assignment (private notes). 20 launches, about
+  27 game years in total. Later launches add footholds (a location next to the target, given by console) and
   isolated targets: Brittany -> MDY (Visayas), Spain -> MSN (Deccan), Britain -> the Irrawaddy-delta state,
   Portugal -> DOM (Sumbawa).
 
@@ -128,8 +128,11 @@ The 1767 test of the trade-expedition branch (run 12, another game with trade st
 shipped to India with 20 and 78-79 transports. A replay in this 1742 game did not reproduce it (nv19, vanilla AI
 defines, console wars, no footholds): Britain against the Irrawaddy-delta state (8 locations, 55 regiments) with 103
 transports, 80 of them a new fleet in a home port, and Portugal against DOM (Sumbawa, 6 locations, 19 regiments)
-with 92 transports (80 new at Lisbon) shipped nothing in 16 months. In this game no European army ever left Europe
-for Asia: 4 attackers, 6 targets, 11-111 transports, 5-16 months each.
+with 92 transports (80 new at Lisbon) shipped nothing in 16 months. Owning land next to the target did not draw
+them out either (nv20): Britain with a foothold beside the Irrawaddy-delta state and Brittany beside MDY, no troops
+in the footholds, 80 new brigs each at home, shipped nothing in 14 months. The footholds raised no levies of their
+own either (no attacker regiment in the target region at any time). In this game no European army ever left
+Europe for Asia: 4 attackers, 6 targets, 11-111 transports, 5-16 months each.
 
 ## Foothold: an army standing next to the target does fight
 

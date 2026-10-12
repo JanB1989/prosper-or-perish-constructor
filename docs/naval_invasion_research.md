@@ -157,8 +157,8 @@ Why (AI war tasks, read from saves and measured with the probe):
   autosave they are troops going home from the colonies (Brittany: Brazil -> Nantes; Portugal: Colombia -> Lisbon),
   short coastal hops (Japan, China, Indochina, Bengal) and Chinese armies using PP's river channels. 1742 and 1642
   look the same (Venice, Spain and Portugal bringing troops home from America; local hops in Japan, China and the
-  Philippines). None takes an army outward to fight overseas. An AI routine running about monthly per country turns the country's existing sea-transport war tasks
-  (each with an embark and a disembark point) into requests. Spain and Brittany never had such a task in any of
+  Philippines). None takes an army outward to fight overseas. An AI routine running about monthly per country
+  turns the country's existing sea-transport war tasks (each with an embark and a disembark point) into requests. Spain and Brittany never had such a task in any of
   these wars, not even with a foothold on the target's landmass (nv20). Which step creates a sea-transport task
   for an army is the open end of this research. The likeliest place is the army logistics task: the vanilla
   comment on `CARPET_SIEGE_SEARCH_DEPTHS` says siege armies that find no target "get moved to logistics to get them

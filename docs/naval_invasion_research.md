@@ -168,8 +168,9 @@ Why (AI war tasks, read from saves and measured with the probe):
   target's landmass (nv20). Read in the code: when a war task's route search fails, its move step records the
   army and its destination as a transport need, grouped by destination, and hands that to the AI's logistics
   pass, which drives the transport side. So Spain's 153 failed searches (nv24) should have recorded needs; the
-  logistics pass then turned none of them into a request. Why it declines targets this far away (sea range, days
-  at sea, fleet condition or cost) is the open end of this research. The vanilla comment on
+  logistics pass then turned none of them into a request. Its own route search also runs with the sea mode off
+  (read in the code), which would explain that; how the AI's repatriation requests from America get through
+  regardless is the open end of this research. The vanilla comment on
   `CARPET_SIEGE_SEARCH_DEPTHS` fits: siege armies that find no target "get moved to logistics to get them
   somewhere near". A separate "transport troops" task type exists in the game but appeared in
   no save of this run.

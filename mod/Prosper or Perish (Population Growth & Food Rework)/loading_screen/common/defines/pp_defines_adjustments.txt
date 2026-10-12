@@ -96,6 +96,13 @@ NAI = {
 	# 9.2 % -> 2.1 % detached; land exchange and wars within run noise; Japan's Nanbokucho ends ~4 years earlier.
 	AI_CONQUER_TREATY_DESIRE_ADJECENT = 100001 # 5
 	AI_CONQUER_TREATY_DESIRE_FROM_WORTH_MULT = 0.00025 # 5
+	# Enclaves (2026-10-12, docs/peace_deal_rulebook.md): a neighbour's conquer desire for a location whose
+	# surroundings are all its own (or its subjects', or impassable). The engine adds it before the area-preference,
+	# threat, dynastic and distance factors and clamps the result at AI_CONQUER_DESIRE_MAX (100), so 300 puts an
+	# enclave at or near the cap even against a much stronger owner (threat factor down to 0.2). It steers the war goal
+	# (the province with the highest summed desire); PP peace picks floor every location's desire at 1.0, so it does
+	# not order the land taken in the deal.
+	CONQUER_DESIRE_EXCLAVED_BONUS = 300 # 50
 }
 
 NEconomy = {

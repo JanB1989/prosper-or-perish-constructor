@@ -9153,7 +9153,7 @@ flavor_cas.150 = { #Compultense Polyglot Bible
 
 	dynamic_historical_event = {
 		tag = CAS
-		from = 1490.1.1
+		from = 1500.1.1
 		to = 1520.1.1
 		monthly_chance = 1
 	}
@@ -9166,6 +9166,7 @@ flavor_cas.150 = { #Compultense Polyglot Bible
 	trigger = {
 		religion = religion:catholic
 		owns = 	location:alcala_de_henares
+		dynamic_historical_event_fired = flavor_cas.33
 		character:cas_cardinal_cisneros ?= {
 			is_alive = yes
 		}
@@ -9237,10 +9238,10 @@ flavor_cas.151 = { #Mercedes Enriqueñas
 	}
 
 	trigger = {
-		exists = character:cas_enrique_ii_trastamara
-		character:cas_enrique_ii_trastamara = { 
-			is_alive = yes 
-			is_ruler = yes
+		ruler ?= character:cas_enrique_ii_trastamara
+		custom_tooltip = {
+			text = variable_tt_castilian_civil_war_over
+			has_variable = castilian_civil_war_over
 		}
 	}
 
@@ -10489,7 +10490,10 @@ flavor_cas.1200 = { #Confirmation of the Mesta Privileges
 	}
 		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_bonus }
 		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_bonus }
-		set_variable = mesta_confirmed
+		custom_tooltip = {
+			text = flavor_cas.1200.a.possession_tt
+			set_variable = mesta_confirmed
+		}
 	}
 
 	option = {

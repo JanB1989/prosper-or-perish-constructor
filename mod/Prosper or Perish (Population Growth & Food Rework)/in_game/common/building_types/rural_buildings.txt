@@ -534,15 +534,16 @@ elephant_hunting_grounds = {
 
 windmill = {
 	audio_tier = 1
+	audio_category = industry
 	is_foreign = no
 	pop_type = laborers
 	max_levels = 1
-	
+
 	employment_size = rural_peasant_enhance_employment
-	
-	
-	category = rgo_building_category
-	
+
+
+	category = infrastructure_category
+
 	rural_settlement = yes
 
 	location_potential = {
@@ -582,14 +583,15 @@ windmill = {
 
 local_smelters = {
 	audio_tier = 1
+	audio_category = industry
 	is_foreign = no
 	pop_type = laborers
 	max_levels = 1
-	
+
 	employment_size = rural_peasant_enhance_employment
-	
-	
-	category = rgo_building_category
+
+
+	category = infrastructure_category
 	
 	rural_settlement = yes
 
@@ -632,15 +634,16 @@ local_smelters = {
 
 sawmill = {
 	audio_tier = 1
+	audio_category = industry
 	is_foreign = no
 	pop_type = laborers
 	max_levels = 1
-	
+
 	employment_size = rural_peasant_enhance_employment
-	
+
 	forbidden_for_estates = yes
-	
-	category = rgo_building_category
+
+	category = infrastructure_category
 	
 	rural_settlement = yes
 

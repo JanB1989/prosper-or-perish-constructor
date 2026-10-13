@@ -717,7 +717,24 @@ flavor_por.17 = {
 	type = country_event
 
 	title = flavor_por.17.title
-	desc = flavor_por.17.desc
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					ruler = {
+						any_child = {
+							is_female = yes
+							is_alive = yes
+						}
+					}
+				}
+				desc = flavor_por.17.desc
+			}
+			triggered_desc = {
+				desc = flavor_por.17.desc_no_heir
+			}
+		}
+	}
 	outcome = neutral
 
 	fire_only_once = yes
@@ -1200,7 +1217,7 @@ flavor_por.22 = { #Vasco da Gama
 	immediate = {
 		create_character = {
 			first_name = name_vasco
-			last_name = da_gama
+			dynasty = dynasty:da_gama_dynasty
 			adm = 85
 			dip = 90
 			mil = 90
@@ -1388,6 +1405,9 @@ flavor_por.25 = { #The New Seat of the Order of Christ
 		historical_option = yes
 		location:tomar = {
 			attach_to_religious_order = scope:order_of_christ
+		}
+		location:tavira = {
+			remove_religious_order = scope:order_of_christ
 		}
 		scope:order_of_christ = {
 			change_religious_order_zeal = 10
@@ -3105,7 +3125,7 @@ flavor_por.39 = { # Cronica Geral de Espanha
 	fire_only_once = yes
 	dynamic_historical_event = {
 		tag = POR
-		from = 1344.1.1
+		from = 1341.1.1
 		to = 1350.1.1
 		monthly_chance = 10
 	}
@@ -3346,7 +3366,7 @@ flavor_por.43 = { # The Last Troubadour - Livro das Cantigas
 	fire_only_once = yes
 	dynamic_historical_event = {
 		tag = POR
-		from = 1350.1.1
+		from = 1344.1.1
 		to = 1360.1.1
 		monthly_chance = 25
 	}
@@ -6393,6 +6413,7 @@ flavor_por.2004 = { # Pedro stages a Rebellion
 
 		historical_option = yes
 
+		set_variable = por_pedro_rebellion
 		change_societal_value = {
 			type = centralization_vs_decentralization
 			value = societal_value_minor_move_to_left

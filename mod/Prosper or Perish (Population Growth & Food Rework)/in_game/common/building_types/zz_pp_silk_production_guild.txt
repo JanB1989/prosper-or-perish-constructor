@@ -9,6 +9,7 @@ pop_type = burghers
 max_levels = guild_max_level
 employment_size = 0.25   # [building_scaling.employment_cut] reference 0.3
 build_time = guild_build_time
+graphical_tags = { factory_small }
 construction_demand = guild_construction
 location_potential = {
     NOT = {

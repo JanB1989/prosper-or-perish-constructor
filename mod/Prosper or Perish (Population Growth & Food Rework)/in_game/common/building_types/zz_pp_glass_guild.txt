@@ -15,6 +15,7 @@ location_potential = {
     is_produced_in_location_market = goods:sand
 }
 build_time = guild_build_time
+graphical_tags = { factory_small }
 unique_production_methods = {
     pp_glass_guild_glass_guild_maintenance = {
         icon_type = goods

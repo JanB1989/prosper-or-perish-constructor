@@ -72,6 +72,20 @@ REPLACE:cb_make_tributary = {
 			desc = "base value"
 			value = 20
 		}
+
+		if = {
+			limit = {
+				root = {
+					has_reform = government_reform:anatolian_beylik
+				}
+			}
+
+			subtract = {
+				desc = "We need to conquer land directly"
+				value = 100
+			}
+		}
+
 		if = {
 			limit = {
 				scope:target = {

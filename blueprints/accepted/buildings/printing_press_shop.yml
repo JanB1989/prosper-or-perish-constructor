@@ -33,6 +33,7 @@ building:
     megalopolis = yes
     obsolete = scriptorium
     build_time = workshop_build_time
+    graphical_tags = { factory_medium }
     unique_production_methods = {
         pp_printing_press_shop_printing_press_leather_maintenance = {
             lead = 0.286

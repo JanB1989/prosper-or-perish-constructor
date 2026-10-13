@@ -12,7 +12,9 @@
 		action_tooltip = {
 			click_type = right
 			click_mode = confirm
+			enabled = "[TownRightsItem.CanRevokeFirst]"
 			title = "REVOKE_TOWN_RIGHTS_FROM"
+			conditions = "[TownRightsItem.GetRevokeFirstConditions]"
 			cost = "[TownRightsItem.GetRevokeFirstCost]"
 			on_action = "[TownRightsItem.RevokeFirst]"
 		}
@@ -411,7 +413,9 @@ template location_town_rights_icon_strip {
 						action_tooltip = {
 							click_type = right
 							click_mode = confirm
+							enabled = "[TownRights.CanRevoke]"
 							title = "REVOKE_LOCATION_TOWN_RIGHT"
+							conditions = "[TownRights.GetRevokeConditions]"
 							cost = "[TownRights.GetRevokeCost]"
 							on_action = "[TownRights.Revoke]"
 						}
@@ -534,7 +538,9 @@ template urban_rights_location_card {
 								action_tooltip = {
 									click_type = right
 									click_mode = confirm
+									enabled = "[TownRights.CanRevoke]"
 									title = "REVOKE_LOCATION_TOWN_RIGHT"
+									conditions = "[TownRights.GetRevokeConditions]"
 									cost = "[TownRights.GetRevokeCost]"
 									on_action = "[TownRights.Revoke]"
 								}

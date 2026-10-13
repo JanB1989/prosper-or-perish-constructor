@@ -1291,7 +1291,7 @@ locations = {
 	lleida = {
 		rank = town
 	}
-	medina_del_campo = {
+	avila = {
 		rank = town
 	}
 	caceres = {
@@ -17198,6 +17198,17 @@ building_manager = {
  temple = { tag = PAP level = 1 location = avignon }
  tools_guild = { tag = PAP level = 1 location = avignon }
  weapon_guild = { tag = PAP level = 1 location = avignon }
+ brewery = { tag = CAS level = 1 location = avila }
+ castle = { tag = CAS level = 1 location = avila }
+ granary = { tag = CAS level = 1 location = avila }
+ marketplace = { tag = CAS level = 1 location = avila }
+ mason = { tag = CAS level = 1 location = avila }
+ paper_guild = { tag = CAS level = 1 location = avila }
+ pottery_guild = { tag = CAS level = 1 location = avila }
+ tannery = { tag = CAS level = 1 location = avila }
+ temple = { tag = CAS level = 1 location = avila }
+ tools_guild = { tag = CAS level = 1 location = avila }
+ weapon_guild = { tag = CAS level = 1 location = avila }
  brewery = { tag = DLH level = 2 location = awadh }
  castle = { tag = DLH level = 1 location = awadh }
  cloth_guild = { tag = DLH level = 6 location = awadh }
@@ -24383,17 +24394,6 @@ building_manager = {
  temple = { tag = MDA level = 1 location = medina }
  tools_guild = { tag = MDA level = 1 location = medina }
  weapon_guild = { tag = MDA level = 1 location = medina }
- brewery = { tag = CAS level = 1 location = medina_del_campo }
- castle = { tag = CAS level = 1 location = medina_del_campo }
- granary = { tag = CAS level = 1 location = medina_del_campo }
- marketplace = { tag = CAS level = 1 location = medina_del_campo }
- mason = { tag = CAS level = 1 location = medina_del_campo }
- paper_guild = { tag = CAS level = 1 location = medina_del_campo }
- pottery_guild = { tag = CAS level = 1 location = medina_del_campo }
- tannery = { tag = CAS level = 1 location = medina_del_campo }
- temple = { tag = CAS level = 1 location = medina_del_campo }
- tools_guild = { tag = CAS level = 1 location = medina_del_campo }
- weapon_guild = { tag = CAS level = 1 location = medina_del_campo }
  castle = { tag = MOR level = 1 location = meknes }
  cloth_guild = { tag = MOR level = 1 location = meknes }
  fine_cloth_guild = { tag = MOR level = 2 location = meknes }

@@ -32,6 +32,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = workshop_build_time
+    graphical_tags = { factory_medium }
     unique_production_methods = {
         pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance = {
             fiber_crops = 1.43

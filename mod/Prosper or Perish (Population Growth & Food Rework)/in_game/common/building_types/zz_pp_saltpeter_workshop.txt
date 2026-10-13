@@ -12,6 +12,7 @@ town = yes
 city = yes
 megalopolis = yes
 build_time = workshop_build_time
+graphical_tags = { factory_medium }
 
 location_potential = {
     NOT = { raw_material = goods:saltpeter }

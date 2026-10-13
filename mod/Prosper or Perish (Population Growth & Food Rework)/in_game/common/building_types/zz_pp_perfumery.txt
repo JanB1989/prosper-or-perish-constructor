@@ -16,6 +16,7 @@ location_potential = {
     NOT = { raw_material = goods:incense }
 }
 build_time = manufactory_build_time
+graphical_tags = { factory_large }
 unique_production_methods = {
     pp_perfumery_blended_incense = {
         icon_type = building_type

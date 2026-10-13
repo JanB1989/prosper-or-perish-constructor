@@ -32,6 +32,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = mills_build_time
+    graphical_tags = { factory_large }
     unique_production_methods = {
         pp_tannery_mill_leather_mill_maintenance = {
             livestock = 10.66

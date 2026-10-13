@@ -36,6 +36,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = manufactory_build_time
+    graphical_tags = { factory_large }
     obsolete = cannon_workshop
     unique_production_methods = {
         pp_cannon_foundry_ammunition_maintenance = {

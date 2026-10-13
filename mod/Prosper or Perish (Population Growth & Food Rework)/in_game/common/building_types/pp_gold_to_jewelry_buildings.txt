@@ -206,8 +206,7 @@ REPLACE:house_of_parliament = {
 			category = building_maintenance
 		}
 	}
-	graphical_tags = {
-	}
+	graphical_tags = { palace }
 	construction_demand = pp_early_capital_jewelry_construction
 	raw_modifier = {
 		local_population_capacity = 0.14
@@ -264,8 +263,7 @@ REPLACE:royal_court = {
 			category = building_maintenance
 		}
 	}
-	graphical_tags = {
-	}
+	graphical_tags = { palace }
 	construction_demand = pp_early_capital_jewelry_construction
 	raw_modifier = {
 		local_population_capacity = 0.07
@@ -608,8 +606,7 @@ REPLACE:republican_assembly = {
 			category = building_maintenance
 		}
 	}
-	graphical_tags = {
-	}
+	graphical_tags = { palace }
 	construction_demand = pp_early_capital_jewelry_construction
 	raw_modifier = {
 		local_population_capacity = 0.07
@@ -661,6 +658,7 @@ REPLACE:caravan_stop = {
 			icon = caravan_stop
 			jewelry = 0.004
 			salt = 0.01
+			camels = 0.01
 			category = building_maintenance
 		}
 	}

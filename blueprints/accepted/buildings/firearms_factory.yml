@@ -38,6 +38,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = mills_build_time
+    graphical_tags = { factory_large }
     obsolete = firearms_manufactory
     unique_production_methods = {
         pp_firearms_factory_ammunition_maintenance = {

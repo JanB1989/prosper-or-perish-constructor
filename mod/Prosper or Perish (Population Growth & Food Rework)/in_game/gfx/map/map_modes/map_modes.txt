@@ -6138,6 +6138,7 @@ tactical = {
 	}
 	
 	refresh_colors_on_selection_change = yes
+	color_refresh_counters = { Winter }
 	color_and_names_refresh_counters = {}
 }
 
@@ -10242,4 +10243,106 @@ religious_orders = {
 	}
 
 	color_and_names_refresh_counters = { LocationOwnerChanged ReligionChanged Month }
+}
+
+dlc = {
+	map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				owner = {
+					is_in_list = dlc_countries
+				}
+			}
+			owner = {
+				value = country_color
+			}
+		}
+	}
+	tooltip_key = {
+	}
+	small_map_names = dlc
+	medium_map_names = dlc
+	large_map_names = dlc
+
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = country
+
+	fill_in_impassable = yes
+	allow_allocate_hotkey = no
+	
+	enable_rivers = yes
+	enable_snow = yes
+	use_fow = no
+	
+	enable_water_names = no
+	enable_water_names_through = yes
+
+	category = hidden
+
+	map_markers = {
+		market_marker = no
+		fort_marker = no
+		toll_marker = no
+	}
+
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+
+		gradient_alpha_inside = 	@filled_near_gradient_alpha_inside
+		gradient_alpha_outside = 	@filled_near_gradient_alpha_outside
+		gradient_width = 			@filled_near_gradient_width
+		gradient_color_mult =		@filled_near_gradient_color_mult
+		edge_width = 				@filled_near_edge_width
+		edge_sharpness = 			@filled_near_edge_sharpness
+		edge_alpha = 				@filled_near_edge_alpha
+		edge_color_mult = 			@filled_near_edge_color_mult
+		before_lighting_blend =		@filled_near_before_lighting_blend
+		after_lighting_blend =		@filled_near_after_lighting_blend
+	}
+	gradient_parameters = {
+		zoom_step = @zoom_step_far
+
+		gradient_alpha_inside = 	@filled_far_gradient_alpha_inside
+		gradient_alpha_outside = 	@filled_far_gradient_alpha_outside
+		gradient_width = 			@filled_far_gradient_width
+		gradient_color_mult =		@filled_far_gradient_color_mult
+		edge_width = 				@filled_far_edge_width
+		edge_sharpness = 			@filled_far_edge_sharpness
+		edge_alpha = 				@filled_far_edge_alpha
+		edge_color_mult = 			@filled_far_edge_color_mult
+		before_lighting_blend =		@filled_far_before_lighting_blend
+		after_lighting_blend =		@filled_far_after_lighting_blend
+	}
+	flatmap_gradient_parameters = {
+		zoom_step = @zoom_step_flatmap
+
+		gradient_alpha_inside = 	@flatmap_gradient_alpha_inside
+		gradient_alpha_outside = 	@flatmap_gradient_alpha_outside
+		gradient_width = 			@flatmap_gradient_width
+		gradient_color_mult =		@flatmap_gradient_color_mult
+		edge_width = 				@flatmap_edge_width
+		edge_sharpness = 			@flatmap_edge_sharpness
+		edge_alpha = 				@flatmap_edge_alpha
+		edge_color_mult = 			@flatmap_edge_color_mult
+		before_lighting_blend =		@flatmap_before_lighting_blend
+		after_lighting_blend =		@flatmap_after_lighting_blend
+	}
+	flatmap_gradient_parameters = {
+		zoom_step = @zoom_step_flatmap_far
+
+		gradient_alpha_inside = 	@flatmap_far_gradient_alpha_inside
+		gradient_alpha_outside = 	@flatmap_far_gradient_alpha_outside
+		gradient_width = 			@flatmap_far_gradient_width 
+		gradient_color_mult =		@flatmap_far_gradient_color_mult 
+		edge_width = 				@flatmap_far_edge_width 		
+		edge_sharpness = 			@flatmap_far_edge_sharpness 	
+		edge_alpha = 				@flatmap_far_edge_alpha 	
+		edge_color_mult = 			@flatmap_far_edge_color_mult 
+		before_lighting_blend =		@flatmap_far_before_lighting_blend 
+		after_lighting_blend =		@flatmap_far_after_lighting_blend 
+	}
+	
+	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }
 }

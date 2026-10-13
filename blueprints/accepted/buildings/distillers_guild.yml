@@ -33,6 +33,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = guild_build_time
+    graphical_tags = { factory_small }
     construction_demand = guild_construction
     unique_production_methods = {
         pp_distillers_guild_sugar_liquor_guild_maintenance = {

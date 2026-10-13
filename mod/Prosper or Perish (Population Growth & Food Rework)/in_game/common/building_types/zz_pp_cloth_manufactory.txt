@@ -13,6 +13,7 @@ city = yes
 megalopolis = yes
 obsolete = cloth_workshop
 build_time = manufactory_build_time
+graphical_tags = { factory_large }
 unique_production_methods = {
     pp_cloth_manufactory_wool_cloth_manufactory_maintenance = {
         icon_type = goods

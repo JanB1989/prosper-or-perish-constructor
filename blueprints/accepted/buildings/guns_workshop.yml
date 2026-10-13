@@ -36,6 +36,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = workshop_build_time
+    graphical_tags = { factory_medium }
     unique_production_methods = {
         pp_guns_workshop_guns_workshop_ammunition_lead_maintenance = {
             lead = 0.143

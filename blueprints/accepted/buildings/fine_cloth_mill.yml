@@ -37,6 +37,7 @@ building:
     megalopolis = yes
     obsolete = fine_cloth_manufactory
     build_time = mills_build_time
+    graphical_tags = { factory_large }
     unique_production_methods = {
         pp_fine_cloth_mill_dyeing_maintenance = {
             icon_type = goods

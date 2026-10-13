@@ -38,6 +38,8 @@ EXPORT_RELATIVE_PATH = Path("artifacts/data/worldbuilder/start_development.csv")
 CHECK_RELATIVE_PATH = Path("artifacts/data/worldbuilder/development_check.csv")
 # location_tag, development of the owned locations of a vanilla game-start save; validation of the evaluator only
 REFERENCE_RELATIVE_PATH = Path("config/validation/vanilla_start_development_eu5_1.4.csv")
+# locations whose vanilla setup changed after that save (game updates); left out of the comparison
+STALE_REFERENCE_RELATIVE_PATH = Path("config/validation/vanilla_start_development_eu5_1.4_stale.csv")
 GEOGRAPHIES = ("mod", "vanilla")
 TOLERANCE = 1e-3
 
@@ -154,6 +156,16 @@ def load_reference(repo: Path) -> pl.DataFrame | None:
     return pl.read_csv(path, comment_prefix="#", schema={"location_tag": pl.String, "development": pl.Float64})
 
 
+def load_validation_reference(repo: Path) -> pl.DataFrame | None:
+    """The reference without the locations whose vanilla setup changed after the save (stale development)."""
+    reference = load_reference(repo)
+    stale = repo / STALE_REFERENCE_RELATIVE_PATH
+    if reference is None or not stale.is_file():
+        return reference
+    tags = pl.read_csv(stale, comment_prefix="#", schema={"location_tag": pl.String})["location_tag"].to_list()
+    return reference.filter(~pl.col("location_tag").is_in(tags))
+
+
 def compare_with_reference(evaluated: pl.DataFrame, reference: pl.DataFrame) -> tuple[dict[str, object], pl.DataFrame]:
     """Match rate of the evaluation on the reference's (owned) locations, both error sides and the mismatches."""
     joined = evaluated.join(reference.rename({"development": "engine"}), on="location_tag", how="inner").with_columns(
@@ -181,7 +193,7 @@ def compare_with_reference(evaluated: pl.DataFrame, reference: pl.DataFrame) -> 
 
 def check(repo: Path, project: Path) -> dict[str, object]:
     """Evaluate vanilla's rules on the vanilla map, compare with the vanilla start save, and size the mod's change."""
-    reference = load_reference(repo)
+    reference = load_validation_reference(repo)
     if reference is None:
         raise FileNotFoundError(f"validation table missing: {repo / REFERENCE_RELATIVE_PATH}")
     vanilla_map = evaluate_development(repo, project, "vanilla")

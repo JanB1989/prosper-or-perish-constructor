@@ -32,6 +32,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = guild_build_time
+    graphical_tags = { factory_small }
     unique_production_methods = {
         pp_tools_guild_stone_tools_guild_maintenance = {
             stone = 0.406

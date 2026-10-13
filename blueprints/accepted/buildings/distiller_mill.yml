@@ -36,6 +36,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = mills_build_time
+    graphical_tags = { factory_large }
     obsolete = distiller_manufactory
     unique_production_methods = {
         pp_distiller_mill_sugar_distillery_mill_maintenance = {

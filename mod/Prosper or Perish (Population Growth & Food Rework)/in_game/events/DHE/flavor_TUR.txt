@@ -2040,7 +2040,6 @@ flavor_tur.35 = {
 		name = flavor_tur.35.a
 		historical_option = yes
 		add_political_influence = political_influence_mild_penalty
-		add_political_influence = political_influence_mild_penalty
 		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_extreme_bonus }
 	}
 

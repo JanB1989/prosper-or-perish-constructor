@@ -655,13 +655,16 @@ plan_campaign_in_italy = {
 				}
 
 				if = {
-					limit = { 
-						is_ai = yes 
+					limit = {
+						is_ai = yes
+						num_of_diplomats >= 1
+						can_declare_war_on = scope:target.owner
 						NOT = { has_truce_with = scope:target.owner }
 					}
 					declare_war_with_cb = {
 						target = scope:target.owner
-						type = casus_belli:cb_conquer_province 
+						type = casus_belli:cb_conquer_province
+						apply_declaration_costs = yes
 					}
 				}
 			}
@@ -761,6 +764,17 @@ plan_campaign_in_italy = {
 			add = {
 				desc = "offensive alliance"
 				value = scope:actor.offensive_alliance_strength
+			}
+			if = {
+				limit = {
+					scope:actor = {
+						NOT = { can_outmatch_defending_coalition = { target = scope:target.owner } }
+					}
+				}
+				subtract = {
+					desc = "defending coalition is too strong"
+					value = 1000
+				}
 			}
 			if = {
 				limit = {

@@ -396,13 +396,7 @@ rise_of_the_ottomans.101 = {
 		}
 
 		ai_will_select = {
-			if = {
-				limit = {
-					num_subjects >= 2
-				}
-
-				value = 0 
-			}
+			value = 1
 		}
 	}
 
@@ -414,6 +408,10 @@ rise_of_the_ottomans.101 = {
 				name = rise_of_the_ottomans_vassal_cooldown_variable
 				years = 5
 			}
+		}
+
+		ai_will_select = {
+			value = 0
 		}
 	}
 

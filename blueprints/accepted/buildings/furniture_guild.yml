@@ -29,6 +29,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = guild_build_time
+    graphical_tags = { factory_small }
     unique_production_methods = {
         pp_furniture_guild_furniture_maintenance = {
             lumber = 0.63

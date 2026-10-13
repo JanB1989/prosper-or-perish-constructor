@@ -181,6 +181,12 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
         {"global_lumber_output_modifier = 0.5", "icon = rudimentary_coastal_ship_repair"},
         {"ai_weight = {add=150}", "icon = lumber_mill_improved", "unlock_building = lumber_mill_improved"},
     ),
+    # trade range (2026-10-08, Jan): the five generic range advances add +50 each (pp_trade_range_advances_adjustments.txt)
+    "merchants_and_trade": ({"trade_range = 250"}, {"trade_range = 50"}),
+    "trade_range_advance_age_2": ({"trade_range = 250"}, {"trade_range = 50"}),
+    "trade_range_advance_age_3": ({"trade_range = 250"}, {"trade_range = 50"}),
+    "joint_stock_companies": ({"trade_range = 200"}, {"trade_range = 50"}),
+    "chartered_companies": ({"trade_range = 200"}, {"trade_range = 50"}),
 }
 # The mod keeps devastation recovery from these advances small (sticky devastation). EU5 1.4 halved the vanilla
 # bonus to +0.0025, so the injects were re-netted; the merged value must stay positive.

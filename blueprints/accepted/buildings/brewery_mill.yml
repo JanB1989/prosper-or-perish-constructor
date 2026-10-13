@@ -34,6 +34,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = mills_build_time
+    graphical_tags = { factory_large }
     obsolete = brewery_manufactory
     unique_production_methods = {
         pp_brewery_mill_brewery_mill_maintenance = {

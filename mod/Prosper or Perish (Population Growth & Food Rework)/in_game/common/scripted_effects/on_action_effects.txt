@@ -410,6 +410,7 @@ setup_area_preferences = {
 			if = {
 				limit = { NOT = { capital.continent = continent:africa } }
 				add_area_preference = avoid_african_colonization
+				add_area_preference = explore_african_coast
 			}
 			if = {
 				limit = {

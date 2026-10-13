@@ -31,6 +31,7 @@ building:
     megalopolis = yes
     obsolete = furniture_manufactory
     build_time = mills_build_time
+    graphical_tags = { factory_large }
     unique_production_methods = {
         pp_furniture_mill_furniture_mill_maintenance = {
             lumber = 9.32 # more timber per piece, machine offcuts

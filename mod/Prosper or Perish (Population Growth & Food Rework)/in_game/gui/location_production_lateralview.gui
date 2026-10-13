@@ -433,39 +433,34 @@
 					}
 
 					blockoverride "scroll_list_layout" {
-						vbox = {
-							fixedgridbox = {
-								visible = "[And( LocationProductionView.Vars.NotExistOrHasValue( 'display', 'lists' ), LocationProductionView.IsLocationFilterEnabled )]"
-								addrow = 65
-								addcolumn = 100%
-								datamodel = "[LocationProductionView.GetBuildingItems]"
-								setitemsizefromcell = yes
-								item = {
-									widget = {
-										hbox = {
-											margin_right = 12
-
-											location_filtered_header_with_candidate = {
-												using = layoutpolicy_expanding
-												blockoverride "location_filtered_header_with_candidate_visible" {
-													visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
-												}
+						fixedgridbox = {
+							visible = "[And( LocationProductionView.Vars.NotExistOrHasValue( 'display', 'lists' ), LocationProductionView.IsLocationFilterEnabled )]"
+							addrow = 65
+							addcolumn = 100%
+							datamodel = "[LocationProductionView.GetBuildingItems]"
+							item = {
+								widget = {
+									size = { 100% 60 }
+									hbox = {
+										location_filtered_header_with_candidate = {
+											using = layoutpolicy_expanding
+											blockoverride "location_filtered_header_with_candidate_visible" {
+												visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
 											}
-											location_filtered_header_no_candidate = {
-												using = layoutpolicy_expanding
-												blockoverride "location_filtered_header_no_candidate_visible" {
-													visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
-												}
-												blockoverride "location_context"
-												{
-													datacontext = "[LocationProductionView.GetSelectedLocation]"
-												}
+										}
+										location_filtered_header_no_candidate = {
+											using = layoutpolicy_expanding
+											blockoverride "location_filtered_header_no_candidate_visible" {
+												visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+											}
+											blockoverride "location_context"
+											{
+												datacontext = "[LocationProductionView.GetSelectedLocation]"
 											}
 										}
 									}
 								}
 							}
-							expand = {}
 						}
 					}
 				}

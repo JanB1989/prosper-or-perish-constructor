@@ -32,6 +32,7 @@ building:
     megalopolis = yes
     obsolete = pottery_manufactory
     build_time = mills_build_time
+    graphical_tags = { factory_large }
     unique_production_methods = {
         pp_pottery_mill_pottery_mill_maintenance = {
             clay = 7.2

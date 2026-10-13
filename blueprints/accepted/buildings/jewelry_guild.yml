@@ -37,6 +37,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = guild_build_time
+    graphical_tags = { factory_small }
     unique_production_methods = {
         pp_jewelry_guild_ivory_enhancement = {
             ivory = 0.07

@@ -37,6 +37,7 @@ building:
     megalopolis = yes
     obsolete = hand_cannon_guild
     build_time = guild_build_time
+    graphical_tags = { factory_small }
     unique_production_methods = {
         pp_gun_smith_guns_guild_ammunition_lead_maintenance = {
             lead = 0.067

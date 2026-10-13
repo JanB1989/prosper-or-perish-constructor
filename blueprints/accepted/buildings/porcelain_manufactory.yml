@@ -29,6 +29,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = manufactory_build_time
+    graphical_tags = { factory_large }
     unique_production_methods = {
         pp_porcelain_manufactory_porcelain_manufactory_maintenance = {
             clay = 10.2 # fireclay saggars to protect the ware in the kiln

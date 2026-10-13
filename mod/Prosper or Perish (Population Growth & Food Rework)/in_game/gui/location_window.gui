@@ -837,7 +837,7 @@
 							}
 						}
 						blockoverride "flag_estate_building_card_flag_visible" {
-							visible = "[And(LocationBuildingItem.GetBuilding.GetType.IsForeign, Not(And3(LocationBuildingItem.IsPlayerBuilding, LocationBuildingItem.GetBuilding.CanPlayerUpgrade, Not(LocationBuildingItem.GetBuilding.GetType.OnlyEstatesCanBuild))))]"
+							visible = "[And(LocationBuildingItem.GetBuilding.GetType.IsForeign, Not(And3(LocationBuildingItem.IsPlayerBuilding, Or(LocationBuildingItem.GetBuilding.CanPlayerUpgrade, LocationBuildingItem.CanExpandBuilding), Not(LocationBuildingItem.GetBuilding.GetType.OnlyEstatesCanBuild))))]"
 						}
 						blockoverride "flag_estate_building_card_flag_size" {
 							block "tooltip_flag_estate_building_card_flag_size" {
@@ -864,7 +864,7 @@
 						blockoverride "square_icon_size" {
 							size = {10 10}
 						}
-						visible = "[And3(Not(LocationBuildingItem.GetBuilding.CanPlayerUpgrade), Not(LocationBuildingItem.GetBuilding.GetType.IsForeign), Not(Building.GetType.OnlyEstatesCanBuild))]"
+						visible = "[And3(Not(LocationBuildingItem.GetBuilding.CanPlayerUpgrade), Or(Not(LocationBuildingItem.GetBuilding.GetType.IsForeign), LocationBuildingItem.IsPlayerBuilding), Not(Building.GetType.OnlyEstatesCanBuild))]"
 						datacontext = "[LocationBuildingItem.GetBuilding]"
 						datacontext = "[LocationBuildingItem.GetBuilding.GetType]"
 						datacontext = "[LocationBuildingItem.GetBuilding.GetLocation]"
@@ -3744,7 +3744,8 @@ template location_card_town_rights_item_body {
 		cost = "[Location.GetRevokeFirstTownRightCost]"
 		on_action = "[Location.RevokeFirstTownRight]"
 		conditions = "[AddLocalizationIf(Not(Location.GetOwner.IsPlayer), 'TWR_NOT_OTHER_COUNTRY_LOCATIONS')]"
-		enabled = "[Location.GetOwner.IsPlayer]"
+		conditions = "[Location.GetRevokeFirstTownRightConditions]"
+		enabled = "[And(Location.GetOwner.IsPlayer, Location.CanRevokeFirstTownRight)]"
 	}
 	tooltipwidget = {
 		using = location_town_rights_tooltip

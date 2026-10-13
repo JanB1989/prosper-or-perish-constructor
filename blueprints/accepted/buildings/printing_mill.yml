@@ -34,6 +34,7 @@ building:
     megalopolis = yes
     obsolete = printing_manufactory
     build_time = mills_build_time
+    graphical_tags = { factory_large }
     unique_production_methods = {
         pp_printing_mill_printing_mill_leather_maintenance = {
             lead = 1.42

@@ -36,6 +36,7 @@ building:
     megalopolis = yes
     obsolete = cloth_manufactory
     build_time = mills_build_time
+    graphical_tags = { factory_large }
     unique_production_methods = {
         pp_textile_mill_wool_mill_maintenance = {
             wool = 4.56

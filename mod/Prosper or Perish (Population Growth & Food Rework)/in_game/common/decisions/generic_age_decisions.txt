@@ -761,7 +761,10 @@ jewish_expulsion_threat = {
 	allow = {
 		at_war = no
 		has_ruler = yes
-		political_influence >= 10
+		political_influence >= {
+			value = political_influence_mild_penalty
+			multiply = -1
+		}
 		custom_tooltip = {
 			text = jewish_expulsion_threat_cooldown_tt
 			NOT = {

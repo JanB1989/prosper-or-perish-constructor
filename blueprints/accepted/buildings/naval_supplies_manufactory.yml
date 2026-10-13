@@ -29,6 +29,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = manufactory_build_time
+    graphical_tags = { factory_large }
     obsolete = naval_supplies_workshop
     unique_production_methods = {
         pp_naval_supplies_manufactory_naval_supplies_manufactory_maintenance = {

@@ -632,10 +632,11 @@ types SelectedMarketView {
 		hbox = {
 			using = layoutpolicy_expanding
 			margin = { 8 5 }
-			margin_right = 5
+			margin_right = 10
 			spacing = 6
 
 			hbox = {
+				layoutpolicy_horizontal = expanding
 				icon = {
 					visible = "[TradeOrderItem.IsEmpty]"
 					size = { 26 26 }
@@ -723,7 +724,8 @@ types SelectedMarketView {
 
 				text_single = {
 					visible = "[GreaterThan_int32(TradeOrderItem.GetTradeCount, '(int32)0')]"
-					size = { 50 15 }
+					size = { -1 15 }
+					layoutpolicy_horizontal = expanding
 					autoresize = no
 					align = right|nobaseline
 					using = Font_Size_Small
@@ -732,7 +734,8 @@ types SelectedMarketView {
 
 				text_single = {
 					visible = "[Not(GreaterThan_int32(TradeOrderItem.GetTradeCount, '(int32)0'))]"
-					size = { 50 15 }
+					size = { -1 15 }
+					layoutpolicy_horizontal = expanding
 					autoresize = no
 					align = right|nobaseline
 					using = Font_Size_Small

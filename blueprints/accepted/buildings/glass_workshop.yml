@@ -30,6 +30,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = workshop_build_time
+    graphical_tags = { factory_medium }
     unique_production_methods = {
         pp_glass_workshop_metal_glass_workshop_maintenance = {
             lumber = 1.053 # furnace fuel and wood ash for potash flux

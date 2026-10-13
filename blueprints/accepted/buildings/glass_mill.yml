@@ -32,6 +32,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = mills_build_time
+    graphical_tags = { factory_large }
     unique_production_methods = {
         pp_glass_mill_glassmill_maintenance = {
             lumber = 1.9 # packing crates and annealing lehr fuel

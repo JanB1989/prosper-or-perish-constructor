@@ -962,7 +962,7 @@ TRY_REPLACE:mesta_council_law = {
 		country_modifier = {
 			global_wool_output_modifier = 0.5
 			global_rural_build_buildings_efficiency = -0.17
-			nobles_estate_max_tax = 0.1
+			export_efficiency = small_trade_efficiency_bonus
 			tax_income_efficiency = medium_tax_income_efficiency_bonus
 		}
 		estate_preferences = {

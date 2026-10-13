@@ -15701,6 +15701,7 @@ flavor_eng.162 = {
 					OR = {
 						root = { has_colonial_charter_in = prev.province_definition }
 						integration_level = integrated
+						integration_level = core
 					}
 			}
 		}
@@ -15709,6 +15710,7 @@ flavor_eng.162 = {
 			OR = {
 				root = { has_colonial_charter_in = prev.province_definition }
 				integration_level = integrated
+				integration_level = core
 				root = { has_building_with_at_least_one_level = overseas_trading_post }
 			}
 		}
@@ -15751,6 +15753,7 @@ flavor_eng.162 = {
 					OR = {
 						root = { has_colonial_charter_in = prev.province_definition }
 						integration_level = integrated
+						integration_level = core
 					}
 				}
 				every_pop = {
@@ -15784,6 +15787,7 @@ flavor_eng.162 = {
 					OR = {
 						root = { has_colonial_charter_in = prev.province_definition }
 						integration_level = integrated
+						integration_level = core
 					}
 				}
 				every_pop = {

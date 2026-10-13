@@ -121,6 +121,6 @@ def _vanilla_game_present() -> bool:
 @pytest.mark.skipif(not _vanilla_game_present(), reason="needs the EU5 game files")
 def test_the_evaluator_reproduces_the_vanilla_start_save() -> None:
     # vanilla's rules on the vanilla map against the engine's own placement (vanilla 1.4 start save)
-    summary, _ = dev.compare_with_reference(dev.evaluate_development(ROOT, ROOT / "constructor.toml", "vanilla"), dev.load_reference(ROOT))
+    summary, _ = dev.compare_with_reference(dev.evaluate_development(ROOT, ROOT / "constructor.toml", "vanilla"), dev.load_validation_reference(ROOT))
     assert summary["missing_from_evaluation"] == 0
     assert summary["match_rate"] >= 0.999, summary

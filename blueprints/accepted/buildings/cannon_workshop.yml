@@ -36,6 +36,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = workshop_build_time
+    graphical_tags = { factory_medium }
     unique_production_methods = {
         pp_cannon_workshop_cannon_workshop_ammunition_stone_maintenance = {
             stone = 0.125

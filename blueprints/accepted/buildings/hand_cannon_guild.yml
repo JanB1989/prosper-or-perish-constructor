@@ -27,6 +27,7 @@ building:
     city = yes
     megalopolis = yes
     build_time = guild_build_time
+    graphical_tags = { factory_small }
     unique_production_methods = {
         pp_hand_cannon_guild_hand_cannon_guild_maintenance = {
             tools = 0.027 # tools cut to a running cost (~15 %, arms making)

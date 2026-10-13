@@ -486,13 +486,15 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
         legacy.unlink()
 
     # on_action applying the per-location static modifiers
+    # navigation modifiers (Difficult Waterway on channel tiles, River Port on banks) only in the on_action: no building
+    # cap reads them, and the setup's timed modifiers are not meant for sea locations
+    navigation_keys: dict[str, list[str]] = {}
     if cfg.raw.get("_navigation"):
         from .navigation import write_bonus_compensation
-        for tag, keys in write_bonus_compensation(cfg.raw['_navigation'], mod_root, vanilla_root).items():
-            per_location[tag].extend(keys)
+        navigation_keys = write_bonus_compensation(cfg.raw['_navigation'], mod_root, vanilla_root)
     lines = [GENERATED, "", "on_game_start = {", "\ton_actions = {", "\t\tpp_wb_apply_attribute_modifiers", "\t}", "}", "", "pp_wb_apply_attribute_modifiers = {", "\teffect = {"]
-    for tag in sorted(per_location):
-        keys = per_location[tag]
+    for tag in sorted(set(per_location) | set(navigation_keys)):
+        keys = per_location.get(tag, []) + navigation_keys.get(tag, [])
         lines.append(f"\t\tlocation:{tag} = {{")
         for key in keys:
             lines.append(f"\t\t\tadd_location_modifier = {{ modifier = {key} months = -1 mode = replace }}")

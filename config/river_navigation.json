@@ -4,26 +4,28 @@
     "navigable": {
       "key": "pp_river_channel",
       "name": "Navigable River",
-      "description": "A river reach that boats can use.",
+      "description": "A river reach that boats can use. Goods, news and orders travel quickly along it.",
       "icon": "assets/icons/topography/pp_river_channel.png",
       "movement_cost": 1.0,
       "map_color": [
         70,
         200,
         255
-      ]
+      ],
+      "proximity_efficiency": 1.5
     },
     "improvable": {
       "key": "pp_river_shallows",
       "name": "Shallows",
-      "description": "Shoals and mill weirs: boats pass slowly.",
+      "description": "Shoals and mill weirs: boats pass, but slowly.",
       "icon": "assets/icons/topography/pp_river_shallows.png",
       "movement_cost": 1.25,
       "map_color": [
         195,
         70,
         255
-      ]
+      ],
+      "proximity_efficiency": 0.5
     },
     "barrier": {
       "key": "pp_river_falls",
@@ -91,7 +93,8 @@
   "notes": [
     "Channel tiles take the topography of their World Builder state: navigable -> Navigable River, improvable -> Shallows, barrier -> Falls (impassable through the impassable_mountains list).",
     "The channels are plain sea tiles: no water roads and no building act on them. The River Navigation Canal and the hidden navigation road types were removed 2026-10-13 (the AI did not use them and the player could not see what to improve; neither can build a road onto a sea tile, EU5 1.4).",
-    "Shallows with a bank in a starting_evidence envelope (the Grand Canal) start as Navigable River."
+    "Shallows with a bank in a starting_evidence envelope (the Grand Canal) start as Navigable River.",
+    "Proximity (2026-10-13, EU5 1.4 step costs, verified in game): a channel step is a sea step (30), divided by 1 + the proximity efficiency of the tile left. Navigable River +1.5 (30 -> 12, a vanilla river leg on land), Shallows +0.5 (20), Difficult Waterway modifier -0.75 on top of Navigable River (17); leaving the river 35 / 2.5 = 14. River ports get local_port_cost_distance_impact -0.5 on top of the harbour (boarding 35 -> ~17)."
   ],
   "retired_buildings": [
     "river_navigation_works",
@@ -104,5 +107,17 @@
   ],
   "unlinked_buildings": [
     "jiangnan_canal_network"
-  ]
+  ],
+  "modifiers": {
+    "difficult_waterway": {
+      "proximity_efficiency": -0.75,
+      "name": "Difficult Waterway",
+      "description": "A great tropical or strongly seasonal river. Floods, low water and sandbars slow the boats that carry news and orders."
+    },
+    "river_port": {
+      "port_cost": -0.5,
+      "name": "River Port",
+      "description": "A landing on a navigable river: boats from here join the waterway quickly."
+    }
+  }
 }

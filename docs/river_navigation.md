@@ -15,6 +15,12 @@ Since 2026-10-13 the channels are plain sea tiles: no water roads and no buildin
 * A channel step costs a sea step for market access (`MARKET_SEA_DISTANCE_FACTOR`), cheaper than land even downstream
   along a river. Movement follows the channel topography (Shallows 1.25, the rest 1.0); Falls are impassable.
 * Shallows with a bank inside a `starting_evidence` envelope (the Grand Canal, 6 tiles) start as Navigable River.
+* Proximity (EU5 1.4, verified in game 2026-10-13): a channel step costs a sea step (30) divided by 1 + the proximity
+  efficiency of the tile left. Navigable River topography +1.5 (12 per step, a vanilla river leg on land), Shallows
+  +0.5 (20), the Difficult Waterway modifier -0.75 on Navigable River tiles of difficult routes (17); leaving the river
+  costs 35 / 2.5 = 14. The River Port modifier (every land location whose port faces a channel) adds
+  local_port_cost_distance_impact -0.5 to the harbour, so boarding costs about 17 instead of 35. Without it the
+  channels cut proximity along every navigable river (banks lost about half their reach against rivers on land).
 * Removed: the River Navigation Canal (one level on a bank of a Shallows tile, opened it) and the five hidden road types
   (`pp_navigation_navigable` / `difficult` / `improvable` / `barrier` / `improved`) that game-start script drew onto
   the channels. The player could not see what to improve and the AI had no reason to build the canal. A buildable road

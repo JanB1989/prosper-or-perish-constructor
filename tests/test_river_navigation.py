@@ -36,8 +36,34 @@ def test_native_pixel_preservation_never_stacks_scripted_bonuses(tmp_path):
     (tmp_path/'main_menu/localization/english').mkdir(parents=True)
     stale=tmp_path/'main_menu/common/static_modifiers/pp_navigation_preservation.txt'
     stale.write_text('pp_river_canal_open = {}\n')
-    assert write_bonus_compensation({'manifest':{'river_preservation':'native_bank_pixel'}},tmp_path,tmp_path)=={}
+    assert write_bonus_compensation({'manifest':{'river_preservation':'native_bank_pixel'},'settings':{}},tmp_path,tmp_path)=={}
     assert not stale.exists()
+
+
+def test_difficult_waterway_and_river_port_modifiers_go_to_the_right_locations(tmp_path):
+    """Difficult Waterway on navigable tiles of difficult routes, River Port on land whose port faces a channel."""
+    from prosper_or_perish_constructor.worldbuilder.navigation import DIFFICULT, RIVER_PORT, write_bonus_compensation
+    for rel in ('main_menu/common/static_modifiers','main_menu/localization/english','in_game/map_data'):
+        (tmp_path/rel).mkdir(parents=True)
+    (tmp_path/'in_game/map_data/ports.csv').write_text('LandProvince;SeaZone;x;y;\nbank;n1;1;1;x\ncoast;some_sea;2;2;x\n')
+    settings={'modifiers':{'difficult_waterway':{'proximity_efficiency':-0.75,'name':'D','description':'d'},
+                           'river_port':{'port_cost':-0.5,'name':'P','description':'p'}}}
+    state={'manifest':{'river_preservation':'native_bank_pixel'},'settings':settings,
+           'tiles':{'n1':{'state':'navigable'},'n2':{'state':'navigable'},'s1':{'state':'improvable'}},
+           'edges':[{'from':'n1','to':'n2','cost_profile':'navigable'},{'from':'n2','to':'s1','cost_profile':'difficult'}]}
+    assert write_bonus_compensation(state,tmp_path,tmp_path)=={'n2':[DIFFICULT],'bank':[RIVER_PORT]}
+    text=(tmp_path/'main_menu/common/static_modifiers/pp_navigation_modifiers.txt').read_text(encoding='utf-8-sig')
+    assert 'local_distance_from_capital_speed_propagation = -0.75' in text and 'local_port_cost_distance_impact = -0.5' in text
+
+
+def test_shipped_channel_topographies_carry_proximity_efficiency():
+    """A channel step costs a sea step divided by 1 + the efficiency of the tile left (EU5 1.4, verified in game
+    2026-10-13): Navigable River +1.5 (a vanilla river leg on land), Shallows +0.5, Falls none."""
+    text=(MOD/'in_game/common/topography/pp_river_topography.txt').read_text(encoding='utf-8-sig')
+    block=lambda k:text.split(f'{k} = {{',1)[1].split('\n}',1)[0]
+    assert 'local_distance_from_capital_speed_propagation = 1.5' in block('pp_river_channel')
+    assert 'local_distance_from_capital_speed_propagation = 0.5' in block('pp_river_shallows')
+    assert 'local_distance_from_capital_speed_propagation' not in block('pp_river_falls')
 
 
 def test_legacy_compensation_contract_requires_rebuild(tmp_path):

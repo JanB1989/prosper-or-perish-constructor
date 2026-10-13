@@ -59,7 +59,6 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
     assert classification.unpriced_buildings["clay_pit"] == ("gathering",)
     assert classification.unclassified_price_buildings == {
         "bund": "pp_bund_price",
-        "river_navigation_canal": "pp_river_navigation_canal_price",
 
         "field_drainage": "pp_field_drainage_price",
         "field_management": "pp_field_management_price",

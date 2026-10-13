@@ -1,15 +1,12 @@
 """Consume World Builder navigation evidence and compile gameplay integration.
 
-Channel tiles take a topography by their state (Navigable River, Shallows, Falls). One building, the River Navigation
-Canal, opens the Shallows tiles next to its location: a Shallows tile is open while any bank next to it has the canal,
-and its water roads switch between their own cost profile and ``improved``. The state is recomputed from the canals
-that exist whenever one is built or destroyed, never toggled, so building and demolishing in any order stays
-consistent (on_destroyed runs while the building still counts: the recompute skips the location being destroyed).
-The canal holds no population capacity.
+Channel tiles take a topography by their state (Navigable River, Shallows, Falls). The channels are plain sea tiles:
+no water roads and no building act on them (the River Navigation Canal and the hidden navigation road types were
+removed 2026-10-13; neither the player nor the AI can build a road that touches a sea tile, EU5 1.4). Shallows with
+documented starting navigation (``starting_evidence``, the Grand Canal) start as Navigable River.
 """
 from collections import Counter, defaultdict
 from dataclasses import replace
-import csv
 import hashlib
 import json
 
@@ -36,12 +33,8 @@ def historical_evidence(settings, attributes):
     return next((entry for entry in settings.get('starting_evidence', []) if inside(attributes, entry['bounds'])), None)
 
 
-def canal_key(settings):
-    return settings['canal']['key']
-
-
-def validate_routes(tiles, edges, sites):
-    """Reject ambiguous undirected connections and unsafe construction hosts."""
+def validate_routes(tiles, edges):
+    """Reject ambiguous undirected connections."""
     seen = set()
     for edge in edges:
         source, target = edge['from'], edge['to']
@@ -51,12 +44,23 @@ def validate_routes(tiles, edges, sites):
         seen.add(pair)
         if source not in tiles:
             raise ValueError(f'Unknown navigation source: {source}')
-        blocked = any(tiles.get(tag, {}).get('state') == 'barrier' for tag in pair)
-        if blocked and (edge['state'] != 'barrier' or edge.get('host')):
-            raise ValueError(f'Navigation works would open a barrier: {pair}')
-        host = edge.get('host')
-        if host and (host not in sites or not set(pair).intersection(sites[host]['water_tiles'])):
-            raise ValueError(f'Navigation host has no assigned endpoint: {pair}, {host}')
+
+
+def opened_at_start(settings, location_attributes, tiles, shores):
+    """Shallows tiles with documented starting navigation: any ownable bank inside a ``starting_evidence`` envelope."""
+    attrs = {r['location_tag']: r for r in location_attributes.select('location_tag', 'calibrated_lon', 'calibrated_lat').iter_rows(named=True)}
+    return {s['water_location'] for s in shores
+            if tiles.get(s['water_location'], {}).get('state') == 'improvable' and s['location_tag'] in attrs
+            and historical_evidence(settings, attrs[s['location_tag']])}
+
+
+def channel_tiles(settings, contract):
+    """The handover's channel tiles, documented starting navigations turned Navigable River."""
+    root = contract.root/'navigation'
+    tiles = {r['location']: r for r in pl.read_csv(root/'tiles.csv').iter_rows(named=True)}
+    shores = list(pl.read_csv(root/'shores.csv').iter_rows(named=True))
+    opened = opened_at_start(settings, contract.location_attributes, tiles, shores)
+    return {t: ({**tile, 'state': 'navigable'} if t in opened else tile) for t, tile in tiles.items()}, shores, opened
 
 
 def prepare(repo, cfg, contract, *, write_blueprints=True, locations=None):
@@ -70,36 +74,11 @@ def prepare(repo, cfg, contract, *, write_blueprints=True, locations=None):
             raise ValueError('Navigation handover checksum mismatch: '+rel)
     manifest=json.loads((root/'manifest.json').read_text())
     if not all(manifest['checks'].values()):raise ValueError('Navigation geography checks failed')
-    tiles={r['location']:r for r in pl.read_csv(root/'tiles.csv').iter_rows(named=True)}
-    shores=list(pl.read_csv(root/'shores.csv').iter_rows(named=True))
+    tiles,shores,opened=channel_tiles(settings,contract)
     edges=list(pl.read_csv(root/'edges.csv').iter_rows(named=True))
-    attrs={r['location_tag']:r for r in contract.location_attributes.join(contract.location_targets.select('location_tag','development'),on='location_tag',how='left').iter_rows(named=True)}
-    if locations is not None:
-        regions = dict(locations.select('location_tag', 'region').iter_rows())
-        for tag, attributes in attrs.items():
-            attributes['region'] = regions.get(tag)
-    key=canal_key(settings)
-    shallows=sorted(t for t,tile in tiles.items() if tile['state']=='improvable')
-    banks=defaultdict(list)   # Shallows tile -> the ownable land locations on its banks
-    for shore in shores:
-        if shore['water_location'] in tiles and tiles[shore['water_location']]['state']=='improvable' and shore['location_tag'] in attrs:
-            banks[shore['water_location']].append(shore)
-    # Documented starting navigations: the best bank of each Shallows tile in an evidence envelope starts with a canal.
-    sites={};water_owner={}
-    for water in shallows:
-        options=[s for s in banks[water] if historical_evidence(settings,attrs[s['location_tag']])]
-        if not options:continue
-        best=max(options,key=lambda s:(int(s['shore_pixels']),float(attrs[s['location_tag']].get('development') or 0),s['location_tag']))
-        host=best['location_tag'];water_owner[water]=host
-        site=sites.setdefault(host,{'building':key,'start_levels':1,'evidence':historical_evidence(settings,attrs[host])['id'],
-                                    'water_tiles':[],'supporting_buildings':[key],'region':attrs[host].get('region','')})
-        site['water_tiles'].append(water)
-    for edge in edges:
-        edge['host']='' if edge['state']=='barrier' else (water_owner.get(edge['from']) or water_owner.get(edge['to']) or '')
-    validate_routes(tiles,edges,sites)
-    state={'settings':settings,'manifest':manifest,'tiles':tiles,'sites':sites,'edges':edges,'without_site':[],
-           'shallows':shallows,'banks':{w:sorted(s['location_tag'] for s in banks[w]) for w in shallows},'canal':key,
-           'river_changes':list(pl.read_csv(root/'river_effect_changes.csv',schema_overrides={'original_levels':pl.String,'remaining_levels':pl.String}).iter_rows(named=True))}
+    validate_routes(tiles,edges)
+    state={'settings':settings,'manifest':manifest,'tiles':tiles,'edges':edges,'opened_at_start':sorted(opened),
+           'shallows':sorted(t for t,tile in tiles.items() if tile['state']=='improvable')}
     raw=dict(cfg.raw);raw['_navigation']=state
     cfg=replace(cfg,raw=raw)
     if write_blueprints:
@@ -107,63 +86,8 @@ def prepare(repo, cfg, contract, *, write_blueprints=True, locations=None):
     return cfg
 
 
-def canal_body(settings):
-    spec=settings['canal'];key=spec['key']
-    upkeep='\n'.join(f'    {k} = {v}' for k,v in spec['upkeep'].items())
-    shallows=settings['topographies']['improvable']['key']
-    return f'''is_foreign = no
-max_levels = 1
-pop_type = laborers
-employment_size = 0
-price = pp_{key}_price
-category = infrastructure_category
-icon = {key}
-rural_settlement = yes
-town = yes
-city = yes
-megalopolis = yes
-build_time = {spec['construction_days']}
-construction_demand = town_building_construction
-location_potential = {{
-  is_coastal = yes
-  OR = {{
-    has_building = building_type:{key}
-    any_neighbor_location = {{ topography = {shallows} NOT = {{ has_location_modifier = {CANAL_OPEN} }} }}
-  }}
-}}
-unique_production_methods = {{
-  pp_{key}_maintenance = {{
-{upkeep}
-    category = building_maintenance
-  }}
-}}
-on_built = {{ custom_tooltip = pp_river_canal_built_tt hidden_effect = {{ location = {{ pp_river_canal_built = yes }} }} }}
-on_destroyed = {{ custom_tooltip = pp_river_canal_destroyed_tt hidden_effect = {{ location = {{ pp_river_canal_destroyed = yes }} }} }}
-forbidden_for_estates = yes
-ai_forbid_shutdown = yes
-raw_modifier = {{
-  free_building_levels = 1
-}}
-'''
-
-
 def ensure_blueprints(repo,settings):
-    spec=settings['canal'];key=spec['key']
-    asset=yaml_io.safe_load((repo/'blueprints/accepted/buildings/jiangnan_canal_network.yml').read_text())['icon']
-    icon=dict(asset);icon['source_png']='../assets/icons/'+key+'.png';icon['output_dds']=key+'.dds';icon.pop('prompt',None);icon.pop('drawing',None)
-    if (repo/'assets/icon_drawings'/key/'draw.py').exists():  # procedural icon (eu5-building icon install)
-        icon['drawing']='../../../assets/icon_drawings/'+key+'/draw.py'
-    pm='pp_'+key+'_maintenance';price='pp_'+key+'_price'
-    data={'version':2,'tag':key,'footprint':'infrastructure',
-          'building':{'key':key,'mode':'CREATE','source':'pp_new_buildings.txt',
-                      'production_method_slots':[{'name':'slot_0','methods':[pm]}],
-                      'possible_production_methods':[],'body':canal_body(settings)},
-          'localization':{'entries':{key:spec['name'],key+'_desc':spec['description'],
-                                    key+'_slot_0':'Maintenance',pm:'Lock and Towpath Keepers',price:spec['name']+' Cost'}},
-          'prices':[{'key':price,'body':'{ gold = '+str(spec['gold'])+' }'}], 'icon':icon,
-          'evaluation':{'allow_rules':{'profit_percent':'Infrastructure upkeep without output: the canal pays for itself through the opened water roads, not through production.'}}}
-    buildings._save_blueprint(repo/'blueprints/accepted/buildings'/f'{key}.yml',data)
-    # the works of the earlier site system are gone; linked buildings no longer touch the water roads
+    """Retired buildings lose their blueprint and manifest entry; linked buildings no longer touch the water roads."""
     for old in settings.get('retired_buildings',[]):
         path=repo/'blueprints/accepted/buildings'/f'{old}.yml'
         if path.exists():path.unlink()
@@ -175,59 +99,16 @@ def ensure_blueprints(repo,settings):
         buildings._save_blueprint(path,data)
     path=repo/'blueprints/buildings.manifest.yml';manifest=yaml_io.safe_load(path.read_text())
     for old in settings.get('retired_buildings',[]):manifest['enabled'].pop('buildings/'+old+'.yml',None)
-    manifest['enabled']['buildings/'+key+'.yml']=True
     path.write_text(yaml.safe_dump(manifest,sort_keys=False),encoding='utf-8')
 
 
-CANAL_OPEN='pp_river_canal_open'
 RIVER_SIZES_LIVE='pp_navigation_river_sizes_live'  # set while pp_navigation_preserve_rivers runs, if river sizes read
-
-
-def refreshable_tiles(state):
-    """Tiles that have a map-state refresh effect (navigation_map_modes: passable tiles with a passable connection)."""
-    out=set()
-    for e in state['edges']:
-        if e['state']=='barrier':continue
-        for tag in (e['from'],e['to']):
-            if tag in state['tiles'] and state['tiles'][tag]['state']!='barrier':out.add(tag)
-    return out
-
-
-def canal_effects(state,edge_line,road_names):
-    """The canal's scripted effects and the game-start lines.
-
-    ``pp_river_canal_tile_<tile>`` (tile scope) recomputes one Shallows tile: open while any bank next to it has the
-    canal, except ``scope:pp_canal_closing`` (the location whose canal is being destroyed); then every water road of
-    the tile is 'improved' when all Shallows tiles at its ends are open, else its own cost profile."""
-    key=state['canal'];shallows=set(state['shallows']);topo=state['settings']['topographies']['improvable']['key']
-    refresh=refreshable_tiles(state)
-    by_tile=defaultdict(list)
-    for e in state['edges']:
-        if e['state']=='barrier':continue
-        for tag in {e['from'],e['to']}&shallows:by_tile[tag].append(e)
-    lines=[]
-    dispatch=['pp_river_canal_refresh_tile = {']
-    for n,tile in enumerate(sorted(shallows)):
-        lines+=[f'pp_river_canal_tile_{tile} = {{',
-                f' if = {{ limit = {{ any_neighbor_location = {{ has_building = building_type:{key} NOT = {{ this = scope:pp_canal_closing }} }} }} add_location_modifier = {{ modifier = {CANAL_OPEN} months = -1 mode = replace }} }}',
-                f' else = {{ remove_location_modifier = {CANAL_OPEN} }}']
-        touched=set()
-        for e in by_tile[tile]:
-            ends=[t for t in (e['from'],e['to']) if t in shallows]
-            cond=' '.join(f'location:{t} = {{ has_location_modifier = {CANAL_OPEN} }}' for t in ends)
-            lines.append(f' if = {{ limit = {{ {cond} }}{edge_line(e,True)} }} else = {{{edge_line(e)} }}')
-            touched.update(t for t in (e['from'],e['to']) if t in refresh)
-        lines+=[f' location:{t} = {{ pp_navigation_map_refresh_{t} = yes }}' for t in sorted(touched)]
-        lines.append('}')
-        dispatch.append(f' {"if" if n==0 else "else_if"} = {{ limit = {{ this = location:{tile} }} pp_river_canal_tile_{tile} = yes }}')
-    dispatch.append('}')
-    lines+=dispatch
-    # built: the recompute runs for every Shallows tile next to the new canal (the closing scope is the tile itself, so
-    # no bank is skipped); destroyed: the location being destroyed is skipped, its canal still counts at on_destroyed
-    lines+=['pp_river_canal_built = {',f' every_neighbor_location = {{ limit = {{ topography = {topo} }} save_scope_as = pp_canal_closing pp_river_canal_refresh_tile = yes }}','}',
-            'pp_river_canal_destroyed = {',' save_scope_as = pp_canal_closing',f' every_neighbor_location = {{ limit = {{ topography = {topo} }} pp_river_canal_refresh_tile = yes }}','}']
-    start=[f' location:{tag} = {{ if = {{ limit = {{ has_building = building_type:{key} }} pp_river_canal_built = yes }} }}' for tag in sorted(state['sites'])]
-    return lines,start
+# generated by earlier builds (navigation roads, River Navigation Canal); removed from the mod folder on every build
+STALE_RUNTIME=('in_game/common/road_types/pp_navigation.txt',
+               'in_game/gfx/map/spline_network/spline_styles/pp_navigation.txt',
+               'in_game/common/scripted_effects/pp_navigation_routes.txt',
+               'in_game/common/advances/pp_navigation.txt',
+               'main_menu/localization/english/pp_navigation_roads_l_english.yml')
 
 
 def write_topographies(mod_root,vanilla_root,contract,settings,repo=None):
@@ -240,7 +121,7 @@ def write_topographies(mod_root,vanilla_root,contract,settings,repo=None):
     from PIL import Image
     topos=settings['topographies']
     repo=Path(repo) if repo else Path(__file__).resolve().parents[3]
-    tiles={r['location']:r['state'] for r in pl.read_csv(contract.root/'navigation/tiles.csv').iter_rows(named=True)}
+    tiles={tag:tile['state'] for tag,tile in channel_tiles(settings,contract)[0].items()}
     path=mod_root/'in_game/map_data/location_templates.txt'
     text=path.read_text(encoding='utf-8-sig');count=Counter()
     def sub(m):
@@ -302,55 +183,6 @@ def recolor_land_topographies(mod_root,colors):
     path.write_text('﻿'+text,encoding='utf-8',newline='\n')
 
 
-def exchange_levels(levels,site):
-    """A documented starting navigation: one canal level at its bank (the canal holds no capacity)."""
-    if not site or not site.get('start_levels'):return 0
-    levels[site['building']]=(1,1)
-    return 1
-# Navigation roads draw with their own spline style: no road texture on the water and, because the
-# vanilla road vehicles only use the four vanilla styles, no trade wagons on the rivers.
-SPLINE_STYLE_ID = 4
-SPLINE_STYLE = f"""pp_navigation = {{
- id = {SPLINE_STYLE_ID}
- spline = {{
-  uv_scale = 0.5
-  width = 0.01
-  uv_rounding = yes
-  smooth_fade_distance = 10
-  smooth_iterations = 0
-  smooth_kernel_size = 1
-  tesselation_max_angle = 5.0
-  tesselation_min_distance = 0.05
-  tesselation_max_distance = 0.25
-  opacity_fade_distance = 0.625
- }}
- effect = {{
-  effectname = "SingleTexturePass"
-  shaderfile = "gfx/FX/road_gravel.shader"
-  texture_set = {{
-   name = ""
-   texture = {{ file = "gfx/map/spline_network/road_dirt_diffuse.dds" }}
-   texture = {{ file = "gfx/map/spline_network/road_dirt_normal.dds" srgb = no }}
-   texture = {{ file = "gfx/map/spline_network/road_dirt_properties.dds" }}
-   texture = {{ file = "gfx/map/spline_network/road_flatmap.dds" }}
-  }}
- }}
- connections = none
- heightmap = none
-}}
-"""
-
-
-def road_costs(state):
-    """Handover road costs with the constructor's balance overrides (`road_costs` in the navigation config) on top.
-    The World Builder owns which cost profile a route has; the constructor owns what each profile costs in game."""
-    costs={k:dict(v) for k,v in state['manifest']['config']['road_costs'].items()}
-    for name,override in state['settings'].get('road_costs',{}).items():
-        if name not in costs:raise ValueError(f'Unknown navigation road cost profile: {name}')
-        costs[name].update(override)
-    return costs
-
-
 def discovery_effect(tiles,shores):
     """Game start: every country discovers the river channels along the land it knows.
 
@@ -382,33 +214,10 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     if not state:return {'enabled':False}
     def write(rel,text):
         p=mod_root/rel;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('\ufeff'+text,encoding='utf-8',newline='\n')
-    costs=road_costs(state);road_names={s:'pp_navigation_'+s for s in costs}
-    roads=[]
-    for i,(name,cost) in enumerate(costs.items(),20):
-        roads.append(f'''{road_names[name]} = {{
- level = {i}
- enabled = {{ always = no }}
- movement_cost = {cost['movement_cost']}
- market_access = {cost['market_access']}
- pop_movement = 0
- proximity = 0
- build_time_per_unit_distance = 30
- price_per_unit_distance = build_gravel_road
- construction_demand = build_gravel_road_demand
- maintenance_demand = maintain_gravel_road_demand
- color = map_paved_road
- spline_style_id = {SPLINE_STYLE_ID}
-}}''')
-    write('in_game/common/road_types/pp_navigation.txt','\n'.join(roads)+'\n')
-    write('in_game/gfx/map/spline_network/spline_styles/pp_navigation.txt',SPLINE_STYLE)
-    spline_report=spline_network.write(mod_root,vanilla_root,[(e['from'],e['to']) for e in state['edges']],
-                                       land_cache=repo/'artifacts/data/worldbuilder/land_adjacency.json')
-    def edge_line(e,improved=False):
-        kind='improved' if improved else e.get('cost_profile',e['state'])
-        return f" location:{e['from']} = {{ add_road_to = {{ target = location:{e['to']} type = {road_names[kind]} }} }}"
-    seed=['pp_navigation_seed = {']+[edge_line(e) for e in state['edges']]+['}']
-    effects,start=canal_effects(state,edge_line,road_names)
-    write('in_game/common/scripted_effects/pp_navigation_routes.txt','\n'.join(seed+effects)+'\n')
+    for rel in STALE_RUNTIME:
+        (mod_root/rel).unlink(missing_ok=True)
+    # the vanilla network plus strips for the land adjacencies of the mod's map that vanilla has none for
+    spline_report=spline_network.write(mod_root,vanilla_root,[],land_cache=repo/'artifacts/data/worldbuilder/land_adjacency.json')
     lost=list(pl.read_csv(contract.root/'navigation/lost_river_effects.csv').iter_rows(named=True))
     shores=list(pl.read_csv(contract.root/'navigation/shores.csv').iter_rows(named=True))
     river_levels={row['location_tag']:int(row['river_level'] or 0) for row in contract.location_attributes.select('location_tag','river_level').iter_rows(named=True)}
@@ -441,22 +250,7 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     write('in_game/common/on_action/pp_navigation.txt','\n'.join([
         'on_game_start = { on_actions = { pp_navigation_start } }','pp_navigation_start = { effect = {',
         ' pp_navigation_discovery = yes',
-        ' pp_navigation_preserve_rivers = yes',' pp_start_river_topup = yes',' pp_navigation_map_seed = yes',' pp_navigation_seed = yes',*start,' pp_navigation_map_refresh = yes','} }'])+'\n')
-    canal=state['settings']['canal']
-    write('in_game/common/advances/pp_navigation.txt',f"TRY_INJECT:{canal['advance']} = {{ unlock_building = {canal['key']} }}\n")
-    loc=['l_english:', ' pp_navigation_navigable: "Navigable River"',' pp_navigation_improvable: "Shallows"',
-         ' pp_navigation_barrier: "Falls"',' pp_navigation_improved: "Canal Passage"',
-         ' pp_navigation_difficult: "Difficult Waterway"',
-         ' pp_navigation_navigable_desc: "A river reach that boats can use. Movement and trade along it are easier."',
-         ' pp_navigation_difficult_desc: "A large tropical or strongly seasonal river. Boats can use it, but slowly and at a cost."',
-         ' pp_navigation_improvable_desc: "Shoals and mill weirs: boats pass slowly and at a cost until a River Navigation Canal is built on a bank."',
-         ' pp_navigation_barrier_desc: "Falls or great rapids that boats cannot pass."',
-         ' pp_navigation_improved_desc: "Shallows kept open by a River Navigation Canal on a bank."',
-         ' pp_river_canal_built_tt: "Opens the shallows next to this location for boats: movement and trade along them become easier."',
-         ' pp_river_canal_destroyed_tt: "The shallows next to this location close again unless another bank keeps a River Navigation Canal."',
-         f' STATIC_MODIFIER_NAME_{CANAL_OPEN}: "Canal Passage"',
-         f' STATIC_MODIFIER_DESC_{CANAL_OPEN}: "A River Navigation Canal on a bank keeps these shallows open for boats."']
-    write('main_menu/localization/english/pp_navigation_roads_l_english.yml','\n'.join(loc)+'\n')
+        ' pp_navigation_preserve_rivers = yes',' pp_start_river_topup = yes',' pp_navigation_map_seed = yes','} }'])+'\n')
     triggers=[]
     for n in range(1,6):
         triggers.append(f'pp_navigation_river_level_{n} = {{ has_location_modifier = river_flowing_through_{n} }}')
@@ -471,51 +265,21 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     write('in_game/common/scripted_triggers/pp_navigation_rivers.txt','\n'.join(triggers)+'\n')
     from .navigation_map_modes import write_map_modes
     write_map_modes(mod_root,state)
-    from eu5gameparser.clausewitz.parser import parse_file
-    initial=defaultdict(dict)
-    # the start placement moves the World Builder rows into the cities file: read every start setup file
-    for path in sorted((mod_root/buildings.SETUP_PATH).parent.glob('*.txt')):
-        if 'building_manager' not in path.read_text(encoding='utf-8-sig',errors='replace'):continue
-        for manager in parse_file(path).entries:
-            if manager.key != 'building_manager':continue
-            for entry in manager.value.entries:
-                values={field.key:field.value for field in entry.value.entries}
-                if int(values.get('level',0))>0 and 'location' in values:
-                    initial[values['location']][entry.key]=int(values['level'])
-    active_sites={tag:sorted(set(initial[tag])&set(site['supporting_buildings'])) for tag,site in state['sites'].items() if set(initial[tag])&set(site['supporting_buildings'])}
     report={'enabled':True,'tiles':len(state['tiles']),'edges':len(state['edges']),'shallows':len(state['shallows']),
-            'shallows_banks':sum(len(v) for v in state['banks'].values()),'starting_canals':len(state['sites']),
-            'initially_open_sites':active_sites,
-            'river_effects_restored':len(lost), 'native_bank_pixels_preserved':state['manifest'].get('preserved_river_pixels',0), 'ocean_connected_passable_tiles':state['manifest']['ocean_connected_passable_tiles'], 'river_ports_changed':state['manifest']['ports_changed'], 'spline_network':spline_report,
-            'engine_facts':['add_road_to replaces an existing road type both ways (verified in game 2026-09-27).',
-                            'on_built fires on the next daily tick; on_destroyed fires while the building still counts (verified 2026-09-27).',
-                            'Roads are undirected; fleet class cannot be restricted on sea tiles.']}
+            'opened_at_start':state['opened_at_start'],
+            'river_effects_restored':len(lost), 'native_bank_pixels_preserved':state['manifest'].get('preserved_river_pixels',0), 'ocean_connected_passable_tiles':state['manifest']['ocean_connected_passable_tiles'], 'river_ports_changed':state['manifest']['ports_changed'], 'spline_network':spline_report}
     output=repo/'artifacts/data/worldbuilder/navigation';output.mkdir(parents=True,exist_ok=True)
-    with (output/'building_inventory.csv').open('w',newline='',encoding='utf-8') as handle:
-        writer=csv.DictWriter(handle,fieldnames=['location','region','building_key','evidence','starting_levels','open_at_start','shallows_tiles'])
-        writer.writeheader()
-        for tag,site in sorted(state['sites'].items()):
-            writer.writerow({'location':tag,'region':site.get('region',''),'building_key':site['building'],'evidence':site['evidence'],
-                             'starting_levels':initial[tag].get(site['building'],0),'open_at_start':bool(active_sites.get(tag)),
-                             'shallows_tiles':';'.join(site['water_tiles'])})
-    (output/'sites.json').write_text(json.dumps(state['sites'],indent=2)+'\n')
+    for stale in ('building_inventory.csv','sites.json'):
+        (output/stale).unlink(missing_ok=True)
     (output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     return report
 
 
-def site_markers(state):
-    """No per-location markers: the canal's gate reads the map (a Shallows neighbour) directly."""
-    return {}
-
-
 def write_bonus_compensation(state,mod_root,vanilla_root):
-    """Native bank pixels own river effects; never add scripted duplicates. Also defines the canal's tile modifier."""
+    """Native bank pixels own river effects; never add scripted duplicates."""
     if state['manifest'].get('river_preservation')!='native_bank_pixel':
         raise ValueError('Rebuild World Builder navigation: native river preservation contract required')
-    blocks=['# River effects are preserved by the native river bitmap.',
-            '# On a Shallows tile while a River Navigation Canal on a bank keeps it open (navigation.canal_effects).',
-            f'{CANAL_OPEN} = {{\n\tgame_data = {{ category = location }}\n}}']
-    (mod_root/'main_menu/common/static_modifiers/pp_navigation_preservation.txt').write_text('\n\n'.join(blocks)+'\n')
+    (mod_root/'main_menu/common/static_modifiers/pp_navigation_preservation.txt').unlink(missing_ok=True)
     stale=mod_root/'main_menu/localization/english/pp_navigation_preservation_l_english.yml'
     if stale.exists():stale.unlink()
     return {}

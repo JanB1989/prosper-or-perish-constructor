@@ -2139,37 +2139,6 @@
                                                     }
                                                 }
 
-                                                # ---- Opening the shallows: shallows -> River Navigation Canal -> Canal Passage ----
-                                                pp_eu_section = {
-                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/buildings/river_navigation_canal.dds" }
-                                                    blockoverride "section_title" { text = "PP_EU_NAV_CANAL" }
-                                                }
-                                                hbox = {
-                                                    margin = { 40 0 }
-                                                    spacing = 8
-                                                    pp_eu_step = {
-                                                        blockoverride "step_icon" { texture = "gfx/interface/topography/pp_river_shallows.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowTopographyName('pp_river_shallows')]" } }
-                                                        blockoverride "step_title" { text = "PP_EU_NAV_STEP_SHALLOWS" }
-                                                        blockoverride "step_text" { text = "PP_EU_NAV_STEP_SHALLOWS_DESC" }
-                                                    }
-                                                    pp_eu_arrow = {}
-                                                    pp_eu_step = {
-                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/river_navigation_canal.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowBuildingTypeName('river_navigation_canal')|e]" } }
-                                                        blockoverride "step_title" { text = "PP_EU_NAV_STEP_BUILD" }
-                                                        blockoverride "step_text" { text = "PP_EU_NAV_STEP_BUILD_DESC" }
-                                                    }
-                                                    pp_eu_arrow = {}
-                                                    pp_eu_step = {
-                                                        blockoverride "step_icon" { texture = "gfx/interface/topography/pp_river_channel.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowModifier('pp_river_canal_open')]" } }
-                                                        blockoverride "step_title" { text = "PP_EU_NAV_STEP_OPEN" }
-                                                        blockoverride "step_text" { text = "PP_EU_NAV_STEP_OPEN_DESC" }
-                                                    }
-                                                }
-                                                pp_eu_text = { text = "PP_EU_NAV_CANAL_DESC" }
-
                                                 # ---- Where to see it ----
                                                 pp_eu_section = {
                                                     blockoverride "section_icon" { texture = "gfx/interface/icons/map_modes/location_modifiers.dds" }

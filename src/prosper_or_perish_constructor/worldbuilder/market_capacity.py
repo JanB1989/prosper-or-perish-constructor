@@ -17,7 +17,6 @@ def write(repo, mod_root):
         "RIVER": "River access",
         "NAVIGABLE": "Navigable waterway",
         "DIFFICULT": "Difficult waterway",
-        "MAINTAINED": "Maintained waterway",
         "MARKET": "Market centre",
         "RANK": "Settlement role",
         "RGO": "Food-producing hinterland",
@@ -64,17 +63,14 @@ def write(repo, mod_root):
             ),
         ]
         # Coast and waterways. Every location next to a navigation reach is coastal (river and channel banks count as
-        # coast; tests/test_victuals_logistics_caps.py), so the three neighbour scans only run on coasts. Navigable and
-        # difficult are mutually exclusive baseline classes; a maintained reach (state 4) is one of the navigable
-        # states, so its scan only runs where a navigable one was found.
-        open_water = "any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 1 var:pp_navigation_map_state = 4 var:pp_navigation_map_state = 6 } }"
+        # coast; tests/test_victuals_logistics_caps.py), so both neighbour scans only run on coasts. Navigable and
+        # difficult are mutually exclusive classes.
+        open_water = "any_neighbor_location = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 }"
         hard_water = "any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 2 var:pp_navigation_map_state = 5 } }"
-        maintained = "any_neighbor_location = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 }"
         body.append(
             "if = { limit = { is_coastal = yes } "
             + add("COAST", spec["coast"])
-            + f" if = {{ limit = {{ {open_water} }} {add('NAVIGABLE', spec['navigable'])}"
-            + f" {when(maintained, 'MAINTAINED', spec['maintained'])} }}"
+            + f" if = {{ limit = {{ {open_water} }} {add('NAVIGABLE', spec['navigable'])} }}"
             + f" else_if = {{ limit = {{ {hard_water} }} {add('DIFFICULT', spec['difficult'])} }} }}"
         )
         # A location carries at most one river level: stop at the first match. The size is read as a modifier value

@@ -1,7 +1,0 @@
-﻿# River effects are preserved by the native river bitmap.
-
-# On a Shallows tile while a River Navigation Canal on a bank keeps it open (navigation.canal_effects).
-
-pp_river_canal_open = {
-	game_data = { category = location }
-}

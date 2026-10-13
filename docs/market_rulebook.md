@@ -56,7 +56,7 @@ in locations.png:
 | Step | Cost |
 |---|---|
 | land → land | K d favg min(road, river); f = 1 + (topography movement_cost − 1)/2 + (vegetation movement_cost − 1)/2, favg the mean of both ends; road = 1 + the road's `market_access` if negative (gravel 0.9, navigable river 0.4, improved 0.2; positive values ignored); river 0.5 downstream / 0.8 upstream (seen from the centre), else 1 — see the river test below |
-| water → water | K d favg S road; S = `MARKET_SEA_DISTANCE_FACTOR`, `MARKET_OPEN_SEA_DISTANCE_FACTOR` if either tile is open sea (no passable land neighbour) or the step joins a lake and a sea tile (measured at 0.2 / 0.4; 0.3 / 0.5 since 2026-10-05, with the navigation road values rescaled so every river step costs what it did) |
+| water → water | K d favg S road; S = `MARKET_SEA_DISTANCE_FACTOR`, `MARKET_OPEN_SEA_DISTANCE_FACTOR` if either tile is open sea (no passable land neighbour) or the step joins a lake and a sea tile (measured at 0.2 / 0.4; 0.3 / 0.5 since 2026-10-05; river channels carry no roads since 2026-10-13, so a channel step is a sea step) |
 | land ↔ water | (K d 0.15 + P) road; P = 0.02 x (1 − harbour suitability) if the land location is owned, has a port and the water tile is its port sea zone or a lake, else 0.1 (`MARKET_NO_PORT_EXTRA_DISTANCE`) |
 
 - **River test** (found 2026-09-27 on 10,304 measured land edges): a land step gets the river factor when the river

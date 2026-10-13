@@ -1,18 +1,5 @@
 {
   "enabled": true,
-  "canal": {
-    "key": "river_navigation_canal",
-    "name": "River Navigation Canal",
-    "gold": 500,
-    "construction_days": 540,
-    "advance": "road_building",
-    "upkeep": {
-      "lumber": 0.04,
-      "tools": 0.02,
-      "stone": 0.01
-    },
-    "description": "Weirs with flash locks, dredged channels and towpaths carry boats past the shallows next to this location. The waterway stays open while any bank keeps such a canal."
-  },
   "topographies": {
     "navigable": {
       "key": "pp_river_channel",
@@ -29,7 +16,7 @@
     "improvable": {
       "key": "pp_river_shallows",
       "name": "Shallows",
-      "description": "Shoals and mill weirs: boats pass slowly and at a cost until a River Navigation Canal is built on a bank.",
+      "description": "Shoals and mill weirs: boats pass slowly.",
       "icon": "assets/icons/topography/pp_river_shallows.png",
       "movement_cost": 1.25,
       "map_color": [
@@ -62,23 +49,6 @@
       125,
       150
     ]
-  },
-  "road_costs": {
-    "navigable": {
-      "market_access": -0.73333
-    },
-    "improved": {
-      "market_access": -0.86667
-    },
-    "difficult": {
-      "market_access": 0.0
-    },
-    "improvable": {
-      "market_access": 0.33333
-    },
-    "barrier": {
-      "market_access": 1.0
-    }
   },
   "starting_evidence": [
     {
@@ -120,9 +90,8 @@
   ],
   "notes": [
     "Channel tiles take the topography of their World Builder state: navigable -> Navigable River, improvable -> Shallows, barrier -> Falls (impassable through the impassable_mountains list).",
-    "One building, the River Navigation Canal, on any bank of a Shallows tile that is not open yet (1 level). A Shallows tile is open while any bank next to it has the canal; its water roads switch between their own cost profile and 'improved' (recomputed on build and destruction, never toggled).",
-    "Shallows in a starting_evidence envelope start with a canal on their best bank.",
-    "Physical conversion thresholds and each route cost profile come from the World Builder handover; road_costs here override what each profile costs in game (step = MARKET_SEA_DISTANCE_FACTOR x (1 + market_access))."
+    "The channels are plain sea tiles: no water roads and no building act on them. The River Navigation Canal and the hidden navigation road types were removed 2026-10-13 (the AI did not use them and the player could not see what to improve; neither can build a road onto a sea tile, EU5 1.4).",
+    "Shallows with a bank in a starting_evidence envelope (the Grand Canal) start as Navigable River."
   ],
   "retired_buildings": [
     "river_navigation_works",
@@ -130,7 +99,8 @@
     "caoyun_canal_office",
     "lowland_sluice_works",
     "nile_navigation_works",
-    "delta_waterway_works"
+    "delta_waterway_works",
+    "river_navigation_canal"
   ],
   "unlinked_buildings": [
     "jiangnan_canal_network"

@@ -1,81 +1,43 @@
-from prosper_or_perish_constructor.worldbuilder.navigation import exchange_levels
+from pathlib import Path
+
+MOD = Path(__file__).resolve().parents[1]/'mod/Prosper or Perish (Population Growth & Food Rework)'
 
 
-def test_starting_canal_is_one_level_outside_the_capacity_families():
-    levels={}
-    assert exchange_levels(levels,{'building':'river_navigation_canal','start_levels':1})==1
-    assert levels=={'river_navigation_canal':(1,1)}
-
-
-def test_no_starting_evidence_means_no_starting_canal():
-    levels={}
-    assert exchange_levels(levels,{'building':'river_navigation_canal','start_levels':0})==0
-    assert exchange_levels(levels,None)==0
-    assert levels=={}
-
-
-def _canal_state():
-    settings={'canal':{'key':'river_navigation_canal'},'topographies':{'improvable':{'key':'pp_river_shallows'}}}
+def test_documented_starting_navigation_turns_shallows_navigable():
+    import polars as pl
+    from prosper_or_perish_constructor.worldbuilder.navigation import opened_at_start
+    settings={'starting_evidence':[{'id':'documented','bounds':[0,0,10,10]}]}
+    attrs=pl.DataFrame({'location_tag':['inside','outside'],'calibrated_lon':[5.0,15.0],'calibrated_lat':[5.0,5.0]})
     tiles={'s1':{'state':'improvable'},'s2':{'state':'improvable'},'n':{'state':'navigable'}}
-    edges=[{'from':'n','to':'s1','state':'improvable','cost_profile':'improvable','shore':False},
-           {'from':'s1','to':'s2','state':'improvable','cost_profile':'improvable','shore':False},
-           {'from':'s1','to':'bank','state':'improvable','cost_profile':'improvable','shore':True}]
-    return {'canal':'river_navigation_canal','shallows':['s1','s2'],'settings':settings,'tiles':tiles,'edges':edges,
-            'sites':{'bank':{'building':'river_navigation_canal'}}}
+    shores=[{'location_tag':'inside','water_location':'s1'},{'location_tag':'outside','water_location':'s2'},
+            {'location_tag':'inside','water_location':'n'},{'location_tag':'unowned','water_location':'s2'}]
+    assert opened_at_start(settings,attrs,tiles,shores)=={'s1'}
 
 
-def _edge_line(e,improved=False):
-    kind='improved' if improved else e.get('cost_profile',e['state'])
-    return f" location:{e['from']} = {{ add_road_to = {{ target = location:{e['to']} type = pp_navigation_{kind} }} }}"
-
-
-def test_canal_recomputes_each_shallows_tile_from_the_canals_that_exist():
-    from prosper_or_perish_constructor.worldbuilder.navigation import CANAL_OPEN, canal_effects
-    lines,start=canal_effects(_canal_state(),_edge_line,{})
-    text='\n'.join(lines)
-    tile=text.split('pp_river_canal_tile_s1 = {')[1].split('\n}')[0]
-    # open while any bank has the canal, except the location being destroyed
-    assert 'any_neighbor_location = { has_building = building_type:river_navigation_canal NOT = { this = scope:pp_canal_closing } }' in tile
-    assert f'remove_location_modifier = {CANAL_OPEN}' in tile
-    # a road between two shallows is improved only while both are open; otherwise it keeps its own profile
-    assert (f'limit = {{ location:s1 = {{ has_location_modifier = {CANAL_OPEN} }} location:s2 = {{ has_location_modifier = {CANAL_OPEN} }} }}'
-            ' location:s1 = { add_road_to = { target = location:s2 type = pp_navigation_improved } }') in tile
-    assert 'else = { location:s1 = { add_road_to = { target = location:s2 type = pp_navigation_improvable } } }' in tile
-    # destruction skips the destroyed location (on_destroyed runs while its canal still counts)
-    destroyed=text.split('pp_river_canal_destroyed = {')[1].split('\n}')[0]
-    assert destroyed.index('save_scope_as = pp_canal_closing') < destroyed.index('pp_river_canal_refresh_tile = yes')
-    assert 'limit = { this = location:s2 } pp_river_canal_tile_s2 = yes' in text
-    assert start==[' location:bank = { if = { limit = { has_building = building_type:river_navigation_canal } pp_river_canal_built = yes } }']
-
-
-def test_canal_blueprint_gate_reads_the_map_and_has_one_level():
-    from prosper_or_perish_constructor.worldbuilder.navigation import CANAL_OPEN, canal_body
-    settings={'canal':{'key':'river_navigation_canal','construction_days':540,'upkeep':{'lumber':0.04}},
-              'topographies':{'improvable':{'key':'pp_river_shallows'}}}
-    body=canal_body(settings)
-    assert 'max_levels = 1' in body and 'pp_navigation_site_' not in body
-    assert f'any_neighbor_location = {{ topography = pp_river_shallows NOT = {{ has_location_modifier = {CANAL_OPEN} }} }}' in body
-    assert 'has_building = building_type:river_navigation_canal' in body   # an existing canal never turns invalid
-    assert 'local_population_capacity' not in body
+def test_shipped_mod_has_no_navigation_roads_and_no_canal():
+    """The River Navigation Canal and the hidden water roads were removed 2026-10-13: nothing creates a road onto a
+    channel tile and the canal is gone from the blueprints and the mod."""
+    root=Path(__file__).resolve().parents[1]
+    assert not (MOD/'in_game/common/road_types/pp_navigation.txt').exists()
+    assert not (MOD/'in_game/common/scripted_effects/pp_navigation_routes.txt').exists()
+    assert not (root/'blueprints/accepted/buildings/river_navigation_canal.yml').exists()
+    assert 'river_navigation_canal' not in (root/'blueprints/buildings.manifest.yml').read_text()
+    for path in (MOD/'in_game').rglob('*.txt'):
+        text=path.read_text(encoding='utf-8-sig',errors='replace')
+        assert 'pp_navigation_' not in text or 'add_road_to' not in text, path
+        assert 'river_navigation_canal' not in text, path
+    start=(MOD/'in_game/common/on_action/pp_navigation.txt').read_text(encoding='utf-8-sig')
+    assert 'pp_navigation_seed' not in start and 'pp_navigation_map_refresh' not in start
 
 
 def test_native_pixel_preservation_never_stacks_scripted_bonuses(tmp_path):
     from prosper_or_perish_constructor.worldbuilder.navigation import write_bonus_compensation
     (tmp_path/'main_menu/common/static_modifiers').mkdir(parents=True)
     (tmp_path/'main_menu/localization/english').mkdir(parents=True)
+    stale=tmp_path/'main_menu/common/static_modifiers/pp_navigation_preservation.txt'
+    stale.write_text('pp_river_canal_open = {}\n')
     assert write_bonus_compensation({'manifest':{'river_preservation':'native_bank_pixel'}},tmp_path,tmp_path)=={}
-    text=(tmp_path/'main_menu/common/static_modifiers/pp_navigation_preservation.txt').read_text()
-    assert 'cancel' not in text and 'river_flowing_through_' not in text
-
-
-def test_canal_tile_modifier_is_defined_and_no_site_markers_remain(tmp_path):
-    from prosper_or_perish_constructor.worldbuilder.navigation import CANAL_OPEN, site_markers, write_bonus_compensation
-    (tmp_path/'main_menu/common/static_modifiers').mkdir(parents=True)
-    state={'manifest':{'river_preservation':'native_bank_pixel'},'sites':{'a':{'building':'river_navigation_canal'}}}
-    assert site_markers(state)=={}
-    write_bonus_compensation(state,tmp_path,tmp_path)
-    text=(tmp_path/'main_menu/common/static_modifiers/pp_navigation_preservation.txt').read_text()
-    assert f'{CANAL_OPEN} = {{' in text and 'pp_navigation_site_' not in text
+    assert not stale.exists()
 
 
 def test_legacy_compensation_contract_requires_rebuild(tmp_path):
@@ -95,11 +57,13 @@ def test_map_mode_emits_only_documented_refresh_counters_and_native_levels(tmp_p
     assert 'is_port = yes' in text
 
     loc=(tmp_path/'main_menu/localization/english/pp_navigable_rivers_map_l_english.yml').read_text()
-    assert chr(92)*2+'n' not in loc
+    assert chr(92)*2+'n' not in loc and 'Canal' not in loc
 
+    # the map state is seeded once: no canal state, no refresh effects
     effects=(tmp_path/'in_game/common/scripted_effects/pp_navigation_map.txt').read_text()
-    assert 'has_road_of_type_to = { target = location:bank type = road_type:pp_navigation_improved }' in effects
-    assert 'value = 6' in effects
+    assert 'location:water = { set_variable = { name = pp_navigation_map_state value = 2 }' in effects
+    assert 'has_road_of_type_to' not in effects and 'pp_navigation_map_refresh' not in effects
+    assert 'value = 4' not in effects and 'value = 6' not in effects
 
 
 def test_regional_envelopes_do_not_leak_into_neighbouring_regions():
@@ -120,20 +84,16 @@ def test_historical_evidence_is_any_documented_envelope():
     assert historical_evidence(settings,{'calibrated_lon':15,'calibrated_lat':5}) is None
 
 
-def test_route_validation_rejects_barrier_upgrades_and_duplicate_undirected_edges():
+def test_route_validation_rejects_duplicate_undirected_edges():
     import pytest
     from prosper_or_perish_constructor.worldbuilder.navigation import validate_routes
     tiles={'water':{'state':'navigable'},'falls':{'state':'barrier'}}
-    sites={'bank':{'water_tiles':['water']}}
-    edge={'from':'water','to':'falls','state':'barrier','shore':False,'host':''}
-    validate_routes(tiles,[edge],sites)
-    with pytest.raises(ValueError,match='open a barrier'):
-        validate_routes(tiles,[{**edge,'host':'bank'}],sites)
+    edge={'from':'water','to':'falls','state':'barrier','shore':False}
+    validate_routes(tiles,[edge])
     with pytest.raises(ValueError,match='Duplicate'):
-        validate_routes(tiles,[edge,{**edge,'from':'falls','to':'water'}],sites)
-    with pytest.raises(ValueError,match='no assigned endpoint'):
-        validate_routes(tiles,[{**edge,'to':'ocean','state':'navigable','host':'other'}],sites)
-    validate_routes(tiles,[{**edge,'to':'ocean','state':'navigable','host':'bank'}],sites)
+        validate_routes(tiles,[edge,{**edge,'from':'falls','to':'water'}])
+    with pytest.raises(ValueError,match='Unknown navigation source'):
+        validate_routes(tiles,[{**edge,'from':'ocean'}])
 
 
 def test_map_mode_difficult_routes_count_both_water_endpoints(tmp_path):
@@ -141,8 +101,8 @@ def test_map_mode_difficult_routes_count_both_water_endpoints(tmp_path):
     write_map_modes(tmp_path,{'tiles':{'a':{'state':'navigable'},'b':{'state':'navigable'}},
         'edges':[{'from':'a','to':'b','shore':False,'state':'navigable','cost_profile':'difficult'}]})
     effects=(tmp_path/'in_game/common/scripted_effects/pp_navigation_map.txt').read_text()
+    assert 'location:a = { set_variable = { name = pp_navigation_map_state value = 5 }' in effects
     assert 'location:b = { set_variable = { name = pp_navigation_map_state value = 5 }' in effects
-    assert 'else = { set_variable = { name = pp_navigation_map_state value = 5 } }' in effects.split('pp_navigation_map_refresh_b = {')[1]
     loc=(tmp_path/'main_menu/localization/english/pp_navigable_rivers_map_l_english.yml').read_text()
     assert 'PP_NAVMAP_DIFFICULT_OPEN_TT' in loc and 'PP_NAVMAP_DIFFICULT_INLAND_TT' in loc
 
@@ -152,20 +112,18 @@ def test_navigable_rivers_map_mode_ships_for_players():
     of the same key points at it, every tooltip and legend key has a text, the old debug view is gone, and the cut-off
     waterways are striped."""
     import re
-    from pathlib import Path
     from PIL import Image
     from prosper_or_perish_constructor.worldbuilder.navigation_map_modes import MAP_MODE
-    mod=Path(__file__).resolve().parents[1]/'mod/Prosper or Perish (Population Growth & Food Rework)'
-    text=(mod/f'in_game/gfx/map/map_modes/{MAP_MODE}.txt').read_text(encoding='utf-8-sig')
+    text=(MOD/f'in_game/gfx/map/map_modes/{MAP_MODE}.txt').read_text(encoding='utf-8-sig')
     assert text.count('{')==text.count('}')
     assert 'category = geography' in text and 'index =' not in text
     assert 'secondary_map_color = {' in text and 'var:pp_navigation_ocean_connected = 1' in text
-    loc=(mod/f'main_menu/localization/english/{MAP_MODE}_map_l_english.yml').read_text(encoding='utf-8-sig')
+    loc=(MOD/f'main_menu/localization/english/{MAP_MODE}_map_l_english.yml').read_text(encoding='utf-8-sig')
     keys=set(re.findall(r'value = (PP_NAVMAP_\w+)',text))|set(re.findall(r'desc = "(PP_NAVMAP_\w+)"',text))
-    assert len(keys)>20 and not sorted(k for k in keys if f' {k}:' not in loc)
+    assert len(keys)>15 and not sorted(k for k in keys if f' {k}:' not in loc)
     assert f'mapmode_{MAP_MODE}_name:' in loc and f'MAPMODE_{MAP_MODE.upper()}:' in loc
-    with Image.open(mod/f'main_menu/gfx/interface/icons/map_modes/{MAP_MODE}.dds') as icon:
+    with Image.open(MOD/f'main_menu/gfx/interface/icons/map_modes/{MAP_MODE}.dds') as icon:
         assert icon.size==(128,128)
-    concept=(mod/f'main_menu/common/game_concepts/{MAP_MODE}.txt').read_text(encoding='utf-8-sig')
+    concept=(MOD/f'main_menu/common/game_concepts/{MAP_MODE}.txt').read_text(encoding='utf-8-sig')
     assert f'texture = "map_modes/{MAP_MODE}"' in concept
-    assert not (mod/'in_game/gfx/map/map_modes/pp_river_navigation.txt').exists()
+    assert not (MOD/'in_game/gfx/map/map_modes/pp_river_navigation.txt').exists()

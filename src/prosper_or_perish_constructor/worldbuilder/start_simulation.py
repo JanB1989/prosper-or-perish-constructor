@@ -489,7 +489,7 @@ class Simulation:
         self.yield_k = {}
         self.food_model = fm.FoodModelConfig.from_raw((cfg.raw.get("start") or {}).get("food_model"))
         self.victuals_pop_factors = rules.victuals_pop_factors()
-        setup_keys = setup_modifier_keys(contract, self.navigation)
+        setup_keys = setup_modifier_keys(contract)
         # The engine's province capitals at game start (config/start_province_capitals.txt, read from a start save):
         # the setup files do not name them and no rule reproduces the engine's pick.
         capitals_file = Path(repo or ".") / "config/start_province_capitals.txt"
@@ -673,13 +673,6 @@ class Simulation:
             status = {"barrier": 3, "navigable": 1, "improvable": 2}[tile["state"]]
             if edge.get("cost_profile") == "difficult":
                 status = 5
-            host = edge.get("host")
-            site = navigation.get("sites", {}).get(host, {})
-            if status != 3 and any(
-                self.counts.get(host, {}).get(k, 0) > 0
-                for k in site.get("supporting_buildings", [])
-            ):
-                status = 4
             self.neighbors[edge["to"]].append(
                 {"variables": {"pp_navigation_map_state": status}}
             )

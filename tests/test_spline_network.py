@@ -125,7 +125,6 @@ def test_shipped_network_has_a_strip_for_every_road():
         text = path.read_text(encoding="utf-8-sig", errors="replace")
         if "add_road_to" in text:
             pairs.update(ROAD.findall(text))
-    assert len(pairs) > 3000, "navigation roads not found in the built mod"
     root = vanilla_root(REPO, REPO / "constructor.toml")
     vanilla = root / "game/main_menu/setup/1337/09_roads.txt"
     if vanilla.is_file():
@@ -133,6 +132,7 @@ def test_shipped_network_has_a_strip_for_every_road():
         pairs.update(re.findall(r"([A-Za-z0-9_\-]+)\s*=\s*([A-Za-z0-9_\-]+)", text.split("{", 1)[1]))
         # every land adjacency of the mod's map: a player or the AI may build a road there later
         pairs.update(sn.land_pairs(MOD, root, REPO / "artifacts/data/worldbuilder/land_adjacency.json"))
+        assert len(pairs) > 40000, "setup roads and land adjacencies not found"
     connections = sn.read_connections(network.read_bytes())
     unknown = sorted({t for pair in pairs for t in pair if t not in index})
     assert unknown == []

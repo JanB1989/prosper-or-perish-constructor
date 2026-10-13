@@ -402,9 +402,8 @@ SHORE_DESCRIPTIONS = {
 }
 
 
-def setup_modifier_keys(contract: Contract, navigation: Mapping[str, object] | None = None) -> dict[str, list[str]]:
-    """Location tag -> the attribute modifiers the setup places: fertility, soil, sea coast, lake shore, and the
-    navigation site markers when ``navigation`` (the prepared navigation state) is given.
+def setup_modifier_keys(contract: Contract) -> dict[str, list[str]]:
+    """Location tag -> the attribute modifiers the setup places: fertility, soil, sea coast and lake shore.
 
     The starting-building caps and gates read them with has_location_modifier, so the offline start placement needs
     the same list the setup file gets."""
@@ -421,10 +420,6 @@ def setup_modifier_keys(contract: Contract, navigation: Mapping[str, object] | N
             for tag, flag in zip(tags, attrs[attribute].to_list()):
                 if str(flag).lower() == "true":   # the handover CSV writes lowercase booleans
                     per_location[tag].append(key)
-    if navigation:
-        from .navigation import site_markers
-        for tag, keys in site_markers(navigation).items():
-            per_location[tag].extend(keys)
     return per_location
 
 
@@ -433,7 +428,7 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
     hostile = hostile_movement(cfg.raw.get("hostile_movement"), contract)
     names: dict[str, str] = {}
     blocks: list[str] = []
-    per_location = setup_modifier_keys(contract, cfg.raw.get("_navigation"))   # location tag -> modifier keys
+    per_location = setup_modifier_keys(contract)   # location tag -> modifier keys
     attrs = contract.location_attributes
     for attribute, prefix in (("fertility", "pp_wb_fertility_"), ("soil_type", "pp_wb_soil_")):
         if attribute not in attrs.columns:

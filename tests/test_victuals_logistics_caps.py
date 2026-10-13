@@ -40,12 +40,11 @@ def test_tavern_cap_scans_waterways_only_on_coasts_and_stops_at_the_first_match(
     body = _tavern_cap()
     lines = body.splitlines()
     scans = [line for line in lines if "any_neighbor_location" in line]
-    # all three neighbour scans sit in the one coastal branch, the maintained scan inside the navigable branch
+    # both neighbour scans sit in the one coastal branch
     assert len(scans) == 1 and scans[0].strip().startswith("if = { limit = { is_coastal = yes }")
     coastal = scans[0]
-    assert coastal.count("any_neighbor_location") == 3
-    navigable = coastal.index("PP_VM_CAP_NAVIGABLE")
-    assert navigable < coastal.index("PP_VM_CAP_MAINTAINED") < coastal.index("else_if")
+    assert coastal.count("any_neighbor_location") == 2 and "PP_VM_CAP_MAINTAINED" not in coastal
+    assert coastal.index("PP_VM_CAP_NAVIGABLE") < coastal.index("else_if") < coastal.index("PP_VM_CAP_DIFFICULT")
     # exclusive classes are else_if chains
     for label, count in (("PP_VM_CAP_RIVER", 5), ("PP_VM_CAP_RANK", 3), ("PP_VM_CAP_TERRAIN", 2)):
         chain = [line.strip() for line in lines if label in line]

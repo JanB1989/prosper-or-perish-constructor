@@ -8,8 +8,8 @@ Edge cost of a step u -> v, K = 0.0024 per pixel (= MARKET_BASE_DISTANCE_FACTOR 
 the bounding-box centres of the two locations in locations.png (horizontal wrap):
 
 * land -> land: K d favg min(road, river); f = 1 + (topography movement_cost - 1)/2 + (vegetation movement_cost - 1)/2,
-  favg the mean of both ends; road = 1 + the road type's market_access when negative (gravel 0.9, navigable 0.4,
-  improved 0.2; positive values are ignored); river = 0.5 downstream, 0.8 upstream, else 1 (RIVER: the river of
+  favg the mean of both ends; road = 1 + the road type's market_access when negative (gravel 0.9, railroad 0.6;
+  positive values are ignored); river = 0.5 downstream, 0.8 upstream, else 1 (RIVER: the river of
   rivers.png runs from one location into the other, traced, AND the straight line between the two bounding-box
   centres touches a river pixel; 97.6 % of 10,304 measured land edges);
 * water -> water: K d favg S road, S = MARKET_SEA_DISTANCE_FACTOR (0.2 when measured, 0.3 since 2026-10-05), or
@@ -36,13 +36,11 @@ import numpy as np
 import polars as pl
 
 K = 0.0024
-# sea/open = the mod's MARKET_SEA_ / MARKET_OPEN_SEA_DISTANCE_FACTOR, navigation roads = config/river_navigation.json
-# road_costs (tests/test_navigation_road_costs.py keeps them in step); lakes measured at the sea / open sea values.
+# sea/open = the mod's MARKET_SEA_ / MARKET_OPEN_SEA_DISTANCE_FACTOR (tests/test_market_distance_factors.py keeps them in
+# step); lakes measured at the sea / open sea values.
 PARAMS = dict(K=K, sea=0.3, open=0.5, lake=0.3, lake_sea=0.5, trans=0.15, port_pen=0.02, noport_pen=0.1,
               down=0.5, up=0.8)
-ROAD_MARKET_ACCESS = {"gravel_road": -0.1, "paved_road": -0.2, "modern_road": -0.3, "railroad": -0.4,
-                      "pp_navigation_navigable": -0.73333, "pp_navigation_improved": -0.86667,
-                      "pp_navigation_difficult": 0.0, "pp_navigation_improvable": 0.33333, "pp_navigation_barrier": 1.0}
+ROAD_MARKET_ACCESS = {"gravel_road": -0.1, "paved_road": -0.2, "modern_road": -0.3, "railroad": -0.4}
 WATER_TOPOGRAPHY = {"coastal_ocean", "inland_sea", "narrows", "ocean", "deep_ocean", "lakes", "high_lakes", "salt_pans",
                     "ocean_wasteland", "pp_river_channel", "pp_river_shallows", "pp_river_falls"}
 LAKE_TOPOGRAPHY = {"lakes", "high_lakes", "salt_pans"}

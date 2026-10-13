@@ -14,7 +14,7 @@ tavern_max_level = {
  	desc = PP_VM_CAP_HARBOR
  	value = this.tavern_max_level_pp_vm_cap_harbor
  }
- if = { limit = { is_coastal = yes } add = { desc = PP_VM_CAP_COAST value = 1.5 } if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 1 var:pp_navigation_map_state = 4 var:pp_navigation_map_state = 6 } } } add = { desc = PP_VM_CAP_NAVIGABLE value = 3 } if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 } } add = { desc = PP_VM_CAP_MAINTAINED value = 1.5 } } } else_if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 2 var:pp_navigation_map_state = 5 } } } add = { desc = PP_VM_CAP_DIFFICULT value = 0.75 } } }
+ if = { limit = { is_coastal = yes } add = { desc = PP_VM_CAP_COAST value = 1.5 } if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 } } add = { desc = PP_VM_CAP_NAVIGABLE value = 3 } } else_if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 2 var:pp_navigation_map_state = 5 } } } add = { desc = PP_VM_CAP_DIFFICULT value = 0.75 } } }
  if = { limit = { pp_wb_river_size_1 = yes } add = { desc = PP_VM_CAP_RIVER value = 0.45 } }
  else_if = { limit = { pp_wb_river_size_2 = yes } add = { desc = PP_VM_CAP_RIVER value = 0.9 } }
  else_if = { limit = { pp_wb_river_size_3 = yes } add = { desc = PP_VM_CAP_RIVER value = 1.35 } }

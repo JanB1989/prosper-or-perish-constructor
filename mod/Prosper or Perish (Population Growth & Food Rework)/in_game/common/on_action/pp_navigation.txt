@@ -4,12 +4,4 @@ pp_navigation_start = { effect = {
  pp_navigation_preserve_rivers = yes
  pp_start_river_topup = yes
  pp_navigation_map_seed = yes
- pp_navigation_seed = yes
- location:dantu = { if = { limit = { has_building = building_type:river_navigation_canal } pp_river_canal_built = yes } }
- location:donge = { if = { limit = { has_building = building_type:river_navigation_canal } pp_river_canal_built = yes } }
- location:jiangdu = { if = { limit = { has_building = building_type:river_navigation_canal } pp_river_canal_built = yes } }
- location:qinghe_huaian = { if = { limit = { has_building = building_type:river_navigation_canal } pp_river_canal_built = yes } }
- location:rencheng = { if = { limit = { has_building = building_type:river_navigation_canal } pp_river_canal_built = yes } }
- location:wujin = { if = { limit = { has_building = building_type:river_navigation_canal } pp_river_canal_built = yes } }
- pp_navigation_map_refresh = yes
 } }

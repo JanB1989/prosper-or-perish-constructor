@@ -601,7 +601,6 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
     clamped = 0
     gated = 0
     raised = 0
-    navigation_exchanged = 0
     above_cap = 0
     clamp = bool((cfg.raw.get("start") or {}).get("clamp_improvements_to_cap", True))
     # buildings sharing one cap (a cap group, a family with its niche members) fill it together
@@ -674,14 +673,6 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
         for key, (level, _) in levels.items():
             if level > 0:
                 rows.append((key, tag, owner, level))
-    # documented starting navigations: one River Navigation Canal at the bank (no capacity, outside the families)
-    from .navigation import exchange_levels
-    for tag, site in sorted(cfg.raw.get("_navigation", {}).get("sites", {}).items()):
-        owner = owners.get(tag, "")
-        canal: dict[str, tuple[int, int]] = {}
-        if owner and exchange_levels(canal, site):
-            navigation_exchanged += 1
-            rows.extend((key, tag, owner, level) for key, (level, _) in canal.items())
     rows.sort()
     lines = [f"\t{key} = {{ tag = {owner} level = {level} location = {tag} }}" for key, tag, owner, level in rows]
     text = "\n".join([GENERATED, "building_manager = {", *lines, "}", ""])
@@ -690,7 +681,7 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
     for rel in LEGACY_SETUP:
         if (mod_root / rel).is_file():
             (mod_root / rel).unlink()
-    return {"rows": len(rows), "navigation_levels_exchanged": navigation_exchanged, "unowned_skipped": skipped, "clamped_to_cap": clamped,
+    return {"rows": len(rows), "unowned_skipped": skipped, "clamped_to_cap": clamped,
             "starting_works_above_cap": above_cap, "gate_rejected": gated, "levels_raised_for_pops": raised,
             "locations_filled_for_pops": len(filled), "locations_still_short": len(short)}
 

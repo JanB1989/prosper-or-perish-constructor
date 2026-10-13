@@ -1,5 +1,5 @@
-"""The Navigable Rivers map mode and the per-location navigation state it reads (seeded at game start, refreshed when a
-   River Navigation Canal is built or destroyed)."""
+"""The Navigable Rivers map mode and the per-location navigation state it reads (seeded at game start; fixed for the
+   whole game since the River Navigation Canal was removed, 2026-10-13)."""
 from collections import defaultdict
 
 
@@ -20,23 +20,6 @@ def write_map_modes(root,state):
     for tag,kinds in sorted(shores.items()):
         seed.append(f' location:{tag} = {{ set_variable = {{ name = pp_navigation_bank value = {1 if kinds-set(["barrier"]) else 2} }} }}')
     seed.append('}')
-    targets=defaultdict(set)
-    for e in state['edges']:
-        if e['state']=='barrier':continue
-        for a,b in [(e['from'],e['to']),(e['to'],e['from'])]:
-            if a in state['tiles']:targets[a].add(b)
-    global_refresh=['pp_navigation_map_refresh = {']
-    for tag,tile in sorted(state['tiles'].items()):
-        if tile['state']=='barrier':continue
-        status=2 if tile['state']=='improvable' else 5 if tag in rough else 1
-        checks=[f'has_road_of_type_to = {{ target = location:{other} type = road_type:pp_navigation_improved }}' for other in sorted(targets[tag])]
-        if not checks:continue
-        seed.extend([f'pp_navigation_map_refresh_{tag} = {{',
-                     ' if = { limit = { '+' '.join(checks)+' } set_variable = { name = pp_navigation_map_state value = 4 } }',
-                     ' else_if = { limit = { OR = { '+' '.join(checks)+' } } set_variable = { name = pp_navigation_map_state value = 6 } }',
-                     f' else = {{ set_variable = {{ name = pp_navigation_map_state value = {status} }} }}','}'])
-        global_refresh.append(f' location:{tag} = {{ pp_navigation_map_refresh_{tag} = yes }}')
-    global_refresh.append('}');seed.extend(global_refresh)
     write('in_game/common/scripted_effects/pp_navigation_map.txt','\n'.join(seed))
     write(f'in_game/gfx/map/map_modes/{MAP_MODE}.txt',map_mode_text())
     write(f'main_menu/localization/english/{MAP_MODE}_map_l_english.yml',map_mode_localization())
@@ -50,11 +33,9 @@ MAP_MODE='pp_navigable_rivers'
 _STATE='has_variable = pp_navigation_map_state var:pp_navigation_map_state = {}'
 _OPEN='has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1'
 # map state (set by pp_navigation_map_seed / _refresh): key, colour, name, what it means
-WATER=[(4,'canal','40 200 170','Canal Passage','Shallows kept open by a River Navigation Canal on a bank: the easiest waterway of all.'),
-       (6,'partial','40 200 170','Partly Opened Shallows','A River Navigation Canal keeps some of these shallows open; the rest still slow boats down.'),
-       (1,'navigable','30 140 230','Navigable River','Fleets sail it, and goods travel along it far more cheaply than over land.'),
+WATER=[(1,'navigable','30 140 230','Navigable River','Fleets sail it, and goods travel along it far more cheaply than over land.'),
        (5,'difficult','150 90 200','Difficult Waterway','A great tropical or strongly seasonal river: boats get through, but slowly and at a cost.'),
-       (2,'shallows','240 165 40','Shallows','Boats pass slowly and at a cost until a River Navigation Canal is built on a bank.'),
+       (2,'shallows','240 165 40','Shallows','Shoals and weirs: boats pass slowly.'),
        (3,'falls','215 45 45','Falls','Falls or great rapids that no boat passes and no canal opens.')]
 REACH={1:'It reaches the open sea.',0:'It does not reach the open sea: fleets on it cannot sail out.'}
 LAND=[('port','has_variable = pp_navigation_bank is_port = yes','245 205 70','River Port',
@@ -66,10 +47,8 @@ LAND=[('port','has_variable = pp_navigation_bank is_port = yes','245 205 70','Ri
       ('water','is_land = no','50 68 88','Sea or Lake','')]
 OTHER='88 84 78'
 CUT_OFF='20 30 50'       # stripes: a waterway that does not reach the open sea
-PARTIAL_STRIPE='240 165 40'
 LEGEND=[('navigable','30 140 230','Navigable River'),('difficult','150 90 200','Difficult Waterway'),
-        ('shallows','240 165 40','Shallows'),('canal','40 200 170','Canal Passage'),
-        ('partial',PARTIAL_STRIPE,'Partly opened shallows (striped)'),('falls','215 45 45','Falls'),
+        ('shallows','240 165 40','Shallows'),('falls','215 45 45','Falls'),
         ('cut_off',CUT_OFF,'Does not reach the open sea (striped)'),('port','245 205 70','River Port'),
         ('bank','205 185 140','Riverbank'),('river','110 140 130','River no boat can sail')]
 
@@ -94,8 +73,7 @@ def map_mode_text():
             condition,value=row.split('|')
             out.append(f'  {"if" if i==0 else "else_if"} = {{ limit = {{ {condition} }} value = {value} }}')
         return out+[f'  else = {{ value = {last} }}']
-    stripes=[f'  if = {{ limit = {{ {_STATE.format(6)} }} value = rgb {{ {PARTIAL_STRIPE} }} }}',
-             f'  else_if = {{ limit = {{ has_variable = pp_navigation_map_state NOT = {{ var:pp_navigation_map_state = 3 }} '
+    stripes=[f'  if = {{ limit = {{ has_variable = pp_navigation_map_state NOT = {{ var:pp_navigation_map_state = 3 }} '
              f'NOT = {{ {_OPEN} }} }} value = rgb {{ {CUT_OFF} }} }}']
     lines=[f'{MAP_MODE} = {{',' map_color = {',
            *chain([r.rsplit('|',1)[0]+'|rgb { '+r.rsplit('|',1)[1]+' }' for r in colors],f'rgb {{ {OTHER} }}'),' }',

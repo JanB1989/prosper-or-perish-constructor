@@ -230,10 +230,27 @@ def main(argv: Sequence[str] | None = None) -> int:
     repo = _resolve_repo(args.repo)
     project = repo / args.project
 
+    sampler = None
+    if args.command in MEMORY_CAPPED_COMMANDS:
+        from prosper_or_perish_constructor import memory_guard
+
+        with project.open("rb") as handle:
+            settings = tomllib.load(handle).get("report", {})
+        code = memory_guard.run_capped(list(sys.argv[1:] if argv is None else argv), memory_guard.cap_gb(settings))
+        if code is not None:
+            return code
+        sampler = memory_guard.PeakSampler()
     try:
         return args.handler(args, extra, repo, project)
     except KeyboardInterrupt:
         return 130
+    finally:
+        if sampler is not None and (line := sampler.line()):
+            print(line, flush=True)
+
+
+# run inside a memory cap (memory_guard): they load whole runs of saves
+MEMORY_CAPPED_COMMANDS = frozenset({"report", "savegame-notebooks"})
 
 
 def _build_parser() -> argparse.ArgumentParser:

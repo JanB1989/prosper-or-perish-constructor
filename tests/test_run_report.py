@@ -446,3 +446,25 @@ def test_town_rights_and_promotions_count_changes_fit_and_page(tmp_path: Path) -
         canvas = rr.MapCanvas(index=index, tags=["paris", "london"], width=40, height=20, tag_index={"paris": 0, "london": 1})
         (video,) = rr.render_promotion_map(run, canvas, tmp_path, fps=2, log=lambda _: None)
         assert (tmp_path / "industry_promotions.mp4").stat().st_size > 0 and video["key"] in rr.PROMOTION_VIDEOS
+
+
+def test_political_colours_use_save_colours_and_shade_subjects_by_top_overlord() -> None:
+    # BRA (save colour) > NOR (subject) > ICE (subject of a subject); FRA has no save colour (setup colour by tag)
+    countries = pl.DataFrame({
+        "snapshot_id": ["s1"] * 4,
+        "country_id": [1, 2, 3, 4],
+        "country_tag": ["BRA", "NOR", "ICE", "FRA"],
+        "map_color": ["#0f1a4c", "#75a5bd", "#2a3b75", None],
+        "is_subject": [False, True, True, False],
+        "overlord_country_id": [None, 1, 2, None],
+        "subject_type": [None, "fiefdom", "dominion", None],
+    })
+    run = rr.RunData("run", "Run", pl.DataFrame(), pl.DataFrame(), pl.DataFrame(), pl.DataFrame(), countries, pl.DataFrame())
+    rgb = dict(rr.political_colours(run, {"FRA": (10, 20, 30)}).select("owner_country_id", "rgb").iter_rows())
+    unpack = lambda p: ((p >> 16) & 255, (p >> 8) & 255, p & 255)  # noqa: E731
+    assert unpack(rgb[1]) == (0x0F, 0x1A, 0x4C)
+    assert unpack(rgb[4]) == (10, 20, 30)
+    from prosper_or_perish_constructor.savegame_maps import _subject_variant_rgb
+
+    assert unpack(rgb[2]) == _subject_variant_rgb((0x0F, 0x1A, 0x4C), "NOR", "fiefdom")
+    assert unpack(rgb[3]) == _subject_variant_rgb((0x0F, 0x1A, 0x4C), "ICE", "dominion")  # top overlord, not NOR

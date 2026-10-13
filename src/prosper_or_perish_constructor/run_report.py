@@ -39,7 +39,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Mapping
 
 import numpy as np
 import polars as pl
@@ -233,10 +233,15 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
         .group_by("snapshot_id", "building_category")
         .agg(pl.col("levels").sum())
     )
+    country_scan = _scan(dataset, "countries", playthrough)
+    # map_color (the save's own country colour) only in snapshots ingested since eu5-game-parser 2026-10-13
+    present = set(country_scan.collect_schema().names())
     countries = (
-        _scan(dataset, "countries", playthrough)
+        country_scan
         .select("snapshot_id", "country_id", "country_tag", "country_name", "population", "owned_locations_count", "gold",
-                "is_subject", "overlord_tag", "overlord_name")
+                "is_subject", "overlord_tag", "overlord_name",
+                *[pl.col(c) if c in present else pl.lit(None, dtype=dtype).alias(c)
+                  for c, dtype in (("overlord_country_id", pl.Int64), ("subject_type", pl.String), ("map_color", pl.String))])
         .collect()
     )
     # the engine leaves countries.population empty: fall back to the population of the owned locations (thousands);
@@ -729,7 +734,7 @@ def _investment_values(run: RunData, locs: pl.DataFrame) -> pl.DataFrame:
 
 def default_maps() -> list[MapSpec]:
     return [
-        MapSpec("political", "Political map", "Owner of every location", None, None),
+        MapSpec("political", "Political map", "Owner of every location in its game colour; subjects in shades of their overlord's colour", None, None),
         MapSpec("population", "Population", "People per location (log scale)", _population_values,
                 lambda f: _log_scale(f, 1000.0)),
         MapSpec("population_change", "Population change", "Change against the first save of the run", None,
@@ -766,6 +771,57 @@ def _country_colours(repo: Path, project: Path, tags: list[str]) -> dict[str, tu
     return out
 
 
+def political_colours(run: RunData, setup: Mapping[str, tuple[int, int, int]]) -> pl.DataFrame:
+    """Map colour per save and country (snapshot_id, owner_country_id, rgb packed 0xRRGGBB).
+
+    A country gets the colour the game draws it in (the save's `map_color`; its setup colour by tag where a snapshot
+    has none). A subject gets a shade of its top overlord's colour (savegame_maps._subject_variant_rgb, stable per
+    subject tag and subject type), so a realm reads as one block of related shades.
+    """
+    from prosper_or_perish_constructor.savegame_maps import _subject_variant_rgb
+
+    packed_setup = {t: (r << 16) | (g << 8) | b for t, (r, g, b) in setup.items()}
+    frame = run.countries.select(
+        "snapshot_id", "country_id", "country_tag", "subject_type",
+        pl.coalesce(
+            pl.col("map_color").str.strip_prefix("#").str.to_integer(base=16, strict=False),
+            pl.col("country_tag").replace_strict(packed_setup, default=None, return_dtype=pl.Int64),
+        ).alias("own"),
+        pl.when(pl.col("is_subject").fill_null(False)).then(pl.col("overlord_country_id")).alias("top"),
+    )
+    # follow overlords of overlords up to the top of the realm (a few joins; chains are short)
+    parents = frame.select("snapshot_id", pl.col("country_id").alias("top"), pl.col("top").alias("_next"))
+    for _ in range(8):
+        frame = frame.join(parents, on=["snapshot_id", "top"], how="left")
+        if frame["_next"].is_null().all():
+            frame = frame.drop("_next")
+            break
+        frame = frame.with_columns(pl.coalesce("_next", "top").alias("top")).drop("_next")
+    frame = frame.join(
+        frame.select("snapshot_id", pl.col("country_id").alias("top"), pl.col("own").alias("top_rgb")),
+        on=["snapshot_id", "top"], how="left",
+    )
+    shades: dict[tuple[int, str, str], int] = {}
+
+    def shade(row: tuple[int, str, str]) -> int:
+        if row not in shades:
+            top, tag, kind = row
+            r, g, b = _subject_variant_rgb(((top >> 16) & 255, (top >> 8) & 255, top & 255), tag, kind)
+            shades[row] = (r << 16) | (g << 8) | b
+        return shades[row]
+
+    subjects = frame.filter(pl.col("top_rgb").is_not_null()).select("top_rgb", "country_tag", pl.col("subject_type").fill_null(""))
+    subject_rgb = [shade(row) for row in subjects.iter_rows()]
+    unowned = (UNOWNED[0] << 16) | (UNOWNED[1] << 8) | UNOWNED[2]
+    frame = frame.with_columns(pl.col("own").fill_null(unowned).alias("rgb"))
+    if subject_rgb:
+        mask = frame["top_rgb"].is_not_null()
+        rgb = frame["rgb"].to_numpy().copy()
+        rgb[mask.to_numpy()] = np.array(subject_rgb, dtype=rgb.dtype)
+        frame = frame.with_columns(pl.Series("rgb", rgb))
+    return frame.select("snapshot_id", pl.col("country_id").alias("owner_country_id"), "rgb")
+
+
 def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, project: Path, fps: int,
                 specs: list[MapSpec] | None = None, log: Callable[[str], None] = print) -> list[dict[str, str]]:
     out.mkdir(parents=True, exist_ok=True)
@@ -788,8 +844,8 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
         pl.col("country_tag").filter(pl.col("owner").is_not_null()).n_unique().alias("countries"),
     )
     world_by = {r["snapshot_id"]: r for r in world.to_dicts()}
-    tags = sorted(t for t in run.locations["country_tag"].unique().to_list() if t)
-    colours = _country_colours(repo, project, tags)
+    tags = sorted(t for t in run.countries["country_tag"].unique().to_list() if t)
+    owner_rgb = political_colours(run, _country_colours(repo, project, tags)).partition_by("snapshot_id", as_dict=True)
     duration = len(snapshots) / fps
     max_kbps = int(MAX_VIDEO_BYTES * 8 / 1000 / (duration + 2.0))
 
@@ -811,7 +867,10 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
             elif spec.values is not None:
                 values = spec.values(run, locs)
             else:
-                values = locs.select("slug", "country_tag", "owner")
+                rgb = owner_rgb.get((snap["snapshot_id"],))
+                values = (locs.filter(pl.col("owner_country_id").is_not_null()).select("slug", "owner_country_id")
+                          .join(rgb.drop("snapshot_id"), on="owner_country_id", how="inner")
+                          if rgb is not None and not locs.is_empty() else pl.DataFrame())
             frames.append((snap, values))
         scale = None
         if spec.scale is not None:
@@ -824,9 +883,9 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
             if spec.key == "political":
                 location_rgb = np.full((len(canvas.tags), 3), UNOWNED, dtype=np.uint8)
                 if not values.is_empty():
-                    owned = values.filter(pl.col("owner").is_not_null() & pl.col("country_tag").is_not_null())
-                    index = owned["slug"].replace_strict(canvas.tag_index, default=-1, return_dtype=pl.Int64).to_numpy()
-                    rgb = np.array([colours.get(t, UNOWNED) for t in owned["country_tag"].to_list()], dtype=np.uint8).reshape(-1, 3)
+                    index = values["slug"].replace_strict(canvas.tag_index, default=-1, return_dtype=pl.Int64).to_numpy()
+                    packed = values["rgb"].to_numpy().astype(np.int64)
+                    rgb = np.stack([(packed >> 16) & 255, (packed >> 8) & 255, packed & 255], axis=1).astype(np.uint8)
                     keep = index >= 0
                     location_rgb[index[keep]] = rgb[keep]
             else:

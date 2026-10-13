@@ -308,17 +308,18 @@ within 45 days. Gore needs longer wars, allies and occupation behind third count
 
 Subject loyalty (0-100, disloyal under 50: no war help, no annexation, may join an independence movement) adds up:
 minus liberty desire (-100..100, decays 0.5 a month towards 0), opinion of the overlord x 0.15, trust x 0.1, the
- /  modifiers (the diplomatic spending slider gives up to +30), at most -20 from an
-independence movement, and the strength term: all subjects of one overlord form a bloc compared with the overlord on
+`subject_loyalty` / `loyalty_to_overlord` modifiers (the diplomatic spending slider gives up to +30), at most -20 from
+an independence movement, and the strength term: all subjects of one overlord form a bloc compared with the overlord on
 army, income and population; above a 25 % bloc share each subject loses (share - 0.25) x its type's
-. A disloyal AI subject declares an independence war only above a 25 % win chance
-(). Run 075b0d4e: vassals kept their overlord for 25 years at the same rate (69-72 %)
+`strength_vs_overlord`. A disloyal AI subject declares an independence war only above a 25 % win chance
+(`AI_INDEPENDENCE_WAR_WIN_CHANCE`). Run 075b0d4e: vassals kept their overlord for 25 years at the same rate (69-72 %)
 whether the subjects held under 25 % or over 75 % of the bloc's population; 4-7 % went independent. Worst cases:
 Liang (29 subjects, 90 % of the population, 1352-1442), Tibet (86 %, 1352-1557), Junagarh holding the Timurids as a
 tributary (2.9x its population, 1677-1837), the rebel state Ganzhou holding its secessionists from 1452 to 1837.
 
-PP (, , , , vanilla copied
-whole):  -0.75 for vassals and fiefdoms (vanilla -0.5), tributaries (-0.25) and secessionists
-(-0.1); secessionists'  10 (vanilla 50). The term only bites above 25 % bloc share, so strong
+PP (`subject_types/pp_vassal.txt`, `pp_fiefdom.txt`, `pp_tributary.txt`, `pp_secessionists.txt`, vanilla copied
+whole): `strength_vs_overlord` -0.75 for vassals and fiefdoms (vanilla -0.5), tributaries (-0.25) and secessionists
+(-0.1); secessionists' `loyalty_to_overlord` 10 (vanilla 50). The term only bites above 25 % bloc share, so strong
 overlords with small subjects are untouched; colonial nations, HRE and Hanseatic members, appanages and samantas keep
-vanilla. Kit: , .
+vanilla. Kit: `~/pp_ai_run/splinter/scripts/adhoc/subject_bloc.py`, `subject_offenders.py`.
+

@@ -303,3 +303,22 @@ countries against neighbours (Castile-Navarre, Aragon-Arborea, Byzantium-Candar,
 under both settings, except Delhi-Khorasan (11 locations under vanilla by day 90; with the new defines still at war
 on day 90, its wish list one location longer); against non-neighbours (England-Hainaut, Hungary-Freising, Khmer-Muang Sua, ...) both settled for gold
 within 45 days. Gore needs longer wars, allies and occupation behind third countries, which the runs measure.
+
+## Subjects outweighing their overlord (2026-10-13)
+
+Subject loyalty (0-100, disloyal under 50: no war help, no annexation, may join an independence movement) adds up:
+minus liberty desire (-100..100, decays 0.5 a month towards 0), opinion of the overlord x 0.15, trust x 0.1, the
+ /  modifiers (the diplomatic spending slider gives up to +30), at most -20 from an
+independence movement, and the strength term: all subjects of one overlord form a bloc compared with the overlord on
+army, income and population; above a 25 % bloc share each subject loses (share - 0.25) x its type's
+. A disloyal AI subject declares an independence war only above a 25 % win chance
+(). Run 075b0d4e: vassals kept their overlord for 25 years at the same rate (69-72 %)
+whether the subjects held under 25 % or over 75 % of the bloc's population; 4-7 % went independent. Worst cases:
+Liang (29 subjects, 90 % of the population, 1352-1442), Tibet (86 %, 1352-1557), Junagarh holding the Timurids as a
+tributary (2.9x its population, 1677-1837), the rebel state Ganzhou holding its secessionists from 1452 to 1837.
+
+PP (, , , , vanilla copied
+whole):  -0.75 for vassals and fiefdoms (vanilla -0.5), tributaries (-0.25) and secessionists
+(-0.1); secessionists'  10 (vanilla 50). The term only bites above 25 % bloc share, so strong
+overlords with small subjects are untouched; colonial nations, HRE and Hanseatic members, appanages and samantas keep
+vanilla. Kit: , .

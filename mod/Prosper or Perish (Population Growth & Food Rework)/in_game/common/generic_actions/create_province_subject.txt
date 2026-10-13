@@ -1,12 +1,13 @@
 ﻿# PP copy of vanilla create_province_subject (2026-10-12, docs/peace_deal_rulebook.md "Enclaves").
 # Vanilla never lets the AI use this action (ai_tick = never). PP lets an AI nation that is broken into 4+ pieces on
 # its home continent release its small enclaves, each whole enclave as one tributary, vassal or samanta: land not
-# connected to the capital by land or strait, at most 6 locations (a bigger piece is a second part of the country), not
-# held by an enemy (pp_enclave_kept_location). Kept: footholds reached by sea that reach outside the capital's region
+# connected to the capital by land or strait, at most 6 locations (a bigger piece is a second part of the country),
+# control under 0.5 everywhere (the nation cannot govern it), not held by an enemy (pp_enclave_kept_location). Kept: footholds reached by sea that reach outside the capital's region
 # (river channels and lakes are not sea), bigger pieces, the exclaves of nations in fewer than 4 pieces (border gore),
 # HRE members. The target is a province, but the AI releases by location (create_country_from_location +
-# make_subject_of), since an enclave often shares its province with kept land of the nation. An enclave that borders
-# one of the nation's subjects joins that subject instead of becoming a new country. Subjects and union juniors cannot
+# make_subject_of), since an enclave often shares its province with kept land of the nation. Without diplomatic
+# capacity left (pp_free_diplomatic_capacity) the enclave goes independent. An enclave that borders one of the
+# nation's subjects joins that subject instead of becoming a new country. Subjects and union juniors cannot
 # create subjects (pp_cannot_create_subjects); their enclaves break away through pp_release_enclave_independence. The
 # player's action is unchanged.
 create_province_subject = {
@@ -243,6 +244,17 @@ create_province_subject = {
 					create_country_from_location = {
 						save_scope_as = new_country
 						set_capital = scope:pp_enclave_seat
+					}
+				}
+				# a subject only while the actor has diplomatic capacity left; over its capacity a country gets
+				# unsupported_diplomatic_capacity (subject loyalty, cabinet efficiency and crown power down), so the
+				# enclave goes independent instead
+				if = {
+					limit = {
+						exists = scope:new_country
+						scope:actor = { pp_free_diplomatic_capacity >= 1 }
+					}
+					scope:new_country = {
 						make_subject_of = {
 							target = scope:actor
 							type = scope:subject_type

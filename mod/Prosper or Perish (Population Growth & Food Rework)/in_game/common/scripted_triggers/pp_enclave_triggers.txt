@@ -19,10 +19,13 @@ pp_cannot_create_subjects = {
 # yes }: the location is NOT in a small enclave the actor may release. Kept: the capital's piece; a piece reached by sea
 # that reaches outside the home region (river channels and lakes are not sea; a coastal splinter wholly inside the home
 # region goes); a piece of 7+ locations, a second part of the country (any_connected_location counts the location
-# itself); a piece of which an enemy holds any location.
+# itself); a piece the nation governs (control 0.5 or more anywhere in it; cut-off enclaves average about 0.2, the
+# capital's piece about 0.5); a piece of which an enemy holds any location.
 pp_enclave_kept_location = {
 	OR = {
 		is_in_list = pp_connected_to_capital
+		local_control >= 0.5
+		any_connected_location = { local_control >= 0.5 }
 		AND = {
 			OR = {
 				NOT = { region ?= { this = scope:pp_home_region } }

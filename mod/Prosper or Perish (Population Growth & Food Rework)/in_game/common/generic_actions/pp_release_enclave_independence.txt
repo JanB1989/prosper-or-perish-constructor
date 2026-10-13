@@ -1,8 +1,8 @@
 ﻿# PP (2026-10-12, docs/peace_deal_rulebook.md "Enclaves"): a subject or union junior cannot create subjects
 # (pp_cannot_create_subjects), so such an AI nation broken into 4+ pieces on its home continent lets its small enclaves
-# go as independent nations, by the same rule as create_province_subject (whole enclave, at most 6 locations, not held
-# by an enemy, footholds reached by sea outside the home region kept; pp_enclave_kept_location). AI only; not offered
-# to players.
+# go as independent nations, by the same rule as create_province_subject (whole enclave, at most 6 locations, control
+# under 0.5, not held by an enemy, footholds reached by sea outside the home region kept; pp_enclave_kept_location). AI
+# only; not offered to players.
 pp_release_enclave_independence = {
 	type = owncountry
 	show_in_gui_list = no

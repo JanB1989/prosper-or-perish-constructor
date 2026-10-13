@@ -1,0 +1,7 @@
+﻿# PP (2026-10-13, docs/peace_deal_rulebook.md "Enclaves"), country scope: diplomatic capacity left, vanilla's AI measure
+# (scripted_relations/alliance.txt: capacity without maintenance minus used). create_province_subject releases an enclave
+# as a subject only while at least 1 is left; above its capacity a country gets unsupported_diplomatic_capacity.
+pp_free_diplomatic_capacity = {
+	value = diplomatic_capacity_without_maintenance
+	subtract = used_diplomatic_capacity
+}

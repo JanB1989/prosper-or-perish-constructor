@@ -1,0 +1,43 @@
+﻿# PP (2026-10-13, docs/peace_deal_rulebook.md "Enclaves"), country scope: the country may not create subjects, so its
+# enclaves go through pp_release_enclave_independence instead of create_province_subject. Same rule as vanilla
+# create_province_subject: a subject (no subject type allows subject creation), or a union member under another
+# country's seniority (create_province_subject_union_tt).
+pp_cannot_create_subjects = {
+	OR = {
+		is_subject = yes
+		AND = {
+			exists = union
+			union ?= {
+				has_active_senior_partner = yes
+				NOT = { country_is_senior_partner = { country = prev } }
+			}
+		}
+	}
+}
+
+# PP (2026-10-13), location scope of a location of scope:actor, after scope:actor = { pp_enclave_mark_capital_piece =
+# yes }: the location is NOT in a small enclave the actor may release. Kept: the capital's piece; a piece reached by sea
+# that reaches outside the home region (river channels and lakes are not sea; a coastal splinter wholly inside the home
+# region goes); a piece of 7+ locations, a second part of the country (any_connected_location counts the location
+# itself); a piece the nation governs (control 0.5 or more anywhere in it; cut-off enclaves average about 0.2, the
+# capital's piece about 0.5); a piece of which an enemy holds any location.
+pp_enclave_kept_location = {
+	OR = {
+		is_in_list = pp_connected_to_capital
+		local_control >= 0.5
+		any_connected_location = { local_control >= 0.5 }
+		AND = {
+			OR = {
+				NOT = { region ?= { this = scope:pp_home_region } }
+				any_connected_location = { NOT = { region ?= { this = scope:pp_home_region } } }
+			}
+			OR = {
+				pp_is_sea_coast = yes
+				any_connected_location = { pp_is_sea_coast = yes }
+			}
+		}
+		any_connected_location = { count >= 7 }
+		NOT = { controller ?= scope:actor }
+		any_connected_location = { NOT = { controller ?= scope:actor } }
+	}
+}

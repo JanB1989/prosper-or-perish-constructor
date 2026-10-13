@@ -1,0 +1,54 @@
+﻿# PP (2026-10-13, docs/peace_deal_rulebook.md "Enclaves"), country scope (the nation, scope:actor of the enclave
+# actions): notes the capital's piece (temporary list pp_connected_to_capital: land or strait, every_connected_location)
+# and the home continent and region (scope:pp_home_continent, scope:pp_home_region) for pp_enclave_kept_location.
+pp_enclave_mark_capital_piece = {
+	capital ?= {
+		add_to_temporary_list = pp_connected_to_capital
+		every_connected_location = { add_to_temporary_list = pp_connected_to_capital }
+		continent = { save_scope_as = pp_home_continent }
+		region = { save_scope_as = pp_home_region }
+	}
+}
+
+# PP (2026-10-13), country scope (the nation), after pp_enclave_mark_capital_piece: counts the nation's pieces on its
+# home continent up to 4 (local variable pp_pieces; the capital's piece is 1). One flood per piece.
+pp_enclave_count_pieces = {
+	set_local_variable = { name = pp_pieces value = 1 }
+	while = {
+		limit = {
+			local_var:pp_pieces < 4
+			any_owned_location = {
+				NOT = { is_in_list = pp_connected_to_capital }
+				NOT = { is_in_list = pp_counted }
+				continent ?= { this = scope:pp_home_continent }
+			}
+		}
+		random_owned_location = {
+			limit = {
+				NOT = { is_in_list = pp_connected_to_capital }
+				NOT = { is_in_list = pp_counted }
+				continent ?= { this = scope:pp_home_continent }
+			}
+			add_to_temporary_list = pp_counted
+			every_connected_location = { add_to_temporary_list = pp_counted }
+		}
+		change_local_variable = { name = pp_pieces add = 1 }
+	}
+}
+
+# PP (2026-10-13), province scope (the target province), scope:actor = the nation: notes one small enclave of the actor
+# in this province (scope:pp_enclave_seat and the temporary list pp_enclave_piece: the seat and all land connected to it).
+# Nothing is saved when the province holds no such land (another release of the same tick took it).
+pp_enclave_pick_piece = {
+	scope:actor = { pp_enclave_mark_capital_piece = yes }
+	random_location_in_province = {
+		limit = {
+			owner = scope:actor
+			continent ?= { this = scope:pp_home_continent }
+			NOT = { pp_enclave_kept_location = yes }
+		}
+		save_scope_as = pp_enclave_seat
+		add_to_temporary_list = pp_enclave_piece
+		every_connected_location = { add_to_temporary_list = pp_enclave_piece }
+	}
+}

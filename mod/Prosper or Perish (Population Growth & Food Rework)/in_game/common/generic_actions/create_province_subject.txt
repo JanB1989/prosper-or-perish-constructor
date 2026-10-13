@@ -1,0 +1,387 @@
+﻿# PP copy of vanilla create_province_subject (2026-10-12, docs/peace_deal_rulebook.md "Enclaves").
+# Vanilla never lets the AI use this action (ai_tick = never). PP lets an AI nation that is broken into 4+ pieces on
+# its home continent release its small enclaves, each whole enclave as one tributary, vassal or samanta: land not
+# connected to the capital by land or strait, at most 6 locations (a bigger piece is a second part of the country),
+# control under 0.5 everywhere (the nation cannot govern it), not held by an enemy (pp_enclave_kept_location). Kept: footholds reached by sea that reach outside the capital's region
+# (river channels and lakes are not sea), bigger pieces, the exclaves of nations in fewer than 4 pieces (border gore),
+# HRE members. The target is a province, but the AI releases by location (create_country_from_location +
+# make_subject_of), since an enclave often shares its province with kept land of the nation. Without diplomatic
+# capacity left (pp_free_diplomatic_capacity) the enclave goes independent. An enclave that borders one of the
+# nation's subjects joins that subject instead of becoming a new country. Subjects and union juniors cannot
+# create subjects (pp_cannot_create_subjects); their enclaves break away through pp_release_enclave_independence. The
+# player's action is unchanged.
+create_province_subject = {
+	type = owncountry
+
+
+	allow = {
+		scope:actor = {
+			or = {
+				is_subject = no
+				subject_type = {
+					allow_subject_creation = yes
+				}
+			}
+		}
+	}
+
+	ai_prerequisite = {
+		pp_cannot_create_subjects = no
+		num_locations > 1
+		trigger_if = {
+			limit = { exists = international_organization:hre }
+			NOT = { is_member_of_international_organization = international_organization:hre }
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = province
+		interaction_source_list = {
+			scope:actor = {
+				every_province = {
+					add_to_list = source
+				}
+			}
+		}
+		# AI: only nations broken into 4+ pieces on their home continent, and only provinces that hold land of a small
+		# enclave of the actor (pp_enclave_kept_location: not the capital's piece, not a foothold reached by sea outside
+		# the home region, not a piece of 7+ locations, not held by an enemy). One flood from the capital, then at most 3
+		# more to count the pieces.
+		ai_interaction_source_list = {
+			scope:actor = {
+				if = {
+					limit = { exists = capital }
+					pp_enclave_mark_capital_piece = yes
+					pp_enclave_count_pieces = yes
+					if = {
+						limit = { local_var:pp_pieces > 3.5 }
+						every_province = {
+							limit = {
+								any_location_in_province = {
+									owner = scope:actor
+									continent ?= { this = scope:pp_home_continent }
+									NOT = { pp_enclave_kept_location = yes }
+								}
+							}
+							add_to_list = source
+						}
+					}
+				}
+			}
+		}
+		target_flag = target_province
+		name = "create_province_subject_select_province"
+		none_available_msg_key = "create_province_subject_no_province"
+		column = {
+			data = name
+		}
+		visible = {
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = subject_type
+		target_flag = subject_type
+		cache_targets = yes #this list of targets doesn't rely on the previous target so we only need to do it once
+		name = "create_building_subject_select_subject_type"
+		none_available_msg_key = "create_building_subject_no_subject_type"
+		column = {
+			data = subject_type_attribute_column
+		}
+		column = { data = subject_type_icon }
+		visible = {
+			# PP: the AI releases an enclave by location (create_country_from_location + make_subject_of), so the engine's
+			# province check does not apply to it. It would also block every province: this list is cached from the first
+			# one, and a province that also holds the capital fails it. The AI takes a tributary where its government
+			# allows one, else a vassal, or a samanta in India (samanta_advance hides the vassal). The government check
+			# stands in for vanilla's tributary check, which errors on a situation missing from the save.
+			trigger_if = {
+				limit = { scope:actor = { is_ai = yes } }
+				OR = {
+					AND = {
+						root = subject_type:vassal
+						scope:actor = { NOT = { has_advance = samanta_advance } }
+					}
+					AND = {
+						root = subject_type:samanta
+						scope:actor = { has_advance = samanta_advance }
+					}
+					AND = {
+						root = subject_type:tributary
+						scope:actor = {
+							OR = {
+								government_type = government_type:steppe_horde
+								government_type = government_type:tribe
+								modifier:allow_tributary_subject = yes
+							}
+						}
+					}
+				}
+			}
+			trigger_else = {
+				subject_can_be_created_by = {
+					country = scope:actor
+					where = scope:target_province
+				}
+				scope:target_province = {
+					NOT = {
+						any_location_in_province = { integration_level = colonized }
+					}
+				}
+			}
+		}
+		enabled = {
+			trigger_if = {
+				limit = {
+					root != subject_type:colonial_nation
+				}
+				scope:actor = {
+					custom_tooltip = {
+						text = create_province_subject_union_tt
+						trigger_if = {
+							limit = { exists = union }
+							union ?= {
+								OR = {
+									NOT = { has_active_senior_partner = yes }
+									country_is_senior_partner = { country = scope:actor }
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		map_color = {
+			if = {
+				limit = {
+					is_land = yes
+					province ?= scope:target_province
+				}
+				value = define:NMapColors|MAP_COLOR_HIGH
+			}
+		}
+		only_color_selectable = no
+	}
+
+	select_trigger = {
+		show_if = {
+			scope:subject_type ?= {
+				has_overlords_ruler = no
+			}
+		}
+		looking_for_a = character
+		source = actor
+		target_flag = ruler
+		cache_targets = yes #this list of targets doesn't rely on the previous target so we only need to do it once
+		allow_null = yes #so we let the game create a random ruler
+		name = "create_building_subject_select_ruler"
+		none_available_msg_key = "create_building_subject_no_ruler"
+		column = {
+			data = character_info
+			widget = character_info_for_select_ruler
+		}
+		visible = {
+			scope:actor = { is_ai = no } # PP: the AI lets the game create a random ruler
+			can_become_a_ruler = yes
+			scope:actor = {
+				trigger_if = {
+					limit = {
+						exists = ruler
+					}
+					ruler != root
+				}
+			}
+		}
+		enabled = {
+			NOT = { modifier:is_head_of_cabinet = yes }
+			is_eligible_heir = scope:actor #the new subject is going to inherit all its settings from the actor, so one rule for all
+		}
+		map_color = {
+			if = {
+				limit = {
+					province = scope:target_province
+				}
+				value = define:NMapColors|MAP_COLOR_HIGH
+			}
+		}
+	}
+
+	effect = {
+		# PP: the AI releases one whole small enclave in the target province, found by location (the province may also
+		# hold kept land of the actor): into a subject of the actor it borders, else as a new subject from its seat.
+		# Another target of the same tick from the same enclave finds nothing left and is skipped.
+		if = {
+			limit = {
+				scope:actor = { is_ai = yes }
+				exists = scope:target_province
+			}
+			scope:target_province = { pp_enclave_pick_piece = yes }
+			if = {
+				limit = {
+					exists = scope:pp_enclave_seat
+					any_in_list = {
+						list = pp_enclave_piece
+						any_neighbor_location = { owner ?= { is_subject_of = scope:actor } }
+					}
+				}
+				random_in_list = {
+					list = pp_enclave_piece
+					limit = { any_neighbor_location = { owner ?= { is_subject_of = scope:actor } } }
+					random_neighbor_location = {
+						limit = { owner ?= { is_subject_of = scope:actor } }
+						owner = { save_scope_as = pp_enclave_heir }
+					}
+				}
+				every_in_list = {
+					list = pp_enclave_piece
+					limit = { owner = scope:actor }
+					change_location_owner = scope:pp_enclave_heir
+				}
+			}
+			else_if = {
+				limit = { exists = scope:pp_enclave_seat }
+				scope:pp_enclave_seat = {
+					create_country_from_location = {
+						save_scope_as = new_country
+						set_capital = scope:pp_enclave_seat
+					}
+				}
+				# a subject only while the actor has diplomatic capacity left; over its capacity a country gets
+				# unsupported_diplomatic_capacity (subject loyalty, cabinet efficiency and crown power down), so the
+				# enclave goes independent instead
+				if = {
+					limit = {
+						exists = scope:new_country
+						scope:actor = { pp_free_diplomatic_capacity >= 1 }
+					}
+					scope:new_country = {
+						make_subject_of = {
+							target = scope:actor
+							type = scope:subject_type
+						}
+					}
+				}
+				if = {
+					limit = { exists = scope:new_country }
+					every_in_list = {
+						list = pp_enclave_piece
+						limit = { owner = scope:actor }
+						change_location_owner = scope:new_country
+					}
+					every_in_list = {
+						list = pp_enclave_piece
+						limit = { owner = scope:new_country }
+						add_core = scope:new_country
+					}
+					scope:new_country = {
+						add_truce_with = {
+							target = scope:actor
+							mutual = yes
+						}
+					}
+				}
+			}
+		}
+		else = {
+			if = {
+				limit = {
+					exists = scope:target_province
+					exists = scope:ruler
+					scope:target_province = { any_location_in_province = { owner = scope:actor } }
+				}
+
+				scope:target_province = {
+					create_location_country_from_province = {
+						ruler = scope:ruler
+						subject_type = scope:subject_type
+
+						capital = {
+							province = {
+								save_scope_as = new_province
+							}
+						}
+						add_truce_with = {
+							target = scope:actor
+							mutual = yes
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					exists = scope:target_province
+					scope:target_province = { any_location_in_province = { owner = scope:actor } }
+				}
+
+				if = {
+					limit = {
+						scope:subject_type = {
+							has_overlords_ruler = yes
+						}
+					}
+					#using overlord's ruler
+					scope:actor = {
+						ruler = {
+							save_scope_as = ruler
+						}
+					}
+				}
+
+				scope:target_province = {
+					create_location_country_from_province = {
+						ruler = scope:ruler
+						subject_type = scope:subject_type
+
+						capital = {
+							province = {
+								save_scope_as = new_province
+							}
+						}
+
+						save_scope_as = new_country
+
+						add_truce_with = {
+							target = scope:actor
+							mutual = yes
+						}
+					}
+				}
+
+				scope:new_country = {
+					ruler = {
+						save_scope_as = ruler
+					}
+				}
+			}
+		}
+	}
+
+	# PP: vanilla had ai_tick = never and ai_will_do = 0. The province list above already holds only small landlocked
+	# enclaves. A march cannot be created from a province (no creation_visible), a fiefdom is meant for annexation, so
+	# the AI picks a tributary where its government allows one, else a vassal (a samanta in India: samanta_advance hides
+	# the vassal). The AI annexes only subjects it borders with enough control (AI_ANNEX_SUBJECT_BORDERING_CONTROL_NEEDED),
+	# so an enclave vassal stays unless the overlord reconnects to it; a samanta cannot be annexed at all.
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	maximum_targets_in_one_tick = 5
+	disallowed_duplicates_of_targets_for_ai = { target_province }
+	ai_will_do = {
+		value = 0
+		if = {
+			limit = { scope:subject_type ?= subject_type:tributary }
+			add = 100
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:subject_type ?= subject_type:vassal
+					scope:subject_type ?= subject_type:samanta
+				}
+			}
+			add = 50
+		}
+	}
+
+	automation_tick = never
+	automation_tick_frequency = 12
+}

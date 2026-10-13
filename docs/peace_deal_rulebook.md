@@ -62,34 +62,19 @@ nothing measurable, because non-adjacent land still scored above zero.
 
 Consequences: no partial cession of land that does not touch the taker; a war goal that does not border the attacker
 is only taken when the deal reaches it through connected land; allies far away get no land; an overseas foothold
-comes only next to existing holdings or through the exception below (whole-country annexation and vassalisation are
+comes only next to existing holdings (no exception since 2026-10-13, below; whole-country annexation and vassalisation are
 unchanged). The "Recipient's
 Desire" tooltip in the peace screen shows the desire without the selection factor, so its numbers are 20,000 x
 smaller than in vanilla (often 0.00); the ranking between locations is the same.
 
-### The one exception: conquest preferences outside the home region (2026-10-09)
+### No exception (2026-10-13, Jan)
 
-`in_game/common/peace_treaties/pp_cede_preferred_location.txt`, AI winners only: a location that does not touch the
-winner may be taken when the winner has a conquest preference on its area (`common/area_preferences`, multiplier
-above 1) and it lies outside the winner's capital region. It costs the engine's own cession cost
-(`location_peace_cost`). To allow more distant land, give the country a conquest preference; the term never changes.
-
-Why this rule (all detached gains in the five vanilla runs, flags read from the save before each transfer, per run;
-overseas = a landmass where the winner held nothing, same land = behind a third country or a gap):
-
-| Rule | Overseas cessions allowed (of 17.8) | Same-land gore allowed (of 160.6) |
-| --- | --- | --- |
-| Conquest preference outside the home region (shipped) | 6.6 | 1.8 |
-| Conquest preference anywhere | 12.4 | 17.8 |
-| Cores | 0.8 | 6.2 |
-| Claims (casus belli on the province) | 0.6 | 1.8 |
-| War goal | 9 % | 9 % |
-
-Home-region preferences are mostly gore (vanilla gives `russia_conquer_region` to every Russian principality, China's
-unification preference to its warlords); war goals do not separate the two at all. Kept: England in France, and
-whatever vanilla's or PP's preferences name (Aragon's islands, Venice, the Ottomans' Balkans, Castile's Maghreb).
-Blocked: Majapahit on Borneo (its home region), Tunis on Sardinia, England on the Hanse, Naples in Greece, Sweden in
-Livonia (no preference behind them).
+From 2026-10-09 to 2026-10-13 a scripted term (`pp_cede_preferred_location`) let an AI winner take a location away
+from its land where it had a conquest preference outside its capital region (meant for overseas footholds: 6.6 of 17.8
+overseas cessions per vanilla run, 1.8 of 160.6 same-land gore). Removed: in observer games it handed out landlocked
+enclaves the winner could never govern (Hungary 57 locations in Ruthenia at control 0.03 through `pp_hungary_go_east`,
+Muscovy 9 in the steppe through `pp_muscovy_conquer_steppe`, Hungary's Podolia from Jochi in 1355). Every AI winner now
+takes connected land only; conquest preferences still steer whom it fights and which land it wants.
 
 ## Measured effect (1341-1357, high aggression, five runs per setting)
 
@@ -186,28 +171,27 @@ under 7 % reconnected. Cut-off land is badly held (control 0.17 vs 0.43 in the c
 the land between its pieces. Landlocked enclaves and sea footholds have the same control and proximity, so no define
 can tell them apart.
 
-PP changes (2026-10-13, on 0.10; tuned on branch `enclave-release`):
+PP changes (v13, 2026-10-13, on 0.10; v1-v12 tuned on branch `enclave-release`, see the tuning steps below):
 
 - `generic_actions/create_province_subject.txt` (same-name copy of vanilla, which bans the AI with `ai_tick = never`).
-  Once a year an AI nation that may create subjects, is not in the HRE and is broken into 4+ pieces on its home
-  continent releases its small enclaves, each whole enclave as one country. An enclave (`pp_enclave_kept_location`) is
-  land not connected to the capital by land or strait (`every_connected_location`), at most 6 locations, control
-  under 0.5 everywhere (the nation cannot govern it), no location held by an enemy. Kept by design: footholds reached
-  by sea that reach outside the capital's region (`pp_is_sea_coast`: river channels and lakes are not sea), bigger
-  pieces, the exclaves of nations in fewer than 4 pieces (border gore), HRE members.
-  - The new country is independent. It is a tributary only where the government allows tributaries
-    (`pp_can_hold_tributary`: horde, tribe, `allow_tributary_subject`) and the nation has at least 1 diplomatic
-    capacity left (`pp_free_diplomatic_capacity`, vanilla's AI measure). Released vassals joined their overlord's
-    offensive wars as forward bases (v10); tributaries join only defensive wars. For other nations the vassal
-    (samanta in India) only carries the action.
-  - An enclave that borders one of the nation's subjects joins that subject instead.
+  Once a year every AI nation that may create subjects and is not in the HRE lets go each piece of its land it can
+  never govern (`pp_enclave_kept_location`): land not connected to the capital by land or strait
+  (`every_connected_location`), `max_control` under 0.5 in every location (control never rises above max_control,
+  so land that has stayed ungoverned stays so), no location held by an enemy. Kept: footholds reached by sea that reach
+  outside the capital's region (`pp_is_sea_coast`: river channels and lakes are not sea), colonies being settled,
+  pieces where the nation can reach control 0.5 anywhere, HRE members. No piece count, size or continent limit
+  (v12: 4+ pieces on the home continent, at most 6 locations, current control).
+  - A piece that borders one of the nation's subjects joins that subject (Morocco's land in Spain next to its vassal
+    Jaen); any other becomes a new subject: a tributary where the government allows one
+    (`pp_can_hold_tributary`: horde, tribe, `allow_tributary_subject`), else a vassal (a samanta in India), over
+    diplomatic capacity too (Jan: released land becomes subjects; they can fight for their freedom).
   - The target is a province, but the AI releases by location (`create_country_from_location` + `make_subject_of`),
-    since an enclave often shares its province with the capital's piece or a kept piece. The player's action is
-    unchanged.
-- `generic_actions/pp_release_enclave_independence.txt` (+ AI list, localization): subjects and union juniors may not
-  create subjects (`pp_cannot_create_subjects`), so they let each such enclave go as an independent nation (AI only).
-- Shared steps: `scripted_triggers/pp_enclave_triggers.txt`, `scripted_effects/pp_enclave_effects.txt`,
-  `script_values/pp_enclave_values.txt`.
+    since a piece often shares its province with kept land. The player's action is unchanged.
+- `generic_actions/pp_release_enclave_independence.txt` (+ localization): subjects and union juniors may not create
+  subjects (`pp_cannot_create_subjects`); a subject's piece joins or becomes a subject of its overlord, a union
+  junior's piece becomes independent (AI only).
+- Shared steps: `scripted_triggers/pp_enclave_triggers.txt`, `scripted_effects/pp_enclave_effects.txt`
+  (`pp_enclave_list_provinces`, `pp_enclave_release_piece`). Not tested in game yet.
 - `CONQUER_DESIRE_EXCLAVED_BONUS` stays vanilla (50). It is the only define built for enclaves (a neighbour's conquer
   desire for a location whose surroundings are all its own, its subjects' or impassable; clamped at 100 with the
   rest). At 300 it removed no more splintered nations than at 50, and neighbours took Austria's HRE enclaves in both

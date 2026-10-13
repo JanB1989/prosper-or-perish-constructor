@@ -1,8 +1,8 @@
 ﻿# PP (2026-10-12, docs/peace_deal_rulebook.md "Enclaves"): a subject or union junior cannot create subjects
-# (pp_cannot_create_subjects), so such an AI nation broken into 4+ pieces on its home continent lets its small enclaves
-# go as independent nations, by the same rule as create_province_subject (whole enclave, at most 6 locations, control
-# under 0.5, not held by an enemy, footholds reached by sea outside the home region kept; pp_enclave_kept_location). AI
-# only; not offered to players.
+# (pp_cannot_create_subjects), so its pieces go through this action, by the same rule as create_province_subject
+# (pp_enclave_kept_location: cut off from the capital, max_control under 0.5 everywhere). A subject's piece joins a
+# subject of its overlord that it borders, else becomes a new subject of that overlord; a union junior's piece becomes
+# independent. AI only; not offered to players.
 pp_release_enclave_independence = {
 	type = owncountry
 	show_in_gui_list = no
@@ -30,26 +30,7 @@ pp_release_enclave_independence = {
 	select_trigger = {
 		looking_for_a = province
 		interaction_source_list = {
-			scope:actor = {
-				if = {
-					limit = { exists = capital }
-					pp_enclave_mark_capital_piece = yes
-					pp_enclave_count_pieces = yes
-					if = {
-						limit = { local_var:pp_pieces > 3.5 }
-						every_province = {
-							limit = {
-								any_location_in_province = {
-									owner = scope:actor
-									continent ?= { this = scope:pp_home_continent }
-									NOT = { pp_enclave_kept_location = yes }
-								}
-							}
-							add_to_list = source
-						}
-					}
-				}
-			}
+			scope:actor = { pp_enclave_list_provinces = yes }
 		}
 		target_flag = target_province
 		name = "create_province_subject_select_province"
@@ -64,29 +45,11 @@ pp_release_enclave_independence = {
 	effect = {
 		if = {
 			limit = { exists = scope:target_province }
-			scope:target_province = { pp_enclave_pick_piece = yes }
 			if = {
-				limit = { exists = scope:pp_enclave_seat }
-				scope:pp_enclave_seat = {
-					create_country_from_location = {
-						save_scope_as = pp_enclave_country
-						set_capital = scope:pp_enclave_seat
-					}
-				}
-				if = {
-					limit = { exists = scope:pp_enclave_country }
-					every_in_list = {
-						list = pp_enclave_piece
-						limit = { owner = scope:actor }
-						change_location_owner = scope:pp_enclave_country
-					}
-					every_in_list = {
-						list = pp_enclave_piece
-						limit = { owner = scope:pp_enclave_country }
-						add_core = scope:pp_enclave_country
-					}
-				}
+				limit = { scope:actor = { is_subject = yes } }
+				scope:actor = { overlord = { save_scope_as = pp_enclave_overlord } }
 			}
+			scope:target_province = { pp_enclave_release_piece = yes }
 		}
 	}
 

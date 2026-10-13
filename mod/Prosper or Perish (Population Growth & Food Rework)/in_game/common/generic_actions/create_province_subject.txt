@@ -1,15 +1,13 @@
 ﻿# PP copy of vanilla create_province_subject (2026-10-12, docs/peace_deal_rulebook.md "Enclaves").
-# Vanilla never lets the AI use this action (ai_tick = never). PP lets an AI nation that is broken into 4+ pieces on
-# its home continent let its small enclaves go, each whole enclave as one new country: land not connected to the
-# capital by land or strait, at most 6 locations (a bigger piece is a second part of the country), control under 0.5
-# everywhere (the nation cannot govern it), not held by an enemy (pp_enclave_kept_location). Kept: footholds reached
-# by sea that reach outside the capital's region (river channels and lakes are not sea), bigger pieces, the exclaves of
-# nations in fewer than 4 pieces (border gore), HRE members. The new country is independent; a tributary only where the
-# government allows tributaries and diplomatic capacity is left (released vassals joined their overlord's wars as
-# forward bases). The target is a province, but the AI releases by location (create_country_from_location), since an
-# enclave often shares its province with kept land of the nation. An enclave that borders one of the nation's subjects
-# joins that subject instead. Subjects and union juniors cannot create subjects (pp_cannot_create_subjects); their
-# enclaves go through pp_release_enclave_independence. The player's action is unchanged.
+# Vanilla never lets the AI use this action (ai_tick = never). PP lets every AI nation let go, once a year, each piece
+# of its land it can never govern (pp_enclave_kept_location): cut off from the capital by land and strait, max_control
+# under 0.5 everywhere. Kept: footholds reached by sea that reach outside the capital's region (river channels and
+# lakes are not sea), colonies being settled, pieces held by an enemy, HRE members. A piece that borders one of the
+# nation's subjects joins that subject; any other becomes a new subject (a tributary where the government allows one,
+# else a vassal; a samanta in India). The target is a province, but the AI releases by location
+# (create_country_from_location), since a piece often shares its province with kept land of the nation. Subjects and
+# union juniors cannot create subjects (pp_cannot_create_subjects); their pieces go through
+# pp_release_enclave_independence. The player's action is unchanged.
 create_province_subject = {
 	type = owncountry
 
@@ -43,31 +41,9 @@ create_province_subject = {
 				}
 			}
 		}
-		# AI: only nations broken into 4+ pieces on their home continent, and only provinces that hold land of a small
-		# enclave of the actor (pp_enclave_kept_location: not the capital's piece, not a foothold reached by sea outside
-		# the home region, not a piece of 7+ locations, not held by an enemy). One flood from the capital, then at most 3
-		# more to count the pieces.
+		# AI: only provinces that hold land of a piece the actor lets go (pp_enclave_kept_location).
 		ai_interaction_source_list = {
-			scope:actor = {
-				if = {
-					limit = { exists = capital }
-					pp_enclave_mark_capital_piece = yes
-					pp_enclave_count_pieces = yes
-					if = {
-						limit = { local_var:pp_pieces > 3.5 }
-						every_province = {
-							limit = {
-								any_location_in_province = {
-									owner = scope:actor
-									continent ?= { this = scope:pp_home_continent }
-									NOT = { pp_enclave_kept_location = yes }
-								}
-							}
-							add_to_list = source
-						}
-					}
-				}
-			}
+			scope:actor = { pp_enclave_list_provinces = yes }
 		}
 		target_flag = target_province
 		name = "create_province_subject_select_province"
@@ -90,12 +66,11 @@ create_province_subject = {
 		}
 		column = { data = subject_type_icon }
 		visible = {
-			# PP: the AI releases an enclave by location (create_country_from_location), so the engine's province check
+			# PP: the AI releases a piece by location (create_country_from_location), so the engine's province check
 			# does not apply to it. It would also block every province: this list is cached from the first one, and a
-			# province that also holds the capital fails it. A nation whose government allows tributaries takes one (a
-			# tributary does not join offensive wars); for every other nation the vassal (samanta in India, where
-			# samanta_advance hides the vassal) only carries the action and the effect lets the enclave go independent:
-			# released vassals joined their overlord's wars as forward bases (Hungary against Poland, 2026-10-13).
+			# province that also holds the capital fails it. The AI's type follows its government, as in
+			# pp_enclave_release_piece: a tributary where allowed, else a vassal (a samanta where samanta_advance hides
+			# the vassal).
 			trigger_if = {
 				limit = { scope:actor = { is_ai = yes } }
 				OR = {
@@ -208,81 +183,15 @@ create_province_subject = {
 	}
 
 	effect = {
-		# PP: the AI releases one whole small enclave in the target province, found by location (the province may also
-		# hold kept land of the actor): into a subject of the actor it borders, else as a new subject from its seat.
-		# Another target of the same tick from the same enclave finds nothing left and is skipped.
+		# PP: the AI lets one whole piece in the target province go (pp_enclave_release_piece); another target of the same
+		# tick from the same piece finds nothing left and is skipped.
 		if = {
 			limit = {
 				scope:actor = { is_ai = yes }
 				exists = scope:target_province
 			}
-			scope:target_province = { pp_enclave_pick_piece = yes }
-			if = {
-				limit = {
-					exists = scope:pp_enclave_seat
-					any_in_list = {
-						list = pp_enclave_piece
-						any_neighbor_location = { owner ?= { is_subject_of = scope:actor } }
-					}
-				}
-				random_in_list = {
-					list = pp_enclave_piece
-					limit = { any_neighbor_location = { owner ?= { is_subject_of = scope:actor } } }
-					random_neighbor_location = {
-						limit = { owner ?= { is_subject_of = scope:actor } }
-						owner = { save_scope_as = pp_enclave_heir }
-					}
-				}
-				every_in_list = {
-					list = pp_enclave_piece
-					limit = { owner = scope:actor }
-					change_location_owner = scope:pp_enclave_heir
-				}
-			}
-			else_if = {
-				limit = { exists = scope:pp_enclave_seat }
-				scope:pp_enclave_seat = {
-					create_country_from_location = {
-						save_scope_as = new_country
-						set_capital = scope:pp_enclave_seat
-					}
-				}
-				# a tributary only where the government allows one and while the actor has diplomatic capacity left
-				# (over its capacity a country gets unsupported_diplomatic_capacity: subject loyalty, cabinet efficiency
-				# and crown power down); every other enclave goes independent
-				if = {
-					limit = {
-						exists = scope:new_country
-						scope:subject_type ?= subject_type:tributary
-						scope:actor = { pp_free_diplomatic_capacity >= 1 }
-					}
-					scope:new_country = {
-						make_subject_of = {
-							target = scope:actor
-							type = subject_type:tributary
-						}
-					}
-				}
-				if = {
-					limit = { exists = scope:new_country }
-					every_in_list = {
-						list = pp_enclave_piece
-						limit = { owner = scope:actor }
-						change_location_owner = scope:new_country
-					}
-					every_in_list = {
-						list = pp_enclave_piece
-						limit = { owner = scope:new_country }
-						add_core = scope:new_country
-					}
-					scope:new_country = {
-						add_truce_with = {
-							target = scope:actor
-							mutual = yes
-						}
-					}
-				}
-			}
+			scope:actor = { save_scope_as = pp_enclave_overlord }
+			scope:target_province = { pp_enclave_release_piece = yes }
 		}
 		else = {
 			if = {
@@ -358,30 +267,13 @@ create_province_subject = {
 		}
 	}
 
-	# PP: vanilla had ai_tick = never and ai_will_do = 0. The province list above already holds only small landlocked
-	# enclaves. A march cannot be created from a province (no creation_visible), a fiefdom is meant for annexation, so
-	# the AI picks a tributary where its government allows one, else a vassal (a samanta in India: samanta_advance hides
-	# the vassal). The AI annexes only subjects it borders with enough control (AI_ANNEX_SUBJECT_BORDERING_CONTROL_NEEDED),
-	# so an enclave vassal stays unless the overlord reconnects to it; a samanta cannot be annexed at all.
+	# PP: vanilla had ai_tick = never and ai_will_do = 0. The province list above holds only pieces the nation lets go.
 	ai_tick = monthly
 	ai_tick_frequency = 12
 	maximum_targets_in_one_tick = 5
 	disallowed_duplicates_of_targets_for_ai = { target_province }
 	ai_will_do = {
-		value = 0
-		if = {
-			limit = { scope:subject_type ?= subject_type:tributary }
-			add = 100
-		}
-		else_if = {
-			limit = {
-				OR = {
-					scope:subject_type ?= subject_type:vassal
-					scope:subject_type ?= subject_type:samanta
-				}
-			}
-			add = 50
-		}
+		add = 100
 	}
 
 	automation_tick = never

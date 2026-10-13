@@ -72,12 +72,12 @@ def test_building_profit_gates_use_the_1_4_names() -> None:
 def test_peace_deals_take_connected_land_only() -> None:
     """Border gore (docs/peace_deal_rulebook.md): a location that does not touch the taker's land (or land already in
     the deal) scores x 1/ADJECENT, which is exactly 0 only above 100000 (fixed point, 5 decimals). FROM_WORTH_MULT
-    scales every location so connected land keeps vanilla's value of 5 x 5."""
+    scales every location so connected land keeps vanilla's value of 5 x 5. No exception: the conquest-preference
+    cession (pp_cede_preferred_location) was removed 2026-10-13, it handed out landlocked enclaves."""
     values = _mod_values()
     adjacent = float(values[("NAI", "AI_CONQUER_TREATY_DESIRE_ADJECENT")])
     worth_mult = float(values[("NAI", "AI_CONQUER_TREATY_DESIRE_FROM_WORTH_MULT")])
     assert adjacent > 100000
     assert abs(adjacent * worth_mult - 25) < 0.05
-    # the one exception (conquest preferences outside the home region) is a scripted peace term
-    assert (ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "in_game" / "common"
-            / "peace_treaties" / "pp_cede_preferred_location.txt").exists()
+    assert not (ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "in_game" / "common"
+                / "peace_treaties" / "pp_cede_preferred_location.txt").exists()

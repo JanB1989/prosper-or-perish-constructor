@@ -26,16 +26,20 @@ pp_can_hold_tributary = {
 }
 
 # PP (2026-10-13), location scope of a location of scope:actor, after scope:actor = { pp_enclave_mark_capital_piece =
-# yes }: the location is NOT in a small enclave the actor may release. Kept: the capital's piece; a piece reached by sea
-# that reaches outside the home region (river channels and lakes are not sea; a coastal splinter wholly inside the home
-# region goes); a piece of 7+ locations, a second part of the country (any_connected_location counts the location
-# itself); a piece the nation governs (control 0.5 or more anywhere in it; cut-off enclaves average about 0.2, the
-# capital's piece about 0.5); a piece of which an enemy holds any location.
+# yes }: the location is NOT in a piece the actor lets go. A piece goes when the nation can never govern it: cut off
+# from the capital by land and strait, max_control under 0.5 in every location (control can never rise above it, so
+# land that has stayed ungoverned this long stays so). Kept: the capital's piece; colonies still being settled; a
+# piece where the nation can reach control 0.5 anywhere; a foothold reached by sea that reaches outside the capital's
+# region (river channels and lakes are not sea); a piece of which an enemy holds any location. Cheap checks first, the
+# floods over the piece (any_connected_location counts the location itself) last.
 pp_enclave_kept_location = {
 	OR = {
 		is_in_list = pp_connected_to_capital
-		local_control >= 0.5
-		any_connected_location = { local_control >= 0.5 }
+		integration_level = colonized
+		max_control >= 0.5
+		NOT = { controller ?= scope:actor }
+		any_connected_location = { max_control >= 0.5 }
+		any_connected_location = { NOT = { controller ?= scope:actor } }
 		AND = {
 			OR = {
 				NOT = { region ?= { this = scope:pp_home_region } }
@@ -46,8 +50,5 @@ pp_enclave_kept_location = {
 				any_connected_location = { pp_is_sea_coast = yes }
 			}
 		}
-		any_connected_location = { count >= 7 }
-		NOT = { controller ?= scope:actor }
-		any_connected_location = { NOT = { controller ?= scope:actor } }
 	}
 }

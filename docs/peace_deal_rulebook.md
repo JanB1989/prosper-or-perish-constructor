@@ -323,3 +323,19 @@ whole): `strength_vs_overlord` -0.75 for vassals and fiefdoms (vanilla -0.5), tr
 overlords with small subjects are untouched; colonial nations, HRE and Hanseatic members, appanages and samantas keep
 vanilla. Kit: `~/pp_ai_run/splinter/scripts/adhoc/subject_bloc.py`, `subject_offenders.py`.
 
+How blocs break (checked in game 2026-10-13, observer game ac43ec8a with the change above):
+
+- The bloc term is computed per subject type, on army, income and population; the population share overstates it
+  (Mali's vassals hold 85-90 % of the bloc's people but 49 % by the game's measure).
+- Disloyal vassals and fiefdoms still defend their overlord (they always join its defensive wars).
+- A subject's AI rebels alone only above a 25 % win chance, and counts the overlord, its allies and every other
+  subject of the overlord as defenders, loyal or not: 0-4 % in every case seen (Kaabu vs Mali, Djerba vs Tunis).
+- Once disloyal subjects join one independence movement, its members count on the rebel side: Tibet's 13 disloyal
+  vassals (bloc term -32.6) went from 0.1 % to 99.8 % and 9 of 14 were independent by 1401 (unchanged run: Tibet kept
+  16 vassals to 1557). By 1397 18 overlords held subjects with over half the bloc's people (unchanged 26), holding 62
+  subjects (unchanged 112).
+- Tested and dropped: disloyal vassals not defending against a fellow subject; the AI's war estimate ignores the
+  war-joining rules.
+- `LOYALTY_FROM_INDEPENDENCE_MOVEMENT_SCALE` 12.5 (vanilla 10) and `_MAX` 25 (vanilla 20): a movement lowers its
+  members' loyalty a little more, so it holds together until it fights. Not tested in game.
+

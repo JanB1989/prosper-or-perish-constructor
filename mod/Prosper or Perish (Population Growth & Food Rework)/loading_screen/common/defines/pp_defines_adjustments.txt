@@ -225,3 +225,11 @@ NUnit = {
 	# 6 historically), so troops ran out of food and wars were over before they landed (trade-expedition ferry tests).
 	NAVY_MOVEMENT_SPEED = 5.2875 # 3.525
 }
+
+NDiplomacy = {
+	# 2026-10-13 (Jan, subjects): an independence movement lowers its members' loyalty a little more, so a movement of
+	# disloyal subjects holds together until it fights. Strong subject blocs break only through such a movement (a lone
+	# subject's AI counts every other subject of its overlord as a defender); docs/peace_deal_rulebook.md "Subjects".
+	LOYALTY_FROM_INDEPENDENCE_MOVEMENT_SCALE = 12.5 # 10
+	LOYALTY_FROM_INDEPENDENCE_MOVEMENT_MAX = 25 # 20
+}

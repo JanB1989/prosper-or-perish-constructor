@@ -195,9 +195,11 @@ PP changes (2026-10-13, on 0.10; tuned on branch `enclave-release`):
   under 0.5 everywhere (the nation cannot govern it), no location held by an enemy. Kept by design: footholds reached
   by sea that reach outside the capital's region (`pp_is_sea_coast`: river channels and lakes are not sea), bigger
   pieces, the exclaves of nations in fewer than 4 pieces (border gore), HRE members.
-  - The new country is a subject while the nation has at least 1 diplomatic capacity left
-    (`pp_free_diplomatic_capacity`, vanilla's AI measure), else independent. Subject type: tributary where the
-    government allows one, else vassal, or samanta in India.
+  - The new country is independent. It is a tributary only where the government allows tributaries
+    (`pp_can_hold_tributary`: horde, tribe, `allow_tributary_subject`) and the nation has at least 1 diplomatic
+    capacity left (`pp_free_diplomatic_capacity`, vanilla's AI measure). Released vassals joined their overlord's
+    offensive wars as forward bases (v10); tributaries join only defensive wars. For other nations the vassal
+    (samanta in India) only carries the action.
   - An enclave that borders one of the nation's subjects joins that subject instead.
   - The target is a province, but the AI releases by location (`create_country_from_location` + `make_subject_of`),
     since an enclave often shares its province with the capital's piece or a kept piece. The player's action is
@@ -224,23 +226,29 @@ Engine facts found on the way:
   vassals and lost the 1541 Vbk independence war more often.
 - `local_control` is 0..1. Target enclaves average control 0.19-0.24, capital pieces 0.47-0.50; 3-10 % of target
   enclaves reach 0.5 somewhere.
+- Vassals and samantas always join their overlord's offensive wars, tributaries only defensive ones. With released
+  vassals (v10), countries new since the start made up 32-104 of the active war participants in the 1737 runs
+  (unchanged runs: 5); Hungary's 1745 war on Poland had 8 of its 10 participants from its released enclaves.
 
 Tests: saves of run 075b0d4e loaded in observer mode (PP Main Test), 25 years from 1537 and 15 years from 1737.
 Independent histories from one save: +1/+2/+3 gold to every country at day 1 (+1 gold to one country was not enough).
-"Weird" = 4+ home pieces without sea footholds and pieces over 6 locations; "stuck" = weird in the last two saves
-(5 years apart). Land classes from the start save; "lost" = held by another existing nation at the end.
+"Weird" = 4+ home pieces without sea footholds and pieces over 6 locations ("ungoverned": only pieces with control
+under 0.5 everywhere, as the rule); "stuck" = weird in the last two saves (5 years apart). Land classes from the
+start save; "lost" = held by another existing nation at the end.
 
 | | unchanged | with the release |
 |---|---|---|
-| 1737 + 15 years | 5 runs | 4 runs (v10) |
-| weird / stuck nations | 32-36 / 30-33 | 0-2 / 0 |
-| HRE land kept | 96-100 % | 99-100 % |
-| bigger pieces lost | 13-25 % | 17-23 % |
-| sea footholds lost | 9-12 % | 9-27 % |
-| all land conquered by existing nations | 3.7-5.2 % | 4.2-5.3 % |
-| countries | 626-638 | 973-983 |
-| 5-year tick | about 116 s | about 126 s |
-| 1537 + 25 years | 5 runs | 3 runs (v11) |
+| 1737 + 15 years | 4 runs | 4 runs (v12, final) |
+| weird ungoverned / stuck | 29-30 / 26-28 | 0-1 / 0 |
+| weird incl. governed pieces | 32-36 | 1-5 (control 0.5+ pieces, kept by design) |
+| HRE land kept | 96-100 % | 100 % |
+| bigger pieces lost | 13-25 % | 13.5-16.4 % |
+| exclaves of nations in < 4 pieces lost | 15.3-20.6 % | 14.5-20.6 % |
+| sea footholds lost | 8.6-11.8 % | 12.0-20.8 % (v10: 8.6-26.5 %) |
+| all land conquered by existing nations | 3.7-5.2 % | 4.0-5.6 % |
+| countries | 626-638 | 887-937 |
+| 5-year tick | about 116 s | about 121 s |
+| 1537 + 25 years | 5 runs | 3 runs (v11, subjects within capacity) |
 | weird / stuck nations | 38-43 / 35-36 | 0-1 / 0 |
 | HRE land kept | 98-100 % | 98-100 % |
 | bigger pieces lost | 11-19 % | 10-26 % |
@@ -248,11 +256,12 @@ Independent histories from one save: +1/+2/+3 gold to every country at day 1 (+1
 | countries | 831-854 | 1,075-1,136 |
 | 5-year tick | 100-113 s | 108-124 s |
 
-- The 1737 sea-foothold losses are two pieces: Poland's Black Sea coast (half or more lost in every run, unchanged
-  ones too; all of it in 3 of 4 runs with the release) and Junagarh's Makran coast (lost in the 2 runs where its
-  Timurid tributary broke free). No mechanism found: the rule never releases these pieces, total conquest and the
-  rate at which subjects break free are unchanged. v11 (capacity gate) was not run from 1737; the control filter
-  was not run in game.
+- The 1737 sea-foothold excess is Poland's Black Sea coast: 56-64 of its 64 locations lost with v12 against 31-58
+  in the unchanged runs (Kyiv, Halych, Hungary, Brandenburg; Poland collapses from 83 to 19-44 locations by 1742 in
+  every run; the coast's control averages 0.27). Junagarh's Makran coast fell in 1 of 4 v12 runs (2 of 4 with v10,
+  after its Timurid tributary broke free). Poland releases nothing itself (3 pieces); releasing nations' stability
+  is not lower; total conquest moves within the spread. v12 was not run from 1537 (the observer game started
+  2026-10-13 covers it).
 - Released subjects stay: of 248 released by 1742, 228 were still subjects of the same overlord in 1752, 10 taken,
   7 independent, 2 annexed back (the AI annexes only subjects it borders).
 - Script errors: about +20 % per minute, all base-game kinds that grow with countries and subjects. The coat of arms
@@ -265,7 +274,7 @@ exclave: 660 -> 940 countries); v6 river channels and lakes are not sea; v7 coas
 releases in war unless occupied, subjects let enclaves go; v8 an enclave next to an own subject joins it, the exclave
 bonus back to 50; v9 union juniors, samantas, coastal pieces reaching outside the home region kept; v10 release by
 location, pieces up to 6, subject types by nation; v11 subjects only within diplomatic capacity, governed enclaves
-(control 0.5+) kept.
+(control 0.5+) kept; v12 independent instead of vassals (tributaries only where allowed).
 
 Metric: `~/pp_ai_run/splinter/scripts/splinter2.py <playthrough>` (stuck splinter episodes, how they end). Test kit
 there: `enc_rep.py` (replicate table), `enc_errors.py` (error rates per run), `enc_fates.py`, `enc_lost.py`,

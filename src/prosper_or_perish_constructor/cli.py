@@ -3681,8 +3681,9 @@ def _update_building_investment(
         return
     catalog = building_investment.load_price_catalog(repo, project, profile=profile, load_order=load_order)
     cost_model = building_investment.load_location_cost_model(repo, project, profile=profile, load_order=load_order)
+    # only runs with new snapshots: a price change rebuilds the other runs when they are reported (run_report)
     building_investment.update_dataset(
-        dataset, catalog, cost_model=cost_model, log=lambda message: print(message, flush=True)
+        dataset, catalog, cost_model=cost_model, playthroughs=(), log=lambda message: print(message, flush=True)
     )
 
 

@@ -162,6 +162,25 @@ def test_dataset_update_is_incremental_and_follows_the_catalog(tmp_path: Path) -
     assert not (out / "s2.parquet").exists()
 
 
+def test_price_change_rebuilds_only_the_requested_runs_and_new_ones(tmp_path: Path) -> None:
+    dataset = tmp_path / "dataset"
+    for run in ("old", "reported"):
+        _write_snapshot(dataset, run, "s1", _buildings())
+    catalog = _price_catalog()
+    assert bi.update_dataset(dataset, catalog, playthroughs=(), log=lambda _: None).written == 2  # both were missing
+    cheaper = catalog.with_columns(pl.col("base_price") / 2)
+    _write_snapshot(dataset, "new", "s1", _buildings())
+    # an ingest: only the run with a missing snapshot
+    assert bi.update_dataset(dataset, cheaper, playthroughs=(), log=lambda _: None).written == 1
+    # a report: its own run follows the new prices, the other old run stays as it was until reported
+    changed = bi.update_dataset(dataset, cheaper, playthroughs=["reported"], log=lambda _: None)
+    assert (changed.written, changed.kept, changed.catalog_changed) == (1, 2, True)
+    total = lambda run: pl.read_parquet(dataset / "tables" / bi.TABLE / f"playthrough_id={run}" / "s1.parquet")["investment"].sum()  # noqa: E731
+    assert total("reported") == pytest.approx(total("old") / 2) and total("new") == pytest.approx(total("reported"))
+    assert bi.update_dataset(dataset, cheaper, playthroughs=["reported"], log=lambda _: None).written == 0
+    assert bi.update_dataset(dataset, cheaper, log=lambda _: None).written == 1  # None: every stale run
+
+
 def _cost_model() -> bi.LocationCostModel:
     static_locations = pl.DataFrame(
         {

@@ -1762,14 +1762,15 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
     started = time.perf_counter()
     from prosper_or_perish_constructor import building_investment
 
-    # the derived table is incremental: a no-op when `ppc savegame-notebooks build` already brought it up to date
+    playthrough = playthrough or latest_playthrough(dataset)
+    # the derived table is incremental and per run: only this run is brought up to today's prices
     building_investment.update_dataset(
         dataset,
         building_investment.load_price_catalog(repo, project),
         cost_model=building_investment.load_location_cost_model(repo, project),
+        playthroughs=[playthrough],
         log=log,
     )
-    playthrough = playthrough or latest_playthrough(dataset)
     _backfill_engine_tables(repo, project, dataset, playthrough, log)
     from prosper_or_perish_constructor.run_report_goods import prepare_goods_flows, write_goods_page  # imports this module
 

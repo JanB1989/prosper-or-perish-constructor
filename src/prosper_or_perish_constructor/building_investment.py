@@ -484,28 +484,43 @@ def update_dataset(
     *,
     cost_model: LocationCostModel | None = None,
     force: bool = False,
+    playthroughs: Iterable[str] | None = None,
     log: Callable[[str], None] = print,
 ) -> UpdateResult:
-    """Write `building_investment` for every snapshot that lacks it (all of them when the catalog or the location
-    cost model changed)."""
+    """Write `building_investment` for every snapshot that lacks it, and rebuild a run's snapshots when the catalog or
+    the location cost model changed since that run was written.
+
+    `playthroughs` limits the rebuild to those runs (plus every run with a missing snapshot, which is rebuilt whole so
+    a run never mixes prices); None rebuilds every stale run. A price change then costs the reported run's ~100
+    snapshots, not the whole dataset (~5,000 snapshots, ~10 minutes, 2026-10-13); other runs catch up when reported.
+    """
     root = dataset / "tables" / TABLE
     fingerprint = catalog_fingerprint(catalog) + ("-" + cost_model.fingerprint() if cost_model is not None else "")
     marker = root / CATALOG_FILE
     try:
-        previous = json.loads(marker.read_text(encoding="utf-8")).get("fingerprint")
+        stored = json.loads(marker.read_text(encoding="utf-8"))
     except (OSError, ValueError):
-        previous = None
-    result = UpdateResult(fingerprint=fingerprint, catalog_changed=previous is not None and previous != fingerprint)
-    rebuild = force or previous != fingerprint
+        stored = {}
+    legacy = stored.get("fingerprint")  # whole-dataset fingerprint of markers written before per-run fingerprints
+    run_prints: dict[str, str] = dict(stored.get("playthroughs") or {})
     sources = _snapshot_files(dataset, "buildings")
     existing = _snapshot_files(dataset, TABLE)
+    result = UpdateResult(fingerprint=fingerprint)
     for relative, path in existing.items():
         if relative not in sources:
             path.unlink(missing_ok=True)
             result.removed += 1
+    by_run: dict[str, list[Path]] = {}
+    for relative in sources:
+        by_run.setdefault(relative.parts[0].removeprefix("playthrough_id="), []).append(relative)
+    wanted = set(by_run) if playthroughs is None else {_safe_run(p) for p in playthroughs}
+    wanted |= {run for run, files in by_run.items() if any(not (root / r).is_file() for r in files)}
+    stale = {run for run in wanted if force or run_prints.get(run, legacy) != fingerprint}
+    result.catalog_changed = any(run_prints.get(run, legacy) not in (None, fingerprint) for run in stale)
     for relative, source in sources.items():
+        run = relative.parts[0].removeprefix("playthrough_id=")
         target = root / relative
-        if target.is_file() and not rebuild:
+        if target.is_file() and run not in stale:
             result.kept += 1
             continue
         table = snapshot_investment(source, dataset / "tables" / "locations" / relative, catalog, cost_model)
@@ -515,12 +530,20 @@ def update_dataset(
         temporary.replace(target)
         result.written += 1
     root.mkdir(parents=True, exist_ok=True)
-    marker.write_text(json.dumps({"fingerprint": fingerprint, "types": catalog.height}, indent=1), encoding="utf-8")
+    runs = {run: run_prints.get(run, legacy) for run in by_run if run_prints.get(run, legacy) is not None}
+    runs.update({run: fingerprint for run in stale})
+    marker.write_text(json.dumps({"types": catalog.height, "playthroughs": dict(sorted(runs.items()))}, indent=1),
+                      encoding="utf-8")
     log(
         f"building investment: {result.written} snapshot(s) written, {result.kept} current, {result.removed} removed"
-        + (" (price catalog or location cost model changed: all rebuilt)" if result.catalog_changed and rebuild else "")
+        + (f" (price catalog or location cost model changed: {len(stale)} run(s) rebuilt)" if result.catalog_changed else "")
     )
     return result
+
+
+def _safe_run(playthrough: str) -> str:
+    """The partition name of a playthrough id (the dataset writes `-` as `_`)."""
+    return playthrough.replace("-", "_")
 
 
 def price_basis_counts(catalog: pl.DataFrame) -> dict[str, int]:

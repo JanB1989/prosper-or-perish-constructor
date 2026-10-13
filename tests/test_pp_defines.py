@@ -69,6 +69,14 @@ def test_building_profit_gates_use_the_1_4_names() -> None:
     assert ("NAI", "AI_BUILDING_PROFIT_MARGIN_THRESHOLD") in set_keys
 
 
+def test_local_oversupply_term_is_off() -> None:
+    """EU5 1.4.1 cuts a building's AI utility by factor x output units when its market's stockpile of the good is 90 %+
+    full. PP's dummy goods (local_food, logistics, manual_labor, offset) always are, so Taverns and Granges were never
+    built (run c0a4fea2); gluts of real goods already reach the AI through the price in the profit term."""
+    values = _mod_values()
+    assert float(values[("NAI", "LOCAL_OVERSUPPLY_UTILITY_FACTOR")]) == 0
+
+
 def test_peace_deals_take_connected_land_only() -> None:
     """Border gore (docs/peace_deal_rulebook.md): a location that does not touch the taker's land (or land already in
     the deal) scores x 1/ADJECENT, which is exactly 0 only above 100000 (fixed point, 5 decimals). FROM_WORTH_MULT

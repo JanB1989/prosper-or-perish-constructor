@@ -50,6 +50,11 @@ NAI = {
 	POP_MISSING_GOODS_UTILITY_FACTOR = 0.25 # 0.02
 	INPUT_GOODS_SHORTAGE_UTILITY_FACTOR = 0.1 # 0.02
 	PROFITABLE_EXPORT_GOODS_UTILITY_FACTOR = 1.0 # 0.5
+	# EU5 1.4.1 "Local oversupply" (2026-10-13): -factor x min(month's supply - demand, output) per output good whose market
+	# stockpile is at 90 %+ of the cap; counts units, ignores price. PP's dummy goods (local_food, logistics, manual_labor,
+	# offset) always sit at the cap, so it hit every Tavern and Grange (run c0a4fea2: Taverns built ~0 from 1342, world
+	# 545 M by 1837); on real goods it is ~0 in PP. Off; gluts reach the AI through the price in the profit term.
+	LOCAL_OVERSUPPLY_UTILITY_FACTOR = 0 # 0.02
 	# Specialization (2026-10-08): keep the export bonus alive once a market already exports the good, so exporters deepen.
 	PROFITABLE_EXPORT_GOODS_REDUCE_PRICE_UTILITY_FACTOR = 0.1 # 0.05
 	AI_EXPORT_GOODS_SURPLUS_GRADIENT_CAP = 0.75 # 0.5; projected surplus at which the export bonus bottoms out

@@ -15,6 +15,16 @@ pp_cannot_create_subjects = {
 	}
 }
 
+# PP (2026-10-13), country scope: the government allows tributaries (vanilla subject_types/tributary.txt
+# creation_visible without its Battle for the Strait case, whose check errors on a situation missing from the save).
+pp_can_hold_tributary = {
+	OR = {
+		government_type = government_type:steppe_horde
+		government_type = government_type:tribe
+		modifier:allow_tributary_subject = yes
+	}
+}
+
 # PP (2026-10-13), location scope of a location of scope:actor, after scope:actor = { pp_enclave_mark_capital_piece =
 # yes }: the location is NOT in a small enclave the actor may release. Kept: the capital's piece; a piece reached by sea
 # that reaches outside the home region (river channels and lakes are not sea; a coastal splinter wholly inside the home

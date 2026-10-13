@@ -2,7 +2,7 @@
 # than the longest trade route in the world (raw route cost ~1450, Asia - Europe ~1000), so by the 1500s every trade
 # was inside range and paid no distance cost (run 40148576: all 7,135 trades in 1837). Each now adds +50, so the base
 # grows 300 -> 550; the percentage modifiers (laws, reforms, Trade Envoys, choices) stay. Distance divisor: NCountry
-# MERCHANT_DISTANCE_COST_DIVISOR in pp_defines_adjustments.txt. Blocks are vanilla 1.4 apart from trade_range.
+# MERCHANT_DISTANCE_COST_DIVISOR is vanilla since 2026-10-13 (400 in EU5 1.4.1). Blocks are vanilla 1.4 apart from trade_range.
 
 TRY_REPLACE:merchants_and_trade = {
 	age = age_2_renaissance

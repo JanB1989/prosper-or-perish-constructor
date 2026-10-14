@@ -3,6 +3,7 @@ tag: paper_guild
 footprint: urban_workshop
 labour:
   class: craft_medieval
+  keep_goods: [alum]
 gate_method: pp_paper_guild_market_sales
 building:
   key: paper_guild
@@ -33,7 +34,8 @@ building:
     unique_production_methods = {
         pp_paper_guild_paper_guild_leather_maintenance = {
             leather = 0.17
-            lumber = 0.17
+            alum = 0.02
+            lumber = 0.136
             manual_labor = 0.12
             produced = paper
             output = 0.5
@@ -42,7 +44,8 @@ building:
         }
         pp_paper_guild_paper_guild_fiber_pulp_maintenance = {
             fiber_crops = 0.64
-            lumber = 0.21
+            alum = 0.025
+            lumber = 0.168
             manual_labor = 0.28
             produced = paper
             output = 1.0
@@ -51,7 +54,8 @@ building:
         }
         pp_paper_guild_paper_guild_cloth_maintenance = {
             cloth = 0.5
-            lumber = 0.099
+            alum = 0.012
+            lumber = 0.079
             manual_labor = 0.26
             produced = paper
             output = 1.0

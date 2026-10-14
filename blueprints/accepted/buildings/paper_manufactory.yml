@@ -3,6 +3,7 @@ tag: paper_manufactory
 footprint: manufactory
 labour:
   class: craft_absolutism
+  keep_goods: [alum]
 gate_method: pp_paper_manufactory_market_sales
 building:
   key: paper_manufactory
@@ -36,7 +37,8 @@ building:
         pp_paper_manufactory_paper_manufactory_maintenance = {
             cloth = 0.27
             fiber_crops = 1.08
-            lumber = 0.27
+            alum = 0.032
+            lumber = 0.216
             manual_labor = 0.27
             produced = paper
             output = 2.0
@@ -47,7 +49,8 @@ building:
             icon_type = goods
             icon = leather
             leather = 0.19
-            lumber = 0.19
+            alum = 0.023
+            lumber = 0.15
             manual_labor = 0.14
             produced = paper
             output = 0.56
@@ -68,7 +71,8 @@ building:
             icon_type = goods
             icon = cloth
             cloth = 0.72
-            lumber = 0.16
+            alum = 0.018
+            lumber = 0.12
             manual_labor = 0.34
             produced = paper
             output = 1.5

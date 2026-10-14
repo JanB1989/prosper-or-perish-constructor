@@ -3,6 +3,7 @@ tag: dyesworks
 footprint: manufactory
 labour:
   class: craft_absolutism
+  keep_goods: [alum]
 gate_method: pp_dyesworks_market_sales
 building:
   key: dyesworks
@@ -32,8 +33,8 @@ building:
     graphical_tags = { factory_large }
     unique_production_methods = {
         pp_dyesworks_dyesworks_maintenance = {
-            alum = 0.34
-            lumber = 3.52
+            alum = 1.367
+            lumber = 1.76
             manual_labor = 0.53
             produced = dyes
             output = 2.0

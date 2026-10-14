@@ -3,6 +3,7 @@ tag: dyes_guild
 footprint: urban_workshop
 labour:
   class: craft_medieval
+  keep_goods: [alum]
 gate_method: pp_dyes_guild_market_sales
 building:
   key: dyes_guild
@@ -39,8 +40,8 @@ building:
             category = guild_input
         }
         pp_dyes_guild_alum_dyes_guild_maintenance = {
-            alum = 0.018
-            lumber = 0.54
+            alum = 0.175
+            lumber = 0.27
             manual_labor = 0.16
             produced = dyes
             output = 0.3

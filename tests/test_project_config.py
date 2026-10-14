@@ -2584,6 +2584,27 @@ def test_victuals_pop_demand_uses_scalar_database_value() -> None:
     assert values["victuals"] == 1
 
 
+def test_alum_takes_a_share_of_lumber_but_dyes_keep_an_alum_free_recipe() -> None:
+    """2026-10-14 (Jan): alum replaces half of lumber's value in the dye lines' alum recipes and 20 % in the paper lines
+    (sizing). The dyes guild's plain recipe stays alum-free: it is the line's fallback where alum is missing and the
+    legacy pass carries it up the line."""
+    buildings = ROOT / "blueprints" / "accepted" / "buildings"
+
+    def method_goods(blueprint: str, method: str) -> dict[str, float]:
+        text = (buildings / f"{blueprint}.yml").read_text(encoding="utf-8")
+        body = re.search(rf"^\s*{method} = \{{\n(.*?)^\s*\}}", text, flags=re.S | re.M).group(1)
+        return {k: float(v) for k, v in re.findall(r"^\s*([a-z_]+) = ([0-9.]+)", body, flags=re.M)}
+
+    assert "alum" not in method_goods("dyes_guild", "pp_dyes_guild_dyes_guild_maintenance")
+    for blueprint, method in [("dyes_guild", "pp_dyes_guild_alum_dyes_guild_maintenance"),
+                              ("dyes_mill", "pp_dyes_mill_dyesmill_maintenance"),
+                              ("paper_workshop", "pp_paper_workshop_paper_workshop_cloth_maintenance"),
+                              ("paper_guild", "pp_paper_guild_paper_guild_fiber_pulp_maintenance"),
+                              ("paper_manufactory", "pp_paper_manufactory_paper_manufactory_maintenance")]:
+        assert method_goods(blueprint, method).get("alum", 0) > 0, method
+        assert "keep_goods: [alum]" in (buildings / f"{blueprint}.yml").read_text(encoding="utf-8"), blueprint
+
+
 def test_staple_and_victuals_transport_costs() -> None:
     """2026-10-14 (Jan): staples are cheap to move between markets (price-1 grains/fish/olives 0.7, legumes/fruit 1.0,
     wild game 0.7, wool 1.25, livestock vanilla 1) and victuals 1.0."""

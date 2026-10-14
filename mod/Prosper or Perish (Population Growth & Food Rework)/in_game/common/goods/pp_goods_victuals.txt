@@ -2,7 +2,7 @@
 	category = produced
 	color = goods_victuals
 	default_market_price = 3.0 # 2.50
-	transport_cost = 2.0 # 3.0; lowered so victuals trade between markets
+	transport_cost = 1.0 # 3.0 -> 2.0 so victuals trade between markets; 1.0 since 2026-10-14 (Jan)
 	food = 0 # preserved trade good, no food value: food only appears as Province Food (local_food)
 	# Baseline demand so it is relevant even before special logic is added.
 	demand_add = {

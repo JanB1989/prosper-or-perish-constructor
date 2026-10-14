@@ -2584,6 +2584,23 @@ def test_victuals_pop_demand_uses_scalar_database_value() -> None:
     assert values["victuals"] == 1
 
 
+def test_staple_and_victuals_transport_costs() -> None:
+    """2026-10-14 (Jan): staples are cheap to move between markets (price-1 grains/fish/olives 0.7, legumes/fruit 1.0,
+    wild game 0.7, wool 1.25, livestock vanilla 1) and victuals 1.0."""
+    goods = MOD_ROOT / "in_game" / "common" / "goods"
+    merged: dict[str, str] = {}
+    for path in (goods / "pp_goods_adjustments.txt", goods / "pp_goods_victuals.txt"):
+        for entry in parse_file(path).entries:
+            if isinstance(entry.value, CList):
+                values = _entry_values(entry.value)
+                if "transport_cost" in values:
+                    merged[entry.key.split(":")[-1]] = str(values["transport_cost"])
+    expected = {good: 0.7 for good in ("wheat", "rice", "millet", "maize", "potato", "fish", "olives", "wild_game")}
+    expected |= {"legumes": 1.0, "fruit": 1.0, "wool": 1.25, "victuals": 1.0}
+    assert {good: float(merged[good]) for good in expected} == expected
+    assert "livestock" not in merged
+
+
 def test_staple_and_horse_pop_demand_cut() -> None:
     """2026-10-14 (Jan): pops' demand for every staple food (goods_categories.csv staple_group) and horses ~30 % below
     vanilla's pop_demand multipliers (1, wheat 0.75, fruit 0.5); wool has no pop demand."""
@@ -2594,6 +2611,7 @@ def test_staple_and_horse_pop_demand_cut() -> None:
                if row["staple_group"] and row["good"] != "wool"]
     for good in [*staples, "horses"]:
         assert abs(float(values[good]) / vanilla.get(good, 1) - 0.7) < 0.011, good
+    assert float(values["salt"]) == 0.33   # a third of vanilla's 1 (2026-10-14)
 
 
 def test_pp_law_adjustments_use_existing_modifier_types() -> None:

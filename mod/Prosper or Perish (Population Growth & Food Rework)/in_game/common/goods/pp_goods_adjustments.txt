@@ -4,10 +4,12 @@
 TRY_INJECT:wool = {
 	block_rgo_upgrade = yes # in 1.3 game doesnt consider it a food anymore so no inject needed
 	food = 0
+	transport_cost = 1.25 # 1; 2026-10-14, Jan: staples move between markets
 }
 TRY_INJECT:wild_game = {
 	block_rgo_upgrade = yes
 	food = 0
+	transport_cost = 0.7 # 0.5; 2026-10-14, Jan: staples move between markets
 }
 TRY_INJECT:fur = {
 	block_rgo_upgrade = yes
@@ -16,32 +18,38 @@ TRY_INJECT:fur = {
 TRY_INJECT:fish = {
 	block_rgo_upgrade = yes
 	food = 0
+	transport_cost = 0.7 # 1; 2026-10-14, Jan: staples move between markets
 }
 TRY_INJECT:wheat = {
 	block_rgo_upgrade = yes
 	food = 0
+	transport_cost = 0.7 # 1; 2026-10-14, Jan: staples move between markets
 }
 TRY_INJECT:maize = {
 	block_rgo_upgrade = yes
 	food = 0
+	transport_cost = 0.7 # 1; 2026-10-14, Jan: staples move between markets
 }
 TRY_INJECT:rice = {
 	block_rgo_upgrade = yes
 	food = 0
+	transport_cost = 0.7 # 1; 2026-10-14, Jan: staples move between markets
 }
 TRY_INJECT:millet = {
 	block_rgo_upgrade = yes
 	food = 0
+	transport_cost = 0.7 # 1; 2026-10-14, Jan: staples move between markets
 }
 TRY_INJECT:legumes = {
 	block_rgo_upgrade = yes
 	food = 0
-	transport_cost = 1.5 # 2; a price-1 staple lost most of a trade's margin to transport (2026-10-01)
+	transport_cost = 1.0 # 2; 2026-10-14, Jan: staples move between markets
 }
 # I need to check what i do with potato RGOs and see how they work out in NA
 TRY_INJECT:potato = {
 	block_rgo_upgrade = yes
 	food = 0
+	transport_cost = 0.7 # 1; 2026-10-14, Jan: staples move between markets
 }
 TRY_INJECT:livestock = {
 	block_rgo_upgrade = yes
@@ -50,11 +58,12 @@ TRY_INJECT:livestock = {
 TRY_INJECT:olives = {
 	block_rgo_upgrade = yes
 	food = 0
+	transport_cost = 0.7 # 1; 2026-10-14, Jan: staples move between markets
 }
 TRY_INJECT:fruit = {
 	block_rgo_upgrade = yes
 	food = 0
-	transport_cost = 1.5 # 2; a price-1 staple lost most of a trade's margin to transport (2026-10-01)
+	transport_cost = 1.0 # 2; 2026-10-14, Jan: staples move between markets
 }
 TRY_INJECT:beeswax = {
 	block_rgo_upgrade = yes

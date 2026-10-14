@@ -54,8 +54,8 @@ def test_adjusted_goods_rows_match_constructor_parser_output() -> None:
 def test_pp_specific_adjustments_are_present_in_export() -> None:
     rows = {row[0]: row[1:] for row in load_adjusted_goods_rows(ROOT)}
 
-    assert rows["wheat"] == [1.0, 1.0, 0.0, None]
-    assert rows["victuals"] == [3.0, 2.0, 0.0, 0.003]
+    assert rows["wheat"] == [1.0, 0.7, 0.0, None]
+    assert rows["victuals"] == [3.0, 1.0, 0.0, 0.003]
     assert rows["province_food_sales"] == [5.0, 100.0, None, 1.0]
     assert rows["local_food"] == [0.5, 100.0, 1.0, 1000.0]
 

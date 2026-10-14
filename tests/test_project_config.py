@@ -2605,6 +2605,16 @@ def test_alum_takes_a_share_of_lumber_but_dyes_keep_an_alum_free_recipe() -> Non
         assert "keep_goods: [alum]" in (buildings / f"{blueprint}.yml").read_text(encoding="utf-8"), blueprint
 
 
+def test_jewelry_guild_cuts_gems_in_its_base_slot() -> None:
+    """2026-10-14 (Jan): gems feed the jewelry guild's base slot (gem cutting) next to gold, silver and copper, at the
+    metal bases' margin at default prices (0.75 gems x 4 + labour for 0.7 jewelry x 5)."""
+    text = (ROOT / "blueprints" / "accepted" / "buildings" / "jewelry_guild.yml").read_text(encoding="utf-8")
+    slot = re.search(r"- name: slot_1\n    methods:\n((?:    - \S+\n)+)", text).group(1)
+    assert "pp_jewelry_guild_gems_base" in slot and "pp_jewelry_guild_silver_base" in slot
+    body = re.search(r"pp_jewelry_guild_gems_base = \{\n(.*?)\n\s*\}", text, flags=re.S).group(1)
+    assert re.search(r"^\s*gems = 0\.75$", body, flags=re.M) and re.search(r"^\s*output = 0\.7$", body, flags=re.M)
+
+
 def test_staple_and_victuals_transport_costs() -> None:
     """2026-10-14 (Jan): staples are cheap to move between markets (price-1 grains/fish/olives 0.7, legumes/fruit 1.0,
     wild game 0.7, wool 1.25, livestock vanilla 1) and victuals 1.0."""

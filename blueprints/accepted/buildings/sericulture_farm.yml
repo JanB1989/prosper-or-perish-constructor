@@ -55,9 +55,9 @@ building:
 
     unique_production_methods = {
         pp_sericulture_farm_base_silk = {
-            manual_labor = 0.032
+            manual_labor = 0.05
             produced = silk
-            output = 0.040
+            output = 0.062 # 0.040 until 2026-10-14; farmed silk is the main source (2026-10-14, Jan)
             category = building_maintenance
         }
     }
@@ -71,7 +71,7 @@ building:
             pottery = 0.036 # basins for boiling the cocoons
             manual_labor = 0.059
             produced = silk
-            output = 0.089
+            output = 0.138 # 0.089 until 2026-10-14; farmed silk is the main source (2026-10-14, Jan)
             category = building_maintenance
         }
     }
@@ -122,6 +122,8 @@ evaluation:
         base_output_per_1k: Passive base output intentionally carries 30% of the full worked silk output after the high-base rebalance.
     pp_sericulture_farm_cocoon_reeling:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Silk is a farmed luxury (2026-10-14, Jan), so reeling earns well above the farm band so the AI builds sericulture over the fiber-crop guild.
     pp_sericulture_farm_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

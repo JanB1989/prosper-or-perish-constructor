@@ -233,8 +233,21 @@ TRY_INJECT:mercury = {
 TRY_INJECT:sand = {
 	block_rgo_upgrade = yes
 }
+# Silk is an upper-class luxury (2026-10-14, Jan): vanilla gives pops no silk demand. Sized like a dear spice
+# (~240 a month at 1837 pops), Europe a quarter more; no development threshold (it cut demand by two thirds).
 TRY_INJECT:silk = {
 	block_rgo_upgrade = yes
+	demand_add = {
+		nobles = 0.08
+		clergy = 0.006
+		burghers = 0.004
+	}
+	wealth_impact_threshold = {
+		all = 1.1
+	}
+	continent_demand_modifier = {
+		europe = 1.25
+	}
 }
 TRY_INJECT:sugar = {
 	block_rgo_upgrade = yes

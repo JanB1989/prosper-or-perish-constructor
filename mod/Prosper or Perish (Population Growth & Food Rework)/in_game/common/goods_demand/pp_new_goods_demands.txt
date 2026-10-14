@@ -19,4 +19,9 @@ INJECT:pop_demand = {
 	horses = 0.7 # 1
 	# Salt: pops demand a third (2026-10-14, Jan).
 	salt = 0.33 # 1
+	# Silk: pops demand it (upper classes, goods demand_add in pp_goods_adjustments.txt; 2026-10-14, Jan).
+	silk = 1
+	# Tea and cocoa: half of pops' demand went unmet all game (1837: 48 % / 45 %); about 3/4 met at these.
+	tea = 0.6 # 1
+	cocoa = 0.7 # 1
 }

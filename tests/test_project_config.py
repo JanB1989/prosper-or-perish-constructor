@@ -2605,6 +2605,30 @@ def test_alum_takes_a_share_of_lumber_but_dyes_keep_an_alum_free_recipe() -> Non
         assert "keep_goods: [alum]" in (buildings / f"{blueprint}.yml").read_text(encoding="utf-8"), blueprint
 
 
+def test_silk_is_a_farmed_upper_class_luxury() -> None:
+    """2026-10-14 (Jan): pops (upper classes) demand silk, tea and cocoa demand is cut, fiber crops make silk only when
+    it is dear (guild output 0.6 -> 0.3) and sericulture farms carry silk (0.2 / 0.3 silk per level)."""
+    demand = _entry_values({e.key: e.value for e in parse_file(GOODS_DEMAND).entries}["INJECT:pop_demand"])
+    assert float(demand["silk"]) == 1 and float(demand["tea"]) == 0.6 and float(demand["cocoa"]) == 0.7
+    goods = {e.key: e.value for e in parse_file(MOD_ROOT / "in_game/common/goods/pp_goods_adjustments.txt").entries}
+    silk = {e.key: e.value for e in goods["TRY_INJECT:silk"].entries}
+    add = _entry_values(silk["demand_add"])
+    assert float(add["nobles"]) == 0.08 and "development_threshold" not in silk
+    buildings = ROOT / "blueprints" / "accepted" / "buildings"
+
+    def silk_out(blueprint: str) -> float:
+        text = (buildings / f"{blueprint}.yml").read_text(encoding="utf-8")
+        total = 0.0
+        for body in re.findall(r"^\s*pp_\w+ = \{\n(.*?)^\s*\}", text, flags=re.S | re.M):
+            if re.search(r"produced = silk", body) and "offset" not in body:
+                total += float(re.search(r"output = ([0-9.]+)", body).group(1))
+        return total
+
+    assert abs(silk_out("silk_production_guild") - 0.3) < 1e-9
+    assert abs(silk_out("sericulture_farm") - 0.2) < 1e-9
+    assert abs(silk_out("regulated_sericulture_farm") - 0.299) < 1e-9
+
+
 def test_jewelry_guild_cuts_gems_in_its_base_slot() -> None:
     """2026-10-14 (Jan): gems feed the jewelry guild's base slot (gem cutting) next to gold, silver and copper, at the
     metal bases' margin at default prices (0.75 gems x 4 + labour for 0.7 jewelry x 5)."""

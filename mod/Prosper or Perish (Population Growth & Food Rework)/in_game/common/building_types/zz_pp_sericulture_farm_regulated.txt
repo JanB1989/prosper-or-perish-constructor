@@ -29,9 +29,9 @@ unique_production_methods = {
     pp_regulated_sericulture_farm_base_silk = {
         icon_type = building_type
         icon = regulated_sericulture_farm
-        manual_labor = 0.042
+        manual_labor = 0.062
         produced = silk
-        output = 0.052
+        output = 0.078 # 0.052 until 2026-10-14; farmed silk is the main source (2026-10-14, Jan)
         category = building_maintenance
     }
 }
@@ -49,7 +49,7 @@ unique_production_methods = {
         coal = 0.017 # light fuel for steady reeling heat
         manual_labor = 0.027
         produced = silk
-        output = 0.060
+        output = 0.09 # 0.060 until 2026-10-14; farmed silk is the main source (2026-10-14, Jan)
         category = building_maintenance
     }
 }
@@ -67,7 +67,7 @@ unique_production_methods = {
         pottery = 0.03 # warming basins for reeling water
         manual_labor = 0.047
         produced = silk
-        output = 0.087
+        output = 0.131 # 0.087 until 2026-10-14; farmed silk is the main source (2026-10-14, Jan)
         category = building_maintenance
     }
 }

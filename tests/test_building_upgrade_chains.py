@@ -1967,7 +1967,7 @@ def test_added_mine_buildings_are_tagged_and_have_site_modifiers() -> None:
         assert raw["building"]["mode"] == "CREATE"
         assert f"buildings/{building}.yml" in enabled
         assert ADDED_MINE_BUILDING_TAG in _body_custom_tags(body)
-        assert re.search(r"^\s*local_population_growth\s*=\s*-0\.0002\s*$", body, flags=re.M)
+        assert re.search(r"^\s*local_population_growth\s*=\s*-0\.00015\s*$", body, flags=re.M)   # -0.0002 until 2026-10-14
         assert re.search(r"^\s*local_migration_attraction\s*=\s*0\.010\s*$", body, flags=re.M)
         assert re.search(rf"^\s*local_{good}_output_modifier\s*=\s*0\.025\s*$", body, flags=re.M)
 

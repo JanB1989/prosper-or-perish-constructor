@@ -1,4 +1,5 @@
 ﻿import csv
+import csv
 import json
 import os
 import re
@@ -2581,6 +2582,18 @@ def test_victuals_pop_demand_uses_scalar_database_value() -> None:
 
     values = _entry_values(pop_demand)
     assert values["victuals"] == 1
+
+
+def test_staple_and_horse_pop_demand_cut() -> None:
+    """2026-10-14 (Jan): pops' demand for every staple food (goods_categories.csv staple_group) and horses ~30 % below
+    vanilla's pop_demand multipliers (1, wheat 0.75, fruit 0.5); wool has no pop demand."""
+    entries = {entry.key: entry.value for entry in parse_file(GOODS_DEMAND).entries}
+    values = _entry_values(entries["INJECT:pop_demand"])
+    vanilla = {"wheat": 0.75, "fruit": 0.5}
+    staples = [row["good"] for row in csv.DictReader((ROOT / "config/goods_categories.csv").open(encoding="utf-8"))
+               if row["staple_group"] and row["good"] != "wool"]
+    for good in [*staples, "horses"]:
+        assert abs(float(values[good]) / vanilla.get(good, 1) - 0.7) < 0.011, good
 
 
 def test_pp_law_adjustments_use_existing_modifier_types() -> None:

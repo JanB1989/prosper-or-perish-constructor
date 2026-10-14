@@ -2,4 +2,19 @@
 ## We inject into the vanilla `pop_demand` database object so we don't collide with it.
 INJECT:pop_demand = {
 	victuals = 1
+	# Staple foods (config/goods_categories.csv staple_group) and horses: pops' demand cut ~30 % (2026-10-14, Jan).
+	# The value multiplies the good's demand_add for every pop type; vanilla in the comment.
+	wheat = 0.53 # 0.75
+	rice = 0.7 # 1
+	millet = 0.7 # 1
+	maize = 0.7 # 1
+	potato = 0.7 # 1
+	legumes = 0.7 # 1
+	livestock = 0.7 # 1
+	fish = 0.7 # 1
+	wild_game = 0.7 # 1
+	camels = 0.7 # 1
+	fruit = 0.35 # 0.5
+	olives = 0.7 # 1
+	horses = 0.7 # 1
 }

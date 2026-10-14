@@ -438,6 +438,7 @@ class Simulation:
         self.trimmed = []
         self.audit = []
         self.rejections = Counter()
+        self.yielded = Counter()   # planned levels taken back for the city Tavern minimum (yield_shared_caps)
         self.attrs = {
             r["location_tag"]: r
             for r in contract.location_attributes.iter_rows(named=True)
@@ -1782,6 +1783,31 @@ class Simulation:
                 report[k] = round(report[k], 1)
             self.construction[good] = report
 
+    def yield_shared_caps(self, tag, keep):
+        """Take back planned levels (this run's placements, newest first) of every building in ``tag`` other than
+        ``keep`` that stands above its cap, until the location's shared caps hold again. Setup buildings that are kept
+        are never touched; if one of them stays above its cap, ``verify`` reports it."""
+        for _ in range(64):
+            loc_state = self._cap_state(tag)
+            over = [k for k, n in sorted(self.counts[tag].items())
+                    if n and k != keep and n > self.cap(tag, k, gates=False, loc_state=loc_state)]
+            if not over:
+                return
+            k = over[0]
+            index = next((i for i in range(len(self.placements) - 1, -1, -1)
+                          if self.placements[i].location == tag and self.placements[i].building == k), None)
+            if index is None:
+                return
+            placement = self.placements[index]
+            if placement.level > 1:
+                self.placements[index] = replace(placement, level=placement.level - 1)
+            else:
+                del self.placements[index]
+            self.counts[tag][k] -= 1
+            if self.staffed[tag][k]:
+                self.staffed[tag][k] -= 1
+            self.yielded[k] += 1
+
     def ensure_city_taverns(self, units):
         """Every city that is a province capital gets a Tavern, even if it initially lies idle (Taverns stand only in
         towns and larger that are province capitals since 2026-10-01; other cities are listed under not_capital).
@@ -1807,6 +1833,9 @@ class Simulation:
             if self.cap(tag, key) < 1:
                 raise ValueError(f"City Tavern minimum exceeds allowed cap: {tag}")
             self.counts[tag][key] = 1
+            # the Tavern's level lowers the shared caps (forest pressure) of the buildings already planned here: the
+            # minimum stands, the planned levels it squeezes out are taken back
+            self.yield_shared_caps(tag, keep=key)
             self.placements.append(sp.Placement(tag, self.owners[tag], key, 1))
             self.city_tavern_minimum["added"] += 1
             num = self.numbers[key]

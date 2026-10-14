@@ -51,7 +51,8 @@ def _dataset(root: Path, made: float, wheat_taken: float | None = None) -> Path:
     return dataset
 
 
-def test_food_sources_fit_the_exact_store_totals(tmp_path: Path) -> None:
+def test_food_sources_fit_the_exact_store_totals(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(rf, "SUBSISTENCE_RATE", 1.487)  # the fixture's numbers are built on this rate
     # estimate: subsistence 10 x 1.487 = 14.87, RGOs 2 x 1.75 = 3.5, farm 2 x 2 = 4, Cookshop 15 x 0.5 = 7.5, Grange -24
     estimate = 10 * rf.SUBSISTENCE_RATE + 3.5 + 4.0 + 7.5 - 24.0
     made = 2.0 * estimate  # the pool made twice the estimate: factor 2

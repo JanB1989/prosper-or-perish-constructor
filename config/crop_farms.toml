@@ -18,6 +18,9 @@ tier_base_output = { 0 = 0.06, 1 = 0.08, 2 = 0.07, 3 = 0.10 }
 tier_base_labour = { 0 = 0.012, 1 = 0.016, 2 = 0.014, 3 = 0.02 }
 base_labour_class = "base"                  # base methods are tagged `base` in the blueprint labour block
 tier_pop_type = { 0 = "peasants", 1 = "peasants", 2 = "peasants", 3 = "laborers" }
+# workers per level (x 1,000): 1.25 since 2026-10-05 (early-game nerf); tiers 2-3 back to 1.0 on 2026-10-14 (Jan: later farms
+# need fewer hands, same output; the laborer tier then takes the [building_scaling.employment_cut] to 0.8)
+tier_employment_size = { 0 = 1.25, 1 = 1.25, 2 = 1.0, 3 = 1.0 }
 tier_build_time = { 0 = "village_build_time", 1 = "workshop_build_time", 2 = "workshop_build_time", 3 = "workshop_build_time" }
 tier_construction_demand = { 0 = "village_construction", 1 = "workshop_construction", 2 = "workshop_construction", 3 = "workshop_construction" }
 tier_increase_per_level_cost = { 0 = 0.15, 1 = 0.15, 2 = 0.15, 3 = 0.15 }
@@ -72,7 +75,6 @@ crowding_cap_levels = 30
 # Body lines shared by every tier (values as in the blueprints)
 [general.body]
 is_foreign = "no"
-employment_size = 1.25   # staple food buildings 1,250 workers per level, peasants and laborers (2026-10-05, Jan: early-game nerf; laborer tiers skip the employment cut)
 category = "village_category"
 custom_tags = ["farming_capacity", "pp_food_security_priority", "pp_staple_food_priority"]
 rural_settlement = "yes"

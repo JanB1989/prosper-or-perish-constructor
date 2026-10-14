@@ -2536,8 +2536,13 @@ def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -
     assert len(scoped_blueprints) == 132   # 102 before the crop farm split: 4 farm tiers became 32; +2 camel herders/stud
 
     # the staple food buildings employ 1.25 per level, peasants and laborers alike (2026-10-05, Jan, early-game nerf;
-    # 1.25 is not the cut reference, so their laborer tiers keep it); every other site the unit size
+    # 1.25 is not the cut reference, so their laborer tiers keep it); their age 4-5 tiers are back to the unit size
+    # (2026-10-14, Jan: later farms need fewer hands); every other site the unit size
+    later_tiers = {"offshore_fishery", "managed_forest_village", "pomological_orchard", "enclosed_sheep_walks"}
+
     def unit(building: str) -> float:
+        if building in later_tiers or building.endswith(("_rotations", "_model_farm")):
+            return 1.0
         return 1.25 if building in PROVISIONED_GOOD_BY_BUILDING else 1.0
 
     for building, blueprint in scoped_blueprints:

@@ -41,7 +41,7 @@ building:
     increase_per_level_cost = 0.24
     max_levels = fish_capacity_max_offshore_fishery
     pop_type = laborers
-    employment_size = 1.25
+    employment_size = 1
     category = rgo_building_category
     custom_tags = { pp_food_security_priority pp_staple_food_priority fishing_capacity }
     icon = offshore_fishery
@@ -136,7 +136,7 @@ building:
     }
 
     modifier = {
-        local_monthly_food = 4.5
+        local_monthly_food = 9
         local_food_capacity = 50
         local_fish_output_modifier = -0.004
         local_merchant_capacity = 0.050

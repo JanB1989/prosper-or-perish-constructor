@@ -51,7 +51,7 @@ if TYPE_CHECKING:
 
 CACHE_VERSION = "food-5"
 FOOD_GOOD = "local_food"
-SUBSISTENCE_RATE = 1.487  # food per month per 1,000 idle peasants or slaves (decompiled, memory location-food-production-formula)
+SUBSISTENCE_RATE = 1.19  # food per month per 1,000 idle peasants or slaves at SUBSISTENCE_AGRICULTURE 1.20 (2026-10-14; 1.487 at 1.50 before, decompiled)
 FACTOR_LIMITS = (0.25, 4.0)
 POP_TYPES = ("nobles", "clergy", "burghers", "laborers", "soldiers", "peasants", "slaves", "tribesmen")
 # where food comes from (display order): key, label, colour

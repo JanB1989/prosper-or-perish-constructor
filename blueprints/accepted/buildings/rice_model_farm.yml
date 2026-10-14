@@ -35,7 +35,7 @@ building:
     increase_per_level_cost = 0.09
     max_levels = farm_capacity_max_rice_model_farm
     pop_type = laborers
-    employment_size = 1.25
+    employment_size = 1
     category = village_category
     custom_tags = { farming_capacity pp_food_security_priority pp_staple_food_priority }
     icon = rice_model_farm
@@ -111,7 +111,7 @@ building:
         pp_rice_model_farm_provision = {
             rice = 0.024
             produced = local_food
-            output = 5.294
+            output = 8.594
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -125,7 +125,7 @@ building:
     }
 
     modifier = {
-        local_monthly_food = 4.331
+        local_monthly_food = 7.031
         local_food_capacity = 50
         local_laborers_desired_pop = 0.002
     }

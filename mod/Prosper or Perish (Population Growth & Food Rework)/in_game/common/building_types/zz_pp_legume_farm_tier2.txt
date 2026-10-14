@@ -4,7 +4,7 @@ is_foreign = no
 increase_per_level_cost = 0.07
 max_levels = farm_capacity_max_legume_rotations
 pop_type = peasants
-employment_size = 1.25
+employment_size = 1
 category = village_category
 custom_tags = { farming_capacity pp_food_security_priority pp_staple_food_priority }
 icon = legume_rotations
@@ -115,8 +115,8 @@ unique_production_methods = {
         icon = legumes
         legumes = 0.016
         produced = local_food
-        output = 3.781
-        debug_max_profit = 117.156
+        output = 6.256
+        debug_max_profit = 194.500
         category = building_maintenance
     }
 }
@@ -129,7 +129,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_monthly_food = 3.094
+    local_monthly_food = 5.119
     local_food_capacity = 50
     local_peasants_estate_power = 0.021
     local_peasant_enfranchisment = 0.002

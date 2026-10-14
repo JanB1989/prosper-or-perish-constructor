@@ -91,6 +91,9 @@ def test_every_staple_food_is_on_the_store_curve() -> None:
     assert "staple_goods" not in raw["stored_food"]["curve"]
 
 
+FARM_MEDIAN_BEFORE_AGE_FOOD_STEP = 0.2659   # Province Food / (12 x output value), median of the 32 crop farms
+
+
 def test_staple_curve_factors_follow_the_crop_farm_balance() -> None:
     """A good's factor is 0.40 x the median over its provisioning buildings of Province Food / (12 x its output value
     at their best methods), over the crop farms' median of the same ratio (constructor.toml [stored_food.curve])."""
@@ -113,6 +116,9 @@ def test_staple_curve_factors_follow_the_crop_farm_balance() -> None:
             assert config.factor(good) == config.staple_factor, good
             assert rule == pytest.approx(config.staple_factor, abs=0.02), good
         else:
+            # the other staples were balanced against the crop farms' median before the 2026-10-14 age 4/5 flat food
+            # step (Jan: 4.5 / 6.0 -> 9.0 / 12.0); that relief is extra food on purpose and leaves their store lines
+            rule = config.staple_factor * statistics.median(ratios[good]) / FARM_MEDIAN_BEFORE_AGE_FOOD_STEP
             assert config.factor(good) == pytest.approx(rule, abs=0.01), (good, round(rule, 3))
 
 

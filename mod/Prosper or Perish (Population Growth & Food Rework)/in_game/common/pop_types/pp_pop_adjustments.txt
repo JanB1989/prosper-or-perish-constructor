@@ -4,11 +4,11 @@ TRY_INJECT:nobles = {
 	promotion_factor = 0.3
 }
 TRY_INJECT:clergy = {
-	pop_food_consumption = 10 # 6.5 # 5.0
+	pop_food_consumption = 6.5 # 10 2026-10-05..14 (early-game nerf); 6.5 before # 5.0
 	promotion_factor = 0.3
 }
 TRY_INJECT:burghers = {
-	pop_food_consumption = 10 # 10 since 2026-10-05 (Jan: early-game nerf); 8 2026-10-03..05; 10 before # 6.5 # 4.0
+	pop_food_consumption = 6.5 # 2026-10-14 (Jan: upper classes ate 31 % of the food by 1837); 10 2026-10-05..14; 8 2026-10-03..05 # 4.0
 	promotion_factor = 0.25
 	pop_percentage_impact = {
 		local_pop_promotion_speed = 0.001
@@ -19,7 +19,7 @@ TRY_INJECT:burghers = {
 # power on the pop type, so dhimmi pops follow their type.
 TRY_INJECT:laborers = {
 	power_per_pop = 0.225 # vanilla 0.0375
-	pop_food_consumption = 1.75 # 1.5 until 2026-10-05 (Jan: early-game nerf)
+	pop_food_consumption = 1.5 # 1.75 2026-10-05..14 (early-game nerf)
 	promotion_factor = 4
 	upper = yes
 	pop_percentage_impact = {

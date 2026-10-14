@@ -598,7 +598,7 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
     body.append(f"increase_per_level_cost = {_increase_cost(crop, slots, context, str(general.get("footprint", "farm_land")))}")
     body.append(f"max_levels = {str(general.get('max_levels_pattern', 'farm_capacity_max_{building}')).format(building=building)}")
     body.append(f"pop_type = {table.tier_value('tier_pop_type', tier)}")
-    body.append(f"employment_size = {_value(shared.get('employment_size', 1))}")
+    body.append(f"employment_size = {_value(table.tier_value('tier_employment_size', tier))}")
     body.append(f"category = {_value(shared.get('category', 'village_category'))}")
     body.append("custom_tags = { " + " ".join(str(tag) for tag in shared.get("custom_tags", ())) + " }")
     body.append(f"icon = {building}")

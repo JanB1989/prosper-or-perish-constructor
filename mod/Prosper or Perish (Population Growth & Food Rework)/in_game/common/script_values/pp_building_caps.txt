@@ -36,6 +36,8 @@ cookshop_max_level_pp_building_level_province_kitchens_elsewhere = {
 	subtract = pp_location_kitchen_levels
 }
 
+# 2026-10-14 (Jan): slopes +23 % (development 0.175, population 0.02 before): caps about 20 % higher, more in big
+# locations (run a3bd6176, 1837: 368 full provinces under 24 months; 5 at the cap).
 pp_granary_cap = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE"
@@ -54,10 +56,10 @@ pp_granary_cap = {
 # Tooltip helpers of pp_granary_cap (cap_tooltips.py): each is one row of the cap, read through this.
 pp_granary_cap_building_level_development = {
 	value = development
-	multiply = 0.175
+	multiply = 0.215
 }
 
 pp_granary_cap_building_level_population = {
 	value = population
-	multiply = 0.0200
+	multiply = 0.0250
 }

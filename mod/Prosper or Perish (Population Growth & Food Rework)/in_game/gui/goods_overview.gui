@@ -1,0 +1,252 @@
+﻿lateralview_full = {	
+	name = "goods_overview"
+	
+	blockoverride "panel_header" {
+		window_header_alt = {
+			blockoverride "header_text" {
+				text = "LEDGER_TAB"
+			}
+			blockoverride "window_header_alt_color_texture"{
+				using = color_default_brown_texture
+			}
+		}
+	}
+
+	blockoverride "panel_content" {
+		vbox = {
+			header_main_tabs = {
+				blockoverride "content" {
+					using = ledger_tabs_template
+				}
+			}
+
+			vbox = {
+				using = layoutpolicy_expanding
+				using = bg_main_inner_alt
+				using = window_main_tabs_margin_alt
+
+				filtered_sorted_list = {
+					margin_top = 10
+					datacontext = "[GoodsView.GetGoodsItemsSortSearch]"
+					
+					blockoverride "sort_buttons_filtered_list" {
+						sort_by_key_button = {
+							name = "name"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 3
+						}
+
+						sort_by_key_button = {
+							name = "produced"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 1
+						}
+
+						sort_by_key_button = {
+							name = "total"
+							blockoverride "sort_by_key_button_texture" {
+								texture = "gfx/interface/icons/sort/goods_total.dds"
+							}
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 1
+						}
+
+						sort_by_key_button = {
+							name = "market"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+
+						sort_by_key_button = {
+							name = "demand"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 1
+						}
+						sort_by_key_button = {
+							name = "category"
+							layoutpolicy_vertical = expanding
+							size = { 120 -1 }
+						}
+					}
+
+					blockoverride "scroll_list_layout" {
+						vbox = { # PP: skips the internal goods (a fixedgridbox would keep their rows empty)
+							layoutpolicy_horizontal = expanding
+							datamodel = "[GoodsView.GetGoods]"
+
+							item = {
+								widget = {
+									datacontext = "[GoodsItem.GetGoods]"
+									using = pp_hide_internal_goods
+									layoutpolicy_horizontal = expanding
+									size = { -1 45 }
+
+									using = ledger_item_template
+									blockoverride "ledger_item_content" {
+										widget = {
+											using = layoutpolicy_expanding
+
+											hbox = {
+												margin = { 15 0 }
+												spacing = 10
+
+												button = {
+													size = { 30 30 }
+													texture = "[GetGoodsIcon(GoodsItem.GetGoods)]"
+													datacontext = "[GoodsItem.GetGoods]"
+													tooltipwidget = {
+														using = Goods_tooltip
+													}
+													onclick = "[ShowGoods(GoodsItem.GetGoods)]"
+												}
+
+												text_single = {
+													layoutpolicy_horizontal = expanding
+													layoutstretchfactor_horizontal = 3
+													autoresize = no
+													align = left|nobaseline
+
+													text = "[GoodsItem.GetGoods.GetNameWithNoTooltip]"
+													default_format = "#subtle_name"
+													datacontext = "[GoodsItem.GetGoods]"
+													tooltipwidget = {
+														using = Goods_tooltip
+													}
+													sort_by_highlight = { name = "name" }
+												}
+
+												text_single = {
+													layoutpolicy_horizontal = expanding
+													layoutstretchfactor_horizontal = 1
+													autoresize = no
+													align = left|nobaseline
+
+													text = "[GoodsItem.GetOurProduced|2L]"		
+													tooltipwidget = {
+														SimpleContextualStringPairTooltipType = {
+						
+															blockoverride "title_icon" {
+																icon = {
+																	using = tooltip_title_icon_size
+																	texture = "[GetGoodsIcon(GoodsItem.GetGoods)]"
+																}
+															}
+			
+															blockoverride "concept_link" {
+																text = [goods|e]
+															}	
+															lowpriotextcontext = "[GoodsItem.GetOurProducedInfo]"
+														}
+													}
+													sort_by_highlight = { name = "produced" }
+												}
+
+												text_single = {
+													layoutpolicy_horizontal = expanding
+													layoutstretchfactor_horizontal = 1
+													autoresize = no
+													align = right|nobaseline
+													raw_text = "[GoodsItem.GetTotalSupply|2L]@supply!"
+				
+													tooltipwidget = {
+														SimpleContextualStringPairTooltipType = {
+						
+															blockoverride "title_icon" {
+																icon = {
+																	using = tooltip_title_icon_size
+																	texture = "[GetGoodsIcon(GoodsItem.GetGoods)]"
+																}
+															}
+			
+															blockoverride "concept_link" {
+																text = [goods|e]
+															}	
+															lowpriotextcontext = "[GoodsItem.GetSupplyInfo]"
+														}
+													}
+													sort_by_highlight = { name = "total" }
+												}
+
+												widget = {
+													using = layoutpolicy_expanding
+													layoutstretchfactor_horizontal = 2
+				
+													text_single = {
+														size = { 100% 100% }
+														autoresize = no
+														align = center|nobaseline
+
+														visible = "[GoodsItem.HasMarket]"
+														raw_text = "@market![GoodsItem.GetBiggestMarket.GetName]"
+														datacontext = "[GoodsItem.GetBiggestMarket]"
+														tooltipwidget = {
+															using = Market_tooltip
+														}
+													}
+													sort_by_highlight = { name = "market" }
+												}
+
+												text_single = {
+													layoutpolicy_horizontal = expanding
+													layoutstretchfactor_horizontal = 1
+													autoresize = no
+													align = right|nobaseline
+				
+													raw_text = "[GoodsItem.GetTotalDemand|2L]@demand!"
+													tooltipwidget = {
+														SimpleContextualStringPairTooltipType = {
+						
+															blockoverride "title_icon" {
+																icon = {
+																	using = tooltip_title_icon_size
+																	texture = "[GetGoodsIcon(GoodsItem.GetGoods)]"
+																}
+															}
+			
+															blockoverride "concept_link" {
+																text = [goods|e]
+															}	
+															lowpriotextcontext = "[GoodsItem.GetDemandInfo]"
+														}
+													}							
+													sort_by_highlight = { name = "demand" }
+												}
+
+												widget = {
+													size = { 100 30 }
+													visible = "[GoodsItem.GetGoods.IsRawMaterial]"
+													tooltip = "[raw_material|e]"
+													tagtooltip_enabled = yes
+
+													icon = {
+														size = { 30 30 }
+														parentanchor = right
+														texture = "gfx/interface/icons/flat_icons/raw_goods.dds"
+													}
+													sort_by_highlight = { name = "category" }
+												}
+			
+												widget = {
+													size = { 100 30 }
+													visible = "[Not(GoodsItem.GetGoods.IsRawMaterial)]"
+													tooltip = "[produced_good|e]"
+													tagtooltip_enabled = yes
+				
+													icon = {
+														parentanchor = right
+														size = { 30 30 }
+														texture = "gfx/interface/icons/flat_icons/produced_goods.dds"	
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

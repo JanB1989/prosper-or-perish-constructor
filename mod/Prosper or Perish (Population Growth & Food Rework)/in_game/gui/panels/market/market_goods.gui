@@ -1,0 +1,1212 @@
+﻿template goods_entry {
+	hbox = {
+		using = layoutpolicy_expanding
+		margin = { 3 0 }
+		
+		vbox = {
+			using = layoutpolicy_expanding
+
+			hbox = {
+				using = layoutpolicy_expanding
+
+				hbox = {
+					header_button_left = {
+						size = { 30 30 }
+						blockoverride "button_icon_stretch_sprite" {}
+						blockoverride "header_button_frame_inner" {visible = no}
+						blockoverride "icon_texture" {visible = no}
+						blockoverride "header_button_icon_size" { size = {30 30 } }
+						blockoverride "header_button_text_layout" {}
+						blockoverride "icon_overlay" {}
+						blockoverride "icon_texture" {
+							texture = "[GetGoodsIcon(GoodsMarketEntry.GetGoods)]"
+							texture_density = 2
+						}
+						datacontext = "[GoodsMarketEntry.GetGoods]"
+						datacontext = "[SelectedMarketLateralView.GetPlayer]"
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						onmousehierarchyenter = "[PdxGuiWidget.SetHighlightGoods(GoodsMarketEntry.GetGoods)]"
+						tooltipwidget = {
+							using = SpecificGoodsMarket_tooltip
+						}
+
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							title = "OPEN_GOOD_PANEL"
+							on_action = "[ShowGoods(GoodsMarketEntry.GetGoods)]"
+						}
+
+						action_tooltip = {
+							click_type = right
+							click_mode = single
+							title = "GOODS_MARKET_CTXMENU_OPEN"
+							on_action = "[PdxGuiWidget.ToggleContextMenu]"
+						}
+
+						contextmenu_widget = {
+							GoodsMarketContextMenu = {}
+						}
+
+						sort_by_small_highlight = {
+							name = "name"
+						}
+					}
+
+					widget = {
+						size = {15 22}
+
+						progressbar_framed = {
+							parentanchor = center
+							size = { 5 22 }
+							using = progress_bar_green_alt
+							value = "[FixedPointToFloat(Divide_CFixedPoint(GoodsMarketEntry.GetStockpile, GoodsMarketEntry.GetMarket.GetCenterLocation.GetModifierValueFixed('maximum_stockpile_capacity')))]"
+							min = 0
+							max = 1
+							direction = vertical
+						}
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						tooltipwidget = {
+							using = GoodsMarketEntry_template
+						}
+
+						sort_by_small_highlight = {
+							name = "stockpile"
+						}
+					}
+				}
+
+				hbox = {
+					using = layoutpolicy_expanding
+					margin_right = 2
+
+					#LOCAL BALANCE 
+
+					widget = {
+						size = { 62 20 }
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						datacontext = "[GoodsMarketEntry.GetGoods]"
+						sort_by_small_highlight = {
+							name = "goods_local_balance"
+						}
+						tooltipwidget = {
+							using = goods_market_local_balance_tooltip
+						}
+
+						hbox = {
+							expand = {}
+							hbox = {
+								spacing = 3
+								text_single = {
+									maximumsize = { 45 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[Market.GetBalanceWithoutTrades(Goods.Self)|+=2]"
+								}
+
+
+								icon = {
+									size = { 16 16 }
+									texture = "[GetConceptTexture('goods')]"
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.3
+									}
+								}
+							}
+						}
+					}
+
+					#IMPORTS
+
+					widget = {
+						size = { 62 20 }
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						datacontext = "[GoodsMarketEntry.GetGoods]"
+						sort_by_small_highlight = {
+							name = "goods_imports"
+						}
+						tooltipwidget = {
+							using = goods_market_imports_tooltip
+						}
+						hbox = {
+							expand = {}
+							hbox = {
+								spacing = 3
+								text_single = {
+									visible = "[GreaterThan_CFixedPoint(Market.GetSupplyImportOnly(Goods.Self),'(CFixedPoint)0')]"
+									maximumsize = { 40 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[Market.GetSupplyImportOnly(Goods.Self)|L2]"
+								}
+
+								text_single = {
+									visible = "[Not(GreaterThan_CFixedPoint(Market.GetSupplyImportOnly(Goods.Self),'(CFixedPoint)0'))]"
+									maximumsize = { 40 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[Market.GetSupplyImportOnly(Goods.Self)|2]"
+									default_format = "#weak"
+								}
+
+								icon = {
+									size = { 18 18 }
+									texture = "[GetConceptTexture('import')]"
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.3
+									}
+
+									using = goods_market_import_tariff_overlay
+								}
+							}
+						}
+					}
+
+					#EXPORTS
+
+					widget = {
+						size = { 62 20 }
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						datacontext = "[GoodsMarketEntry.GetGoods]"
+						sort_by_small_highlight = {
+							name = "goods_exports"
+						}
+						tooltipwidget = {
+							using = goods_market_exports_tooltip
+						}
+						hbox = {
+							expand = {}
+							hbox = {
+								spacing = 3
+								text_single = {
+									visible = "[GreaterThan_CFixedPoint(Market.GetDemandExportOnly(Goods.Self),'(CFixedPoint)0')]"
+									maximumsize = { 40 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[Market.GetDemandExportOnly(Goods.Self)|L2]"
+								}
+								text_single = {
+									visible = "[Not(GreaterThan_CFixedPoint(Market.GetDemandExportOnly(Goods.Self),'(CFixedPoint)0'))]"
+									maximumsize = { 40 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[Market.GetDemandExportOnly(Goods.Self)|2]"
+									default_format = "#weak"
+								}
+
+
+								icon = {
+									size = { 18 18 }
+									texture = "[GetConceptTexture('export')]"
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.3
+									}
+
+									using = goods_market_export_tariff_overlay
+								}
+							}
+						}
+					}
+
+					widget = {
+						size = { 15 30}
+						icon = {
+							parentanchor = center
+							size = {24 30}
+							texture = "gfx/interface/buttons/flats/button_simple.dds"						
+							modify_texture = {
+								# using = color_new_gold_texture
+								using = color_bone_texture
+								blend_mode = normal
+							}
+						}
+					}
+
+
+					# BALANCE
+					widget = {
+						size = { 62 20 }
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						datacontext = "[GoodsMarketEntry.GetGoods]"
+						sort_by_small_highlight = {
+							name = "goods_balance"
+						}
+						tooltipwidget = {
+							using = goods_market_balance_tooltip
+						}
+						hbox = {
+							expand = {}
+							hbox = {
+								spacing = 3
+								text_single = {
+									maximumsize = { 42 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[Market.GetSurplus(Goods.Self)|+=2]"
+								}
+
+
+								icon = {
+									size = { 18 18 }
+									texture = "gfx/interface/icons/flat_icons/trade_market/goods_balance.dds"
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.3
+									}
+								}
+							}
+						}
+					}
+
+					# PRICE
+					widget = {
+						tooltipmeta = {
+							texture =  "[GetGoodsIcon(GoodsMarketEntry.GetGoods)]"
+						}
+						# size = { 68 20 }
+						size = { 50 20 }
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						tooltipwidget = {
+							using = goods_market_price_tooltip
+						}
+						hbox = {
+							# spacing = 1
+							# text_single = {
+							# 	maximumsize = { 30 20 }
+							# 	align = right|nobaseline
+							# 	using = Font_Size_Small
+							# 	text = "[GoodsMarketEntry.GetGoods.GetDefaultMarketPrice|2S]"
+							# 	datacontext = "[SelectedMarketLateralView.GetMarket]"
+
+							# }
+							# icon = {
+							# 	# parentanchor = center
+							# 	size = { 12 12 }
+							# 	texture = "gfx/interface/icons/outliner/arrow_right.dds"
+							# }
+							# icon = {
+							# 	size = {12 12}
+							# 	texture = "gfx/interface/buttons/flats/button_simple.dds"						
+							# 	modify_texture = {
+							# 		using = color_new_gold_texture
+							# 	}
+							# }
+							expand = {}
+							hbox = {
+
+								# expand = {}
+								
+								spacing = 2
+
+								text_single = {
+									maximumsize = { 30 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[GoodsMarketEntry.GetPrice|2]"
+									datacontext = "[SelectedMarketLateralView.GetMarket]"
+				
+									sort_by_small_highlight = {
+										name = "market_price"
+									}
+								}
+	
+								text_single = {
+									maximumsize = { 20 20 }
+									align = right|nobaseline
+									using = Font_Size_Small
+									raw_text = "@[GoodsMarketEntry.GetGoods.GetPriceDifferenceIconName(GoodsMarketEntry.GetPrice)]!"
+									datacontext = "[SelectedMarketLateralView.GetMarket]"
+				
+									sort_by_small_highlight = {
+										name = "market_price_diff"
+									}
+								}
+							}
+						}
+					}
+				}
+
+				hbox = {
+					spacing = 3
+					header_button_left = {
+						size = { 30 30 }
+						blockoverride "button_icon_stretch_sprite" {}
+						blockoverride "header_button_frame_inner" {visible = no}
+						blockoverride "header_button_icon_size" { size = { 30 30 } }
+						blockoverride "header_button_text_layout" {}
+						blockoverride "icon_overlay" {}
+						blockoverride "icon_texture" {
+							texture = "[GetConceptTexture('building')]"
+							texture_density = 2
+						}
+
+						enabled = "[And(CanGoodGetProduced(GoodsMarketEntry.GetGoods), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+					
+						tooltipwidget = {
+							BasicFunctionalTooltip = {}
+						}
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							visible = "[CanGoodGetProduced(GoodsMarketEntry.GetGoods)]"
+							enabled = "[CanGoodGetProduced(GoodsMarketEntry.GetGoods)]"
+							title = "MARKET_BUILDING_SHORTCUT"
+							on_action = "[SetUIFocusMarket(SelectedMarketLateralView.GetMarket.Self)]"
+							on_action = "[OpenLateralViewWithFilter('production', GoodsMarketEntry.GetGoods.GetKey)]"
+						}
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							visible = "[Not(CanGoodGetProduced(GoodsMarketEntry.GetGoods))]"
+							enabled = no
+							title = "MARKET_BUILDING_SHORTCUT_DISABLED"
+						}
+
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							visible = "[Not(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+							enabled = no
+							title = "MARKET_BUILDING_SHORTCUT_FOREIGN"
+						}
+					}
+
+					# expand raw goods NEW
+					header_button_left = {
+						size = { 30 30 }
+						blockoverride "button_icon_stretch_sprite" {}
+						blockoverride "header_button_frame_inner" {visible = no}
+						blockoverride "header_button_icon_size" { size = { 30 30 } }
+						blockoverride "header_button_text_layout" {}
+						blockoverride "icon_overlay" {}
+						blockoverride "icon_texture" {
+							texture = "gfx/interface/icons/map_modes/raw_material.dds"
+							texture_density = 2
+						}
+
+						enabled = "[And(SelectedMarketLateralView.CanExpandRGO(GoodsMarketEntry.GetGoods), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+					
+						tooltipwidget = {
+							BasicFunctionalTooltip = {}
+						}
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							visible = "[And(GoodsMarketEntry.GetGoods.IsRawMaterial, GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+							enabled = "[SelectedMarketLateralView.CanExpandRGO(GoodsMarketEntry.GetGoods)]"
+							title = "MARKET_RGO_SHORTCUT"
+							on_action = "[ShowExpandRawGoodLocationsViewWithMarketAndGoods(SelectedMarketLateralView.GetMarket.Self, GoodsMarketEntry.GetGoods, '(bool)yes')]"
+						}
+
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							visible = "[And(Not(GoodsMarketEntry.GetGoods.IsRawMaterial), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+							enabled = no
+							title = "MARKET_RGO_SHORTCUT_DISABLED"
+						}
+
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							visible = "[Not(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+							enabled = no
+							title = "MARKET_BUILDING_SHORTCUT_FOREIGN"
+						}
+					}
+
+			
+					# import button new
+					header_button_left = {
+						size = { 30 30 }
+						blockoverride "button_icon_stretch_sprite" {}
+						blockoverride "header_button_frame_inner" {visible = no}
+						blockoverride "header_button_icon_size" { size = { 30 30 } }
+						blockoverride "header_button_text_layout" {}
+						blockoverride "icon_overlay" {}
+						blockoverride "icon_texture" {
+							texture = "gfx/interface/icons/flat_icons/trade_market/import.dds"
+							texture_density = 2
+						}
+
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+
+						enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
+
+						tooltipwidget = {
+							BasicFunctionalTooltip = {}
+						}
+						action_tooltip = {
+								click_type = left
+								click_mode = single
+								title = "MARKET_CTXMENU_CREATE_IMPORT_ORDER"
+								enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
+								conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+								on_action = "[CreateImportOrderForGoodInMarket(GoodsMarketEntry.GetGoods,SelectedMarketLateralView.GetMarket.Self)]"
+
+						}
+					}
+
+					# export button new
+					header_button_left = {
+						size = { 30 30 }
+						blockoverride "button_icon_stretch_sprite" {}
+						blockoverride "header_button_frame_inner" {visible = no}
+						blockoverride "header_button_icon_size" { size = { 30 30 } }
+						blockoverride "header_button_text_layout" {}
+						blockoverride "icon_overlay" {}
+						blockoverride "icon_texture" {
+							texture = "gfx/interface/icons/flat_icons/trade_market/export.dds"
+							texture_density = 2
+						}
+
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+
+						enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
+
+						tooltipwidget = {
+							BasicFunctionalTooltip = {}
+						}
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							title = "MARKET_CTXMENU_CREATE_EXPORT_ORDER"
+							enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
+							conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+							on_action = "[CreateExportOrderForGoodInMarket(GoodsMarketEntry.GetGoods,SelectedMarketLateralView.GetMarket.Self)]"
+						}
+					}
+				}
+            }
+		}
+	}
+}
+
+template goods_in_range_entry {
+	hbox = {
+		using = layoutpolicy_expanding
+		margin = { 3 0 }
+		
+		vbox = {
+			using = layoutpolicy_expanding
+
+			hbox = {
+				using = layoutpolicy_expanding
+
+				hbox = {
+					header_button_left = {
+						size = { 30 30 }
+						blockoverride "button_icon_stretch_sprite" {}
+						blockoverride "header_button_frame_inner" {visible = no}
+						blockoverride "icon_texture" {visible = no}
+						blockoverride "header_button_icon_size" { size = {30 30 } }
+						blockoverride "header_button_text_layout" {}
+						blockoverride "icon_overlay" {}
+						blockoverride "icon_texture" {
+							texture = "[GetGoodsIcon(GoodsMarketEntry.GetGoods)]"
+							texture_density = 2
+						}
+						datacontext = "[GoodsMarketEntry.GetGoods]"
+						datacontext = "[SelectedMarketLateralView.GetPlayer]"
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						onmousehierarchyenter = "[PdxGuiWidget.SetHighlightGoods(GoodsMarketEntry.GetGoods)]"
+						tooltipwidget = {
+							using = SpecificGoodsMarket_tooltip
+						}
+
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							title = "OPEN_GOOD_PANEL"
+							on_action = "[ShowGoods(GoodsMarketEntry.GetGoods)]"
+						}
+
+						action_tooltip = {
+							click_type = right
+							click_mode = single
+							title = "GOODS_MARKET_CTXMENU_OPEN"
+							on_action = "[PdxGuiWidget.ToggleContextMenu]"
+						}
+
+						contextmenu_widget = {
+							GoodsMarketContextMenu = {}
+						}
+
+						sort_by_small_highlight = {
+							name = "name"
+						}
+					}
+					
+				}
+
+				hbox = {
+					using = layoutpolicy_expanding
+					margin_right = 2
+
+					
+					#IN RANGE LOCAL SUPPLY 
+					widget = {
+						size = { 62 20 }
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						datacontext = "[GoodsMarketEntry.GetGoods]"
+						sort_by_small_highlight = {
+							name = "in_range_produced"
+						}
+						tooltipwidget = {
+							using = InRangeMarkets_produced
+						}
+
+						hbox = {
+							expand = {}
+							hbox = {
+								spacing = 3
+								text_single = {
+									maximumsize = { 45 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[SelectedMarketLateralView.GetProducedInRange(Goods.Self)|+=2]"
+								}
+
+
+								icon = {
+									size = { 16 16 }
+									texture = "[GetConceptTexture('supply')]"
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.3
+									}
+								}
+							}
+						}
+					}
+
+					#IN RANGE LOCAL DEMAND 
+					widget = {
+						size = { 62 20 }
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						datacontext = "[GoodsMarketEntry.GetGoods]"
+						sort_by_small_highlight = {
+							name = "in_range_locally_demanded"
+						}
+						tooltipwidget = {
+							using = InRangeMarkets_localdemand
+						}
+
+						hbox = {
+							expand = {}
+							hbox = {
+								spacing = 3
+								text_single = {
+									maximumsize = { 45 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[SelectedMarketLateralView.GetLocallyDemandedInRange(Goods.Self)|-=2]"
+								}
+
+
+								icon = {
+									size = { 16 16 }
+									texture = "[GetConceptTexture('demand')]"
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.3
+									}
+								}
+							}
+						}
+					}
+
+
+					#IN RANGE LOCAL BALANCE 
+
+					widget = {
+						size = { 62 20 }
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						datacontext = "[GoodsMarketEntry.GetGoods]"
+						sort_by_small_highlight = {
+							name = "in_range_local_balance"
+						}
+						tooltipwidget = {
+							using = InRangeMarkets_localbalance
+						}
+
+						hbox = {
+							expand = {}
+							hbox = {
+								spacing = 3
+								text_single = {
+									maximumsize = { 45 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[SelectedMarketLateralView.GetLocalBalanceInRange(Goods.Self)|+=2]"
+								}
+
+
+								icon = {
+									size = { 16 16 }
+									texture = "[GetConceptTexture('goods')]"
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.3
+									}
+								}
+							}
+						}
+					}
+
+					#IMPORTS
+
+					widget = {
+						size = { 62 20 }
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						datacontext = "[GoodsMarketEntry.GetGoods]"
+						sort_by_small_highlight = {
+							name = "goods_imports"
+						}
+						tooltipwidget = {
+							using = InRangeMarkets_imports
+						}
+						hbox = {
+							expand = {}
+							hbox = {
+								spacing = 3
+								text_single = {
+									visible = "[GreaterThan_CFixedPoint(SelectedMarketLateralView.GetImportsInRange(Goods.Self),'(CFixedPoint)0')]"
+									maximumsize = { 40 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[SelectedMarketLateralView.GetImportsInRange(Goods.Self)|L2]"
+								}
+
+								text_single = {
+									visible = "[Not(GreaterThan_CFixedPoint(SelectedMarketLateralView.GetImportsInRange(Goods.Self),'(CFixedPoint)0'))]"
+									maximumsize = { 40 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[SelectedMarketLateralView.GetImportsInRange(Goods.Self)|2]"
+									default_format = "#weak"
+								}
+
+								icon = {
+									size = { 18 18 }
+									texture = "[GetConceptTexture('import')]"
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.3
+									}
+								}
+							}
+						}
+					}
+
+					#EXPORTS
+
+					widget = {
+						size = { 62 20 }
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						datacontext = "[GoodsMarketEntry.GetGoods]"
+						sort_by_small_highlight = {
+							name = "goods_exports"
+						}
+						tooltipwidget = {
+							using = InRangeMarkets_exports
+						}
+						hbox = {
+							expand = {}
+							hbox = {
+								spacing = 3
+								text_single = {
+									visible = "[GreaterThan_CFixedPoint(SelectedMarketLateralView.GetExportsInRange(Goods.Self),'(CFixedPoint)0')]"
+									maximumsize = { 40 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[SelectedMarketLateralView.GetExportsInRange(Goods.Self)|L2]"
+								}
+								text_single = {
+									visible = "[Not(GreaterThan_CFixedPoint(SelectedMarketLateralView.GetExportsInRange(Goods.Self),'(CFixedPoint)0'))]"
+									maximumsize = { 40 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[SelectedMarketLateralView.GetExportsInRange(Goods.Self)|2]"
+									default_format = "#weak"
+								}
+
+
+								icon = {
+									size = { 18 18 }
+									texture = "[GetConceptTexture('export')]"
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.3
+									}
+								}
+							}
+						}
+					}
+
+					widget = {
+						size = { 15 30}
+						icon = {
+							parentanchor = center
+							size = {24 30}
+							texture = "gfx/interface/buttons/flats/button_simple.dds"						
+							modify_texture = {
+								# using = color_new_gold_texture
+								using = color_bone_texture
+								blend_mode = normal
+							}
+						}
+					}
+
+
+					# BALANCE
+					widget = {
+						size = { 62 20 }
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						datacontext = "[GoodsMarketEntry.GetGoods]"
+						sort_by_small_highlight = {
+							name = "goods_balance"
+						}
+						tooltipwidget = {
+							using = InRangeMarkets_balance
+						}
+						hbox = {
+							expand = {}
+							hbox = {
+								spacing = 3
+								text_single = {
+									maximumsize = { 42 20 }
+									align = center|nobaseline
+									using = Font_Size_Small
+									text = "[SelectedMarketLateralView.GetBalanceInRange(Goods.Self)|+=2]"
+								}
+
+
+								icon = {
+									size = { 18 18 }
+									texture = "gfx/interface/icons/flat_icons/trade_market/goods_balance.dds"
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.3
+									}
+								}
+							}
+						}
+					}					
+				}
+
+            }
+		}
+	}
+}
+
+types MarketOverview {
+	type goods_quickfilter_button = widget {
+		block "goods_quickfilter_button_size" {
+			size = { 135 32 }
+		}
+
+		block "goods_quickfilter_button_background" {
+			background = {
+				using = paper_card_texture
+				margin = {-3 -3}
+	
+				modify_texture = {
+					using = color_paper_texture
+				}
+	
+				modify_texture = {
+					using = overlay_paper_03
+				}
+			}
+			background = {
+				using = color_mid_light_green_texture
+				margin = {-3 -3}
+	
+				modify_texture = {
+					texture = "[GetGraphicalCultureTexture('header_pattern')]"
+					texture_density = 2
+					spriteType = corneredtiled
+					blend_mode = overlay
+					alpha = 0.1
+				}
+	
+				modify_texture = {
+					block "building_color" {
+						color = { 0.145 0.2 0.141 }
+						alpha = 0.5
+						blend_mode = overlay
+					}
+				}
+			}
+		}
+
+
+		card_header_button_04 = {
+			size = { 100% 100% }
+			allow_outside = yes
+
+			action_tooltip = {
+				click_type = left
+				click_mode = single
+				block "goods_quickfilter_button_title" {
+					title = "TOGGLE_FILTER"
+				}
+				block "goods_quickfilter_button_on_action" {}
+			}
+
+			block "goods_quickfilter_button_tooltip" {
+				tooltipwidget = { SearchFilterTooltipType = {} }
+			}
+
+			icon = {
+				name = "filter_is_on"
+				using = color_white_texture
+				alpha = 0.3
+				size = { 100% 100% }
+				block "goods_quickfilter_button_highlight" {}
+			}
+
+			hbox = {
+				spacing = 5
+				margin = { 6 0 }
+
+				block "goods_quickfilter_button_leading" {}
+
+				icon = {
+					block "goods_quickfilter_button_icon_size" { size = { 22 22 } }
+					block "goods_quickfilter_button_icon" {}
+				}
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					autoresize = no
+					align = left|nobaseline
+					fontsize = 14
+					alwaystransparent = yes
+					block "goods_quickfilter_button_label" { visible = no }
+				}
+
+				block "goods_quickfilter_button_trailing" {}
+			}
+		}
+	}
+
+	type market_overview_goods = vbox {
+		using = layoutpolicy_expanding
+
+		filtered_sorted_list = {
+			datacontext = "[SelectedMarketLateralView.GetGoodsMarketEntriesSortSearch]"
+
+			blockoverride "searchbar_extra_pre_content" {
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 3
+					margin = { 10 5 }
+					margin_top = 0
+					datacontext = "[SelectedMarketLateralView.GetGoodsMarketEntriesSortSearch.GetSearchBar]"
+
+					# Raw materials
+					goods_quickfilter_button = {
+						layoutpolicy_horizontal = expanding
+						
+						datacontext = "[SearchBar.FindFilterByKey('goods_category_raw_material')]"
+						blockoverride "goods_quickfilter_button_highlight" {
+							visible = "[SearchBar.IsFilterEnabledByKey('goods_category_raw_material')]"
+						}
+						blockoverride "goods_quickfilter_button_icon" {
+							texture = "[GetConceptTexture('rgo')]"
+						}
+						blockoverride "goods_quickfilter_button_label" {
+							text = "game_concept_raw_materials"
+						}
+						blockoverride "goods_quickfilter_button_on_action" {
+							on_action = "[SearchBar.ToggleFilterByKey('goods_category_raw_material')]"
+						}
+					}
+
+					# Food bearing goods
+					goods_quickfilter_button = {
+						layoutpolicy_horizontal = expanding
+
+						datacontext = "[SearchBar.FindFilterByKey('goods_food_bearing')]"
+						blockoverride "goods_quickfilter_button_highlight" {
+							visible = "[SearchBar.IsFilterEnabledByKey('goods_food_bearing')]"
+						}
+						blockoverride "goods_quickfilter_button_icon" {
+							texture = "gfx/interface/icons/map_modes/food.dds"
+						}
+						blockoverride "goods_quickfilter_button_label" {
+							text = "market_goods_quickfilter_food_goods"
+						}
+						blockoverride "goods_quickfilter_button_on_action" {
+							on_action = "[SearchBar.ToggleFilterByKey('goods_food_bearing')]"
+						}
+					}
+
+
+					# Produced goods
+					goods_quickfilter_button = {
+						layoutpolicy_horizontal = expanding
+
+						datacontext = "[SearchBar.FindFilterByKey('goods_category_produced')]"
+						blockoverride "goods_quickfilter_button_highlight" {
+							visible = "[SearchBar.IsFilterEnabledByKey('goods_category_produced')]"
+						}
+						blockoverride "goods_quickfilter_button_icon" {
+							texture = "gfx/interface/icons/flat_icons/produced_goods.dds"
+						}
+						blockoverride "goods_quickfilter_button_label" {
+							text = "game_concept_produced_goods"
+						}
+						blockoverride "goods_quickfilter_button_on_action" {
+							on_action = "[SearchBar.ToggleFilterByKey('goods_category_produced')]"
+						}
+					}
+				}
+			}
+
+			blockoverride "sort_buttons_filtered_list" {
+				sort_by_key_button = {
+					name = "name"
+					layoutpolicy_vertical = expanding
+					size = { 35 -1 }
+				}
+
+				sort_by_key_button = {
+					name = "stockpile"
+					layoutpolicy_vertical = expanding
+					size = { 35 -1 }
+				}
+
+				sort_by_key_button = {
+					name = "goods_local_balance"
+					layoutpolicy_vertical = expanding
+					size = { 55 -1 }
+				}
+
+				sort_by_key_button = {
+					name = "goods_imports"
+					layoutpolicy_vertical = expanding
+					size = { 70 -1 }
+				}
+
+				sort_by_key_button = {
+					name = "goods_exports"
+					layoutpolicy_vertical = expanding
+					size = { 70 -1 }
+				}
+
+				sort_by_key_button = {
+					name = "goods_balance"
+					layoutpolicy_vertical = expanding
+					size = { 75 -1 }
+				}
+
+				sort_by_key_button = {
+					name = "market_price"
+					layoutpolicy_vertical = expanding
+					size = { 45 -1 }
+				}
+
+				sort_by_key_button = {
+					name = "market_price_diff"
+					using = layoutpolicy_expanding
+				}
+			}
+
+			blockoverride "scroll_list_layout" {
+				vbox = { # PP: skips the internal goods (a fixedgridbox would keep their rows empty)
+					layoutpolicy_horizontal = expanding
+					datamodel = "[SelectedMarketLateralView.GetGoodsMarketEntries]"
+
+					item = {
+						widget = {
+							datacontext = "[GoodsMarketEntry.GetGoods]"
+							using = pp_hide_internal_goods
+							layoutpolicy_horizontal = expanding
+							size = { -1 40 }
+
+							widget = {
+								size = { 100% 35 }
+								scroll_card = {
+									using = bg_paper_card
+									parentanchor = center
+									size = { 99% 35 }
+									using = goods_entry
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+types MarketsInRangeOverview {
+	type markets_in_range_overview_goods = vbox {
+		using = layoutpolicy_expanding
+
+		filtered_sorted_list = {
+			datacontext = "[SelectedMarketLateralView.GetInRangeGoodsEntriesSortSearch]"
+
+			blockoverride "searchbar_extra_pre_content" {
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 4
+					margin = { 5 5 }
+					margin_top = 0
+					datacontext = "[SelectedMarketLateralView.GetInRangeGoodsEntriesSortSearch.GetSearchBar]"
+
+					expand = {}
+
+					# Raw materials
+					goods_quickfilter_button = {
+						datacontext = "[SearchBar.FindFilterByKey('goods_category_raw_material')]"
+						blockoverride "goods_quickfilter_button_highlight" {
+							visible = "[SearchBar.IsFilterEnabledByKey('goods_category_raw_material')]"
+						}
+						blockoverride "goods_quickfilter_button_icon" {
+							texture = "[GetConceptTexture('rgo')]"
+						}
+						blockoverride "goods_quickfilter_button_label" {
+							text = "game_concept_raw_materials"
+						}
+						blockoverride "goods_quickfilter_button_on_action" {
+							on_action = "[SearchBar.ToggleFilterByKey('goods_category_raw_material')]"
+						}
+					}
+
+					# Produced goods
+					goods_quickfilter_button = {
+						datacontext = "[SearchBar.FindFilterByKey('goods_category_produced')]"
+						blockoverride "goods_quickfilter_button_highlight" {
+							visible = "[SearchBar.IsFilterEnabledByKey('goods_category_produced')]"
+						}
+						blockoverride "goods_quickfilter_button_icon" {
+							texture = "[GetConceptTexture('raw_material')]"
+						}
+						blockoverride "goods_quickfilter_button_label" {
+							text = "game_concept_produced_goods"
+						}
+						blockoverride "goods_quickfilter_button_on_action" {
+							on_action = "[SearchBar.ToggleFilterByKey('goods_category_produced')]"
+						}
+					}
+
+					# Food bearing goods
+					goods_quickfilter_button = {
+						datacontext = "[SearchBar.FindFilterByKey('goods_food_bearing')]"
+						blockoverride "goods_quickfilter_button_highlight" {
+							visible = "[SearchBar.IsFilterEnabledByKey('goods_food_bearing')]"
+						}
+						blockoverride "goods_quickfilter_button_icon" {
+							texture = "[GetConceptTexture('food')]"
+						}
+						blockoverride "goods_quickfilter_button_label" {
+							text = "market_goods_quickfilter_food_goods"
+						}
+						blockoverride "goods_quickfilter_button_on_action" {
+							on_action = "[SearchBar.ToggleFilterByKey('goods_food_bearing')]"
+						}
+					}
+
+					expand = {}
+				}
+			}
+
+			blockoverride "sort_buttons_filtered_list" {
+				sort_by_key_button = {
+					name = "name"
+					layoutpolicy_vertical = expanding
+					size = { 25 -1 }
+				}
+
+				sort_by_key_button = {
+					name = "in_range_produced"
+					layoutpolicy_vertical = expanding
+					size = { 55 -1 }
+				}
+				sort_by_key_button = {
+					name = "in_range_locally_demanded"
+					layoutpolicy_vertical = expanding
+					size = { 55 -1 }
+				}
+
+				sort_by_key_button = {
+					name = "in_range_local_balance"
+					layoutpolicy_vertical = expanding
+					size = { 55 -1 }
+				}
+
+				sort_by_key_button = {
+					name = "in_range_imports"
+					layoutpolicy_vertical = expanding
+					size = { 70 -1 }
+				}
+
+				sort_by_key_button = {
+					name = "in_range_exports"
+					layoutpolicy_vertical = expanding
+					size = { 70 -1 }
+				}
+
+				sort_by_key_button = {
+					name = "in_range_balance"
+					layoutpolicy_vertical = expanding
+					size = { 75 -1 }
+				}
+			}
+
+			blockoverride "scroll_list_layout" {
+				vbox = { # PP: skips the internal goods (a fixedgridbox would keep their rows empty)
+					layoutpolicy_horizontal = expanding
+					datamodel = "[SelectedMarketLateralView.GetInRangeGoodsEntries]"
+
+					item = {
+						widget = {
+							datacontext = "[GoodsMarketEntry.GetGoods]"
+							using = pp_hide_internal_goods
+							layoutpolicy_horizontal = expanding
+							size = { -1 40 }
+
+							widget = {
+								size = { 100% 35 }
+								scroll_card = {
+									using = bg_paper_card
+									parentanchor = center
+									size = { 99% 35 }
+									using = goods_in_range_entry
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

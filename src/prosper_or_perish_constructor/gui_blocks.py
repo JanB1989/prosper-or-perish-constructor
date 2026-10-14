@@ -102,6 +102,16 @@ class TypeIndex:
             self._cache[name] = frozenset(self._collect(self.types[name], {name}))
         return self._cache[name]
 
+    def template_blocks(self, name: str) -> frozenset[str]:
+        """Block names the expansion of template ``name`` brings into the widget that uses it."""
+        if name not in self.templates:
+            return frozenset()
+        key = "template " + name
+        if key not in self._cache:
+            self._cache[key] = frozenset()                  # cycle guard
+            self._cache[key] = frozenset(self._collect(self.templates[name], {name}))
+        return self._cache[key]
+
     def _collect(self, node: Node, seen: set[str]) -> set[str]:
         names: set[str] = set()
         for sub in walk(node):
@@ -142,22 +152,26 @@ def dead_overrides(text: str, index: TypeIndex) -> Counter[tuple[str, str]]:
 
     An override may sit anywhere inside an instance (also in plain widgets nested in it); it counts as live when any
     typed instance around it, up to the enclosing type definition (whose base type's blocks count too), has the
-    block. A dead one is reported against the nearest typed instance around it.
+    block, or when a widget around it uses a template that brings the block (`item = { widget = { using =
+    ledger_item_template blockoverride "ledger_item_content" { ... } } }`). A dead one is reported against the nearest
+    typed instance around it.
     """
     found: Counter[tuple[str, str]] = Counter()
 
-    def visit(node: Node, typed: list[str]) -> None:
+    def visit(node: Node, typed: list[str], used: frozenset[str]) -> None:
+        for name in node.usings:
+            used |= index.template_blocks(name)
         for child in node.children:
             if child.key == "blockoverride":
-                if typed and not any(child.label in (index.blocks(t) or ()) for t in typed):
+                if typed and child.label not in used and not any(child.label in (index.blocks(t) or ()) for t in typed):
                     found[(typed[-1], child.label)] += 1
-                visit(child, typed)
+                visit(child, typed, used)
             elif child.key in _DEFINITIONS:
-                visit(child, [child.base] if child.key == "type" and child.base in index.types else [])
+                visit(child, [child.base] if child.key == "type" and child.base in index.types else [], frozenset())
             elif child.key in index.types:
-                visit(child, typed + [child.key])
+                visit(child, typed + [child.key], used)
             else:
-                visit(child, typed)
+                visit(child, typed, used)
 
-    visit(parse(text), [])
+    visit(parse(text), [], frozenset())
     return found

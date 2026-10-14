@@ -1,0 +1,335 @@
+﻿lateralview_full = {	
+	name = "markets_overview"
+	
+	blockoverride "panel_header" {
+		window_header_alt = {
+			blockoverride "header_text" {
+				text = "LEDGER_TAB"
+			}
+			blockoverride "window_header_alt_color_texture"{
+				using = color_default_brown_texture
+			}
+		}
+	}
+
+	blockoverride "panel_content" {
+		vbox = {
+			header_main_tabs = {
+				blockoverride "content" {
+					using = ledger_tabs_template
+				}
+			}
+
+			vbox = {
+				using = layoutpolicy_expanding
+				using = bg_main_inner_alt
+				using = window_main_tabs_margin_alt
+
+				filtered_sorted_list = {
+					margin_top = 10
+					datacontext = "[MarketsView.GetMarketsItemsSortSearch]"
+				
+					blockoverride "sort_buttons_filtered_list" {
+						sort_by_key_button = {
+							name = "owner"
+							layoutpolicy_vertical = expanding
+							size = { 80 -1 }
+						}
+
+						sort_by_key_button = {
+							name = "name"
+							layoutpolicy_vertical = expanding
+							size = { 440 -1 }
+						}
+
+						sort_by_key_button = {
+							name = "value"
+							layoutpolicy_vertical = expanding
+							size = { 130 -1 }
+						}
+
+						sort_by_key_button = {
+							name = "capacity"
+							layoutpolicy_vertical = expanding
+							size = { 300 -1 }
+						}
+
+						sort_by_key_button = {
+							name = "food"
+							layoutpolicy_vertical = expanding
+							size = { 120 -1 }
+						}
+						sort_by_key_button = {
+							name = "surplus"
+							layoutpolicy_vertical = expanding
+							size = { 160 -1 }
+						}
+
+						sort_by_key_button = {
+							name = "demand"
+							layoutpolicy_vertical = expanding
+							size = { 180 -1 }
+						}
+
+						sort_by_key_button = {
+							name = "language"
+							layoutpolicy_vertical = expanding
+							size = { 140 -1 }
+						}
+
+						sort_by_key_button = {
+							name = "food_price"
+							layoutpolicy_vertical = expanding
+							size = { 140 -1 }
+						}
+
+						sort_by_key_button = {
+							name = "burgher_trading"
+							layoutpolicy_vertical = expanding
+							size = { 170 -1 }
+						}
+					}
+
+					blockoverride "scroll_list_content" {
+						addcolumn = 100%
+						addrow = 45
+						setitemsizefromcell = yes
+
+						datamodel = "[MarketsView.GetMarkets]"
+						item = {
+							using = ledger_item_template
+							blockoverride "ledger_item_content" {
+								widget = {
+									using = layoutpolicy_expanding
+
+									hbox = {
+										margin = { 10 0 }
+										spacing = 10
+
+										widget = {
+											layoutpolicy_vertical = expanding
+											size = { 60 -1 }
+
+											country_flag_small = {
+												datacontext = "[Market.GetCenterLocation.GetOwner]"
+												parentanchor = center
+											}
+											sort_by_highlight = {
+												name = "owner"
+											}
+										}
+
+
+										container = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											text_single = {
+												size = { 440 32 }
+												layoutpolicy_horizontal = expanding
+												layoutstretchfactor_horizontal = 3
+												autoresize = no
+												align = left|nobaseline
+
+												text = "[Market.GetNameWithNoTooltip]"
+												default_format = "#subtle_name"
+
+												tooltipwidget = {
+														using = Market_tooltip
+												}
+												sort_by_highlight = {
+													name = "name"
+												}
+											}
+										}
+
+										container = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											text_single = {
+												size = { 100 32 }
+												layoutpolicy_horizontal = expanding
+												layoutstretchfactor_horizontal = 1
+												autoresize = no
+												align = right|nobaseline
+
+												raw_text = "[Market.GetTotalValueTraded|2]@gold!"		
+																		
+												tooltipwidget = {
+													using = market_value_tooltip
+												}
+												default_format = "#important_number"
+												sort_by_highlight = {
+													name = "value"
+												}
+											}
+										}
+										
+										container = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											text_single = {	
+												size = { 50 32 }
+												layoutpolicy_horizontal = expanding
+												layoutstretchfactor_horizontal = 1
+												autoresize = no
+												align = center|nobaseline
+
+												raw_text = "[Market.GetMerchantTotalCapacityInMarket|0]"		
+																		
+												
+											}
+											
+										
+										
+											overlappingitembox = {
+												position = { 55 0 }
+												margin = {0 4}
+												size = { 200 32 }
+												datamodel = "[DataModelFirst(Market.GetMerchants, '(int32)5')]"
+												item = {
+													country_flag_small = {
+														datacontext = "[Merchant.GetCountry]"
+													}
+												}
+											}
+											
+											tooltipwidget = {
+												using = market_top_merchants_tooltip
+											}
+											sort_by_highlight = {
+												name = "capacity"
+											}
+										}
+										
+										text_single = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											autoresize = no
+											align = right|nobaseline
+
+											raw_text = "[Market.GetMonthlyFoodBalance|+=2]@food!"		
+																	
+											tooltipwidget = {
+												using = market_food_balance_tooltip
+											}
+											sort_by_highlight = {
+												name = "food"
+											}
+										}
+										
+										widget = {
+											layoutpolicy_vertical = expanding
+											size = { 140 -1 }
+
+											widget = { # PP: the first five goods that are not internal (vanilla overlappingitembox of the first five)
+												size = { 120 24 }
+												parentanchor = center
+												scissor = yes
+
+												dynamicgridbox = {
+													flipdirection = yes
+													datamodel_wrap = 9
+													ignoreinvisible = yes
+													datamodel = "[DataModelFirst(Market.GetSurplusGoods, '(int32)9')]"
+													item = {
+														icon = {
+															size = { 24 24 }
+															using = pp_hide_internal_goods
+															texture = "[GetGoodsIcon(GoodsMarketEntry.GetGoods)]"
+	
+															datacontext = "[GoodsMarketEntry.GetGoods]"
+															tooltipwidget = {
+																using = SpecificGoodsMarket_tooltip
+															}
+														}
+													}
+												}
+											}
+											sort_by_highlight = {
+												name = "surplus"
+											}
+										}
+										
+										widget = {
+											layoutpolicy_vertical = expanding
+											size = { 175 -1 }
+
+											widget = { # PP: the first five goods that are not internal (vanilla overlappingitembox of the first five)
+												size = { 120 24 }
+												parentanchor = center
+												scissor = yes
+
+												dynamicgridbox = {
+													flipdirection = yes
+													datamodel_wrap = 9
+													ignoreinvisible = yes
+													datamodel = "[DataModelFirst(Market.GetHighestDemandGoods, '(int32)9')]"
+													item = {
+														icon = {
+															size = { 24 24 }
+															using = pp_hide_internal_goods
+															texture = "[GetGoodsIcon(GoodsMarketEntry.GetGoods)]"
+	
+															datacontext = "[GoodsMarketEntry.GetGoods]"
+															tooltipwidget = {
+																using = SpecificGoodsMarket_tooltip
+															}
+														}
+													}
+												}
+											}
+											sort_by_highlight = {
+												name = "demand"
+											}
+										}
+
+										text_single = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											autoresize = no
+											align = left|nobaseline
+											text = "[Market.GetLanguage.GetName]"
+											default_format = "#subtle_name"
+											sort_by_highlight = {
+												name = "language"
+											}
+										}
+
+										text_single = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											autoresize = no
+											align = right|nobaseline
+											raw_text = "[Market.GetFoodPrice|2]@gold!"
+											tooltipwidget = {
+												using = food_price_tooltip
+											}
+											sort_by_highlight = {
+												name = "food_price"
+											}
+										}
+
+										text_single = {
+											margin_right = 10
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											autoresize = no
+											align = right|nobaseline
+											raw_text = "[Market.GetBurgherTradeCapacity|0]@trade_capacity!"
+											tooltipwidget = {
+												using = market_burgher_trade_capacity
+											}
+											sort_by_highlight = {
+												name = "burgher_trading"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

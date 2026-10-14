@@ -392,6 +392,13 @@
   (`PP_WELCOME_SIT_*`) and one button that opens the Europedia on its Prosper or Perish section
   (`OpenLateralView('encyclopedia')` + the variables `pp_encyclopedia_active` = yes, `pp_filter` = all); the situation
   never ends, the player closes it. Picture from the same tool; tests: `tests/test_welcome_situation_panel.py`.
+- Internal goods (2026-10-14, Jan): `offset`, `logistics`, `local_food` (Province Food) and `province_food_sales` are
+  hidden from the market's goods lists, the goods ledger, the markets ledger's surplus/demand icons and the trade-order
+  goods picker (view only; tooltips, building panels and methods still show them). The list is `INTERNAL_GOODS` in
+  `tools/port_vanilla_gui.py`, which writes the template `pp_hide_internal_goods` (`in_game/gui/shared/
+  pp_internal_goods.gui`) and the four vanilla windows (goods rows as `vbox`, icon rows as `dynamicgridbox` with
+  `ignoreinvisible`, so hidden goods leave no gap); a new internal good goes into that tuple, then rerun the tool.
+  Tests: `tests/test_internal_goods_gui.py`.
 - Situation map legends should use mod-owned plain localization keys, not inherited or generic `LEGEND_KEY_*` keys, because legend UI is sensitive to formatter syntax.
 - In GUI files, do not put `#` formatter markers in `default_format` style names; use the raw style key such as `yellow_titles`.
   Exception found 2026-10-10: EU5 1.4 vanilla writes `default_format = "#yellow_titles"` (382 times, never bare), and the

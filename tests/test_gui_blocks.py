@@ -87,6 +87,11 @@ def test_a_renamed_block_is_reported_where_the_old_one_was_overridden():
     assert new.blocks("Derived") == {"section_content"} and new.blocks("vbox") is None
     nested = 'TooltipScrolledContentSection = { widget = { blockoverride "scrollbar_setup" {} } }'
     assert not gui_blocks.dead_overrides(nested, new)
+    # a widget that uses a template takes the template's blocks (a plain widget without it does not)
+    inlined = 'TooltipContentSection = { widget = { using = scroll_setup blockoverride "scrollbar_setup" {} } }'
+    assert not gui_blocks.dead_overrides(inlined, new)
+    assert gui_blocks.dead_overrides(inlined.replace("using = scroll_setup ", ""), new) == Counter(
+        {("TooltipContentSection", "scrollbar_setup"): 1})
     # the chip generator's scroll section fits the 1.4 shape
     assert not gui_blocks.dead_overrides(location_status._scrolled('text = "x"'), new)
 

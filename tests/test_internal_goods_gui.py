@@ -21,7 +21,7 @@ def _mod(rel: str) -> str:
 
 def _files() -> list[str]:
     tool = _tool()
-    return [*tool.INTERNAL_GOODS_LISTS, *tool.INTERNAL_GOODS_ICONS]
+    return [*tool.INTERNAL_GOODS_LISTS, *tool.INTERNAL_GOODS_ICONS, *tool.INTERNAL_GOODS_TABLES]
 
 
 def test_windows_are_a_fresh_port_of_the_current_vanilla_files():
@@ -29,7 +29,7 @@ def test_windows_are_a_fresh_port_of_the_current_vanilla_files():
     tool = _tool()
     for rel in _files():
         assert _mod(rel) == tool.port_internal_goods(tool._read(_vanilla() / tool.GUI / rel), rel), rel
-    assert _mod(tool.INTERNAL_GOODS_GUI) == tool.internal_goods_template()
+    assert _mod(tool.INTERNAL_GOODS_GUI) == tool.internal_goods_gui(tool._read(_vanilla() / tool.COOLTIP_TYPES))
 
 
 def test_hidden_goods_are_the_mods_goods():
@@ -54,11 +54,33 @@ def test_every_goods_list_uses_the_template():
     for rel, models in tool.INTERNAL_GOODS_ICONS.items():
         text = _mod(rel)
         assert text.count(f"using = {tool.INTERNAL_GOODS_TEMPLATE}") == len(models), rel
-        count = tool.TOP_GOODS_ICONS + len(tool.INTERNAL_GOODS)
+        count = tool.TOP_GOODS + len(tool.INTERNAL_GOODS)
         for model in models:   # ignoreinvisible: hidden icons take no slot; the strip clips the rest at five
             assert re.search(r"ignoreinvisible = yes\n[ \t]*datamodel = "
                              rf"\"\[DataModelFirst\({re.escape(model)}, '\(int32\){count}'\)\]\"", text), (rel, model)
-            assert f"DataModelFirst({model}, '(int32){tool.TOP_GOODS_ICONS}')" not in text
+            assert f"DataModelFirst({model}, '(int32){tool.TOP_GOODS}')" not in text
+
+
+def test_tooltip_goods_tables_show_five_goods_that_are_not_internal():
+    """Each table's columns read the first five plus one per internal good on the goods table column, whose rows
+    hide the internal goods and whose rows box is five rows high (the market tooltip's Greatest Local Surplus/
+    Deficits)."""
+    tool = _tool()
+    count = tool.TOP_GOODS + len(tool.INTERNAL_GOODS)
+    for rel, models in tool.INTERNAL_GOODS_TABLES.items():
+        text = _mod(rel)
+        assert text.count(f"{tool.GOODS_TABLE_COLUMN} = {{") == 3 * len(models), rel   # goods, balance, price
+        for model in models:
+            assert f"DataModelFirst({model}, '(int32){count}')" in text
+            assert f"DataModelFirst({model}, '(int32){tool.TOP_GOODS}')" not in text
+    column = _mod(tool.INTERNAL_GOODS_GUI)
+    column = column[column.index(f"type {tool.GOODS_TABLE_COLUMN} = vbox"):]
+    rows = column[column.index("scrollvbox = {"):]
+    assert f"maximumsize = {{ -1 {tool.TOP_GOODS * 30} }}" in rows and "scrollbarpolicy_vertical = always_off" in rows
+    assert re.search(r'block "column_datamodel" \{\}\n\n[ \t]*item = \{\n[ \t]*TooltipTableField = \{\n[ \t]*'
+                     r'blockoverride "visibility" \{\n[ \t]*datacontext = "\[GoodsMarketEntry\.GetGoods\]"\n[ \t]*'
+                     rf"using = {tool.INTERNAL_GOODS_TEMPLATE}\n", rows)
+    assert 'blockoverride "visibility"' not in column[:column.index("scrollvbox = {")]   # the header stays
 
 
 def test_data_functions_exist_in_the_game():

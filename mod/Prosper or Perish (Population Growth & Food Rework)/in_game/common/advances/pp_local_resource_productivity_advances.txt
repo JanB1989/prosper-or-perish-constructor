@@ -231,3 +231,12 @@ TRY_INJECT:tre_trapezuntine_endurance = {
 	global_raw_material_output = -0.10
 	global_max_rgo_size_modifier = 0.10
 }
+
+# 2026-10-14, Jan: no age-6 fur output (vanilla +0.3). Fur output per worker already rose 1.0 -> 1.73 by 1837 (run a3bd6176)
+# and a third of the fur went unsold after 1750; wild game keeps its +0.3.
+REPLACE:long_rifle = {
+	age = age_6_revolutions
+	requires = levee_en_masse_advance
+
+	global_wild_game_output_modifier = 0.3
+}

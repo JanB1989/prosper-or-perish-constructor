@@ -187,6 +187,8 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
     "trade_range_advance_age_3": ({"trade_range = 250"}, {"trade_range = 50"}),
     "joint_stock_companies": ({"trade_range = 200"}, {"trade_range = 50"}),
     "chartered_companies": ({"trade_range = 200"}, {"trade_range = 50"}),
+    # fur (2026-10-14, Jan): no age-6 fur output, fur output per worker already rose 1.0 -> 1.73 (run a3bd6176)
+    "long_rifle": ({"global_fur_output_modifier = 0.3"}, set()),
 }
 # The mod keeps devastation recovery from these advances small (sticky devastation). EU5 1.4 halved the vanilla
 # bonus to +0.0025, so the injects were re-netted; the merged value must stay positive.

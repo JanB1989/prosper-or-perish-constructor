@@ -194,7 +194,7 @@ price = pp_cookshop_price
 			category = building_maintenance
 		}
 
-		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
+		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey ---
 		pp_cookshop_kheer_serve = {
 			icon_type = building_type
 			icon = cookshop
@@ -219,10 +219,11 @@ price = pp_cookshop_price
 			output = 0.49
 			category = building_maintenance
 		}
+		# 2026-10-14, Jan: wild game instead of fur 0.12 (same gold); fur is a luxury, not food
 		pp_cookshop_boreal_hunter_stew_serve = {
 			icon_type = building_type
 			icon = cookshop
-			fur = 0.12
+			wild_game = 0.24
 			millet = 0.1
 			salt = 0.01
 			manual_labor = 0.064

@@ -89,8 +89,9 @@ building:
     	#   building's flat local_monthly_food
     	# ==========================================
     	unique_production_methods = {
+    		# 2026-10-14, Jan: wild game instead of fur 0.15 (same gold); fur is a luxury, not food
     		pp_public_kitchen_boreal_hunter_stew_serve = {
-    			fur = 0.15
+    			wild_game = 0.3
     			millet = 0.13
     			salt = 0.014
     			manual_labor = 0.039
@@ -109,7 +110,7 @@ building:
     			category = building_maintenance
     		}
 
-    		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
+    		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey ---
     		pp_public_kitchen_kheer_serve = {
     			rice = 0.24
     			sugar = 0.022

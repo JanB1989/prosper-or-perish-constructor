@@ -11,9 +11,27 @@ TRY_INJECT:wild_game = {
 	food = 0
 	transport_cost = 0.7 # 0.5; 2026-10-14, Jan: staples move between markets
 }
+# Fur is a court luxury wherever winters are cool, not only in the snow (2026-10-14, Jan; run a3bd6176: 25-45 % of the
+# fur went unsold all game, demand per noble ~0 in China, the Ottoman lands, Persia and Italy). Vanilla winter none 0 /
+# mild 0.5 / normal 1 / severe 2; the climate factor keeps the tropics out (engine: winter x climate x topography).
+# Importer markets (no own fur production) demand more, so fur travels. Ages 1-3 add demand (pp_age_adjustments.txt).
 TRY_INJECT:fur = {
 	block_rgo_upgrade = yes
 	food = 0
+	winter_demand_modifier = {
+		none = 0.5
+		mild = 0.75
+		normal = 1
+		severe = 1.25
+	}
+	climate_demand_modifier = {
+		tropical = 0
+		ha1300_climate_tropical_monsoon = 0
+		ha1300_climate_savanna = 0
+		arid = 0.5
+		hot_semi_arid = 0.5
+	}
+	market_unavailability_demand_modifier = 1.5
 }
 TRY_INJECT:fish = {
 	block_rgo_upgrade = yes

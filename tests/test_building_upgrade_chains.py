@@ -199,6 +199,7 @@ ADDED_MINE_BUILDING_GOODS = {
     "stone_quarry_improved": "stone",
 }
 ADDED_MINE_BUILDING_TAG = "pp_mine_building"
+MINE_SITE_OUTPUT_BONUS_BY_TIER = {0: "0.015", 1: "0.025", 2: "0.035"}
 
 DEACTIVATED_MINING_VILLAGE_BLUEPRINTS = {
     "buildings/mining_village.yml",
@@ -1969,7 +1970,10 @@ def test_added_mine_buildings_are_tagged_and_have_site_modifiers() -> None:
         assert ADDED_MINE_BUILDING_TAG in _body_custom_tags(body)
         assert re.search(r"^\s*local_population_growth\s*=\s*-0\.00015\s*$", body, flags=re.M)   # -0.0002 until 2026-10-14
         assert re.search(r"^\s*local_migration_attraction\s*=\s*0\.010\s*$", body, flags=re.M)
-        assert re.search(rf"^\s*local_{good}_output_modifier\s*=\s*0\.025\s*$", body, flags=re.M)
+        # Per-level site bonus by upgrade tier (2026-10-14; flat 0.025 before): early mines weaker, upgrades stronger.
+        tier = raw["upgrade_chain"]["tier"]
+        site_bonus = re.findall(rf"^\s*local_{good}_output_modifier\s*=\s*(-?[0-9.]+)\s*$", body, flags=re.M)
+        assert site_bonus == [MINE_SITE_OUTPUT_BONUS_BY_TIER[tier]], (building, tier, site_bonus)
 
 
 def test_iron_mine_tiers_are_iron_deposit_only() -> None:

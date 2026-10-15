@@ -46,6 +46,47 @@ def test_every_specialization_charter_upgrades_to_its_rights():
         assert re.search(rf"^{good}_charter = \{{\s*is_specialization = yes\s*upgrades_to = {good}_rights\b", text, re.MULTILINE)
 
 
+def _pp_specialization_blocks() -> dict[str, str]:
+    text = (TOWN_RIGHTS / "pp_specialization_town_rights.txt").read_text(encoding="utf-8-sig")
+    return {m[1]: m[2] for m in re.finditer(r"(?ms)^(pp_\w+) = \{(.*?)^\}", text)}
+
+
+def test_one_specialization_rule_names_every_other_pp_specialization_right():
+    """One specialization right per town (`pp_one_specialization_tt`): every PP specialization right refuses every
+    other one, except the charter it upgrades from (the upgrade checks the right's allow while the charter is held).
+    Guards new rights such as the rights-only iron line (Hammer Privileges, 2026-10-15)."""
+    blocks = _pp_specialization_blocks()
+    assert "pp_iron_rights" in blocks and len(blocks) == 35
+    upgrades_from = {m[1]: key for key, body in blocks.items() if (m := re.search(r"upgrades_to = (\w+)", body))}
+    missing = []
+    for key, body in blocks.items():
+        nor = body.split("text = pp_one_specialization_tt", 1)[1]
+        listed = set(re.findall(r"has_town_rights = town_rights_type:(\w+)", nor))
+        expected = set(blocks) - {key, upgrades_from.get(key)}
+        missing += [f"{key} lacks {other}" for other in sorted(expected - listed)]
+    assert not missing, missing
+
+
+def test_every_pp_specialization_right_has_name_description_and_icon():
+    mod = TOWN_RIGHTS.parents[2]
+    loc = (mod / "main_menu" / "localization" / "english" / "pp_specialization_town_rights_l_english.yml").read_text(
+        encoding="utf-8-sig")
+    icons = mod / "main_menu" / "gfx" / "interface" / "icons" / "town_rights"
+    for key, body in _pp_specialization_blocks().items():
+        assert re.search(rf"^  {key}: \"", loc, re.MULTILINE), key
+        assert re.search(rf"^  {key}_desc: \"", loc, re.MULTILINE), key
+        assert (icons / f"{key}.dds").stat().st_size > 1000, key
+        for tooltip in re.findall(r"text = (\w+)", body):
+            assert re.search(rf"^  {tooltip}: \"", loc, re.MULTILINE), tooltip
+
+
+def test_iron_right_needs_iron_worked_in_the_town():
+    body = _pp_specialization_blocks()["pp_iron_rights"]
+    assert "upgrades_to" not in body and "potential" not in body
+    assert "raw_material = goods:iron" in body
+    assert "local_iron_output_modifier" in body and "local_production_efficiency" in body
+
+
 def test_every_town_right_of_the_mod_has_its_own_colour():
     """EU5 logs "Town Rights X has same color as Y" for every pair sharing a colour; the town-rights map mode cannot
     tell them apart. Vanilla rights the mod replaces (switched off) get their own colours too (2026-10-15)."""

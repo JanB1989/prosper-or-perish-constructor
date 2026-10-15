@@ -1,9 +1,10 @@
-"""Render the 34 specialization town right icons (17 lines x charter/rights) and write their DDS files.
+"""Render the 35 specialization town right icons (17 lines x charter/rights, plus the rights-only iron line)
+and write their DDS files.
 
 Run from the constructor repo:
 
     uv run python assets/town_right_drawings/render.py                 # all icons -> PNG + DDS
-    uv run python assets/town_right_drawings/render.py --only cloth glass --no-dds
+    uv run python assets/town_right_drawings/render.py --only cloth glass iron --no-dds
     uv run python assets/town_right_drawings/render.py --sheet /tmp/sheet.png [--zoom 2]
 
 PNGs (128 px and 1024 px) go to ``artifacts/icons/town_rights/``; DDS files (DXT5, 128 px, full mip chain,
@@ -31,6 +32,8 @@ import frame  # noqa: E402
 GOODS = ("cloth", "fine_cloth", "leather", "pottery", "furniture", "glass", "jewelry", "porcelain", "lacquerware",
          "beer", "liquor", "books", "tools", "weaponry", "firearms", "cannons", "naval_supplies")
 TIERS = {"charter": "pp_{good}_charter", "rights": "pp_{good}_rights"}
+# tiers each line has: the 17 manufacturing lines a charter and its rights; iron (Hammer Privileges) one right only
+LINES = {good: tuple(TIERS) for good in GOODS} | {"iron": ("rights",)}
 PNG_DIR = REPO / "artifacts" / "icons" / "town_rights"
 DDS_DIR = REPO / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "main_menu" / "gfx" / "interface" / \
     "icons" / "town_rights"
@@ -69,20 +72,22 @@ def render_one(job: tuple[str, str, bool]) -> tuple[str, str]:
 
 
 def contact_sheet(goods: tuple[str, ...], out: Path, zoom: int = 1, cols: int = 1) -> None:
-    """Vanilla pairs on top, then one row per line: name, charter, rights (128 px), then both at 48 px."""
+    """Vanilla pairs on top, then one row per line: name, charter, rights (128 px), then both at 48 px.
+    A rights-only line (iron) leaves its charter cells empty."""
     cell = 128 * zoom
     small = 48 * zoom
     pad = 10 * zoom
     label_w = 150 * zoom
-    rows: list[tuple[str, Image.Image, Image.Image]] = []
+    rows: list[tuple[str, Image.Image | None, Image.Image]] = []
     for p in VANILLA_PAIRS:
         a, b = VANILLA / f"{p}_charter.dds", VANILLA / f"royal_{p}_rights.dds"
         if a.exists() and b.exists():
             rows.append((f"vanilla {p}", Image.open(a).convert("RGBA"), Image.open(b).convert("RGBA")))
     for g in goods:
         a, b = PNG_DIR / f"pp_{g}_charter.png", PNG_DIR / f"pp_{g}_rights.png"
-        if a.exists() and b.exists():
-            rows.append((g, Image.open(a).convert("RGBA"), Image.open(b).convert("RGBA")))
+        has_charter = "charter" in LINES[g]
+        if b.exists() and (a.exists() or not has_charter):
+            rows.append((g, Image.open(a).convert("RGBA") if has_charter else None, Image.open(b).convert("RGBA")))
     per_col = (len(rows) + cols - 1) // cols
     entry_w = label_w + 2 * cell + 2 * small + 5 * pad
     entry_h = cell + pad
@@ -98,12 +103,14 @@ def contact_sheet(goods: tuple[str, ...], out: Path, zoom: int = 1, cols: int = 
         d.text((x, y + cell // 2 - 8 * zoom), name, fill=(220, 210, 190, 255), font=font)
         x += label_w
         for im in (a, b):
-            sheet.alpha_composite(im.resize((cell, cell), Image.LANCZOS if zoom == 1 else Image.NEAREST), (x, y))
+            if im is not None:
+                sheet.alpha_composite(im.resize((cell, cell), Image.LANCZOS if zoom == 1 else Image.NEAREST), (x, y))
             x += cell + pad
         for im in (a, b):
-            sm = im.resize((48, 48), Image.LANCZOS)
-            sm = sm.resize((small, small), Image.NEAREST)
-            sheet.alpha_composite(sm, (x, y + (cell - small) // 2))
+            if im is not None:
+                sm = im.resize((48, 48), Image.LANCZOS)
+                sm = sm.resize((small, small), Image.NEAREST)
+                sheet.alpha_composite(sm, (x, y + (cell - small) // 2))
             x += small + pad
     out.parent.mkdir(parents=True, exist_ok=True)
     sheet.save(out)
@@ -111,16 +118,16 @@ def contact_sheet(goods: tuple[str, ...], out: Path, zoom: int = 1, cols: int = 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--only", nargs="*", choices=GOODS, help="render only these lines")
+    ap.add_argument("--only", nargs="*", choices=tuple(LINES), help="render only these lines")
     ap.add_argument("--no-dds", action="store_true", help="write PNGs only")
     ap.add_argument("--sheet", type=Path, help="also write a contact sheet PNG here")
     ap.add_argument("--zoom", type=int, default=1)
     ap.add_argument("--cols", type=int, default=1, help="columns of entries in the contact sheet")
     ap.add_argument("--no-render", action="store_true", help="only rebuild the contact sheet")
     args = ap.parse_args()
-    goods = tuple(args.only) if args.only else GOODS
+    goods = tuple(args.only) if args.only else tuple(LINES)
     if not args.no_render:
-        jobs = [(g, t, not args.no_dds) for g in goods for t in TIERS]
+        jobs = [(g, t, not args.no_dds) for g in goods for t in LINES[g]]
         with ProcessPoolExecutor(max_workers=min(8, len(jobs))) as ex:
             for good, tier in ex.map(render_one, jobs):
                 print(f"rendered {TIERS[tier].format(good=good)}")

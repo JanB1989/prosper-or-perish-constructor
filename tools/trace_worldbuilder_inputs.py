@@ -15,6 +15,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+import traceback
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -24,6 +25,16 @@ from prosper_or_perish_constructor import cli  # noqa: E402
 
 # Map data and setup count whole (cli.WORLDBUILDER_MOD_INPUTS); the trace narrows the script folders.
 ROOTS = ("in_game/common", "in_game/map_data", "main_menu/common", "main_menu/setup", "loading_screen/common")
+
+
+# Readers of the definition folders that look definitions up by name (the parser's merge for start_rules.Rules, the
+# plain-number script values, compat's override names); cli._DefinitionReach narrows the fingerprint to what they reach.
+BY_NAME_READERS = {("load_order.py", "load_merged_directory"), ("vanilla_food_productivity.py", "script_values"),
+                   ("compat.py", "mod_overrides")}
+
+
+def _by_name(stack: traceback.StackSummary) -> bool:
+    return any((Path(frame.filename).name, frame.name) in BY_NAME_READERS for frame in stack)
 
 
 def _dirty(mod: Path) -> set[str]:
@@ -39,9 +50,13 @@ def main() -> int:
     reads: set[str] = set()
     writes: set[str] = set()
     lists: set[str] = set()
+    other_reads: set[str] = set()   # definition-folder files read by something other than a by-name reader
+    definition_folders = tuple(f + "/" for f in cli.WB_DEFINITION_FOLDERS)
+
+    tracing = [True]
 
     def hook(event: str, args: tuple) -> None:
-        if event not in ("open", "os.listdir", "os.scandir") or not args:
+        if not tracing[0] or event not in ("open", "os.listdir", "os.scandir") or not args:
             return
         path = args[0]
         if isinstance(path, (bytes, os.PathLike)):
@@ -54,14 +69,24 @@ def main() -> int:
         rel = path[len(prefix):]
         if event == "open":
             mode = str(args[1] or "r")
-            (writes if any(c in mode for c in "wax+") else reads).add(rel)
+            written = any(c in mode for c in "wax+")
+            (writes if written else reads).add(rel)
+            if not written and rel.startswith(definition_folders) and not _by_name(traceback.extract_stack()):
+                other_reads.add(rel)
         else:
             lists.add(rel)
 
     before = _dirty(mod)
     sys.addaudithook(hook)
+    narrowed: list[str] = []
     try:
         cli._worldbuilder_apply(REPO, project)
+        tracing[0] = False
+        # A file the stage reads other than by name must count whole in the fingerprint (cli._DefinitionReach).
+        reach = cli._DefinitionReach()
+        cli._worldbuilder_parts(REPO, project, reach)
+        narrowed = sorted(rel for rel in other_reads
+                          if (mod / rel).is_file() and reach._entries(mod / rel, (mod / rel).read_bytes()) is not None)
     finally:
         changed = sorted(_dirty(mod) - before)
         if changed:
@@ -85,7 +110,9 @@ def main() -> int:
         print(f"MISSING from WORLDBUILDER_MOD_INPUTS: {rel}")
     for rel in unused:
         print(f"no longer read (could drop): {rel}")
-    return 1 if missing else 0
+    for rel in narrowed:
+        print(f"READ WHOLE but narrowed to reached definitions (name it in stage code or config): {rel}")
+    return 1 if missing or narrowed else 0
 
 
 if __name__ == "__main__":

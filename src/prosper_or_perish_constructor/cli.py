@@ -3886,8 +3886,9 @@ def _sync_stage_fingerprints(repo: Path, project: Path) -> dict[str, str]:
 WB_PART = "worldbuilder|"
 
 
-def _worldbuilder_parts(repo: Path, project: Path) -> dict[str, str]:
-    """One digest per World Builder input (file or folder), so a rerun can say which input changed."""
+def _worldbuilder_parts(repo: Path, project: Path, reach: "_DefinitionReach | None" = None) -> dict[str, str]:
+    """One digest per World Builder input (file or folder), so a rerun can say which input changed. ``reach``: filled
+    with what counts of the definition folders (tests)."""
     from eu5gameparser.load_order import local_load_order_path
 
     from prosper_or_perish_constructor.vanilla_mirror import installed_build_id
@@ -3900,18 +3901,202 @@ def _worldbuilder_parts(repo: Path, project: Path) -> dict[str, str]:
         load_order,
         local_load_order_path(load_order),
     ]
-    parts: dict[str, str] = {}
+    mod_root = _project_mod_root(repo, project).resolve()
+    definition_roots = {(mod_root / folder).resolve(): folder for folder in WB_DEFINITION_FOLDERS}
+    reach = _DefinitionReach() if reach is None else reach
+
+    def collect(path: Path, data: bytes) -> bytes:
+        out = _worldbuilder_view(path, data)
+        reach.add_root(path, out)
+        return out
+
+    labelled: dict[Path, str] = {}
     for path in sorted({item.resolve() if item.exists() else item for item in paths}, key=str):
         try:
-            label = str(path.relative_to(repo.resolve()))
+            labelled[path] = str(path.relative_to(repo.resolve()))
         except ValueError:
-            label = str(path)
-        # Compared without comments, AI weights and blueprint localization/icon/evaluation (_worldbuilder_view): the
-        # stage never reads them, and a weight or comment edit used to rerun the whole start setup (about two minutes).
-        parts[label] = _fingerprint_paths([path], file_filter=_is_fingerprint_input, view=_worldbuilder_view)
+            labelled[path] = str(path)
+    digests: dict[str, str] = {}
+    # Every other input first: what they name decides which definitions count (_DefinitionReach).
+    for path, label in labelled.items():
+        if path not in definition_roots:
+            # Compared without comments, AI weights and blueprint localization/icon/evaluation (_worldbuilder_view): the
+            # stage never reads them, and a weight or comment edit used to rerun the whole start setup (about two minutes).
+            digests[label] = _fingerprint_paths([path], file_filter=_is_fingerprint_input, view=collect)
+    reach.add_stage_names(config, repo)
+    reach.add_vanilla(_vanilla_game_root(load_order))
+    reach.index(definition_roots)
+    for path, label in labelled.items():
+        if path in definition_roots:
+            digests[label] = _fingerprint_paths([path], file_filter=_is_fingerprint_input, view=reach.view)
+    parts = {label: digests[label] for label in labelled.values()}
     # The game data itself is too large to hash; its Steam build stands in for it.
     parts["game build"] = str(installed_build_id(load_order))
     return parts
+
+
+def _vanilla_game_root(load_order: Path) -> Path | None:
+    from eu5gameparser.load_order import read_load_order
+
+    from prosper_or_perish_constructor.location_baseline import resolve_load_order_path
+
+    try:
+        raw = read_load_order(load_order)["paths"]["vanilla_root"]
+    except (OSError, KeyError, TypeError):
+        return None
+    return resolve_load_order_path(str(raw), load_order.parent) / "game"
+
+
+# Folders of named definitions (2026-10-15, Jan: a one-line edit to the enclave triggers reran the start setup, 73 s).
+# The stage loads them whole but reads a definition only by name: start_rules.Rules evaluates the scripted triggers and
+# script values the buildings, static modifiers, ranks, goods and classes reach, and compat.mod_overrides reads only the
+# REPLACE/INJECT names of a folder it patches (the stage never evaluates a generic action). So a file here counts whole
+# only when the stage names it (stage code, config, geography export) or it replaces the vanilla file of that name;
+# elsewhere only the definitions an input reaches by name count (vanilla names always; True below), and of the rest only
+# their override names. tests/test_sync_fingerprint.py checks the stage reads these folders no other way.
+WB_DEFINITION_FOLDERS = {
+    "in_game/common/scripted_triggers": True,
+    "in_game/common/script_values": True,
+    "main_menu/common/script_values": True,
+    "in_game/common/generic_actions": False,
+}
+_ROOT_SUFFIXES = {".txt", ".yml", ".yaml", ".toml", ".py", ".json", ".csv"}
+_WORD_BYTES = frozenset(b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_$")
+_WORDS = bytes(c if c in _WORD_BYTES else 0x20 for c in range(256))
+_PARAM = re.compile(rb"\$[A-Za-z0-9_]*\$")
+_TXT_NAME = re.compile(r"[A-Za-z0-9_.-]+\.txt")
+_TOP_ENTRY = re.compile(rb"\s*(?:([A-Z_]+):)?([A-Za-z0-9_@.$-]+)\s*\??=\s*")
+_SCALAR = re.compile(rb'"[^"]*"|[^\s{}]+')
+_CODE_LINE = re.compile(rb'(?:"[^"\n]*"|[^"#\n])*')   # a line up to its comment (a # inside a string is text)
+
+
+def _top_level_entries(raw: bytes) -> list[tuple[bytes | None, bytes, bytes]] | None:
+    """(override prefix, name, entry text without comments) of every top-level entry of a script file; None when it
+    does not parse (the file then counts whole)."""
+    data = b"\n".join(_CODE_LINE.match(line)[0].rstrip() for line in raw.removeprefix(b"\xef\xbb\xbf").split(b"\n"))
+    out: list[tuple[bytes | None, bytes, bytes]] = []
+    i, n = 0, len(data)
+    while True:
+        m = _TOP_ENTRY.match(data, i)
+        if not m:
+            return out if not data[i:].strip() else None
+        j = m.end()
+        if j < n and data[j] == 0x7B:
+            depth, k, quoted = 0, j, False
+            while k < n:
+                c = data[k]
+                if c == 0x22:
+                    quoted = not quoted
+                elif not quoted and c == 0x7B:
+                    depth += 1
+                elif not quoted and c == 0x7D:
+                    depth -= 1
+                    if not depth:
+                        break
+                k += 1
+            if depth:
+                return None
+            end = k + 1
+        else:
+            value = _SCALAR.match(data, j)
+            if not value:
+                return None
+            end = value.end()
+        out.append((m[1], m[2], data[m.start():end].strip()))
+        i = end
+
+
+class _DefinitionReach:
+    """Which definitions of WB_DEFINITION_FOLDERS the World Builder stage can read: the closure of the names its other
+    inputs, the stage-named and vanilla-replacing files and vanilla's own triggers and values mention."""
+
+    def __init__(self) -> None:
+        self.words: set[bytes] = set()
+        self.patterns: list[re.Pattern[bytes]] = []
+        self.whole_names: set[str] = set()        # file names the stage reads by name
+        self.vanilla_files: set[tuple[str, str]] = set()   # (folder, file) a mod copy of which replaces vanilla's file
+        self.vanilla: set[bytes] = set()          # names vanilla defines (a mod override of one always counts)
+        self.kept: set[bytes] = set()
+        self.folders: dict[Path, str] = {}        # mod folder -> its WB_DEFINITION_FOLDERS key
+
+    def add_root(self, path: Path, data: bytes) -> None:
+        if path.suffix.lower() not in _ROOT_SUFFIXES:
+            return
+        if path.suffix in {".py", ".toml", ".json"}:
+            self.whole_names.update(_TXT_NAME.findall(data.decode("utf-8", errors="replace")))
+        self._add_words(data)
+
+    def _add_words(self, data: bytes) -> None:
+        for word in set(data.translate(_WORDS).split()) - self.words:
+            self.words.add(word)
+            if b"$" in word:
+                parts = _PARAM.split(word)
+                if any(parts):
+                    self.patterns.append(re.compile(rb"\w*".join(re.escape(p) for p in parts)))
+
+    def add_stage_names(self, config: dict[str, Any], repo: Path) -> None:
+        """The geography export's files (the stage copies and compares them) count whole."""
+        raw = _mapping(config.get("worldbuilder", {})).get("geography_export")
+        build = (_resolve_config_path(repo, raw) / "ha1300-build.json") if raw else None
+        if build is not None and build.is_file():
+            files = json.loads(build.read_text(encoding="utf-8-sig")).get("files") or {}
+            self.whole_names.update(Path(rel).name for rel in files if rel.endswith(".txt"))
+
+    def add_vanilla(self, game: Path | None) -> None:
+        """Vanilla's evaluated definitions: their names, what they mention, and their file names."""
+        if game is None:
+            return
+        for folder, bodies in WB_DEFINITION_FOLDERS.items():
+            for path in sorted((game / folder).glob("*.txt")) if bodies else ():
+                data = path.read_bytes()
+                self.vanilla_files.add((folder, path.name))
+                self._add_words(_worldbuilder_view(path, data))
+                self.vanilla.update(name for _, name, _ in _top_level_entries(data) or ())
+
+    def _entries(self, path: Path, data: bytes) -> list[tuple[bytes | None, bytes, bytes]] | None:
+        folder = self.folders.get(path.parent)
+        if folder is None or path.name in self.whole_names or (folder, path.name) in self.vanilla_files:
+            return None
+        if path.suffix.lower() != ".txt":
+            return None
+        return _top_level_entries(data)
+
+    def index(self, roots: Mapping[Path, str]) -> None:
+        """Read the mod's definition folders (``roots``: mod folder -> WB_DEFINITION_FOLDERS key) and close the kept
+        names over what kept definitions mention."""
+        pending: dict[bytes, list[bytes]] = {}
+        for root, folder in roots.items():
+            for path in sorted(root.rglob("*")) if root.is_dir() else ():
+                if not path.is_file():
+                    continue
+                self.folders[path.parent] = folder
+                data = path.read_bytes()
+                entries = self._entries(path, data)
+                if entries is None:
+                    self._add_words(_worldbuilder_view(path, data))
+                elif WB_DEFINITION_FOLDERS[folder]:
+                    for _, name, text in entries:
+                        pending.setdefault(name, []).append(text)
+        changed = True
+        while changed:
+            changed = False
+            for name in [n for n in pending if n not in self.kept]:
+                if name in self.vanilla or name in self.words or name.startswith(b"@") or any(
+                        p.fullmatch(name) for p in self.patterns):
+                    self.kept.add(name)
+                    for text in pending[name]:
+                        self._add_words(text)
+                    changed = True
+
+    def view(self, path: Path, data: bytes) -> bytes | None:
+        """A definition file as the stage can read it; None (left out) when nothing in it can be read."""
+        entries = self._entries(path, data)
+        if entries is None:
+            return _worldbuilder_view(path, data)
+        bodies = WB_DEFINITION_FOLDERS[self.folders[path.parent]]
+        out = [text if bodies and name in self.kept else prefix + b":" + name
+               for prefix, name, text in entries if (bodies and name in self.kept) or prefix]
+        return b"\n".join(out) or None
 
 
 def _worldbuilder_rerun_reason(repo: Path, project: Path, state: dict[str, str]) -> str:
@@ -4063,10 +4248,14 @@ def _fingerprint_path(digest, path: Path, root: Path, *, file_filter=None, view=
 
 
 def _fingerprint_file(digest, path: Path, label: Path, *, view=None) -> None:
+    data = path.read_bytes()
+    if view is not None:
+        data = view(path, data)
+        if data is None:   # nothing the reader can read (_DefinitionReach.view): the file does not count
+            return
     digest.update(str(label).replace(os.sep, "/").encode("utf-8", errors="surrogateescape"))
     digest.update(b"\0")
-    data = path.read_bytes()
-    digest.update(view(path, data) if view is not None else data)
+    digest.update(data)
     digest.update(b"\0")
 
 

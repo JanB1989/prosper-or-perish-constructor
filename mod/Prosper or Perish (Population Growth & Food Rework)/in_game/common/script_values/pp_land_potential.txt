@@ -16,8 +16,8 @@ pp_land_potential_chili = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = 0.03 }
 	else_if = { limit = { climate = arctic } add = 0.03 }
 	else_if = { limit = { climate = hot_semi_arid } add = 0.1 }
-	else_if = { limit = { climate = cold_arid } add = -0.13 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.05 }
+	else_if = { limit = { climate = cold_arid } add = -0.13 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.09 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = 0.03 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = 0.03 }
@@ -71,8 +71,8 @@ pp_land_potential_cloves = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = 0.02 }
 	else_if = { limit = { climate = arctic } add = -0.2 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.29 }
-	else_if = { limit = { climate = cold_arid } add = -0.2 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.26 }
+	else_if = { limit = { climate = cold_arid } add = -0.2 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = 0.1 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = 0.02 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.24 }
@@ -121,8 +121,8 @@ pp_land_potential_cocoa = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = 0.08 }
 	else_if = { limit = { climate = arctic } add = -0.2 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.2 }
-	else_if = { limit = { climate = cold_arid } add = -0.2 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.2 }
+	else_if = { limit = { climate = cold_arid } add = -0.2 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = 0.16 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = 0.16 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.2 }
@@ -178,8 +178,8 @@ pp_land_potential_coffee = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.12 }
 	else_if = { limit = { climate = arctic } add = -0.32 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.31 }
-	else_if = { limit = { climate = cold_arid } add = -0.32 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.32 }
+	else_if = { limit = { climate = cold_arid } add = -0.32 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.04 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.12 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.32 }
@@ -233,8 +233,8 @@ pp_land_potential_cotton = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.1 }
 	else_if = { limit = { climate = arctic } add = -0.32 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.02 }
-	else_if = { limit = { climate = cold_arid } add = -0.12 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = 0.05 }
+	else_if = { limit = { climate = cold_arid } add = -0.12 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.23 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.12 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.2 }
@@ -289,8 +289,8 @@ pp_land_potential_dyes = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = 0.07 }
 	else_if = { limit = { climate = arctic } add = -0.43 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.08 }
-	else_if = { limit = { climate = cold_arid } add = -0.25 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.21 }
+	else_if = { limit = { climate = cold_arid } add = -0.25 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = 0.17 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.13 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.15 }
@@ -342,8 +342,8 @@ pp_land_potential_fiber_crops = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.02 }
 	else_if = { limit = { climate = arctic } add = -0.39 }
 	else_if = { limit = { climate = hot_semi_arid } add = 0.1 }
-	else_if = { limit = { climate = cold_arid } add = -0.19 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.19 }
+	else_if = { limit = { climate = cold_arid } add = -0.19 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = 0.02 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.02 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.08 }
@@ -396,13 +396,13 @@ pp_land_potential_fruit = {
 	else_if = { limit = { climate = ha1300_climate_savanna } add = -0.21 }
 	else_if = { limit = { climate = subtropical } add = -0.06 }
 	else_if = { limit = { climate = arid } add = 0.07 }
-	else_if = { limit = { climate = mediterranean } add = 0.03 }
+	else_if = { limit = { climate = mediterranean } add = 0.04 }
 	else_if = { limit = { climate = cold_semi_arid } add = -0.06 }
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.25 }
 	else_if = { limit = { climate = arctic } add = -0.06 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.38 }
-	else_if = { limit = { climate = cold_arid } add = -0.06 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = 0.05 }
+	else_if = { limit = { climate = cold_arid } add = -0.06 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.06 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.06 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = 0.13 }
@@ -411,17 +411,17 @@ pp_land_potential_fruit = {
 	else_if = { limit = { vegetation = ha1300_veg_mixed_forest } add = -0.08 }
 	else_if = { limit = { vegetation = desert } add = 0.19 }
 	else_if = { limit = { vegetation = farmland } add = 0.05 }
-	else_if = { limit = { vegetation = ha1300_veg_thicket } add = -0.08 }
+	else_if = { limit = { vegetation = ha1300_veg_thicket } add = -0.09 }
 	else_if = { limit = { vegetation = ha1300_veg_dry_forest } add = -0.17 }
 	else_if = { limit = { vegetation = woods } add = -0.07 }
-	if = { limit = { topography = mountains } add = -0.12 }
+	if = { limit = { topography = mountains } add = -0.13 }
 	if = { limit = { has_location_modifier = pp_wb_fertility_very_high } add = 0.17 }
 	else_if = { limit = { has_location_modifier = pp_wb_fertility_high } add = 0.09 }
 	else_if = { limit = { has_location_modifier = pp_wb_fertility_low } add = -0.19 }
 	else_if = { limit = { has_location_modifier = pp_wb_fertility_very_low } add = -0.26 }
-	if = { limit = { has_location_modifier = pp_wb_soil_sand } add = -0.09 }
+	if = { limit = { has_location_modifier = pp_wb_soil_sand } add = -0.08 }
 	else_if = { limit = { has_location_modifier = pp_wb_soil_clay } add = -0.05 }
-	else_if = { limit = { has_location_modifier = pp_wb_soil_peat } add = -0.16 }
+	else_if = { limit = { has_location_modifier = pp_wb_soil_peat } add = -0.15 }
 }
 
 pp_land_potential_step_fruit = {
@@ -458,8 +458,8 @@ pp_land_potential_incense = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.11 }
 	else_if = { limit = { climate = arctic } add = -0.38 }
 	else_if = { limit = { climate = hot_semi_arid } add = 0.29 }
-	else_if = { limit = { climate = cold_arid } add = -0.38 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.3 }
+	else_if = { limit = { climate = cold_arid } add = -0.38 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.18 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.18 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.25 }
@@ -512,21 +512,21 @@ pp_land_potential_legumes = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = 0.04 }
 	else_if = { limit = { climate = arctic } add = 0.04 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.01 }
-	else_if = { limit = { climate = cold_arid } add = -0.07 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = 0.04 }
+	else_if = { limit = { climate = cold_arid } add = -0.07 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.1 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.01 }
-	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.11 }
+	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.12 }
 	else_if = { limit = { climate = ha1300_climate_subpolar_oceanic } add = -0.2 }
-	if = { limit = { vegetation = jungle } add = -0.11 }
+	if = { limit = { vegetation = jungle } add = -0.1 }
 	else_if = { limit = { vegetation = ha1300_veg_mixed_forest } add = -0.06 }
-	else_if = { limit = { vegetation = ha1300_veg_swamp } add = -0.06 }
+	else_if = { limit = { vegetation = ha1300_veg_swamp } add = -0.07 }
 	else_if = { limit = { vegetation = ha1300_veg_scrubland } add = -0.06 }
 	else_if = { limit = { vegetation = woods } add = -0.08 }
 	if = { limit = { topography = ha1300_topo_rolling } add = -0.05 }
 	if = { limit = { has_location_modifier = pp_wb_fertility_very_high } add = 0.07 }
 	else_if = { limit = { has_location_modifier = pp_wb_fertility_high } add = 0.03 }
-	else_if = { limit = { has_location_modifier = pp_wb_fertility_low } add = -0.22 }
+	else_if = { limit = { has_location_modifier = pp_wb_fertility_low } add = -0.21 }
 	else_if = { limit = { has_location_modifier = pp_wb_fertility_very_low } add = -0.43 }
 	if = { limit = { has_location_modifier = pp_wb_soil_sand } add = -0.06 }
 	else_if = { limit = { has_location_modifier = pp_wb_soil_clay } add = -0.07 }
@@ -566,8 +566,8 @@ pp_land_potential_lumber = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.06 }
 	else_if = { limit = { climate = arctic } add = -0.4 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.31 }
-	else_if = { limit = { climate = cold_arid } add = -0.4 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.2 }
+	else_if = { limit = { climate = cold_arid } add = -0.4 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = 0.04 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.33 }
 	else_if = { limit = { climate = ha1300_climate_subpolar_oceanic } add = -0.04 }
@@ -622,8 +622,8 @@ pp_land_potential_maize = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.05 }
 	else_if = { limit = { climate = arctic } add = -0.25 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.1 }
-	else_if = { limit = { climate = cold_arid } add = -0.25 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.02 }
+	else_if = { limit = { climate = cold_arid } add = -0.25 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.11 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.05 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.22 }
@@ -676,8 +676,8 @@ pp_land_potential_medicaments = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.04 }
 	else_if = { limit = { climate = arctic } add = -0.04 }
 	else_if = { limit = { climate = hot_semi_arid } add = 0.11 }
-	else_if = { limit = { climate = cold_arid } add = -0.04 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = 0.11 }
+	else_if = { limit = { climate = cold_arid } add = -0.04 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = 0.04 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.16 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = 0.19 }
@@ -732,8 +732,8 @@ pp_land_potential_millet = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.1 }
 	else_if = { limit = { climate = arctic } add = -0.1 }
 	else_if = { limit = { climate = hot_semi_arid } add = 0.14 }
-	else_if = { limit = { climate = cold_arid } add = -0.1 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = 0.17 }
+	else_if = { limit = { climate = cold_arid } add = -0.1 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.3 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = 0.01 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = 0.01 }
@@ -786,16 +786,16 @@ pp_land_potential_olives = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.2 }
 	else_if = { limit = { climate = arctic } add = -0.2 }
 	else_if = { limit = { climate = hot_semi_arid } add = 0.04 }
-	else_if = { limit = { climate = cold_arid } add = -0.2 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.2 }
+	else_if = { limit = { climate = cold_arid } add = -0.2 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.2 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.2 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.03 }
 	else_if = { limit = { climate = ha1300_climate_subpolar_oceanic } add = -0.2 }
 	if = { limit = { vegetation = ha1300_veg_marsh } add = -0.11 }
 	else_if = { limit = { vegetation = forest } add = -0.09 }
-	else_if = { limit = { vegetation = ha1300_veg_mixed_forest } add = -0.08 }
-	else_if = { limit = { vegetation = ha1300_veg_coniferous_forest } add = -0.07 }
+	else_if = { limit = { vegetation = ha1300_veg_mixed_forest } add = -0.07 }
+	else_if = { limit = { vegetation = ha1300_veg_coniferous_forest } add = -0.06 }
 	else_if = { limit = { vegetation = desert } add = -0.11 }
 	else_if = { limit = { vegetation = ha1300_veg_swamp } add = -0.15 }
 	else_if = { limit = { vegetation = ha1300_veg_scrubland } add = -0.11 }
@@ -842,8 +842,8 @@ pp_land_potential_pepper = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.03 }
 	else_if = { limit = { climate = arctic } add = -0.23 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.03 }
-	else_if = { limit = { climate = cold_arid } add = -0.23 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.09 }
+	else_if = { limit = { climate = cold_arid } add = -0.23 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.03 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.14 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.03 }
@@ -900,8 +900,8 @@ pp_land_potential_potato = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.01 }
 	else_if = { limit = { climate = arctic } add = 0.38 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.12 }
-	else_if = { limit = { climate = cold_arid } add = -0.12 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.28 }
+	else_if = { limit = { climate = cold_arid } add = -0.12 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = 0.06 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = 0.04 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.32 }
@@ -949,8 +949,8 @@ pp_land_potential_rice = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.05 }
 	else_if = { limit = { climate = arctic } add = -0.4 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.36 }
-	else_if = { limit = { climate = cold_arid } add = -0.4 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.4 }
+	else_if = { limit = { climate = cold_arid } add = -0.4 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = 0.03 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.05 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.4 }
@@ -1003,8 +1003,8 @@ pp_land_potential_saffron = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.13 }
 	else_if = { limit = { climate = arctic } add = -0.22 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.12 }
-	else_if = { limit = { climate = cold_arid } add = -0.02 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = 0.07 }
+	else_if = { limit = { climate = cold_arid } add = -0.02 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.22 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.11 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = 0.15 }
@@ -1061,8 +1061,8 @@ pp_land_potential_silk = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = 0.01 }
 	else_if = { limit = { climate = arctic } add = -0.41 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.04 }
-	else_if = { limit = { climate = cold_arid } add = -0.23 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.31 }
+	else_if = { limit = { climate = cold_arid } add = -0.23 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = 0.03 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.04 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.28 }
@@ -1120,8 +1120,8 @@ pp_land_potential_sugar = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = 0.14 }
 	else_if = { limit = { climate = arctic } add = -0.23 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.03 }
-	else_if = { limit = { climate = cold_arid } add = -0.23 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.23 }
+	else_if = { limit = { climate = cold_arid } add = -0.23 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.03 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.03 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.23 }
@@ -1177,8 +1177,8 @@ pp_land_potential_tea = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = 0.02 }
 	else_if = { limit = { climate = arctic } add = -0.26 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.26 }
-	else_if = { limit = { climate = cold_arid } add = -0.26 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = -0.1 }
+	else_if = { limit = { climate = cold_arid } add = -0.26 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.04 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = 0.02 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.26 }
@@ -1230,8 +1230,8 @@ pp_land_potential_tobacco = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.1 }
 	else_if = { limit = { climate = arctic } add = -0.3 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.14 }
-	else_if = { limit = { climate = cold_arid } add = -0.3 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = 0.04 }
+	else_if = { limit = { climate = cold_arid } add = -0.3 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.32 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.13 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = -0.08 }
@@ -1286,8 +1286,8 @@ pp_land_potential_wheat = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.11 }
 	else_if = { limit = { climate = arctic } add = 0.05 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.12 }
-	else_if = { limit = { climate = cold_arid } add = -0.06 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = 0.05 }
+	else_if = { limit = { climate = cold_arid } add = -0.06 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.2 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = 0.05 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = 0.05 }
@@ -1340,8 +1340,8 @@ pp_land_potential_wine = {
 	else_if = { limit = { climate = ha1300_climate_subtropical_monsoon } add = -0.2 }
 	else_if = { limit = { climate = arctic } add = -0.2 }
 	else_if = { limit = { climate = hot_semi_arid } add = -0.15 }
-	else_if = { limit = { climate = cold_arid } add = -0.09 }
 	else_if = { limit = { climate = ha1300_climate_continental_monsoon } add = 0.05 }
+	else_if = { limit = { climate = cold_arid } add = -0.09 }
 	else_if = { limit = { climate = ha1300_climate_tropical_monsoon } add = -0.2 }
 	else_if = { limit = { climate = ha1300_climate_highland_monsoon } add = -0.08 }
 	else_if = { limit = { climate = ha1300_climate_dry_summer_continental } add = 0.13 }

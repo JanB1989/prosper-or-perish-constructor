@@ -11401,8 +11401,7 @@ zafra = {
 }
 plasencia = {
 	define_pop = {	type = clergy	size = 0.008	culture = castilian	religion = catholic }
-	define_pop = {	type = peasants	size = 18.137	culture = castilian	religion = catholic }
-	define_pop = {	type = laborers	size = 0.270	culture = castilian	religion = catholic }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 18.407	culture = castilian	religion = catholic }
 	define_pop = {	type = peasants	size = 0.417	culture = sephardi	religion = judaism }
 	define_pop = {	type = peasants	size = 1.885	culture = andalusi	religion = sunni }
 }
@@ -12806,7 +12805,8 @@ zorita = {
 cuenca = {
 	define_pop = {	type = nobles	size = 0.008	culture = castilian	religion = catholic }
 	define_pop = {	type = clergy	size = 0.048	culture = castilian	religion = catholic }
-	define_pop = {	type = peasants	size = 13.658	culture = castilian	religion = catholic }
+	define_pop = {	type = peasants	size = 13.398	culture = castilian	religion = catholic }
+	define_pop = {	type = laborers	size = 0.260	culture = castilian	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 0.974	culture = sephardi	religion = judaism }
 	define_pop = {	type = peasants	size = 1.470	culture = andalusi	religion = sunni }
 	define_pop = {	type = clergy	size = 0.003	culture = sephardi	religion = judaism }

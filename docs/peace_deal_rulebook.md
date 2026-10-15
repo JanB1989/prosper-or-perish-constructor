@@ -185,6 +185,11 @@ PP changes (v13, 2026-10-13, on 0.10; v1-v12 tuned on branch `enclave-release`, 
     2026-10-15, both actions). Run 4b42459e: the rebel Castile of 1378 (capital Briviesca, 33 scattered locations)
     released Madrid/Avila, Granada/Almeria, Carmona, Hellin and Valencia as its vassals in 1379-1380; when Castile won
     the revolt in 1380 it inherited them. The loyalist side is cut apart by the rebels' land in the same way.
+  - Paused in any war (`at_war`, 2026-10-15, Jan: a player cannot release land at war either). An independence war
+    against one's own rebels is no civil war: run 4b90876a, the Celali uprising broke away as Hudavendigar (Bursa) in
+    October 1608 with 225 of 456 Ottoman locations, interleaved with the Ottoman land in 15 of 16 areas; the Ottomans
+    released 15 tributaries during that war and 9 more after it, Hudavendigar 24 vassals after it (465 -> 185 + 102
+    locations and ~40 small subjects by 1622). After a peace the release runs as before.
   - A piece that borders one of the nation's subjects joins that subject (Morocco's land in Spain next to its vassal
     Jaen); any other becomes a new subject: a tributary where the government allows one
     (`pp_can_hold_tributary`: horde, tribe, `allow_tributary_subject`), else a vassal (a samanta in India), over

@@ -25,9 +25,11 @@ def _block(text: str, key: str) -> str:
     raise AssertionError(f"unclosed {key}")
 
 
-def test_pause_trigger_covers_civil_war_and_rebels():
+def test_pause_trigger_covers_war_civil_war_and_rebels():
+    """Any war pauses it: an independence war against one's own rebels is no civil war (run 4b90876a, Ottomans 1608)."""
     body = _block((COMMON / "scripted_triggers" / "pp_enclave_triggers.txt").read_text(encoding="utf-8-sig"),
                   "pp_enclave_release_paused")
+    assert re.search(r"\bat_war = yes\b", body)
     assert re.search(r"\bin_civil_war = yes\b", body)
     assert re.search(r"\bis_rebel_country = yes\b", body)
 

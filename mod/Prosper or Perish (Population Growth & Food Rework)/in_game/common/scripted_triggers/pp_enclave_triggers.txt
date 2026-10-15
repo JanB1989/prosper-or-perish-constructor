@@ -19,8 +19,12 @@ pp_cannot_create_subjects = {
 # country is born as scattered pieces with low control far from its capital, and the loyalist side is cut apart by the
 # rebels' land, so both would let their heartland go; the winner then keeps those subjects (run 4b42459e: the rebel
 # Castile of 1378 released Madrid, Avila, Granada and Valencia as vassals, which Castile inherited in 1380).
+# 2026-10-15, Jan: no release in any war (a player cannot release land at war either). An independence war is no civil
+# war: run 4b90876a, the Celali rebels broke away as Hudavendigar in 1608, holding half the Ottoman land as a
+# checkerboard, and the Ottomans released 15 tributaries while still fighting them.
 pp_enclave_release_paused = {
 	OR = {
+		at_war = yes
 		in_civil_war = yes
 		is_rebel_country = yes
 	}

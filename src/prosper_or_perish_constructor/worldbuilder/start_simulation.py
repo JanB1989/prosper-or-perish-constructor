@@ -671,9 +671,7 @@ class Simulation:
             if not edge["shore"]:
                 continue
             tile = navigation["tiles"][edge["from"]]
-            status = {"barrier": 3, "navigable": 1, "improvable": 2}[tile["state"]]
-            if edge.get("cost_profile") == "difficult":
-                status = 5
+            status = {"barrier": 3, "navigable": 1, "difficult": 5}[tile["state"]]
             self.neighbors[edge["to"]].append(
                 {"variables": {"pp_navigation_map_state": status}}
             )

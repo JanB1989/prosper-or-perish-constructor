@@ -2,7 +2,6 @@
  map_color = {
   if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 } value = rgb { 30 140 230 } }
   else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 } value = rgb { 150 90 200 } }
-  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 } value = rgb { 240 165 40 } }
   else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 } value = rgb { 215 45 45 } }
   else_if = { limit = { has_variable = pp_navigation_bank is_port = yes } value = rgb { 245 205 70 } }
   else_if = { limit = { has_variable = pp_navigation_bank } value = rgb { 205 185 140 } }
@@ -18,8 +17,6 @@
   else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 } value = PP_NAVMAP_NAVIGABLE_INLAND_TT }
   else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAVMAP_DIFFICULT_OPEN_TT }
   else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 } value = PP_NAVMAP_DIFFICULT_INLAND_TT }
-  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAVMAP_SHALLOWS_OPEN_TT }
-  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 } value = PP_NAVMAP_SHALLOWS_INLAND_TT }
   else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 } value = PP_NAVMAP_FALLS_TT }
   else_if = { limit = { has_variable = pp_navigation_bank is_port = yes } value = PP_NAVMAP_PORT_TT }
   else_if = { limit = { has_variable = pp_navigation_bank } value = PP_NAVMAP_BANK_TT }
@@ -29,7 +26,6 @@
  }
  legend_key = { desc = "PP_NAVMAP_LEGEND_NAVIGABLE" color = rgb { 30 140 230 } }
  legend_key = { desc = "PP_NAVMAP_LEGEND_DIFFICULT" color = rgb { 150 90 200 } }
- legend_key = { desc = "PP_NAVMAP_LEGEND_SHALLOWS" color = rgb { 240 165 40 } }
  legend_key = { desc = "PP_NAVMAP_LEGEND_FALLS" color = rgb { 215 45 45 } }
  legend_key = { desc = "PP_NAVMAP_LEGEND_CUT_OFF" color = rgb { 20 30 50 } }
  legend_key = { desc = "PP_NAVMAP_LEGEND_PORT" color = rgb { 245 205 70 } }

@@ -1256,12 +1256,12 @@ types pp_attribute_tooltips
 		}
 		vbox = {
 			layoutpolicy_horizontal = expanding
-			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_PP_RIVER_SHALLOWS')), '(int32)1', '(int32)0'))]"
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_PP_RIVER_DIFFICULT')), '(int32)1', '(int32)0'))]"
 			item = {
 		TooltipContentSection = {
 			blockoverride "section_content" {
-				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_pp_river_shallows')]" }
-				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_PP_RIVER_SHALLOWS" } }
+				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_pp_river_difficult')]" }
+				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_PP_RIVER_DIFFICULT" } }
 			}
 		}
 			}

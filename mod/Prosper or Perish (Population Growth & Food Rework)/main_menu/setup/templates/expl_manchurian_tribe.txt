@@ -7,8 +7,6 @@
 	west_china_region
 }
 discovered_areas = {
-	pp_nav_east_china_region_area pp_nav_japan_region_area pp_nav_korea_region_area pp_nav_north_china_region_area pp_nav_south_china_region_area pp_nav_west_china_region_area
-
 	#east_siberia_region
 	east_stanovoi_area
 	west_stanovoi_area
@@ -36,6 +34,8 @@ discovered_areas = {
 	japan_coastline
 }
 discovered_provinces = {
+	pp_nav_grand_canal_0_province pp_nav_grand_canal_1_province pp_nav_grand_canal_2_province pp_nav_han_river_0_province pp_nav_min_river_0_province pp_nav_pearl_river_xi_river_0_province pp_nav_qiantang_river_0_province pp_nav_yangtze_0_province pp_nav_yangtze_1_province pp_nav_yangtze_2_province pp_nav_yangtze_3_province pp_nav_yangtze_4_province pp_nav_yangtze_5_province pp_nav_yodo_river_0_province pp_nav_yodo_river_1_province
+
 	#south_china_region
 	#south_china_coastline
 	guangdong_coast_sea_province

@@ -4,8 +4,6 @@
 }
 
 discovered_areas = {
-	pp_nav_andes_region_area pp_nav_colombia_region_area
-
 	caly_area
 	quitu_area
 	sinu_area
@@ -19,4 +17,7 @@ discovered_areas = {
 	culiacan_area
 	tamaulipeco_area
 	xalisco_area
+}
+discovered_provinces = {
+	pp_nav_guayas_0_province pp_nav_guayas_1_province pp_nav_magdalena_0_province pp_nav_orinoco_0_province
 }

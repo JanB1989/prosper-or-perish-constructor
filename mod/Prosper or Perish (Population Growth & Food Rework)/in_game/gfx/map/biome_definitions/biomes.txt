@@ -418,7 +418,7 @@
 	climate = subpolar
 	topography = narrows
 	topography = pp_river_channel
-	topography = pp_river_shallows
+	topography = pp_river_difficult
 	topography = pp_river_falls
 	biome = arctic_narrows
 }
@@ -817,7 +817,7 @@
 	climate = hot_semi_arid
 	topography = narrows
 	topography = pp_river_channel
-	topography = pp_river_shallows
+	topography = pp_river_difficult
 	topography = pp_river_falls
 	biome = arid_narrows
 }
@@ -1216,7 +1216,7 @@
 	climate = cold_semi_arid
 	topography = narrows
 	topography = pp_river_channel
-	topography = pp_river_shallows
+	topography = pp_river_difficult
 	topography = pp_river_falls
 	biome = cold_arid_narrows
 }
@@ -1706,7 +1706,7 @@
 	climate = ha1300_climate_subtropical_monsoon
 	topography = narrows
 	topography = pp_river_channel
-	topography = pp_river_shallows
+	topography = pp_river_difficult
 	topography = pp_river_falls
 	biome = tropical_narrows
 }
@@ -2310,7 +2310,7 @@
 	climate = ha1300_climate_continental_monsoon
 	topography = narrows
 	topography = pp_river_channel
-	topography = pp_river_shallows
+	topography = pp_river_difficult
 	topography = pp_river_falls
 	biome = oceanic_narrows
 }
@@ -2680,7 +2680,7 @@
 	climate = mediterranean
 	topography = narrows
 	topography = pp_river_channel
-	topography = pp_river_shallows
+	topography = pp_river_difficult
 	topography = pp_river_falls
 	biome = mediterranean_narrows
 }

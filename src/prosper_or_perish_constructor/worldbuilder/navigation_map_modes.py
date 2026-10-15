@@ -11,11 +11,8 @@ def write_map_modes(root,state):
     for e in state['edges']:
         if e['shore']:shores[e['to']].add(e['state'])
     seed=['pp_navigation_map_seed = {']
-    rough={tag for e in state['edges'] if e.get('cost_profile')=='difficult'
-           for tag in (e['from'],e['to']) if tag in state['tiles']}
     for tag,tile in sorted(state['tiles'].items()):
-        status={'navigable':1,'improvable':2,'barrier':3}[tile['state']]
-        if status==1 and tag in rough:status=5
+        status={'navigable':1,'difficult':5,'barrier':3}[tile['state']]
         seed.append(f' location:{tag} = {{ set_variable = {{ name = pp_navigation_map_state value = {status} }} set_variable = {{ name = pp_navigation_water_level value = {tile.get('river_level',0)} }} set_variable = {{ name = pp_navigation_ocean_connected value = {int(bool(tile.get('ocean_connected',False)))} }} }}')
     for tag,kinds in sorted(shores.items()):
         seed.append(f' location:{tag} = {{ set_variable = {{ name = pp_navigation_bank value = {1 if kinds-set(["barrier"]) else 2} }} }}')
@@ -34,8 +31,7 @@ _STATE='has_variable = pp_navigation_map_state var:pp_navigation_map_state = {}'
 _OPEN='has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1'
 # map state (set by pp_navigation_map_seed / _refresh): key, colour, name, what it means
 WATER=[(1,'navigable','30 140 230','Navigable River','Fleets sail it, and goods travel along it far more cheaply than over land.'),
-       (5,'difficult','150 90 200','Difficult Waterway','A great tropical or strongly seasonal river: boats get through, but slowly and at a cost.'),
-       (2,'shallows','240 165 40','Shallows','Shoals and weirs: boats pass slowly.'),
+       (5,'difficult','150 90 200','Difficult Waterway','Shoals and weirs, or a great tropical or strongly seasonal river: boats get through, but slowly.'),
        (3,'falls','215 45 45','Falls','Falls or great rapids that no boat passes and no canal opens.')]
 REACH={1:'It reaches the open sea.',0:'It does not reach the open sea: fleets on it cannot sail out.'}
 LAND=[('port','has_variable = pp_navigation_bank is_port = yes','245 205 70','River Port',
@@ -48,7 +44,7 @@ LAND=[('port','has_variable = pp_navigation_bank is_port = yes','245 205 70','Ri
 OTHER='88 84 78'
 CUT_OFF='20 30 50'       # stripes: a waterway that does not reach the open sea
 LEGEND=[('navigable','30 140 230','Navigable River'),('difficult','150 90 200','Difficult Waterway'),
-        ('shallows','240 165 40','Shallows'),('falls','215 45 45','Falls'),
+        ('falls','215 45 45','Falls'),
         ('cut_off',CUT_OFF,'Does not reach the open sea (striped)'),('port','245 205 70','River Port'),
         ('bank','205 185 140','Riverbank'),('river','110 140 130','River no boat can sail')]
 
@@ -98,7 +94,7 @@ def map_mode_localization():
     loc=['l_english:',
          f' mapmode_{MAP_MODE}_name: "Navigable Rivers"',
          f' MAPMODE_{MAP_MODE.upper()}: "#T $mapmode_{MAP_MODE}_name$#!\\nShows the rivers [navies|e] can sail, where '
-         'shallows and falls stop them, which waterways reach the open sea and which banks have a [port|e]."']
+         'difficult water slows them and falls stop them, which waterways reach the open sea and which banks have a [port|e]."']
     for state,key,_,name,text in WATER:
         if state==3:loc.append(f' {_key(key)}_TT: "{name}\\n{text}"')
         else:

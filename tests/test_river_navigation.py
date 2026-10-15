@@ -40,29 +40,46 @@ def test_native_pixel_preservation_never_stacks_scripted_bonuses(tmp_path):
     assert not stale.exists()
 
 
-def test_difficult_waterway_and_river_port_modifiers_go_to_the_right_locations(tmp_path):
-    """Difficult Waterway on navigable tiles of difficult routes, River Port on land whose port faces a channel."""
-    from prosper_or_perish_constructor.worldbuilder.navigation import DIFFICULT, RIVER_PORT, write_bonus_compensation
+def test_river_port_modifier_goes_to_land_whose_port_faces_a_channel(tmp_path):
+    from prosper_or_perish_constructor.worldbuilder.navigation import RIVER_PORT, write_bonus_compensation
     for rel in ('main_menu/common/static_modifiers','main_menu/localization/english','in_game/map_data'):
         (tmp_path/rel).mkdir(parents=True)
     (tmp_path/'in_game/map_data/ports.csv').write_text('LandProvince;SeaZone;x;y;\nbank;n1;1;1;x\ncoast;some_sea;2;2;x\n')
-    settings={'modifiers':{'difficult_waterway':{'proximity_efficiency':-0.75,'name':'D','description':'d'},
-                           'river_port':{'port_cost':-0.5,'name':'P','description':'p'}}}
+    settings={'modifiers':{'river_port':{'port_cost':-0.5,'name':'P','description':'p'}}}
     state={'manifest':{'river_preservation':'native_bank_pixel'},'settings':settings,
-           'tiles':{'n1':{'state':'navigable'},'n2':{'state':'navigable'},'s1':{'state':'improvable'}},
+           'tiles':{'n1':{'state':'navigable'},'n2':{'state':'navigable'},'s1':{'state':'difficult'}},
            'edges':[{'from':'n1','to':'n2','cost_profile':'navigable'},{'from':'n2','to':'s1','cost_profile':'difficult'}]}
-    assert write_bonus_compensation(state,tmp_path,tmp_path)=={'n2':[DIFFICULT],'bank':[RIVER_PORT]}
+    assert write_bonus_compensation(state,tmp_path,tmp_path)=={'bank':[RIVER_PORT]}
     text=(tmp_path/'main_menu/common/static_modifiers/pp_navigation_modifiers.txt').read_text(encoding='utf-8-sig')
-    assert 'local_distance_from_capital_speed_propagation = -0.75' in text and 'local_port_cost_distance_impact = -0.5' in text
+    assert 'local_port_cost_distance_impact = -0.5' in text and 'speed_propagation' not in text
+
+
+def test_channel_kinds_two_passable_types_plus_falls(tmp_path):
+    """Shallows and the navigable tiles of difficult routes are Difficult Waterway; documented starting navigation
+    (Grand Canal) opens Shallows to Navigable River; Falls stay."""
+    import polars as pl
+    from types import SimpleNamespace
+    from prosper_or_perish_constructor.worldbuilder.navigation import channel_tiles
+    nav=tmp_path/'navigation';nav.mkdir()
+    pl.DataFrame({'location':['n','r','s','g','f'],'state':['navigable','navigable','improvable','improvable','barrier']}).write_csv(nav/'tiles.csv')
+    pl.DataFrame({'location_tag':['bank'],'water_location':['g'],'state':['improvable'],'shore_pixels':[5]}).write_csv(nav/'shores.csv')
+    pl.DataFrame({'from':['n','r'],'to':['r','s'],'state':['navigable','improvable'],'cost_profile':['navigable','difficult'],
+                  'shore':[False,False]}).write_csv(nav/'edges.csv')
+    attrs=pl.DataFrame({'location_tag':['bank'],'calibrated_lon':[5.0],'calibrated_lat':[5.0]})
+    contract=SimpleNamespace(root=tmp_path,location_attributes=attrs)
+    tiles,_,opened=channel_tiles({'starting_evidence':[{'id':'x','bounds':[0,0,10,10]}]},contract)
+    assert {t:v['state'] for t,v in tiles.items()}=={'n':'navigable','r':'difficult','s':'difficult','g':'navigable','f':'barrier'}
+    assert opened=={'g'}
 
 
 def test_shipped_channel_topographies_carry_proximity_efficiency():
     """A channel step costs a sea step divided by 1 + the efficiency of the tile left (EU5 1.4, verified in game
-    2026-10-13): Navigable River +1.5 (a vanilla river leg on land), Shallows +0.5, Falls none."""
+    2026-10-13): Navigable River +1.5 (a vanilla river leg on land), Difficult Waterway +0.75, Falls none."""
     text=(MOD/'in_game/common/topography/pp_river_topography.txt').read_text(encoding='utf-8-sig')
     block=lambda k:text.split(f'{k} = {{',1)[1].split('\n}',1)[0]
     assert 'local_distance_from_capital_speed_propagation = 1.5' in block('pp_river_channel')
-    assert 'local_distance_from_capital_speed_propagation = 0.5' in block('pp_river_shallows')
+    assert 'local_distance_from_capital_speed_propagation = 0.75' in block('pp_river_difficult')
+    assert 'pp_river_shallows' not in text
     assert 'local_distance_from_capital_speed_propagation' not in block('pp_river_falls')
 
 
@@ -75,7 +92,7 @@ def test_legacy_compensation_contract_requires_rebuild(tmp_path):
 
 def test_map_mode_emits_only_documented_refresh_counters_and_native_levels(tmp_path):
     from prosper_or_perish_constructor.worldbuilder.navigation_map_modes import write_map_modes
-    write_map_modes(tmp_path,{'tiles':{'water':{'state':'improvable'}},'edges':[{'from':'water','to':'bank','shore':True,'state':'improvable'}]})
+    write_map_modes(tmp_path,{'tiles':{'water':{'state':'difficult'}},'edges':[{'from':'water','to':'bank','shore':True,'state':'improvable'}]})
     text=(tmp_path/'in_game/gfx/map/map_modes/pp_navigable_rivers.txt').read_text()
     assert 'LocationRoadsChanged' in text
     assert 'LocationBuildingChanged' not in text
@@ -87,7 +104,7 @@ def test_map_mode_emits_only_documented_refresh_counters_and_native_levels(tmp_p
 
     # the map state is seeded once: no canal state, no refresh effects
     effects=(tmp_path/'in_game/common/scripted_effects/pp_navigation_map.txt').read_text()
-    assert 'location:water = { set_variable = { name = pp_navigation_map_state value = 2 }' in effects
+    assert 'location:water = { set_variable = { name = pp_navigation_map_state value = 5 }' in effects
     assert 'has_road_of_type_to' not in effects and 'pp_navigation_map_refresh' not in effects
     assert 'value = 4' not in effects and 'value = 6' not in effects
 
@@ -122,9 +139,9 @@ def test_route_validation_rejects_duplicate_undirected_edges():
         validate_routes(tiles,[{**edge,'from':'ocean'}])
 
 
-def test_map_mode_difficult_routes_count_both_water_endpoints(tmp_path):
+def test_map_mode_shows_difficult_waterway_tiles(tmp_path):
     from prosper_or_perish_constructor.worldbuilder.navigation_map_modes import write_map_modes
-    write_map_modes(tmp_path,{'tiles':{'a':{'state':'navigable'},'b':{'state':'navigable'}},
+    write_map_modes(tmp_path,{'tiles':{'a':{'state':'difficult'},'b':{'state':'difficult'}},
         'edges':[{'from':'a','to':'b','shore':False,'state':'navigable','cost_profile':'difficult'}]})
     effects=(tmp_path/'in_game/common/scripted_effects/pp_navigation_map.txt').read_text()
     assert 'location:a = { set_variable = { name = pp_navigation_map_state value = 5 }' in effects

@@ -1,6 +1,6 @@
 """Consume World Builder navigation evidence and compile gameplay integration.
 
-Channel tiles take a topography by their state (Navigable River, Shallows, Falls). The channels are plain sea tiles:
+Channel tiles take a topography by their kind (Navigable River, Difficult Waterway, Falls). The channels are plain sea tiles:
 no water roads and no building act on them (the River Navigation Canal and the hidden navigation road types were
 removed 2026-10-13; neither the player nor the AI can build a road that touches a sea tile, EU5 1.4). Shallows with
 documented starting navigation (``starting_evidence``, the Grand Canal) start as Navigable River.
@@ -55,12 +55,24 @@ def opened_at_start(settings, location_attributes, tiles, shores):
 
 
 def channel_tiles(settings, contract):
-    """The handover's channel tiles, documented starting navigations turned Navigable River."""
+    """The handover's channel tiles with their kind in 'state': navigable, difficult or barrier.
+
+    Difficult Waterway = the World Builder's Shallows (improvable) plus the navigable tiles of difficult (tropical or
+    seasonal) routes; Shallows with documented starting navigation (the Grand Canal) are Navigable River."""
     root = contract.root/'navigation'
     tiles = {r['location']: r for r in pl.read_csv(root/'tiles.csv').iter_rows(named=True)}
     shores = list(pl.read_csv(root/'shores.csv').iter_rows(named=True))
     opened = opened_at_start(settings, contract.location_attributes, tiles, shores)
-    return {t: ({**tile, 'state': 'navigable'} if t in opened else tile) for t, tile in tiles.items()}, shores, opened
+    rough = {t for e in pl.read_csv(root/'edges.csv').iter_rows(named=True) if e['cost_profile'] == 'difficult'
+             for t in (e['from'], e['to']) if t in tiles}
+
+    def kind(t, tile):
+        if t in opened:
+            return 'navigable'
+        if tile['state'] == 'improvable' or (tile['state'] == 'navigable' and t in rough):
+            return 'difficult'
+        return tile['state']
+    return {t: {**tile, 'state': kind(t, tile)} for t, tile in tiles.items()}, shores, opened
 
 
 def prepare(repo, cfg, contract, *, write_blueprints=True, locations=None):
@@ -77,8 +89,7 @@ def prepare(repo, cfg, contract, *, write_blueprints=True, locations=None):
     tiles,shores,opened=channel_tiles(settings,contract)
     edges=list(pl.read_csv(root/'edges.csv').iter_rows(named=True))
     validate_routes(tiles,edges)
-    state={'settings':settings,'manifest':manifest,'tiles':tiles,'edges':edges,'opened_at_start':sorted(opened),
-           'shallows':sorted(t for t,tile in tiles.items() if tile['state']=='improvable')}
+    state={'settings':settings,'manifest':manifest,'tiles':tiles,'edges':edges,'opened_at_start':sorted(opened)}
     raw=dict(cfg.raw);raw['_navigation']=state
     cfg=replace(cfg,raw=raw)
     if write_blueprints:
@@ -169,6 +180,9 @@ def write_topographies(mod_root,vanilla_root,contract,settings,repo=None):
         p=mod_root/rel;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('﻿'+header+body+'\n',encoding='utf-8',newline='\n')
     p=mod_root/'main_menu/localization/english/pp_river_topography_l_english.yml'
     p.write_text('\n'.join(loc)+'\n',encoding='utf-8',newline='\n')
+    # retired channel topographies (Shallows merged into Difficult Waterway, 2026-10-15)
+    for old in ('pp_river_shallows',):
+        (mod_root/'main_menu/gfx/interface/topography'/f'{old}.dds').unlink(missing_ok=True)
     recolor_land_topographies(mod_root,settings.get('land_topography_colors',{}))
     return dict(count)
 
@@ -268,7 +282,8 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     write('in_game/common/scripted_triggers/pp_navigation_rivers.txt','\n'.join(triggers)+'\n')
     from .navigation_map_modes import write_map_modes
     write_map_modes(mod_root,state)
-    report={'enabled':True,'tiles':len(state['tiles']),'edges':len(state['edges']),'shallows':len(state['shallows']),
+    report={'enabled':True,'tiles':len(state['tiles']),'edges':len(state['edges']),
+            'kinds':dict(Counter(tile['state'] for tile in state['tiles'].values())),
             'opened_at_start':state['opened_at_start'],
             'river_effects_restored':len(lost), 'native_bank_pixels_preserved':state['manifest'].get('preserved_river_pixels',0), 'ocean_connected_passable_tiles':state['manifest']['ocean_connected_passable_tiles'], 'river_ports_changed':state['manifest']['ports_changed'], 'spline_network':spline_report}
     output=repo/'artifacts/data/worldbuilder/navigation';output.mkdir(parents=True,exist_ok=True)
@@ -278,17 +293,14 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     return report
 
 
-DIFFICULT='pp_river_difficult'
 RIVER_PORT='pp_river_port'
 
 
 def write_bonus_compensation(state,mod_root,vanilla_root):
     """Native bank pixels own river effects; never add scripted duplicates.
 
-    Writes the two navigation static modifiers and returns the locations that carry them from game start: Difficult
-    Waterway on the navigable tiles of tropical or seasonal routes (less proximity efficiency than the Navigable River
-    topography gives) and River Port on every land location whose port faces a channel (cheaper to board the river,
-    like the vanilla harbour's port cost). Both on_action only (modifiers.py): no building cap reads them."""
+    Writes the River Port static modifier and returns the land locations whose port faces a channel (cheaper to board
+    the river, like the vanilla harbour's port cost). On_action only (modifiers.py): no building cap reads it."""
     if state['manifest'].get('river_preservation')!='native_bank_pixel':
         raise ValueError('Rebuild World Builder navigation: native river preservation contract required')
     (mod_root/'main_menu/common/static_modifiers/pp_navigation_preservation.txt').unlink(missing_ok=True)
@@ -296,21 +308,15 @@ def write_bonus_compensation(state,mod_root,vanilla_root):
     if stale.exists():stale.unlink()
     spec=state['settings'].get('modifiers',{})
     if not spec:return {}
-    d,p=spec['difficult_waterway'],spec['river_port']
+    p=spec['river_port']
     (mod_root/'main_menu/common/static_modifiers/pp_navigation_modifiers.txt').write_text(
         '﻿# Generated by ppc worldbuilder (navigation.py); do not edit by hand.\n'
-        f"{DIFFICULT} = {{\n\tgame_data = {{ category = location }}\n\tlocal_distance_from_capital_speed_propagation = {d['proximity_efficiency']}\n}}\n\n"
         f"{RIVER_PORT} = {{\n\tgame_data = {{ category = location }}\n\tlocal_port_cost_distance_impact = {p['port_cost']}\n}}\n",
         encoding='utf-8',newline='\n')
     (mod_root/'main_menu/localization/english/pp_navigation_modifiers_l_english.yml').write_text(
         '﻿l_english:\n'
-        f' STATIC_MODIFIER_NAME_{DIFFICULT}: "{d["name"]}"\n STATIC_MODIFIER_DESC_{DIFFICULT}: "{d["description"]}"\n'
         f' STATIC_MODIFIER_NAME_{RIVER_PORT}: "{p["name"]}"\n STATIC_MODIFIER_DESC_{RIVER_PORT}: "{p["description"]}"\n',
         encoding='utf-8',newline='\n')
-    rough={t for e in state['edges'] if e.get('cost_profile')=='difficult' for t in (e['from'],e['to'])
-           if state['tiles'].get(t,{}).get('state')=='navigable'}
     ports=pl.read_csv(mod_root/'in_game/map_data/ports.csv',separator=';',infer_schema_length=0,truncate_ragged_lines=True)
     river_ports={a for a,b in ports.select('LandProvince','SeaZone').iter_rows() if b in state['tiles']}
-    out={t:[DIFFICULT] for t in sorted(rough)}
-    out.update({t:[RIVER_PORT] for t in sorted(river_ports)})
-    return out
+    return {t:[RIVER_PORT] for t in sorted(river_ports)}

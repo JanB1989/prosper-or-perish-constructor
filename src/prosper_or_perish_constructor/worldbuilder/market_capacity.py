@@ -66,7 +66,7 @@ def write(repo, mod_root):
         # coast; tests/test_victuals_logistics_caps.py), so both neighbour scans only run on coasts. Navigable and
         # difficult are mutually exclusive classes.
         open_water = "any_neighbor_location = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 }"
-        hard_water = "any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 2 var:pp_navigation_map_state = 5 } }"
+        hard_water = "any_neighbor_location = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 }"
         body.append(
             "if = { limit = { is_coastal = yes } "
             + add("COAST", spec["coast"])

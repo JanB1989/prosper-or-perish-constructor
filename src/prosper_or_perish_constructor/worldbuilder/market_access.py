@@ -42,7 +42,7 @@ PARAMS = dict(K=K, sea=0.3, open=0.5, lake=0.3, lake_sea=0.5, trans=0.15, port_p
               down=0.5, up=0.8)
 ROAD_MARKET_ACCESS = {"gravel_road": -0.1, "paved_road": -0.2, "modern_road": -0.3, "railroad": -0.4}
 WATER_TOPOGRAPHY = {"coastal_ocean", "inland_sea", "narrows", "ocean", "deep_ocean", "lakes", "high_lakes", "salt_pans",
-                    "ocean_wasteland", "pp_river_channel", "pp_river_shallows", "pp_river_falls"}
+                    "ocean_wasteland", "pp_river_channel", "pp_river_difficult", "pp_river_falls"}
 LAKE_TOPOGRAPHY = {"lakes", "high_lakes", "salt_pans"}
 WIDTH = 16384
 CACHE = Path("artifacts/data/markets")

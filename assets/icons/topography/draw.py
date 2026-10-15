@@ -169,7 +169,7 @@ def shallows() -> Path:
     tone = tone * (1 - foam * riv) + 1.0 * foam * riv
     crest = mask(lambda d: d.line([(x0, y + 5), (x1, y - 7)], fill=255, width=5))
     tone = np.where(crest * riv > 0.5, 0.16, tone)
-    return finish(tone, alpha, "pp_river_shallows")
+    return finish(tone, alpha, "pp_river_difficult")
 
 
 # --- Falls: the river drops over a rock ledge into a spray-filled pool ------------------------------------------

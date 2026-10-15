@@ -2117,18 +2117,10 @@
                                                     }
                                                     pp_eu_entry = {
                                                         blockoverride "entry_icons" {
-                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/topography/pp_river_channel.dds" } blockoverride "item_link" { raw_text = "[ShowTopographyName('pp_river_channel')]" } }
-                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/climate/tropical.dds" } blockoverride "item_link" { raw_text = "[ShowClimateName('tropical')]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/topography/pp_river_difficult.dds" } blockoverride "item_link" { raw_text = "[ShowTopographyName('pp_river_difficult')]" } }
                                                         }
                                                         blockoverride "entry_title" { text = "PP_EU_NAV_DIFFICULT" }
                                                         blockoverride "entry_text" { text = "PP_EU_NAV_DIFFICULT_DESC" }
-                                                    }
-                                                    pp_eu_entry = {
-                                                        blockoverride "entry_icons" {
-                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/topography/pp_river_shallows.dds" } blockoverride "item_link" { raw_text = "[ShowTopographyName('pp_river_shallows')]" } }
-                                                        }
-                                                        blockoverride "entry_title" { text = "PP_EU_NAV_SHALLOWS" }
-                                                        blockoverride "entry_text" { text = "PP_EU_NAV_SHALLOWS_DESC" }
                                                     }
                                                     pp_eu_entry = {
                                                         blockoverride "entry_icons" {

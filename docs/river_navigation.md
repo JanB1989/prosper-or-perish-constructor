@@ -15,17 +15,19 @@ Since 2026-10-13 the channels are plain sea tiles: no water roads and no buildin
 * A channel step costs a sea step for market access (`MARKET_SEA_DISTANCE_FACTOR`), cheaper than land even downstream
   along a river. Movement follows the channel topography (Shallows 1.25, the rest 1.0); Falls are impassable.
 * Shallows with a bank inside a `starting_evidence` envelope (the Grand Canal, 6 tiles) start as Navigable River.
+* Two passable channel types plus Falls (2026-10-15): **Navigable River** and **Difficult Waterway** (the World
+  Builder's Shallows plus the navigable tiles of tropical or strongly seasonal routes: movement cost 1.25, so ships are
+  slower and a market-access step about 12 % dearer; Victualling Yard cap +0.75 instead of +3), and **Falls**
+  (impassable).
 * Proximity (EU5 1.4, verified in game 2026-10-13): a channel step costs a sea step (30) divided by 1 + the proximity
-  efficiency of the tile left. Navigable River topography +1.5 (12 per step, a vanilla river leg on land), Shallows
-  +0.5 (20), the Difficult Waterway modifier -0.75 on Navigable River tiles of difficult routes (17); leaving the river
-  costs 35 / 2.5 = 14. The River Port modifier (every land location whose port faces a channel) adds
-  local_port_cost_distance_impact -0.5 to the harbour, so boarding costs about 17 instead of 35. Without it the
-  channels cut proximity along every navigable river (banks lost about half their reach against rivers on land).
-* Removed: the River Navigation Canal (one level on a bank of a Shallows tile, opened it) and the five hidden road types
-  (`pp_navigation_navigable` / `difficult` / `improvable` / `barrier` / `improved`) that game-start script drew onto
-  the channels. The player could not see what to improve and the AI had no reason to build the canal. A buildable road
-  type is no substitute (EU5 1.4 decompile): every road construction requires two adjacent land locations, and the AI
-  and the road tool use the highest-level enabled road type for every connection.
+  efficiency of the tile left: Navigable River +1.5 (12, a vanilla river leg on land), Difficult Waterway +0.75 (17);
+  leaving the river costs 35 / 2.5 = 14. The River Port modifier (every land location whose port faces a channel) adds
+  local_port_cost_distance_impact -0.5 to the harbour, so boarding costs about 17 instead of 35.
+* Provinces (2026-10-15, World Builder `river_provinces`): one area per river, provinces of up to 8 channel tiles that
+  form one connected stretch of that river, cut from the mouth upstream and named after their main bank ("Mainz
+  Reach"). A fleet patrolling a province projects maritime presence onto one stretch of one river (before, provinces
+  were blocks of 12 tiles by tile number per geographic region: 61 of 89 were in pieces, 41 mixed rivers). Discovery
+  templates list the river provinces with a tile in a known region.
 * The engine applies sea movement to every fleet class. There is no small-boat restriction.
 
 The rest of this section and "Road graphics" describe earlier systems and are history.

@@ -11,7 +11,7 @@ pp_river_channel = {
 	audio_tags = { masDataTopologyElevation = 0 masDataTopologyOcean = 1 }
 }
 
-pp_river_shallows = {
+pp_river_difficult = {
 	color = rgb { 195 70 255 }
 	can_freeze_over = yes
 	can_have_ice = yes
@@ -19,7 +19,7 @@ pp_river_shallows = {
 	weather_front_strength_change_percent = 0
 	weather_cyclone_strength_change_percent = 0
 	weather_tornado_strength_change_percent = 0
-	location_modifier = { blocks_vision_from_sea = yes local_distance_from_capital_speed_propagation = 0.5 }
+	location_modifier = { blocks_vision_from_sea = yes local_distance_from_capital_speed_propagation = 0.75 }
 	audio_tags = { masDataTopologyElevation = 0 masDataTopologyOcean = 1 }
 }
 

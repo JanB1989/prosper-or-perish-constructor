@@ -1,7 +1,5 @@
 ﻿
 discovered_areas = {
-	pp_nav_crescent_region_area pp_nav_egypt_region_area
-
 	#anatolia_region
 	west_anatolia_area
 	cappadocia_area
@@ -20,4 +18,7 @@ discovered_areas = {
 	central_mediterranean_sea_area
 	ionian_sea_area
 	adriatic_sea_area
+}
+discovered_provinces = {
+	pp_nav_nile_0_province pp_nav_nile_1_province pp_nav_nile_2_province pp_nav_shatt_al_arab_0_province pp_nav_tigris_0_province
 }

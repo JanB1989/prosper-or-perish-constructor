@@ -220,7 +220,9 @@ def test_every_country_discovers_the_rivers_along_its_land():
     assert "location:pp_nav_3 = { if = { limit = { any_neighbor_location = { is_discovered_by = scope:pp_nav_discoverer } }" in text
     assert "every_location_in_region" not in text
     built = (MOD / "in_game/common/scripted_effects/pp_navigation_discovery.txt").read_text(encoding="utf-8-sig")
-    assert built.count("discover_location") >= 800
+    names = (MOD / "main_menu/localization/english/pp_navigation_geography_l_english.yml").read_text(encoding="utf-8-sig")
+    tiles_in_mod = len(re.findall(r"(?m)^ pp_nav_\d{5}:", names))
+    assert tiles_in_mod > 700 and built.count("discover_location") == tiles_in_mod
     assert "pp_navigation_discovery = yes" in (MOD / "in_game/common/on_action/pp_navigation.txt").read_text(encoding="utf-8-sig")
 
 

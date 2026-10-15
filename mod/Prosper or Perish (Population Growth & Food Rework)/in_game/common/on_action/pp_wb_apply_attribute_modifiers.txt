@@ -104,6 +104,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_low months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:abadeh = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_low months = -1 mode = replace }
@@ -4627,6 +4628,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_low months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_silt months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:arkhangelskoye = {
 			add_location_modifier = { modifier = pp_wb_fertility_high months = -1 mode = replace }
@@ -4660,6 +4662,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_lake months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:arlon = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
@@ -5393,6 +5396,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_low months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:astrina = {
 			add_location_modifier = { modifier = pp_wb_fertility_high months = -1 mode = replace }
@@ -6153,6 +6157,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_clay months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:ayopaya = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
@@ -9453,6 +9458,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:bergerac = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_high months = -1 mode = replace }
@@ -11468,6 +11474,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_lake months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:braga = {
 			add_location_modifier = { modifier = pp_wb_fertility_low months = -1 mode = replace }
@@ -11564,6 +11571,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_low months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:brataulung = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_high months = -1 mode = replace }
@@ -13352,6 +13360,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_high months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:caraquet = {
 			add_location_modifier = { modifier = pp_wb_fertility_low months = -1 mode = replace }
@@ -15669,6 +15678,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:chine = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_high months = -1 mode = replace }
@@ -16204,6 +16214,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_sand months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:choyrin_datsan = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_low months = -1 mode = replace }
@@ -20084,6 +20095,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_low months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:dorey = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_low months = -1 mode = replace }
@@ -20661,6 +20673,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_low months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:durjaya = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_high months = -1 mode = replace }
@@ -21708,6 +21721,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_low months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:enjebara = {
 			add_location_modifier = { modifier = pp_wb_fertility_high months = -1 mode = replace }
@@ -24182,6 +24196,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_high months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:gdov = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
@@ -26032,6 +26047,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_low months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_clay months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:guaycura = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_low months = -1 mode = replace }
@@ -42299,6 +42315,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:larino = {
 			add_location_modifier = { modifier = pp_wb_fertility_high months = -1 mode = replace }
@@ -45158,6 +45175,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_high months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:machekha = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
@@ -51724,6 +51742,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_low months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_peat months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:muarakaman = {
 			add_location_modifier = { modifier = pp_wb_fertility_low months = -1 mode = replace }
@@ -57253,6 +57272,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:olesnica = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_high months = -1 mode = replace }
@@ -62154,6 +62174,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:porto_tibirica = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_high months = -1 mode = replace }
@@ -65474,6 +65495,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_high months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:rochester = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_high months = -1 mode = replace }
@@ -67096,6 +67118,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_clay months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:samawa = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_low months = -1 mode = replace }
@@ -71102,6 +71125,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:sines = {
 			add_location_modifier = { modifier = pp_wb_fertility_high months = -1 mode = replace }
@@ -72732,6 +72756,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_clay months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:st_affrique = {
 			add_location_modifier = { modifier = pp_wb_fertility_high months = -1 mode = replace }
@@ -75150,6 +75175,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_high months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:tammisha = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_high months = -1 mode = replace }
@@ -75253,6 +75279,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_high months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:tanchang = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
@@ -77411,6 +77438,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_loam months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:thiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
@@ -80734,6 +80762,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_high months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_sand months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_coastal months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_river_port months = -1 mode = replace }
 		}
 		location:tyerrernotepanner = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_high months = -1 mode = replace }

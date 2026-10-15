@@ -128,7 +128,7 @@ pp_cloth_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_cloth
+	color = hsv { 0.000 0.390 0.619 }
 }
 
 pp_fine_cloth_rights = {
@@ -250,7 +250,7 @@ pp_fine_cloth_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_fine_cloth
+	color = hsv { 0.083 0.120 0.517 }
 }
 
 pp_leather_rights = {
@@ -372,7 +372,7 @@ pp_leather_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_leather
+	color = hsv { 0.050 0.175 0.575 }
 }
 
 pp_pottery_rights = {
@@ -494,7 +494,7 @@ pp_pottery_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_pottery
+	color = hsv { 0.500 0.120 0.542 }
 }
 
 pp_furniture_rights = {
@@ -616,7 +616,7 @@ pp_furniture_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_furniture
+	color = hsv { 0.500 0.161 0.542 }
 }
 
 pp_glass_rights = {
@@ -738,7 +738,7 @@ pp_glass_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_glass
+	color = hsv { 0.458 0.500 0.800 }
 }
 
 pp_jewelry_rights = {
@@ -860,7 +860,7 @@ pp_jewelry_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_jewelry
+	color = hsv { 0.085 0.475 0.720 }
 }
 
 pp_porcelain_rights = {
@@ -982,7 +982,7 @@ pp_porcelain_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_porcelain
+	color = hsv { 0.562 0.388 0.576 }
 }
 
 pp_lacquerware_rights = {
@@ -1104,7 +1104,7 @@ pp_lacquerware_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_lacquerware
+	color = hsv { 0.974 0.500 0.798 }
 }
 
 pp_beer_rights = {
@@ -1226,7 +1226,7 @@ pp_beer_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_beer
+	color = hsv { 0.700 0.410 0.625 }
 }
 
 pp_liquor_rights = {
@@ -1348,7 +1348,7 @@ pp_liquor_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_liquor
+	color = hsv { 0.900 0.400 0.600 }
 }
 
 pp_books_rights = {
@@ -1470,7 +1470,7 @@ pp_books_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_books
+	color = hsv { 0.910 0.405 0.815 }
 }
 
 pp_tools_rights = {
@@ -1592,7 +1592,7 @@ pp_tools_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_tools
+	color = hsv { 0.620 0.150 0.540 }
 }
 
 pp_weaponry_rights = {
@@ -1714,7 +1714,7 @@ pp_weaponry_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_weaponry
+	color = hsv { 0.583 0.120 0.582 }
 }
 
 pp_firearms_rights = {
@@ -1836,7 +1836,7 @@ pp_firearms_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_firearms
+	color = hsv { 0.880 0.150 0.720 }
 }
 
 pp_cannons_rights = {
@@ -1958,7 +1958,7 @@ pp_cannons_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_cannons
+	color = hsv { 0.780 0.200 0.720 }
 }
 
 pp_naval_supplies_rights = {
@@ -2080,7 +2080,7 @@ pp_naval_supplies_charter = {
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_naval_supplies
+	color = hsv { 0.632 0.363 0.700 }
 }
 
 # Vanilla bundled specialization rights: replaced by the per-good rights above (never available).
@@ -2090,7 +2090,7 @@ REPLACE:royal_tooling_rights = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_tools
+	color = hsv { 0 0 0.12 }
 }
 
 REPLACE:royal_jewelry_rights = {
@@ -2099,7 +2099,7 @@ REPLACE:royal_jewelry_rights = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_jewelry
+	color = hsv { 0 0 0.165 }
 }
 
 REPLACE:royal_naval_rights = {
@@ -2108,7 +2108,7 @@ REPLACE:royal_naval_rights = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_naval_supplies
+	color = hsv { 0 0 0.21 }
 }
 
 REPLACE:royal_textile_rights = {
@@ -2117,7 +2117,7 @@ REPLACE:royal_textile_rights = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_fine_cloth
+	color = hsv { 0 0 0.255 }
 }
 
 REPLACE:royal_weaponry_rights = {
@@ -2126,7 +2126,7 @@ REPLACE:royal_weaponry_rights = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_weaponry
+	color = hsv { 0 0 0.3 }
 }
 
 REPLACE:royal_book_rights = {
@@ -2135,7 +2135,7 @@ REPLACE:royal_book_rights = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_paper
+	color = hsv { 0 0 0.345 }
 }
 
 REPLACE:royal_artisan_rights = {
@@ -2144,7 +2144,7 @@ REPLACE:royal_artisan_rights = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_pottery
+	color = hsv { 0 0 0.39 }
 }
 
 REPLACE:royal_brewing_rights = {
@@ -2153,7 +2153,7 @@ REPLACE:royal_brewing_rights = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_liquor
+	color = hsv { 0 0 0.435 }
 }
 
 REPLACE:royal_masonry_rights = {
@@ -2162,7 +2162,7 @@ REPLACE:royal_masonry_rights = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_masonry
+	color = hsv { 0 0 0.48 }
 }
 
 REPLACE:tooling_charter = {
@@ -2171,7 +2171,7 @@ REPLACE:tooling_charter = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_tools
+	color = hsv { 0 0 0.525 }
 }
 
 REPLACE:jewelry_charter = {
@@ -2180,7 +2180,7 @@ REPLACE:jewelry_charter = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_jewelry
+	color = hsv { 0 0 0.57 }
 }
 
 REPLACE:naval_charter = {
@@ -2189,7 +2189,7 @@ REPLACE:naval_charter = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_naval_supplies
+	color = hsv { 0 0 0.615 }
 }
 
 REPLACE:textile_charter = {
@@ -2198,7 +2198,7 @@ REPLACE:textile_charter = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_fine_cloth
+	color = hsv { 0 0 0.66 }
 }
 
 REPLACE:weaponry_charter = {
@@ -2207,7 +2207,7 @@ REPLACE:weaponry_charter = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_weaponry
+	color = hsv { 0 0 0.705 }
 }
 
 REPLACE:book_charter = {
@@ -2216,7 +2216,7 @@ REPLACE:book_charter = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_paper
+	color = hsv { 0 0 0.75 }
 }
 
 REPLACE:artisan_charter = {
@@ -2225,7 +2225,7 @@ REPLACE:artisan_charter = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_pottery
+	color = hsv { 0 0 0.795 }
 }
 
 REPLACE:brewing_charter = {
@@ -2234,7 +2234,7 @@ REPLACE:brewing_charter = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_liquor
+	color = hsv { 0 0 0.84 }
 }
 
 REPLACE:masonry_charter = {
@@ -2243,5 +2243,5 @@ REPLACE:masonry_charter = {
 	allow = { always = no }
 	location_modifier = {
 	}
-	color = goods_masonry
+	color = hsv { 0 0 0.885 }
 }

@@ -170,3 +170,18 @@ def test_navigable_rivers_map_mode_ships_for_players():
     concept=(MOD/f'main_menu/common/game_concepts/{MAP_MODE}.txt').read_text(encoding='utf-8-sig')
     assert f'texture = "map_modes/{MAP_MODE}"' in concept
     assert not (MOD/'in_game/gfx/map/map_modes/pp_river_navigation.txt').exists()
+
+
+def test_touching_channel_tiles_get_different_shades(tmp_path):
+    from prosper_or_perish_constructor.worldbuilder.navigation_map_modes import shades, write_map_modes
+    # a confluence: c touches a, b and d; a bank edge never counts
+    tiles = {t: {"state": "navigable"} for t in "abcd"}
+    edges = [{"from": x, "to": y, "shore": False} for x, y in ("ca", "cb", "cd", "ab")] + [{"from": "a", "to": "land", "shore": True, "state": "navigable"}]
+    shade = shades({"tiles": tiles, "edges": edges})
+    assert all(shade[x] != shade[y] for x, y in ("ca", "cb", "cd", "ab")) and set(shade.values()) <= {1, 2, 3, 4}
+    write_map_modes(tmp_path, {"tiles": tiles, "edges": edges})
+    text = (tmp_path / "in_game/gfx/map/map_modes/pp_navigable_rivers.txt").read_text()
+    assert "var:pp_navigation_map_shade = 2 } value = rgb { 0 40 120 }" in text
+    effects = (tmp_path / "in_game/common/scripted_effects/pp_navigation_map.txt").read_text()
+    c = shade.get("c")
+    assert f"location:c = {{ set_variable = {{ name = pp_navigation_map_state value = 1 }} set_variable = {{ name = pp_navigation_map_shade value = {c} }}" in effects

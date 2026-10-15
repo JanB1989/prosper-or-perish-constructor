@@ -1,6 +1,12 @@
 ﻿pp_navigable_rivers = {
  map_color = {
-  if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 } value = rgb { 30 140 230 } }
+  if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_map_shade var:pp_navigation_map_shade = 2 } value = rgb { 0 40 120 } }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_map_shade var:pp_navigation_map_shade = 3 } value = rgb { 160 230 255 } }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_map_shade var:pp_navigation_map_shade = 4 } value = rgb { 0 190 160 } }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 } value = rgb { 30 140 230 } }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_map_shade var:pp_navigation_map_shade = 2 } value = rgb { 75 20 120 } }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_map_shade var:pp_navigation_map_shade = 3 } value = rgb { 230 185 255 } }
+  else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_map_shade var:pp_navigation_map_shade = 4 } value = rgb { 215 60 165 } }
   else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 } value = rgb { 150 90 200 } }
   else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 } value = rgb { 215 45 45 } }
   else_if = { limit = { has_variable = pp_navigation_bank is_port = yes } value = rgb { 245 205 70 } }

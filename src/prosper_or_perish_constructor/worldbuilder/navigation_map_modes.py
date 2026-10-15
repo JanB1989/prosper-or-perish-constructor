@@ -1,6 +1,6 @@
 """The Navigable Rivers map mode and the per-location navigation state it reads (seeded at game start; fixed for the
    whole game since the River Navigation Canal was removed, 2026-10-13)."""
-from collections import defaultdict
+from collections import defaultdict, deque
 
 
 def write_map_modes(root,state):
@@ -11,15 +11,38 @@ def write_map_modes(root,state):
     for e in state['edges']:
         if e['shore']:shores[e['to']].add(e['state'])
     seed=['pp_navigation_map_seed = {']
+    shade=shades(state)
     for tag,tile in sorted(state['tiles'].items()):
         status={'navigable':1,'difficult':5,'barrier':3}[tile['state']]
-        seed.append(f' location:{tag} = {{ set_variable = {{ name = pp_navigation_map_state value = {status} }} set_variable = {{ name = pp_navigation_water_level value = {tile.get('river_level',0)} }} set_variable = {{ name = pp_navigation_ocean_connected value = {int(bool(tile.get('ocean_connected',False)))} }} }}')
+        seed.append(f' location:{tag} = {{ set_variable = {{ name = pp_navigation_map_state value = {status} }} set_variable = {{ name = pp_navigation_map_shade value = {shade[tag]} }} set_variable = {{ name = pp_navigation_water_level value = {tile.get('river_level',0)} }} set_variable = {{ name = pp_navigation_ocean_connected value = {int(bool(tile.get('ocean_connected',False)))} }} }}')
     for tag,kinds in sorted(shores.items()):
         seed.append(f' location:{tag} = {{ set_variable = {{ name = pp_navigation_bank value = {1 if kinds-set(["barrier"]) else 2} }} }}')
     seed.append('}')
     write('in_game/common/scripted_effects/pp_navigation_map.txt','\n'.join(seed))
     write(f'in_game/gfx/map/map_modes/{MAP_MODE}.txt',map_mode_text())
     write(f'main_menu/localization/english/{MAP_MODE}_map_l_english.yml',map_mode_localization())
+
+
+def shades(state):
+    """Shade 1..SHADES per channel tile so that touching tiles differ: greedy colouring along each waterway (breadth
+    first), avoiding the shades of the neighbours first and of the tiles two steps away second, so a river cycles
+    through several shades instead of two. 0 would read as an unset variable."""
+    tiles=state['tiles'];nb=defaultdict(set)
+    for e in state['edges']:
+        if not e['shore'] and e['from'] in tiles and e['to'] in tiles and e['from']!=e['to']:
+            nb[e['from']].add(e['to']);nb[e['to']].add(e['from'])
+    shade={}
+    for start in sorted(tiles):
+        if start in shade:continue
+        queue=deque([start]);seen={start}
+        while queue:
+            tag=queue.popleft()
+            near=[shade[n] for n in nb[tag] if n in shade]
+            far=[shade[m] for n in nb[tag] for m in nb[n] if m!=tag and m in shade]
+            shade[tag]=min(range(1,SHADES+1),key=lambda k:(near.count(k),far.count(k),k))
+            for n in sorted(nb[tag]-seen):
+                seen.add(n);queue.append(n)
+    return shade
 
 
 # The Navigable Rivers map mode (Geography, beside vanilla's Rivers; no index puts it in Rivers' group). The water
@@ -29,7 +52,13 @@ def write_map_modes(root,state):
 MAP_MODE='pp_navigable_rivers'
 _STATE='has_variable = pp_navigation_map_state var:pp_navigation_map_state = {}'
 _OPEN='has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1'
-# map state (set by pp_navigation_map_seed / _refresh): key, colour, name, what it means
+# map state (set by pp_navigation_map_seed / _refresh): key, colour, name, what it means. Each water kind is drawn in
+# SHADES clearly different shades of its colour (WATER_SHADES; the first is the legend colour), so touching tiles
+# stand apart. The map's lighting blend halves the contrast, hence the wide spread (dark, pale, a hue shift).
+SHADES=4
+WATER_SHADES={1:['30 140 230','0 40 120','160 230 255','0 190 160'],
+              5:['150 90 200','75 20 120','230 185 255','215 60 165'],
+              3:['215 45 45']*SHADES}
 WATER=[(1,'navigable','30 140 230','Navigable River','Fleets sail it, and goods travel along it far more cheaply than over land.'),
        (5,'difficult','150 90 200','Difficult Waterway','Shoals and weirs, or a great tropical or strongly seasonal river: boats get through, but slowly.'),
        (3,'falls','215 45 45','Falls','Falls or great rapids that no boat passes and no canal opens.')]
@@ -56,6 +85,9 @@ def _key(name):
 def map_mode_text():
     colors=[];tips=[]
     for state,key,color,_,_ in WATER:
+        for k,shade in enumerate(WATER_SHADES[state][1:],2):
+            if shade!=color:
+                colors.append(f'{_STATE.format(state)} has_variable = pp_navigation_map_shade var:pp_navigation_map_shade = {k}|{shade}')
         colors.append(f'{_STATE.format(state)}|{color}')
         if state==3:tips.append(f'{_STATE.format(state)}|{_key(key)}_TT')
         else:

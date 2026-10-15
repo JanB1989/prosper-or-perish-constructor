@@ -100,7 +100,10 @@
   Workers per level (after the employment cut): tier 2 x1.15 (0.287), tier 3 x1.3 (0.325 burghers, 1.04 laborers),
   tier 4 x1.45 (1.16); these sizes are written directly, so the cut skips them. Stack malus in the staffed `modifier`:
   `local_<good>_output_modifier` -0.005 (tier 1) / -0.0025 (tier 2) per level. The market village and the tatara
-  craft methods: x0.7 only.
+  craft methods: x0.7 only. The steel mill (a mill without a line) got the tier-4 numbers by hand on 2026-10-15
+  (Jan: steel too weak): 4 -> 8.946 steel, iron/coal 3.44 -> 6.88, workers 1.16; no counter, malus or upgrade weight.
+  Its Market leg runs at margin 1.06 (`[production_gate.leg] margin_by_good`): nothing demands steel until some exists, so
+  the price sat at base and the 1.0 leg never opened (no steel mill in the 9 full runs since 2026-10-10).
 - Every line building counts its standing levels in `raw_modifier local_pp_<good>_line_levels` (modifier types
   `pp_manufacturing_line_modifier_types.txt`). Tiers 2+ have `ai_construct_weight` 200 / (owner income + 10) where the
   predecessor stands (the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001).
@@ -112,6 +115,15 @@
   `REPLACE`d with `potential = { always = no }`. Each rights block stands before its charter: `upgrades_to` reads only
   a right that is already loaded (a forward reference fails at load and the charter never upgrades; fixed 2026-10-15,
   `tests/test_town_rights_order.py`).
+- Iron right "Hammer Privileges" (`pp_iron_rights`, 2026-10-15, Jan; not tested in game): one right, no charter, no
+  potential, no unlocking advance (nothing upgrades into it; an empty unlock list = unlocked from the start). Iron output
+  +0.5, production efficiency -0.075. Only where the town works iron itself (`allow`: iron RGO, or a bog iron smelter of
+  any tier with a level), because the line acts only on the town's own iron and the AI values it only against that. It
+  is one of the specialization rights (in every `pp_one_specialization_tt` list; a test checks the lists name each
+  other). Vanilla Bergslag Privileges (mining RGOs incl. iron) stays unchanged: a Bergslag town cannot take the iron
+  right, but vanilla Bergslag does not check for it (one way, like every PP right); mining charter and the Bergregal
+  rights may stack with it in a city with two slots. Icon: `assets/town_right_drawings/goods/iron.py` (blast
+  furnace, pick and hammer; rights frame only, `LINES` in `render.py`).
 - Trade buildings: merchants' quarters, customs house, entrepot need Printing Press embraced; grand marketplace,
   commerce centre, trading hub, clearing house, stock exchange need Global Trade (`allow`, owner). Merchant capacity per
   level: merchants' quarters 1.8 (+20 %), grand marketplace 3 (+50 %), commerce centre 7.2 (+80 %), added to vanilla's
@@ -353,6 +365,18 @@
   rerun apply after a game update or a goods price change.
 - The goods market percentage and maintenance efficiency still apply on top. The AI spends a fixed share of income on
   its navy, so cheaper late ships mean larger AI navies. Not tested in game.
+
+## AI Roads (2026-10-15, Jan)
+
+- Roads should not be good everywhere, upgrades rarely: prices stay (gravel 45, paved 240, modern 450, railroad 1300
+  per unit, `pp_road_gold_adjustments.txt`). The engine credits a candidate road with the full land - road saving at its
+  far end even where that end already has a cheaper path (river leg 12 < road 20) or no proximity; 42 % of the AI's new
+  roads in run 4b90876a raised nothing.
+- `road_types/pp_road_ai_weights.txt` INJECTs `ai_construct_weight` (root = from, scope:to, scope:builder) from
+  `script_values/pp_road_ai_values.txt`: veto when |proximity(from) - proximity(to)| < the type's step
+  (20 - road proximity) / 1.15 + 2. Railroads skip it between two locations of potential tax base 80+ (~30 pairs in 1827)
+  and get +50 x min(1, builder gold / 10,000) there. `tests/test_road_ai_weights.py`. Not tested in game; the +50 is
+  not calibrated.
 
 ## Release Checklist
 

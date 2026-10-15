@@ -1,0 +1,39 @@
+﻿# AI road choice (2026-10-15, Jan). Read by road_types/pp_road_ai_weights.txt: root = from, scope:to, scope:builder.
+# The engine credits every candidate road with the full land - road proximity saving at its far end, even where that
+# end already has a cheaper path (a river leg, another road) or is out of reach; 42 % of the AI's new roads in run
+# 4b90876a raised nothing. A road only helps when the two ends lie further apart in proximity than its own step, so
+# the weights veto a road that cannot raise the far end by at least 2.
+# Road step = (20 - the type's proximity) / 1.15 (average location efficiency): gravel 17.4, paved 13.0, modern 8.7,
+# railroad 4.3. Upgrades need the same: paved over a gravel road the far end uses has a gap of 17.4 and passes.
+# Railroads skip the check between two great centres (both potential tax base 80+, ~30 pairs worldwide in 1827) and get
+# a bonus there that fades in with the builder's treasury (full at 10,000 gold), so a poor owner's queue never waits on one.
+
+pp_road_proximity_gap = {
+	value = proximity
+	subtract = scope:to.proximity
+	if = { limit = { proximity < scope:to.proximity } multiply = -1 }
+}
+
+pp_road_ai_weight_gravel = {
+	value = 0
+	if = { limit = { pp_road_proximity_gap < 19.4 } value = -1000000 }
+}
+
+pp_road_ai_weight_paved = {
+	value = 0
+	if = { limit = { pp_road_proximity_gap < 15 } value = -1000000 }
+}
+
+pp_road_ai_weight_modern = {
+	value = 0
+	if = { limit = { pp_road_proximity_gap < 10.7 } value = -1000000 }
+}
+
+pp_road_ai_weight_railroad = {
+	value = 0
+	if = {
+		limit = { location_potential_tax_base >= 80 scope:to = { location_potential_tax_base >= 80 } }
+		add = { value = scope:builder.gold divide = 10000 min = 0 max = 1 multiply = 50 }
+	}
+	else_if = { limit = { pp_road_proximity_gap < 6.3 } value = -1000000 }
+}

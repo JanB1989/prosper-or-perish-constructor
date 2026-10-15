@@ -1,0 +1,5 @@
+﻿# AI road weights (2026-10-15): see script_values/pp_road_ai_values.txt.
+INJECT:gravel_road = { ai_construct_weight = pp_road_ai_weight_gravel }
+INJECT:paved_road = { ai_construct_weight = pp_road_ai_weight_paved }
+INJECT:modern_road = { ai_construct_weight = pp_road_ai_weight_modern }
+INJECT:railroad = { ai_construct_weight = pp_road_ai_weight_railroad }

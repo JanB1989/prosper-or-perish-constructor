@@ -181,6 +181,10 @@ PP changes (v13, 2026-10-13, on 0.10; v1-v12 tuned on branch `enclave-release`, 
   outside the capital's region (`pp_is_sea_coast`: river channels and lakes are not sea), colonies being settled,
   pieces where the nation can reach control 0.5 anywhere, HRE members. No piece count, size or continent limit
   (v12: 4+ pieces on the home continent, at most 6 locations, current control).
+  - Paused during a civil war and for rebel states (`pp_enclave_release_paused`: `in_civil_war`, `is_rebel_country`;
+    2026-10-15, both actions). Run 4b42459e: the rebel Castile of 1378 (capital Briviesca, 33 scattered locations)
+    released Madrid/Avila, Granada/Almeria, Carmona, Hellin and Valencia as its vassals in 1379-1380; when Castile won
+    the revolt in 1380 it inherited them. The loyalist side is cut apart by the rebels' land in the same way.
   - A piece that borders one of the nation's subjects joins that subject (Morocco's land in Spain next to its vassal
     Jaen); any other becomes a new subject: a tributary where the government allows one
     (`pp_can_hold_tributary`: horde, tribe, `allow_tributary_subject`), else a vassal (a samanta in India), over

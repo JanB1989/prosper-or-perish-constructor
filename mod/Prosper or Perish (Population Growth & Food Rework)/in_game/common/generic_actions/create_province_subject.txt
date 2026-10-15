@@ -2,7 +2,7 @@
 # Vanilla never lets the AI use this action (ai_tick = never). PP lets every AI nation let go, once a year, each piece
 # of its land it can never govern (pp_enclave_kept_location): cut off from the capital by land and strait, max_control
 # under 0.5 everywhere. Kept: footholds reached by sea that reach outside the capital's region (river channels and
-# lakes are not sea), colonies being settled, pieces held by an enemy, HRE members. A piece that borders one of the
+# lakes are not sea), colonies being settled, pieces held by an enemy, HRE members; no release during a civil war or by a rebel state (pp_enclave_release_paused). A piece that borders one of the
 # nation's subjects joins that subject; any other becomes a new subject (a tributary where the government allows one,
 # else a vassal; a samanta in India). The target is a province, but the AI releases by location
 # (create_country_from_location), since a piece often shares its province with kept land of the nation. Subjects and
@@ -25,6 +25,7 @@ create_province_subject = {
 
 	ai_prerequisite = {
 		pp_cannot_create_subjects = no
+		pp_enclave_release_paused = no
 		num_locations > 1
 		trigger_if = {
 			limit = { exists = international_organization:hre }

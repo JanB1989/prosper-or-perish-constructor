@@ -15,6 +15,17 @@ pp_cannot_create_subjects = {
 	}
 }
 
+# PP (2026-10-15), country scope: no enclave release while the country fights a civil war or is a rebel state. A revolt
+# country is born as scattered pieces with low control far from its capital, and the loyalist side is cut apart by the
+# rebels' land, so both would let their heartland go; the winner then keeps those subjects (run 4b42459e: the rebel
+# Castile of 1378 released Madrid, Avila, Granada and Valencia as vassals, which Castile inherited in 1380).
+pp_enclave_release_paused = {
+	OR = {
+		in_civil_war = yes
+		is_rebel_country = yes
+	}
+}
+
 # PP (2026-10-13), country scope: the government allows tributaries (vanilla subject_types/tributary.txt
 # creation_visible without its Battle for the Strait case, whose check errors on a situation missing from the save).
 pp_can_hold_tributary = {

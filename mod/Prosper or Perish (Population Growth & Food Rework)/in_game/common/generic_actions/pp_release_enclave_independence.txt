@@ -20,6 +20,7 @@ pp_release_enclave_independence = {
 
 	ai_prerequisite = {
 		pp_cannot_create_subjects = yes
+		pp_enclave_release_paused = no
 		num_locations > 1
 		trigger_if = {
 			limit = { exists = international_organization:hre }

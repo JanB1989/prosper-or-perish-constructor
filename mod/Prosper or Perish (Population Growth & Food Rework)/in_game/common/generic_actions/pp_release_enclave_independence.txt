@@ -50,7 +50,8 @@ pp_release_enclave_independence = {
 				limit = { scope:actor = { is_subject = yes } }
 				scope:actor = { overlord = { save_scope_as = pp_enclave_overlord } }
 			}
-			scope:target_province = { pp_enclave_release_piece = yes }
+			scope:target_province = { pp_enclave_pick_piece = yes }
+			scope:actor = { pp_enclave_release_piece = yes }
 		}
 	}
 

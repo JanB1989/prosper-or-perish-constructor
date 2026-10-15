@@ -212,6 +212,11 @@ Engine facts found on the way:
 - Each subject uses diplomatic capacity; over it a country gets `unsupported_diplomatic_capacity` (subject loyalty
   -25, cabinet efficiency and crown estate power -50 % at full overuse). Hungary went over it with 6-9 released
   vassals and lost the 1541 Vbk independence war more often.
+- A province is destroyed as soon as its last location of the nation changes owner, and every effect that still runs
+  in its scope fails ("Scoped object is not valid. Type: Province (4294967295)", 563 lines in the first month of a
+  new 1.4.1 game, 2026-10-15). In those releases the new country stayed independent, with the seat only and no cores
+  or truce. Since then only `pp_enclave_pick_piece` runs in the target province; `pp_enclave_release_piece` runs in
+  the nation's scope (tested in game: a new game to 1338.4, no errors, new countries become subjects).
 - `local_control` is 0..1. Target enclaves average control 0.19-0.24, capital pieces 0.47-0.50; 3-10 % of target
   enclaves reach 0.5 somewhere.
 - Vassals and samantas always join their overlord's offensive wars, tributaries only defensive ones. With released

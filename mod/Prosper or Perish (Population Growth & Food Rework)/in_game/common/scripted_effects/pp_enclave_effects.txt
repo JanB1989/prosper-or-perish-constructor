@@ -43,13 +43,14 @@ pp_enclave_pick_piece = {
 	}
 }
 
-# PP (2026-10-13), province scope (the target province), scope:actor = the nation, scope:pp_enclave_overlord = the
-# country the released land answers to (the nation itself, or its overlord when the nation is a subject): lets one
-# piece go. A piece that borders a subject of the overlord joins that subject; any other becomes a new subject of the
-# overlord from its seat (independent when scope:pp_enclave_overlord is not set: a union junior). Its land gets the
-# new country's cores, and the nation and the new country a truce.
+# PP (2026-10-13), country scope (the nation, scope:actor), after pp_enclave_pick_piece in the target province,
+# scope:pp_enclave_overlord = the country the released land answers to (the nation itself, or its overlord when the
+# nation is a subject): lets the picked piece go. A piece that borders a subject of the overlord joins that subject; any
+# other becomes a new subject of the overlord from its seat (independent when scope:pp_enclave_overlord is not set: a
+# union junior). Its land gets the new country's cores, and the nation and the new country a truce.
+# Never call it in the target province's scope: the province is destroyed as soon as its last location of the nation
+# changes owner, and every effect after that in its scope fails (EU5 1.4.1 error.log, 2026-10-15).
 pp_enclave_release_piece = {
-	pp_enclave_pick_piece = yes
 	if = {
 		limit = {
 			exists = scope:pp_enclave_seat

@@ -109,7 +109,9 @@
   cloth / leather / pottery / glass / jewelry / books, 5 for the other lines; output +0.35, efficiency -0.05; a rights type needs an unlocking advance, else the engine never grants its charter); one
   specialization right per town (`pp_one_specialization_tt`). The AI values only the output line against the town's own
   production, so it takes a right where that line dominates. The 18 vanilla bundled royal rights and charters are
-  `REPLACE`d with `potential = { always = no }`.
+  `REPLACE`d with `potential = { always = no }`. Each rights block stands before its charter: `upgrades_to` reads only
+  a right that is already loaded (a forward reference fails at load and the charter never upgrades; fixed 2026-10-15,
+  `tests/test_town_rights_order.py`).
 - Trade buildings: merchants' quarters, customs house, entrepot need Printing Press embraced; grand marketplace,
   commerce centre, trading hub, clearing house, stock exchange need Global Trade (`allow`, owner). Merchant capacity per
   level: merchants' quarters 1.8 (+20 %), grand marketplace 3 (+50 %), commerce centre 7.2 (+80 %), added to vanilla's

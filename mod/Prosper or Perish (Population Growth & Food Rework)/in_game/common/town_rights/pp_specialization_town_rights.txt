@@ -6,66 +6,8 @@
 # production efficiency -0.05. One specialization right per town. The AI values only the output line against what the
 # town already makes, so it takes a right where that line dominates the town.
 # The vanilla bundled specialization rights and charters are switched off below.
-
-pp_cloth_charter = {
-	is_specialization = yes
-	upgrades_to = pp_cloth_rights
-
-	allow = {
-		scope:target = {
-			modifier:local_pp_cloth_line_levels >= 3
-			custom_tooltip = {
-				text = pp_one_specialization_tt
-				NOR = {
-					has_town_rights = town_rights_type:pp_fine_cloth_charter
-					has_town_rights = town_rights_type:pp_leather_charter
-					has_town_rights = town_rights_type:pp_pottery_charter
-					has_town_rights = town_rights_type:pp_furniture_charter
-					has_town_rights = town_rights_type:pp_glass_charter
-					has_town_rights = town_rights_type:pp_jewelry_charter
-					has_town_rights = town_rights_type:pp_porcelain_charter
-					has_town_rights = town_rights_type:pp_lacquerware_charter
-					has_town_rights = town_rights_type:pp_beer_charter
-					has_town_rights = town_rights_type:pp_liquor_charter
-					has_town_rights = town_rights_type:pp_books_charter
-					has_town_rights = town_rights_type:pp_tools_charter
-					has_town_rights = town_rights_type:pp_weaponry_charter
-					has_town_rights = town_rights_type:pp_firearms_charter
-					has_town_rights = town_rights_type:pp_cannons_charter
-					has_town_rights = town_rights_type:pp_naval_supplies_charter
-					has_town_rights = town_rights_type:pp_cloth_rights
-					has_town_rights = town_rights_type:pp_fine_cloth_rights
-					has_town_rights = town_rights_type:pp_leather_rights
-					has_town_rights = town_rights_type:pp_pottery_rights
-					has_town_rights = town_rights_type:pp_furniture_rights
-					has_town_rights = town_rights_type:pp_glass_rights
-					has_town_rights = town_rights_type:pp_jewelry_rights
-					has_town_rights = town_rights_type:pp_porcelain_rights
-					has_town_rights = town_rights_type:pp_lacquerware_rights
-					has_town_rights = town_rights_type:pp_beer_rights
-					has_town_rights = town_rights_type:pp_liquor_rights
-					has_town_rights = town_rights_type:pp_books_rights
-					has_town_rights = town_rights_type:pp_tools_rights
-					has_town_rights = town_rights_type:pp_weaponry_rights
-					has_town_rights = town_rights_type:pp_firearms_rights
-					has_town_rights = town_rights_type:pp_cannons_rights
-					has_town_rights = town_rights_type:pp_naval_supplies_rights
-					has_town_rights = town_rights_type:flemish_cloth_industries_right
-					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
-					has_town_rights = town_rights_type:scandinavian_tar_privileges
-					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
-				}
-			}
-		}
-	}
-
-	location_modifier = {
-		local_cloth_output_modifier = 0.15
-		local_production_efficiency = -0.05
-	}
-
-	color = goods_cloth
-}
+# Each rights block stands before its charter: upgrades_to reads only a key that is already loaded (a forward reference
+# fails with "Failed to read key reference" and the charter never upgrades).
 
 pp_cloth_rights = {
 	is_specialization = yes
@@ -129,17 +71,17 @@ pp_cloth_rights = {
 	color = goods_cloth
 }
 
-pp_fine_cloth_charter = {
+pp_cloth_charter = {
 	is_specialization = yes
-	upgrades_to = pp_fine_cloth_rights
+	upgrades_to = pp_cloth_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_fine_cloth_line_levels >= 3
+			modifier:local_pp_cloth_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
-					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
 					has_town_rights = town_rights_type:pp_leather_charter
 					has_town_rights = town_rights_type:pp_pottery_charter
 					has_town_rights = town_rights_type:pp_furniture_charter
@@ -182,11 +124,11 @@ pp_fine_cloth_charter = {
 	}
 
 	location_modifier = {
-		local_fine_cloth_output_modifier = 0.15
+		local_cloth_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_fine_cloth
+	color = goods_cloth
 }
 
 pp_fine_cloth_rights = {
@@ -251,18 +193,18 @@ pp_fine_cloth_rights = {
 	color = goods_fine_cloth
 }
 
-pp_leather_charter = {
+pp_fine_cloth_charter = {
 	is_specialization = yes
-	upgrades_to = pp_leather_rights
+	upgrades_to = pp_fine_cloth_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_leather_line_levels >= 3
+			modifier:local_pp_fine_cloth_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
 					has_town_rights = town_rights_type:pp_cloth_charter
-					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
 					has_town_rights = town_rights_type:pp_pottery_charter
 					has_town_rights = town_rights_type:pp_furniture_charter
 					has_town_rights = town_rights_type:pp_glass_charter
@@ -304,11 +246,11 @@ pp_leather_charter = {
 	}
 
 	location_modifier = {
-		local_leather_output_modifier = 0.15
+		local_fine_cloth_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_leather
+	color = goods_fine_cloth
 }
 
 pp_leather_rights = {
@@ -373,19 +315,19 @@ pp_leather_rights = {
 	color = goods_leather
 }
 
-pp_pottery_charter = {
+pp_leather_charter = {
 	is_specialization = yes
-	upgrades_to = pp_pottery_rights
+	upgrades_to = pp_leather_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_pottery_line_levels >= 3
+			modifier:local_pp_leather_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
 					has_town_rights = town_rights_type:pp_cloth_charter
 					has_town_rights = town_rights_type:pp_fine_cloth_charter
-					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
 					has_town_rights = town_rights_type:pp_furniture_charter
 					has_town_rights = town_rights_type:pp_glass_charter
 					has_town_rights = town_rights_type:pp_jewelry_charter
@@ -426,11 +368,11 @@ pp_pottery_charter = {
 	}
 
 	location_modifier = {
-		local_pottery_output_modifier = 0.15
+		local_leather_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_pottery
+	color = goods_leather
 }
 
 pp_pottery_rights = {
@@ -495,20 +437,20 @@ pp_pottery_rights = {
 	color = goods_pottery
 }
 
-pp_furniture_charter = {
+pp_pottery_charter = {
 	is_specialization = yes
-	upgrades_to = pp_furniture_rights
+	upgrades_to = pp_pottery_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_furniture_line_levels >= 3
+			modifier:local_pp_pottery_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
 					has_town_rights = town_rights_type:pp_cloth_charter
 					has_town_rights = town_rights_type:pp_fine_cloth_charter
 					has_town_rights = town_rights_type:pp_leather_charter
-					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
 					has_town_rights = town_rights_type:pp_glass_charter
 					has_town_rights = town_rights_type:pp_jewelry_charter
 					has_town_rights = town_rights_type:pp_porcelain_charter
@@ -548,11 +490,11 @@ pp_furniture_charter = {
 	}
 
 	location_modifier = {
-		local_furniture_output_modifier = 0.15
+		local_pottery_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_furniture
+	color = goods_pottery
 }
 
 pp_furniture_rights = {
@@ -617,13 +559,13 @@ pp_furniture_rights = {
 	color = goods_furniture
 }
 
-pp_glass_charter = {
+pp_furniture_charter = {
 	is_specialization = yes
-	upgrades_to = pp_glass_rights
+	upgrades_to = pp_furniture_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_glass_line_levels >= 3
+			modifier:local_pp_furniture_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
@@ -631,7 +573,7 @@ pp_glass_charter = {
 					has_town_rights = town_rights_type:pp_fine_cloth_charter
 					has_town_rights = town_rights_type:pp_leather_charter
 					has_town_rights = town_rights_type:pp_pottery_charter
-					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
 					has_town_rights = town_rights_type:pp_jewelry_charter
 					has_town_rights = town_rights_type:pp_porcelain_charter
 					has_town_rights = town_rights_type:pp_lacquerware_charter
@@ -670,11 +612,11 @@ pp_glass_charter = {
 	}
 
 	location_modifier = {
-		local_glass_output_modifier = 0.15
+		local_furniture_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_glass
+	color = goods_furniture
 }
 
 pp_glass_rights = {
@@ -739,13 +681,13 @@ pp_glass_rights = {
 	color = goods_glass
 }
 
-pp_jewelry_charter = {
+pp_glass_charter = {
 	is_specialization = yes
-	upgrades_to = pp_jewelry_rights
+	upgrades_to = pp_glass_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_jewelry_line_levels >= 3
+			modifier:local_pp_glass_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
@@ -754,7 +696,7 @@ pp_jewelry_charter = {
 					has_town_rights = town_rights_type:pp_leather_charter
 					has_town_rights = town_rights_type:pp_pottery_charter
 					has_town_rights = town_rights_type:pp_furniture_charter
-					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
 					has_town_rights = town_rights_type:pp_porcelain_charter
 					has_town_rights = town_rights_type:pp_lacquerware_charter
 					has_town_rights = town_rights_type:pp_beer_charter
@@ -792,11 +734,11 @@ pp_jewelry_charter = {
 	}
 
 	location_modifier = {
-		local_jewelry_output_modifier = 0.15
+		local_glass_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_jewelry
+	color = goods_glass
 }
 
 pp_jewelry_rights = {
@@ -861,13 +803,13 @@ pp_jewelry_rights = {
 	color = goods_jewelry
 }
 
-pp_porcelain_charter = {
+pp_jewelry_charter = {
 	is_specialization = yes
-	upgrades_to = pp_porcelain_rights
+	upgrades_to = pp_jewelry_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_porcelain_line_levels >= 3
+			modifier:local_pp_jewelry_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
@@ -877,7 +819,7 @@ pp_porcelain_charter = {
 					has_town_rights = town_rights_type:pp_pottery_charter
 					has_town_rights = town_rights_type:pp_furniture_charter
 					has_town_rights = town_rights_type:pp_glass_charter
-					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
 					has_town_rights = town_rights_type:pp_lacquerware_charter
 					has_town_rights = town_rights_type:pp_beer_charter
 					has_town_rights = town_rights_type:pp_liquor_charter
@@ -914,11 +856,11 @@ pp_porcelain_charter = {
 	}
 
 	location_modifier = {
-		local_porcelain_output_modifier = 0.15
+		local_jewelry_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_porcelain
+	color = goods_jewelry
 }
 
 pp_porcelain_rights = {
@@ -983,13 +925,13 @@ pp_porcelain_rights = {
 	color = goods_porcelain
 }
 
-pp_lacquerware_charter = {
+pp_porcelain_charter = {
 	is_specialization = yes
-	upgrades_to = pp_lacquerware_rights
+	upgrades_to = pp_porcelain_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_lacquerware_line_levels >= 3
+			modifier:local_pp_porcelain_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
@@ -1000,7 +942,7 @@ pp_lacquerware_charter = {
 					has_town_rights = town_rights_type:pp_furniture_charter
 					has_town_rights = town_rights_type:pp_glass_charter
 					has_town_rights = town_rights_type:pp_jewelry_charter
-					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
 					has_town_rights = town_rights_type:pp_beer_charter
 					has_town_rights = town_rights_type:pp_liquor_charter
 					has_town_rights = town_rights_type:pp_books_charter
@@ -1036,11 +978,11 @@ pp_lacquerware_charter = {
 	}
 
 	location_modifier = {
-		local_lacquerware_output_modifier = 0.15
+		local_porcelain_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_lacquerware
+	color = goods_porcelain
 }
 
 pp_lacquerware_rights = {
@@ -1105,13 +1047,13 @@ pp_lacquerware_rights = {
 	color = goods_lacquerware
 }
 
-pp_beer_charter = {
+pp_lacquerware_charter = {
 	is_specialization = yes
-	upgrades_to = pp_beer_rights
+	upgrades_to = pp_lacquerware_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_beer_line_levels >= 3
+			modifier:local_pp_lacquerware_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
@@ -1123,7 +1065,7 @@ pp_beer_charter = {
 					has_town_rights = town_rights_type:pp_glass_charter
 					has_town_rights = town_rights_type:pp_jewelry_charter
 					has_town_rights = town_rights_type:pp_porcelain_charter
-					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
 					has_town_rights = town_rights_type:pp_liquor_charter
 					has_town_rights = town_rights_type:pp_books_charter
 					has_town_rights = town_rights_type:pp_tools_charter
@@ -1158,11 +1100,11 @@ pp_beer_charter = {
 	}
 
 	location_modifier = {
-		local_beer_output_modifier = 0.15
+		local_lacquerware_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_beer
+	color = goods_lacquerware
 }
 
 pp_beer_rights = {
@@ -1227,13 +1169,13 @@ pp_beer_rights = {
 	color = goods_beer
 }
 
-pp_liquor_charter = {
+pp_beer_charter = {
 	is_specialization = yes
-	upgrades_to = pp_liquor_rights
+	upgrades_to = pp_beer_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_liquor_line_levels >= 3
+			modifier:local_pp_beer_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
@@ -1246,7 +1188,7 @@ pp_liquor_charter = {
 					has_town_rights = town_rights_type:pp_jewelry_charter
 					has_town_rights = town_rights_type:pp_porcelain_charter
 					has_town_rights = town_rights_type:pp_lacquerware_charter
-					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
 					has_town_rights = town_rights_type:pp_books_charter
 					has_town_rights = town_rights_type:pp_tools_charter
 					has_town_rights = town_rights_type:pp_weaponry_charter
@@ -1280,11 +1222,11 @@ pp_liquor_charter = {
 	}
 
 	location_modifier = {
-		local_liquor_output_modifier = 0.15
+		local_beer_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_liquor
+	color = goods_beer
 }
 
 pp_liquor_rights = {
@@ -1349,13 +1291,13 @@ pp_liquor_rights = {
 	color = goods_liquor
 }
 
-pp_books_charter = {
+pp_liquor_charter = {
 	is_specialization = yes
-	upgrades_to = pp_books_rights
+	upgrades_to = pp_liquor_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_books_line_levels >= 3
+			modifier:local_pp_liquor_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
@@ -1369,7 +1311,7 @@ pp_books_charter = {
 					has_town_rights = town_rights_type:pp_porcelain_charter
 					has_town_rights = town_rights_type:pp_lacquerware_charter
 					has_town_rights = town_rights_type:pp_beer_charter
-					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
 					has_town_rights = town_rights_type:pp_tools_charter
 					has_town_rights = town_rights_type:pp_weaponry_charter
 					has_town_rights = town_rights_type:pp_firearms_charter
@@ -1402,11 +1344,11 @@ pp_books_charter = {
 	}
 
 	location_modifier = {
-		local_books_output_modifier = 0.15
+		local_liquor_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_books
+	color = goods_liquor
 }
 
 pp_books_rights = {
@@ -1471,13 +1413,13 @@ pp_books_rights = {
 	color = goods_books
 }
 
-pp_tools_charter = {
+pp_books_charter = {
 	is_specialization = yes
-	upgrades_to = pp_tools_rights
+	upgrades_to = pp_books_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_tools_line_levels >= 3
+			modifier:local_pp_books_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
@@ -1492,7 +1434,7 @@ pp_tools_charter = {
 					has_town_rights = town_rights_type:pp_lacquerware_charter
 					has_town_rights = town_rights_type:pp_beer_charter
 					has_town_rights = town_rights_type:pp_liquor_charter
-					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
 					has_town_rights = town_rights_type:pp_weaponry_charter
 					has_town_rights = town_rights_type:pp_firearms_charter
 					has_town_rights = town_rights_type:pp_cannons_charter
@@ -1524,11 +1466,11 @@ pp_tools_charter = {
 	}
 
 	location_modifier = {
-		local_tools_output_modifier = 0.15
+		local_books_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_tools
+	color = goods_books
 }
 
 pp_tools_rights = {
@@ -1593,13 +1535,13 @@ pp_tools_rights = {
 	color = goods_tools
 }
 
-pp_weaponry_charter = {
+pp_tools_charter = {
 	is_specialization = yes
-	upgrades_to = pp_weaponry_rights
+	upgrades_to = pp_tools_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_weaponry_line_levels >= 3
+			modifier:local_pp_tools_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
@@ -1615,7 +1557,7 @@ pp_weaponry_charter = {
 					has_town_rights = town_rights_type:pp_beer_charter
 					has_town_rights = town_rights_type:pp_liquor_charter
 					has_town_rights = town_rights_type:pp_books_charter
-					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
 					has_town_rights = town_rights_type:pp_firearms_charter
 					has_town_rights = town_rights_type:pp_cannons_charter
 					has_town_rights = town_rights_type:pp_naval_supplies_charter
@@ -1646,11 +1588,11 @@ pp_weaponry_charter = {
 	}
 
 	location_modifier = {
-		local_weaponry_output_modifier = 0.15
+		local_tools_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_weaponry
+	color = goods_tools
 }
 
 pp_weaponry_rights = {
@@ -1715,13 +1657,13 @@ pp_weaponry_rights = {
 	color = goods_weaponry
 }
 
-pp_firearms_charter = {
+pp_weaponry_charter = {
 	is_specialization = yes
-	upgrades_to = pp_firearms_rights
+	upgrades_to = pp_weaponry_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_firearms_line_levels >= 3
+			modifier:local_pp_weaponry_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
@@ -1738,7 +1680,7 @@ pp_firearms_charter = {
 					has_town_rights = town_rights_type:pp_liquor_charter
 					has_town_rights = town_rights_type:pp_books_charter
 					has_town_rights = town_rights_type:pp_tools_charter
-					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
 					has_town_rights = town_rights_type:pp_cannons_charter
 					has_town_rights = town_rights_type:pp_naval_supplies_charter
 					has_town_rights = town_rights_type:pp_cloth_rights
@@ -1768,11 +1710,11 @@ pp_firearms_charter = {
 	}
 
 	location_modifier = {
-		local_firearms_output_modifier = 0.15
+		local_weaponry_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_firearms
+	color = goods_weaponry
 }
 
 pp_firearms_rights = {
@@ -1837,13 +1779,13 @@ pp_firearms_rights = {
 	color = goods_firearms
 }
 
-pp_cannons_charter = {
+pp_firearms_charter = {
 	is_specialization = yes
-	upgrades_to = pp_cannons_rights
+	upgrades_to = pp_firearms_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_cannons_line_levels >= 3
+			modifier:local_pp_firearms_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
@@ -1861,7 +1803,7 @@ pp_cannons_charter = {
 					has_town_rights = town_rights_type:pp_books_charter
 					has_town_rights = town_rights_type:pp_tools_charter
 					has_town_rights = town_rights_type:pp_weaponry_charter
-					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
 					has_town_rights = town_rights_type:pp_naval_supplies_charter
 					has_town_rights = town_rights_type:pp_cloth_rights
 					has_town_rights = town_rights_type:pp_fine_cloth_rights
@@ -1890,11 +1832,11 @@ pp_cannons_charter = {
 	}
 
 	location_modifier = {
-		local_cannons_output_modifier = 0.15
+		local_firearms_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_cannons
+	color = goods_firearms
 }
 
 pp_cannons_rights = {
@@ -1959,13 +1901,13 @@ pp_cannons_rights = {
 	color = goods_cannons
 }
 
-pp_naval_supplies_charter = {
+pp_cannons_charter = {
 	is_specialization = yes
-	upgrades_to = pp_naval_supplies_rights
+	upgrades_to = pp_cannons_rights
 
 	allow = {
 		scope:target = {
-			modifier:local_pp_naval_supplies_line_levels >= 3
+			modifier:local_pp_cannons_line_levels >= 3
 			custom_tooltip = {
 				text = pp_one_specialization_tt
 				NOR = {
@@ -1984,7 +1926,7 @@ pp_naval_supplies_charter = {
 					has_town_rights = town_rights_type:pp_tools_charter
 					has_town_rights = town_rights_type:pp_weaponry_charter
 					has_town_rights = town_rights_type:pp_firearms_charter
-					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_naval_supplies_charter
 					has_town_rights = town_rights_type:pp_cloth_rights
 					has_town_rights = town_rights_type:pp_fine_cloth_rights
 					has_town_rights = town_rights_type:pp_leather_rights
@@ -2012,11 +1954,11 @@ pp_naval_supplies_charter = {
 	}
 
 	location_modifier = {
-		local_naval_supplies_output_modifier = 0.15
+		local_cannons_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 
-	color = goods_naval_supplies
+	color = goods_cannons
 }
 
 pp_naval_supplies_rights = {
@@ -2075,6 +2017,66 @@ pp_naval_supplies_rights = {
 
 	location_modifier = {
 		local_naval_supplies_output_modifier = 0.35
+		local_production_efficiency = -0.05
+	}
+
+	color = goods_naval_supplies
+}
+
+pp_naval_supplies_charter = {
+	is_specialization = yes
+	upgrades_to = pp_naval_supplies_rights
+
+	allow = {
+		scope:target = {
+			modifier:local_pp_naval_supplies_line_levels >= 3
+			custom_tooltip = {
+				text = pp_one_specialization_tt
+				NOR = {
+					has_town_rights = town_rights_type:pp_cloth_charter
+					has_town_rights = town_rights_type:pp_fine_cloth_charter
+					has_town_rights = town_rights_type:pp_leather_charter
+					has_town_rights = town_rights_type:pp_pottery_charter
+					has_town_rights = town_rights_type:pp_furniture_charter
+					has_town_rights = town_rights_type:pp_glass_charter
+					has_town_rights = town_rights_type:pp_jewelry_charter
+					has_town_rights = town_rights_type:pp_porcelain_charter
+					has_town_rights = town_rights_type:pp_lacquerware_charter
+					has_town_rights = town_rights_type:pp_beer_charter
+					has_town_rights = town_rights_type:pp_liquor_charter
+					has_town_rights = town_rights_type:pp_books_charter
+					has_town_rights = town_rights_type:pp_tools_charter
+					has_town_rights = town_rights_type:pp_weaponry_charter
+					has_town_rights = town_rights_type:pp_firearms_charter
+					has_town_rights = town_rights_type:pp_cannons_charter
+					has_town_rights = town_rights_type:pp_cloth_rights
+					has_town_rights = town_rights_type:pp_fine_cloth_rights
+					has_town_rights = town_rights_type:pp_leather_rights
+					has_town_rights = town_rights_type:pp_pottery_rights
+					has_town_rights = town_rights_type:pp_furniture_rights
+					has_town_rights = town_rights_type:pp_glass_rights
+					has_town_rights = town_rights_type:pp_jewelry_rights
+					has_town_rights = town_rights_type:pp_porcelain_rights
+					has_town_rights = town_rights_type:pp_lacquerware_rights
+					has_town_rights = town_rights_type:pp_beer_rights
+					has_town_rights = town_rights_type:pp_liquor_rights
+					has_town_rights = town_rights_type:pp_books_rights
+					has_town_rights = town_rights_type:pp_tools_rights
+					has_town_rights = town_rights_type:pp_weaponry_rights
+					has_town_rights = town_rights_type:pp_firearms_rights
+					has_town_rights = town_rights_type:pp_cannons_rights
+					has_town_rights = town_rights_type:pp_naval_supplies_rights
+					has_town_rights = town_rights_type:flemish_cloth_industries_right
+					has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+					has_town_rights = town_rights_type:scandinavian_tar_privileges
+					has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+				}
+			}
+		}
+	}
+
+	location_modifier = {
+		local_naval_supplies_output_modifier = 0.15
 		local_production_efficiency = -0.05
 	}
 

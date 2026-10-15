@@ -36,3 +36,19 @@ def test_pause_trigger_covers_civil_war_and_rebels():
 def test_release_actions_check_the_pause(action):
     text = (COMMON / "generic_actions" / f"{action}.txt").read_text(encoding="utf-8-sig")
     assert re.search(r"\bpp_enclave_release_paused = no\b", _block(text, "ai_prerequisite"))
+
+
+@pytest.mark.parametrize("action", ["create_province_subject", "pp_release_enclave_independence"])
+def test_release_runs_outside_the_target_province(action):
+    """The province is destroyed once its last location of the nation changes owner, so every effect after that in its
+    scope failed ("Scoped object is not valid. Type: Province" x 563 in the first month, EU5 1.4.1, 2026-10-15) and the
+    new country stayed an independent one-location country without cores or truce. Only the pick runs in the province.
+    """
+    effect = _block((COMMON / "generic_actions" / f"{action}.txt").read_text(encoding="utf-8-sig"), "effect")
+    assert re.search(r"scope:target_province = \{ pp_enclave_pick_piece = yes \}\s*scope:actor = \{ pp_enclave_release_piece = yes \}", effect)
+    assert not re.search(r"scope:target_province = \{[^}]*pp_enclave_release_piece", effect)
+    release = _block((COMMON / "scripted_effects" / "pp_enclave_effects.txt").read_text(encoding="utf-8-sig"),
+                     "pp_enclave_release_piece")
+    assert "pp_enclave_pick_piece" not in release
+    # nothing in the release may lean on the current (province) scope: every land move goes through saved scopes/lists
+    assert not re.search(r"^\t(?:random|every|any)_location_in_province\b", release, re.MULTILINE)

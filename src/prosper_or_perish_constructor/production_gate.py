@@ -85,6 +85,7 @@ class LegConfig:
     """[production_gate.leg]: the gate leg, a one-method last slot that makes a little of the building's main good."""
 
     margin: float = 1.0  # revenue / input cost at base prices
+    margin_by_good: Mapping[str, float] = field(default_factory=dict)  # per main good, overrides margin
     value: float = 0.01  # output worth this much gold per level at base prices
     input: str = "offset"  # a floor-pinned dummy good: the leg's cost never moves
     slot_label: str = "Market"
@@ -141,7 +142,8 @@ def load_config(project: Path) -> GateConfig:
         base_inputs=frozenset(str(g) for g in evaluation.get("base_method_input_goods", default.base_inputs)),
         price_overrides={str(k): float(v) for k, v in dict(evaluation.get("price_overrides") or {}).items()},
         pinned_goods=frozenset(str(g) for g in section.get("pinned_goods", default.pinned_goods)),
-        leg=LegConfig(**{k: (float(v) if k in {"margin", "value"} else str(v)) for k, v in dict(leg).items()}) if isinstance(leg, dict) else None,
+        leg=LegConfig(**{k: ({str(g): float(m) for g, m in v.items()} if k == "margin_by_good" else float(v) if k in {"margin", "value"} else str(v))
+                         for k, v in dict(leg).items()}) if isinstance(leg, dict) else None,
     )
 
 
@@ -390,7 +392,7 @@ def plan_leg(building: str, slots: Sequence[Slot], flag: str | None, config: Gat
     input_price = float(prices.get(config.leg.input, 0.0))
     if price <= 0 or input_price <= 0:
         raise GateError(f"{building}: no base price for {good if price <= 0 else config.leg.input}")
-    output, amount = _leg_amounts(config.leg.value, price, config.leg.margin, input_price)
+    output, amount = _leg_amounts(config.leg.value, price, config.leg.margin_by_good.get(good, config.leg.margin), input_price)
     return Leg(leg_name(building), good, output, config.leg.input, amount)
 
 

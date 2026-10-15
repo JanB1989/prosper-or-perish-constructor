@@ -1063,6 +1063,9 @@ pinned_goods = ["local_food", "offset", "logistics"]
 # stops when it is cheap: at margin 1.0 and the 1.05 threshold it opens at 1.05x the base price without output bonus,
 # earlier on good land. Storage-leg gates (grange, tavern), services and logistics keep their own gate.
 margin = 1.0
+# Steel (2026-10-15): nothing demands steel until some exists (its users switch methods only when it is in the market), so
+# its price sat at the base price and the 1.0 leg never opened; no steel mill in 9 full runs. At 1.06 it opens from 0.99x.
+margin_by_good = { steel = 1.06 }
 value = 0.01          # gold of the main good per level at base prices; the cost x market access must stay above 0.001
 input = "offset"
 slot_label = "Market"

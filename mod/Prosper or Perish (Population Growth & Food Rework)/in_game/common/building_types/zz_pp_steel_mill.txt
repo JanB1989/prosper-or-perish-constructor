@@ -1,12 +1,15 @@
 ﻿# >>> eu5-building-pipeline:steel_mill:building
 REPLACE:steel_mill = {
+# steel 2026-10-15 (Jan: steel too weak, needs throughput and profit): the steel mill is a mill without a line, so the
+# manufacturing tiers pass of 2026-10-06 skipped it; tier 4 by hand like the other mills: own method x2.0 goods in
+# and out, margin +0.12 (default prices, labour 1: 1.015 -> 1.135), workers x1.45
 audio_tier = 5
 is_foreign = no
 pop_type = laborers
 is_mill = yes
 max_levels = mills_max_level
 startup_ramp_target = mills_startup_ramp_target
-employment_size = 0.8   # [building_scaling.employment_cut] reference 1
+employment_size = 1.16   # manufacturing tiers 2026-10-06: 0.8 after the employment cut x1.45
 category = basic_industry_category
 town = yes
 city = yes
@@ -17,11 +20,11 @@ unique_production_methods = {
     pp_steel_mill_steel_mill_maintenance = {
         icon_type = building_type
         icon = steel_mill
-        iron = 3.44
-        coal = 3.44
-        manual_labor = 0.79
+        iron = 6.88
+        coal = 6.88
+        manual_labor = 1.58
         produced = steel
-        output = 4.0
+        output = 8.946
         debug_max_profit = mills_profit_margin
         category = mills_input
     }
@@ -30,16 +33,16 @@ unique_production_methods = {
     pp_steel_mill_market_sales = {
         icon_type = goods
         icon = steel
-        offset = 0.01
+        offset = 0.019
         produced = steel
-        output = 0.002
+        output = 0.004
         category = building_maintenance
     }
 }
 construction_demand = mill_construction
 increase_per_level_cost = 0.16
 	raw_modifier = {
-		local_population_capacity = 0.4
+		local_population_capacity = 0.464
 	}
 }
 # <<< eu5-building-pipeline:steel_mill:building

@@ -382,7 +382,7 @@ def test_every_market_good_building_gates_on_its_leg_and_no_gate_buys_its_main_g
         if plan.leg is not None:
             legs += 1
             assert plan.gate == plan.leg.name and plan.slots[-1].methods == (plan.leg.method(),), plan.building
-            assert plan.leg.method().margin(prices) == pytest.approx(config.leg.margin, rel=0.02), plan.building
+            assert plan.leg.method().margin(prices) == pytest.approx(config.leg.margin_by_good.get(good, config.leg.margin), rel=0.02), plan.building
         else:
             where = pg.locate(plan.slots, plan.gate)
             gate = plan.slots[where[0]].methods[where[1]]

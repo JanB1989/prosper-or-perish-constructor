@@ -283,3 +283,11 @@ Replays from 1807 and 1808 (seven runs; slower time decay `WAR_ENTHUSIASM_TIME_L
 unchanged 0.10 held out for three years and lost nothing in one replay, both variants lost 17-20 locations in another.
 No define lets the AI see that it can win while its war score is negative; the lever is the war itself (sieging the
 enemy's land) or the `requestpeace` script weights. Not adopted.
+
+Why the war score never turned: a battle counts its losses against the whole side's army, so at PP army sizes the
+32 battles of this war summed to about one point (the Ottomans won 21 of them). The war score was the occupied
+Ottoman land, doubled by `OCCUPATION_VALUE_SCALE` 2. The Ottomans never sent an army to retake it: their AI gives
+each army the job with the best score, and chasing an enemy stack or joining a gathering (fixed priorities 8-10)
+always beats sieging, even sieging their own occupied land next door (priority 4), although their armies were strong
+enough for it. No define sets those priorities; the assignment defines only trade all priorities against distance
+for every army in the world.

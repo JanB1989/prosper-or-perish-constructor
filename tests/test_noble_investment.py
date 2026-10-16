@@ -65,6 +65,9 @@ def test_generated_scripts_are_balanced_and_wired() -> None:
     assert braces_balance(on_action)
     assert "pp_noble_investment_monthly = {" in effects
     assert "pp_noble_investment_monthly = yes" in on_action
+    # has_estate is a character trigger; in country scope the game errors and reads it as false (2026-10-16 test).
+    assert "country_has_estate = estate_type:nobles_estate" in effects
+    assert not re.search(r"(?<!country_)has_estate\s*=", effects)
     for value in re.findall(r"\b(pp_noble_investment_(?:reserve|price_multiplier|min_margin|min_unemployed))\b", effects):
         assert f"{value} = " in VALUES_PATH.read_text(encoding="utf-8-sig")
 

@@ -239,7 +239,7 @@ def render(found: list[Candidate]) -> str:
         "\tif = {",
         "\t\tlimit = {",
         "\t\t\tNOT = { has_variable = pp_noble_investment_cooldown }",
-        "\t\t\thas_estate = estate_type:nobles_estate",
+        "\t\t\tcountry_has_estate = estate_type:nobles_estate",
         '\t\t\t"estate(estate_type:nobles_estate)" = { estate_gold >= pp_noble_investment_reserve }',
         "\t\t}",
         '\t\t"estate(estate_type:nobles_estate)" = { save_scope_as = pp_noble_investment_nobles }',

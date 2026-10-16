@@ -8,7 +8,7 @@ pp_noble_investment_monthly = {
 	if = {
 		limit = {
 			NOT = { has_variable = pp_noble_investment_cooldown }
-			has_estate = estate_type:nobles_estate
+			country_has_estate = estate_type:nobles_estate
 			"estate(estate_type:nobles_estate)" = { estate_gold >= pp_noble_investment_reserve }
 		}
 		"estate(estate_type:nobles_estate)" = { save_scope_as = pp_noble_investment_nobles }

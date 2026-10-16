@@ -138,6 +138,14 @@ def test_masons_are_ranked_by_profit_after_inputs() -> None:
     assert "set_local_variable = { name = pp_noble_investment_best_score value = 0 }" in effects
 
 
+def test_mason_shortage_starts_at_80_percent_of_supply() -> None:
+    # User rule (2026-10-16): masons only when masonry demand is more than 80 % of supply; other goods need demand > supply.
+    block = candidate_blocks()["mason"]
+    rule = '"goods_demand_in_market(goods:masonry)" > { value = "goods_supply_in_market(goods:masonry)" multiply = 0.8 }'
+    assert block.count(rule) == 2
+    assert '"goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)"' in candidate_blocks()["iron_mine"]
+
+
 def test_candidate_rules(tmp_path) -> None:
     (tmp_path / "a.txt").write_text(
         """

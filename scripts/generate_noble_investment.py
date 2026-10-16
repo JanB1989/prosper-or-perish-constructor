@@ -52,6 +52,9 @@ POP_TYPES = ("peasants", "laborers")
 RESERVE_GOLD = 150
 # Free hands needed in the location (people; one level of most PP buildings employs 1,000-1,250).
 MIN_UNEMPLOYED = 1000
+# A good counts as short when market demand > this x supply; 1.0 unless listed (masonry: user rule, 2026-10-16).
+SHORTAGE_RATIO = {"masonry": 0.8}
+DEFAULT_SHORTAGE_RATIO = 1.0
 # Days before the country looks again: after a build, and after a search that found nothing.
 BUILD_COOLDOWN_DAYS = 90
 IDLE_COOLDOWN_DAYS = 180
@@ -325,7 +328,12 @@ def find_block(index: int, candidate: Candidate, modifiers: set[str]) -> str:
 
 
 def shortage(good: str) -> str:
-    return f'"goods_demand_in_market(goods:{good})" > "goods_supply_in_market(goods:{good})"'
+    """Market-scope trigger: demand for the good above SHORTAGE_RATIO x supply."""
+    ratio = SHORTAGE_RATIO.get(good, DEFAULT_SHORTAGE_RATIO)
+    supply = f'"goods_supply_in_market(goods:{good})"'
+    if ratio != 1:
+        supply = f"{{ value = {supply} multiply = {number(ratio)} }}"
+    return f'"goods_demand_in_market(goods:{good})" > {supply}'
 
 
 def build_branch(index: int, candidate: Candidate, first: bool) -> str:

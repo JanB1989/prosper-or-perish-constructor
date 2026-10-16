@@ -4224,12 +4224,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:masonry)" > "goods_supply_in_market(goods:masonry)" }
+			any_market_present_in_country = { "goods_demand_in_market(goods:masonry)" > { value = "goods_supply_in_market(goods:masonry)" multiply = 0.8 } }
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:masonry)" > "goods_supply_in_market(goods:masonry)" }
+				market = { "goods_demand_in_market(goods:masonry)" > { value = "goods_supply_in_market(goods:masonry)" multiply = 0.8 } }
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				can_build_building = building_type:mason
 			}

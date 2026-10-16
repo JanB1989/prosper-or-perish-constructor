@@ -309,3 +309,8 @@ longer (1667: 8 instead of 3 still running after 10 years); the number of wars i
 field winner lost was a defender winning battles while the attacker took its land by sieges: the remaining cause is
 the army job priorities, which no define sets. Small samples (about 45 fought wars per variant): watch it in the next
 long run.
+
+The Ottoman war itself, same 1807 save, 0.10 vs A: Ottoman war enthusiasm when they accepted 0.08 vs 0.33 (median over
+the war 0.39 vs 0.46), the accepted cession cost 79 war score at a war score of 34 vs 42 at 27, Ottoman land lost 43 vs
+25 (10-year runs: 43 vs 25). The Mamluk side still did all the sieging (siege score 2.8 vs 0.02), so the Ottomans hold
+out longer and pay less, but they still do not win back their land.

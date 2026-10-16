@@ -456,7 +456,9 @@
 - A country searches only while its nobles hold more than `pp_noble_investment_reserve`, then waits 90 days after a build
   and 180 days after a search that found nothing. A candidate needs: the nobles' gold >= reserve + price x
   `ESTATE_MAX_PRICE_MULTIPLIER`; a market with demand above supply of its main good (country-wide pre-check, then the
-  location's market); `pp_noble_investment_min_unemployed` free people; `can_build_building`. Rank: main good market
+  location's market); `pp_noble_investment_min_unemployed` free people; `can_build_building`; and `has_advance` for an
+  advance that unlocks it (`can_build_building` let nobles start unresearched buildings in game, 2026-10-16; the
+  generator reads `unlock_building` from vanilla, DLC and mod advances in load order). Rank: main good market
   price / default price x (1 + `local_<good>_output_modifier` where the game has one), the same margin the Market leg
   gives the AI's gate; it must beat `AI_BUILDING_PROFIT_MARGIN_THRESHOLD`. The best one is built with
   `construct_estate_building` (nobles pay and own it).

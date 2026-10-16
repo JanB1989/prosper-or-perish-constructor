@@ -72,6 +72,46 @@ def test_generated_scripts_are_balanced_and_wired() -> None:
         assert f"{value} = " in VALUES_PATH.read_text(encoding="utf-8-sig")
 
 
+def candidate_blocks() -> dict[str, str]:
+    text = EFFECTS_PATH.read_text(encoding="utf-8-sig")
+    find = text[text.index("pp_noble_investment_find_best = {") : text.index("pp_noble_investment_build_best = {")]
+    parts = re.split(r"^\t# \d+: (\w+) \(.*\)$", find, flags=re.M)
+    return dict(zip(parts[1::2], parts[2::2]))
+
+
+def test_buildings_unlocked_by_mod_advances_need_the_advance() -> None:
+    # In game, can_build_building let the nobles start buildings the country had not researched (2026-10-16).
+    blocks = candidate_blocks()
+    unlocks: dict[str, set[str]] = {}
+    for path in (MOD_ROOT / "in_game" / "common" / "advances").glob("*.txt"):
+        for advance, body in gen.top_level_blocks(path.read_text(encoding="utf-8-sig")):
+            for building in re.findall(r"\bunlock_building\s*=\s*(\w+)", body):
+                unlocks.setdefault(building, set()).add(advance.split(":")[-1])
+    gated = {b for b in blocks if b in unlocks}
+    assert gated, "no mod-unlocked candidates found; the check is broken"
+    for building in gated:
+        checks = set(re.findall(r"has_advance = (\w+)", blocks[building]))
+        assert checks & unlocks[building], building
+
+
+def test_advance_unlocks_follow_load_order(tmp_path) -> None:
+    game, mod = tmp_path / "game", tmp_path / "mod"
+    (game / "in_game/common/advances").mkdir(parents=True)
+    (game / "dlc/d1/in_game/common/advances").mkdir(parents=True)
+    (mod / "in_game/common/advances").mkdir(parents=True)
+    (game / "in_game/common/advances/a.txt").write_text(
+        "adv_a = { unlock_building = mill }\nadv_b = { unlock_building = mine }\n", encoding="utf-8"
+    )
+    (game / "dlc/d1/in_game/common/advances/d.txt").write_text("adv_d = { unlock_building = mill }\n", encoding="utf-8")
+    (mod / "in_game/common/advances/m.txt").write_text(
+        "REPLACE:adv_b = { }\nTRY_INJECT:adv_a = { unlock_building = farm }\n", encoding="utf-8"
+    )
+    assert gen.advance_unlocks(game, mod) == {"mill": ("adv_a", "adv_d"), "farm": ("adv_a",)}
+    gated = Candidate("mill", "laborers", "tools", None, ("adv_a", "adv_d"))
+    assert gen.researched(gated).strip() == "OR = { has_advance = adv_a has_advance = adv_d }"
+    assert gen.researched(Candidate("mine", "laborers", "iron", None)) == ""
+
+
 def test_values_file_matches_generator_constants() -> None:
     assert VALUES_PATH.read_text(encoding="utf-8") == render_values()
 

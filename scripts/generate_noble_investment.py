@@ -70,6 +70,8 @@ class Candidate:
     pop_type: str
     good: str
     output_modifier: str | None
+    # Advances that unlock the building (any one will do); empty = available from the start.
+    advances: tuple[str, ...] = ()
 
 
 def top_level_blocks(text: str) -> list[tuple[str, str]]:
@@ -107,6 +109,30 @@ def building_definitions(folder: Path) -> dict[str, str]:
     return definitions
 
 
+def advance_unlocks(game_root: Path, mod_root: Path) -> dict[str, tuple[str, ...]]:
+    """Building -> the advances whose `unlock_building` names it, after the game's load order (vanilla, DLC, mod;
+    REPLACE overrides an advance, INJECT adds to it). In game, can_build_building lets the nobles start buildings whose
+    advance the country has not researched (2026-10-16 test), so the pulse checks has_advance itself."""
+    folders = [game_root / "in_game" / "common" / "advances"]
+    folders += sorted((game_root / "dlc").glob("*/in_game/common/advances"))
+    folders.append(mod_root / "in_game" / "common" / "advances")
+    bodies: dict[str, str] = {}
+    for folder in folders:
+        for path in sorted(folder.glob("*.txt")):
+            for name, body in top_level_blocks(path.read_text(encoding="utf-8-sig", errors="replace")):
+                key = name.split(":")[-1]
+                if name.startswith(("INJECT:", "TRY_INJECT:")):
+                    if key in bodies:
+                        bodies[key] += body
+                    continue
+                bodies[key] = body
+    unlocks: dict[str, set[str]] = {}
+    for advance, body in bodies.items():
+        for building in re.findall(r"\bunlock_building\s*=\s*(\w+)", body):
+            unlocks.setdefault(building, set()).add(advance)
+    return {building: tuple(sorted(advances)) for building, advances in unlocks.items()}
+
+
 def field(body: str, key: str) -> str | None:
     match = re.search(rf"^\s*{key}\s*=\s*(\w+)", body, re.M)
     return match.group(1) if match else None
@@ -130,7 +156,10 @@ def modifier_names(game_roots: list[Path]) -> set[str]:
     return names
 
 
-def candidates(definitions: dict[str, str], modifiers: set[str]) -> list[Candidate]:
+def candidates(
+    definitions: dict[str, str], modifiers: set[str], unlocks: dict[str, tuple[str, ...]] | None = None
+) -> list[Candidate]:
+    unlocks = unlocks or {}
     found = []
     for building, body in sorted(definitions.items()):
         pop_type = field(body, "pop_type")
@@ -140,8 +169,19 @@ def candidates(definitions: dict[str, str], modifiers: set[str]) -> list[Candida
         if field(body, "forbidden_for_estates") == "yes" or field(body, "is_special") == "yes":
             continue
         modifier = f"local_{good}_output_modifier"
-        found.append(Candidate(building, pop_type, good, modifier if modifier in modifiers else None))
+        output_modifier = modifier if modifier in modifiers else None
+        found.append(Candidate(building, pop_type, good, output_modifier, unlocks.get(building, ())))
     return found
+
+
+def researched(candidate: Candidate) -> str:
+    """Country-scope limit lines: the country has an advance that unlocks the building."""
+    if not candidate.advances:
+        return ""
+    checks = " ".join(f"has_advance = {advance}" for advance in candidate.advances)
+    if len(candidate.advances) == 1:
+        return f"\t\t\t{checks}\n"
+    return f"\t\t\tOR = {{ {checks} }}\n"
 
 
 def margin(candidate: Candidate, indent: str) -> str:
@@ -165,7 +205,7 @@ def find_block(index: int, candidate: Candidate) -> str:
     return f"""\t# {index}: {building} ({candidate.pop_type}, {good})
 \tif = {{
 \t\tlimit = {{
-\t\t\tscope:pp_noble_investment_nobles = {{
+{researched(candidate)}\t\t\tscope:pp_noble_investment_nobles = {{
 \t\t\t\testate_gold >= {{
 \t\t\t\t\tvalue = building_type:{building}.building_base_cost_in_gold
 \t\t\t\t\tmultiply = pp_noble_investment_price_multiplier
@@ -321,7 +361,7 @@ def main() -> None:
     if args.vanilla is None or not (args.vanilla / MODIFIER_TYPES).is_dir():
         raise SystemExit(f"EU5 game folder not found: {args.vanilla} (pass --vanilla <install>/game)")
     modifiers = modifier_names([args.vanilla, MOD_ROOT])
-    found = candidates(building_definitions(BUILDING_TYPES), modifiers)
+    found = candidates(building_definitions(BUILDING_TYPES), modifiers, advance_unlocks(args.vanilla, MOD_ROOT))
     outputs = {EFFECTS_PATH: render(found), VALUES_PATH: render_values()}
     if args.check:
         stale = [p for p, text in outputs.items() if not p.exists() or p.read_text(encoding="utf-8") != text]

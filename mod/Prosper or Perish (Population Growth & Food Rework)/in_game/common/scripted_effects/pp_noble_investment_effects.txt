@@ -32,6 +32,7 @@ pp_noble_investment_find_best = {
 	# 1: alum_quarry (laborers, alum)
 	if = {
 		limit = {
+			has_advance = advanced_mining
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:alum_quarry.building_base_cost_in_gold
@@ -75,6 +76,7 @@ pp_noble_investment_find_best = {
 	# 2: alum_works (laborers, alum)
 	if = {
 		limit = {
+			has_advance = green_vitriol
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:alum_works.building_base_cost_in_gold
@@ -161,6 +163,7 @@ pp_noble_investment_find_best = {
 	# 4: bog_iron_smelter (laborers, iron)
 	if = {
 		limit = {
+			has_advance = iron_working
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:bog_iron_smelter.building_base_cost_in_gold
@@ -204,6 +207,7 @@ pp_noble_investment_find_best = {
 	# 5: bog_iron_smelter_blast_furnace (laborers, iron)
 	if = {
 		limit = {
+			has_advance = blast_furnace
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:bog_iron_smelter_blast_furnace.building_base_cost_in_gold
@@ -247,6 +251,7 @@ pp_noble_investment_find_best = {
 	# 6: bog_iron_smelter_coke_blast_furnace (laborers, iron)
 	if = {
 		limit = {
+			has_advance = coke_blast_furnace
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:bog_iron_smelter_coke_blast_furnace.building_base_cost_in_gold
@@ -290,6 +295,7 @@ pp_noble_investment_find_best = {
 	# 7: brewery_mill (laborers, beer)
 	if = {
 		limit = {
+			has_advance = brewery_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:brewery_mill.building_base_cost_in_gold
@@ -376,6 +382,7 @@ pp_noble_investment_find_best = {
 	# 9: cannons_factory (laborers, cannons)
 	if = {
 		limit = {
+			has_advance = gun_factory_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:cannons_factory.building_base_cost_in_gold
@@ -462,6 +469,7 @@ pp_noble_investment_find_best = {
 	# 11: cattle_farmstead (peasants, livestock)
 	if = {
 		limit = {
+			has_advance = pp_manuring_and_seed_stores
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:cattle_farmstead.building_base_cost_in_gold
@@ -505,6 +513,7 @@ pp_noble_investment_find_best = {
 	# 12: cattle_model_farm (laborers, livestock)
 	if = {
 		limit = {
+			has_advance = pp_model_farm
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:cattle_model_farm.building_base_cost_in_gold
@@ -548,6 +557,7 @@ pp_noble_investment_find_best = {
 	# 13: cattle_rotations (peasants, livestock)
 	if = {
 		limit = {
+			has_advance = pp_farming_village_rotations
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:cattle_rotations.building_base_cost_in_gold
@@ -763,6 +773,7 @@ pp_noble_investment_find_best = {
 	# 18: clay_washmill (laborers, clay)
 	if = {
 		limit = {
+			has_advance = pp_clay_washmill
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:clay_washmill.building_base_cost_in_gold
@@ -892,6 +903,7 @@ pp_noble_investment_find_best = {
 	# 21: coal_mine_improved (laborers, coal)
 	if = {
 		limit = {
+			has_advance = coal_improvements_absolutism
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:coal_mine_improved.building_base_cost_in_gold
@@ -935,6 +947,7 @@ pp_noble_investment_find_best = {
 	# 22: coal_mine_revolutions (laborers, coal)
 	if = {
 		limit = {
+			has_advance = coal_improvements_revolutions
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:coal_mine_revolutions.building_base_cost_in_gold
@@ -1107,6 +1120,7 @@ pp_noble_investment_find_best = {
 	# 26: copper_mine_adit (laborers, copper)
 	if = {
 		limit = {
+			has_advance = new_currency_demands
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:copper_mine_adit.building_base_cost_in_gold
@@ -1193,6 +1207,7 @@ pp_noble_investment_find_best = {
 	# 28: distiller_mill (laborers, liquor)
 	if = {
 		limit = {
+			has_advance = distiller_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:distiller_mill.building_base_cost_in_gold
@@ -1236,6 +1251,7 @@ pp_noble_investment_find_best = {
 	# 29: drift_net_fishery (laborers, fish)
 	if = {
 		limit = {
+			has_advance = pp_coastal_drift_nets
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:drift_net_fishery.building_base_cost_in_gold
@@ -1322,6 +1338,7 @@ pp_noble_investment_find_best = {
 	# 31: dyes_mill (laborers, dyes)
 	if = {
 		limit = {
+			has_advance = dyes_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:dyes_mill.building_base_cost_in_gold
@@ -1451,6 +1468,7 @@ pp_noble_investment_find_best = {
 	# 34: engineered_brine_saltworks (laborers, salt)
 	if = {
 		limit = {
+			has_advance = pp_engineered_brine_saltworks
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:engineered_brine_saltworks.building_base_cost_in_gold
@@ -1537,6 +1555,7 @@ pp_noble_investment_find_best = {
 	# 36: fiber_dressing_yard (laborers, fiber_crops)
 	if = {
 		limit = {
+			has_advance = pp_fiber_dressing_yard
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:fiber_dressing_yard.building_base_cost_in_gold
@@ -1580,6 +1599,7 @@ pp_noble_investment_find_best = {
 	# 37: fine_cloth_mill (laborers, fine_cloth)
 	if = {
 		limit = {
+			has_advance = fine_cloth_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:fine_cloth_mill.building_base_cost_in_gold
@@ -1623,6 +1643,7 @@ pp_noble_investment_find_best = {
 	# 38: firearms_factory (laborers, firearms)
 	if = {
 		limit = {
+			has_advance = firearms_factory_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:firearms_factory.building_base_cost_in_gold
@@ -1666,6 +1687,7 @@ pp_noble_investment_find_best = {
 	# 39: furniture_mill (laborers, furniture)
 	if = {
 		limit = {
+			has_advance = furniture_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:furniture_mill.building_base_cost_in_gold
@@ -1752,6 +1774,7 @@ pp_noble_investment_find_best = {
 	# 41: gem_sluice (laborers, gems)
 	if = {
 		limit = {
+			has_advance = foreign_mining_techniques
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:gem_sluice.building_base_cost_in_gold
@@ -1795,6 +1818,7 @@ pp_noble_investment_find_best = {
 	# 42: glass_mill (laborers, glass)
 	if = {
 		limit = {
+			has_advance = glass_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:glass_mill.building_base_cost_in_gold
@@ -1881,6 +1905,7 @@ pp_noble_investment_find_best = {
 	# 44: gold_stamp_mill (laborers, goods_gold)
 	if = {
 		limit = {
+			has_advance = pp_pan_amalgamation_mines
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:gold_stamp_mill.building_base_cost_in_gold
@@ -2010,6 +2035,7 @@ pp_noble_investment_find_best = {
 	# 47: improved_charcoal_maker (laborers, coal)
 	if = {
 		limit = {
+			has_advance = coal_improvements_absolutism
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:improved_charcoal_maker.building_base_cost_in_gold
@@ -2139,6 +2165,7 @@ pp_noble_investment_find_best = {
 	# 50: iron_foundry (laborers, tools)
 	if = {
 		limit = {
+			has_advance = iron_foundry_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:iron_foundry.building_base_cost_in_gold
@@ -2182,6 +2209,7 @@ pp_noble_investment_find_best = {
 	# 51: iron_mill (laborers, tools)
 	if = {
 		limit = {
+			has_advance = iron_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:iron_mill.building_base_cost_in_gold
@@ -2268,6 +2296,7 @@ pp_noble_investment_find_best = {
 	# 53: iron_mine_deep (laborers, iron)
 	if = {
 		limit = {
+			has_advance = slitting_mills
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:iron_mine_deep.building_base_cost_in_gold
@@ -2311,6 +2340,7 @@ pp_noble_investment_find_best = {
 	# 54: iron_mine_improved (laborers, iron)
 	if = {
 		limit = {
+			has_advance = rgo_size_advance_discovery
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:iron_mine_improved.building_base_cost_in_gold
@@ -2440,6 +2470,7 @@ pp_noble_investment_find_best = {
 	# 57: lead_mine_bole_smelting (laborers, lead)
 	if = {
 		limit = {
+			has_advance = bole_smelting
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:lead_mine_bole_smelting.building_base_cost_in_gold
@@ -2483,6 +2514,7 @@ pp_noble_investment_find_best = {
 	# 58: lead_mine_cupola_smelting (laborers, lead)
 	if = {
 		limit = {
+			has_advance = cupola_smelting
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:lead_mine_cupola_smelting.building_base_cost_in_gold
@@ -2569,6 +2601,7 @@ pp_noble_investment_find_best = {
 	# 60: legume_farmstead (peasants, legumes)
 	if = {
 		limit = {
+			has_advance = pp_manuring_and_seed_stores
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:legume_farmstead.building_base_cost_in_gold
@@ -2612,6 +2645,7 @@ pp_noble_investment_find_best = {
 	# 61: legume_model_farm (laborers, legumes)
 	if = {
 		limit = {
+			has_advance = pp_model_farm
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:legume_model_farm.building_base_cost_in_gold
@@ -2655,6 +2689,7 @@ pp_noble_investment_find_best = {
 	# 62: legume_rotations (peasants, legumes)
 	if = {
 		limit = {
+			has_advance = pp_farming_village_rotations
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:legume_rotations.building_base_cost_in_gold
@@ -2741,6 +2776,7 @@ pp_noble_investment_find_best = {
 	# 64: lumber_mill_improved (laborers, lumber)
 	if = {
 		limit = {
+			has_advance = lumber_improvements_absolutism
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:lumber_mill_improved.building_base_cost_in_gold
@@ -2827,6 +2863,7 @@ pp_noble_investment_find_best = {
 	# 66: maize_farmstead (peasants, maize)
 	if = {
 		limit = {
+			has_advance = pp_manuring_and_seed_stores
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:maize_farmstead.building_base_cost_in_gold
@@ -2870,6 +2907,7 @@ pp_noble_investment_find_best = {
 	# 67: maize_model_farm (laborers, maize)
 	if = {
 		limit = {
+			has_advance = pp_model_farm
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:maize_model_farm.building_base_cost_in_gold
@@ -2913,6 +2951,7 @@ pp_noble_investment_find_best = {
 	# 68: maize_rotations (peasants, maize)
 	if = {
 		limit = {
+			has_advance = pp_farming_village_rotations
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:maize_rotations.building_base_cost_in_gold
@@ -2956,6 +2995,7 @@ pp_noble_investment_find_best = {
 	# 69: managed_cocoa_grove (laborers, cocoa)
 	if = {
 		limit = {
+			has_advance = pp_managed_cocoa_grove
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:managed_cocoa_grove.building_base_cost_in_gold
@@ -2999,6 +3039,7 @@ pp_noble_investment_find_best = {
 	# 70: managed_pepper_garden (laborers, pepper)
 	if = {
 		limit = {
+			has_advance = pp_managed_pepper_garden
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:managed_pepper_garden.building_base_cost_in_gold
@@ -3085,6 +3126,7 @@ pp_noble_investment_find_best = {
 	# 72: marble_saw_yard (laborers, marble)
 	if = {
 		limit = {
+			has_advance = renaissance_sculptures
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:marble_saw_yard.building_base_cost_in_gold
@@ -3128,6 +3170,7 @@ pp_noble_investment_find_best = {
 	# 73: market_cotton_farm (laborers, cotton)
 	if = {
 		limit = {
+			has_advance = pp_market_cotton_farm
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:market_cotton_farm.building_base_cost_in_gold
@@ -3171,6 +3214,7 @@ pp_noble_investment_find_best = {
 	# 74: market_tobacco_farm (laborers, tobacco)
 	if = {
 		limit = {
+			has_advance = pp_market_tobacco_farm
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:market_tobacco_farm.building_base_cost_in_gold
@@ -3343,6 +3387,7 @@ pp_noble_investment_find_best = {
 	# 78: millet_farmstead (peasants, millet)
 	if = {
 		limit = {
+			has_advance = pp_manuring_and_seed_stores
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:millet_farmstead.building_base_cost_in_gold
@@ -3386,6 +3431,7 @@ pp_noble_investment_find_best = {
 	# 79: millet_model_farm (laborers, millet)
 	if = {
 		limit = {
+			has_advance = pp_model_farm
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:millet_model_farm.building_base_cost_in_gold
@@ -3429,6 +3475,7 @@ pp_noble_investment_find_best = {
 	# 80: millet_rotations (peasants, millet)
 	if = {
 		limit = {
+			has_advance = pp_farming_village_rotations
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:millet_rotations.building_base_cost_in_gold
@@ -3472,6 +3519,7 @@ pp_noble_investment_find_best = {
 	# 81: naval_supplies_mill (laborers, naval_supplies)
 	if = {
 		limit = {
+			has_advance = naval_supplies_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:naval_supplies_mill.building_base_cost_in_gold
@@ -3558,6 +3606,7 @@ pp_noble_investment_find_best = {
 	# 83: offshore_fishery (laborers, fish)
 	if = {
 		limit = {
+			has_advance = pp_herring_buss
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:offshore_fishery.building_base_cost_in_gold
@@ -3644,6 +3693,7 @@ pp_noble_investment_find_best = {
 	# 85: olive_farmstead (peasants, olives)
 	if = {
 		limit = {
+			has_advance = pp_manuring_and_seed_stores
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:olive_farmstead.building_base_cost_in_gold
@@ -3687,6 +3737,7 @@ pp_noble_investment_find_best = {
 	# 86: olive_model_farm (laborers, olives)
 	if = {
 		limit = {
+			has_advance = pp_model_farm
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:olive_model_farm.building_base_cost_in_gold
@@ -3730,6 +3781,7 @@ pp_noble_investment_find_best = {
 	# 87: olive_rotations (peasants, olives)
 	if = {
 		limit = {
+			has_advance = pp_farming_village_rotations
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:olive_rotations.building_base_cost_in_gold
@@ -3773,6 +3825,7 @@ pp_noble_investment_find_best = {
 	# 88: paper_mill (laborers, paper)
 	if = {
 		limit = {
+			has_advance = paper_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:paper_mill.building_base_cost_in_gold
@@ -3945,6 +3998,7 @@ pp_noble_investment_find_best = {
 	# 92: potato_farmstead (peasants, potato)
 	if = {
 		limit = {
+			has_advance = pp_manuring_and_seed_stores
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:potato_farmstead.building_base_cost_in_gold
@@ -3988,6 +4042,7 @@ pp_noble_investment_find_best = {
 	# 93: potato_model_farm (laborers, potato)
 	if = {
 		limit = {
+			has_advance = pp_model_farm
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:potato_model_farm.building_base_cost_in_gold
@@ -4031,6 +4086,7 @@ pp_noble_investment_find_best = {
 	# 94: potato_rotations (peasants, potato)
 	if = {
 		limit = {
+			has_advance = pp_farming_village_rotations
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:potato_rotations.building_base_cost_in_gold
@@ -4074,6 +4130,7 @@ pp_noble_investment_find_best = {
 	# 95: pottery_mill (laborers, pottery)
 	if = {
 		limit = {
+			has_advance = pottery_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:pottery_mill.building_base_cost_in_gold
@@ -4117,6 +4174,7 @@ pp_noble_investment_find_best = {
 	# 96: printing_mill (laborers, books)
 	if = {
 		limit = {
+			has_advance = printing_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:printing_mill.building_base_cost_in_gold
@@ -4160,6 +4218,7 @@ pp_noble_investment_find_best = {
 	# 97: putrefaction_mill (laborers, saltpeter)
 	if = {
 		limit = {
+			has_advance = putrefaction_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:putrefaction_mill.building_base_cost_in_gold
@@ -4203,6 +4262,7 @@ pp_noble_investment_find_best = {
 	# 98: quicksilver_retort (laborers, mercury)
 	if = {
 		limit = {
+			has_advance = pp_pan_amalgamation_mines
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:quicksilver_retort.building_base_cost_in_gold
@@ -4246,6 +4306,7 @@ pp_noble_investment_find_best = {
 	# 99: regulated_sericulture_farm (laborers, silk)
 	if = {
 		limit = {
+			has_advance = pp_regulated_sericulture_farm
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:regulated_sericulture_farm.building_base_cost_in_gold
@@ -4332,6 +4393,7 @@ pp_noble_investment_find_best = {
 	# 101: rice_farmstead (peasants, rice)
 	if = {
 		limit = {
+			has_advance = pp_manuring_and_seed_stores
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:rice_farmstead.building_base_cost_in_gold
@@ -4375,6 +4437,7 @@ pp_noble_investment_find_best = {
 	# 102: rice_model_farm (laborers, rice)
 	if = {
 		limit = {
+			has_advance = pp_model_farm
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:rice_model_farm.building_base_cost_in_gold
@@ -4418,6 +4481,7 @@ pp_noble_investment_find_best = {
 	# 103: rice_rotations (peasants, rice)
 	if = {
 		limit = {
+			has_advance = pp_farming_village_rotations
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:rice_rotations.building_base_cost_in_gold
@@ -4547,6 +4611,7 @@ pp_noble_investment_find_best = {
 	# 106: saffron_kiln_croft (laborers, saffron)
 	if = {
 		limit = {
+			has_advance = pp_saffron_kiln_croft
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:saffron_kiln_croft.building_base_cost_in_gold
@@ -4676,6 +4741,7 @@ pp_noble_investment_find_best = {
 	# 109: salt_mine_improved (laborers, salt)
 	if = {
 		limit = {
+			has_advance = rgo_size_advance_discovery
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:salt_mine_improved.building_base_cost_in_gold
@@ -4719,6 +4785,7 @@ pp_noble_investment_find_best = {
 	# 110: saltpeter_beds (laborers, saltpeter)
 	if = {
 		limit = {
+			has_advance = advanced_mining
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:saltpeter_beds.building_base_cost_in_gold
@@ -4805,6 +4872,7 @@ pp_noble_investment_find_best = {
 	# 112: sand_washery (laborers, sand)
 	if = {
 		limit = {
+			has_advance = pp_sand_washery
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:sand_washery.building_base_cost_in_gold
@@ -4934,6 +5002,7 @@ pp_noble_investment_find_best = {
 	# 115: silver_mine_improved (laborers, silver)
 	if = {
 		limit = {
+			has_advance = saiger_process_discovery
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:silver_mine_improved.building_base_cost_in_gold
@@ -5020,6 +5089,7 @@ pp_noble_investment_find_best = {
 	# 117: steel_mill (laborers, steel)
 	if = {
 		limit = {
+			has_advance = steel_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:steel_mill.building_base_cost_in_gold
@@ -5106,6 +5176,7 @@ pp_noble_investment_find_best = {
 	# 119: stone_quarry_improved (laborers, stone)
 	if = {
 		limit = {
+			has_advance = pp_stone_quarry_improvements
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:stone_quarry_improved.building_base_cost_in_gold
@@ -5192,6 +5263,7 @@ pp_noble_investment_find_best = {
 	# 121: tannery_mill (laborers, leather)
 	if = {
 		limit = {
+			has_advance = tannery_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:tannery_mill.building_base_cost_in_gold
@@ -5321,6 +5393,7 @@ pp_noble_investment_find_best = {
 	# 124: tea_sorting_garden (laborers, tea)
 	if = {
 		limit = {
+			has_advance = pp_tea_sorting_garden
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:tea_sorting_garden.building_base_cost_in_gold
@@ -5364,6 +5437,7 @@ pp_noble_investment_find_best = {
 	# 125: terraced_coffee_grove (laborers, coffee)
 	if = {
 		limit = {
+			has_advance = pp_terraced_coffee_grove
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:terraced_coffee_grove.building_base_cost_in_gold
@@ -5407,6 +5481,7 @@ pp_noble_investment_find_best = {
 	# 126: textile_mill (laborers, cloth)
 	if = {
 		limit = {
+			has_advance = textile_mill_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:textile_mill.building_base_cost_in_gold
@@ -5450,6 +5525,7 @@ pp_noble_investment_find_best = {
 	# 127: tin_stamping_mill (laborers, tin)
 	if = {
 		limit = {
+			has_advance = new_currency_demands
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:tin_stamping_mill.building_base_cost_in_gold
@@ -5579,6 +5655,7 @@ pp_noble_investment_find_best = {
 	# 130: trapiche_sugarcane_farm (laborers, sugar)
 	if = {
 		limit = {
+			has_advance = pp_trapiche_sugarcane_farm
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:trapiche_sugarcane_farm.building_base_cost_in_gold
@@ -5665,6 +5742,7 @@ pp_noble_investment_find_best = {
 	# 132: water_sawmill (laborers, lumber)
 	if = {
 		limit = {
+			has_advance = lumber_improvements_reformation
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:water_sawmill.building_base_cost_in_gold
@@ -5708,6 +5786,7 @@ pp_noble_investment_find_best = {
 	# 133: weapon_factory (laborers, weaponry)
 	if = {
 		limit = {
+			has_advance = weapon_factory_advance
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:weapon_factory.building_base_cost_in_gold
@@ -5794,6 +5873,7 @@ pp_noble_investment_find_best = {
 	# 135: wheat_farmstead (peasants, wheat)
 	if = {
 		limit = {
+			has_advance = pp_manuring_and_seed_stores
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:wheat_farmstead.building_base_cost_in_gold
@@ -5837,6 +5917,7 @@ pp_noble_investment_find_best = {
 	# 136: wheat_model_farm (laborers, wheat)
 	if = {
 		limit = {
+			has_advance = pp_model_farm
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:wheat_model_farm.building_base_cost_in_gold
@@ -5880,6 +5961,7 @@ pp_noble_investment_find_best = {
 	# 137: wheat_rotations (peasants, wheat)
 	if = {
 		limit = {
+			has_advance = pp_farming_village_rotations
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:wheat_rotations.building_base_cost_in_gold

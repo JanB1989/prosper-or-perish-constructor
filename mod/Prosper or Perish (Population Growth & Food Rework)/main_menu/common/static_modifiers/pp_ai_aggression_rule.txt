@@ -1,0 +1,12 @@
+﻿# War planning (2026-10-16, branch ai-war-willingness, docs/war_ai_rulebook.md): the "normal" AI aggression game rule
+# (game_rules ai_aggression -> ai:normal_aggression) adds this to every country's ai_months_between_wars. An AI whose
+# aggressiveness is 0 or lower plans no war until this many months after its last war (any war it took part in,
+# defensive and allied ones too); personalities add their own (balanced +6, defensive +12, cautious +18,
+# isolationist +24; aggressive -12, expansionist -6). Vanilla 24 left most balanced AIs 30 months out of every war;
+# 12 keeps a pause between wars without freezing them. Low (60) and high (6) aggression stay vanilla.
+TRY_REPLACE:normal_aggression = {
+	game_data = {
+		category = country
+	}
+	ai_months_between_wars = 12
+}

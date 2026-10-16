@@ -104,6 +104,14 @@ NAI = {
 	# CONQUER_DESIRE_EXCLAVED_BONUS stays vanilla (50): at 300 (tested 2026-10-12, docs/peace_deal_rulebook.md
 	# "Enclaves") it removed no more splintered nations than 50 and neighbours took Austria's HRE enclaves in both
 	# 1537 test runs; the enclave release (generic_actions/create_province_subject.txt) does the work.
+	# War planning (2026-10-16, branch ai-war-willingness, docs/war_ai_rulebook.md). Each month an AI at peace rolls to
+	# plan a war: chance 0.30 x (1 + aggressiveness x SCALE), at most 1. At SCALE 10 any aggressiveness of -0.1 or less
+	# (most balanced AIs sit at -0.02..-0.18 from traits and societal values) never plans a war; at 5 they plan now and
+	# then, defensive and isolationist AIs still never do, aggressive and expansionist ones still roll almost every month.
+	CHANCE_OF_EXPANSION_AGGRESSIVENESS_SCALE = 5 # 10
+	# A planning AI war-games only its 20 most desired neighbours (big, allied ones first); at 1667 most of them fail the
+	# win estimate, so weaker, sensible targets further down the list were never looked at. No measurable tick cost.
+	AI_NUM_EXPANSION_TARGETS = 40 # 20
 }
 
 NEconomy = {

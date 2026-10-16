@@ -246,4 +246,11 @@ NDiplomacy = {
 	# subject's AI counts every other subject of its overlord as a defender); docs/peace_deal_rulebook.md "Subjects".
 	LOYALTY_FROM_INDEPENDENCE_MOVEMENT_SCALE = 12.5 # 10
 	LOYALTY_FROM_INDEPENDENCE_MOVEMENT_MAX = 25 # 20
+	# 2026-10-16 (Jan's goal: a side that wins its battles should see the war as winnable; docs/war_ai_rulebook.md 8).
+	# AI peace acceptance weighs war enthusiasm; past 24 months it fell 0.01 a month and spent manpower took up to 0.2
+	# more, so a defender that wins its battles while the attacker sieges ceded land worth about twice the war score.
+	# Halved both: in 10-year observer runs from 1807 and 1667 (~45 fought wars each) battle winners ceded 73
+	# locations instead of 187 and ended net down in 4 wars instead of 9; same number of wars, some last longer.
+	WAR_ENTHUSIASM_TIME_LATE_FACTOR = 0.005 # 0.01
+	WAR_ENTHUSIASM_MILITARY_STRENGTH_FACTOR = 0.05 # 0.1
 }

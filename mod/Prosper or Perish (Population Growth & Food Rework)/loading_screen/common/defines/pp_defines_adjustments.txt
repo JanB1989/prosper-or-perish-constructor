@@ -112,6 +112,11 @@ NAI = {
 	# A planning AI war-games only its 20 most desired neighbours (big, allied ones first); at 1667 most of them fail the
 	# win estimate, so weaker, sensible targets further down the list were never looked at. No measurable tick cost.
 	AI_NUM_EXPANSION_TARGETS = 40 # 20
+	# AI strength estimate (war target win chance, peace demands, surrender, peace offers): army = whole levy pool x
+	# LEVIES + regulars x REGULARS 3, x (1 + land morale) x (1 + discipline); unit quality otherwise not counted. Levy-
+	# heavy realms looked as strong as professional armies they lose to (1807: France 99 %, Mamluks 86 % of counted
+	# army from levies, Ottomans 29 %). At 0.5 a regular counts as 6 levies. Not tested in game.
+	WAR_BALANCE_LEVIES_IMPORTANCE = 0.5 # 1
 }
 
 NEconomy = {

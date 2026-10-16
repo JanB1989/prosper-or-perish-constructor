@@ -79,6 +79,7 @@ Examples:
 |---|---|---|---|
 | `NAI.CHANCE_OF_EXPANSION_AGGRESSIVENESS_SCALE` | 10 | 5 | At 10 an aggressiveness of -0.1 already zeroes the planning roll; most balanced AIs sit at -0.02..-0.18. At 5 they plan now and then; defensive (-0.2 and lower) and isolationist AIs still never do; aggressive/expansionist AIs keep a roll near 1. |
 | `NAI.AI_NUM_EXPANSION_TARGETS` | 20 | 40 | Desire order puts big, allied neighbours first and they fail the estimate; weaker neighbours further down were never war-gamed. Tick time unchanged within noise. |
+| `NAI.WAR_BALANCE_LEVIES_IMPORTANCE` (2026-10-16, Jan, not tested in game) | 1 | 0.5 | The AI's strength estimate (war targets, win chance in peace demands, surrender, peace offers) counts the whole levy pool, raised or not, x this plus regulars x 3, then x (1 + land morale) x (1 + discipline); unit quality is not counted. Levy-heavy realms (1807: France 99 %, Mamluks 86 % of counted army from levies, Ottomans 29 %) looked as strong as professional armies that beat them. At 0.5 a regular counts as 6 levies. |
 | static modifier `normal_aggression` `ai_months_between_wars` (`pp_ai_aggression_rule.txt`) | 24 | 12 | Under the normal aggression rule a balanced AI stayed 30 months out of planning after every war it was part of, allied and defensive wars included. Now 18. Low/high aggression unchanged. |
 
 Not changed, tested without effect: `MONTHS_TO_WAIT_FOR_CASUS_BELLI` 24 -> 12 (identical runs: the waiting objectives

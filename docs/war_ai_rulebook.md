@@ -99,6 +99,16 @@ Probe on the 120 largest AIs (by 1667 tax base), two game years from each start,
 | 1657.4 (autosave) | 10 -> 11 | 22 -> 31 |
 | total | 17 -> 24 | 43 -> 92 |
 
+Four game years (same probe, end saves `pp_war_long*_base` / `_branch`):
+
+| Start | Declaring countries | Declarations | Offensive wars running at the end | Locations changed owner | Top-30 powers gained / lost | Top-30 stability, war exhaustion |
+|---|---|---|---|---|---|---|
+| 1667.12 vanilla / PP | 19 / 23 | 68 / 76 | 15 / 16 | 207 / 247 | 23 / 55 -> 68 / 40 | 10.6, 0.45 -> 12.0, 0.45 |
+| 1662.4 vanilla / PP | 8 / 14 | 14 / 45 | 8 / 12 | 640 / 578 | 62 / 220 -> 63 / 201 | 7.2, 0.41 -> 7.9, 0.96 |
+
+Land changing hands is dominated by revolts and independence wars, so it moves both ways; world control (0.55) and the
+powers' gold and stability did not change.
+
 New wars are neighbour wars the attacker should win: MOS -> farghana_province (estimate 0.83), WUU -> its Chinese
 neighbours (seongwi, jinzhou, zezhou), INJ -> KLB, lower_sindh -> PUN, jinzhou -> xingzhou. Single components (1667 start): scale 5
 alone 4 -> 6, months 12 alone 4 -> 8 (1662 start: no change), 40 targets alone (one year) 3 -> 4. Runs diverge after

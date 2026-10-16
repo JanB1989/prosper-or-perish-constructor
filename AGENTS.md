@@ -475,3 +475,14 @@
 - Not tested in game yet. Check that `construct_estate_building` charges the nobles' treasury (the vanilla uses are
   events) and the monthly cost; `DEBUG = True` in the generator adds build counters (country, location, global
   `pp_noble_investment_builds`).
+
+## Manpower Buildings AI (2026-10-16)
+
+- The engine AI did not queue manpower buildings: in a 1541 save (playset with AI Army & Manpower Overhaul) no queue of
+  573 held a barracks, camp, training field or conscription centre, 3 held an armory, while the Ottomans sat at 2 % of
+  their manpower and Poland at 7 %. AAMO's yearly script builds only armories and barracks.
+- Armory, barracks, training fields, regimental camp and conscription centre carry `important_for_AI = yes` (vanilla
+  1.4 has it; the 1.4 blueprint merge 417d5aca dropped it on four) and `ai_construct_weight` = 300 x (1 -
+  owner `manpower_percentage`, min 0) / (owner `monthly_income_total` + 10), the Library pattern (EU5 1.4 adds the
+  weight raw after the gate). Blueprints and built files are edited together. Not yet checked in game; the 300 is a
+  first guess. Tests: tests/test_manpower_ai_weight.py.

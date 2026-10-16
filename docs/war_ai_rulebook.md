@@ -274,12 +274,12 @@ The Mamluk coalition (with the Qara Qoyunlu) won the first battles by numbers an
 land; from mid 1807 the Ottomans won most battles at 2-4:1 losses but never besieged Mamluk land, so the war score
 kept creeping toward the Mamluks (about -34). In year 3 the Ottomans accepted a cession worth about twice that war
 score: acceptance adds the war score, the months at war (+0.5 each) and low enthusiasm (time past 24 months, spent
-manpower, occupied land), and nothing in it compares the armies. The strength estimate (, levies 0.5)
+manpower, occupied land), and nothing in it compares the armies. The strength estimate (`WAR_BALANCE_*`, levies 0.5)
 does not enter acceptance or enthusiasm at all: it steers whom to attack and the offers an AI sends.
 
-Replays from 1807 and 1808 (seven runs; slower time decay  0.005 with a weaker manpower term
- 0.05 or a stronger  0.75): each tweak makes the Ottomans demand a peace
+Replays from 1807 and 1808 (seven runs; slower time decay `WAR_ENTHUSIASM_TIME_LATE_FACTOR` 0.005 with a weaker manpower term
+`WAR_ENTHUSIASM_MILITARY_STRENGTH_FACTOR` 0.05 or a stronger `WAR_ENTHUSIASM_UNIT_BALANCE` 0.75): each tweak makes the Ottomans demand a peace
 10-25 war score cheaper, but the outcome follows the war's path (occupations, deals that would split the empire): the
 unchanged 0.10 held out for three years and lost nothing in one replay, both variants lost 17-20 locations in another.
 No define lets the AI see that it can win while its war score is negative; the lever is the war itself (sieging the
-enemy's land) or the  script weights. Not adopted.
+enemy's land) or the `requestpeace` script weights. Not adopted.

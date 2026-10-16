@@ -446,3 +446,24 @@
 - Crop farms are open to estates (`forbidden_for_estates = no` in config/crop_farms.toml); Cookshops and Public
   Kitchens already were. `ESTATE_MAX_PRICE_MULTIPLIER` = 2.0 (a plain multiplier on what an estate pays for its own
   builds, not a cap; was 1.2). Tests: tests/test_employment_cut.py.
+
+## Noble Investment (2026-10-16)
+
+- Nobles with surplus gold build peasant and labourer buildings for goods their market is short of, the most profitable
+  first. The engine's own estate plan (one project per estate, docs/ai_building_rulebook.md section 3) cannot be steered,
+  and nobles mostly plan land improvements, masons and granaries, so this is a pulse script:
+  `on_action/pp_noble_investment.txt` (monthly country pulse, 0-29 day delay) calls `pp_noble_investment_monthly`.
+- A country searches only while its nobles hold more than `pp_noble_investment_reserve`, then waits 90 days after a build
+  and 180 days after a search that found nothing. A candidate needs: the nobles' gold >= reserve + price x
+  `ESTATE_MAX_PRICE_MULTIPLIER`; a market with demand above supply of its main good (country-wide pre-check, then the
+  location's market); `pp_noble_investment_min_unemployed` free people; `can_build_building`. Rank: main good market
+  price / default price x (1 + `local_<good>_output_modifier` where the game has one), the same margin the Market leg
+  gives the AI's gate; it must beat `AI_BUILDING_PROFIT_MARGIN_THRESHOLD`. The best one is built with
+  `construct_estate_building` (nobles pay and own it).
+- `scripts/generate_noble_investment.py --vanilla "<EU5>/game"` writes `scripted_effects/pp_noble_investment_effects.txt`
+  and `script_values/pp_noble_investment_values.txt` from the built mod's building types (pop_type peasants/laborers,
+  a Market Sales good or the good priced in `ai_construct_weight`, not `forbidden_for_estates`, not `is_special`).
+  Rerun after building changes; `--check` fails when they are stale. Tests: tests/test_noble_investment.py.
+- Not tested in game yet. Check that `construct_estate_building` charges the nobles' treasury (the vanilla uses are
+  events) and the monthly cost; `DEBUG = True` in the generator adds build counters (country, location, global
+  `pp_noble_investment_builds`).

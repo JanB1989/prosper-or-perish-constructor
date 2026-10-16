@@ -48,6 +48,10 @@ ADVANCES = Path("in_game") / "common" / "advances"
 GOODS = Path("in_game") / "common" / "goods"
 
 POP_TYPES = ("peasants", "laborers")
+# Ranking weight per pop type: score = profit x weight. Nobles prefer peasant buildings (user rule, 2026-10-16; at
+# default prices the median peasant building makes 1.16 gold per level, the median labourer one 0.64, but labour yards
+# and model farms reach 4-14 and won every pick). The profit and margin checks are unchanged.
+POP_PRIORITY = {"peasants": 3.0, "laborers": 1.0}
 # Gold the nobles keep for themselves (loans to the crown, their own engine plan, which starts from 50 gold); only gold
 # above this plus what the building costs them counts as surplus.
 RESERVE_GOLD = 150
@@ -304,7 +308,8 @@ def find_block(index: int, candidate: Candidate, modifiers: set[str]) -> str:
         for method in block:
             profit.extend(method_lines(method, modifiers, indent))
         profit.append(f"{indent}pp_noble_investment_add_block = yes")
-    profit.append(f"{indent}pp_noble_investment_keep_better_location = {{ index = {index} }}")
+    priority = number(POP_PRIORITY[candidate.pop_type])
+    profit.append(f"{indent}pp_noble_investment_keep_better_location = {{ index = {index} priority = {priority} }}")
     profit_text = "\n".join(profit)
     return f"""\t# {index}: {building} ({candidate.pop_type}, {good})
 \tif = {{
@@ -384,22 +389,27 @@ pp_noble_investment_add_block = {{
 \t}}
 }}
 
-# The building at this location becomes the best candidate when it makes more than the best so far (which starts at
-# 0: it must make money) and earns at least the AI's margin on its inputs.
+# The building at this location becomes the best candidate when its score (profit x the pop type's priority) beats the
+# best so far (which starts at 0: it must make money) and it earns at least the AI's margin on its inputs.
 pp_noble_investment_keep_better_location = {{
 \tset_local_variable = {{
 \t\tname = pp_noble_investment_profit
 \t\tvalue = {{ value = local_var:pp_noble_investment_revenue subtract = local_var:pp_noble_investment_cost }}
 \t}}
+\tset_local_variable = {{
+\t\tname = pp_noble_investment_score
+\t\tvalue = {{ value = local_var:pp_noble_investment_profit multiply = $priority$ }}
+\t}}
 \tif = {{
 \t\tlimit = {{
-\t\t\tlocal_var:pp_noble_investment_profit > local_var:pp_noble_investment_best_score
+\t\t\tlocal_var:pp_noble_investment_profit > 0
+\t\t\tlocal_var:pp_noble_investment_score > local_var:pp_noble_investment_best_score
 \t\t\tlocal_var:pp_noble_investment_revenue >= {{
 \t\t\t\tvalue = local_var:pp_noble_investment_cost
 \t\t\t\tmultiply = pp_noble_investment_min_margin
 \t\t\t}}
 \t\t}}
-\t\tset_local_variable = {{ name = pp_noble_investment_best_score value = local_var:pp_noble_investment_profit }}
+\t\tset_local_variable = {{ name = pp_noble_investment_best_score value = local_var:pp_noble_investment_score }}
 \t\tset_local_variable = {{ name = pp_noble_investment_best_index value = $index$ }}
 \t\tsave_scope_as = pp_noble_investment_location
 \t}}

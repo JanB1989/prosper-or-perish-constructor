@@ -21,6 +21,7 @@ building:
     	
     	employment_size = manpower_employment
     	important_for_AI = yes
+    	AI_ignore_available_worker_flag = yes # PP: soldiers are scarce (0.6 % of pops, 1545 save); vanilla sets it on fields and camps
     	ai_construct_weight = {
     		# PP: the emptier the manpower pool, the more the AI wants manpower buildings; without it the AI never queued
     		# them (1541 save: 0 of 573 queues). Library pattern: weight / (owner monthly income + 10).

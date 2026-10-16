@@ -146,6 +146,18 @@ def test_mason_shortage_starts_at_80_percent_of_supply() -> None:
     assert '"goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)"' in candidate_blocks()["iron_mine"]
 
 
+def test_peasant_buildings_are_preferred() -> None:
+    # User rule (2026-10-16): nobles favoured labourer buildings; the score is profit x the pop type's priority.
+    assert gen.POP_PRIORITY["peasants"] > gen.POP_PRIORITY["laborers"]
+    blocks = candidate_blocks()
+    for building, pop_type in {"wheat_farm": "peasants", "iron_mine": "laborers", "mason": "laborers"}.items():
+        priority = gen.number(gen.POP_PRIORITY[pop_type])
+        assert f"priority = {priority} }}" in blocks[building], building
+    effects = EFFECTS_PATH.read_text(encoding="utf-8-sig")
+    assert "value = { value = local_var:pp_noble_investment_profit multiply = $priority$ }" in effects
+    assert "local_var:pp_noble_investment_profit > 0" in effects
+
+
 def test_no_stacking_in_one_location() -> None:
     # Nobles stacked the same building 3-4 times in one location while the first was still being built (2026-10-16).
     blocks = candidate_blocks()

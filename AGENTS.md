@@ -465,7 +465,8 @@
   location's market prices, summed over the method blocks, each block's best method the country can run (output x
   price x (1 + `local_<good>_output_modifier` where the game has one) - inputs x prices; methods with `allow` skipped,
   `unlock_production_method` advances required). Wages are inputs (manual labour), so this is real profit. It must be
-  above 0 with revenue >= `AI_BUILDING_PROFIT_MARGIN_THRESHOLD` x input cost; the best one is built with
+  above 0 with revenue >= `AI_BUILDING_PROFIT_MARGIN_THRESHOLD` x input cost; the highest score (profit x
+  `POP_PRIORITY`: peasants 3, labourers 1, because nobles kept picking labour yards and model farms) is built with
   `construct_estate_building` (nobles pay and own it). The first version ranked by the main good's price alone and
   nobles kept building masons that lose money at default prices (margin 0.55: stone and labour, 2026-10-16).
 - `scripts/generate_noble_investment.py --vanilla "<EU5>/game"` writes `scripted_effects/pp_noble_investment_effects.txt`
@@ -484,5 +485,7 @@
 - Armory, barracks, training fields, regimental camp and conscription centre carry `important_for_AI = yes` (vanilla
   1.4 has it; the 1.4 blueprint merge 417d5aca dropped it on four) and `ai_construct_weight` = 300 x (1 -
   owner `manpower_percentage`, min 0) / (owner `monthly_income_total` + 10), the Library pattern (EU5 1.4 adds the
-  weight raw after the gate). Blueprints and built files are edited together. Not yet checked in game; the 300 is a
+  weight raw after the gate), and `AI_ignore_available_worker_flag = yes` (vanilla sets it on training fields and
+  camps; soldiers are 0.6 % of pops in a 1545 save, and with the weight alone only 8 of 561 queues held one, none
+  of them the Ottomans at 2 % manpower). Blueprints and built files are edited together. Not yet checked in game; the 300 is a
   first guess. Tests: tests/test_manpower_ai_weight.py.

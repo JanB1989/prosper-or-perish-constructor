@@ -33,3 +33,5 @@ def test_manpower_buildings_answer_an_empty_manpower_pool(building: str) -> None
     assert weight_lines(body) == expected
     assert weight_lines(built) == expected
     assert "important_for_AI = yes" in body and "important_for_AI = yes" in built
+    # Soldiers are scarce (0.6 % of pops in a 1545 save); without this the AI skipped the buildings before scoring.
+    assert "AI_ignore_available_worker_flag = yes" in body and "AI_ignore_available_worker_flag = yes" in built

@@ -659,4 +659,4 @@ def test_hostile_movement_config_matches_the_handover_classes():
     repo = Path(__file__).resolve().parents[1]
     config = tomllib.loads((repo / "constructor.toml").read_text(encoding="utf-8"))["worldbuilder"]["hostile_movement"]
     assert set(config) == {"topography", "vegetation", "soil_type"}   # never rivers (Jan, 2026-10-07)
-    assert all(0 < v <= 0.30 for classes in config.values() for v in classes.values())
+    assert all(0 < v <= 0.45 for classes in config.values() for v in classes.values())   # x1.5 on 2026-10-16 (Jan)

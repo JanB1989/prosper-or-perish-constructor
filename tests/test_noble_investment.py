@@ -9,6 +9,7 @@ from scripts.generate_noble_investment import (
     MOD_ROOT,
     VALUES_PATH,
     Candidate,
+    Method,
     building_definitions,
     candidates,
     field,
@@ -107,9 +108,9 @@ def test_advance_unlocks_follow_load_order(tmp_path) -> None:
         "REPLACE:adv_b = { }\nTRY_INJECT:adv_a = { unlock_building = farm }\n", encoding="utf-8"
     )
     assert gen.advance_unlocks(game, mod) == {"mill": ("adv_a", "adv_d"), "farm": ("adv_a",)}
-    gated = Candidate("mill", "laborers", "tools", None, ("adv_a", "adv_d"))
+    gated = Candidate("mill", "laborers", "tools", advances=("adv_a", "adv_d"))
     assert gen.researched(gated).strip() == "OR = { has_advance = adv_a has_advance = adv_d }"
-    assert gen.researched(Candidate("mine", "laborers", "iron", None)) == ""
+    assert gen.researched(Candidate("mine", "laborers", "iron")) == ""
 
 
 def test_values_file_matches_generator_constants() -> None:
@@ -118,9 +119,23 @@ def test_values_file_matches_generator_constants() -> None:
 
 def test_debug_render_stays_balanced(monkeypatch) -> None:
     monkeypatch.setattr(gen, "DEBUG", True)
-    text = render([Candidate("iron_mine", "laborers", "iron", "local_iron_output_modifier")])
+    method = Method("pp_iron_mine_base", "iron", 0.5, (("manual_labor", 0.1),))
+    text = render([Candidate("iron_mine", "laborers", "iron", ((method,),))], {"local_iron_output_modifier"})
     assert braces_balance(text)
     assert "change_global_variable = { name = pp_noble_investment_builds add = 1 }" in text
+
+
+def test_masons_are_ranked_by_profit_after_inputs() -> None:
+    # The first version ranked by the masonry price alone; nobles kept building loss-making masons (2026-10-16).
+    block = candidate_blocks()["mason"]
+    assert '"market.market_price(goods:masonry)" multiply = 0.5' in block
+    assert '"market.market_price(goods:stone)" multiply = 0.32' in block
+    assert '"market.market_price(goods:clay)" multiply = 0.64' in block
+    assert '"market.market_price(goods:manual_labor)" multiply = 0.11' in block
+    assert "pp_noble_investment_keep_better_location = { index = " in block
+    effects = EFFECTS_PATH.read_text(encoding="utf-8-sig")
+    assert "multiply = pp_noble_investment_min_margin" in effects
+    assert "set_local_variable = { name = pp_noble_investment_best_score value = 0 }" in effects
 
 
 def test_candidate_rules(tmp_path) -> None:
@@ -128,25 +143,71 @@ def test_candidate_rules(tmp_path) -> None:
         """
 REPLACE:mine = {
     pop_type = laborers
-    unique_production_methods = { m = { pp_mine_market_sales = { produced = iron output = 0.004 } } }
+    unique_production_methods = {
+        pp_mine_base = {
+            produced = iron
+            output = 0.5
+            manual_labor = 0.1
+            tools = 0.05
+            debug_max_profit = rural_profit_margin
+        }
+        pp_mine_deep = {
+            produced = iron
+            output = 0.8
+            manual_labor = 0.1
+        }
+        pp_mine_royal = {
+            allow = { always = yes }
+            produced = iron
+            output = 9
+        }
+    }
+    unique_production_methods = {
+        pp_mine_market_sales = {
+            offset = 0.01
+            produced = iron
+            output = 0.004
+        }
+    }
 }
 farm = {
     pop_type = peasants
     ai_construct_weight = { value = "market.market_price(goods:wheat)" }
+    unique_production_methods = {
+        pp_farm_base = {
+            produced = wheat
+            output = 1
+        }
+    }
 }
 forbidden = {
     pop_type = peasants
     forbidden_for_estates = yes
-    unique_production_methods = { m = { pp_forbidden_market_sales = { produced = fish } } }
+    unique_production_methods = {
+        pp_forbidden_market_sales = {
+            produced = fish
+            output = 1
+        }
+    }
 }
 special = {
     pop_type = laborers
     is_special = yes
-    unique_production_methods = { m = { pp_special_market_sales = { produced = silver } } }
+    unique_production_methods = {
+        pp_special_market_sales = {
+            produced = silver
+            output = 1
+        }
+    }
 }
 burgher_shop = {
     pop_type = burghers
-    unique_production_methods = { m = { pp_burgher_shop_market_sales = { produced = cloth } } }
+    unique_production_methods = {
+        pp_burgher_shop_market_sales = {
+            produced = cloth
+            output = 1
+        }
+    }
 }
 no_good = {
     pop_type = peasants
@@ -154,8 +215,15 @@ no_good = {
 """,
         encoding="utf-8",
     )
-    found = candidates(building_definitions(tmp_path), {"local_iron_output_modifier"})
+    goods = {"iron", "wheat", "fish", "silver", "cloth", "manual_labor", "tools", "offset"}
+    found = candidates(building_definitions(tmp_path), goods, {"mine": ("adv_mine",)}, {"pp_mine_deep": ("adv_deep",)})
+    base = Method("pp_mine_base", "iron", 0.5, (("manual_labor", 0.1), ("tools", 0.05)))
+    deep = Method("pp_mine_deep", "iron", 0.8, (("manual_labor", 0.1),), ("adv_deep",))
+    sales = Method("pp_mine_market_sales", "iron", 0.004, (("offset", 0.01),))
     assert found == [
-        Candidate("farm", "peasants", "wheat", None),
-        Candidate("mine", "laborers", "iron", "local_iron_output_modifier"),
+        Candidate("farm", "peasants", "wheat", ((Method("pp_farm_base", "wheat", 1.0, ()),),)),
+        Candidate("mine", "laborers", "iron", ((base, deep), (sales,)), ("adv_mine",)),
     ]
+    lines = " ".join(gen.method_lines(deep, {"local_iron_output_modifier"}, ""))
+    assert "limit = { owner = { has_advance = adv_deep } }" in lines
+    assert "multiply = { value = 1 add = modifier:local_iron_output_modifier }" in lines

@@ -125,3 +125,144 @@ balance. Kit: private `~/pp_ai_run/warai`.
 - **CB supply**: parliament agendas (every 59 months) are the main CB source; only ~50 spy networks exist worldwide.
 - **Treasury and stability readiness**: Castile, Yemen and others hold a CB and a won estimate but stay below
   1.5 x tax base in gold or below 0 stability.
+
+# Ending wars: war score, enthusiasm, peace offers, terms (EU5 1.4.1)
+
+Decoded 2026-10-16 from the 1.4.1 executable: every define that decides when a war ends and on what terms. Behaviour
+only. PP changes none of these (except the two peace-deal location defines in `docs/peace_deal_rulebook.md`). "WS" =
+war score in points (-100..100), "e" = war enthusiasm (0..1). Values below are vanilla.
+
+## 1. War score (players and AI alike)
+
+- **Complete victory (+-100)**: the loser surrendered unconditionally, reached its maximum war exhaustion, or is fully
+  occupied. Before `MONTHS_BEFORE_TOTAL_OCCUPATION` (60) a full occupation only counts when the whole enemy side is
+  occupied; after it, the war leader alone is enough.
+- Otherwise, between the two war leaders: bonus pools (`add_bonus_warscore`, each side 0..`WARGOAL_MAX_BONUS` 50) +
+  ticking score of the side holding the war goal + battle score (sum of battle results, capped at
+  +-`WARSCORE_MAX_FROM_BATTLES` 50, a CB's `max_warscore_from_battles` overrides), together capped at +-100; then
+  occupation and blockade score of every participant; final cap +-99, 100 only for the side holding the war goal.
+- **Battle result** = loss ratio x `BATTLE_RESULT_SCALE` (25), capped at `BATTLE_RESULT_CAP` (25), probably x (1 + the
+  age's `war_score_from_battles`, -0.05..-0.20 from age 3).
+- **Ticking**: the holder of the war goal gains `DEFAULT_WARGOAL_TICKINGWARSCORE_BONUS` (2) x the goal's
+  `ticking_war_score` per step, up to `WARGOAL_MAX_TICKING_WAR_SCORE` (25); the other side's pool falls by the same.
+  Superiority goals tick only while battle score is beyond +-`SUPERIORITY_WARGOAL_WARSCORE_THRESHOLD` (10); each won
+  battle adds `DEFAULT_WARGOAL_BATTLESCORE_BONUS` (3) to the winner's bonus.
+
+## 2. Forced endings and fixed rules (players and AI alike)
+
+- **Enforceable offer** (refusing costs `STAB_HIT_GOOD_PEACE` -10 stability): WS >= 100; or WS >=
+  `WAR_ENFORCE_DEMANDS_MAX_WARSCORE_FRACTION` x 100 (50) and the demand costs less than WS /
+  `WAR_ENFORCE_DEMANDS_WARSCORE_COST_NEEDED` (2); or only the war goal once its ticking is full (superiority-type goals
+  also need the goal held `PEACE_AUTO_ENFORCE_BASE_DAYS` 365 + `PEACE_AUTO_ENFORCE_RANK_DAY` 180 x attacker rank level
+  days); the defender holding its goal the same way can enforce white peace. `PEACE_AUTO_ENFORCE_*` never end a war by
+  themselves.
+- **Call for peace**: the side whose leader has WS >= `CALL_FOR_PEACE_WARSCORE_LIMIT` (67) after
+  `CALL_FOR_PEACE_THRESHOLD_MONTHS` (60) gets +1 per further month; after the enemy surrendered unconditionally +3 per
+  month (`CALL_FOR_PEACE_FROM_UNCONDITIONAL_SURRENDER`) from `UNCONDITIONAL_SURRENDER_MONTHS` (2) on. It raises war
+  exhaustion and AI acceptance. Wars older than the game start count at most `PEACE_MAX_MONTHS_AT_WAR_BEFORE_START_DATE`
+  (12) months of history.
+- **White peace after inactivity**: a war ends in white peace `YEARS_SINCE_LAST_WAR_ACTION_BEFORE_WHITE_PEACE` (3) years
+  after its last war action unless a unit stands on enemy land; no player exemption. Rebel-type wars get a winner
+  instead. `YEARS_BEFORE_WHITE_PEACE_ALERT_ADVANCE` (1) is the alert lead only.
+- Separate peace not before `PEACE_SEPERATE_BLOCK_MONTHS` (12); unconditional surrender not before
+  `UNCONDITIONAL_SURRENDER_MIN_MONTHS` (12). Truce = `TRUCE_YEARS` 5 + 10 x (share of WS used / 100) years.
+  `DURATION_BEFORE_PURGING_WARS_IN_DAYS` is bookkeeping only.
+
+## 3. War enthusiasm (AI decisions)
+
+Per country per war, clamped 0..1, sum of (all `NDiplomacy.WAR_ENTHUSIASM_*`):
+
+| Term | Value | War leader | Ally |
+|---|---|---|---|
+| base | 0.5 | 0.5 | x `ALLY_BASE_RELUCTANCE_MULT` 1.5 = 0.75 |
+| time | (24 - months) x 0.0075 up to `TIME_MONTHS` 24, then x 0.01 (+0.18 at start, -0.5 at month 74) | x1 | x1 |
+| war exhaustion | -0.02 per point | /2 | x1 |
+| rebels | -0.2 x threat | /2 | x1 |
+| desperation | -0.75 x share of own location value occupied or besieged | /2 | x1 |
+| sieges | +0.25 x share we besiege, -0.5 x share of ours besieged | x1 | x1 |
+| ongoing battles | 10 x share of force limit fighting (any battle with 10 % of it pins e at 1.0) | x1 | x1 |
+| unit balance | 0.5 x side balance | x1 | 0 |
+| war direction | 0.005 x gains, x5 when gaining | x1 | 0 |
+| war goal achieved / capital held / independence | +0.05 each | x1 | goal 0 |
+| military strength | -0.2..+0.1 (army vs force limit, manpower vs max) | x1 | x2 |
+| losses | -2.5 x men lost, -4 x ships lost (per denominator) | x1 | x1 |
+| separate peace | -0.1 | 0 | -0.1 |
+| ally winning | 0.5 per WS point when WS > 0 (`ALLY_MULT`) | 0 | **an ally at WS >= +2 sits at 1.0** |
+| CB script values | `additional_war_enthusiasm(_attacker/_defender)` | x1 | x1 |
+
+Quirks in the code: `WAR_ENTHUSIASM_COALITION_FACTOR` 0.3 is truncated to an integer (0); `WAR_ENTHUSIASM_CALL_FOR_PEACE`
+is 0 for leaders and allies (only coalition leaders use it); the late time factor also applies to negative enthusiasm.
+
+## 4. AI peace decisions
+
+- **Acceptance** (every offer to an AI, from a player or an AI): sum of script weights from
+  `in_game/common/ai_diplochance/00_ai_diplochance.txt` `requestpeace`, accepted at >= 1: base -25, + WS (absolute WS
+  for white peace or gifts), -100 x (e - 0.5), + call for peace, + 0.5 per month at war, -1 per WS the deal costs (gifts
+  add cost and value), +2 per own defending siege, -5 per own attacking siege, -20 if the deal takes too much,
+  +10 per demand, -30 for fragmenting the country, -50 x excess when a gift would push others over
+  `TARGET_SAFE_ANTAGONISM_FOR_AI` (50) with more strength than 0.75 x ours; +50 when the offer contains the AI's own
+  ideal deal or fits its white-peace entitlement (min(100, 100 (e - 0.5) + WS) <= cost); +100 for enforceable demands;
+  -10000 after surrendering unconditionally to someone else. The AI's own demand budget = this acceptance for white
+  peace - 1.
+- **What the AI wants** (its ideal deal): win chance >= 0.8: 100; 0.6..0.8: 66 + 25 (e - 0.5); 0.4..0.6:
+  (33 + 33 (e - 0.5) + WS) / 2; below: WS; then x (1 + `expected_warscore_modifier`). In the first
+  `EARLY_PEACE_TIME_MONTHS` (4) months it is raised to (X + `EARLY_PEACE_TIME_BASE` 10) x `EARLY_PEACE_TIME_FACTOR` 1.5;
+  afterwards it drops to white peace when WS < `MINIMUM_WAR_SCORE_TO_CONSIDER_DEFEAT` (-50) or win chance <
+  `MINIMUM_WIN_CHANCE_TO_CONSIDER_DEFEAT` (0.25). Below `MIN_WARSCORE_TO_DEMAND` (10) it asks for nothing. The AI never
+  offers concessions in normal wars, only demands or white peace.
+- **When it sends**, every 90 days: a war leader keeps fighting while e > `PEACE_OFFER_WAR_ENTHUSIASM_THRESHOLD` (0.6)
+  unless the war is 60+ months old or its goal is held; an ally leaves at e <= `PEACE_OFFER_ALLY_LEAVE_WAR_ENTHUSIASM`
+  (0.25) or once `PEACE_OFFER_OCCUPATION_PERCENTAGE_THRESHOLD` (25 %) of its land is occupied. It sends when the enemy
+  is 25 % occupied, when the demand uses >= `PEACE_OFFER_WARSCORE_PERCENTAGE_THRESHOLD` (0.33) of its WS, when e <=
+  `PEACE_OFFER_WAR_ENTHUSIASM_STALE_WAR` (0.5), or when it is weaker than 0.5 x its enemies (0.1 x with
+  `PEACE_OFFER_MISSING_IMPORTANT_TREATIES_STRENGTH_COMPARISON_MULT` when it still misses an important treaty).
+- **Unconditional surrender** (AI): at WS -100 at once; else as war leader at WS <= `UNCONDITIONAL_SURRENDER_WARSCORE_LIMIT`
+  (-90) with a strength share <= `MINIMUM_STRENGTH_TO_AVOID_UNCONDITIONAL_SURRENDER` (0.15), enemy >=
+  `UNCONDITIONAL_SURRENDER_HOPELESS_STRENGTH_COMPARISON` (20) x stronger and balance <= `ACCEPTABLE_BALANCE_DEFAULT` (1.2).
+- **Ally split**: the leader keeps 60 % of the unguaranteed war score and shares 40 % (`PEACE_OFFER_ALLY_DEFAULT_FAIRNESS`)
+  by contribution (participation, tax base, negotiation power, opinion); promised land is 75 % guaranteed; shares below
+  `PEACE_OFFER_ALLY_NOT_ENOUGH_TO_CARE_THRESHOLD` (3 %) get nothing.
+- **Outnumbered** (side strength < `HEAVILY_OUTNUMBERED_RATIO` 0.4): the army AI chases only stacks of at most
+  `OUTNUMBERED_BATTLE_ADVANTAGE` (0.6) of its own on good terrain (`OUTNUMBERED_TERRAIN_BONUS_MIN` 5 %) and focuses enemies
+  with low enthusiasm (`OUTNUMBERED_ENTHUSIASM_WEIGHT` 2) that can sign a separate peace (`OUTNUMBERED_SEPARABLE_WEIGHT` 1.5).
+
+## 5. Terms: what land costs, what the AI asks for
+
+- **Cost of a location** = war worth / (1 + E), clamped 0.1..99, E >= -0.99, E summed from: revolt war 5.0 (and nothing
+  else); small independent owner + location worth / owner's total worth; size discount (owner worth - 100) x 0.001 up to
+  0.5; unoccupied fort -0.15 and never besieged another -0.18 (+49 % cost); same culture +0.10, same religion +0.10;
+  power projection lead x 0.001; rival +0.33; war-score efficiency modifiers and lack of control; owner not an original
+  participant -0.5 (double cost); taker an original defender +0.25. Applies to players too.
+- **AI desire per term**: land = the cede desire (`docs/peace_deal_rulebook.md`); gold = 0.1 per WS (`PEACE_GOLD_AI_DESIRE`,
+  max 2.5 at `PEACE_MAX_WARSCORE_FOR_GOLD` 25; amount 0.2 loan sizes per WS); reparations = income x 0.1 x 10 years x 12 x
+  0.1 (in gold); noble sacrifice 1 % of nobles per WS (`PEACE_MAX_WARSCORE_FOR_SACRIFICE` 25), desire from the doom it
+  removes; junior partner (worth + conquer desire) x `PEACE_BECOME_JUNIOR_PARTNER_FACTOR` 3; royal marriage
+  10 / (1 + place in line) + 3 / (1 + age / 30); release nation = cut x future (product of two small factors, only for
+  connected blocks of 5+ locations touching the taker); cancel/transfer subject only for AI takers that want the subject.
+  All are 0 in revolt wars. With PP's land defines, adjacent land always wins over gold.
+- **Allies after the peace** (anyone leading the peace): an ally expects contribution x 0.75 (promised land) or x 0.5;
+  short allies lose up to 20 trust and opinion (halved if not promised; none below 20 % contribution when not
+  promised, none for AI allies that want no land); over-paid allies owe favors.
+
+## 6. Defines with no effect in 1.4.1
+
+No code reads them (only registration; a read through a pointer would be missed, so "almost certainly dead"):
+`AI_CALL_FOR_PEACE_CHANCE_MULTIPLIER`, `EXPECTED_WAR_SCORE_BASE`, `IDEAL_WARSCORE_DIFFERENCE_THRESHOLD_TO_CONSIDER_PEACE`,
+`PEACE_OFFER_ACCEPTANCE_THRESHOLD`, `PEACE_OFFER_SEND_PEACE_ENEMY_STRENGTH_FACTOR`, `PEACE_OFFER_TOO_MUCH_ALLY_WARSCORE_THRESHOLD`,
+`PEACE_OFFER_WAR_SCORE_THRESHOLD` (replaced by hardcoded bands, the `requestpeace` weights and the enforce rule),
+`PEACE_CEDE_CITY_BASE_MULTIPLIER`, `PEACE_CEDE_PROVINCE_ALLY_DESIRE_BASE`,
+`PEACE_CEDE_PROVINCE_ALLY_DESIRE_OUR_CONQUER_DESIRE_FACTOR`, `PEACE_RELEASE_COUNTRY_GORE_FACTOR`, `PEACE_SACRIFICE_AI_DESIRE`.
+
+## 7. Levers
+
+- **Longer or shorter wars**: `WAR_ENTHUSIASM_TIME_LATE_FACTOR` / `TIME_MONTHS` (the long-run decay), `WAR_ENTHUSIASM_BASE`,
+  `ONGOING_BATTLES` (pins e during battles), `ALLY_MULT` (pins winning allies), `PEACE_OFFER_WAR_ENTHUSIASM_THRESHOLD`
+  (AI only); `requestpeace` `months_at_war` / `war_enthusiam` (script, AI acceptance of anyone's offers); call-for-peace
+  thresholds, ticking cap and rate, battle caps, `YEARS_SINCE_LAST_WAR_ACTION_BEFORE_WHITE_PEACE` (all players too).
+- **Terms the AI accepts or asks for**: `requestpeace` weights (base, warscore, peaceoffer, war_enthusiam), the
+  win-chance bands (hardcoded) via `expected_warscore_modifier`, `EARLY_PEACE_TIME_*`, `MINIMUM_*_TO_CONSIDER_DEFEAT`,
+  `WAR_ENFORCE_DEMANDS_*` with `STAB_HIT_GOOD_PEACE`, the surrender limits, `TARGET_SAFE_ANTAGONISM_FOR_AI`, cost
+  efficiency terms (forts, non-target, size discount).
+- **AI only**: enthusiasm thresholds, ideal deal, send rules, surrender decision, ally split, outnumbered behaviour.
+  **Everyone**: war score, enforceability, call for peace, forced white peace, location cost, ally expectations,
+  and the `requestpeace` acceptance (it judges player offers to AIs too).

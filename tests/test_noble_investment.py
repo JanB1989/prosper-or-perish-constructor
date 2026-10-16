@@ -146,6 +146,16 @@ def test_mason_shortage_starts_at_80_percent_of_supply() -> None:
     assert '"goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)"' in candidate_blocks()["iron_mine"]
 
 
+def test_no_stacking_in_one_location() -> None:
+    # Nobles stacked the same building 3-4 times in one location while the first was still being built (2026-10-16).
+    blocks = candidate_blocks()
+    assert all("num_civil_constructions < 1" in block for block in blocks.values())
+    assert all("NOT = { has_variable = pp_noble_investment_recent }" in block for block in blocks.values())
+    effects = EFFECTS_PATH.read_text(encoding="utf-8-sig")
+    build = effects[effects.index("pp_noble_investment_build_best = {") :]
+    assert f"set_variable = {{ name = pp_noble_investment_recent value = 1 days = {gen.LOCATION_COOLDOWN_DAYS} }}" in build
+
+
 def test_candidate_rules(tmp_path) -> None:
     (tmp_path / "a.txt").write_text(
         """

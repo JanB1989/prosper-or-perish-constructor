@@ -7,7 +7,8 @@ over the month), a country whose nobles hold more gold than a reserve plus the p
 
 * a building worked by peasants or labourers that makes a market good, researched by the country,
 * in a location whose market is short of that good (demand above supply),
-* with free hands (unemployed population) and `can_build_building`,
+* with free hands (unemployed population) and `can_build_building`, no construction under way and no noble investment
+  in the last LOCATION_COOLDOWN_DAYS,
 
 and has the nobles build the most profitable one with `construct_estate_building` (the estate pays and owns it).
 
@@ -58,6 +59,9 @@ DEFAULT_SHORTAGE_RATIO = 1.0
 # Days before the country looks again: after a build, and after a search that found nothing.
 BUILD_COOLDOWN_DAYS = 90
 IDLE_COOLDOWN_DAYS = 180
+# Days a location is left alone after the nobles invested there: construction takes about a year, and the shortage that
+# made the building pay lasts until it produces, so without this the same building was stacked 3-4 times (2026-10-16).
+LOCATION_COOLDOWN_DAYS = 730
 # Method keys that make a method conditional; such methods are left out of the profit (the script cannot test them).
 CONDITION_KEYS = ("allow", "potential", "location_allow")
 # Block profit before any method was looked at; a block whose methods are all unavailable adds nothing.
@@ -319,6 +323,8 @@ def find_block(index: int, candidate: Candidate, modifiers: set[str]) -> str:
 \t\t\t\texists = market
 \t\t\t\tmarket = {{ {shortage(good)} }}
 \t\t\t\tpp_unemployed_population >= pp_noble_investment_min_unemployed
+\t\t\t\tnum_civil_constructions < 1
+\t\t\t\tNOT = {{ has_variable = pp_noble_investment_recent }}
 \t\t\t\tcan_build_building = building_type:{building}
 \t\t\t}}
 {profit_text}
@@ -454,6 +460,7 @@ def render(found: list[Candidate], modifiers: set[str]) -> str:
         "",
         "# Location scope (the chosen location): the nobles start the chosen building there.",
         "pp_noble_investment_build_best = {",
+        f"\tset_variable = {{ name = pp_noble_investment_recent value = 1 days = {LOCATION_COOLDOWN_DAYS} }}",
     ]
     out.extend(build_branch(index, candidate, index == 1) for index, candidate in enumerate(found, start=1))
     if DEBUG:

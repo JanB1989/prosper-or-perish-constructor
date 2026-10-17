@@ -787,14 +787,11 @@ def goods_table_column(cooltips: str) -> str:
         raise ValueError("vanilla TooltipTableField: no row_size")
     height = TOP_GOODS * int(field.group(1))
     return (f"\ttype {GOODS_TABLE_COLUMN} = vbox {{ # PP: vanilla TooltipTableColumn, rows without the internal goods\n"
-            f"{body.rstrip()}\n\n\t\tscrollarea = {{ # the first {TOP_GOODS} visible rows (vanilla TooltipListScrollArea; "
-            "a scrollvbox takes no scrollbar policy)\n"
-            f"\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tmaximumsize = {{ -1 {height} }}\n"
-            "\t\t\tautoresizescrollarea = yes\n\t\t\tautoresizeviewport = yes\n"
-            "\t\t\tscrollbarpolicy_horizontal = always_off\n\t\t\tscrollbarpolicy_vertical = always_off\n\n"
-            "\t\t\tscrollwidget = {\n"
-            "\t\t\t\tvbox = {\n\t\t\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\t\t\tblock \"column_datamodel\" {}\n\n"
-            f"{_indent(rows, 3)}\t\t\t\t}}\n\t\t\t}}\n\t\t}}\n\t}}\n")
+            f"{body.rstrip()}\n\n\t\tscrollvbox = {{ # the first {TOP_GOODS} visible rows (takes no scrollbar policy; "
+            "a scrollarea misaligned the columns in game, 2026-10-17)\n"
+            f"\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tmaximumsize = {{ -1 {height} }}\n\n"
+            "\t\t\tvbox = {\n\t\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\t\tblock \"column_datamodel\" {}\n\n"
+            f"{_indent(rows, 2)}\t\t\t}}\n\t\t}}\n\t}}\n")
 
 
 def internal_goods_gui(cooltips: str) -> str:

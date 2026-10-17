@@ -39,44 +39,38 @@ types PPInternalGoods {
 			}
 		}
 
-		scrollarea = { # the first 5 visible rows (vanilla TooltipListScrollArea; a scrollvbox takes no scrollbar policy)
+		scrollvbox = { # the first 5 visible rows (takes no scrollbar policy; a scrollarea misaligned the columns in game, 2026-10-17)
 			layoutpolicy_horizontal = expanding
 			maximumsize = { -1 150 }
-			autoresizescrollarea = yes
-			autoresizeviewport = yes
-			scrollbarpolicy_horizontal = always_off
-			scrollbarpolicy_vertical = always_off
 
-			scrollwidget = {
-				vbox = {
-					layoutpolicy_horizontal = expanding
-					block "column_datamodel" {}
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				block "column_datamodel" {}
 
-					item = {
-							TooltipTableField = {
-								blockoverride "visibility" {
-									datacontext = "[GoodsMarketEntry.GetGoods]"
-									using = pp_hide_internal_goods
-								}
-								blockoverride "field_content" {
-									block "table_field_margin" {
-										margin = { 10 0 }
-									}
-									spacing = 5
-
-									block "field_left" {}
-
-									block "tooltip_table_text_single" {
-										text_single = {
-											block "field_text_visibility" {}
-											block "field_text" {}
-										}
-									}
-
-									block "field_right" {}
-								}
+				item = {
+						TooltipTableField = {
+							blockoverride "visibility" {
+								datacontext = "[GoodsMarketEntry.GetGoods]"
+								using = pp_hide_internal_goods
 							}
-					}
+							blockoverride "field_content" {
+								block "table_field_margin" {
+									margin = { 10 0 }
+								}
+								spacing = 5
+
+								block "field_left" {}
+
+								block "tooltip_table_text_single" {
+									text_single = {
+										block "field_text_visibility" {}
+										block "field_text" {}
+									}
+								}
+
+								block "field_right" {}
+							}
+						}
 				}
 			}
 		}

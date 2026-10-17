@@ -75,14 +75,14 @@ def test_tooltip_goods_tables_show_five_goods_that_are_not_internal():
             assert f"DataModelFirst({model}, '(int32){tool.TOP_GOODS}')" not in text
     column = _mod(tool.INTERNAL_GOODS_GUI)
     column = column[column.index(f"type {tool.GOODS_TABLE_COLUMN} = vbox"):]
-    assert not re.search(r"(?m)^[ \t]*scrollvbox = \{", column)   # takes no scrollbar policy (error.log, 2026-10-17)
-    rows = column[column.index("scrollarea = {"):]
-    assert f"maximumsize = {{ -1 {tool.TOP_GOODS * 30} }}" in rows and "scrollbarpolicy_vertical = always_off" in rows
-    assert "scrollwidget = {" in rows
+    # a scrollvbox (a scrollarea misaligned the columns in game) without scrollbar policies (error.log, 2026-10-17)
+    assert not re.search(r"(?m)^[ \t]*scrollarea = \{", column)
+    rows = column[column.index("scrollvbox = {"):]
+    assert f"maximumsize = {{ -1 {tool.TOP_GOODS * 30} }}" in rows and "scrollbarpolicy" not in rows
     assert re.search(r'block "column_datamodel" \{\}\n\n[ \t]*item = \{\n[ \t]*TooltipTableField = \{\n[ \t]*'
                      r'blockoverride "visibility" \{\n[ \t]*datacontext = "\[GoodsMarketEntry\.GetGoods\]"\n[ \t]*'
                      rf"using = {tool.INTERNAL_GOODS_TEMPLATE}\n", rows)
-    assert 'blockoverride "visibility"' not in column[:column.index("scrollarea = {")]   # the header stays
+    assert 'blockoverride "visibility"' not in column[:column.index("scrollvbox = {")]   # the header stays
 
 
 def test_data_functions_exist_in_the_game():

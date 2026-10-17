@@ -160,6 +160,18 @@ def test_mines_are_built_regardless_of_shortage() -> None:
     assert '"goods_demand_in_market(goods:stone)"' in blocks["stone_quarry"]
 
 
+def test_farms_rank_by_the_local_crop_signal() -> None:
+    # Farm profits are nearly equal (Province Food dominates), so nobles built only legume farms (2026-10-17); a farm's
+    # score is scaled by its crop's local signal, everything else by 1.
+    blocks = candidate_blocks()
+    wheat = ('set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:wheat)" '
+             'divide = "default_price(goods:wheat)" multiply = { value = 1 add = modifier:local_wheat_output_modifier } min = 0 } }')
+    assert wheat in blocks["wheat_farm"]
+    assert '"market.market_price(goods:legumes)" divide = "default_price(goods:legumes)"' in blocks["legume_farm"]
+    for other in ("iron_mine", "mason"):
+        assert "set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }" in blocks[other], other
+
+
 def test_free_workers_of_the_buildings_own_pop_type() -> None:
     # Nobles built farms while existing farms had empty jobs (2026-10-17); one full level of the building's own pop
     # type must stand idle (thousands, like employment_size).
@@ -218,7 +230,7 @@ def test_peasant_buildings_are_preferred() -> None:
         priority = gen.number(gen.POP_PRIORITY[pop_type])
         assert f"priority = {priority} }}" in blocks[building], building
     effects = EFFECTS_PATH.read_text(encoding="utf-8-sig")
-    assert "value = { value = local_var:pp_noble_investment_profit multiply = $priority$ }" in effects
+    assert "multiply = $priority$\n\t\t\tmultiply = local_var:pp_noble_investment_signal" in effects
     assert "local_var:pp_noble_investment_profit > 0" in effects
 
 

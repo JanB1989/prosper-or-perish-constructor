@@ -472,7 +472,9 @@
   price x (1 + `local_<good>_output_modifier` where the game has one) - inputs x prices; methods with `allow` skipped,
   `unlock_production_method` advances required). Wages are inputs (manual labour), so this is real profit. It must be
   above 0 with revenue >= `AI_BUILDING_PROFIT_MARGIN_THRESHOLD` x input cost; the highest score (profit x
-  `POP_PRIORITY`: peasants 3, labourers 1, because nobles kept picking labour yards and model farms) is built with
+  `POP_PRIORITY`: peasants 3, labourers 1, because nobles kept picking labour yards and model farms; x for farms the
+  crop's local signal (1 + local output modifier) x price / default price, the mod's farm AI term, since farm
+  profits are nearly equal and nobles built only legume farms, 2026-10-17) is built with
   `construct_estate_building` (nobles pay and own it). The first version ranked by the main good's price alone and
   nobles kept building masons that lose money at default prices (margin 0.55: stone and labour, 2026-10-16).
 - `scripts/generate_noble_investment.py --vanilla "<EU5>/game"` writes `scripted_effects/pp_noble_investment_effects.txt`

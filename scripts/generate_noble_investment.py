@@ -355,6 +355,21 @@ def method_lines(method: Method, modifiers: set[str], indent: str) -> list[str]:
     )
 
 
+def signal(candidate: Candidate, modifiers: set[str]) -> str:
+    """Location-scope script value the score is multiplied by. Farms: the crop's local signal, (1 + the location's
+    output modifier for it) x its market price / default price, like the mod's own farm AI weight. Their profit is
+    nearly the same for every crop (the Province Food dominates), so ranking by profit alone built legume farms
+    everywhere (2026-10-17). Everything else: 1."""
+    if not makes_province_food(candidate.blocks):
+        return "value = 1"
+    good = candidate.good
+    text = f'value = "market.market_price(goods:{good})" divide = "default_price(goods:{good})"'
+    modifier = f"local_{good}_output_modifier"
+    if modifier in modifiers:
+        text += f" multiply = {{ value = 1 add = modifier:{modifier} }}"
+    return text + " min = 0"
+
+
 def find_block(index: int, candidate: Candidate, modifiers: set[str]) -> str:
     building, good = candidate.building, candidate.good
     indent = "\t" * 3
@@ -367,6 +382,7 @@ def find_block(index: int, candidate: Candidate, modifiers: set[str]) -> str:
         for method in block:
             profit.extend(method_lines(method, modifiers, indent))
         profit.append(f"{indent}pp_noble_investment_add_block = yes")
+    profit.append(f"{indent}set_local_variable = {{ name = pp_noble_investment_signal value = {{ {signal(candidate, modifiers)} }} }}")
     priority = number(POP_PRIORITY[candidate.pop_type])
     profit.append(f"{indent}pp_noble_investment_keep_better_location = {{ index = {index} priority = {priority} }}")
     profit_text = "\n".join(profit)
@@ -471,7 +487,11 @@ pp_noble_investment_keep_better_location = {{
 \t}}
 \tset_local_variable = {{
 \t\tname = pp_noble_investment_score
-\t\tvalue = {{ value = local_var:pp_noble_investment_profit multiply = $priority$ }}
+\t\tvalue = {{
+\t\t\tvalue = local_var:pp_noble_investment_profit
+\t\t\tmultiply = $priority$
+\t\t\tmultiply = local_var:pp_noble_investment_signal
+\t\t}}
 \t}}
 \tif = {{
 \t\tlimit = {{

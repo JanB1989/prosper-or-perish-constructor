@@ -66,7 +66,11 @@ pp_noble_investment_keep_better_location = {
 	}
 	set_local_variable = {
 		name = pp_noble_investment_score
-		value = { value = local_var:pp_noble_investment_profit multiply = $priority$ }
+		value = {
+			value = local_var:pp_noble_investment_profit
+			multiply = $priority$
+			multiply = local_var:pp_noble_investment_signal
+		}
 	}
 	if = {
 		limit = {
@@ -146,6 +150,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 1 priority = 1 }
 		}
 	}
@@ -210,6 +215,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 2 priority = 1 }
 		}
 	}
@@ -273,6 +279,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 3 priority = 1 }
 		}
 	}
@@ -313,6 +320,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.014 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 4 priority = 1 }
 		}
 	}
@@ -360,6 +368,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.014 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 5 priority = 1 }
 		}
 	}
@@ -407,6 +416,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.014 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 6 priority = 1 }
 		}
 	}
@@ -463,6 +473,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 7 priority = 1 }
 		}
 	}
@@ -526,6 +537,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:camels)" divide = "default_price(goods:camels)" multiply = { value = 1 add = modifier:local_camels_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 8 priority = 1 }
 		}
 	}
@@ -592,6 +604,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 9 priority = 1 }
 		}
 	}
@@ -645,6 +658,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:livestock)" multiply = 0.007 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:livestock)" divide = "default_price(goods:livestock)" multiply = { value = 1 add = modifier:local_livestock_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 10 priority = 3 }
 		}
 	}
@@ -695,6 +709,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:livestock)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:livestock)" divide = "default_price(goods:livestock)" multiply = { value = 1 add = modifier:local_livestock_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 11 priority = 3 }
 		}
 	}
@@ -745,6 +760,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:livestock)" multiply = 0.016 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:livestock)" divide = "default_price(goods:livestock)" multiply = { value = 1 add = modifier:local_livestock_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 12 priority = 1 }
 		}
 	}
@@ -799,6 +815,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:livestock)" multiply = 0.011 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:livestock)" divide = "default_price(goods:livestock)" multiply = { value = 1 add = modifier:local_livestock_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 13 priority = 3 }
 		}
 	}
@@ -838,6 +855,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 14 priority = 1 }
 		}
 	}
@@ -887,6 +905,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 15 priority = 1 }
 		}
 	}
@@ -950,6 +969,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 16 priority = 1 }
 		}
 	}
@@ -993,6 +1013,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 17 priority = 1 }
 		}
 	}
@@ -1057,6 +1078,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 18 priority = 1 }
 		}
 	}
@@ -1106,6 +1128,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 19 priority = 1 }
 		}
 	}
@@ -1169,6 +1192,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 20 priority = 1 }
 		}
 	}
@@ -1229,6 +1253,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 21 priority = 1 }
 		}
 	}
@@ -1289,6 +1314,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 22 priority = 1 }
 		}
 	}
@@ -1338,6 +1364,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 23 priority = 1 }
 		}
 	}
@@ -1387,6 +1414,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 24 priority = 1 }
 		}
 	}
@@ -1458,6 +1486,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 25 priority = 1 }
 		}
 	}
@@ -1526,6 +1555,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 26 priority = 1 }
 		}
 	}
@@ -1575,6 +1605,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 27 priority = 1 }
 		}
 	}
@@ -1642,6 +1673,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 28 priority = 1 }
 		}
 	}
@@ -1698,6 +1730,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:fish)" divide = "default_price(goods:fish)" multiply = { value = 1 add = modifier:local_fish_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 29 priority = 1 }
 		}
 	}
@@ -1747,6 +1780,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 30 priority = 1 }
 		}
 	}
@@ -1791,6 +1825,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 31 priority = 1 }
 		}
 	}
@@ -1831,6 +1866,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 32 priority = 3 }
 		}
 	}
@@ -1880,6 +1916,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 33 priority = 1 }
 		}
 	}
@@ -1943,6 +1980,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 34 priority = 1 }
 		}
 	}
@@ -1992,6 +2030,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 35 priority = 1 }
 		}
 	}
@@ -2042,6 +2081,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 36 priority = 1 }
 		}
 	}
@@ -2100,6 +2140,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 37 priority = 1 }
 		}
 	}
@@ -2166,6 +2207,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 38 priority = 1 }
 		}
 	}
@@ -2206,6 +2248,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 39 priority = 1 }
 		}
 	}
@@ -2269,6 +2312,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 40 priority = 1 }
 		}
 	}
@@ -2333,6 +2377,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 41 priority = 1 }
 		}
 	}
@@ -2381,6 +2426,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 42 priority = 1 }
 		}
 	}
@@ -2448,6 +2494,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.018 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 43 priority = 1 }
 		}
 	}
@@ -2512,6 +2559,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.018 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 44 priority = 1 }
 		}
 	}
@@ -2562,6 +2610,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 45 priority = 1 }
 		}
 	}
@@ -2626,6 +2675,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 46 priority = 1 }
 		}
 	}
@@ -2666,6 +2716,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 47 priority = 1 }
 		}
 	}
@@ -2715,6 +2766,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 48 priority = 1 }
 		}
 	}
@@ -2764,6 +2816,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 49 priority = 1 }
 		}
 	}
@@ -2823,6 +2876,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.013 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 50 priority = 1 }
 		}
 	}
@@ -2886,6 +2940,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.013 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 51 priority = 1 }
 		}
 	}
@@ -2953,6 +3008,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.014 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 52 priority = 1 }
 		}
 	}
@@ -3025,6 +3081,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.014 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 53 priority = 1 }
 		}
 	}
@@ -3100,6 +3157,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.014 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 54 priority = 1 }
 		}
 	}
@@ -3149,6 +3207,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 55 priority = 1 }
 		}
 	}
@@ -3216,6 +3275,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 56 priority = 1 }
 		}
 	}
@@ -3280,6 +3340,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 57 priority = 1 }
 		}
 	}
@@ -3344,6 +3405,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 58 priority = 1 }
 		}
 	}
@@ -3410,6 +3472,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:legumes)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:legumes)" divide = "default_price(goods:legumes)" multiply = { value = 1 add = modifier:local_legumes_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 59 priority = 3 }
 		}
 	}
@@ -3470,6 +3533,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:legumes)" multiply = 0.015 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:legumes)" divide = "default_price(goods:legumes)" multiply = { value = 1 add = modifier:local_legumes_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 60 priority = 3 }
 		}
 	}
@@ -3520,6 +3584,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:legumes)" multiply = 0.024 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:legumes)" divide = "default_price(goods:legumes)" multiply = { value = 1 add = modifier:local_legumes_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 61 priority = 1 }
 		}
 	}
@@ -3587,6 +3652,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:legumes)" multiply = 0.016 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:legumes)" divide = "default_price(goods:legumes)" multiply = { value = 1 add = modifier:local_legumes_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 62 priority = 3 }
 		}
 	}
@@ -3662,6 +3728,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.014 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 63 priority = 1 }
 		}
 	}
@@ -3734,6 +3801,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.014 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 64 priority = 1 }
 		}
 	}
@@ -3788,6 +3856,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:maize)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:maize)" divide = "default_price(goods:maize)" multiply = { value = 1 add = modifier:local_maize_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 65 priority = 3 }
 		}
 	}
@@ -3839,6 +3908,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:maize)" multiply = 0.015 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:maize)" divide = "default_price(goods:maize)" multiply = { value = 1 add = modifier:local_maize_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 66 priority = 3 }
 		}
 	}
@@ -3890,6 +3960,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:maize)" multiply = 0.024 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:maize)" divide = "default_price(goods:maize)" multiply = { value = 1 add = modifier:local_maize_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 67 priority = 1 }
 		}
 	}
@@ -3948,6 +4019,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:maize)" multiply = 0.016 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:maize)" divide = "default_price(goods:maize)" multiply = { value = 1 add = modifier:local_maize_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 68 priority = 3 }
 		}
 	}
@@ -4008,6 +4080,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 69 priority = 1 }
 		}
 	}
@@ -4068,6 +4141,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 70 priority = 1 }
 		}
 	}
@@ -4131,6 +4205,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 71 priority = 1 }
 		}
 	}
@@ -4195,6 +4270,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 72 priority = 1 }
 		}
 	}
@@ -4255,6 +4331,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 73 priority = 1 }
 		}
 	}
@@ -4315,6 +4392,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 74 priority = 1 }
 		}
 	}
@@ -4358,6 +4436,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 75 priority = 1 }
 		}
 	}
@@ -4411,6 +4490,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:millet)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:millet)" divide = "default_price(goods:millet)" multiply = { value = 1 add = modifier:local_millet_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 76 priority = 3 }
 		}
 	}
@@ -4461,6 +4541,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:millet)" multiply = 0.015 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:millet)" divide = "default_price(goods:millet)" multiply = { value = 1 add = modifier:local_millet_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 77 priority = 3 }
 		}
 	}
@@ -4511,6 +4592,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:millet)" multiply = 0.024 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:millet)" divide = "default_price(goods:millet)" multiply = { value = 1 add = modifier:local_millet_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 78 priority = 1 }
 		}
 	}
@@ -4568,6 +4650,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:millet)" multiply = 0.016 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:millet)" divide = "default_price(goods:millet)" multiply = { value = 1 add = modifier:local_millet_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 79 priority = 3 }
 		}
 	}
@@ -4608,6 +4691,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 80 priority = 1 }
 		}
 	}
@@ -4663,6 +4747,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:fish)" divide = "default_price(goods:fish)" multiply = { value = 1 add = modifier:local_fish_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 81 priority = 1 }
 		}
 	}
@@ -4733,6 +4818,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:fish)" divide = "default_price(goods:fish)" multiply = { value = 1 add = modifier:local_fish_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 82 priority = 1 }
 		}
 	}
@@ -4787,6 +4873,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:olives)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:olives)" divide = "default_price(goods:olives)" multiply = { value = 1 add = modifier:local_olives_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 83 priority = 3 }
 		}
 	}
@@ -4838,6 +4925,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:olives)" multiply = 0.015 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:olives)" divide = "default_price(goods:olives)" multiply = { value = 1 add = modifier:local_olives_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 84 priority = 3 }
 		}
 	}
@@ -4889,6 +4977,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:olives)" multiply = 0.024 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:olives)" divide = "default_price(goods:olives)" multiply = { value = 1 add = modifier:local_olives_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 85 priority = 1 }
 		}
 	}
@@ -4947,6 +5036,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:olives)" multiply = 0.016 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:olives)" divide = "default_price(goods:olives)" multiply = { value = 1 add = modifier:local_olives_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 86 priority = 3 }
 		}
 	}
@@ -5006,6 +5096,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 87 priority = 1 }
 		}
 	}
@@ -5055,6 +5146,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 88 priority = 1 }
 		}
 	}
@@ -5104,6 +5196,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 89 priority = 1 }
 		}
 	}
@@ -5158,6 +5251,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:potato)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:potato)" divide = "default_price(goods:potato)" multiply = { value = 1 add = modifier:local_potato_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 90 priority = 3 }
 		}
 	}
@@ -5209,6 +5303,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:potato)" multiply = 0.015 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:potato)" divide = "default_price(goods:potato)" multiply = { value = 1 add = modifier:local_potato_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 91 priority = 3 }
 		}
 	}
@@ -5260,6 +5355,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:potato)" multiply = 0.024 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:potato)" divide = "default_price(goods:potato)" multiply = { value = 1 add = modifier:local_potato_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 92 priority = 1 }
 		}
 	}
@@ -5318,6 +5414,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:potato)" multiply = 0.016 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:potato)" divide = "default_price(goods:potato)" multiply = { value = 1 add = modifier:local_potato_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 93 priority = 3 }
 		}
 	}
@@ -5362,6 +5459,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 94 priority = 1 }
 		}
 	}
@@ -5414,6 +5512,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 95 priority = 1 }
 		}
 	}
@@ -5454,6 +5553,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 96 priority = 1 }
 		}
 	}
@@ -5518,6 +5618,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 97 priority = 1 }
 		}
 	}
@@ -5578,6 +5679,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 98 priority = 1 }
 		}
 	}
@@ -5632,6 +5734,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:rice)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:rice)" divide = "default_price(goods:rice)" multiply = { value = 1 add = modifier:local_rice_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 99 priority = 3 }
 		}
 	}
@@ -5683,6 +5786,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:rice)" multiply = 0.015 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:rice)" divide = "default_price(goods:rice)" multiply = { value = 1 add = modifier:local_rice_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 100 priority = 3 }
 		}
 	}
@@ -5734,6 +5838,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:rice)" multiply = 0.024 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:rice)" divide = "default_price(goods:rice)" multiply = { value = 1 add = modifier:local_rice_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 101 priority = 1 }
 		}
 	}
@@ -5792,6 +5897,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:rice)" multiply = 0.016 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:rice)" divide = "default_price(goods:rice)" multiply = { value = 1 add = modifier:local_rice_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 102 priority = 3 }
 		}
 	}
@@ -5839,6 +5945,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 103 priority = 3 }
 		}
 	}
@@ -5888,6 +5995,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 104 priority = 1 }
 		}
 	}
@@ -5948,6 +6056,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 105 priority = 1 }
 		}
 	}
@@ -5997,6 +6106,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 106 priority = 1 }
 		}
 	}
@@ -6046,6 +6156,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 107 priority = 1 }
 		}
 	}
@@ -6096,6 +6207,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 108 priority = 1 }
 		}
 	}
@@ -6146,6 +6258,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 109 priority = 1 }
 		}
 	}
@@ -6195,6 +6308,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 110 priority = 1 }
 		}
 	}
@@ -6255,6 +6369,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 111 priority = 1 }
 		}
 	}
@@ -6304,6 +6419,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 112 priority = 1 }
 		}
 	}
@@ -6371,6 +6487,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 113 priority = 1 }
 		}
 	}
@@ -6435,6 +6552,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 114 priority = 1 }
 		}
 	}
@@ -6484,6 +6602,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 115 priority = 1 }
 		}
 	}
@@ -6524,6 +6643,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.019 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 116 priority = 1 }
 		}
 	}
@@ -6573,6 +6693,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 117 priority = 1 }
 		}
 	}
@@ -6637,6 +6758,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 118 priority = 1 }
 		}
 	}
@@ -6686,6 +6808,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 119 priority = 1 }
 		}
 	}
@@ -6730,6 +6853,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 120 priority = 1 }
 		}
 	}
@@ -6769,6 +6893,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 121 priority = 1 }
 		}
 	}
@@ -6818,6 +6943,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 122 priority = 1 }
 		}
 	}
@@ -6878,6 +7004,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 123 priority = 1 }
 		}
 	}
@@ -6938,6 +7065,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 124 priority = 1 }
 		}
 	}
@@ -6998,6 +7126,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 125 priority = 1 }
 		}
 	}
@@ -7062,6 +7191,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 126 priority = 1 }
 		}
 	}
@@ -7129,6 +7259,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 127 priority = 1 }
 		}
 	}
@@ -7178,6 +7309,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 128 priority = 1 }
 		}
 	}
@@ -7238,6 +7370,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 129 priority = 1 }
 		}
 	}
@@ -7283,6 +7416,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 130 priority = 1 }
 		}
 	}
@@ -7359,6 +7493,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.014 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 131 priority = 1 }
 		}
 	}
@@ -7411,6 +7546,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:offset)" multiply = 0.012 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = 1 } }
 			pp_noble_investment_keep_better_location = { index = 132 priority = 1 }
 		}
 	}
@@ -7467,6 +7603,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:wheat)" multiply = 0.01 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:wheat)" divide = "default_price(goods:wheat)" multiply = { value = 1 add = modifier:local_wheat_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 133 priority = 3 }
 		}
 	}
@@ -7517,6 +7654,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:wheat)" multiply = 0.015 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:wheat)" divide = "default_price(goods:wheat)" multiply = { value = 1 add = modifier:local_wheat_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 134 priority = 3 }
 		}
 	}
@@ -7567,6 +7705,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:wheat)" multiply = 0.024 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:wheat)" divide = "default_price(goods:wheat)" multiply = { value = 1 add = modifier:local_wheat_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 135 priority = 1 }
 		}
 	}
@@ -7624,6 +7763,7 @@ pp_noble_investment_find_best = {
 			set_local_variable = { name = pp_noble_investment_method_cost value = { value = 0 add = { value = "market.market_price(goods:wheat)" multiply = 0.016 } } }
 			pp_noble_investment_keep_better_method = yes
 			pp_noble_investment_add_block = yes
+			set_local_variable = { name = pp_noble_investment_signal value = { value = "market.market_price(goods:wheat)" divide = "default_price(goods:wheat)" multiply = { value = 1 add = modifier:local_wheat_output_modifier } min = 0 } }
 			pp_noble_investment_keep_better_location = { index = 136 priority = 3 }
 		}
 	}

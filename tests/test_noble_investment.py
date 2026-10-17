@@ -146,6 +146,14 @@ def test_mason_shortage_starts_at_80_percent_of_supply() -> None:
     assert '"goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)"' in candidate_blocks()["iron_mine"]
 
 
+def test_excluded_buildings_are_never_candidates() -> None:
+    # User rule (2026-10-17): nobles do not build market villages.
+    assert "market_village" in gen.EXCLUDED_BUILDINGS
+    blocks = candidate_blocks()
+    assert not set(gen.EXCLUDED_BUILDINGS) & set(blocks)
+    assert "building_type:market_village" not in EFFECTS_PATH.read_text(encoding="utf-8-sig")
+
+
 def test_peasant_buildings_are_preferred() -> None:
     # User rule (2026-10-16): nobles favoured labourer buildings; the score is profit x the pop type's priority.
     assert gen.POP_PRIORITY["peasants"] > gen.POP_PRIORITY["laborers"]

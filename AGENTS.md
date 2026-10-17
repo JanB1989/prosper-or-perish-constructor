@@ -471,7 +471,8 @@
   nobles kept building masons that lose money at default prices (margin 0.55: stone and labour, 2026-10-16).
 - `scripts/generate_noble_investment.py --vanilla "<EU5>/game"` writes `scripted_effects/pp_noble_investment_effects.txt`
   and `script_values/pp_noble_investment_values.txt` from the built mod's building types (pop_type peasants/laborers,
-  a Market Sales good or the good priced in `ai_construct_weight`, not `forbidden_for_estates`, not `is_special`).
+  a Market Sales good or the good priced in `ai_construct_weight`, not `forbidden_for_estates`, not `is_special`,
+  not in `EXCLUDED_BUILDINGS`: market village, 2026-10-17, user rule; the engine's own noble plans can still pick it).
   Rerun after building changes; `--check` fails when they are stale. Tests: tests/test_noble_investment.py.
 - Not tested in game yet. Check that `construct_estate_building` charges the nobles' treasury (the vanilla uses are
   events) and the monthly cost; `DEBUG = True` in the generator adds build counters (country, location, global

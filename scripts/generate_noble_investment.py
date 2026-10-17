@@ -52,6 +52,10 @@ POP_TYPES = ("peasants", "laborers")
 # default prices the median peasant building makes 1.16 gold per level, the median labourer one 0.64, but labour yards
 # and model farms reach 4-14 and won every pick). The profit and margin checks are unchanged.
 POP_PRIORITY = {"peasants": 3.0, "laborers": 1.0}
+# Buildings the nobles never invest in, whatever they earn (user rules).
+EXCLUDED_BUILDINGS = {
+    "market_village": "2026-10-17: nobles must not build market villages (36 of 39 noble ones in a 1550 save were ours)",
+}
 # Gold the nobles keep for themselves (loans to the crown, their own engine plan, which starts from 50 gold); only gold
 # above this plus what the building costs them counts as surplus.
 RESERVE_GOLD = 150
@@ -240,7 +244,7 @@ def candidates(
     for building, body in sorted(definitions.items()):
         pop_type = field(body, "pop_type")
         good = main_good(body)
-        if pop_type not in POP_TYPES or good is None:
+        if pop_type not in POP_TYPES or good is None or building in EXCLUDED_BUILDINGS:
             continue
         if field(body, "forbidden_for_estates") == "yes" or field(body, "is_special") == "yes":
             continue

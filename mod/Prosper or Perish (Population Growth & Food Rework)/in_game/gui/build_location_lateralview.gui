@@ -1288,16 +1288,17 @@
 					text = "[SelectLocalization(BuildInLocationLateralView.GetBuildingType.IsForeign,'BUILD_LOCATION_FOREIGN_EMPTY', 'BUILD_LOCATION_EMPTY')]"
 				}
 				blockoverride "scroll_list_layout" { # PP: the selected sort or the payback order
-					vbox = {
-						layoutpolicy_horizontal = expanding
-						margin_top = 2
-						vbox = { # the selected sort
-							layoutpolicy_horizontal = expanding
+					flowcontainer = {
+						direction = vertical
+						ignoreinvisible = yes
+						position = { 0 2 }
+						fixedgridbox = { # the selected sort: vanilla's grid
+							addcolumn = 930
+							addrow = 60
 							datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), '(int32)0', GetDataModelSize(BuildInLocationLateralView.GetItems)))]"
 							item = {
 								widget = {
-									layoutpolicy_horizontal = expanding
-									size = { -1 60 }
+									size = { 930 60 }
 									widget = {
 										size = { 100% 58 }
 										parentanchor = center
@@ -1311,25 +1312,28 @@
 								}
 							}
 						}
-						vbox = { # payback order: shortest first, the selected sort inside each band
-							layoutpolicy_horizontal = expanding
-							vbox = { # payback 0 to 0.5 years
-								layoutpolicy_horizontal = expanding
+						flowcontainer = { # payback order: shortest first, the last sort inside each band
+							direction = vertical
+							ignoreinvisible = yes
+							flowcontainer = { # payback 0 to 1 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)6'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)12'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1343,14 +1347,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)6'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)12'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1367,23 +1371,25 @@
 									}
 								}
 							}
-							vbox = { # payback 0.5 to 1 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 1 to 2 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)6'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)12'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)12'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)24'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1397,14 +1403,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)6'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)12'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)12'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)24'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1421,23 +1427,25 @@
 									}
 								}
 							}
-							vbox = { # payback 1 to 1.5 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 2 to 3 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)12'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)18'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)24'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)36'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1451,14 +1459,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)12'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)18'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)24'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)36'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1475,23 +1483,25 @@
 									}
 								}
 							}
-							vbox = { # payback 1.5 to 2 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 3 to 4 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)18'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)24'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)36'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)48'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1505,14 +1515,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)18'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)24'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)36'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)48'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1529,23 +1539,25 @@
 									}
 								}
 							}
-							vbox = { # payback 2 to 2.5 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 4 to 5 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)24'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)30'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)48'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)60'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1559,14 +1571,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)24'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)30'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)48'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)60'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1583,293 +1595,25 @@
 									}
 								}
 							}
-							vbox = { # payback 2.5 to 3 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 5 to 6 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)30'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)36'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										vbox = {
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)30'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)36'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							vbox = { # payback 3 to 3.5 years
-								layoutpolicy_horizontal = expanding
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)36'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)42'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										vbox = {
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)36'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)42'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							vbox = { # payback 3.5 to 4 years
-								layoutpolicy_horizontal = expanding
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)42'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)48'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										vbox = {
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)42'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)48'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							vbox = { # payback 4 to 4.5 years
-								layoutpolicy_horizontal = expanding
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)48'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)54'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										vbox = {
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)48'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)54'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							vbox = { # payback 4.5 to 5 years
-								layoutpolicy_horizontal = expanding
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)54'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)60'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										vbox = {
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)54'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)60'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							vbox = { # payback 5 to 6 years
-								layoutpolicy_horizontal = expanding
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)60'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)72'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1883,14 +1627,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)60'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)72'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1907,23 +1651,25 @@
 									}
 								}
 							}
-							vbox = { # payback 6 to 7 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 6 to 7 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)72'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)84'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1937,14 +1683,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)72'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)84'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1961,23 +1707,25 @@
 									}
 								}
 							}
-							vbox = { # payback 7 to 8 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 7 to 8 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)84'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)96'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -1991,14 +1739,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)84'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)96'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2015,23 +1763,25 @@
 									}
 								}
 							}
-							vbox = { # payback 8 to 9 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 8 to 10 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)96'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)108'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)96'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)120'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2045,14 +1795,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)96'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)108'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)96'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)120'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2069,77 +1819,25 @@
 									}
 								}
 							}
-							vbox = { # payback 9 to 10 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 10 to 12 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)108'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)120'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										vbox = {
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)108'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)120'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							vbox = { # payback 10 to 12 years
-								layoutpolicy_horizontal = expanding
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)120'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)144'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2153,14 +1851,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)120'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)144'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2177,23 +1875,25 @@
 									}
 								}
 							}
-							vbox = { # payback 12 to 14 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 12 to 15 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)144'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)168'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)144'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)180'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2207,14 +1907,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)144'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)168'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)144'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)180'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2231,23 +1931,25 @@
 									}
 								}
 							}
-							vbox = { # payback 14 to 16 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 15 to 20 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)168'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)192'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)180'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)240'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2261,14 +1963,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)168'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)192'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)180'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)240'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2285,23 +1987,25 @@
 									}
 								}
 							}
-							vbox = { # payback 16 to 18 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 20 to 30 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)192'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)216'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)240'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)360'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2315,14 +2019,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)192'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)216'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)240'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)360'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2339,23 +2043,25 @@
 									}
 								}
 							}
-							vbox = { # payback 18 to 20 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 30 to 50 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)216'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)240'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)360'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)600'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2369,14 +2075,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)216'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)240'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)360'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)600'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2393,23 +2099,25 @@
 									}
 								}
 							}
-							vbox = { # payback 20 to 25 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 50 to 100 years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)240'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)300'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)600'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)1200'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2423,14 +2131,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)240'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)300'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)600'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)1200'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2447,239 +2155,25 @@
 									}
 								}
 							}
-							vbox = { # payback 25 to 30 years
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # payback 100 to more years
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)300'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)360'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										vbox = {
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)300'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)360'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							vbox = { # payback 30 to 40 years
-								layoutpolicy_horizontal = expanding
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)360'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)480'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										vbox = {
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)360'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)480'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							vbox = { # payback 40 to 60 years
-								layoutpolicy_horizontal = expanding
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)480'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)720'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										vbox = {
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)480'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)720'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							vbox = { # payback 60 to 100 years
-								layoutpolicy_horizontal = expanding
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)720'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)1200'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										vbox = {
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)720'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)1200'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							vbox = { # payback 100 to more years
-								layoutpolicy_horizontal = expanding
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)1200'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2693,14 +2187,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)1200'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2717,23 +2211,25 @@
 									}
 								}
 							}
-							vbox = { # no payback (no profit)
-								layoutpolicy_horizontal = expanding
+							flowcontainer = { # no payback (no profit)
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											layoutpolicy_horizontal = expanding
 											datamodel = "[DataModelRepeatedItem(Select_int32(Not(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0')), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2747,14 +2243,14 @@
 												}
 											}
 										}
-										vbox = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											layoutpolicy_horizontal = expanding
 											datamodel = "[DataModelRepeatedItem(Select_int32(Not(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0')), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													layoutpolicy_horizontal = expanding
-													size = { -1 60 }
+													size = { 930 60 }
 													widget = {
 														size = { 100% 58 }
 														parentanchor = center
@@ -2772,7 +2268,6 @@
 								}
 							}
 						}
-						expand = {}
 					}
 				}
 			}
@@ -4819,7 +4314,7 @@ template bg_input_good {
 
 lateralview = {
 	name = "build_location_lateralview"
-	size = { 970 100% } # PP: wider than the vanilla left panel (570)
+	size = { 990 100% } # PP: wider than the vanilla left panel (570)
 
 	# SOUND - Build Location (Left Panel)
 	blockoverride "snd_panel_identifier" { soundeffect = "UI_panelAux_buildLocation_show" }
@@ -4858,7 +4353,7 @@ lateralview = {
 							layoutpolicy_horizontal = fixed
 							layoutpolicy_vertical = fixed
 							autoresize = yes
-							maximumsize = { 820 -1 }
+							maximumsize = { 840 -1 }
 							text = "BUILD_LOCATION_TITLE"
 						}
 					}
@@ -4881,18 +4376,18 @@ window = { # PP: vanilla select_menu_left (select_menu.gui), opened beside the w
 	allow_outside = yes
 	layer = sidemenu
 	parentanchor = left
-	position = { 970 180 }
+	position = { 990 180 }
 
 	state = {
 		name = _show
 		duration = 0.133
-		position_x = 970
+		position_x = 990
 		alpha = 1
 	}
 	state = {
 		name = _hide
 		duration = 0.133
-		position_x = 925
+		position_x = 945
 		alpha = 0
 	}
 

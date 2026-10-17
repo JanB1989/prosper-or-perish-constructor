@@ -43,9 +43,11 @@ FOOD_GAUGE_FILES: dict[str, str] = {
 RETIRED = ("expansion_lateralview.gui",)
 EUROPEDIA = "encyclopedia_lateralview.gui"
 # the build panel ("Building <type>"): width (vanilla left panel 570; a six-slot row with the value columns needs
-# ~920), location card (vanilla 150) and the input goods per line of a slot filter row (the Cookshop slot has 22)
+# ~920), row width (fixed: the rows sit in flowcontainers; panel minus list margins and scrollbar, 45 in vanilla, and
+# some slack), location card (vanilla 150) and the input goods per line of a slot filter row (the Cookshop slot has 22)
 BUILD_LOCATION = "build_location_lateralview.gui"
-BUILD_PANEL_WIDTH = 970
+BUILD_PANEL_WIDTH = 990
+BUILD_ROW_WIDTH = BUILD_PANEL_WIDTH - 60
 BUILD_LOCATION_CARD_WIDTH = 175
 BUILD_INPUTS_PER_LINE = 14
 # the location rows keep vanilla's production efficiencies (two methods per column) and get one value per column:
@@ -66,9 +68,10 @@ BUILD_COST_SORT_KEY = "cost"   # engine key of the build list (BUILDING_LOCATION
 # the list once per payback band, shortest first; inside a band the selected sort holds. Band upper edges in years,
 # then one band above the last edge and one for no payback (profit 0 or less). The rows are vanilla's, each built
 # only in its band (DataModelRepeatedItem of 1 or 0), so the payback order builds as many rows as the selected sort.
+# Every band checks every item each frame (bands x locations), so the bands stay few: 27 were laggy in game.
 BUILD_PAYBACK_VARIABLE = "pp_build_payback_order"
 BUILD_SORT_BUTTONS = 11   # the header's engine sort buttons (vanilla's 10 and cost); each one leaves the payback order
-BUILD_PAYBACK_BANDS = (0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 25, 30, 40, 60, 100)
+BUILD_PAYBACK_BANDS = (1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 20, 30, 50, 100)
 # the mod's internal goods: accounting goods pinned at their price floor that no one trades or consumes (in_game/common/
 # goods/pp_goods_*.txt). The market, the goods ledger, the markets ledger's surplus/demand icons and the trade-order
 # goods picker skip them; tooltips, building panels and production methods still show them.
@@ -492,30 +495,37 @@ def _band_condition(income: str, low: float, high: float | None) -> str:
     return _all_of(terms)
 
 
+def _column(lines: list[str], comment: str = "") -> str:
+    """A vertical flowcontainer: sizes to its content and skips hidden children (a box stretched to the panel's height
+    and spread the spare height between the rows; with an expand its layout did not converge, error.log 2026-10-17)."""
+    return _block("flowcontainer = {" + (f" # {comment}" if comment else ""),
+                  ["direction = vertical", "ignoreinvisible = yes", *lines])
+
+
 def _band(comment: str, items: str, row: str, built: str, unbuilt: str) -> str:
     """The list's items once more; each builds its row (the vanilla row) only when it falls in this band, so every
     row is built once across all bands."""
     def side(visible: str, cond: str) -> str:
-        return _block("vbox = {", [f'visible = "[{visible}]"', "layoutpolicy_horizontal = expanding",
-                                   f"datamodel = \"[DataModelRepeatedItem(Select_int32({cond}, '(int32)1', '(int32)0'))]\"",
-                                   _block("item = {", [row])])
-    return _block(f"vbox = {{ # {comment}", [
-        "layoutpolicy_horizontal = expanding", f'datamodel = "[{items}]"',
-        _block("item = {", [_block("vbox = {", ["layoutpolicy_horizontal = expanding", *ROW_CONTEXTS,
-                                                side(BUILT, built), side(f"Not({BUILT})", unbuilt)])])])
+        return _column([f'visible = "[{visible}]"',
+                        f"datamodel = \"[DataModelRepeatedItem(Select_int32({cond}, '(int32)1', '(int32)0'))]\"",
+                        _block("item = {", [row])])
+    return _column([f'datamodel = "[{items}]"',
+                    _block("item = {", [_column([*ROW_CONTEXTS, side(BUILT, built), side(f"Not({BUILT})", unbuilt)])])],
+                   comment)
 
 
 def _payback_order(t: str, what: str) -> str:
-    """The list area holds two lists of the vanilla rows over the same items: the selected sort or, with the header's
-    payback button on, the payback bands. Each list takes all items or none (DataModelFirst), so the hidden one builds
-    no rows. The list ends in an expand: a box would spread the panel's spare height between its rows."""
+    """The list area holds two lists of the vanilla rows over the same items: vanilla's grid in the selected sort or,
+    with the header's payback button on, the payback bands. Each list takes all items or none (DataModelFirst), so the
+    hidden one builds no rows. Both sit in vertical flowcontainers, which size to their content; the rows are
+    BUILD_ROW_WIDTH wide (a flowcontainer has no width of its own for vanilla's 100%)."""
     start, end, ind = _cut(t, r'^([ \t]*)blockoverride "scroll_list_content" \{\n', what)
     block = t[start:end]
-    for needed in ('datamodel = "[BuildInLocationLateralView.GetItems]"', "addrow = 60"):
+    for needed in ('datamodel = "[BuildInLocationLateralView.GetItems]"', "addcolumn = 100%", "addrow = 60"):
         if needed not in block:
             raise ValueError(f"{what}: the location list no longer has {needed}")
-    row = _once(r"^widget = \{\n\tsize = \{ 100% 60 \}\n", "widget = {\n\tlayoutpolicy_horizontal = expanding\n\tsize = { -1 60 }\n",
-                _item_body(block), what)
+    w = BUILD_ROW_WIDTH
+    row = _once(r"^widget = \{\n\tsize = \{ 100% 60 \}\n", f"widget = {{\n\tsize = {{ {w} 60 }}\n", _item_body(block), what)
     mode = _payback_mode()
     items = "BuildInLocationLateralView.GetItems"
     every = f"GetDataModelSize({items})"
@@ -526,16 +536,11 @@ def _payback_order(t: str, what: str) -> str:
              for low, high in payback_bands()]
     bands.append(_band("no payback (no profit)", band_items, row,
                        *(f"Not(GreaterThan_CFixedPoint({income}, {ZERO}))" for income in BUILD_PAYBACK_BASIS)))
+    grid = _block("fixedgridbox = { # the selected sort: vanilla's grid", [
+        f"addcolumn = {w}", "addrow = 60", f'datamodel = "[{sorted_items}]"', _block("item = {", [row])])
     layout = _block('blockoverride "scroll_list_layout" { # PP: the selected sort or the payback order', [
-        _block("vbox = {", [
-            "layoutpolicy_horizontal = expanding", "margin_top = 2",
-            _block("vbox = { # the selected sort", ["layoutpolicy_horizontal = expanding",
-                                                    f'datamodel = "[{sorted_items}]"', _block("item = {", [row])]),
-            _block("vbox = { # payback order: shortest first, the selected sort inside each band",
-                   ["layoutpolicy_horizontal = expanding", *bands]),
-            "expand = {}",
-        ]),
-    ])
+        _column(["position = { 0 2 }", grid,
+                 _column(bands, "payback order: shortest first, the last sort inside each band")])])
     return t[:start] + _indent(layout, len(ind)).rstrip("\n") + t[end:]
 
 

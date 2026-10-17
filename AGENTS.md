@@ -428,15 +428,17 @@
   nine, so hidden goods leave no gap and top-five lists keep five); a new internal good goes into that tuple, then
   rerun the tool.
   Tests: `tests/test_internal_goods_gui.py`.
-- Build panel (2026-10-17, Jan; panel 970 wide): the vanilla location row (slot circles and every method's efficiency,
+- Build panel (2026-10-17, Jan; panel 990 wide, rows a fixed 930): the vanilla location row (slot circles and every method's efficiency,
   two per column) plus one value per column: build cost (sorts by the engine's `cost` key, which vanilla never
   shows), payback (build cost / monthly profit per level, in years, Construction Manager's ROI by profit; the tooltip
   also gives it by tax income), profit and tax income (template `pp_build_location_values`). The engine sorts only by
   its own keys, so the header's payback button (GUI variable `pp_build_payback_order`) draws the same vanilla rows
   once per payback band (`BUILD_PAYBACK_BANDS`), each built only in its band (`DataModelRepeatedItem` of 1 or 0);
-  inside a band the selected sort holds. The list box ends in `expand = {}` (without it the spare panel height went
-  above and between the rows, seen in game). Payback order and the first column layout seen in game 2026-10-17; the
-  970 width and the restored efficiencies not yet. All in `port_build_location` (`tools/port_vanilla_gui.py`); tests:
+  inside a band the last sort holds, and every sort button switches the payback order off. Never a vbox in the list
+  area: it stretched to the panel and spread the spare height between the rows, and with an `expand` its layout did
+  not converge and the panel lagged (error.log, in game 2026-10-17); the selected sort is vanilla's fixedgridbox, the
+  bands vertical flowcontainers (size to content). Every band checks every location each frame, so keep the bands
+  few (27 lagged; now 17). All in `port_build_location` (`tools/port_vanilla_gui.py`); tests:
   `tests/test_build_location_gui.py`.
 - Situation map legends should use mod-owned plain localization keys, not inherited or generic `LEGEND_KEY_*` keys, because legend UI is sensitive to formatter syntax.
 - In GUI files, do not put `#` formatter markers in `default_format` style names; use the raw style key such as `yellow_titles`.

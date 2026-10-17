@@ -48,7 +48,7 @@ def test_six_slot_row_fits_the_panel():
            + columns * tool.BUILD_EFFICIENCY_WIDTH + (columns - 1) * 6   # production efficiencies
            + sum(tool.BUILD_VALUE_WIDTHS) + 2 * tool.BUILD_VALUE_MARGIN  # build cost, payback, profit, tax income
            + 120 + 5)                                    # builder, margin
-    assert row <= tool.BUILD_PANEL_WIDTH - 45            # list margins and scrollbar (vanilla: 570 panel, 525 row)
+    assert row <= tool.BUILD_ROW_WIDTH <= tool.BUILD_PANEL_WIDTH - 45   # list margins, scrollbar (vanilla 570 -> 525)
 
 
 def test_slot_columns_cover_six_slots_two_each():
@@ -102,8 +102,9 @@ def test_payback_bands_are_consecutive():
 
 def test_payback_order_lists_every_item_once():
     """Each band builds the vanilla row only for its items (bands do not overlap, plus one band for no profit); the
-    selected sort and the payback order each take all items or none, so the hidden list builds no rows. The list ends
-    in an expand (without it the box spread the panel's spare height above and between the rows, seen in game)."""
+    selected sort (vanilla's fixedgridbox) and the payback order each take all items or none, so the hidden list builds
+    no rows. No box in the list: a vbox spread the panel's spare height between the rows, and with an expand its
+    layout did not converge and the panel lagged (in game, 2026-10-17); flowcontainers size to their content."""
     tool = _tool()
     text = _mod_file()
     var = tool.BUILD_PAYBACK_VARIABLE
@@ -116,7 +117,10 @@ def test_payback_order_lists_every_item_once():
     assert "pp_build_payback_row" not in text and "pp_build_location_builder" not in text
     layout = text[text.index('blockoverride "scroll_list_layout"'):]
     layout = layout[:tool._block_end(layout, layout.index("{"))]
-    assert re.search(r"expand = \{\}\n[ \t]*\}\n[ \t]*\}$", layout)   # last in the list's box
+    assert not re.search(r"(?m)^[ \t]*(vbox|expand) = \{", layout)
+    assert len(re.findall(r"(?m)^[ \t]*hbox = \{", layout)) == 1 + 2 * bands   # only the rows' own (vanilla) hbox
+    assert layout.count("fixedgridbox = {") == 1 and f"addcolumn = {tool.BUILD_ROW_WIDTH}\n" in layout
+    assert layout.count(f"size = {{ {tool.BUILD_ROW_WIDTH} 60 }}") == 1 + 2 * bands
     every = "GetDataModelSize(BuildInLocationLateralView.GetItems)"
     assert text.count(f"Select_int32({tool._payback_mode()}, {every}, '(int32)0'))]\"") == bands
     assert text.count(f"Select_int32({tool._payback_mode()}, '(int32)0', {every}))]\"") == 1

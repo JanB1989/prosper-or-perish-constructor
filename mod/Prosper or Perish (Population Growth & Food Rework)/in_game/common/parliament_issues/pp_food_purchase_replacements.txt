@@ -5,7 +5,7 @@
 TRY_INJECT:expand_food_stockpiles = {
 	modifier_when_in_debate = {
 		food_purchase_efficiency = -1 # cancels vanilla's +1
-		global_food_capacity_modifier = 0.20
+		global_food_capacity = 20
 	}
 }
 

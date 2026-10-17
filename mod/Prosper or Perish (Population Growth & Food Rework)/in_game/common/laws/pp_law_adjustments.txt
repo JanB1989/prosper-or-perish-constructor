@@ -869,7 +869,7 @@ TRY_REPLACE:dahsala_system = {
 	ghalla_bakshi = {
 		country_modifier = {
 			peasants_estate_target_satisfaction = medium_permanent_target_satisfaction
-			global_food_capacity_modifier = 0.10 # was food_purchase_efficiency = 0.1
+			global_food_capacity = 10 # was food_purchase_efficiency = 0.1
 		}
 		estate_preferences = {
 			peasants_estate

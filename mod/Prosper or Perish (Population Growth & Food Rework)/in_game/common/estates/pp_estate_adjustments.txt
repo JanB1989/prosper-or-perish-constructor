@@ -46,6 +46,6 @@ TRY_INJECT:peasants_estate = {
 	# hold no food; 2026-10-17, Jan). Scaled by power above the low-power threshold like the rest of the block.
 	high_power = {
 		food_purchase_efficiency = -1 # cancels vanilla's +1
-		global_food_capacity_modifier = 0.40
+		global_food_capacity = 40
 	}
 }

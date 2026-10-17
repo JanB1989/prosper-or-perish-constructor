@@ -1,6 +1,6 @@
 ﻿# Food purchase efficiency does nothing in PP (markets hold no food; the base value 10000 in
 # auto_modifiers/pp_country_base_values.txt only zeroes the food slider bill). Advances that gave it get a live
-# food modifier instead (2026-10-17, Jan): stores for the peasants' side, victuals for the import side.
+# food modifier instead (2026-10-17, Jan): less food eaten, store room, or victuals for the import side.
 
 TRY_REPLACE:peasant_connections_advance = {
 	age = age_1_traditions
@@ -8,7 +8,7 @@ TRY_REPLACE:peasant_connections_advance = {
 
 	requires = guilds
 
-	global_food_capacity_modifier = 0.10 # was food_purchase_efficiency = 0.2
+	global_peasants_food_consumption = -0.03 # was food_purchase_efficiency = 0.2
 }
 
 TRY_REPLACE:zan_food_imports = {
@@ -20,5 +20,5 @@ TRY_REPLACE:zan_food_imports = {
 
 	requires = merchant_power_from_maritime_discovery_advance
 
-	global_victuals_output_modifier = 0.10 # was food_purchase_efficiency = 0.1
+	global_victuals_output_modifier = 0.03 # was food_purchase_efficiency = 0.1
 }

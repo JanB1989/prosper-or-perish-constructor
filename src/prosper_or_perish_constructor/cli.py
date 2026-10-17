@@ -712,7 +712,15 @@ def _build_parser() -> argparse.ArgumentParser:
     sync.add_argument(
         "--while-running",
         action="store_true",
-        help="Deploy even while EU5 is running (its debug-mode filewatcher then hot-reloads the mod).",
+        help="Deploy even while EU5 is running (its debug-mode filewatcher then hot-reloads the mod). Only interface, "
+        "text and graphics files: changed game data (building types, common/, events ...) is refused, a hot reload "
+        "of it corrupted a running game and its saves (2026-10-18).",
+    )
+    sync.add_argument(
+        "--reload-game-data",
+        action="store_true",
+        help="With --while-running: deploy changed game data into the running game anyway (it and its next saves "
+        "may break).",
     )
     vanilla_mirror = _add_command(
         subcommands,
@@ -4317,7 +4325,45 @@ def _game_running() -> bool:
     return GAME_PROCESS.lower().encode("ascii") in result.stdout.lower()
 
 
-def _deploy_built_mod(repo: Path, project: Path, *, force: bool, while_running: bool = False) -> int:
+# Folders the running game hot-reloads safely: interface, text and graphics (the GUI work of 2026-10-17 reloaded
+# into a running game all day). Everything else is game data: on 2026-10-18 a `--while-running` sync reloaded
+# building_types into Jan's running game, the next autosave held 141 broken constructions (SaveRepair_FixConstructions
+# on every load) and the game crashed in CCancelSpecificConstructionCommand within seconds of play.
+LIVE_SAFE_FOLDERS = frozenset({"gui", "localization", "gfx", "fonts", "music", "sound"})
+
+
+def live_safe(rel: Path) -> bool:
+    """A mod file the running game may hot-reload (its second path part is an interface/text/graphics folder)."""
+    return len(rel.parts) > 2 and rel.parts[1] in LIVE_SAFE_FOLDERS
+
+
+def _unsafe_live_changes(project: Path) -> list[str]:
+    """Files outside LIVE_SAFE_FOLDERS that the deploy (the orchestrator's own dry run: same file comparison,
+    `--clean` deletes included) would copy into or delete from the live target: what it would hot-reload into game
+    data."""
+    from eu5_mod_orchestrator.config import load_project_config
+    from eu5_mod_orchestrator.deploy import deploy as plan_deploy
+
+    plan = plan_deploy(load_project_config(project), dry_run=True, clean=True)
+    changed = [(p, "") for p in plan.planned_copies] + [(p, " (removed)") for p in plan.planned_deletes]
+    out = [f"{rel}{note}" for path, note in changed if not live_safe(rel := path.relative_to(plan.target))]
+    return sorted(out)
+
+
+def _deploy_built_mod(repo: Path, project: Path, *, force: bool, while_running: bool = False,
+                      reload_game_data: bool = False) -> int:
+    if while_running and not reload_game_data and _game_running():
+        unsafe = _unsafe_live_changes(project)
+        if unsafe:
+            listed = "\n  ".join(unsafe[:12]) + ("\n  ..." if len(unsafe) > 12 else "")
+            print(
+                f"EU5 is running and this deploy would hot-reload {len(unsafe)} game-data file(s):\n  {listed}\n"
+                "NOT deployed: a hot reload of game data corrupts the running game and its next saves (2026-10-18: "
+                "broken constructions, crash). Interface, text and graphics deploy while the game runs; close the "
+                "game and re-run `uv run ppc sync --yes`, or pass --reload-game-data if the running game may break.",
+                flush=True,
+            )
+            return 3
     # With -debug_mode the game's filewatcher reloads changed script files. Reloading building types that
     # the mod REPLACEs re-adds vanilla's production methods, so error.log fills with thousands of false
     # "duplicated production method name" and "Unexpected token" lines and the running game is left
@@ -4368,7 +4414,8 @@ def _smart_sync(args: argparse.Namespace, repo: Path, project: Path, clock: "_St
         print("Smart sync: validation inputs unchanged; skipping validation.", flush=True)
     _save_sync_state(repo, state)
     return clock.run(
-        "deploy", _deploy_built_mod, repo, project, force=args.force_deploy, while_running=args.while_running
+        "deploy", _deploy_built_mod, repo, project, force=args.force_deploy, while_running=args.while_running,
+        reload_game_data=args.reload_game_data,
     )
 
 
@@ -4389,7 +4436,8 @@ def _sync(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: P
         if build_result != 0:
             return build_result
         _record_current_sync_state(repo, project)
-        return _deploy_built_mod(repo, project, force=args.force_deploy, while_running=args.while_running)
+        return _deploy_built_mod(repo, project, force=args.force_deploy, while_running=args.while_running,
+                                 reload_game_data=args.reload_game_data)
     clock = _StageClock("ppc sync")
     try:
         return _smart_sync(args, repo, project, clock)

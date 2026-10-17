@@ -477,18 +477,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:camels)" > "goods_supply_in_market(goods:camels)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:camels)" > "goods_supply_in_market(goods:camels)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -612,18 +606,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -672,18 +660,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -728,18 +710,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -784,18 +760,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -1687,18 +1657,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -1834,6 +1798,7 @@ pp_noble_investment_find_best = {
 	# 32: elephant_hunting_grounds (peasants, ivory)
 	if = {
 		limit = {
+			AND = { produced_in_country:elephants > 0 } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:elephant_hunting_grounds.building_base_cost_in_gold
@@ -3393,18 +3358,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3466,18 +3425,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3532,18 +3485,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3588,18 +3535,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3800,6 +3741,7 @@ pp_noble_investment_find_best = {
 	# 65: maize_farm (peasants, maize)
 	if = {
 		limit = {
+			AND = { OR = { pp_maize_native_country = yes has_advance = pp_maize_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:maize_farm.building_base_cost_in_gold
@@ -3807,18 +3749,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3860,6 +3796,7 @@ pp_noble_investment_find_best = {
 	if = {
 		limit = {
 			has_advance = pp_manuring_and_seed_stores
+			AND = { OR = { pp_maize_native_country = yes has_advance = pp_maize_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:maize_farmstead.building_base_cost_in_gold
@@ -3867,18 +3804,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3916,6 +3847,7 @@ pp_noble_investment_find_best = {
 	if = {
 		limit = {
 			has_advance = pp_model_farm
+			AND = { OR = { pp_maize_native_country = yes has_advance = pp_maize_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:maize_model_farm.building_base_cost_in_gold
@@ -3923,18 +3855,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3972,6 +3898,7 @@ pp_noble_investment_find_best = {
 	if = {
 		limit = {
 			has_advance = pp_farming_village_rotations
+			AND = { OR = { pp_maize_native_country = yes has_advance = pp_maize_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:maize_rotations.building_base_cost_in_gold
@@ -3979,18 +3906,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4451,18 +4372,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4511,18 +4426,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4567,18 +4476,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4623,18 +4526,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4725,18 +4622,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4787,18 +4678,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4855,6 +4740,7 @@ pp_noble_investment_find_best = {
 	# 83: olive_farm (peasants, olives)
 	if = {
 		limit = {
+			AND = { OR = { pp_olive_native_country = yes has_advance = pp_olives_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:olive_farm.building_base_cost_in_gold
@@ -4862,18 +4748,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4915,6 +4795,7 @@ pp_noble_investment_find_best = {
 	if = {
 		limit = {
 			has_advance = pp_manuring_and_seed_stores
+			AND = { OR = { pp_olive_native_country = yes has_advance = pp_olives_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:olive_farmstead.building_base_cost_in_gold
@@ -4922,18 +4803,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4971,6 +4846,7 @@ pp_noble_investment_find_best = {
 	if = {
 		limit = {
 			has_advance = pp_model_farm
+			AND = { OR = { pp_olive_native_country = yes has_advance = pp_olives_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:olive_model_farm.building_base_cost_in_gold
@@ -4978,18 +4854,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5027,6 +4897,7 @@ pp_noble_investment_find_best = {
 	if = {
 		limit = {
 			has_advance = pp_farming_village_rotations
+			AND = { OR = { pp_olive_native_country = yes has_advance = pp_olives_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:olive_rotations.building_base_cost_in_gold
@@ -5034,18 +4905,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5246,6 +5111,7 @@ pp_noble_investment_find_best = {
 	# 90: potato_farm (peasants, potato)
 	if = {
 		limit = {
+			AND = { OR = { pp_potato_native_country = yes has_advance = pp_potato_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:potato_farm.building_base_cost_in_gold
@@ -5253,18 +5119,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5306,6 +5166,7 @@ pp_noble_investment_find_best = {
 	if = {
 		limit = {
 			has_advance = pp_manuring_and_seed_stores
+			AND = { OR = { pp_potato_native_country = yes has_advance = pp_potato_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:potato_farmstead.building_base_cost_in_gold
@@ -5313,18 +5174,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5362,6 +5217,7 @@ pp_noble_investment_find_best = {
 	if = {
 		limit = {
 			has_advance = pp_model_farm
+			AND = { OR = { pp_potato_native_country = yes has_advance = pp_potato_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:potato_model_farm.building_base_cost_in_gold
@@ -5369,18 +5225,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5418,6 +5268,7 @@ pp_noble_investment_find_best = {
 	if = {
 		limit = {
 			has_advance = pp_farming_village_rotations
+			AND = { OR = { pp_potato_native_country = yes has_advance = pp_potato_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:potato_rotations.building_base_cost_in_gold
@@ -5425,18 +5276,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5740,6 +5585,7 @@ pp_noble_investment_find_best = {
 	# 99: rice_farm (peasants, rice)
 	if = {
 		limit = {
+			AND = { OR = { pp_rice_native_country = yes has_advance = pp_rice_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:rice_farm.building_base_cost_in_gold
@@ -5747,18 +5593,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5800,6 +5640,7 @@ pp_noble_investment_find_best = {
 	if = {
 		limit = {
 			has_advance = pp_manuring_and_seed_stores
+			AND = { OR = { pp_rice_native_country = yes has_advance = pp_rice_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:rice_farmstead.building_base_cost_in_gold
@@ -5807,18 +5648,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5856,6 +5691,7 @@ pp_noble_investment_find_best = {
 	if = {
 		limit = {
 			has_advance = pp_model_farm
+			AND = { OR = { pp_rice_native_country = yes has_advance = pp_rice_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:rice_model_farm.building_base_cost_in_gold
@@ -5863,18 +5699,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5912,6 +5742,7 @@ pp_noble_investment_find_best = {
 	if = {
 		limit = {
 			has_advance = pp_farming_village_rotations
+			AND = { OR = { pp_rice_native_country = yes has_advance = pp_rice_farm_advance_general } } # country_potential
 			scope:pp_noble_investment_nobles = {
 				estate_gold >= {
 					value = building_type:rice_rotations.building_base_cost_in_gold
@@ -5919,18 +5750,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -7600,18 +7425,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -7663,18 +7482,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -7719,18 +7532,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -7775,18 +7582,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			OR = {
-				any_market_present_in_country = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
-				any_owned_location = { pp_location_stored_months < 12 }
-			}
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				OR = {
-					market = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
-					pp_location_stored_months < 12
-				}
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }

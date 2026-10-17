@@ -52,12 +52,11 @@ POP_TYPES = ("peasants", "laborers")
 # default prices the median peasant building makes 1.16 gold per level, the median labourer one 0.64, but labour yards
 # and model farms reach 4-14 and won every pick). The profit and margin checks are unchanged.
 POP_PRIORITY = {"peasants": 3.0, "laborers": 1.0}
-# Farms and other Province Food makers fill the province store first, so for them a province holding less than this
-# many months of food counts as a shortage too (the mod's own food urgency line, pp_food_urgency_weight). With the market
-# test alone nobles built no farms where the market had a grain surplus (Austria 1384: wheat 47 supply / 41 demand).
-FOOD_STORE_MONTHS = 12
-# Blueprint footprint classes built without any shortage (user rule 2026-10-17: mines regardless of shortage); profit,
-# research, free hands and the location rules still apply.
+# Built without any shortage (profit, research, free hands and the location rules still apply). User rules 2026-10-17:
+# mines regardless of shortage; farms too, as their Province Food fills the store and drives population growth (with
+# the market test nobles built no farms where the market had a grain surplus: Austria 1384, wheat 47 supply / 41
+# demand). Farms = every Province Food maker (crop farms, cattle farms, fisheries, camel herders and their upgrades).
+# Blueprint footprint classes:
 NO_SHORTAGE_FOOTPRINTS = {"mining"}
 # Mines whose blueprint has another footprint (user rule 2026-10-17: gold diggings are mines; the stamp mill is their
 # upgrade, which replaces the diggings).
@@ -118,12 +117,15 @@ class Candidate:
     blocks: tuple[tuple[Method, ...], ...] = ()
     # Advances that unlock the building (any one will do); empty = available from the start.
     advances: tuple[str, ...] = ()
-    # False for buildings built regardless of shortage (NO_SHORTAGE_FOOTPRINTS).
+    # False for buildings built regardless of shortage (mines, farms).
     needs_shortage: bool = True
+    # The building's own country_potential (country scope), one line; can_build_building does not test it, so nobles
+    # built potato farms before the potato reached the country (2026-10-17).
+    country_potential: str = ""
 
-    @property
-    def makes_province_food(self) -> bool:
-        return any(method.produced == "local_food" for block in self.blocks for method in block)
+
+def makes_province_food(blocks: tuple[tuple[Method, ...], ...]) -> bool:
+    return any(method.produced == "local_food" for block in blocks for method in block)
 
 
 def top_level_blocks(text: str) -> list[tuple[str, str]]:
@@ -281,8 +283,17 @@ def candidates(
         blocks = method_blocks(body, goods, method_unlocks)
         if not blocks:
             continue
-        needs_shortage = footprints.get(building) not in NO_SHORTAGE_FOOTPRINTS and building not in NO_SHORTAGE_BUILDINGS
-        found.append(Candidate(building, pop_type, good, blocks, unlocks.get(building, ()), needs_shortage))
+        needs_shortage = not (
+            footprints.get(building) in NO_SHORTAGE_FOOTPRINTS
+            or building in NO_SHORTAGE_BUILDINGS
+            or makes_province_food(blocks)
+        )
+        potential = " ".join(
+            " ".join(inner(block).split()) for name, block in top_level_blocks(inner(body)) if name == "country_potential"
+        )
+        found.append(
+            Candidate(building, pop_type, good, blocks, unlocks.get(building, ()), needs_shortage, potential)
+        )
     return found
 
 
@@ -292,8 +303,12 @@ def has_any_advance(advances: tuple[str, ...]) -> str:
 
 
 def researched(candidate: Candidate) -> str:
-    """Country-scope limit lines: the country has an advance that unlocks the building."""
-    return f"\t\t\t{has_any_advance(candidate.advances)}\n" if candidate.advances else ""
+    """Country-scope limit lines: the country has an advance that unlocks the building and passes its own
+    country_potential."""
+    lines = f"\t\t\t{has_any_advance(candidate.advances)}\n" if candidate.advances else ""
+    if candidate.country_potential:
+        lines += f"\t\t\tAND = {{ {candidate.country_potential} }} # country_potential\n"
+    return lines
 
 
 def price(good: str) -> str:
@@ -374,25 +389,17 @@ def find_block(index: int, candidate: Candidate, modifiers: set[str]) -> str:
 
 
 def country_need(candidate: Candidate) -> str:
-    """Country-scope limit line: some market of the country is short of the good (or, for Province Food makers, some
-    owned location's province holds less than FOOD_STORE_MONTHS of food)."""
+    """Country-scope limit line: some market of the country is short of the good."""
     if not candidate.needs_shortage:
         return "\t\t\t# built regardless of shortage"
-    market = f"any_market_present_in_country = {{ {shortage(candidate.good)} }}"
-    if not candidate.makes_province_food:
-        return f"\t\t\t{market}"
-    store = f"any_owned_location = {{ pp_location_stored_months < {FOOD_STORE_MONTHS} }}"
-    return f"\t\t\tOR = {{\n\t\t\t\t{market}\n\t\t\t\t{store}\n\t\t\t}}"
+    return f"\t\t\tany_market_present_in_country = {{ {shortage(candidate.good)} }}"
 
 
 def location_need(candidate: Candidate) -> str:
-    """Location-scope limit line: its market is short of the good (or its province's food store is low)."""
+    """Location-scope limit line: its market is short of the good."""
     if not candidate.needs_shortage:
         return "\t\t\t\t# built regardless of shortage"
-    market = f"market = {{ {shortage(candidate.good)} }}"
-    if not candidate.makes_province_food:
-        return f"\t\t\t\t{market}"
-    return f"\t\t\t\tOR = {{\n\t\t\t\t\t{market}\n\t\t\t\t\tpp_location_stored_months < {FOOD_STORE_MONTHS}\n\t\t\t\t}}"
+    return f"\t\t\t\tmarket = {{ {shortage(candidate.good)} }}"
 
 
 def shortage(good: str) -> str:

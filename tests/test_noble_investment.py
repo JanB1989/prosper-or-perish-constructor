@@ -160,15 +160,24 @@ def test_mines_are_built_regardless_of_shortage() -> None:
     assert '"goods_demand_in_market(goods:stone)"' in blocks["stone_quarry"]
 
 
-def test_farms_answer_a_low_province_food_store() -> None:
-    # Nobles built no farms where the market had a grain surplus (Austria 1384); a store under 12 months counts too.
+def test_farms_are_built_regardless_of_shortage() -> None:
+    # User rule (2026-10-17): farms feed the store and population growth; every Province Food maker skips the shortage.
     blocks = candidate_blocks()
-    store = f"pp_location_stored_months < {gen.FOOD_STORE_MONTHS}"
-    for farm in ("wheat_farm", "cattle_farm", "millet_farmstead", "ocean_fishery"):
-        assert blocks[farm].count(store) == 2, farm
-        assert '"goods_demand_in_market(goods:' in blocks[farm], farm
-    for other in ("iron_mine", "mason", "lumber_mill"):
-        assert store not in blocks[other], other
+    for farm in ("wheat_farm", "cattle_farm", "millet_farmstead", "ocean_fishery", "potato_farm"):
+        assert blocks[farm].count("# built regardless of shortage") == 2, farm
+        assert "goods_demand_in_market" not in blocks[farm], farm
+    for other in ("mason", "lumber_mill", "stone_quarry"):
+        assert "goods_demand_in_market" in blocks[other], other
+
+
+def test_country_potential_is_checked() -> None:
+    # can_build_building skips country_potential: nobles built potato farms before the potato arrived (2026-10-17).
+    blocks = candidate_blocks()
+    gate = "AND = { OR = { pp_potato_native_country = yes has_advance = pp_potato_farm_advance_general } }"
+    for tier in ("potato_farm", "potato_farmstead", "potato_model_farm", "potato_rotations"):
+        assert gate in blocks[tier], tier
+    assert "AND = { produced_in_country:elephants > 0 }" in blocks["elephant_hunting_grounds"]
+    assert "# country_potential" not in blocks["wheat_farm"]
 
 
 def test_excluded_buildings_are_never_candidates() -> None:

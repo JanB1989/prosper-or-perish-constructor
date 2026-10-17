@@ -52,6 +52,10 @@ POP_TYPES = ("peasants", "laborers")
 # default prices the median peasant building makes 1.16 gold per level, the median labourer one 0.64, but labour yards
 # and model farms reach 4-14 and won every pick). The profit and margin checks are unchanged.
 POP_PRIORITY = {"peasants": 3.0, "laborers": 1.0}
+# Farms and other Province Food makers fill the province store first, so for them a province holding less than this
+# many months of food counts as a shortage too (the mod's own food urgency line, pp_food_urgency_weight). With the market
+# test alone nobles built no farms where the market had a grain surplus (Austria 1384: wheat 47 supply / 41 demand).
+FOOD_STORE_MONTHS = 12
 # Buildings the nobles never invest in, whatever they earn (user rules).
 EXCLUDED_BUILDINGS = {
     "market_village": "2026-10-17: nobles must not build market villages (36 of 39 noble ones in a 1550 save were ours)",
@@ -107,6 +111,10 @@ class Candidate:
     blocks: tuple[tuple[Method, ...], ...] = ()
     # Advances that unlock the building (any one will do); empty = available from the start.
     advances: tuple[str, ...] = ()
+
+    @property
+    def makes_province_food(self) -> bool:
+        return any(method.produced == "local_food" for block in self.blocks for method in block)
 
 
 def top_level_blocks(text: str) -> list[tuple[str, str]]:
@@ -325,12 +333,12 @@ def find_block(index: int, candidate: Candidate, modifiers: set[str]) -> str:
 \t\t\t\t\tadd = pp_noble_investment_reserve
 \t\t\t\t}}
 \t\t\t}}
-\t\t\tany_market_present_in_country = {{ {shortage(good)} }}
+{country_need(candidate)}
 \t\t}}
 \t\tevery_owned_location = {{
 \t\t\tlimit = {{
 \t\t\t\texists = market
-\t\t\t\tmarket = {{ {shortage(good)} }}
+{location_need(candidate)}
 \t\t\t\tpp_unemployed_population >= pp_noble_investment_min_unemployed
 \t\t\t\tnum_civil_constructions < 1
 \t\t\t\tNOT = {{ has_variable = pp_noble_investment_recent }}
@@ -340,6 +348,24 @@ def find_block(index: int, candidate: Candidate, modifiers: set[str]) -> str:
 \t\t}}
 \t}}
 """
+
+
+def country_need(candidate: Candidate) -> str:
+    """Country-scope limit line: some market of the country is short of the good (or, for Province Food makers, some
+    owned location's province holds less than FOOD_STORE_MONTHS of food)."""
+    market = f"any_market_present_in_country = {{ {shortage(candidate.good)} }}"
+    if not candidate.makes_province_food:
+        return f"\t\t\t{market}"
+    store = f"any_owned_location = {{ pp_location_stored_months < {FOOD_STORE_MONTHS} }}"
+    return f"\t\t\tOR = {{\n\t\t\t\t{market}\n\t\t\t\t{store}\n\t\t\t}}"
+
+
+def location_need(candidate: Candidate) -> str:
+    """Location-scope limit line: its market is short of the good (or its province's food store is low)."""
+    market = f"market = {{ {shortage(candidate.good)} }}"
+    if not candidate.makes_province_food:
+        return f"\t\t\t\t{market}"
+    return f"\t\t\t\tOR = {{\n\t\t\t\t\t{market}\n\t\t\t\t\tpp_location_stored_months < {FOOD_STORE_MONTHS}\n\t\t\t\t}}"
 
 
 def shortage(good: str) -> str:

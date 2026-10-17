@@ -477,12 +477,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:camels)" > "goods_supply_in_market(goods:camels)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:camels)" > "goods_supply_in_market(goods:camels)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:camels)" > "goods_supply_in_market(goods:camels)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:camels)" > "goods_supply_in_market(goods:camels)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -606,12 +612,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -660,12 +672,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -710,12 +728,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -760,12 +784,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:livestock)" > "goods_supply_in_market(goods:livestock)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -1657,12 +1687,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3357,12 +3393,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3424,12 +3466,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3484,12 +3532,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3534,12 +3588,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:legumes)" > "goods_supply_in_market(goods:legumes)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3747,12 +3807,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3801,12 +3867,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3851,12 +3923,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3901,12 +3979,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:maize)" > "goods_supply_in_market(goods:maize)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4367,12 +4451,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4421,12 +4511,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4471,12 +4567,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4521,12 +4623,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:millet)" > "goods_supply_in_market(goods:millet)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4617,12 +4725,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4673,12 +4787,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:fish)" > "goods_supply_in_market(goods:fish)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4742,12 +4862,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4796,12 +4922,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4846,12 +4978,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -4896,12 +5034,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:olives)" > "goods_supply_in_market(goods:olives)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5109,12 +5253,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5163,12 +5313,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5213,12 +5369,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5263,12 +5425,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:potato)" > "goods_supply_in_market(goods:potato)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5579,12 +5747,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5633,12 +5807,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5683,12 +5863,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -5733,12 +5919,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:rice)" > "goods_supply_in_market(goods:rice)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -7408,12 +7600,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -7465,12 +7663,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -7515,12 +7719,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -7565,12 +7775,18 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+			OR = {
+				any_market_present_in_country = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+				any_owned_location = { pp_location_stored_months < 12 }
+			}
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+				OR = {
+					market = { "goods_demand_in_market(goods:wheat)" > "goods_supply_in_market(goods:wheat)" }
+					pp_location_stored_months < 12
+				}
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }

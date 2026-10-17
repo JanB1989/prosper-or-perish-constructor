@@ -456,7 +456,9 @@
 - A country searches only while its nobles hold more than `pp_noble_investment_reserve`, then waits 90 days after a build
   and 180 days after a search that found nothing. A candidate needs: the nobles' gold >= reserve + price x
   `ESTATE_MAX_PRICE_MULTIPLIER`; a market with demand above supply of its main good (country-wide pre-check, then the
-  location's market; masonry from demand > 0.8 x supply, `SHORTAGE_RATIO`); `pp_noble_investment_min_unemployed` free
+  location's market; masonry from demand > 0.8 x supply, `SHORTAGE_RATIO`; for the 36 Province Food makers (farms,
+  fisheries, camel herders) also a province store under 12 months, `FOOD_STORE_MONTHS`, since a market grain surplus
+  kept nobles from building farms in hungry provinces, Austria 1384); `pp_noble_investment_min_unemployed` free
   people; no construction under way there (`num_civil_constructions`) and no noble investment there in the last 730
   days (location variable `pp_noble_investment_recent`; without it the same building was stacked 3-4 times while the
   first was still being built); `can_build_building`; and `has_advance` for an

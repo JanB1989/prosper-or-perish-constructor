@@ -146,6 +146,17 @@ def test_mason_shortage_starts_at_80_percent_of_supply() -> None:
     assert '"goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)"' in candidate_blocks()["iron_mine"]
 
 
+def test_farms_answer_a_low_province_food_store() -> None:
+    # Nobles built no farms where the market had a grain surplus (Austria 1384); a store under 12 months counts too.
+    blocks = candidate_blocks()
+    store = f"pp_location_stored_months < {gen.FOOD_STORE_MONTHS}"
+    for farm in ("wheat_farm", "cattle_farm", "millet_farmstead", "ocean_fishery"):
+        assert blocks[farm].count(store) == 2, farm
+        assert '"goods_demand_in_market(goods:' in blocks[farm], farm
+    for other in ("iron_mine", "mason", "lumber_mill"):
+        assert store not in blocks[other], other
+
+
 def test_excluded_buildings_are_never_candidates() -> None:
     # User rule (2026-10-17): nobles do not build market villages.
     assert "market_village" in gen.EXCLUDED_BUILDINGS

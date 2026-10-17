@@ -449,7 +449,9 @@
   `_no_candidate` (production_lateralview.gui, re-declared by CMF) in `shared/pp_location_building_rows.gui`
   (`port_location_rows`), built rows fed by the candidate's LocationToBuildItem, unbuilt rows by template
   `pp_location_values_unbuilt`; each row records its own band (same variable as the build panel); no `cost` sort key
-  assumed there (a header label instead). All in `port_build_location` (`tools/port_vanilla_gui.py`); tests:
+  assumed there (a header label instead). The building window's header row (`building_view.gui`, `port_building_view`)
+  also shows slots and efficiencies two per column, window 760 wide: vanilla's 50-high row squeezed a three-slot
+  building's checkbox column so auto expand could not be clicked (Jan, 2026-10-17). All in `port_build_location` (`tools/port_vanilla_gui.py`); tests:
   `tests/test_build_location_gui.py`.
 - Situation map legends should use mod-owned plain localization keys, not inherited or generic `LEGEND_KEY_*` keys, because legend UI is sensitive to formatter syntax.
 - In GUI files, do not put `#` formatter markers in `default_format` style names; use the raw style key such as `yellow_titles`.

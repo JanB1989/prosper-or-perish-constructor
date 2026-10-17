@@ -3,7 +3,9 @@
 Each override is the vanilla file plus the mod's own changes, which are written down here so the next game update
 only needs a rerun: the stored-food gauges (the script value ``pp_province_food_storage_months`` instead of the
 vanilla food-capacity percentage), for the Europedia, the Prosper or Perish page (its button and its cards, taken from the current mod
-file), for the build panel a layout that fits PP's many-slot, many-input buildings (``port_build_location``), and
+file), for the build panel a layout that fits PP's many-slot, many-input buildings (``port_build_location``), the
+same for the location view's rows (``port_location_rows``, ``port_location_production``) and the building window's
+header (``port_building_view``), and
 for the market, the goods and markets ledgers and the trade-order goods picker the internal goods hidden
 (``port_internal_goods``). Everything else is vanilla, so whatever the game adds to these windows stays visible.
 
@@ -82,6 +84,9 @@ LOCATION_ROWS_GUI = "shared/pp_location_building_rows.gui"
 LOCATION_ROW_TYPES = ("location_filtered_header_with_candidate", "location_filtered_header_no_candidate")
 LOCATION_VALUES_UNBUILT = "pp_location_values_unbuilt"
 LOCATION_SORT_BUTTONS = 5
+# the building window's header row: slots and efficiencies two per column (vanilla 570 wide; six slots need ~750)
+BUILDING_VIEW = "building_view.gui"
+BUILDING_VIEW_WIDTH = 760
 BUILD_PAYBACK_MIN_PROFIT = 0.05   # profit per level per month counted at least this in the band key (no division by 0)
 # the mod's internal goods: accounting goods pinned at their price floor that no one trades or consumes (in_game/common/
 # goods/pp_goods_*.txt). The market, the goods ledger, the markets ledger's surplus/demand icons and the trade-order
@@ -688,6 +693,40 @@ def port_location_rows(production: str) -> str:
             + _values_template(unbuilt_only=True))
 
 
+def port_building_view(t: str) -> str:
+    """The building window's header row: slot circles and production efficiencies two per column. Vanilla stacks them,
+    so a three-slot PP building overflows the 50-high row and squeezes its checkbox column (Jan, 2026-10-17: the
+    auto-expand box could not be clicked on a Tailors' Guild). The window is wider to hold the extra columns."""
+    what = "vanilla building view"
+    w = BUILDING_VIEW_WIDTH
+    t = _once(r'^(lateralview = \{\n\tname = "building_view"\n)',
+              rf"\1\tsize = {{ {w} 100% }} # PP: wider than the vanilla left panel (570) for the slot columns\n", t, what)
+    t = _once(r'(text = "\[BuildingView\.GetTitle\]"\n[ \t]*default_format = "#yellow_titles"\n[ \t]*)maximumsize = \{ 420 -1 \}',
+              rf"\1maximumsize = {{ {w - 150} -1 }}", t, what)
+    start, end, ind = _cut(t, r'^([ \t]*)vbox = \{\n[ \t]*datacontext = "\[BuildingView\.GetLocationToBuildItem\]"\n'
+                              r'[ \t]*(visible = "[^\n]*")\n[ \t]*spacing = 1\n'
+                              r'[ \t]*datamodel = "\[LocationToBuildItem\.GetBuildingSlots\]"\n', what)
+    visible = re.search(r'(?m)^[ \t]*(visible = "[^\n]*")\n', t[start:end]).group(1)
+    grid = (f"{ind}hbox = {{ # PP: production-method slots, two per column\n"
+            f"{ind}\tdatacontext = \"[BuildingView.GetLocationToBuildItem]\"\n{ind}\t{visible}\n{ind}\tspacing = 2\n"
+            + _slot_columns(ind + "\t", "LocationToBuildItem.GetBuildingSlots", _item_body(t[start:end]), 1)
+            + f"{ind}}}")
+    t = t[:start] + grid + t[end:]
+    start, end, ind = _cut(t, r"^([ \t]*)widget = \{\n[ \t]*size = \{ 70 -1 \}\n[ \t]*layoutpolicy_vertical = expanding\n"
+                              r"[ \t]*vbox = \{\n", what)
+    block = t[start:end]
+    inner = re.search(r'(?m)^([ \t]*)vbox = \{ ?\n[ \t]*visible = "\[Building\.IsProducing\]"\n', block)
+    if not inner or 'datamodel = "[Building.GetProductionMethods]"' not in block:
+        raise ValueError(f"{what}: the header's efficiency no longer lists Building.GetProductionMethods")
+    methods = block[inner.start():_block_end(block, block.index("{", inner.start()))]
+    grid = (f"{ind}vbox = {{ # PP: production efficiencies, two per column\n{ind}\tminimumsize = {{ 70 -1 }}\n"
+            f"{ind}\tlayoutpolicy_vertical = expanding\n{ind}\thbox = {{\n{ind}\t\tvisible = \"[Building.IsProducing]\"\n"
+            f"{ind}\t\tmargin_top = 2\n{ind}\t\tspacing = 6\n{ind}\t\texpand = {{}}\n"
+            + _slot_columns(ind + "\t\t", "Building.GetProductionMethods", _item_body(methods), 6)
+            + f"{ind}\t}}\n{ind}\texpand = {{}}\n{ind}}}")
+    return t[:start] + grid + t[end:]
+
+
 def port_location_production(t: str) -> str:
     """The location view (after its food gauges): wider, the pp_ rows, the header's value columns (build cost label,
     payback button; every sort leaves the payback order) and the list as vanilla's grid or the payback bands."""
@@ -901,6 +940,7 @@ def ported(vanilla_game: Path, mod_root: Path) -> dict[str, str | None]:
         out[rel] = port_food_gauges(_read(vanilla_game / GUI / rel), scope)
     out[LOCATION_PRODUCTION] = port_location_production(out[LOCATION_PRODUCTION])
     out[LOCATION_ROWS_GUI] = port_location_rows(_read(vanilla_game / GUI / PRODUCTION))
+    out[BUILDING_VIEW] = port_building_view(_read(vanilla_game / GUI / BUILDING_VIEW))
     out[EUROPEDIA] = port_europedia(_read(vanilla_game / GUI / EUROPEDIA), _read(mod_root / GUI / EUROPEDIA))
     out[BUILD_LOCATION] = port_build_location(_read(vanilla_game / GUI / BUILD_LOCATION))
     for rel in {**INTERNAL_GOODS_LISTS, **INTERNAL_GOODS_ICONS, **INTERNAL_GOODS_TABLES}:

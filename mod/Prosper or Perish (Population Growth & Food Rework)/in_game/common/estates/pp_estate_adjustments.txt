@@ -1,9 +1,6 @@
 ﻿# The bonuses scale from 50% (0) to 100% (half of the bonus). E.g. at 100% peasant satisfaction it would be half of the bonus written here
-# Crown estate: food purchase cost scales with crown power (10% power = +10% buy price)
 TRY_INJECT:crown_estate = {
 	power = {
-		# food_purchase_efficiency = -3.0
-		# food_purchase_efficiency = 10000
 		building_upkeep_multiplier = 0.10
 	}
 }
@@ -44,5 +41,11 @@ TRY_INJECT:peasants_estate = {
 		global_fish_output_modifier = 0.25
 		global_wild_game_output_modifier = 0.25
 		global_fur_output_modifier = 0.25
+	}
+	# Strong peasants: more store room instead of vanilla's food purchase efficiency, which does nothing in PP (markets
+	# hold no food; 2026-10-17, Jan). Scaled by power above the low-power threshold like the rest of the block.
+	high_power = {
+		food_purchase_efficiency = -1 # cancels vanilla's +1
+		global_food_capacity_modifier = 0.40
 	}
 }

@@ -70,7 +70,6 @@ TRY_INJECT:land_vs_naval = {
 
 TRY_INJECT:aristocracy_vs_plutocracy = {
 	right_modifier = {
-		food_purchase_efficiency = 0.20
 		global_victuals_output_modifier = 0.05 # merchant houses run the provisioning trade
 	}
 }
@@ -189,7 +188,6 @@ TRY_INJECT:individualism_vs_communalism = {
 	}
 	right_modifier = {
 		building_upkeep_efficiency = 0.05
-		food_purchase_efficiency = 0.10
 		global_province_food_sales_output_modifier = -0.05
 		global_offset_output_modifier = -0.05
 		global_food_capacity_modifier = 0.20

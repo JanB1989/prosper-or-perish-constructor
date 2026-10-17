@@ -90,6 +90,9 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
     # trade (2026-10-07, Jan): Global Trade countries' long hauls use a bit less merchant capacity
     "global_trade_advance": (set(), {"trade_sea_efficiency = 0.15", "trade_range_modifier = 0.1"}),
     "print_culture": ({"global_institution_growth_modifier = 0.2"}, {"global_institution_growth_modifier = 0.1"}),
+    # food purchase efficiency does nothing in PP (2026-10-17, Jan): live food modifiers instead
+    "peasant_connections_advance": ({"food_purchase_efficiency = 0.2"}, {"global_food_capacity_modifier = 0.1"}),
+    "zan_food_imports": ({"food_purchase_efficiency = 0.1"}, {"global_victuals_output_modifier = 0.1"}),
     # New World branch (2026-10-04): Christian Iberian countries skip the institution gate, AI weight for them
     "new_world_advance": (
         {"allow = {has_embraced_institution=institution:new_world}"},

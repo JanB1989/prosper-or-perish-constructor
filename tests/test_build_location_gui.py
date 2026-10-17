@@ -123,6 +123,25 @@ def test_payback_order_lists_every_item_once():
     assert 'blockoverride "scroll_list_content"' not in text
 
 
+def test_no_properties_the_engine_rejects():
+    """error.log 2026-10-17: a dynamicgridbox takes no spacing; datacontext_from_model on an empty model logs an error
+    for every row without a construction."""
+    text = _mod_file()
+    for grid in re.finditer(r"(?m)^([ \t]*)dynamicgridbox = \{[^\n]*\n((?:\1\t[^\n]*\n|\n)*?)\1\}", text):
+        assert not re.search(rf"(?m)^{grid.group(1)}\tspacing = ", grid.group(2))
+    assert not re.search(r"(?m)^[ \t]*datacontext_from_model = ", text)   # vanilla keeps one commented out
+    assert "DataModelFirst(Location.GetCivilConstructions, '(int32)1')" in text
+
+
+def test_every_sort_button_leaves_the_payback_order():
+    tool = _tool()
+    text = _mod_file()
+    clear = f"onclick = \"[GetVariableSystem.Clear('{tool.BUILD_PAYBACK_VARIABLE}')]\""
+    buttons = re.findall(r"(?m)^[ \t]*sort_by_key_button = \{[^\n]*\n[ \t]*name = \"\w+\"\n([^\n]*)\n", text)
+    assert len(buttons) == tool.BUILD_SORT_BUTTONS
+    assert all(clear in line for line in buttons)
+
+
 def test_braces_balance():
     tool = _tool()
     text = _mod_file()

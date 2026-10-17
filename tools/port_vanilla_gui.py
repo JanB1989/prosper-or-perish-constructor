@@ -67,6 +67,7 @@ BUILD_COST_SORT_KEY = "cost"   # engine key of the build list (BUILDING_LOCATION
 # then one band above the last edge and one for no payback (profit 0 or less). The rows are vanilla's, each built
 # only in its band (DataModelRepeatedItem of 1 or 0), so the payback order builds as many rows as the selected sort.
 BUILD_PAYBACK_VARIABLE = "pp_build_payback_order"
+BUILD_SORT_BUTTONS = 11   # the header's engine sort buttons (vanilla's 10 and cost); each one leaves the payback order
 BUILD_PAYBACK_BANDS = (0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 25, 30, 40, 60, 100)
 # the mod's internal goods: accounting goods pinned at their price floor that no one trades or consumes (in_game/common/
 # goods/pp_goods_*.txt). The market, the goods ledger, the markets ledger's surplus/demand icons and the trade-order
@@ -254,8 +255,9 @@ def port_build_location(vanilla: str) -> str:
               r"\1\2\3margin = {9 5}\n\3minimumsize = { -1 35 }\n"
               r"\3set_parent_dimension_to_minimum = height # PP: the row grows when its inputs wrap\n", t, what)
     t = _once(r"^([ \t]*)hbox = \{ # HIDES PRICES IF NUMBER OF INPUTS > 5\n([ \t]*)spacing = 4\n",
-              rf"\1dynamicgridbox = {{ # HIDES PRICES IF NUMBER OF INPUTS > 5 (PP: {BUILD_INPUTS_PER_LINE} per line)\n"
-              rf"\2flipdirection = yes\n\2datamodel_wrap = {BUILD_INPUTS_PER_LINE}\n\2spacing = 4\n", t, what)
+              rf"\1dynamicgridbox = {{ # HIDES PRICES IF NUMBER OF INPUTS > 5 (PP: {BUILD_INPUTS_PER_LINE} per line; "
+              rf"a dynamicgridbox takes no spacing)\n\2flipdirection = yes\n\2datamodel_wrap = {BUILD_INPUTS_PER_LINE}\n",
+              t, what)
     # location rows: a wider location card (long names), slot circles and efficiencies two per column
     t = _once(r"(card_header_button_04 = \{\n[ \t]*)size = \{ 150 48 \}", rf"\1size = {{ {BUILD_LOCATION_CARD_WIDTH} 48 }}",
               t, what)
@@ -307,6 +309,12 @@ def port_build_location(vanilla: str) -> str:
               t, what)
     t = _once(r'(sort_by_key_button = \{\n[ \t]*name = "number_building"\n)([ \t]*)using = layoutpolicy_expanding\n',
               r"\1\2layoutpolicy_vertical = expanding\n\2size = { 125 -1 }\n", t, what)
+    clear = f"onclick = \"[GetVariableSystem.Clear('{BUILD_PAYBACK_VARIABLE}')]\" # PP: a sort leaves the payback order"
+    t, n = re.subn(r'(?m)^([ \t]*)(sort_by_key_button = \{[^\n]*\n)([ \t]*)(name = "\w+"\n)',
+                   lambda m: f"{m.group(1)}{m.group(2)}{m.group(3)}{m.group(4)}{m.group(3)}{clear}\n", t)
+    if n != BUILD_SORT_BUTTONS:
+        raise ValueError(f"{what}: expected {BUILD_SORT_BUTTONS} sort buttons, found {n}")
+    t = _constructions_text(t, what)
     t = _value_columns(t, what)
     t = _payback_order(t, what)
     # the market picker: vanilla's select_menu_left with its offset moved to the panel's new right edge
@@ -369,6 +377,24 @@ def _cut(t: str, pattern: str, what: str) -> tuple[int, int, str]:
 def _payback_mode() -> str:
     return (f"And(GetVariableSystem.Exists('{BUILD_PAYBACK_VARIABLE}'), "
             "BuildInLocationLateralView.GetBuildingType.IsProducing)")
+
+
+def _constructions_text(t: str, what: str) -> str:
+    """The location card's construction count read the first construction for its tooltip with datacontext_from_model,
+    which logs an error for every row without one (error.log, 2026-10-17): the text is built only with a construction,
+    as vanilla's RGO panel does."""
+    start, end, ind = _cut(t, r'^([ \t]*)text_single = \{\n[ \t]*datacontext = "\[LocationToBuildItem\.GetLocation\]"\n'
+                              r'[ \t]*visible = "\[DataModelHasItems\(Location\.GetCivilConstructions\)\]"\n', what)
+    block = t[start:end]
+    if "datacontext_from_model" not in block or "using = Construction_tooltip" not in block:
+        raise ValueError(f"{what}: the construction count no longer reads the first construction")
+    raw = re.search(r'(?m)^[ \t]*(raw_text = "[^\n]*")\n', block).group(1)
+    text = _block("hbox = { # PP: the construction count, built only with a construction (its tooltip reads the first)", [
+        'datacontext = "[LocationToBuildItem.GetLocation]"',
+        "datamodel = \"[DataModelFirst(Location.GetCivilConstructions, '(int32)1')]\"",
+        _block("item = {", [_block("text_single = {", ["autoresize = yes", "using = Font_Size_Very_Small", raw,
+                                                       _block("tooltipwidget = {", ["using = Construction_tooltip"])])])])
+    return t[:start] + _indent(text, len(ind)).rstrip("\n") + t[end:]
 
 
 def _value_text(raw: str, visible: str = "", tooltip: str = "", highlight: str = "") -> str:
@@ -548,11 +574,14 @@ def goods_table_column(cooltips: str) -> str:
         raise ValueError("vanilla TooltipTableField: no row_size")
     height = TOP_GOODS * int(field.group(1))
     return (f"\ttype {GOODS_TABLE_COLUMN} = vbox {{ # PP: vanilla TooltipTableColumn, rows without the internal goods\n"
-            f"{body.rstrip()}\n\n\t\tscrollvbox = {{ # the first {TOP_GOODS} visible rows\n"
+            f"{body.rstrip()}\n\n\t\tscrollarea = {{ # the first {TOP_GOODS} visible rows (vanilla TooltipListScrollArea; "
+            "a scrollvbox takes no scrollbar policy)\n"
             f"\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tmaximumsize = {{ -1 {height} }}\n"
+            "\t\t\tautoresizescrollarea = yes\n\t\t\tautoresizeviewport = yes\n"
             "\t\t\tscrollbarpolicy_horizontal = always_off\n\t\t\tscrollbarpolicy_vertical = always_off\n\n"
-            "\t\t\tvbox = {\n\t\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\t\tblock \"column_datamodel\" {}\n\n"
-            f"{_indent(rows, 2)}\t\t\t}}\n\t\t}}\n\t}}\n")
+            "\t\t\tscrollwidget = {\n"
+            "\t\t\t\tvbox = {\n\t\t\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\t\t\tblock \"column_datamodel\" {}\n\n"
+            f"{_indent(rows, 3)}\t\t\t\t}}\n\t\t\t}}\n\t\t}}\n\t}}\n")
 
 
 def internal_goods_gui(cooltips: str) -> str:

@@ -912,10 +912,9 @@
 														production_method_good_price_diff = {}
 													}
 												}
-												dynamicgridbox = { # HIDES PRICES IF NUMBER OF INPUTS > 5 (PP: 14 per line)
+												dynamicgridbox = { # HIDES PRICES IF NUMBER OF INPUTS > 5 (PP: 14 per line; a dynamicgridbox takes no spacing)
 													flipdirection = yes
 													datamodel_wrap = 14
-													spacing = 4
 													datamodel = "[PossibleProductionMethodsItem.GetActiveInputs]"
 													visible = "[Or(
 														And( 
@@ -1155,23 +1154,27 @@
 				blockoverride "sort_buttons_filtered_list" {
 					sort_by_key_button = {
 						name = "name"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 55 -1 }
 					}
 
 					sort_by_key_button = {
 						name = "goods"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 55 -1 }
 					}
 
 					sort_by_key_button = {
 						name = "employment"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 55 -1 }
 					}
 					sort_by_key_button = {
 						name = "population"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 55 -1 }
 					}
@@ -1180,6 +1183,7 @@
 
 					sort_by_key_button = {
 						name = "production_efficiency"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 70 -1 }
 						visible = "[BuildInLocationLateralView.GetBuildingType.IsProducing]"
@@ -1200,6 +1204,7 @@
 
 					sort_by_key_button = { # PP: the engine's cost key (vanilla has no button for it)
 						name = "cost"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 60 -1 }
 						visible = "[BuildInLocationLateralView.GetBuildingType.IsProducing]"
@@ -1235,6 +1240,7 @@
 
 					sort_by_key_button = {
 						name = "profit"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 60 -1 }
 						visible = "[BuildInLocationLateralView.GetBuildingType.IsProducing]"
@@ -1242,6 +1248,7 @@
 
 					sort_by_key_button = {
 						name = "income"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 65 -1 }
 						visible = "[BuildInLocationLateralView.GetBuildingType.IsProducing]"
@@ -1249,6 +1256,7 @@
 
 					sort_by_key_button = {
 						name = "control_income"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 88 -1 }
 						visible = "[BuildInLocationLateralView.GetBuildingType.GrantsControl]"
@@ -1256,6 +1264,7 @@
 
 					sort_by_key_button = {
 						name = "current_control"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 88 -1 }
 						visible = "[BuildInLocationLateralView.GetBuildingType.GrantsControl]"
@@ -1266,6 +1275,7 @@
 
 					sort_by_key_button = {
 						name = "number_building"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 125 -1 }
 					}
@@ -3011,21 +3021,18 @@ template build_location_entry {
 									}
 								}
 
-								text_single = {
+								hbox = { # PP: the construction count, built only with a construction (its tooltip reads the first)
 									datacontext = "[LocationToBuildItem.GetLocation]"
-									visible = "[DataModelHasItems(Location.GetCivilConstructions)]"
-
-									autoresize = yes
-									using = Font_Size_Very_Small
-									raw_text = "(#L +[GetDataModelSize(Location.GetCivilConstructions)]#! @construction!)"
-
-									datacontext_from_model = { 
-										datamodel = "[Location.GetCivilConstructions]"
-										index = 0
-									}
-									
-									tooltipwidget = {
-										using = Construction_tooltip
+									datamodel = "[DataModelFirst(Location.GetCivilConstructions, '(int32)1')]"
+									item = {
+										text_single = {
+											autoresize = yes
+											using = Font_Size_Very_Small
+											raw_text = "(#L +[GetDataModelSize(Location.GetCivilConstructions)]#! @construction!)"
+											tooltipwidget = {
+												using = Construction_tooltip
+											}
+										}
 									}
 								}
 							}

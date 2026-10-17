@@ -1,6 +1,15 @@
 ﻿lateralview = {
 	name = "location_production_lateralview"
 	size = { 990 100% } # PP: wider than the vanilla left panel (570), like the build panel
+	widget = { # PP: pp_panel_width for the search filter menu
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[Not(LocationProductionView.Vars.HasValue('pp_panel_width', '990'))]"
+		state = {
+			name = _show
+			on_start = "[LocationProductionView.Vars.Set('pp_panel_width', '990')]"
+		}
+	}
 	widgetid = "location_production_lateralview"
 
 	blockoverride "panel_header" {

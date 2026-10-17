@@ -87,6 +87,10 @@ LOCATION_SORT_BUTTONS = 5
 # the building window's header row: slots and efficiencies two per column (vanilla 570 wide; six slots need ~750)
 BUILDING_VIEW = "building_view.gui"
 BUILDING_VIEW_WIDTH = 760
+# the left panels share one search filter menu, vanilla opens it at x 570: the wider PP panels write their width into
+# their Vars (PANEL_WIDTH_VARIABLE) and the menu opens there (port_select_search_filter)
+SEARCH_FILTER = "select_search_filter.gui"
+PANEL_WIDTH_VARIABLE = "pp_panel_width"
 BUILD_PAYBACK_MIN_PROFIT = 0.05   # profit per level per month counted at least this in the band key (no division by 0)
 # the mod's internal goods: accounting goods pinned at their price floor that no one trades or consumes (in_game/common/
 # goods/pp_goods_*.txt). The market, the goods ledger, the markets ledger's surplus/demand icons and the trade-order
@@ -355,7 +359,7 @@ def port_build_location(vanilla: str) -> str:
               f"\tstate = {{\n\t\tname = _show\n\t\tduration = 0.133\n\t\tposition_x = {x}\n\t\talpha = 1\n\t}}\n"
               f"\tstate = {{\n\t\tname = _hide\n\t\tduration = 0.133\n\t\tposition_x = {x - 45}\n\t\talpha = 0\n\t}}\n\n"
               "\tusing = bg_sidemenu\n\n\tselect_menu_layout = {\n" + _indent(body.strip("\n") + "\n", 1) + "\t}\n}")
-    return t[:m.start()] + picker + t[end:]
+    return _mark_width(t[:m.start()] + picker + t[end:], "BuildInLocationLateralView", BUILD_PANEL_WIDTH, what)
 
 
 def payback_years(cost: str, income: str) -> str:
@@ -693,6 +697,48 @@ def port_location_rows(production: str) -> str:
             + _values_template(unbuilt_only=True))
 
 
+def _mark_width(t: str, view: str, width: int, what: str) -> str:
+    """After the panel's PP size line: a hidden widget that writes the panel's width into its own Vars once (its _show
+    runs when the panel is created), so the shared search filter menu (select_search_filter.gui) opens beside it
+    instead of under it."""
+    m = re.search(r"(?m)^\tsize = \{ \d+ 100% \} # PP: wider than the vanilla left panel[^\n]*\n", t)
+    if not m:
+        raise ValueError(f"{what}: no PP size line")
+    marker = _indent(_block(f"widget = {{ # PP: {PANEL_WIDTH_VARIABLE} for the search filter menu", [
+        "size = { 0 0 }", "visible_at_creation = no",
+        f"visible = \"[Not({view}.Vars.HasValue('{PANEL_WIDTH_VARIABLE}', '{width}'))]\"",
+        _block("state = {", ["name = _show", f"on_start = \"[{view}.Vars.Set('{PANEL_WIDTH_VARIABLE}', '{width}')]\""])]), 1)
+    return t[:m.end()] + marker + t[m.end():]
+
+
+def port_select_search_filter(t: str) -> str:
+    """The shared search filter menu of the left panels: vanilla opens it at the 570 edge of the left panel, under the
+    PP panels that are wider (Jan, 2026-10-17: the build panel's filters could not be opened). Same menu, positioned at
+    the width its panel wrote into its Vars (_mark_width), else 570."""
+    what = "vanilla search filter menu"
+    m = re.search(r"(?m)^select_menu_left = \{\n", t)
+    if not m:
+        raise ValueError(f"{what}: no left menu")
+    end = _block_end(t, t.index("{", m.start()))
+    body = t[m.end():end - 1]
+    setup = re.search(r'(?m)^\tblockoverride "menu_setup" \{\n[ \t]*name = "select_search_filter_left"\n\t\}\n\n?', body)
+    if not setup:
+        raise ValueError(f"{what}: the left menu has no menu_setup name")
+    body = body[:setup.start()] + body[setup.end():]
+    vars_ = "SelectSearchFilter.AccessSearchBar.Manager.Vars"
+    position = "'(CVector2f)570,180'"
+    for width in sorted({BUILD_PANEL_WIDTH, BUILDING_VIEW_WIDTH}):
+        position = f"Select_CVector2f({vars_}.HasValue('{PANEL_WIDTH_VARIABLE}', '{width}'), '(CVector2f){width},180', {position})"
+    window = ("window = { # PP: vanilla select_menu_left (select_menu.gui), opened beside the PP panels that are wider than 570\n"
+              '\tname = "select_search_filter_left"\n'
+              "\tmovable = no\n\tvisible_at_creation = no\n\talwaystransparent = no\n\tallow_outside = yes\n"
+              f"\tlayer = sidemenu\n\tparentanchor = left\n\tposition = \"[{position}]\"\n\n"
+              "\tstate = {\n\t\tname = _show\n\t\tduration = 0.133\n\t\talpha = 1\n\t}\n"
+              "\tstate = {\n\t\tname = _hide\n\t\tduration = 0.133\n\t\talpha = 0\n\t}\n\n"
+              "\tusing = bg_sidemenu\n\n\tselect_menu_layout = {\n" + _indent(body.strip("\n") + "\n", 1) + "\t}\n}")
+    return t[:m.start()] + window + t[end:]
+
+
 def port_building_view(t: str) -> str:
     """The building window's header row: slot circles and production efficiencies two per column. Vanilla stacks them,
     so a three-slot PP building overflows the 50-high row and squeezes its checkbox column (Jan, 2026-10-17: the
@@ -724,7 +770,7 @@ def port_building_view(t: str) -> str:
             f"{ind}\t\tmargin_top = 2\n{ind}\t\tspacing = 6\n{ind}\t\texpand = {{}}\n"
             + _slot_columns(ind + "\t\t", "Building.GetProductionMethods", _item_body(methods), 6)
             + f"{ind}\t}}\n{ind}\texpand = {{}}\n{ind}}}")
-    return t[:start] + grid + t[end:]
+    return _mark_width(t[:start] + grid + t[end:], "BuildingView", BUILDING_VIEW_WIDTH, what)
 
 
 def port_location_production(t: str) -> str:
@@ -788,7 +834,8 @@ def port_location_production(t: str) -> str:
     layout = _block('blockoverride "scroll_list_layout" { # PP: the selected sort or the payback order', [
         _column([grid, _column([f'visible = "[And({shown}, {mode})]"', *bands],
                                "payback order: shortest first, the last sort inside each band")])])
-    return t[:start] + _indent(layout, len(ind)).rstrip("\n") + t[end:]
+    t = t[:start] + _indent(layout, len(ind)).rstrip("\n") + t[end:]
+    return _mark_width(t, "LocationProductionView", BUILD_PANEL_WIDTH, what)
 
 
 def _any_of(terms: list[str]) -> str:
@@ -941,6 +988,7 @@ def ported(vanilla_game: Path, mod_root: Path) -> dict[str, str | None]:
     out[LOCATION_PRODUCTION] = port_location_production(out[LOCATION_PRODUCTION])
     out[LOCATION_ROWS_GUI] = port_location_rows(_read(vanilla_game / GUI / PRODUCTION))
     out[BUILDING_VIEW] = port_building_view(_read(vanilla_game / GUI / BUILDING_VIEW))
+    out[SEARCH_FILTER] = port_select_search_filter(_read(vanilla_game / GUI / SEARCH_FILTER))
     out[EUROPEDIA] = port_europedia(_read(vanilla_game / GUI / EUROPEDIA), _read(mod_root / GUI / EUROPEDIA))
     out[BUILD_LOCATION] = port_build_location(_read(vanilla_game / GUI / BUILD_LOCATION))
     for rel in {**INTERNAL_GOODS_LISTS, **INTERNAL_GOODS_ICONS, **INTERNAL_GOODS_TABLES}:

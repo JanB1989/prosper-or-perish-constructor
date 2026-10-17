@@ -3774,6 +3774,15 @@ template bg_input_good {
 lateralview = {
 	name = "build_location_lateralview"
 	size = { 990 100% } # PP: wider than the vanilla left panel (570)
+	widget = { # PP: pp_panel_width for the search filter menu
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[Not(BuildInLocationLateralView.Vars.HasValue('pp_panel_width', '990'))]"
+		state = {
+			name = _show
+			on_start = "[BuildInLocationLateralView.Vars.Set('pp_panel_width', '990')]"
+		}
+	}
 
 	# SOUND - Build Location (Left Panel)
 	blockoverride "snd_panel_identifier" { soundeffect = "UI_panelAux_buildLocation_show" }

@@ -1,6 +1,15 @@
 ﻿lateralview = {
 	name = "building_view"
 	size = { 760 100% } # PP: wider than the vanilla left panel (570) for the slot columns
+	widget = { # PP: pp_panel_width for the search filter menu
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[Not(BuildingView.Vars.HasValue('pp_panel_width', '760'))]"
+		state = {
+			name = _show
+			on_start = "[BuildingView.Vars.Set('pp_panel_width', '760')]"
+		}
+	}
 
 	blockoverride "panel_header" {
 		window_header_alt = {

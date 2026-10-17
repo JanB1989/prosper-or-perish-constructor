@@ -124,8 +124,11 @@
   right, but vanilla Bergslag does not check for it (one way, like every PP right); mining charter and the Bergregal
   rights may stack with it in a city with two slots. Icon: `assets/town_right_drawings/goods/iron.py` (blast
   furnace, pick and hammer; rights frame only, `LINES` in `render.py`).
-- Trade buildings: merchants' quarters, customs house, entrepot need Printing Press embraced; grand marketplace,
-  commerce centre, trading hub, clearing house, stock exchange need Global Trade (`allow`, owner). Merchant capacity per
+- Trade buildings: merchants' quarters, customs house, trading hub need Printing Press embraced; grand marketplace,
+  commerce centre, clearing house, stock exchange need Global Trade (`allow`, owner). Rule (Jan, 2026-10-18): a gate's
+  institution belongs to the building's unlock age or an earlier one, never a later one (vanilla unlocks: entrepot age
+  2 -> no gate; merchants' quarters and trading hub age 3, Printing Press age 3; customs house age 4; Global Trade age
+  4, grand marketplace / stock exchange age 5, commerce centre / clearing house age 6). Merchant capacity per
   level: merchants' quarters 1.8 (+20 %), grand marketplace 3 (+50 %), commerce centre 7.2 (+80 %), added to vanilla's
   line; their AI weight is 200 where the predecessor stands + 100 at the market centre, / (owner income + 10).
 - Also: `rural_building_cap` development term 0.15 -> 0.25 (mines, quarries, rural works); decentralization

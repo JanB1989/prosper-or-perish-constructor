@@ -443,7 +443,13 @@
   per band per frame. Each location records its band once into the GUI variable `pp_pb_<building name><location key>`
   (a recorder created hidden, `visible_at_creation = no`, whose `_show` state runs when the payback order opens or the
   location's construction count changes); the bands only read the variables (33 ms = the frame cap). Bands: one per
-  whole year below 10, then 10+ and no profit, then "not recorded yet". All in `port_build_location` (`tools/port_vanilla_gui.py`); tests:
+  whole year below 10, then 10+ and no profit, then "not recorded yet".
+  The location view ("Production in <location>", 2026-10-17, not yet seen in game) has the same layout, value columns
+  and payback order: its rows are pp_ copies of vanilla's `location_filtered_header_with_candidate` /
+  `_no_candidate` (production_lateralview.gui, re-declared by CMF) in `shared/pp_location_building_rows.gui`
+  (`port_location_rows`), built rows fed by the candidate's LocationToBuildItem, unbuilt rows by template
+  `pp_location_values_unbuilt`; each row records its own band (same variable as the build panel); no `cost` sort key
+  assumed there (a header label instead). All in `port_build_location` (`tools/port_vanilla_gui.py`); tests:
   `tests/test_build_location_gui.py`.
 - Situation map legends should use mod-owned plain localization keys, not inherited or generic `LEGEND_KEY_*` keys, because legend UI is sensitive to formatter syntax.
 - In GUI files, do not put `#` formatter markers in `default_format` style names; use the raw style key such as `yellow_titles`.

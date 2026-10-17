@@ -74,6 +74,14 @@ BUILD_COST_SORT_KEY = "cost"   # engine key of the build list (BUILDING_LOCATION
 BUILD_PAYBACK_VARIABLE = "pp_build_payback_order"
 BUILD_SORT_BUTTONS = 11   # the header's engine sort buttons (vanilla's 10 and cost); each one leaves the payback order
 BUILD_PAYBACK_BANDS = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+# the location view ("Production in <location>"): same columns, slot layout and payback order as the build panel. Its
+# rows are vanilla types in production_lateralview.gui (re-declared by CMF), so the mod uses pp_ copies of them.
+LOCATION_PRODUCTION = "location_production_lateralview.gui"
+PRODUCTION = "production_lateralview.gui"
+LOCATION_ROWS_GUI = "shared/pp_location_building_rows.gui"
+LOCATION_ROW_TYPES = ("location_filtered_header_with_candidate", "location_filtered_header_no_candidate")
+LOCATION_VALUES_UNBUILT = "pp_location_values_unbuilt"
+LOCATION_SORT_BUTTONS = 5
 BUILD_PAYBACK_MIN_PROFIT = 0.05   # profit per level per month counted at least this in the band key (no division by 0)
 # the mod's internal goods: accounting goods pinned at their price floor that no one trades or consumes (in_game/common/
 # goods/pp_goods_*.txt). The market, the goods ledger, the markets ledger's surplus/demand icons and the trade-order
@@ -414,7 +422,12 @@ def _value_text(raw: str, visible: str = "", tooltip: str = "", highlight: str =
     return _block("text_single = {", lines)
 
 
-def _value_column(comment: str, width: int, built: list[str], unbuilt: list[str]) -> str:
+def _value_column(comment: str, width: int, built: list[str], unbuilt: list[str], unbuilt_only: bool = False) -> str:
+    """One value column: the built and the unbuilt branch of a LocationToBuildItem row, or (unbuilt_only) the unbuilt
+    texts alone for a row that has only a building type and a location."""
+    if unbuilt_only:
+        return _block(f"widget = {{ # {comment}", [f"size = {{ {width} -1 }}", "layoutpolicy_vertical = expanding",
+                                                    *unbuilt])
     show = "LocationToBuildItem.ShowProfit"
     return _block(f"widget = {{ # {comment}", [
         f"size = {{ {width} -1 }}", "layoutpolicy_vertical = expanding",
@@ -423,9 +436,10 @@ def _value_column(comment: str, width: int, built: list[str], unbuilt: list[str]
     ])
 
 
-def _values_template() -> str:
-    """Build cost, payback, profit and tax income per level, one value per column (template pp_build_location_values,
-    used by the location rows)."""
+def _values_template(unbuilt_only: bool = False) -> str:
+    """Build cost, payback, profit and tax income per level, one value per column: template pp_build_location_values
+    for a LocationToBuildItem row (build panel, the location view's built rows), or LOCATION_VALUES_UNBUILT for the
+    location view's unbuilt rows (BuildingType and Location in context)."""
     cost = BUILD_PAYBACK_COST
     cost_width, pay, profit, tax = BUILD_VALUE_WIDTHS
 
@@ -442,20 +456,25 @@ def _values_template() -> str:
     unbuilt_tt = _block("tooltipwidget = {", ["using = BuildingTypeProfit_Tooltip"])
     subsidized = f"And(LessThanOrEqualTo_CFixedPoint(Building.GetProfit, {ZERO}), Building.IsSubsidized)"
     (inc_b, inc_u), (prof_b, prof_u) = BUILD_PAYBACK_INCOME, BUILD_PAYBACK_PROFIT
+    u = unbuilt_only
     columns = [
         _value_column("build cost of the next level", cost_width,
-                      build_cost(BUILD_PAYBACK_TOOLTIP[0]), build_cost(BUILD_PAYBACK_TOOLTIP[1])),
+                      build_cost(BUILD_PAYBACK_TOOLTIP[0]), build_cost(BUILD_PAYBACK_TOOLTIP[1]), u),
         _value_column("payback: years of profit per build cost", pay,
                       payback(BUILD_PAYBACK_BASIS[0], BUILD_PAYBACK_TOOLTIP[0]),
-                      payback(BUILD_PAYBACK_BASIS[1], BUILD_PAYBACK_TOOLTIP[1])),
+                      payback(BUILD_PAYBACK_BASIS[1], BUILD_PAYBACK_TOOLTIP[1]), u),
         _value_column("profit per level", profit,
                       [_value_text(f"[{prof_b}|+=2]@wealth!", f"Not({subsidized})", built_tt, "profit"),
                        _value_text(f"#L [{prof_b}|2]#!@wealth!", subsidized, built_tt, "profit")],
-                      [_value_text(f"[{prof_u}|+=2]@wealth!", "", unbuilt_tt, "profit")]),
+                      [_value_text(f"[{prof_u}|+=2]@wealth!", "", unbuilt_tt, "profit")], u),
         _value_column("tax income per level", tax,
                       [_value_text(f"[{inc_b}|+=2]@income!", "", built_tt, "income")],
-                      [_value_text(f"[{inc_u}|+=2]@income!", "", unbuilt_tt, "income")]),
+                      [_value_text(f"[{inc_u}|+=2]@income!", "", unbuilt_tt, "income")], u),
     ]
+    if unbuilt_only:
+        return _block(f"template {LOCATION_VALUES_UNBUILT} {{ # PP: the value columns of an unbuilt location-view row", [
+            'visible = "[BuildingType.IsProducing]"', "layoutpolicy_vertical = expanding",
+            f"margin = {{ {BUILD_VALUE_MARGIN} 0 }}", *columns])
     return _block("template pp_build_location_values { # PP: the value columns of a location row (an hbox)", [
         'visible = "[LocationToBuildItem.GetBuildingType.IsProducing]"', "layoutpolicy_vertical = expanding",
         f"margin = {{ {BUILD_VALUE_MARGIN} 0 }}", *ROW_CONTEXTS, *columns])
@@ -576,6 +595,160 @@ def _payback_order(t: str, what: str) -> str:
         _column(["position = { 0 2 }", grid,
                  _column([f'visible = "[{mode}]"', _recorder(items), *bands],
                          "payback order: shortest first, the last sort inside each band")])])
+    return t[:start] + _indent(layout, len(ind)).rstrip("\n") + t[end:]
+
+
+def _row_recorder(sides: list[tuple[str, str]], contexts: list[str]) -> str:
+    """Records a location-view row's payback band (same GUI variable as the build panel): one recorder per (condition,
+    profit) and construction-count parity, created hidden, so _show runs when the row is created and when the
+    location's construction count changes."""
+    constructions = "IsOdd_int32(GetDataModelSize(Location.GetCivilConstructions))"
+    name = payback_band_name()
+    widgets = []
+    for cond, profit in sides:
+        for odd in (constructions, f"Not({constructions})"):
+            widgets.append(_block("widget = {", [
+                "visible_at_creation = no", f'visible = "[{_all_of([c for c in (cond, odd) if c])}]"', "size = { 0 0 }",
+                _block("state = {", ["name = _show",
+                                     f'on_start = "[GetVariableSystem.Set({name}, {_band_value(profit)})]"'])]))
+    return _block("widget = { # PP: records this row's payback band (read by the payback order)",
+                  ["size = { 0 0 }", "ignore_layout = yes", *contexts, *widgets])
+
+
+def _location_row_with_candidate(t: str, what: str) -> str:
+    """The location view's built row: slot circles and production efficiencies two per column (vanilla stacks them out
+    of the row), the value columns of the build panel (the candidate's LocationToBuildItem) in place of profit over
+    tax income, upkeep kept for buildings that produce nothing, and the band recorder."""
+    start, end, ind = _cut(t, r'^([ \t]*)vbox = \{\n[ \t]*datacontext = "\[BuildingCandidate\.GetLocationToBuildItem\]"\n'
+                              r'[ \t]*visible = "\[LocationToBuildItem\.HasConstructedBuildingLevels\]"\n[ \t]*spacing = 1\n'
+                              r'[ \t]*datamodel = "\[LocationToBuildItem\.GetBuildingSlots\]"\n', what)
+    grid = (f"{ind}hbox = {{ # PP: production-method slots, two per column\n"
+            f"{ind}\tdatacontext = \"[BuildingCandidate.GetLocationToBuildItem]\"\n"
+            f"{ind}\tvisible = \"[LocationToBuildItem.HasConstructedBuildingLevels]\"\n{ind}\tspacing = 2\n"
+            + _slot_columns(ind + "\t", "LocationToBuildItem.GetBuildingSlots", _item_body(t[start:end]), 1)
+            + f"{ind}}}")
+    t = t[:start] + grid + t[end:]
+    start, end, ind = _cut(t, r"^([ \t]*)widget = \{ #efficiency\n[ \t]*size = \{ 70 -1 \}\n", what)
+    block = t[start:end]
+    inner = re.search(r'(?m)^([ \t]*)vbox = \{ ?\n[ \t]*visible = "\[Building\.IsProducing\]"\n', block)
+    if not inner or 'datamodel = "[Building.GetProductionMethods]"' not in block:
+        raise ValueError(f"{what}: the built row's efficiency no longer lists Building.GetProductionMethods")
+    methods = block[inner.start():_block_end(block, block.index("{", inner.start()))]
+    grid = (f"{ind}vbox = {{ #efficiency (PP: two production methods per column)\n{ind}\tminimumsize = {{ 70 -1 }}\n"
+            f"{ind}\tlayoutpolicy_vertical = expanding\n{ind}\thbox = {{\n{ind}\t\tvisible = \"[Building.IsProducing]\"\n"
+            f"{ind}\t\tmargin_top = 2\n{ind}\t\tspacing = 6\n{ind}\t\texpand = {{}}\n"
+            + _slot_columns(ind + "\t\t", "Building.GetProductionMethods", _item_body(methods), 6)
+            + f"{ind}\t}}\n{ind}\texpand = {{}}\n{ind}}}")
+    t = t[:start] + grid + t[end:]
+    start, end, ind = _cut(t, r"^([ \t]*)widget = \{ # profit/income/upkeep\n", what)
+    block = t[start:end]
+    upkeep = re.search(r"(?m)^([ \t]*)hbox = \{ #upkeep\n", block)
+    if not upkeep:
+        raise ValueError(f"{what}: the built row has no upkeep cell")
+    upkeep_text = _dedent(block[upkeep.start():_block_end(block, block.index("{", upkeep.start()))], len(upkeep.group(1)))
+    cell = _block("hbox = { # PP: build cost, payback, profit, tax income; upkeep for buildings that produce nothing", [
+        "layoutpolicy_vertical = expanding",
+        "hbox = { datacontext = \"[BuildingCandidate.GetLocationToBuildItem]\" using = pp_build_location_values }",
+        _block("widget = {", ['visible = "[Not(BuildingItem.GetBuildingType.IsProducing)]"', "size = { 60 36 }",
+                              upkeep_text])])
+    t = t[:start] + _indent(cell, len(ind)).rstrip("\n") + t[end:]
+    anchor = re.search(r'(?m)^([ \t]*)datacontext = "\[Building\.GetLocation\]"\n', t)
+    if not anchor:
+        raise ValueError(f"{what}: the built row sets no Location")
+    recorder = _row_recorder([(BUILT, BUILD_PAYBACK_BASIS[0]), (f"Not({BUILT})", BUILD_PAYBACK_BASIS[1])],
+                             ['datacontext = "[BuildingCandidate.GetLocationToBuildItem]"'])
+    return t[:anchor.end()] + "\n" + _indent(recorder, len(anchor.group(1))) + t[anchor.end():]
+
+
+def _location_row_no_candidate(t: str, what: str) -> str:
+    """The location view's unbuilt row: the value columns from the building type and the location, and the band
+    recorder."""
+    start, end, ind = _cut(t, r"^([ \t]*)widget = \{ #profit / income\n", what)
+    cell = (f"{ind}hbox = {{ using = {LOCATION_VALUES_UNBUILT} }} # PP: build cost, payback, profit, tax income\n\n"
+            + _indent(_row_recorder([("", BUILD_PAYBACK_BASIS[1])], []), len(ind)).rstrip("\n"))
+    return t[:start] + cell + t[end:]
+
+
+def port_location_rows(production: str) -> str:
+    """The location view's two building rows (vanilla types in production_lateralview.gui, which CMF re-declares) as
+    pp_ copies with the build panel's layout, plus the unbuilt rows' value columns template."""
+    what = "vanilla location view rows"
+    out = []
+    for name, port in zip(LOCATION_ROW_TYPES, (_location_row_with_candidate, _location_row_no_candidate)):
+        m = re.search(rf"(?m)^\ttype {name} = hbox \{{\n", production)
+        if not m:
+            raise ValueError(f"{what}: no type {name}")
+        block = production[m.start():_block_end(production, production.index("{", m.start()))]
+        block = block.replace(f"type {name} = hbox", f"type pp_{name} = hbox", 1)
+        out.append(port(_dedent(block, 1), f"{what} ({name})"))
+    return ("# Generated by tools/port_vanilla_gui.py (port_location_rows): the location view's building rows with the\n"
+            "# build panel's layout (slots and efficiencies two per column, build cost, payback, profit, tax income) and\n"
+            "# the payback band recorder. pp_ copies: CMF re-declares the vanilla types.\n"
+            f"types PPLocationBuildingRows {{\n{_indent(''.join(b.rstrip() + chr(10) + chr(10) for b in out).rstrip() + chr(10), 1)}}}\n\n"
+            + _values_template(unbuilt_only=True))
+
+
+def port_location_production(t: str) -> str:
+    """The location view (after its food gauges): wider, the pp_ rows, the header's value columns (build cost label,
+    payback button; every sort leaves the payback order) and the list as vanilla's grid or the payback bands."""
+    what = "vanilla location view"
+    w = BUILD_PANEL_WIDTH
+    t = _once(r'^(lateralview = \{\n\tname = "location_production_lateralview"\n)',
+              rf"\1\tsize = {{ {w} 100% }} # PP: wider than the vanilla left panel (570), like the build panel\n", t, what)
+    t = _once(r"(header_title = \{\n(?:[ \t]*\w+ = \w+\n)*[ \t]*)maximumsize = \{ 415 -1 \}",
+              rf"\1maximumsize = {{ {w - 150} -1 }}", t, what)
+    mode = f"GetVariableSystem.Exists('{BUILD_PAYBACK_VARIABLE}')"
+    clear = f"onclick = \"[GetVariableSystem.Clear('{BUILD_PAYBACK_VARIABLE}')]\" # PP: a sort leaves the payback order"
+    t, n = re.subn(r"(?m)^([ \t]*)(sort_by_key_button = \{\n)", lambda m: f"{m.group(1)}{m.group(2)}{m.group(1)}\t{clear}\n", t)
+    if n != LOCATION_SORT_BUTTONS:
+        raise ValueError(f"{what}: expected {LOCATION_SORT_BUTTONS} sort buttons, found {n}")
+    t = _once(r'(sort_by_key_button = \{\n[^\n]*\n[ \t]*)size = \{ 110 -1 \}(\n[ \t]*name = "production_efficiency")',
+              rf"\1size = {{ {BUILD_EFFICIENCY_WIDTH} -1 }}\2", t, what)
+    cost, pay, profit, tax = BUILD_VALUE_WIDTHS
+    for key, width in (("profit", profit), ("income", tax + BUILD_VALUE_MARGIN)):
+        t = _once(rf'(sort_by_key_button = \{{\n[^\n]*\n[ \t]*name = "{key}"\n[ \t]*layoutpolicy_vertical = expanding\n[ \t]*)'
+                  r"size = \{ 40 -1 \}", rf"\g<1>size = {{ {width} -1 }}", t, what)
+    label = _block("widget = { # PP: build cost (no engine sort key in this list)", [
+        "layoutpolicy_vertical = expanding", f"size = {{ {cost + BUILD_VALUE_MARGIN} -1 }}", 'tooltip = "PP_BUILD_COST_HEADER_TT"',
+        _block("icon = {", ["size = { 20 20 }", "parentanchor = center", 'texture = "gfx/interface/icons/sort/cost.dds"'])])
+    t = _once(r'^([ \t]*)(sort_by_key_button = \{\n[^\n]*\n[ \t]*name = "profit"\n)',
+              lambda h: (_indent(label + "\n" + _payback_toggle(pay).replace(
+                  'visible = "[BuildInLocationLateralView.GetBuildingType.IsProducing]"\n', ""), len(h.group(1)))
+                  + "\n" + h.group(0)), t, what)
+    t = _once(r'^([ \t]*)(sort_by_key_button = \{\n[^\n]*\n[ \t]*size = \{ 70 -1 \}\n[ \t]*name = "production_efficiency")',
+              r"\1expand = {} # PP: the value buttons sit over their columns\n\n\1\2", t, what)
+    t = _once(r'(sort_by_key_button = \{\n[^\n]*\n[ \t]*name = "level"\n)([ \t]*)using = layoutpolicy_expanding\n',
+              r"\1\2layoutpolicy_vertical = expanding\n\2size = { 125 -1 }\n", t, what)
+    # the list: vanilla's grid (selected sort) or the payback bands, rows BUILD_ROW_WIDTH wide (flowcontainers)
+    start, end, ind = _cut(t, r'^([ \t]*)blockoverride "scroll_list_layout" \{\n', what)
+    block = t[start:end]
+    items = "LocationProductionView.GetBuildingItems"
+    shown = re.search(r'(?m)^[ \t]*visible = "\[(.*)\]"\n', block)
+    if not shown or f'datamodel = "[{items}]"' not in block or "addrow = 65" not in block:
+        raise ValueError(f"{what}: the building list is no longer vanilla's grid")
+    shown = shown.group(1)
+    rw = BUILD_ROW_WIDTH
+    row = _item_body(block)
+    for name in LOCATION_ROW_TYPES:
+        row, k = re.subn(rf"(?m)^([ \t]*){name} = \{{", rf"\1pp_{name} = {{", row)
+        if k != 1:
+            raise ValueError(f"{what}: the list does not use {name} once")
+    row = _once(r"^widget = \{\n\tsize = \{ 100% 60 \}\n", f"widget = {{\n\tsize = {{ {rw} 60 }}\n", row, what)
+    cell = _block("widget = {", [f"size = {{ {rw} 65 }}", row])
+    name = payback_band_name()
+    contexts = ['datacontext = "[BuildingItem.GetBuildingType]"', 'datacontext = "[LocationProductionView.GetSelectedLocation]"']
+    bands = [(f"payback {low} to {high} years" if high else f"payback {low} years or more, or no profit",
+              f"GetVariableSystem.HasValue({name}, '{low}')") for low, high in payback_bands()]
+    bands.append(("not recorded yet", f"Not(GetVariableSystem.Exists({name}))"))
+    bands = [_column([f'datamodel = "[{items}]"', _block("item = {", [_column([
+        *contexts, f"datamodel = \"[DataModelRepeatedItem(Select_int32({test}, '(int32)1', '(int32)0'))]\"",
+        _block("item = {", [cell])])])], comment) for comment, test in bands]
+    grid = _block("fixedgridbox = { # the selected sort: vanilla's grid", [
+        f'visible = "[And({shown}, Not({mode}))]"', "addrow = 65", f"addcolumn = {rw}", f'datamodel = "[{items}]"',
+        _block("item = {", [row])])
+    layout = _block('blockoverride "scroll_list_layout" { # PP: the selected sort or the payback order', [
+        _column([grid, _column([f'visible = "[And({shown}, {mode})]"', *bands],
+                               "payback order: shortest first, the last sort inside each band")])])
     return t[:start] + _indent(layout, len(ind)).rstrip("\n") + t[end:]
 
 
@@ -729,6 +902,8 @@ def ported(vanilla_game: Path, mod_root: Path) -> dict[str, str | None]:
     out: dict[str, str | None] = {}
     for rel, scope in FOOD_GAUGE_FILES.items():
         out[rel] = port_food_gauges(_read(vanilla_game / GUI / rel), scope)
+    out[LOCATION_PRODUCTION] = port_location_production(out[LOCATION_PRODUCTION])
+    out[LOCATION_ROWS_GUI] = port_location_rows(_read(vanilla_game / GUI / PRODUCTION))
     out[EUROPEDIA] = port_europedia(_read(vanilla_game / GUI / EUROPEDIA), _read(mod_root / GUI / EUROPEDIA))
     out[BUILD_LOCATION] = port_build_location(_read(vanilla_game / GUI / BUILD_LOCATION))
     for rel in {**INTERNAL_GOODS_LISTS, **INTERNAL_GOODS_ICONS, **INTERNAL_GOODS_TABLES}:

@@ -1293,9 +1293,10 @@
 						ignoreinvisible = yes
 						position = { 0 2 }
 						fixedgridbox = { # the selected sort: vanilla's grid
+							visible = "[Not(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing))]"
 							addcolumn = 930
 							addrow = 60
-							datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), '(int32)0', GetDataModelSize(BuildInLocationLateralView.GetItems)))]"
+							datamodel = "[BuildInLocationLateralView.GetItems]"
 							item = {
 								widget = {
 									size = { 930 60 }
@@ -1315,10 +1316,11 @@
 						flowcontainer = { # payback order: shortest first, the last sort inside each band
 							direction = vertical
 							ignoreinvisible = yes
+							visible = "[And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing)]"
 							flowcontainer = { # payback 0 to 1 years
 								direction = vertical
 								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
+								datamodel = "[BuildInLocationLateralView.GetItems]"
 								item = {
 									flowcontainer = {
 										direction = vertical
@@ -1330,7 +1332,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)12'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)0'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1351,7 +1353,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)12'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)0'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1374,7 +1376,7 @@
 							flowcontainer = { # payback 1 to 2 years
 								direction = vertical
 								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
+								datamodel = "[BuildInLocationLateralView.GetItems]"
 								item = {
 									flowcontainer = {
 										direction = vertical
@@ -1386,7 +1388,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)12'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)24'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)1'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1407,7 +1409,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)12'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)24'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)1'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1430,7 +1432,7 @@
 							flowcontainer = { # payback 2 to 3 years
 								direction = vertical
 								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
+								datamodel = "[BuildInLocationLateralView.GetItems]"
 								item = {
 									flowcontainer = {
 										direction = vertical
@@ -1442,7 +1444,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)24'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)36'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)2'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1463,7 +1465,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)24'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)36'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)2'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1486,7 +1488,7 @@
 							flowcontainer = { # payback 3 to 4 years
 								direction = vertical
 								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
+								datamodel = "[BuildInLocationLateralView.GetItems]"
 								item = {
 									flowcontainer = {
 										direction = vertical
@@ -1498,7 +1500,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)36'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)48'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)3'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1519,7 +1521,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)36'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)48'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)3'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1542,7 +1544,7 @@
 							flowcontainer = { # payback 4 to 5 years
 								direction = vertical
 								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
+								datamodel = "[BuildInLocationLateralView.GetItems]"
 								item = {
 									flowcontainer = {
 										direction = vertical
@@ -1554,7 +1556,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)48'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)60'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)4'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1575,7 +1577,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)48'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)60'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)4'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1598,7 +1600,7 @@
 							flowcontainer = { # payback 5 to 6 years
 								direction = vertical
 								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
+								datamodel = "[BuildInLocationLateralView.GetItems]"
 								item = {
 									flowcontainer = {
 										direction = vertical
@@ -1610,7 +1612,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)60'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)72'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)5'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1631,7 +1633,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)60'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)72'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)5'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1654,7 +1656,7 @@
 							flowcontainer = { # payback 6 to 7 years
 								direction = vertical
 								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
+								datamodel = "[BuildInLocationLateralView.GetItems]"
 								item = {
 									flowcontainer = {
 										direction = vertical
@@ -1666,7 +1668,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)72'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)84'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)6'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1687,7 +1689,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)72'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)84'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)6'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1710,7 +1712,7 @@
 							flowcontainer = { # payback 7 to 8 years
 								direction = vertical
 								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
+								datamodel = "[BuildInLocationLateralView.GetItems]"
 								item = {
 									flowcontainer = {
 										direction = vertical
@@ -1722,7 +1724,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)84'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)96'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)7'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1743,7 +1745,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)84'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)96'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)7'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1763,10 +1765,10 @@
 									}
 								}
 							}
-							flowcontainer = { # payback 8 to 10 years
+							flowcontainer = { # payback 8 to 9 years
 								direction = vertical
 								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
+								datamodel = "[BuildInLocationLateralView.GetItems]"
 								item = {
 									flowcontainer = {
 										direction = vertical
@@ -1778,7 +1780,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)96'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)120'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)8'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1799,7 +1801,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)96'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)120'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)8'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1819,10 +1821,10 @@
 									}
 								}
 							}
-							flowcontainer = { # payback 10 to 12 years
+							flowcontainer = { # payback 9 to 10 years
 								direction = vertical
 								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
+								datamodel = "[BuildInLocationLateralView.GetItems]"
 								item = {
 									flowcontainer = {
 										direction = vertical
@@ -1834,7 +1836,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)120'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)144'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)9'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1855,7 +1857,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)120'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)144'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)9'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1875,10 +1877,10 @@
 									}
 								}
 							}
-							flowcontainer = { # payback 12 to 15 years
+							flowcontainer = { # payback 10 years or more, or no profit
 								direction = vertical
 								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
+								datamodel = "[BuildInLocationLateralView.GetItems]"
 								item = {
 									flowcontainer = {
 										direction = vertical
@@ -1890,7 +1892,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)144'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)180'))), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(GreaterThanOrEqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)10'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }
@@ -1911,343 +1913,7 @@
 											direction = vertical
 											ignoreinvisible = yes
 											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)144'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)180'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							flowcontainer = { # payback 15 to 20 years
-								direction = vertical
-								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									flowcontainer = {
-										direction = vertical
-										ignoreinvisible = yes
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)180'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)240'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)180'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)240'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							flowcontainer = { # payback 20 to 30 years
-								direction = vertical
-								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									flowcontainer = {
-										direction = vertical
-										ignoreinvisible = yes
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)240'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)360'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)240'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)360'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							flowcontainer = { # payback 30 to 50 years
-								direction = vertical
-								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									flowcontainer = {
-										direction = vertical
-										ignoreinvisible = yes
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)360'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)600'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)360'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)600'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							flowcontainer = { # payback 50 to 100 years
-								direction = vertical
-								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									flowcontainer = {
-										direction = vertical
-										ignoreinvisible = yes
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)600'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)1200'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)600'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)1200'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							flowcontainer = { # payback 100 to more years
-								direction = vertical
-								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									flowcontainer = {
-										direction = vertical
-										ignoreinvisible = yes
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)1200'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)1200'))), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							flowcontainer = { # no payback (no profit)
-								direction = vertical
-								ignoreinvisible = yes
-								datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), GetDataModelSize(BuildInLocationLateralView.GetItems), '(int32)0'))]"
-								item = {
-									flowcontainer = {
-										direction = vertical
-										ignoreinvisible = yes
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(Not(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0')), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(Not(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0')), '(int32)1', '(int32)0'))]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(GreaterThanOrEqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)10'), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
 													size = { 930 60 }

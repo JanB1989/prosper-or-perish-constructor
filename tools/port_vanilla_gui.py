@@ -68,10 +68,13 @@ BUILD_COST_SORT_KEY = "cost"   # engine key of the build list (BUILDING_LOCATION
 # the list once per payback band, shortest first; inside a band the selected sort holds. Band upper edges in years,
 # then one band above the last edge and one for no payback (profit 0 or less). The rows are vanilla's, each built
 # only in its band (DataModelRepeatedItem of 1 or 0), so the payback order builds as many rows as the selected sort.
-# Every band checks every item each frame (bands x locations), so the bands stay few: 27 were laggy in game.
+# Every band checks every location each frame (bands x locations; 27 bands of two comparisons each lagged the whole
+# game in game, 2026-10-17), so each test is one cost and one profit call (whole years, payback_whole_years) and the
+# bands are one year wide up to BUILD_PAYBACK_BANDS[-1], then one top band that also holds the unprofitable rows.
 BUILD_PAYBACK_VARIABLE = "pp_build_payback_order"
 BUILD_SORT_BUTTONS = 11   # the header's engine sort buttons (vanilla's 10 and cost); each one leaves the payback order
-BUILD_PAYBACK_BANDS = (1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 20, 30, 50, 100)
+BUILD_PAYBACK_BANDS = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+BUILD_PAYBACK_MIN_PROFIT = 0.05   # profit per level per month counted at least this in the band key (no division by 0)
 # the mod's internal goods: accounting goods pinned at their price floor that no one trades or consumes (in_game/common/
 # goods/pp_goods_*.txt). The market, the goods ledger, the markets ledger's surplus/demand icons and the trade-order
 # goods picker skip them; tooltips, building panels and production methods still show them.
@@ -479,20 +482,26 @@ def _payback_toggle(width: int) -> str:
     ])
 
 
-def payback_bands() -> list[tuple[float, float | None]]:
-    """(lower, upper) years of each band, shortest first; upper None = no upper edge."""
+def payback_bands() -> list[tuple[int, int | None]]:
+    """(lower, upper) whole years of each band, shortest first; upper None = no upper edge (and no profit)."""
     edges = (0, *BUILD_PAYBACK_BANDS)
     return [*zip(edges, edges[1:]), (BUILD_PAYBACK_BANDS[-1], None)]
 
 
-def _band_condition(income: str, low: float, high: float | None) -> str:
-    cost = BUILD_PAYBACK_COST
-    terms = [f"GreaterThan_CFixedPoint({income}, {ZERO})"]
-    if low:
-        terms.append(f"GreaterThanOrEqualTo_CFixedPoint({cost}, Multiply_CFixedPoint({income}, '(CFixedPoint){12 * low:g}'))")
-    if high is not None:
-        terms.append(f"LessThan_CFixedPoint({cost}, Multiply_CFixedPoint({income}, '(CFixedPoint){12 * high:g}'))")
-    return _all_of(terms)
+def payback_whole_years(profit: str) -> str:
+    """Whole years of profit per build cost, from one cost and one profit call (the band tests run every frame for
+    every band and location). Profit at or below BUILD_PAYBACK_MIN_PROFIT counts as that, so no profit lands in the
+    top band without a division by zero."""
+    floor = f"Max_CFixedPoint({profit}, '(CFixedPoint){BUILD_PAYBACK_MIN_PROFIT}')"
+    return f"FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint({BUILD_PAYBACK_COST}, '(CFixedPoint)12'), {floor}))"
+
+
+def _band_condition(profit: str, low: int, high: int | None) -> str:
+    if high is None:
+        return f"GreaterThanOrEqualTo_int32({payback_whole_years(profit)}, '(int32){low}')"
+    if high != low + 1:
+        raise ValueError("payback bands are one whole year wide below the top band")
+    return f"EqualTo_int32({payback_whole_years(profit)}, '(int32){low}')"
 
 
 def _column(lines: list[str], comment: str = "") -> str:
@@ -515,32 +524,28 @@ def _band(comment: str, items: str, row: str, built: str, unbuilt: str) -> str:
 
 
 def _payback_order(t: str, what: str) -> str:
-    """The list area holds two lists of the vanilla rows over the same items: vanilla's grid in the selected sort or,
-    with the header's payback button on, the payback bands. Each list takes all items or none (DataModelFirst), so the
-    hidden one builds no rows. Both sit in vertical flowcontainers, which size to their content; the rows are
-    BUILD_ROW_WIDTH wide (a flowcontainer has no width of its own for vanilla's 100%)."""
+    """The list area holds two lists of the vanilla rows over the same items: vanilla's grid (vanilla's binding) in the
+    selected sort or, with the header's payback button on, the payback bands. The hidden one is not updated. Both sit
+    in vertical flowcontainers, which size to their content; the rows are BUILD_ROW_WIDTH wide (a flowcontainer has no
+    width of its own for vanilla's 100%)."""
     start, end, ind = _cut(t, r'^([ \t]*)blockoverride "scroll_list_content" \{\n', what)
     block = t[start:end]
-    for needed in ('datamodel = "[BuildInLocationLateralView.GetItems]"', "addcolumn = 100%", "addrow = 60"):
+    items = "BuildInLocationLateralView.GetItems"
+    for needed in (f'datamodel = "[{items}]"', "addcolumn = 100%", "addrow = 60"):
         if needed not in block:
             raise ValueError(f"{what}: the location list no longer has {needed}")
     w = BUILD_ROW_WIDTH
     row = _once(r"^widget = \{\n\tsize = \{ 100% 60 \}\n", f"widget = {{\n\tsize = {{ {w} 60 }}\n", _item_body(block), what)
     mode = _payback_mode()
-    items = "BuildInLocationLateralView.GetItems"
-    every = f"GetDataModelSize({items})"
-    sorted_items = f"DataModelFirst({items}, Select_int32({mode}, '(int32)0', {every}))"
-    band_items = f"DataModelFirst({items}, Select_int32({mode}, {every}, '(int32)0'))"
-    bands = [_band(f"payback {low} to {high or 'more'} years", band_items, row,
+    bands = [_band(f"payback {low} to {high} years" if high else f"payback {low} years or more, or no profit", items, row,
                    _band_condition(BUILD_PAYBACK_BASIS[0], low, high), _band_condition(BUILD_PAYBACK_BASIS[1], low, high))
              for low, high in payback_bands()]
-    bands.append(_band("no payback (no profit)", band_items, row,
-                       *(f"Not(GreaterThan_CFixedPoint({income}, {ZERO}))" for income in BUILD_PAYBACK_BASIS)))
     grid = _block("fixedgridbox = { # the selected sort: vanilla's grid", [
-        f"addcolumn = {w}", "addrow = 60", f'datamodel = "[{sorted_items}]"', _block("item = {", [row])])
+        f'visible = "[Not({mode})]"', f"addcolumn = {w}", "addrow = 60", f'datamodel = "[{items}]"',
+        _block("item = {", [row])])
     layout = _block('blockoverride "scroll_list_layout" { # PP: the selected sort or the payback order', [
         _column(["position = { 0 2 }", grid,
-                 _column(bands, "payback order: shortest first, the last sort inside each band")])])
+                 _column([f'visible = "[{mode}]"', *bands], "payback order: shortest first, the last sort inside each band")])])
     return t[:start] + _indent(layout, len(ind)).rstrip("\n") + t[end:]
 
 

@@ -42,29 +42,32 @@ FOOD_GAUGE_FILES: dict[str, str] = {
 # overrides the mod no longer needs (pure vanilla after the port)
 RETIRED = ("expansion_lateralview.gui",)
 EUROPEDIA = "encyclopedia_lateralview.gui"
-# the build panel ("Building <type>"): width (vanilla left panel 570; a six-slot row needs ~790), location card
-# (vanilla 150) and the input goods per line of a slot filter row (the Cookshop slot has 22)
+# the build panel ("Building <type>"): width (vanilla left panel 570; a six-slot row with the value columns needs
+# ~770), location card (vanilla 150) and the input goods per line of a slot filter row (the Cookshop slot has 22)
 BUILD_LOCATION = "build_location_lateralview.gui"
-BUILD_PANEL_WIDTH = 800
+BUILD_PANEL_WIDTH = 820
 BUILD_LOCATION_CARD_WIDTH = 175
 BUILD_INPUTS_PER_LINE = 14
-# the location rows' value columns, one value each: production efficiency (the first production method), payback
-# time, profit and tax income per level. Payback = build cost / tax income per month, in years (the Construction
-# Manager mod's ROI); per (built, unbuilt) branch the tax income per level and the profit per level
+# the location rows' value columns, one value each: production efficiency (the first production method), build cost,
+# payback time, profit and tax income per level. Payback = build cost / profit per level per month, in years (the
+# Construction Manager mod's ROI by profit; its tooltip also gives the years by tax income); per (built, unbuilt)
+# branch the profit and the tax income per level
 BUILD_EFFICIENCY_WIDTH = 70
-BUILD_VALUE_WIDTHS = (55, 60, 60)   # payback, profit, tax income
-BUILD_VALUE_MARGIN = 5              # left and right of the value columns
+BUILD_VALUE_WIDTHS = (55, 55, 60, 60)   # build cost, payback, profit, tax income
+BUILD_VALUE_MARGIN = 5                  # left and right of the value columns
 BUILD_PAYBACK_INCOME = ("Building.GetIncomeToOwnerPerLevel",
                         "GetBuildingTypeIncomeToOwnerInLocation(BuildingType.Self, Location.Self)")
 BUILD_PAYBACK_PROFIT = ("Building.GetProfitPerLevel", "GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self)")
+BUILD_PAYBACK_BASIS = BUILD_PAYBACK_PROFIT
 BUILD_PAYBACK_COST = "GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self)"
 BUILD_PAYBACK_TOOLTIP = ("PP_BUILD_PAYBACK_TT_BUILT", "PP_BUILD_PAYBACK_TT_UNBUILT")   # pp_build_panel_l_english.yml
+BUILD_COST_SORT_KEY = "cost"   # engine key of the build list (BUILDING_LOCATION_SORT_BY_COST), unused by vanilla
 # payback order: the engine sorts only by its own keys, so the header's payback button (global GUI variable) draws
 # the list once per payback band, shortest first; inside a band the selected sort holds. Band upper edges in years,
-# then one band above the last edge and one for no payback (tax income 0 or less). Rows are compact (location,
-# payback, profit, tax income, builder) and built only in their band (DataModelRepeatedItem of 1 or 0).
+# then one band above the last edge and one for no payback (profit 0 or less). Rows are compact (location, build
+# cost, payback, profit, tax income, builder) and built only in their band (DataModelRepeatedItem of 1 or 0).
 BUILD_PAYBACK_VARIABLE = "pp_build_payback_order"
-BUILD_PAYBACK_BANDS = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 25, 30, 35, 40, 60, 100)
+BUILD_PAYBACK_BANDS = (0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 25, 30, 40, 60, 100)
 BUILD_PAYBACK_ROW_HEIGHT = 48
 BUILD_PAYBACK_LOCATION_WIDTH = 260
 # the mod's internal goods: accounting goods pinned at their price floor that no one trades or consumes (in_game/common/
@@ -293,12 +296,17 @@ def port_build_location(vanilla: str) -> str:
               r"\1expand = {} # PP: the value buttons sit over their columns\n\n\1\2", t, what)
     t = _once(r'(sort_by_key_button = \{\n[ \t]*name = "production_efficiency"\n[ \t]*layoutpolicy_vertical = expanding\n'
               r"[ \t]*)size = \{ 100 -1 \}", rf"\1size = {{ {BUILD_EFFICIENCY_WIDTH} -1 }}", t, what)
-    pay, profit, tax = BUILD_VALUE_WIDTHS
+    cost, pay, profit, tax = BUILD_VALUE_WIDTHS
     for key, width in (("profit", profit), ("income", tax + BUILD_VALUE_MARGIN)):
         t = _once(rf'(sort_by_key_button = \{{\n[ \t]*name = "{key}"\n[ \t]*layoutpolicy_vertical = expanding\n[ \t]*)'
                   r"size = \{ 40 -1 \}", rf"\g<1>size = {{ {width} -1 }}", t, what)
+    cost_button = _block("sort_by_key_button = { # PP: the engine's cost key (vanilla has no button for it)", [
+        f'name = "{BUILD_COST_SORT_KEY}"', "layoutpolicy_vertical = expanding", f"size = {{ {cost + BUILD_VALUE_MARGIN} -1 }}",
+        'visible = "[BuildInLocationLateralView.GetBuildingType.IsProducing]"',
+        _block('blockoverride "sort_by_key_button_texture" {', ['texture = "gfx/interface/icons/sort/cost.dds"'])])
     t = _once(r'^([ \t]*)(sort_by_key_button = \{\n[ \t]*name = "profit"\n)',
-              lambda h: _indent(_payback_toggle(pay + BUILD_VALUE_MARGIN), len(h.group(1))) + "\n" + h.group(0), t, what)
+              lambda h: (_indent(cost_button + "\n" + _payback_toggle(pay), len(h.group(1))) + "\n" + h.group(0)),
+              t, what)
     t = _once(r'(sort_by_key_button = \{\n[ \t]*name = "number_building"\n)([ \t]*)using = layoutpolicy_expanding\n',
               r"\1\2layoutpolicy_vertical = expanding\n\2size = { 125 -1 }\n", t, what)
     t = _value_columns(t, what)
@@ -386,24 +394,30 @@ def _value_column(comment: str, width: int, built: list[str], unbuilt: list[str]
 
 
 def _values_template() -> str:
-    """Payback, profit and tax income per level, one value per column (template pp_build_location_values, used by
-    the detailed and the compact rows)."""
+    """Build cost, payback, profit and tax income per level, one value per column (template pp_build_location_values,
+    used by the detailed and the compact rows)."""
     cost = BUILD_PAYBACK_COST
-    pay, profit, tax = BUILD_VALUE_WIDTHS
+    cost_width, pay, profit, tax = BUILD_VALUE_WIDTHS
 
-    def payback(income: str, tooltip: str) -> list[str]:
-        return [_value_text(f"[{payback_years(cost, income)}|1]@time!",
-                            f"And(GreaterThan_CFixedPoint({income}, {ZERO}), GreaterThan_CFixedPoint({cost}, {ZERO}))",
+    def payback(basis: str, tooltip: str) -> list[str]:
+        return [_value_text(f"[{payback_years(cost, basis)}|1]@time!",
+                            f"And(GreaterThan_CFixedPoint({basis}, {ZERO}), GreaterThan_CFixedPoint({cost}, {ZERO}))",
                             f'tooltip = "{tooltip}"'),
-                _value_text("#L -#!", f"Not(GreaterThan_CFixedPoint({income}, {ZERO}))")]
+                _value_text("#L -#!", f"Not(GreaterThan_CFixedPoint({basis}, {ZERO}))")]
+
+    def build_cost(tooltip: str) -> list[str]:
+        return [_value_text(f"[{cost}|0]@gold!", "", f'tooltip = "{tooltip}"', BUILD_COST_SORT_KEY)]
 
     built_tt = _block("tooltipwidget = {", ["using = BuildingProfit_Tooltip"])
     unbuilt_tt = _block("tooltipwidget = {", ["using = BuildingTypeProfit_Tooltip"])
     subsidized = f"And(LessThanOrEqualTo_CFixedPoint(Building.GetProfit, {ZERO}), Building.IsSubsidized)"
     (inc_b, inc_u), (prof_b, prof_u) = BUILD_PAYBACK_INCOME, BUILD_PAYBACK_PROFIT
     columns = [
-        _value_column("payback: years of tax income per build cost", pay,
-                      payback(inc_b, BUILD_PAYBACK_TOOLTIP[0]), payback(inc_u, BUILD_PAYBACK_TOOLTIP[1])),
+        _value_column("build cost of the next level", cost_width,
+                      build_cost(BUILD_PAYBACK_TOOLTIP[0]), build_cost(BUILD_PAYBACK_TOOLTIP[1])),
+        _value_column("payback: years of profit per build cost", pay,
+                      payback(BUILD_PAYBACK_BASIS[0], BUILD_PAYBACK_TOOLTIP[0]),
+                      payback(BUILD_PAYBACK_BASIS[1], BUILD_PAYBACK_TOOLTIP[1])),
         _value_column("profit per level", profit,
                       [_value_text(f"[{prof_b}|+=2]@wealth!", f"Not({subsidized})", built_tt, "profit"),
                        _value_text(f"#L [{prof_b}|2]#!@wealth!", subsidized, built_tt, "profit")],
@@ -422,7 +436,7 @@ def _value_columns(t: str, what: str) -> str:
     a template, so the compact rows of the payback order use the same buttons."""
     start, end, ind = _cut(t, r'^([ \t]*)hbox = \{\n[ \t]*visible = "\[LocationToBuildItem\.GetBuildingType\.IsProducing\]"\n'
                               r"[ \t]*margin = \{ 5 0 \}\n[ \t]*widget = \{ #profit\n", what)
-    t = t[:start] + f"{ind}hbox = {{ using = pp_build_location_values }} # PP: payback, profit, tax income" + t[end:]
+    t = t[:start] + f"{ind}hbox = {{ using = pp_build_location_values }} # PP: build cost, payback, profit, tax income" + t[end:]
     builder = []
     for name in ("builder", "upgrader"):
         start, end, ind = _cut(t, rf"^([ \t]*)widget = \{{ #{name}\n", what)
@@ -457,9 +471,9 @@ def _band_condition(income: str, low: float, high: float | None) -> str:
     cost = BUILD_PAYBACK_COST
     terms = [f"GreaterThan_CFixedPoint({income}, {ZERO})"]
     if low:
-        terms.append(f"GreaterThanOrEqualTo_CFixedPoint({cost}, Multiply_CFixedPoint({income}, '(CFixedPoint){12 * low}'))")
+        terms.append(f"GreaterThanOrEqualTo_CFixedPoint({cost}, Multiply_CFixedPoint({income}, '(CFixedPoint){12 * low:g}'))")
     if high is not None:
-        terms.append(f"LessThan_CFixedPoint({cost}, Multiply_CFixedPoint({income}, '(CFixedPoint){12 * high}'))")
+        terms.append(f"LessThan_CFixedPoint({cost}, Multiply_CFixedPoint({income}, '(CFixedPoint){12 * high:g}'))")
     return _all_of(terms)
 
 
@@ -523,10 +537,10 @@ def _payback_order(t: str, what: str) -> str:
     sorted_items = f"DataModelFirst({items}, Select_int32({mode}, '(int32)0', {every}))"
     band_items = f"DataModelFirst({items}, Select_int32({mode}, {every}, '(int32)0'))"
     bands = [_band(f"payback {low} to {high or 'more'} years", band_items,
-                   _band_condition(BUILD_PAYBACK_INCOME[0], low, high), _band_condition(BUILD_PAYBACK_INCOME[1], low, high))
+                   _band_condition(BUILD_PAYBACK_BASIS[0], low, high), _band_condition(BUILD_PAYBACK_BASIS[1], low, high))
              for low, high in payback_bands()]
-    bands.append(_band("no payback (no tax income)", band_items,
-                       *(f"Not(GreaterThan_CFixedPoint({income}, {ZERO}))" for income in BUILD_PAYBACK_INCOME)))
+    bands.append(_band("no payback (no profit)", band_items,
+                       *(f"Not(GreaterThan_CFixedPoint({income}, {ZERO}))" for income in BUILD_PAYBACK_BASIS)))
     layout = _block('blockoverride "scroll_list_layout" { # PP: the selected sort or the payback order', [
         _block("vbox = {", [
             "layoutpolicy_horizontal = expanding", "margin_top = 2",

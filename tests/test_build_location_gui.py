@@ -75,15 +75,19 @@ def _loc() -> str:
     return (MOD_ROOT / "main_menu/localization/english/pp_build_panel_l_english.yml").read_text(encoding="utf-8-sig")
 
 
-def test_payback_column_for_built_and_unbuilt_rows():
-    """Construction Manager's ROI: build cost / monthly tax income in years, once per branch in the value columns
-    template, which both the detailed and the compact rows use; tooltips localized."""
+def test_cost_and_payback_columns_for_built_and_unbuilt_rows():
+    """Construction Manager's ROI by profit: build cost / monthly profit per level in years, and the build cost, once
+    per branch in the value columns template, which both the detailed and the compact rows use; the cost column has
+    the engine's cost sort key; tooltips localized."""
     tool = _tool()
     text = _mod_file()
-    for income, tooltip in zip(tool.BUILD_PAYBACK_INCOME, tool.BUILD_PAYBACK_TOOLTIP):
-        assert text.count(f'raw_text = "[{tool.payback_years(tool.BUILD_PAYBACK_COST, income)}|1]@time!"') == 1
-        assert text.count(f'tooltip = "{tooltip}"') == 1
+    assert tool.BUILD_PAYBACK_BASIS == tool.BUILD_PAYBACK_PROFIT
+    for basis, tooltip in zip(tool.BUILD_PAYBACK_BASIS, tool.BUILD_PAYBACK_TOOLTIP):
+        assert text.count(f'raw_text = "[{tool.payback_years(tool.BUILD_PAYBACK_COST, basis)}|1]@time!"') == 1
+        assert text.count(f'tooltip = "{tooltip}"') == 2                       # cost and payback column
         assert f"  {tooltip}: " in _loc()
+    assert text.count(f'raw_text = "[{tool.BUILD_PAYBACK_COST}|0]@gold!"') == 2
+    assert text.count(f'name = "{tool.BUILD_COST_SORT_KEY}"') == 3             # header button, two highlights
     assert text.count("template pp_build_location_values {") == 1
     assert text.count("hbox = { using = pp_build_location_values }") == 2      # detailed and compact row
     assert text.count("using = pp_build_location_builder\n") == 2

@@ -429,7 +429,8 @@
   rerun the tool.
   Tests: `tests/test_internal_goods_gui.py`.
 - Build panel (2026-10-17, Jan; not yet seen in game): each location row has one value per column, efficiency (first
-  production method), payback (build cost / monthly tax income per level, in years, Construction Manager's ROI),
+  production method), build cost (sorts by the engine's `cost` key, which vanilla never shows), payback (build cost /
+  monthly profit per level, in years, Construction Manager's ROI by profit; the tooltip also gives it by tax income),
   profit and tax income (template `pp_build_location_values`; builder and upgrader in `pp_build_location_builder`).
   The engine sorts only by its own keys, so the header's payback button (GUI variable `pp_build_payback_order`) draws
   the list once per payback band (`BUILD_PAYBACK_BANDS`) as compact rows (`pp_build_payback_row`), each built only in

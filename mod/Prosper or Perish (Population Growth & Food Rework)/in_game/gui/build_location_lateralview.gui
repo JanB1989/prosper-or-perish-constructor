@@ -2168,14 +2168,14 @@ template build_location_entry {
 					visible = "[LocationToBuildItem.GetBuildingType.IsProducing]"
 					margin = { 5 0 }
 					widget = { #profit
-						size = { 60 39 }
+						size = { 60 54 }
 						hbox = { #built
 							visible = "[And(LocationToBuildItem.ShowProfit, LocationToBuildItem.HasConstructedBuildingLevels)]"
 							expand = {}
 							datacontext = "[LocationToBuildItem.GetBuildingType]"
 							vbox = {  #profitable
 								visible = "[GreaterThan_CFixedPoint(Building.GetProfit, '(CFixedPoint)0')]"
-								spacing = 3
+								spacing = 0
 								tooltipwidget = {
 									using = BuildingProfit_Tooltip
 								}
@@ -2200,6 +2200,16 @@ template build_location_entry {
 										size = { 105% 100% }
 										name = "income"
 									}
+								}
+
+								text_single = { # PP: payback time, years of tax income per build cost
+									visible = "[And(GreaterThan_CFixedPoint(Building.GetIncomeToOwnerPerLevel, '(CFixedPoint)0'), GreaterThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)0'))]"
+									size = { 60 18 }
+									align = nobaseline|right
+									autoresize = no
+									fontsize = 14
+									raw_text = "[Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Building.GetIncomeToOwnerPerLevel), '(CFixedPoint)12')|1]@time!"
+									tooltip = "PP_BUILD_PAYBACK_TT_BUILT"
 								}
 							}
 							text_single = { #unprofitable and not subsidized
@@ -2279,6 +2289,16 @@ template build_location_entry {
 										size = { 105% 100% }
 										name = "income"
 									}
+								}
+
+								text_single = { # PP: payback time, years of tax income per build cost
+									visible = "[And(GreaterThan_CFixedPoint(GetBuildingTypeIncomeToOwnerInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)0'))]"
+									size = { 60 18 }
+									align = nobaseline|right
+									autoresize = no
+									fontsize = 14
+									raw_text = "[Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), GetBuildingTypeIncomeToOwnerInLocation(BuildingType.Self, Location.Self)), '(CFixedPoint)12')|1]@time!"
+									tooltip = "PP_BUILD_PAYBACK_TT_UNBUILT"
 								}
 
 							}

@@ -48,6 +48,13 @@ BUILD_LOCATION = "build_location_lateralview.gui"
 BUILD_PANEL_WIDTH = 800
 BUILD_LOCATION_CARD_WIDTH = 175
 BUILD_INPUTS_PER_LINE = 14
+# payback line under a location row's profit and tax income: build cost / tax income per month, in years (the
+# Construction Manager mod's ROI); per (built, unbuilt) branch the tax income per level and the profit per level
+BUILD_PAYBACK_INCOME = ("Building.GetIncomeToOwnerPerLevel",
+                        "GetBuildingTypeIncomeToOwnerInLocation(BuildingType.Self, Location.Self)")
+BUILD_PAYBACK_PROFIT = ("Building.GetProfitPerLevel", "GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self)")
+BUILD_PAYBACK_COST = "GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self)"
+BUILD_PAYBACK_TOOLTIP = ("PP_BUILD_PAYBACK_TT_BUILT", "PP_BUILD_PAYBACK_TT_UNBUILT")   # pp_build_panel_l_english.yml
 # the mod's internal goods: accounting goods pinned at their price floor that no one trades or consumes (in_game/common/
 # goods/pp_goods_*.txt). The market, the goods ledger, the markets ledger's surplus/demand icons and the trade-order
 # goods picker skip them; tooltips, building panels and production methods still show them.
@@ -218,7 +225,8 @@ def port_build_location(vanilla: str) -> str:
     """Vanilla build panel ("Building <type>"), laid out for PP's buildings: up to 22 inputs in one slot (Cookshop)
     and up to six production-method slots (fishing village). The panel is wider, the goods rows of the slot filter
     wrap their inputs onto more lines and grow with them, and each location row shows its slot circles and production
-    efficiencies two per column, so they stay inside the row. Everything else is vanilla."""
+    efficiencies two per column, so they stay inside the row, and under its profit and tax income the payback time
+    (``_payback``). Everything else is vanilla."""
     what = "vanilla build panel"
     t = vanilla
     # the panel: wider than the 570 of the left lateral views; the market picker opens beside it
@@ -275,6 +283,7 @@ def port_build_location(vanilla: str) -> str:
                   r"size = \{ 40 -1 \}", r"\1size = { 35 -1 }", t, what)
     t = _once(r'(sort_by_key_button = \{\n[ \t]*name = "number_building"\n)([ \t]*)using = layoutpolicy_expanding\n',
               r"\1\2layoutpolicy_vertical = expanding\n\2size = { 125 -1 }\n", t, what)
+    t = _payback(t, what)
     # the market picker: vanilla's select_menu_left with its offset moved to the panel's new right edge
     m = re.search(r"(?m)^select_menu_left = \{\n", t)
     if not m:
@@ -295,6 +304,35 @@ def port_build_location(vanilla: str) -> str:
               f"\tstate = {{\n\t\tname = _hide\n\t\tduration = 0.133\n\t\tposition_x = {x - 45}\n\t\talpha = 0\n\t}}\n\n"
               "\tusing = bg_sidemenu\n\n\tselect_menu_layout = {\n" + _indent(body.strip("\n") + "\n", 1) + "\t}\n}")
     return t[:m.start()] + picker + t[end:]
+
+
+def payback_years(cost: str, income: str) -> str:
+    return f"Divide_CFixedPoint(Divide_CFixedPoint({cost}, {income}), '(CFixedPoint)12')"
+
+
+def _payback(t: str, what: str) -> str:
+    """A third line in each location row's profit column: the years the level's tax income takes to pay back its
+    build cost (the tooltip also gives the years by profit). Shown where the tax income is positive; the two vanilla
+    lines lose their spacing and the column grows to three lines (the row is 58 high)."""
+    t = _once(r"(widget = \{ #profit\n[ \t]*)size = \{ 60 39 \}", r"\1size = { 60 54 }", t, what)
+    t = _once(r"(vbox = \{  #profitable\n[ \t]*visible = \"[^\n]*\"\n[ \t]*)spacing = 3\n", r"\1spacing = 0\n", t, what)
+    for income, tooltip, fmt in zip(BUILD_PAYBACK_INCOME, BUILD_PAYBACK_TOOLTIP, ("+=2", "+=<2")):
+        line = re.compile(rf'(?m)^([ \t]*)text_single = \{{\n(?:[ \t]*\w+ = [^\n]*\n)*?[ \t]*raw_text = '
+                          rf'"\[{re.escape(income)}\|{re.escape(fmt)}\]@income!"\n')
+        found = list(line.finditer(t))
+        if len(found) != 1:
+            raise ValueError(f"{what}: expected 1 tax income line on {income}, found {len(found)}")
+        ind = found[0].group(1)
+        end = _block_end(t, t.index("{", found[0].start()))
+        shown = (f"And(GreaterThan_CFixedPoint({income}, '(CFixedPoint)0'), "
+                 f"GreaterThan_CFixedPoint({BUILD_PAYBACK_COST}, '(CFixedPoint)0'))")
+        payback = (f"\n\n{ind}text_single = {{ # PP: payback time, years of tax income per build cost\n"
+                   f"{ind}\tvisible = \"[{shown}]\"\n{ind}\tsize = {{ 60 18 }}\n{ind}\talign = nobaseline|right\n"
+                   f"{ind}\tautoresize = no\n{ind}\tfontsize = 14\n"
+                   f"{ind}\traw_text = \"[{payback_years(BUILD_PAYBACK_COST, income)}|1]@time!\"\n"
+                   f"{ind}\ttooltip = \"{tooltip}\"\n{ind}}}")
+        t = t[:end] + payback + t[end:]
+    return t
 
 
 def _any_of(terms: list[str]) -> str:

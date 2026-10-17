@@ -68,6 +68,18 @@ def test_market_picker_opens_beside_the_panel():
     assert "select_menu_left" not in text.replace("vanilla select_menu_left", "")
 
 
+def test_payback_line_under_built_and_unbuilt_tax_income():
+    """Construction Manager's ROI: build cost / monthly tax income in years, one line per branch, tooltips localized."""
+    tool = _tool()
+    text = _mod_file()
+    loc = (MOD_ROOT / "main_menu/localization/english/pp_build_panel_l_english.yml").read_text(encoding="utf-8-sig")
+    for income, tooltip in zip(tool.BUILD_PAYBACK_INCOME, tool.BUILD_PAYBACK_TOOLTIP):
+        assert text.count(f'raw_text = "[{tool.payback_years(tool.BUILD_PAYBACK_COST, income)}|1]@time!"') == 1
+        assert text.count(f'tooltip = "{tooltip}"') == 1
+        assert f"  {tooltip}: " in loc
+    assert "size = { 60 54 }" in text   # three 18-high lines in the 58-high row
+
+
 def test_braces_balance():
     tool = _tool()
     text = _mod_file()

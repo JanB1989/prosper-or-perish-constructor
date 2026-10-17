@@ -150,8 +150,8 @@ def test_mines_are_built_regardless_of_shortage() -> None:
     # User rule (2026-10-17): mines (blueprint footprint "mining") need no shortage; profit and the rest still apply.
     blocks = candidate_blocks()
     footprints = gen.blueprint_footprints()
-    mines = [b for b in blocks if footprints.get(b) in gen.NO_SHORTAGE_FOOTPRINTS]
-    assert {"iron_mine", "coal_mine", "salt_mine", "silver_mine"} <= set(mines)
+    mines = [b for b in blocks if footprints.get(b) in gen.NO_SHORTAGE_FOOTPRINTS or b in gen.NO_SHORTAGE_BUILDINGS]
+    assert {"iron_mine", "coal_mine", "salt_mine", "silver_mine", "gold_diggings", "gold_stamp_mill"} <= set(mines)
     for mine in mines:
         assert "goods_demand_in_market" not in blocks[mine], mine
         assert blocks[mine].count("# built regardless of shortage") == 2, mine

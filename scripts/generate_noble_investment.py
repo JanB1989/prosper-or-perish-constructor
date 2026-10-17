@@ -59,6 +59,9 @@ FOOD_STORE_MONTHS = 12
 # Blueprint footprint classes built without any shortage (user rule 2026-10-17: mines regardless of shortage); profit,
 # research, free hands and the location rules still apply.
 NO_SHORTAGE_FOOTPRINTS = {"mining"}
+# Mines whose blueprint has another footprint (user rule 2026-10-17: gold diggings are mines; the stamp mill is their
+# upgrade, which replaces the diggings).
+NO_SHORTAGE_BUILDINGS = {"gold_diggings", "gold_stamp_mill"}
 BLUEPRINTS = ROOT / "blueprints" / "accepted" / "buildings"
 # Buildings the nobles never invest in, whatever they earn (user rules).
 EXCLUDED_BUILDINGS = {
@@ -278,7 +281,7 @@ def candidates(
         blocks = method_blocks(body, goods, method_unlocks)
         if not blocks:
             continue
-        needs_shortage = footprints.get(building) not in NO_SHORTAGE_FOOTPRINTS
+        needs_shortage = footprints.get(building) not in NO_SHORTAGE_FOOTPRINTS and building not in NO_SHORTAGE_BUILDINGS
         found.append(Candidate(building, pop_type, good, blocks, unlocks.get(building, ()), needs_shortage))
     return found
 

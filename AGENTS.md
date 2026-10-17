@@ -459,7 +459,8 @@
   location's market; masonry from demand > 0.8 x supply, `SHORTAGE_RATIO`; for the 36 Province Food makers (farms,
   fisheries, camel herders) also a province store under 12 months, `FOOD_STORE_MONTHS`, since a market grain surplus
   kept nobles from building farms in hungry provinces, Austria 1384; mines, blueprint footprint `mining`, need no
-  shortage at all, `NO_SHORTAGE_FOOTPRINTS`, user rule 2026-10-17); `pp_noble_investment_min_unemployed` free
+  shortage at all, `NO_SHORTAGE_FOOTPRINTS`, plus gold diggings and the gold stamp mill, `NO_SHORTAGE_BUILDINGS`,
+  user rules 2026-10-17); `pp_noble_investment_min_unemployed` free
   people; no construction under way there (`num_civil_constructions`) and no noble investment there in the last 730
   days (location variable `pp_noble_investment_recent`; without it the same building was stacked 3-4 times while the
   first was still being built); `can_build_building`; and `has_advance` for an

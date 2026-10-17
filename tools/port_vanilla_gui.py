@@ -430,8 +430,8 @@ def _values_template() -> str:
     cost_width, pay, profit, tax = BUILD_VALUE_WIDTHS
 
     def payback(basis: str, tooltip: str) -> list[str]:
-        return [_value_text(f"[{payback_years(cost, basis)}|1]@time!",
-                            f"And(GreaterThan_CFixedPoint({basis}, {ZERO}), GreaterThan_CFixedPoint({cost}, {ZERO}))",
+        # no cost guard: the cost call is the slow one (in game 2026-10-17), and a free level shows 0.0
+        return [_value_text(f"[{payback_years(cost, basis)}|1]@time!", f"GreaterThan_CFixedPoint({basis}, {ZERO})",
                             f'tooltip = "{tooltip}"'),
                 _value_text("#L -#!", f"Not(GreaterThan_CFixedPoint({basis}, {ZERO}))")]
 
@@ -496,12 +496,20 @@ def payback_whole_years(profit: str) -> str:
     return f"FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint({BUILD_PAYBACK_COST}, '(CFixedPoint)12'), {floor}))"
 
 
-def _band_condition(profit: str, low: int, high: int | None) -> str:
-    if high is None:
-        return f"GreaterThanOrEqualTo_int32({payback_whole_years(profit)}, '(int32){low}')"
-    if high != low + 1:
-        raise ValueError("payback bands are one whole year wide below the top band")
-    return f"EqualTo_int32({payback_whole_years(profit)}, '(int32){low}')"
+def payback_band_name() -> str:
+    """GUI variable that holds a location's recorded payback band for the building type of the panel."""
+    return "Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey))"
+
+
+def _band_value(profit: str) -> str:
+    """The band of a location as text: its whole years of payback, the top band for longer or no profit. Evaluated
+    only when the location is recorded (the cost call is too slow for every frame)."""
+    key = payback_whole_years(profit)
+    top = BUILD_PAYBACK_BANDS[-1]
+    value = f"'{top}'"
+    for k in reversed(range(top)):
+        value = f"Select_CString(EqualTo_int32({key}, '(int32){k}'), '{k}', {value})"
+    return value
 
 
 def _column(lines: list[str], comment: str = "") -> str:
@@ -511,23 +519,42 @@ def _column(lines: list[str], comment: str = "") -> str:
                   ["direction = vertical", "ignoreinvisible = yes", *lines])
 
 
-def _band(comment: str, items: str, row: str, built: str, unbuilt: str) -> str:
-    """The list's items once more; each builds its row (the vanilla row) only when it falls in this band, so every
-    row is built once across all bands."""
-    def side(visible: str, cond: str) -> str:
-        return _column([f'visible = "[{visible}]"',
-                        f"datamodel = \"[DataModelRepeatedItem(Select_int32({cond}, '(int32)1', '(int32)0'))]\"",
-                        _block("item = {", [row])])
+def _recorder(items: str) -> str:
+    """Each location records its band once (a widget's _show state writes the GUI variable): when the payback order
+    opens and whenever its construction count changes (one of two recorders turns visible), so a level queued in the
+    panel moves its row. The bands then only read the variables."""
+    constructions = "IsOdd_int32(GetDataModelSize(Location.GetCivilConstructions))"
+    name = payback_band_name()
+    mode = _payback_mode()
+
+    def record(built: str, odd: str, profit: str) -> str:
+        # _show runs when the widget's own visible turns true after it was created hidden (visible_at_creation = no,
+        # as in the PP Observer Auto Pause mod), so it holds the payback switch too
+        return _block("widget = {", ["visible_at_creation = no", f'visible = "[And({mode}, And({built}, {odd}))]"',
+                                     "size = { 0 0 }",
+                                     _block("state = {", ["name = _show",
+                                                          f'on_start = "[GetVariableSystem.Set({name}, {_band_value(profit)})]"'])])
+    sides = [record(b, o, p) for b, p in ((BUILT, BUILD_PAYBACK_BASIS[0]), (f"Not({BUILT})", BUILD_PAYBACK_BASIS[1]))
+             for o in (constructions, f"Not({constructions})")]
     return _column([f'datamodel = "[{items}]"',
-                    _block("item = {", [_column([*ROW_CONTEXTS, side(BUILT, built), side(f"Not({BUILT})", unbuilt)])])],
-                   comment)
+                    _block("item = {", [_block("widget = {", ["size = { 0 0 }", *ROW_CONTEXTS, *sides])])],
+                   "records each location's payback band (the cost call is too slow for every frame)")
+
+
+def _band(comment: str, items: str, row: str, shown: str) -> str:
+    """The list's items once more; each builds its row (the vanilla row) only when its recorded band is this one, so
+    every row is built once across all bands."""
+    return _column([f'datamodel = "[{items}]"', _block("item = {", [_column([
+        *ROW_CONTEXTS, f"datamodel = \"[DataModelRepeatedItem(Select_int32({shown}, '(int32)1', '(int32)0'))]\"",
+        _block("item = {", [row])])])], comment)
 
 
 def _payback_order(t: str, what: str) -> str:
     """The list area holds two lists of the vanilla rows over the same items: vanilla's grid (vanilla's binding) in the
     selected sort or, with the header's payback button on, the payback bands. The hidden one is not updated. Both sit
     in vertical flowcontainers, which size to their content; the rows are BUILD_ROW_WIDTH wide (a flowcontainer has no
-    width of its own for vanilla's 100%)."""
+    width of its own for vanilla's 100%). The bands read each location's recorded band (_recorder); a location not
+    recorded yet goes last."""
     start, end, ind = _cut(t, r'^([ \t]*)blockoverride "scroll_list_content" \{\n', what)
     block = t[start:end]
     items = "BuildInLocationLateralView.GetItems"
@@ -537,15 +564,18 @@ def _payback_order(t: str, what: str) -> str:
     w = BUILD_ROW_WIDTH
     row = _once(r"^widget = \{\n\tsize = \{ 100% 60 \}\n", f"widget = {{\n\tsize = {{ {w} 60 }}\n", _item_body(block), what)
     mode = _payback_mode()
+    name = payback_band_name()
     bands = [_band(f"payback {low} to {high} years" if high else f"payback {low} years or more, or no profit", items, row,
-                   _band_condition(BUILD_PAYBACK_BASIS[0], low, high), _band_condition(BUILD_PAYBACK_BASIS[1], low, high))
+                   f"GetVariableSystem.HasValue({name}, '{low}')")
              for low, high in payback_bands()]
+    bands.append(_band("not recorded yet", items, row, f"Not(GetVariableSystem.Exists({name}))"))
     grid = _block("fixedgridbox = { # the selected sort: vanilla's grid", [
         f'visible = "[Not({mode})]"', f"addcolumn = {w}", "addrow = 60", f'datamodel = "[{items}]"',
         _block("item = {", [row])])
     layout = _block('blockoverride "scroll_list_layout" { # PP: the selected sort or the payback order', [
         _column(["position = { 0 2 }", grid,
-                 _column([f'visible = "[{mode}]"', *bands], "payback order: shortest first, the last sort inside each band")])])
+                 _column([f'visible = "[{mode}]"', _recorder(items), *bands],
+                         "payback order: shortest first, the last sort inside each band")])])
     return t[:start] + _indent(layout, len(ind)).rstrip("\n") + t[end:]
 
 

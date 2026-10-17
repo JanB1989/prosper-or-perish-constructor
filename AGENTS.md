@@ -437,9 +437,13 @@
   inside a band the last sort holds, and every sort button switches the payback order off. Never a vbox in the list
   area: it stretched to the panel and spread the spare height between the rows, and with an `expand` its layout did
   not converge and the panel lagged (error.log, in game 2026-10-17); the selected sort is vanilla's fixedgridbox, the
-  bands vertical flowcontainers (size to content). Every band checks every location each frame, so each test is one
-  cost and one profit call (whole years via `FixedPointToInt`) and the bands are few: one per year below 10, then 10+
-  and no profit (27 bands of two comparisons lagged the whole game with a long list, 2026-10-17). All in `port_build_location` (`tools/port_vanilla_gui.py`); tests:
+  bands vertical flowcontainers (size to content). **`GetBuildOrExpandBuildingCost` is slow** (measured in game
+  2026-10-17 with `measure_frame_time` and hot-swapped GUI variants: band tests calling it every frame took the panel
+  from 33 to 65 ms per frame on a ~40-location list; the profit call and the band widgets cost nothing): never call it
+  per band per frame. Each location records its band once into the GUI variable `pp_pb_<building name><location key>`
+  (a recorder created hidden, `visible_at_creation = no`, whose `_show` state runs when the payback order opens or the
+  location's construction count changes); the bands only read the variables (33 ms = the frame cap). Bands: one per
+  whole year below 10, then 10+ and no profit, then "not recorded yet". All in `port_build_location` (`tools/port_vanilla_gui.py`); tests:
   `tests/test_build_location_gui.py`.
 - Situation map legends should use mod-owned plain localization keys, not inherited or generic `LEGEND_KEY_*` keys, because legend UI is sensitive to formatter syntax.
 - In GUI files, do not put `#` formatter markers in `default_format` style names; use the raw style key such as `yellow_titles`.

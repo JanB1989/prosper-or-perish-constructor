@@ -98,40 +98,46 @@ def test_payback_bands_are_consecutive():
     bands = tool.payback_bands()
     assert bands[0][0] == 0 and bands[-1][1] is None
     assert all(high == low for (_, high), (low, _) in zip(bands, bands[1:]))
-    assert all(high == low + 1 for low, high in bands[:-1])                    # whole years: one comparison each
+    assert all(high == low + 1 for low, high in bands[:-1])                    # whole years: the recorded value
 
 
-def test_payback_order_lists_every_item_once():
-    """Each band builds the vanilla row only for its items (bands do not overlap; the top band also takes the rows
-    without profit). Every band tests every location every frame, so a test is one cost and one profit call (27 bands
-    of two comparisons each lagged the whole game, 2026-10-17). The selected sort is vanilla's grid on vanilla's
-    binding; whichever list is hidden is not updated. No box in the list: a vbox spread the panel's spare height
-    between the rows, and with an expand its layout did not converge; flowcontainers size to their content."""
+def test_payback_order_reads_recorded_bands():
+    """The cost call is too slow for every frame (in game 2026-10-17: band tests calling it every frame took the panel
+    from 33 to 65 ms per frame, the profit call alone cost nothing). Each location records its band once into a GUI
+    variable (a recorder created hidden, whose _show runs when the payback order opens or its construction count
+    changes); the bands only read the variables (33 ms, the frame cap). Each band builds the vanilla row only for its
+    items; a location not recorded yet goes last. The selected sort is vanilla's grid on vanilla's binding; whichever
+    list is hidden is not updated. No box in the list (a vbox stretched and, with an expand, did not converge)."""
     tool = _tool()
     text = _mod_file()
     var = tool.BUILD_PAYBACK_VARIABLE
+    name = tool.payback_band_name()
     assert f"onclick = \"[GetVariableSystem.Toggle('{var}')]\"" in text
     assert "  PP_BUILD_PAYBACK_ORDER_TT: " in _loc()
-    bands = len(tool.payback_bands())
+    bands = len(tool.payback_bands()) + 1                                        # and "not recorded yet"
     rows = re.findall(r"(?m)^[ \t]*using = build_location_entry\n", text)      # not vanilla's commented-out one
-    assert len(rows) == 1 + 2 * bands                                            # selected sort, built/unbuilt per band
-    tests = re.findall(r'datamodel = "\[DataModelRepeatedItem\(Select_int32\((.*), \'\(int32\)1\', \'\(int32\)0\'\)\)\]"',
+    assert len(rows) == 1 + bands
+    tests = re.findall(r"datamodel = \"\[DataModelRepeatedItem\(Select_int32\((.*), '\(int32\)1', '\(int32\)0'\)\)\]\"",
                        text)
-    assert len(tests) == 2 * bands
-    for test in tests:
-        assert test.count(tool.BUILD_PAYBACK_COST) == 1
-        assert sum(test.count(profit) for profit in tool.BUILD_PAYBACK_BASIS) == 1
-    assert "pp_build_payback_row" not in text and "pp_build_location_builder" not in text
-    assert "DataModelFirst(BuildInLocationLateralView.GetItems" not in text
+    assert tests == [f"GetVariableSystem.HasValue({name}, '{low}')" for low, _ in tool.payback_bands()] + [
+        f"Not(GetVariableSystem.Exists({name}))"]
+    records = re.findall(r"(?m)^([ \t]*)visible_at_creation = no\n\1visible = \"\[(.*)\]\"\n\1size = \{ 0 0 \}\n"
+                         r"\1state = \{\n\1\tname = _show\n\1\ton_start = \"\[GetVariableSystem\.Set\((.*)\)\]\"\n", text)
+    assert len(records) == 4                                                     # built/unbuilt x odd/even constructions
+    for _, visible, setter in records:
+        assert tool._payback_mode() in visible
+        assert setter.startswith(name + ", Select_CString(")
+    assert text.count(tool.BUILD_PAYBACK_COST) == (                              # cost and payback text per branch,
+        4 + 4 * tool.BUILD_PAYBACK_BANDS[-1])                                    # the four recorders
     layout = text[text.index('blockoverride "scroll_list_layout"'):]
     layout = layout[:tool._block_end(layout, layout.index("{"))]
     assert not re.search(r"(?m)^[ \t]*(vbox|expand) = \{", layout)
-    assert len(re.findall(r"(?m)^[ \t]*hbox = \{", layout)) == 1 + 2 * bands   # only the rows' own (vanilla) hbox
     assert layout.count("fixedgridbox = {") == 1 and f"addcolumn = {tool.BUILD_ROW_WIDTH}\n" in layout
-    assert layout.count(f"size = {{ {tool.BUILD_ROW_WIDTH} 60 }}") == 1 + 2 * bands
-    assert layout.count(f'datamodel = "[BuildInLocationLateralView.GetItems]"') == 1 + bands
+    assert layout.count(f"size = {{ {tool.BUILD_ROW_WIDTH} 60 }}") == 1 + bands
+    assert layout.count('datamodel = "[BuildInLocationLateralView.GetItems]"') == 1 + 1 + bands   # grid, recorder
     assert layout.count(f'visible = "[Not({tool._payback_mode()})]"') == 1
-    assert layout.count(f'visible = "[{tool._payback_mode()}]"') == 1
+    assert "DataModelFirst(BuildInLocationLateralView.GetItems" not in text
+    assert "pp_build_payback_row" not in text and "pp_build_location_builder" not in text
 
 
 def test_no_properties_the_engine_rejects():

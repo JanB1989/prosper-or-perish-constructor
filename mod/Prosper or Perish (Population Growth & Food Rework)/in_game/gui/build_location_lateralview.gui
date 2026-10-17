@@ -1317,6 +1317,55 @@
 							direction = vertical
 							ignoreinvisible = yes
 							visible = "[And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing)]"
+							flowcontainer = { # records each location's payback band (the cost call is too slow for every frame)
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									widget = {
+										size = { 0 0 }
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										widget = {
+											visible_at_creation = no
+											visible = "[And(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), And(LocationToBuildItem.HasConstructedBuildingLevels, IsOdd_int32(GetDataModelSize(Location.GetCivilConstructions))))]"
+											size = { 0 0 }
+											state = {
+												name = _show
+												on_start = "[GetVariableSystem.Set(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)0'), '0', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)1'), '1', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)2'), '2', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)3'), '3', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)4'), '4', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)5'), '5', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)6'), '6', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)7'), '7', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)8'), '8', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)9'), '9', '10')))))))))))]"
+											}
+										}
+										widget = {
+											visible_at_creation = no
+											visible = "[And(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), And(LocationToBuildItem.HasConstructedBuildingLevels, Not(IsOdd_int32(GetDataModelSize(Location.GetCivilConstructions)))))]"
+											size = { 0 0 }
+											state = {
+												name = _show
+												on_start = "[GetVariableSystem.Set(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)0'), '0', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)1'), '1', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)2'), '2', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)3'), '3', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)4'), '4', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)5'), '5', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)6'), '6', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)7'), '7', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)8'), '8', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)9'), '9', '10')))))))))))]"
+											}
+										}
+										widget = {
+											visible_at_creation = no
+											visible = "[And(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), And(Not(LocationToBuildItem.HasConstructedBuildingLevels), IsOdd_int32(GetDataModelSize(Location.GetCivilConstructions))))]"
+											size = { 0 0 }
+											state = {
+												name = _show
+												on_start = "[GetVariableSystem.Set(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)0'), '0', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)1'), '1', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)2'), '2', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)3'), '3', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)4'), '4', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)5'), '5', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)6'), '6', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)7'), '7', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)8'), '8', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)9'), '9', '10')))))))))))]"
+											}
+										}
+										widget = {
+											visible_at_creation = no
+											visible = "[And(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), And(Not(LocationToBuildItem.HasConstructedBuildingLevels), Not(IsOdd_int32(GetDataModelSize(Location.GetCivilConstructions)))))]"
+											size = { 0 0 }
+											state = {
+												name = _show
+												on_start = "[GetVariableSystem.Set(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)0'), '0', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)1'), '1', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)2'), '2', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)3'), '3', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)4'), '4', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)5'), '5', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)6'), '6', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)7'), '7', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)8'), '8', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)9'), '9', '10')))))))))))]"
+											}
+										}
+									}
+								}
+							}
 							flowcontainer = { # payback 0 to 1 years
 								direction = vertical
 								ignoreinvisible = yes
@@ -1328,44 +1377,18 @@
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)0'), '(int32)1', '(int32)0'))]"
-											item = {
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '0'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
 												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)0'), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
 													}
 												}
 											}
@@ -1384,44 +1407,18 @@
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)1'), '(int32)1', '(int32)0'))]"
-											item = {
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '1'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
 												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)1'), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
 													}
 												}
 											}
@@ -1440,44 +1437,18 @@
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)2'), '(int32)1', '(int32)0'))]"
-											item = {
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '2'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
 												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)2'), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
 													}
 												}
 											}
@@ -1496,44 +1467,18 @@
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)3'), '(int32)1', '(int32)0'))]"
-											item = {
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '3'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
 												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)3'), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
 													}
 												}
 											}
@@ -1552,44 +1497,18 @@
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)4'), '(int32)1', '(int32)0'))]"
-											item = {
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '4'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
 												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)4'), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
 													}
 												}
 											}
@@ -1608,44 +1527,18 @@
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)5'), '(int32)1', '(int32)0'))]"
-											item = {
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '5'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
 												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)5'), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
 													}
 												}
 											}
@@ -1664,44 +1557,18 @@
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)6'), '(int32)1', '(int32)0'))]"
-											item = {
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '6'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
 												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)6'), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
 													}
 												}
 											}
@@ -1720,44 +1587,18 @@
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)7'), '(int32)1', '(int32)0'))]"
-											item = {
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '7'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
 												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)7'), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
 													}
 												}
 											}
@@ -1776,44 +1617,18 @@
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)8'), '(int32)1', '(int32)0'))]"
-											item = {
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '8'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
 												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)8'), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
 													}
 												}
 											}
@@ -1832,44 +1647,18 @@
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)9'), '(int32)1', '(int32)0'))]"
-											item = {
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '9'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
 												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
-													}
-												}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)9'), '(int32)1', '(int32)0'))]"
-											item = {
-												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
 													}
 												}
 											}
@@ -1888,44 +1677,48 @@
 										datacontext = "[LocationToBuildItem.GetLocation]"
 										datacontext = "[LocationToBuildItem.GetBuilding]"
 										datacontext = "[LocationToBuildItem.GetBuildingType]"
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(GreaterThanOrEqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)10'), '(int32)1', '(int32)0'))]"
-											item = {
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '10'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
 												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
 													}
 												}
 											}
 										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											visible = "[Not(LocationToBuildItem.HasConstructedBuildingLevels)]"
-											datamodel = "[DataModelRepeatedItem(Select_int32(GreaterThanOrEqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)10'), '(int32)1', '(int32)0'))]"
-											item = {
+									}
+								}
+							}
+							flowcontainer = { # not recorded yet
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										datamodel = "[DataModelRepeatedItem(Select_int32(Not(GetVariableSystem.Exists(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)))), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
 												widget = {
-													size = { 930 60 }
-													widget = {
-														size = { 100% 58 }
-														parentanchor = center
-														hbox = {
-															using = layoutpolicy_expanding
-															using = bg_cabinet_card_frame
-															margin = {5 5}
-															using = build_location_entry
-														}
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
 													}
 												}
 											}
@@ -4183,7 +3976,7 @@ template pp_build_location_values { # PP: the value columns of a location row (a
 			visible = "[And(LocationToBuildItem.ShowProfit, LocationToBuildItem.HasConstructedBuildingLevels)]"
 			size = { 100% 100% }
 			text_single = {
-				visible = "[And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)0'))]"
+				visible = "[GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0')]"
 				size = { 100% 18 }
 				parentanchor = vcenter
 				align = nobaseline|right
@@ -4206,7 +3999,7 @@ template pp_build_location_values { # PP: the value columns of a location row (a
 			visible = "[And(LocationToBuildItem.ShowProfit, Not(LocationToBuildItem.HasConstructedBuildingLevels))]"
 			size = { 100% 100% }
 			text_single = {
-				visible = "[And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)0'))]"
+				visible = "[GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0')]"
 				size = { 100% 18 }
 				parentanchor = vcenter
 				align = nobaseline|right

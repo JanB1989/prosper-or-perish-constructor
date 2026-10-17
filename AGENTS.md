@@ -428,6 +428,13 @@
   nine, so hidden goods leave no gap and top-five lists keep five); a new internal good goes into that tuple, then
   rerun the tool.
   Tests: `tests/test_internal_goods_gui.py`.
+- Build panel (2026-10-17, Jan; not yet seen in game): each location row has one value per column, efficiency (first
+  production method), payback (build cost / monthly tax income per level, in years, Construction Manager's ROI),
+  profit and tax income (template `pp_build_location_values`; builder and upgrader in `pp_build_location_builder`).
+  The engine sorts only by its own keys, so the header's payback button (GUI variable `pp_build_payback_order`) draws
+  the list once per payback band (`BUILD_PAYBACK_BANDS`) as compact rows (`pp_build_payback_row`), each built only in
+  its band (`DataModelRepeatedItem` of 1 or 0); inside a band the selected sort holds. All in `port_build_location`
+  (`tools/port_vanilla_gui.py`); tests: `tests/test_build_location_gui.py`.
 - Situation map legends should use mod-owned plain localization keys, not inherited or generic `LEGEND_KEY_*` keys, because legend UI is sensitive to formatter syntax.
 - In GUI files, do not put `#` formatter markers in `default_format` style names; use the raw style key such as `yellow_titles`.
   Exception found 2026-10-10: EU5 1.4 vanilla writes `default_format = "#yellow_titles"` (382 times, never bare), and the

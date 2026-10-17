@@ -1150,12 +1150,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:coal)" > "goods_supply_in_market(goods:coal)" }
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:coal)" > "goods_supply_in_market(goods:coal)" }
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -1214,12 +1214,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:coal)" > "goods_supply_in_market(goods:coal)" }
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:coal)" > "goods_supply_in_market(goods:coal)" }
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -1274,12 +1274,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:coal)" > "goods_supply_in_market(goods:coal)" }
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:coal)" > "goods_supply_in_market(goods:coal)" }
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -1431,12 +1431,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:copper)" > "goods_supply_in_market(goods:copper)" }
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:copper)" > "goods_supply_in_market(goods:copper)" }
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -1503,12 +1503,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:copper)" > "goods_supply_in_market(goods:copper)" }
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:copper)" > "goods_supply_in_market(goods:copper)" }
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -2935,12 +2935,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)" }
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)" }
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3003,12 +3003,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)" }
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)" }
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3075,12 +3075,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)" }
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)" }
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -3198,12 +3198,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:lead)" > "goods_supply_in_market(goods:lead)" }
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:lead)" > "goods_supply_in_market(goods:lead)" }
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -6186,12 +6186,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:salt)" > "goods_supply_in_market(goods:salt)" }
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:salt)" > "goods_supply_in_market(goods:salt)" }
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -6236,12 +6236,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:salt)" > "goods_supply_in_market(goods:salt)" }
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:salt)" > "goods_supply_in_market(goods:salt)" }
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -6493,12 +6493,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:silver)" > "goods_supply_in_market(goods:silver)" }
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:silver)" > "goods_supply_in_market(goods:silver)" }
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
@@ -6561,12 +6561,12 @@ pp_noble_investment_find_best = {
 					add = pp_noble_investment_reserve
 				}
 			}
-			any_market_present_in_country = { "goods_demand_in_market(goods:silver)" > "goods_supply_in_market(goods:silver)" }
+			# built regardless of shortage
 		}
 		every_owned_location = {
 			limit = {
 				exists = market
-				market = { "goods_demand_in_market(goods:silver)" > "goods_supply_in_market(goods:silver)" }
+				# built regardless of shortage
 				pp_unemployed_population >= pp_noble_investment_min_unemployed
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }

@@ -56,6 +56,10 @@ POP_PRIORITY = {"peasants": 3.0, "laborers": 1.0}
 # many months of food counts as a shortage too (the mod's own food urgency line, pp_food_urgency_weight). With the market
 # test alone nobles built no farms where the market had a grain surplus (Austria 1384: wheat 47 supply / 41 demand).
 FOOD_STORE_MONTHS = 12
+# Blueprint footprint classes built without any shortage (user rule 2026-10-17: mines regardless of shortage); profit,
+# research, free hands and the location rules still apply.
+NO_SHORTAGE_FOOTPRINTS = {"mining"}
+BLUEPRINTS = ROOT / "blueprints" / "accepted" / "buildings"
 # Buildings the nobles never invest in, whatever they earn (user rules).
 EXCLUDED_BUILDINGS = {
     "market_village": "2026-10-17: nobles must not build market villages (36 of 39 noble ones in a 1550 save were ours)",
@@ -111,6 +115,8 @@ class Candidate:
     blocks: tuple[tuple[Method, ...], ...] = ()
     # Advances that unlock the building (any one will do); empty = available from the start.
     advances: tuple[str, ...] = ()
+    # False for buildings built regardless of shortage (NO_SHORTAGE_FOOTPRINTS).
+    needs_shortage: bool = True
 
     @property
     def makes_province_food(self) -> bool:
@@ -241,13 +247,26 @@ def modifier_names(game_roots: list[Path]) -> set[str]:
     return names
 
 
+def blueprint_footprints(folder: Path = BLUEPRINTS) -> dict[str, str]:
+    """Building key -> its blueprint's footprint class (top-level `footprint:`)."""
+    found = {}
+    for path in sorted(folder.glob("*.yml")):
+        text = path.read_text(encoding="utf-8-sig")
+        footprint = re.search(r"^footprint:\s*(\w+)", text, re.M)
+        key = re.search(r"^building:\s*\n(?:\s+.*\n)*?\s+key:\s*(\w+)", text, re.M)
+        if footprint and key:
+            found[key.group(1)] = footprint.group(1)
+    return found
+
+
 def candidates(
     definitions: dict[str, str],
     goods: set[str],
     unlocks: dict[str, tuple[str, ...]] | None = None,
     method_unlocks: dict[str, tuple[str, ...]] | None = None,
+    footprints: dict[str, str] | None = None,
 ) -> list[Candidate]:
-    unlocks, method_unlocks = unlocks or {}, method_unlocks or {}
+    unlocks, method_unlocks, footprints = unlocks or {}, method_unlocks or {}, footprints or {}
     found = []
     for building, body in sorted(definitions.items()):
         pop_type = field(body, "pop_type")
@@ -259,7 +278,8 @@ def candidates(
         blocks = method_blocks(body, goods, method_unlocks)
         if not blocks:
             continue
-        found.append(Candidate(building, pop_type, good, blocks, unlocks.get(building, ())))
+        needs_shortage = footprints.get(building) not in NO_SHORTAGE_FOOTPRINTS
+        found.append(Candidate(building, pop_type, good, blocks, unlocks.get(building, ()), needs_shortage))
     return found
 
 
@@ -353,6 +373,8 @@ def find_block(index: int, candidate: Candidate, modifiers: set[str]) -> str:
 def country_need(candidate: Candidate) -> str:
     """Country-scope limit line: some market of the country is short of the good (or, for Province Food makers, some
     owned location's province holds less than FOOD_STORE_MONTHS of food)."""
+    if not candidate.needs_shortage:
+        return "\t\t\t# built regardless of shortage"
     market = f"any_market_present_in_country = {{ {shortage(candidate.good)} }}"
     if not candidate.makes_province_food:
         return f"\t\t\t{market}"
@@ -362,6 +384,8 @@ def country_need(candidate: Candidate) -> str:
 
 def location_need(candidate: Candidate) -> str:
     """Location-scope limit line: its market is short of the good (or its province's food store is low)."""
+    if not candidate.needs_shortage:
+        return "\t\t\t\t# built regardless of shortage"
     market = f"market = {{ {shortage(candidate.good)} }}"
     if not candidate.makes_province_food:
         return f"\t\t\t\t{market}"
@@ -560,6 +584,7 @@ def main() -> None:
         goods_names(args.vanilla, MOD_ROOT),
         unlock_map(advances, "unlock_building"),
         unlock_map(advances, "unlock_production_method"),
+        blueprint_footprints(),
     )
     outputs = {EFFECTS_PATH: render(found, modifiers), VALUES_PATH: render_values()}
     if args.check:

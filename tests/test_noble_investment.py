@@ -143,7 +143,21 @@ def test_mason_shortage_starts_at_80_percent_of_supply() -> None:
     block = candidate_blocks()["mason"]
     rule = '"goods_demand_in_market(goods:masonry)" > { value = "goods_supply_in_market(goods:masonry)" multiply = 0.8 }'
     assert block.count(rule) == 2
-    assert '"goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)"' in candidate_blocks()["iron_mine"]
+    assert '"goods_demand_in_market(goods:lumber)" > "goods_supply_in_market(goods:lumber)"' in candidate_blocks()["lumber_mill"]
+
+
+def test_mines_are_built_regardless_of_shortage() -> None:
+    # User rule (2026-10-17): mines (blueprint footprint "mining") need no shortage; profit and the rest still apply.
+    blocks = candidate_blocks()
+    footprints = gen.blueprint_footprints()
+    mines = [b for b in blocks if footprints.get(b) in gen.NO_SHORTAGE_FOOTPRINTS]
+    assert {"iron_mine", "coal_mine", "salt_mine", "silver_mine"} <= set(mines)
+    for mine in mines:
+        assert "goods_demand_in_market" not in blocks[mine], mine
+        assert blocks[mine].count("# built regardless of shortage") == 2, mine
+        assert "pp_noble_investment_keep_better_location" in blocks[mine], mine
+        assert "can_build_building" in blocks[mine], mine
+    assert '"goods_demand_in_market(goods:stone)"' in blocks["stone_quarry"]
 
 
 def test_farms_answer_a_low_province_food_store() -> None:

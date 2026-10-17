@@ -103,7 +103,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:alum)" > "goods_supply_in_market(goods:alum)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:alum_quarry
@@ -167,7 +167,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:alum)" > "goods_supply_in_market(goods:alum)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:alum_works
@@ -230,7 +230,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:amber)" > "goods_supply_in_market(goods:amber)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:amber_collector
@@ -294,7 +294,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:bog_iron_smelter
@@ -334,7 +334,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:bog_iron_smelter_blast_furnace
@@ -381,7 +381,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:iron)" > "goods_supply_in_market(goods:iron)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:bog_iron_smelter_coke_blast_furnace
@@ -428,7 +428,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:beer)" > "goods_supply_in_market(goods:beer)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:brewery_mill
@@ -483,7 +483,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:camel_herders
@@ -547,7 +547,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:cannons)" > "goods_supply_in_market(goods:cannons)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:cannons_factory
@@ -612,7 +612,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:cattle_farm
@@ -666,7 +666,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:cattle_farmstead
@@ -716,7 +716,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:cattle_model_farm
@@ -766,7 +766,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:cattle_rotations
@@ -819,7 +819,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:coal)" > "goods_supply_in_market(goods:coal)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:charcoal_maker
@@ -858,7 +858,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:chili)" > "goods_supply_in_market(goods:chili)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:chili_plantation
@@ -907,7 +907,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:mercury)" > "goods_supply_in_market(goods:mercury)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:cinnabar_pit
@@ -970,7 +970,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:clay)" > "goods_supply_in_market(goods:clay)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:clay_pit
@@ -1014,7 +1014,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:clay)" > "goods_supply_in_market(goods:clay)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:clay_washmill
@@ -1077,7 +1077,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:cloves)" > "goods_supply_in_market(goods:cloves)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:clove_grove
@@ -1126,7 +1126,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:coal_mine
@@ -1190,7 +1190,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:coal_mine_improved
@@ -1250,7 +1250,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:coal_mine_revolutions
@@ -1309,7 +1309,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:cocoa)" > "goods_supply_in_market(goods:cocoa)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:cocoa_grove
@@ -1358,7 +1358,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:coffee)" > "goods_supply_in_market(goods:coffee)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:coffee_grove
@@ -1407,7 +1407,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:copper_mine
@@ -1479,7 +1479,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:copper_mine_adit
@@ -1546,7 +1546,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:cotton)" > "goods_supply_in_market(goods:cotton)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:cotton_farm
@@ -1596,7 +1596,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:liquor)" > "goods_supply_in_market(goods:liquor)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:distiller_mill
@@ -1663,7 +1663,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:drift_net_fishery
@@ -1718,7 +1718,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:dyes)" > "goods_supply_in_market(goods:dyes)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:dye_plantation
@@ -1768,7 +1768,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:dyes)" > "goods_supply_in_market(goods:dyes)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:dyes_mill
@@ -1812,7 +1812,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:ivory)" > "goods_supply_in_market(goods:ivory)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:elephant_hunting_grounds
@@ -1851,7 +1851,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:elephants)" > "goods_supply_in_market(goods:elephants)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:elephant_kraal
@@ -1901,7 +1901,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:salt)" > "goods_supply_in_market(goods:salt)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:engineered_brine_saltworks
@@ -1963,7 +1963,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:fiber_crops)" > "goods_supply_in_market(goods:fiber_crops)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:fiber_crops_farm
@@ -2013,7 +2013,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:fiber_crops)" > "goods_supply_in_market(goods:fiber_crops)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:fiber_dressing_yard
@@ -2063,7 +2063,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:fine_cloth)" > "goods_supply_in_market(goods:fine_cloth)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:fine_cloth_mill
@@ -2121,7 +2121,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:firearms)" > "goods_supply_in_market(goods:firearms)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:firearms_factory
@@ -2187,7 +2187,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:furniture)" > "goods_supply_in_market(goods:furniture)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:furniture_mill
@@ -2226,7 +2226,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:gems)" > "goods_supply_in_market(goods:gems)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:gem_gravel_pit
@@ -2290,7 +2290,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:gems)" > "goods_supply_in_market(goods:gems)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:gem_sluice
@@ -2354,7 +2354,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:glass)" > "goods_supply_in_market(goods:glass)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:glass_mill
@@ -2401,7 +2401,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:gold_diggings
@@ -2469,7 +2469,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:gold_stamp_mill
@@ -2532,7 +2532,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:manual_labor)" > "goods_supply_in_market(goods:manual_labor)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 2
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:hired_labor_yard
@@ -2582,7 +2582,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:horses)" > "goods_supply_in_market(goods:horses)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:horse_breeders
@@ -2647,7 +2647,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:coal)" > "goods_supply_in_market(goods:coal)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:improved_charcoal_maker
@@ -2686,7 +2686,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:incense)" > "goods_supply_in_market(goods:incense)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:incense_grove
@@ -2735,7 +2735,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:salt)" > "goods_supply_in_market(goods:salt)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:inland_saltworks
@@ -2785,7 +2785,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:tools)" > "goods_supply_in_market(goods:tools)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.04
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:iron_foundry
@@ -2844,7 +2844,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:tools)" > "goods_supply_in_market(goods:tools)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:iron_mill
@@ -2906,7 +2906,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:iron_mine
@@ -2974,7 +2974,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:iron_mine_deep
@@ -3046,7 +3046,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:iron_mine_improved
@@ -3120,7 +3120,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:ivory)" > "goods_supply_in_market(goods:ivory)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:ivory_hunting_camp
@@ -3169,7 +3169,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:lead_mine
@@ -3237,7 +3237,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:lead)" > "goods_supply_in_market(goods:lead)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:lead_mine_bole_smelting
@@ -3301,7 +3301,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:lead)" > "goods_supply_in_market(goods:lead)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:lead_mine_cupola_smelting
@@ -3364,7 +3364,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:legume_farm
@@ -3431,7 +3431,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:legume_farmstead
@@ -3491,7 +3491,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:legume_model_farm
@@ -3541,7 +3541,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:legume_rotations
@@ -3607,7 +3607,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:lumber)" > "goods_supply_in_market(goods:lumber)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:lumber_mill
@@ -3683,7 +3683,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:lumber)" > "goods_supply_in_market(goods:lumber)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:lumber_mill_improved
@@ -3755,7 +3755,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:maize_farm
@@ -3810,7 +3810,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:maize_farmstead
@@ -3861,7 +3861,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:maize_model_farm
@@ -3912,7 +3912,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:maize_rotations
@@ -3969,7 +3969,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:cocoa)" > "goods_supply_in_market(goods:cocoa)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:managed_cocoa_grove
@@ -4029,7 +4029,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:pepper)" > "goods_supply_in_market(goods:pepper)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:managed_pepper_garden
@@ -4088,7 +4088,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:marble)" > "goods_supply_in_market(goods:marble)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:marble_quarry
@@ -4152,7 +4152,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:marble)" > "goods_supply_in_market(goods:marble)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:marble_saw_yard
@@ -4216,7 +4216,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:cotton)" > "goods_supply_in_market(goods:cotton)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:market_cotton_farm
@@ -4276,7 +4276,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:tobacco)" > "goods_supply_in_market(goods:tobacco)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:market_tobacco_farm
@@ -4335,7 +4335,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:masonry)" > { value = "goods_supply_in_market(goods:masonry)" multiply = 0.8 } }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:mason
@@ -4378,7 +4378,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:millet_farm
@@ -4432,7 +4432,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:millet_farmstead
@@ -4482,7 +4482,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:millet_model_farm
@@ -4532,7 +4532,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:millet_rotations
@@ -4589,7 +4589,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:naval_supplies)" > "goods_supply_in_market(goods:naval_supplies)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:naval_supplies_mill
@@ -4628,7 +4628,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:ocean_fishery
@@ -4684,7 +4684,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:offshore_fishery
@@ -4754,7 +4754,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:olive_farm
@@ -4809,7 +4809,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:olive_farmstead
@@ -4860,7 +4860,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:olive_model_farm
@@ -4911,7 +4911,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:olive_rotations
@@ -4968,7 +4968,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:paper)" > "goods_supply_in_market(goods:paper)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:paper_mill
@@ -5026,7 +5026,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:pearls)" > "goods_supply_in_market(goods:pearls)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:pearl_fishery
@@ -5075,7 +5075,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:pepper)" > "goods_supply_in_market(goods:pepper)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:pepper_garden
@@ -5125,7 +5125,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:potato_farm
@@ -5180,7 +5180,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:potato_farmstead
@@ -5231,7 +5231,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:potato_model_farm
@@ -5282,7 +5282,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:potato_rotations
@@ -5339,7 +5339,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:pottery)" > "goods_supply_in_market(goods:pottery)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:pottery_mill
@@ -5383,7 +5383,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:books)" > "goods_supply_in_market(goods:books)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:printing_mill
@@ -5435,7 +5435,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:saltpeter)" > "goods_supply_in_market(goods:saltpeter)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.5
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:putrefaction_mill
@@ -5475,7 +5475,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:mercury)" > "goods_supply_in_market(goods:mercury)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:quicksilver_retort
@@ -5539,7 +5539,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:silk)" > "goods_supply_in_market(goods:silk)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:regulated_sericulture_farm
@@ -5599,7 +5599,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:rice_farm
@@ -5654,7 +5654,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:rice_farmstead
@@ -5705,7 +5705,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:rice_model_farm
@@ -5756,7 +5756,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:rice_rotations
@@ -5812,7 +5812,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:manual_labor)" > "goods_supply_in_market(goods:manual_labor)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 0.75
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:rural_daywork_yard
@@ -5859,7 +5859,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:saffron)" > "goods_supply_in_market(goods:saffron)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:saffron_croft
@@ -5909,7 +5909,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:saffron)" > "goods_supply_in_market(goods:saffron)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:saffron_kiln_croft
@@ -5968,7 +5968,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:salt)" > "goods_supply_in_market(goods:salt)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:salt_collector
@@ -6017,7 +6017,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:salt_mine
@@ -6067,7 +6067,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:salt_mine_improved
@@ -6117,7 +6117,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:saltpeter)" > "goods_supply_in_market(goods:saltpeter)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:saltpeter_beds
@@ -6166,7 +6166,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:sand)" > "goods_supply_in_market(goods:sand)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:sand_pit
@@ -6216,7 +6216,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:sand)" > "goods_supply_in_market(goods:sand)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:sand_washery
@@ -6275,7 +6275,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:silk)" > "goods_supply_in_market(goods:silk)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:sericulture_farm
@@ -6324,7 +6324,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:silver_mine
@@ -6392,7 +6392,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:silver_mine_improved
@@ -6455,7 +6455,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:medicaments)" > "goods_supply_in_market(goods:medicaments)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:simplers_grove
@@ -6505,7 +6505,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:steel)" > "goods_supply_in_market(goods:steel)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:steel_mill
@@ -6544,7 +6544,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:stone)" > "goods_supply_in_market(goods:stone)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:stone_quarry
@@ -6594,7 +6594,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:stone)" > "goods_supply_in_market(goods:stone)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:stone_quarry_improved
@@ -6657,7 +6657,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:sugar)" > "goods_supply_in_market(goods:sugar)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:sugarcane_farm
@@ -6707,7 +6707,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:leather)" > "goods_supply_in_market(goods:leather)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:tannery_mill
@@ -6750,7 +6750,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:tar)" > "goods_supply_in_market(goods:tar)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:tar_kiln
@@ -6789,7 +6789,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:tea)" > "goods_supply_in_market(goods:tea)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:tea_garden
@@ -6839,7 +6839,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:tea)" > "goods_supply_in_market(goods:tea)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:tea_sorting_garden
@@ -6899,7 +6899,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:coffee)" > "goods_supply_in_market(goods:coffee)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:terraced_coffee_grove
@@ -6959,7 +6959,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:cloth)" > "goods_supply_in_market(goods:cloth)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:textile_mill
@@ -7019,7 +7019,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:tin)" > "goods_supply_in_market(goods:tin)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:tin_stamping_mill
@@ -7082,7 +7082,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:tin)" > "goods_supply_in_market(goods:tin)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:tin_streamworks
@@ -7149,7 +7149,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:tobacco)" > "goods_supply_in_market(goods:tobacco)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:tobacco_farm
@@ -7199,7 +7199,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:sugar)" > "goods_supply_in_market(goods:sugar)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:trapiche_sugarcane_farm
@@ -7258,7 +7258,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:wine)" > "goods_supply_in_market(goods:wine)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:vineyard_estate
@@ -7304,7 +7304,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:lumber)" > "goods_supply_in_market(goods:lumber)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:water_sawmill
@@ -7380,7 +7380,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				market = { "goods_demand_in_market(goods:weaponry)" > "goods_supply_in_market(goods:weaponry)" }
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 1.16
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:weapon_factory
@@ -7431,7 +7431,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:wheat_farm
@@ -7488,7 +7488,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:wheat_farmstead
@@ -7538,7 +7538,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:wheat_model_farm
@@ -7588,7 +7588,7 @@ pp_noble_investment_find_best = {
 			limit = {
 				exists = market
 				# built regardless of shortage
-				pp_unemployed_population >= pp_noble_investment_min_unemployed
+				"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1
 				num_civil_constructions < 1
 				NOT = { has_variable = pp_noble_investment_recent }
 				can_build_building = building_type:wheat_rotations

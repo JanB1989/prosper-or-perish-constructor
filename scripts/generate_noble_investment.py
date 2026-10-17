@@ -69,8 +69,9 @@ EXCLUDED_BUILDINGS = {
 # Gold the nobles keep for themselves (loans to the crown, their own engine plan, which starts from 50 gold); only gold
 # above this plus what the building costs them counts as surplus.
 RESERVE_GOLD = 150
-# Free hands needed in the location (people; one level of most PP buildings employs 1,000-1,250).
-MIN_UNEMPLOYED = 1000
+# Free hands: the location needs unemployed pops of the building's own pop type for one full level (its
+# employment_size, in thousands like unemployed_pops_of_pop_type_in_location). Nobles built farms while the farms
+# already there had empty jobs (2026-10-17): the old test counted 1,000 unemployed of any pop type.
 # A good counts as short when market demand > this x supply; 1.0 unless listed (masonry: user rule, 2026-10-16).
 SHORTAGE_RATIO = {"masonry": 0.8}
 DEFAULT_SHORTAGE_RATIO = 1.0
@@ -122,6 +123,8 @@ class Candidate:
     # The building's own country_potential (country scope), one line; can_build_building does not test it, so nobles
     # built potato farms before the potato reached the country (2026-10-17).
     country_potential: str = ""
+    # Workers per level, in thousands (employment_size).
+    employment: float = 1.0
 
 
 def makes_province_food(blocks: tuple[tuple[Method, ...], ...]) -> bool:
@@ -291,8 +294,14 @@ def candidates(
         potential = " ".join(
             " ".join(inner(block).split()) for name, block in top_level_blocks(inner(body)) if name == "country_potential"
         )
+        size = re.search(r"^\s*employment_size\s*=\s*([\d.]+)", body, re.M)
+        if size is None:
+            raise SystemExit(f"{building}: employment_size is not a number")
         found.append(
-            Candidate(building, pop_type, good, blocks, unlocks.get(building, ()), needs_shortage, potential)
+            Candidate(
+                building, pop_type, good, blocks, unlocks.get(building, ()), needs_shortage, potential,
+                float(size.group(1)),
+            )
         )
     return found
 
@@ -377,7 +386,7 @@ def find_block(index: int, candidate: Candidate, modifiers: set[str]) -> str:
 \t\t\tlimit = {{
 \t\t\t\texists = market
 {location_need(candidate)}
-\t\t\t\tpp_unemployed_population >= pp_noble_investment_min_unemployed
+\t\t\t\t"unemployed_pops_of_pop_type_in_location(pop_type:{candidate.pop_type})" >= {number(candidate.employment)}
 \t\t\t\tnum_civil_constructions < 1
 \t\t\t\tNOT = {{ has_variable = pp_noble_investment_recent }}
 \t\t\t\tcan_build_building = building_type:{building}
@@ -607,8 +616,6 @@ def render_values() -> str:
             f"pp_noble_investment_price_multiplier = {define('ESTATE_MAX_PRICE_MULTIPLIER'):g}",
             "# Revenue a building must earn per gold of inputs (AI_BUILDING_PROFIT_MARGIN_THRESHOLD).",
             f"pp_noble_investment_min_margin = {define('AI_BUILDING_PROFIT_MARGIN_THRESHOLD'):g}",
-            "# Unemployed people the location needs.",
-            f"pp_noble_investment_min_unemployed = {MIN_UNEMPLOYED}",
             "",
         ]
     )

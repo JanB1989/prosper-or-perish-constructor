@@ -461,8 +461,9 @@
   cattle farms, fisheries, camel herders and their tiers, since their food drives population growth and a market
   grain surplus kept nobles from building farms, Austria 1384; user rules 2026-10-17); the building's own
   `country_potential` (`can_build_building` skips it: nobles built potato farms before the potato arrived);
-  `pp_noble_investment_min_unemployed` free
-  people; no construction under way there (`num_civil_constructions`) and no noble investment there in the last 730
+  one full level of idle pops of the building's own pop type (`unemployed_pops_of_pop_type_in_location` >= its
+  `employment_size`, thousands; the old 1,000 idle of any type let nobles build farms while the farms there had
+  empty jobs, 2026-10-17); no construction under way there (`num_civil_constructions`) and no noble investment there in the last 730
   days (location variable `pp_noble_investment_recent`; without it the same building was stacked 3-4 times while the
   first was still being built); `can_build_building`; and `has_advance` for an
   advance that unlocks it (`can_build_building` let nobles start unresearched buildings in game, 2026-10-16; the

@@ -160,6 +160,17 @@ def test_mines_are_built_regardless_of_shortage() -> None:
     assert '"goods_demand_in_market(goods:stone)"' in blocks["stone_quarry"]
 
 
+def test_free_workers_of_the_buildings_own_pop_type() -> None:
+    # Nobles built farms while existing farms had empty jobs (2026-10-17); one full level of the building's own pop
+    # type must stand idle (thousands, like employment_size).
+    blocks = candidate_blocks()
+    assert 'unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 1.25' in blocks["wheat_farm"]
+    assert 'unemployed_pops_of_pop_type_in_location(pop_type:laborers)" >= 0.8' in blocks["mason"]
+    effects = EFFECTS_PATH.read_text(encoding="utf-8-sig")
+    assert "pp_unemployed_population" not in effects
+    assert all("unemployed_pops_of_pop_type_in_location" in block for block in blocks.values())
+
+
 def test_farms_are_built_regardless_of_shortage() -> None:
     # User rule (2026-10-17): farms feed the store and population growth; every Province Food maker skips the shortage.
     blocks = candidate_blocks()
@@ -226,6 +237,7 @@ def test_candidate_rules(tmp_path) -> None:
         """
 REPLACE:mine = {
     pop_type = laborers
+    employment_size = 0.8
     unique_production_methods = {
         pp_mine_base = {
             produced = iron
@@ -255,6 +267,7 @@ REPLACE:mine = {
 }
 farm = {
     pop_type = peasants
+    employment_size = 1.25
     ai_construct_weight = { value = "market.market_price(goods:wheat)" }
     unique_production_methods = {
         pp_farm_base = {
@@ -265,6 +278,7 @@ farm = {
 }
 forbidden = {
     pop_type = peasants
+    employment_size = 1
     forbidden_for_estates = yes
     unique_production_methods = {
         pp_forbidden_market_sales = {
@@ -275,6 +289,7 @@ forbidden = {
 }
 special = {
     pop_type = laborers
+    employment_size = 1
     is_special = yes
     unique_production_methods = {
         pp_special_market_sales = {
@@ -285,6 +300,7 @@ special = {
 }
 burgher_shop = {
     pop_type = burghers
+    employment_size = 1
     unique_production_methods = {
         pp_burgher_shop_market_sales = {
             produced = cloth
@@ -294,6 +310,7 @@ burgher_shop = {
 }
 no_good = {
     pop_type = peasants
+    employment_size = 1
 }
 """,
         encoding="utf-8",
@@ -304,8 +321,8 @@ no_good = {
     deep = Method("pp_mine_deep", "iron", 0.8, (("manual_labor", 0.1),), ("adv_deep",))
     sales = Method("pp_mine_market_sales", "iron", 0.004, (("offset", 0.01),))
     assert found == [
-        Candidate("farm", "peasants", "wheat", ((Method("pp_farm_base", "wheat", 1.0, ()),),)),
-        Candidate("mine", "laborers", "iron", ((base, deep), (sales,)), ("adv_mine",)),
+        Candidate("farm", "peasants", "wheat", ((Method("pp_farm_base", "wheat", 1.0, ()),),), employment=1.25),
+        Candidate("mine", "laborers", "iron", ((base, deep), (sales,)), ("adv_mine",), employment=0.8),
     ]
     lines = " ".join(gen.method_lines(deep, {"local_iron_output_modifier"}, ""))
     assert "limit = { owner = { has_advance = adv_deep } }" in lines

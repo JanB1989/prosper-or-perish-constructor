@@ -180,6 +180,17 @@ def test_country_potential_is_checked() -> None:
     assert "# country_potential" not in blocks["wheat_farm"]
 
 
+def test_cleanup_removes_only_new_world_crop_farms() -> None:
+    # One-off console effect (2026-10-17): potato and maize farms in countries that could not build them.
+    effects = EFFECTS_PATH.read_text(encoding="utf-8-sig")
+    cleanup = effects[effects.index("pp_noble_investment_cleanup = {") :]
+    assert braces_balance(cleanup)
+    destroyed = set(re.findall(r"destroy_all_buildings_of_type = building_type:(\w+)", cleanup))
+    assert destroyed == {f"{crop}_{tier}" for crop in ("potato", "maize") for tier in ("farm", "farmstead", "model_farm", "rotations")}
+    assert "limit = { NOT = { AND = { OR = { pp_potato_native_country = yes has_advance = pp_potato_farm_advance_general } } } }" in cleanup
+    assert "olive" not in cleanup and "rice" not in cleanup
+
+
 def test_excluded_buildings_are_never_candidates() -> None:
     # User rule (2026-10-17): nobles do not build market villages.
     assert "market_village" in gen.EXCLUDED_BUILDINGS

@@ -480,6 +480,47 @@ pp_noble_investment_keep_better_location = {{
 }}
 """
 
+# New World crops only: their "native" test is an American original capital, so no Old World country may hold their
+# farms before the advance. Rice and olives are native by region of the original capital (Italy, Iberia, ...), so a
+# country that conquered or started with such land holds those farms rightly; the cleanup leaves them alone.
+CLEANUP_CROPS = ("potato", "maize")
+
+
+def render_cleanup(found: list[Candidate]) -> list[str]:
+    """One-off console effect (2026-10-17, user request): before country_potential was checked, nobles built crop farms
+    the country could not build (281 of 584 noble constructions in an Austria 1384 save were potato farms). In every
+    country that fails a crop farm's country_potential, every tier of that farm goes, finished or still being built
+    (removing the building ends its construction; whoever built it). Run once: effect pp_noble_investment_cleanup = yes"""
+    groups: dict[str, list[str]] = {}
+    for candidate in found:
+        if candidate.country_potential and candidate.good in CLEANUP_CROPS:
+            groups.setdefault(candidate.country_potential, []).append(candidate.building)
+    out = [
+        "# One-off cleanup, run once from the console: effect pp_noble_investment_cleanup = yes",
+        "# Removes every tier of a crop farm in each country that fails the farm's country_potential (not native to the crop",
+        "# and without its advance), finished or under construction, whoever built it. Countries that may build them keep",
+        "# theirs.",
+        "pp_noble_investment_cleanup = {",
+    ]
+    for potential, buildings in groups.items():
+        out += [
+            f"\t# {', '.join(buildings)}",
+            "\tevery_country = {",
+            f"\t\tlimit = {{ NOT = {{ AND = {{ {potential} }} }} }}",
+            "\t\tevery_owned_location = {",
+        ]
+        for building in buildings:
+            out += [
+                "\t\t\tif = {",
+                f"\t\t\t\tlimit = {{ any_buildings_in_location = {{ building_type = building_type:{building} }} }}",
+                f"\t\t\t\tdestroy_all_buildings_of_type = building_type:{building}",
+                "\t\t\t}",
+            ]
+        out += ["\t\t}", "\t}"]
+    out += ["}", ""]
+    return out
+
+
 DEBUG_COUNTERS = """\t\tif = {
 \t\t\tlimit = { NOT = { has_variable = pp_noble_investment_builds } }
 \t\t\tset_variable = { name = pp_noble_investment_builds value = 0 }
@@ -549,6 +590,7 @@ def render(found: list[Candidate], modifiers: set[str]) -> str:
             "\t}",
         ]
     out += ["}", ""]
+    out += render_cleanup(found)
     return "\n".join(out)
 
 

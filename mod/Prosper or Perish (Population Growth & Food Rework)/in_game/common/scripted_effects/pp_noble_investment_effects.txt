@@ -8178,3 +8178,54 @@ pp_noble_investment_build_best = {
 		construct_estate_building = { building_type = building_type:wheat_rotations estate_type = estate_type:nobles_estate }
 	}
 }
+
+# One-off cleanup, run once from the console: effect pp_noble_investment_cleanup = yes
+# Removes every tier of a crop farm in each country that fails the farm's country_potential (not native to the crop
+# and without its advance), finished or under construction, whoever built it. Countries that may build them keep
+# theirs.
+pp_noble_investment_cleanup = {
+	# maize_farm, maize_farmstead, maize_model_farm, maize_rotations
+	every_country = {
+		limit = { NOT = { AND = { OR = { pp_maize_native_country = yes has_advance = pp_maize_farm_advance_general } } } }
+		every_owned_location = {
+			if = {
+				limit = { any_buildings_in_location = { building_type = building_type:maize_farm } }
+				destroy_all_buildings_of_type = building_type:maize_farm
+			}
+			if = {
+				limit = { any_buildings_in_location = { building_type = building_type:maize_farmstead } }
+				destroy_all_buildings_of_type = building_type:maize_farmstead
+			}
+			if = {
+				limit = { any_buildings_in_location = { building_type = building_type:maize_model_farm } }
+				destroy_all_buildings_of_type = building_type:maize_model_farm
+			}
+			if = {
+				limit = { any_buildings_in_location = { building_type = building_type:maize_rotations } }
+				destroy_all_buildings_of_type = building_type:maize_rotations
+			}
+		}
+	}
+	# potato_farm, potato_farmstead, potato_model_farm, potato_rotations
+	every_country = {
+		limit = { NOT = { AND = { OR = { pp_potato_native_country = yes has_advance = pp_potato_farm_advance_general } } } }
+		every_owned_location = {
+			if = {
+				limit = { any_buildings_in_location = { building_type = building_type:potato_farm } }
+				destroy_all_buildings_of_type = building_type:potato_farm
+			}
+			if = {
+				limit = { any_buildings_in_location = { building_type = building_type:potato_farmstead } }
+				destroy_all_buildings_of_type = building_type:potato_farmstead
+			}
+			if = {
+				limit = { any_buildings_in_location = { building_type = building_type:potato_model_farm } }
+				destroy_all_buildings_of_type = building_type:potato_model_farm
+			}
+			if = {
+				limit = { any_buildings_in_location = { building_type = building_type:potato_rotations } }
+				destroy_all_buildings_of_type = building_type:potato_rotations
+			}
+		}
+	}
+}

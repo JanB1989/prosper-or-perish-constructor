@@ -479,6 +479,11 @@
   a Market Sales good or the good priced in `ai_construct_weight`, not `forbidden_for_estates`, not `is_special`,
   not in `EXCLUDED_BUILDINGS`: market village, 2026-10-17, user rule; the engine's own noble plans can still pick it).
   Rerun after building changes; `--check` fails when they are stale. Tests: tests/test_noble_investment.py.
+- One-off cleanup (2026-10-17): `effect pp_noble_investment_cleanup = yes` in the console removes every tier of the
+  potato and maize farms (`CLEANUP_CROPS`, New World crops) in each country that fails their `country_potential`,
+  finished or under construction, whoever built them (281 of 584 noble constructions in an Austria 1384 save were
+  potato farms built before the country check). Rice and olives are left: they are native by original-capital
+  region, so a conqueror's farms there are legitimate.
 - Not tested in game yet. Check that `construct_estate_building` charges the nobles' treasury (the vanilla uses are
   events) and the monthly cost; `DEBUG = True` in the generator adds build counters (country, location, global
   `pp_noble_investment_builds`).

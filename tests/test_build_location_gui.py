@@ -38,29 +38,28 @@ def test_build_panel_is_a_fresh_port_of_the_current_vanilla_file():
 
 
 def test_six_slot_row_fits_the_panel():
-    """Widest location row (six slots: three columns of circles) with its value columns inside the panel's row width."""
+    """Widest location row (six slots: three columns of circles and efficiencies) with its value columns inside the
+    panel's row width."""
     tool = _tool()
     columns = 3
     row = (45 + 8                                        # building icon, card margins
            + tool.BUILD_LOCATION_CARD_WIDTH + 30         # location card, own-building checkboxes
            + columns * 24 + (columns - 1) * 2            # slot circles
-           + tool.BUILD_EFFICIENCY_WIDTH                 # production efficiency (first method)
-           + sum(tool.BUILD_VALUE_WIDTHS) + 2 * tool.BUILD_VALUE_MARGIN   # payback, profit, tax income
+           + columns * tool.BUILD_EFFICIENCY_WIDTH + (columns - 1) * 6   # production efficiencies
+           + sum(tool.BUILD_VALUE_WIDTHS) + 2 * tool.BUILD_VALUE_MARGIN  # build cost, payback, profit, tax income
            + 120 + 5)                                    # builder, margin
     assert row <= tool.BUILD_PANEL_WIDTH - 45            # list margins and scrollbar (vanilla: 570 panel, 525 row)
 
 
-def test_slot_circles_two_per_column_and_one_efficiency():
+def test_slot_columns_cover_six_slots_two_each():
     text = _mod_file()
-    model = "LocationToBuildItem.GetBuildingSlots"
-    models = re.findall(r'datamodel = "\[(DataModel[^"]*' + re.escape(model) + r'[^"]*)\]"', text)
-    assert models == [
-        f"DataModelFirst({model}, '(int32)2')",
-        f"DataModelFirst(DataModelSkipFirst({model}, '(int32)2'), '(int32)2')",
-        f"DataModelSkipFirst({model}, '(int32)4')",
-    ]
-    assert re.findall(r'datamodel = "\[([^"]*Building\.GetProductionMethods[^"]*)\]"', text) == [
-        "DataModelFirst(Building.GetProductionMethods, '(int32)1')"]
+    for model in ("LocationToBuildItem.GetBuildingSlots", "Building.GetProductionMethods"):
+        models = re.findall(r'datamodel = "\[(DataModel[^"]*' + re.escape(model) + r'[^"]*)\]"', text)
+        assert models == [
+            f"DataModelFirst({model}, '(int32)2')",
+            f"DataModelFirst(DataModelSkipFirst({model}, '(int32)2'), '(int32)2')",
+            f"DataModelSkipFirst({model}, '(int32)4')",
+        ]
 
 
 def test_market_picker_opens_beside_the_panel():
@@ -77,8 +76,8 @@ def _loc() -> str:
 
 def test_cost_and_payback_columns_for_built_and_unbuilt_rows():
     """Construction Manager's ROI by profit: build cost / monthly profit per level in years, and the build cost, once
-    per branch in the value columns template, which both the detailed and the compact rows use; the cost column has
-    the engine's cost sort key; tooltips localized."""
+    per branch in the value columns template of the location row; the cost column has the engine's cost sort key;
+    tooltips localized."""
     tool = _tool()
     text = _mod_file()
     assert tool.BUILD_PAYBACK_BASIS == tool.BUILD_PAYBACK_PROFIT
@@ -89,9 +88,9 @@ def test_cost_and_payback_columns_for_built_and_unbuilt_rows():
     assert text.count(f'raw_text = "[{tool.BUILD_PAYBACK_COST}|0]@gold!"') == 2
     assert text.count(f'name = "{tool.BUILD_COST_SORT_KEY}"') == 3             # header button, two highlights
     assert text.count("template pp_build_location_values {") == 1
-    assert text.count("hbox = { using = pp_build_location_values }") == 2      # detailed and compact row
-    assert text.count("using = pp_build_location_builder\n") == 2
+    assert text.count("hbox = { using = pp_build_location_values }") == 1
     assert "widget = { #profit" not in text
+    assert text.count("widget = { #builder") == 1 and text.count("widget = { #upgrader") == 1   # vanilla, in place
 
 
 def test_payback_bands_are_consecutive():
@@ -102,16 +101,22 @@ def test_payback_bands_are_consecutive():
 
 
 def test_payback_order_lists_every_item_once():
-    """Each band builds a row only for its items (bands do not overlap, plus one band for no tax income); the selected
-    sort and the payback order each take all items or none, so the hidden list builds no rows."""
+    """Each band builds the vanilla row only for its items (bands do not overlap, plus one band for no profit); the
+    selected sort and the payback order each take all items or none, so the hidden list builds no rows. The list ends
+    in an expand (without it the box spread the panel's spare height above and between the rows, seen in game)."""
     tool = _tool()
     text = _mod_file()
     var = tool.BUILD_PAYBACK_VARIABLE
     assert f"onclick = \"[GetVariableSystem.Toggle('{var}')]\"" in text
     assert "  PP_BUILD_PAYBACK_ORDER_TT: " in _loc()
     bands = len(tool.payback_bands()) + 1
-    assert text.count("using = pp_build_payback_row\n") == 2 * bands             # built and unbuilt side per band
+    rows = re.findall(r"(?m)^[ \t]*using = build_location_entry\n", text)      # not vanilla's commented-out one
+    assert len(rows) == 1 + 2 * bands                                            # selected sort, built/unbuilt per band
     assert text.count("DataModelRepeatedItem(Select_int32(") == 2 * bands
+    assert "pp_build_payback_row" not in text and "pp_build_location_builder" not in text
+    layout = text[text.index('blockoverride "scroll_list_layout"'):]
+    layout = layout[:tool._block_end(layout, layout.index("{"))]
+    assert re.search(r"expand = \{\}\n[ \t]*\}\n[ \t]*\}$", layout)   # last in the list's box
     every = "GetDataModelSize(BuildInLocationLateralView.GetItems)"
     assert text.count(f"Select_int32({tool._payback_mode()}, {every}, '(int32)0'))]\"") == bands
     assert text.count(f"Select_int32({tool._payback_mode()}, '(int32)0', {every}))]\"") == 1

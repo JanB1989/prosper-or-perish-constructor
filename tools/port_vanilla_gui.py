@@ -43,16 +43,16 @@ FOOD_GAUGE_FILES: dict[str, str] = {
 RETIRED = ("expansion_lateralview.gui",)
 EUROPEDIA = "encyclopedia_lateralview.gui"
 # the build panel ("Building <type>"): width (vanilla left panel 570; a six-slot row with the value columns needs
-# ~770), location card (vanilla 150) and the input goods per line of a slot filter row (the Cookshop slot has 22)
+# ~920), location card (vanilla 150) and the input goods per line of a slot filter row (the Cookshop slot has 22)
 BUILD_LOCATION = "build_location_lateralview.gui"
-BUILD_PANEL_WIDTH = 820
+BUILD_PANEL_WIDTH = 970
 BUILD_LOCATION_CARD_WIDTH = 175
 BUILD_INPUTS_PER_LINE = 14
-# the location rows' value columns, one value each: production efficiency (the first production method), build cost,
-# payback time, profit and tax income per level. Payback = build cost / profit per level per month, in years (the
+# the location rows keep vanilla's production efficiencies (two methods per column) and get one value per column:
+# build cost, payback time, profit and tax income per level. Payback = build cost / profit per level per month, in years (the
 # Construction Manager mod's ROI by profit; its tooltip also gives the years by tax income); per (built, unbuilt)
 # branch the profit and the tax income per level
-BUILD_EFFICIENCY_WIDTH = 70
+BUILD_EFFICIENCY_WIDTH = 70   # one column of production efficiencies (the header button sits over the last one)
 BUILD_VALUE_WIDTHS = (55, 55, 60, 60)   # build cost, payback, profit, tax income
 BUILD_VALUE_MARGIN = 5                  # left and right of the value columns
 BUILD_PAYBACK_INCOME = ("Building.GetIncomeToOwnerPerLevel",
@@ -64,12 +64,10 @@ BUILD_PAYBACK_TOOLTIP = ("PP_BUILD_PAYBACK_TT_BUILT", "PP_BUILD_PAYBACK_TT_UNBUI
 BUILD_COST_SORT_KEY = "cost"   # engine key of the build list (BUILDING_LOCATION_SORT_BY_COST), unused by vanilla
 # payback order: the engine sorts only by its own keys, so the header's payback button (global GUI variable) draws
 # the list once per payback band, shortest first; inside a band the selected sort holds. Band upper edges in years,
-# then one band above the last edge and one for no payback (profit 0 or less). Rows are compact (location, build
-# cost, payback, profit, tax income, builder) and built only in their band (DataModelRepeatedItem of 1 or 0).
+# then one band above the last edge and one for no payback (profit 0 or less). The rows are vanilla's, each built
+# only in its band (DataModelRepeatedItem of 1 or 0), so the payback order builds as many rows as the selected sort.
 BUILD_PAYBACK_VARIABLE = "pp_build_payback_order"
 BUILD_PAYBACK_BANDS = (0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 25, 30, 40, 60, 100)
-BUILD_PAYBACK_ROW_HEIGHT = 48
-BUILD_PAYBACK_LOCATION_WIDTH = 260
 # the mod's internal goods: accounting goods pinned at their price floor that no one trades or consumes (in_game/common/
 # goods/pp_goods_*.txt). The market, the goods ledger, the markets ledger's surplus/demand icons and the trade-order
 # goods picker skip them; tooltips, building panels and production methods still show them.
@@ -239,10 +237,10 @@ def _item_body(block: str) -> str:
 def port_build_location(vanilla: str) -> str:
     """Vanilla build panel ("Building <type>"), laid out for PP's buildings: up to 22 inputs in one slot (Cookshop)
     and up to six production-method slots (fishing village). The panel is wider, the goods rows of the slot filter
-    wrap their inputs onto more lines and grow with them, and each location row shows its slot circles two per column
-    and one value per column: production efficiency (first method), payback time, profit and tax income per level
-    (``_value_columns``). The header's payback button switches the list to the payback order (``_payback_order``).
-    Everything else is vanilla."""
+    wrap their inputs onto more lines and grow with them, and each location row shows its slot circles and production
+    efficiencies two per column, so they stay inside the row, then one value per column: build cost, payback time,
+    profit and tax income per level (``_value_columns``). The header's payback button lists the rows in payback order
+    (``_payback_order``). Everything else is vanilla."""
     what = "vanilla build panel"
     t = vanilla
     # the panel: wider than the 570 of the left lateral views; the market picker opens beside it
@@ -285,12 +283,12 @@ def port_build_location(vanilla: str) -> str:
         raise ValueError(f"{what}: the efficiency column no longer lists Building.GetProductionMethods")
     visible = re.search(r"(?m)^[ \t]*visible = (\"[^\n]*\")\n", block).group(1)
     ind = m.group(1)
-    one = (f"{ind}hbox = {{ #built (PP: one value per row, the first production method; all of them in the building's "
-           f"panel)\n{ind}\tmargin_top = 2\n{ind}\tvisible = {visible}\n{ind}\tlayoutpolicy_horizontal = expanding\n"
-           f"{ind}\texpand = {{}}\n{ind}\tvbox = {{\n"
-           f"{ind}\t\tdatamodel = \"[DataModelFirst(Building.GetProductionMethods, '(int32)1')]\"\n"
-           f"{ind}\t\titem = {{\n{_indent(_item_body(block), len(ind) + 3)}{ind}\t\t}}\n{ind}\t}}\n{ind}}}")
-    t = t[:m.start()] + one + t[end:]
+    grid = (f"{ind}hbox = {{ #built (PP: two production methods per column)\n{ind}\tmargin_top = 2\n"
+            f"{ind}\tvisible = {visible}\n{ind}\tlayoutpolicy_horizontal = expanding\n{ind}\tspacing = 6\n"
+            f"{ind}\texpand = {{}}\n"
+            + _slot_columns(ind + "\t", "Building.GetProductionMethods", _item_body(block), 6)
+            + f"{ind}}}")
+    t = t[:m.start()] + grid + t[end:]
     # sort buttons: the value columns' buttons sit over their columns at the right of the row
     t = _once(r'^([ \t]*)(sort_by_key_button = \{\n[ \t]*name = "production_efficiency"\n)',
               r"\1expand = {} # PP: the value buttons sit over their columns\n\n\1\2", t, what)
@@ -395,7 +393,7 @@ def _value_column(comment: str, width: int, built: list[str], unbuilt: list[str]
 
 def _values_template() -> str:
     """Build cost, payback, profit and tax income per level, one value per column (template pp_build_location_values,
-    used by the detailed and the compact rows)."""
+    used by the location rows)."""
     cost = BUILD_PAYBACK_COST
     cost_width, pay, profit, tax = BUILD_VALUE_WIDTHS
 
@@ -432,20 +430,11 @@ def _values_template() -> str:
 
 
 def _value_columns(t: str, what: str) -> str:
-    """The vanilla profit cell (profit over tax income) becomes the value columns; the builder and upgrader move into
-    a template, so the compact rows of the payback order use the same buttons."""
+    """The vanilla profit cell (profit over tax income) becomes the value columns."""
     start, end, ind = _cut(t, r'^([ \t]*)hbox = \{\n[ \t]*visible = "\[LocationToBuildItem\.GetBuildingType\.IsProducing\]"\n'
                               r"[ \t]*margin = \{ 5 0 \}\n[ \t]*widget = \{ #profit\n", what)
     t = t[:start] + f"{ind}hbox = {{ using = pp_build_location_values }} # PP: build cost, payback, profit, tax income" + t[end:]
-    builder = []
-    for name in ("builder", "upgrader"):
-        start, end, ind = _cut(t, rf"^([ \t]*)widget = \{{ #{name}\n", what)
-        builder.append(_dedent(t[start:end], len(ind)))
-        here = (f"{ind}hbox = {{ # PP: builder and upgrader (template pp_build_location_builder)\n"
-                f"{ind}\tlayoutpolicy_vertical = expanding\n{ind}\tusing = pp_build_location_builder\n{ind}}}")
-        t = t[:start] + (here if name == "builder" else "") + t[end:]
-    return (t.rstrip("\n") + "\n\n" + _values_template() + "\n"
-            + _block("template pp_build_location_builder { # PP: vanilla builder and upgrader of a location row", builder))
+    return t.rstrip("\n") + "\n\n" + _values_template()
 
 
 def _payback_toggle(width: int) -> str:
@@ -477,53 +466,23 @@ def _band_condition(income: str, low: float, high: float | None) -> str:
     return _all_of(terms)
 
 
-def _band(comment: str, items: str, built: str, unbuilt: str) -> str:
-    """The list's items once more; each builds its compact row only when it falls in this band."""
+def _band(comment: str, items: str, row: str, built: str, unbuilt: str) -> str:
+    """The list's items once more; each builds its row (the vanilla row) only when it falls in this band, so every
+    row is built once across all bands."""
     def side(visible: str, cond: str) -> str:
         return _block("vbox = {", [f'visible = "[{visible}]"', "layoutpolicy_horizontal = expanding",
                                    f"datamodel = \"[DataModelRepeatedItem(Select_int32({cond}, '(int32)1', '(int32)0'))]\"",
-                                   _block("item = {", [_block("widget = {", ["using = pp_build_payback_row"])])])
+                                   _block("item = {", [row])])
     return _block(f"vbox = {{ # {comment}", [
         "layoutpolicy_horizontal = expanding", f'datamodel = "[{items}]"',
         _block("item = {", [_block("vbox = {", ["layoutpolicy_horizontal = expanding", *ROW_CONTEXTS,
                                                 side(BUILT, built), side(f"Not({BUILT})", unbuilt)])])])
 
 
-def _payback_row_template() -> str:
-    loc = "LocationToBuildItem.GetLocation"
-    location = _block("button = { # location: click to go there", [
-        "layoutpolicy_vertical = expanding", f"size = {{ {BUILD_PAYBACK_LOCATION_WIDTH} -1 }}", "using = bg_paper_card",
-        _block("hbox = {", [
-            "using = layoutpolicy_expanding", "margin = { 6 0 }", "spacing = 3",
-            _block("icon = {", ["size = { 16 16 }", 'texture = "[Location.GetRankIcon]"']),
-            _block("text_single = {", ["layoutpolicy_horizontal = expanding", "autoresize = yes",
-                                       "using = Font_Size_Very_Small", f'text = "[{loc}.GetNameWithNoTooltip]"',
-                                       'default_format = "#yellow_titles"']),
-            _block("text_single = {", ['visible = "[DataModelHasItems(Location.GetCivilConstructions)]"',
-                                       "autoresize = yes", "using = Font_Size_Very_Small",
-                                       'raw_text = "(#L +[GetDataModelSize(Location.GetCivilConstructions)]#! @construction!)"']),
-        ]),
-        _block("action_tooltip = {", ["click_type = left", "click_mode = single", 'title = "GO_TO_LOCATION"',
-                                      f'on_action = "[ShowLocation({loc})]"']),
-        f'ondoubleclick = "[PanToLocation({loc})]"',
-        f'onmousehierarchyenter = "[PdxGuiWidget.SetHighlightLocation({loc})]"',
-        _block("tooltipwidget = {", ["using = location_simple_tooltip"]),
-    ])
-    h = BUILD_PAYBACK_ROW_HEIGHT
-    return _block("template pp_build_payback_row { # PP: compact location row of the payback order", [
-        "layoutpolicy_horizontal = expanding", f"size = {{ -1 {h} }}",
-        _block("widget = {", [f"size = {{ 100% {h - 2} }}", "parentanchor = center", _block("hbox = {", [
-            "using = layoutpolicy_expanding", "using = bg_cabinet_card_frame", "margin = { 5 4 }", "spacing = 5",
-            location, "expand = {}", "hbox = { using = pp_build_location_values }",
-            _block("hbox = {", ["layoutpolicy_vertical = expanding", "using = pp_build_location_builder"]),
-        ])]),
-    ])
-
-
 def _payback_order(t: str, what: str) -> str:
-    """The list area holds two lists over the same items: the selected sort (vanilla rows) or, with the header's payback
-    button on, the payback bands of compact rows. Each list takes all items or none (DataModelFirst), so the hidden one
-    builds no rows."""
+    """The list area holds two lists of the vanilla rows over the same items: the selected sort or, with the header's
+    payback button on, the payback bands. Each list takes all items or none (DataModelFirst), so the hidden one builds
+    no rows. The list ends in an expand: a box would spread the panel's spare height between its rows."""
     start, end, ind = _cut(t, r'^([ \t]*)blockoverride "scroll_list_content" \{\n', what)
     block = t[start:end]
     for needed in ('datamodel = "[BuildInLocationLateralView.GetItems]"', "addrow = 60"):
@@ -536,23 +495,22 @@ def _payback_order(t: str, what: str) -> str:
     every = f"GetDataModelSize({items})"
     sorted_items = f"DataModelFirst({items}, Select_int32({mode}, '(int32)0', {every}))"
     band_items = f"DataModelFirst({items}, Select_int32({mode}, {every}, '(int32)0'))"
-    bands = [_band(f"payback {low} to {high or 'more'} years", band_items,
+    bands = [_band(f"payback {low} to {high or 'more'} years", band_items, row,
                    _band_condition(BUILD_PAYBACK_BASIS[0], low, high), _band_condition(BUILD_PAYBACK_BASIS[1], low, high))
              for low, high in payback_bands()]
-    bands.append(_band("no payback (no profit)", band_items,
+    bands.append(_band("no payback (no profit)", band_items, row,
                        *(f"Not(GreaterThan_CFixedPoint({income}, {ZERO}))" for income in BUILD_PAYBACK_BASIS)))
     layout = _block('blockoverride "scroll_list_layout" { # PP: the selected sort or the payback order', [
         _block("vbox = {", [
             "layoutpolicy_horizontal = expanding", "margin_top = 2",
-            _block("vbox = { # the selected sort (vanilla rows)", ["layoutpolicy_horizontal = expanding",
-                                                                   f'datamodel = "[{sorted_items}]"',
-                                                                   _block("item = {", [row])]),
+            _block("vbox = { # the selected sort", ["layoutpolicy_horizontal = expanding",
+                                                    f'datamodel = "[{sorted_items}]"', _block("item = {", [row])]),
             _block("vbox = { # payback order: shortest first, the selected sort inside each band",
                    ["layoutpolicy_horizontal = expanding", *bands]),
+            "expand = {}",
         ]),
     ])
-    t = t[:start] + _indent(layout, len(ind)).rstrip("\n") + t[end:]
-    return t.rstrip("\n") + "\n\n" + _payback_row_template()
+    return t[:start] + _indent(layout, len(ind)).rstrip("\n") + t[end:]
 
 
 def _any_of(terms: list[str]) -> str:

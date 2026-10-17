@@ -1281,7 +1281,7 @@
 					vbox = {
 						layoutpolicy_horizontal = expanding
 						margin_top = 2
-						vbox = { # the selected sort (vanilla rows)
+						vbox = { # the selected sort
 							layoutpolicy_horizontal = expanding
 							datamodel = "[DataModelFirst(BuildInLocationLateralView.GetItems, Select_int32(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), '(int32)0', GetDataModelSize(BuildInLocationLateralView.GetItems)))]"
 							item = {
@@ -1318,7 +1318,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)6'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1328,7 +1339,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)6'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1350,7 +1372,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)6'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)12'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1360,7 +1393,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)6'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)12'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1382,7 +1426,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)12'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)18'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1392,7 +1447,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)12'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)18'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1414,7 +1480,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)18'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)24'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1424,7 +1501,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)18'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)24'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1446,7 +1534,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)24'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)30'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1456,7 +1555,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)24'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)30'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1478,7 +1588,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)30'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)36'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1488,7 +1609,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)30'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)36'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1510,7 +1642,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)36'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)42'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1520,7 +1663,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)36'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)42'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1542,7 +1696,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)42'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)48'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1552,7 +1717,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)42'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)48'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1574,7 +1750,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)48'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)54'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1584,7 +1771,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)48'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)54'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1606,7 +1804,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)54'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)60'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1616,7 +1825,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)54'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)60'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1638,7 +1858,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)60'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)72'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1648,7 +1879,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)60'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)72'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1670,7 +1912,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)72'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)84'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1680,7 +1933,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)72'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)84'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1702,7 +1966,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)84'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)96'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1712,7 +1987,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)84'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)96'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1734,7 +2020,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)96'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)108'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1744,7 +2041,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)96'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)108'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1766,7 +2074,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)108'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)120'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1776,7 +2095,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)108'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)120'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1798,7 +2128,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)120'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)144'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1808,7 +2149,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)120'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)144'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1830,7 +2182,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)144'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)168'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1840,7 +2203,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)144'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)168'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1862,7 +2236,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)168'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)192'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1872,7 +2257,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)168'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)192'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1894,7 +2290,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)192'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)216'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1904,7 +2311,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)192'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)216'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1926,7 +2344,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)216'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)240'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1936,7 +2365,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)216'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)240'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1958,7 +2398,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)240'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)300'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1968,7 +2419,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)240'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)300'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -1990,7 +2452,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)300'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)360'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -2000,7 +2473,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)300'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)360'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -2022,7 +2506,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)360'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)480'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -2032,7 +2527,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)360'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)480'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -2054,7 +2560,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)480'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)720'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -2064,7 +2581,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)480'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)720'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -2086,7 +2614,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)720'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)1200'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -2096,7 +2635,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)720'))), LessThan_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)1200'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -2118,7 +2668,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)1200'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -2128,7 +2689,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(And(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'), GreaterThanOrEqualTo_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Multiply_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)1200'))), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -2150,7 +2722,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(Not(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0')), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -2160,7 +2743,18 @@
 											datamodel = "[DataModelRepeatedItem(Select_int32(Not(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0')), '(int32)1', '(int32)0'))]"
 											item = {
 												widget = {
-													using = pp_build_payback_row
+													layoutpolicy_horizontal = expanding
+													size = { -1 60 }
+													widget = {
+														size = { 100% 58 }
+														parentanchor = center
+														hbox = {
+															using = layoutpolicy_expanding
+															using = bg_cabinet_card_frame
+															margin = {5 5}
+															using = build_location_entry
+														}
+													}
 												}
 											}
 										}
@@ -2168,6 +2762,7 @@
 								}
 							}
 						}
+						expand = {}
 					}
 				}
 			}
@@ -2903,36 +3498,106 @@ template build_location_entry {
 						layoutpolicy_horizontal = expanding
 						layoutpolicy_vertical = expanding
 						
-						hbox = { #built (PP: one value per row, the first production method; all of them in the building's panel)
+						hbox = { #built (PP: two production methods per column)
 							margin_top = 2
 							visible = "[And(LocationToBuildItem.ShowProfit, LocationToBuildItem.HasConstructedBuildingLevels)]"
 							layoutpolicy_horizontal = expanding
+							spacing = 6
 							expand = {}
 							vbox = {
-								datamodel = "[DataModelFirst(Building.GetProductionMethods, '(int32)1')]"
-								item = {
-									text_single = {
-										size = { 70 18 }
-										autoresize = no
-										#raw_text = "[Building.GetBuildingProductionEfficiency(ActiveProductionMethod.GetMethod)|+=2%]@efficiency!"
-										text = "BUILDING_PROD_EFFICIENCY"
-										align = nobaseline|right
-										default_format = "@bold!"
-										fontsize = 14
-										tooltipwidget = {
-											using = building_production_efficiency_tooltip
-										}
-										sort_by_highlight = {
-											size = { 105% 200% }
-											name = "production_efficiency"
-										}
-										using = bg_number_container_bckg
-										blockoverride "number_container_extra" {
-											margin = { 1 0 }
-											margin_left = 0
+								layoutpolicy_vertical = expanding
+								vbox = {
+									spacing = 6
+									datamodel = "[DataModelFirst(Building.GetProductionMethods, '(int32)2')]"
+									item = {
+										text_single = {
+											size = { 70 18 }
+											autoresize = no
+											#raw_text = "[Building.GetBuildingProductionEfficiency(ActiveProductionMethod.GetMethod)|+=2%]@efficiency!"
+											text = "BUILDING_PROD_EFFICIENCY"
+											align = nobaseline|right
+											default_format = "@bold!"
+											fontsize = 14
+											tooltipwidget = {
+												using = building_production_efficiency_tooltip
+											}
+											sort_by_highlight = {
+												size = { 105% 200% }
+												name = "production_efficiency"
+											}
+											using = bg_number_container_bckg
+											blockoverride "number_container_extra" {
+												margin = { 1 0 }
+												margin_left = 0
+											}
 										}
 									}
 								}
+								expand = {}
+							}
+							vbox = {
+								visible = "[GreaterThan_int32(GetDataModelSize(Building.GetProductionMethods), '(int32)2')]"
+								layoutpolicy_vertical = expanding
+								vbox = {
+									spacing = 6
+									datamodel = "[DataModelFirst(DataModelSkipFirst(Building.GetProductionMethods, '(int32)2'), '(int32)2')]"
+									item = {
+										text_single = {
+											size = { 70 18 }
+											autoresize = no
+											#raw_text = "[Building.GetBuildingProductionEfficiency(ActiveProductionMethod.GetMethod)|+=2%]@efficiency!"
+											text = "BUILDING_PROD_EFFICIENCY"
+											align = nobaseline|right
+											default_format = "@bold!"
+											fontsize = 14
+											tooltipwidget = {
+												using = building_production_efficiency_tooltip
+											}
+											sort_by_highlight = {
+												size = { 105% 200% }
+												name = "production_efficiency"
+											}
+											using = bg_number_container_bckg
+											blockoverride "number_container_extra" {
+												margin = { 1 0 }
+												margin_left = 0
+											}
+										}
+									}
+								}
+								expand = {}
+							}
+							vbox = {
+								visible = "[GreaterThan_int32(GetDataModelSize(Building.GetProductionMethods), '(int32)4')]"
+								layoutpolicy_vertical = expanding
+								vbox = {
+									spacing = 6
+									datamodel = "[DataModelSkipFirst(Building.GetProductionMethods, '(int32)4')]"
+									item = {
+										text_single = {
+											size = { 70 18 }
+											autoresize = no
+											#raw_text = "[Building.GetBuildingProductionEfficiency(ActiveProductionMethod.GetMethod)|+=2%]@efficiency!"
+											text = "BUILDING_PROD_EFFICIENCY"
+											align = nobaseline|right
+											default_format = "@bold!"
+											fontsize = 14
+											tooltipwidget = {
+												using = building_production_efficiency_tooltip
+											}
+											sort_by_highlight = {
+												size = { 105% 200% }
+												name = "production_efficiency"
+											}
+											using = bg_number_container_bckg
+											blockoverride "number_container_extra" {
+												margin = { 1 0 }
+												margin_left = 0
+											}
+										}
+									}
+								}
+								expand = {}
 							}
 						}
 
@@ -3004,12 +3669,575 @@ template build_location_entry {
 
 				hbox = { using = pp_build_location_values } # PP: build cost, payback, profit, tax income
 
-				hbox = { # PP: builder and upgrader (template pp_build_location_builder)
+				widget = { #builder
+					visible = "[Not(And(LocationToBuildItem.HasBuilding, LocationToBuildItem.GetBuilding.CanPlayerUpgrade))]"
 					layoutpolicy_vertical = expanding
-					using = pp_build_location_builder
+					size = { 120 -1 }
+					alwaystransparent = no
+					filter_mouse = left|right
+					widget = {
+						parentanchor = center
+						size = { 100% 38 }
+						
+						sort_by_highlight = {
+							size = { 100% 100% }
+							name = "number_building"
+						}
+
+						hbox = { 
+							using = bg_text_mask_container_brown
+							margin = {5 5}
+						}
+						
+						hbox = {
+							spacing = 5
+							margin = {5 0}
+							
+							button_square_minus = {
+								size = { 21 21 }
+								datacontext = "[LocationToBuildItem.GetBuilding]"
+								enabled = "[Or(LocationToBuildItem.CanDestroy, LocationToBuildItem.CanDequeue)]"
+								datacontext = "[BuildInLocationLateralView.GetBuildingType]"
+
+								action_tooltip = {
+									click_type = left
+									click_mode = confirm
+									click_modifier = default
+
+									title = "DESTROY_BUILDING_ACTION"
+									description = "[LocationToBuildItem.CanDestroyDesc]"
+									confirmation = "[LocationToBuildItem.CanDestroyDesc]"
+									on_action = "[LocationToBuildItem.DestroyDefault]"
+									enabled = "[LocationToBuildItem.CanDestroy]"
+									visible = "[Not(LocationToBuildItem.CanDequeue)]"
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = confirm
+									click_modifier = ctrl
+
+									title = "DESTROY_BUILDING_ACTION_CTRL"
+									description = "[LocationToBuildItem.CanDestroyDescCtrl]"
+								confirmation = "[LocationToBuildItem.CanDestroyDescCtrl]"
+									on_action = "[LocationToBuildItem.DestroyCtrl]"
+									enabled = "[LocationToBuildItem.CanDestroy]"
+									visible = "[Not(LocationToBuildItem.CanDequeue)]"
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = confirm
+									click_modifier = shift
+
+									title = "DESTROY_BUILDING_ACTION_SHIFT"
+									description = "[LocationToBuildItem.CanDestroyDescShift]"
+									confirmation = "[LocationToBuildItem.CanDestroyDescShift]"
+									on_action = "[LocationToBuildItem.DestroyShift]"
+									enabled = "[LocationToBuildItem.CanDestroy]"
+									visible = "[Not(LocationToBuildItem.CanDequeue)]"
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+
+									title = "DEQUEUE_BUILDING_TYPE_LOCATION_ACTION"
+									description = "[LocationToBuildItem.CanDequeueDesc]"
+									on_action = "[LocationToBuildItem.Dequeue]"
+									visible = "[LocationToBuildItem.CanDequeue]"
+								}
+
+								tooltipwidget = {
+									using = destroy_building_in_location_tt
+								}
+							}
+
+							vbox = {
+								using = layoutpolicy_expanding
+								# spacing = 1
+								widget = {
+									layoutpolicy_vertical = expanding
+									size = {55 22}
+
+									tooltipwidget = {
+										SimpleContextualTooltipType = {
+											blockoverride "title_icon" {
+												icon = {
+													using = tooltip_title_icon_size
+													texture = "[GetBuildingIcon(BuildInLocationLateralView.GetBuildingType)]"
+												}
+											}
+											lowpriotextcontext =  BUILD_LOCATION_NUMBER
+											blockoverride "tooltip_extra_content" {
+												# block "tooltip_extra_content" {}
+												# TooltipTextBlock = {
+												# 	blockoverride "text" {
+												# 		text = "BUILD_LOCATION_NUMBER"
+												# 	}
+												# }
+												TooltipStringPairList = {
+													datacontext = "[LocationToBuildItem.GetBuilding]"
+													datacontext = "[LocationToBuildItem.GetLocation]"
+													blockoverride "block_title" {
+														text = "BUILDING_LEVEL_MAX_TABLE_TITLE"
+													}
+													textcontext = "[BuildInLocationLateralView.GetBuildingType.GetMaxLevelInformation(LocationToBuildItem.GetLocation)]"
+												}
+
+											}
+										}
+									}
+
+									text_single = {
+										parentanchor = center
+										maximumsize = {55 22}
+										visible = "[Not(LocationToBuildItem.HasBuilding)]"
+										raw_text = "0 / [LocationToBuildItem.GetMaxLevel|0Y]"
+										default_format = "#important_number"
+										align = nobaseline
+									}
+
+									text_single = {
+										parentanchor = center
+										maximumsize = {55 22}
+										visible = "[And3(LocationToBuildItem.HasBuilding, Not(LocationToBuildItem.GetBuilding.IsUnderConstruction), Not(And(LocationToBuildItem.GetBuilding.CanPlayerUpgrade, LocationToBuildItem.GetBuilding.IsPlayerUpgrading)))]"
+										raw_text = "[LocationToBuildItem.GetBuilding.GetLevel|0Y] / [LocationToBuildItem.GetBuilding.GetMaxLevel|0Y]"
+										default_format = "#important_number"
+										align = nobaseline
+									}
+
+									text_single = {
+										parentanchor = center
+										maximumsize = {55 22}
+										visible = "[And4(LocationToBuildItem.HasBuilding, Not(LocationToBuildItem.GetBuilding.IsUnderConstruction), LocationToBuildItem.GetBuilding.CanPlayerUpgrade, LocationToBuildItem.GetBuilding.IsPlayerUpgrading)]"
+										raw_text = "[LocationToBuildItem.GetBuilding.GetLevel|0Y](#G -[LocationToBuildItem.GetBuilding.GetLevelsUnderUpgrade|0]#!) / [LocationToBuildItem.GetBuilding.GetMaxLevel|0Y]"
+										default_format = "#important_number"
+										align = nobaseline
+									}
+
+									text_single = {
+										parentanchor = center
+										maximumsize = {55 22}
+										visible = "[And(LocationToBuildItem.HasBuilding, LocationToBuildItem.GetBuilding.IsUnderConstruction)]"
+										raw_text = "[LocationToBuildItem.GetBuilding.GetLevel|0Y]([LocationToBuildItem.GetBuilding.GetLevelsUnderConstruction|0+=]) / [LocationToBuildItem.GetBuilding.GetMaxLevel|0Y]"
+										default_format = "#important_number"
+										align = nobaseline
+									}
+								}
+
+								# Traffic-light badge for the profitability drop from expanding one more level.
+								# Only shown for producing building types that can still be built/expanded.
+								building_expansion_risk_badge = {
+									datacontext = "[LocationToBuildItem.GetBuildingType]"
+									datacontext = "[LocationToBuildItem.GetLocation]"
+									blockoverride "building_expansion_risk_badge_impact_warning_visible" {
+										visible = "[LocationToBuildItem.HasGoodsImpactedByConstruction]"
+									}
+								}
+							}
+
+							button_square_plus = {
+								visible = "[And(LocationToBuildItem.HasBuilding, Not(LocationToBuildItem.GetBuilding.CanPlayerUpgrade))]"
+								enabled = "[LocationToBuildItem.CanCreateBuilding]"
+								datacontext = "[LocationToBuildItem.GetLocation]"
+								datacontext = "[LocationToBuildItem.GetBuildingType]"
+								size = { 21 21 }
+								blockoverride "square_icon_content" {
+									icon = {
+										visible = "[Not(GreaterThan_CFixedPoint(GetRemainingUpgradeLevels(BuildingType.Self, Location.Self), '(CFixedPoint)0'))]"
+										size = { 100% 100% }
+										parentanchor = center
+										texture = "gfx/interface/buttons/flats/add.dds"
+										texture_density = 2
+										modify_texture = { using = color_gold_texture }
+										modify_texture = { using = overlay_window_texture blend_mode = overlay alpha = 0.9 }
+										background = {
+											texture = "gfx/interface/buttons/flats/add.dds"
+											texture_density = 2
+											margin_bottom = 1
+											modify_texture = { using = color_black_texture }
+										}
+										glow = { name = "drop_shadow" glow_radius = 3 color = {0.0 0.0 0.0 1.0} alpha = 0.2 }
+									}
+									icon = {
+										visible = "[GreaterThan_CFixedPoint(GetRemainingUpgradeLevels(BuildingType.Self, Location.Self), '(CFixedPoint)0')]"
+										size = { 100% 100% }
+										parentanchor = center
+										texture = "gfx/interface/buttons/flats/upgrade_button2.dds"
+										texture_density = 2
+										modify_texture = { using = color_gold_texture }
+										modify_texture = { using = overlay_window_texture blend_mode = overlay alpha = 0.9 }
+										background = {
+											texture = "gfx/interface/buttons/flats/upgrade_button2.dds"
+											texture_density = 2
+											margin_bottom = 1
+											modify_texture = { using = color_black_texture }
+										}
+										glow = { name = "drop_shadow" glow_radius = 3 color = {0.0 0.0 0.0 1.0} alpha = 0.2 }
+									}
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									click_modifier = default
+
+									title = "BUILDING_IN_LOCATION_ACTION"
+									cost = "[LocationToBuildItem.GetCost]"
+									description = "[CanBuildOrExpandBuildingInfo(BuildingType.Self, Location.Self)]"
+									on_action = "[ExpandBuildingDefault(LocationToBuildItem.GetBuilding.Self)]"
+									enabled = "[LocationToBuildItem.CanCreateBuilding]"
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									click_modifier = ctrl
+									click_modifier_description = "BUILDING_IN_LOCATION_ACTION_CTRL_MOD_DESC"
+
+									title = "BUILDING_IN_LOCATION_ACTION_CTRL"
+									cost = "[LocationToBuildItem.GetCost]"
+									description = "[CanBuildOrExpandBuildingInfo(BuildingType.Self, Location.Self)]"
+									on_action = "[ExpandBuildingCtrl(LocationToBuildItem.GetBuilding.Self)]"
+									enabled = "[LocationToBuildItem.CanCreateBuilding]"
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									click_modifier = shift
+									click_modifier_description = "BUILDING_IN_LOCATION_ACTION_SHIFT_MOD_DESC"
+
+									title = "BUILDING_IN_LOCATION_ACTION_SHIFT"
+									cost = "[LocationToBuildItem.GetCost]"
+									description = "[CanBuildOrExpandBuildingInfo(BuildingType.Self, Location.Self)]"
+									on_action = "[ExpandBuildingShift(LocationToBuildItem.GetBuilding.Self)]"
+									enabled = "[LocationToBuildItem.CanCreateBuilding]"
+								}
+
+								tooltipwidget = {
+									using = construct_building_in_location_tt
+								}
+							}
+
+							button_square_plus = {
+								visible = "[Not(LocationToBuildItem.HasBuilding)]"
+								enabled = "[LocationToBuildItem.CanCreateBuilding]"
+								datacontext = "[LocationToBuildItem.GetLocation]"
+								datacontext = "[LocationToBuildItem.GetBuildingType]"
+								size = { 21 21 }
+								blockoverride "square_icon_content" {
+									icon = {
+										visible = "[Not(GreaterThan_CFixedPoint(GetRemainingUpgradeLevels(BuildingType.Self, Location.Self), '(CFixedPoint)0'))]"
+										size = { 100% 100% }
+										parentanchor = center
+										texture = "gfx/interface/buttons/flats/add.dds"
+										texture_density = 2
+										modify_texture = { using = color_gold_texture }
+										modify_texture = { using = overlay_window_texture blend_mode = overlay alpha = 0.9 }
+										background = {
+											texture = "gfx/interface/buttons/flats/add.dds"
+											texture_density = 2
+											margin_bottom = 1
+											modify_texture = { using = color_black_texture }
+										}
+										glow = { name = "drop_shadow" glow_radius = 3 color = {0.0 0.0 0.0 1.0} alpha = 0.2 }
+									}
+									icon = {
+										visible = "[GreaterThan_CFixedPoint(GetRemainingUpgradeLevels(BuildingType.Self, Location.Self), '(CFixedPoint)0')]"
+										size = { 100% 100% }
+										parentanchor = center
+										texture = "gfx/interface/buttons/flats/upgrade_button2.dds"
+										texture_density = 2
+										modify_texture = { using = color_gold_texture }
+										modify_texture = { using = overlay_window_texture blend_mode = overlay alpha = 0.9 }
+										background = {
+											texture = "gfx/interface/buttons/flats/upgrade_button2.dds"
+											texture_density = 2
+											margin_bottom = 1
+											modify_texture = { using = color_black_texture }
+										}
+										glow = { name = "drop_shadow" glow_radius = 3 color = {0.0 0.0 0.0 1.0} alpha = 0.2 }
+									}
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									click_modifier = default
+
+									title = "BUILDING_IN_LOCATION_ACTION"
+									cost = "[LocationToBuildItem.GetCost]"
+									description = "[CanBuildOrExpandBuildingInfo(BuildingType.Self, Location.Self)]"
+									on_action = "[LocationToBuildItem.CreateBuildingDefault]"
+									enabled = "[LocationToBuildItem.CanCreateBuilding]"
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									click_modifier = ctrl
+
+									title = "BUILDING_IN_LOCATION_ACTION_CTRL"
+									cost = "[LocationToBuildItem.GetCost]"
+									description = "[CanBuildOrExpandBuildingInfo(BuildingType.Self, Location.Self)]"
+									on_action = "[LocationToBuildItem.CreateBuildingCtrl]"
+									enabled = "[LocationToBuildItem.CanCreateBuilding]"
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									click_modifier = shift
+
+									title = "BUILDING_IN_LOCATION_ACTION_SHIFT"
+									cost = "[LocationToBuildItem.GetCost]"
+									description = "[CanBuildOrExpandBuildingInfo(BuildingType.Self, Location.Self)]"
+									on_action = "[LocationToBuildItem.CreateBuildingShift]"
+									enabled = "[LocationToBuildItem.CanCreateBuilding]"
+								}
+
+								tooltipwidget = {
+									using = construct_building_in_location_tt
+								}
+							}
+						}
+					}
 				}
 
+				widget = { #upgrader
+					visible = "[And(LocationToBuildItem.HasBuilding, LocationToBuildItem.GetBuilding.CanPlayerUpgrade)]"
+					layoutpolicy_vertical = expanding
+					size = { 120 -1 }
+					alwaystransparent = no
+					filter_mouse = left|right
 
+					#destroy current
+					widget = {
+						parentanchor = left|vcenter
+						size = { 49% 38 }
+						
+						sort_by_highlight = {
+							size = { 100% 100% }
+							name = "number_building"
+						}
+						
+						hbox = {
+							spacing = 2
+							using = bg_text_mask_container_brown
+							margin = {2 5}
+							margin_left = 5
+							
+							button_square_minus = {
+								size = { 21 21 }
+								datacontext = "[LocationToBuildItem.GetBuilding]"
+								enabled = "[Or(LocationToBuildItem.CanDestroy, LocationToBuildItem.CanDequeue)]"
+								datacontext = "[BuildInLocationLateralView.GetBuildingType]"
+
+								action_tooltip = {
+									click_type = left
+									click_mode = confirm
+									click_modifier = default
+
+									title = "DESTROY_BUILDING_ACTION"
+									description = "[LocationToBuildItem.CanDestroyDesc]"
+									confirmation = "[LocationToBuildItem.CanDestroyDesc]"
+									on_action = "[LocationToBuildItem.DestroyDefault]"
+									enabled = "[LocationToBuildItem.CanDestroy]"
+									visible = "[Not(LocationToBuildItem.CanDequeue)]"
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = confirm
+									click_modifier = ctrl
+
+									title = "DESTROY_BUILDING_ACTION_CTRL"
+									description = "[LocationToBuildItem.CanDestroyDescCtrl]"
+								confirmation = "[LocationToBuildItem.CanDestroyDescCtrl]"
+									on_action = "[LocationToBuildItem.DestroyCtrl]"
+									enabled = "[LocationToBuildItem.CanDestroy]"
+									visible = "[Not(LocationToBuildItem.CanDequeue)]"
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = confirm
+									click_modifier = shift
+
+									title = "DESTROY_BUILDING_ACTION_SHIFT"
+									description = "[LocationToBuildItem.CanDestroyDescShift]"
+									confirmation = "[LocationToBuildItem.CanDestroyDescShift]"
+									on_action = "[LocationToBuildItem.DestroyShift]"
+									enabled = "[LocationToBuildItem.CanDestroy]"
+									visible = "[Not(LocationToBuildItem.CanDequeue)]"
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+
+									title = "DEQUEUE_BUILDING_TYPE_LOCATION_ACTION"
+									description = "[LocationToBuildItem.CanDequeueDesc]"
+									on_action = "[LocationToBuildItem.Dequeue]"
+									visible = "[LocationToBuildItem.CanDequeue]"
+								}
+
+								tooltipwidget = {
+									using = destroy_building_in_location_tt
+								}
+							}
+
+							widget = {
+								layoutpolicy_vertical = expanding
+								size = {28 -1}
+								tooltipwidget = {
+									SimpleContextualTooltipType = {
+										blockoverride "title_icon" {
+											icon = {
+												using = tooltip_title_icon_size
+												texture = "[GetBuildingIcon(BuildInLocationLateralView.GetBuildingType)]"
+											}
+										}
+										lowpriotextcontext =  BUILD_LOCATION_NUMBER
+										blockoverride "tooltip_extra_content" {
+											# block "tooltip_extra_content" {}
+											# TooltipTextBlock = {
+											# 	blockoverride "text" {
+											# 		text = "BUILD_LOCATION_NUMBER"
+											# 	}
+											# }
+											TooltipStringPairList = {
+												datacontext = "[LocationToBuildItem.GetBuilding]"
+												datacontext = "[LocationToBuildItem.GetLocation]"
+												blockoverride "block_title" {
+													text = "BUILDING_LEVEL_MAX_TABLE_TITLE"
+												}
+												textcontext = "[BuildInLocationLateralView.GetBuildingType.GetMaxLevelInformation(LocationToBuildItem.GetLocation)]"
+											}
+
+										}
+									}
+								}
+
+								text_single = {
+									parentanchor = center
+									maximumsize = {28 -1}
+									visible = "[And3(LocationToBuildItem.HasBuilding, Not(LocationToBuildItem.GetBuilding.IsUnderConstruction), Not(And(LocationToBuildItem.GetBuilding.CanPlayerUpgrade, LocationToBuildItem.GetBuilding.IsPlayerUpgrading)))]"
+									raw_text = "[LocationToBuildItem.GetBuilding.GetLevel|0Y]"
+									default_format = "#important_number"
+									align = nobaseline
+								}
+
+								text_single = {
+									parentanchor = center
+									maximumsize = {28 -1}
+									visible = "[And4(LocationToBuildItem.HasBuilding, Not(LocationToBuildItem.GetBuilding.IsUnderConstruction), LocationToBuildItem.GetBuilding.CanPlayerUpgrade, LocationToBuildItem.GetBuilding.IsPlayerUpgrading)]"
+									raw_text = "[LocationToBuildItem.GetBuilding.GetLevel|0Y](#G -[LocationToBuildItem.GetBuilding.GetLevelsUnderUpgrade|0]#!)"
+									default_format = "#important_number"
+									align = nobaseline
+								}
+
+								text_single = {
+									parentanchor = center
+									maximumsize = {28 -1}
+									visible = "[And(LocationToBuildItem.HasBuilding, LocationToBuildItem.GetBuilding.IsUnderConstruction)]"
+									raw_text = "[LocationToBuildItem.GetBuilding.GetLevel|0Y]([LocationToBuildItem.GetBuilding.GetLevelsUnderConstruction|0+=])"
+									default_format = "#important_number"
+									align = nobaseline
+								}
+							}
+						}
+					}
+
+					#upgrade
+					widget = {
+						parentanchor = right|vcenter
+						size = { 45% 38 }
+						hbox = {
+							spacing = 3
+							using = bg_text_mask_container_brown
+							margin = {2 5}
+							margin_right = 5
+
+							widget = {
+								layoutpolicy_vertical = expanding
+								size = {22 -1}
+								datacontext = "[LocationToBuildItem.GetBuilding.GetType.GetNextReplacementBuilding(Player.Self)]"
+								tooltipwidget = {
+									SimpleContextualTooltipType = {
+										blockoverride "title_icon" {
+											icon = {
+												using = tooltip_title_icon_size
+												texture = "[GetBuildingIcon(BuildInLocationLateralView.GetBuildingType.GetNextReplacementBuilding(Player.Self))]"
+											}
+										}
+										lowpriotextcontext =  UPGRADE_LOCATION_NUMBER
+									}
+								}
+
+								text_single = {
+									parentanchor = center
+									maximumsize = {22 -1}
+									raw_text = "[LocationToBuildItem.GetBuilding.GetLevelsUnderUpgrade|0+=]"
+									default_format = "#important_number"
+									align = nobaseline
+								}
+							}
+							
+							# UPGRADE
+							button_square_plus = {
+								visible = "[And(LocationToBuildItem.HasBuilding, LocationToBuildItem.GetBuilding.CanPlayerUpgrade)]"
+								datacontext = "[LocationToBuildItem.GetBuilding.GetType.GetNextReplacementBuilding(Player.Self)]"
+								size = { 21 21 }
+								blockoverride "plusminus_icon" {
+									texture = "gfx/interface/buttons/flats/upgrade_button2.dds"
+								}
+								datacontext = "[LocationToBuildItem.GetBuilding.GetLocation]"
+								enabled = "[CanUpgradeToBuilding(BuildingType.Self, Location.Self)]"
+								action_tooltip = {
+									click_mode = single
+									click_type = left
+									click_modifier = default
+									title = "UPGRADE_BUILDING_ACTION"
+									enabled = "[CanUpgradeToBuilding(BuildingType.Self, Location.Self)]"
+									description = "[CanUpgradeToBuildingInfo(BuildingType.Self, Location.Self)]"
+									cost = "[GetBuildOrExpandBuildingCostValue(BuildingType.Self, Location.Self)]"
+									on_action = "[UpgradeBuildingDefault(BuildingType.Self, Location.Self)]"
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									click_modifier = ctrl
+
+									title = "UPGRADE_BUILDING_ACTION_CTRL"
+									cost = "[GetBuildOrExpandBuildingCostValue(BuildingType.Self, Location.Self)]"
+									description = "[CanUpgradeToBuildingInfo(BuildingType.Self, Location.Self)]"
+									on_action = "[UpgradeBuildingCtrl(BuildingType.Self, Location.Self)]"
+									enabled = "[CanUpgradeToBuilding(BuildingType.Self, Location.Self)]"
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									click_modifier = shift
+
+									title = "UPGRADE_BUILDING_ACTION_SHIFT"
+									cost = "[GetBuildOrExpandBuildingCostValue(BuildingType.Self, Location.Self)]"
+									description = "[CanUpgradeToBuildingInfo(BuildingType.Self, Location.Self)]"
+									on_action = "[UpgradeBuildingShift(BuildingType.Self, Location.Self)]"
+									enabled = "[CanUpgradeToBuilding(BuildingType.Self, Location.Self)]"
+								}
+
+								tooltipwidget = {
+									using = construct_building_in_location_tt
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -3584,7 +4812,7 @@ template bg_input_good {
 
 lateralview = {
 	name = "build_location_lateralview"
-	size = { 820 100% } # PP: wider than the vanilla left panel (570)
+	size = { 970 100% } # PP: wider than the vanilla left panel (570)
 
 	# SOUND - Build Location (Left Panel)
 	blockoverride "snd_panel_identifier" { soundeffect = "UI_panelAux_buildLocation_show" }
@@ -3623,7 +4851,7 @@ lateralview = {
 							layoutpolicy_horizontal = fixed
 							layoutpolicy_vertical = fixed
 							autoresize = yes
-							maximumsize = { 670 -1 }
+							maximumsize = { 820 -1 }
 							text = "BUILD_LOCATION_TITLE"
 						}
 					}
@@ -3646,18 +4874,18 @@ window = { # PP: vanilla select_menu_left (select_menu.gui), opened beside the w
 	allow_outside = yes
 	layer = sidemenu
 	parentanchor = left
-	position = { 820 180 }
+	position = { 970 180 }
 
 	state = {
 		name = _show
 		duration = 0.133
-		position_x = 820
+		position_x = 970
 		alpha = 1
 	}
 	state = {
 		name = _hide
 		duration = 0.133
-		position_x = 775
+		position_x = 925
 		alpha = 0
 	}
 
@@ -3928,636 +5156,6 @@ template pp_build_location_values { # PP: the value columns of a location row (a
 					size = { 105% 100% }
 					name = "income"
 				}
-			}
-		}
-	}
-}
-
-template pp_build_location_builder { # PP: vanilla builder and upgrader of a location row
-	widget = { #builder
-		visible = "[Not(And(LocationToBuildItem.HasBuilding, LocationToBuildItem.GetBuilding.CanPlayerUpgrade))]"
-		layoutpolicy_vertical = expanding
-		size = { 120 -1 }
-		alwaystransparent = no
-		filter_mouse = left|right
-		widget = {
-			parentanchor = center
-			size = { 100% 38 }
-		
-			sort_by_highlight = {
-				size = { 100% 100% }
-				name = "number_building"
-			}
-
-			hbox = { 
-				using = bg_text_mask_container_brown
-				margin = {5 5}
-			}
-		
-			hbox = {
-				spacing = 5
-				margin = {5 0}
-			
-				button_square_minus = {
-					size = { 21 21 }
-					datacontext = "[LocationToBuildItem.GetBuilding]"
-					enabled = "[Or(LocationToBuildItem.CanDestroy, LocationToBuildItem.CanDequeue)]"
-					datacontext = "[BuildInLocationLateralView.GetBuildingType]"
-
-					action_tooltip = {
-						click_type = left
-						click_mode = confirm
-						click_modifier = default
-
-						title = "DESTROY_BUILDING_ACTION"
-						description = "[LocationToBuildItem.CanDestroyDesc]"
-						confirmation = "[LocationToBuildItem.CanDestroyDesc]"
-						on_action = "[LocationToBuildItem.DestroyDefault]"
-						enabled = "[LocationToBuildItem.CanDestroy]"
-						visible = "[Not(LocationToBuildItem.CanDequeue)]"
-					}
-
-					action_tooltip = {
-						click_type = left
-						click_mode = confirm
-						click_modifier = ctrl
-
-						title = "DESTROY_BUILDING_ACTION_CTRL"
-						description = "[LocationToBuildItem.CanDestroyDescCtrl]"
-					confirmation = "[LocationToBuildItem.CanDestroyDescCtrl]"
-						on_action = "[LocationToBuildItem.DestroyCtrl]"
-						enabled = "[LocationToBuildItem.CanDestroy]"
-						visible = "[Not(LocationToBuildItem.CanDequeue)]"
-					}
-
-					action_tooltip = {
-						click_type = left
-						click_mode = confirm
-						click_modifier = shift
-
-						title = "DESTROY_BUILDING_ACTION_SHIFT"
-						description = "[LocationToBuildItem.CanDestroyDescShift]"
-						confirmation = "[LocationToBuildItem.CanDestroyDescShift]"
-						on_action = "[LocationToBuildItem.DestroyShift]"
-						enabled = "[LocationToBuildItem.CanDestroy]"
-						visible = "[Not(LocationToBuildItem.CanDequeue)]"
-					}
-
-					action_tooltip = {
-						click_type = left
-						click_mode = single
-
-						title = "DEQUEUE_BUILDING_TYPE_LOCATION_ACTION"
-						description = "[LocationToBuildItem.CanDequeueDesc]"
-						on_action = "[LocationToBuildItem.Dequeue]"
-						visible = "[LocationToBuildItem.CanDequeue]"
-					}
-
-					tooltipwidget = {
-						using = destroy_building_in_location_tt
-					}
-				}
-
-				vbox = {
-					using = layoutpolicy_expanding
-					# spacing = 1
-					widget = {
-						layoutpolicy_vertical = expanding
-						size = {55 22}
-
-						tooltipwidget = {
-							SimpleContextualTooltipType = {
-								blockoverride "title_icon" {
-									icon = {
-										using = tooltip_title_icon_size
-										texture = "[GetBuildingIcon(BuildInLocationLateralView.GetBuildingType)]"
-									}
-								}
-								lowpriotextcontext =  BUILD_LOCATION_NUMBER
-								blockoverride "tooltip_extra_content" {
-									# block "tooltip_extra_content" {}
-									# TooltipTextBlock = {
-									# 	blockoverride "text" {
-									# 		text = "BUILD_LOCATION_NUMBER"
-									# 	}
-									# }
-									TooltipStringPairList = {
-										datacontext = "[LocationToBuildItem.GetBuilding]"
-										datacontext = "[LocationToBuildItem.GetLocation]"
-										blockoverride "block_title" {
-											text = "BUILDING_LEVEL_MAX_TABLE_TITLE"
-										}
-										textcontext = "[BuildInLocationLateralView.GetBuildingType.GetMaxLevelInformation(LocationToBuildItem.GetLocation)]"
-									}
-
-								}
-							}
-						}
-
-						text_single = {
-							parentanchor = center
-							maximumsize = {55 22}
-							visible = "[Not(LocationToBuildItem.HasBuilding)]"
-							raw_text = "0 / [LocationToBuildItem.GetMaxLevel|0Y]"
-							default_format = "#important_number"
-							align = nobaseline
-						}
-
-						text_single = {
-							parentanchor = center
-							maximumsize = {55 22}
-							visible = "[And3(LocationToBuildItem.HasBuilding, Not(LocationToBuildItem.GetBuilding.IsUnderConstruction), Not(And(LocationToBuildItem.GetBuilding.CanPlayerUpgrade, LocationToBuildItem.GetBuilding.IsPlayerUpgrading)))]"
-							raw_text = "[LocationToBuildItem.GetBuilding.GetLevel|0Y] / [LocationToBuildItem.GetBuilding.GetMaxLevel|0Y]"
-							default_format = "#important_number"
-							align = nobaseline
-						}
-
-						text_single = {
-							parentanchor = center
-							maximumsize = {55 22}
-							visible = "[And4(LocationToBuildItem.HasBuilding, Not(LocationToBuildItem.GetBuilding.IsUnderConstruction), LocationToBuildItem.GetBuilding.CanPlayerUpgrade, LocationToBuildItem.GetBuilding.IsPlayerUpgrading)]"
-							raw_text = "[LocationToBuildItem.GetBuilding.GetLevel|0Y](#G -[LocationToBuildItem.GetBuilding.GetLevelsUnderUpgrade|0]#!) / [LocationToBuildItem.GetBuilding.GetMaxLevel|0Y]"
-							default_format = "#important_number"
-							align = nobaseline
-						}
-
-						text_single = {
-							parentanchor = center
-							maximumsize = {55 22}
-							visible = "[And(LocationToBuildItem.HasBuilding, LocationToBuildItem.GetBuilding.IsUnderConstruction)]"
-							raw_text = "[LocationToBuildItem.GetBuilding.GetLevel|0Y]([LocationToBuildItem.GetBuilding.GetLevelsUnderConstruction|0+=]) / [LocationToBuildItem.GetBuilding.GetMaxLevel|0Y]"
-							default_format = "#important_number"
-							align = nobaseline
-						}
-					}
-
-					# Traffic-light badge for the profitability drop from expanding one more level.
-					# Only shown for producing building types that can still be built/expanded.
-					building_expansion_risk_badge = {
-						datacontext = "[LocationToBuildItem.GetBuildingType]"
-						datacontext = "[LocationToBuildItem.GetLocation]"
-						blockoverride "building_expansion_risk_badge_impact_warning_visible" {
-							visible = "[LocationToBuildItem.HasGoodsImpactedByConstruction]"
-						}
-					}
-				}
-
-				button_square_plus = {
-					visible = "[And(LocationToBuildItem.HasBuilding, Not(LocationToBuildItem.GetBuilding.CanPlayerUpgrade))]"
-					enabled = "[LocationToBuildItem.CanCreateBuilding]"
-					datacontext = "[LocationToBuildItem.GetLocation]"
-					datacontext = "[LocationToBuildItem.GetBuildingType]"
-					size = { 21 21 }
-					blockoverride "square_icon_content" {
-						icon = {
-							visible = "[Not(GreaterThan_CFixedPoint(GetRemainingUpgradeLevels(BuildingType.Self, Location.Self), '(CFixedPoint)0'))]"
-							size = { 100% 100% }
-							parentanchor = center
-							texture = "gfx/interface/buttons/flats/add.dds"
-							texture_density = 2
-							modify_texture = { using = color_gold_texture }
-							modify_texture = { using = overlay_window_texture blend_mode = overlay alpha = 0.9 }
-							background = {
-								texture = "gfx/interface/buttons/flats/add.dds"
-								texture_density = 2
-								margin_bottom = 1
-								modify_texture = { using = color_black_texture }
-							}
-							glow = { name = "drop_shadow" glow_radius = 3 color = {0.0 0.0 0.0 1.0} alpha = 0.2 }
-						}
-						icon = {
-							visible = "[GreaterThan_CFixedPoint(GetRemainingUpgradeLevels(BuildingType.Self, Location.Self), '(CFixedPoint)0')]"
-							size = { 100% 100% }
-							parentanchor = center
-							texture = "gfx/interface/buttons/flats/upgrade_button2.dds"
-							texture_density = 2
-							modify_texture = { using = color_gold_texture }
-							modify_texture = { using = overlay_window_texture blend_mode = overlay alpha = 0.9 }
-							background = {
-								texture = "gfx/interface/buttons/flats/upgrade_button2.dds"
-								texture_density = 2
-								margin_bottom = 1
-								modify_texture = { using = color_black_texture }
-							}
-							glow = { name = "drop_shadow" glow_radius = 3 color = {0.0 0.0 0.0 1.0} alpha = 0.2 }
-						}
-					}
-
-					action_tooltip = {
-						click_type = left
-						click_mode = single
-						click_modifier = default
-
-						title = "BUILDING_IN_LOCATION_ACTION"
-						cost = "[LocationToBuildItem.GetCost]"
-						description = "[CanBuildOrExpandBuildingInfo(BuildingType.Self, Location.Self)]"
-						on_action = "[ExpandBuildingDefault(LocationToBuildItem.GetBuilding.Self)]"
-						enabled = "[LocationToBuildItem.CanCreateBuilding]"
-					}
-
-					action_tooltip = {
-						click_type = left
-						click_mode = single
-						click_modifier = ctrl
-						click_modifier_description = "BUILDING_IN_LOCATION_ACTION_CTRL_MOD_DESC"
-
-						title = "BUILDING_IN_LOCATION_ACTION_CTRL"
-						cost = "[LocationToBuildItem.GetCost]"
-						description = "[CanBuildOrExpandBuildingInfo(BuildingType.Self, Location.Self)]"
-						on_action = "[ExpandBuildingCtrl(LocationToBuildItem.GetBuilding.Self)]"
-						enabled = "[LocationToBuildItem.CanCreateBuilding]"
-					}
-
-					action_tooltip = {
-						click_type = left
-						click_mode = single
-						click_modifier = shift
-						click_modifier_description = "BUILDING_IN_LOCATION_ACTION_SHIFT_MOD_DESC"
-
-						title = "BUILDING_IN_LOCATION_ACTION_SHIFT"
-						cost = "[LocationToBuildItem.GetCost]"
-						description = "[CanBuildOrExpandBuildingInfo(BuildingType.Self, Location.Self)]"
-						on_action = "[ExpandBuildingShift(LocationToBuildItem.GetBuilding.Self)]"
-						enabled = "[LocationToBuildItem.CanCreateBuilding]"
-					}
-
-					tooltipwidget = {
-						using = construct_building_in_location_tt
-					}
-				}
-
-				button_square_plus = {
-					visible = "[Not(LocationToBuildItem.HasBuilding)]"
-					enabled = "[LocationToBuildItem.CanCreateBuilding]"
-					datacontext = "[LocationToBuildItem.GetLocation]"
-					datacontext = "[LocationToBuildItem.GetBuildingType]"
-					size = { 21 21 }
-					blockoverride "square_icon_content" {
-						icon = {
-							visible = "[Not(GreaterThan_CFixedPoint(GetRemainingUpgradeLevels(BuildingType.Self, Location.Self), '(CFixedPoint)0'))]"
-							size = { 100% 100% }
-							parentanchor = center
-							texture = "gfx/interface/buttons/flats/add.dds"
-							texture_density = 2
-							modify_texture = { using = color_gold_texture }
-							modify_texture = { using = overlay_window_texture blend_mode = overlay alpha = 0.9 }
-							background = {
-								texture = "gfx/interface/buttons/flats/add.dds"
-								texture_density = 2
-								margin_bottom = 1
-								modify_texture = { using = color_black_texture }
-							}
-							glow = { name = "drop_shadow" glow_radius = 3 color = {0.0 0.0 0.0 1.0} alpha = 0.2 }
-						}
-						icon = {
-							visible = "[GreaterThan_CFixedPoint(GetRemainingUpgradeLevels(BuildingType.Self, Location.Self), '(CFixedPoint)0')]"
-							size = { 100% 100% }
-							parentanchor = center
-							texture = "gfx/interface/buttons/flats/upgrade_button2.dds"
-							texture_density = 2
-							modify_texture = { using = color_gold_texture }
-							modify_texture = { using = overlay_window_texture blend_mode = overlay alpha = 0.9 }
-							background = {
-								texture = "gfx/interface/buttons/flats/upgrade_button2.dds"
-								texture_density = 2
-								margin_bottom = 1
-								modify_texture = { using = color_black_texture }
-							}
-							glow = { name = "drop_shadow" glow_radius = 3 color = {0.0 0.0 0.0 1.0} alpha = 0.2 }
-						}
-					}
-
-					action_tooltip = {
-						click_type = left
-						click_mode = single
-						click_modifier = default
-
-						title = "BUILDING_IN_LOCATION_ACTION"
-						cost = "[LocationToBuildItem.GetCost]"
-						description = "[CanBuildOrExpandBuildingInfo(BuildingType.Self, Location.Self)]"
-						on_action = "[LocationToBuildItem.CreateBuildingDefault]"
-						enabled = "[LocationToBuildItem.CanCreateBuilding]"
-					}
-
-					action_tooltip = {
-						click_type = left
-						click_mode = single
-						click_modifier = ctrl
-
-						title = "BUILDING_IN_LOCATION_ACTION_CTRL"
-						cost = "[LocationToBuildItem.GetCost]"
-						description = "[CanBuildOrExpandBuildingInfo(BuildingType.Self, Location.Self)]"
-						on_action = "[LocationToBuildItem.CreateBuildingCtrl]"
-						enabled = "[LocationToBuildItem.CanCreateBuilding]"
-					}
-
-					action_tooltip = {
-						click_type = left
-						click_mode = single
-						click_modifier = shift
-
-						title = "BUILDING_IN_LOCATION_ACTION_SHIFT"
-						cost = "[LocationToBuildItem.GetCost]"
-						description = "[CanBuildOrExpandBuildingInfo(BuildingType.Self, Location.Self)]"
-						on_action = "[LocationToBuildItem.CreateBuildingShift]"
-						enabled = "[LocationToBuildItem.CanCreateBuilding]"
-					}
-
-					tooltipwidget = {
-						using = construct_building_in_location_tt
-					}
-				}
-			}
-		}
-	}
-	widget = { #upgrader
-		visible = "[And(LocationToBuildItem.HasBuilding, LocationToBuildItem.GetBuilding.CanPlayerUpgrade)]"
-		layoutpolicy_vertical = expanding
-		size = { 120 -1 }
-		alwaystransparent = no
-		filter_mouse = left|right
-
-		#destroy current
-		widget = {
-			parentanchor = left|vcenter
-			size = { 49% 38 }
-		
-			sort_by_highlight = {
-				size = { 100% 100% }
-				name = "number_building"
-			}
-		
-			hbox = {
-				spacing = 2
-				using = bg_text_mask_container_brown
-				margin = {2 5}
-				margin_left = 5
-			
-				button_square_minus = {
-					size = { 21 21 }
-					datacontext = "[LocationToBuildItem.GetBuilding]"
-					enabled = "[Or(LocationToBuildItem.CanDestroy, LocationToBuildItem.CanDequeue)]"
-					datacontext = "[BuildInLocationLateralView.GetBuildingType]"
-
-					action_tooltip = {
-						click_type = left
-						click_mode = confirm
-						click_modifier = default
-
-						title = "DESTROY_BUILDING_ACTION"
-						description = "[LocationToBuildItem.CanDestroyDesc]"
-						confirmation = "[LocationToBuildItem.CanDestroyDesc]"
-						on_action = "[LocationToBuildItem.DestroyDefault]"
-						enabled = "[LocationToBuildItem.CanDestroy]"
-						visible = "[Not(LocationToBuildItem.CanDequeue)]"
-					}
-
-					action_tooltip = {
-						click_type = left
-						click_mode = confirm
-						click_modifier = ctrl
-
-						title = "DESTROY_BUILDING_ACTION_CTRL"
-						description = "[LocationToBuildItem.CanDestroyDescCtrl]"
-					confirmation = "[LocationToBuildItem.CanDestroyDescCtrl]"
-						on_action = "[LocationToBuildItem.DestroyCtrl]"
-						enabled = "[LocationToBuildItem.CanDestroy]"
-						visible = "[Not(LocationToBuildItem.CanDequeue)]"
-					}
-
-					action_tooltip = {
-						click_type = left
-						click_mode = confirm
-						click_modifier = shift
-
-						title = "DESTROY_BUILDING_ACTION_SHIFT"
-						description = "[LocationToBuildItem.CanDestroyDescShift]"
-						confirmation = "[LocationToBuildItem.CanDestroyDescShift]"
-						on_action = "[LocationToBuildItem.DestroyShift]"
-						enabled = "[LocationToBuildItem.CanDestroy]"
-						visible = "[Not(LocationToBuildItem.CanDequeue)]"
-					}
-
-					action_tooltip = {
-						click_type = left
-						click_mode = single
-
-						title = "DEQUEUE_BUILDING_TYPE_LOCATION_ACTION"
-						description = "[LocationToBuildItem.CanDequeueDesc]"
-						on_action = "[LocationToBuildItem.Dequeue]"
-						visible = "[LocationToBuildItem.CanDequeue]"
-					}
-
-					tooltipwidget = {
-						using = destroy_building_in_location_tt
-					}
-				}
-
-				widget = {
-					layoutpolicy_vertical = expanding
-					size = {28 -1}
-					tooltipwidget = {
-						SimpleContextualTooltipType = {
-							blockoverride "title_icon" {
-								icon = {
-									using = tooltip_title_icon_size
-									texture = "[GetBuildingIcon(BuildInLocationLateralView.GetBuildingType)]"
-								}
-							}
-							lowpriotextcontext =  BUILD_LOCATION_NUMBER
-							blockoverride "tooltip_extra_content" {
-								# block "tooltip_extra_content" {}
-								# TooltipTextBlock = {
-								# 	blockoverride "text" {
-								# 		text = "BUILD_LOCATION_NUMBER"
-								# 	}
-								# }
-								TooltipStringPairList = {
-									datacontext = "[LocationToBuildItem.GetBuilding]"
-									datacontext = "[LocationToBuildItem.GetLocation]"
-									blockoverride "block_title" {
-										text = "BUILDING_LEVEL_MAX_TABLE_TITLE"
-									}
-									textcontext = "[BuildInLocationLateralView.GetBuildingType.GetMaxLevelInformation(LocationToBuildItem.GetLocation)]"
-								}
-
-							}
-						}
-					}
-
-					text_single = {
-						parentanchor = center
-						maximumsize = {28 -1}
-						visible = "[And3(LocationToBuildItem.HasBuilding, Not(LocationToBuildItem.GetBuilding.IsUnderConstruction), Not(And(LocationToBuildItem.GetBuilding.CanPlayerUpgrade, LocationToBuildItem.GetBuilding.IsPlayerUpgrading)))]"
-						raw_text = "[LocationToBuildItem.GetBuilding.GetLevel|0Y]"
-						default_format = "#important_number"
-						align = nobaseline
-					}
-
-					text_single = {
-						parentanchor = center
-						maximumsize = {28 -1}
-						visible = "[And4(LocationToBuildItem.HasBuilding, Not(LocationToBuildItem.GetBuilding.IsUnderConstruction), LocationToBuildItem.GetBuilding.CanPlayerUpgrade, LocationToBuildItem.GetBuilding.IsPlayerUpgrading)]"
-						raw_text = "[LocationToBuildItem.GetBuilding.GetLevel|0Y](#G -[LocationToBuildItem.GetBuilding.GetLevelsUnderUpgrade|0]#!)"
-						default_format = "#important_number"
-						align = nobaseline
-					}
-
-					text_single = {
-						parentanchor = center
-						maximumsize = {28 -1}
-						visible = "[And(LocationToBuildItem.HasBuilding, LocationToBuildItem.GetBuilding.IsUnderConstruction)]"
-						raw_text = "[LocationToBuildItem.GetBuilding.GetLevel|0Y]([LocationToBuildItem.GetBuilding.GetLevelsUnderConstruction|0+=])"
-						default_format = "#important_number"
-						align = nobaseline
-					}
-				}
-			}
-		}
-
-		#upgrade
-		widget = {
-			parentanchor = right|vcenter
-			size = { 45% 38 }
-			hbox = {
-				spacing = 3
-				using = bg_text_mask_container_brown
-				margin = {2 5}
-				margin_right = 5
-
-				widget = {
-					layoutpolicy_vertical = expanding
-					size = {22 -1}
-					datacontext = "[LocationToBuildItem.GetBuilding.GetType.GetNextReplacementBuilding(Player.Self)]"
-					tooltipwidget = {
-						SimpleContextualTooltipType = {
-							blockoverride "title_icon" {
-								icon = {
-									using = tooltip_title_icon_size
-									texture = "[GetBuildingIcon(BuildInLocationLateralView.GetBuildingType.GetNextReplacementBuilding(Player.Self))]"
-								}
-							}
-							lowpriotextcontext =  UPGRADE_LOCATION_NUMBER
-						}
-					}
-
-					text_single = {
-						parentanchor = center
-						maximumsize = {22 -1}
-						raw_text = "[LocationToBuildItem.GetBuilding.GetLevelsUnderUpgrade|0+=]"
-						default_format = "#important_number"
-						align = nobaseline
-					}
-				}
-			
-				# UPGRADE
-				button_square_plus = {
-					visible = "[And(LocationToBuildItem.HasBuilding, LocationToBuildItem.GetBuilding.CanPlayerUpgrade)]"
-					datacontext = "[LocationToBuildItem.GetBuilding.GetType.GetNextReplacementBuilding(Player.Self)]"
-					size = { 21 21 }
-					blockoverride "plusminus_icon" {
-						texture = "gfx/interface/buttons/flats/upgrade_button2.dds"
-					}
-					datacontext = "[LocationToBuildItem.GetBuilding.GetLocation]"
-					enabled = "[CanUpgradeToBuilding(BuildingType.Self, Location.Self)]"
-					action_tooltip = {
-						click_mode = single
-						click_type = left
-						click_modifier = default
-						title = "UPGRADE_BUILDING_ACTION"
-						enabled = "[CanUpgradeToBuilding(BuildingType.Self, Location.Self)]"
-						description = "[CanUpgradeToBuildingInfo(BuildingType.Self, Location.Self)]"
-						cost = "[GetBuildOrExpandBuildingCostValue(BuildingType.Self, Location.Self)]"
-						on_action = "[UpgradeBuildingDefault(BuildingType.Self, Location.Self)]"
-					}
-
-					action_tooltip = {
-						click_type = left
-						click_mode = single
-						click_modifier = ctrl
-
-						title = "UPGRADE_BUILDING_ACTION_CTRL"
-						cost = "[GetBuildOrExpandBuildingCostValue(BuildingType.Self, Location.Self)]"
-						description = "[CanUpgradeToBuildingInfo(BuildingType.Self, Location.Self)]"
-						on_action = "[UpgradeBuildingCtrl(BuildingType.Self, Location.Self)]"
-						enabled = "[CanUpgradeToBuilding(BuildingType.Self, Location.Self)]"
-					}
-
-					action_tooltip = {
-						click_type = left
-						click_mode = single
-						click_modifier = shift
-
-						title = "UPGRADE_BUILDING_ACTION_SHIFT"
-						cost = "[GetBuildOrExpandBuildingCostValue(BuildingType.Self, Location.Self)]"
-						description = "[CanUpgradeToBuildingInfo(BuildingType.Self, Location.Self)]"
-						on_action = "[UpgradeBuildingShift(BuildingType.Self, Location.Self)]"
-						enabled = "[CanUpgradeToBuilding(BuildingType.Self, Location.Self)]"
-					}
-
-					tooltipwidget = {
-						using = construct_building_in_location_tt
-					}
-				}
-			}
-		}
-	}
-}
-
-template pp_build_payback_row { # PP: compact location row of the payback order
-	layoutpolicy_horizontal = expanding
-	size = { -1 48 }
-	widget = {
-		size = { 100% 46 }
-		parentanchor = center
-		hbox = {
-			using = layoutpolicy_expanding
-			using = bg_cabinet_card_frame
-			margin = { 5 4 }
-			spacing = 5
-			button = { # location: click to go there
-				layoutpolicy_vertical = expanding
-				size = { 260 -1 }
-				using = bg_paper_card
-				hbox = {
-					using = layoutpolicy_expanding
-					margin = { 6 0 }
-					spacing = 3
-					icon = {
-						size = { 16 16 }
-						texture = "[Location.GetRankIcon]"
-					}
-					text_single = {
-						layoutpolicy_horizontal = expanding
-						autoresize = yes
-						using = Font_Size_Very_Small
-						text = "[LocationToBuildItem.GetLocation.GetNameWithNoTooltip]"
-						default_format = "#yellow_titles"
-					}
-					text_single = {
-						visible = "[DataModelHasItems(Location.GetCivilConstructions)]"
-						autoresize = yes
-						using = Font_Size_Very_Small
-						raw_text = "(#L +[GetDataModelSize(Location.GetCivilConstructions)]#! @construction!)"
-					}
-				}
-				action_tooltip = {
-					click_type = left
-					click_mode = single
-					title = "GO_TO_LOCATION"
-					on_action = "[ShowLocation(LocationToBuildItem.GetLocation)]"
-				}
-				ondoubleclick = "[PanToLocation(LocationToBuildItem.GetLocation)]"
-				onmousehierarchyenter = "[PdxGuiWidget.SetHighlightLocation(LocationToBuildItem.GetLocation)]"
-				tooltipwidget = {
-					using = location_simple_tooltip
-				}
-			}
-			expand = {}
-			hbox = { using = pp_build_location_values }
-			hbox = {
-				layoutpolicy_vertical = expanding
-				using = pp_build_location_builder
 			}
 		}
 	}

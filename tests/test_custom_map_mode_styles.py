@@ -46,7 +46,6 @@ CUSTOM_MAP_MODE_FILES = (
 )
 
 VALUE_SOURCE_MODES = {
-    "pp_population_capacity": "location_max_population",
     "pp_population_capacity_density": "modifier:pp_population_capacity_density",
     "pp_pop_delta_location": "pp_pop_delta_location_pct",
     "pp_pop_delta_province": "pp_pop_delta_province_pct",
@@ -66,12 +65,6 @@ VALUE_SOURCE_MODES = {
 }
 
 STRUCTURE_SNIPPETS = {
-    "pp_population_capacity": (
-        "category = population",
-        "index = 1",
-        "color_refresh_counters = { LocationDevelopmentChanged LocationPopulationChanged }",
-        "color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }",
-    ),
     "pp_population_capacity_density": (
         "category = debug",
         "index = 2",
@@ -216,7 +209,12 @@ STRUCTURE_SNIPPETS = {
     "pp_farming_village_capacity": (
         "category = geography",
         "index = 1",
-        "color_refresh_counters = { TopographyVegetationDatabaseUpdate }",
+        "secondary_map_color = {",
+        "location_population_percentage > @pp_farming_overuse_full",
+        "location_population_percentage >= @pp_farming_overuse_fade_start",
+        "MAPMODE_PP_FARMING_VILLAGE_CAPACITY_FILLING",
+        "MAPMODE_PP_FARMING_VILLAGE_CAPACITY_OVERUSED",
+        "color_refresh_counters = { TopographyVegetationDatabaseUpdate ProductionList LocationPopulationChanged }",
     ),
     "pp_forest_village_capacity": (
         "category = geography",
@@ -345,7 +343,6 @@ def test_static_map_modes_match_calibration_thresholds() -> None:
     calibration = json.loads(CALIBRATION.read_text(encoding="utf-8"))["scales"]
 
     expected = {
-        "pp_population_capacity": ("location_max_population", calibration["population_capacity"]["thresholds"]),
         "pp_fishing_village_capacity": ("fish_capacity", calibration["food_capacity"]["fish"]["thresholds"]),
         "pp_farming_village_capacity": ("farm_capacity", calibration["food_capacity"]["farm"]["thresholds"]),
         "pp_forest_village_capacity": ("forest_capacity", calibration["food_capacity"]["forest"]["thresholds"]),
@@ -394,30 +391,24 @@ def test_farm_capacity_scale_keeps_developed_locations_distinguishable() -> None
     assert thresholds[3] - thresholds[2] >= 8
 
 
-def test_population_capacity_scale_keeps_high_capacity_locations_distinguishable() -> None:
-    block = _all_blocks()["pp_population_capacity"]
+def test_arable_land_lives_in_the_farming_capacity_map_mode() -> None:
+    # 2026-10-18 (Jan): one map answers "where can I build farms" (colours) and "where are the people over the
+    # Arable Land" (stripes fading in as the land fills); the separate Arable Land map mode is gone.
+    blocks = _all_blocks()
     text = LOCALIZATION.read_text(encoding="utf-8-sig")
-    calibration = json.loads(CALIBRATION.read_text(encoding="utf-8"))["scales"][
-        "population_capacity"
-    ]
-    thresholds = [float(value) for value in calibration["thresholds"]]
+    constants = _constant_values()
+    block = blocks["pp_farming_village_capacity"]
 
-    assert _thresholds(block, "location_max_population") == [
-        *thresholds,
+    assert "pp_population_capacity" not in blocks
+    assert "mapmode_pp_population_capacity_name" not in text
+    fade = [
+        constants[f"@pp_farming_overuse_{name}"]
+        for name in ("fade_start", "fade_mid", "fade_high", "full", "severe")
     ]
-    assert block.count("lerp = {") == 8
-    assert block.count("legend_key =") == 9
-    assert "@pp_population_capacity_map_cap" not in block
-    assert "define:NMapColors|MAP_COLOR_TOP" in block
-    assert "rgb { 245 245 245 }" in block
-    assert "rgb { 170 235 255 }" in block
-    assert "rgb { 70 210 255 }" in block
-    assert "modifier:local_population_capacity" not in block
-    assert "MAPMODE_PP_POPULATION_CAPACITY_RANGE_125_155" in text
-    assert "MAPMODE_PP_POPULATION_CAPACITY_RANGE_155_200" in text
-    assert f"{int(thresholds[-1])}+ arable land" in text
+    assert fade == sorted(fade) and fade[0] < 1 == fade[3] < fade[4]
+    assert block.count("location_population_percentage") == 5
     assert "GetPopulationCapacity|0" in text
-    assert "GetModifierValue('local_population_capacity')" not in text
+    assert "GetTotalPopulation|0" in text
 
 
 def test_population_capacity_density_debug_mode_uses_fixed_density_buckets() -> None:
@@ -874,7 +865,6 @@ def test_custom_map_mode_localization_uses_traffic_light_copy_without_hardcoded_
     assert "Red marks scarce capacity" in text
     assert "Green marks low unemployment" in text
     assert "yellow marks the base price" in text
-    assert "pale-to-cyan colors mark the most remaining land" in text
 
 
 def test_population_delta_map_modes_have_picker_icons_and_concept_localization() -> None:

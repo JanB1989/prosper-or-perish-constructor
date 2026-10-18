@@ -41,6 +41,13 @@
 @pp_province_food_storage_months_max = 24
 @pp_province_food_storage_months_step = 6
 @pp_farming_village_capacity_map_cap = 24
+# Farming Capacity stripes: people / Arable Land (location_population_percentage). They fade in while the land fills
+# and are solid once it is overused (2026-10-18, Jan: one map for "where can I build farms" and "where am I over").
+@pp_farming_overuse_fade_start = 0.75
+@pp_farming_overuse_fade_mid = 0.85
+@pp_farming_overuse_fade_high = 0.95
+@pp_farming_overuse_full = 1
+@pp_farming_overuse_severe = 1.25
 @pp_fishing_village_capacity_map_cap = 9
 @pp_forest_village_capacity_map_cap = 11
 
@@ -718,11 +725,38 @@ pp_farming_village_capacity = {
 		}
 	}
 
+	# Stripes (secondary): how full the Arable Land is with people. Purple stays readable on every traffic-light colour;
+	# pale lilac while the land fills, deep purple once it is overused.
+	secondary_map_color = {
+		if = {
+			limit = { is_ownable = yes location_population_percentage >= @pp_farming_overuse_severe }
+			value = rgb { 70 15 95 }
+		}
+		else_if = {
+			limit = { is_ownable = yes location_population_percentage > @pp_farming_overuse_full }
+			value = rgb { 120 35 150 }
+		}
+		else_if = {
+			limit = { is_ownable = yes location_population_percentage >= @pp_farming_overuse_fade_high }
+			value = rgb { 160 90 190 }
+		}
+		else_if = {
+			limit = { is_ownable = yes location_population_percentage >= @pp_farming_overuse_fade_mid }
+			value = rgb { 195 150 220 }
+		}
+		else_if = {
+			limit = { is_ownable = yes location_population_percentage >= @pp_farming_overuse_fade_start }
+			value = rgb { 225 200 240 }
+		}
+	}
+
 	legend_key = { desc = "MAPMODE_PP_FARMING_VILLAGE_CAPACITY_VERY_LOW" color = define:NMapColors|MAP_COLOR_MIN }
 	legend_key = { desc = "MAPMODE_PP_FARMING_VILLAGE_CAPACITY_LOW" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_FARMING_VILLAGE_CAPACITY_MEDIUM" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_FARMING_VILLAGE_CAPACITY_HIGH" color = define:NMapColors|MAP_COLOR_HIGH }
 	legend_key = { desc = "MAPMODE_PP_FARMING_VILLAGE_CAPACITY_CAPPED" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_FARMING_VILLAGE_CAPACITY_FILLING" color = rgb { 195 150 220 } }
+	legend_key = { desc = "MAPMODE_PP_FARMING_VILLAGE_CAPACITY_OVERUSED" color = rgb { 120 35 150 } }
 
 	tooltip_key = {
 		if = { limit = { is_ownable = yes } value = MAPMODE_PP_FARMING_VILLAGE_CAPACITY_TT_LAND }
@@ -764,8 +798,9 @@ pp_farming_village_capacity = {
 		after_lighting_blend =		@data_after_lighting_blend
 	}
 
-	color_refresh_counters = { TopographyVegetationDatabaseUpdate }
-	color_and_names_refresh_counters = { TopographyVegetationDatabaseUpdate }
+	# farms change the free slots, people the stripes
+	color_refresh_counters = { TopographyVegetationDatabaseUpdate ProductionList LocationPopulationChanged }
+	color_and_names_refresh_counters = { TopographyVegetationDatabaseUpdate LocationOwnerChanged }
 }
 
 pp_forest_village_capacity = {

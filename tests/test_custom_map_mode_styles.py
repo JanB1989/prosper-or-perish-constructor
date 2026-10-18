@@ -407,8 +407,19 @@ def test_arable_land_lives_in_the_farming_capacity_map_mode() -> None:
     ]
     assert fade == sorted(fade) and fade[0] < 1 == fade[3] < fade[4]
     assert block.count("location_population_percentage") == 5
-    assert "GetPopulationCapacity|0" in text
-    assert "GetTotalPopulation|0" in text
+    # the hover carries the numbers; one physical line per entry (a raw line break ends the string in game)
+    hover = next(
+        line for line in text.splitlines() if line.startswith("  MAPMODE_PP_FARMING_VILLAGE_CAPACITY_TT_LAND:")
+    )
+    assert hover.endswith('"')
+    for getter in ("ScriptValue('farm_capacity')|0", "GetTotalPopulation|0", "GetPopulationCapacity|0"):
+        assert getter in hover
+    stray = [
+        number
+        for number, line in enumerate(text.splitlines()[1:], start=2)
+        if line.strip() and not re.match(r"\s*(#|[A-Za-z0-9_.\-]+:)", line)
+    ]
+    assert not stray
 
 
 def test_population_capacity_density_debug_mode_uses_fixed_density_buckets() -> None:

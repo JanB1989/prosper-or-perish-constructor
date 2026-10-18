@@ -7,8 +7,7 @@
   MAPMODE_PP_FISHING_VILLAGE_CAPACITY_HIGH: "High fishing capacity"
   MAPMODE_PP_FISHING_VILLAGE_CAPACITY_CAPPED: "Exceptional fishing capacity"
   mapmode_pp_farming_village_capacity_name: "Farming Capacity"
-  MAPMODE_PP_FARMING_VILLAGE_CAPACITY: "#T $mapmode_pp_farming_village_capacity_name$#!
-Shows where farms can still be built and where the people use too much land. The colors count the free [population_capacity|e] left for farms in farm levels (see [pp_farm_capacity|e]): red marks little or none, yellow some, green plenty. Purple stripes show how full the land is with people: they fade in as it fills and turn deep purple on [Concept('pp_overused_arable_land', 'Overused Arable Land')|e]. A farm built under stripes takes land the people already need."
+  MAPMODE_PP_FARMING_VILLAGE_CAPACITY: "#T $mapmode_pp_farming_village_capacity_name$#!\nShows where farms can still be built and where the people use too much land. The colors count the free [population_capacity|e] left for farms in farm levels (see [pp_farm_capacity|e]): red marks little or none, yellow some, green plenty. Purple stripes show how full the land is with people: they fade in as it fills and turn deep purple on [Concept('pp_overused_arable_land', 'Overused Arable Land')|e]. A farm built under stripes takes land the people already need."
   MAPMODE_PP_FARMING_VILLAGE_CAPACITY_VERY_LOW: "Very low farming capacity"
   MAPMODE_PP_FARMING_VILLAGE_CAPACITY_LOW: "Low farming capacity"
   MAPMODE_PP_FARMING_VILLAGE_CAPACITY_MEDIUM: "Moderate farming capacity"
@@ -40,14 +39,7 @@ Shows where farms can still be built and where the people use too much land. The
   mapmode_pp_positive_province_food_growth_name: "Province Food Growth"
   MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH: "#T $mapmode_pp_positive_province_food_growth_name$#!\nColors each [province|e] by the months of its own food consumption it holds in storage. Stored food drives [population_growth|e]: the more months in store, the faster the province grows, up to the striped level. A monthly surplus that is not stored adds no growth."
   MAPMODE_PP_FISHING_VILLAGE_CAPACITY_TT_LAND: "#T $mapmode_pp_fishing_village_capacity_name$#!\nCurrent Capacity: #V [ROOT.GetLocation.MakeScope.ScriptValue('fish_capacity')|1]#!\n\nThis is the same value used by fish-producing building maximum levels. Their maximum-level tooltip lists the active [pp_fish_capacity|e] sources, including natural fishing grounds, Maximum RGO Size, [river|e] size, Manorial Customals, and fish-producing [building|e] levels.\n\n#I $PP_CAPACITY_MAPMODE_SEE_EUROPEDIA$#!"
-  MAPMODE_PP_FARMING_VILLAGE_CAPACITY_TT_LAND: "#T $mapmode_pp_farming_village_capacity_name$#!
-Free for farms: #V [ROOT.GetLocation.MakeScope.ScriptValue('farm_capacity')|0]#! farm levels
-[population_capacity|e]: #V [ROOT.GetLocation.GetPopulationCapacity|0]#!
-[population|e]: #V [ROOT.GetLocation.GetTotalPopulation|0]#!
-
-Every farm level takes a share of the arable land, so farms of every kind compete for it; a farm's maximum-level tooltip shows the land free for it and the land the other farms already use. The people live on the same land: where they outnumber it, the land is [Concept('pp_overused_arable_land', 'Overused Arable Land')|e], and every new farm makes that worse.
-
-#I $PP_CAPACITY_MAPMODE_SEE_EUROPEDIA$#!"
+  MAPMODE_PP_FARMING_VILLAGE_CAPACITY_TT_LAND: "#T $mapmode_pp_farming_village_capacity_name$#!\nRoom for farms: #V [ROOT.GetLocation.MakeScope.ScriptValue('farm_capacity')|0]#! more levels\nPeople: #V [ROOT.GetLocation.GetTotalPopulation|0]#! of #V [ROOT.GetLocation.GetPopulationCapacity|0]#! [population_capacity|e]\n\n#I $PP_CAPACITY_MAPMODE_SEE_EUROPEDIA$#!"
   MAPMODE_PP_FOREST_VILLAGE_CAPACITY_TT_LAND: "#T $mapmode_pp_forest_village_capacity_name$#!\nCurrent Capacity: #V [ROOT.GetLocation.MakeScope.ScriptValue('forest_capacity')|1]#!\n\nThis is the same value used by forest and lumber building maximum levels. Their maximum-level tooltip lists the active [pp_forest_capacity|e] sources, including forest geography, [rgo|e], Maximum RGO Size, location rank, Manorial Customals, forest and lumber [building|e] levels, and building levels in the location.\n\n#I $PP_CAPACITY_MAPMODE_SEE_EUROPEDIA$#!"
   MAPMODE_PP_MARKET_FOOD_PRICE_TT_LAND: "#T $mapmode_pp_market_food_price_name$#!\n@market! [Market.GetName]\nFood Price: #V [Market.GetFoodPrice|2]#![gold_i]"
   MAPMODE_PP_MARKET_FOOD_PRICE_TT_WATER: "Sea/Lake Location (No Market Food Price)"

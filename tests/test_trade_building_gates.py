@@ -1,64 +1,70 @@
-"""A building gated on an embraced institution must not get that institution later than vanilla unlocks it (Jan,
-2026-10-18: the entrepot unlocks in the Age of Renaissance but needed Printing Press, an Age of Discovery institution,
-so a researched building could not be built for a whole age; the trading hub had the same with Global Trade)."""
+"""A building that an advance unlocks never needs an institution on top (Jan, 2026-10-19: "if a building is researched,
+it shouldn't need some other unrelated institution"). History: the 2026-10-06 trade-building gates (Printing Press /
+Global Trade on merchants' quarters, trading hub, customs house, grand marketplace, stock exchange, commerce centre,
+clearing house, entrepot) left researched buildings unbuildable for up to an age; removed 2026-10-18/19.
+
+Checks every building type the game loads (vanilla in_game/common plus the built mod; a mod file of the same name
+shadows vanilla's) against every advance's unlock_building, including scripted triggers used in the build rules."""
 
 from __future__ import annotations
 
 import re
 from pathlib import Path
 
-import yaml
 from eu5gameparser.load_order import LoadOrderConfig
 
 ROOT = Path(__file__).resolve().parents[1]
-AGE = re.compile(r"age_(\d+)_")
+MOD = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "in_game/common"
+GATES = ("allow", "location_potential", "country_potential")
+INSTITUTION = re.compile(r"has_embraced_institution|institution:\w+")
 
 
-def _top_blocks(text: str) -> dict[str, str]:
-    """Top-level ``name = { ... }`` blocks of a script file (comments stripped)."""
+def _blocks(text: str) -> dict[str, str]:
+    """The ``name = { ... }`` blocks at the outermost brace depth of ``text`` (comments stripped; the mod's built
+    files write fields at column 0, so depth, not indentation); REPLACE:/INJECT: prefixes dropped, repeats joined."""
     text = re.sub(r"#[^\n]*", "", text)
-    out, i = {}, 0
-    for m in re.finditer(r"(?m)^([A-Za-z0-9_]+)\s*=\s*\{", text):
-        if m.start() < i:
-            continue
-        depth, j = 0, m.end() - 1
-        for j in range(m.end() - 1, len(text)):
-            depth += {"{": 1, "}": -1}.get(text[j], 0)
-            if depth == 0:
-                break
-        out[m.group(1)] = text[m.end():j]
-        i = j
+    out: dict[str, str] = {}
+    opener = re.compile(r"((?:[A-Z_]+:)?[A-Za-z0-9_]+)\s*=\s*\{")
+    i, depth = 0, 0
+    while i < len(text):
+        if depth == 0:
+            m = opener.match(text, i)
+            if m and (i == 0 or not (text[i - 1].isalnum() or text[i - 1] in "_:")):
+                level, j = 0, m.end() - 1
+                for j in range(m.end() - 1, len(text)):
+                    level += {"{": 1, "}": -1}.get(text[j], 0)
+                    if level == 0:
+                        break
+                name = m.group(1).split(":")[-1]
+                out[name] = out.get(name, "") + "\n" + text[m.end():j]
+                i = j + 1
+                continue
+        depth += {"{": 1, "}": -1}.get(text[i], 0)
+        i += 1
     return out
 
 
-def _ages(folder: Path, key: str) -> dict[str, int]:
-    """name (or unlocked building for key unlock_building) -> age number."""
-    out: dict[str, int] = {}
-    for path in sorted(folder.glob("*.txt")):
-        for name, body in _top_blocks(path.read_text(encoding="utf-8-sig")).items():
-            age = re.search(r"\bage\s*=\s*(age_\d+_\w+)", body)
-            if not age:
-                continue
-            number = int(AGE.match(age.group(1)).group(1))
-            names = [name] if key == "" else re.findall(rf"\b{key}\s*=\s*(\w+)", body)
-            for n in names:
-                out[n] = min(out.get(n, number), number)
-    return out
+def _files(folder: str) -> dict[str, str]:
+    vanilla = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").vanilla_root / "game/in_game/common"
+    files = {p.name: p for p in sorted((vanilla / folder).glob("*.txt"))}
+    files.update({p.name: p for p in sorted((MOD / folder).glob("*.txt"))})
+    return {name: path.read_text(encoding="utf-8-sig", errors="replace") for name, path in files.items()}
 
 
-def test_institution_gates_fit_the_unlock_age():
-    common = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").vanilla_root / "game/in_game/common"
-    institutions = _ages(common / "institution", "")
-    unlocks = _ages(common / "advances", "unlock_building")
-    gated = 0
-    for path in sorted((ROOT / "blueprints/accepted/buildings").glob("*.yml")):
-        data = yaml.safe_load(path.read_text(encoding="utf-8"))
-        body = re.sub(r"#[^\n]*", "", ((data or {}).get("building") or {}).get("body") or "")
-        for institution in re.findall(r"has_embraced_institution\s*=\s*institution:(\w+)", body):
-            key = data["building"]["key"]
-            if key not in unlocks:
+def test_researched_buildings_need_no_institution():
+    unlocked = {b for text in _files("advances").values() for body in _blocks(text).values()
+                for b in re.findall(r"\bunlock_building\s*=\s*(\w+)", body)}
+    triggers = {name: body for text in _files("scripted_triggers").values() for name, body in _blocks(text).items()}
+    gated = set()
+    for text in _files("building_types").values():
+        for building, body in _blocks(text).items():
+            if building not in unlocked:
                 continue
-            gated += 1
-            assert institutions[institution] <= unlocks[key], (
-                f"{key}: unlocked in age {unlocks[key]}, gate {institution} only in age {institutions[institution]}")
-    assert gated >= 7    # the trade buildings
+            for field, gate in _blocks(body).items():
+                if field not in GATES:
+                    continue
+                called = [triggers[t] for t in re.findall(r"\b(\w+)\s*=\s*yes", gate) if t in triggers]
+                if INSTITUTION.search(gate) or any(INSTITUTION.search(c) for c in called):
+                    gated.add(f"{building}.{field}")
+    assert not gated, f"researched buildings gated on an institution: {sorted(gated)}"
+    assert len(unlocked) > 150   # the scan sees vanilla's and the mod's unlocks

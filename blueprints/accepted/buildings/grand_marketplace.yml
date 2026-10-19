@@ -10,10 +10,8 @@ building:
   possible_production_methods: []
   body: |-
     # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
-    # trade buildings 2026-10-06: only countries that have embraced Global Trade build it (the AI and the player alike)
-    allow = {
-    	owner = { has_embraced_institution = institution:global_trade }
-    }
+    # no institution gate (2026-10-19, Jan): a researched building never needs an unrelated institution
+    # (test_trade_building_gates); it had Printing Press / Global Trade since 2026-10-06.
     # trade buildings 2026-10-06: merchant capacity per level 2 -> 3, +50 % (adds to vanilla's line)
     modifier = {
     	local_merchant_capacity = 1.0

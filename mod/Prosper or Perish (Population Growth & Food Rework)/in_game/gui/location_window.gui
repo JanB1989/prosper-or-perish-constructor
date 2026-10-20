@@ -8273,9 +8273,7 @@ pp_land_potential_chip = {}
 													action_tooltip = {
 														click_type = left
 														click_mode = single
-														on_action = "[OpenLateralViewWithParams('location_production', 'display = lists')]"
-														on_action = "[OpenLateralViewWithFilter('location_production', PopType.GetKey)]"
-														on_action = "[ShowLocationProductionView(LocationView.GetLocation.GetId, '(bool)no')]"
+														on_action = "[ShowLocationProductionViewForPopType(LocationView.GetLocation.GetId, PopType.GetKey)]"
 														title = "MANAGE_BUILDINGS_POP_TYPE"
 													}
 
@@ -11379,10 +11377,10 @@ pp_land_potential_chip = {}
 
 													text_single = {
 														size = { 100% 100% }
-														autoresize = yes
+														autoresize = no
 														fontsize = 13
 														using = Font_Type_Standard
-														align = center
+														align = center|nobaseline
 														text = "[LocationView.GetLocation.GetCultureStatusShortLabelForLocation(PopCultureItem.GetCulture)]"
 													}
 												}

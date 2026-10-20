@@ -4598,13 +4598,7 @@ flavor_fra.1171 = { ## Guesclin's Fabian Strategy
 	option = { # Bertrand will inflict devastation on the Battlefield
 		name = flavor_fra.1171.a
 		historical_option = yes
-		scope:bertrand_guesclin = {
-			add_character_modifier = {
-				modifier = guesclin_fabian_strats
-				months = 300
-				mode = add
-			}
-		}
+		add_country_modifier = { modifier = guesclin_fabian_strats years = 15 mode = add }
 		ai_chance = {
 			base = 75
 		}
@@ -8615,11 +8609,6 @@ flavor_fra.2105 = { # Campaign for Milan
 			target = c:MLO.capital
 			modifier = antagonism_pressed_claim
 			value = 5
-		}
-		add_casus_belli = {
-			target = c:MLO
-			type = casus_belli:cb_claim_throne
-			character = scope:ruler_fra
 		}
 		if = {
 			limit = { c:MLO ?= { government_type = government_type:monarchy } }

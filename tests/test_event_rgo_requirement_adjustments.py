@@ -75,15 +75,9 @@ def test_event_rgo_adjustments_keep_vanilla_good_checks() -> None:
         for relative_path in OVERRIDDEN_EVENT_FILES
     )
 
-    for expected in (
-        "raw_material = goods:silver",
-        "raw_material = goods:incense",
-        "raw_material = goods:sugar",
-        "raw_material = goods:cotton",
-        "raw_material = goods:tobacco",
-        "raw_material = goods:elephants",
-    ):
-        assert expected in combined_text
+    for good in ("silver", "incense", "sugar", "cotton", "tobacco", "elephants"):
+        # EU5 1.4.2 writes some of these checks as raw_material ?= goods:<good>
+        assert re.search(rf"raw_material \??= goods:{good}\b", combined_text), good
 
 
 def test_event_rgo_adjustments_only_change_worker_thresholds_and_intentional_event_fixes() -> None:

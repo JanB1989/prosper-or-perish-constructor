@@ -2102,7 +2102,6 @@ building_manager = {
  field_management = { tag = BHP level = 8 location = bishnupur }
  irrigated_fields = { tag = BHP level = 5 location = bishnupur }
  land_clearance = { tag = BHP level = 8 location = bishnupur }
- land_clearance = { tag = CHI level = 1 location = bishreit }
  field_management = { tag = DLH level = 3 location = biswan }
  irrigated_fields = { tag = DLH level = 5 location = biswan }
  land_clearance = { tag = DLH level = 3 location = biswan }
@@ -2505,7 +2504,6 @@ building_manager = {
  field_management = { tag = MAC level = 9 location = builth }
  land_clearance = { tag = MAC level = 1 location = builth }
  field_management = { tag = KIE level = 1 location = buinovichi }
- field_management = { tag = HCN level = 1 location = buir_nuur }
  land_clearance = { tag = HCN level = 2 location = buir_nuur }
  field_management = { tag = CAS level = 1 location = buitrago_de_lozoya }
  field_management = { tag = KED level = 1 location = bujang }
@@ -2525,6 +2523,7 @@ building_manager = {
  land_clearance = { tag = WAL level = 1 location = bukov }
  land_clearance = { tag = VUN level = 7 location = bula_kongo }
  qanats = { tag = BLA level = 1 location = buleda }
+ field_management = { tag = TRH level = 1 location = bulgan }
  irrigated_fields = { tag = PLB level = 1 location = buluranriding }
  paddy_water_control = { tag = PLB level = 1 location = buluranriding }
  field_management = { tag = PLB level = 1 location = bumi_ayu }
@@ -3412,7 +3411,6 @@ building_manager = {
  field_management = { tag = KIE level = 1 location = chornukhy }
  field_management = { tag = KIE level = 1 location = chortolisy }
  field_management = { tag = BRA level = 1 location = choszczno }
- land_clearance = { tag = CHI level = 1 location = choyrin_datsan }
  field_management = { tag = BOH level = 8 location = chrudim }
  land_clearance = { tag = BOH level = 2 location = chrudim }
  field_drainage = { tag = POL level = 1 location = chrzanow }
@@ -3807,7 +3805,6 @@ building_manager = {
  land_clearance = { tag = PEG level = 2 location = dala }
  paddy_water_control = { tag = PEG level = 4 location = dala }
  field_management = { tag = SWE level = 2 location = dalaborg }
- land_clearance = { tag = QAS level = 1 location = dalai_nuur }
  field_drainage = { tag = FUY level = 1 location = dalaiketun }
  land_clearance = { tag = FUY level = 4 location = dalaiketun }
  irrigation_systems = { tag = BMP level = 1 location = dalgan }
@@ -7615,7 +7612,6 @@ building_manager = {
  land_clearance = { tag = CHI level = 4 location = jiyin }
  land_clearance = { tag = CHI level = 1 location = jiyuan }
  land_clearance = { tag = CHI level = 1 location = jizhou }
- land_clearance = { tag = JLY level = 1 location = jizzakh }
  field_management = { tag = CAS level = 1 location = jodar }
  irrigated_fields = { tag = PAH level = 1 location = johor_lama }
  paddy_water_control = { tag = PAH level = 1 location = johor_lama }
@@ -7648,7 +7644,7 @@ building_manager = {
  land_clearance = { tag = JAP level = 1 location = joutou }
  paddy_water_control = { tag = JAP level = 2 location = joutou }
  land_clearance = { tag = AJU level = 3 location = jowhar }
- field_management = { tag = CHI level = 5 location = juancheng }
+ field_management = { tag = CHI level = 6 location = juancheng }
  land_clearance = { tag = CHI level = 5 location = juancheng }
  field_management = { tag = YEM level = 1 location = juban }
  land_clearance = { tag = YEM level = 1 location = juban }
@@ -7984,6 +7980,7 @@ building_manager = {
  irrigated_fields = { tag = DLH level = 5 location = kara }
  land_clearance = { tag = DLH level = 2 location = kara }
  paddy_water_control = { tag = DLH level = 5 location = kara }
+ land_clearance = { tag = TRH level = 1 location = kara_irtysh }
  field_management = { tag = GLH level = 1 location = karabul }
  field_drainage = { tag = DLH level = 1 location = karad }
  field_management = { tag = DLH level = 4 location = karad }
@@ -10365,7 +10362,6 @@ building_manager = {
  land_clearance = { tag = KRD level = 2 location = manyas }
  field_management = { tag = CAS level = 2 location = manzanares }
  land_clearance = { tag = CAS level = 1 location = manzanares }
- land_clearance = { tag = CHI level = 1 location = manzushir }
  field_management = { tag = CHI level = 6 location = maoming }
  irrigated_fields = { tag = CHI level = 2 location = maoming }
  land_clearance = { tag = CHI level = 3 location = maoming }
@@ -10651,7 +10647,6 @@ building_manager = {
  land_clearance = { tag = FRA level = 1 location = menehould }
  field_management = { tag = SRU level = 7 location = menemen }
  land_clearance = { tag = SRU level = 1 location = menemen }
- land_clearance = { tag = BGT level = 1 location = menen }
  field_management = { tag = MWO level = 1 location = mengban_weiyuan }
  field_drainage = { tag = CHI level = 1 location = mengcheng }
  field_management = { tag = CHI level = 2 location = mengcheng }
@@ -13008,7 +13003,6 @@ building_manager = {
  land_clearance = { tag = AYA level = 1 location = pisaq }
  field_management = { tag = BOH level = 7 location = pisek }
  land_clearance = { tag = BOH level = 1 location = pisek }
- land_clearance = { tag = JLY level = 1 location = pishagar }
  field_management = { tag = HAL level = 2 location = piskorowice }
  field_management = { tag = KIC level = 2 location = pismachi }
  field_management = { tag = PST level = 1 location = pistoia }
@@ -16915,6 +16909,7 @@ building_manager = {
  land_clearance = { tag = ERE level = 1 location = tokat }
  irrigated_fields = { tag = JAP level = 2 location = toki }
  paddy_water_control = { tag = JAP level = 2 location = toki }
+ field_management = { tag = QCH level = 1 location = toksun }
  field_management = { tag = CAS level = 4 location = toledo }
  land_clearance = { tag = CAS level = 1 location = toledo }
  field_management = { tag = TEP level = 5 location = tollan }
@@ -17183,7 +17178,6 @@ building_manager = {
  field_drainage = { tag = POL level = 1 location = trzemeszno }
  field_management = { tag = POL level = 3 location = trzemeszno }
  land_clearance = { tag = POL level = 1 location = trzemeszno }
- land_clearance = { tag = QAS level = 1 location = tsagaan }
  land_clearance = { tag = OGE level = 1 location = tsagaan_usun }
  field_management = { tag = GEO level = 3 location = tsagvli }
  land_clearance = { tag = GEO level = 1 location = tsagvli }
@@ -19123,7 +19117,7 @@ building_manager = {
  land_clearance = { tag = SKK level = 2 location = yuksom }
  land_clearance = { tag = CHI level = 2 location = yulin }
  land_clearance = { tag = CHI level = 1 location = yun }
- field_management = { tag = CHI level = 3 location = yuncheng }
+ field_management = { tag = CHI level = 4 location = yuncheng }
  land_clearance = { tag = CHI level = 1 location = yuncheng }
  field_management = { tag = CHI level = 1 location = yunhe }
  field_management = { tag = CHI level = 6 location = yunmeng }
@@ -19473,7 +19467,6 @@ building_manager = {
  land_clearance = { tag = MVA level = 2 location = znojmo }
  field_drainage = { tag = KIE level = 1 location = zolotonosha }
  field_management = { tag = KIE level = 1 location = zolotonosha }
- land_clearance = { tag = JLY level = 1 location = zomin }
  field_management = { tag = CHI level = 3 location = zongyang }
  irrigated_fields = { tag = CHI level = 6 location = zongyang }
  land_clearance = { tag = CHI level = 4 location = zongyang }

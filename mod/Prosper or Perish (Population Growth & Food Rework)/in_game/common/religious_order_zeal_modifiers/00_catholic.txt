@@ -318,20 +318,6 @@ zeal_bold_explorers = {
 	value = 1
 }
 
-zeal_holdings_sprawl = {
-	order_trigger = {
-		any_location_in_religious_order = { count > 3 }
-	}
-	order_scale = {
-		value = 0
-		every_location_in_religious_order = { add = 1 }
-		subtract = 3
-		min = 0
-		max = 20
-	}
-	value = -3
-}
-
 zeal_holding_prosperity = {
 	order_trigger = {
 		any_location_in_religious_order = { count > 0 }

@@ -306,9 +306,9 @@ conquest_of_paradise.13 = {
 		is_subject_type = colonial_nation
 		any_owned_location = {
 			OR = {
-				raw_material = goods:sand
-				raw_material = goods:stone
-				raw_material = goods:clay
+				raw_material ?= goods:sand
+				raw_material ?= goods:stone
+				raw_material ?= goods:clay
 			}
 		}
 		produced_in_country:iron < num_of_non_rural
@@ -318,9 +318,9 @@ conquest_of_paradise.13 = {
 		random_owned_location = {
 			limit = {
 				OR = {
-					raw_material = goods:sand
-					raw_material = goods:stone
-					raw_material = goods:clay
+					raw_material ?= goods:sand
+					raw_material ?= goods:stone
+					raw_material ?= goods:clay
 				}
 			}
 			save_scope_as = iron_ore_location
@@ -349,8 +349,8 @@ conquest_of_paradise.14 = {
 		is_subject_type = colonial_nation
 		any_owned_location = {
 			OR = {
-				raw_material = goods:sand
-				raw_material = goods:clay
+				raw_material ?= goods:sand
+				raw_material ?= goods:clay
 			}
 		}
 		produced_in_country:wool < num_of_non_rural
@@ -360,8 +360,8 @@ conquest_of_paradise.14 = {
 		random_owned_location = {
 			limit = {
 				OR = {
-					raw_material = goods:sand
-					raw_material = goods:clay
+					raw_material ?= goods:sand
+					raw_material ?= goods:clay
 				}
 			}
 			save_scope_as = wool_location
@@ -393,9 +393,9 @@ conquest_of_paradise.15 = {
 		}
 		any_owned_location = {
 			OR = {
-				raw_material = goods:sugar
-				raw_material = goods:cotton
-				raw_material = goods:tobacco
+				raw_material ?= goods:sugar
+				raw_material ?= goods:cotton
+				raw_material ?= goods:tobacco
 			}
 			rgo_workers >= 0
 			
@@ -407,9 +407,9 @@ conquest_of_paradise.15 = {
 		random_owned_location = {
 			limit = {
 				OR = {
-					raw_material = goods:sugar
-					raw_material = goods:cotton
-					raw_material = goods:tobacco
+					raw_material ?= goods:sugar
+					raw_material ?= goods:cotton
+					raw_material ?= goods:tobacco
 				}
 				rgo_workers >= 0
 			}

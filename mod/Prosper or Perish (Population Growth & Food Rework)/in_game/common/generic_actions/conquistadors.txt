@@ -76,6 +76,7 @@ create_conquistador = {
 						receives_defensive_support_from = scope:actor
 					}
 				}
+				owner ?= { potential_army_size < conquistador_max_target_army_size }
 			}
 
 			# Don't let a Catholic Spain conquistador onto an area where another Christian
@@ -100,7 +101,13 @@ create_conquistador = {
 			
 			scope:target_1 = {
 				ordered_location_in_area = {
-					order_by = population
+					order_by = {
+						value = population
+						if = {
+							limit = { owner ?= { potential_army_size < conquistador_max_target_army_size } }
+							add = 1000000
+						}
+					}
 					max = 1
 					limit = {
 						pp_is_sea_coast = yes
@@ -124,7 +131,13 @@ create_conquistador = {
 
 					#try again, but this time ignore coastal
 					ordered_location_in_area = {
-						order_by = population
+						order_by = {
+							value = population
+							if = {
+								limit = { owner ?= { potential_army_size < conquistador_max_target_army_size } }
+								add = 1000000
+							}
+						}
 						max = 1
 						limit = {
 							has_owner = yes

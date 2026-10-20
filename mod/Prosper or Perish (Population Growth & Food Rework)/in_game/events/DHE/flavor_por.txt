@@ -807,6 +807,17 @@ flavor_por.17 = {
 			save_scope_as = john_avis
 		}
 
+		if = {
+			limit = {
+				has_dlc = "d009_across_the_pillars"
+				exists = character:por_goncalo_vasques
+			}
+			character:por_goncalo_vasques = {
+				religious_order ?= { save_scope_as = avis_order }
+			}
+			scope:avis_order ?= { set_head_character = scope:john_avis }
+		}
+
 		create_rebel = {
 			category = pretender
 			name = avis_supporters
@@ -824,6 +835,7 @@ flavor_por.17 = {
 
 		scope:john_avis = { change_character_allegiance = scope:avis_supporters }
 
+		scope:avis_supporters = { add_rebel_progress = rebel_progress_severe_penalty }
 
 		custom_tooltip = {
 			text = flavor_por.17.a.custom
@@ -4786,6 +4798,8 @@ flavor_por.62 = { #Magellan
 		scope:target_character = {
 			move_country = scope:target_country
 		}
+
+		add_prestige = prestige_weak_bonus
 
 		scope:target_country = { trigger_event_silently = flavor_cas.28 }
 	}

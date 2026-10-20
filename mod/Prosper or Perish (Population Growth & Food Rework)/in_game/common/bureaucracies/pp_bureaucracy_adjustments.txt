@@ -31,7 +31,7 @@ TRY_REPLACE:mazalim_court_bureaucracy = {
 		scale = {
 			value = scope:maintenance
 		}
-		global_max_control = 0.05
+		global_monthly_control = 0.005
 		monthly_towards_jurisprudence = societal_value_monthly_move
 	}
 

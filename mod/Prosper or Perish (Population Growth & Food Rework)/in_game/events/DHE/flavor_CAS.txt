@@ -928,22 +928,8 @@ flavor_cas.14 = { #Prince of Asturias
 		name = flavor_cas.14.a
 		historical_option = yes
 
-		province_definition:east_asturias_province = {
-			every_location_in_province_definition = {
-				limit = {
-					owner = root
-				}
-				change_control = control_mild_bonus
-			}
-		}
-		province_definition:west_asturias_province = {
-			every_location_in_province_definition = {
-				limit = {
-					owner = root
-				}
-				change_control = control_mild_bonus
-			}
-		}
+		unlock_estate_privilege_effect = { type = lon_principado_de_asturias }
+		grant_estate_privilege = estate_privilege:lon_principado_de_asturias
 		scope:target_heir = {
 			add_adm = 15
 			add_mil = 10
@@ -9487,6 +9473,12 @@ flavor_cas.1000 = { #Tomás de Torquemada and the Spanish Inquisition
 
 		set_variable = spa_holy_inquisition
 		scope:inquisitor_torquemada = { move_country = root }
+		if = {
+			limit = {
+				has_dlc = "d009_across_the_pillars"
+			}
+			unlock_law_effect = { type = limpieza_de_sangre_law }
+		}
 		unlock_policy_effect = { type = spa_inquisition_policy }
 		add_policy = policy:spa_inquisition_policy
 		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_bonus }
@@ -10215,6 +10207,12 @@ flavor_cas.1005 = { #Expulsion of the Moriscos
 
 		remove_variable = spa_holy_inquisition
 		lock_policy_effect = { type = spa_inquisition_policy }
+		if = {
+			limit = {
+				has_dlc = "d009_across_the_pillars"
+			}
+			lock_law_effect = { type = limpieza_de_sangre_law }
+		}
 		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_extreme_penalty }
 		add_stability = stability_ultimate_penalty
 	}
@@ -11245,6 +11243,7 @@ flavor_cas.1503 = { #Archives of the Indies Building
 		name = flavor_cas.1503.a
 		historical_option = yes
 
+		unlock_building_effect = { type = archive_of_the_indies }
 		scope:trade_center_location = {
 			construct_building = {
 				building_type = building_type:archive_of_the_indies

@@ -591,9 +591,12 @@ def test_employment_systems_add_the_shared_priority_bonus_once() -> None:
     bonus_text = EMPLOYMENT_PRIORITY_BONUS.read_text(encoding="utf-8-sig")
     tiers = sorted({int(value) for value in re.findall(r"add = (\d+)", bonus_text)})
     assert all(b - a >= EMPLOYMENT_PRIORITY_TIER_GAP for a, b in zip(tiers, tiers[1:]))
-    # the vanilla category bonuses of the capitalism variants are scaled the same way (x1000)
+    # the vanilla category bonuses of the capitalism variants are scaled the same way (x1000); the EU5 1.4.2
+    # rgo_enhancement_category bonus sits just below the food tiers in the plain systems and between infrastructure
+    # and education in the infrastructure variants
     category_bonuses = sorted({int(value) for value in re.findall(r"add = (\d+)", employment_text)})
-    assert category_bonuses == [100000, 1000000, 10000000]
+    assert category_bonuses == [80000, 100000, 1000000, 10000000, 15000000]
+    assert 80000 < min(tiers)
     # logistics rank above everything (tests/test_logistics_infrastructure_buildings.py); education above the rest
     logistics = set(re.findall(r"(?s)has_tag = pp_logistics \}(.*?)\n\t\}", bonus_text)[0].split("add = ")[1:])
     logistics_tiers = {int(re.match(r"\d+", value).group(0)) for value in logistics}

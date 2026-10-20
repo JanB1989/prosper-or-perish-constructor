@@ -364,20 +364,12 @@ REPLACE:local_governor = {
 			}
 		}
 		owner = scope:actor
-		trigger_if = {
-			limit = {
-				has_building = building_type:seljuk_mint
-			}
-			NOT = {
-				has_building = building_type:seljuk_mint
-			}
-		}
 	}
 	location_potential = {
 		has_road_to_capital = yes
 		is_capital = no
-		NOT = { has_building = building_type:itinerant_court_seat } # Cannot coexist with the Seat of the Itinerant Court (and vice versa)
-		NOT = { has_building = building_type:kings_manor }
+		is_historical_capital = no
+		has_proximity_source_building = no
 	}
 	remove_if = {
 		location = {
@@ -466,6 +458,9 @@ REPLACE:naval_governor = {
 		NOT = { is_connected_to_through_realm = owner.capital }
 		is_overseas_for_owner = no
 		is_port = yes
+		is_capital = no
+		is_historical_capital = no
+		has_proximity_source_building = no
 	}
 	remove_if = {
 		location = { is_connected_to_through_realm = owner.capital }

@@ -75,11 +75,14 @@ fishing_village = {
 	rural_settlement = yes
 	
 	location_potential = {
-		is_coastal = yes
+		OR = {
+			is_coastal = yes
+			has_river = yes
+		}
 	}
-	
-		
-	
+
+
+
 	build_time = village_build_time
 
 	possible_production_methods = {
@@ -542,7 +545,7 @@ windmill = {
 	employment_size = rural_peasant_enhance_employment
 
 
-	category = infrastructure_category
+	category = rgo_enhancement_category
 
 	rural_settlement = yes
 
@@ -591,8 +594,8 @@ local_smelters = {
 	employment_size = rural_peasant_enhance_employment
 
 
-	category = infrastructure_category
-	
+	category = rgo_enhancement_category
+
 	rural_settlement = yes
 
 	location_potential = {
@@ -643,7 +646,7 @@ sawmill = {
 
 	forbidden_for_estates = yes
 
-	category = infrastructure_category
+	category = rgo_enhancement_category
 	
 	rural_settlement = yes
 

@@ -30,6 +30,14 @@ TRY_REPLACE:first_come_first_serve = {
 	priority = {
 		value = building_index #buildings filled in first built, first filled order
 		multiply = -1
+		# EU5 1.4.2: RGO enhancers (windmill, sawmill, local smelters, mercury patio) staff first (vanilla +20000); here
+		# just below PP's lowest food tier (85000), so food buildings keep their workers first
+		if = {
+			limit = {
+				building_category = rgo_enhancement_category
+			}
+			add = 80000
+		}
 		# Prosper or Perish tiers, 1000 apart: the tier decides, this system's own value orders within a tier
 		add = pp_employment_priority_bonus
 	}
@@ -54,6 +62,14 @@ TRY_REPLACE:capitalism = {
 
 	priority = {
 		value = building_potential_profit
+		# EU5 1.4.2: RGO enhancers (windmill, sawmill, local smelters, mercury patio) staff first (vanilla +20000); here
+		# just below PP's lowest food tier (85000), so food buildings keep their workers first
+		if = {
+			limit = {
+				building_category = rgo_enhancement_category
+			}
+			add = 80000
+		}
 		# Prosper or Perish tiers, 1000 apart: the tier decides, this system's own value orders within a tier
 		add = pp_employment_priority_bonus
 	}
@@ -88,6 +104,14 @@ TRY_REPLACE:capitalism_prioritising_infrastructure = {
 				}
 			}
 			add = 10000000
+		}
+		# EU5 1.4.2: RGO enhancers (windmill, sawmill, local smelters, mercury patio) staff first (vanilla +20000); here
+		# above infrastructure like vanilla and below education (20000000)
+		if = {
+			limit = {
+				building_category = rgo_enhancement_category
+			}
+			add = 15000000
 		}
 		# Prosper or Perish tiers, 1000 apart: the tier decides, this system's own value orders within a tier
 		add = pp_employment_priority_bonus
@@ -137,6 +161,14 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade = {
 				}
 			}
 			add = 1000000
+		}
+		# EU5 1.4.2: RGO enhancers (windmill, sawmill, local smelters, mercury patio) staff first (vanilla +20000); here
+		# above infrastructure like vanilla and below education (20000000)
+		if = {
+			limit = {
+				building_category = rgo_enhancement_category
+			}
+			add = 15000000
 		}
 		# Prosper or Perish tiers, 1000 apart: the tier decides, this system's own value orders within a tier
 		add = pp_employment_priority_bonus
@@ -194,6 +226,14 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade_and_culture = {
 				}
 			}
 			add = 100000
+		}
+		# EU5 1.4.2: RGO enhancers (windmill, sawmill, local smelters, mercury patio) staff first (vanilla +20000); here
+		# above infrastructure like vanilla and below education (20000000)
+		if = {
+			limit = {
+				building_category = rgo_enhancement_category
+			}
+			add = 15000000
 		}
 		# Prosper or Perish tiers, 1000 apart: the tier decides, this system's own value orders within a tier
 		add = pp_employment_priority_bonus

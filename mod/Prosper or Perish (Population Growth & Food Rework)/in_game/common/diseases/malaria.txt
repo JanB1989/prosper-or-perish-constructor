@@ -86,6 +86,14 @@ malaria = {
 			multiply = 0
 		}
 		else_if = {
+			limit = {
+				topography = wetlands
+				OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+				continent = continent:europe
+			}
+			multiply = 1.5
+		}
+		else_if = {
 			limit = { topography = wetlands }
 			multiply = 3
 		}

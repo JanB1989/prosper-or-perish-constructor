@@ -168,8 +168,9 @@ pp_tt_climate_ha1300_climate_dry_summer_continental = {
 	game_data = { category = location }
 	free_capacity_attracts_pops = yes
 	local_population_capacity = 22.4
-	local_build_buildings_efficiency = -0.02
-	local_construction_speed = -0.02
+	free_building_levels = -3
+	local_build_buildings_efficiency = -0.08
+	local_construction_speed = -0.08
 }
 
 pp_tt_climate_ha1300_climate_continental_monsoon = {

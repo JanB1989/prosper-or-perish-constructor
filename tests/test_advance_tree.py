@@ -77,19 +77,17 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
         {"global_disease_resistance = 0.07", "global_population_growth = 0.002"},
         {"global_disease_resistance = 0.12", "global_population_capacity_modifier = 0.08"},
     ),
-    # institution spread (2026-10-04): research speed instead of max literacy, Print Culture growth halved
     # trade (2026-10-07, Jan): a little cheaper merchants for the printing countries
     "printing_press_advance": (
-        {"global_max_literacy = 10"},
-        {"research_speed_modifier = 0.05", "merchant_maintenance_efficiency = 0.1"}
+        set(),
+        {"merchant_maintenance_efficiency = 0.1"}
         # specialization rights (2026-10-07): unlocked here, so their charters can be granted before
         | {f"unlock_town_rights = pp_{good}_rights" for good in (
             "cloth", "fine_cloth", "leather", "pottery", "furniture", "glass", "jewelry", "porcelain", "lacquerware",
             "beer", "liquor", "books", "tools", "weaponry", "firearms", "cannons", "naval_supplies")},
     ),
-    # trade (2026-10-07, Jan): Global Trade countries' long hauls use a bit less merchant capacity
-    "global_trade_advance": (set(), {"trade_sea_efficiency = 0.15", "trade_range_modifier = 0.1"}),
-    "print_culture": ({"global_institution_growth_modifier = 0.2"}, {"global_institution_growth_modifier = 0.1"}),
+    # trade (2026-10-07, Jan): Global Trade countries' long sea hauls use a bit less merchant capacity
+    "global_trade_advance": (set(), {"trade_sea_efficiency = 0.15"}),
     # food purchase efficiency does nothing in PP (2026-10-17, Jan): live food modifiers instead
     "peasant_connections_advance": ({"food_purchase_efficiency = 0.2"}, {"global_peasants_food_consumption = -0.03"}),
     "zan_food_imports": ({"food_purchase_efficiency = 0.1"}, {"global_victuals_output_modifier = 0.03"}),
@@ -184,12 +182,6 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
         {"global_lumber_output_modifier = 0.5", "icon = rudimentary_coastal_ship_repair"},
         {"ai_weight = {add=150}", "icon = lumber_mill_improved", "unlock_building = lumber_mill_improved"},
     ),
-    # trade range (2026-10-08, Jan): the five generic range advances add +50 each (pp_trade_range_advances_adjustments.txt)
-    "merchants_and_trade": ({"trade_range = 250"}, {"trade_range = 50"}),
-    "trade_range_advance_age_2": ({"trade_range = 250"}, {"trade_range = 50"}),
-    "trade_range_advance_age_3": ({"trade_range = 250"}, {"trade_range = 50"}),
-    "joint_stock_companies": ({"trade_range = 200"}, {"trade_range = 50"}),
-    "chartered_companies": ({"trade_range = 200"}, {"trade_range = 50"}),
     # fur (2026-10-14, Jan): no age-6 fur output, fur output per worker already rose 1.0 -> 1.73 (run a3bd6176)
     "long_rifle": ({"global_fur_output_modifier = 0.3"}, set()),
 }

@@ -65,26 +65,6 @@ TRY_REPLACE:noble_sponsored_navy = {
 	}
 }
 
-# Great Offices of the Crown of France: vanilla block plus a higher noble tax cap (Jan 2026-10-05)
-# and +3 diplomatic reputation (Jan 2026-10-06; vanilla privileges give at most +2).
-# France kept collapsing in observer runs: its nobles (+50 % power from this privilege) were taxable at only 4-5 %.
-TRY_REPLACE:great_offices_of_the_crown_of_france = {
-	estate = nobles_estate
-	content_priority = 100
-	potential = {
-		has_or_had_tag = FRA
-	}
-
-	country_modifier = {
-		government_size = 1
-		nobles_estate_target_satisfaction = small_privilege_target_satisfaction
-		global_nobles_estate_power = 0.5
-		global_peasant_enfranchisment = -0.1
-		nobles_estate_max_tax = 0.10
-		diplomatic_reputation = 3
-	}
-}
-
 # Local Tribal Strongholds (Maghreb): vanilla block with the tribes' power doubled (+50 % -> +100 %) and a lower tribes
 # tax cap (Jan 2026-10-11).
 TRY_REPLACE:local_tribal_strongholds = {

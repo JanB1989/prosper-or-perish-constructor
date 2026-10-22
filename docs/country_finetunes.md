@@ -2,6 +2,7 @@
 
 Hand-tuned changes for single countries, one entry each: what and why.
 
+- **France bonuses removed** (2026-10-22, Jan): Great Offices of the Crown back to vanilla (no +10 % noble max tax, no +3 diplomatic reputation; `pp_estate_privilege_adjustments.txt`) and no +500 starting gold (`on_action/pp_country_finetunes.txt`). Why: EU5 1.4.3; see whether France holds together without help. Supersedes the France entries of 2026-10-05 and 2026-10-06 below; France's lucky-nation aims stay.
 - **France** (2026-10-05, `pp_estate_privilege_adjustments.txt`): Great Offices of the Crown +10 points noble max tax.
   Why: its powerful nobles were taxable at only 4-5 %, so the crown went bankrupt and France fell apart in observer runs.
 - **France +500, Ottomans +1,500, Byzantium -1,000 starting gold** (2026-10-05, `on_action/pp_country_finetunes.txt`).

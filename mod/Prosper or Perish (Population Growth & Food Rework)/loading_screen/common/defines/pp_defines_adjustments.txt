@@ -223,15 +223,10 @@ NEstate = {
 }
 
 NCountry = {
-	# 2026-10-04 (Jan): institutions spread too fast in PP (age-2 institutions reached 61 % of the world's people
-	# 65 years after they appeared, run 379f7d7a). Embracing needs twice the exposed population; trade spreads
-	# institutions only over shorter routes and from busier markets (PP markets trade far more than vanilla's).
-	# 2026-10-06 (Jan): market volume threshold 30 -> 20, more mid-sized markets pass institutions on.
-	INSTITUTION_MINIMUM_PERCENT = 0.4 # 0.2
-	INSTITUTION_TRADE_SPREAD_RANGE_HALFCOST = 25 # 50
-	INSTITUTION_TRADE_MIN_VOLUME = 20 # 10
-	# 2026-10-13 (Jan): MERCHANT_DISTANCE_COST_DIVISOR back to vanilla (EU5 1.4.1 cut it 1200 -> 400; PP had 120 since
-	# 2026-10-08). Range growth stays cut in pp_trade_range_advances_adjustments.txt.
+	# 2026-10-22 (Jan): institution spread and trade distance are vanilla again. EU5 1.4.3 prices trade distance
+	# itself (route cost x MERCHANT_ROUTE_COST_MULTIPLIER 5 against the trade range, MERCHANT_DISTANCE_COST_DIVISOR 800)
+	# and its institution trade spread uses the same x5 cost; PP's curb (minimum percent 0.4, halfcost 25, minimum
+	# volume 20, spread values 65 %, Print Culture halved) and its trade range cut (+50 per range advance) are gone.
 }
 
 NUnit = {

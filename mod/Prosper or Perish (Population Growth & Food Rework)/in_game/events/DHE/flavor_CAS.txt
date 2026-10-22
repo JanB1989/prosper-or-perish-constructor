@@ -17,6 +17,7 @@ flavor_cas.1 = { # Christopher Columbus
 				has_advance = quest_for_the_new_world
 				dominant_religion = religion:catholic
 				capital.sub_continent = sub_continent:western_europe
+				has_ports = yes
 				nor = {
 					this = root
 					has_variable = turned_down_columbus 
@@ -9044,21 +9045,21 @@ flavor_cas.147 = { # Wreck of San José Discovered
 		name = flavor_cas.147.a_positive
 		trigger = { has_variable = cas_san_jose_success }
 		add_prestige = prestige_weak_bonus
-		change_gold_effect = { scale = 4 }
+		change_gold_effect = { scale = 2 }
 	}
 	
 	option = {
 		name = flavor_cas.147.b_positive
 		trigger = { has_variable = cas_san_jose_success }
 		add_prestige = prestige_mild_bonus
-		change_gold_effect = { scale = 8 }
+		change_gold_effect = { scale = 4 }
 	}
 	
 	option = {
 		name = flavor_cas.147.c_positive
 		trigger = { has_variable = cas_san_jose_success }
-		add_legitimacy = legitimacy_mild_bonus
-		add_prestige = prestige_extreme_bonus
+		add_legitimacy = legitimacy_ultimate_bonus
+		add_prestige = prestige_ultimate_bonus
 	}
 	
 	after = {

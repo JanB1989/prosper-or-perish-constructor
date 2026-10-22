@@ -21,7 +21,10 @@ flavor_mos.1 = {
 		has_ruler = yes
 		country_exists = c:NOV
 		NOT = { in_union_with = c:NOV }
-		is_neighbor_of = c:NOV
+		OR = {
+			is_neighbor_of = c:NOV
+			any_neighbor_country = { is_subject_of = c:NOV }
+		}
 	}
 
 	illustration_tags = {

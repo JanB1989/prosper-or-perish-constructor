@@ -4637,20 +4637,44 @@ flavor_eng.47 = {
 
 	immediate = {
 		# John of Gaunt (born 1340) - future House of Lancaster founder
-		create_character = {
-			first_name = name_john
-			dynasty = dynasty:plantagenet_dynasty
-			birth_date = 1340.3.24
-			birth_location = location:london
-			father = root.ruler
+		if = {
+			limit = {
+				root.ruler = {
+					any_child = {
+						count < 2
+						is_female = no
+						is_alive = yes
+					}
+				}
+			}
+			create_character = {
+				first_name = name_john
+				dynasty = dynasty:plantagenet_dynasty
+				birth_date = 1340.3.24
+				birth_location = location:london
+				father = root.ruler
+				mother = character:eng_philippa_de_hainault
+			}
 		}
 		# Edmund of Langley (born 1341) - future House of York founder
-		create_character = {
-			first_name = name_edmond
-			dynasty = dynasty:plantagenet_dynasty
-			birth_date = 1341.6.5
-			birth_location = location:london
-			father = root.ruler
+		if = {
+			limit = {
+				root.ruler = {
+					any_child = {
+						count < 3
+						is_female = no
+						is_alive = yes
+					}
+				}
+			}
+			create_character = {
+				first_name = name_edmond
+				dynasty = dynasty:plantagenet_dynasty
+				birth_date = 1341.6.5
+				birth_location = location:london
+				father = root.ruler
+				mother = character:eng_philippa_de_hainault
+			}
 		}
 	}
 

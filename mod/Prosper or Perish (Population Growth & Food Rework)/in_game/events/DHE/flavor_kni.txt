@@ -1164,6 +1164,7 @@ flavor_kni.111 = {
 
 	immediate = {
 		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		location:jerusalem.owner = { save_scope_as = target_country }
 	}
 
 	option = {
@@ -1194,18 +1195,29 @@ flavor_kni.111 = {
 			}
 		}
 		else = {
-			propose_resolution = {
-				resolution = resolution:call_crusade
-				actor = root
-				recipient = international_organization:catholic_church
-				target = scope:target_country
-				vote = yes
-			}
-			change_gold_effect = { scale = -20 }
-			c:KNI = {
-				change_gold_effect = { scale = 20 }
-				add_religious_influence_if_valid = {
-					VALUE = 20
+			if = {
+				limit = {
+					can_call_crusade_trigger = yes
+					is_subject = no
+					NOT = { has_cooldown = recently_called_crusade }
+					scope:target_country = {
+						is_valid_target_for_crusade = yes
+						crusade_target_relations_valid_trigger = { ACTOR = root }
+					}
+				}
+				propose_resolution = {
+					resolution = resolution:call_crusade
+					actor = root
+					recipient = international_organization:catholic_church
+					target = scope:target_country
+					vote = yes
+				}
+				change_gold_effect = { scale = -20 }
+				c:KNI = {
+					change_gold_effect = { scale = 20 }
+					add_religious_influence_if_valid = {
+						VALUE = 20
+					}
 				}
 			}
 		}

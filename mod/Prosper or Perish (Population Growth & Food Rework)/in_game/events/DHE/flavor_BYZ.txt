@@ -7465,24 +7465,30 @@ flavor_byz.1503 = {
 		has_or_had_tag = BYZ
 		is_situation_active = situation:rise_of_the_ottomans
 		country_exists = c:TUR
-		situation:rise_of_the_ottomans.var:strongest_beylik_variable ?= c:TUR
+		custom_tooltip = {
+			text = byz_tur_strongest_beylik_tt
+			situation:rise_of_the_ottomans.var:strongest_beylik_variable ?= c:TUR
+		}
 		c:AYD ?= {
 			opinion = {
 				target = c:BYZ
 				value > -100
 			}
 			at_war = no
-			trigger_if = {
-				limit = {
-					is_situation_active = situation:rise_of_the_ottomans
-					country_exists = situation:rise_of_the_ottomans.var:third_strongest_strongest_beylik_variable
+			custom_tooltip = {
+				text = byz_ayd_second_or_third_strongest_beylik_tt
+				trigger_if = {
+					limit = {
+						is_situation_active = situation:rise_of_the_ottomans
+						country_exists = situation:rise_of_the_ottomans.var:third_strongest_strongest_beylik_variable
+					}
+					OR = {
+						situation:rise_of_the_ottomans.var:second_strongest_strongest_beylik_variable ?= c:AYD
+						situation:rise_of_the_ottomans.var:third_strongest_strongest_beylik_variable ?= c:AYD
+					}
 				}
-				OR = {
-					situation:rise_of_the_ottomans.var:second_strongest_strongest_beylik_variable ?= c:AYD
-					situation:rise_of_the_ottomans.var:third_strongest_strongest_beylik_variable ?= c:AYD
-				}
+				trigger_else = { is_situation_active = situation:rise_of_the_ottomans }
 			}
-			trigger_else = { is_situation_active = situation:rise_of_the_ottomans }
 			NOR = {
 				is_subject_of = c:TUR
 				c:TUR = { is_subject_of = prev }

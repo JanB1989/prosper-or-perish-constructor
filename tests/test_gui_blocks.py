@@ -24,7 +24,13 @@ ATTRIBUTE_TOOLTIPS = MOD_ROOT / "in_game/gui/shared/pp_attribute_tooltips.gui"
 STATUS_LOC = MOD_ROOT / "main_menu/localization/english/pp_location_status_l_english.yml"
 # Empty overrides of a block 1.4's button_regular no longer has: no-ops on the Prosper or Perish Europedia page's
 # filter buttons (hand-kept window, tools/port_vanilla_gui.py), harmless.
-KNOWN_NO_OPS = {("encyclopedia_lateralview.gui", "button_regular", "background")}
+KNOWN_NO_OPS = {
+    ("encyclopedia_lateralview.gui", "button_regular", "background"),
+    # EU5 1.4.3 removed these blocks from location_card but kept its own overrides of them (location_window.gui,
+    # town_rights.gui); pp_location_card carries the same no-ops
+    ("location_window.gui", "pp_location_card", "location_card_core_icon_size"),
+    ("town_rights.gui", "pp_location_card", "location_rank_sort_highlight"),
+}
 
 
 @cache

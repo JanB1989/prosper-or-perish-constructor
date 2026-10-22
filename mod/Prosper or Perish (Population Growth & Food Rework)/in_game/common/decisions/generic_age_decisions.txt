@@ -81,12 +81,18 @@ sponsor_a_cathedral_decision = {
 		effect = {
 			add_political_influence = political_influence_mild_penalty
 			add_religious_influence = religious_influence_severe_penalty
-			scope:target_location = {
-				construct_building = {
-					building_type = building_type:cathedral
-					cost_multiplier = 0.90
-					cost_multiplier_reason = "royal_sponsorship"
+			if = {
+				limit = { exists = scope:target_location }
+				scope:target_location = {
+					construct_building = {
+						building_type = building_type:cathedral
+						cost_multiplier = 0.90
+						cost_multiplier_reason = "royal_sponsorship"
+					}
 				}
+			}
+			else = {
+				custom_tooltip = sponsor_a_cathedral_cost_estimate_tt
 			}
 			hidden_effect = {
 				ruler = {
@@ -169,12 +175,18 @@ sponsor_a_great_madrasa_decision = {
 		effect = {
 			add_political_influence = political_influence_mild_penalty
 			add_religious_influence = religious_influence_severe_penalty
-			scope:target_location = {
-				construct_building = {
-					building_type = building_type:great_madrasa
-					cost_multiplier = 0.90
-					cost_multiplier_reason = "royal_sponsorship"
+			if = {
+				limit = { exists = scope:target_location }
+				scope:target_location = {
+					construct_building = {
+						building_type = building_type:great_madrasa
+						cost_multiplier = 0.90
+						cost_multiplier_reason = "royal_sponsorship"
+					}
 				}
+			}
+			else = {
+				custom_tooltip = sponsor_a_great_madrasa_cost_estimate_tt
 			}
 			hidden_effect = {
 				ruler = {

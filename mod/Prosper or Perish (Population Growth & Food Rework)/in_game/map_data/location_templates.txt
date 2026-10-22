@@ -2883,7 +2883,7 @@ moron = { topography = flatland vegetation = ha1300_veg_marsh climate = mediterr
 olvera = { topography = hills vegetation = ha1300_veg_thicket climate = mediterranean religion = catholic culture = castilian raw_material = medicaments}
 osuna = { topography = flatland vegetation = ha1300_veg_thicket climate = mediterranean religion = catholic culture = castilian raw_material = olives}
 sanlucar_la_mayor = { topography = flatland vegetation = ha1300_veg_thicket climate = mediterranean religion = catholic culture = castilian raw_material = horses natural_harbor_suitability = 0.00 }
-almeria = { modifier = almeria_silk_base topography = flatland vegetation = ha1300_veg_scrubland climate = cold_semi_arid religion = sunni culture = andalusi raw_material = fiber_crops natural_harbor_suitability = 0.25}
+almeria = { topography = flatland vegetation = ha1300_veg_scrubland climate = cold_semi_arid religion = sunni culture = andalusi raw_material = fiber_crops natural_harbor_suitability = 0.25}
 almanzora = { topography = hills vegetation = ha1300_veg_thicket climate = cold_semi_arid religion = sunni culture = andalusi raw_material = marble}
 baza = { topography = plateau vegetation = ha1300_veg_thicket climate = mediterranean religion = sunni culture = andalusi raw_material = saffron}
 gergal = { topography = hills vegetation = ha1300_veg_scrubland climate = cold_semi_arid religion = sunni culture = andalusi raw_material = dyes}
@@ -2898,7 +2898,7 @@ guadix = { topography = plateau vegetation = ha1300_veg_thicket climate = medite
 illora = { topography = plateau vegetation = ha1300_veg_thicket climate = mediterranean religion = sunni culture = andalusi raw_material = stone}
 loja = { topography = mountains vegetation = ha1300_veg_thicket climate = mediterranean religion = sunni culture = andalusi raw_material = legumes}
 pinar = { topography = plateau vegetation = ha1300_veg_thicket climate = mediterranean religion = sunni culture = andalusi raw_material = wheat}
-orgiva = { topography = mountains vegetation = ha1300_veg_thicket climate = mediterranean religion = sunni culture = andalusi raw_material = silk}
+orgiva = { modifier = alpujarras_silk_base topography = mountains vegetation = ha1300_veg_thicket climate = mediterranean religion = sunni culture = andalusi raw_material = silk}
 nevada_range = { topography = mountain_wasteland vegetation = sparse climate = continental}
 subbetic_range = { topography = mountain_wasteland vegetation = sparse climate = oceanic}
 malaga = { modifier = malaga_sweet_wine_base topography = flatland vegetation = ha1300_veg_thicket climate = mediterranean religion = sunni culture = andalusi raw_material = sugar natural_harbor_suitability = 0.25}

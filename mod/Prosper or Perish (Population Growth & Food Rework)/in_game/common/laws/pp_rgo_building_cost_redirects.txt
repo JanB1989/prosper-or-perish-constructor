@@ -406,7 +406,6 @@ TRY_REPLACE:legal_code_law = {
 		}
 		country_modifier = {
 			government_reform_slots = 1
-			global_max_bureaucracy_slots = 1
 			clergy_estate_target_satisfaction = small_permanent_target_satisfaction
 			monthly_towards_centralization = societal_value_monthly_move
 		}

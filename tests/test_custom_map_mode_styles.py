@@ -38,7 +38,6 @@ CUSTOM_MAP_MODE_FILES = (
     MAP_MODE_ROOT / "pp_goods_output_map_modes_generated.txt",
     MAP_MODE_ROOT / "pp_local_output_modifier_map_modes.txt",
     MAP_MODE_ROOT / "pp_population_capacity_map_modes.txt",
-    MAP_MODE_ROOT / "pp_population_delta_map_modes.txt",
     MAP_MODE_ROOT / "pp_food_map_modes.txt",
     MAP_MODE_ROOT / "pp_unemployed_peasants_map_modes.txt",
     MAP_MODE_ROOT / "pp_building_levels_map_modes.txt",
@@ -46,13 +45,6 @@ CUSTOM_MAP_MODE_FILES = (
 )
 
 VALUE_SOURCE_MODES = {
-    "pp_population_capacity_density": "modifier:pp_population_capacity_density",
-    "pp_pop_delta_location": "pp_pop_delta_location_pct",
-    "pp_pop_delta_province": "pp_pop_delta_province_pct",
-    "pp_pop_delta_area": "pp_pop_delta_area_pct",
-    "pp_pop_delta_region": "pp_pop_delta_region_pct",
-    "pp_pop_delta_macro_region": "pp_pop_delta_macro_region_pct",
-    "pp_pop_delta_super_region": "pp_pop_delta_super_region_pct",
     "pp_positive_province_food_growth": "pp_province_food_storage_months",
     "pp_fishing_village_capacity": "fish_capacity",
     "pp_farming_village_capacity": "farm_capacity",
@@ -65,84 +57,6 @@ VALUE_SOURCE_MODES = {
 }
 
 STRUCTURE_SNIPPETS = {
-    "pp_population_capacity_density": (
-        "category = debug",
-        "index = 2",
-        "allow_allocate_hotkey = no",
-        "modifier:pp_population_capacity_density",
-        "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_TT_LAND",
-        "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_RANGE_0_10",
-        "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_CAPPED",
-        "color_refresh_counters = { LocationDevelopmentChanged LocationPopulationChanged }",
-    ),
-    "pp_pop_delta_location": (
-        "category = population",
-        "index = 1",
-        "pp_pop_delta_location_pct",
-        "has_variable = pp_pop_baseline",
-        "small_map_names = location",
-        "small_tooltip_context = location",
-        "MAPMODE_PP_POP_DELTA_LOCATION_TT_LAND",
-        "MAPMODE_PP_POP_DELTA_MINUS_100",
-        "MAPMODE_PP_POP_DELTA_PLUS_10",
-        "MAPMODE_PP_POP_DELTA_PLUS_200",
-        "color_refresh_counters = { LocationPopulationChanged }",
-    ),
-    "pp_pop_delta_province": (
-        "category = population",
-        "index = 1",
-        "pp_pop_delta_province_pct",
-        "has_variable = pp_province_pop_baseline",
-        "small_map_names = province",
-        "small_tooltip_context = location",
-        "MAPMODE_PP_POP_DELTA_PROVINCE_TT_LAND",
-        "MAPMODE_PP_POP_DELTA_MINUS_100",
-        "color_refresh_counters = { LocationPopulationChanged }",
-    ),
-    "pp_pop_delta_area": (
-        "category = population",
-        "index = 1",
-        "pp_pop_delta_area_pct",
-        "has_variable = pp_area_pop_baseline",
-        "small_map_names = area",
-        "small_tooltip_context = location",
-        "MAPMODE_PP_POP_DELTA_AREA_TT_LAND",
-        "MAPMODE_PP_POP_DELTA_MINUS_100",
-        "color_refresh_counters = { LocationPopulationChanged }",
-    ),
-    "pp_pop_delta_region": (
-        "category = population",
-        "index = 1",
-        "pp_pop_delta_region_pct",
-        "has_variable = pp_region_pop_baseline",
-        "small_map_names = region",
-        "small_tooltip_context = location",
-        "MAPMODE_PP_POP_DELTA_REGION_TT_LAND",
-        "MAPMODE_PP_POP_DELTA_MINUS_100",
-        "color_refresh_counters = { LocationPopulationChanged }",
-    ),
-    "pp_pop_delta_macro_region": (
-        "category = population",
-        "index = 1",
-        "pp_pop_delta_macro_region_pct",
-        "has_variable = pp_macro_region_pop_baseline",
-        "small_map_names = sub_continent",
-        "small_tooltip_context = location",
-        "MAPMODE_PP_POP_DELTA_MACRO_REGION_TT_LAND",
-        "MAPMODE_PP_POP_DELTA_MINUS_100",
-        "color_refresh_counters = { LocationPopulationChanged }",
-    ),
-    "pp_pop_delta_super_region": (
-        "category = population",
-        "index = 1",
-        "pp_pop_delta_super_region_pct",
-        "has_variable = pp_super_region_pop_baseline",
-        "small_map_names = continent",
-        "small_tooltip_context = location",
-        "MAPMODE_PP_POP_DELTA_SUPER_REGION_TT_LAND",
-        "MAPMODE_PP_POP_DELTA_MINUS_100",
-        "color_refresh_counters = { LocationPopulationChanged }",
-    ),
     "pp_population_growth": (
         "category = population",
         "index = 1",
@@ -152,16 +66,6 @@ STRUCTURE_SNIPPETS = {
         "define:NMapColors|POPULATION_STARVING_COLOR_STRIPE",
         "MAPMODE_PP_POPULATION_GROWTH_STARVING",
         "color_refresh_counters = { LocationDevelopmentChanged LocationPopulationChanged }",
-    ),
-    "pp_market_food_price": (
-        "category = economy",
-        "index = 3",
-        "small_map_names = market",
-        "small_tooltip_context = market",
-        "market_marker = yes",
-        "toll_marker = yes",
-        "map_lines_mode = ToMarketCenter",
-        "color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }",
     ),
     "pp_victuals_price": (
         "category = economy",
@@ -422,109 +326,17 @@ def test_arable_land_lives_in_the_farming_capacity_map_mode() -> None:
     assert not stray
 
 
-def test_population_capacity_density_debug_mode_uses_fixed_density_buckets() -> None:
-    block = _all_blocks()["pp_population_capacity_density"]
-    text = LOCALIZATION.read_text(encoding="utf-8-sig")
-
-    assert _thresholds(block, "modifier:pp_population_capacity_density") == [
-        10.0,
-        25.0,
-        50.0,
-        100.0,
-        150.0,
-        250.0,
-        400.0,
-        600.0,
-    ]
-    assert block.count("lerp = {") == 8
-    assert block.count("legend_key =") == 9
-    assert "category = debug" in block
-    assert "index = 2" in block
-    assert "MAPMODE_PP_POPULATION_CAPACITY_DENSITY" in text
-    assert "people/km²" in text
-
-
-def test_population_delta_debug_modes_use_shared_percent_change_scale() -> None:
+def test_removed_debug_and_market_food_map_modes_stay_gone() -> None:
+    """Density debug view, population-delta modes and the Market Food Price map were removed before release."""
     blocks = _all_blocks()
-    text = LOCALIZATION.read_text(encoding="utf-8-sig")
-    modes = (
-        ("pp_pop_delta_location", "pp_pop_delta_location_pct", "location", "pp_pop_baseline"),
-        ("pp_pop_delta_province", "pp_pop_delta_province_pct", "province", "pp_province_pop_baseline"),
-        ("pp_pop_delta_area", "pp_pop_delta_area_pct", "area", "pp_area_pop_baseline"),
-        ("pp_pop_delta_region", "pp_pop_delta_region_pct", "region", "pp_region_pop_baseline"),
-        (
-            "pp_pop_delta_macro_region",
-            "pp_pop_delta_macro_region_pct",
-            "sub_continent",
-            "pp_macro_region_pop_baseline",
-        ),
-        (
-            "pp_pop_delta_super_region",
-            "pp_pop_delta_super_region_pct",
-            "continent",
-            "pp_super_region_pop_baseline",
-        ),
-    )
-
-    for mode, value_source, scope_name, baseline_var in modes:
-        block = blocks[mode]
-        assert _thresholds(block, value_source) == [
-            -1.0,
-            -0.5,
-            0.0,
-            0.1,
-            0.5,
-            2.0,
-        ]
-        assert block.count("lerp = {") >= 4
-        assert block.count("legend_key =") == 11
-        # Not debug: vanilla gates the debug map-mode menu behind [IsBuildDebug] in
-        # hud_bot.gui, so a debug-category mode is unreachable in a retail build.
-        assert "category = population" in block
-        assert "index = 1" in block
-        assert f"small_map_names = {scope_name}" in block
-        assert "small_tooltip_context = location" in block
-        assert f"has_variable = {baseline_var}" in block
-        assert f"mapmode_{mode}_name" in text
-        assert f"MAPMODE_{mode.upper()}" in text
-        assert f"MAPMODE_{mode.upper()}_TT_LAND" in text
-        assert "Saved:" in text
-        assert "Current:" in text
-        assert "Change:" in text
-        # -50%..0% must lerp so mid-range losses (e.g. -17%) are not solid MID.
-        assert f"{value_source} < @pp_pop_delta_zero" in block
-        assert "add = 0.5" in block
-        assert "divide = 0.5" in block
-
-    assert "event pp_population_baseline_debug.1" in text
-    assert "MAPMODE_PP_POP_DELTA_MINUS_100" in text
-    assert "MAPMODE_PP_POP_DELTA_MINUS_25" in text
-    assert "MAPMODE_PP_POP_DELTA_PLUS_10" in text
-    assert "MAPMODE_PP_POP_DELTA_PLUS_50" in text
-    assert "MAPMODE_PP_POP_DELTA_PLUS_200" in text
-    assert "MAPMODE_PP_POP_DELTA_NO_BASELINE" in text
-
-
-def test_market_food_price_uses_reference_centered_buckets() -> None:
-    block = _all_blocks()["pp_market_food_price"]
-    scale = json.loads(CALIBRATION.read_text(encoding="utf-8"))["scales"]["market_food_price"]
-
-    expected_thresholds = [
-        *[float(value) for value in scale["low_thresholds"]],
-        float(scale["reference"]),
-        *[float(value) for value in scale["high_thresholds"]],
-    ]
-    assert _thresholds(block, "market.food_price") == expected_thresholds
-    assert block.count("lerp = {") == 4
-    assert "@pp_market_food_price_max" not in block
-    assert "divide = @pp_market_food_price_max" not in block
-    assert "MAPMODE_PP_MARKET_FOOD_PRICE_VERY_CHEAP" in block
-    assert "MAPMODE_PP_MARKET_FOOD_PRICE_CHEAP" in block
-    assert "MAPMODE_PP_MARKET_FOOD_PRICE_NEUTRAL" in block
-    assert "MAPMODE_PP_MARKET_FOOD_PRICE_EXPENSIVE" in block
-    assert "MAPMODE_PP_MARKET_FOOD_PRICE_SEVERE" in block
-    assert "min_color = define:NMapColors|MAP_COLOR_MAX" in block
-    assert "max_color = define:NMapColors|MAP_COLOR_MIN" in block
+    for mode in (
+        "pp_population_capacity_density",
+        "pp_market_food_price",
+        *(f"pp_pop_delta_{scope}" for scope in ("location", "province", "area", "region", "macro_region", "super_region")),
+    ):
+        assert mode not in blocks
+    assert not (MAP_MODE_ROOT / "pp_population_delta_map_modes.txt").exists()
+    assert "market_food_price" not in json.loads(CALIBRATION.read_text(encoding="utf-8"))["scales"]
 
 
 def test_victuals_price_uses_default_price_centered_buckets() -> None:
@@ -875,54 +687,10 @@ def test_custom_map_mode_localization_uses_traffic_light_copy_without_hardcoded_
     assert not re.search(r"(?<!\d)0-70(?!\d)", text)
     assert "Red marks scarce capacity" in text
     assert "Green marks low unemployment" in text
-    assert "yellow marks the base price" in text
-
-
-def test_population_delta_map_modes_have_picker_icons_and_concept_localization() -> None:
-    """Every pop-delta map mode needs a DDS, a game concept and that concept's loc keys.
-
-    A concept without `game_concept_<id>` / `_desc` still renders its icon but logs
-    "Missing localization key" on every load.
-    """
-    concepts = MOD_ROOT / "main_menu" / "common" / "game_concepts" / "pp_pop_delta_map_modes.txt"
-    assert concepts.is_file()
-    concept_text = concepts.read_text(encoding="utf-8-sig")
-    text = LOCALIZATION.read_text(encoding="utf-8-sig")
-
-    missing: list[str] = []
-    for mode in (
-        "pp_pop_delta_location",
-        "pp_pop_delta_province",
-        "pp_pop_delta_area",
-        "pp_pop_delta_region",
-        "pp_pop_delta_macro_region",
-        "pp_pop_delta_super_region",
-    ):
-        icon = (
-            MOD_ROOT
-            / "main_menu"
-            / "gfx"
-            / "interface"
-            / "icons"
-            / "map_modes"
-            / f"{mode}.dds"
-        )
-        if not icon.is_file():
-            missing.append(f"{mode}: icon")
-        if f'{mode} = {{' not in concept_text:
-            missing.append(f"{mode}: concept block")
-        if f'texture = "map_modes/{mode}"' not in concept_text:
-            missing.append(f"{mode}: concept texture")
-        if f"game_concept_{mode}:" not in text:
-            missing.append(f"{mode}: game_concept loc")
-        if f"game_concept_{mode}_desc:" not in text:
-            missing.append(f"{mode}: game_concept desc loc")
-
-    assert not missing
 
 
 def test_every_mod_game_concept_has_localization() -> None:
-    """Guards the whole game_concepts folder, not just the pop-delta ones."""
+    """Guards the whole game_concepts folder."""
     concept_dir = MOD_ROOT / "main_menu" / "common" / "game_concepts"
     loc_dir = MOD_ROOT / "main_menu" / "localization" / "english"
     loc_text = "\n".join(

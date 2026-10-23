@@ -94,11 +94,12 @@ def test_active_rgo_cost_assignments_are_generated_redirect_dependencies() -> No
     generated = _generated_redirect_blocks()
 
     # EU5 1.4 added 15 country/culture advances and two static modifiers that cut RGO expansion cost.
-    # Pasture Access is redirected by hand since 2026-10-11 (pp_estate_privilege_adjustments.txt).
-    assert len(assignments) == 74
+    # Pasture Access is redirected by hand since 2026-10-11 (pp_estate_privilege_adjustments.txt), Efficient Mining
+    # since 2026-10-24 (pp_local_resource_productivity_advances.txt): blocks the mod replaces keep one owner.
+    assert len(assignments) == 73
     assert Counter(assignment.method for assignment in assignments) == {
         "farming": 35,
-        "mining": 24,
+        "mining": 23,
         "forestry": 6,
         "hunting": 5,
         "gathering": 4,
@@ -241,6 +242,51 @@ def test_pasture_access_is_redirected_by_hand() -> None:
     assert "expand_rgo_farming_cost_modifier" not in block
     assert "global_rural_build_buildings_efficiency = 0.01" in block
     assert "research_speed = -0.075" in block
+
+
+def test_efficient_mining_is_redirected_by_hand_and_never_replaced_twice() -> None:
+    # The mod REPLACEs efficient_mining by hand; a generated TRY_REPLACE of the same block would be a second owner.
+    path = MOD_ROOT / "in_game" / "common" / "advances" / "pp_local_resource_productivity_advances.txt"
+    block = {entry.key: entry.value for entry in parse_file(path).entries}["REPLACE:efficient_mining"]
+    values = _numeric_values(block)
+    assert "expand_rgo_mining_cost_modifier" not in values
+    assert values[RGO_COST_REDIRECT_FALLBACK_MODIFIER] == _fallback_rural_efficiency_value(-0.1)
+    assert values["global_copper_output_modifier"] == 0.1
+
+    profile = load_profile("constructor", LOAD_ORDER)
+    generated = _generated_redirect_blocks()
+    for scope, collection in RGO_COST_REDIRECT_COLLECTIONS:
+        replaced = _mod_replaced_keys(profile, scope, collection)
+        assert replaced.isdisjoint(generated.get((scope, collection), {})), (scope, collection)
+
+
+def test_generated_redirects_write_each_modifier_once_per_block() -> None:
+    # Two redirected lines in one block (parl_rural_crafts_mod, laws_of_burgos) sum into one line.
+    written = {RGO_COST_REDIRECT_FALLBACK_MODIFIER, *RGO_COST_MODIFIERS.values()}
+
+    def duplicates(block: CList, where: str) -> list[str]:
+        found = [
+            f"{where}: {key}"
+            for key, count in Counter(entry.key for entry in block.entries if not isinstance(entry.value, CList)).items()
+            if count > 1 and key in written
+        ]
+        for entry in block.entries:
+            if isinstance(entry.value, CList):
+                found.extend(duplicates(entry.value, f"{where}/{entry.key}"))
+        for item in block.items:
+            if isinstance(item, CList):
+                found.extend(duplicates(item, where))
+        return found
+
+    offenders = [
+        offender
+        for (scope, collection), blocks in _generated_redirect_blocks().items()
+        for top_key, block in blocks.items()
+        for offender in duplicates(block, f"{scope}/{collection}/{top_key}")
+    ]
+    assert offenders == []
+    laws = (MOD_ROOT / "in_game" / "common" / "laws" / RGO_COST_REDIRECT_FILE).read_text(encoding="utf-8-sig")
+    assert f"{RGO_COST_REDIRECT_FALLBACK_MODIFIER} = 0.2" in laws
 
 
 def test_rural_efficiency_fallback_is_half_magnitude_rounded_to_two_decimals() -> None:

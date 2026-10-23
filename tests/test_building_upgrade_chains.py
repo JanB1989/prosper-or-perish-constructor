@@ -674,18 +674,6 @@ def _normalized_first_script_block(text: str, name: str) -> str:
     return "\n".join(lines)
 
 
-def _enclosing_script_block(
-    blocks: list[tuple[int, int, str]], position: int, name: str
-) -> tuple[int, int, str]:
-    candidates = [block for block in blocks if block[0] <= position < block[1]]
-    assert candidates, f"{name} block missing around character {position}"
-    return min(candidates, key=lambda block: block[1] - block[0])
-
-
-def _script_line_number(text: str, position: int) -> int:
-    return text.count("\n", 0, position) + 1
-
-
 def _inline_production_method_blocks(body: str) -> dict[str, str]:
     blocks: dict[str, str] = {}
     pattern = re.compile(r"(?m)^[ \t]*(pp_[A-Za-z0-9_]+)\s*=\s*\{")
@@ -1498,6 +1486,17 @@ def test_lake_shores_get_their_modifier_from_the_setup() -> None:
     assert "pp_apply_adjacent_to_lake_modifier" not in text
     setup = (GAME_START_PATH.parents[3] / "main_menu/setup/1337/21_pp_wb_attribute_modifiers.txt").read_text(encoding="utf-8-sig")
     assert setup.count("pp_wb_lake") > 1000
+
+
+def test_game_start_carries_no_dead_cleanup_blocks() -> None:
+    """The never-called RGO cut, lake marker and invalid-building cull were removed before release."""
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    modifier_text = LOCATION_MODIFIER_ADJUSTMENTS_PATH.read_text(encoding="utf-8-sig")
+
+    for name in ("pp_reduce_specific_rgo", "pp_apply_adjacent_to_lake_modifier", "pp_remove_invalid_buildings"):
+        assert name not in text
+    assert "is_adjacent_to_lake" not in text
+    assert re.search(r"^is_adjacent_to_lake\s*=\s*\{", modifier_text, flags=re.M) is None
 
 
 def test_game_start_places_no_buildings_at_runtime() -> None:

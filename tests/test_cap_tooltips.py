@@ -99,7 +99,8 @@ def test_every_land_farm_shows_its_land_once() -> None:
 def test_farm_cap_rows_link_arable_land() -> None:
     """The farm max-level rows speak of Arable Land (the population capacity, renamed 2026-10-10; the Farmland concept
     is gone): "Free Arable Land" and the farm's own levels."""
-    text = "".join(p.read_text(encoding="utf-8-sig") for p in LOCALIZATION.glob("*.yml"))
+    # english and replace (vanilla keys such as game_concept_population_capacity live in replace, loc_replace.py)
+    text = "".join(p.read_text(encoding="utf-8-sig") for p in LOCALIZATION.parent.rglob("*.yml"))
     for key in ("BUILDING_LEVEL_WB_FREE_FARMLAND", "PP_BUILDING_LEVEL_FARM_OWN_LEVELS"):
         assert f"\n  {key}:" in text, key
     assert "local_pp_farmland_used" not in text and "farm_capacity_from_" not in text

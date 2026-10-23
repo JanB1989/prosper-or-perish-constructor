@@ -348,12 +348,13 @@ def _depth(block: CList, key: str) -> int:
 
 def test_display_values_read_the_carried_step() -> None:
     text = "\n" + _read(MOD_ROOT / stored_food.SCRIPT_VALUES)
-    years = _block(text, "pp_stored_food_years")
+    step = _block(text, "pp_stored_food_step")
     assert re.search(
         r"province \?= \{\s*if = \{\s*limit = \{ has_variable = pp_food_store_step var:pp_food_store_step > 99.5 \}\s*"
-        r"add = var:pp_food_store_step\s*subtract = 100\s*\}\s*\}\s*divide = 12\s*min = 0",
-        years,
+        r"add = var:pp_food_store_step\s*subtract = 99\.0\s*\}\s*\}",
+        step,
     )
+    assert "pp_stored_food_years" not in text   # removed 2026-10-24: nothing in the game read it
     growth = _block(text, "pp_province_food_storage_growth")
     # one branch per step, the step's growth as written (growth_by_month)
     assert "else_if = { limit = { var:pp_food_store_step < 118.5 } add = 0.009 }" in growth

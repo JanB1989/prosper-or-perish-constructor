@@ -863,7 +863,6 @@ def test_fish_and_forest_fixed_environment_paths_are_removed() -> None:
     )
 
     required = (
-        "pp_farm_base_capacity_value",
         "pp_fish_base_capacity_value",
         "pp_forest_base_capacity_value",
         "fish_capacity",
@@ -874,6 +873,7 @@ def test_fish_and_forest_fixed_environment_paths_are_removed() -> None:
     assert not missing
 
     obsolete = (
+        "pp_farm_base_capacity_value",   # never-read static farm value, removed 2026-10-24
         "pp_fishing_village_fixed_env_bonus",
         "pp_forest_village_fixed_env_bonus",
         "pp_fishing_village_capacity_value",
@@ -903,6 +903,10 @@ def test_fish_and_forest_fixed_environment_paths_are_removed() -> None:
     )
     offenders = [token for token in obsolete if token in combined]
     assert offenders == []
+    # their modifier type icons went with them (removed before release)
+    icons = MOD_ROOT / "main_menu" / "gfx" / "interface" / "icons" / "modifier_types"
+    stale = ("fishing_village_max_level_modifier.dds", "forest_village_max_level_modifier.dds")
+    assert [name for name in stale if (icons / name).exists()] == []
 
 
 def _tooltip_helpers(text: str) -> set[str]:
@@ -1270,19 +1274,12 @@ def test_general_farm_eligibility_triggers_are_conservative() -> None:
     trigger_text = (
         MOD_ROOT / "in_game" / "common" / "scripted_triggers" / "pp_startup_building_compatibility.txt"
     ).read_text(encoding="utf-8-sig")
-    farm_base_block = _text_block_between(
-        capacity_text,
-        "pp_farm_base_capacity_value = {",
-        "\npp_fish_base_capacity_value = {",
-    )
+    # never-called leftovers, removed 2026-10-24
+    assert "pp_farm_base_capacity_value" not in capacity_text
+    assert "pp_orchard_friendly_location_potential" not in trigger_text
     general_block = _text_block_between(
         trigger_text,
         "pp_general_farmable_food_location_potential = {",
-        "\npp_orchard_friendly_location_potential = {",
-    )
-    orchard_block = _text_block_between(
-        trigger_text,
-        "pp_orchard_friendly_location_potential = {",
         "\npp_pasture_friendly_location_potential = {",
     )
     pasture_block = _text_block_between(
@@ -1305,21 +1302,6 @@ def test_general_farm_eligibility_triggers_are_conservative() -> None:
             "wool",
             "beeswax",
         ),
-        orchard_block: (
-            "fruit",
-            "olives",
-            "wine",
-            "wheat",
-            "maize",
-            "rice",
-            "millet",
-            "legumes",
-            "potato",
-            "livestock",
-            "beeswax",
-            "silk",
-            "tea",
-        ),
         pasture_block: ("wool", "livestock", "horses"),
     }
     forbidden = ("fish", "clay", "lumber", "stone", "tin", "silver", "gold", "goods_gold", "gems", "saltpeter", "amber")
@@ -1332,28 +1314,6 @@ def test_general_farm_eligibility_triggers_are_conservative() -> None:
             assert f"raw_material = goods:{good}" not in block
 
     assert "vegetation = farmland" in general_block
-    for accepted_old_warning_good in ("wheat", "rice", "legumes", "livestock", "silk", "beeswax", "wine"):
-        assert f"raw_material = goods:{accepted_old_warning_good}" in orchard_block
-    for rejected_old_warning_good in ("clay", "fish", "tin", "silver", "goods_gold", "gems", "saltpeter", "amber"):
-        assert f"raw_material = goods:{rejected_old_warning_good}" not in orchard_block
-    assert "raw_material = goods:beeswax" in farm_base_block
-
-    orchard_goods_order = re.findall(r"raw_material = goods:(\w+)", orchard_block)
-    assert orchard_goods_order == [
-        "livestock",
-        "wheat",
-        "millet",
-        "legumes",
-        "fruit",
-        "rice",
-        "beeswax",
-        "maize",
-        "wine",
-        "silk",
-        "potato",
-        "tea",
-        "olives",
-    ]
 
 
 def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> None:
@@ -1413,15 +1373,10 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
         / "scripted_triggers"
         / "pp_startup_building_compatibility.txt"
     ).read_text(encoding="utf-8-sig")
-    farm_base_block = _text_block_between(
-        capacity_text,
-        "pp_farm_base_capacity_value = {",
-        "\npp_fish_base_capacity_value = {",
-    )
     general_farm_block = _text_block_between(
         trigger_text,
         "pp_general_farmable_food_location_potential = {",
-        "\npp_orchard_friendly_location_potential = {",
+        "\npp_pasture_friendly_location_potential = {",
     )
     granary_text = (BUILDING_BLUEPRINT_ROOT / "granary.yml").read_text(encoding="utf-8-sig")
     fishing_potential_block = _accepted_blueprint_building_values("fishing_village")[
@@ -1452,7 +1407,6 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
     assert "var:pp_fruit_orchard_eligible > 0" in fruit_text
     assert "pp_fruit_orchard_location_potential = yes" in fruit_text
     assert "pp_vanilla_start_fruit_orchard_location" not in fruit_text
-    assert "raw_material = goods:beeswax" in farm_base_block
     assert "raw_material = goods:beeswax" in general_farm_block
     assert "vegetation = farmland" in general_farm_block
     assert "is_coastal" in fishing_potential
@@ -1527,6 +1481,15 @@ def test_fruit_and_sheep_families_use_shared_eligibility_gates() -> None:
     assert "var:pp_fruit_orchard_eligible > 0" in fruit_text
     assert "NOT = { has_variable = pp_fruit_orchard_eligible }" in fruit_text
 
+    game_start = GAME_START.read_text(encoding="utf-8-sig")
+    assert "pp_remove_invalid_buildings" not in game_start   # never-called cull, removed before release
+    assert "building_type:farming_village" not in game_start
+    assert "pp_orchard_friendly_location_potential" not in game_start
+    assert "pp_general_farmable_food_location > 0" not in game_start
+    assert "pp_orchard_friendly_location > 0" not in game_start
+    assert "pp_pasture_friendly_location > 0" not in game_start
+    assert "NOT = { raw_material = goods:fruit }" not in game_start
+    assert "NOT = { raw_material = goods:wool }" not in game_start
 
     rgo_effects = RGO_STATIC_BONUS_EFFECTS.read_text(encoding="utf-8-sig")
     assert "pp_refresh_fruit_orchard_eligibility" in rgo_effects
@@ -1723,83 +1686,6 @@ def test_fish_and_forest_capacity_maps_use_current_capacity_and_tooltips_show_so
     assert "Available Capacity:" not in localization_text
     assert "Gross Capacity:" not in localization_text
     assert "Fishing Capacity modifiers, including river size and town rights" not in localization_text
-
-
-def test_market_food_price_map_mode_uses_market_price_scale_and_assets() -> None:
-    map_text = FOOD_MAP_MODES.read_text(encoding="utf-8-sig")
-    localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
-        encoding="utf-8-sig"
-    )
-    block = _text_block_between(
-        map_text,
-        "pp_market_food_price = {",
-        "\npp_victuals_price = {",
-    )
-
-    assert "@pp_market_food_price_neutral = 0.12" in map_text
-    assert "@pp_market_food_price_cheap = 0.054" in map_text
-    assert "@pp_market_food_price_expensive = 0.171" in map_text
-    required_map_snippets = (
-        "value = market.food_price",
-        "limit = { has_owner = yes }",
-        "min_color = define:NMapColors|MAP_COLOR_MAX",
-        "max_color = define:NMapColors|MAP_COLOR_MIN",
-        "market.food_price < @pp_market_food_price_cheap",
-        "market.food_price < @pp_market_food_price_neutral",
-        "market.food_price < @pp_market_food_price_expensive",
-        "max = 1",
-        "min = 0",
-        "category = economy",
-        "small_map_names = market",
-        "market_marker = yes",
-        "color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }",
-        "map_lines_mode = ToMarketCenter",
-        "MAPMODE_PP_MARKET_FOOD_PRICE_VERY_CHEAP",
-        "MAPMODE_PP_MARKET_FOOD_PRICE_CHEAP",
-        "MAPMODE_PP_MARKET_FOOD_PRICE_NEUTRAL",
-        "MAPMODE_PP_MARKET_FOOD_PRICE_EXPENSIVE",
-        "MAPMODE_PP_MARKET_FOOD_PRICE_SEVERE",
-    )
-    missing_map_snippets = [snippet for snippet in required_map_snippets if snippet not in block]
-    assert not missing_map_snippets
-    assert block.count("lerp = {") == 4
-
-    required_localization = (
-        "mapmode_pp_market_food_price_name",
-        "MAPMODE_PP_MARKET_FOOD_PRICE",
-        "MAPMODE_PP_MARKET_FOOD_PRICE_VERY_CHEAP",
-        "MAPMODE_PP_MARKET_FOOD_PRICE_CHEAP",
-        "MAPMODE_PP_MARKET_FOOD_PRICE_NEUTRAL",
-        "MAPMODE_PP_MARKET_FOOD_PRICE_EXPENSIVE",
-        "MAPMODE_PP_MARKET_FOOD_PRICE_SEVERE",
-        "MAPMODE_PP_MARKET_FOOD_PRICE_TT_LAND",
-        "MAPMODE_PP_MARKET_FOOD_PRICE_TT_WATER",
-        "[Market.GetName]",
-        "[Market.GetFoodPrice|2]",
-    )
-    missing_localization = [
-        snippet for snippet in required_localization if snippet not in localization_text
-    ]
-    assert not missing_localization
-
-    assert (
-        MOD_ROOT
-        / "main_menu"
-        / "gfx"
-        / "interface"
-        / "icons"
-        / "map_modes"
-        / "pp_market_food_price.dds"
-    ).is_file()
-    assert not (
-        MOD_ROOT
-        / "in_game"
-        / "gfx"
-        / "interface"
-        / "icons"
-        / "map_modes"
-        / "pp_market_food_price.dds"
-    ).exists()
 
 
 def test_victuals_price_map_mode_uses_default_relative_scale_and_assets() -> None:
@@ -2018,8 +1904,7 @@ def test_yearly_closed_building_review_is_removed() -> None:
     assert not (MOD_ROOT / "in_game" / "events" / "debug" / "pp_ai_building_review_debug.txt").exists()
     assert not (SCRIPT_VALUES_ROOT / "pp_ai_building_review.txt").exists()
     assert not VICTUALS_IMPORT_TRIGGERS.exists()
-    localization = (LOCALIZATION_ROOT / "pp_debug_l_english.yml").read_text(encoding="utf-8-sig")
-    assert "pp_ai_building_review_debug" not in localization
+    assert not (LOCALIZATION_ROOT / "pp_debug_l_english.yml").exists()   # debug loc removed 2026-10-24
     scripts = [*(MOD_ROOT / "in_game" / "common").rglob("*.txt"), *(MOD_ROOT / "in_game" / "events").rglob("*.txt")]
     for path in scripts:
         text = path.read_text(encoding="utf-8-sig", errors="replace")
@@ -2111,64 +1996,15 @@ def test_four_yearly_zero_rgo_floor_repairs_owned_locations_for_all_countries() 
     assert "every_location_in_the_world" not in action_text
 
 
-def test_capacity_culling_debug_event_runs_same_global_four_year_action() -> None:
-    event_entries = {entry.key: entry.value for entry in parse_file(CAPACITY_CULLING_DEBUG_EVENT).entries}
-    assert "pp_capacity_culling_debug.1" in event_entries
-
-    event = event_entries["pp_capacity_culling_debug.1"]
-    assert isinstance(event, CList)
-    event_values = _entry_values(event)
-    assert event_values["type"] == "country_event"
-    assert event_values["orphan"] is True
-
-    immediate = event_values["immediate"]
-    assert isinstance(immediate, CList)
-    global_scope = _entry_values(immediate)["every_country"]
-    assert isinstance(global_scope, CList)
-    assert _entry_values(global_scope)["pp_cull_capacity_buildings_over_max_v2_effect"] is True
-
-    event_text = CAPACITY_CULLING_DEBUG_EVENT.read_text(encoding="utf-8-sig")
-    assert "pp_cull_capacity_building_above_max" not in event_text
-    assert "change_building_level_in_location" not in event_text
-    assert "every_owned_location" not in event_text
-
-    localization = (LOCALIZATION_ROOT / "pp_debug_l_english.yml").read_text(encoding="utf-8-sig")
-    assert "pp_capacity_culling_debug.1.title" in localization
-    assert (
-        'pp_capacity_culling_debug.1.desc: "Runs the same capacity building culling on-action '
-        'used by the four-year country pulse for every country."'
-    ) in localization
-
-
-def test_monthly_market_food_stockpile_topup_is_defined_but_weather_hook_is_disabled() -> None:
+def test_console_debug_events_and_market_food_topup_are_gone() -> None:
     # no script rides the yearly country pulse (the closed-building review was removed 2026-10-01)
     assert not COUNTRY_YEARLY.exists()
-    # the empty weather-pulse hook of the disabled stockpile top-up is gone (2026-10-03: it ran an empty effect on every
-    # location each month); the top-up effect itself stays defined for a test run
+    # removed before release (2026-10-24): the never-called market food top-up and the console debug events
     assert not MARKET_FOOD_PRICE_EXTREME_ON_ACTION.exists()
-
-    text = MARKET_FOOD_PRICE_EXTREMES.read_text(encoding="utf-8-sig")
-    entries = {entry.key: entry.value for entry in parse_file(MARKET_FOOD_PRICE_EXTREMES).entries}
-
-    assert "pp_monthly_market_food_stockpile_topup" in entries
-    assert "pp_add_market_center_province_food_from_market_max" in entries
-
-    assert "has_global_variable = pp_market_food_price_extreme_checked" not in text
-    assert "name = pp_market_food_price_extreme_checked" not in text
-    assert "years = 1" not in text
-    assert text.count("every_market_in_world") == 1
-    assert "market_food_percentage < 0.05" in text
-    assert "market_food_percentage < 0.01" not in text
-    assert "market_food_percentage > 0.99" not in text
-    assert "market_max_food" in text
-    assert "multiply = 0.05" in text
-    assert "location = {" in text
-    assert "province = {" in text
-    assert "change_province_food" in text
-    assert "debug_log" not in text
-    assert "add_goods_supply" not in text
-    assert "victuals" not in text
-    assert "target_price" not in text
+    assert not MARKET_FOOD_PRICE_EXTREMES.exists()
+    assert not CAPACITY_CULLING_DEBUG_EVENT.exists()
+    assert not COLUMBIAN_EXCHANGE_DEBUG_EVENT.exists()
+    assert not (MOD_ROOT / "in_game" / "events" / "debug" / "pp_population_baseline_debug.txt").exists()
 
 
 def test_capacity_culling_v2_calls_helper_for_each_capacity_building() -> None:
@@ -2517,11 +2353,57 @@ def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -
 
 def test_victuals_pop_demand_uses_scalar_database_value() -> None:
     entries = {entry.key: entry.value for entry in parse_file(GOODS_DEMAND).entries}
-    pop_demand = entries["INJECT:pop_demand"]
+    pop_demand = entries["REPLACE:pop_demand"]
     assert isinstance(pop_demand, CList)
 
     values = _entry_values(pop_demand)
     assert values["victuals"] == 1
+
+
+def _vanilla_goods_demand_objects() -> dict[str, dict[str, object]]:
+    load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
+    folder = load_order.vanilla_root / "game" / "in_game" / "common" / "goods_demand"
+    objects: dict[str, dict[str, object]] = {}
+    for path in sorted(folder.glob("*.txt")):
+        for entry in parse_file(path).entries:
+            if isinstance(entry.value, CList):
+                objects[entry.key] = _entry_values(entry.value)
+    return objects
+
+
+def test_pop_demand_replace_keeps_vanilla_content() -> None:
+    """The game rejects an INJECT of a good vanilla's pop_demand already lists ("Goods already specified"), so PP
+    REPLACEs the object: every vanilla good stays, only PP's deliberate values differ."""
+    vanilla = _vanilla_goods_demand_objects()["pop_demand"]
+    values = _entry_values({e.key: e.value for e in parse_file(GOODS_DEMAND).entries}["REPLACE:pop_demand"])
+    assert set(vanilla) <= set(values)
+    assert set(values) - set(vanilla) == {"victuals", "silk"}
+    changed = {key for key in vanilla if str(values[key]) != str(vanilla[key])}
+    assert changed == {"wheat", "rice", "millet", "maize", "potato", "legumes", "livestock", "fish", "wild_game",
+                       "camels", "fruit", "olives", "horses", "salt", "tea", "cocoa"}
+    assert values["category"] == "pop_needs"
+
+
+def test_no_mod_file_injects_goods_vanilla_demand_objects_already_list() -> None:
+    """An INJECT/TRY_INJECT of a good the vanilla goods_demand object already lists is rejected by the game, and an
+    inject into an object the mod REPLACEs is ignored; such values must live in the mod's REPLACE."""
+    vanilla = _vanilla_goods_demand_objects()
+    replaced: set[str] = set()
+    injects: list[tuple[str, str, dict[str, object]]] = []
+    for path in sorted((MOD_ROOT / "in_game" / "common" / "goods_demand").glob("*.txt")):
+        for entry in parse_file(path).entries:
+            mode, _, name = entry.key.rpartition(":")
+            if mode in {"REPLACE", "TRY_REPLACE", "REPLACE_OR_CREATE"}:
+                replaced.add(name)
+            elif mode in {"INJECT", "TRY_INJECT", "INJECT_OR_CREATE"} and isinstance(entry.value, CList):
+                injects.append((path.name, name, _entry_values(entry.value)))
+    offenders = [
+        (file, name, sorted(set(values) & set(vanilla.get(name, {})) - {"category"}))
+        for file, name, values in injects
+        if set(values) & set(vanilla.get(name, {})) - {"category"}
+    ]
+    assert offenders == []
+    assert [(file, name) for file, name, _ in injects if name in replaced] == []
 
 
 def test_alum_takes_a_share_of_lumber_but_dyes_keep_an_alum_free_recipe() -> None:
@@ -2548,7 +2430,7 @@ def test_alum_takes_a_share_of_lumber_but_dyes_keep_an_alum_free_recipe() -> Non
 def test_silk_is_a_farmed_upper_class_luxury() -> None:
     """2026-10-14 (Jan): pops (upper classes) demand silk, tea and cocoa demand is cut, fiber crops make silk only when
     it is dear (guild output 0.6 -> 0.3) and sericulture farms carry silk (0.2 / 0.3 silk per level)."""
-    demand = _entry_values({e.key: e.value for e in parse_file(GOODS_DEMAND).entries}["INJECT:pop_demand"])
+    demand = _entry_values({e.key: e.value for e in parse_file(GOODS_DEMAND).entries}["REPLACE:pop_demand"])
     assert float(demand["silk"]) == 1 and float(demand["tea"]) == 0.6 and float(demand["cocoa"]) == 0.7
     goods = {e.key: e.value for e in parse_file(MOD_ROOT / "in_game/common/goods/pp_goods_adjustments.txt").entries}
     silk = {e.key: e.value for e in goods["TRY_INJECT:silk"].entries}
@@ -2600,7 +2482,7 @@ def test_staple_and_horse_pop_demand_cut() -> None:
     """2026-10-14 (Jan): pops' demand for every staple food (goods_categories.csv staple_group) and horses ~30 % below
     vanilla's pop_demand multipliers (1, wheat 0.75, fruit 0.5); wool has no pop demand."""
     entries = {entry.key: entry.value for entry in parse_file(GOODS_DEMAND).entries}
-    values = _entry_values(entries["INJECT:pop_demand"])
+    values = _entry_values(entries["REPLACE:pop_demand"])
     vanilla = {"wheat": 0.75, "fruit": 0.5}
     staples = [row["good"] for row in csv.DictReader((ROOT / "config/goods_categories.csv").open(encoding="utf-8"))
                if row["staple_group"] and row["good"] != "wool"]
@@ -3153,33 +3035,6 @@ def test_columbian_exchange_actions_refresh_rgo_bonus_after_raw_material_swap() 
     assert action_text.count(
         "change_raw_material = scope:target_good\n\t\t\tpp_refresh_rgo_static_bonus = yes"
     ) == 2
-
-
-def test_columbian_exchange_debug_event_refreshes_after_raw_material_swap() -> None:
-    event_text = COLUMBIAN_EXCHANGE_DEBUG_EVENT.read_text(encoding="utf-8-sig")
-    entries = {entry.key: entry.value for entry in parse_file(COLUMBIAN_EXCHANGE_DEBUG_EVENT).entries}
-
-    assert "pp_columbian_exchange_debug.1" in entries
-    assert "activate_situation = situation:columbian_exchange" in event_text
-    assert "set_variable = { name = is_in_columbian_exchange value = yes }" in event_text
-    assert "change_raw_material = goods:maize" in event_text
-    assert "change_raw_material = goods:potato" in event_text
-    assert "pp_refresh_rgo_static_bonus = yes" in event_text
-    assert "pp_refresh_fruit_orchard_eligibility = yes" in event_text
-    assert event_text.count(
-        "change_raw_material = goods:maize\n\t\t\t}\n\t\t\tpp_refresh_rgo_static_bonus = yes"
-    ) == 1
-
-
-def test_columbian_exchange_debug_event_keys_are_localized() -> None:
-    localization_text = (LOCALIZATION_ROOT / "pp_debug_l_english.yml").read_text(encoding="utf-8-sig")
-
-    for key in (
-        "pp_columbian_exchange_debug.1.title",
-        "pp_columbian_exchange_debug.1.desc",
-        "pp_columbian_exchange_debug.1.a",
-    ):
-        assert f" {key}:" in localization_text
 
 
 def _vanilla_estate_buildings() -> tuple[str, ...]:

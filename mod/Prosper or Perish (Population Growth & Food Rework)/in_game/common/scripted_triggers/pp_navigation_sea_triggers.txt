@@ -2,7 +2,7 @@
 # Water access, three exclusive states (worldbuilder/coast.py computes the same sets from the map offline):
 # sea coast: borders passable sea that is neither a navigable river channel (region pp_navigation_region) nor lake
 # water; waterway: coastal only through river channels or navigable lakes; inland: is_coastal = no. The channels are
-# sea zones, so is_coastal alone is also true on every river bank.
+# sea zones, so is_coastal alone is also true on every river bank. Waterway = is_coastal = yes and not pp_is_sea_coast.
 pp_is_sea_coast = {
 	is_coastal = yes
 	any_neighbor_location = {
@@ -13,8 +13,4 @@ pp_is_sea_coast = {
 		NOT = { topography = salt_pans }
 		NOT = { topography = ocean_wasteland }
 	}
-}
-pp_is_waterway = {
-	is_coastal = yes
-	NOT = { pp_is_sea_coast = yes }
 }

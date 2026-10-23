@@ -38,6 +38,56 @@ def test_geography_sync_ships_the_map_ports_and_adjacencies(tmp_path):
     assert export_files(tmp_path) == ["in_game/map_data/adjacencies.csv", "in_game/map_data/default.map", "in_game/map_data/ports.csv"]
 
 
+def test_geography_sync_tests_soil_and_fertility_modifiers_not_variables(tmp_path):
+    # 2026-10-24: the setup's pp_wb_fertility_<class> / pp_wb_soil_<class> modifiers are the one record of a location's
+    # soil and fertility; the export's variable on_actions and the unused triggers and customizable loc stay out
+    import json
+
+    from prosper_or_perish_constructor.worldbuilder import geography
+
+    export, mod = tmp_path / "export", tmp_path / "mod"
+    files = {
+        "in_game/common/on_action/ha1300_global_soils.txt": "on_game_start = { on_actions = { ha1300_assign_soil_types } }\n",
+        "in_game/common/scripted_triggers/ha1300_fertility.txt": "ha1300_fertility_is_low = { has_variable = ha1300_fertility var:ha1300_fertility = 2 }\n",
+        "in_game/common/customizable_localization/ha1300_global_soils.txt":
+            "ha1300_soil_type_name = { type = location\n text = { localization_key = A trigger = { has_variable = ha1300_soil_type var:ha1300_soil_type = 6 } }\n"
+            " text = { localization_key = B fallback = yes } }ha1300_soil_type_evidence = { type = location\n"
+            " text = { localization_key = C trigger = { has_variable = ha1300_soil_inferred } }\n}\n",
+        "in_game/common/customizable_localization/ha1300_native_geography.txt":
+            "ha1300_native_coast = {\n type = location\n}\nha1300_native_lake = {\n type = location\n}\nha1300_native_max_winter = {\n type = location\n}\n",
+        "in_game/gfx/map/map_modes/ha1300_fertility.txt":
+            "ha1300_fertility = { map_color = { if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 5 } value = rgb { 1 2 3 } } } }\n",
+    }
+    for rel, text in files.items():
+        (export / rel).parent.mkdir(parents=True, exist_ok=True)
+        (export / rel).write_text("﻿" + text, encoding="utf-8")
+    (export / "ha1300-build.json").write_text(json.dumps({"files": {rel: "x" for rel in files}}))
+    stale = mod / "in_game/common/on_action/ha1300_fertility.txt"   # an earlier sync's copy
+    stale.parent.mkdir(parents=True)
+    stale.write_text("x")
+    geography.sync_geography(export, mod, tmp_path)
+    assert not stale.exists()
+    assert not (mod / "in_game/common/on_action/ha1300_global_soils.txt").exists()
+    assert not (mod / "in_game/common/scripted_triggers/ha1300_fertility.txt").exists()
+    soils = (mod / "in_game/common/customizable_localization/ha1300_global_soils.txt").read_text(encoding="utf-8-sig")
+    assert "trigger = { has_location_modifier = pp_wb_soil_stony }" in soils
+    assert "ha1300_soil_type_evidence" not in soils and soils.endswith("fallback = yes } }\n")
+    native = (mod / "in_game/common/customizable_localization/ha1300_native_geography.txt").read_text(encoding="utf-8-sig")
+    assert native == "ha1300_native_lake = {\n type = location\n}\n"
+    fertility = (mod / "in_game/gfx/map/map_modes/ha1300_fertility.txt").read_text(encoding="utf-8-sig")
+    assert "limit = { has_location_modifier = pp_wb_fertility_very_high }" in fertility
+
+
+def test_mod_keeps_soil_and_fertility_only_as_location_modifiers():
+    from prosper_or_perish_constructor.worldbuilder.geography import DROPPED_EXPORT_FILES
+
+    for rel in DROPPED_EXPORT_FILES:
+        assert not (MOD_ROOT / rel).exists(), rel
+    for path in [*(MOD_ROOT / "in_game").rglob("*.txt"), *(MOD_ROOT / "in_game").rglob("*.gui")]:
+        text = path.read_text(encoding="utf-8-sig", errors="replace")
+        assert not re.search(r"(?:var:|has_variable = )ha1300_(?:fertility|soil_type|soil_inferred)\b", text), path
+
+
 def test_capitals_and_pop_countries_do_not_own_land(tmp_path):
     start = tmp_path / "mod/main_menu/setup/1337"
     start.mkdir(parents=True)

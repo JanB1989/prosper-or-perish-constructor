@@ -1,6 +1,7 @@
 """Render the live Tavern / Victualling Yard caps; the offline planner evaluates these same scripts."""
 
 import json
+import re
 
 from .buildings import river_size_trigger, write_river_size_triggers
 
@@ -156,7 +157,8 @@ def write(repo, mod_root):
     ]
     lines.append("grange_max_level = {\n " + "\n ".join(body) + "\n}")
     path = mod_root / "in_game/common/script_values/pp_victuals_logistics.txt"
-    path.write_text("\ufeff" + "\n\n".join(lines) + "\n", encoding="utf-8")
+    script = "\n\n".join(lines) + "\n"
+    path.write_text("\ufeff" + script, encoding="utf-8")
     # Victualling Yard sites: good harbours on the sea coast (pp_wb_coastal marks the World Builder's sea coast, river
     # ports excluded) or very good harbours anywhere, never in cold climates. The engine's harbour value includes the
     # river-mouth bonus, so a great river alone (river size 5 = +0.25) cannot pass the second tier.
@@ -180,7 +182,8 @@ def write(repo, mod_root):
     )
     loc.write_text(
         "\ufeffl_english:\n"
-        + "\n".join(f' PP_VM_CAP_{k}: "{v}"' for k, v in labels.items())
+        # only the rows the caps use (food_rgo/farmland 0 drop RGO/FARMLAND): an unused key is dead text
+        + "\n".join(f' PP_VM_CAP_{k}: "{v}"' for k, v in labels.items() if re.search(rf"\bPP_VM_CAP_{k}\b", script))
         + "\n",
         encoding="utf-8",
     )

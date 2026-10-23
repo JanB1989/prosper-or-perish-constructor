@@ -1,15 +1,15 @@
 ﻿ha1300_fertility = {
- map_color = { if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 1 } value = rgb { 168 64 59 } }
-else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 2 } value = rgb { 215 125 64 } }
-else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 3 } value = rgb { 219 191 100 } }
-else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 4 } value = rgb { 139 182 94 } }
-else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 5 } value = rgb { 55 139 80 } }
+ map_color = { if = { limit = { has_location_modifier = pp_wb_fertility_very_low } value = rgb { 168 64 59 } }
+else_if = { limit = { has_location_modifier = pp_wb_fertility_low } value = rgb { 215 125 64 } }
+else_if = { limit = { has_location_modifier = pp_wb_fertility_moderate } value = rgb { 219 191 100 } }
+else_if = { limit = { has_location_modifier = pp_wb_fertility_high } value = rgb { 139 182 94 } }
+else_if = { limit = { has_location_modifier = pp_wb_fertility_very_high } value = rgb { 55 139 80 } }
 else = { value = rgb { 45 60 72 } } }
- tooltip_key = { if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 1 } value = HA1300_FERTILITY_VERY_LOW_MAP }
-else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 2 } value = HA1300_FERTILITY_LOW_MAP }
-else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 3 } value = HA1300_FERTILITY_MODERATE_MAP }
-else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 4 } value = HA1300_FERTILITY_HIGH_MAP }
-else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 5 } value = HA1300_FERTILITY_VERY_HIGH_MAP }
+ tooltip_key = { if = { limit = { has_location_modifier = pp_wb_fertility_very_low } value = HA1300_FERTILITY_VERY_LOW_MAP }
+else_if = { limit = { has_location_modifier = pp_wb_fertility_low } value = HA1300_FERTILITY_LOW_MAP }
+else_if = { limit = { has_location_modifier = pp_wb_fertility_moderate } value = HA1300_FERTILITY_MODERATE_MAP }
+else_if = { limit = { has_location_modifier = pp_wb_fertility_high } value = HA1300_FERTILITY_HIGH_MAP }
+else_if = { limit = { has_location_modifier = pp_wb_fertility_very_high } value = HA1300_FERTILITY_VERY_HIGH_MAP }
 else_if = { limit = { is_land = no } value = HA1300_FERTILITY_WATER } else = { value = HA1300_FERTILITY_UNKNOWN } }
 legend_key = { desc = "HA1300_FERTILITY_VERY_LOW" color = rgb { 168 64 59 } }
 legend_key = { desc = "HA1300_FERTILITY_LOW" color = rgb { 215 125 64 } }

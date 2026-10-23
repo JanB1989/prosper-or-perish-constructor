@@ -401,7 +401,7 @@ def test_non_production_hand_overrides_remain_in_place() -> None:
     assert (building_types / "pp_mercury_patio_adjustments.txt").is_file()
     assert (building_types / "pp_culture_building_adjustments.txt").is_file()
     assert (building_types / "pp_gold_to_jewelry_buildings.txt").is_file()
-    assert (building_types / "pp_governor_building_adjustments.txt").is_file()
+    assert not (building_types / "pp_governor_building_adjustments.txt").exists()   # governor rows sit in the REPLACE
 
 
 def test_import_missing_writes_faithful_replace_yaml_without_touching_accepted(

@@ -462,17 +462,11 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
     static_path.parent.mkdir(parents=True, exist_ok=True)
     static_path.write_text("﻿" + "\n\n".join([GENERATED, *blocks]) + "\n", encoding="utf-8", newline="\n")
 
-    # rivers: vanilla body minus the capacity percentage, plus the level's rows
-    bodies = river_bodies(vanilla_root)
-    legacy_rivers = legacy_river_lines(mod_root)
-    river_blocks: list[str] = []
-    for level, body in sorted(bodies.items()):
-        mods = rows.get(("river_level", str(level)), {})
-        merged = merge_modifier_lines(body, legacy_rivers.get(level, []))
-        extra = [f"\t{k} = {_fmt(v)}" for k, v in mods.items()]
-        river_blocks.append("\n".join([f"TRY_REPLACE:river_flowing_through_{level} = {{", *[f"\t{l}" for l in merged], *extra, "}"]))
+    # rivers: vanilla body minus the capacity percentage, plus the mod's river-level lines and the level's rows
+    # (the file's header still says "hand-authored river injects": kept byte-identical; they are config since 2026-10-24)
+    river_text, river_count = render_river_modifiers(rows, river_level_lines(cfg.raw.get("river_levels")), vanilla_root)
     (mod_root / RIVER_MODIFIERS_PATH).parent.mkdir(parents=True, exist_ok=True)
-    (mod_root / RIVER_MODIFIERS_PATH).write_text("﻿" + "\n\n".join([GENERATED, "# River capacity percentages and food modifiers removed; World Builder river-level rows added (levels 1..5 = engine river sizes); the mod's hand-authored river injects are folded in (an inject into a replaced block is ignored by the engine).", *river_blocks]) + "\n", encoding="utf-8", newline="\n")
+    (mod_root / RIVER_MODIFIERS_PATH).write_text(river_text, encoding="utf-8", newline="\n")
 
     # no goods intercept modifier: the per-good base output at the RGO is the hand-authored raw-material bonus
     # (pp_rgo_bonus_<good>, re-applied when the raw material changes); the fit intercept is dropped
@@ -519,7 +513,24 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
         path = mod_root / rel
         if path.is_file():
             path.unlink()
-    return {"static_modifiers": len(blocks), "river_levels": len(river_blocks), "locations_with_modifiers": len(per_location)}
+    return {"static_modifiers": len(blocks), "river_levels": river_count, "locations_with_modifiers": len(per_location)}
+
+
+def render_river_modifiers(rows: Mapping[tuple[str, str], Mapping[str, float]], level_lines: Mapping[int, list[str]],
+                           vanilla_root: Path) -> tuple[str, int]:
+    """pp_00_wb_river_modifiers.txt: one TRY_REPLACE per vanilla river_flowing_through_<n> (vanilla body without the
+    capacity percentage and food lines, the mod's [worldbuilder.river_levels] lines summed in, the level's rows)."""
+    bodies = river_bodies(vanilla_root)
+    if set(level_lines) - set(bodies):
+        raise ValueError(f"[worldbuilder.river_levels] has values for river levels vanilla lacks: {sorted(set(level_lines) - set(bodies))}")
+    river_blocks: list[str] = []
+    for level, body in sorted(bodies.items()):
+        mods = rows.get(("river_level", str(level)), {})
+        merged = merge_modifier_lines(body, level_lines.get(level, []))
+        extra = [f"\t{k} = {_fmt(v)}" for k, v in mods.items()]
+        river_blocks.append("\n".join([f"TRY_REPLACE:river_flowing_through_{level} = {{", *[f"\t{l}" for l in merged], *extra, "}"]))
+    text = "﻿" + "\n\n".join([GENERATED, "# River capacity percentages and food modifiers removed; World Builder river-level rows added (levels 1..5 = engine river sizes); the per-level values of [worldbuilder.river_levels] in constructor.toml are folded in (an inject into a replaced block is ignored by the engine).", *river_blocks]) + "\n"
+    return text, len(river_blocks)
 
 
 def write_setup_modifiers(per_location: Mapping[str, list[str]], mod_root: Path) -> int:
@@ -572,24 +583,19 @@ def write_development_capacity(mod_root: Path, people_per_point: float) -> bool:
     return True
 
 
-def legacy_river_lines(mod_root: Path) -> dict[int, list[str]]:
-    """Lines of the hand-authored ``TRY_INJECT:river_flowing_through_<n>`` blocks (capacity and food lines dropped)."""
-    path = mod_root / ADJUSTMENTS_PATH
-    if not path.is_file():
-        return {}
-    text = path.read_text(encoding="utf-8-sig")
+def river_level_lines(config: Mapping[str, object] | None) -> dict[int, list[str]]:
+    """``[worldbuilder.river_levels]`` (constructor.toml): ``<modifier> = [level 1, ..., level 5]`` -> per river level
+    the ``<modifier> = <value>`` lines added to vanilla's river_flowing_through_<n> (in table order). The mod's own river
+    effects live here, not in a TRY_INJECT: the engine ignores an inject into the block the World Builder replaces."""
     out: dict[int, list[str]] = {}
-    for match in re.finditer(r"^TRY_INJECT:river_flowing_through_(\d)\s*=\s*\{\n(?P<body>.*?)^\}", text, re.M | re.S):
-        lines = []
-        for raw in match.group("body").splitlines():
-            line = raw.split("#", 1)[0].strip()
-            if not line or "=" not in line:
-                continue
-            key = line.split("=", 1)[0].strip()
-            if key in CAPACITY_KEYS or key in FOOD_KEYS:
-                continue
-            lines.append(line)
-        out[int(match.group(1))] = lines
+    for key, values in (config or {}).items():
+        if key in CAPACITY_KEYS or key in FOOD_KEYS:
+            raise ValueError(f"[worldbuilder.river_levels].{key}: capacity and food stay with the World Builder rows")
+        if not isinstance(values, list) or not values or not all(isinstance(v, int | float) for v in values):
+            raise ValueError(f"[worldbuilder.river_levels].{key} must be a list of numbers, one per river level")
+        for level, value in enumerate(values, start=1):
+            text = str(value) if isinstance(value, int) else f"{value:.6f}".rstrip("0").rstrip(".")
+            out.setdefault(level, []).append(f"{key} = {text}")
     return out
 
 

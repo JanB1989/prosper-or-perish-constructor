@@ -14,7 +14,7 @@ MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 MAP_MODES = MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes" / "pp_goods_output_map_modes_generated.txt"
 SCRIPT_VALUES = MOD_ROOT / "in_game" / "common" / "script_values" / "pp_goods_output_map_modes_generated.txt"
 LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_goods_output_map_modes_l_english.yml"
-ICON_DIR = MOD_ROOT / "in_game" / "gfx" / "interface" / "icons" / "map_modes"
+ICON_DIR = MOD_ROOT / "main_menu" / "gfx" / "interface" / "icons" / "map_modes"
 GOODS_OUTPUT_BUCKETS = ((0, 10), (10, 30), (30, 60), (60, 100), (100, 150), (150, 300))
 VANILLA_TRAFFIC_COLORS = (
     "define:NMapColors|MAP_COLOR_MIN",

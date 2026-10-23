@@ -77,7 +77,7 @@ _POTENTIAL_RE = re.compile(r"(?P<indent>[ \t]*)location_potential\s*=\s*\{.*?\n(
 # visible), so a cap row tested that way was missing in game wherever the engine traced the river itself (EU5 1.4
 # start: irrigated fields on the Yangtze banks 8 levels and Taverns 1 level above max). Modifier values add up over
 # static and script-added modifiers alike, and each river_flowing_through_N carries irrigant_cap_modifier = N
-# (pp_location_modifier_adjustments.txt; start_simulation.run checks it).
+# (constructor.toml [worldbuilder.river_levels] -> pp_00_wb_river_modifiers.txt; start_simulation.run checks it).
 RIVER_SIZE_MODIFIER = "irrigant_cap_modifier"
 RIVER_SIZE_TRIGGERS_PATH = Path("in_game/common/scripted_triggers/pp_wb_river_size.txt")
 

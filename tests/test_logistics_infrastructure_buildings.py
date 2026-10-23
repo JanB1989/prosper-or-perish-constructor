@@ -85,10 +85,11 @@ def test_river_boatmen_yard_cap_scales_with_river_level() -> None:
     assert "value = modifier:pp_river_boatmen_yard_cap_modifier" in cap_value
     assert 'min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }' in cap_value
 
-    modifiers = LOCATION_MODIFIERS.read_text(encoding="utf-8-sig")
+    # the World Builder's river replace carries it (constructor.toml [worldbuilder.river_levels]; an inject is ignored)
+    modifiers = (MOD_ROOT / "main_menu/common/static_modifiers/pp_00_wb_river_modifiers.txt").read_text(encoding="utf-8-sig")
     for river_level in range(1, 6):
         block = re.search(
-            rf"TRY_INJECT:river_flowing_through_{river_level} = \{{(?P<body>.*?)\n\}}",
+            rf"TRY_REPLACE:river_flowing_through_{river_level} = \{{(?P<body>.*?)\n\}}",
             modifiers,
             flags=re.S,
         )
@@ -199,13 +200,14 @@ def test_market_village_market_access_is_neutralized_by_inject_blueprint() -> No
     blueprint = MARKET_VILLAGE_MARKET_ACCESS_BLUEPRINT.read_text(encoding="utf-8")
     assert "mode: REPLACE" in blueprint
     assert "key: market_village" in blueprint
-    assert "local_market_access = -0.005" in blueprint
+    # vanilla's +0.005 market access is dropped from the replace (was a cancelling +0.005/-0.005 pair)
+    assert "local_market_access" not in blueprint
     assert "unique_production_methods" in blueprint
     assert "pp_market_village_rural_blacksmith" in blueprint
 
     rendered = MARKET_VILLAGE_MARKET_ACCESS_RENDERED.read_text(encoding="utf-8-sig")
     assert "REPLACE:market_village" in rendered
-    assert "local_market_access = -0.005" in rendered
+    assert "local_market_access" not in rendered
     assert "unique_production_methods" in rendered
     assert "pp_market_village_rural_blacksmith" in rendered
 

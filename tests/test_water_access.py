@@ -92,7 +92,7 @@ def test_sea_trigger_excludes_channels_lakes_and_frozen_sea():
     for text in ("NOT = { region = region:pp_navigation_region }", "NOT = { topography = lakes }",
                  "NOT = { topography = high_lakes }", "NOT = { topography = salt_pans }", "NOT = { topography = ocean_wasteland }"):
         assert text in ns.TRIGGERS
-    assert "pp_is_waterway = {" in ns.TRIGGERS
+    assert "pp_is_waterway = {" not in ns.TRIGGERS   # only the offline start simulation knows waterways
 
 
 def test_sea_only_buildings_narrow_their_vanilla_conditions():

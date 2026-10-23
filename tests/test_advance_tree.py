@@ -109,7 +109,11 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
         },
     ),
     "advanced_mining": (set(), {"unlock_building = alum_quarry", "unlock_building = saltpeter_beds"}),
-    "efficient_mining": ({"global_iron_output_modifier = 0.1"}, set()),
+    # the RGO cost redirect by hand (one owner of the block; rgo_cost_redirects.py leaves mod-replaced blocks alone)
+    "efficient_mining": (
+        {"global_iron_output_modifier = 0.1", "expand_rgo_mining_cost_modifier = -0.1"},
+        {"global_rural_build_buildings_efficiency = 0.05"},
+    ),
     "new_currency_demands": (
         {"global_copper_output_modifier = 0.25", "global_tin_output_modifier = 0.1"},
         {"unlock_building = copper_mine_adit", "unlock_building = tin_stamping_mill"},

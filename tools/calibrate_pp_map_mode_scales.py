@@ -22,6 +22,13 @@ MOD_ROOT_DEFAULT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food R
 LOCATION_MODIFIERS_REL = Path("main_menu/common/static_modifiers/pp_location_modifiers.txt")
 BUILDING_CAPACITY_VALUES_REL = Path("in_game/common/script_values/pp_building_capacity_values.txt")
 BUILDING_CAPS_REL = Path("in_game/common/script_values/pp_building_caps.txt")
+# Raw materials that gave a location the static farm-capacity sample (the former mod script value
+# pp_farm_base_capacity_value, removed 2026-10-24; kept here so the farm scale stays reproducible).
+FARM_SAMPLE_GOODS = frozenset({
+    "livestock", "millet", "wheat", "maize", "rice", "legumes", "potato", "olives", "fruit", "wool", "horses",
+    "elephants", "camels", "fiber_crops", "cotton", "sugar", "tobacco", "dyes", "chili", "cloves", "cocoa",
+    "coffee", "incense", "pepper", "saffron", "silk", "medicaments", "tea", "wine", "beeswax",
+})
 
 
 def main() -> None:
@@ -66,7 +73,6 @@ def build_calibration() -> dict:
                 good: _signed_scale_dict(local_output_samples.get(good, []))
                 for good in raw_materials
             },
-            "market_food_price": _reference_scale_dict(_market_food_price_values()),
             "food_capacity": {
                 "fish": _sequential_scale_dict(_food_capacity_thresholds("fish", food_capacity_samples.get("fish", []))),
                 "farm": _sequential_scale_dict(_food_capacity_thresholds("farm", food_capacity_samples.get("farm", []))),
@@ -141,17 +147,6 @@ def _local_output_modifier_samples(path: Path) -> dict[str, list[float]]:
     return samples
 
 
-def _market_food_price_values() -> list[float]:
-    try:
-        import polars as pl
-    except ImportError:
-        return []
-    path = ROOT / "artifacts" / "data" / "savegame" / "market_food.parquet"
-    if not path.exists():
-        return []
-    return pl.read_parquet(path).filter(pl.col("food_price") > 0)["food_price"].to_list()
-
-
 def _unemployment_values() -> list[float]:
     try:
         import polars as pl
@@ -202,7 +197,7 @@ def _food_capacity_samples(mod_root: Path) -> dict[str, list[float]]:
         return {}
 
     values_text = (mod_root / BUILDING_CAPACITY_VALUES_REL).read_text(encoding="utf-8-sig")
-    farm_goods = _goods_in_script_value(values_text, "pp_farm_base_capacity_value")
+    farm_goods = FARM_SAMPLE_GOODS
     forest_goods = _goods_in_script_value(values_text, "pp_forest_base_capacity_value")
     farm_buildings = _building_types_with_max_levels(mod_root, "farm_capacity")
     fish_buildings = _building_types_with_max_levels(mod_root, "fish_capacity")
@@ -392,39 +387,6 @@ def _signed_output_scale_thresholds(values: Iterable[float]) -> dict[str, object
     }
 
 
-def _reference_scale_dict(values: list[float]) -> dict[str, object]:
-    reference = 0.12
-    lows = sorted(value for value in values if 0 < value < reference)
-    highs = sorted(value for value in values if value > reference)
-    if len(lows) >= 5:
-        low_thresholds = _strict_thresholds(
-            [_round_price(_quantile(lows, 0.20)), _round_price(_quantile(lows, 0.80))],
-            minimum=0.001,
-        )
-    else:
-        low_thresholds = [0.02, 0.08]
-    if len(highs) >= 5:
-        high_thresholds = _strict_thresholds(
-            [_round_price(_quantile(highs, 0.45)), _round_price(_quantile(highs, 0.90))],
-            minimum=0.001,
-        )
-    else:
-        high_thresholds = [0.18, 0.30]
-    low_thresholds = [min(low_thresholds[0], reference - 0.002), min(low_thresholds[1], reference - 0.001)]
-    if not low_thresholds[0] < low_thresholds[1] < reference:
-        low_thresholds = [0.02, 0.08]
-    high_thresholds = [max(high_thresholds[0], reference + 0.001), max(high_thresholds[1], reference + 0.002)]
-    if not reference < high_thresholds[0] < high_thresholds[1]:
-        high_thresholds = [0.18, 0.30]
-    return {
-        "kind": "reference_centered",
-        "reference": reference,
-        "low_thresholds": low_thresholds,
-        "high_thresholds": high_thresholds,
-        "source": "market_food_price_distribution" if values else "fallback_market_food_price_scale",
-    }
-
-
 def _building_efficiency_scale_dict() -> dict[str, object]:
     return {
         "kind": "signed_centered",
@@ -461,10 +423,6 @@ def _round_quantity(value: float) -> float:
 
 def _round_modifier(value: float) -> float:
     return round(value, 2)
-
-
-def _round_price(value: float) -> float:
-    return round(value, 3)
 
 
 def _strict_thresholds(values: Iterable[float], *, minimum: float) -> list[float]:

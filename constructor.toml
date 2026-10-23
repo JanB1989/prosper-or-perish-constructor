@@ -120,6 +120,19 @@ level_limit = 15
 local_migration_attraction = 0.3   # lakeshore settlement: fresh water, fish and easy transport
 local_defensive = 0.1              # the lake works as a moat
 
+# The mod's own river effects, per engine river size (one value per river_flowing_through_1..5). `ppc worldbuilder apply`
+# sums them into its TRY_REPLACE of vanilla's river blocks (pp_00_wb_river_modifiers.txt); an inject into those blocks
+# would be ignored by the engine. Fish and irrigation caps and River Boatmen's Yard levels grow with the river; the free
+# building levels, build efficiency and construction speed are graphs/building_capacity/data/free_building_levels_sheet.csv's
+# river_level rows (tests/test_worldbuilder_stage.py keeps them equal; free_building_levels.py no longer compiles them).
+[worldbuilder.river_levels]
+fish_capacity_from_river_size = [1, 1, 2, 3, 4]
+irrigant_cap_modifier = [1, 2, 3, 4, 5]
+pp_river_boatmen_yard_cap_modifier = [3, 6, 9, 12, 15]
+free_building_levels = [3, 5, 7, 9, 12]
+local_build_buildings_efficiency = [0.1, 0.15, 0.2, 0.25, 0.3]
+local_construction_speed = [0.1, 0.15, 0.2, 0.25, 0.3]
+
 # Hostile movement cost (2026-10-07, Jan; x1.5 on 2026-10-16): armies hostile to the location (at war with its owner,
 # rebels, pirates) move slower through rough home ground, the defender knows the paths. Classes add up on top of the flat
 # +10 % on all land (location_base_values in pp_population_growth_and_food_adjustments.txt); worst location +107.5 %

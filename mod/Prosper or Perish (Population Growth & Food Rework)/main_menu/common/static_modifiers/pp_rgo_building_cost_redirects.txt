@@ -45,9 +45,8 @@ TRY_INJECT:parl_noble_enclosure_mod = {
 
 TRY_INJECT:parl_rural_crafts_mod = {
 	expand_rgo_forestry_cost_modifier = 0.2
-	global_rural_build_buildings_efficiency = 0.1
+	global_rural_build_buildings_efficiency = 0.2
 	expand_rgo_gathering_cost_modifier = 0.2
-	global_rural_build_buildings_efficiency = 0.1
 }
 
 TRY_INJECT:quecholli_gr = {

@@ -25,6 +25,7 @@ import sys
 from pathlib import Path
 
 from PIL import Image
+from eu5_building_pipeline.dds import write_game_dds
 
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
@@ -70,7 +71,7 @@ def main(argv: list[str] | None = None) -> int:
         if not args.no_write:
             target = MOD / "main_menu" / PICTURE.format(key)
             target.parent.mkdir(parents=True, exist_ok=True)
-            image.save(target, format="DDS", pixel_format="DXT5")
+            write_game_dds(image, target)   # DXT5 + full mips (eu5_building_pipeline.dds)
             print(target.relative_to(ROOT))
     if not args.no_write:
         icon = MOD / "in_game" / ICON

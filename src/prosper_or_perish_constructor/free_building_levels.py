@@ -998,6 +998,7 @@ COMPILE_STATIC_MODIFIERS_RELATIVE = Path(
 COMPILE_BUILDING_TYPES_RELATIVE = Path(
     "in_game/common/building_types/pp_governor_building_adjustments.txt"
 )
+COMPILE_BUILDING_TYPES_HEADER = "# Governor building capacity — compiled from free_building_levels_sheet.csv on ppc sync.\n"
 STATIC_MODIFIER_BLOCK_BY_FACTOR: dict[tuple[str, str], str] = {
     ("river_level", "1"): "river_flowing_through_1",
     ("river_level", "2"): "river_flowing_through_2",
@@ -1010,6 +1011,10 @@ STATIC_MODIFIER_BLOCK_BY_FACTOR: dict[tuple[str, str], str] = {
     ("capital", "true"): "capital",
     ("province_capital", "true"): "province_capital",
 }
+# The World Builder stage TRY_REPLACEs river_flowing_through_<n> (pp_00_wb_river_modifiers.txt), so the engine would
+# ignore an inject into it: the river rows' values live in constructor.toml [worldbuilder.river_levels] instead
+# (tests/test_worldbuilder_stage.py keeps them equal to the sheet).
+STATIC_MODIFIER_FACTORS_NOT_COMPILED = frozenset({"river_level"})
 BUILDING_TYPE_BLOCK_BY_FACTOR: dict[tuple[str, str], str] = {
     ("naval_governor", "true"): "naval_governor",
     ("local_governor", "true"): "local_governor",
@@ -1129,7 +1134,7 @@ def audit_compile_modifier_baselines(repo: Path) -> pl.DataFrame:
             block_name = STATIC_MODIFIER_BLOCK_BY_FACTOR[(factor, value)]
             baseline_source = "static_modifier"
             inner_header = None
-            compiled = True
+            compiled = factor not in STATIC_MODIFIER_FACTORS_NOT_COMPILED
         elif factor == "road_level" and value != "0":
             block_name = STATIC_MODIFIER_BLOCK_BY_FACTOR.get((factor, value), "")
             baseline_source = "static_modifier"
@@ -1427,6 +1432,8 @@ def _compile_static_modifier_file(
     changed = False
 
     for (factor, value), block_name in STATIC_MODIFIER_BLOCK_BY_FACTOR.items():
+        if factor in STATIC_MODIFIER_FACTORS_NOT_COMPILED:
+            continue
         row = weights.filter(
             (pl.col("factor") == factor) & (pl.col("value") == value)
         )
@@ -1488,9 +1495,9 @@ def _compile_building_type_file(
     *,
     baselines: ModifierBaselineResolver,
 ) -> int:
-    if not path.is_file():
-        raise FileNotFoundError(f"Cannot compile building modifiers; missing file: {path}")
-    text = _read_compile_text(path)
+    """Compile the governor rows: into the mod's REPLACE of the building when it has one, else as a TRY_INJECT in
+    ``path``. ``path`` exists only while it holds a block (an empty header-only file is deleted, never written)."""
+    text = _read_compile_text(path) if path.is_file() else COMPILE_BUILDING_TYPES_HEADER
     changed = False
     replacements = _mod_replacement_files(path.parent, exclude=path)
     replacements_changed: set[Path] = set()
@@ -1546,6 +1553,11 @@ def _compile_building_type_file(
                 text = new_text
                 changed = True
 
+    if not any(line.strip() and not line.lstrip().startswith("#") for line in text.splitlines()):
+        if path.is_file():
+            path.unlink()
+            return 1 + len(replacements_changed)
+        return len(replacements_changed)
     if changed and _write_compile_text_if_changed(path, text):
         return 1 + len(replacements_changed)
     return (1 if changed else 0) + len(replacements_changed)

@@ -327,6 +327,15 @@
   good it sells, Provision the good it buys back, other unique methods their building, other global methods their good.
   A blueprint may set its own pair (the method keeps it); copies of vanilla files are left alone.
 
+## Interface DDS Format
+
+- Every DDS under `<layer>/gfx/interface/` is in vanilla's format: DXT5 (or DXT1) with a full mip chain, icons at most
+  128 px (building icons 128, from the 512 px blueprint PNGs), advance icons at most 256, illustrations at their size.
+  Write them with `eu5_building_pipeline.dds.write_game_dds` / `encode_dds`, never `Image.save(format="DDS")` (raw
+  RGBA, no mips; Pillow's own DXT5 alpha is lossy). The last finalize pass of `ppc build` / `ppc sync`
+  (`interface_dds.py`) converts anything else in place and leaves compliant files byte-identical;
+  `tests/test_interface_dds.py` enforces it. Map mode picker icons live only in `main_menu/gfx/interface/icons/map_modes`.
+
 ## Script Value Overrides (EU5 1.4)
 
 - A scalar `REPLACE:name = 0` in `common/script_values` does nothing: the game reads the key as the scope link
@@ -391,8 +400,11 @@
 - `uv run ppc ship-upkeep apply` writes `in_game/common/prices/pp_ship_upkeep.txt`: one `<unit_type>_maintenance` add
   per navy unit type (vanilla unit-specific prices add to the category price before the age doubling), so that
   (category gold + add) x 2^(age index) = the basket value; units vanilla already prices get `TRY_REPLACE:` with their
-  sailors kept. The define stays 1. `ppc ship-upkeep check` must report the file current (`tests/test_ship_upkeep.py`);
-  rerun apply after a game update or a goods price change.
+  sailors kept. The define stays 1. For the new prices it also writes their `<price>_cost_modifier` types, icons (the
+  category's vanilla maintenance icon) and names (`pp_ship_upkeep_modifier_types.txt`, `..._modifier_icons.txt`,
+  `pp_ship_upkeep_l_english.yml`; the game logs "Missing modifier type for price" without them). `ppc ship-upkeep
+  check` must report the files current (`tests/test_ship_upkeep.py`); rerun apply after a game update or a goods price
+  change.
 - The goods market percentage and maintenance efficiency still apply on top. The AI spends a fixed share of income on
   its navy, so cheaper late ships mean larger AI navies. Not tested in game.
 
@@ -435,7 +447,7 @@
   and "Settled Land" are retired; `tests/test_europedia_style.py` fails if they come back. State icons:
   `tools/build_arable_land_icons.py`.
 - Europedia cards use the card style in `in_game/gui/shared/pp_europedia_style.gui` (banner, lead, sections with flows,
-  scales and goods rows; rules in `main_menu/common/game_concepts/Ingame_Documentation_Rules.md`, first card Variable
+  scales and goods rows; rules in `docs/mod_authoring_rules.md`, first card Variable
   Harvests, 2026-10-09). Their text has no numbers at all: values sit behind concept, modifier and goods links.
 - Use plain text in situation panes and generated static-modifier descriptions unless that target UI is verified to support inline concept links; unsupported formatter tags spam `error.log`.
 - Situation panels: the game opens `gui/panels/situation/<situation key>.gui` when a situation is clicked. The Variable

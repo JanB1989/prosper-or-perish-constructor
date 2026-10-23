@@ -336,7 +336,7 @@ A naval war for pirates and every country that may hire privateers. Files: `casu
   like Preferred Market Access, trade protection lifted, 10 years), Sack the Market (destroys one coastal market of the
   loser; cost 10 + half its trade income, max 50; AI desire -10 until seen in game). Vanilla treaties stay as they are.
   Tribute of the Seas was removed the same day (Jan): it equalled vanilla war reparations (cost 10, 10 % of income,
-  10 years); its relation `pp_sea_tribute` stays so saves that hold one still load.
+  10 years); its relation `pp_sea_tribute` was removed before release (2026-10-24).
 - **Coastal Raid (navy toggle, tested in game as a 30-day click ability):** while on, the navy raids when switched on and
   each time it enters a sea zone: one adjacent coastal location whose owner fights us in this war (war participants
   only), with peasants and not Recently Razed: its peasants -1 %, 0.4 % of them arrive as slaves in the raider's capital

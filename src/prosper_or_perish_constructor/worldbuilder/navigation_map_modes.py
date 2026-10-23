@@ -14,7 +14,7 @@ def write_map_modes(root,state):
     shade=shades(state)
     for tag,tile in sorted(state['tiles'].items()):
         status={'navigable':1,'difficult':5,'barrier':3}[tile['state']]
-        seed.append(f' location:{tag} = {{ set_variable = {{ name = pp_navigation_map_state value = {status} }} set_variable = {{ name = pp_navigation_map_shade value = {shade[tag]} }} set_variable = {{ name = pp_navigation_water_level value = {tile.get('river_level',0)} }} set_variable = {{ name = pp_navigation_ocean_connected value = {int(bool(tile.get('ocean_connected',False)))} }} }}')
+        seed.append(f' location:{tag} = {{ set_variable = {{ name = pp_navigation_map_state value = {status} }} set_variable = {{ name = pp_navigation_map_shade value = {shade[tag]} }} set_variable = {{ name = pp_navigation_ocean_connected value = {int(bool(tile.get('ocean_connected',False)))} }} }}')
     for tag,kinds in sorted(shores.items()):
         seed.append(f' location:{tag} = {{ set_variable = {{ name = pp_navigation_bank value = {1 if kinds-set(["barrier"]) else 2} }} }}')
     seed.append('}')

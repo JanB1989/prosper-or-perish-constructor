@@ -627,8 +627,7 @@ TRY_REPLACE:legal_code_law = {
 		}
 		country_modifier = {
 			monthly_towards_serfdom = societal_value_large_monthly_move
-			global_rural_build_buildings_efficiency = 0.1
-			global_rural_build_buildings_efficiency = 0.1
+			global_rural_build_buildings_efficiency = 0.2
 			global_pop_conversion_speed_modifier = 0.2
 		}
 		estate_preferences = {

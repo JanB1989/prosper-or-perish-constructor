@@ -86,7 +86,7 @@ class Rules:
         profile = load_profile("constructor", load_order_path=order)
 
         # The parser's merge drops an inject into a replaced block, as the engine does (river_flowing_through_N
-        # counts its fish row once).
+        # carries its fish row once, from the World Builder's replace; the mod keeps no inject there).
         def merged(name, scope="in_game"):
             return {
                 e.key: e.value

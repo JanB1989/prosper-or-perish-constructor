@@ -24,8 +24,6 @@ RAID_EFFECT_FILE = COMMON / "scripted_effects" / "pp_coastal_raid_effects.txt"
 TARGET_TRIGGER_FILE = COMMON / "scripted_triggers" / "pp_naval_raid_triggers.txt"
 LOC_FILE = MOD / "main_menu" / "localization" / "english" / "pp_naval_raid_l_english.yml"
 CB = "cb_pp_naval_raid"
-# Its treaty is gone (2026-10-23, Jan: same as vanilla war reparations); kept so saves that hold one still load.
-RELATIONS_KEPT_FOR_SAVES = {"pp_sea_tribute"}
 
 
 def _blocks(path: Path) -> dict[str, CList]:
@@ -76,7 +74,7 @@ def test_treaties_create_the_relations_defined_with_them() -> None:
     relations = set(_blocks(RELATION_FILE))
     created = set(re.findall(r"type = relation_type:([a-z_]+)", _text(TREATY_FILE)))
     assert created == {"pp_open_harbours"}
-    assert relations == created | RELATIONS_KEPT_FOR_SAVES
+    assert relations == created
 
 
 def test_every_player_facing_key_has_english_text() -> None:

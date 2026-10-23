@@ -56,6 +56,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/crop_farms.py",
     "src/prosper_or_perish_constructor/free_building_levels.py",
     "src/prosper_or_perish_constructor/goods_categories.py",      # crop_farms (start crop allocation) imports these
+    "src/prosper_or_perish_constructor/interface_dds.py",         # the geography sync copies icons in the game format
     "src/prosper_or_perish_constructor/location_baseline.py",
     "src/prosper_or_perish_constructor/logistics.py",            # production_labour skips its network methods
     "src/prosper_or_perish_constructor/production_gate.py",
@@ -103,8 +104,6 @@ WORLDBUILDER_MOD_INPUTS = (
     "in_game/common/expedition_types/circumnavigation_expedition.txt",
     "in_game/common/expedition_types/pacific_crossing.txt",
     "in_game/common/expedition_types/treasure_fleet.txt",
-    "in_game/common/on_action/ha1300_fertility.txt",
-    "in_game/common/on_action/ha1300_global_soils.txt",
     "in_game/common/religious_order_callings/00_iberian_military.txt",
     "in_game/common/religious_order_zeal_modifiers/00_catholic.txt",
     "in_game/common/scripted_effects/on_action_effects.txt",
@@ -392,7 +391,7 @@ def _build_parser() -> argparse.ArgumentParser:
     ship_upkeep.add_argument(
         "action",
         choices=("apply", "check"),
-        help="apply writes the price file from vanilla unit types, goods demands and default prices; check reports whether it is current.",
+        help="apply writes the price file (and the new prices' modifier types, icons and names) from vanilla unit types, goods demands and default prices; check reports whether they are current.",
     )
     ship_upkeep.add_argument("--verbose", action="store_true", help="also print every ship with its old and new base upkeep.")
     blockade = _add_command(
@@ -1245,7 +1244,7 @@ def _ship_upkeep(args: argparse.Namespace, extra: Sequence[str], repo: Path, pro
         for ship in sorted(ships, key=lambda s: (s.category, s.age_index, s.unit)):
             print(f"{ship.unit:40s} {ship.category:16s} age {ship.age_index + 1}: {ship.old_base:7.2f} -> {ship.new_base:6.2f}")
     state = ("written" if changed else "unchanged") if args.action == "apply" else ("OFF (run ppc ship-upkeep apply)" if changed else "current")
-    print(f"ship upkeep: {len(ships)} navy unit types, {ship_upkeep.OUTPUT} {state}.")
+    print(f"ship upkeep: {len(ships)} navy unit types, {ship_upkeep.OUTPUT} (+ modifier types, icons, names) {state}.")
     return 0 if args.action == "apply" or not changed else 1
 
 
@@ -1394,6 +1393,14 @@ def _print_logistics_zones(repo: Path, project: Path) -> None:
     triggers = logistics.load_zone_triggers(mod_root / logistics.ZONE_TRIGGERS_RELATIVE)
     zones = logistics.zone_membership(logistics.load_locations(repo, project), triggers)
     print("logistics zones (land locations): " + ", ".join(f"{zone.removeprefix(logistics.ZONE_PREFIX)} {len(tags)}" for zone, tags in zones.items()))
+
+
+def _normalize_interface_dds(mod_root: Path) -> None:
+    """Every interface DDS in the game format (DXT, full mip chain, icons at vanilla size); runs last, after every
+    step that writes icons (interface_dds.py)."""
+    from prosper_or_perish_constructor import interface_dds
+
+    print(interface_dds.summary(interface_dds.apply(mod_root)), flush=True)
 
 
 def _install_good_icons(repo: Path, project: Path, mod_root: Path) -> None:
@@ -1700,6 +1707,16 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
             f"{'; removed ' + ', '.join(nil.removed) if nil.removed else ''}).",
             flush=True,
         )
+    from prosper_or_perish_constructor import loc_replace
+
+    overrides = loc_replace.apply(mod_root, cap_tooltips.game_root(vanilla_root(repo, project)))
+    print(
+        f"Vanilla text overrides: moved {overrides.moved_count} keys vanilla also defines from "
+        f"{len(overrides.moved)} English files into {loc_replace.GENERATED_RELATIVE_PATH.name} "
+        f"({overrides.kept} kept, {len(overrides.dropped_equal)} dropped as word-for-word vanilla).",
+        flush=True,
+    )
+    _normalize_interface_dds(mod_root)
     _ensure_constructor_text_boms(mod_root)
 
 
@@ -1742,19 +1759,24 @@ def _ensure_farming_capacity_raw_modifier_bridges(repo: Path, mod_root: Path) ->
         farm_level_counter_for_building,
     )
 
-    data = load_building_type_data(
-        profile=CONSTRUCTOR_PROFILE,
-        load_order_path=repo / CONSTRUCTOR_LOAD_ORDER,
-    )
-    building_keys = sorted(str(key) for key in data.building_types["name"].to_list())
     accepted_blueprint_keys = {
         path.stem
         for path in (repo / "blueprints" / "accepted" / "buildings").glob("*.yml")
     }
-    land_farms = set(LAND_FARM_BUILDINGS)
-    fallback_building_keys = [
-        building for building in building_keys if building not in accepted_blueprint_keys
-    ]
+    # Accepted blueprints own their level counter; the fallback file exists only while a land farm has no blueprint
+    # (never written header-only; the game data is parsed only then).
+    fallback_building_keys: list[str] = []
+    if any(building not in accepted_blueprint_keys for building in LAND_FARM_BUILDINGS):
+        data = load_building_type_data(
+            profile=CONSTRUCTOR_PROFILE,
+            load_order_path=repo / CONSTRUCTOR_LOAD_ORDER,
+        )
+        building_keys = {str(key) for key in data.building_types["name"].to_list()}
+        fallback_building_keys = sorted(
+            building
+            for building in LAND_FARM_BUILDINGS
+            if building in building_keys and building not in accepted_blueprint_keys
+        )
 
     bridge_lines = [
         "# Prosper or Perish - generated farming-capacity raw modifier fallbacks.",
@@ -1762,27 +1784,20 @@ def _ensure_farming_capacity_raw_modifier_bridges(repo: Path, mod_root: Path) ->
         "# Generated by ppc finalize; do not edit by hand.",
         "",
     ]
-    generated_bridge_count = 0
     for building in fallback_building_keys:
-        updates: dict[str, str] = {}
-        if building in land_farms:
-            updates[farm_level_counter_for_building(building)] = "1"
-        if not updates:
-            continue
-        generated_bridge_count += 1
         bridge_lines.append(f"TRY_INJECT:{building} = {{")
         bridge_lines.append("\traw_modifier = {")
-        for key, value in updates.items():
-            bridge_lines.append(f"\t\t{key} = {value}")
+        bridge_lines.append(f"\t\t{farm_level_counter_for_building(building)} = 1")
         bridge_lines.append("\t}")
         bridge_lines.append("}")
         bridge_lines.append("")
+    generated_bridge_count = len(fallback_building_keys)
 
-    _write_text_if_changed(
-        mod_root / FARMING_CAPACITY_RAW_MODIFIER_BRIDGES,
-        "\n".join(bridge_lines).rstrip() + "\n",
-        encoding="utf-8-sig",
-    )
+    bridge_path = mod_root / FARMING_CAPACITY_RAW_MODIFIER_BRIDGES
+    if generated_bridge_count:
+        _write_text_if_changed(bridge_path, "\n".join(bridge_lines).rstrip() + "\n", encoding="utf-8-sig")
+    elif bridge_path.is_file():
+        bridge_path.unlink()
 
     counters = {farm_level_counter_for_building(building): building for building in LAND_FARM_BUILDINGS}
     _write_farming_capacity_modifier_types(mod_root, list(counters))

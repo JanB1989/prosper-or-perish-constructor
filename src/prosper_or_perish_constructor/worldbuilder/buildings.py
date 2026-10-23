@@ -571,9 +571,8 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
                 demand: Mapping[str, float] | None = None, cultures: Mapping[str, str] | None = None) -> dict[str, int]:
     """Starting improvement levels for owned locations (levels rescaled with the building's scale).
 
-    The World Builder's starting levels are the works standing in 1337. With ``[worldbuilder.start]
-    clamp_improvements_to_cap = false`` they are kept in full above the cap (the engine keeps setup levels above
-    max_levels; they cannot be extended), otherwise they are clamped to it.
+    The World Builder's starting levels are the works standing in 1337, clamped to the cap (no building stands above
+    its cap, 2026-10-24, Jan).
 
     ``demand`` (people per location the improvements must house so the pops at game start fit their capacity) raises
     the ledger's levels of the location's eligible buildings up to their caps, largest people per level first. The
@@ -586,8 +585,6 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
     clamped = 0
     gated = 0
     raised = 0
-    above_cap = 0
-    clamp = bool((cfg.raw.get("start") or {}).get("clamp_improvements_to_cap", True))
     # buildings sharing one cap (a cap group, a family with its niche members) fill it together
     share = {k: str(v.get("group") or v.get("family") or k) for k, v in caps.items()}
     share.update({k: str(caps[str(v["family"])].get("group") or v["family"]) for k, v in caps.items() if v.get("niche") and caps.get(str(v["family"]), {}).get("group")})
@@ -623,11 +620,9 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
             limit = int(caps[key]["limit"])
             level = int(math.floor(start * scale + 1e-9))
             cap = cap_levels(equations[kind], by_tag.get(tag, {}), scale, limit) if tag in by_tag else level
-            if clamp and level > min(cap, limit):
+            if level > min(cap, limit):
                 clamped += 1
                 level = min(cap, limit)
-            elif level > cap:
-                above_cap += 1
             attrs = {**by_tag.get(tag, {}), "culture": (cultures or {}).get(tag, "")}
             if not gate_matches(gates[kind], attrs):
                 # the game rejects a setup building whose location_potential fails ("has an invalid building")
@@ -667,7 +662,7 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
         if (mod_root / rel).is_file():
             (mod_root / rel).unlink()
     return {"rows": len(rows), "unowned_skipped": skipped, "clamped_to_cap": clamped,
-            "starting_works_above_cap": above_cap, "gate_rejected": gated, "levels_raised_for_pops": raised,
+            "gate_rejected": gated, "levels_raised_for_pops": raised,
             "locations_filled_for_pops": len(filled), "locations_still_short": len(short)}
 
 

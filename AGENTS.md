@@ -371,6 +371,15 @@
 - No start exceptions: no building rule names start locations or start flags. The start setup removes every vanilla
   setup row that fails its building's rank, `location_potential` or `allow` (`start_simulation.drop_invalid`; the setup
   audit checks the same), so the game start holds only what could be built there. `tests/test_setup_building_keepers.py`.
+- By the book (2026-10-24, Jan): no building starts above its cap, the 1337 improvement works included (the World
+  Builder clamps its starting levels, `clamp_start_to_cap`; the constructor clamps every building; the old above-cap
+  exception also made the planner skip every placement in ~1,500 locations). Vanilla's `<rank> = setup_only` counts only
+  for setup- and event-only buildings (`allow = { always = no }`): cathedrals and city walls below their rank go. The
+  start check reads every rule (`start_rules`: cultures, capitals, integration, province, pops, borders, market goods =
+  the mod map's RGOs in the start save's markets `config/start_markets.txt` plus base_production goods); conditions on
+  the building country (`BUILDER_TRIGGERS`, scope:actor) hold for the setup's owner. A rule it cannot read fails the
+  build. No game-start culls: the random estate cull, its vanilla location lists and the invalid-building culls are
+  deleted. `tests/test_building_effects.py`: every building the game loads has an effect.
 
 ## Ship Upkeep (2026-10-11, Jan)
 

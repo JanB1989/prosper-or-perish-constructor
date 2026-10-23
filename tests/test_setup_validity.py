@@ -92,6 +92,8 @@ def test_the_setup_attribute_modifiers_reach_the_start_placement():
 
 
 def test_setup_rows_failing_rank_or_potential_are_dropped_unless_unresolved():
+    # vanilla's setup_only rank counts only for setup-only buildings (allow = { always = no }); a cathedral anyone can
+    # build goes where its rank forbids it (2026-10-24, Jan: by the book)
     from collections import Counter
 
     from eu5gameparser.clausewitz.parser import parse_text
@@ -110,7 +112,7 @@ def test_setup_rows_failing_rank_or_potential_are_dropped_unless_unresolved():
     sim = SimpleNamespace(rules=rules, locations={"beteta": {}}, trimmed=[], ctx=lambda tag: ctx,
                           counts={"beteta": Counter(tar_kiln=4, pottery_guild=1, cathedral=1, town_hall=1)})
     Simulation.drop_invalid(sim)
-    assert sim.counts["beteta"] == Counter(tar_kiln=0, pottery_guild=0, cathedral=1, town_hall=1)
+    assert sim.counts["beteta"] == Counter(tar_kiln=0, pottery_guild=0, cathedral=0, town_hall=1)
 
 
 def test_the_river_share_of_starting_buildings_moves_to_game_start(tmp_path):
@@ -313,7 +315,7 @@ def test_the_shipped_setup_passed_the_start_placement_audit():
     if not table.is_file():   # no build in this checkout yet
         return
     audit = pl.read_csv(table, schema_overrides={"problem": pl.String, "cap": pl.Int64}).with_columns(pl.col("problem").fill_null(""))
-    errors = audit.filter(~pl.col("problem").is_in(["", "unresolved", ss.KEPT_ABOVE_CAP]))
+    errors = audit.filter(pl.col("problem") != "")   # every rule read, none broken (2026-10-24)
     assert errors.height == 0, errors.head(10)
     audited = {(r["location"], r["building"]): r["levels"] for r in audit.iter_rows(named=True)}
     for line in (MOD_ROOT / START_SETUP_PATH).read_text(encoding="utf-8-sig").splitlines():

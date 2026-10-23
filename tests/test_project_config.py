@@ -1527,18 +1527,6 @@ def test_fruit_and_sheep_families_use_shared_eligibility_gates() -> None:
     assert "var:pp_fruit_orchard_eligible > 0" in fruit_text
     assert "NOT = { has_variable = pp_fruit_orchard_eligible }" in fruit_text
 
-    game_start = GAME_START.read_text(encoding="utf-8-sig")
-    for stem in CROP_FARM_STEMS:
-        assert f"NOT = {{ pp_{stem}_farm_location_potential = yes }}" in game_start
-    assert "building_type:farming_village" not in game_start
-    assert game_start.count("NOT = { pp_fruit_orchard_location_potential = yes }") == 2
-    assert "NOT = { pp_orchard_friendly_location_potential = yes }" not in game_start
-    assert "NOT = { pp_pasture_friendly_location_potential = yes }" in game_start
-    assert "pp_general_farmable_food_location > 0" not in game_start
-    assert "pp_orchard_friendly_location > 0" not in game_start
-    assert "pp_pasture_friendly_location > 0" not in game_start
-    assert "NOT = { raw_material = goods:fruit }" not in game_start
-    assert "NOT = { raw_material = goods:wool }" not in game_start
 
     rgo_effects = RGO_STATIC_BONUS_EFFECTS.read_text(encoding="utf-8-sig")
     assert "pp_refresh_fruit_orchard_eligibility" in rgo_effects
@@ -2259,29 +2247,13 @@ def test_capacity_culling_v2_avoids_pooled_and_iterative_culling() -> None:
     assert not [token for token in forbidden_tokens if token in text]
 
 
-def test_setup_estate_building_culling_is_registered_and_internal() -> None:
-    game_start_entries = {entry.key: entry.value for entry in parse_file(GAME_START).entries}
-    game_start = game_start_entries["on_game_start"]
-    assert isinstance(game_start, CList)
-    on_actions = _entry_values(game_start)["on_actions"]
-    assert isinstance(on_actions, CList)
-
-    assert "pp_cull_setup_estate_buildings" in on_actions.items
-    assert on_actions.items.index("pp_cull_setup_estate_buildings") < on_actions.items.index(
-        "pp_game_start_effect"
-    )
-
-    culling_entries = {entry.key: entry.value for entry in parse_file(ESTATE_SETUP_CULLING).entries}
-    assert "pp_cull_setup_estate_buildings" in culling_entries
-
-    culling_text = ESTATE_SETUP_CULLING.read_text(encoding="utf-8-sig")
-    assert "has_game_rule" not in culling_text
-    assert not (
-        MOD_ROOT / "main_menu" / "common" / "game_rules" / "pp_estate_setup_culling_rules.txt"
-    ).exists()
-
-    localization = (LOCALIZATION_ROOT / "pp_game_rules_l_english.yml").read_text(encoding="utf-8-sig")
-    assert "estate_setup_culling" not in localization
+def test_no_estate_building_cull_at_game_start() -> None:
+    """The random game-start estate cull and its vanilla location lists are deleted (2026-10-24, Jan: no special rules)."""
+    assert not ESTATE_SETUP_CULLING.exists()
+    assert not ESTATE_START_PRESERVATION.exists()
+    for path in (MOD_ROOT / "in_game" / "common").rglob("*.txt"):
+        text = path.read_text(encoding="utf-8-sig", errors="replace")
+        assert "pp_cull_setup_estate_buildings" not in text and "pp_vanilla_start_" not in text, path.name
 
 
 def test_game_start_keeps_vanilla_province_food() -> None:
@@ -2295,47 +2267,6 @@ def test_game_start_keeps_vanilla_province_food() -> None:
     assert not STARTING_PROVINCE_FOOD_ACTION.exists()
     assert not STARTING_PROVINCE_FOOD_VALUE.exists()
     assert not STARTING_PROVINCE_FOOD_RULES.exists()
-
-
-def test_setup_estate_building_culling_covers_vanilla_estate_buildings() -> None:
-    estate_buildings = set(_vanilla_estate_buildings())
-    culling_text = ESTATE_SETUP_CULLING.read_text(encoding="utf-8-sig")
-
-    gated_buildings = set(re.findall(r"has_building = building_type:([A-Za-z0-9_]+)", culling_text))
-    destroyed_buildings = set(
-        re.findall(r"destroy_all_buildings_of_type = building_type:([A-Za-z0-9_]+)", culling_text)
-    )
-
-    assert gated_buildings == estate_buildings
-    assert destroyed_buildings == estate_buildings
-    assert culling_text.count("chance = 65") == len(estate_buildings)
-    assert "construct_building" not in culling_text
-    assert "construct_estate_building" not in culling_text
-    assert "destroy_building =" not in culling_text
-    assert "destroy_building_forcefully" not in culling_text
-
-
-def test_setup_estate_building_culling_preserves_vanilla_start_estate_locations() -> None:
-    explicit_locations = _vanilla_start_estate_locations_by_building()
-    trigger_entries = {entry.key: entry.value for entry in parse_file(ESTATE_START_PRESERVATION).entries}
-
-    expected_triggers = {
-        f"pp_vanilla_start_{building}_location" for building in explicit_locations
-    }
-    assert set(trigger_entries) == expected_triggers
-
-    culling_text = ESTATE_SETUP_CULLING.read_text(encoding="utf-8-sig")
-    for building, locations in explicit_locations.items():
-        trigger_name = f"pp_vanilla_start_{building}_location"
-        assert f"NOT = {{ {trigger_name} = yes }}" in culling_text
-
-        trigger = trigger_entries[trigger_name]
-        assert isinstance(trigger, CList)
-        values = _entry_values(trigger)
-        or_block = values["OR"]
-        assert isinstance(or_block, CList)
-        preserved = {entry.value for entry in or_block.entries if entry.key == "this"}
-        assert preserved == {f"location:{location}" for location in locations}
 
 
 def test_replaced_buildings_do_not_reuse_vanilla_unique_method_names() -> None:

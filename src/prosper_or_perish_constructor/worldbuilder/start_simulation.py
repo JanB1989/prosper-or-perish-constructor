@@ -220,6 +220,15 @@ def _never(node):
     return isinstance(node, CList) and any((k == "always" and v in (False, "no")) or _never(v) for k, _, v in entries(node))
 
 
+def rank_allowed(body, rank):
+    """Whether the building may stand at the location's rank. Vanilla's ``<rank> = setup_only`` (a cathedral in a town,
+    city walls in a town: placed by the setup below the rank it can be built at) counts only for setup- and event-only
+    buildings, whose rule it is; a building anyone can build stands only where it could be built (2026-10-24, Jan)."""
+    value = first(body, rank, False)
+    allow = first(body, "allow")
+    return value is True or (value == "setup_only" and allow is not None and _never(allow))
+
+
 def placement_gates(body):
     """The rules a setup row must pass: location_potential, and allow unless the building is setup- or event-only
     (vanilla's ``allow = { always = no }``: nobody ever builds it, it stands only where the setup or an event puts it,
@@ -439,8 +448,14 @@ class Simulation:
         repo=None,
         crop_threshold=0.60,
         province_food=None,
+        country_capitals=None,
+        land_neighbors=None,
+        integration=None,
     ):
         self.rules, self.cfg, self.start = rules, cfg, start
+        self.country_capitals = dict(country_capitals or {})   # country tag -> its capital location (owned)
+        self.land_neighbors = dict(land_neighbors or {})       # location -> locations sharing a land border
+        self.integration = dict(integration or {})             # location -> core / integrated / conquered / colony
         self.province_food = dict(province_food or {})
         self.pops, self.owners, self.ranks, self.food = pops, owners, ranks, food
         self.counts = _tracked_counts(initial)
@@ -512,6 +527,8 @@ class Simulation:
             if capitals_file.exists()
             else None
         )
+        dominant = sp.dominant_cultures(pops)
+        dominant_religion = sp.dominant_religions(pops)
         for tag, loc in self.locations.items():
             a = self.attrs.get(tag, {})
             target = self.targets.get(tag, {})
@@ -610,6 +627,16 @@ class Simulation:
                 "neighbors": self.neighbors[tag],
                 "modifiers": dict(mods),
                 "buildings": {},
+                # the location's own facts the building rules test (2026-10-24: the start check reads every rule)
+                "pops": pops.get(tag, []),
+                "dominant_culture": dominant.get(tag, ""),
+                "dominant_religion": dominant_religion.get(tag, ""),
+                "province_definition": str(loc.get("province") or ""),
+                "is_capital": self.country_capitals.get(owners[tag]) == tag,
+                "counts_as_capital": self.country_capitals.get(owners[tag]) == tag,
+                "country_capitals": self.country_capitals,
+                "integration_level": self.integration.get(tag, ""),
+                "is_border": any(owners.get(n) and owners.get(n) != owners[tag] for n in self.land_neighbors.get(tag, ())),
             }
             ctx["variables"]["pp_forest_base_capacity"] = rules.value(
                 "pp_forest_base_capacity_value", ctx
@@ -653,6 +680,21 @@ class Simulation:
             self.catchments[group] = (
                 min(sorted(choices), key=distance) if choices else str(region)
             )
+        # is_produced_in_market: the raw materials of the mod map's locations in the location's market at game start
+        # (config/start_markets.txt, read from a start save; a location missing there falls back to its catchment)
+        markets_file = Path(repo or ".") / "config/start_markets.txt"
+        start_markets = dict(line.split() for line in markets_file.read_text(encoding="utf-8").splitlines()
+                             if line.strip() and not line.startswith("#")) if markets_file.exists() else {}
+        market_of = {t: start_markets.get(t) or self.catchments[group] for group, ts in self.groups.items() for t in ts}
+        # goods with base_production (sand, stone, clay, ...) are made by idle peasants in every location
+        everywhere = {str(k) for k, body in rules.goods.items()
+                      if isinstance(body, CList) and float(first(body, "base_production", 0) or 0) > 0}
+        market_goods = defaultdict(lambda: set(everywhere))
+        for t, market in market_of.items():
+            if self.locations[t].get("raw_material"):
+                market_goods[market].add(str(self.locations[t]["raw_material"]).split(":")[-1])
+        for t, market in market_of.items():
+            self.base[t]["market_goods"] = market_goods[market]
         # Crop farms: a crop location's farm levels are spread over the tier-0 crop farms (crop_allocation). The plan
         # here filters on the buildings' gates; place() re-allocates each location on its live caps.
         self.crop_cfg = ca.load_crop_config({"worldbuilder": cfg.raw}, repo=repo)
@@ -873,13 +915,13 @@ class Simulation:
         exceptions (2026-10-23, Jan): the start holds only what could be built there. The engine keeps such buildings at start but deletes them when the location changes
         owner. A gate the evaluator cannot resolve keeps the row (the engine decides)."""
         for tag in sorted(self.locations):
-            ctx = self.ctx(tag)
+            ctx = {**self.ctx(tag), "placement": True}   # builder conditions hold for the setup (BUILDER_TRIGGERS)
             rank = ctx.get("location_rank", "rural_settlement")
             for key, n in sorted(self.counts[tag].items()):
                 body = self.rules.buildings.get(key)
                 if not n or body is None:
                     continue
-                valid = first(body, rank, False) in (True, "setup_only")
+                valid = rank_allowed(body, rank)
                 for _gate, node in placement_gates(body):
                     try:
                         valid = valid and self.rules.test(node, ctx)
@@ -939,14 +981,13 @@ class Simulation:
 
     def clamp(self):
         # Caps can share pools or shrink with urbanisation: iterate to a stable
-        # state, always removing levels and never silently raising the cap.
-        # The 1337 improvement works stand in full above their cap unless [worldbuilder.start] clamp_improvements_to_cap.
-        keep_improvements = not bool((self.cfg.raw.get("start") or {}).get("clamp_improvements_to_cap", True))
+        # state, always removing levels and never silently raising the cap. No building stands above its cap
+        # (2026-10-24, Jan), the 1337 improvement works included.
         for _ in range(20):
             changed = False
             for tag in sorted(self.locations):
                 for key, n in sorted(self.counts[tag].items()):
-                    if not n or (keep_improvements and key in self.improvement_keys):
+                    if not n:
                         continue
                     cap = self.cap(tag, key, gates=False)
                     if n > cap:
@@ -1914,7 +1955,6 @@ class Simulation:
 
     def verify(self):
         failures = []
-        keep_improvements = not bool((self.cfg.raw.get("start") or {}).get("clamp_improvements_to_cap", True))
         for tag in sorted(self.locations):
             ctx = self.ctx(tag)
             for key, n in sorted(self.counts[tag].items()):
@@ -1924,7 +1964,7 @@ class Simulation:
                 self.audit.append(
                     {"location": tag, "building": key, "levels": n, "cap": cap}
                 )
-                if n > cap and not (keep_improvements and key in self.improvement_keys):
+                if n > cap:
                     failures.append(self.audit[-1])
         if failures:
             raise ValueError(f"Buildings above cap: {failures[:10]}")
@@ -1987,11 +2027,11 @@ def audit_setup(sim, levels, cultures=None):
                 # rank, potential and max level are checked independently: a rule the evaluator cannot read in one
                 # (a culture-locked potential) leaves the others checked
                 unresolved = []
-                if first(body, rank, False) not in (True, "setup_only"):
+                if not rank_allowed(body, rank):
                     problem = "invalid building (rank)"
                 for gate, node in placement_gates(body):
                     try:
-                        if not problem and not sim.rules.test(node, ctx):
+                        if not problem and not sim.rules.test(node, {**ctx, "placement": True}):
                             problem = f"invalid building ({gate})"
                     except Unresolved as exc:
                         unresolved.append(f"{gate}: {exc}")
@@ -2002,10 +2042,7 @@ def audit_setup(sim, levels, cultures=None):
                 else:
                     cap = value
                     if not problem and n > cap:
-                        # improvement levels above their cap are the 1337 works, kept on purpose (the engine keeps
-                        # setup levels above max_levels; [worldbuilder.start] clamp_improvements_to_cap)
-                        kept = str(first(body, "max_levels", "")).startswith("pp_wb_cap_")
-                        problem = KEPT_ABOVE_CAP if kept else "above max level"
+                        problem = "above max level"
                 sim.rules.unsupported = before
                 if not problem and unresolved:
                     problem, detail = "unresolved", "; ".join(unresolved)
@@ -2044,9 +2081,6 @@ def unguarded_topup_rows(path):
     return bad
 
 
-KEPT_ABOVE_CAP = "starting works above the cap (kept)"
-
-
 def validate_setup(sim, repo, vanilla_root, mod_root):
     """Audit the setup files as written (``audit_setup``) and the topup's guards; any error the engine would log at
     the start fails the build. Writes every audited row to ``SETUP_AUDIT_RELATIVE_PATH``."""
@@ -2057,7 +2091,8 @@ def validate_setup(sim, repo, vanilla_root, mod_root):
     schema = {"location": pl.String, "building": pl.String, "levels": pl.Int64, "cap": pl.Int64, "problem": pl.String, "detail": pl.String}
     pl.DataFrame(rows, schema=schema).write_csv(path)
     problems = Counter(r["problem"] for r in rows if r["problem"])
-    errors = [r for r in rows if r["problem"] not in ("", "unresolved", KEPT_ABOVE_CAP)]
+    # every rule is read (2026-10-24, Jan: by the book): a rule the start model cannot read fails the build too
+    errors = [r for r in rows if r["problem"]]
     if errors or unguarded:
         raise ValueError(
             f"Setup buildings the engine would reject at game start: {dict(problems)}; first rows {errors[:10]}; "
@@ -2123,7 +2158,16 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
     from prosper_or_perish_constructor.crop_farms import load_crop_table
 
     province_food = province_food_per_level(rules, start.province_food)
+    from .spline_network import land_pairs
+
+    land_neighbors = defaultdict(set)
+    for a, b in land_pairs(Path(mod_root), Path(vanilla_root), Path(repo) / "artifacts/data/worldbuilder/land_adjacency.json"):
+        land_neighbors[a].add(b)
+        land_neighbors[b].add(a)
     sim = Simulation(
+        country_capitals=sp.load_capitals(vanilla_root, mod_root),
+        integration=sp.load_integration(vanilla_root, mod_root),
+        land_neighbors=land_neighbors,
         repo=repo,
         crop_threshold=load_crop_table(repo).threshold,
         province_food=province_food,

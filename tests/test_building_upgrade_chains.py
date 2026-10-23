@@ -1486,36 +1486,18 @@ def test_manpower_building_blueprints_do_not_copy_invalid_owner_culture_gate() -
         assert "prev.location.dominant_culture" not in body
 
 
-def test_game_start_never_places_offshore_fishery_directly_and_culls_invalid_locations() -> None:
+def test_game_start_never_places_offshore_fishery_directly() -> None:
+    # setup offshore fisheries off the sea coast are removed from the setup (start_simulation drop_invalid), not culled
     text = GAME_START_PATH.read_text(encoding="utf-8-sig")
-
-    assert "construct_building = {\n\t\t\t\t\t\tbuilding_type = building_type:offshore_fishery" not in text
-    assert re.search(
-        r"building_type\s*=\s*building_type:offshore_fishery.*?NOT\s*=\s*\{\s*pp_is_sea_coast\s*=\s*yes\s*\}.*?"
-        r"building\s*=\s*building_type:offshore_fishery",
-        text,
-        flags=re.S,
-    )
+    assert "building_type:offshore_fishery" not in text
 
 
-def test_game_start_restores_lake_adjacency_modifier() -> None:
+def test_lake_shores_get_their_modifier_from_the_setup() -> None:
+    # the World Builder setup places pp_wb_lake on every lake shore; the old game-start lake script is gone (2026-10-24)
     text = GAME_START_PATH.read_text(encoding="utf-8-sig")
-    modifier_text = LOCATION_MODIFIER_ADJUSTMENTS_PATH.read_text(encoding="utf-8-sig")
-    localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
-        encoding="utf-8-sig"
-    )
-
-    assert re.search(r"on_game_start\s*=\s*\{.*?pp_apply_adjacent_to_lake_modifier", text, flags=re.S)
-    assert "pp_apply_adjacent_to_lake_modifier = {" in text
-    assert "limit = { is_adjacent_to_lake = yes }" in text
-    assert "modifier = is_adjacent_to_lake" in text
-    assert "has_location_modifier = is_adjacent_to_lake" in text
-    assert "remove_location_modifier = is_adjacent_to_lake" in text
-    assert "modifier = adjacent_to_lake" not in text
-    assert "has_location_modifier = adjacent_to_lake" not in text
-    assert "remove_location_modifier = adjacent_to_lake" not in text
-    assert re.search(r"^is_adjacent_to_lake\s*=\s*\{.*?category\s*=\s*location", modifier_text, flags=re.S | re.M)
-    assert "STATIC_MODIFIER_NAME_is_adjacent_to_lake" in localization_text
+    assert "pp_apply_adjacent_to_lake_modifier" not in text
+    setup = (GAME_START_PATH.parents[3] / "main_menu/setup/1337/21_pp_wb_attribute_modifiers.txt").read_text(encoding="utf-8-sig")
+    assert setup.count("pp_wb_lake") > 1000
 
 
 def test_game_start_places_no_buildings_at_runtime() -> None:
@@ -1537,13 +1519,10 @@ def test_game_start_places_no_buildings_at_runtime() -> None:
     assert "building_manager = {" in start_setup.read_text(encoding="utf-8-sig")
 
 
-def test_game_start_rgo_reduction_cannot_zero_max_workers() -> None:
+def test_game_start_raises_zero_rgo_max_workers_and_reduces_none() -> None:
     text = GAME_START_PATH.read_text(encoding="utf-8-sig")
     assert "pp_reset_rgo_max_workers" not in text
-
-    on_game_start = _first_script_block(text, "on_game_start")
-    assert re.search(r"(?m)^[ \t]*pp_reduce_specific_rgo[ \t]*$", on_game_start) is None
-    assert re.search(r"(?m)^[ \t]*#[ \t]*pp_reduce_specific_rgo[ \t]*$", on_game_start)
+    assert "pp_reduce_specific_rgo" not in text   # the dead RGO cut is deleted (2026-10-24)
 
     floor = _first_script_block(text, "pp_raise_zero_rgo_max_workers")
     assert "exists = raw_material" in floor
@@ -1557,65 +1536,14 @@ def test_game_start_rgo_reduction_cannot_zero_max_workers() -> None:
         floor,
     )
 
-    reducer = _first_script_block(text, "pp_reduce_specific_rgo")
-    branch_blocks = _iter_script_blocks(reducer, "if") + _iter_script_blocks(reducer, "else_if")
-    offenders: list[str] = []
 
-    for match in re.finditer(r"(?m)^[ \t]*change_max_raw_material_workers\s*=\s*(-\d+)\s*$", reducer):
-        reduction = abs(int(match.group(1)))
-        _, _, branch_block = _enclosing_script_block(branch_blocks, match.start(), "if/else_if")
-        limit_block = _first_script_block(branch_block, "limit")
-        floor_match = re.search(r"\bmax_rgo_workers\s*>=\s*(\d+)\b", limit_block)
-        line = _script_line_number(reducer, match.start())
-
-        if floor_match is None:
-            offenders.append(f"line {line}: missing max_rgo_workers guard")
-            continue
-        if int(floor_match.group(1)) <= reduction:
-            offenders.append(
-                f"line {line}: max_rgo_workers guard {floor_match.group(1)} does not survive reduction {reduction}"
-            )
-
-    assert re.search(r"\brgo_workers\b", reducer) is None
-    assert not offenders
-
-
-def test_game_start_invalid_building_cleanup_matches_current_potentials() -> None:
+def test_game_start_destroys_no_buildings() -> None:
+    """No start culls (2026-10-24, Jan): the setup holds only buildings their rules allow (start_simulation
+    drop_invalid), so nothing removes buildings at game start."""
     text = GAME_START_PATH.read_text(encoding="utf-8-sig")
-    on_game_start = _first_script_block(text, "on_game_start")
-    assert on_game_start.index("pp_remove_invalid_fiber_and_stud_farms") < on_game_start.index(
-        "pp_game_start_effect"
-    )
-
-    fiber_and_stud_cleanup = _first_script_block(text, "pp_remove_invalid_fiber_and_stud_farms")
-    assert "building_type:fiber_crops_farm" in fiber_and_stud_cleanup
-    assert "pp_fiber_crops_farm_location_potential = yes" in fiber_and_stud_cleanup
-    assert "building_type:horse_breeders" in fiber_and_stud_cleanup
-    assert "pp_horse_breeders_location_potential = yes" in fiber_and_stud_cleanup
-    assert "building_type:stud_farm" in fiber_and_stud_cleanup
-    assert "can_build_building" not in fiber_and_stud_cleanup
-
-    cleanup = _first_script_block(text, "pp_remove_invalid_buildings")
-
-    assert "building_type:granary" not in cleanup
-
-    cleanup_ifs = _iter_script_blocks(cleanup, "if")
-    fruit_orchard_block = next(
-        block
-        for _, _, block in cleanup_ifs
-        if "building_type:fruit_orchard" in block and "change_building_level_in_location" in block
-    )
-    fruit_orchard_limit = _first_script_block(fruit_orchard_block, "limit")
-    assert "pp_fruit_orchard_location_potential = yes" in fruit_orchard_limit
-    assert "pp_vanilla_start_fruit_orchard_location" not in fruit_orchard_limit
-
-    fishing_village_block = next(
-        block
-        for _, _, block in cleanup_ifs
-        if "building_type:fishing_village" in block and "change_building_level_in_location" in block
-    )
-    fishing_village_limit = _first_script_block(fishing_village_block, "limit")
-    assert "is_coastal = yes" in fishing_village_limit
+    for name in ("pp_remove_invalid_buildings", "pp_remove_invalid_fiber_and_stud_farms", "pp_cull_setup_estate_buildings",
+                 "destroy_all_buildings_of_type", "destroy_building"):
+        assert name not in text, name
 
 
 def _is_generated_vanilla_copy(path: Path) -> bool:

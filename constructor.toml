@@ -660,9 +660,6 @@ replace = [
 # savegame-driven food startup compiler. A farm never pushes a location over its cap: spare land = capacity - pops.
 keep_pops_within_capacity = true
 fill_improvements_to_pops = true      # starting improvement levels rise to their caps where the 1337 pops need the room
-# The 1337 works (World Builder starting levels) stand in full even above the cap: the engine keeps setup levels above
-# max_levels, they just cannot be extended (2026-10-05, Jan: China's past investment is its advantage).
-clamp_improvements_to_cap = false
 peasant_work_share = 0.6              # share of a location's peasants that may staff rural buildings at start
 max_farm_levels_per_location = 6
 food_target_ratio = 1.1               # province food supply aimed for, relative to what the pops eat

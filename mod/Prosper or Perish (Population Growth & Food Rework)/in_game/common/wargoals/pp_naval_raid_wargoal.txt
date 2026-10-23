@@ -1,0 +1,15 @@
+﻿# War goal of the PP Sea Raid casus belli (pp_naval_raid_cb.txt). Vanilla's `naval` goal with its own war name: the
+# engine ticks it from blockaded ports and adds bonus war score for won naval battles.
+
+pp_naval_raid = {
+	type = naval_superiority
+	war_name = "PP_NAVAL_RAID_WAR_NAME" #uses first and second
+
+	attacker = {
+		conquer_cost = 10.0
+		subjugate_cost = 10.0
+	}
+	defender = {
+	}
+	ticking_war_score = 0.5
+}

@@ -21,6 +21,7 @@ TREATY_FILE = COMMON / "peace_treaties" / "pp_naval_raid_treaties.txt"
 RELATION_FILE = COMMON / "scripted_relations" / "pp_naval_raid_relations.txt"
 ABILITY_FILE = COMMON / "unit_abilities" / "pp_coastal_raid.txt"
 RAID_EFFECT_FILE = COMMON / "scripted_effects" / "pp_coastal_raid_effects.txt"
+TARGET_TRIGGER_FILE = COMMON / "scripted_triggers" / "pp_naval_raid_triggers.txt"
 LOC_FILE = MOD / "main_menu" / "localization" / "english" / "pp_naval_raid_l_english.yml"
 CB = "cb_pp_naval_raid"
 # Its treaty is gone (2026-10-23, Jan: same as vanilla war reparations); kept so saves that hold one still load.
@@ -43,6 +44,15 @@ def test_casus_belli_uses_the_naval_superiority_war_goal() -> None:
     cb = _blocks(CB_FILE)[CB]
     wargoal = _blocks(WARGOAL_FILE)[cb.first("war_goal_type")]
     assert wargoal.first("type") == "naval_superiority"
+
+
+def test_casus_belli_only_targets_coasts_next_to_our_privateers() -> None:
+    cb = _blocks(CB_FILE)[CB]
+    for check in ("create_enabled", "declare_enabled"):
+        assert "pp_naval_raid_target_trigger" in [entry.key for entry in cb.first(check).entries], check
+    trigger = _text(TARGET_TRIGGER_FILE)
+    assert "pp_naval_raid_target_trigger = {" in trigger
+    assert "any_privateer_from_country" in trigger and "owner ?= scope:target" in trigger
 
 
 def test_treaties_and_ability_need_a_war_of_the_casus_belli() -> None:
@@ -78,6 +88,6 @@ def test_every_player_facing_key_has_english_text() -> None:
     for relation in _blocks(RELATION_FILE):
         wanted |= {f"{relation}_relation", f"{relation}_relation_desc"}
     wanted |= {"pp_coastal_raid", "pp_coastal_raid_desc", "pp_coastal_raid_cta"}
-    for path in (TREATY_FILE, ABILITY_FILE):
+    for path in (TREATY_FILE, ABILITY_FILE, TARGET_TRIGGER_FILE):
         wanted |= set(re.findall(r'(?:text|name|none_available_msg_key|desc) = "?((?:pp|PP)_[A-Za-z_]+)', _text(path)))
     assert sorted(wanted - keys) == []

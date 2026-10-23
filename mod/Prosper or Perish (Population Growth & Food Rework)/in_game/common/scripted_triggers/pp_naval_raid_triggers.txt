@@ -1,0 +1,18 @@
+﻿# Sea Raid casus belli (casus_belli/pp_naval_raid_cb.txt), root = attacker, scope:target = target: one of root's
+# privateers sails in a sea area with a sea zone next to land the target owns. Starts from root's privateers (one per
+# area at most), so it stays cheap.
+pp_naval_raid_target_trigger = {
+	custom_tooltip = {
+		text = pp_naval_raid_target_tt
+		any_privateer_from_country = {
+			area = {
+				any_location_in_area = {
+					any_neighbor_location = {
+						is_land = yes
+						owner ?= scope:target
+					}
+				}
+			}
+		}
+	}
+}

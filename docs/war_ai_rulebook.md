@@ -321,12 +321,14 @@ out longer and pay less, but they still do not win back their land.
 A naval war for pirates and every country that may hire privateers. Files: `casus_belli/pp_naval_raid_cb.txt`,
 `wargoals/pp_naval_raid_wargoal.txt`, `peace_treaties/pp_naval_raid_treaties.txt`,
 `scripted_relations/pp_naval_raid_relations.txt`, `unit_abilities/pp_coastal_raid.txt`,
-`scripted_effects/pp_coastal_raid_effects.txt`, localization
+`scripted_effects/pp_coastal_raid_effects.txt`, `scripted_triggers/pp_naval_raid_triggers.txt`, localization
 `pp_naval_raid_l_english.yml`; `tests/test_naval_raid_cb.py`.
 
 - **Who and against whom:** `modifier:can_hire_privateers` and own ports (pirate republics, privateering laws, policies
-  and advances); it builds up (speed 15, like Anti-Piracy) against a country with ports whose sea zone holds our
-  privateers, no truce. No `ai_will_do`: the AI values it by the war goal like any other CB.
+  and advances); it builds up (speed 15, like Anti-Piracy) only against a country whose land borders a sea zone of a
+  sea area where one of our privateers sails (`scripted_triggers/pp_naval_raid_triggers.txt`, from our privateers, so
+  cheap), no truce; the same check again to declare (withdrawn privateers close it). No `ai_will_do`: the AI values it
+  by the war goal like any other CB.
 - **War goal:** vanilla's naval superiority type with vanilla `naval` numbers (land and subjugation x10 cost, ticking
   0.5). The engine already does the rest: ticking war score while we blockade ports and the enemy blockades none of
   ours, bonus war score per won naval battle. PP's blockade capacity x10 (`ppc blockade`) makes blockades easy.

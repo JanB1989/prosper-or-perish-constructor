@@ -320,7 +320,8 @@ out longer and pay less, but they still do not win back their land.
 
 A naval war for pirates and every country that may hire privateers. Files: `casus_belli/pp_naval_raid_cb.txt`,
 `wargoals/pp_naval_raid_wargoal.txt`, `peace_treaties/pp_naval_raid_treaties.txt`,
-`scripted_relations/pp_naval_raid_relations.txt`, `unit_abilities/pp_coastal_raid.txt`, localization
+`scripted_relations/pp_naval_raid_relations.txt`, `unit_abilities/pp_coastal_raid.txt`,
+`scripted_effects/pp_coastal_raid_effects.txt`, localization
 `pp_naval_raid_l_english.yml`; `tests/test_naval_raid_cb.py`.
 
 - **Who and against whom:** `modifier:can_hire_privateers` and own ports (pirate republics, privateering laws, policies
@@ -329,10 +330,13 @@ A naval war for pirates and every country that may hire privateers. Files: `casu
 - **War goal:** vanilla's naval superiority type with vanilla `naval` numbers (land and subjugation x10 cost, ticking
   0.5). The engine already does the rest: ticking war score while we blockade ports and the enemy blockades none of
   ours, bonus war score per won naval battle. PP's blockade capacity x10 (`ppc blockade`) makes blockades easy.
-- **Treaties (only in a war of this CB, base cost 10):** Tribute of the Seas (loser pays 10 % of its monthly income
-  for 10 years, vanilla war reparations' share), Open Harbours (the winner's markets pull the loser's locations like
-  Preferred Market Access, trade protection lifted, 10 years), Sack the Market (destroys one coastal market of the
+- **Treaties (only in a war of this CB, base cost 10):** Open Harbours (the winner's markets pull the loser's locations
+  like Preferred Market Access, trade protection lifted, 10 years), Sack the Market (destroys one coastal market of the
   loser; cost 10 + half its trade income, max 50; AI desire -10 until seen in game). Vanilla treaties stay as they are.
-- **Coastal Raid (navy ability, 30 days):** in a war of this CB, next to an enemy coastal location of that war with
-  peasants and not Recently Razed: its peasants -1 %, 0.4 % of them arrive as slaves in the raider's capital (vanilla
-  wokou ratios), Recently Razed for a year. AI weight 25 (like the clan raids); whether AI navies use it is unknown.
+  Tribute of the Seas was removed the same day (Jan): it equalled vanilla war reparations (cost 10, 10 % of income,
+  10 years); its relation `pp_sea_tribute` stays so saves that hold one still load.
+- **Coastal Raid (navy toggle, tested in game as a 30-day click ability):** while on, the navy raids when switched on and
+  each time it enters a sea zone: one adjacent coastal location whose owner fights us in this war (war participants
+  only), with peasants and not Recently Razed: its peasants -1 %, 0.4 % of them arrive as slaves in the raider's capital
+  (vanilla wokou ratios), Recently Razed for a year. A navy that sits still raids nothing more (no periodic hook);
+  naval morale -25 % while on; ends by itself at peace. AI weight 25; whether AI navies switch it on is unknown.

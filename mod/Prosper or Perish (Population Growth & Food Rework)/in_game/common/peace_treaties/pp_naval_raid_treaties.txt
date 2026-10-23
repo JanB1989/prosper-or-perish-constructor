@@ -1,57 +1,6 @@
 ﻿# Peace treaties of the PP Sea Raid casus belli (pp_naval_raid_cb.txt): only in a war of that casus belli, cheap in war
-# score. Tribute of the Seas and Open Harbours create the relations in pp_naval_raid_relations.txt for ten years;
+# score. Open Harbours creates the relation in pp_naval_raid_relations.txt for ten years;
 # Sack the Market destroys one of the loser's coastal markets (vanilla destroy_market). Not tested in game.
-
-pp_peace_sea_tribute = {
-	potential = {
-		scope:war ?= {
-			has_casus_belli = yes
-			casus_belli ?= casus_belli:cb_pp_naval_raid
-		}
-	}
-	allow = {
-		scope:loser = {
-			NOT = {
-				receiving_scripted_relation = {
-					type = relation_type:pp_sea_tribute
-					target = scope:winner
-				}
-			}
-		}
-	}
-
-	cost = {
-		add = {
-			desc = "DIPLOREASON_BASE"
-			value = 10
-		}
-	}
-
-	effect = {
-		scope:winner = {
-			create_relation = {
-				type = relation_type:pp_sea_tribute
-				first = scope:winner
-				second = scope:loser
-				years = 10
-			}
-		}
-	}
-
-	ai_desire = {
-		add = {
-			desc = "DIPLOREASON_BASE"
-			value = 5
-		}
-		add = {
-			desc = "PP_DIPLOREASON_LOSER_INCOME"
-			value = scope:loser.monthly_income_trade_and_tax
-			multiply = 0.5
-			min = 0
-			max = 20
-		}
-	}
-}
 
 pp_peace_open_harbours = {
 	potential = {

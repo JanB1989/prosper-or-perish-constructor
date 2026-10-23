@@ -1,8 +1,8 @@
 """The Sea Raid casus belli (2026-10-23) and the files that hang on it stay wired together.
 
-The casus belli points at the PP war goal (vanilla's naval superiority type, which ticks from blockades); the three
-peace treaties and the Coastal Raid navy ability only work in a war of that casus belli; the treaties create the
-relations defined next to them; every key the player sees has English localization.
+The casus belli points at the PP war goal (vanilla's naval superiority type, which ticks from blockades); the peace
+treaties and the Coastal Raid navy ability only work in a war of that casus belli; the treaties create relations
+defined next to them; every key the player sees has English localization.
 """
 
 from __future__ import annotations
@@ -20,8 +20,11 @@ WARGOAL_FILE = COMMON / "wargoals" / "pp_naval_raid_wargoal.txt"
 TREATY_FILE = COMMON / "peace_treaties" / "pp_naval_raid_treaties.txt"
 RELATION_FILE = COMMON / "scripted_relations" / "pp_naval_raid_relations.txt"
 ABILITY_FILE = COMMON / "unit_abilities" / "pp_coastal_raid.txt"
+RAID_EFFECT_FILE = COMMON / "scripted_effects" / "pp_coastal_raid_effects.txt"
 LOC_FILE = MOD / "main_menu" / "localization" / "english" / "pp_naval_raid_l_english.yml"
 CB = "cb_pp_naval_raid"
+# Its treaty is gone (2026-10-23, Jan: same as vanilla war reparations); kept so saves that hold one still load.
+RELATIONS_KEPT_FOR_SAVES = {"pp_sea_tribute"}
 
 
 def _blocks(path: Path) -> dict[str, CList]:
@@ -44,18 +47,26 @@ def test_casus_belli_uses_the_naval_superiority_war_goal() -> None:
 
 def test_treaties_and_ability_need_a_war_of_the_casus_belli() -> None:
     treaties = _blocks(TREATY_FILE)
-    assert set(treaties) == {"pp_peace_sea_tribute", "pp_peace_open_harbours", "pp_peace_sack_market"}
+    assert set(treaties) == {"pp_peace_open_harbours", "pp_peace_sack_market"}
     for name, treaty in treaties.items():
         potential = treaty.first("potential")
         assert isinstance(potential, CList), name
         assert f"casus_belli:{CB}" in _text(TREATY_FILE).split(f"{name} = {{", 1)[1].split("cost = {", 1)[0], name
+    ability = _blocks(ABILITY_FILE)["pp_coastal_raid"]
+    assert ability.first("toggle") is True
     assert f"in_war_of_casus_belli = casus_belli:{CB}" in _text(ABILITY_FILE)
+    for hook in ("start_effect", "on_entering_location"):
+        assert [entry.key for entry in ability.first(hook).entries] == ["pp_coastal_raid_effect"], hook
+    effect = _text(RAID_EFFECT_FILE)
+    assert "pp_coastal_raid_effect = {" in effect
+    assert f"casus_belli ?= casus_belli:{CB}" in effect
 
 
 def test_treaties_create_the_relations_defined_with_them() -> None:
     relations = set(_blocks(RELATION_FILE))
     created = set(re.findall(r"type = relation_type:([a-z_]+)", _text(TREATY_FILE)))
-    assert created == relations == {"pp_sea_tribute", "pp_open_harbours"}
+    assert created == {"pp_open_harbours"}
+    assert relations == created | RELATIONS_KEPT_FOR_SAVES
 
 
 def test_every_player_facing_key_has_english_text() -> None:

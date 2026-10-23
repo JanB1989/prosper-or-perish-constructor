@@ -1,0 +1,51 @@
+﻿# Coastal Raid (unit_abilities/pp_coastal_raid.txt), root = navy: raids one coastal location next to the navy's sea
+# zone whose owner fights the navy's owner in a war of the PP Sea Raid casus belli and that was not razed within the
+# year. Its peasants lose a share and a smaller share arrives as slaves in the raider's capital (vanilla's wokou raid
+# ratios, wokou_events.2); the location is Recently Razed for a year.
+pp_coastal_raid_effect = {
+	unit_location = {
+		random_neighbor_location = {
+			limit = {
+				is_land = yes
+				is_coastal = yes
+				owner ?= {
+					"war_with_country(root.owner)" ?= {
+						has_casus_belli = yes
+						casus_belli ?= casus_belli:cb_pp_naval_raid
+					}
+				}
+				NOT = { has_location_modifier = recently_razed }
+				any_pop = { pop_type = pop_type:peasants }
+			}
+			save_scope_as = pp_raided_location
+		}
+	}
+	scope:pp_raided_location ?= {
+		every_pop = {
+			limit = {
+				pop_type = pop_type:peasants
+			}
+			save_temporary_scope_as = pp_raided_pop
+			root.owner.capital = {
+				add_pop = {
+					culture = scope:pp_raided_pop.culture
+					religion = scope:pp_raided_pop.religion
+					size = {
+						value = scope:pp_raided_pop.pop_size
+						multiply = 0.004
+					}
+					type = pop_type:slaves
+				}
+			}
+			add_pop_size = {
+				value = pop_size
+				multiply = -0.01
+			}
+		}
+		add_location_modifier = {
+			modifier = recently_razed
+			years = 1
+			mode = add_and_extend
+		}
+	}
+}

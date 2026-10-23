@@ -1,7 +1,8 @@
 ﻿# Relations forced by the PP Sea Raid treaties (pp_naval_raid_treaties.txt); first = winner, second = loser. They are
 # created for a fixed time by the treaty (create_relation years) and cannot be offered, requested or broken by hand.
 
-# Tribute of the Seas: the loser pays a share of its monthly income to the winner (vanilla war reparations' share).
+# Tribute of the Seas: the loser pays a share of its monthly income to the winner. Its treaty is gone (2026-10-23, Jan:
+# the same as vanilla war reparations); the relation stays so saves that hold one still load. Drop it later.
 pp_sea_tribute = {
 	type = diplomacy
 	relation_type = oneway

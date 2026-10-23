@@ -10,18 +10,19 @@ ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 BLUEPRINTS = ROOT / "blueprints" / "accepted" / "buildings"
 RIVER_BLUEPRINT = BLUEPRINTS / "river_boatmen_yard.yml"
-# building -> (logistics class, max_levels, rank flags)
+# building -> (logistics class, site cap of its one-level-at-a-time max_levels or None, rank flags)
 LOGISTICS_BUILDINGS = {
     "river_boatmen_yard": ("river", "pp_river_boatmen_yard_max_level", {"rural_settlement", "town", "city", "megalopolis"}),
     "coastal_shipping_office": ("coastal", "pp_coastal_shipping_office_max_level", {"town", "city", "megalopolis"}),
-    "transport_office": ("urban", "100", {"town", "city", "megalopolis"}),
-    "carrier_inn": ("overland", "100", {"rural_settlement", "town"}),
-    "pp_caravanserai": ("overland", "100", {"rural_settlement", "town"}),
-    "pp_oasis_caravan_station": ("overland", "100", {"rural_settlement", "town"}),
-    "pp_yam_station": ("overland", "100", {"rural_settlement", "town"}),
-    "pp_banjara_tanda": ("overland", "100", {"rural_settlement", "town"}),
-    "pp_llama_caravan_post": ("overland", "100", {"rural_settlement", "town"}),
+    "transport_office": ("urban", None, {"town", "city", "megalopolis"}),
+    "carrier_inn": ("overland", None, {"rural_settlement", "town"}),
+    "pp_caravanserai": ("overland", None, {"rural_settlement", "town"}),
+    "pp_oasis_caravan_station": ("overland", None, {"rural_settlement", "town"}),
+    "pp_yam_station": ("overland", None, {"rural_settlement", "town"}),
+    "pp_banjara_tanda": ("overland", None, {"rural_settlement", "town"}),
+    "pp_llama_caravan_post": ("overland", None, {"rural_settlement", "town"}),
 }
+LEVEL_CAPS = MOD_ROOT / "in_game" / "common" / "script_values" / "pp_logistics_level_caps.txt"
 BULKY_SCALE = {"pp_caravanserai": 1.5, "pp_oasis_caravan_station": 1.5, "pp_llama_caravan_post": 1.5, "pp_banjara_tanda": 0.5}
 LOGISTICS_CAPS = MOD_ROOT / "in_game" / "common" / "script_values" / "pp_logistics_building_caps.txt"
 LOCATION_MODIFIERS = MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_location_modifier_adjustments.txt"
@@ -74,7 +75,7 @@ def _block(body: str, key: str) -> str:
 
 def test_river_boatmen_yard_cap_scales_with_river_level() -> None:
     blueprint = RIVER_BLUEPRINT.read_text(encoding="utf-8")
-    assert "max_levels = pp_river_boatmen_yard_max_level" in blueprint
+    assert "max_levels = pp_river_boatmen_yard_logistics_max_level" in blueprint  # river cap clamps it (LEVEL_CAPS)
     location_potential = blueprint.split("location_potential = {", 1)[1].split("}", 1)[0]
     assert "has_river = yes" in location_potential
     assert "is_adjacent_to_lake = yes" not in location_potential
@@ -104,7 +105,7 @@ def test_river_boatmen_yard_cap_scales_with_river_level() -> None:
 
 def test_coastal_shipping_office_cap_scales_with_natural_harbor() -> None:
     blueprint = (BLUEPRINTS / "coastal_shipping_office.yml").read_text(encoding="utf-8")
-    assert "max_levels = pp_coastal_shipping_office_max_level" in blueprint
+    assert "max_levels = pp_coastal_shipping_office_logistics_max_level" in blueprint  # harbour cap clamps it
     assert "is_port = yes" in blueprint
 
     cap_value = LOGISTICS_CAPS.read_text(encoding="utf-8")
@@ -124,7 +125,8 @@ def test_coastal_shipping_office_cap_scales_with_natural_harbor() -> None:
 
 
 def test_logistics_buildings_are_laborer_buildings_that_never_close() -> None:
-    for building, (cls, max_levels, ranks) in LOGISTICS_BUILDINGS.items():
+    caps = LEVEL_CAPS.read_text(encoding="utf-8")
+    for building, (cls, site_cap, ranks) in LOGISTICS_BUILDINGS.items():
         blueprint = _blueprint(building)
         body = blueprint["building"]["body"]
         assert blueprint["logistics"]["class"] == cls
@@ -132,7 +134,13 @@ def test_logistics_buildings_are_laborer_buildings_that_never_close() -> None:
         assert blueprint["footprint"] == "infrastructure"
         assert blueprint["gate_method"]
         assert "price =" not in body and "prices" not in blueprint
-        assert _field(body, "max_levels") == max_levels
+        # one logistics level at a time per location (2026-10-23)
+        cap_name = f"pp_{building.removeprefix('pp_')}_logistics_max_level"
+        assert _field(body, "max_levels") == cap_name
+        cap = _block(caps, cap_name)
+        assert f'value = "location_building_level(building_type:{building})"' in cap
+        assert "building_levels_under_construction >= 1" in cap
+        assert (f"value = this.{site_cap} }}" in cap) if site_cap else ("max =" not in cap)
         assert _field(body, "pop_type") == "laborers"
         assert _field(body, "employment_size") == "1"
         assert _field(body, "category") == "infrastructure_category"

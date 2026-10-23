@@ -278,7 +278,12 @@
   below `urgency_max_market_access` (0.85) as a share of it, and makes it every logistics building's flat
   `ai_construct_weight` (no income divide, like the food urgency; 70 levels at 0.20 -> 92, max 120). Since 2026-10-23
   (Jan) the build gate `gate_max_market_access` is 0.99, so a location may build logistics as soon as it drops below full
-  access, while the urgency still pushes the AI only below 0.85. Edits to logistics.py rerun the start
+  access, while the urgency still pushes the AI only below 0.85. One level at a time (same day, `one_level_at_a_time`):
+  every logistics building's `max_levels` is `pp_<building>_logistics_max_level` (generated
+  `pp_logistics_level_caps.txt`) = levels built + 1 while no other logistics construction runs in the location, clamped
+  by `level_caps` (river size, harbour); the engine counts levels under construction against `max_levels`, so the next
+  level waits for the last to finish and passes the allow gate again (the AI had started up to 3 levels at once).
+  Edits to logistics.py rerun the start
   setup (it is a World Builder input); the weight numbers do too, since constructor.toml is hashed whole.
   `uv run ppc logistics check` must report 0 off, a current urgency value and 0 problems; `ppc build` prints it and `tests/test_logistics.py`
   enforces it. Order after editing recipes: `ppc labour apply`, `ppc logistics apply`, `ppc gate apply`.

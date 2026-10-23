@@ -1135,6 +1135,14 @@ market_access = 0.10          # raw_modifier local_market_access per level
 # location's place in the market's goods allocation order (unclamped access).
 gate_max_market_access = 0.99
 gate_min_building_levels = 15 # allow: total_building_levels >= this
+# One level at a time (2026-10-23, Jan): the AI started up to 3 levels of one logistics building in one location at once
+# (current game, 1387/1393), and the allow gate is checked only when a level starts, so a location just below the
+# line would have ended 2-3 levels over it. max_levels = levels built + 1 while no other logistics construction runs
+# in the location (script values generated into pp_logistics_level_caps.txt); the engine counts levels under
+# construction against max_levels, so the next level waits for the last and passes the gate again. level_caps clamps
+# the buildings that have a site limit (river size, harbour); the others had max_levels = 100.
+one_level_at_a_time = true
+level_caps = { river_boatmen_yard = "pp_river_boatmen_yard_max_level", coastal_shipping_office = "pp_coastal_shipping_office_max_level" }
 improved_method_bonus = 0.05  # extra output share on the improved (third) method
 network_output = 0.30         # logistics per level of the input-less network method (pure profit, no input cost)
 # AI urgency (2026-10-05, Jan): the engine's build score does not see market access, so a heavily built location at

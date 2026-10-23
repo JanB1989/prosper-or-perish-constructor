@@ -26,7 +26,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = 100
+    max_levels = pp_llama_caravan_post_logistics_max_level
     increase_per_level_cost = 0.25
     pop_type = laborers
     employment_size = 1

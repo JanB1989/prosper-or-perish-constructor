@@ -347,6 +347,39 @@ def test_the_urgency_line_follows_the_gate_unless_set(repo: Path) -> None:
     assert "multiply = { value = 0.85 subtract = market_access min = 0 divide = 0.85 }" in text
 
 
+ONE_AT_A_TIME = URGENCY.replace(
+    "network_output = 0.30\n", 'network_output = 0.30\none_level_at_a_time = true\nlevel_caps = { inn = "inn_site_cap" }\n'
+)
+
+
+def test_one_level_at_a_time_caps_the_levels_at_built_plus_one(repo: Path) -> None:
+    (repo / "constructor.toml").write_text(ONE_AT_A_TIME, encoding="utf-8")
+    result = lg.apply(repo, repo / "constructor.toml", PRICES)
+    assert result.problems == []
+    assert "max_levels = pp_inn_logistics_max_level" in _body(repo)
+    text = (repo / "mod" / lg.LEVEL_CAPS_RELATIVE).read_text(encoding="utf-8")
+    assert text.startswith("﻿")
+    block = text[text.index("pp_inn_logistics_max_level = {"):]
+    # levels built, +1 while its own level is under way or no logistics building has one, clamped by the site cap
+    assert 'value = "location_building_level(building_type:inn)"' in block
+    assert block.count("building_type = building_type:inn") == 4  # own level (twice), the any-logistics list (twice)
+    assert block.count("building_levels_under_construction >= 1") == 4
+    assert 'add = { desc = "BUILDING_LEVEL_LOGISTICS_NEXT" value = 1 }' in block
+    assert 'max = { desc = "BUILDING_LEVEL_LOGISTICS_SITE" value = this.inn_site_cap }' in block
+    assert not lg.apply(repo, repo / "constructor.toml", PRICES, write=False).problems
+    (repo / "mod" / lg.LEVEL_CAPS_RELATIVE).write_text("edited by hand", encoding="utf-8")
+    assert lg.apply(repo, repo / "constructor.toml", PRICES, write=False).problems == [
+        "pp_logistics_level_caps.txt is stale (run ppc logistics apply)"
+    ]
+
+
+def test_level_caps_must_name_logistics_buildings(repo: Path) -> None:
+    (repo / "constructor.toml").write_text(ONE_AT_A_TIME.replace("{ inn =", "{ tavern ="), encoding="utf-8")
+    assert lg.apply(repo, repo / "constructor.toml", PRICES, write=False).problems == [
+        "[logistics] level_caps names buildings without a logistics tag: ['tavern']"
+    ]
+
+
 def test_every_logistics_building_weighs_the_urgency_and_the_value_is_current() -> None:
     result = lg.apply(ROOT, ROOT / "constructor.toml", write=False)
     assert not result.urgency_stale

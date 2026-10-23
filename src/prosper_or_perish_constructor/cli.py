@@ -395,6 +395,18 @@ def _build_parser() -> argparse.ArgumentParser:
         help="apply writes the price file from vanilla unit types, goods demands and default prices; check reports whether it is current.",
     )
     ship_upkeep.add_argument("--verbose", action="store_true", help="also print every ship with its old and new base upkeep.")
+    blockade = _add_command(
+        subcommands,
+        "blockade",
+        "Blockade capacity x [blockade_capacity] factor for every ship that is not a levy ship (in_game/common/unit_types/pp_blockade_capacity.txt).",
+        _blockade,
+    )
+    blockade.add_argument(
+        "action",
+        choices=("apply", "check"),
+        help="apply writes the unit type injects from vanilla unit types; check reports whether they are current.",
+    )
+    blockade.add_argument("--verbose", action="store_true", help="also print every ship with its old and new blockade capacity.")
     gate = _add_command(
         subcommands,
         "gate",
@@ -1234,6 +1246,20 @@ def _ship_upkeep(args: argparse.Namespace, extra: Sequence[str], repo: Path, pro
             print(f"{ship.unit:40s} {ship.category:16s} age {ship.age_index + 1}: {ship.old_base:7.2f} -> {ship.new_base:6.2f}")
     state = ("written" if changed else "unchanged") if args.action == "apply" else ("OFF (run ppc ship-upkeep apply)" if changed else "current")
     print(f"ship upkeep: {len(ships)} navy unit types, {ship_upkeep.OUTPUT} {state}.")
+    return 0 if args.action == "apply" or not changed else 1
+
+
+def _blockade(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("blockade does not accept extra arguments.")
+    from prosper_or_perish_constructor import blockade_capacity
+
+    ships, changed = blockade_capacity.apply(repo, project, write=args.action == "apply")
+    if args.verbose:
+        for ship in sorted(ships, key=lambda s: (s.category, s.unit)):
+            print(f"{ship.unit:40s} {ship.category:16s} {ship.vanilla:5.2f} -> {ship.new:6.2f}{' (levy)' if ship.levy else ''}")
+    state = ("written" if changed else "unchanged") if args.action == "apply" else ("OFF (run ppc blockade apply)" if changed else "current")
+    print(f"blockade: {len(ships)} navy unit types, {sum(s.levy for s in ships)} levy kept, {blockade_capacity.OUTPUT} {state}.")
     return 0 if args.action == "apply" or not changed else 1
 
 

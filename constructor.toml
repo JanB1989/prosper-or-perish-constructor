@@ -1242,3 +1242,8 @@ province_food_share = { 0 = 1.0, 6 = 0.8, 12 = 0.65, 18 = 0.5, 24 = 0.4 }
 staple_per_province_food = -0.40
 staple_per_province_food_by_good = { fish = -0.20, fruit = -0.21, wild_game = -0.14, wool = -0.23, camels = -0.16 }
 
+
+[blockade_capacity]
+# Blockade capacity of every ship that is not a levy ship = vanilla x factor (2026-10-23, Jan). Written by
+# `uv run ppc blockade apply` into in_game/common/unit_types/pp_blockade_capacity.txt (blockade_capacity.py).
+factor = 10

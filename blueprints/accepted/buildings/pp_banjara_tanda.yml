@@ -45,7 +45,7 @@ building:
       pp_logistics_zone_banjara = yes
     }
     allow = {
-      market_access < 0.85
+      market_access < 0.99
       total_building_levels >= 15
     }
     construction_demand = pp_banjara_tanda_construction

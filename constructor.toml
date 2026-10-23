@@ -1128,7 +1128,12 @@ wine = ["winery", "winery_manufactory"]
 good = "logistics"
 input_cost = 3.0              # gold per level per method at default prices, manual_labor and floor goods at 1
 market_access = 0.10          # raw_modifier local_market_access per level
-gate_max_market_access = 0.85 # allow: market_access < this
+# allow: market_access < this. 2026-10-23 (Jan): 0.99 (was 0.85), buildable as soon as a location falls below full
+# access. Checked first: no war, occupation, blockade, devastation or plague term moves market access; the only timed
+# minus is vanilla's staple port stagnation event option; market changes move it (run 4c623702: drops below 0.99 ~1.5x
+# those below 0.85). One level lifts any location from 0.94 over the line; above 1.0 the bonus still raises the
+# location's place in the market's goods allocation order (unclamped access).
+gate_max_market_access = 0.99
 gate_min_building_levels = 15 # allow: total_building_levels >= this
 improved_method_bonus = 0.05  # extra output share on the improved (third) method
 network_output = 0.30         # logistics per level of the input-less network method (pure profit, no input cost)
@@ -1137,8 +1142,10 @@ network_output = 0.30         # logistics per level of the input-less network me
 # could stall. ppc logistics apply writes pp_logistics_urgency_weight (script_values/pp_logistics_urgency.txt) and adds
 # it flat (no income divide, like the food urgency) as each logistics building's ai_construct_weight:
 # urgency_per_level x building levels (steps of urgency_level_step, at most urgency_levels_cap) x the access gap below
-# gate_max_market_access as a share of it. 70 levels at 0.20 access -> 92; 15 levels at 0.75 -> 3.5; max 120 (the food
-# urgency's max is 90).
+# urgency_max_market_access as a share of it. 70 levels at 0.20 access -> 92; 15 levels at 0.75 -> 3.5; max 120 (the
+# food urgency's max is 90). Its line stays at 0.85 when the gate moved to 0.99 (2026-10-23, Jan): the AI is pushed
+# only where access really hurts, above it the buildings compete on profit.
+urgency_max_market_access = 0.85
 urgency_per_level = 2.0
 urgency_levels_cap = 60
 urgency_level_step = 5

@@ -46,7 +46,7 @@ building:
         NOT = { location_rank = location_rank:town }
         development >= 10
       }
-      market_access < 0.85
+      market_access < 0.99
       total_building_levels >= 15
     }
     construction_demand = pp_transport_office_construction

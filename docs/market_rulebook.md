@@ -92,7 +92,8 @@ in locations.png:
   viceroyalty) carry `raw_modifier free_building_levels = 1`: foreign countries open them with 1 + 0.1 x development +
   0.05 x population levels each (Mantova: 267 foreign levels of 437), and each level now supports itself.
 - The logistics buildings add `local_market_access = +0.10` per level through `raw_modifier`, can be built only while
-  `market_access < 0.85` and `total_building_levels >= 15` (`allow`), and produce the floor-pinned `logistics` good for
+  `market_access < 0.99` (0.85 until 2026-10-23) and `total_building_levels >= 15` (`allow`), and produce the
+  floor-pinned `logistics` good for
   their wage. Blueprint rule: `ppc logistics apply|check`, `[logistics]` in `constructor.toml`,
   `src/prosper_or_perish_constructor/logistics.py`. Regional variants of the Carrier Inn follow the geography-only
   zones in `pp_logistics_zone_triggers.txt`.

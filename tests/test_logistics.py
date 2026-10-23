@@ -328,8 +328,23 @@ def test_urgency_weight_grows_with_building_levels_and_the_access_gap() -> None:
     assert lg.urgency_weight(config, 77, 0.37) == pytest.approx(67.8, abs=0.1)
     assert lg.urgency_weight(config, 15, 0.75) == pytest.approx(3.5, abs=0.1)
     assert lg.urgency_weight(config, 200, 0.0) == pytest.approx(120.0)  # the cap; the food urgency peaks at 90
-    assert lg.urgency_weight(config, 60, 0.85) == 0.0  # the allow gate's line
+    assert lg.urgency_weight(config, 60, 0.85) == 0.0  # the urgency's own line
+    assert lg.urgency_weight(config, 60, 0.95) == 0.0  # below the allow gate (0.99), above the urgency line
     assert lg.urgency_weight(config, 60, 1.10) == 0.0
+
+
+def test_the_urgency_line_follows_the_gate_unless_set(repo: Path) -> None:
+    (repo / "constructor.toml").write_text(URGENCY, encoding="utf-8")
+    assert lg.load_config(repo / "constructor.toml").urgency_line == 0.85
+    (repo / "constructor.toml").write_text(
+        URGENCY.replace("gate_max_market_access = 0.85\n", "gate_max_market_access = 0.99\nurgency_max_market_access = 0.85\n"),
+        encoding="utf-8",
+    )
+    result = lg.apply(repo, repo / "constructor.toml", PRICES)
+    assert result.problems == []
+    assert "market_access < 0.99" in _block(_body(repo), "allow")
+    text = (repo / "mod" / lg.URGENCY_RELATIVE).read_text(encoding="utf-8")
+    assert "multiply = { value = 0.85 subtract = market_access min = 0 divide = 0.85 }" in text
 
 
 def test_every_logistics_building_weighs_the_urgency_and_the_value_is_current() -> None:

@@ -275,8 +275,10 @@
   access ranked its logistics buildings like any small earner and could stall. `ppc logistics apply` writes
   `pp_logistics_urgency_weight` (`in_game/common/script_values/pp_logistics_urgency.txt`, generated) from `[logistics]`
   `urgency_per_level` x building levels (steps of `urgency_level_step`, at most `urgency_levels_cap`) x the access gap
-  below `gate_max_market_access` as a share of it, and makes it every logistics building's flat `ai_construct_weight`
-  (no income divide, like the food urgency; 70 levels at 0.20 -> 92, max 120). Edits to logistics.py rerun the start
+  below `urgency_max_market_access` (0.85) as a share of it, and makes it every logistics building's flat
+  `ai_construct_weight` (no income divide, like the food urgency; 70 levels at 0.20 -> 92, max 120). Since 2026-10-23
+  (Jan) the build gate `gate_max_market_access` is 0.99, so a location may build logistics as soon as it drops below full
+  access, while the urgency still pushes the AI only below 0.85. Edits to logistics.py rerun the start
   setup (it is a World Builder input); the weight numbers do too, since constructor.toml is hashed whole.
   `uv run ppc logistics check` must report 0 off, a current urgency value and 0 problems; `ppc build` prints it and `tests/test_logistics.py`
   enforces it. Order after editing recipes: `ppc labour apply`, `ppc logistics apply`, `ppc gate apply`.

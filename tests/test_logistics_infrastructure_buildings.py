@@ -145,7 +145,7 @@ def test_logistics_buildings_are_laborer_buildings_that_never_close() -> None:
         assert _custom_tags(body) == {"pp_logistics", PRIORITY_TAG.get(building, "pp_rural_logistics_priority")}
         assert f"construction_demand = pp_{building.removeprefix('pp_')}_construction" in body
         allow = _block(body, "allow")
-        assert "market_access < 0.85" in allow and "total_building_levels >= 15" in allow
+        assert "market_access < 0.99" in allow and "total_building_levels >= 15" in allow
         # market access and owner conditions never go into location_potential (the game re-checks it on owner change)
         potential = _block(body, "location_potential") if "location_potential = {" in body else ""
         assert "market_access" not in potential and "owner" not in potential and "development" not in potential

@@ -23440,7 +23440,7 @@ flavor_eng.240 = {
 		trigger = {
 			region:great_britain_region = {
 				any_location_in_region = {
-					has_building_with_at_least_one_level = farming_village
+					modifier:local_pp_farm_levels > 0
 					owner ?= root
 				}
 			}

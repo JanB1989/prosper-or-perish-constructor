@@ -1832,7 +1832,7 @@ def test_cash_crop_upgrade_chains_use_dedicated_discovery_advances_and_clean_inp
             assert raw["building"]["mode"] == "CREATE"
             assert raw["building"]["source"] == "pp_new_buildings.txt"
             assert f"max_levels = farm_capacity_max_{key}" in body
-            assert f"farm_capacity_from_{key} = -1" in body
+            assert f"pp_levels_{key} = 1" in body
             assert re.search(rf"location_potential\s*=\s*\{{\s*raw_material\s*=\s*goods:{good}\s*\}}", body)
             assert not any(term in body for term in FORBIDDEN_CASH_CROP_UPGRADE_TERMS)
             assert raw.get("upgrade_chain") == {

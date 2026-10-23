@@ -530,7 +530,7 @@ def test_rural_capacities_farm_rows_take_arable_land():
             assert land_of.get(farm, farm_land["arable"]["land"]) == share, (row, farm)
             text = (blueprints / f"{farm}.yml").read_text(encoding="utf-8")
             assert f"max_levels = farm_capacity_max_{farm}" in text, farm
-            assert re.search(rf"local_pp_farmland_used = {share:g}\b", text), farm
+            assert re.search(rf"local_population_capacity = -{share:g}\b", text), farm
 
 
 def test_rural_capacities_fish_and_forest_rows_follow_their_capacity():

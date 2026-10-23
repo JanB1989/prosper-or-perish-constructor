@@ -61,9 +61,6 @@ ATTRIBUTE_TRIGGERS = {
 }
 # One class per location: the engine's climate/vegetation/topography, the setup's single fertility and soil modifier.
 EXCLUSIVE_ATTRIBUTES = frozenset({"climate", "vegetation", "topography", "fertility", "soil_type"})
-OTHER_CAPACITY_BLUEPRINTS = (
-    "terraces", "irrigation_reservoirs", "aqueduct_system", "pound_lock_canal_infrastructure",
-)
 LEVELS_MODIFIER = "pp_wb_levels_{key}"
 LEVELS_TYPES_PATH = Path("main_menu/common/modifier_type_definitions/pp_wb_building_levels.txt")
 LEVELS_ICONS_PATH = Path("main_menu/common/modifier_icons/pp_wb_building_levels.txt")
@@ -481,17 +478,6 @@ def patch_improvement_blueprints(contract: Contract, cfg: WorldBuilderConfig, re
         data["building"]["body"] = body
         _save_blueprint(path, data)
         patched.append(key)
-    for key in OTHER_CAPACITY_BLUEPRINTS:
-        path = repo / BLUEPRINTS / f"{key}.yml"
-        if not path.is_file():
-            continue
-        data = yaml_io.safe_load(path.read_text(encoding="utf-8"))
-        body = str(data["building"]["body"])
-        if "local_population_capacity" in body:
-            body = re.sub(r"local_population_capacity\s*=\s*-?\d+(?:\.\d+)?", "local_population_capacity = 0", body)
-            data["building"]["body"] = body
-            _save_blueprint(path, data)
-            patched.append(key)
     return patched
 
 
@@ -547,9 +533,8 @@ def farm_constants(cfg: WorldBuilderConfig, building: str) -> tuple[float, float
 
 
 def patch_farm_blueprints(cfg: WorldBuilderConfig, repo: Path, farm_buildings: list[str]) -> list[str]:
-    """Each farm level takes land: raw_modifier local_population_capacity = -land (kept beside its level counter), and
-    records it as local_pp_farmland_used = land, which the farm max-level tooltips read as "Used by other farms"
-    (scripts/generate_rural_capacity_values.py; one modifier read instead of a sum over every farm type)."""
+    """Each farm level takes land: raw_modifier local_population_capacity = -land (kept beside its level counter); the
+    land shows on the farm once, as Arable Land (2026-10-23, Jan: no second record of the same land)."""
     patched: list[str] = []
     for key in farm_buildings:
         path = repo / BLUEPRINTS / f"{key}.yml"
@@ -558,7 +543,7 @@ def patch_farm_blueprints(cfg: WorldBuilderConfig, repo: Path, farm_buildings: l
         land, _ = farm_constants(cfg, key)
         data = yaml_io.safe_load(path.read_text(encoding="utf-8"))
         body = str(data["building"]["body"])
-        new = _replace_raw_modifier(body, {"local_population_capacity": _fmt(-land), "local_pp_farmland_used": _fmt(land)})
+        new = _replace_raw_modifier(body, {"local_population_capacity": _fmt(-land)}, drop_prefixes=("local_pp_farmland_used",))
         if new != body:
             data["building"]["body"] = new
             _save_blueprint(path, data)

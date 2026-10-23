@@ -440,7 +440,6 @@ pp_start_topup_salt_collector_potential = {
 
 pp_start_topup_tar_kiln_potential = {
 	OR = {
-		pp_wb_setup_tar_kiln_location = yes
 		OR = {
 			vegetation = woods
 			vegetation = ha1300_veg_thicket

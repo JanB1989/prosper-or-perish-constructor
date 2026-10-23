@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:pp_yam_station:building
 pp_yam_station = {
 is_foreign = no
-max_levels = 100
+max_levels = pp_yam_station_logistics_max_level
 increase_per_level_cost = 0.19
 pop_type = laborers
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
@@ -20,7 +20,7 @@ location_potential = {
   pp_logistics_zone_yam = yes
 }
 allow = {
-  market_access < 0.85
+  market_access < 0.99
   total_building_levels >= 15
 }
 construction_demand = pp_yam_station_construction

@@ -36,7 +36,7 @@ DOCUMENTED_PRODUCED_GOOD_REPLACEMENTS = {
     # methods with explicit food, fish, forest-resource, and worker-victual methods.
     "fishing_village": {"naval_supplies", "pottery"},
     "forest_village": {"tools", "weaponry"},
-    # farming_village is a tombstone since the crop farm split: livestock moved to the cattle_farm chain.
+    # farming_village was split into the crop farms and deleted (2026-10-23): livestock moved to the cattle_farm chain.
     "farming_village": {"livestock"},
 }
 

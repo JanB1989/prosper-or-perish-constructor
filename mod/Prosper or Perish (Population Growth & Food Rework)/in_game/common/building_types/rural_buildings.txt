@@ -115,70 +115,7 @@ fishing_village = {
 	}
 }
 
-farming_village = {
-	audio_tier = 1
-	is_foreign = no
-	max_levels = rural_building_cap
-	startup_ramp_target = rural_startup_ramp_target
-	pop_type = peasants
-	
-	is_village = yes
-	
-	category = village_category
-	employment_size = village_employment_size
-	
-	rural_settlement = yes
-	
-	location_potential = {
-		OR = {
-			raw_material = goods:wheat
-			raw_material = goods:maize
-			raw_material = goods:rice
-			raw_material = goods:millet
-			raw_material = goods:legumes
-			raw_material = goods:potato
-			raw_material = goods:livestock
-			raw_material = goods:olives
-			raw_material = goods:fruit
-			raw_material = goods:wool
-		}
-	}
-	
-		
-	
-	build_time = village_build_time
-	
-	unique_production_methods = {
-		farming_village_maintenance = {
-			icon_type = building_type
-			icon = farming_village
-			tools = 0.0267
-			clay = 1.0896
-			
-			output = 0.5
-			
-			produced = livestock
-			
-			debug_max_profit = 0.188
-	
-			category = building_maintenance
-		}
-	}
 
-	construction_demand = village_construction
-
-	modifier = {
-		local_food_capacity = 100
-		local_raw_material_output = 0.025
-		local_peasants_estate_power = 0.25		#25% higher here.
-		local_peasant_enfranchisment = 0.01
-
-	}
-	raw_modifier = {
-		local_laborers_desired_pop = 0.1
-		local_soldiers_desired_pop = 0.05
-	}
-}
 
 forest_village = {
 	audio_tier = 1

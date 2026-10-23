@@ -230,6 +230,24 @@ vanilla_files = [
   "in_game/events/DHE/flavor_ETH.txt",
   "in_game/events/DHE/flavor_ENG.txt",
 ]
+# Vanilla objects the mod deletes: left out of the file's copy (written even without a widened test, else vanilla's
+# definition comes back). farming_village was split into the crop farms (2026-10-02) and deleted 2026-10-23 (Jan).
+removed_objects = { "in_game/common/building_types/rural_buildings.txt" = ["farming_village"] }
+
+# Exact replacements of vanilla references to deleted objects (fail when vanilla changes; on top of the widening).
+[[worldbuilder.compat.replacements]]
+# option c of the English farming event: any farm or orchard instead of the farming village
+file = "in_game/events/DHE/flavor_ENG.txt"
+replace = [
+  { find = "has_building_with_at_least_one_level = farming_village", with = "modifier:local_pp_farm_levels > 0", count = 1 },
+]
+
+[[worldbuilder.compat.replacements]]
+# town graphics: the peasant gathering meshes follow the crop farms instead of the farming village
+file = "main_menu/gfx/map/city_data/templates.txt"
+replace = [
+  { find = "has_building_with_at_least_one_level:farming_village = 1", with = "has_building_with_at_least_one_level:wheat_farm = 1\n\t\t\t\thas_building_with_at_least_one_level:rice_farm = 1\n\t\t\t\thas_building_with_at_least_one_level:millet_farm = 1\n\t\t\t\thas_building_with_at_least_one_level:maize_farm = 1\n\t\t\t\thas_building_with_at_least_one_level:legume_farm = 1\n\t\t\t\thas_building_with_at_least_one_level:potato_farm = 1\n\t\t\t\thas_building_with_at_least_one_level:olive_farm = 1\n\t\t\t\thas_building_with_at_least_one_level:cattle_farm = 1", count = 1 },
+]
 
 [worldbuilder.navigation_scripts]
 # Vanilla scripts that route fleets over water (find_route, create_route from 1.4), put ships on the map or send an
@@ -653,10 +671,8 @@ subsistence_pop_types = ["peasants", "laborers", "slaves"]
 max_cookshop_levels_per_location = 6
 # Victuals limits come from the live import/export scripted values.
 laborer_conversion_share = 0.5        # share of a location's peasants that may become the Cookshops' laborers
-# Vanilla setup buildings kept where the World Builder geography fails their location_potential (as the World Builder
-# test mod does): pp_wb_setup_<building>_location lists them (pp_wb_setup_buildings.txt) and each building's potential
-# tests it. irrigation_systems is not listed: an improvement building, its start levels come from the capacity model.
-keep_setup_buildings = ["terraces", "fruit_orchard", "tar_kiln", "lumber_mill"]
+# No setup exceptions (2026-10-23, Jan): a vanilla setup building that fails its building's rank, location_potential or
+# allow is removed from the setup (start_simulation drop_invalid); no building rule names start locations.
 [worldbuilder.start.processors]
 # raw material -> building placed at game start (its laborers are converted from local peasants); levels as before
 alum = { building = "alum_quarry", levels = 1 }

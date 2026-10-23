@@ -2194,12 +2194,12 @@
                                                         blockoverride "step_title" { text = "PP_EU_RURAL_FARM_LAND" }
                                                         blockoverride "step_text" { text = "PP_EU_RURAL_FARM_LAND_DESC" }
                                                     }
-                                                    pp_eu_sign = { blockoverride "sign_text" { raw_text = "–" } }
+                                                    pp_eu_sign = { blockoverride "sign_text" { raw_text = "+" } }
                                                     pp_eu_step = {
-                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/modifier_types/global_population_capacity_modifier.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowModifierTypeName('local_pp_farmland_used')]" } }
-                                                        blockoverride "step_title" { text = "PP_EU_RURAL_FARM_OTHERS" }
-                                                        blockoverride "step_text" { text = "PP_EU_RURAL_FARM_OTHERS_DESC" }
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/wheat_farmstead.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowModifierTypeName('pp_levels_wheat_farmstead')]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_RURAL_FARM_OWN" }
+                                                        blockoverride "step_text" { text = "PP_EU_RURAL_FARM_OWN_DESC" }
                                                     }
                                                     pp_eu_sign = { blockoverride "sign_text" { raw_text = "=" } }
                                                     pp_eu_step = {

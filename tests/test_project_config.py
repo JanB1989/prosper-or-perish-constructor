@@ -17,9 +17,11 @@ from eu5_mod_orchestrator.adapters.parser import load_raw_material_goods
 from eu5_mod_orchestrator.blueprints import accepted_blueprint_files, enabled_manifest_entries, validate_blueprint_file
 from eu5_mod_orchestrator.config import load_project_config
 from prosper_or_perish_constructor import cli
-from prosper_or_perish_constructor.rural_capacity import (
-    FARM_WATER_CONTROL_BUILDINGS,
-    capacity_max_omitted_buildings_by_building,
+from prosper_or_perish_constructor.rural_capacity import capacity_max_omitted_buildings_by_building
+
+WATER_CONTROL_BUILDINGS = (
+    "land_clearance", "field_drainage", "irrigation_systems", "qanats", "irrigated_fields", "bund", "terraces",
+    "polders", "khmer_baray", "aqueduct_system",
 )
 from prosper_or_perish_constructor.vanilla_setup import (
     expand_town_setup,
@@ -1444,8 +1446,9 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
         else ""
     )
 
-    orchard_exception_locations = set(re.findall(r"this = location:(\w+)", fruit_trigger_text))
-    assert orchard_exception_locations == set(current_invalid_locations["fruit_orchard"])
+    # no start exceptions (2026-10-23, Jan): the setup orchards that fail the gate are removed from the setup
+    # (start_simulation drop_invalid), never let through by a location list
+    assert "this = location:" not in fruit_trigger_text
     assert "var:pp_fruit_orchard_eligible > 0" in fruit_text
     assert "pp_fruit_orchard_location_potential = yes" in fruit_text
     assert "pp_vanilla_start_fruit_orchard_location" not in fruit_text
@@ -1465,13 +1468,11 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
     for location, building in invalid_rows:
         if building == "farming_village" and "raw_material = goods:beeswax" not in general_farm_block:
             unsupported.append((location, building))
-        elif building == "fruit_orchard" and location not in orchard_exception_locations:
-            unsupported.append((location, building))
         elif building == "fishing_village" and "is_coastal" not in fishing_potential:
             unsupported.append((location, building))
         elif building == "granary" and "is_province_capital = yes" not in granary_text:
-            # since 2026-10-06 the Granary stands at province capitals only; the start planner (drop_invalid) removes
-            # the setup Granaries elsewhere, so these old log rows are explained by the gate
+            # since 2026-10-06 the Granary stands at province capitals only (its allow); the start planner
+            # (drop_invalid, which tests allow since 2026-10-23) removes the setup Granaries elsewhere
             unsupported.append((location, building))
         elif building == "winery" and "NOT = { raw_material = goods:wine }" in winery_text:
             unsupported.append((location, building))
@@ -1500,7 +1501,7 @@ def _assert_absent_or_cost_only_building_inject(path: Path) -> None:
 
 
 def test_water_control_buildings_have_manual_increase_per_level_cost() -> None:
-    for building, _multiplier in FARM_WATER_CONTROL_BUILDINGS:
+    for building in WATER_CONTROL_BUILDINGS:
         text = (BUILDING_BLUEPRINT_ROOT / f"{building}.yml").read_text(encoding="utf-8-sig")
         assert re.search(r"^\s*increase_per_level_cost\s*=\s*0\.\d{2}\s*$", text, flags=re.M), building
 
@@ -1935,7 +1936,7 @@ def test_building_capacity_europedia_explains_capacity_pools_and_rural_cap() -> 
     for link in ("[population_capacity|e]", "[pp_fish_capacity|e]", "[pp_forest_capacity|e]"):
         assert link in lead
     assert "[population_capacity|e]" in localization["PP_EU_RURAL_FARMS_DESC"]
-    assert "ShowModifierTypeName('local_pp_farmland_used')" in localization["PP_EU_RURAL_FARMS_NOTES"]
+    assert "ShowModifierTypeName('local_population_capacity')" in localization["PP_EU_RURAL_FARMS_NOTES"]
     assert "ShowBuildingTypeName('pearl_fishery')" in localization["PP_EU_RURAL_FISH_NOTES"]
     where = localization["PP_EU_RURAL_WHERE_DESC"]
     for term in ("Geography group", "mines, quarries", "$mapmode_pp_farming_village_capacity_name$"):

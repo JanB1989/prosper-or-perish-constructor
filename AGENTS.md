@@ -355,11 +355,22 @@
   `tests/test_cap_tooltips.py` fails on any max-level row with sub-steps or without a desc (vanilla buildings too).
   A labelled `floor = { ... }` breaks the cap to 0; keep floors inside helpers. The start planner's evaluator
   (`start_rules.py`) reads `this.`/`root.` as the same location.
-- Farm max levels speak in levels of that farm (`scripts/generate_rural_capacity_values.py`): "[Farmland] for this
-  farm" (free farmland, floored as before, plus the land all farms here use) minus "Used by other farms" (that land
-  less this farm's own and replaceable lower-tier levels); the difference is the old cap exactly. Every land farm
-  records its land per level as `raw_modifier local_pp_farmland_used` (`crop_farms.py` and worldbuilder
-  `patch_farm_blueprints`), shown as "Farmland Used"; the Farmland concept (`pp_farmland`) explains it on hover.
+- Farm max levels speak in levels of that farm (`scripts/generate_rural_capacity_values.py`): "Free Arable Land"
+  (floor((flat - reserve) / land)) plus "This farm and the lower tiers it replaces" (their level counters
+  `raw_modifier pp_levels_<farm> = 1`, scaled like the land they take, so the cap is exact). A farm shows its land once,
+  as Arable Land (`local_population_capacity = -land`); no second land record (2026-10-23, Jan: `local_pp_farmland_used`
+  and the old "Farming Capacity from X" counters are gone, a test blocks them).
+
+## Deleted Vanilla Objects and Start Exceptions (2026-10-23, Jan)
+
+- The mod deletes vanilla objects it has no use for instead of keeping inert stubs: `[worldbuilder.compat]
+  removed_objects` leaves them out of the file's generated copy (written even without a widened test, else the vanilla
+  definition comes back), `[[worldbuilder.compat.replacements]]` rewrites vanilla references to them (exact text, fails
+  when vanilla changes). `farming_village` is deleted this way (its English event option and the town graphics now
+  follow the crop farms); `compat.removed_vanilla_buildings` gives the deleted buildings to the footprint check and the production coverage.
+- No start exceptions: no building rule names start locations or start flags. The start setup removes every vanilla
+  setup row that fails its building's rank, `location_potential` or `allow` (`start_simulation.drop_invalid`; the setup
+  audit checks the same), so the game start holds only what could be built there. `tests/test_setup_building_keepers.py`.
 
 ## Ship Upkeep (2026-10-11, Jan)
 

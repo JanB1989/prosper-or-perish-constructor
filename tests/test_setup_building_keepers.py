@@ -1,72 +1,78 @@
-"""Vanilla setup buildings kept where the World Builder geography fails their location_potential."""
+"""No start exceptions (2026-10-23, Jan): buildings stand at game start only where their own rules allow them.
+
+A vanilla setup building that fails its building's rank, location_potential or allow is removed from the setup
+(start_simulation ``drop_invalid``); no building rule lets named start locations through.
+"""
 
 from __future__ import annotations
 
+import re
 import tomllib
 from pathlib import Path
 from types import SimpleNamespace
 
-from eu5gameparser.clausewitz.parser import parse_file, parse_text
+from eu5gameparser.clausewitz.parser import parse_text
 
 from prosper_or_perish_constructor.worldbuilder import start_simulation as ss
 from prosper_or_perish_constructor.worldbuilder.start_rules import Rules
 
 ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+# location lists that are a building's design, not a start exception (vanilla's own, or a site classification)
+DESIGN_LOCATION_LISTS = {"salt_mine", "salt_mine_improved", "inland_saltworks", "engineered_brine_saltworks", "ablaq_palace", "shoen"}
 
 
-def _configured() -> list[str]:
+def test_keepers_are_gone() -> None:
     raw = tomllib.loads((ROOT / "constructor.toml").read_text(encoding="utf-8"))
-    return list(raw["worldbuilder"]["start"]["keep_setup_buildings"])
+    assert "keep_setup_buildings" not in raw["worldbuilder"]["start"]
+    assert not hasattr(ss, "keep_setup_buildings")
+    assert not (MOD_ROOT / "in_game/common/scripted_triggers/pp_wb_setup_buildings.txt").exists()
+    for folder in ("building_types", "scripted_triggers", "script_values"):
+        for path in (MOD_ROOT / "in_game/common" / folder).glob("*.txt"):
+            assert not re.search(r"\bpp_wb_setup_\w+_location\b", path.read_text(encoding="utf-8-sig")), path.name
+    for path in (ROOT / "blueprints/accepted/buildings").glob("*.yml"):
+        assert "pp_wb_setup_" not in path.read_text(encoding="utf-8"), path.name
 
 
-def _sim(potential: str, rows: dict[str, dict]) -> SimpleNamespace:
+def test_orchard_gate_names_no_locations() -> None:
+    text = (MOD_ROOT / "in_game/common/scripted_triggers/pp_startup_building_compatibility.txt").read_text(encoding="utf-8-sig")
+    assert "location:" not in text
+
+
+def test_building_rules_name_no_start_locations() -> None:
+    """Only design lists may name locations inside a building's location_potential or allow."""
+    offenders = []
+    for path in (ROOT / "blueprints/accepted/buildings").glob("*.yml"):
+        text = path.read_text(encoding="utf-8")
+        if path.stem in DESIGN_LOCATION_LISTS:
+            continue
+        if re.search(r"this = location:\w+", text):
+            offenders.append(path.stem)
+    assert offenders == []
+
+
+def _drop(body: str, rows: dict[str, dict]) -> dict[str, int]:
     rules = Rules.__new__(Rules)
     rules.triggers, rules.values = {}, {}
-    rules.buildings = {"tar_kiln": parse_text(f"tar_kiln = {{ location_potential = {{ {potential} }} }}").entries[0].value}
-    counts = {tag: {"tar_kiln": row.pop("levels")} for tag, row in rows.items()}
-    return SimpleNamespace(rules=rules, locations=list(rows), counts=counts, ctx=lambda tag: {"location_tag": tag, **rows[tag]})
+    rules.buildings = {"granary": parse_text(f"granary = {{ {body} }}").entries[0].value}
+    counts = {tag: {"granary": row.pop("levels")} for tag, row in rows.items()}
+    contexts = {tag: {"location_tag": tag, "location_rank": "town", **row} for tag, row in rows.items()}
+    sim = SimpleNamespace(rules=rules, locations=list(rows), counts=counts, trimmed=[], ctx=contexts.__getitem__)
+    ss.Simulation.drop_invalid(sim)
+    return {tag: c["granary"] for tag, c in sim.counts.items()}
 
 
-def test_failing_setup_rows_are_listed_and_then_pass(tmp_path: Path) -> None:
-    sim = _sim("OR = { pp_wb_setup_tar_kiln_location = yes vegetation = forest }", {
-        "woods": {"vegetation": "forest", "levels": 2},
-        "plain": {"vegetation": "grasslands", "levels": 4},
-        "empty": {"vegetation": "grasslands", "levels": 0},   # no setup row: not kept
-    })
-    kept, unreferenced = ss.keep_setup_buildings(sim, ["tar_kiln"], tmp_path)
-    assert kept == {"tar_kiln": ["plain"]} and unreferenced == []
-    text = (tmp_path / ss.SETUP_BUILDING_TRIGGERS_PATH).read_text(encoding="utf-8-sig")
-    assert "pp_wb_setup_tar_kiln_location = {\n\tOR = { this = location:plain }\n}" in text
-    potential = next(iter(sim.rules.buildings["tar_kiln"].values("location_potential")))
-    assert sim.rules.test(potential, sim.ctx("plain")) and not sim.rules.test(potential, sim.ctx("empty"))
+def test_drop_invalid_removes_rows_failing_potential_or_allow() -> None:
+    body = "town = yes location_potential = { vegetation = forest } allow = { is_province_capital = yes }"
+    assert _drop(body, {
+        "capital_forest": {"vegetation": "forest", "is_province_capital": True, "levels": 2},
+        "plain_capital": {"vegetation": "grasslands", "is_province_capital": True, "levels": 2},   # potential fails
+        "forest_village": {"vegetation": "forest", "is_province_capital": False, "levels": 3},    # allow fails
+    }) == {"capital_forest": 2, "plain_capital": 0, "forest_village": 0}
 
 
-def test_nothing_failing_writes_an_always_no_trigger_and_reports_missing_references(tmp_path: Path) -> None:
-    sim = _sim("vegetation = forest", {"woods": {"vegetation": "forest", "levels": 1}})
-    kept, unreferenced = ss.keep_setup_buildings(sim, ["tar_kiln"], tmp_path)
-    assert kept == {"tar_kiln": []} and unreferenced == ["tar_kiln"]
-    assert "pp_wb_setup_tar_kiln_location = {\n\talways = no\n}" in (tmp_path / ss.SETUP_BUILDING_TRIGGERS_PATH).read_text(encoding="utf-8-sig")
-
-
-def test_the_mod_defines_and_tests_every_keeper_trigger() -> None:
-    keys = _configured()
-    assert set(keys) >= {"terraces", "fruit_orchard", "tar_kiln", "lumber_mill"}
-    defined = {e.key for e in parse_file(MOD_ROOT / ss.SETUP_BUILDING_TRIGGERS_PATH).entries}
-    assert defined == {ss.setup_building_trigger(k) for k in keys}
-    texts = "\n".join(p.read_text(encoding="utf-8-sig") for p in (MOD_ROOT / "in_game/common/building_types").glob("*.txt"))
-    for key in keys:
-        assert f"{ss.setup_building_trigger(key)} = yes" in texts, f"{key}: its location_potential must test the keeper"
-    report = (ROOT / "artifacts/data/worldbuilder/start_placement.json")
-    if report.is_file():
-        import json
-
-        data = json.loads(report.read_text(encoding="utf-8"))
-        assert data.get("setup_building_keepers_unreferenced", []) == []
-
-
-def test_terraces_inject_keeps_vanilla_tests() -> None:
-    # terraces is a TRY_INJECT: its injected potential must carry vanilla's own tests next to the keeper
-    text = (MOD_ROOT / "in_game/common/building_types/zz_pp_terraces.txt").read_text(encoding="utf-8-sig")
-    for test in ("topography = mountains", "topography = plateau", "topography = hills", "pp_wb_setup_terraces_location = yes"):
-        assert test in text
+def test_setup_only_buildings_keep_their_start_rows() -> None:
+    # vanilla's allow = { always = no } (kokufu, cardinal seats, monuments): nobody builds them, the setup places them
+    for allow in ("always = no", "custom_tooltip = { text = x always = no }"):
+        body = f"town = yes location_potential = {{ vegetation = forest }} allow = {{ {allow} }}"
+        assert _drop(body, {"seat": {"vegetation": "forest", "levels": 1}}) == {"seat": 1}

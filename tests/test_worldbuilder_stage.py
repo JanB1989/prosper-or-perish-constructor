@@ -401,6 +401,31 @@ def test_compat_copy_leaves_replaced_objects_alone_and_never_undoes_earlier_over
     assert report["files"] == 1 and "OR = { vegetation = sparse vegetation = ha1300_veg_scrubland }" in (folder / "unique_buildings.txt").read_text(encoding="utf-8")
 
 
+def test_compat_removes_deleted_vanilla_objects_and_rewrites_their_references(tmp_path):
+    from prosper_or_perish_constructor.worldbuilder import compat as wb_compat
+
+    fam = {"vegetation": {}, "climate": {}, "topography": {}}
+    rel = "in_game/common/building_types/rural_buildings.txt"
+    ref = "in_game/events/flavor.txt"
+    vanilla = tmp_path / "vanilla" / "game"
+    (vanilla / rel).parent.mkdir(parents=True)
+    (vanilla / ref).parent.mkdir(parents=True)
+    (vanilla / rel).write_text("village = {\n\tmax_levels = 5\n}\nmine = {\n\tmax_levels = 2\n}\n", encoding="utf-8")
+    (vanilla / ref).write_text("e = { trigger = { has_building = village } }\n", encoding="utf-8")
+    mod = tmp_path / "mod"
+    # nothing to widen, but the copy is written: without it the vanilla definition would come back
+    report = wb_compat.write_compat_patches(vanilla.parent, mod, tmp_path, fam, [rel], {rel: ["village"]},
+                                            {ref: [("has_building = village", "has_building = mine", 1)]})
+    assert report["files"] == 2
+    copy = (mod / rel).read_text(encoding="utf-8-sig")
+    assert [n for n, _, _ in wb_compat.top_level_objects(copy)] == ["mine"]
+    assert "has_building = mine" in (mod / ref).read_text(encoding="utf-8-sig")
+    with pytest.raises(ValueError, match="objects to remove not found: gone"):
+        wb_compat.write_compat_patches(vanilla.parent, mod, tmp_path, fam, [rel], {rel: ["gone"]})
+    with pytest.raises(ValueError, match="expected 1 occurrence"):
+        wb_compat.write_compat_patches(vanilla.parent, mod, tmp_path, fam, [], None, {ref: [("has_building = farm", "x", 1)]})
+
+
 def test_population_capacity_cell_bands_the_gauge_and_names_both_sides_of_the_ratio():
     from prosper_or_perish_constructor import location_view as wb_geography
 

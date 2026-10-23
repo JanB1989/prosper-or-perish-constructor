@@ -6,9 +6,9 @@ the crop chosen as a production method) is split into one chain per crop::
     <stem>_farm -> <stem>_farmstead -> <stem>_rotations -> <stem>_model_farm
 
 ``ppc crop-farms --write`` renders the 32 accepted blueprints (``blueprints/accepted/buildings/<building>.yml``), the
-scripted triggers they gate on (``pp_crop_farm_triggers.txt`` in the mod), enables them in the building manifest,
-deletes the retired tier blueprints and turns ``farming_village`` (a vanilla building other vanilla content names) into
-a tombstone that can never be built. ``--check`` compares the loaded YAML with what would be written (a semantic
+scripted triggers they gate on (``pp_crop_farm_triggers.txt`` in the mod), enables them in the building manifest and
+deletes the retired blueprints (the old tiers and ``farming_village``, which ``[worldbuilder.compat] removed_objects``
+deletes from the game). ``--check`` compares the loaded YAML with what would be written (a semantic
 comparison, so a re-dump of the same data is not stale) and ``ppc build`` fails on any difference.
 
 Per blueprint:
@@ -71,9 +71,7 @@ GOODS_CATEGORY_SCALING_RELATIVE = Path("config/goods_category_scaling.toml")
 TIERS = (0, 1, 2, 3)
 # level counters rendered into raw_modifier (one per standing level, staffing ignored): the Cookshop cap reads them
 RAW_COUNTERS = ("local_pp_farm_levels", "local_pp_staple_levels")
-TOMBSTONE = "farming_village"
-RETIRED_BLUEPRINTS = ("husbandry_farmstead", "farming_village_rotations", "model_farm")
-TOMBSTONE_METHOD = "pp_farming_village_retired"
+RETIRED_BLUEPRINTS = ("farming_village", "husbandry_farmstead", "farming_village_rotations", "model_farm")
 LABOUR_GOOD = "manual_labor"
 TIER_ADVANCE_HOST_STEM = "wheat"          # each tier advance is rendered once, in the wheat blueprint of its tier
 STAPLE_LINE_VALUE = "pp_stored_food_staple_line"   # stored_food.py: the crop line of the province's Stored Food step
@@ -643,12 +641,10 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
     body.extend(
         [
             "raw_modifier = {",
-            f"  {str(general.get('farm_capacity_line_pattern', 'farm_capacity_from_{building} = -1')).format(building=building)}",
-            # after the capacity line, where the World Builder land merge (worldbuilder/buildings.py) keeps it
+            f"  {str(general.get('farm_level_line_pattern', 'pp_levels_{building} = 1')).format(building=building)}",
+            # after the level counter, where the World Builder land merge (worldbuilder/buildings.py) keeps it
             *(f"  {key} = {_num(value)}" for key, value in counters.items()),
             f"  local_population_capacity = {_land_text(-context.land(building))}",
-            # the same land as a record the farm max-level tooltips read ("Used by other farms", 2026-10-03)
-            f"  local_pp_farmland_used = {_land_text(context.land(building))}",
             "}",
             "",
             "modifier = {",
@@ -940,57 +936,6 @@ def _cultivation_advance_body(table: CropTable, key: str, spec: Mapping[str, Any
     return "\n".join(lines)
 
 
-# ---------------------------------------------------------------------------------------------------------- tombstone
-
-
-def render_tombstone() -> dict[str, Any]:
-    """``farming_village`` stays defined (vanilla content names it) but can never be built or placed."""
-    body = "\n".join(
-        [
-            "audio_tier = 1",
-            "startup_ramp_target = rural_startup_ramp_target",
-            "is_foreign = no",
-            "max_levels = 0",
-            "pop_type = peasants",
-            "employment_size = 1",
-            "category = village_category",
-            "build_time = village_build_time",
-            "construction_demand = village_construction",
-            "",
-            "location_potential = {",
-            "    always = no",
-            "}",
-            "",
-            "unique_production_methods = {",
-            f"    {TOMBSTONE_METHOD} = {{",
-            "        category = building_maintenance",
-            "    }",
-            "}",
-        ]
-    )
-    return {
-        "version": 2,
-        "tag": TOMBSTONE,
-        "footprint": "technical",
-        "building": {
-            "key": TOMBSTONE,
-            "mode": "REPLACE",
-            "source": "pp_food_buildings.txt",
-            "production_method_slots": [{"name": "slot_0", "methods": [TOMBSTONE_METHOD]}],
-            "possible_production_methods": [],
-            "body": body,
-        },
-        "localization": {
-            "entries": {
-                TOMBSTONE: "Farming Village (retired)",
-                f"{TOMBSTONE}_desc": "Farming villages have given way to farms that each grow one crop.",
-                f"{TOMBSTONE}_slot_0": "Retired",
-                TOMBSTONE_METHOD: "Retired",
-            }
-        },
-    }
-
-
 # ---------------------------------------------------------------------------------------------------------- triggers
 
 
@@ -1036,12 +981,11 @@ def expected_outputs(repo: Path, project: Path) -> tuple[CropTable, dict[str, di
     blueprints = {
         table.building(crop, tier): render_blueprint(table, crop, tier, context) for crop in table.crops for tier in TIERS
     }
-    blueprints[TOMBSTONE] = render_tombstone()
     return table, blueprints, render_triggers(table, context.gates)
 
 
 def write(repo: Path, project: Path) -> list[str]:
-    """Write the 32 blueprints, the tombstone, the triggers and the manifest; delete the retired blueprints.
+    """Write the 32 blueprints, the triggers and the manifest; delete the retired blueprints.
     Returns what changed (paths relative to the repo)."""
     table, blueprints, triggers = expected_outputs(repo, project)
     missing = [
@@ -1128,7 +1072,7 @@ _MANIFEST_ENTRY_RE = re.compile(r"^  (?P<entry>buildings/[^:]+\.yml):\s*(?P<valu
 
 
 def _updated_manifest(text: str, buildings: Sequence[str]) -> str:
-    """The manifest with the retired tiers removed and every crop farm enabled (inserted after farming_village)."""
+    """The manifest with the retired blueprints removed and every crop farm enabled (inserted before the first one)."""
     retired = {f"buildings/{key}.yml" for key in RETIRED_BLUEPRINTS}
     wanted = [f"buildings/{key}.yml" for key in buildings]
     present: dict[str, str] = {}
@@ -1142,16 +1086,18 @@ def _updated_manifest(text: str, buildings: Sequence[str]) -> str:
         kept.append(line)
     if all(present.get(entry) == "true" for entry in wanted):
         return "".join(kept)
-    kept = [
-        line
-        for line in kept
-        if not ((match := _MANIFEST_ENTRY_RE.match(line.rstrip("\r\n"))) and match.group("entry") in wanted)
-    ]
-    insert = [f"  {entry}: true\n" for entry in wanted]
-    anchor = next((i for i, line in enumerate(kept) if line.startswith(f"  buildings/{TOMBSTONE}.yml:")), None)
-    if anchor is None:
-        anchor = max((i for i, line in enumerate(kept) if _MANIFEST_ENTRY_RE.match(line.rstrip("\r\n"))), default=len(kept) - 1)
-    return "".join(kept[: anchor + 1] + insert + kept[anchor + 1 :])
+
+    def is_wanted(line: str) -> bool:
+        return bool((match := _MANIFEST_ENTRY_RE.match(line.rstrip("\r\n"))) and match.group("entry") in wanted)
+
+    first = next((i for i, line in enumerate(kept) if is_wanted(line)), None)
+    if first is None:
+        anchor = max((i for i, line in enumerate(kept) if _MANIFEST_ENTRY_RE.match(line.rstrip("\r\n"))), default=len(kept) - 1) + 1
+    else:
+        anchor = first
+    head = [line for line in kept[:anchor] if not is_wanted(line)]
+    tail = [line for line in kept[anchor:] if not is_wanted(line)]
+    return "".join(head + [f"  {entry}: true\n" for entry in wanted] + tail)
 
 
 def _mapping_diff(current: Any, expected: Any) -> str:

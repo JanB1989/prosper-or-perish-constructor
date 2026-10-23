@@ -70,28 +70,27 @@ def test_farm_max_levels_read_in_levels_of_the_farm() -> None:
         block = re.search(rf"(?ms)^farm_capacity_max_{building} = \{{\n(.*?)^\}}", text).group(1)
         rows = re.findall(r"^\t(\w+) = \{ desc = \"(\w+)\" value = this\.(\w+) \}$", block, flags=re.M)
         assert [(op, desc) for op, desc, _ in rows] == [
-            ("add", "PP_BUILDING_LEVEL_FARMLAND"), ("subtract", "PP_BUILDING_LEVEL_FARMLAND_OTHER_FARMS")
+            ("add", "BUILDING_LEVEL_WB_FREE_FARMLAND"), ("add", "PP_BUILDING_LEVEL_FARM_OWN_LEVELS")
         ], building
-        farmland, others = rows[0][2], rows[1][2]
-        # Farmland = floor((flat - reserve) / land) + all farms' land / land; Used by other farms = that land / land
-        # less this farm's (and its replaceable tiers') own levels: the difference is the old cap exactly
-        land = re.search(rf"(?ms)^{farmland} = \{{.*?divide = ([\d.]+)\n.*?floor = yes", text).group(1)
-        assert re.search(rf"(?ms)^{farmland} = \{{.*?add = \{{ value = modifier:local_pp_farmland_used divide = {land} \}}", text)
-        other = re.search(rf"(?ms)^{others} = \{{\n(.*?)^\}}", text).group(1)
-        assert f"value = modifier:local_pp_farmland_used\n\tdivide = {land}" in other
-        assert f"add = modifier:farm_capacity_from_{building}" in other
+        free, own = rows[0][2], rows[1][2]
+        # Free Arable Land = floor((flat - reserve) / land); this farm = its own (and its replaceable tiers') level
+        # counters: the sum is the old cap exactly (2026-10-23)
+        assert re.search(rf"(?ms)^{free} = \{{\n\tvalue = modifier:local_population_capacity\n\tsubtract = [\d.]+\n\tdivide = [\d.]+\n\tfloor = yes\n\}}", text)
+        body = re.search(rf"(?ms)^{own} = \{{\n(.*?)^\}}", text).group(1)
+        assert f"add = modifier:pp_levels_{building}" in body
 
 
-def test_every_land_farm_records_the_land_it_uses() -> None:
+def test_every_land_farm_shows_its_land_once() -> None:
+    """A farm carries its land once, as Arable Land (local_population_capacity), plus its level counter; no second land
+    record (2026-10-23, Jan) and none of the retired farming capacity lines anywhere."""
     root = MOD_ROOT / "in_game/common/building_types"
     found = {}
     for path in root.glob("*.txt"):
-        for block in re.findall(r"raw_modifier = \{([^}]*)\}", path.read_text(encoding="utf-8-sig")):
-            counter = re.search(r"farm_capacity_from_(\w+) = -1", block)
-            land = re.search(r"local_population_capacity = (-[\d.]+)", block)
-            if counter and land:
-                used = re.search(r"local_pp_farmland_used = ([\d.]+)", block)
-                assert used and float(used.group(1)) == -float(land.group(1)), (path.name, counter.group(1))
+        text = path.read_text(encoding="utf-8-sig")
+        assert "local_pp_farmland_used" not in text and "farm_capacity_from_" not in text, path.name
+        for block in re.findall(r"raw_modifier = \{([^}]*)\}", text):
+            counter = re.search(r"pp_levels_(\w+) = 1\b", block)
+            if counter and re.search(r"local_population_capacity = -[\d.]+", block):
                 found[counter.group(1)] = True
     assert {b for b in LAND_FARM_BUILDINGS if b in found} == set(found)
     assert len(found) >= 60
@@ -99,10 +98,10 @@ def test_every_land_farm_records_the_land_it_uses() -> None:
 
 def test_farm_cap_rows_link_arable_land() -> None:
     """The farm max-level rows speak of Arable Land (the population capacity, renamed 2026-10-10; the Farmland concept
-    is gone): the row label links the vanilla concept, which reads "Arable Land"."""
+    is gone): "Free Arable Land" and the farm's own levels."""
     text = "".join(p.read_text(encoding="utf-8-sig") for p in LOCALIZATION.glob("*.yml"))
-    for key in ("PP_BUILDING_LEVEL_FARMLAND", "PP_BUILDING_LEVEL_FARMLAND_OTHER_FARMS", "MODIFIER_TYPE_NAME_local_pp_farmland_used"):
+    for key in ("BUILDING_LEVEL_WB_FREE_FARMLAND", "PP_BUILDING_LEVEL_FARM_OWN_LEVELS"):
         assert f"\n  {key}:" in text, key
-    assert "[population_capacity|e]" in re.search(r'PP_BUILDING_LEVEL_FARMLAND: "([^"]*)"', text).group(1)
+    assert "local_pp_farmland_used" not in text and "farm_capacity_from_" not in text
     assert re.search(r'game_concept_population_capacity: "Arable Land"', text)
     assert not (MOD_ROOT / "main_menu/common/game_concepts/pp_farmland.txt").exists()

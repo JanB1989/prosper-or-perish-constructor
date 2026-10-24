@@ -1,8 +1,8 @@
 """The welcome situation panel (in_game/gui/panels/situation/pp_mod_welcome_situation.gui).
 
 The game opens gui/panels/situation/<situation key>.gui when the player clicks a situation. The welcome is an
-introduction and one button that opens the Prosper or Perish section of the Europedia; the situation never ends (the
-player closes it). Hand-kept GUI the game checks only when it draws it, so these tests read the files the game loads.
+introduction, one button that opens the Prosper or Perish section of the Europedia and one that dismisses the welcome;
+the situation never ends by itself. Hand-kept GUI the game checks only when it draws it, so these tests read the files the game loads.
 """
 
 from __future__ import annotations
@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 PANEL = MOD_ROOT / "in_game/gui/panels/situation/pp_mod_welcome_situation.gui"
 SITUATION = MOD_ROOT / "in_game/common/situations/pp_mod_welcome_situation.txt"
+SCRIPTED_GUI = MOD_ROOT / "in_game/common/scripted_guis/pp_welcome_situation.txt"
 EUROPEDIA = MOD_ROOT / "in_game/gui/encyclopedia_lateralview.gui"
 
 
@@ -47,7 +48,8 @@ def test_every_texture_and_text_key_exists():
     textures = set(re.findall(r'texture = "(gfx/[^"]+)"', _panel()))
     assert textures and not sorted(t for t in textures if not _texture_exists(t))
     keys = set(re.findall(r'(?:text|tooltip) = "(\w+)"', _panel()))
-    assert {"PP_WELCOME_SIT_LEAD", "PP_WELCOME_SIT_BODY", "PP_WELCOME_SIT_CTA", "PP_WELCOME_SIT_CTA_TT"} <= keys
+    assert {"PP_WELCOME_SIT_LEAD", "PP_WELCOME_SIT_BODY", "PP_WELCOME_SIT_CTA", "PP_WELCOME_SIT_CTA_TT", "PP_WELCOME_SIT_DISMISS",
+            "PP_WELCOME_SIT_DISMISS_TT"} <= keys
     assert not sorted(keys - set(_all_loc()))
 
 
@@ -56,16 +58,23 @@ def test_texts_carry_no_numbers():
         assert not re.search(r"\d", re.sub(r"\[[^\[\]]*\]", "", value)), key
 
 
-def test_the_one_button_opens_the_prosper_or_perish_section():
-    """The button opens the Europedia and sets the two variables its PP section reads (shown, all cards)."""
+def test_the_buttons_open_the_prosper_or_perish_section_and_dismiss_the_welcome():
+    """The first button opens the Europedia and sets the two variables its PP section reads (shown, all cards); the
+    second ends the welcome through its scripted GUI and closes the panel."""
     buttons = re.findall(r"button_\w+ = \{", _panel())
-    assert len(buttons) == 1
+    assert len(buttons) == 2
     clicks = re.findall(r'onclick = "\[(.*?)\]"', _panel())
     assert clicks == [
         "OpenLateralView('encyclopedia')",
         "GetVariableSystem.Set('pp_encyclopedia_active', 'yes')",
         "GetVariableSystem.Set('pp_filter', 'all')",
+        "GetScriptedGui('pp_dismiss_welcome_situation').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)",
+        "LateralView.Close",
     ]
+    scripted = SCRIPTED_GUI.read_text(encoding="utf-8-sig")
+    assert re.search(r"(?m)^pp_dismiss_welcome_situation = \{", scripted)
+    assert "scope = country" in scripted
+    assert "end_situation = situation:pp_mod_welcome_situation" in scripted
     europedia = EUROPEDIA.read_text(encoding="utf-8-sig")
     assert "GetVariableSystem.HasValue('pp_encyclopedia_active', 'yes')" in europedia
     assert "GetVariableSystem.HasValue('pp_filter', 'all')" in europedia
@@ -83,7 +92,8 @@ def test_data_functions_exist_in_the_game():
     assert not sorted(used - vanilla)
 
 
-def test_situation_never_ends_and_starts_once():
+def test_situation_never_ends_by_itself_and_starts_once():
+    """Only the dismiss button ends it (end_situation ignores can_end); it never starts again."""
     text = SITUATION.read_text(encoding="utf-8-sig")
     assert re.search(r"can_end = \{\s*always = no\s*\}", text)
     assert "pp_mod_welcome_situation_completed" not in text

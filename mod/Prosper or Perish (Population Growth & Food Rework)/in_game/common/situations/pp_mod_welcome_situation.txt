@@ -1,5 +1,6 @@
-﻿# Welcome: starts at game start for the human players and never ends (the player closes it when done reading).
-# Its panel (gui/panels/situation/pp_mod_welcome_situation.gui) opens the Prosper or Perish section of the Europedia.
+﻿# Welcome: starts at game start for the human players and never ends by itself; the panel's dismiss button ends it
+# (scripted_guis/pp_welcome_situation.txt). Its panel (gui/panels/situation/pp_mod_welcome_situation.gui) also opens
+# the Prosper or Perish section of the Europedia.
 pp_mod_welcome_situation = {
 	monthly_spawn_chance = monthly_spawn_chance_unique
 

@@ -1,0 +1,12 @@
+﻿# Prosper or Perish: the welcome situation's dismiss button (gui/panels/situation/pp_mod_welcome_situation.gui) ends
+# the situation for good. The panel passes the player's country as root; the welcome never starts again (its start
+# flag is removed when it starts, and only a new game sets it).
+pp_dismiss_welcome_situation = {
+	scope = country
+	is_valid = {
+		situation:pp_mod_welcome_situation = { situation_is_active = yes }
+	}
+	effect = {
+		end_situation = situation:pp_mod_welcome_situation
+	}
+}

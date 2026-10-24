@@ -1,6 +1,7 @@
 ﻿# Prosper or Perish: the welcome situation panel (hand-kept). The game opens gui/panels/situation/<situation key>.gui
-# when the player clicks a situation. An introduction and one button that opens the Prosper or Perish section of the
-# Europedia (encyclopedia_lateralview.gui shows it when pp_encyclopedia_active is yes; pp_filter picks its cards).
+# when the player clicks a situation. An introduction, one button that opens the Prosper or Perish section of the
+# Europedia (encyclopedia_lateralview.gui shows it when pp_encyclopedia_active is yes; pp_filter picks its cards) and
+# one that dismisses the welcome for good.
 # Built like harvest_situation.gui; texts PP_WELCOME_SIT_* in pp_situations_l_english.yml, no numbers;
 # tests/test_welcome_situation_panel.py.
 
@@ -62,6 +63,16 @@ situation_panel = {
 				onclick = "[GetVariableSystem.Set('pp_encyclopedia_active', 'yes')]"
 				onclick = "[GetVariableSystem.Set('pp_filter', 'all')]"
 				tooltip = "PP_WELCOME_SIT_CTA_TT"
+			}
+
+			# for players who know the Europedia: ends the welcome for good (scripted_guis/pp_welcome_situation.txt)
+			# and closes the panel
+			button_regular = {
+				size = { 360 36 }
+				text = "PP_WELCOME_SIT_DISMISS"
+				onclick = "[GetScriptedGui('pp_dismiss_welcome_situation').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				onclick = "[LateralView.Close]"
+				tooltip = "PP_WELCOME_SIT_DISMISS_TT"
 			}
 		}
 	}

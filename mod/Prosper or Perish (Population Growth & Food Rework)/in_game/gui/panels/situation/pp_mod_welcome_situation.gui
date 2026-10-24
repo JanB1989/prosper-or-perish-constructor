@@ -66,11 +66,11 @@ situation_panel = {
 			}
 
 			# for players who know the Europedia: ends the welcome for good (scripted_guis/pp_welcome_situation.txt)
-			# and closes the panel
+			# and closes the panel; root = the situation, which exists in observer mode too (GetPlayer does not)
 			button_regular = {
 				size = { 360 36 }
 				text = "PP_WELCOME_SIT_DISMISS"
-				onclick = "[GetScriptedGui('pp_dismiss_welcome_situation').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				onclick = "[GetScriptedGui('pp_dismiss_welcome_situation').Execute(GuiScope.SetRoot(SituationView.GetActiveSituation.GetSituation.MakeScope).End)]"
 				onclick = "[LateralView.Close]"
 				tooltip = "PP_WELCOME_SIT_DISMISS_TT"
 			}

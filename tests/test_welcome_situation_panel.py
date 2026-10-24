@@ -68,12 +68,15 @@ def test_the_buttons_open_the_prosper_or_perish_section_and_dismiss_the_welcome(
         "OpenLateralView('encyclopedia')",
         "GetVariableSystem.Set('pp_encyclopedia_active', 'yes')",
         "GetVariableSystem.Set('pp_filter', 'all')",
-        "GetScriptedGui('pp_dismiss_welcome_situation').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)",
+        # root = the situation: an observer has no country, GetPlayer is empty there (2026-10-24)
+        "GetScriptedGui('pp_dismiss_welcome_situation').Execute("
+        "GuiScope.SetRoot(SituationView.GetActiveSituation.GetSituation.MakeScope).End)",
         "LateralView.Close",
     ]
+    assert not [click for click in clicks if "GetPlayer" in click]
     scripted = SCRIPTED_GUI.read_text(encoding="utf-8-sig")
     assert re.search(r"(?m)^pp_dismiss_welcome_situation = \{", scripted)
-    assert "scope = country" in scripted
+    assert "scope = country" not in scripted
     assert "end_situation = situation:pp_mod_welcome_situation" in scripted
     europedia = EUROPEDIA.read_text(encoding="utf-8-sig")
     assert "GetVariableSystem.HasValue('pp_encyclopedia_active', 'yes')" in europedia

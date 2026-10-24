@@ -471,11 +471,11 @@ def test_granary_storage_and_startup_placement_are_compatible() -> None:
     assert "value = pp_granary_ai_weight" in granary_text
     # the capital test sits in allow: the engine removes buildings whose location_potential fails after a change of
     # owner (run 31ef07ce: half of the conquered capital Granaries gone), allow only gates new levels
-    potential = granary_text.split("location_potential = {", 1)[1].split("\n        }", 1)[0]
+    potential = granary_text.partition("location_potential = {")[2].split("\n        }", 1)[0]
     assert "is_province_capital" not in potential
     assert "allow = {\n            is_province_capital = yes" in granary_text
-    for rank in ("rural_settlement", "town", "city", "megalopolis"):
-        assert f"location_rank = location_rank:{rank}" in granary_text
+    for rank in ("rural_settlement", "town", "city", "megalopolis"):   # every rank (the flags; no rank test needed)
+        assert f"\n        {rank} = yes" in granary_text
 
 
 def test_no_blueprint_tests_the_province_capital_in_location_potential() -> None:
@@ -1412,7 +1412,7 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
     assert "is_coastal" in fishing_potential
     assert "is_province_capital = yes" in granary_text   # one Granary site per province (2026-10-06)
     for rank in ("rural_settlement", "town", "city", "megalopolis"):
-        assert f"location_rank = location_rank:{rank}" in granary_text
+        assert f"\n        {rank} = yes" in granary_text
     _assert_absent_or_cost_only_building_inject(winery_blueprint)
     _assert_absent_or_cost_only_building_inject(winery_manufactory_blueprint)
     assert "NOT = { raw_material = goods:wine }" not in winery_text

@@ -44,16 +44,9 @@ building:
     location_potential = {
         OR = {
             raw_material = goods:stone
-            AND = {
-                OR = {
-                    topography = mountains
-                    topography = plateau
-                    topography = hills
-                }
-                NOT = {
-                    raw_material = goods:stone
-                }
-            }
+            topography = mountains
+            topography = plateau
+            topography = hills
         }
     }
     category = rgo_building_category

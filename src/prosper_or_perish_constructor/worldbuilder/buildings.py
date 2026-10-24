@@ -406,7 +406,12 @@ def _set_max_levels(body: str, value: str) -> str:
 
 
 def _set_location_potential(body: str, trigger_lines: list[str]) -> str:
+    # An empty gate (always = yes) adds nothing: left out beside other conditions; alone, the block goes (no
+    # location_potential = buildable everywhere).
+    trigger_lines = [l for l in trigger_lines if l != "always = yes"]
     match = _POTENTIAL_RE.search(body)
+    if not trigger_lines:
+        return body if match is None else body[: match.start()] + body[match.end():].removeprefix("\n")
     pad = match.group("indent") if match else "    "
     block = "\n".join([f"{pad}location_potential = {{", *[f"{pad}  {l}" for l in trigger_lines], f"{pad}}}"])
     if match is None:

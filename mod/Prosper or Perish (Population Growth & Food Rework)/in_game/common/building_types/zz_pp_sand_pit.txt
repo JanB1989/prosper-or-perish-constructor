@@ -12,14 +12,7 @@ town = yes
 city = yes
 megalopolis = yes
 
-location_potential = {
-    OR = {
-        raw_material = goods:sand
-        NOT = {
-            raw_material = goods:sand
-        }
-    }
-}
+# buildable everywhere, so no location_potential (2026-10-24: was "sand RGO OR not sand RGO")
 category = rgo_building_category
 build_time = rural_build_time
 

@@ -13,15 +13,7 @@ city = yes
 megalopolis = yes
 obsolete = sand_pit
 build_time = workshop_build_time
-
-location_potential = {
-    OR = {
-        raw_material = goods:sand
-        NOT = {
-            raw_material = goods:sand
-        }
-    }
-}
+# buildable everywhere, so no location_potential (2026-10-24: was "sand RGO OR not sand RGO")
 construction_demand = workshop_construction
 ai_forbid_shutdown = no
 forbidden_for_estates = no

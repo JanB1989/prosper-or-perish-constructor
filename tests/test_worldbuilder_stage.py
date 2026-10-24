@@ -64,6 +64,14 @@ def test_cap_script_value_and_gate_use_game_keys(tmp_path):
     assert wb_buildings.trigger_for(c, "river_level", "3") == "pp_wb_river_size_3 = yes"
 
 
+def test_empty_gate_writes_no_always_yes():
+    body = "    max_levels = 1\n    location_potential = {\n      always = yes\n    }\n    modifier = {\n    }\n"
+    # beside other conditions (a niche lock) the empty gate adds nothing; alone the block goes (buildable everywhere)
+    locked = wb_buildings._set_location_potential(body, ["dominant_culture ?= culture:x", "always = yes"])
+    assert "location_potential = {\n      dominant_culture ?= culture:x\n    }" in locked and "always" not in locked
+    assert wb_buildings._set_location_potential(body, ["always = yes"]) == "    max_levels = 1\n    modifier = {\n    }\n"
+
+
 def test_cap_terms_of_one_exclusive_attribute_chain_with_else_if(tmp_path):
     c = _contract(tmp_path)
     eq = {"base_levels": 1, "levels_per_development_point": 0, "class_terms": [

@@ -1904,7 +1904,8 @@ def test_yearly_closed_building_review_is_removed() -> None:
     assert not (MOD_ROOT / "in_game" / "events" / "debug" / "pp_ai_building_review_debug.txt").exists()
     assert not (SCRIPT_VALUES_ROOT / "pp_ai_building_review.txt").exists()
     assert not VICTUALS_IMPORT_TRIGGERS.exists()
-    assert not (LOCALIZATION_ROOT / "pp_debug_l_english.yml").exists()   # debug loc removed 2026-10-24
+    # the debug loc holds only the population baseline events of the pop-delta map modes (back 2026-10-24)
+    assert "pp_ai_building_review" not in (LOCALIZATION_ROOT / "pp_debug_l_english.yml").read_text(encoding="utf-8-sig")
     scripts = [*(MOD_ROOT / "in_game" / "common").rglob("*.txt"), *(MOD_ROOT / "in_game" / "events").rglob("*.txt")]
     for path in scripts:
         text = path.read_text(encoding="utf-8-sig", errors="replace")
@@ -2004,7 +2005,8 @@ def test_console_debug_events_and_market_food_topup_are_gone() -> None:
     assert not MARKET_FOOD_PRICE_EXTREMES.exists()
     assert not CAPACITY_CULLING_DEBUG_EVENT.exists()
     assert not COLUMBIAN_EXCHANGE_DEBUG_EVENT.exists()
-    assert not (MOD_ROOT / "in_game" / "events" / "debug" / "pp_population_baseline_debug.txt").exists()
+    # the population baseline events stay: the pop-delta map modes name them (restored 2026-10-24)
+    assert sorted(p.name for p in (MOD_ROOT / "in_game" / "events" / "debug").iterdir()) == ["pp_population_baseline_debug.txt"]
 
 
 def test_capacity_culling_v2_calls_helper_for_each_capacity_building() -> None:
@@ -2874,7 +2876,7 @@ def test_internal_trade_good_icons_use_game_compatible_dds_layout() -> None:
     for path in paths:
         data = path.read_bytes()
         assert data[:4] == b"DDS ", path
-        assert data[84:88] == b"DXT5", path
+        assert data[84:88] == (b"DX10" if "illustrations" in path.parts else b"DXT5"), path   # pictures BC7
         dimensions = (
             int.from_bytes(data[16:20], "little"),
             int.from_bytes(data[12:16], "little"),
@@ -2882,7 +2884,7 @@ def test_internal_trade_good_icons_use_game_compatible_dds_layout() -> None:
         mip_count = int.from_bytes(data[28:32], "little")
         if "illustrations" in path.parts:
             assert dimensions == (1080, 440), path
-            assert mip_count == 11, path
+            assert mip_count <= 1, path   # one level (2641cae9)
         else:
             assert dimensions == (128, 128), path
             assert mip_count == 8, path

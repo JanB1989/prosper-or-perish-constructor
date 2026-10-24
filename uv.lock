@@ -55,6 +55,15 @@ wheels = [
 ]
 
 [[package]]
+name = "archspec"
+version = "0.2.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/82/26/7bb7a53f4e246908fdc1810f4cbd6c8d70ce6a924e6c50f0269c5e792c1c/archspec-0.2.6.tar.gz", hash = "sha256:2ea980955530499865225eff917b649b39fd014b53f8c6461b6348c1d8b866f1", size = 59191, upload-time = "2026-05-14T19:10:25.114Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/15/12/7f9edf5a5a547ce0421e8f120c157b3602eabb12147ffea95eefbd55a94e/archspec-0.2.6-py3-none-any.whl", hash = "sha256:22463371fe8e9fa92fa144bf320cb445373a99f2ca6a5914c890e0c0b7816f8f", size = 81818, upload-time = "2026-05-14T19:10:23.538Z" },
+]
+
+[[package]]
 name = "asttokens"
 version = "3.0.1"
 source = { registry = "https://pypi.org/simple" }
@@ -384,6 +393,32 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/39/a4/5180d9afc57e8fca05601dd652bdff19604c218814037fe90ffc7625a50a/docutils-0.23.tar.gz", hash = "sha256:746f5060322511280a1e50eb76846ed6bf2342984b2ac04dc42caa1a8d78799e", size = 2303823, upload-time = "2026-05-27T17:41:06.934Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/32/91/30151a39f7570f448ed84529390628a651d7f27c87d73c9b887f8189695e/docutils-0.23-py3-none-any.whl", hash = "sha256:25d013af9bf23bc1c7b2b093dff4208166c53a94786c9e447808335ef1185fea", size = 634701, upload-time = "2026-05-27T17:40:58.442Z" },
+]
+
+[[package]]
+name = "etcpak"
+version = "0.9.15"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "archspec" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/76/21/c504ccfe89dbff7154a7733b6792885b3af88a6a5db534b381ae6c3048fd/etcpak-0.9.15.tar.gz", hash = "sha256:fe09e32d8aa75b8163832428c3d6df65a51b2b7e0237292c10c1224ca5728a43", size = 118748, upload-time = "2025-08-11T21:58:01.32Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/84/cb/d302b8aaa77ec2b8b468731237d72d6832c96a18b944c0a34f21eacd4d79/etcpak-0.9.15-cp37-abi3-macosx_10_9_x86_64.whl", hash = "sha256:ead1fa47527b9d216be50f65ab4cc728ced93dafea773139026ad6268934fb6f", size = 368722, upload-time = "2025-08-11T21:57:06.519Z" },
+    { url = "https://files.pythonhosted.org/packages/17/6c/501e3c4307ce022d2522af84e78dd03c4e225870f7484ccb5d4302b7c0ec/etcpak-0.9.15-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:b96260c18ff79387d9b003c9188196c2490bdcd3420496fcf544f246a534c31b", size = 185525, upload-time = "2025-08-11T21:57:08.591Z" },
+    { url = "https://files.pythonhosted.org/packages/80/0a/afd05444fe8fc3db906f57580be711c0a6bc39375ca7a738f04e7e1fc947/etcpak-0.9.15-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a5c4c6ebe3a5aaf907afa14619071cd5bc60857f175491d04cbacedbba561d5c", size = 1170402, upload-time = "2025-08-11T21:57:09.783Z" },
+    { url = "https://files.pythonhosted.org/packages/ba/c9/cae71b16a2d7f70012f7c61d7cf225cbd4ae10c5401aded3b6cb3c14e9c4/etcpak-0.9.15-cp37-abi3-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:13954e177dfc0c0643c6069fd9568dc4116cfb0a5cbe5657be93b94bed41c529", size = 551698, upload-time = "2025-08-11T21:57:11.589Z" },
+    { url = "https://files.pythonhosted.org/packages/c7/c5/c3530a189a7fde543d77f2c3bbf2fd370497346b0b4d857e4163e6099b06/etcpak-0.9.15-cp37-abi3-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:b168f8d3ebad00ade491a8e3a6a86e47356a943337ab3cccff1c605ac664b525", size = 579230, upload-time = "2025-08-11T21:57:12.865Z" },
+    { url = "https://files.pythonhosted.org/packages/72/69/a3ee48aa9f7f3a7cbbdd2911f80dbc39cefff9dda8744e5f0c8123503995/etcpak-0.9.15-cp37-abi3-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:7cc0746ddc2220e84982b48ce62df17a08dfc38ac77bd878b5835139765be8e8", size = 662066, upload-time = "2025-08-11T21:57:14.099Z" },
+    { url = "https://files.pythonhosted.org/packages/d1/b1/07d7955b6c25aa5c56c427125a32ea8431e61edf4df79a54e14329b3a7f7/etcpak-0.9.15-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b75248c4869c7fddf1e5bba4be02a504da08cffb17434dcdb5bc618869d4ea0a", size = 2610903, upload-time = "2025-08-11T21:57:15.719Z" },
+    { url = "https://files.pythonhosted.org/packages/e7/59/e057c7d09506ec462c9b9d7323a8bf3155692effbaa6af68d6417b2b05f0/etcpak-0.9.15-cp37-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:b7407c83db1b73be12816d56e3ed75a44f39553327aa5a3613b10839c891bac7", size = 2006710, upload-time = "2025-08-11T21:57:17.174Z" },
+    { url = "https://files.pythonhosted.org/packages/b1/2a/e6bd68d717aafaa4df7417b0e8aa50a0e57ab1efad55dafc401d81a0701e/etcpak-0.9.15-cp37-abi3-musllinux_1_2_armv7l.whl", hash = "sha256:693d4a73451b2d8b3f13da372fae071a2a1a0ac01c783d02c8e000abe8ee4370", size = 1321875, upload-time = "2025-08-11T21:57:18.893Z" },
+    { url = "https://files.pythonhosted.org/packages/70/91/28839b77a701c6d478ba82a38c5de294223e34d393f602b65df1f0908ceb/etcpak-0.9.15-cp37-abi3-musllinux_1_2_i686.whl", hash = "sha256:b5c794bfe0cb3d8a1d4ff5d823e413b5ac25486a9d995505d785ee4d8886887e", size = 1620716, upload-time = "2025-08-11T21:57:20.607Z" },
+    { url = "https://files.pythonhosted.org/packages/2b/01/26b52b7371e3c321c1b064b67b2373be13cd4568ab1881f087ac0aa32285/etcpak-0.9.15-cp37-abi3-musllinux_1_2_ppc64le.whl", hash = "sha256:3029d8736e381579c679aa2d6a303d0123110392847d1b932dc142328f63ad8b", size = 1606327, upload-time = "2025-08-11T21:57:22.343Z" },
+    { url = "https://files.pythonhosted.org/packages/36/7e/db313295f76d32552c64138d07a40cc04f579e01a2e64755c3bd40aee91a/etcpak-0.9.15-cp37-abi3-musllinux_1_2_s390x.whl", hash = "sha256:2ccd4b43d78ecbf4f53c55343daefdf317947f2ae46537cfd5f0e29414c3c5f5", size = 1808211, upload-time = "2025-08-11T21:57:23.634Z" },
+    { url = "https://files.pythonhosted.org/packages/db/2c/83e1eae30717fc7f81562a72d2dcf9e47954bd3fdab8d883bc25a7c6be0f/etcpak-0.9.15-cp37-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:34406279b664aae890fef96f5175cc68bb48b2cb0440c076ab37fb591b181f68", size = 3505883, upload-time = "2025-08-11T21:57:25.394Z" },
+    { url = "https://files.pythonhosted.org/packages/a3/c7/067be73bcaddb97c530f105b526ea08488c0793b36e853f6a032f1a78868/etcpak-0.9.15-cp37-abi3-win32.whl", hash = "sha256:34bee5cf945e12efa76728aca448932229bd9496c691d5fe12e20783446fd446", size = 225905, upload-time = "2025-08-11T21:57:26.795Z" },
+    { url = "https://files.pythonhosted.org/packages/65/d5/6659ba74d4fec78a46dcf4ae6780c6fac34acf041c8e4d63bba709995a4d/etcpak-0.9.15-cp37-abi3-win_amd64.whl", hash = "sha256:669d902eeb774bc6d4df226183c09c3d03c9fc0f47b4c0c20030fc2b39eec2f2", size = 1132728, upload-time = "2025-08-11T21:57:27.974Z" },
 ]
 
 [[package]]
@@ -1534,6 +1569,7 @@ name = "prosper-or-perish-constructor"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "etcpak" },
     { name = "eu5-building-pipeline" },
     { name = "eu5-mod-orchestrator" },
     { name = "eu5gameparser" },
@@ -1559,6 +1595,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "etcpak", specifier = ">=0.9.15" },
     { name = "eu5-building-pipeline", editable = "../eu5-building-pipeline" },
     { name = "eu5-mod-orchestrator", editable = "../eu5-mod-orchestrator" },
     { name = "eu5gameparser", editable = "../eu5-game-parser" },

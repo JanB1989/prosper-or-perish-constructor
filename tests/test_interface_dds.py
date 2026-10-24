@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import io
 from pathlib import Path
 
 from PIL import Image, ImageDraw
@@ -13,14 +14,18 @@ ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 
 
-def test_every_mod_interface_dds_is_block_compressed_with_full_mips() -> None:
+def test_every_mod_interface_dds_is_in_the_game_format() -> None:
+    # block-compressed with a full mip chain; pictures BC7 in one level (shown at half size, a chain blurs them)
     files = interface_dds.interface_files(MOD_ROOT)
     assert len(files) > 300
     bad = []
     for path in files:
         relative = path.relative_to(MOD_ROOT)
         info = dds_info(path)
-        if info is None or not info.compressed or not info.has_full_mips:
+        if interface_dds.is_picture(relative):
+            if not interface_dds.is_picture_format(path):
+                bad.append(f"{relative}: picture {info}, not {interface_dds.PICTURE_FORMAT} in one level")
+        elif info is None or not info.compressed or not info.has_full_mips:
             bad.append(f"{relative}: {info}")
         elif (limit := interface_dds.max_side(relative)) is not None and max(info.width, info.height) > limit:
             bad.append(f"{relative}: {info.width}x{info.height} > {limit}")
@@ -70,7 +75,8 @@ def test_apply_converts_old_icons_and_leaves_compliant_files_alone(tmp_path: Pat
     assert dds_info(old).format == "DXT5"
     assert is_game_format(flat, size=(128, 128))
     assert good.read_bytes() == good_bytes and good.stat().st_mtime_ns == good_mtime
-    assert is_game_format(banner, size=(600, 100))           # illustrations keep their size
+    assert (dds_info(banner).width, dds_info(banner).height) == (600, 100)   # illustrations keep their size
+    assert interface_dds.is_picture_format(banner)           # pictures are BC7 in one level
     assert dds_info(map_texture).compressed is False         # gfx/map is not touched
     with Image.open(old) as image:
         rgba = image.convert("RGBA")
@@ -92,6 +98,40 @@ def test_mipless_dxt5_keeps_its_first_level_bytes(tmp_path: Path) -> None:
     after = path.read_bytes()
     assert is_game_format(after, size=(128, 128))
     assert after[128:128 + top] == before[128:128 + top]
+
+
+def test_dxt_pictures_become_one_bc7_level(tmp_path: Path) -> None:
+    # a DXT5 picture with a full chain is compliant as a texture, but pictures are BC7 in one level (they are shown at
+    # half their size, so the game drew the chain's blurred second level)
+    path = tmp_path / "main_menu" / "gfx" / "interface" / "illustrations" / "situation" / "x.dds"
+    path.parent.mkdir(parents=True)
+    picture = Image.new("RGBA", (1080, 440), (180, 120, 60, 255))
+    ImageDraw.Draw(picture).rectangle((200, 100, 700, 300), fill=(40, 90, 160, 255))
+    path.write_bytes(encode_dds(picture))
+    assert not interface_dds.is_compliant(path, path.relative_to(tmp_path))
+
+    result = interface_dds.apply(tmp_path)
+
+    assert len(result.converted) == 1
+    data = path.read_bytes()
+    info = dds_info(data)
+    assert (info.format, info.width, info.height, info.mip_count) == ("BC7", 1080, 440, 1)
+    assert int.from_bytes(data[128:132], "little") == interface_dds.DXGI_FORMAT_BC7_UNORM
+    with Image.open(path) as image:                          # a standard reader takes it
+        rgba = image.convert("RGBA")
+    assert rgba.size == (1080, 440)
+    assert max(abs(a - b) for a, b in zip(rgba.getpixel((50, 50)), (180, 120, 60, 255))) <= 4
+    assert max(abs(a - b) for a, b in zip(rgba.getpixel((450, 200)), (40, 90, 160, 255))) <= 4
+    assert interface_dds.apply(tmp_path).converted == []
+
+
+def test_bc7_picture_pads_to_whole_blocks() -> None:
+    data = interface_dds.encode_bc7(Image.new("RGBA", (1082, 442), (10, 200, 30, 255)))
+    info = dds_info(data)
+    assert (info.width, info.height, info.mip_count) == (1082, 442, 1)
+    assert len(data) == 148 + 16 * 271 * 111                # ceil(1082 / 4) x ceil(442 / 4) blocks
+    with Image.open(io.BytesIO(data)) as image:
+        assert image.size == (1082, 442) and image.convert("RGBA").getpixel((1081, 441)) == (10, 200, 30, 255)
 
 
 def test_size_limits_follow_vanilla_folders() -> None:

@@ -5,6 +5,7 @@ description = "Constructor orchestration workspace for Prosper or Perish."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "etcpak>=0.9.15",
     "eu5-building-pipeline",
     "eu5-mod-orchestrator",
     "eu5gameparser",

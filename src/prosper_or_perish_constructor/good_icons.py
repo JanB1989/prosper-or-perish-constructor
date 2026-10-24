@@ -7,8 +7,9 @@ For a good ``g`` with ``assets/icons/trade_goods/icon_goods_g.png`` (128 px) and
 - ``main_menu/gfx/interface/icons/modifier_types/g_positive.dds`` (the icon of its modifier types),
 - ``main_menu/gfx/interface/icons/trade_goods/illustrations/icon_goods_g.dds`` (the market illustration),
 
-as DXT5 with a full mip chain, the layout of the hand-converted offset icons. A missing PNG is skipped (the build runs
-before the art exists); a DDS newer than its PNG is left alone.
+the icons as DXT5 with a full mip chain (the layout of the hand-converted offset icons), the illustration as BC7 in one
+level (the picture format, interface_dds). A missing PNG is skipped (the build runs before the art exists); a DDS newer
+than its PNG is left alone.
 """
 
 from __future__ import annotations
@@ -50,19 +51,25 @@ def install(repo: Path, mod_root: Path, goods: Iterable[str]) -> IconResult:
                 continue
             if dds.is_file() and dds.stat().st_mtime >= png.stat().st_mtime:
                 continue
-            write_dxt5(png, dds, size)
+            write_dds(png, dds, size)
             result.written.append(relative)
     return result
 
 
-def write_dxt5(png: Path, dds: Path, size: tuple[int, int]) -> None:
-    """DXT5 DDS with a full mip chain (``floor(log2(max side)) + 1`` levels), the shared game-format writer."""
+def write_dds(png: Path, dds: Path, size: tuple[int, int]) -> None:
+    """Game-format DDS: a picture (illustrations folder) BC7 in one level, an icon DXT5 with a full mip chain
+    (``floor(log2(max side)) + 1`` levels, the shared game-format writer)."""
     from PIL import Image
 
     from eu5_building_pipeline.dds import write_game_dds
+    from prosper_or_perish_constructor.interface_dds import encode_bc7, is_picture
 
     with Image.open(png) as source:
         image = source.convert("RGBA")
     if image.size != size:
         image = image.resize(size, Image.Resampling.LANCZOS)
-    write_game_dds(image, dds)
+    if is_picture(dds):
+        dds.parent.mkdir(parents=True, exist_ok=True)
+        dds.write_bytes(encode_bc7(image))
+    else:
+        write_game_dds(image, dds)

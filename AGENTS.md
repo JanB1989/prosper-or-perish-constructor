@@ -330,11 +330,15 @@
 ## Interface DDS Format
 
 - Every DDS under `<layer>/gfx/interface/` is in vanilla's format: DXT5 (or DXT1) with a full mip chain, icons at most
-  128 px (building icons 128, from the 512 px blueprint PNGs), advance icons at most 256, illustrations at their size.
-  Write them with `eu5_building_pipeline.dds.write_game_dds` / `encode_dds`, never `Image.save(format="DDS")` (raw
-  RGBA, no mips; Pillow's own DXT5 alpha is lossy). The last finalize pass of `ppc build` / `ppc sync`
-  (`interface_dds.py`) converts anything else in place and leaves compliant files byte-identical;
-  `tests/test_interface_dds.py` enforces it. Map mode picker icons live only in `main_menu/gfx/interface/icons/map_modes`.
+  128 px (building icons 128, from the 512 px blueprint PNGs), advance icons at most 256. Write them with
+  `eu5_building_pipeline.dds.write_game_dds` / `encode_dds`, never `Image.save(format="DDS")` (raw RGBA, no mips;
+  Pillow's own DXT5 alpha is lossy). Pictures (anything below an `illustrations` folder: Europedia banners, situation
+  and goods pictures) are BC7 in ONE level at their size, written from their source with `interface_dds.encode_bc7`
+  (etcpak): they are stored at twice the shown size, so a mip chain made the game draw a blurred half-size level
+  (2026-10-24, Jan: "low res" banners; BC7 one level 40 dB vs DXT5 with mips 31 dB at the shown size). The last
+  finalize pass of `ppc build` / `ppc sync` (`interface_dds.py`) converts anything else in place and leaves compliant
+  files byte-identical; `tests/test_interface_dds.py` enforces it. Map mode picker icons live only in
+  `main_menu/gfx/interface/icons/map_modes`.
 
 ## Script Value Overrides (EU5 1.4)
 

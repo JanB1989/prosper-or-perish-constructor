@@ -153,7 +153,11 @@ def test_victualling_yard_ships_salt_beef_and_raises_the_cookshop_cap() -> None:
     cap = caps[caps.index("cookshop_max_level = {"):]
     assert "this.cookshop_max_level_pp_building_level_province_victualling_yards" in cap[:cap.index("\n}")]
     values = (MOD_ROOT / "in_game/common/script_values/pp_food_building_values.txt").read_text(encoding="utf-8-sig")
-    assert "add = modifier:local_pp_victualling_yard_levels" in values
+    # whole Yard levels, not the input-scaled raw_modifier counter (food_level_counts.py, 2026-10-24)
+    assert "add = pp_location_victualling_yard_building_levels" in values
+    assert "add = modifier:local_pp_victualling_yard_levels" not in values
+    counts = (MOD_ROOT / "in_game/common/script_values/pp_food_building_level_counts.txt").read_text(encoding="utf-8-sig")
+    assert "location_building_level(building_type:victualling_yard)" in counts
     types = (MOD_ROOT / "main_menu/common/modifier_type_definitions/pp_food_building_modifier_types.txt").read_text(
         encoding="utf-8-sig")
     assert "local_pp_victualling_yard_levels = {" in types

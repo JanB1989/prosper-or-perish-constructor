@@ -238,10 +238,13 @@ def test_every_staple_food_maker_raises_the_cookshop_cap() -> None:
     assert missing == []
     assert {"fishing_village", "ocean_fishery", "sheep_farms", "forest_village", "eng_royal_forest",
             "maghreb_palm_irrigation", "wheat_farm", "fruit_orchard"} <= marked
-    # the cap reads both markers; the farms' spread term only their own
+    # the cap counts the whole levels of every building with either marker (food_level_counts.py); the farms' spread
+    # term reads only their own marker
     values = (MOD_ROOT / "in_game/common/script_values/pp_food_building_values.txt").read_text(encoding="utf-8-sig")
     block = values[values.index("pp_province_farm_levels = {"):]
     block = block[:block.index("\n}\n")]
-    assert "add = modifier:local_pp_farm_levels" in block and "add = modifier:local_pp_staple_levels" in block
+    assert "add = pp_location_farm_building_levels" in block and "modifier:" not in block
+    counts = (MOD_ROOT / "in_game/common/script_values/pp_food_building_level_counts.txt").read_text(encoding="utf-8-sig")
+    assert all(f"location_building_level(building_type:{key})" in counts for key in marked)
     wheat = (MOD_ROOT / "in_game/common/building_types/zz_pp_wheat_farm_tier0.txt").read_text(encoding="utf-8-sig")
     assert "modifier:local_pp_farm_levels max" in wheat and "local_pp_staple_levels" not in wheat

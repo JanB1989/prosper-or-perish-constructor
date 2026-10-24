@@ -1707,6 +1707,15 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
             f"{'; removed ' + ', '.join(nil.removed) if nil.removed else ''}).",
             flush=True,
         )
+    from prosper_or_perish_constructor import food_level_counts
+
+    counts = food_level_counts.write(mod_root)
+    print(
+        "Cookshop cap counts whole levels: "
+        + ", ".join(f"{name} {n} building types" for name, n in counts.counted.items())
+        + (" (rewritten)." if counts.changed else " (unchanged)."),
+        flush=True,
+    )
     from prosper_or_perish_constructor import loc_replace
 
     overrides = loc_replace.apply(mod_root, cap_tooltips.game_root(vanilla_root(repo, project)))

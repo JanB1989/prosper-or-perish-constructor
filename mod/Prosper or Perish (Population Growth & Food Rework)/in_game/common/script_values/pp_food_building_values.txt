@@ -14,13 +14,14 @@ pp_location_stored_months = {
 	min = 0
 }
 
-# Province scope: the farm, orchard and other staple food levels worked in the province (sum of modifier:local_pp_farm_levels
-# and modifier:local_pp_staple_levels). The Cookshop cap and the Cookshop AI weight read it.
+# Province scope: the farm, orchard and other staple food levels standing in the province, in whole building levels
+# (pp_location_farm_building_levels, generated: every building type carrying local_pp_farm_levels or
+# local_pp_staple_levels). Not the raw_modifier counters: the engine scales those by input fulfilment, which floored the
+# cap below the kitchens standing at it (2026-10-24). The Cookshop cap and the Cookshop AI weight read it.
 pp_province_farm_levels = {
 	value = 0
 	every_location_in_province = {
-		add = modifier:local_pp_farm_levels
-		add = modifier:local_pp_staple_levels
+		add = pp_location_farm_building_levels
 	}
 }
 
@@ -32,12 +33,13 @@ pp_location_province_farm_levels = {
 	}
 }
 
-# Province scope: the standing Victualling Yard levels in the province (sum of modifier:local_pp_victualling_yard_levels,
-# raw_modifier, 2026-10-04). The Cookshop cap adds half a level per Yard level.
+# Province scope: the standing Victualling Yard levels in the province, in whole building levels
+# (pp_location_victualling_yard_building_levels, generated; not the input-scaled raw_modifier counter, 2026-10-24).
+# The Cookshop cap adds half a level per Yard level.
 pp_province_victualling_yard_levels = {
 	value = 0
 	every_location_in_province = {
-		add = modifier:local_pp_victualling_yard_levels
+		add = pp_location_victualling_yard_building_levels
 	}
 }
 

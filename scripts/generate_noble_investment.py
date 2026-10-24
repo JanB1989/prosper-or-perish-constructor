@@ -1,0 +1,856 @@
+"""Generate the noble investment scripts: nobles with surplus gold build peasant and labourer buildings.
+
+The engine lets an estate keep one planned project and start it from its own treasury (docs/ai_building_rulebook.md,
+section 3). How it picks that plan is not known, and in practice the nobles build land improvements, masons and
+granaries, hardly ever the farms, mines and workshops that make goods. This pulse adds that on top: once a month (spread
+over the month), a country whose nobles hold more gold than a reserve plus the price of the building looks for
+
+* a building worked by peasants or labourers that makes a market good, researched by the country,
+* in a location whose market is short of that good (demand above supply),
+* with free hands (unemployed population) and `can_build_building`, no construction under way and no noble investment
+  in the last LOCATION_COOLDOWN_DAYS,
+
+and has the nobles build the most profitable one with `construct_estate_building` (the estate pays and owns it).
+
+A second search in the same pulse, with its own cooldown, adds Arable Land (user request, 2026-10-24): a land improvement
+(blueprint footprint `capacity_source`, peasants or labourers, `local_population_capacity` in its raw_modifier) where a
+location is more than LAND_FULL_SHARE full (the engine's own threshold for valuing capacity, docs/ai_building_rulebook.md)
+or over capacity. Land improvements earn nothing, so they do not compete with the profit ranking: the most Arable Land
+per gold wins, over-capacity locations scaled up by the share they are over.
+
+Profit is worked out per level at the location's market prices, method by method: for every production-method block
+the best method the country can run (output x price x (1 + the location's output modifier for that good) - inputs x
+prices; methods behind an `allow` are skipped, methods unlocked by an advance need it), summed over the blocks. Wages
+are inputs in PP (manual labour), so this is the building's real profit. A building must make money and earn at least
+AI_BUILDING_PROFIT_MARGIN_THRESHOLD x its input cost (the AI's own margin); the best one wins. The first version ranked
+by the main good's price alone and kept building masons that lost money on dear stone and labour (2026-10-16).
+
+The nobles must hold the reserve plus the price times ESTATE_MAX_PRICE_MULTIPLIER (what an estate pays for its own
+builds); both defines are read from pp_defines_adjustments.txt.
+
+Candidates come from the built mod's building types: pop_type peasants or laborers, a main market good (the good of the
+one-method Market Sales slot, else the first good priced in ai_construct_weight), not forbidden_for_estates, not
+is_special, methods in unique_production_methods. Re-run after building or advance changes:
+
+    uv run --no-project python scripts/generate_noble_investment.py --vanilla "<EU5 install>/game"
+"""
+
+from __future__ import annotations
+
+import argparse
+import re
+import tomllib
+from dataclasses import dataclass
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+BUILDING_TYPES = MOD_ROOT / "in_game" / "common" / "building_types"
+EFFECTS_PATH = MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_noble_investment_effects.txt"
+VALUES_PATH = MOD_ROOT / "in_game" / "common" / "script_values" / "pp_noble_investment_values.txt"
+DEFINES_PATH = MOD_ROOT / "loading_screen" / "common" / "defines" / "pp_defines_adjustments.txt"
+MODIFIER_TYPES = Path("main_menu") / "common" / "modifier_type_definitions"
+ADVANCES = Path("in_game") / "common" / "advances"
+GOODS = Path("in_game") / "common" / "goods"
+
+POP_TYPES = ("peasants", "laborers")
+# Ranking weight per pop type: score = profit x weight. Nobles prefer peasant buildings (user rule, 2026-10-16; at
+# default prices the median peasant building makes 1.16 gold per level, the median labourer one 0.64, but labour yards
+# and model farms reach 4-14 and won every pick). The profit and margin checks are unchanged.
+POP_PRIORITY = {"peasants": 3.0, "laborers": 1.0}
+# Built without any shortage (profit, research, free hands and the location rules still apply). User rules 2026-10-17:
+# mines regardless of shortage; farms too, as their Province Food fills the store and drives population growth (with
+# the market test nobles built no farms where the market had a grain surplus: Austria 1384, wheat 47 supply / 41
+# demand). Farms = every Province Food maker (crop farms, cattle farms, fisheries, camel herders and their upgrades).
+# Blueprint footprint classes:
+NO_SHORTAGE_FOOTPRINTS = {"mining"}
+# Mines whose blueprint has another footprint (user rule 2026-10-17: gold diggings are mines; the stamp mill is their
+# upgrade, which replaces the diggings).
+NO_SHORTAGE_BUILDINGS = {"gold_diggings", "gold_stamp_mill"}
+BLUEPRINTS = ROOT / "blueprints" / "accepted" / "buildings"
+# Buildings the nobles never invest in, whatever they earn (user rules).
+EXCLUDED_BUILDINGS = {
+    "market_village": "2026-10-17: nobles must not build market villages (36 of 39 noble ones in a 1550 save were ours)",
+}
+# Gold the nobles keep for themselves (loans to the crown, their own engine plan, which starts from 50 gold); only gold
+# above this plus what the building costs them counts as surplus.
+RESERVE_GOLD = 150
+# Free hands: the location needs unemployed pops of the building's own pop type for one full level (its
+# employment_size, in thousands like unemployed_pops_of_pop_type_in_location). Nobles built farms while the farms
+# already there had empty jobs (2026-10-17): the old test counted 1,000 unemployed of any pop type.
+# A good counts as short when market demand > this x supply; 1.0 unless listed (masonry: user rule, 2026-10-16).
+SHORTAGE_RATIO = {"masonry": 0.8}
+DEFAULT_SHORTAGE_RATIO = 1.0
+# Days before the country looks again: after a build, and after a search that found nothing.
+BUILD_COOLDOWN_DAYS = 90
+IDLE_COOLDOWN_DAYS = 180
+# Days a location is left alone after the nobles invested there: construction takes about a year, and the shortage that
+# made the building pay lasts until it produces, so without this the same building was stacked 3-4 times (2026-10-16).
+LOCATION_COOLDOWN_DAYS = 730
+# Method keys that make a method conditional; such methods are left out of the profit (the script cannot test them).
+CONDITION_KEYS = ("allow", "potential", "location_allow")
+# Block profit before any method was looked at; a block whose methods are all unavailable adds nothing.
+NO_METHOD = -1000000
+# Land improvements: the blueprint footprint class of buildings that add Arable Land, and how full a location must be
+# (population / capacity) before the nobles add more. The engine values capacity only above 0.9 (a fixed engine
+# threshold, docs/ai_building_rulebook.md "Population capacity"); the free-land modifiers it applies carry
+# 1 - population / capacity, so full = no Abundant Arable Land and less than 1 - LAND_FULL_SHARE Available Arable Land.
+LAND_FOOTPRINT = "capacity_source"
+LAND_FULL_SHARE = 0.9
+# Debug instrumentation (variables counting the builds per country, location and world). Off in the shipped mod (no test
+# hooks in normal play); set True for a measuring run.
+DEBUG = False
+
+
+def define(name: str) -> float:
+    """A define from the mod's defines file: estates pay ESTATE_MAX_PRICE_MULTIPLIER x the price of their own builds,
+    and the minimum margin is the AI's own AI_BUILDING_PROFIT_MARGIN_THRESHOLD."""
+    match = re.search(rf"^\s*{name}\s*=\s*([\d.]+)", DEFINES_PATH.read_text(encoding="utf-8-sig"), re.M)
+    if match is None:
+        raise SystemExit(f"{name} not found in {DEFINES_PATH.relative_to(ROOT)}")
+    return float(match.group(1))
+
+
+@dataclass(frozen=True)
+class Method:
+    name: str
+    produced: str | None
+    output: float
+    inputs: tuple[tuple[str, float], ...]
+    # Advances that unlock the method (any one will do); empty = always available.
+    advances: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class Candidate:
+    building: str
+    pop_type: str
+    good: str
+    # Production-method blocks (each a slot: the building runs one method of each).
+    blocks: tuple[tuple[Method, ...], ...] = ()
+    # Advances that unlock the building (any one will do); empty = available from the start.
+    advances: tuple[str, ...] = ()
+    # False for buildings built regardless of shortage (mines, farms).
+    needs_shortage: bool = True
+    # The building's own country_potential (country scope), one line; can_build_building does not test it, so nobles
+    # built potato farms before the potato reached the country (2026-10-17).
+    country_potential: str = ""
+    # Workers per level, in thousands (employment_size).
+    employment: float = 1.0
+
+
+@dataclass(frozen=True)
+class LandCandidate:
+    building: str
+    pop_type: str
+    # Arable Land per level, in thousands (raw_modifier local_population_capacity).
+    capacity: float
+    advances: tuple[str, ...] = ()
+    country_potential: str = ""
+    employment: float = 0.0
+
+
+def makes_province_food(blocks: tuple[tuple[Method, ...], ...]) -> bool:
+    return any(method.produced == "local_food" for block in blocks for method in block)
+
+
+def top_level_blocks(text: str) -> list[tuple[str, str]]:
+    """`name = { ... }` blocks at the outermost level of a Paradox script text, comments removed."""
+    text = re.sub(r"#[^\n]*", "", text)
+    blocks: list[tuple[str, str]] = []
+    depth, name, start = 0, None, 0
+    for match in re.finditer(r"[{}]|^[ \t]*([\w:]+)\s*=\s*(?=\{)", text, re.M):
+        if match.group(1) is not None:
+            if depth == 0:
+                name, start = match.group(1), match.end()
+            continue
+        if match.group(0) == "{":
+            depth += 1
+            continue
+        depth -= 1
+        if depth == 0 and name:
+            blocks.append((name, text[start : match.end()]))
+            name = None
+    return blocks
+
+
+def inner(body: str) -> str:
+    """A block's text without its own braces."""
+    return body.strip()[1:-1]
+
+
+def load_definitions(folders: list[Path], keep=lambda body: True) -> dict[str, str]:
+    """Key -> body after the game's load order: folders in order, files in name order; a plain or REPLACE definition
+    replaces, INJECT adds to an existing one."""
+    bodies: dict[str, str] = {}
+    for folder in folders:
+        for path in sorted(folder.glob("*.txt")):
+            for name, body in top_level_blocks(path.read_text(encoding="utf-8-sig", errors="replace")):
+                key = name.split(":")[-1]
+                if name.startswith(("INJECT:", "TRY_INJECT:")):
+                    if key in bodies:
+                        bodies[key] = bodies[key][:-1] + inner(body) + "}"
+                    continue
+                if keep(body):
+                    bodies[key] = body
+    return bodies
+
+
+def game_folders(game_root: Path, mod_root: Path, sub: Path) -> list[Path]:
+    return [game_root / sub, *sorted((game_root / "dlc").glob(f"*/{sub.as_posix()}")), mod_root / sub]
+
+
+def building_definitions(folder: Path) -> dict[str, str]:
+    """Building key -> body as the game loads the mod's building types."""
+    return load_definitions([folder], keep=lambda body: "pop_type" in body)
+
+
+def unlock_map(advances: dict[str, str], key: str) -> dict[str, tuple[str, ...]]:
+    """Unlocked thing -> the advances whose `key` (unlock_building, unlock_production_method) names it."""
+    unlocks: dict[str, set[str]] = {}
+    for advance, body in advances.items():
+        for thing in re.findall(rf"\b{key}\s*=\s*(\w+)", body):
+            unlocks.setdefault(thing, set()).add(advance)
+    return {thing: tuple(sorted(found)) for thing, found in unlocks.items()}
+
+
+def advance_unlocks(game_root: Path, mod_root: Path, key: str = "unlock_building") -> dict[str, tuple[str, ...]]:
+    """Building (or method, with key=unlock_production_method) -> its unlocking advances, vanilla + DLC + mod. In game,
+    can_build_building lets the nobles start buildings the country has not researched (2026-10-16 test), so the pulse
+    checks has_advance itself."""
+    return unlock_map(load_definitions(game_folders(game_root, mod_root, ADVANCES)), key)
+
+
+def goods_names(game_root: Path, mod_root: Path) -> set[str]:
+    return set(load_definitions(game_folders(game_root, mod_root, GOODS)))
+
+
+def field(body: str, key: str) -> str | None:
+    match = re.search(rf"^\s*{key}\s*=\s*(\w+)", body, re.M)
+    return match.group(1) if match else None
+
+
+def main_good(body: str) -> str | None:
+    sales = sorted(set(re.findall(r"\w+_market_sales\s*=\s*\{[^{}]*?produced\s*=\s*(\w+)", body, re.S)))
+    if len(sales) == 1:
+        return sales[0]
+    weight = re.search(r"ai_construct_weight\s*=\s*\{(.*)", body, re.S)
+    priced = re.findall(r"market_price\(goods:(\w+)\)", weight.group(1)) if weight else []
+    return priced[0] if priced else None
+
+
+def method_blocks(
+    body: str, goods: set[str], method_unlocks: dict[str, tuple[str, ...]]
+) -> tuple[tuple[Method, ...], ...] | None:
+    """The building's unique production-method blocks; None when it uses shared methods (not modelled)."""
+    blocks = []
+    for name, block in top_level_blocks(inner(body)):
+        if name == "possible_production_methods" and inner(block).strip():
+            return None
+        if name != "unique_production_methods":
+            continue
+        methods = []
+        for method, method_body in top_level_blocks(inner(block)):
+            text = inner(method_body)
+            if any(re.search(rf"^\s*{key}\s*=", text, re.M) for key in CONDITION_KEYS):
+                continue
+            produced = field(text, "produced")
+            output = re.search(r"^\s*output\s*=\s*([\d.]+)", text, re.M)
+            inputs = tuple(
+                (good, float(amount))
+                for good, amount in re.findall(r"^\s*(\w+)\s*=\s*([\d.]+)", text, re.M)
+                if good in goods and float(amount) > 0
+            )
+            methods.append(
+                Method(method, produced, float(output.group(1)) if output else 0.0, inputs, method_unlocks.get(method, ()))
+            )
+        if methods:
+            blocks.append(tuple(methods))
+    return tuple(blocks)
+
+
+def modifier_names(game_roots: list[Path]) -> set[str]:
+    names: set[str] = set()
+    for root in game_roots:
+        for path in sorted((root / MODIFIER_TYPES).glob("*.txt")):
+            text = path.read_text(encoding="utf-8-sig", errors="replace")
+            names.update(re.findall(r"^(\w+)\s*=\s*\{", text, re.M))
+    return names
+
+
+def blueprint_footprints(folder: Path = BLUEPRINTS) -> dict[str, str]:
+    """Building key -> its blueprint's footprint class (top-level `footprint:`)."""
+    found = {}
+    for path in sorted(folder.glob("*.yml")):
+        text = path.read_text(encoding="utf-8-sig")
+        footprint = re.search(r"^footprint:\s*(\w+)", text, re.M)
+        key = re.search(r"^building:\s*\n(?:\s+.*\n)*?\s+key:\s*(\w+)", text, re.M)
+        if footprint and key:
+            found[key.group(1)] = footprint.group(1)
+    return found
+
+
+def candidates(
+    definitions: dict[str, str],
+    goods: set[str],
+    unlocks: dict[str, tuple[str, ...]] | None = None,
+    method_unlocks: dict[str, tuple[str, ...]] | None = None,
+    footprints: dict[str, str] | None = None,
+) -> list[Candidate]:
+    unlocks, method_unlocks, footprints = unlocks or {}, method_unlocks or {}, footprints or {}
+    found = []
+    for building, body in sorted(definitions.items()):
+        pop_type = field(body, "pop_type")
+        good = main_good(body)
+        if pop_type not in POP_TYPES or good is None or building in EXCLUDED_BUILDINGS:
+            continue
+        if field(body, "forbidden_for_estates") == "yes" or field(body, "is_special") == "yes":
+            continue
+        blocks = method_blocks(body, goods, method_unlocks)
+        if not blocks:
+            continue
+        needs_shortage = not (
+            footprints.get(building) in NO_SHORTAGE_FOOTPRINTS
+            or building in NO_SHORTAGE_BUILDINGS
+            or makes_province_food(blocks)
+        )
+        found.append(
+            Candidate(
+                building, pop_type, good, blocks, unlocks.get(building, ()), needs_shortage,
+                country_potential(body), employment(building, body),
+            )
+        )
+    return found
+
+
+def country_potential(body: str) -> str:
+    return " ".join(
+        " ".join(inner(block).split()) for name, block in top_level_blocks(inner(body)) if name == "country_potential"
+    )
+
+
+def employment(building: str, body: str) -> float:
+    size = re.search(r"^\s*employment_size\s*=\s*([\d.]+)", body, re.M)
+    if size is None:
+        raise SystemExit(f"{building}: employment_size is not a number")
+    return float(size.group(1))
+
+
+def arable_land(body: str) -> float:
+    """Arable Land a level adds: local_population_capacity in the raw_modifier blocks (the modifier block carries the
+    workers' footprint, scaled by staffing)."""
+    return sum(
+        float(amount)
+        for block in re.findall(r"\braw_modifier\s*=\s*\{([^{}]*)\}", body)
+        for amount in re.findall(r"^\s*local_population_capacity\s*=\s*(-?[\d.]+)", block, re.M)
+    )
+
+
+def land_candidates(
+    definitions: dict[str, str],
+    unlocks: dict[str, tuple[str, ...]] | None = None,
+    footprints: dict[str, str] | None = None,
+) -> list[LandCandidate]:
+    """Land improvements the nobles may build: blueprint footprint LAND_FOOTPRINT, peasants or labourers, open to
+    estates, adding Arable Land. Unlike the production candidates, regional specials (polders, bund, baray) count:
+    is_special keeps wonders out of the profit search, and these are ordinary improvements where the land allows them."""
+    unlocks, footprints = unlocks or {}, footprints or {}
+    found = []
+    for building, body in sorted(definitions.items()):
+        pop_type = field(body, "pop_type")
+        if footprints.get(building) != LAND_FOOTPRINT or pop_type not in POP_TYPES or building in EXCLUDED_BUILDINGS:
+            continue
+        if field(body, "forbidden_for_estates") == "yes":
+            continue
+        capacity = arable_land(body)
+        if capacity <= 0:
+            continue
+        found.append(
+            LandCandidate(
+                building, pop_type, capacity, unlocks.get(building, ()), country_potential(body),
+                employment(building, body),
+            )
+        )
+    return found
+
+
+def has_any_advance(advances: tuple[str, ...]) -> str:
+    checks = " ".join(f"has_advance = {advance}" for advance in advances)
+    return checks if len(advances) == 1 else f"OR = {{ {checks} }}"
+
+
+def researched(candidate: Candidate | LandCandidate) -> str:
+    """Country-scope limit lines: the country has an advance that unlocks the building and passes its own
+    country_potential."""
+    lines = f"\t\t\t{has_any_advance(candidate.advances)}\n" if candidate.advances else ""
+    if candidate.country_potential:
+        lines += f"\t\t\tAND = {{ {candidate.country_potential} }} # country_potential\n"
+    return lines
+
+
+def price(good: str) -> str:
+    return f'"market.market_price(goods:{good})"'
+
+
+def number(amount: float) -> str:
+    return f"{amount:g}"
+
+
+def method_lines(method: Method, modifiers: set[str], indent: str) -> list[str]:
+    """Location scope: the method's revenue and input cost per level into local variables, then keep it when it beats
+    the block's best method so far."""
+    revenue = "value = 0"
+    if method.produced and method.output > 0:
+        revenue = f"value = {price(method.produced)} multiply = {number(method.output)}"
+        modifier = f"local_{method.produced}_output_modifier"
+        if modifier in modifiers:
+            revenue += f" multiply = {{ value = 1 add = modifier:{modifier} }}"
+    cost = " ".join(
+        ["value = 0"] + [f"add = {{ value = {price(good)} multiply = {number(amount)} }}" for good, amount in method.inputs]
+    )
+    body = [
+        f"# {method.name}",
+        f"set_local_variable = {{ name = pp_noble_investment_method_revenue value = {{ {revenue} }} }}",
+        f"set_local_variable = {{ name = pp_noble_investment_method_cost value = {{ {cost} }} }}",
+        "pp_noble_investment_keep_better_method = yes",
+    ]
+    if not method.advances:
+        return [indent + line for line in body]
+    return (
+        [f"{indent}if = {{", f"{indent}\tlimit = {{ owner = {{ {has_any_advance(method.advances)} }} }}"]
+        + [f"{indent}\t{line}" for line in body]
+        + [f"{indent}}}"]
+    )
+
+
+def signal(candidate: Candidate, modifiers: set[str]) -> str:
+    """Location-scope script value the score is multiplied by. Farms: the crop's local signal, (1 + the location's
+    output modifier for it) x its market price / default price, like the mod's own farm AI weight. Their profit is
+    nearly the same for every crop (the Province Food dominates), so ranking by profit alone built legume farms
+    everywhere (2026-10-17). Everything else: 1."""
+    if not makes_province_food(candidate.blocks):
+        return "value = 1"
+    good = candidate.good
+    text = f'value = "market.market_price(goods:{good})" divide = "default_price(goods:{good})"'
+    modifier = f"local_{good}_output_modifier"
+    if modifier in modifiers:
+        text += f" multiply = {{ value = 1 add = modifier:{modifier} }}"
+    return text + " min = 0"
+
+
+def find_block(index: int, candidate: Candidate, modifiers: set[str]) -> str:
+    building, good = candidate.building, candidate.good
+    indent = "\t" * 3
+    profit: list[str] = [
+        f"{indent}set_local_variable = {{ name = pp_noble_investment_revenue value = 0 }}",
+        f"{indent}set_local_variable = {{ name = pp_noble_investment_cost value = 0 }}",
+    ]
+    for block in candidate.blocks:
+        profit.append(f"{indent}pp_noble_investment_start_block = yes")
+        for method in block:
+            profit.extend(method_lines(method, modifiers, indent))
+        profit.append(f"{indent}pp_noble_investment_add_block = yes")
+    profit.append(f"{indent}set_local_variable = {{ name = pp_noble_investment_signal value = {{ {signal(candidate, modifiers)} }} }}")
+    priority = number(POP_PRIORITY[candidate.pop_type])
+    profit.append(f"{indent}pp_noble_investment_keep_better_location = {{ index = {index} priority = {priority} }}")
+    profit_text = "\n".join(profit)
+    return f"""\t# {index}: {building} ({candidate.pop_type}, {good})
+\tif = {{
+\t\tlimit = {{
+{researched(candidate)}\t\t\tscope:pp_noble_investment_nobles = {{
+\t\t\t\testate_gold >= {{
+\t\t\t\t\tvalue = building_type:{building}.building_base_cost_in_gold
+\t\t\t\t\tmultiply = pp_noble_investment_price_multiplier
+\t\t\t\t\tadd = pp_noble_investment_reserve
+\t\t\t\t}}
+\t\t\t}}
+{country_need(candidate)}
+\t\t}}
+\t\tevery_owned_location = {{
+\t\t\tlimit = {{
+\t\t\t\texists = market
+{location_need(candidate)}
+{free_hands(candidate.pop_type, candidate.employment)}
+\t\t\t\tnum_civil_constructions < 1
+\t\t\t\tNOT = {{ has_variable = pp_noble_investment_recent }}
+\t\t\t\tcan_build_building = building_type:{building}
+\t\t\t}}
+{profit_text}
+\t\t}}
+\t}}
+"""
+
+
+def country_need(candidate: Candidate) -> str:
+    """Country-scope limit line: some market of the country is short of the good."""
+    if not candidate.needs_shortage:
+        return "\t\t\t# built regardless of shortage"
+    return f"\t\t\tany_market_present_in_country = {{ {shortage(candidate.good)} }}"
+
+
+def location_need(candidate: Candidate) -> str:
+    """Location-scope limit line: its market is short of the good."""
+    if not candidate.needs_shortage:
+        return "\t\t\t\t# built regardless of shortage"
+    return f"\t\t\t\tmarket = {{ {shortage(candidate.good)} }}"
+
+
+def shortage(good: str) -> str:
+    """Market-scope trigger: demand for the good above SHORTAGE_RATIO x supply."""
+    ratio = SHORTAGE_RATIO.get(good, DEFAULT_SHORTAGE_RATIO)
+    supply = f'"goods_supply_in_market(goods:{good})"'
+    if ratio != 1:
+        supply = f"{{ value = {supply} multiply = {number(ratio)} }}"
+    return f'"goods_demand_in_market(goods:{good})" > {supply}'
+
+
+def build_branch(index: int, candidate: Candidate, first: bool) -> str:
+    keyword = "if" if first else "else_if"
+    return (
+        f"\t{keyword} = {{\n"
+        f"\t\tlimit = {{ local_var:pp_noble_investment_best_index = {index} }}\n"
+        f"\t\tconstruct_estate_building = {{ building_type = building_type:{candidate.building} "
+        f"estate_type = estate_type:nobles_estate }}\n"
+        f"\t}}"
+    )
+
+
+def free_hands(pop_type: str, size: float) -> str:
+    return f'\t\t\t\t"unemployed_pops_of_pop_type_in_location(pop_type:{pop_type})" >= {number(size)}'
+
+
+def land_is_full() -> str:
+    """Location-scope limit lines: more than LAND_FULL_SHARE full or over capacity. The engine applies Abundant /
+    Available Arable Land scaled by 1 - population / capacity (the pp_land_* markers carry that scale), Overused Arable
+    Land over capacity."""
+    free = number(round(1 - LAND_FULL_SHARE, 6))
+    return (
+        f"\t\t\t\tNOT = {{ modifier:pp_land_abundant > 0 }} # more than {number(LAND_FULL_SHARE * 100)} % full\n"
+        f"\t\t\t\tmodifier:pp_land_available < {free}"
+    )
+
+
+def land_find_block(index: int, candidate: LandCandidate) -> str:
+    building = candidate.building
+    hands = f"{free_hands(candidate.pop_type, candidate.employment)}\n" if candidate.employment > 0 else ""
+    return f"""\t# land {index}: {building} ({candidate.pop_type}, {number(candidate.capacity)} arable land)
+\tif = {{
+\t\tlimit = {{
+{researched(candidate)}\t\t\tscope:pp_noble_investment_nobles = {{
+\t\t\t\testate_gold >= {{
+\t\t\t\t\tvalue = building_type:{building}.building_base_cost_in_gold
+\t\t\t\t\tmultiply = pp_noble_investment_price_multiplier
+\t\t\t\t\tadd = pp_noble_investment_reserve
+\t\t\t\t}}
+\t\t\t}}
+\t\t}}
+\t\tevery_owned_location = {{
+\t\t\tlimit = {{
+{land_is_full()}
+{hands}\t\t\t\tnum_civil_constructions < 1
+\t\t\t\tNOT = {{ has_variable = pp_noble_investment_recent }}
+\t\t\t\tcan_build_building = building_type:{building}
+\t\t\t}}
+\t\t\tpp_noble_land_keep_better_location = {{ index = {index} building = {building} capacity = {number(candidate.capacity)} }}
+\t\t}}
+\t}}
+"""
+
+
+def land_build_branch(index: int, candidate: LandCandidate, first: bool) -> str:
+    keyword = "if" if first else "else_if"
+    return (
+        f"\t{keyword} = {{\n"
+        f"\t\tlimit = {{ local_var:pp_noble_land_best_index = {index} }}\n"
+        f"\t\tconstruct_estate_building = {{ building_type = building_type:{candidate.building} "
+        f"estate_type = estate_type:nobles_estate }}\n"
+        f"\t}}"
+    )
+
+
+LAND_HELPERS = f"""# Location scope: the improvement here becomes the best when it adds more Arable Land per gold than the best so far,
+# scaled up by the share the location is over capacity.
+pp_noble_land_keep_better_location = {{
+\tset_local_variable = {{
+\t\tname = pp_noble_land_score
+\t\tvalue = {{
+\t\t\tvalue = $capacity$
+\t\t\tdivide = {{ value = building_type:$building$.building_base_cost_in_gold min = 1 }}
+\t\t\tmultiply = {{ value = 1 add = modifier:pp_land_overpopulation }}
+\t\t}}
+\t}}
+\tif = {{
+\t\tlimit = {{ local_var:pp_noble_land_score > local_var:pp_noble_land_best_score }}
+\t\tset_local_variable = {{ name = pp_noble_land_best_score value = local_var:pp_noble_land_score }}
+\t\tset_local_variable = {{ name = pp_noble_land_best_index value = $index$ }}
+\t\tsave_scope_as = pp_noble_land_location
+\t}}
+}}
+"""
+
+
+HELPERS = f"""# Location scope helpers for the profit of one building at one location (all in local variables).
+# A block starts with no method.
+pp_noble_investment_start_block = {{
+\tset_local_variable = {{ name = pp_noble_investment_block_profit value = {NO_METHOD} }}
+\tset_local_variable = {{ name = pp_noble_investment_block_revenue value = 0 }}
+\tset_local_variable = {{ name = pp_noble_investment_block_cost value = 0 }}
+}}
+
+# Keep the method just computed when it makes more than the block's best so far.
+pp_noble_investment_keep_better_method = {{
+\tset_local_variable = {{
+\t\tname = pp_noble_investment_method_profit
+\t\tvalue = {{ value = local_var:pp_noble_investment_method_revenue subtract = local_var:pp_noble_investment_method_cost }}
+\t}}
+\tif = {{
+\t\tlimit = {{ local_var:pp_noble_investment_method_profit > local_var:pp_noble_investment_block_profit }}
+\t\tset_local_variable = {{ name = pp_noble_investment_block_profit value = local_var:pp_noble_investment_method_profit }}
+\t\tset_local_variable = {{ name = pp_noble_investment_block_revenue value = local_var:pp_noble_investment_method_revenue }}
+\t\tset_local_variable = {{ name = pp_noble_investment_block_cost value = local_var:pp_noble_investment_method_cost }}
+\t}}
+}}
+
+# Add the block's best method to the building's revenue and input cost.
+pp_noble_investment_add_block = {{
+\tif = {{
+\t\tlimit = {{ local_var:pp_noble_investment_block_profit > {NO_METHOD} }}
+\t\tchange_local_variable = {{ name = pp_noble_investment_revenue add = local_var:pp_noble_investment_block_revenue }}
+\t\tchange_local_variable = {{ name = pp_noble_investment_cost add = local_var:pp_noble_investment_block_cost }}
+\t}}
+}}
+
+# The building at this location becomes the best candidate when its score (profit x the pop type's priority) beats the
+# best so far (which starts at 0: it must make money) and it earns at least the AI's margin on its inputs.
+pp_noble_investment_keep_better_location = {{
+\tset_local_variable = {{
+\t\tname = pp_noble_investment_profit
+\t\tvalue = {{ value = local_var:pp_noble_investment_revenue subtract = local_var:pp_noble_investment_cost }}
+\t}}
+\tset_local_variable = {{
+\t\tname = pp_noble_investment_score
+\t\tvalue = {{
+\t\t\tvalue = local_var:pp_noble_investment_profit
+\t\t\tmultiply = $priority$
+\t\t\tmultiply = local_var:pp_noble_investment_signal
+\t\t}}
+\t}}
+\tif = {{
+\t\tlimit = {{
+\t\t\tlocal_var:pp_noble_investment_profit > 0
+\t\t\tlocal_var:pp_noble_investment_score > local_var:pp_noble_investment_best_score
+\t\t\tlocal_var:pp_noble_investment_revenue >= {{
+\t\t\t\tvalue = local_var:pp_noble_investment_cost
+\t\t\t\tmultiply = pp_noble_investment_min_margin
+\t\t\t}}
+\t\t}}
+\t\tset_local_variable = {{ name = pp_noble_investment_best_score value = local_var:pp_noble_investment_score }}
+\t\tset_local_variable = {{ name = pp_noble_investment_best_index value = $index$ }}
+\t\tsave_scope_as = pp_noble_investment_location
+\t}}
+}}
+"""
+
+# New World crops only: their "native" test is an American original capital, so no Old World country may hold their
+# farms before the advance. Rice and olives are native by region of the original capital (Italy, Iberia, ...), so a
+# country that conquered or started with such land holds those farms rightly; the cleanup leaves them alone.
+CLEANUP_CROPS = ("potato", "maize")
+
+
+def render_cleanup(found: list[Candidate]) -> list[str]:
+    """One-off console effect (2026-10-17, user request): before country_potential was checked, nobles built crop farms
+    the country could not build (281 of 584 noble constructions in an Austria 1384 save were potato farms). In every
+    country that fails a crop farm's country_potential, every tier of that farm goes, finished or still being built
+    (removing the building ends its construction; whoever built it). Run once: effect pp_noble_investment_cleanup = yes"""
+    groups: dict[str, list[str]] = {}
+    for candidate in found:
+        if candidate.country_potential and candidate.good in CLEANUP_CROPS:
+            groups.setdefault(candidate.country_potential, []).append(candidate.building)
+    out = [
+        "# One-off cleanup, run once from the console: effect pp_noble_investment_cleanup = yes",
+        "# Removes every tier of a crop farm in each country that fails the farm's country_potential (not native to the crop",
+        "# and without its advance), finished or under construction, whoever built it. Countries that may build them keep",
+        "# theirs.",
+        "pp_noble_investment_cleanup = {",
+    ]
+    for potential, buildings in groups.items():
+        out += [
+            f"\t# {', '.join(buildings)}",
+            "\tevery_country = {",
+            f"\t\tlimit = {{ NOT = {{ AND = {{ {potential} }} }} }}",
+            "\t\tevery_owned_location = {",
+        ]
+        for building in buildings:
+            out += [
+                "\t\t\tif = {",
+                f"\t\t\t\tlimit = {{ any_buildings_in_location = {{ building_type = building_type:{building} }} }}",
+                f"\t\t\t\tdestroy_all_buildings_of_type = building_type:{building}",
+                "\t\t\t}",
+            ]
+        out += ["\t\t}", "\t}"]
+    out += ["}", ""]
+    return out
+
+
+DEBUG_COUNTERS = """\t\tif = {
+\t\t\tlimit = { NOT = { has_variable = pp_noble_investment_builds } }
+\t\t\tset_variable = { name = pp_noble_investment_builds value = 0 }
+\t\t}
+\t\tchange_variable = { name = pp_noble_investment_builds add = 1 }
+\t\tif = {
+\t\t\tlimit = { NOT = { has_global_variable = pp_noble_investment_builds } }
+\t\t\tset_global_variable = { name = pp_noble_investment_builds value = 0 }
+\t\t}
+\t\tchange_global_variable = { name = pp_noble_investment_builds add = 1 }
+"""
+
+
+def search(name: str) -> list[str]:
+    """Country-scope lines of one search (`pp_noble_investment` or `pp_noble_land`): while its cooldown is off and the
+    nobles hold the reserve, find the best candidate, build it and wait BUILD_COOLDOWN_DAYS, else IDLE_COOLDOWN_DAYS."""
+    return [
+        "\tif = {",
+        "\t\tlimit = {",
+        f"\t\t\tNOT = {{ has_variable = {name}_cooldown }}",
+        "\t\t\tcountry_has_estate = estate_type:nobles_estate",
+        '\t\t\t"estate(estate_type:nobles_estate)" = { estate_gold >= pp_noble_investment_reserve }',
+        "\t\t}",
+        '\t\t"estate(estate_type:nobles_estate)" = { save_scope_as = pp_noble_investment_nobles }',
+        f"\t\tset_local_variable = {{ name = {name}_best_score value = 0 }}",
+        f"\t\tset_local_variable = {{ name = {name}_best_index value = 0 }}",
+        f"\t\t{name}_find_best = yes",
+        "\t\tif = {",
+        f"\t\t\tlimit = {{ local_var:{name}_best_index > 0 }}",
+        f"\t\t\tscope:{name}_location = {{ {name}_build_best = yes }}",
+        f"\t\t\tset_variable = {{ name = {name}_cooldown value = 1 days = {BUILD_COOLDOWN_DAYS} }}",
+        "\t\t}",
+        "\t\telse = {",
+        f"\t\t\tset_variable = {{ name = {name}_cooldown value = 1 days = {IDLE_COOLDOWN_DAYS} }}",
+        "\t\t}",
+        "\t}",
+    ]
+
+
+def render(found: list[Candidate], modifiers: set[str], land: list[LandCandidate] | None = None) -> str:
+    land = land or []
+    out = [
+        "\ufeff# Prosper or Perish - Noble investment: nobles with surplus gold build peasant and labourer buildings for goods",
+        "# their markets are short of, the most profitable first, and land improvements where the Arable Land is full.",
+        "# Generated by scripts/generate_noble_investment.py from the built mod's building types. Do not edit by hand.",
+        f"# {len(found)} candidates, {len(land)} land improvements.",
+        "",
+        "# Country scope. Fired by monthly_country_pulse (on_action/pp_noble_investment.txt). Production first, then land;",
+        "# each search has its own cooldown, and the land search skips the location the first one just built in.",
+        "pp_noble_investment_monthly = {",
+        *search("pp_noble_investment"),
+    ]
+    if land:
+        out += search("pp_noble_land")
+    out += [
+        "}",
+        "",
+        HELPERS,
+        "# Country scope: the most profitable candidate's index (local_var:pp_noble_investment_best_index), its profit per",
+        "# level (local_var:pp_noble_investment_best_score) and location (scope:pp_noble_investment_location).",
+        "pp_noble_investment_find_best = {",
+    ]
+    out.extend(find_block(index, candidate, modifiers) for index, candidate in enumerate(found, start=1))
+    out += [
+        "}",
+        "",
+        "# Location scope (the chosen location): the nobles start the chosen building there.",
+        "pp_noble_investment_build_best = {",
+        f"\tset_variable = {{ name = pp_noble_investment_recent value = 1 days = {LOCATION_COOLDOWN_DAYS} }}",
+    ]
+    out.extend(build_branch(index, candidate, index == 1) for index, candidate in enumerate(found, start=1))
+    out += debug_lines() + ["}", ""]
+    if land:
+        out += [
+            LAND_HELPERS,
+            "# Country scope: the land improvement adding the most Arable Land per gold (local_var:pp_noble_land_best_index)",
+            "# and its location (scope:pp_noble_land_location).",
+            "pp_noble_land_find_best = {",
+        ]
+        out.extend(land_find_block(index, candidate) for index, candidate in enumerate(land, start=1))
+        out += [
+            "}",
+            "",
+            "# Location scope (the chosen location): the nobles start the chosen land improvement there.",
+            "pp_noble_land_build_best = {",
+            f"\tset_variable = {{ name = pp_noble_investment_recent value = 1 days = {LOCATION_COOLDOWN_DAYS} }}",
+        ]
+        out.extend(land_build_branch(index, candidate, index == 1) for index, candidate in enumerate(land, start=1))
+        out += debug_lines() + ["}", ""]
+    out += render_cleanup(found)
+    return "\n".join(out)
+
+
+def debug_lines() -> list[str]:
+    if not DEBUG:
+        return []
+    return [
+        "\tif = {",
+        "\t\tlimit = { NOT = { has_variable = pp_noble_investment_builds } }",
+        "\t\tset_variable = { name = pp_noble_investment_builds value = 0 }",
+        "\t}",
+        "\tchange_variable = { name = pp_noble_investment_builds add = 1 }",
+        "\towner = {",
+        DEBUG_COUNTERS.rstrip("\n"),
+        "\t}",
+    ]
+
+
+def render_values() -> str:
+    return "\n".join(
+        [
+            "﻿# Prosper or Perish - Noble investment thresholds.",
+            "# Generated by scripts/generate_noble_investment.py (its constants and pp_defines_adjustments.txt).",
+            "# Do not edit by hand.",
+            "",
+            "# Gold the nobles keep; only gold above this plus what the building costs them is spent.",
+            f"pp_noble_investment_reserve = {RESERVE_GOLD}",
+            "# Estates pay this times a building's price for their own builds (ESTATE_MAX_PRICE_MULTIPLIER).",
+            f"pp_noble_investment_price_multiplier = {define('ESTATE_MAX_PRICE_MULTIPLIER'):g}",
+            "# Revenue a building must earn per gold of inputs (AI_BUILDING_PROFIT_MARGIN_THRESHOLD).",
+            f"pp_noble_investment_min_margin = {define('AI_BUILDING_PROFIT_MARGIN_THRESHOLD'):g}",
+            "",
+        ]
+    )
+
+
+def default_vanilla_root() -> Path | None:
+    config = ROOT / "constructor.load_order.toml"
+    if not config.exists():
+        return None
+    raw = tomllib.loads(config.read_text(encoding="utf-8"))["paths"]["vanilla_root"]
+    return Path(raw) / "game"
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--vanilla", type=Path, default=default_vanilla_root(), help="EU5 game/ folder")
+    parser.add_argument("--check", action="store_true", help="fail if the generated file is out of date")
+    args = parser.parse_args()
+    if args.vanilla is None or not (args.vanilla / MODIFIER_TYPES).is_dir():
+        raise SystemExit(f"EU5 game folder not found: {args.vanilla} (pass --vanilla <install>/game)")
+    modifiers = modifier_names([args.vanilla, MOD_ROOT])
+    advances = load_definitions(game_folders(args.vanilla, MOD_ROOT, ADVANCES))
+    definitions, unlocks, footprints = building_definitions(BUILDING_TYPES), unlock_map(advances, "unlock_building"), blueprint_footprints()
+    found = candidates(
+        definitions, goods_names(args.vanilla, MOD_ROOT), unlocks, unlock_map(advances, "unlock_production_method"), footprints
+    )
+    land = land_candidates(definitions, unlocks, footprints)
+    outputs = {EFFECTS_PATH: render(found, modifiers, land), VALUES_PATH: render_values()}
+    if args.check:
+        stale = [p for p, text in outputs.items() if not p.exists() or p.read_text(encoding="utf-8") != text]
+        if stale:
+            names = ", ".join(str(p.relative_to(ROOT)) for p in stale)
+            raise SystemExit(f"out of date: {names}; re-run without --check")
+        return
+    for path, text in outputs.items():
+        path.write_text(text, encoding="utf-8", newline="\n")
+    print(f"{len(found)} candidates, {len(land)} land improvements -> {EFFECTS_PATH.relative_to(ROOT)}")
+
+
+if __name__ == "__main__":
+    main()

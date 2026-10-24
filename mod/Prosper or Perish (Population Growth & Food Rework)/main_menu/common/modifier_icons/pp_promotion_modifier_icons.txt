@@ -1,0 +1,6 @@
+﻿# Prosper or Perish - icon of the promotion signal (modifier_type_definitions/pp_promotion_modifier_types.txt); without
+# one the game logs "Missing Icon for Modifier".
+local_pp_surplus_laborer_jobs = {
+	positive = "gfx/interface/icons/pops/laborers.dds"
+	negative = "gfx/interface/icons/pops/laborers.dds"
+}

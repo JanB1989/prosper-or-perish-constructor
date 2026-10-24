@@ -165,6 +165,17 @@ def drop_blocks(text: str, names: tuple[str, ...], rel: str) -> str:
     return text
 
 
+# The navigation export's river areas (water only) share names with countries ("Rhine" and the Palatinate's PAL): the
+# engine warns that dynamic country naming may pick them. Flagged like vanilla's own areas that must not name a country.
+MAP_DEFINITIONS = "in_game/map_data/definitions.txt"
+_RIVER_AREA = re.compile(r"^(pp_nav_\w+_area = \{)(?! not_eligible_for_dynamic_country_name)", re.MULTILINE)
+
+
+def river_areas_name_no_country(text: str) -> str:
+    """``definitions.txt`` with every navigation river area marked not_eligible_for_dynamic_country_name."""
+    return _RIVER_AREA.sub(r"\1 not_eligible_for_dynamic_country_name = yes", text)
+
+
 def drop_keys(text: str, keys: tuple[str, ...]) -> str:
     """``text`` (a localization file) without the entry lines of ``keys``."""
     if not keys:
@@ -210,6 +221,14 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path) -> dict[str, ob
             merged = topography_map_mode_without_rivers(src.read_text(encoding="utf-8-sig"))
             if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
                 dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")
+                changed += 1
+            copied[rel] = digest
+            continue
+        if rel == MAP_DEFINITIONS:
+            raw = src.read_bytes().decode("utf-8")   # keeps the export's BOM and line ends
+            own = river_areas_name_no_country(raw)
+            if not dst.is_file() or dst.read_bytes().decode("utf-8") != own:
+                dst.write_bytes(own.encode("utf-8"))
                 changed += 1
             copied[rel] = digest
             continue

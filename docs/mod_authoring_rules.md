@@ -120,24 +120,23 @@ banners differ and that the text has no numbers; add a new card to its `CARDS` w
 Keep the GUI's filter buttons and cards in this order (more may be added):
 
 1. All
-2. Getting Started
-3. F.A.Q.
-4. Overview
-5. Food (was Food in EU5)
-6. Food Production
-7. Food Consumption
-8. New Trade Goods
-9. Logistics (Market Access) (was Building Limits)
-10. Navigable Rivers
-11. Rural Capacities (was Building Capacity)
-12. Labor
-13. Variable Harvests
-14. Arable Land (was Population Capacity)
-15. Population Growth
-16. Other Changes
+2. Overview
+3. Food (was Food in EU5)
+4. Food Production
+5. Food Consumption
+6. New Trade Goods
+7. Logistics (Market Access) (was Building Limits)
+8. Navigable Rivers
+9. Rural Capacities (was Building Capacity)
+10. Labor
+11. Variable Harvests
+12. Arable Land (was Population Capacity)
+13. Population Growth
+14. Other Changes
 
 The Update 0.9 changelog card and the Other Changes cards Cheap Food, Expensive Food (the market food price, switched
-off) and Province Current Food Storage (now in Province Food Growth from Storage) were removed 2026-10-24.
+off) and Province Current Food Storage (now in Province Food Growth from Storage) were removed 2026-10-24, the Getting
+Started and F.A.Q. cards the same day (out of date).
 
 ### Concept files
 
@@ -147,8 +146,6 @@ Each card has exactly one game concept file in `M/main_menu/common/game_concepts
 | Card | File |
 |---|---|
 | All | (filter only) |
-| Getting Started | `pp_getting_started.txt` |
-| F.A.Q. | `pp_faq.txt` |
 | Overview | `pp_overview.txt` |
 | Food | `pp_food_in_eu5.txt` |
 | Food Production | `pp_food_production.txt` |

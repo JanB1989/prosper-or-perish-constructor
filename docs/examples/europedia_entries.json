@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Prosper or Perish Europedia",
-    "entry_count": 20,
+    "entry_count": 18,
     "sources": {
       "gui": "in_game/gui/encyclopedia_lateralview.gui",
       "localization": "main_menu/localization/english/pp_europedia_l_english.yml",
@@ -12,17 +12,7 @@
     {
       "id": "all",
       "label": "All",
-      "count": 20
-    },
-    {
-      "id": "getting_started",
-      "label": "Getting Started",
-      "count": 1
-    },
-    {
-      "id": "faq",
-      "label": "F.A.Q.",
-      "count": 1
+      "count": 18
     },
     {
       "id": "overview",
@@ -92,70 +82,8 @@
   ],
   "entries": [
     {
-      "id": "pp-getting-started",
-      "order": 1,
-      "filter": "getting_started",
-      "filter_label": "Getting Started",
-      "concept_key": "pp_getting_started",
-      "title_key": "game_concept_pp_getting_started",
-      "body_key": "game_concept_pp_getting_started_desc",
-      "title": "Getting Started",
-      "body_raw": "#T Getting Started#!\nIf you are new or returning, the changes can be overwhelming because there are so many.\n\n#T First, Check Your Settings#!\nFirst check if you actually started with the correct settings. You can change a bunch of things you do not like. The game is balanced around the default settings, but I personally often play without Variable Harvests.\n\n#T Recommended Community Mods#!\nI personally almost always use the Community Mod Framework mods Faster Universalis, with default settings, and Construction Manager. Construction Manager especially allows you to build or upgrade buildings based on the time they take to pay for their building cost. Since P&P changes building costs in a lot of places, this is a much more sensible metric than building based on profit.\n\n#T What to Pay Attention To#!\nIn general, this mod makes food much more important. When you urbanize, you increase your food consumption. This food needs to be produced somewhere and distributed.\n\nThe most important thing I try to make happen is that a province store running low creates a cascading effect where building up your food production becomes profitable and necessary.\n\nIn simple terms, it always works like this:\n$BULLET$ 1. If food is short, rural buildings switch to feeding the province by themselves: farms provision it with their crop. [ShowBuildingTypeName('cookshop')|e] and [ShowBuildingTypeName('public_kitchen')|e] always serve their dishes to the province.\n$BULLET$ 2. If [ShowGoodsName('victuals')|e] are cheap, build a [ShowBuildingTypeName('tavern')|e]. It buys victuals from the goods market and feeds the province with them, and it earns more while the province store is low.\n$BULLET$ 3. If the province store is full, your population grows faster and you get more prosperity.\n$BULLET$ 4. If the store runs low, your population grows slower and you get less prosperity.\n\nIt is best to understand how [ShowBuildingTypeName('tavern')|e] works. It hires and fires people based on whether buying victuals for the province pays off, which is the case while the province store is low. You can subsidize it, but you rarely need to. Just leave it be and build it in cities where you do not want to produce food with [ShowBuildingTypeName('cookshop')|e]. Its counterpart [ShowBuildingTypeName('victualling_yard')|e] packs a full province store into victuals for the goods market; it belongs where rivers, coasts and market centres let the victuals travel.\n\nEssentially everything is balanced around this idea.\n\n#T RGOs#!\nEvery location keeps its [rgo|e], but it cannot be expanded: more of a raw material comes from buildings. Buildings are just more interesting.\n\n#T Variable Harvests#!\nThey happen yearly and make your crop production vary a lot.\n\n#T Map Modes#!\nPlease familiarize yourself with the map modes. I added a lot. They are very helpful for many things.\n\n#T Farming, Forest, and Fishing Capacity#!\nThere are map modes for these as well. They are shared room for buildings: farms take their land from the location's [population_capacity|e], fishing buildings share its [pp_fish_capacity|e] and forest buildings its [pp_forest_capacity|e] (see [pp_farm_capacity|e]). The idea is that buildings that use the same land compete for it.\n\n#T Land Attributes#!\nThis is a static modifier produced by a complicated out-of-game pipeline. It calculates the fertility of a location based on many out-of-game factors that do not exist in game, like soil, water access, temperatures, and more.\n\n#T Building Levels#!\nYou will see some locations cannot build too many buildings until they reach their capacity. You can still overbuild, but it would be wise to build infrastructure buildings so you do not suffer the consequences of being over capacity.\n\nPlease use the filters in the building menu or the relevant map mode to find the places where you are over capacity and build the buildings there.\n\n#T Internal Food Goods#!\n[ShowGoodsName('province_food_sales')|e] pays the [ShowBuildingTypeName('grange')|e] for the surplus of a well-stocked province, and nothing once the store runs low. It is an internal good that lets the Grange react to the province store by itself. You can otherwise ignore it.",
-      "body_plain": "Getting Started\nIf you are new or returning, the changes can be overwhelming because there are so many.\n\nFirst, Check Your Settings\nFirst check if you actually started with the correct settings. You can change a bunch of things you do not like. The game is balanced around the default settings, but I personally often play without Variable Harvests.\n\nRecommended Community Mods\nI personally almost always use the Community Mod Framework mods Faster Universalis, with default settings, and Construction Manager. Construction Manager especially allows you to build or upgrade buildings based on the time they take to pay for their building cost. Since P&P changes building costs in a lot of places, this is a much more sensible metric than building based on profit.\n\nWhat to Pay Attention To\nIn general, this mod makes food much more important. When you urbanize, you increase your food consumption. This food needs to be produced somewhere and distributed.\n\nThe most important thing I try to make happen is that a province store running low creates a cascading effect where building up your food production becomes profitable and necessary.\n\nIn simple terms, it always works like this:\n-  1. If food is short, rural buildings switch to feeding the province by themselves: farms provision it with their crop. Cookshop and Public Kitchen always serve their dishes to the province.\n-  2. If Victuals are cheap, build a Tavern. It buys victuals from the goods market and feeds the province with them, and it earns more while the province store is low.\n-  3. If the province store is full, your population grows faster and you get more prosperity.\n-  4. If the store runs low, your population grows slower and you get less prosperity.\n\nIt is best to understand how Tavern works. It hires and fires people based on whether buying victuals for the province pays off, which is the case while the province store is low. You can subsidize it, but you rarely need to. Just leave it be and build it in cities where you do not want to produce food with Cookshop. Its counterpart Victualling Yard packs a full province store into victuals for the goods market; it belongs where rivers, coasts and market centres let the victuals travel.\n\nEssentially everything is balanced around this idea.\n\nRGOs\nEvery location keeps its Rgo, but it cannot be expanded: more of a raw material comes from buildings. Buildings are just more interesting.\n\nVariable Harvests\nThey happen yearly and make your crop production vary a lot.\n\nMap Modes\nPlease familiarize yourself with the map modes. I added a lot. They are very helpful for many things.\n\nFarming, Forest, and Fishing Capacity\nThere are map modes for these as well. They are shared room for buildings: farms take their land from the location's Population Capacity, fishing buildings share its Pp Fish Capacity and forest buildings its Pp Forest Capacity (see Pp Farm Capacity). The idea is that buildings that use the same land compete for it.\n\nLand Attributes\nThis is a static modifier produced by a complicated out-of-game pipeline. It calculates the fertility of a location based on many out-of-game factors that do not exist in game, like soil, water access, temperatures, and more.\n\nBuilding Levels\nYou will see some locations cannot build too many buildings until they reach their capacity. You can still overbuild, but it would be wise to build infrastructure buildings so you do not suffer the consequences of being over capacity.\n\nPlease use the filters in the building menu or the relevant map mode to find the places where you are over capacity and build the buildings there.\n\nInternal Food Goods\nProvince Food Sales pays the Grange for the surplus of a well-stocked province, and nothing once the store runs low. It is an internal good that lets the Grange react to the province store by itself. You can otherwise ignore it.",
-      "icon_texture": "gfx/interface/icons/flat_icons/effect.dds",
-      "definition": {
-        "key": "pp_getting_started",
-        "file": "main_menu/common/game_concepts/pp_getting_started.txt",
-        "line": 2,
-        "family": "food",
-        "texture": "flat_icons/effect",
-        "aliases": []
-      },
-      "source": {
-        "gui": "in_game/gui/encyclopedia_lateralview.gui",
-        "localization": "main_menu/localization/english/pp_europedia_l_english.yml",
-        "concept": "main_menu/common/game_concepts/pp_getting_started.txt"
-      },
-      "links": [
-        "population_capacity",
-        "pp_farm_capacity",
-        "pp_fish_capacity",
-        "pp_forest_capacity",
-        "rgo"
-      ],
-      "body_html": "<h3>Getting Started</h3>\n<p>If you are new or returning, the changes can be overwhelming because there are so many.</p>\n<h3>First, Check Your Settings</h3>\n<p>First check if you actually started with the correct settings. You can change a bunch of things you do not like. The game is balanced around the default settings, but I personally often play without Variable Harvests.</p>\n<h3>Recommended Community Mods</h3>\n<p>I personally almost always use the Community Mod Framework mods Faster Universalis, with default settings, and Construction Manager. Construction Manager especially allows you to build or upgrade buildings based on the time they take to pay for their building cost. Since P&amp;P changes building costs in a lot of places, this is a much more sensible metric than building based on profit.</p>\n<h3>What to Pay Attention To</h3>\n<p>In general, this mod makes food much more important. When you urbanize, you increase your food consumption. This food needs to be produced somewhere and distributed.</p>\n<p>The most important thing I try to make happen is that a province store running low creates a cascading effect where building up your food production becomes profitable and necessary.</p>\n<p>In simple terms, it always works like this:</p>\n<ul><li>1. If food is short, rural buildings switch to feeding the province by themselves: farms provision it with their crop. <span class=\"token token-building\">Cookshop</span> and <span class=\"token token-building\">Public Kitchen</span> always serve their dishes to the province.</li><li>2. If <span class=\"token token-good\">Victuals</span> are cheap, build a <span class=\"token token-building\">Tavern</span>. It buys victuals from the goods market and feeds the province with them, and it earns more while the province store is low.</li><li>3. If the province store is full, your population grows faster and you get more prosperity.</li><li>4. If the store runs low, your population grows slower and you get less prosperity.</li></ul>\n<p>It is best to understand how <span class=\"token token-building\">Tavern</span> works. It hires and fires people based on whether buying victuals for the province pays off, which is the case while the province store is low. You can subsidize it, but you rarely need to. Just leave it be and build it in cities where you do not want to produce food with <span class=\"token token-building\">Cookshop</span>. Its counterpart <span class=\"token token-building\">Victualling Yard</span> packs a full province store into victuals for the goods market; it belongs where rivers, coasts and market centres let the victuals travel.</p>\n<p>Essentially everything is balanced around this idea.</p>\n<h3>RGOs</h3>\n<p>Every location keeps its <span class=\"concept-ref\">Rgo</span>, but it cannot be expanded: more of a raw material comes from buildings. Buildings are just more interesting.</p>\n<h3>Variable Harvests</h3>\n<p>They happen yearly and make your crop production vary a lot.</p>\n<h3>Map Modes</h3>\n<p>Please familiarize yourself with the map modes. I added a lot. They are very helpful for many things.</p>\n<h3>Farming, Forest, and Fishing Capacity</h3>\n<p>There are map modes for these as well. They are shared room for buildings: farms take their land from the location&#x27;s <span class=\"concept-ref\">Population Capacity</span>, fishing buildings share its <span class=\"concept-ref\">Pp Fish Capacity</span> and forest buildings its <span class=\"concept-ref\">Pp Forest Capacity</span> (see <a class=\"concept-link\" href=\"#pp-farm-capacity\">P&amp;P: Rural Capacities</a>). The idea is that buildings that use the same land compete for it.</p>\n<h3>Land Attributes</h3>\n<p>This is a static modifier produced by a complicated out-of-game pipeline. It calculates the fertility of a location based on many out-of-game factors that do not exist in game, like soil, water access, temperatures, and more.</p>\n<h3>Building Levels</h3>\n<p>You will see some locations cannot build too many buildings until they reach their capacity. You can still overbuild, but it would be wise to build infrastructure buildings so you do not suffer the consequences of being over capacity.</p>\n<p>Please use the filters in the building menu or the relevant map mode to find the places where you are over capacity and build the buildings there.</p>\n<h3>Internal Food Goods</h3>\n<p><span class=\"token token-good\">Province Food Sales</span> pays the <span class=\"token token-building\">Grange</span> for the surplus of a well-stocked province, and nothing once the store runs low. It is an internal good that lets the Grange react to the province store by itself. You can otherwise ignore it.</p>"
-    },
-    {
-      "id": "pp-faq",
-      "order": 2,
-      "filter": "faq",
-      "filter_label": "F.A.Q.",
-      "concept_key": "pp_faq",
-      "title_key": "game_concept_pp_faq",
-      "body_key": "game_concept_pp_faq_desc",
-      "title": "F.A.Q.",
-      "body_raw": "#T Q: Are my other mods compatible with Prosper or Perish?:#!\nI recommend playing with the Community Framework mods Faster Universalis and Construction Manager. For everything else, you need to try it yourself or ask in the Discord. If you test other mods, load Prosper or Perish last and run an Observer test before committing to a campaign.\n\n#T Q: An update ruined my save. What do I do?:#!\nSteam Workshop updates can break old saves. Download the matching older release from https://github.com/JanB1989/prosper-or-perish-constructor/releases . Extract the repository archive, open its mod folder, and copy the Prosper or Perish (Population Growth & Food Rework) folder into C:\\Users\\YourUserName\\Documents\\Paradox Interactive\\Europa Universalis V\\mod . Then use that local copy for the old save instead of the auto-updating Workshop copy.\n\n#T Q: How do I install the GitHub version?:#!\nGo to https://github.com/JanB1989/prosper-or-perish-constructor and download the repository, or download the branch or release you want. Extract it, open the repository's mod folder, and copy the Prosper or Perish (Population Growth & Food Rework) folder into C:\\Users\\YourUserName\\Documents\\Paradox Interactive\\Europa Universalis V\\mod . Then enable that local copy in the EU5 launcher.\n\n#T Q: Why is everyone starving at game start?:#!\nI put a lot of effort into cleaning up the start, but the economy can still take a couple of years to settle. I will keep working on this; you are good to go.",
-      "body_plain": "Q: Are my other mods compatible with Prosper or Perish?:\nI recommend playing with the Community Framework mods Faster Universalis and Construction Manager. For everything else, you need to try it yourself or ask in the Discord. If you test other mods, load Prosper or Perish last and run an Observer test before committing to a campaign.\n\nQ: An update ruined my save. What do I do?:\nSteam Workshop updates can break old saves. Download the matching older release from https://github.com/JanB1989/prosper-or-perish-constructor/releases . Extract the repository archive, open its mod folder, and copy the Prosper or Perish (Population Growth & Food Rework) folder into C:\\Users\\YourUserName\\Documents\\Paradox Interactive\\Europa Universalis V\\mod . Then use that local copy for the old save instead of the auto-updating Workshop copy.\n\nQ: How do I install the GitHub version?:\nGo to https://github.com/JanB1989/prosper-or-perish-constructor and download the repository, or download the branch or release you want. Extract it, open the repository's mod folder, and copy the Prosper or Perish (Population Growth & Food Rework) folder into C:\\Users\\YourUserName\\Documents\\Paradox Interactive\\Europa Universalis V\\mod . Then enable that local copy in the EU5 launcher.\n\nQ: Why is everyone starving at game start?:\nI put a lot of effort into cleaning up the start, but the economy can still take a couple of years to settle. I will keep working on this; you are good to go.",
-      "icon_texture": "gfx/interface/icons/flat_icons/effect.dds",
-      "definition": {
-        "key": "pp_faq",
-        "file": "main_menu/common/game_concepts/pp_faq.txt",
-        "line": 2,
-        "family": "food",
-        "texture": "flat_icons/effect",
-        "aliases": []
-      },
-      "source": {
-        "gui": "in_game/gui/encyclopedia_lateralview.gui",
-        "localization": "main_menu/localization/english/pp_europedia_l_english.yml",
-        "concept": "main_menu/common/game_concepts/pp_faq.txt"
-      },
-      "links": [],
-      "body_html": "<h3>Q: Are my other mods compatible with Prosper or Perish?:</h3>\n<p>I recommend playing with the Community Framework mods Faster Universalis and Construction Manager. For everything else, you need to try it yourself or ask in the Discord. If you test other mods, load Prosper or Perish last and run an Observer test before committing to a campaign.</p>\n<h3>Q: An update ruined my save. What do I do?:</h3>\n<p>Steam Workshop updates can break old saves. Download the matching older release from https://github.com/JanB1989/prosper-or-perish-constructor/releases . Extract the repository archive, open its mod folder, and copy the Prosper or Perish (Population Growth &amp; Food Rework) folder into C:\\Users\\YourUserName\\Documents\\Paradox Interactive\\Europa Universalis V\\mod . Then use that local copy for the old save instead of the auto-updating Workshop copy.</p>\n<h3>Q: How do I install the GitHub version?:</h3>\n<p>Go to https://github.com/JanB1989/prosper-or-perish-constructor and download the repository, or download the branch or release you want. Extract it, open the repository&#x27;s mod folder, and copy the Prosper or Perish (Population Growth &amp; Food Rework) folder into C:\\Users\\YourUserName\\Documents\\Paradox Interactive\\Europa Universalis V\\mod . Then enable that local copy in the EU5 launcher.</p>\n<h3>Q: Why is everyone starving at game start?:</h3>\n<p>I put a lot of effort into cleaning up the start, but the economy can still take a couple of years to settle. I will keep working on this; you are good to go.</p>"
-    },
-    {
       "id": "prosper-perish-mod",
-      "order": 3,
+      "order": 1,
       "filter": "overview",
       "filter_label": "Overview",
       "concept_key": "prosper_perish_mod",
@@ -191,7 +119,7 @@
     },
     {
       "id": "pp-food-in-eu5",
-      "order": 4,
+      "order": 2,
       "filter": "food_in_eu5",
       "filter_label": "Food",
       "concept_key": "pp_food_in_eu5",
@@ -225,7 +153,7 @@
     },
     {
       "id": "pp-food",
-      "order": 5,
+      "order": 3,
       "filter": "food",
       "filter_label": "Food Production",
       "concept_key": "pp_food",
@@ -259,7 +187,7 @@
     },
     {
       "id": "pp-food-consumption",
-      "order": 6,
+      "order": 4,
       "filter": "food_consumption",
       "filter_label": "Food Consumption",
       "concept_key": "pp_food_consumption",
@@ -299,7 +227,7 @@
     },
     {
       "id": "pp-victuals",
-      "order": 7,
+      "order": 5,
       "filter": "victuals",
       "filter_label": "New Trade Goods",
       "concept_key": "pp_victuals",
@@ -335,7 +263,7 @@
     },
     {
       "id": "pp-building-limits",
-      "order": 8,
+      "order": 6,
       "filter": "building_limits",
       "filter_label": "Logistics",
       "concept_key": "pp_building_limits",
@@ -381,7 +309,7 @@
     },
     {
       "id": "pp-navigable-rivers",
-      "order": 9,
+      "order": 7,
       "filter": "navigable_rivers",
       "filter_label": "Navigable Rivers",
       "concept_key": "pp_navigable_rivers",
@@ -414,7 +342,7 @@
     },
     {
       "id": "pp-farm-capacity",
-      "order": 10,
+      "order": 8,
       "filter": "farm_capacity",
       "filter_label": "Rural Capacities",
       "concept_key": "pp_farm_capacity",
@@ -453,7 +381,7 @@
     },
     {
       "id": "pp-labor",
-      "order": 11,
+      "order": 9,
       "filter": "labor",
       "filter_label": "Labor",
       "concept_key": "pp_labor",
@@ -487,7 +415,7 @@
     },
     {
       "id": "pp-variable-harvests",
-      "order": 12,
+      "order": 10,
       "filter": "harvest",
       "filter_label": "Variable Harvests",
       "concept_key": "pp_variable_harvests",
@@ -527,7 +455,7 @@
     },
     {
       "id": "pp-population-capacity",
-      "order": 13,
+      "order": 11,
       "filter": "pop_capacity",
       "filter_label": "Arable Land",
       "concept_key": "pp_population_capacity",
@@ -565,7 +493,7 @@
     },
     {
       "id": "pp-population-growth",
-      "order": 14,
+      "order": 12,
       "filter": "pop_growth",
       "filter_label": "Population Growth",
       "concept_key": "pp_population_growth",
@@ -605,7 +533,7 @@
     },
     {
       "id": "pp-buildings-in-location",
-      "order": 15,
+      "order": 13,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_buildings_in_location",
@@ -638,7 +566,7 @@
     },
     {
       "id": "pp-available-free-land",
-      "order": 16,
+      "order": 14,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_available_free_land",
@@ -669,7 +597,7 @@
     },
     {
       "id": "pp-abundant-free-land",
-      "order": 17,
+      "order": 15,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_abundant_free_land",
@@ -700,7 +628,7 @@
     },
     {
       "id": "pp-prosperity",
-      "order": 18,
+      "order": 16,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_prosperity",
@@ -732,7 +660,7 @@
     },
     {
       "id": "pp-devastation",
-      "order": 19,
+      "order": 17,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_devastation",
@@ -762,7 +690,7 @@
     },
     {
       "id": "pp-starvation",
-      "order": 20,
+      "order": 18,
       "filter": "other_changes",
       "filter_label": "Other Changes",
       "concept_key": "pp_starvation",

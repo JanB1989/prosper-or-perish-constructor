@@ -86,7 +86,7 @@ def test_the_legacy_method_keeps_the_references_margin_at_its_share_of_the_outpu
     assert legacy.value(PRICES) / legacy.cost(PRICES) == pytest.approx(ref_margin, rel=0.05)
     assert set(legacy.amounts) == {"stone", "manual_labor"}
     assert legacy.scalars == {"category": "x_input"}
-    assert legacy.desc == "kept from the $guild$"
+    assert legacy.desc == "kept from the [ShowBuildingTypeName('guild')|e]"   # a named building is a link
 
 
 # ---------------------------------------------------------------- the repo

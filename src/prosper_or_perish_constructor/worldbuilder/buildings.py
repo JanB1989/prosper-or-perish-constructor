@@ -284,9 +284,14 @@ def shared_cap_value(name: str, source: str, siblings: list[str], clamps: list[s
     return "\n".join(lines) + "\n\n" + "\n".join(open_lines)
 
 
+def building_link(key: str) -> str:
+    """A building's name as a link (hover shows the building): every building a text names is linked."""
+    return f"[ShowBuildingTypeName('{key}')|e]"
+
+
 def _names(keys: list[str]) -> str:
-    """``$a$, $b$ and $c$``: building names for a localization string."""
-    names = [f"${key}$" for key in keys]
+    """``a, b and c`` as building links for a localization string."""
+    names = [building_link(key) for key in keys]
     return names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
 
 
@@ -307,15 +312,15 @@ def write_level_types(counters: Mapping[str, str], capacities: Mapping[str, list
         modifier, head, others = CAPACITY_MODIFIER.format(cap=cap), members[0], members[1:]
         types.extend([f"{modifier} = {{", "\tdecimals = 2", "\tgame_data = {", "\t\tcategory = location", "\t}", "}", ""])
         icon(modifier, head)
-        loc.append(f'  MODIFIER_TYPE_NAME_{modifier}: "${head}$ Capacity"')
+        loc.append(f'  MODIFIER_TYPE_NAME_{modifier}: "{building_link(head)} Capacity"')
         shared = f" {_names(others)} share this limit." if others else ""
-        loc.append(f'  MODIFIER_TYPE_DESC_{modifier}: "How many levels of ${head}$ this location can hold.{shared}"')
+        loc.append(f'  MODIFIER_TYPE_DESC_{modifier}: "How many levels of {building_link(head)} this [location|e] can hold.{shared}"')
     for key, cap in sorted(counters.items()):
         modifier, head = LEVELS_MODIFIER.format(key=key), capacities[cap][0]
         types.extend([f"{modifier} = {{", "\tdecimals = 0", "\tgame_data = {", "\t\tcategory = location", "\t}", "}", ""])
         icon(modifier, head)
-        loc.append(f'  MODIFIER_TYPE_NAME_{modifier}: "Uses ${head}$ Capacity"')
-        loc.append(f'  MODIFIER_TYPE_DESC_{modifier}: "Each level of ${key}$ takes one level of the ${head}$ Capacity it shares with related buildings."')
+        loc.append(f'  MODIFIER_TYPE_NAME_{modifier}: "Uses {building_link(head)} Capacity"')
+        loc.append(f'  MODIFIER_TYPE_DESC_{modifier}: "Each level of {building_link(key)} takes one level of the {building_link(head)} Capacity it shares with related [buildings|e]."')
     for path, lines in ((LEVELS_TYPES_PATH, types), (LEVELS_ICONS_PATH, icons), (LEVELS_LOC_PATH, loc)):
         target = mod_root / path
         if not capacities:
@@ -327,15 +332,16 @@ def write_level_types(counters: Mapping[str, str], capacities: Mapping[str, list
 
 
 def term_labels(contract: Contract, equation: Mapping[str, object]) -> dict[str, str]:
-    """Tooltip row label per class term: the game's own name of the class (as on the location window's chips)."""
+    """Tooltip row label per class term: the game's own name of the class (as on the location window's chips) and the
+    attribute's concept as a link."""
     labels = {}
     for term in equation["class_terms"]:
         attribute, value = str(term["attribute"]), str(term["value"])
         key = f"BUILDING_LEVEL_WB_{attribute.upper()}_{value.upper()}"
         if attribute in ("climate", "vegetation", "topography"):
-            labels[key] = f"${_game_key(contract, attribute, value)}$ ({attribute.capitalize()})"
-        elif attribute == "fertility":
-            labels[key] = f"$STATIC_MODIFIER_NAME_pp_wb_fertility_{value}$"
+            labels[key] = f"${_game_key(contract, attribute, value)}$ ([{attribute}|e])"
+        elif attribute == "fertility":   # reads like the chip's name (High Fertility), the attribute linked
+            labels[key] = " ".join(w.capitalize() for w in value.split("_")) + " [ha1300_fertility|e]"
     return labels
 
 
@@ -430,7 +436,7 @@ def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> d
             continue
         rest = key.removeprefix("BUILDING_LEVEL_WB_")
         if rest.startswith("SHARED_"):
-            loc.append(f'''  {key}: "Used by [ShowBuildingTypeName('{rest.removeprefix("SHARED_").lower()}')|e]"''')
+            loc.append(f'  {key}: "Used by {building_link(rest.removeprefix("SHARED_").lower())}"')
             continue
         attribute, _, value = rest.partition("_")
         if attribute == "SOIL":
@@ -440,7 +446,8 @@ def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> d
         if attribute == "IS":
             attribute, _, value = ("COASTAL", "", "") if "COASTAL" in rest else ("LAKE", "", "")
         label = " ".join(w.capitalize() for w in value.lower().split("_")) if value else ""
-        loc.append(f'  {key}: "{(label + " " if label else "") + attribute.capitalize()}"')
+        concept = {"SOIL": "[ha1300_soil_type|e]", "RIVER": "[river|e]"}.get(attribute, attribute.capitalize())
+        loc.append(f'  {key}: "{(label + " " if label else "") + concept}"')
     loc_path = mod_root / "main_menu/localization/english/pp_wb_building_caps_l_english.yml"
     loc_path.parent.mkdir(parents=True, exist_ok=True)
     loc_path.write_text("﻿" + "\n".join(loc) + "\n", encoding="utf-8", newline="\n")

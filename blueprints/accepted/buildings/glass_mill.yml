@@ -105,9 +105,9 @@ localization:
     pp_glass_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     glass_mill_slot_1: Market
     pp_glass_mill_legacy_glass_guild_maintenance: "$glass_guild_maintenance$ (Old Ways)"
-    pp_glass_mill_legacy_glass_guild_maintenance_desc: "An older way of working, kept from the $glass_guild$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_glass_mill_legacy_glass_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('glass_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
     pp_glass_mill_legacy_metal_glass_workshop_maintenance: "$metal_glass_workshop_maintenance$ (Old Ways)"
-    pp_glass_mill_legacy_metal_glass_workshop_maintenance_desc: "An older way of working, kept from the $glass_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_glass_mill_legacy_metal_glass_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('glass_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.

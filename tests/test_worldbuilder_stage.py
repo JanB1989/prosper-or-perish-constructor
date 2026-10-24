@@ -192,12 +192,14 @@ def test_niche_buildings_share_the_family_cap_and_are_stronger(tmp_path):
     assert "pp_wb_levels_land_clearance = {" in types and "pp_wb_levels_terraces_x = {" in types and "pp_wb_capacity_land_clearance = {" in types
     loc = (tmp_path / "main_menu/localization/english/pp_wb_building_caps_l_english.yml").read_text(encoding="utf-8-sig")
     assert '''BUILDING_LEVEL_WB_SHARED_TERRACES_X: "Used by [ShowBuildingTypeName('terraces_x')|e]"''' in loc
-    assert 'BUILDING_LEVEL_WB_CLIMATE_ARID: "$arid$ (Climate)"' in loc
-    assert 'BUILDING_LEVEL_WB_FERTILITY_HIGH: "$STATIC_MODIFIER_NAME_pp_wb_fertility_high$"' in loc
+    # the class by its game name with the attribute's concept linked; every building named is a link
+    assert 'BUILDING_LEVEL_WB_CLIMATE_ARID: "$arid$ ([climate|e])"' in loc
+    assert 'BUILDING_LEVEL_WB_FERTILITY_HIGH: "High [ha1300_fertility|e]"' in loc
     levels_loc = (tmp_path / wb_buildings.LEVELS_LOC_PATH).read_text(encoding="utf-8-sig")
-    assert 'MODIFIER_TYPE_NAME_pp_wb_capacity_land_clearance: "$land_clearance$ Capacity"' in levels_loc
-    assert "$terraces_x$ share this limit." in levels_loc
-    assert 'MODIFIER_TYPE_NAME_pp_wb_levels_terraces_x: "Uses $land_clearance$ Capacity"' in levels_loc
+    assert '''MODIFIER_TYPE_NAME_pp_wb_capacity_land_clearance: "[ShowBuildingTypeName('land_clearance')|e] Capacity"''' in levels_loc
+    assert "this [location|e] can hold. [ShowBuildingTypeName('terraces_x')|e] share this limit." in levels_loc
+    assert '''MODIFIER_TYPE_NAME_pp_wb_levels_terraces_x: "Uses [ShowBuildingTypeName('land_clearance')|e] Capacity"''' in levels_loc
+    assert "$" not in levels_loc.replace("$land_clearance$", "")   # no plain names left (the fixture's only building)
     # setup rows only come from the general member (the niche shares its kind)
     owners = {"a": "SWE"}
     out = wb_buildings.write_setup(c, cfg, caps, owners, tmp_path)

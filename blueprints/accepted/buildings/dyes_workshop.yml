@@ -71,7 +71,7 @@ localization:
     pp_dyes_workshop_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     dyes_workshop_slot_1: Market
     pp_dyes_workshop_legacy_dyes_guild_maintenance: "$dyes_guild_maintenance$ (Old Ways)"
-    pp_dyes_workshop_legacy_dyes_guild_maintenance_desc: "An older way of working, kept from the $dyes_guild$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_dyes_workshop_legacy_dyes_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('dyes_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.

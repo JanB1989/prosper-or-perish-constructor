@@ -49,7 +49,7 @@
  guns_workshop_slot_1: "Guns Workshop Work"
  improved_charcoal_maker: "Charcoal Retort"
  improved_charcoal_maker_desc: "Sealed kilns and retorts control the charring of coppice wood more closely, using clay linings and sealed burn chambers to raise charcoal yields without competing with true coal seams."
- incamisana_desc: "The $incamisana$ is a temple in honor of water and its divine patrons. Its channels and fountains irrigate the terraces below, so Andean lands sustain more people per channel than ordinary irrigation. Incamisanas and irrigation systems share the same water, so their levels count against one cap."
+ incamisana_desc: "The [ShowBuildingTypeName('incamisana')|e] is a temple in honor of water and its divine patrons. Its channels and fountains irrigate the terraces below, so Andean lands sustain more people per channel than ordinary [ShowBuildingTypeName('irrigation_systems')|e]. It shares its water with [ShowBuildingTypeName('irrigation_systems')|e], so their levels count against one cap."
  jewelry_guild_slot_0: "Jewelry Guild Work"
  jewelry_guild_slot_1: "Jewelry Guild Work"
  khmer_baray_desc: "A large reservoir of water. Each baray stores the monsoon for the dry season and feeds the fields below it, so Khmer lands can sustain far more people per channel than ordinary irrigation. Barays and irrigation systems share the same water, so their levels count against one cap."

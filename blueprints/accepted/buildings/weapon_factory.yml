@@ -116,11 +116,11 @@ localization:
     pp_weapon_factory_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     weapon_factory_slot_1: Market
     pp_weapon_factory_legacy_pre_columbian_weapon_smith_maintenance: "$pre_columbian_weapon_smith_maintenance$ (Old Ways)"
-    pp_weapon_factory_legacy_pre_columbian_weapon_smith_maintenance_desc: "An older way of working, kept from the $weapon_guild$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_weapon_factory_legacy_pre_columbian_weapon_smith_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('weapon_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
     pp_weapon_factory_legacy_weapon_manufactory_maintenance: "$weapon_manufactory_maintenance$ (Old Ways)"
-    pp_weapon_factory_legacy_weapon_manufactory_maintenance_desc: "An older way of working, kept from the $weapon_manufactory$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_weapon_factory_legacy_weapon_manufactory_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('weapon_manufactory')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
     pp_weapon_factory_legacy_weapon_smith_maintenance: "$weapon_smith_maintenance$ (Old Ways)"
-    pp_weapon_factory_legacy_weapon_smith_maintenance_desc: "An older way of working, kept from the $weapon_guild$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_weapon_factory_legacy_weapon_smith_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('weapon_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.

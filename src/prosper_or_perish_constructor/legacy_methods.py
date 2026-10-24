@@ -479,7 +479,7 @@ def legacy_method(
         icon=icon,
         reference=reference.name,
         label=f"{base_label} {config.label_suffix}".strip(),
-        desc=config.desc.replace("{origin}", f"${recipe.origin}$"),
+        desc=config.desc.replace("{origin}", f"[ShowBuildingTypeName('{recipe.origin}')|e]"),   # a named building is a link
     )
 
 

@@ -1,0 +1,589 @@
+﻿
+@filter_card_wide = 300
+
+types SearchFilterTypes {
+	type SearchFilterTooltipType = ContextualTooltipType {
+		blockoverride "title_icon" {
+			datacontext = "[StringToIconAndText(SearchFilter.GetName)]"
+			icon = {
+				visible = "[StringIsEmpty(IconAndText.GetIcon)]"
+				texture = "gfx/interface/buttons/flats/filter.dds"
+				using = tooltip_title_icon_size
+				modify_texture = {
+					using = color_gold_texture
+				}
+
+				glow = {
+					name = "drop_shadow"
+					glow_radius = 3
+					color = {0.0 0.0 0.0 1.0}
+					alpha = 0.3
+				}
+			}
+
+			text_single = {
+				visible = "[Not(StringIsEmpty(IconAndText.GetIcon))]"
+				autoresize = no
+				using = tooltip_title_icon_size
+				align = center|nobaseline
+				fontsize = 30
+				text = "[IconAndText.GetIcon]"
+			}
+		}
+
+		blockoverride "title_text" {
+			text = "[IconAndText.GetText]"
+		}
+
+		blockoverride "tooltip_content" {
+			datacontext = "[StringToTitleDescTooltip(SearchFilter.GetTooltip)]"
+			TooltipScrolledBlockList = {
+				blockoverride "block_scrollarea" { maximumsize = { -1 420 }}
+				textcontext = "[TitleDescTooltip.GetDesc.GetStringView]"
+			}
+		}
+	}
+
+	type SearchFilterCard = widget {
+		layoutpolicy_horizontal = expanding
+
+		checkbutton_01_alt = {
+			visible = "[SearchFilter.IsExclusive]"
+			size = { 100% 100% }
+			action_tooltip = {
+				title = "TOGGLE_FILTER"
+				on_action = "[SearchFilterCategory.ToggleFilter(SearchFilter.Self)]"
+			}
+			down = "[SearchFilterCategory.IsFilterEnabled(SearchFilter.Self)]"
+
+			tooltipwidget = {
+				SearchFilterTooltipType = {}
+			}
+		}
+
+		checkbutton_02_alt = {
+			visible = "[Not(SearchFilter.IsExclusive)]"
+			size = { 100% 100% }
+			action_tooltip = {
+				title = "TOGGLE_FILTER"
+				on_action = "[SearchFilterCategory.ToggleFilter(SearchFilter.Self)]"
+			}
+			down = "[SearchFilterCategory.IsFilterEnabled(SearchFilter.Self)]"
+
+			tooltipwidget = {
+				SearchFilterTooltipType = {}
+			}
+		}
+
+		vbox = {
+			set_parent_dimension_to_minimum = height
+			margin = "[ToVector2f('(float)10', Select_float(SearchFilter.HasRange, '(float)15', '(float)5'))]"	
+			spacing = 5
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+
+				icon = {
+					size = { 15 15 }
+					visible = "[SearchBar.HasPin]"
+
+					button_pin_alt = {
+						size = { 100% 100% }
+						down = "[SearchBar.IsFilterPinned(SearchFilter.Self)]"
+
+						action_tooltip = {
+							title = "[SelectLocalization(SearchBar.IsFilterPinned(SearchFilter.Self), 'UNPIN_FILTER', 'PIN_FILTER')]"
+							on_action = "[SearchBar.ToggleCategoryFilterPin(SearchFilterCategory.Self, SearchFilter.Self)]"
+						}
+
+						tooltipwidget = {
+							SearchFilterTooltipType = {}
+						}
+					}
+				}
+
+				text_single = {
+					minimumsize = { @[filter_card_wide - 68] -1 }
+					maximumsize = { @[filter_card_wide - 68] -1 }
+					using = Font_Size_Very_Small
+					fontsize_min = 10
+					autoresize = yes
+					alwaystransparent = yes
+					text = "[SearchFilter.GetName]"
+				}
+
+				icon = {
+					alwaystransparent = yes
+					visible = "[SearchFilter.IsExclusive]"
+					using = checkbox_round_texture
+					size = { 13 13 }
+					frame = "[Select_int32(SearchFilterCategory.IsFilterEnabled(SearchFilter.Self), '(int32)2', '(int32)1')]"
+
+					background = {
+						texture = "gfx/interface/buttons/checkbox_round_bg.dds"
+						texture_density = 2
+						using = color_dark_blue
+						shaderfile = "gfx/FX/pdxgui_default.shader"
+					}
+				}
+
+				icon = {
+					alwaystransparent = yes
+					visible = "[Not(SearchFilter.IsExclusive)]"
+					using = button_checkbox_template
+					size = { 15 15 }
+					frame = "[Select_int32(SearchFilterCategory.IsFilterEnabled(SearchFilter.Self), '(int32)2', '(int32)1')]"
+				}
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin = { 3 0 }
+				visible = "[SearchFilter.HasRange]"
+				datacontext = "[SearchFilter.GetRange]"
+				datacontext = "[SearchFilterCategory.AccessRangeValues(SearchFilter.Self)]"
+
+				hbox = {
+					using = layoutpolicy_expanding
+					spacing = 5
+					margin = { 2 4 }
+
+					background = {
+						using = bg_round_corners_texture
+						texture_density = 4
+						alpha = 0.5
+
+						modify_texture = {
+							using = color_progress_blue_texture
+							alpha = 0.7
+						}
+					}
+
+					text_single = {
+						size = { 40 17 }
+						autoresize = no
+						using = Font_Size_Very_Small
+						align = center|nobaseline
+						text = "[SearchFilterRangeValues.GetMinValue]"
+					}
+
+					ranged_slider = {
+						layoutpolicy_horizontal = expanding
+						size = { -1 10 }
+
+						direction = horizontal
+
+						step = "[SearchFilterRange.GetStep]"
+						wheelstep = "[SearchFilterRange.GetStep]"
+
+						value_low = "[SearchFilterRangeValues.GetMinSliderValue]"
+						value = "[SearchFilterRangeValues.GetMaxSliderValue]"
+
+						min = "[SearchFilterRange.GetMin]"
+						max = "[SearchFilterRange.GetMax]"
+
+						# tracknavigation = paged
+						# page = 0.01
+
+						onvaluechanged_low = "[SearchFilterCategory.SetRangeMinValue(SearchFilter.Self)]"
+						onvaluechanged = "[SearchFilterCategory.SetRangeMaxValue(SearchFilter.Self)]"
+
+						track = { using = economy_slider_track }
+						track_range = { using = economy_slider_track_range }
+						track_highlight = { using = economy_slider_track_highlight }
+
+						slider = { using = economy_slider_slider }
+						dec_button = { button = {} }
+						inc_button = { button = {} }
+
+						slider_low = { using = economy_slider_slider }
+						dec_button_low = { button = {} }
+						inc_button_low = { button = {} }
+					}
+
+					text_single = {
+						size = { 40 17 }
+						autoresize = no
+						using = Font_Size_Very_Small
+						align = center|nobaseline
+						text = "[SearchFilterRangeValues.GetMaxValue]"
+					}
+				}
+			}
+		}
+	}
+}
+
+template select_search_filter_content {
+	vbox = {
+		layoutpolicy_horizontal = expanding
+		spacing = 10
+
+		visible = "[SearchBar.HasSearchFilterCategories]"
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 3
+
+			button_regular = {
+				layoutpolicy_horizontal = expanding
+				datacontext = "[SearchBar]"
+				text = "SEARCHBAR_CLEAR_SEARCH_FILTERS"
+				using = bg_button_flavor_4
+
+				action_tooltip = {
+					title = "SEARCHBAR_CLEAR_SEARCH_FILTERS"
+					on_action = "[SearchBar.ClearEnabledSearchFilters]"
+				}
+
+				tooltipwidget = {
+					BasicFunctionalTooltip = {}
+				}
+			}
+
+			button_regular = {
+				layoutpolicy_horizontal = expanding
+				datacontext = "[SearchBar]"
+				text = "[SelectLocalization(SearchBar.HasPin, 'SEARCHBAR_SET_FAV_SEARCH_FILTERS', 'SEARCHBAR_SET_DEFAULT_FILTERS')]"
+				using = bg_button_flavor_4
+
+				action_tooltip = {
+					title = "[SelectLocalization(SearchBar.HasPin, 'SEARCHBAR_SET_FAV_SEARCH_FILTERS_BT', 'SEARCHBAR_SET_DEFAULT_FILTERS_BT')]"
+					on_action = "[SearchBar.ResetFiltersToDefault]"
+				}
+
+				action_tooltip = {
+					click_type = right
+					visible = "[SearchBar.HasPin]"
+					title = "SEARCHBAR_RESET_FAV_SEARCH_FILTERS_BT"
+					on_action = "[SearchBar.ResetPin]"
+					on_action = "[SearchBar.ResetFiltersToDefault]"
+				}
+
+				tooltipwidget = {
+					BasicFunctionalTooltip = {}
+				}
+			}
+
+			button_regular = {
+				layoutpolicy_horizontal = expanding
+				action_tooltip = {
+					title = "SEARCHBAR_CLEAR_RESET_RANGES_TOOLTIP"
+					on_action = "[SearchBar.ClearModifiedRangeValues]"
+				}
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+				visible = "[SearchBar.HasAnyRangedFilter]"
+				enabled = "[SearchBar.HasModifiedRangeValues]"
+				text = "SEARCHBAR_CLEAR_RESET_RANGES"
+				using = bg_button_flavor_4
+			}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 10
+
+			datamodel = "[SearchBar.GetSearchFilterCategories]"
+			item = {
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					visible = "[And(SearchFilterCategory.IsCategoryVisible, SearchFilterCategory.HasFilters)]"
+
+					background = {
+						using = paper_card_texture
+						margin = { -17 -3 }
+
+						modify_texture = {
+							using = color_paper_texture
+							visible = "[Not(SearchFilterCategory.HasOnlyExclusiveGroups)]"
+						}
+
+						modify_texture = {
+							using = color_dark_brown_texture
+							visible = "[SearchFilterCategory.HasOnlyExclusiveGroups]"
+						}
+
+						modify_texture = {
+							using = overlay_paper_03
+							alpha = 0.6
+						}
+					}
+
+					button_banner_02 = {
+						layoutpolicy_horizontal = expanding
+						maximumsize = { @[filter_card_wide + 60] -1 }
+						minimumsize = { @[filter_card_wide + 60] -1 }
+						margin_right = 15
+						size = { -1 45 }
+
+						visible = "[SearchFilterCategory.HasName]"
+						text = "[SearchFilterCategory.GetName]"
+
+						action_tooltip = {
+							title = "[SelectLocalization(SearchFilterCategory.IsExpanded, 'CLOSE_CATEGORY', 'EXPAND_CATEGORY')]"
+							on_action = "[SearchFilterCategory.Toggle]"
+						}
+						tooltipwidget = {
+							BasicFunctionalTooltip = {}
+						}
+
+						default_format = "#yellow_titles"
+						using = Font_Size_Medium
+						margin_bottom = 9
+
+						icon = {
+							size = { 22 22 }
+							position = { -30 -3 }
+							parentanchor = vcenter|right
+
+							visible = "[Not(SearchFilterCategory.IsExpanded)]"
+							texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+							using = button_regular_icon_color
+							glow = {
+								glow_radius = 3
+								color = {0.0 0.0 0.0 1.0}
+								alpha = 0.4
+							}
+						}
+
+						icon = {
+							size = { 22 22 }
+							position = { -30 -3 }
+							parentanchor = vcenter|right
+
+							visible = "[SearchFilterCategory.IsExpanded]"
+							texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+							using = button_regular_icon_color
+							glow = {
+								glow_radius = 3
+								color = {0.0 0.0 0.0 1.0}
+								alpha = 0.4
+							}
+						}
+					}
+
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						margin = { 30 5 }
+						spacing = 2
+						visible = "[And(SearchFilterCategory.IsExpanded, Not(SearchFilterCategory.HasGroups))]"
+						datamodel = "[SearchFilterCategory.GetFilters]"
+						item = {
+							SearchFilterCard = {}
+						}
+					}
+
+					vbox = {
+						minimumsize = { 360 -1 }
+						maximumsize = { 360 -1 }
+						layoutpolicy_horizontal = expanding
+						visible = "[And(SearchFilterCategory.IsExpanded, SearchFilterCategory.HasGroups)]"
+						datamodel = "[SearchFilterCategory.GetGroups]"
+						item = {
+							vbox = {
+								layoutpolicy_horizontal = expanding
+								spacing = 5
+
+								button_banner_01 = {
+									layoutpolicy_horizontal = expanding
+									size = { -1 35 }
+
+									visible = "[SearchFilterGroup.HasName]"
+
+									text = "[SearchFilterGroup.GetName]"
+
+									action_tooltip = {
+										title = "[SelectLocalization(SearchFilterGroup.IsExpanded, 'CLOSE_CATEGORY', 'EXPAND_CATEGORY')]"
+										on_action = "[SearchFilterGroup.Toggle]"
+									}
+									tooltipwidget = {
+										BasicFunctionalTooltip = {}
+									}
+
+									margin_bottom = 5
+
+									icon = {
+										size = { 22 22 }
+										position = { -15 -2 }
+										parentanchor = vcenter|right
+
+										visible = "[Not(SearchFilterGroup.IsExpanded)]"
+										texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+										using = button_regular_icon_color
+										glow = {
+											glow_radius = 3
+											color = {0.0 0.0 0.0 1.0}
+											alpha = 0.3
+										}
+									}
+
+									icon = {
+										size = { 22 22 }
+										position = { -15 -2 }
+										parentanchor = vcenter|right
+
+										visible = "[SearchFilterGroup.IsExpanded]"
+										texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+										using = button_regular_icon_color
+										glow = {
+											glow_radius = 3
+											color = {0.0 0.0 0.0 1.0}
+											alpha = 0.3
+										}
+									}
+								}
+
+								hbox = {
+									visible = "[SearchFilterGroup.IsExpanded]"
+									margin = { 15 0 }
+									margin_bottom = 2
+									layoutpolicy_horizontal = expanding
+									ignoreinvisible = yes
+									
+									vbox = {
+										margin = { 15 5 }
+										layoutpolicy_horizontal = expanding
+										spacing = 2
+
+										using = bg_scroll_card_rendered
+										blockoverride "bg_scroll_card_rendered_visible" {
+											visible = "[SearchFilterGroup.IsGroupExclusive]"
+										}
+										blockoverride "card_color" {
+											modify_texture = {
+												visible = "[SearchFilterGroup.IsGroupExclusive]"
+												using = color_bg_brown_texture
+											}
+
+											modify_texture = {
+												visible = "[Not(SearchFilterGroup.IsGroupExclusive)]"
+												using = color_mid_blue_texture
+											}
+										}
+
+										datamodel = "[SearchFilterGroup.GetFilters]"
+										item = {
+											SearchFilterCard = {}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	vbox = {
+		layoutpolicy_horizontal = expanding
+		spacing = 10
+
+		# visible = "[SearchBar.HasTextSearchFilters]"
+		visible = no
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 10
+			select_menu_header = {
+				blockoverride "header_icon_obj" {}
+
+				blockoverride "header_text" {
+					text = "text_filters_category_name"
+				}
+			}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 10
+			datamodel = "[SearchBar.GetTextSearchFilters]"
+			item = {
+				hbox = {
+					margin = { 10 10 }
+					using = bg_card_container
+					layoutpolicy_horizontal = expanding
+					spacing = 15
+					datacontext = "[TextSearchFilter.GetFilter]"
+					tooltipwidget = {
+						SearchFilterTooltipType = {}
+					}
+
+					text_multi = {
+						layoutpolicy_horizontal = expanding
+						autoresize = yes
+						alwaystransparent = yes
+						text = "[TextSearchFilter.GetFilter.GetName]"
+					}
+
+					button_checkbox = {
+						size = { 20 20 }
+						action_tooltip = {
+							title = "TOGGLE_FILTER"
+							on_action = "[TextSearchFilter.ToggleFilter]"
+						}
+
+						action_tooltip = {
+							click_type = right
+							title = "SELECT_FILTER"
+							on_action = "[TextSearchFilter.ToggleFilter]"
+						}
+
+						tooltipwidget = { SearchFilterTooltipType = {} }
+					}
+				}
+			}
+		}
+	}
+}
+
+window = { # PP: vanilla select_menu_left (select_menu.gui), opened beside the PP panels that are wider than 570
+	name = "select_search_filter_left"
+	movable = no
+	visible_at_creation = no
+	alwaystransparent = no
+	allow_outside = yes
+	layer = sidemenu
+	parentanchor = left
+	position = "[Select_CVector2f(SelectSearchFilter.AccessSearchBar.Manager.Vars.HasValue('pp_panel_width', '990'), '(CVector2f)990,180', Select_CVector2f(SelectSearchFilter.AccessSearchBar.Manager.Vars.HasValue('pp_panel_width', '760'), '(CVector2f)760,180', '(CVector2f)570,180'))]"
+
+	state = {
+		name = _show
+		duration = 0.133
+		alpha = 1
+	}
+	state = {
+		name = _hide
+		duration = 0.133
+		alpha = 0
+	}
+
+	using = bg_sidemenu
+
+	select_menu_layout = {
+		blockoverride "close_on_action" { on_action = "[SelectSearchFilter.OnClose]" }
+		blockoverride "select_header_text" {
+			text = "SELECT_FILTERS_HEADER"
+		}
+		blockoverride "select_content" {
+			datacontext = "[SelectSearchFilter.AccessSearchBar]"
+			using = select_search_filter_content
+		}
+	}
+}
+
+select_menu_right = {
+	blockoverride "menu_setup" {
+		name = "select_search_filter_right"
+	}
+
+	blockoverride "close_on_action" { on_action = "[SelectSearchFilter.OnClose]" }
+	blockoverride "select_header_text" {
+		text = "SELECT_FILTERS_HEADER"
+	}
+
+	blockoverride "select_content" {
+		datacontext = "[SelectSearchFilter.AccessSearchBar]"
+		using = select_search_filter_content
+	}
+}
+

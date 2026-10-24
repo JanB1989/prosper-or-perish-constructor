@@ -1,5 +1,15 @@
 ﻿lateralview = {
 	name = "location_production_lateralview"
+	size = { 990 100% } # PP: wider than the vanilla left panel (570), like the build panel
+	widget = { # PP: pp_panel_width for the search filter menu
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[Not(LocationProductionView.Vars.HasValue('pp_panel_width', '990'))]"
+		state = {
+			name = _show
+			on_start = "[LocationProductionView.Vars.Set('pp_panel_width', '990')]"
+		}
+	}
 	widgetid = "location_production_lateralview"
 
 	blockoverride "panel_header" {
@@ -24,7 +34,7 @@
 					header_title = {
 						layoutpolicy_horizontal = fixed
 						autoresize = yes
-						maximumsize = { 415 -1 }
+						maximumsize = { 840 -1 }
 						text = "PRODUCTION_VIEW_LOC"
 						using = snd_UI_window_state
 					}
@@ -400,13 +410,17 @@
 
 					blockoverride "sort_buttons_filtered_list" {
 						sort_by_key_button = {
+							onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 							name = "name"
 							layoutpolicy_vertical = expanding
 							size = { 220 -1 }
 						}
 
+						expand = {} # PP: the value buttons sit over their columns
+
 						sort_by_key_button = {
-							size = { 110 -1 }
+							onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
+							size = { 70 -1 }
 							name = "production_efficiency"
 							layoutpolicy_vertical = expanding
 							blockoverride "sort_by_key_button_texture" {
@@ -414,48 +428,576 @@
 							}
 						}
 		
-						sort_by_key_button = {
-							name = "profit"
+						widget = { # PP: build cost (no engine sort key in this list)
 							layoutpolicy_vertical = expanding
-							size = { 40 -1 }
+							size = { 60 -1 }
+							tooltip = "PP_BUILD_COST_HEADER_TT"
+							icon = {
+								size = { 20 20 }
+								parentanchor = center
+								texture = "gfx/interface/icons/sort/cost.dds"
+							}
+						}
+
+						button = { # PP: payback order (no engine sort key: the list is drawn in payback bands)
+							name = "pp_payback_order"
+							layoutpolicy_vertical = expanding
+							size = { 55 -1 }
+								down = "[GetVariableSystem.Exists('pp_build_payback_order')]"
+							background = {
+								visible = "[GetVariableSystem.Exists('pp_build_payback_order')]"
+								texture = "gfx/interface/component_masks/mask_fade_vertical_up.dds"
+								texture_density = 2
+								alpha = 0.4
+								modify_texture = {
+									using = color_sortby_off
+									blend_mode = multiply
+								}
+							}
+							onclick = "[GetVariableSystem.Toggle('pp_build_payback_order')]"
+							tooltip = "PP_BUILD_PAYBACK_ORDER_TT"
+							icon = {
+								size = { 20 20 }
+								parentanchor = center
+								texture = "gfx/interface/icons/sort/time.dds"
+							}
 						}
 
 						sort_by_key_button = {
+							onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
+							name = "profit"
+							layoutpolicy_vertical = expanding
+							size = { 60 -1 }
+						}
+
+						sort_by_key_button = {
+							onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 							name = "income"
 							layoutpolicy_vertical = expanding
-							size = { 40 -1 }
+							size = { 65 -1 }
 						}
 						
 						sort_by_key_button = {
+							onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 							name = "level"
-							using = layoutpolicy_expanding
+							layoutpolicy_vertical = expanding
+							size = { 125 -1 }
 						}
 					}
 
-					blockoverride "scroll_list_layout" {
-						fixedgridbox = {
-							visible = "[And( LocationProductionView.Vars.NotExistOrHasValue( 'display', 'lists' ), LocationProductionView.IsLocationFilterEnabled )]"
-							addrow = 65
-							addcolumn = 100%
-							datamodel = "[LocationProductionView.GetBuildingItems]"
-							item = {
-								widget = {
-									size = { 100% 60 }
-									hbox = {
-										location_filtered_header_with_candidate = {
-											using = layoutpolicy_expanding
-											blockoverride "location_filtered_header_with_candidate_visible" {
-												visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
+					blockoverride "scroll_list_layout" { # PP: the selected sort or the payback order
+						flowcontainer = {
+							direction = vertical
+							ignoreinvisible = yes
+							fixedgridbox = { # the selected sort: vanilla's grid
+								visible = "[And(And( LocationProductionView.Vars.NotExistOrHasValue( 'display', 'lists' ), LocationProductionView.IsLocationFilterEnabled ), Not(GetVariableSystem.Exists('pp_build_payback_order')))]"
+								addrow = 65
+								addcolumn = 930
+								datamodel = "[LocationProductionView.GetBuildingItems]"
+								item = {
+									widget = {
+										size = { 930 60 }
+										hbox = {
+											pp_location_filtered_header_with_candidate = {
+												using = layoutpolicy_expanding
+												blockoverride "location_filtered_header_with_candidate_visible" {
+													visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
+												}
+											}
+											pp_location_filtered_header_no_candidate = {
+												using = layoutpolicy_expanding
+												blockoverride "location_filtered_header_no_candidate_visible" {
+													visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+												}
+												blockoverride "location_context"
+												{
+													datacontext = "[LocationProductionView.GetSelectedLocation]"
+												}
 											}
 										}
-										location_filtered_header_no_candidate = {
-											using = layoutpolicy_expanding
-											blockoverride "location_filtered_header_no_candidate_visible" {
-												visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+									}
+								}
+							}
+							flowcontainer = { # payback order: shortest first, the last sort inside each band
+								direction = vertical
+								ignoreinvisible = yes
+								visible = "[And(And( LocationProductionView.Vars.NotExistOrHasValue( 'display', 'lists' ), LocationProductionView.IsLocationFilterEnabled ), GetVariableSystem.Exists('pp_build_payback_order'))]"
+								flowcontainer = { # payback 0 to 1 years
+									direction = vertical
+									ignoreinvisible = yes
+									datamodel = "[LocationProductionView.GetBuildingItems]"
+									item = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
+											datacontext = "[BuildingItem.GetBuildingType]"
+											datacontext = "[LocationProductionView.GetSelectedLocation]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '0'), '(int32)1', '(int32)0'))]"
+											item = {
+												widget = {
+													size = { 930 65 }
+													widget = {
+														size = { 930 60 }
+														hbox = {
+															pp_location_filtered_header_with_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_with_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
+																}
+															}
+															pp_location_filtered_header_no_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_no_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+																}
+																blockoverride "location_context"
+																{
+																	datacontext = "[LocationProductionView.GetSelectedLocation]"
+																}
+															}
+														}
+													}
+												}
 											}
-											blockoverride "location_context"
-											{
-												datacontext = "[LocationProductionView.GetSelectedLocation]"
+										}
+									}
+								}
+								flowcontainer = { # payback 1 to 2 years
+									direction = vertical
+									ignoreinvisible = yes
+									datamodel = "[LocationProductionView.GetBuildingItems]"
+									item = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
+											datacontext = "[BuildingItem.GetBuildingType]"
+											datacontext = "[LocationProductionView.GetSelectedLocation]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '1'), '(int32)1', '(int32)0'))]"
+											item = {
+												widget = {
+													size = { 930 65 }
+													widget = {
+														size = { 930 60 }
+														hbox = {
+															pp_location_filtered_header_with_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_with_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
+																}
+															}
+															pp_location_filtered_header_no_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_no_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+																}
+																blockoverride "location_context"
+																{
+																	datacontext = "[LocationProductionView.GetSelectedLocation]"
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								flowcontainer = { # payback 2 to 3 years
+									direction = vertical
+									ignoreinvisible = yes
+									datamodel = "[LocationProductionView.GetBuildingItems]"
+									item = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
+											datacontext = "[BuildingItem.GetBuildingType]"
+											datacontext = "[LocationProductionView.GetSelectedLocation]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '2'), '(int32)1', '(int32)0'))]"
+											item = {
+												widget = {
+													size = { 930 65 }
+													widget = {
+														size = { 930 60 }
+														hbox = {
+															pp_location_filtered_header_with_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_with_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
+																}
+															}
+															pp_location_filtered_header_no_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_no_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+																}
+																blockoverride "location_context"
+																{
+																	datacontext = "[LocationProductionView.GetSelectedLocation]"
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								flowcontainer = { # payback 3 to 4 years
+									direction = vertical
+									ignoreinvisible = yes
+									datamodel = "[LocationProductionView.GetBuildingItems]"
+									item = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
+											datacontext = "[BuildingItem.GetBuildingType]"
+											datacontext = "[LocationProductionView.GetSelectedLocation]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '3'), '(int32)1', '(int32)0'))]"
+											item = {
+												widget = {
+													size = { 930 65 }
+													widget = {
+														size = { 930 60 }
+														hbox = {
+															pp_location_filtered_header_with_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_with_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
+																}
+															}
+															pp_location_filtered_header_no_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_no_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+																}
+																blockoverride "location_context"
+																{
+																	datacontext = "[LocationProductionView.GetSelectedLocation]"
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								flowcontainer = { # payback 4 to 5 years
+									direction = vertical
+									ignoreinvisible = yes
+									datamodel = "[LocationProductionView.GetBuildingItems]"
+									item = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
+											datacontext = "[BuildingItem.GetBuildingType]"
+											datacontext = "[LocationProductionView.GetSelectedLocation]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '4'), '(int32)1', '(int32)0'))]"
+											item = {
+												widget = {
+													size = { 930 65 }
+													widget = {
+														size = { 930 60 }
+														hbox = {
+															pp_location_filtered_header_with_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_with_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
+																}
+															}
+															pp_location_filtered_header_no_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_no_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+																}
+																blockoverride "location_context"
+																{
+																	datacontext = "[LocationProductionView.GetSelectedLocation]"
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								flowcontainer = { # payback 5 to 6 years
+									direction = vertical
+									ignoreinvisible = yes
+									datamodel = "[LocationProductionView.GetBuildingItems]"
+									item = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
+											datacontext = "[BuildingItem.GetBuildingType]"
+											datacontext = "[LocationProductionView.GetSelectedLocation]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '5'), '(int32)1', '(int32)0'))]"
+											item = {
+												widget = {
+													size = { 930 65 }
+													widget = {
+														size = { 930 60 }
+														hbox = {
+															pp_location_filtered_header_with_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_with_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
+																}
+															}
+															pp_location_filtered_header_no_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_no_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+																}
+																blockoverride "location_context"
+																{
+																	datacontext = "[LocationProductionView.GetSelectedLocation]"
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								flowcontainer = { # payback 6 to 7 years
+									direction = vertical
+									ignoreinvisible = yes
+									datamodel = "[LocationProductionView.GetBuildingItems]"
+									item = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
+											datacontext = "[BuildingItem.GetBuildingType]"
+											datacontext = "[LocationProductionView.GetSelectedLocation]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '6'), '(int32)1', '(int32)0'))]"
+											item = {
+												widget = {
+													size = { 930 65 }
+													widget = {
+														size = { 930 60 }
+														hbox = {
+															pp_location_filtered_header_with_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_with_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
+																}
+															}
+															pp_location_filtered_header_no_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_no_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+																}
+																blockoverride "location_context"
+																{
+																	datacontext = "[LocationProductionView.GetSelectedLocation]"
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								flowcontainer = { # payback 7 to 8 years
+									direction = vertical
+									ignoreinvisible = yes
+									datamodel = "[LocationProductionView.GetBuildingItems]"
+									item = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
+											datacontext = "[BuildingItem.GetBuildingType]"
+											datacontext = "[LocationProductionView.GetSelectedLocation]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '7'), '(int32)1', '(int32)0'))]"
+											item = {
+												widget = {
+													size = { 930 65 }
+													widget = {
+														size = { 930 60 }
+														hbox = {
+															pp_location_filtered_header_with_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_with_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
+																}
+															}
+															pp_location_filtered_header_no_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_no_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+																}
+																blockoverride "location_context"
+																{
+																	datacontext = "[LocationProductionView.GetSelectedLocation]"
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								flowcontainer = { # payback 8 to 9 years
+									direction = vertical
+									ignoreinvisible = yes
+									datamodel = "[LocationProductionView.GetBuildingItems]"
+									item = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
+											datacontext = "[BuildingItem.GetBuildingType]"
+											datacontext = "[LocationProductionView.GetSelectedLocation]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '8'), '(int32)1', '(int32)0'))]"
+											item = {
+												widget = {
+													size = { 930 65 }
+													widget = {
+														size = { 930 60 }
+														hbox = {
+															pp_location_filtered_header_with_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_with_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
+																}
+															}
+															pp_location_filtered_header_no_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_no_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+																}
+																blockoverride "location_context"
+																{
+																	datacontext = "[LocationProductionView.GetSelectedLocation]"
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								flowcontainer = { # payback 9 to 10 years
+									direction = vertical
+									ignoreinvisible = yes
+									datamodel = "[LocationProductionView.GetBuildingItems]"
+									item = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
+											datacontext = "[BuildingItem.GetBuildingType]"
+											datacontext = "[LocationProductionView.GetSelectedLocation]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '9'), '(int32)1', '(int32)0'))]"
+											item = {
+												widget = {
+													size = { 930 65 }
+													widget = {
+														size = { 930 60 }
+														hbox = {
+															pp_location_filtered_header_with_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_with_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
+																}
+															}
+															pp_location_filtered_header_no_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_no_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+																}
+																blockoverride "location_context"
+																{
+																	datacontext = "[LocationProductionView.GetSelectedLocation]"
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								flowcontainer = { # payback 10 years or more, or no profit
+									direction = vertical
+									ignoreinvisible = yes
+									datamodel = "[LocationProductionView.GetBuildingItems]"
+									item = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
+											datacontext = "[BuildingItem.GetBuildingType]"
+											datacontext = "[LocationProductionView.GetSelectedLocation]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '10'), '(int32)1', '(int32)0'))]"
+											item = {
+												widget = {
+													size = { 930 65 }
+													widget = {
+														size = { 930 60 }
+														hbox = {
+															pp_location_filtered_header_with_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_with_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
+																}
+															}
+															pp_location_filtered_header_no_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_no_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+																}
+																blockoverride "location_context"
+																{
+																	datacontext = "[LocationProductionView.GetSelectedLocation]"
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								flowcontainer = { # not recorded yet
+									direction = vertical
+									ignoreinvisible = yes
+									datamodel = "[LocationProductionView.GetBuildingItems]"
+									item = {
+										flowcontainer = {
+											direction = vertical
+											ignoreinvisible = yes
+											datacontext = "[BuildingItem.GetBuildingType]"
+											datacontext = "[LocationProductionView.GetSelectedLocation]"
+											datamodel = "[DataModelRepeatedItem(Select_int32(Not(GetVariableSystem.Exists(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)))), '(int32)1', '(int32)0'))]"
+											item = {
+												widget = {
+													size = { 930 65 }
+													widget = {
+														size = { 930 60 }
+														hbox = {
+															pp_location_filtered_header_with_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_with_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, Not(IsDataModelEmpty(BuildingItem.GetBuildingCandidates)))]"
+																}
+															}
+															pp_location_filtered_header_no_candidate = {
+																using = layoutpolicy_expanding
+																blockoverride "location_filtered_header_no_candidate_visible" {
+																	visible = "[And(LocationProductionView.IsLocationFilterEnabled, IsDataModelEmpty(BuildingItem.GetBuildingCandidates))]"
+																}
+																blockoverride "location_context"
+																{
+																	datacontext = "[LocationProductionView.GetSelectedLocation]"
+																}
+															}
+														}
+													}
+												}
 											}
 										}
 									}

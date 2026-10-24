@@ -266,8 +266,19 @@ def test_sync_does_not_deploy_while_the_game_runs(tmp_path: Path, monkeypatch: p
     assert cli.main(["--repo", str(repo), "sync", "--yes", "--full-build"]) == 3
     assert calls == ["build"]
 
+    # --while-running deploys interface/text/graphics, never changed game data (2026-10-18: a hot reload of
+    # building types corrupted the running game's saves)
+    unsafe: list[str] = []
+    monkeypatch.setattr(cli, "_unsafe_live_changes", lambda project: unsafe)
     assert cli.main(["--repo", str(repo), "sync", "--yes", "--full-build", "--while-running"]) == 0
     assert calls == ["build", "build", "deploy"]
+
+    unsafe.append("in_game/common/building_types/zz_pp_entrepot.txt")
+    assert cli.main(["--repo", str(repo), "sync", "--yes", "--full-build", "--while-running"]) == 3
+    assert calls == ["build", "build", "deploy", "build"]
+    assert cli.main(["--repo", str(repo), "sync", "--yes", "--full-build", "--while-running",
+                     "--reload-game-data"]) == 0
+    assert calls == ["build", "build", "deploy", "build", "build", "deploy"]
 
 
 def test_smart_sync_reruns_world_builder_only_when_its_inputs_change(

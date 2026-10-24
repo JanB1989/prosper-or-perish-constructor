@@ -27,16 +27,10 @@ REPLACE:terraces = {
       topography = mountains
       topography = plateau
       topography = hills
-      pp_wb_setup_terraces_location = yes   # vanilla setup terraces the World Builder topography would reject
     }
   }
   increase_per_level_cost = 0.30
   custom_tags = { pp_food_security_priority pp_water_control_priority }
-  raw_modifier = {
-    farm_capacity_from_terraces = 0.60
-        local_population_capacity = 0
-  }
-
   modifier = {
     local_maize_output_modifier = 0.1
     local_potato_output_modifier = 0.1

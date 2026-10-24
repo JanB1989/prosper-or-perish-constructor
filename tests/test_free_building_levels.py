@@ -746,9 +746,11 @@ def test_compile_free_building_level_modifiers_updates_without_clobbering(tmp_pa
 
     static_text = static_path.read_text(encoding="utf-8-sig")
     assert "local_monthly_food_modifier = -0.05" in static_text
-    assert "free_building_levels = 3" in static_text
-    assert "local_build_buildings_efficiency = 0.1" in static_text
-    assert "local_construction_speed = 0.1" in static_text
+    # river rows are not compiled: the World Builder replaces river_flowing_through_<n>, so an inject would be ignored;
+    # their values live in constructor.toml [worldbuilder.river_levels]
+    river_1 = static_text[static_text.index("TRY_INJECT:river_flowing_through_1"):].split("\n}")[0]
+    assert "free_building_levels" not in river_1 and "local_build_buildings_efficiency" not in river_1
+    assert "TRY_INJECT:river_flowing_through_2" not in static_text
     assert "TRY_REPLACE:development" in static_text
     assert "free_building_levels = 0.5" in static_text
     assert "local_food_capacity = 10" in static_text
@@ -954,7 +956,7 @@ def test_building_type_compile_writes_into_the_mod_replacement_not_an_ignored_in
     )
 
     assert fbl._compile_building_type_file(inject_path, weights, baselines=None) == 1
-    assert inject_path.read_text(encoding="utf-8-sig") == "# header\n"
+    assert not inject_path.exists()   # header only: deleted, never written
     assert replacement.read_text(encoding="utf-8-sig") == replacement_text   # zero = no line
 
     weights = weights.with_columns(pl.Series("free_building_levels", [2.0, 1.0]))
@@ -963,7 +965,7 @@ def test_building_type_compile_writes_into_the_mod_replacement_not_an_ignored_in
     assert "\tmodifier = {\n\t\tlocal_proximity_source = 80\n\t\tfree_building_levels = 2\n\t}\n\traw_modifier" in text
     assert "\tmax_levels = 1\n\tmodifier = {\n\t\tfree_building_levels = 1\n\t}\n}" in text
     assert "local_population_capacity = -0.01" in text
-    assert inject_path.read_text(encoding="utf-8-sig") == "# header\n"
+    assert not inject_path.exists()
 
     inject_path.write_text("TRY_INJECT:naval_governor = {\n\tmodifier = {\n\t\tlocal_proximity_source = 5\n\t}\n}\n",
                            encoding="utf-8")

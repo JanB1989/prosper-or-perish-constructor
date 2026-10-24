@@ -4,10 +4,8 @@ INJECT:entrepot = {
 market_center_modifier = {
 	local_trade_center_power = -0.05   # vanilla 0.1 per level: net 0.05
 }
-# trade buildings 2026-10-06: only countries that have embraced Printing Press build it (the AI and the player alike)
-allow = {
-	owner = { has_embraced_institution = institution:printing_press }
-}
+# no Printing Press gate (2026-10-18, Jan): vanilla unlocks the entrepot in the Age of Renaissance, Printing Press
+# spreads only in the Age of Discovery, so the gate blocked a researched building for a whole age.
 	raw_modifier = {
 		local_population_capacity = 0.06
 	}

@@ -14,20 +14,13 @@ before the art exists); a DDS newer than its PNG is left alone.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-import io
-import math
 from pathlib import Path
-import struct
 from typing import Iterable
 
 ASSET_ROOT = Path("assets/icons/trade_goods")
 ICON_ROOT = Path("main_menu/gfx/interface/icons")
 ICON_SIZE = (128, 128)
 ILLUSTRATION_SIZE = (1080, 440)
-
-_DDSD_MIPMAPCOUNT = 0x20000
-_DDSCAPS_COMPLEX = 0x8
-_DDSCAPS_MIPMAP = 0x400000
 
 
 @dataclass
@@ -63,30 +56,13 @@ def install(repo: Path, mod_root: Path, goods: Iterable[str]) -> IconResult:
 
 
 def write_dxt5(png: Path, dds: Path, size: tuple[int, int]) -> None:
-    """DXT5 DDS with a full mip chain (``floor(log2(max side)) + 1`` levels)."""
+    """DXT5 DDS with a full mip chain (``floor(log2(max side)) + 1`` levels), the shared game-format writer."""
     from PIL import Image
+
+    from eu5_building_pipeline.dds import write_game_dds
 
     with Image.open(png) as source:
         image = source.convert("RGBA")
     if image.size != size:
         image = image.resize(size, Image.Resampling.LANCZOS)
-    levels = int(math.floor(math.log2(max(size)))) + 1
-    header: bytearray | None = None
-    data = bytearray()
-    for level in range(levels):
-        width, height = max(1, size[0] >> level), max(1, size[1] >> level)
-        mip = image if level == 0 else image.resize((width, height), Image.Resampling.LANCZOS)
-        buffer = io.BytesIO()
-        mip.save(buffer, format="DDS", pixel_format="DXT5")
-        raw = buffer.getvalue()
-        if header is None:
-            header = bytearray(raw[:128])
-        data += raw[128:]
-    assert header is not None
-    flags, = struct.unpack_from("<I", header, 8)
-    struct.pack_into("<I", header, 8, flags | _DDSD_MIPMAPCOUNT)
-    struct.pack_into("<I", header, 28, levels)
-    caps, = struct.unpack_from("<I", header, 108)
-    struct.pack_into("<I", header, 108, caps | _DDSCAPS_COMPLEX | _DDSCAPS_MIPMAP)
-    dds.parent.mkdir(parents=True, exist_ok=True)
-    dds.write_bytes(bytes(header) + bytes(data))
+    write_game_dds(image, dds)

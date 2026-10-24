@@ -109,12 +109,6 @@ TRY_REPLACE:coastal = {
 	local_supply_limit_modifier = 0.05
 	local_monthly_development_modifier = 0.20
 }
-# Location marker applied on game start for locations bordering lakes.
-is_adjacent_to_lake = {
-	game_data = {
-		category = location
-	}
-}
 TRY_REPLACE:building_levels = {
 	game_data = {
 		category = location
@@ -270,46 +264,8 @@ TRY_INJECT:location_template_natural_harbor_suitability_good = {
 	local_trade_center_power = -0.01   # vanilla 0.01: the harbour already counts through market access
 }
 
-TRY_INJECT:river_flowing_through_1 = {
-	fish_capacity_from_river_size = 1
-	irrigant_cap_modifier = 1
-	pp_river_boatmen_yard_cap_modifier = 3
-	free_building_levels = 3
-	local_build_buildings_efficiency = 0.1
-	local_construction_speed = 0.1
-}
-TRY_INJECT:river_flowing_through_2 = {
-	fish_capacity_from_river_size = 1
-	irrigant_cap_modifier = 2
-	pp_river_boatmen_yard_cap_modifier = 6
-	free_building_levels = 5
-	local_build_buildings_efficiency = 0.15
-	local_construction_speed = 0.15
-}
-TRY_INJECT:river_flowing_through_3 = {
-	fish_capacity_from_river_size = 2
-	irrigant_cap_modifier = 3
-	pp_river_boatmen_yard_cap_modifier = 9
-	free_building_levels = 7
-	local_build_buildings_efficiency = 0.2
-	local_construction_speed = 0.2
-}
-TRY_INJECT:river_flowing_through_4 = {
-	fish_capacity_from_river_size = 3
-	irrigant_cap_modifier = 4
-	pp_river_boatmen_yard_cap_modifier = 12
-	free_building_levels = 9
-	local_build_buildings_efficiency = 0.25
-	local_construction_speed = 0.25
-}
-TRY_INJECT:river_flowing_through_5 = {
-	fish_capacity_from_river_size = 4
-	irrigant_cap_modifier = 5
-	pp_river_boatmen_yard_cap_modifier = 15
-	free_building_levels = 12
-	local_build_buildings_efficiency = 0.3
-	local_construction_speed = 0.3
-}
+# River effects (river_flowing_through_<n>): constructor.toml [worldbuilder.river_levels], written into the World
+# Builder's TRY_REPLACE in pp_00_wb_river_modifiers.txt (the engine ignores an inject into a replaced block).
 
 TRY_INJECT:local_abuses_modifier = {
 	local_wheat_output_modifier = -0.1

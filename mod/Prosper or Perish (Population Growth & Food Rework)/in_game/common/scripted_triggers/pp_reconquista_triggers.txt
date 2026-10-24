@@ -1,15 +1,8 @@
-﻿# Reconquista aim (docs/country_finetunes.md): is a Muslim country still ruling from Iberia / the Maghreb?
+﻿# Reconquista aim (docs/country_finetunes.md): is a Muslim country still ruling from Iberia?
 
 pp_reconquista_iberia_open = {
 	any_country = {
 		religion.group = religion_group:muslim
 		capital ?= { region = region:iberia_region }
-	}
-}
-
-pp_reconquista_maghreb_open = {
-	any_country = {
-		religion.group = religion_group:muslim
-		capital ?= { region = region:maghreb_region }
 	}
 }

@@ -363,7 +363,7 @@
                         }
                         }
 
-                        # Mod Content — filter buttons and cards per Ingame_Documentation_Rules.md
+                        # Mod Content — filter buttons and cards per the constructor's docs/mod_authoring_rules.md
                         vbox = {
                             layoutpolicy_horizontal = expanding
                             layoutpolicy_vertical = expanding
@@ -405,16 +405,6 @@
 	
 	                                    blockoverride "background" {}
 	                                }
-	                                button_regular = {
-	                                    layoutpolicy_horizontal = expanding
-	                                    raw_text = "Update 0.9"
-	                                    onclick = "[GetVariableSystem.Set('pp_filter', 'update_0_9')]"
-                                    down = "[GetVariableSystem.HasValue('pp_filter', 'update_0_9')]"
-                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
-                                    tooltipwidget = { BasicFunctionalTooltip = {} }
-
-                                    blockoverride "background" {}
-                                }
                                 button_regular = {
                                     layoutpolicy_horizontal = expanding
 	                                    raw_text = "Overview"
@@ -642,42 +632,6 @@
 	                                            }
 	                                        }
 
-	                                        # ---- Update 0.9 ----
-	                                        vbox = {
-	                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'update_0_9'))]"
-	                                            set_parent_size_to_minimum = yes
-	                                            margin = { 0 10 }
-	                                            vbox = {
-	                                                layoutpolicy_horizontal = expanding
-	                                                spacing = 10
-	                                                using = bg_paper_card
-	                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
-	                                                max_width = 1450
-	                                                min_width = 1450
-	                                                icon = {
-	                                                    layoutpolicy_horizontal = expanding
-	                                                    using = button_main_tab_texture
-	                                                    frame = 4
-	                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
-	                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
-	                                                    hbox = {
-	                                                        margin = { 40 0 }
-	                                                        margin_top = 8
-	                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-	                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_update_0_9" }
-	                                                    }
-	                                                }
-	                                                TooltipListScrollArea = {
-	                                                    blockoverride "scrollarea_content" {
-	                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-	                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_update_0_9_desc" margin = { 40 10 } }
-	                                                        }
-	                                                    }
-	                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
-	                                                }
-	                                            }
-	                                        }
-
 	                                        # ---- Overview (Prosper or Perish Mod) ----
 	                                        vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'overview'))]"
@@ -715,7 +669,7 @@
                                         }
 
                                         # ---- Food ----
-                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: docs/mod_authoring_rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'food_in_eu5'))]"
                                             set_parent_size_to_minimum = yes
@@ -937,7 +891,7 @@
                                         }
 
                                         # ---- Food Production ----
-                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: docs/mod_authoring_rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'food'))]"
                                             set_parent_size_to_minimum = yes
@@ -1145,7 +1099,7 @@
                                         }
 
                                         # ---- Food Consumption ----
-                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: docs/mod_authoring_rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'food_consumption'))]"
                                             set_parent_size_to_minimum = yes
@@ -1416,7 +1370,7 @@
                                         }
 
                                         # ---- New Trade Goods (Victuals) ----
-                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: docs/mod_authoring_rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'victuals'))]"
                                             set_parent_size_to_minimum = yes
@@ -1682,7 +1636,7 @@
                                         }
 
                                         # ---- Logistics (Market Access) ----
-                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: docs/mod_authoring_rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'building_limits'))]"
                                             set_parent_size_to_minimum = yes
@@ -2039,7 +1993,7 @@
                                         }
 
                                         # ---- Navigable Rivers ----
-                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: docs/mod_authoring_rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'navigable_rivers'))]"
                                             set_parent_size_to_minimum = yes
@@ -2141,7 +2095,7 @@
                                         }
 
                                         # ---- Farming/Fishing/Forest Capacities ----
-                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: docs/mod_authoring_rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'farm_capacity'))]"
                                             set_parent_size_to_minimum = yes
@@ -2194,12 +2148,12 @@
                                                         blockoverride "step_title" { text = "PP_EU_RURAL_FARM_LAND" }
                                                         blockoverride "step_text" { text = "PP_EU_RURAL_FARM_LAND_DESC" }
                                                     }
-                                                    pp_eu_sign = { blockoverride "sign_text" { raw_text = "–" } }
+                                                    pp_eu_sign = { blockoverride "sign_text" { raw_text = "+" } }
                                                     pp_eu_step = {
-                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/modifier_types/global_population_capacity_modifier.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowModifierTypeName('local_pp_farmland_used')]" } }
-                                                        blockoverride "step_title" { text = "PP_EU_RURAL_FARM_OTHERS" }
-                                                        blockoverride "step_text" { text = "PP_EU_RURAL_FARM_OTHERS_DESC" }
+                                                        blockoverride "step_icon" { texture = "gfx/interface/icons/buildings/wheat_farmstead.dds" }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowModifierTypeName('pp_levels_wheat_farmstead')]" } }
+                                                        blockoverride "step_title" { text = "PP_EU_RURAL_FARM_OWN" }
+                                                        blockoverride "step_text" { text = "PP_EU_RURAL_FARM_OWN_DESC" }
                                                     }
                                                     pp_eu_sign = { blockoverride "sign_text" { raw_text = "=" } }
                                                     pp_eu_step = {
@@ -2392,7 +2346,7 @@
                                         }
 
                                         # ---- Labor ----
-                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: docs/mod_authoring_rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'labor'))]"
                                             set_parent_size_to_minimum = yes
@@ -2595,7 +2549,7 @@
                                         }
 
                                         # ---- Variable Harvests ----
-                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: docs/mod_authoring_rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'harvest'))]"
                                             set_parent_size_to_minimum = yes
@@ -2825,7 +2779,7 @@
                                         }
 
                                         # ---- Arable Land ----
-                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: docs/mod_authoring_rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'pop_capacity'))]"
                                             set_parent_size_to_minimum = yes
@@ -3033,7 +2987,7 @@
                                         }
 
                                         # ---- Population Growth ----
-                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: Ingame_Documentation_Rules.md)
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: docs/mod_authoring_rules.md)
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'pop_growth'))]"
                                             set_parent_size_to_minimum = yes
@@ -3389,114 +3343,6 @@
                                                     blockoverride "scrollarea_content" {
                                                         vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
                                                             text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_devastation_desc" margin = { 40 10 } }
-                                                        }
-                                                    }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
-                                                }
-                                            }
-                                        }
-
-                                        # ---- Province Current Food Storage (Other Changes) ----
-                                        vbox = {
-                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'other_changes'))]"
-                                            set_parent_size_to_minimum = yes
-                                            margin = { 0 10 }
-                                            vbox = {
-                                                layoutpolicy_horizontal = expanding
-                                                spacing = 10
-                                                using = bg_paper_card
-                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                max_width = 1450
-                                                min_width = 1450
-                                                icon = {
-                                                    layoutpolicy_horizontal = expanding
-                                                    using = button_main_tab_texture
-                                                    frame = 4
-                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
-                                                    hbox = {
-                                                        margin = { 40 0 }
-                                                        margin_top = 8
-                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_province_current_food_storage" }
-                                                    }
-                                                }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_province_current_food_storage_desc" margin = { 40 10 } }
-                                                        }
-                                                    }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
-                                                }
-                                            }
-                                        }
-
-                                        # ---- Cheap Food (Other Changes) ----
-                                        vbox = {
-                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'other_changes'))]"
-                                            set_parent_size_to_minimum = yes
-                                            margin = { 0 10 }
-                                            vbox = {
-                                                layoutpolicy_horizontal = expanding
-                                                spacing = 10
-                                                using = bg_paper_card
-                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                max_width = 1450
-                                                min_width = 1450
-                                                icon = {
-                                                    layoutpolicy_horizontal = expanding
-                                                    using = button_main_tab_texture
-                                                    frame = 4
-                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
-                                                    hbox = {
-                                                        margin = { 40 0 }
-                                                        margin_top = 8
-                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_cheap_food" }
-                                                    }
-                                                }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_cheap_food_desc" margin = { 40 10 } }
-                                                        }
-                                                    }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
-                                                }
-                                            }
-                                        }
-
-                                        # ---- Expensive Food (Other Changes) ----
-                                        vbox = {
-                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'other_changes'))]"
-                                            set_parent_size_to_minimum = yes
-                                            margin = { 0 10 }
-                                            vbox = {
-                                                layoutpolicy_horizontal = expanding
-                                                spacing = 10
-                                                using = bg_paper_card
-                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                max_width = 1450
-                                                min_width = 1450
-                                                icon = {
-                                                    layoutpolicy_horizontal = expanding
-                                                    using = button_main_tab_texture
-                                                    frame = 4
-                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
-                                                    hbox = {
-                                                        margin = { 40 0 }
-                                                        margin_top = 8
-                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_expensive_food" }
-                                                    }
-                                                }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_expensive_food_desc" margin = { 40 10 } }
                                                         }
                                                     }
                                                     block "block_scrollarea" { maximumsize = { -1 800 } }

@@ -69,9 +69,10 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     coast.write_runtime(mod_root)
     report["class_injects"] = wb_modifiers.write_class_injects(contract, cfg.geography_export, mod_root, repo, vanilla_root(repo, project),
                                                                hostile_config=cfg.raw.get("hostile_movement"))
-    if cfg.compat_files:
+    if cfg.compat_files or cfg.compat_removed or cfg.compat_replacements:
         families = wb_compat.load_families(cfg.geography_export)
-        report["compat_patches"] = wb_compat.write_compat_patches(vanilla_root(repo, project), mod_root, repo, families, cfg.compat_files)
+        report["compat_patches"] = wb_compat.write_compat_patches(vanilla_root(repo, project), mod_root, repo, families, cfg.compat_files,
+                                                                  cfg.compat_removed, cfg.compat_replacements)
     # terrain look: the World Builder classes and channel topographies take their vanilla parent's biome
     from . import biomes
 

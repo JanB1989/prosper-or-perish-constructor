@@ -1,0 +1,25 @@
+﻿# PP Sea Raid (2026-10-23, Jan): a naval war for countries that run privateers, only against countries whose coast
+# borders a sea area where our privateers sail (pp_naval_raid_target_trigger; checked to create and to declare). The war
+# goal is vanilla's naval superiority (ticking war score from blockaded ports, bonus war score from won naval battles);
+# taking land costs as much as in vanilla's naval wars. Its own treaties (pp_naval_raid_treaties.txt) and the Coastal
+# Raid navy toggle (pp_coastal_raid.txt) need a war of this casus belli.
+#root is country
+#scope:target is the target
+
+cb_pp_naval_raid = {
+	create_visible = {
+		modifier:can_hire_privateers = yes
+		has_ports = yes
+	}
+	create_enabled = {
+		NOT = { has_truce_with = scope:target }
+		pp_naval_raid_target_trigger = yes
+	}
+	declare_enabled = {
+		pp_naval_raid_target_trigger = yes
+	}
+
+	speed = 15
+
+	war_goal_type = pp_naval_raid
+}

@@ -29,14 +29,6 @@ TRY_INJECT:dal_dalmatian_olive_pacts = {
 	global_olives_output_modifier = 0.2
 }
 
-TRY_REPLACE:efficient_mining = {
-	age = age_3_discovery
-	icon = efficient_mining
-	for = adm
-	global_rural_build_buildings_efficiency = 0.05
-	global_copper_output_modifier = 0.1
-}
-
 TRY_INJECT:folwark_system = {
 	expand_rgo_farming_cost_modifier = 0.25
 	global_rural_build_buildings_efficiency = 0.13

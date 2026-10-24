@@ -223,15 +223,10 @@ NEstate = {
 }
 
 NCountry = {
-	# 2026-10-04 (Jan): institutions spread too fast in PP (age-2 institutions reached 61 % of the world's people
-	# 65 years after they appeared, run 379f7d7a). Embracing needs twice the exposed population; trade spreads
-	# institutions only over shorter routes and from busier markets (PP markets trade far more than vanilla's).
-	# 2026-10-06 (Jan): market volume threshold 30 -> 20, more mid-sized markets pass institutions on.
-	INSTITUTION_MINIMUM_PERCENT = 0.4 # 0.2
-	INSTITUTION_TRADE_SPREAD_RANGE_HALFCOST = 25 # 50
-	INSTITUTION_TRADE_MIN_VOLUME = 20 # 10
-	# 2026-10-13 (Jan): MERCHANT_DISTANCE_COST_DIVISOR back to vanilla (EU5 1.4.1 cut it 1200 -> 400; PP had 120 since
-	# 2026-10-08). Range growth stays cut in pp_trade_range_advances_adjustments.txt.
+	# 2026-10-22 (Jan): institution spread and trade distance are vanilla again. EU5 1.4.3 prices trade distance
+	# itself (route cost x MERCHANT_ROUTE_COST_MULTIPLIER 5 against the trade range, MERCHANT_DISTANCE_COST_DIVISOR 800)
+	# and its institution trade spread uses the same x5 cost; PP's curb (minimum percent 0.4, halfcost 25, minimum
+	# volume 20, spread values 65 %, Print Culture halved) and its trade range cut (+50 per range advance) are gone.
 }
 
 NUnit = {
@@ -246,4 +241,20 @@ NDiplomacy = {
 	# subject's AI counts every other subject of its overlord as a defender); docs/peace_deal_rulebook.md "Subjects".
 	LOYALTY_FROM_INDEPENDENCE_MOVEMENT_SCALE = 12.5 # 10
 	LOYALTY_FROM_INDEPENDENCE_MOVEMENT_MAX = 25 # 20
+	# 2026-10-16 (Jan's goal: a side that wins its battles should see the war as winnable; docs/war_ai_rulebook.md 8).
+	# AI peace acceptance weighs war enthusiasm; past 24 months it fell 0.01 a month and spent manpower took up to 0.2
+	# more, so a defender that wins its battles while the attacker sieges ceded land worth about twice the war score.
+	# Halved both: in 10-year observer runs from 1807 and 1667 (~45 fought wars each) battle winners ceded 73
+	# locations instead of 187 and ended net down in 4 wars instead of 9; same number of wars, some last longer.
+	WAR_ENTHUSIASM_TIME_LATE_FACTOR = 0.005 # 0.01
+	WAR_ENTHUSIASM_MILITARY_STRENGTH_FACTOR = 0.05 # 0.1
+}
+
+NCombat = {
+	# 2026-10-16 (Jan, docs/war_ai_rulebook.md 8): the war score of a war comes almost entirely from occupied land (a
+	# battle counts its losses against the whole side's army, about one point per war at PP army sizes), and AI defenders
+	# chase enemy stacks instead of besieging. Sieges of locations without a fort take as long per phase as fort sieges,
+	# so besiegers sit longer where the defender's field armies can break the siege, and land falls more slowly.
+	# Players too. Not tested in game.
+	DAYS_PER_SIEGE_PHASE_WITHOUT_FORT = 30 # 15
 }

@@ -7801,7 +7801,7 @@ america = {
 					 
 					north_pacific_high_sea56 
 					north_pacific_high_sea59 north_pacific_high_sea63 north_pacific_high_sea64 
-					north_pacific_high_sea67 north_pacific_high_sea69 north_pacific_high_sea72 
+					north_pacific_high_sea69 north_pacific_high_sea72 
 					north_pacific_high_sea74 north_pacific_high_sea75 north_pacific_high_sea78
 				}
 				kaialigamiut_coast_sea_zones_province = {
@@ -7812,20 +7812,20 @@ america = {
 					north_pacific_high_sea22 north_pacific_high_sea23 north_pacific_high_sea37
 				}
 				kavagmiut_coast_sea_zones_province = {
-					norton_bay nome_coast clarence_gulf
-					shishmarev_inlet 
-					north_pacific_high_sea40 north_pacific_high_sea42
+					norton_bay nome_coast
+					
+					north_pacific_high_sea40
 				}
 				kugmiut_coast_sea_zones_province = {
 					hotham_inlet
 					krusenstern_lagoon point_hope wevok_point
 				}
 				bering_sea_zones_province = {
-					amiq_coast5 stmatthew_coast3 kialegak_cape sevuokuk_point kongkok_bay
+					amiq_coast5 stmatthew_coast3 kialegak_cape
 					
 					north_pacific_high_sea35 north_pacific_high_sea24 north_pacific_high_sea27
 					north_pacific_high_sea25 north_pacific_high_sea29 north_pacific_high_sea31 
-					north_pacific_high_sea44 north_pacific_high_sea47 north_pacific_high_sea52
+					north_pacific_high_sea44 north_pacific_high_sea52
 					north_pacific_high_sea50 north_pacific_high_sea55
 				}
 			}
@@ -10475,6 +10475,12 @@ pacific_ocean_continent = {
 					alaska_sea bering_sea laptev_sea
 					pacific_north_current1 pacific_north_current2 pacific_north_current3 pacific_north_current4 pacific_north_current5 pacific_north_current6 pacific_north_current7 pacific_north_current8 pacific_north_current9 pacific_north_current10 pacific_north_current11 pacific_north_current12 pacific_north_current13 pacific_north_current14 pacific_north_current15 pacific_north_current16 pacific_north_current17 pacific_north_current18 pacific_north_current19 pacific_north_current20 pacific_north_current21 pacific_north_current22 pacific_north_current23 pacific_north_current24 pacific_north_current25 pacific_north_current26 pacific_north_current27 pacific_north_current28 pacific_north_current29 pacific_north_current30 pacific_north_current31 pacific_north_current32 pacific_north_current33 pacific_north_current34 pacific_north_current35 pacific_north_current36 pacific_north_current37 pacific_north_current38 pacific_north_current39 pacific_north_current40 pacific_north_current41 pacific_north_current42 pacific_north_current43 pacific_north_current44 pacific_north_current45 pacific_north_current46 pacific_north_current47 pacific_north_current48 pacific_north_current49 pacific_north_current50 pacific_north_current51 pacific_north_current52 pacific_north_current53 pacific_north_current54 pacific_north_current55 pacific_north_current56 pacific_north_current57 pacific_north_current58 pacific_north_current59 pacific_north_current60 pacific_north_current61 pacific_north_current62 pacific_north_current63 pacific_north_current64 pacific_north_current66 pacific_north_current67 pacific_north_current68 pacific_north_current69 pacific_north_current70 pacific_north_current71 pacific_north_current72 pacific_north_current73 pacific_north_current74 pacific_north_current75 pacific_north_current76 pacific_north_current77 pacific_north_current78 pacific_north_current79 pacific_north_current80 pacific_north_current81 pacific_north_current83 pacific_north_current84 pacific_north_current85
 					chukchi_sea
+				}
+				north_pacific_high_sea67_province = {
+					north_pacific_high_sea67
+				}
+				bering_strait_east_province = {
+					north_pacific_high_sea47 kongkok_bay sevuokuk_point north_pacific_high_sea42 clarence_gulf shishmarev_inlet
 				}
 			}
 			pacific_north_equatorial_area = {

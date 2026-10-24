@@ -15,6 +15,10 @@ very_poor_harvest = {
 poor_harvest = {
 	texture = "modifiers/locations"
 }
+# no modifier in average years; the Europedia's harvest scale links it like the others
+average_harvest = {
+	texture = "modifiers/locations"
+}
 good_harvest = {
 	texture = "modifiers/locations"
 }

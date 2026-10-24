@@ -2883,7 +2883,7 @@ moron = { topography = flatland vegetation = ha1300_veg_marsh climate = mediterr
 olvera = { topography = hills vegetation = ha1300_veg_thicket climate = mediterranean religion = catholic culture = castilian raw_material = medicaments}
 osuna = { topography = flatland vegetation = ha1300_veg_thicket climate = mediterranean religion = catholic culture = castilian raw_material = olives}
 sanlucar_la_mayor = { topography = flatland vegetation = ha1300_veg_thicket climate = mediterranean religion = catholic culture = castilian raw_material = horses natural_harbor_suitability = 0.00 }
-almeria = { modifier = almeria_silk_base topography = flatland vegetation = ha1300_veg_scrubland climate = cold_semi_arid religion = sunni culture = andalusi raw_material = fiber_crops natural_harbor_suitability = 0.25}
+almeria = { topography = flatland vegetation = ha1300_veg_scrubland climate = cold_semi_arid religion = sunni culture = andalusi raw_material = fiber_crops natural_harbor_suitability = 0.25}
 almanzora = { topography = hills vegetation = ha1300_veg_thicket climate = cold_semi_arid religion = sunni culture = andalusi raw_material = marble}
 baza = { topography = plateau vegetation = ha1300_veg_thicket climate = mediterranean religion = sunni culture = andalusi raw_material = saffron}
 gergal = { topography = hills vegetation = ha1300_veg_scrubland climate = cold_semi_arid religion = sunni culture = andalusi raw_material = dyes}
@@ -2898,7 +2898,7 @@ guadix = { topography = plateau vegetation = ha1300_veg_thicket climate = medite
 illora = { topography = plateau vegetation = ha1300_veg_thicket climate = mediterranean religion = sunni culture = andalusi raw_material = stone}
 loja = { topography = mountains vegetation = ha1300_veg_thicket climate = mediterranean religion = sunni culture = andalusi raw_material = legumes}
 pinar = { topography = plateau vegetation = ha1300_veg_thicket climate = mediterranean religion = sunni culture = andalusi raw_material = wheat}
-orgiva = { topography = mountains vegetation = ha1300_veg_thicket climate = mediterranean religion = sunni culture = andalusi raw_material = silk}
+orgiva = { modifier = alpujarras_silk_base topography = mountains vegetation = ha1300_veg_thicket climate = mediterranean religion = sunni culture = andalusi raw_material = silk}
 nevada_range = { topography = mountain_wasteland vegetation = sparse climate = continental}
 subbetic_range = { topography = mountain_wasteland vegetation = sparse climate = oceanic}
 malaga = { modifier = malaga_sweet_wine_base topography = flatland vegetation = ha1300_veg_thicket climate = mediterranean religion = sunni culture = andalusi raw_material = sugar natural_harbor_suitability = 0.25}
@@ -6370,8 +6370,8 @@ bogiston = { topography = mountains vegetation = ha1300_veg_thicket climate = ha
 burchmullo = { topography = mountains vegetation = grasslands climate = ha1300_climate_dry_summer_continental religion = sunni culture = khorezmian_culture raw_material = goods_gold}
 fanakat = { topography = flatland vegetation = ha1300_veg_marsh climate = cold_semi_arid religion = sunni culture = khorezmian_culture raw_material = livestock}
 nuket = { topography = flatland vegetation = ha1300_veg_marsh climate = ha1300_climate_dry_summer_continental religion = sunni culture = khorezmian_culture raw_material = livestock}
-tian_shan14 = { topography = mountain_wasteland vegetation = sparse climate = continental}
-tian_shan15 = { topography = mountain_wasteland vegetation = sparse climate = continental}
+tian_shan14 = { topography = mountain_wasteland vegetation = sparse climate = cold_arid}
+tian_shan15 = { topography = mountain_wasteland vegetation = sparse climate = cold_arid}
 fergana = { topography = hills vegetation = ha1300_veg_thicket climate = cold_semi_arid religion = sunni culture = khorezmian_culture raw_material = silver}
 marghinan = { topography = ha1300_topo_floodplains vegetation = ha1300_veg_marsh climate = cold_arid religion = sunni culture = khorezmian_culture raw_material = silk}
 osh = { topography = hills vegetation = ha1300_veg_thicket climate = cold_semi_arid religion = sunni culture = khorezmian_culture raw_material = silk}
@@ -6409,7 +6409,7 @@ ketmen_tobe = { topography = mountains vegetation = ha1300_veg_thicket climate =
 naryn = { topography = hills vegetation = grasslands climate = cold_semi_arid religion = sunni culture = khorezmian_culture raw_material = beeswax}
 chatyr_kol_lake = { topography = lakes climate = cold_arid}
 song_kul_lake = { topography = lakes climate = continental}
-tian_shan8 = { topography = mountain_wasteland vegetation = desert climate = continental}
+tian_shan8 = { topography = mountain_wasteland vegetation = desert climate = subpolar}
 tian_shan9 = { topography = mountain_wasteland vegetation = sparse climate = cold_semi_arid}
 tian_shan11 = { topography = mountain_wasteland vegetation = sparse climate = subpolar}
 tian_shan12 = { topography = mountain_wasteland vegetation = sparse climate = continental}
@@ -6518,8 +6518,8 @@ gulja = { topography = mountains vegetation = ha1300_veg_tundra climate = cold_s
 narat = { topography = plateau vegetation = ha1300_veg_mixed_forest climate = cold_semi_arid religion = tengri culture = oirat_culture raw_material = camels}
 nilka = { topography = mountains vegetation = grasslands climate = cold_semi_arid religion = tengri culture = oirat_culture raw_material = stone}
 tokkuztara = { topography = plateau vegetation = grasslands climate = subpolar religion = tengri culture = oirat_culture raw_material = legumes}
-borohoro2 = { topography = mountain_wasteland vegetation = sparse climate = continental}
-tian_shan6 = { topography = mountain_wasteland vegetation = sparse climate = cold_semi_arid}
+borohoro2 = { topography = mountain_wasteland vegetation = sparse climate = subpolar}
+tian_shan6 = { topography = mountain_wasteland vegetation = sparse climate = subpolar}
 wusun = { topography = mountain_wasteland vegetation = woods climate = continental}
 almaty = { topography = ha1300_topo_valleys vegetation = ha1300_veg_scrubland climate = continental religion = tengri culture = kyrgyz_culture raw_material = wheat}
 boyauli = { topography = flatland vegetation = grasslands climate = cold_semi_arid religion = tengri culture = kyrgyz_culture raw_material = wheat}
@@ -6563,7 +6563,7 @@ barskoon = { topography = hills vegetation = grasslands climate = cold_semi_arid
 balykchy = { topography = hills vegetation = grasslands climate = subpolar religion = sunni culture = kyrgyz_culture raw_material = clay}
 kochkor = { topography = plateau vegetation = grasslands climate = cold_semi_arid religion = sunni culture = khorezmian_culture raw_material = wheat}
 san_tash = { topography = plateau vegetation = grasslands climate = continental religion = sunni culture = kyrgyz_culture raw_material = wheat}
-issyk_kul_lake = { topography = lakes climate = cold_arid}
+issyk_kul_lake = { topography = lakes climate = cold_semi_arid}
 kayalyk = { topography = plateau vegetation = grasslands climate = continental religion = tengri culture = oirat_culture raw_material = livestock}
 ayagoz = { topography = plateau vegetation = grasslands climate = continental religion = tengri culture = oirat_culture raw_material = livestock}
 dungene = { topography = hills vegetation = grasslands climate = continental religion = tengri culture = kyrgyz_culture raw_material = salt}
@@ -10581,7 +10581,7 @@ tiancheng = { topography = plateau vegetation = grasslands climate = cold_semi_a
 baideng = { topography = plateau vegetation = grasslands climate = cold_semi_arid religion = sanjiao culture = jin_culture raw_material = livestock}
 yulin_datong = { topography = plateau vegetation = grasslands climate = ha1300_climate_continental_monsoon religion = sanjiao culture = jin_culture raw_material = livestock}
 yunchuan = { topography = hills vegetation = grasslands climate = ha1300_climate_continental_monsoon religion = sanjiao culture = jin_culture raw_material = livestock}
-taihangshan3 = { topography = mountain_wasteland vegetation = sparse climate = cold_semi_arid}
+taihangshan3 = { topography = mountain_wasteland vegetation = sparse climate = continental}
 bayannur = { topography = plateau vegetation = ha1300_veg_scrubland climate = cold_arid religion = tengri culture = tumed_culture raw_material = millet}
 uraqai = { topography = wetlands vegetation = ha1300_veg_marsh climate = cold_semi_arid religion = tengri culture = mongolian_culture raw_material = millet}
 xinhure = { topography = plateau vegetation = ha1300_veg_scrubland climate = cold_semi_arid religion = tengri culture = mongolian_culture raw_material = livestock}
@@ -10610,7 +10610,7 @@ shanyin = { topography = plateau vegetation = farmland climate = ha1300_climate_
 zhongling = { topography = hills vegetation = grasslands climate = ha1300_climate_continental_monsoon religion = mahayana culture = jin_culture raw_material = livestock}
 shenwu = { topography = hills vegetation = grasslands climate = ha1300_climate_continental_monsoon religion = mahayana culture = jin_culture raw_material = livestock}
 shanyang_yingzhou = { topography = plateau vegetation = farmland climate = cold_semi_arid religion = mahayana culture = jin_culture raw_material = millet}
-taihangshan9 = { topography = mountain_wasteland vegetation = sparse climate = cold_semi_arid}
+taihangshan9 = { topography = mountain_wasteland vegetation = sparse climate = continental}
 lingxian_shanxi = { topography = plateau vegetation = grasslands climate = cold_semi_arid religion = sanjiao culture = jilu_culture raw_material = livestock}
 guangling = { topography = plateau vegetation = forest climate = ha1300_climate_continental_monsoon religion = sanjiao culture = jilu_culture raw_material = livestock}
 hunyuan = { topography = plateau vegetation = forest climate = ha1300_climate_continental_monsoon religion = sanjiao culture = jin_culture raw_material = livestock}
@@ -10646,7 +10646,7 @@ lanzhou_kelan = { topography = plateau vegetation = grasslands climate = ha1300_
 hehe = { topography = hills vegetation = grasslands climate = ha1300_climate_continental_monsoon religion = mahayana culture = jin_culture raw_material = wheat}
 loufan = { topography = mountains vegetation = grasslands climate = ha1300_climate_continental_monsoon religion = mahayana culture = jin_culture raw_material = livestock}
 xingxian = { topography = hills vegetation = grasslands climate = ha1300_climate_continental_monsoon religion = mahayana culture = jin_culture raw_material = livestock}
-taihangshan7 = { topography = mountain_wasteland vegetation = sparse climate = cold_semi_arid}
+taihangshan7 = { topography = mountain_wasteland vegetation = sparse climate = continental}
 liaoshan = { topography = mountains vegetation = forest climate = ha1300_climate_continental_monsoon religion = mahayana culture = jin_culture raw_material = beeswax}
 heshun = { topography = mountains vegetation = forest climate = ha1300_climate_continental_monsoon religion = mahayana culture = jin_culture raw_material = lumber}
 yushe = { topography = mountains vegetation = forest climate = ha1300_climate_continental_monsoon religion = mahayana culture = jin_culture raw_material = wild_game}
@@ -10679,7 +10679,7 @@ xiangning = { topography = mountains vegetation = forest climate = ha1300_climat
 tongdi = { topography = plateau vegetation = forest climate = ha1300_climate_continental_monsoon religion = mahayana culture = jin_culture raw_material = livestock}
 qinyuan = { topography = mountains vegetation = forest climate = ha1300_climate_continental_monsoon religion = mahayana culture = jin_culture raw_material = livestock}
 wuxiang = { topography = plateau vegetation = farmland climate = ha1300_climate_continental_monsoon religion = mahayana culture = jin_culture raw_material = livestock}
-taihangshan4 = { topography = mountain_wasteland vegetation = forest climate = cold_semi_arid}
+taihangshan4 = { topography = mountain_wasteland vegetation = forest climate = continental}
 lishi = { topography = hills vegetation = grasslands climate = ha1300_climate_continental_monsoon religion = mahayana culture = jin_culture raw_material = livestock}
 fangshan_lishi = { topography = mountains vegetation = grasslands climate = ha1300_climate_continental_monsoon religion = mahayana culture = jin_culture raw_material = stone}
 linxian = { topography = hills vegetation = grasslands climate = ha1300_climate_continental_monsoon religion = mahayana culture = jin_culture raw_material = fruit}
@@ -10694,7 +10694,7 @@ jiaocheng = { topography = mountains vegetation = forest climate = ha1300_climat
 xugou = { topography = ha1300_topo_floodplains vegetation = forest climate = cold_semi_arid religion = mahayana culture = jin_culture raw_material = rice}
 qixian_taiyuan = { topography = plateau vegetation = ha1300_veg_mixed_forest climate = cold_semi_arid religion = mahayana culture = jin_culture raw_material = clay}
 wenshui = { topography = mountains vegetation = forest climate = cold_semi_arid religion = mahayana culture = jin_culture raw_material = wheat}
-taihangshan2 = { topography = mountain_wasteland vegetation = woods climate = cold_semi_arid}
+taihangshan2 = { topography = mountain_wasteland vegetation = woods climate = continental}
 xiexian = { topography = flatland vegetation = ha1300_veg_mixed_forest climate = ha1300_climate_continental_monsoon religion = mahayana culture = qin_culture raw_material = salt}
 pinglu = { topography = hills vegetation = forest climate = ha1300_climate_continental_monsoon religion = mahayana culture = qin_culture raw_material = fruit}
 ruicheng = { topography = flatland vegetation = ha1300_veg_mixed_forest climate = ha1300_climate_continental_monsoon religion = mahayana culture = qin_culture raw_material = fruit}
@@ -11926,13 +11926,13 @@ kara_irtysh = { topography = plateau vegetation = grasslands climate = cold_semi
 ulungur = { topography = plateau vegetation = ha1300_veg_scrubland climate = cold_semi_arid religion = tengri culture = oirat_culture raw_material = legumes}
 lake_jili = { topography = high_lakes climate = arid}
 lake_ulungur = { topography = high_lakes climate = arid}
-atas_bogd = { topography = mountain_wasteland vegetation = sparse climate = cold_semi_arid}
+atas_bogd = { topography = mountain_wasteland vegetation = sparse climate = cold_arid}
 beshbalik = { topography = plateau vegetation = ha1300_veg_scrubland climate = cold_semi_arid religion = mahayana culture = uyghur_culture raw_material = livestock}
 dunla = { topography = flatland vegetation = ha1300_veg_scrubland climate = cold_semi_arid religion = mahayana culture = uyghur_culture raw_material = wheat}
 guchung = { topography = plateau vegetation = ha1300_veg_scrubland climate = cold_arid religion = mahayana culture = uyghur_culture raw_material = livestock}
 mori = { topography = plateau vegetation = desert climate = cold_arid religion = mahayana culture = uyghur_culture raw_material = livestock}
 yuanhu = { topography = plateau vegetation = desert climate = cold_arid religion = tengri culture = uyghur_culture raw_material = livestock}
-bodga_shan = { topography = mountain_wasteland vegetation = sparse climate = cold_arid}
+bodga_shan = { topography = mountain_wasteland vegetation = sparse climate = subpolar}
 bortala = { topography = flatland vegetation = grasslands climate = cold_semi_arid religion = tengri culture = oirat_culture raw_material = wool}
 jing = { topography = flatland vegetation = desert climate = cold_arid religion = tengri culture = oirat_culture raw_material = livestock}
 kuytun = { topography = flatland vegetation = ha1300_veg_scrubland climate = cold_arid religion = tengri culture = oirat_culture raw_material = horses}
@@ -11940,8 +11940,8 @@ urghtbulaq = { topography = plateau vegetation = ha1300_veg_scrubland climate = 
 usu_xinjiang = { topography = flatland vegetation = ha1300_veg_scrubland climate = cold_arid religion = tengri culture = oirat_culture raw_material = wool}
 ebi_lake = { topography = lakes climate = cold_arid}
 sayram_lake = { topography = lakes climate = continental}
-borohoro1 = { topography = mountain_wasteland vegetation = sparse climate = cold_semi_arid}
-alatau = { topography = mountain_wasteland vegetation = sparse climate = arctic}
+borohoro1 = { topography = mountain_wasteland vegetation = sparse climate = subpolar}
+alatau = { topography = mountain_wasteland vegetation = sparse climate = subpolar}
 hoboksar = { topography = plateau vegetation = ha1300_veg_scrubland climate = cold_semi_arid religion = tengri culture = oirat_culture raw_material = livestock}
 gonganbao = { topography = flatland vegetation = desert climate = cold_arid religion = tengri culture = oirat_culture raw_material = camels}
 manas = { topography = flatland vegetation = desert climate = cold_arid religion = tengri culture = oirat_culture raw_material = clay}
@@ -11963,7 +11963,7 @@ kutubi = { topography = flatland vegetation = grasslands climate = cold_semi_ari
 ulan_us = { topography = flatland vegetation = grasslands climate = cold_semi_arid religion = tengri culture = oirat_culture raw_material = wheat}
 qanbalik = { topography = flatland vegetation = grasslands climate = cold_semi_arid religion = tengri culture = oirat_culture raw_material = wool}
 urumqi = { topography = plateau vegetation = grasslands climate = cold_semi_arid religion = mahayana culture = uyghur_culture raw_material = livestock}
-borohoro3 = { topography = mountain_wasteland vegetation = sparse climate = cold_semi_arid}
+borohoro3 = { topography = mountain_wasteland vegetation = sparse climate = subpolar}
 aksu = { topography = plateau vegetation = desert climate = cold_arid religion = sunni culture = khorezmian_culture raw_material = cotton}
 bai_xinjiang = { topography = plateau vegetation = desert climate = cold_arid religion = sunni culture = khorezmian_culture raw_material = wool}
 kumtura = { topography = plateau vegetation = desert climate = cold_arid religion = sunni culture = khorezmian_culture raw_material = beeswax}
@@ -11972,7 +11972,7 @@ qumbash = { topography = ha1300_topo_floodplains vegetation = ha1300_veg_marsh c
 shayar = { topography = ha1300_topo_floodplains vegetation = ha1300_veg_scrubland climate = cold_arid religion = sunni culture = khorezmian_culture raw_material = wheat}
 uqturpan = { topography = mountains vegetation = desert climate = cold_arid religion = sunni culture = khorezmian_culture raw_material = iron}
 tian_shan2 = { topography = mountain_wasteland vegetation = sparse climate = subpolar}
-tian_shan3 = { topography = mountain_wasteland vegetation = desert climate = cold_semi_arid}
+tian_shan3 = { topography = mountain_wasteland vegetation = desert climate = subpolar}
 charchan = { topography = plateau vegetation = desert climate = cold_arid religion = mahayana culture = khorezmian_culture raw_material = cotton}
 charklik = { topography = plateau vegetation = desert climate = cold_arid religion = mahayana culture = uyghur_culture raw_material = millet}
 niya = { topography = plateau vegetation = desert climate = cold_arid religion = sunni culture = khorezmian_culture raw_material = wool}
@@ -11998,8 +11998,8 @@ bosten = { topography = plateau vegetation = desert climate = cold_arid religion
 yulduz = { topography = plateau vegetation = grasslands climate = arctic religion = tengri culture = oirat_culture raw_material = livestock}
 bosten_lake = { topography = high_lakes climate = cold_arid}
 kuruktag = { topography = hills vegetation = desert climate = cold_arid}
-tian_shan4 = { topography = mountain_wasteland vegetation = sparse climate = continental}
-tian_shan5 = { topography = mountain_wasteland vegetation = sparse climate = cold_semi_arid}
+tian_shan4 = { topography = mountain_wasteland vegetation = sparse climate = subpolar}
+tian_shan5 = { topography = mountain_wasteland vegetation = sparse climate = subpolar}
 lake_wuzongbulake = { topography = high_lakes climate = cold_arid}
 kashgar = { topography = hills vegetation = ha1300_veg_scrubland climate = cold_arid religion = sunni culture = khorezmian_culture raw_material = wheat}
 artush = { topography = hills vegetation = ha1300_veg_scrubland climate = cold_arid religion = sunni culture = khorezmian_culture raw_material = cotton}
@@ -20471,12 +20471,12 @@ tamaulipas_coast = { topography = inland_sea climate = continental}
 madre_lagoon = { topography = inland_sea climate = hot_semi_arid}
 grande_delta = { topography = inland_sea climate = hot_semi_arid}
 gulf_mexico3 = { topography = inland_sea climate = continental}
-padre_island = { topography = inland_sea climate = arid}
-corpus_christi_bay = { topography = inland_sea climate = arid}
+padre_island = { topography = inland_sea climate = hot_semi_arid}
+corpus_christi_bay = { topography = inland_sea climate = hot_semi_arid}
 matagorda_bay = { topography = inland_sea climate = subtropical}
 brazos_mouth = { topography = inland_sea climate = subtropical}
 gulf_mexico1 = { topography = inland_sea climate = subtropical}
-gulf_mexico2 = { topography = inland_sea climate = arid}
+gulf_mexico2 = { topography = inland_sea climate = hot_semi_arid}
 gulf_mexico22 = { topography = inland_sea climate = subtropical}
 waccasassa_bay = { topography = inland_sea climate = subtropical}
 tampa_bay = { topography = inland_sea climate = subtropical}
@@ -23197,7 +23197,6 @@ north_pacific_high_sea56 = { topography = ocean climate = subpolar}
 north_pacific_high_sea59 = { topography = ocean climate = subpolar}
 north_pacific_high_sea63 = { topography = ocean climate = subpolar}
 north_pacific_high_sea64 = { topography = ocean climate = subpolar}
-north_pacific_high_sea67 = { topography = deep_ocean climate = subpolar movement_assistance = { -90.16 4.98 }}
 north_pacific_high_sea69 = { topography = ocean climate = subpolar}
 north_pacific_high_sea72 = { topography = ocean climate = subpolar}
 north_pacific_high_sea74 = { topography = ocean climate = subpolar}
@@ -23215,10 +23214,7 @@ north_pacific_high_sea23 = { topography = ocean climate = subpolar}
 north_pacific_high_sea37 = { topography = ocean climate = subpolar}
 norton_bay = { topography = coastal_ocean climate = subpolar}
 nome_coast = { topography = coastal_ocean climate = subpolar}
-clarence_gulf = { topography = deep_ocean climate = subpolar movement_assistance = { -90.16 4.98 }}
-shishmarev_inlet = { topography = deep_ocean climate = subpolar movement_assistance = { -90.16 4.98 }}
 north_pacific_high_sea40 = { topography = ocean climate = subpolar}
-north_pacific_high_sea42 = { topography = deep_ocean climate = subpolar movement_assistance = { -90.16 4.98 }}
 hotham_inlet = { topography = coastal_ocean climate = subpolar}
 krusenstern_lagoon = { topography = coastal_ocean climate = subpolar}
 point_hope = { topography = coastal_ocean climate = subpolar}
@@ -23226,8 +23222,6 @@ wevok_point = { topography = coastal_ocean climate = arctic}
 amiq_coast5 = { topography = coastal_ocean climate = subpolar}
 stmatthew_coast3 = { topography = coastal_ocean climate = subpolar}
 kialegak_cape = { topography = coastal_ocean climate = subpolar}
-sevuokuk_point = { topography = deep_ocean climate = subpolar movement_assistance = { -90.16 4.98 }}
-kongkok_bay = { topography = deep_ocean climate = subpolar movement_assistance = { -90.16 4.98 }}
 north_pacific_high_sea35 = { topography = ocean climate = subpolar}
 north_pacific_high_sea24 = { topography = ocean climate = subpolar}
 north_pacific_high_sea27 = { topography = ocean climate = subpolar}
@@ -23235,7 +23229,6 @@ north_pacific_high_sea25 = { topography = ocean climate = subpolar}
 north_pacific_high_sea29 = { topography = ocean climate = subpolar}
 north_pacific_high_sea31 = { topography = ocean climate = subpolar}
 north_pacific_high_sea44 = { topography = ocean climate = subpolar}
-north_pacific_high_sea47 = { topography = deep_ocean climate = subpolar movement_assistance = { -90.16 4.98 }}
 north_pacific_high_sea52 = { topography = ocean climate = subpolar}
 north_pacific_high_sea50 = { topography = ocean climate = subpolar}
 north_pacific_high_sea55 = { topography = ocean climate = subpolar}
@@ -25219,7 +25212,7 @@ totobiegosode = { topography = ha1300_topo_floodplains vegetation = ha1300_veg_t
 gaaigosode = { topography = ha1300_topo_floodplains vegetation = ha1300_veg_thicket climate = ha1300_climate_savanna religion = nallagdigua_religion culture = ayoreo_culture raw_material = legumes}
 amomegosode = { topography = ha1300_topo_floodplains vegetation = ha1300_veg_dry_forest climate = ha1300_climate_savanna religion = nallagdigua_religion culture = ayoreo_culture raw_material = lumber}
 ijnapuigosode = { topography = flatland vegetation = ha1300_veg_dry_forest climate = hot_semi_arid religion = nallagdigua_religion culture = ayoreo_culture raw_material = wild_game}
-ayoreo_forest = { topography = flatland_wasteland vegetation = forest climate = arid}
+ayoreo_forest = { topography = flatland_wasteland vegetation = forest climate = hot_semi_arid}
 yshyr_forest = { topography = flatland_wasteland vegetation = forest climate = tropical}
 chishamnee = { topography = ha1300_topo_floodplains vegetation = ha1300_veg_thicket climate = hot_semi_arid religion = tokuah_religion culture = nivacle_culture raw_material = lumber}
 yita = { topography = ha1300_topo_floodplains vegetation = ha1300_veg_dry_forest climate = hot_semi_arid religion = tokuah_religion culture = nivacle_culture raw_material = fiber_crops}
@@ -25308,7 +25301,7 @@ weenhayek = { topography = flatland vegetation = ha1300_veg_dry_forest climate =
 mrubicha = { topography = flatland vegetation = ha1300_veg_dry_forest climate = ha1300_climate_savanna religion = tunpa_religion culture = ava_culture raw_material = wild_game}
 pilaya_jungle = { topography = hills_wasteland vegetation = jungle climate = subtropical}
 yungas_jungle = { topography = hills_wasteland vegetation = jungle climate = continental}
-muyupampa_forest = { topography = flatland_wasteland vegetation = forest climate = arid}
+muyupampa_forest = { topography = flatland_wasteland vegetation = forest climate = hot_semi_arid}
 jeguakava = { topography = flatland vegetation = grasslands climate = subtropical religion = tunpa_religion culture = ava_culture raw_material = wild_game}
 ibicui = { topography = flatland vegetation = grasslands climate = subtropical religion = tunpa_religion culture = ava_culture raw_material = fiber_crops}
 ibirapuita = { topography = flatland vegetation = grasslands climate = subtropical religion = tunpa_religion culture = ava_culture raw_material = legumes}
@@ -25686,7 +25679,7 @@ jinigudera = { topography = hills vegetation = ha1300_veg_scrubland climate = ar
 martuthunira = { topography = flatland vegetation = ha1300_veg_scrubland climate = arid religion = dreamtime_religion culture = nhuwala_culture raw_material = millet natural_harbor_suitability = 0.00}
 yindjibarndi = { topography = hills vegetation = ha1300_veg_scrubland climate = arid religion = dreamtime_religion culture = kurrama_culture raw_material = goods_gold}
 noanamaronga = { topography = hills vegetation = ha1300_veg_savanna climate = arid religion = dreamtime_religion culture = nhuwala_culture raw_material = wild_game}
-little_sandy_desert = { topography = hills_wasteland vegetation = desert climate = hot_semi_arid}
+little_sandy_desert = { topography = hills_wasteland vegetation = desert climate = arid}
 carnegie_lake = { topography = lakes climate = arid}
 disappointment_lake = { topography = lakes climate = cold_arid}
 gibson_desert = { topography = hills_wasteland vegetation = desert climate = arid}
@@ -25701,7 +25694,7 @@ kundal = { topography = flatland vegetation = ha1300_veg_thicket climate = arid 
 iparuka = { topography = flatland vegetation = ha1300_veg_scrubland climate = arid religion = dreamtime_religion culture = nyangumarda_culture raw_material = legumes natural_harbor_suitability = 0.00}
 nyangumarda = { topography = flatland vegetation = ha1300_veg_thicket climate = arid religion = dreamtime_religion culture = nyangumarda_culture raw_material = clay}
 karajarri = { topography = flatland vegetation = ha1300_veg_scrubland climate = hot_semi_arid religion = dreamtime_religion culture = karajarri_culture raw_material = fiber_crops natural_harbor_suitability = 0.00}
-great_sandy_desert = { topography = flatland_wasteland vegetation = desert climate = hot_semi_arid}
+great_sandy_desert = { topography = flatland_wasteland vegetation = desert climate = arid}
 dora_lake = { topography = lakes climate = arid}
 gregory_lake = { topography = lakes climate = arid}
 mackay_lake_australia = { topography = lakes climate = cold_arid}
@@ -25802,7 +25795,7 @@ wakabunga = { topography = flatland vegetation = grasslands climate = hot_semi_a
 bulamu = { topography = ha1300_topo_floodplains vegetation = grasslands climate = arid religion = dreamtime_religion culture = warluwarra_culture raw_material = wild_game}
 warluwarra = { topography = ha1300_topo_floodplains vegetation = grasslands climate = arid religion = dreamtime_religion culture = warluwarra_culture raw_material = fiber_crops}
 andegerebenha = { topography = flatland vegetation = ha1300_veg_scrubland climate = arid religion = dreamtime_religion culture = warluwarra_culture raw_material = fiber_crops}
-tanami_desert = { topography = flatland_wasteland vegetation = desert climate = hot_semi_arid}
+tanami_desert = { topography = flatland_wasteland vegetation = desert climate = arid}
 yadhaigana = { topography = flatland vegetation = ha1300_veg_thicket climate = ha1300_climate_savanna religion = dreamtime_religion culture = yadhaigana_culture raw_material = millet natural_harbor_suitability = 0.00}
 anggamudi = { topography = flatland vegetation = ha1300_veg_savanna climate = ha1300_climate_savanna religion = dreamtime_religion culture = anggamudi_culture raw_material = fish natural_harbor_suitability = 0.00}
 tjungundji = { topography = flatland vegetation = ha1300_veg_savanna climate = ha1300_climate_savanna religion = dreamtime_religion culture = anggamudi_culture raw_material = legumes natural_harbor_suitability = 0.00}
@@ -25898,7 +25891,7 @@ bidjara = { topography = plateau vegetation = ha1300_veg_savanna climate = hot_s
 margany = { topography = plateau vegetation = ha1300_veg_thicket climate = subtropical religion = dreamtime_religion culture = yagalingu_culture raw_material = stone}
 badjidi = { topography = plateau vegetation = ha1300_veg_thicket climate = subtropical religion = dreamtime_religion culture = bidjara_culture raw_material = wild_game}
 nguri = { topography = plateau vegetation = ha1300_veg_savanna climate = subtropical religion = dreamtime_religion culture = bidjara_culture raw_material = livestock}
-simpson_desert = { topography = flatland_wasteland vegetation = desert climate = hot_semi_arid}
+simpson_desert = { topography = flatland_wasteland vegetation = desert climate = arid}
 blanche_lake = { topography = lakes climate = arid}
 darumbal = { topography = flatland vegetation = ha1300_veg_savanna climate = subtropical religion = dreamtime_religion culture = darumbal_culture raw_material = millet natural_harbor_suitability = 0.00}
 bayali = { topography = hills vegetation = ha1300_veg_savanna climate = subtropical religion = dreamtime_religion culture = bayali_culture raw_material = wild_game natural_harbor_suitability = 0.00}
@@ -25941,7 +25934,7 @@ yauan = { topography = flatland vegetation = ha1300_veg_savanna climate = subtro
 wailwan = { topography = hills vegetation = ha1300_veg_savanna climate = subtropical religion = dreamtime_religion culture = ngoorabul_culture raw_material = clay}
 wonnarua = { topography = hills vegetation = ha1300_veg_savanna climate = subtropical religion = dreamtime_religion culture = ngoorabul_culture raw_material = lumber}
 strzelecki_desert = { topography = flatland_wasteland vegetation = desert climate = hot_semi_arid}
-sturt_stony_desert = { topography = flatland_wasteland vegetation = desert climate = hot_semi_arid}
+sturt_stony_desert = { topography = flatland_wasteland vegetation = desert climate = arid}
 burugardi = { topography = plateau vegetation = ha1300_veg_savanna climate = oceanic religion = dreamtime_religion culture = gumbaynggirr_culture raw_material = fiber_crops}
 nganyaywana = { topography = hills vegetation = ha1300_veg_savanna climate = subtropical religion = dreamtime_religion culture = nganyaywana_culture raw_material = fiber_crops}
 dainggatti = { topography = hills vegetation = forest climate = subtropical religion = dreamtime_religion culture = dainggatti_culture raw_material = millet natural_harbor_suitability = 0.00}
@@ -26148,7 +26141,7 @@ australia_highseas_67 = { topography = ocean climate = arid}
 australian_highseas_00 = { topography = ocean climate = tropical}
 australia_highseas_68 = { topography = ocean climate = tropical}
 faraway_bay = { topography = coastal_ocean climate = tropical}
-reveley_shore = { topography = coastal_ocean climate = arid}
+reveley_shore = { topography = coastal_ocean climate = hot_semi_arid}
 joseph_bonaparte_gulf = { topography = coastal_ocean climate = tropical}
 injin_coast = { topography = coastal_ocean climate = tropical}
 daly_river_mouth = { topography = coastal_ocean climate = tropical}
@@ -26170,11 +26163,11 @@ australia_highseas_6 = { topography = inland_sea climate = tropical}
 australia_highseas_4 = { topography = coastal_ocean climate = tropical}
 australia_highseas_10 = { topography = inland_sea climate = tropical}
 numbulwar_shore = { topography = inland_sea climate = tropical}
-pellew_islands_coast = { topography = inland_sea climate = arid}
+pellew_islands_coast = { topography = inland_sea climate = hot_semi_arid}
 calvert_coast = { topography = inland_sea climate = tropical}
 gangalidda_coast = { topography = inland_sea climate = tropical}
 carpentaria_gulf = { topography = inland_sea climate = tropical}
-karumba_coast = { topography = inland_sea climate = arid}
+karumba_coast = { topography = inland_sea climate = hot_semi_arid}
 duck_creek_shore = { topography = inland_sea climate = tropical}
 nassau_river_mouth = { topography = inland_sea climate = tropical}
 pormpuraaw_shore = { topography = inland_sea climate = tropical}
@@ -26268,10 +26261,10 @@ australia_highseas_39 = { topography = ocean climate = oceanic}
 australia_highseas_40 = { topography = ocean climate = oceanic}
 the_pages = { topography = coastal_ocean climate = cold_semi_arid}
 west_kangaroo_coast = { topography = coastal_ocean climate = cold_semi_arid}
-south_saint_vincent_gulf = { topography = inland_sea climate = cold_arid}
-north_saint_vincent_gulf = { topography = inland_sea climate = cold_arid}
-north_spencer_gulf = { topography = inland_sea climate = cold_arid}
-south_spencer_gulf = { topography = inland_sea climate = oceanic}
+south_saint_vincent_gulf = { topography = inland_sea climate = cold_semi_arid}
+north_saint_vincent_gulf = { topography = inland_sea climate = cold_semi_arid}
+north_spencer_gulf = { topography = inland_sea climate = cold_semi_arid}
+south_spencer_gulf = { topography = inland_sea climate = cold_semi_arid}
 coffin_bay = { topography = coastal_ocean climate = mediterranean}
 australia_highseas_41 = { topography = ocean climate = cold_semi_arid}
 australia_highseas_42 = { topography = ocean climate = cold_semi_arid}
@@ -28265,6 +28258,13 @@ pacific_north_current83 = { topography = deep_ocean climate = continental moveme
 pacific_north_current84 = { topography = deep_ocean climate = continental movement_assistance = { 78.56 25.27 }}
 pacific_north_current85 = { topography = deep_ocean climate = continental movement_assistance = { 78.56 25.27 }}
 chukchi_sea = { topography = ocean_wasteland climate = arctic}
+north_pacific_high_sea67 = { topography = deep_ocean climate = subpolar movement_assistance = { -90.16 4.98 }}
+north_pacific_high_sea47 = { topography = deep_ocean climate = subpolar movement_assistance = { -90.16 4.98 }}
+kongkok_bay = { topography = deep_ocean climate = subpolar movement_assistance = { -90.16 4.98 }}
+sevuokuk_point = { topography = deep_ocean climate = subpolar movement_assistance = { -90.16 4.98 }}
+north_pacific_high_sea42 = { topography = deep_ocean climate = subpolar movement_assistance = { -90.16 4.98 }}
+clarence_gulf = { topography = deep_ocean climate = subpolar movement_assistance = { -90.16 4.98 }}
+shishmarev_inlet = { topography = deep_ocean climate = subpolar movement_assistance = { -90.16 4.98 }}
 north_pacific_ocean = { topography = ocean_wasteland climate = oceanic}
 north_pacific_coast = { topography = coastal_ocean climate = arid}
 pacific_north_equatorial_current3 = { topography = deep_ocean climate = tropical movement_assistance = { -86.81 -20.00 }}

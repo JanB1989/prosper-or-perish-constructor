@@ -120,33 +120,47 @@ level_limit = 15
 local_migration_attraction = 0.3   # lakeshore settlement: fresh water, fish and easy transport
 local_defensive = 0.1              # the lake works as a moat
 
-# Hostile movement cost (2026-10-07, Jan): armies hostile to the location (at war with it, rebels, pirates) move slower
-# through rough home ground, the defender knows the paths. Classes add up; the worst stack on the map is +75 %
-# (mountains + jungle, wetlands + swamp + peat). Rivers, climate, fertility and shores carry none. Written into the
-# topography/vegetation class injects and the soil static modifiers (`ppc worldbuilder apply`).
+# The mod's own river effects, per engine river size (one value per river_flowing_through_1..5). `ppc worldbuilder apply`
+# sums them into its TRY_REPLACE of vanilla's river blocks (pp_00_wb_river_modifiers.txt); an inject into those blocks
+# would be ignored by the engine. Fish and irrigation caps and River Boatmen's Yard levels grow with the river; the free
+# building levels, build efficiency and construction speed are graphs/building_capacity/data/free_building_levels_sheet.csv's
+# river_level rows (tests/test_worldbuilder_stage.py keeps them equal; free_building_levels.py no longer compiles them).
+[worldbuilder.river_levels]
+fish_capacity_from_river_size = [1, 1, 2, 3, 4]
+irrigant_cap_modifier = [1, 2, 3, 4, 5]
+pp_river_boatmen_yard_cap_modifier = [3, 6, 9, 12, 15]
+free_building_levels = [3, 5, 7, 9, 12]
+local_build_buildings_efficiency = [0.1, 0.15, 0.2, 0.25, 0.3]
+local_construction_speed = [0.1, 0.15, 0.2, 0.25, 0.3]
+
+# Hostile movement cost (2026-10-07, Jan; x1.5 on 2026-10-16): armies hostile to the location (at war with its owner,
+# rebels, pirates) move slower through rough home ground, the defender knows the paths. Classes add up on top of the flat
+# +10 % on all land (location_base_values in pp_population_growth_and_food_adjustments.txt); worst location +107.5 %
+# (mountains + jungle + base). Map mean about +40 % (was +21 %). Rivers, climate, fertility and shores carry none. Written into
+# the topography/vegetation class injects and the soil static modifiers (`ppc worldbuilder apply`).
 [worldbuilder.hostile_movement.topography]
-mountains = 0.30
-mountain_wasteland = 0.30
-wetlands = 0.20
-hills = 0.15
-valleys = 0.15                     # passes and defiles
-plateau = 0.05
+mountains = 0.45
+mountain_wasteland = 0.45
+wetlands = 0.30
+hills = 0.20
+valleys = 0.20                     # passes and defiles
+plateau = 0.075
 
 [worldbuilder.hostile_movement.vegetation]
-jungle = 0.30
-swamp = 0.25
-marsh = 0.20
-thicket = 0.15
-forest = 0.15
-mixed_forest = 0.15
-coniferous_forest = 0.15
-dry_forest = 0.10
-desert = 0.10
-woods = 0.05
+jungle = 0.45
+swamp = 0.35
+marsh = 0.30
+thicket = 0.20
+forest = 0.20
+mixed_forest = 0.20
+coniferous_forest = 0.20
+dry_forest = 0.15
+desert = 0.15
+woods = 0.075
 
 [worldbuilder.hostile_movement.soil_type]
-peat = 0.10                        # bog ground
-clay = 0.05                        # mud in the wet season
+peat = 0.15                        # bog ground
+clay = 0.075                      # mud in the wet season
 
 [worldbuilder.buildings.map]
 # World Builder ledger type -> blueprint key
@@ -228,6 +242,24 @@ vanilla_files = [
   "in_game/events/DHE/flavor_ICE.txt",
   "in_game/events/DHE/flavor_ETH.txt",
   "in_game/events/DHE/flavor_ENG.txt",
+]
+# Vanilla objects the mod deletes: left out of the file's copy (written even without a widened test, else vanilla's
+# definition comes back). farming_village was split into the crop farms (2026-10-02) and deleted 2026-10-23 (Jan).
+removed_objects = { "in_game/common/building_types/rural_buildings.txt" = ["farming_village"] }
+
+# Exact replacements of vanilla references to deleted objects (fail when vanilla changes; on top of the widening).
+[[worldbuilder.compat.replacements]]
+# option c of the English farming event: any farm or orchard instead of the farming village
+file = "in_game/events/DHE/flavor_ENG.txt"
+replace = [
+  { find = "has_building_with_at_least_one_level = farming_village", with = "modifier:local_pp_farm_levels > 0", count = 1 },
+]
+
+[[worldbuilder.compat.replacements]]
+# town graphics: the peasant gathering meshes follow the crop farms instead of the farming village
+file = "main_menu/gfx/map/city_data/templates.txt"
+replace = [
+  { find = "has_building_with_at_least_one_level:farming_village = 1", with = "has_building_with_at_least_one_level:wheat_farm = 1\n\t\t\t\thas_building_with_at_least_one_level:rice_farm = 1\n\t\t\t\thas_building_with_at_least_one_level:millet_farm = 1\n\t\t\t\thas_building_with_at_least_one_level:maize_farm = 1\n\t\t\t\thas_building_with_at_least_one_level:legume_farm = 1\n\t\t\t\thas_building_with_at_least_one_level:potato_farm = 1\n\t\t\t\thas_building_with_at_least_one_level:olive_farm = 1\n\t\t\t\thas_building_with_at_least_one_level:cattle_farm = 1", count = 1 },
 ]
 
 [worldbuilder.navigation_scripts]
@@ -646,9 +678,6 @@ replace = [
 # savegame-driven food startup compiler. A farm never pushes a location over its cap: spare land = capacity - pops.
 keep_pops_within_capacity = true
 fill_improvements_to_pops = true      # starting improvement levels rise to their caps where the 1337 pops need the room
-# The 1337 works (World Builder starting levels) stand in full even above the cap: the engine keeps setup levels above
-# max_levels, they just cannot be extended (2026-10-05, Jan: China's past investment is its advantage).
-clamp_improvements_to_cap = false
 peasant_work_share = 0.6              # share of a location's peasants that may staff rural buildings at start
 max_farm_levels_per_location = 6
 food_target_ratio = 1.1               # province food supply aimed for, relative to what the pops eat
@@ -657,10 +686,8 @@ subsistence_pop_types = ["peasants", "laborers", "slaves"]
 max_cookshop_levels_per_location = 6
 # Victuals limits come from the live import/export scripted values.
 laborer_conversion_share = 0.5        # share of a location's peasants that may become the Cookshops' laborers
-# Vanilla setup buildings kept where the World Builder geography fails their location_potential (as the World Builder
-# test mod does): pp_wb_setup_<building>_location lists them (pp_wb_setup_buildings.txt) and each building's potential
-# tests it. irrigation_systems is not listed: an improvement building, its start levels come from the capacity model.
-keep_setup_buildings = ["terraces", "fruit_orchard", "tar_kiln", "lumber_mill"]
+# No setup exceptions (2026-10-23, Jan): a vanilla setup building that fails its building's rank, location_potential or
+# allow is removed from the setup (start_simulation drop_invalid); no building rule names start locations.
 [worldbuilder.start.processors]
 # raw material -> building placed at game start (its laborers are converted from local peasants); levels as before
 alum = { building = "alum_quarry", levels = 1 }
@@ -1132,8 +1159,21 @@ wine = ["winery", "winery_manufactory"]
 good = "logistics"
 input_cost = 3.0              # gold per level per method at default prices, manual_labor and floor goods at 1
 market_access = 0.10          # raw_modifier local_market_access per level
-gate_max_market_access = 0.85 # allow: market_access < this
+# allow: market_access < this. 2026-10-23 (Jan): 0.99 (was 0.85), buildable as soon as a location falls below full
+# access. Checked first: no war, occupation, blockade, devastation or plague term moves market access; the only timed
+# minus is vanilla's staple port stagnation event option; market changes move it (run 4c623702: drops below 0.99 ~1.5x
+# those below 0.85). One level lifts any location from 0.94 over the line; above 1.0 the bonus still raises the
+# location's place in the market's goods allocation order (unclamped access).
+gate_max_market_access = 0.99
 gate_min_building_levels = 15 # allow: total_building_levels >= this
+# One level at a time (2026-10-23, Jan): the AI started up to 3 levels of one logistics building in one location at once
+# (current game, 1387/1393), and the allow gate is checked only when a level starts, so a location just below the
+# line would have ended 2-3 levels over it. max_levels = levels built + 1 while no other logistics construction runs
+# in the location (script values generated into pp_logistics_level_caps.txt); the engine counts levels under
+# construction against max_levels, so the next level waits for the last and passes the gate again. level_caps clamps
+# the buildings that have a site limit (river size, harbour); the others had max_levels = 100.
+one_level_at_a_time = true
+level_caps = { river_boatmen_yard = "pp_river_boatmen_yard_max_level", coastal_shipping_office = "pp_coastal_shipping_office_max_level" }
 improved_method_bonus = 0.05  # extra output share on the improved (third) method
 network_output = 0.30         # logistics per level of the input-less network method (pure profit, no input cost)
 # AI urgency (2026-10-05, Jan): the engine's build score does not see market access, so a heavily built location at
@@ -1141,8 +1181,10 @@ network_output = 0.30         # logistics per level of the input-less network me
 # could stall. ppc logistics apply writes pp_logistics_urgency_weight (script_values/pp_logistics_urgency.txt) and adds
 # it flat (no income divide, like the food urgency) as each logistics building's ai_construct_weight:
 # urgency_per_level x building levels (steps of urgency_level_step, at most urgency_levels_cap) x the access gap below
-# gate_max_market_access as a share of it. 70 levels at 0.20 access -> 92; 15 levels at 0.75 -> 3.5; max 120 (the food
-# urgency's max is 90).
+# urgency_max_market_access as a share of it. 70 levels at 0.20 access -> 92; 15 levels at 0.75 -> 3.5; max 120 (the
+# food urgency's max is 90). Its line stays at 0.85 when the gate moved to 0.99 (2026-10-23, Jan): the AI is pushed
+# only where access really hurts, above it the buildings compete on profit.
+urgency_max_market_access = 0.85
 urgency_per_level = 2.0
 urgency_levels_cap = 60
 urgency_level_step = 5
@@ -1246,3 +1288,8 @@ province_food_share = { 0 = 1.0, 6 = 0.8, 12 = 0.65, 18 = 0.5, 24 = 0.4 }
 staple_per_province_food = -0.40
 staple_per_province_food_by_good = { fish = -0.20, fruit = -0.21, wild_game = -0.14, wool = -0.23, camels = -0.16 }
 
+
+[blockade_capacity]
+# Blockade capacity of every ship that is not a levy ship = vanilla x factor (2026-10-23, Jan). Written by
+# `uv run ppc blockade apply` into in_game/common/unit_types/pp_blockade_capacity.txt (blockade_capacity.py).
+factor = 10

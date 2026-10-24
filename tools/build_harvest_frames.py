@@ -10,6 +10,7 @@ exceptional). Average years use vanilla's neutral brown frame. Rerun after chang
 from pathlib import Path
 
 from PIL import Image, ImageOps
+from eu5_building_pipeline.dds import write_game_dds
 
 from prosper_or_perish_constructor.location_status import HARVEST_FRAMES, SEVERITY_COLOURS
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
@@ -32,7 +33,7 @@ def main() -> None:
     for severity, colour in SEVERITY_COLOURS.items():
         target = MOD / "in_game" / HARVEST_FRAMES.format(severity=severity)
         target.parent.mkdir(parents=True, exist_ok=True)
-        recolour(frame, colour).save(target, format="DDS", pixel_format="DXT5")
+        write_game_dds(recolour(frame, colour), target)   # DXT5 + full mips (eu5_building_pipeline.dds)
         print(target.relative_to(ROOT))
 
 

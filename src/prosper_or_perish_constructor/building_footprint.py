@@ -103,7 +103,9 @@ def validate(repo: Path, config: FootprintConfig, vanilla_root: Path | None) -> 
         elif name not in config.shares:
             errors.append(f"{path.name}: footprint class {name!r} is not in [{CONFIG_SECTION}.classes]")
     if vanilla_root is not None:
-        for key in sorted(set(vanilla_definitions(vanilla_root)) - set(classes)):
+        from prosper_or_perish_constructor.worldbuilder.compat import removed_vanilla_buildings
+
+        for key in sorted(set(vanilla_definitions(vanilla_root)) - set(classes) - removed_vanilla_buildings(repo)):
             errors.append(f"vanilla building {key} has no blueprint (add one with a footprint class)")
     return errors
 

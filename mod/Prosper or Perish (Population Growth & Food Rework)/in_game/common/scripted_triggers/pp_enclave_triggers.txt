@@ -30,6 +30,20 @@ pp_enclave_release_paused = {
 	}
 }
 
+# PP (2026-10-19, Jan), country scope: the country never lets enclaves go. Colonial nations hold scattered islands and
+# coasts by design, and their pieces became new vassals of the overlord: Jan's Portugal (1492) had 16 one-location
+# vassals in the Caribbean released by its colonial nations. No subject of a player either: the released land would
+# become the player's subjects without the player choosing it.
+pp_enclave_release_exempt = {
+	OR = {
+		AND = {
+			is_subject = yes
+			subject_type = subject_type:colonial_nation
+		}
+		overlord ?= { is_ai = no }
+	}
+}
+
 # PP (2026-10-13), country scope: the government allows tributaries (vanilla subject_types/tributary.txt
 # creation_visible without its Battle for the Strait case, whose check errors on a situation missing from the save).
 pp_can_hold_tributary = {

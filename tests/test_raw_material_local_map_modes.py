@@ -29,10 +29,8 @@ OBSOLETE_HELPER_FILES = (
     / "pp_local_output_map_mode_modifier_types_l_english.yml",
 )
 CALIBRATION = ROOT / "tools" / "map_mode_scale_calibration.json"
-ICON_DIRS = (
-    MOD_ROOT / "in_game" / "gfx" / "interface" / "icons" / "map_modes",
-    MOD_ROOT / "main_menu" / "gfx" / "interface" / "icons" / "map_modes",
-)
+# map mode picker icons live only in main_menu (docs/mod_authoring_rules.md)
+ICON_DIRS = (MOD_ROOT / "main_menu" / "gfx" / "interface" / "icons" / "map_modes",)
 
 
 def _raw_material_goods() -> list[str]:
@@ -209,7 +207,6 @@ def test_local_output_map_modes_have_required_localization() -> None:
         keys = [
             f"mapmode_pp_local_{good}_output_modifier_name",
             f"MAPMODE_PP_LOCAL_{upper}_OUTPUT_MODIFIER",
-            f"MAPMODE_PP_LOCAL_{upper}_OUTPUT_MODIFIER_TT_LAND",
             f"MAPMODE_PP_LOCAL_{upper}_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN",
             f"PP_LOCAL_{upper}_OUTPUT_MODIFIER_LOCATION_POTENTIAL_TT",
             f"PP_LOCAL_{upper}_OUTPUT_MODIFIER_RGO_BONUS_TT",
@@ -559,7 +556,7 @@ def test_local_output_map_mode_localization_uses_literal_newlines() -> None:
     assert not bad_lines
 
 
-def test_local_output_map_modes_have_icons_in_both_contexts() -> None:
+def test_local_output_map_modes_have_icons_in_main_menu_only() -> None:
     missing: list[str] = []
     for good in _raw_material_goods():
         filename = f"pp_local_{good}_output_modifier.dds"

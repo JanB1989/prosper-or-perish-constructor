@@ -88,9 +88,14 @@ def test_food_storage_gui_compiler_tracks_growth_cap_define(
     localization = (mod_root / food_storage_gui.FOOD_STORAGE_LOCALIZATION).read_text(
         encoding="utf-8-sig"
     )
-    assert "EFFECTS_FROM_STORAGE" in localization
-    assert "maximum of #Y 42#! Months" in localization
-    assert "maximum of #Y 120#! Months" not in localization
+    # EFFECTS_FROM_STORAGE is a vanilla key, so it is written to localization/replace
+    replace = (mod_root / food_storage_gui.FOOD_STORAGE_REPLACE_LOCALIZATION).read_text(
+        encoding="utf-8-sig"
+    )
+    assert "EFFECTS_FROM_STORAGE" not in localization
+    assert "EFFECTS_FROM_STORAGE" in replace
+    assert "maximum of #Y 42#! Months" in replace
+    assert "maximum of #Y 120#! Months" not in replace
     assert 'MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_LOW: "10.5 months"' in localization
     assert 'MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_MODERATE: "21 months"' in localization
     assert 'MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_HIGH: "31.5 months"' in localization

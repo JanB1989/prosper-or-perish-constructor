@@ -92,6 +92,12 @@ def build_europedia_payload(mod_root: Path) -> dict[str, Any]:
         raise EuropediaExportError(f"No custom Europedia cards found in {gui_path}")
 
     localization = _read_localization(localization_path)
+    # card texts may live in other English files too (the harvest texts the Seasonal Harvests standalone mod shares,
+    # vanilla keys in localization/replace)
+    for path in sorted((mod_root / "main_menu" / "localization").rglob("*_l_english.yml")):
+        if path != localization_path:
+            for key, value in _read_localization(path).items():
+                localization.setdefault(key, value)
     concepts = _read_concepts(concepts_root, mod_root)
     filter_labels = _extract_filter_labels(gui_path.read_text(encoding="utf-8-sig"))
 

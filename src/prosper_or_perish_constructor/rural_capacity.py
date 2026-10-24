@@ -80,19 +80,6 @@ FOREST_CAP_BUILDINGS = (
     "water_sawmill",
     "lumber_mill_improved",
 )
-FARM_WATER_CONTROL_BUILDINGS = (
-    ("land_clearance", "0.60"),
-    ("field_drainage", "0.60"),
-    ("irrigation_systems", "0.60"),
-    ("irrigation_reservoirs", "0.60"),
-    ("qanats", "0.60"),
-    ("irrigated_fields", "0.60"),
-    ("bund", "0.60"),
-    ("terraces", "0.60"),
-    ("polders", "0.60"),
-    ("khmer_baray", "0.60"),
-    ("aqueduct_system", "2"),
-)
 
 
 def capacity_max_omitted_buildings_by_building(
@@ -142,5 +129,6 @@ def capacity_max_omitted_buildings_by_building(
     return omissions
 
 
-def farm_capacity_modifier_for_building(building: str) -> str:
-    return f"farm_capacity_from_{building}"
+def farm_level_counter_for_building(building: str) -> str:
+    """The farm's own level counter (raw_modifier, +1 per standing level): its max level adds its levels back."""
+    return f"pp_levels_{building}"

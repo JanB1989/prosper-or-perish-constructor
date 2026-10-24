@@ -1,0 +1,54 @@
+﻿# Food purchase efficiency does nothing in PP (markets hold no food). The debate modifiers that gave it are cancelled
+# and get a live food modifier instead (2026-10-17, Jan).
+
+# Peasants: expand the food stockpiles -> more store room while debated.
+TRY_INJECT:expand_food_stockpiles = {
+	modifier_when_in_debate = {
+		food_purchase_efficiency = -1 # cancels vanilla's +1
+		global_food_capacity = 20
+	}
+}
+
+# Delhi famine relief: vanilla read market food, which is always 0 in PP (the issue was open whenever the flag stood and
+# its effect picked markets at random). Now it reads the provinces' own stores.
+TRY_REPLACE:dlh_famine_reductions = {
+	estate = peasants_estate
+
+	modifier_when_in_debate = {
+		global_food_decay = -0.001 # was food_purchase_efficiency = 0.5
+	}
+	allow = {
+		OR = {
+			any_cabinet_character ?= {
+				has_variable = dlh_famine_reduction_flag
+			}
+			ruler_or_regent ?= {
+				has_variable = dlh_famine_reduction_flag
+			}
+		}
+		any_province = { province_food_percentage < 0.5 }
+	}
+	on_debate_passed = {
+		add_estate_satisfaction = {
+			type = estate_type:peasants_estate
+			value = estate_satisfaction_mild_bonus
+		}
+		ordered_province = {
+			limit = { province_food_percentage < 0.5 }
+			order_by = {
+				value = province_food_percentage
+				multiply = -1
+			}
+			max = 4
+			add_province_modifier = {
+				modifier = expanded_food_production_modifier
+				years = modifier_duration_years_long
+				mode = replace
+			}
+		}
+	}
+	on_debate_failed = {
+		parliament_debate_failed_effect = yes
+	}
+	chance = 25
+}

@@ -24,7 +24,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = 100
+    max_levels = pp_carrier_inn_logistics_max_level
     increase_per_level_cost = 0.25
     pop_type = laborers
     employment_size = 1
@@ -45,7 +45,7 @@ building:
       NOT = { pp_logistics_zone_any = yes }
     }
     allow = {
-      market_access < 0.85
+      market_access < 0.99
       total_building_levels >= 15
     }
     construction_demand = pp_carrier_inn_construction

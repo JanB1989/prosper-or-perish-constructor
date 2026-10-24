@@ -234,6 +234,72 @@ def dominant_cultures(pops: Mapping[str, list[Pop]]) -> dict[str, str]:
     return result
 
 
+def dominant_religions(pops: Mapping[str, list[Pop]]) -> dict[str, str]:
+    """The religion with the most people in each location (all pop types)."""
+    result = {}
+    for tag, groups in pops.items():
+        totals: dict[str, float] = defaultdict(float)
+        for pop in groups:
+            totals[pop.religion] += pop.size_k
+        if totals:
+            result[tag] = max(sorted(totals), key=totals.get)
+    return result
+
+
+def load_integration(vanilla_root: Path, mod_root: Path) -> dict[str, str]:
+    """location tag -> its integration with its owner at game start, from the countries setup's own_* lists
+    (own_control_core / own_core -> core, own_control_integrated -> integrated, own_control_conquered -> conquered,
+    own_control_colony -> colony)."""
+    from eu5gameparser.clausewitz.parser import parse_file
+    from eu5gameparser.clausewitz.syntax import CList
+
+    levels: dict[str, str] = {}
+
+    def countries_of(node):
+        for entry in node.entries:
+            if entry.key == "countries" and isinstance(entry.value, CList):
+                yield from countries_of(entry.value)
+            elif isinstance(entry.value, CList):
+                yield entry
+
+    for path in setup_files(vanilla_root, mod_root, "10_countries.txt"):
+        for countries in parse_file(path).values("countries"):
+            if isinstance(countries, CList):
+                for country in countries_of(countries):
+                    for entry in country.value.entries:
+                        name = str(entry.key)
+                        if isinstance(entry.value, CList) and name.startswith("own_"):
+                            level = name.removeprefix("own_").removeprefix("control_")
+                            for item in entry.value.items:
+                                if isinstance(item, str):
+                                    levels.setdefault(item, level)
+    return levels
+
+
+def load_capitals(vanilla_root: Path, mod_root: Path) -> dict[str, str]:
+    """country tag -> its capital at game start (the countries setup's ``capital``; c:TAG.capital, is_capital)."""
+    from eu5gameparser.clausewitz.parser import parse_file
+    from eu5gameparser.clausewitz.syntax import CList
+
+    capitals: dict[str, str] = {}
+
+    def countries_of(node):
+        for entry in node.entries:
+            if entry.key == "countries" and isinstance(entry.value, CList):
+                yield from countries_of(entry.value)
+            elif isinstance(entry.value, CList):
+                yield entry
+
+    for path in setup_files(vanilla_root, mod_root, "10_countries.txt"):
+        for countries in parse_file(path).values("countries"):
+            if isinstance(countries, CList):
+                for country in countries_of(countries):
+                    capital = next(iter(country.value.values("capital")), None)
+                    if isinstance(capital, str):
+                        capitals.setdefault(str(country.key), capital)
+    return capitals
+
+
 def load_owners(vanilla_root: Path, mod_root: Path) -> dict[str, str]:
     """location tag -> owning country tag at game start: the countries setup's own_* location lists.
 

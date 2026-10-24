@@ -13,7 +13,6 @@ TRY_REPLACE:mazalim_court_bureaucracy = {
 	}
 
 	estates_that_like = {
-		crown_estate
 		burghers_estate
 		peasants_estate
 	}
@@ -23,7 +22,7 @@ TRY_REPLACE:mazalim_court_bureaucracy = {
 
 	#neutral
 	neutral_modifier = {
-		monthly_legitimacy = 0.05
+		monthly_legitimacy = 0.1
 	}
 
 	#positive
@@ -31,7 +30,7 @@ TRY_REPLACE:mazalim_court_bureaucracy = {
 		scale = {
 			value = scope:maintenance
 		}
-		global_max_control = 0.05
+		global_monthly_control = 0.005
 		monthly_towards_jurisprudence = societal_value_monthly_move
 	}
 
@@ -45,7 +44,7 @@ TRY_REPLACE:mazalim_court_bureaucracy = {
 				multiply = 0.8
 			}
 		}
-		nobles_estate_target_satisfaction = -0.1
+		nobles_estate_target_satisfaction = -0.05
 		monthly_towards_mysticism = societal_value_monthly_move
 	}
 }

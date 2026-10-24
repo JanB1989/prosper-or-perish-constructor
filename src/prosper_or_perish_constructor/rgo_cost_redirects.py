@@ -282,9 +282,16 @@ def write_rgo_cost_redirect_files(
     for (scope, collection, top_key), patches_by_path in sorted(grouped.items()):
         if profile is not None and (scope, collection) not in mod_replaced:
             mod_replaced[(scope, collection)] = _mod_replaced_keys(profile, scope, collection)
-        # The engine ignores an inject into a block a mod replaced: such entries are rewritten whole, like the
-        # collections that take no nested inject.
-        if collection in RGO_COST_REDIRECT_REPLACE_COLLECTIONS or top_key in mod_replaced.get((scope, collection), ()):
+        # The engine ignores an inject into a block a mod replaced, and a second replace would make two owners of the
+        # block: a block the mod replaces by hand carries its redirect by hand (Pasture Access, Efficient Mining).
+        if top_key in mod_replaced.get((scope, collection), ()):
+            source = _replacement_source_record(_merged_entry_for_key(profile, scope, collection, top_key))
+            raise ValueError(
+                f"{scope}/{collection}/{top_key} is replaced by the mod ({source.file if source else '?'}) and still "
+                f"carries an expand_rgo_*_cost_modifier: redirect it by hand in that replace "
+                f"({RGO_COST_REDIRECT_FALLBACK_MODIFIER} = half the cost modifier, sign flipped)"
+            )
+        if collection in RGO_COST_REDIRECT_REPLACE_COLLECTIONS:
             if profile is None:
                 raise ValueError(
                     f"profile is required to generate {collection} cost redirects"
@@ -319,6 +326,7 @@ def write_rgo_cost_redirect_files(
             leaf_entries.extend(
                 RGO_REDIRECT_COMPENSATIONS.get((scope, collection, top_key, path), ())
             )
+            leaf_entries = _sum_same_keys(leaf_entries)
             if leaf_entries:
                 _append_nested_patch(body, path, leaf_entries, indent=1)
                 patch_count += 1
@@ -401,40 +409,55 @@ def _render_source_replacement_block(
     block_lines = list(source_lines[start_index : end_index + 1])
     block_lines[0] = _replace_top_level_key(block_lines[0], top_key)
 
-    replacements: dict[int, list[str]] = {}
-    for patch_assignments in patches_by_path.values():
-        for assignment in patch_assignments:
-            if Path(assignment.source_file) != source_path:
-                raise ValueError(
-                    "Cannot rewrite redirect across source files: "
-                    f"{top_key} is in {source_path}, assignment is in {assignment.source_file}"
-                )
-            line_index = assignment.source_line - source.line
-            try:
-                source_line = block_lines[line_index]
-            except IndexError as error:
-                raise ValueError(
-                    f"Source line {assignment.source_line} for {assignment.modifier} "
-                    f"is outside {source_path}:{source.line}"
-                ) from error
-            if assignment.modifier not in source_line:
-                raise ValueError(
-                    f"Expected {assignment.modifier} at {source_path}:{assignment.source_line}"
-                )
-            indent = re.match(r"\s*", source_line).group(0)
-            replacements[line_index] = [
-                f"{indent}{modifier_key} = {_format_number(modifier_value)}"
-                for modifier_key, modifier_value in _substitute_modifier_entries(
-                    method=assignment.method,
-                    value=assignment.value,
-                    modifiers_by_method=modifiers_by_method,
-                )
-            ]
+    # Two redirected lines in one block would write the same modifier twice: the second adds to the first instead.
+    enclosing = _enclosing_block_starts(block_lines)
+    replacements: dict[int, list[tuple[str, Decimal]]] = {}
+    first_line: dict[tuple[int | None, str], int] = {}
+    ordered = sorted(
+        (assignment for patch_assignments in patches_by_path.values() for assignment in patch_assignments),
+        key=lambda assignment: assignment.source_line,
+    )
+    for assignment in ordered:
+        if Path(assignment.source_file) != source_path:
+            raise ValueError(
+                "Cannot rewrite redirect across source files: "
+                f"{top_key} is in {source_path}, assignment is in {assignment.source_file}"
+            )
+        line_index = assignment.source_line - source.line
+        try:
+            source_line = block_lines[line_index]
+        except IndexError as error:
+            raise ValueError(
+                f"Source line {assignment.source_line} for {assignment.modifier} "
+                f"is outside {source_path}:{source.line}"
+            ) from error
+        if assignment.modifier not in source_line:
+            raise ValueError(
+                f"Expected {assignment.modifier} at {source_path}:{assignment.source_line}"
+            )
+        replacements[line_index] = []
+        for modifier_key, modifier_value in _substitute_modifier_entries(
+            method=assignment.method,
+            value=assignment.value,
+            modifiers_by_method=modifiers_by_method,
+        ):
+            slot = (enclosing[line_index], modifier_key)
+            if slot in first_line:
+                owner = replacements[first_line[slot]]
+                position = next(i for i, (key, _) in enumerate(owner) if key == modifier_key)
+                owner[position] = (modifier_key, owner[position][1] + Decimal(str(modifier_value)))
+            else:
+                first_line[slot] = line_index
+                replacements[line_index].append((modifier_key, Decimal(str(modifier_value))))
 
     rendered: list[str] = []
     for index, line in enumerate(block_lines):
         if index in replacements:
-            rendered.extend(replacements[index])
+            indent = re.match(r"\s*", line).group(0)
+            rendered.extend(
+                f"{indent}{modifier_key} = {_format_number(float(modifier_value))}"
+                for modifier_key, modifier_value in replacements[index]
+            )
         else:
             rendered.append(line)
     extra = [f"	{key} = {_format_number(value)}" for key, value in compensations]
@@ -477,6 +500,28 @@ def _entry_key(raw_key: str) -> str:
 
 def _is_generated_redirect_path(path: str | Path) -> bool:
     return Path(path).name == RGO_COST_REDIRECT_FILE
+
+
+def _enclosing_block_starts(lines: list[str]) -> list[int | None]:
+    """For each line, the index of the line that opened its innermost enclosing block."""
+    stack: list[int] = []
+    enclosing: list[int | None] = []
+    for index, line in enumerate(lines):
+        enclosing.append(stack[-1] if stack else None)
+        for char in line.split("#", 1)[0]:
+            if char == "{":
+                stack.append(index)
+            elif char == "}" and stack:
+                stack.pop()
+    return enclosing
+
+
+def _sum_same_keys(entries: Iterable[tuple[str, float]]) -> list[tuple[str, float]]:
+    """One line per modifier: same-key values add up (in the first one's place), as the engine would sum them."""
+    totals: dict[str, Decimal] = {}
+    for key, value in entries:
+        totals[key] = totals.get(key, Decimal(0)) + Decimal(str(value))
+    return [(key, float(total)) for key, total in totals.items()]
 
 
 def _find_block_end(lines: list[str], start_index: int) -> int:

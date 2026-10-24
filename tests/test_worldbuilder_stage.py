@@ -161,13 +161,10 @@ def test_cap_group_members_share_one_cap_and_keep_their_1337_works(tmp_path):
         block = text.split(f"pp_wb_cap_{key} = {{")[1].split("\n}")[0]
         assert "value = pp_wb_cap_water_shared" in block and all(f"modifier:pp_wb_levels_{o}" in block for o in others)
     assert caps["bund"]["group"] == "water" and caps["baray_x"]["group"] == "water" and caps["baray_x"]["shared"]
-    # 1337 works above the cap stand in full unless clamp_improvements_to_cap
-    keep = dataclasses.replace(cfg, raw={"start": {"clamp_improvements_to_cap": False}})
-    out = wb_buildings.write_setup(c, keep, caps, {"a": "SWE"}, tmp_path)
-    rows = (tmp_path / wb_buildings.SETUP_PATH).read_text(encoding="utf-8-sig")
-    assert "bund = { tag = SWE level = 5 location = a }" in rows and out["clamped_to_cap"] == 0 and out["starting_works_above_cap"] == 1
-    wb_buildings.write_setup(c, cfg, caps, {"a": "SWE"}, tmp_path)
+    # 1337 works above the cap stop at the cap: no building stands above its cap (2026-10-24, Jan)
+    out = wb_buildings.write_setup(c, cfg, caps, {"a": "SWE"}, tmp_path)
     assert "bund = { tag = SWE level = 3 location = a }" in (tmp_path / wb_buildings.SETUP_PATH).read_text(encoding="utf-8-sig")
+    assert out["clamped_to_cap"] == 1 and "starting_works_above_cap" not in out
 
 
 def test_niche_blueprint_gets_lock_gate_counter_and_must_be_replace(tmp_path):
@@ -401,6 +398,31 @@ def test_compat_copy_leaves_replaced_objects_alone_and_never_undoes_earlier_over
     assert report["files"] == 1 and "OR = { vegetation = sparse vegetation = ha1300_veg_scrubland }" in (folder / "unique_buildings.txt").read_text(encoding="utf-8")
 
 
+def test_compat_removes_deleted_vanilla_objects_and_rewrites_their_references(tmp_path):
+    from prosper_or_perish_constructor.worldbuilder import compat as wb_compat
+
+    fam = {"vegetation": {}, "climate": {}, "topography": {}}
+    rel = "in_game/common/building_types/rural_buildings.txt"
+    ref = "in_game/events/flavor.txt"
+    vanilla = tmp_path / "vanilla" / "game"
+    (vanilla / rel).parent.mkdir(parents=True)
+    (vanilla / ref).parent.mkdir(parents=True)
+    (vanilla / rel).write_text("village = {\n\tmax_levels = 5\n}\nmine = {\n\tmax_levels = 2\n}\n", encoding="utf-8")
+    (vanilla / ref).write_text("e = { trigger = { has_building = village } }\n", encoding="utf-8")
+    mod = tmp_path / "mod"
+    # nothing to widen, but the copy is written: without it the vanilla definition would come back
+    report = wb_compat.write_compat_patches(vanilla.parent, mod, tmp_path, fam, [rel], {rel: ["village"]},
+                                            {ref: [("has_building = village", "has_building = mine", 1)]})
+    assert report["files"] == 2
+    copy = (mod / rel).read_text(encoding="utf-8-sig")
+    assert [n for n, _, _ in wb_compat.top_level_objects(copy)] == ["mine"]
+    assert "has_building = mine" in (mod / ref).read_text(encoding="utf-8-sig")
+    with pytest.raises(ValueError, match="objects to remove not found: gone"):
+        wb_compat.write_compat_patches(vanilla.parent, mod, tmp_path, fam, [rel], {rel: ["gone"]})
+    with pytest.raises(ValueError, match="expected 1 occurrence"):
+        wb_compat.write_compat_patches(vanilla.parent, mod, tmp_path, fam, [], None, {ref: [("has_building = farm", "x", 1)]})
+
+
 def test_population_capacity_cell_bands_the_gauge_and_names_both_sides_of_the_ratio():
     from prosper_or_perish_constructor import location_view as wb_geography
 
@@ -493,20 +515,56 @@ def test_development_row_from_the_handover(tmp_path):
     assert "local_population_capacity" not in block and "no population capacity from development" in block
 
 
-def test_river_replacements_fold_in_the_hand_authored_injects(tmp_path):
+def test_river_replacements_fold_in_the_configured_river_levels(tmp_path):
+    import dataclasses
+
     c = _contract(tmp_path)
     vanilla = tmp_path / "vanilla"
     (vanilla / "game/main_menu/common/static_modifiers").mkdir(parents=True)
-    (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("river_flowing_through_2 = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n\tlocal_population_capacity_modifier = 0.2\n\tlocal_monthly_food_modifier = 0.10\n\tlocal_supply_limit_modifier = 0.10\n}\n", encoding="utf-8")
+    (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("river_flowing_through_1 = {\n\tlocal_population_capacity_modifier = 0.1\n}\nriver_flowing_through_2 = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n\tlocal_population_capacity_modifier = 0.2\n\tlocal_monthly_food_modifier = 0.10\n\tlocal_supply_limit_modifier = 0.10\n}\n", encoding="utf-8")
     adj = tmp_path / wb_modifiers.ADJUSTMENTS_PATH
     adj.parent.mkdir(parents=True, exist_ok=True)
-    adj.write_text("TRY_REPLACE:development = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n}\n\nTRY_INJECT:river_flowing_through_2 = {\n\tlocal_population_capacity_modifier = -0.2\n\tfish_capacity_from_river_size = 1\n\tfree_building_levels = 15\n\tlocal_supply_limit_modifier = 0.05 # vanilla 0.10\n}\n", encoding="utf-8")
-    wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla)
+    adj.write_text("TRY_REPLACE:development = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n}\n", encoding="utf-8")
+    levels = {"fish_capacity_from_river_size": [1, 1], "free_building_levels": [3, 15], "local_supply_limit_modifier": [0.0, 0.05]}
+    cfg = dataclasses.replace(_cfg(tmp_path), raw={"river_levels": levels})
+    wb_modifiers.write_static_modifiers(c, cfg, tmp_path, vanilla)
     text = (tmp_path / wb_modifiers.RIVER_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
     block = text[text.index("TRY_REPLACE:river_flowing_through_2"):]
     assert "free_building_levels = 15" in block and "fish_capacity_from_river_size = 1" in block
-    assert "local_supply_limit_modifier = 0.15" in block            # vanilla 0.10 + the additive inject 0.05
+    assert "local_supply_limit_modifier = 0.15" in block            # vanilla 0.10 + the configured 0.05
     assert "local_population_capacity_modifier" not in block and "local_monthly_food_modifier" not in block
+    for bad in ({"local_monthly_food_modifier": [0.1, 0.1]}, {"free_building_levels": [1, 2, 3]}):
+        with pytest.raises(ValueError):
+            wb_modifiers.write_static_modifiers(c, dataclasses.replace(cfg, raw={"river_levels": bad}), tmp_path, vanilla)
+
+
+def test_river_levels_live_in_config_not_in_ignored_injects() -> None:
+    # The engine ignores an inject into the blocks the World Builder replaces (verified 2026-09-21), so the mod's river
+    # effects are config; the free building levels, efficiency and speed stay equal to the weights sheet's river rows.
+    import re
+    import tomllib
+
+    from prosper_or_perish_constructor.free_building_levels import (
+        STATIC_MODIFIER_FACTORS_NOT_COMPILED,
+        read_local_free_building_level_sheet_csv,
+    )
+
+    repo = Path(__file__).resolve().parents[1]
+    mod = repo / "mod/Prosper or Perish (Population Growth & Food Rework)"
+    adjustments = (mod / wb_modifiers.ADJUSTMENTS_PATH).read_text(encoding="utf-8-sig")
+    assert "river_flowing_through" not in "\n".join(l.split("#", 1)[0] for l in adjustments.splitlines())
+    assert "river_level" in STATIC_MODIFIER_FACTORS_NOT_COMPILED
+    levels = tomllib.loads((repo / "constructor.toml").read_text(encoding="utf-8"))["worldbuilder"]["river_levels"]
+    sheet = read_local_free_building_level_sheet_csv(repo=repo).filter(pl.col("factor") == "river_level")
+    for key in ("free_building_levels", "local_build_buildings_efficiency", "local_construction_speed"):
+        by_level = {int(v): float(x) for v, x in sheet.select("value", key).iter_rows() if int(v) > 0}
+        assert [float(x) for x in levels[key]] == [by_level[level] for level in sorted(by_level)], key
+    river = (mod / wb_modifiers.RIVER_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
+    for level, lines in wb_modifiers.river_level_lines(levels).items():
+        block = river[river.index(f"TRY_REPLACE:river_flowing_through_{level} = {{"):].split("\n}")[0]
+        for line in lines:
+            key = line.split(" = ")[0]
+            assert re.search(rf"^\t{key} = ", block, re.M), (level, key)
 
 
 def test_rgo_chip_lists_the_bonus_of_the_location_raw_material_only():
@@ -659,4 +717,4 @@ def test_hostile_movement_config_matches_the_handover_classes():
     repo = Path(__file__).resolve().parents[1]
     config = tomllib.loads((repo / "constructor.toml").read_text(encoding="utf-8"))["worldbuilder"]["hostile_movement"]
     assert set(config) == {"topography", "vegetation", "soil_type"}   # never rivers (Jan, 2026-10-07)
-    assert all(0 < v <= 0.30 for classes in config.values() for v in classes.values())
+    assert all(0 < v <= 0.45 for classes in config.values() for v in classes.values())   # x1.5 on 2026-10-16 (Jan)

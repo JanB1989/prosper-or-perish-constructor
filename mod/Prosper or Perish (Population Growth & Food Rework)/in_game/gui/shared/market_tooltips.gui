@@ -310,7 +310,7 @@ template market_top_merchants_details {
 			blockoverride "column_title_left" { expand = {} }
 			blockoverride "field_left" { expand = {} }
 			blockoverride "field_text" { 
-				raw_text = "[Merchant.GetTotalTradeProfit|+=2]@gold!" 
+				raw_text = "[Merchant.GetProjectedTradeProfit|2+=]@gold!"
 				tooltipwidget = {
 					datacontext = "[Merchant]"
 					ContextualTooltipType = {

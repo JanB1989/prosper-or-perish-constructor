@@ -10,4 +10,4 @@ Place the `Prosper or Perish Seasonal Harvests` folder in your Europa Universali
 
 ## Version
 
-1.0.0 — compatible with EU5 1.3.11.
+1.1.0 — compatible with EU5 1.4. Built from the Prosper or Perish harvest files, so the two mods can be loaded together: the files and texts of the same name replace each other and nothing loads twice.

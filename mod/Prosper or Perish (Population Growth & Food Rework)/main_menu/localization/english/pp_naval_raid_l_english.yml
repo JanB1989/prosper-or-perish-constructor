@@ -1,0 +1,27 @@
+﻿l_english:
+ cb_pp_naval_raid: "Sea Raid"
+ cb_pp_naval_raid_desc: "Our [privateers|e] already prey on their shipping. Now our fleets will close their harbours and plunder their coasts until they pay for peace on the sea."
+ war_goal_pp_naval_raid: "Command the Sea"
+ war_goal_pp_naval_raid_desc: "[war_goal|e] is to command the sea. Get bonus [war_score|e] from winning naval battles. If we [blockade|e] a port (and our opponent is not) we will receive a ticking [war_score|e]. Navies at war can carry out Coastal Raids on enemy shores."
+ pp_naval_raid_target_tt: "Our [privateers|e] sail in a sea area that borders their coast"
+ PP_NAVAL_RAID_WAR_NAME: "The $NUM$$ORDER$ Sea Raid of $FIRSTNAME$ against $SECONDNAME$"
+
+ pp_peace_open_harbours: "Open Harbours"
+ pp_peace_open_harbours_desc: "Their harbours will lie open to our merchants, and their [locations|e] will be drawn to our [markets|e]."
+ pp_peace_open_harbours_entry: "[TARGET_COUNTRY.GetNameWithFlag] opens its harbours to our [markets|e]"
+ pp_peace_open_harbours_entry_short: "Open Harbours of [TARGET_COUNTRY.GetNameWithFlagWithNoTooltip]"
+ pp_peace_sack_market: "Sack [target_market.GetName]"
+ pp_peace_sack_market_desc: "We will burn their warehouses and scatter their traders. The [market|e] will be no more."
+ pp_peace_sack_market_group: "Sack [target_market.GetName] of [TARGET_COUNTRY.GetNameWithFlag]"
+ pp_peace_sack_market_group_short: "Sack [target_market.GetName] of [TARGET_COUNTRY.GetNameWithFlagWithNoTooltip]"
+ pp_peace_sack_market_entry: "Destroy the [market|e] of [target_market.GetName]"
+ pp_peace_sack_market_entry_short: "Sack [target_market.GetName]"
+ pp_peace_sack_market_select_market: "Select the coastal [market|e] to sack:"
+ pp_peace_sack_market_no_markets: "They hold no coastal [market|e]."
+
+ pp_open_harbours_relation: "Open Harbours"
+ pp_open_harbours_relation_desc: "A [country|e] must let another country's [markets|e] draw in its [locations|e], imposed at the end of a Sea Raid."
+
+ pp_coastal_raid: "Coastal Raid"
+ pp_coastal_raid_desc: "Wherever this fleet sails along an enemy shore of our Sea Raid, its sailors land, burn what they cannot carry and carry off captives to be sold as slaves at home."
+ pp_coastal_raid_cta: "Click to start or stop raiding enemy coasts"

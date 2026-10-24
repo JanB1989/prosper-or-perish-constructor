@@ -1,0 +1,24 @@
+﻿# Relations forced by the PP Sea Raid treaties (pp_naval_raid_treaties.txt); first = winner, second = loser. They are
+# created for a fixed time by the treaty (create_relation years) and cannot be offered, requested or broken by hand.
+
+# Open Harbours: the winner's markets pull the loser's locations like vanilla Preferred Market Access (trade_access).
+pp_open_harbours = {
+	type = diplomacy
+	relation_type = oneway
+	break_on_war = yes
+	annulled_by_peace_treaty = yes
+	relation_type_for_ai = hostile
+	lifts_trade_protection = yes
+	trade_to_first = 0.2
+	category = {
+		offer = CATEGORY_ECONOMY_ACTIONS
+		request = CATEGORY_ECONOMY_ACTIONS
+		break = CATEGORY_ECONOMY_ACTIONS
+		cancellation = CATEGORY_ECONOMY_ACTIONS
+	}
+
+	offer_visible = { always = no }
+	request_visible = { always = no }
+	cancel_visible = { always = no }
+	break_visible = { always = no }
+}

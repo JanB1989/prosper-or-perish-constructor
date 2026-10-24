@@ -124,8 +124,11 @@
   right, but vanilla Bergslag does not check for it (one way, like every PP right); mining charter and the Bergregal
   rights may stack with it in a city with two slots. Icon: `assets/town_right_drawings/goods/iron.py` (blast
   furnace, pick and hammer; rights frame only, `LINES` in `render.py`).
-- Trade buildings: merchants' quarters, customs house, entrepot need Printing Press embraced; grand marketplace,
-  commerce centre, trading hub, clearing house, stock exchange need Global Trade (`allow`, owner). Merchant capacity per
+- Trade buildings: no institution gates. Rule (Jan, 2026-10-19): a building an advance unlocks never needs an
+  institution on top; once researched, it can be built (`tests/test_trade_building_gates.py` checks every loaded
+  building type, vanilla and mod, scripted triggers included). The Printing Press / Global Trade gates of 2026-10-06 on
+  merchants' quarters, trading hub, customs house, grand marketplace, stock exchange, commerce centre, clearing house
+  and entrepot left researched buildings unbuildable for up to an age and are gone (2026-10-18/19). Merchant capacity per
   level: merchants' quarters 1.8 (+20 %), grand marketplace 3 (+50 %), commerce centre 7.2 (+80 %), added to vanilla's
   line; their AI weight is 200 where the predecessor stands + 100 at the market centre, / (owner income + 10).
 - Also: `rural_building_cap` development term 0.15 -> 0.25 (mines, quarries, rural works); decentralization
@@ -272,8 +275,15 @@
   access ranked its logistics buildings like any small earner and could stall. `ppc logistics apply` writes
   `pp_logistics_urgency_weight` (`in_game/common/script_values/pp_logistics_urgency.txt`, generated) from `[logistics]`
   `urgency_per_level` x building levels (steps of `urgency_level_step`, at most `urgency_levels_cap`) x the access gap
-  below `gate_max_market_access` as a share of it, and makes it every logistics building's flat `ai_construct_weight`
-  (no income divide, like the food urgency; 70 levels at 0.20 -> 92, max 120). Edits to logistics.py rerun the start
+  below `urgency_max_market_access` (0.85) as a share of it, and makes it every logistics building's flat
+  `ai_construct_weight` (no income divide, like the food urgency; 70 levels at 0.20 -> 92, max 120). Since 2026-10-23
+  (Jan) the build gate `gate_max_market_access` is 0.99, so a location may build logistics as soon as it drops below full
+  access, while the urgency still pushes the AI only below 0.85. One level at a time (same day, `one_level_at_a_time`):
+  every logistics building's `max_levels` is `pp_<building>_logistics_max_level` (generated
+  `pp_logistics_level_caps.txt`) = levels built + 1 while no other logistics construction runs in the location, clamped
+  by `level_caps` (river size, harbour); the engine counts levels under construction against `max_levels`, so the next
+  level waits for the last to finish and passes the allow gate again (the AI had started up to 3 levels at once).
+  Edits to logistics.py rerun the start
   setup (it is a World Builder input); the weight numbers do too, since constructor.toml is hashed whole.
   `uv run ppc logistics check` must report 0 off, a current urgency value and 0 problems; `ppc build` prints it and `tests/test_logistics.py`
   enforces it. Order after editing recipes: `ppc labour apply`, `ppc logistics apply`, `ppc gate apply`.
@@ -317,6 +327,15 @@
   good it sells, Provision the good it buys back, other unique methods their building, other global methods their good.
   A blueprint may set its own pair (the method keeps it); copies of vanilla files are left alone.
 
+## Interface DDS Format
+
+- Every DDS under `<layer>/gfx/interface/` is in vanilla's format: DXT5 (or DXT1) with a full mip chain, icons at most
+  128 px (building icons 128, from the 512 px blueprint PNGs), advance icons at most 256, illustrations at their size.
+  Write them with `eu5_building_pipeline.dds.write_game_dds` / `encode_dds`, never `Image.save(format="DDS")` (raw
+  RGBA, no mips; Pillow's own DXT5 alpha is lossy). The last finalize pass of `ppc build` / `ppc sync`
+  (`interface_dds.py`) converts anything else in place and leaves compliant files byte-identical;
+  `tests/test_interface_dds.py` enforces it. Map mode picker icons live only in `main_menu/gfx/interface/icons/map_modes`.
+
 ## Script Value Overrides (EU5 1.4)
 
 - A scalar `REPLACE:name = 0` in `common/script_values` does nothing: the game reads the key as the scope link
@@ -345,11 +364,31 @@
   `tests/test_cap_tooltips.py` fails on any max-level row with sub-steps or without a desc (vanilla buildings too).
   A labelled `floor = { ... }` breaks the cap to 0; keep floors inside helpers. The start planner's evaluator
   (`start_rules.py`) reads `this.`/`root.` as the same location.
-- Farm max levels speak in levels of that farm (`scripts/generate_rural_capacity_values.py`): "[Farmland] for this
-  farm" (free farmland, floored as before, plus the land all farms here use) minus "Used by other farms" (that land
-  less this farm's own and replaceable lower-tier levels); the difference is the old cap exactly. Every land farm
-  records its land per level as `raw_modifier local_pp_farmland_used` (`crop_farms.py` and worldbuilder
-  `patch_farm_blueprints`), shown as "Farmland Used"; the Farmland concept (`pp_farmland`) explains it on hover.
+- Farm max levels speak in levels of that farm (`scripts/generate_rural_capacity_values.py`): "Free Arable Land"
+  (floor((flat - reserve) / land)) plus "This farm and the lower tiers it replaces" (their level counters
+  `raw_modifier pp_levels_<farm> = 1`, scaled like the land they take, so the cap is exact). A farm shows its land once,
+  as Arable Land (`local_population_capacity = -land`); no second land record (2026-10-23, Jan: `local_pp_farmland_used`
+  and the old "Farming Capacity from X" counters are gone, a test blocks them).
+
+## Deleted Vanilla Objects and Start Exceptions (2026-10-23, Jan)
+
+- The mod deletes vanilla objects it has no use for instead of keeping inert stubs: `[worldbuilder.compat]
+  removed_objects` leaves them out of the file's generated copy (written even without a widened test, else the vanilla
+  definition comes back), `[[worldbuilder.compat.replacements]]` rewrites vanilla references to them (exact text, fails
+  when vanilla changes). `farming_village` is deleted this way (its English event option and the town graphics now
+  follow the crop farms); `compat.removed_vanilla_buildings` gives the deleted buildings to the footprint check and the production coverage.
+- No start exceptions: no building rule names start locations or start flags. The start setup removes every vanilla
+  setup row that fails its building's rank, `location_potential` or `allow` (`start_simulation.drop_invalid`; the setup
+  audit checks the same), so the game start holds only what could be built there. `tests/test_setup_building_keepers.py`.
+- By the book (2026-10-24, Jan): no building starts above its cap, the 1337 improvement works included (the World
+  Builder clamps its starting levels, `clamp_start_to_cap`; the constructor clamps every building; the old above-cap
+  exception also made the planner skip every placement in ~1,500 locations). Vanilla's `<rank> = setup_only` counts only
+  for setup- and event-only buildings (`allow = { always = no }`): cathedrals and city walls below their rank go. The
+  start check reads every rule (`start_rules`: cultures, capitals, integration, province, pops, borders, market goods =
+  the mod map's RGOs in the start save's markets `config/start_markets.txt` plus base_production goods); conditions on
+  the building country (`BUILDER_TRIGGERS`, scope:actor) hold for the setup's owner. A rule it cannot read fails the
+  build. No game-start culls: the random estate cull, its vanilla location lists and the invalid-building culls are
+  deleted. `tests/test_building_effects.py`: every building the game loads has an effect.
 
 ## Ship Upkeep (2026-10-11, Jan)
 
@@ -361,8 +400,11 @@
 - `uv run ppc ship-upkeep apply` writes `in_game/common/prices/pp_ship_upkeep.txt`: one `<unit_type>_maintenance` add
   per navy unit type (vanilla unit-specific prices add to the category price before the age doubling), so that
   (category gold + add) x 2^(age index) = the basket value; units vanilla already prices get `TRY_REPLACE:` with their
-  sailors kept. The define stays 1. `ppc ship-upkeep check` must report the file current (`tests/test_ship_upkeep.py`);
-  rerun apply after a game update or a goods price change.
+  sailors kept. The define stays 1. For the new prices it also writes their `<price>_cost_modifier` types, icons (the
+  category's vanilla maintenance icon) and names (`pp_ship_upkeep_modifier_types.txt`, `..._modifier_icons.txt`,
+  `pp_ship_upkeep_l_english.yml`; the game logs "Missing modifier type for price" without them). `ppc ship-upkeep
+  check` must report the files current (`tests/test_ship_upkeep.py`); rerun apply after a game update or a goods price
+  change.
 - The goods market percentage and maintenance efficiency still apply on top. The AI spends a fixed share of income on
   its navy, so cheaper late ships mean larger AI navies. Not tested in game.
 
@@ -405,7 +447,7 @@
   and "Settled Land" are retired; `tests/test_europedia_style.py` fails if they come back. State icons:
   `tools/build_arable_land_icons.py`.
 - Europedia cards use the card style in `in_game/gui/shared/pp_europedia_style.gui` (banner, lead, sections with flows,
-  scales and goods rows; rules in `main_menu/common/game_concepts/Ingame_Documentation_Rules.md`, first card Variable
+  scales and goods rows; rules in `docs/mod_authoring_rules.md`, first card Variable
   Harvests, 2026-10-09). Their text has no numbers at all: values sit behind concept, modifier and goods links.
 - Use plain text in situation panes and generated static-modifier descriptions unless that target UI is verified to support inline concept links; unsupported formatter tags spam `error.log`.
 - Situation panels: the game opens `gui/panels/situation/<situation key>.gui` when a situation is clicked. The Variable
@@ -428,6 +470,31 @@
   nine, so hidden goods leave no gap and top-five lists keep five); a new internal good goes into that tuple, then
   rerun the tool.
   Tests: `tests/test_internal_goods_gui.py`.
+- Build panel (2026-10-17, Jan; panel 990 wide, rows a fixed 930): the vanilla location row (slot circles and every method's efficiency,
+  two per column) plus one value per column: build cost (sorts by the engine's `cost` key, which vanilla never
+  shows), payback (build cost / monthly profit per level, in years, Construction Manager's ROI by profit; the tooltip
+  also gives it by tax income), profit and tax income (template `pp_build_location_values`). The engine sorts only by
+  its own keys, so the header's payback button (GUI variable `pp_build_payback_order`) draws the same vanilla rows
+  once per payback band (`BUILD_PAYBACK_BANDS`), each built only in its band (`DataModelRepeatedItem` of 1 or 0);
+  inside a band the last sort holds, and every sort button switches the payback order off. Never a vbox in the list
+  area: it stretched to the panel and spread the spare height between the rows, and with an `expand` its layout did
+  not converge and the panel lagged (error.log, in game 2026-10-17); the selected sort is vanilla's fixedgridbox, the
+  bands vertical flowcontainers (size to content). **`GetBuildOrExpandBuildingCost` is slow** (measured in game
+  2026-10-17 with `measure_frame_time` and hot-swapped GUI variants: band tests calling it every frame took the panel
+  from 33 to 65 ms per frame on a ~40-location list; the profit call and the band widgets cost nothing): never call it
+  per band per frame. Each location records its band once into the GUI variable `pp_pb_<building name><location key>`
+  (a recorder created hidden, `visible_at_creation = no`, whose `_show` state runs when the payback order opens or the
+  location's construction count changes); the bands only read the variables (33 ms = the frame cap). Bands: one per
+  whole year below 10, then 10+ and no profit, then "not recorded yet".
+  The location view ("Production in <location>", 2026-10-17, not yet seen in game) has the same layout, value columns
+  and payback order: its rows are pp_ copies of vanilla's `location_filtered_header_with_candidate` /
+  `_no_candidate` (production_lateralview.gui, re-declared by CMF) in `shared/pp_location_building_rows.gui`
+  (`port_location_rows`), built rows fed by the candidate's LocationToBuildItem, unbuilt rows by template
+  `pp_location_values_unbuilt`; each row records its own band (same variable as the build panel); no `cost` sort key
+  assumed there (a header label instead). The building window's header row (`building_view.gui`, `port_building_view`)
+  also shows slots and efficiencies two per column, window 760 wide: vanilla's 50-high row squeezed a three-slot
+  building's checkbox column so auto expand could not be clicked (Jan, 2026-10-17). All in `port_build_location` (`tools/port_vanilla_gui.py`); tests:
+  `tests/test_build_location_gui.py`.
 - Situation map legends should use mod-owned plain localization keys, not inherited or generic `LEGEND_KEY_*` keys, because legend UI is sensitive to formatter syntax.
 - In GUI files, do not put `#` formatter markers in `default_format` style names; use the raw style key such as `yellow_titles`.
   Exception found 2026-10-10: EU5 1.4 vanilla writes `default_format = "#yellow_titles"` (382 times, never bare), and the

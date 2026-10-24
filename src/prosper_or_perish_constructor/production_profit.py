@@ -148,6 +148,11 @@ def production_building_coverage(
     vanilla_data = load_eu5_data(profile=vanilla_profile, load_order_path=load_order_path)
     constructor_data = load_eu5_data(profile=constructor_profile, load_order_path=load_order_path)
     vanilla_buildings, goods_by_building = positive_output_buildings(vanilla_data.building_data)
+    from prosper_or_perish_constructor.worldbuilder.compat import removed_vanilla_buildings
+
+    removed = removed_vanilla_buildings(repo)
+    vanilla_buildings -= removed
+    goods_by_building = {building: goods for building, goods in goods_by_building.items() if building not in removed}
     constructor_buildings, constructor_goods = positive_output_buildings(constructor_data.building_data)
     accepted = accepted_blueprint_paths_by_building(repo)
     stub_only = accepted_cost_only_stub_buildings(repo)

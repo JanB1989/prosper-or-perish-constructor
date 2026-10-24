@@ -61,9 +61,6 @@ ATTRIBUTE_TRIGGERS = {
 }
 # One class per location: the engine's climate/vegetation/topography, the setup's single fertility and soil modifier.
 EXCLUSIVE_ATTRIBUTES = frozenset({"climate", "vegetation", "topography", "fertility", "soil_type"})
-OTHER_CAPACITY_BLUEPRINTS = (
-    "terraces", "irrigation_reservoirs", "aqueduct_system", "pound_lock_canal_infrastructure",
-)
 LEVELS_MODIFIER = "pp_wb_levels_{key}"
 LEVELS_TYPES_PATH = Path("main_menu/common/modifier_type_definitions/pp_wb_building_levels.txt")
 LEVELS_ICONS_PATH = Path("main_menu/common/modifier_icons/pp_wb_building_levels.txt")
@@ -80,7 +77,7 @@ _POTENTIAL_RE = re.compile(r"(?P<indent>[ \t]*)location_potential\s*=\s*\{.*?\n(
 # visible), so a cap row tested that way was missing in game wherever the engine traced the river itself (EU5 1.4
 # start: irrigated fields on the Yangtze banks 8 levels and Taverns 1 level above max). Modifier values add up over
 # static and script-added modifiers alike, and each river_flowing_through_N carries irrigant_cap_modifier = N
-# (pp_location_modifier_adjustments.txt; start_simulation.run checks it).
+# (constructor.toml [worldbuilder.river_levels] -> pp_00_wb_river_modifiers.txt; start_simulation.run checks it).
 RIVER_SIZE_MODIFIER = "irrigant_cap_modifier"
 RIVER_SIZE_TRIGGERS_PATH = Path("in_game/common/scripted_triggers/pp_wb_river_size.txt")
 
@@ -481,17 +478,6 @@ def patch_improvement_blueprints(contract: Contract, cfg: WorldBuilderConfig, re
         data["building"]["body"] = body
         _save_blueprint(path, data)
         patched.append(key)
-    for key in OTHER_CAPACITY_BLUEPRINTS:
-        path = repo / BLUEPRINTS / f"{key}.yml"
-        if not path.is_file():
-            continue
-        data = yaml_io.safe_load(path.read_text(encoding="utf-8"))
-        body = str(data["building"]["body"])
-        if "local_population_capacity" in body:
-            body = re.sub(r"local_population_capacity\s*=\s*-?\d+(?:\.\d+)?", "local_population_capacity = 0", body)
-            data["building"]["body"] = body
-            _save_blueprint(path, data)
-            patched.append(key)
     return patched
 
 
@@ -547,9 +533,8 @@ def farm_constants(cfg: WorldBuilderConfig, building: str) -> tuple[float, float
 
 
 def patch_farm_blueprints(cfg: WorldBuilderConfig, repo: Path, farm_buildings: list[str]) -> list[str]:
-    """Each farm level takes land: raw_modifier local_population_capacity = -land (kept beside its level counter), and
-    records it as local_pp_farmland_used = land, which the farm max-level tooltips read as "Used by other farms"
-    (scripts/generate_rural_capacity_values.py; one modifier read instead of a sum over every farm type)."""
+    """Each farm level takes land: raw_modifier local_population_capacity = -land (kept beside its level counter); the
+    land shows on the farm once, as Arable Land (2026-10-23, Jan: no second record of the same land)."""
     patched: list[str] = []
     for key in farm_buildings:
         path = repo / BLUEPRINTS / f"{key}.yml"
@@ -558,7 +543,7 @@ def patch_farm_blueprints(cfg: WorldBuilderConfig, repo: Path, farm_buildings: l
         land, _ = farm_constants(cfg, key)
         data = yaml_io.safe_load(path.read_text(encoding="utf-8"))
         body = str(data["building"]["body"])
-        new = _replace_raw_modifier(body, {"local_population_capacity": _fmt(-land), "local_pp_farmland_used": _fmt(land)})
+        new = _replace_raw_modifier(body, {"local_population_capacity": _fmt(-land)}, drop_prefixes=("local_pp_farmland_used",))
         if new != body:
             data["building"]["body"] = new
             _save_blueprint(path, data)
@@ -586,9 +571,8 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
                 demand: Mapping[str, float] | None = None, cultures: Mapping[str, str] | None = None) -> dict[str, int]:
     """Starting improvement levels for owned locations (levels rescaled with the building's scale).
 
-    The World Builder's starting levels are the works standing in 1337. With ``[worldbuilder.start]
-    clamp_improvements_to_cap = false`` they are kept in full above the cap (the engine keeps setup levels above
-    max_levels; they cannot be extended), otherwise they are clamped to it.
+    The World Builder's starting levels are the works standing in 1337, clamped to the cap (no building stands above
+    its cap, 2026-10-24, Jan).
 
     ``demand`` (people per location the improvements must house so the pops at game start fit their capacity) raises
     the ledger's levels of the location's eligible buildings up to their caps, largest people per level first. The
@@ -601,8 +585,6 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
     clamped = 0
     gated = 0
     raised = 0
-    above_cap = 0
-    clamp = bool((cfg.raw.get("start") or {}).get("clamp_improvements_to_cap", True))
     # buildings sharing one cap (a cap group, a family with its niche members) fill it together
     share = {k: str(v.get("group") or v.get("family") or k) for k, v in caps.items()}
     share.update({k: str(caps[str(v["family"])].get("group") or v["family"]) for k, v in caps.items() if v.get("niche") and caps.get(str(v["family"]), {}).get("group")})
@@ -638,11 +620,9 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
             limit = int(caps[key]["limit"])
             level = int(math.floor(start * scale + 1e-9))
             cap = cap_levels(equations[kind], by_tag.get(tag, {}), scale, limit) if tag in by_tag else level
-            if clamp and level > min(cap, limit):
+            if level > min(cap, limit):
                 clamped += 1
                 level = min(cap, limit)
-            elif level > cap:
-                above_cap += 1
             attrs = {**by_tag.get(tag, {}), "culture": (cultures or {}).get(tag, "")}
             if not gate_matches(gates[kind], attrs):
                 # the game rejects a setup building whose location_potential fails ("has an invalid building")
@@ -682,7 +662,7 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
         if (mod_root / rel).is_file():
             (mod_root / rel).unlink()
     return {"rows": len(rows), "unowned_skipped": skipped, "clamped_to_cap": clamped,
-            "starting_works_above_cap": above_cap, "gate_rejected": gated, "levels_raised_for_pops": raised,
+            "gate_rejected": gated, "levels_raised_for_pops": raised,
             "locations_filled_for_pops": len(filled), "locations_still_short": len(short)}
 
 

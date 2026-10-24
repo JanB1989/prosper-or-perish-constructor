@@ -81,12 +81,18 @@ sponsor_a_cathedral_decision = {
 		effect = {
 			add_political_influence = political_influence_mild_penalty
 			add_religious_influence = religious_influence_severe_penalty
-			scope:target_location = {
-				construct_building = {
-					building_type = building_type:cathedral
-					cost_multiplier = 0.90
-					cost_multiplier_reason = "royal_sponsorship"
+			if = {
+				limit = { exists = scope:target_location }
+				scope:target_location = {
+					construct_building = {
+						building_type = building_type:cathedral
+						cost_multiplier = 0.90
+						cost_multiplier_reason = "royal_sponsorship"
+					}
 				}
+			}
+			else = {
+				custom_tooltip = sponsor_a_cathedral_cost_estimate_tt
 			}
 			hidden_effect = {
 				ruler = {
@@ -169,12 +175,18 @@ sponsor_a_great_madrasa_decision = {
 		effect = {
 			add_political_influence = political_influence_mild_penalty
 			add_religious_influence = religious_influence_severe_penalty
-			scope:target_location = {
-				construct_building = {
-					building_type = building_type:great_madrasa
-					cost_multiplier = 0.90
-					cost_multiplier_reason = "royal_sponsorship"
+			if = {
+				limit = { exists = scope:target_location }
+				scope:target_location = {
+					construct_building = {
+						building_type = building_type:great_madrasa
+						cost_multiplier = 0.90
+						cost_multiplier_reason = "royal_sponsorship"
+					}
 				}
+			}
+			else = {
+				custom_tooltip = sponsor_a_great_madrasa_cost_estimate_tt
 			}
 			hidden_effect = {
 				ruler = {
@@ -775,7 +787,7 @@ jewish_expulsion_threat = {
 
 	ai_will_do = {
 		add = {
-			value = -150
+			value = -250
 			desc = "BASE_VALUE"
 		}
 
@@ -790,12 +802,6 @@ jewish_expulsion_threat = {
 			value = root.modifier:tolerance_heathen
 			multiply = -50
 		}
-
-		add = {
-			desc = "$MODIFIER_TYPE_NAME_global_pop_conversion_speed_modifier$"
-			value = root.modifier:global_pop_conversion_speed_modifier
-			multiply = 100
-		}
 	}
 
 	option = {
@@ -807,6 +813,10 @@ jewish_expulsion_threat = {
 				multiply = {
 					value = 100
 					multiply = "religion_percentage_in_country(religion:judaism)"
+				}
+				max = {
+					value = monthly_income_trade_and_tax
+					multiply = 3
 				}
 			}
 			change_societal_value = {
@@ -821,6 +831,21 @@ jewish_expulsion_threat = {
 					province_definition = { save_scope_as = jewish_expulsion_origin_province_definition }
 					ROOT = {
 						random_neighbor_country = {
+							weight = {
+								base = 1
+								modifier = {
+									add = total_population
+								}
+								modifier = {
+									factor = 3
+									modifier:tolerance_heathen >= 0
+								}
+								modifier = {
+									factor = 0.25
+									modifier:tolerance_heathen < -1
+								}
+							}
+							save_temporary_scope_as = jewish_expulsion_destination_country
 							random_province = {
 								limit = {
 									NOT = { province_definition = scope:jewish_expulsion_origin_province_definition }
@@ -835,6 +860,10 @@ jewish_expulsion_threat = {
 										value = "scope:jewish_expulsion_origin_location.religion_population(religion:judaism)"
 										multiply = { 0.25 0.5 }
 										divide = 2
+										max = {
+											value = scope:jewish_expulsion_destination_country.total_population
+											multiply = 0.01
+										}
 									}
 									months = 2
 								}

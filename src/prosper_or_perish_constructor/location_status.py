@@ -62,7 +62,6 @@ REGION_GOODS = {
 }
 LAND_MARKERS = ("pp_land_overpopulation", "pp_land_abundant", "pp_land_available")
 # The stored years the province's Stored Food modifier is applied at (location-scope script value, stored_food.py).
-STORED_FOOD_YEARS = "pp_stored_food_years"
 STORED_FOOD_STEP = "pp_stored_food_step"   # the carried step, -1 without one (stored_food.py)
 
 _ANCHOR = "\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\t# BOTTOM CONDITIONS\n"
@@ -233,11 +232,6 @@ def _chip(name: str, visible: str, icon: str, title: str, concept: str, content:
 
 def _text(key: str) -> str:
     return f'TooltipTextBlock = {{ blockoverride "text" {{ text = "{key}" }} }}'
-
-
-def stored_food_years() -> str:
-    """GUI value: the stored years the location's province carries its Stored Food modifier at (0 without it)."""
-    return f"{_LOC}.MakeScope.ScriptValue('{STORED_FOOD_YEARS}')"
 
 
 def stored_food_step() -> str:

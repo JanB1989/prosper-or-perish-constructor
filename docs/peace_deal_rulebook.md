@@ -190,6 +190,9 @@ PP changes (v13, 2026-10-13, on 0.10; v1-v12 tuned on branch `enclave-release`, 
     October 1608 with 225 of 456 Ottoman locations, interleaved with the Ottoman land in 15 of 16 areas; the Ottomans
     released 15 tributaries during that war and 9 more after it, Hudavendigar 24 vassals after it (465 -> 185 + 102
     locations and ~40 small subjects by 1622). After a peace the release runs as before.
+  - Never for colonial nations or subjects of a player (`pp_enclave_release_exempt`, 2026-10-19, Jan, both actions).
+    Jan's Portugal (1482-1492): its AI colonial nations (Bahamas, Leeward Islands) let their low-control islands go as
+    16 one-location vassals of Portugal, and those vassals then colonized Cuba, Jamaica and Puerto Rico themselves.
   - A piece that borders one of the nation's subjects joins that subject (Morocco's land in Spain next to its vassal
     Jaen); any other becomes a new subject: a tributary where the government allows one
     (`pp_can_hold_tributary`: horde, tribe, `allow_tributary_subject`), else a vassal (a samanta in India), over

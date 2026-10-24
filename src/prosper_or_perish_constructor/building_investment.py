@@ -354,7 +354,8 @@ def load_location_cost_model(
     profile = profile or str(config.get("profile") or "constructor")
     data_profile = LoadOrderConfig.load(load_order).profile(profile)
 
-    # The parser's merge drops an inject into a replaced block, as the engine does (the river efficiency counts once).
+    # The parser's merge drops an inject into a replaced block, as the engine does (the river efficiency counts once:
+    # it lives in the World Builder's river replace, from constructor.toml [worldbuilder.river_levels]).
     def efficiencies(relative_dir: str, header: str | None, scope: str = "in_game") -> dict[str, float]:
         data = load_modifier_block_data(data_profile, relative_dir=relative_dir, scope=scope)
         return {name: data.modifier_baseline(name, header, BUILD_EFFICIENCY) for name in data.entries["name"]}

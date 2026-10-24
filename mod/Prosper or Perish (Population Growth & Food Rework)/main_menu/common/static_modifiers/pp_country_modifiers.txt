@@ -1,5 +1,13 @@
 ﻿TRY_INJECT:inflation_impact = {
 	building_upkeep_efficiency = 0.80
+	food_purchase_efficiency = 1 # cancels vanilla's -1; does nothing in PP (markets hold no food)
+}
+
+# Grain imports (parliament): the grain comes as victuals, PP's only food between provinces, instead of food purchase
+# efficiency, which does nothing in PP (2026-10-17, Jan).
+TRY_INJECT:parl_grain_imports_mod = {
+	food_purchase_efficiency = -0.3 # cancels vanilla's +0.3
+	global_victuals_output_modifier = 0.03
 }
 
 # Exploration slider: +50 % progress x slider (vanilla +100 %). The other +50 % is a base value in

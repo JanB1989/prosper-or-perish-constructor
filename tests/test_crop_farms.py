@@ -158,18 +158,20 @@ def test_crop_buildings_are_the_chains_in_table_order(table: crop_farms.CropTabl
         assert provisioning.provisioned_good(building) == good
 
 
-def test_retired_farm_tiers_are_gone_and_farming_village_is_a_tombstone() -> None:
+def test_retired_farm_blueprints_are_gone_and_farming_village_is_deleted() -> None:
     for key in crop_farms.RETIRED_BLUEPRINTS:
         assert not (BLUEPRINTS / f"{key}.yml").exists()
-
-    tombstone = _blueprint("farming_village")
-    body = tombstone["building"]["body"]
-    assert tombstone["building"]["mode"] == "REPLACE"
-    assert "upgrade_chain" not in tombstone and "advancements" not in tombstone
-    assert re.search(r"(?m)^max_levels = 0$", body)
-    assert "always = no" in _block(body, "location_potential")
-    assert "modifier = {" not in body
-    assert [slot["methods"] for slot in tombstone["building"]["production_method_slots"]] == [[crop_farms.TOMBSTONE_METHOD]]
+    manifest = (ROOT / "blueprints" / "buildings.manifest.yml").read_text(encoding="utf-8")
+    assert "buildings/farming_village.yml" not in manifest
+    # deleted from the game: no definition and no reference anywhere in the mod (Jan, 2026-10-23)
+    hits = [
+        str(path.relative_to(MOD_ROOT))
+        for path in MOD_ROOT.rglob("*.txt")
+        if re.search(r"(?<![a-z_])farming_village(?![a-z_])", path.read_text(encoding="utf-8-sig", errors="replace"))
+    ]
+    assert hits == []
+    for path in (MOD_ROOT / "main_menu" / "localization").rglob("*.yml"):
+        assert not re.search(r"(?m)^\s*farming_village(_desc)?:", path.read_text(encoding="utf-8-sig", errors="replace")), path
 
 
 def test_gated_chains_share_their_gates_on_every_tier(table: crop_farms.CropTable) -> None:
@@ -311,17 +313,17 @@ def test_generated_mod_advances_match_the_crop_blueprints(table: crop_farms.Crop
 
 
 def test_farm_capacity_tooltip_rows_have_localization() -> None:
-    # 2026-10-03 (Jan): every farm max level reads in levels of that farm, "Farmland for this farm" minus "Used by
-    # other farms", each one row (read through this.); the Farmland label links the concept that explains it
+    # 2026-10-23 (Jan): every farm max level reads in levels of that farm, "Free Arable Land" plus the farm's own
+    # levels, each one row (read through this.)
     text = FARMING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")
     keys = set(re.findall(r'desc = "((?:PP_)?BUILDING_LEVEL_\w+)"', text))
     localized: set[str] = set()
     for path in ENGLISH_LOCALIZATION.glob("*.yml"):
         localized.update(re.findall(r"(?m)^\s+((?:PP_)?BUILDING_LEVEL_\w+):", path.read_text(encoding="utf-8-sig")))
 
-    assert {"PP_BUILDING_LEVEL_FARMLAND", "PP_BUILDING_LEVEL_FARMLAND_OTHER_FARMS"} <= keys
+    assert {"BUILDING_LEVEL_WB_FREE_FARMLAND", "PP_BUILDING_LEVEL_FARM_OWN_LEVELS"} <= keys
     for key in crop_farms.crop_buildings(crop_farms.load_crop_table(ROOT)):
-        assert f"value = this.farm_capacity_max_{key}_other_farms" in text, key
+        assert f"value = this.farm_capacity_max_{key}_own_levels" in text, key
     assert sorted(keys - localized) == []
 
 

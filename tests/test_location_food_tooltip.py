@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from prosper_or_perish_constructor import gui_compat
+from prosper_or_perish_constructor import food_storage_gui, gui_compat
 from prosper_or_perish_constructor.food_storage_gui import (
     format_gui_fixed_point,
     load_food_storage_max_months,
@@ -151,7 +151,10 @@ def test_all_remaining_food_indicators_use_stored_food_months() -> None:
 def test_food_storage_tooltip_uses_configured_maximum_months() -> None:
     assert FOOD_STORAGE_LOCALIZATION.exists()
 
-    text = FOOD_STORAGE_LOCALIZATION.read_text(encoding="utf-8-sig")
+    # EFFECTS_FROM_STORAGE is a vanilla key: food_storage_gui writes it into localization/replace
+    text = FOOD_STORAGE_LOCALIZATION.read_text(encoding="utf-8-sig") + (
+        MOD_ROOT / food_storage_gui.FOOD_STORAGE_REPLACE_LOCALIZATION
+    ).read_text(encoding="utf-8-sig")
     assert "EFFECTS_FROM_STORAGE" in text
     assert f"maximum of #Y {FOOD_STORAGE_MAX_MONTHS}#! Months" in text
     assert "maximum of #Y 120#! Months" not in text

@@ -1,0 +1,47 @@
+﻿# Coastal Raid (2026-10-23, Jan): a toggle for a navy in a war of the PP Sea Raid casus belli (pp_naval_raid_cb.txt).
+# While it is on, the navy raids an enemy coast of that war when it is switched on and every time it enters a sea
+# zone (pp_coastal_raid_effect in scripted_effects/pp_coastal_raid_effects.txt; each location once a year). A navy
+# that sits still raids nothing more. Ends by itself when the owner is no longer in such a war. Not tested in game.
+
+pp_coastal_raid = {
+	toggle = yes
+	duration = -1
+	navy_only = yes
+	map = yes
+
+	hidden = {
+		owner = {
+			NOT = { in_war_of_casus_belli = casus_belli:cb_pp_naval_raid }
+		}
+	}
+
+	allow = {
+		is_navy = yes
+		is_exiled = no
+	}
+
+	finished_when = {
+		OR = {
+			is_exiled = yes
+			owner = {
+				NOT = { in_war_of_casus_belli = casus_belli:cb_pp_naval_raid }
+			}
+		}
+	}
+
+	modifier = {
+		naval_morale_modifier = -0.25
+	}
+
+	start_effect = {
+		pp_coastal_raid_effect = yes
+	}
+
+	on_entering_location = {
+		pp_coastal_raid_effect = yes
+	}
+
+	ai_will_do = {
+		add = 25
+	}
+}

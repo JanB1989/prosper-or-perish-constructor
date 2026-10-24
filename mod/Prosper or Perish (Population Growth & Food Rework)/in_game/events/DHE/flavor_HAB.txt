@@ -5751,7 +5751,6 @@ flavor_hab.101 = { #The Belvedere Palace
 }
 
 flavor_hab.102 = { #Composing the Kaiserhymne
-	hide_portraits = yes
 	type = country_event
 	title = flavor_hab.102.title
 	desc = flavor_hab.102.desc
@@ -5807,8 +5806,8 @@ flavor_hab.102 = { #Composing the Kaiserhymne
 		name = flavor_hab.102.a
 		change_gold_effect = { scale = -6 }
 		culture = {
-			add_cultural_tradition = cultural_tradition_mild_penalty
-			add_cultural_influence = cultural_influence_mild_penalty
+			add_cultural_tradition = cultural_tradition_mild_bonus
+			add_cultural_influence = cultural_influence_mild_bonus
 		}
 		show_as_tooltip = {
 			location:vienna = {
@@ -9662,6 +9661,7 @@ flavor_hab.2400 = { #Bohemian Marriage
 						age_in_years <= 40
 						is_married = no
 						is_alive = yes
+						is_betrothed = no
 					}
 					save_scope_as = target_princess
 				}
@@ -9685,6 +9685,7 @@ flavor_hab.2400 = { #Bohemian Marriage
 			is_adult = yes
 			has_dynasty = yes
 			is_alive = yes
+			is_betrothed = no
 		}
 		c:BOH = {
 			government_type = government_type:monarchy
@@ -9696,6 +9697,7 @@ flavor_hab.2400 = { #Bohemian Marriage
 					age_in_years <= 40
 					is_married = no
 					is_alive = yes
+					is_betrothed = no
 				}
 			}
 		}

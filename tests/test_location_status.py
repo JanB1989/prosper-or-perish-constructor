@@ -157,8 +157,9 @@ def test_mod_files_carry_the_markers_types_and_localization():
     used = set(re.findall(r'"(PP_[A-Z_]+)"', gui)) | set(re.findall(r"Localize\('(PP_[A-Z_]+)'\)", gui))
     used |= set(re.findall(r"localization_key = (PP_[A-Z_]+)", location_status.custom_localization(HARVESTS)))
     loc += location_status.harvest_localization(HARVESTS)
+    loc += (MOD_ROOT / "main_menu/localization/english/pp_seasonal_harvests_l_english.yml").read_text(encoding="utf-8-sig")
     loc += (MOD_ROOT / stored_food.LOCALIZATION).read_text(encoding="utf-8-sig")
-    missing = sorted(key for key in used if f"\n  {key}:" not in loc)
+    missing = sorted(key for key in used if not re.search(rf"^[ \t]*{key}:", loc, re.M))
     assert not missing
 
 
@@ -202,7 +203,7 @@ def test_province_modifier_list_shows_the_stored_food_step():
     # 2026-10-03: one Stored Food step modifier with its true values; the list shows it like any province modifier
     window = (MOD_ROOT / "in_game/gui/location_window.gui").read_text(encoding="utf-8-sig")
     assert "STATIC_MODIFIER_NAME_pp_stored_food" not in window
-    assert "ScriptValue('pp_stored_food_years'), '(CFixedPoint)0'), '(int32)1', '(int32)0'))" not in window
+    assert "pp_stored_food_years" not in window
     assert not hasattr(location_status, "hide_stored_food_modifier")
 
 

@@ -21,6 +21,7 @@ import argparse
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
+from eu5_building_pipeline.dds import write_game_dds
 
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
@@ -121,12 +122,12 @@ def main(argv: list[str] | None = None) -> int:
         target = MOD / "main_menu" / ICONS_DIR
         target.mkdir(parents=True, exist_ok=True)
         for name, im in built.items():
-            im.save(target / f"{name}.dds", format="DDS", pixel_format="DXT5")
+            write_game_dds(im, target / f"{name}.dds")   # DXT5 + full mips (eu5_building_pipeline.dds)
             print((target / f"{name}.dds").relative_to(ROOT))
         for rel, kind in BASE_TARGETS.items():
             path = MOD / "main_menu/gfx/interface/icons" / rel
             path.parent.mkdir(parents=True, exist_ok=True)
-            base[kind].save(path, format="DDS", pixel_format="DXT5")
+            write_game_dds(base[kind], path)   # DXT5 + full mips (eu5_building_pipeline.dds)
             print(path.relative_to(ROOT))
     return 0
 

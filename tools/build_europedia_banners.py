@@ -26,6 +26,8 @@ from pathlib import Path
 
 from PIL import Image, ImageFilter
 
+from eu5_building_pipeline.dds import write_game_dds
+
 ROOT = Path(__file__).resolve().parents[1]
 MOD = ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)"
 PAINTINGS_DIR = ROOT / "assets/europedia_paintings"
@@ -79,7 +81,7 @@ def main(argv: list[str] | None = None) -> int:
         if not args.no_write:
             target = MOD / "main_menu" / BANNERS_DIR / f"banner_{name}.dds"
             target.parent.mkdir(parents=True, exist_ok=True)
-            image.save(target, format="DDS", pixel_format="DXT5")
+            write_game_dds(image, target)   # DXT5 + full mips (eu5_building_pipeline.dds)
             print(target.relative_to(ROOT))
     return 0
 

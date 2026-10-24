@@ -2,8 +2,8 @@
 # All goods need to have 0 food value. TRY_INJECT replaces `food`, it does not add to vanilla: a negative value
 # makes every RGO of that good subtract food (eu5.exe adds RGO workers x food with no sign check), so write 0.
 TRY_INJECT:wool = {
-	block_rgo_upgrade = yes # in 1.3 game doesnt consider it a food anymore so no inject needed
-	food = 0
+	block_rgo_upgrade = yes
+	food = 0 # EU5 1.4.2 made wool a food good again (3.0)
 	transport_cost = 1.25 # 1; 2026-10-14, Jan: staples move between markets
 }
 TRY_INJECT:wild_game = {
@@ -234,6 +234,7 @@ TRY_INJECT:goods_gold = {
 }
 TRY_INJECT:horses = {
 	block_rgo_upgrade = yes
+	food = 0 # EU5 1.4.2 made horses a food good (2.0)
 	transport_cost = 1.5 # 2; horses are short in many markets and barely traded (2026-10-01)
 }
 TRY_INJECT:ivory = {

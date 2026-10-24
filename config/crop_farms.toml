@@ -35,7 +35,7 @@ tier_land_today = { 0 = -5, 1 = -2, 2 = -5, 3 = -5 }
 footprint = "farm_land"
 location_potential_base = "pp_general_farmable_food_location_potential"   # AND-ed with crops.location_rule unless location_rule_standalone
 max_levels_pattern = "farm_capacity_max_{building}"
-farm_capacity_line_pattern = "farm_capacity_from_{building} = -1"
+farm_level_line_pattern = "pp_levels_{building} = 1"   # the farm max level adds its own levels back
 # Farm trade-off (2026-10-03, Jan): one store curve for every staple good and every tier ([stored_food.curve] in
 # constructor.toml) moves the farms between Province Food (low store) and crop for the market (full store). The late
 # tiers grow 4-15x tier 0's crop for about the same Province Food, so in a poor harvest at a low store the crop line

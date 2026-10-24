@@ -1,0 +1,114 @@
+﻿# Peace treaties of the PP Sea Raid casus belli (pp_naval_raid_cb.txt): only in a war of that casus belli, cheap in war
+# score. Open Harbours creates the relation in pp_naval_raid_relations.txt for ten years;
+# Sack the Market destroys one of the loser's coastal markets (vanilla destroy_market). Not tested in game.
+
+pp_peace_open_harbours = {
+	potential = {
+		scope:war ?= {
+			has_casus_belli = yes
+			casus_belli ?= casus_belli:cb_pp_naval_raid
+		}
+		scope:winner = {
+			has_markets = yes
+		}
+	}
+	allow = {
+		scope:loser = {
+			NOT = {
+				receiving_scripted_relation = {
+					type = relation_type:pp_open_harbours
+					target = scope:winner
+				}
+			}
+		}
+	}
+
+	cost = {
+		add = {
+			desc = "DIPLOREASON_BASE"
+			value = 10
+		}
+	}
+
+	effect = {
+		scope:winner = {
+			create_relation = {
+				type = relation_type:pp_open_harbours
+				first = scope:winner
+				second = scope:loser
+				years = 10
+			}
+		}
+	}
+
+	ai_desire = {
+		add = {
+			desc = "DIPLOREASON_BASE"
+			value = 5
+		}
+	}
+}
+
+pp_peace_sack_market = {
+	category = misc
+
+	potential = {
+		scope:war ?= {
+			has_casus_belli = yes
+			casus_belli ?= casus_belli:cb_pp_naval_raid
+		}
+		scope:loser = {
+			any_market_center_in_country = {
+				location = { is_coastal = yes }
+			}
+		}
+	}
+	allow = {
+	}
+
+	select_trigger = {
+		looking_for_a = market
+		source = recipient
+		target_flag = target_market
+		name = "pp_peace_sack_market_select_market"
+		none_available_msg_key = "pp_peace_sack_market_no_markets"
+		column = {
+			data = name
+		}
+		visible = {
+			location = {
+				owner ?= scope:recipient
+				is_coastal = yes
+			}
+		}
+	}
+
+	cost = {
+		add = {
+			desc = "DIPLOREASON_BASE"
+			value = 10
+		}
+		add = {
+			desc = "game_concept_trade_income"
+			value = scope:loser.monthly_trade_income
+			multiply = 0.5
+		}
+		max = 50
+	}
+
+	effect = {
+		if = {
+			limit = {
+				exists = scope:target_market
+			}
+			scope:target_market = {
+				destroy_market = {}
+			}
+		}
+	}
+
+	ai_desire = {
+		# off for the AI until it has been seen in game
+		add = -10
+	}
+}

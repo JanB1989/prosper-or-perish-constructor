@@ -5,6 +5,8 @@ from pathlib import Path
 
 from PIL import Image, ImageFilter
 
+from eu5_building_pipeline.dds import write_game_dds
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = ROOT / "assets/icons/land_potential/sources"
@@ -48,7 +50,7 @@ def main() -> None:
     PREVIEW.parent.mkdir(parents=True, exist_ok=True)
     icon.save(PREVIEW)
     TARGET.parent.mkdir(parents=True, exist_ok=True)
-    icon.save(TARGET, format="DDS", pixel_format="DXT5")
+    write_game_dds(icon, TARGET)   # DXT5 + full mips (eu5_building_pipeline.dds)
     print(TARGET.relative_to(ROOT))
 
 

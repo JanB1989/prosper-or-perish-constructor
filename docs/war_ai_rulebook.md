@@ -80,6 +80,8 @@ Examples:
 | `NAI.CHANCE_OF_EXPANSION_AGGRESSIVENESS_SCALE` | 10 | 5 | At 10 an aggressiveness of -0.1 already zeroes the planning roll; most balanced AIs sit at -0.02..-0.18. At 5 they plan now and then; defensive (-0.2 and lower) and isolationist AIs still never do; aggressive/expansionist AIs keep a roll near 1. |
 | `NAI.AI_NUM_EXPANSION_TARGETS` | 20 | 40 | Desire order puts big, allied neighbours first and they fail the estimate; weaker neighbours further down were never war-gamed. Tick time unchanged within noise. |
 | `NAI.WAR_BALANCE_LEVIES_IMPORTANCE` (2026-10-16, Jan, not tested in game) | 1 | 0.5 | The AI's strength estimate (war targets, win chance in peace demands, surrender, peace offers) counts the whole levy pool, raised or not, x this plus regulars x 3, then x (1 + land morale) x (1 + discipline); unit quality is not counted. Levy-heavy realms (1807: France 99 %, Mamluks 86 % of counted army from levies, Ottomans 29 %) looked as strong as professional armies that beat them. At 0.5 a regular counts as 6 levies. |
+| `NDiplomacy.WAR_ENTHUSIASM_TIME_LATE_FACTOR`, `WAR_ENTHUSIASM_MILITARY_STRENGTH_FACTOR` (2026-10-16, section 8) | 0.01, 0.1 | 0.005, 0.05 | War enthusiasm drives AI peace acceptance. Past 24 months it fell 0.01 a month and spent manpower took up to 0.2 more, so a side that won its battles but lost the siege race gave up land worth about twice the war score. |
+| `NCombat.DAYS_PER_SIEGE_PHASE_WITHOUT_FORT` (2026-10-16, Jan, not tested in game) | 15 | 30 | War score is occupied land; AI defenders chase instead of besieging. Unfortified land now falls as slowly per phase as a fort, so besiegers sit longer where field armies can break the siege. Players too. |
 | static modifier `normal_aggression` `ai_months_between_wars` (`pp_ai_aggression_rule.txt`) | 24 | 12 | Under the normal aggression rule a balanced AI stayed 30 months out of planning after every war it was part of, allied and defensive wars included. Now 18. Low/high aggression unchanged. |
 
 Not changed, tested without effect: `MONTHS_TO_WAIT_FOR_CASUS_BELLI` 24 -> 12 (identical runs: the waiting objectives
@@ -267,3 +269,76 @@ No code reads them (only registration; a read through a pointer would be missed,
 - **AI only**: enthusiasm thresholds, ideal deal, send rules, surrender decision, ally split, outnumbered behaviour.
   **Everyone**: war score, enforceability, call for peace, forced white peace, location cost, ally expectations,
   and the `requestpeace` acceptance (it judges player offers to AIs too).
+
+## 8. Case: a stronger army that gives up (Ottomans vs Mamluks 1806-1809, run d3b7a95a)
+
+The Mamluk coalition (with the Qara Qoyunlu) won the first battles by numbers and occupied about an eighth of Ottoman
+land; from mid 1807 the Ottomans won most battles at 2-4:1 losses but never besieged Mamluk land, so the war score
+kept creeping toward the Mamluks (about -34). In year 3 the Ottomans accepted a cession worth about twice that war
+score: acceptance adds the war score, the months at war (+0.5 each) and low enthusiasm (time past 24 months, spent
+manpower, occupied land), and nothing in it compares the armies. The strength estimate (`WAR_BALANCE_*`, levies 0.5)
+does not enter acceptance or enthusiasm at all: it steers whom to attack and the offers an AI sends.
+
+Replays from 1807 and 1808 (seven runs; slower time decay `WAR_ENTHUSIASM_TIME_LATE_FACTOR` 0.005 with a weaker manpower term
+`WAR_ENTHUSIASM_MILITARY_STRENGTH_FACTOR` 0.05 or a stronger `WAR_ENTHUSIASM_UNIT_BALANCE` 0.75): each tweak makes the Ottomans demand a peace
+10-25 war score cheaper, but the outcome follows the war's path (occupations, deals that would split the empire): the
+unchanged 0.10 held out for three years and lost nothing in one replay, both variants lost 17-20 locations in another.
+No define lets the AI see that it can win while its war score is negative; the lever is the war itself (sieging the
+enemy's land) or the `requestpeace` script weights.
+
+Why the war score never turned: a battle counts its losses against the whole side's army, so at PP army sizes the
+32 battles of this war summed to about one point (the Ottomans won 21 of them). The war score was the occupied
+Ottoman land, doubled by `OCCUPATION_VALUE_SCALE` 2. The Ottomans never sent an army to retake it: their AI gives
+each army the job with the best score, and chasing an enemy stack or joining a gathering (fixed priorities 8-10)
+always beats sieging, even sieging their own occupied land next door (priority 4), although their armies were strong
+enough for it. No define sets those priorities; the assignment defines only trade all priorities against distance
+for every army in the world.
+
+**World-wide test (2026-10-16), adopted.** Every war of 10 observer years from 1807 and from 1667, per variant (13-28
+fought wars each; "field winner" = the side with fewer battle losses; land = locations that moved between the sides):
+
+| Variant | Field winner ceded (1807 / 1667) | Field winner gained | Wars where the field winner ended net down |
+|---|---|---|---|
+| 0.10 | 120 / 67 | 83 / 210 | 4 / 5 |
+| A: enthusiasm, `TIME_LATE_FACTOR` 0.005 + `MILITARY_STRENGTH_FACTOR` 0.05 | 64 / 9 | 207 / 205 | 2 / 2 |
+| B: army jobs, `AI_MILITARY_ARMY_ASSIGNMENT_PROXIMITY_FACTOR` -2, `AI_STICK_TO_SIEGE_TIME_FACTOR` 0.01, `AI_FOW_FORGET_CHASE_ARMY_CHANCE` 0.66 | 74 / 29 | 132 / 179 | 4 / 2 |
+| A + B | 41 / 68 | 142 / 182 | 2 / 3 |
+
+A is the only variant better in both eras; it was adopted. B did not raise the defenders' share of sieging (it stays
+about a fifth to a quarter), so the army-job defines do not reach the cause. Side effect of A: wars last a little
+longer (1667: 8 instead of 3 still running after 10 years); the number of wars is unchanged. Almost every war a
+field winner lost was a defender winning battles while the attacker took its land by sieges: the remaining cause is
+the army job priorities, which no define sets. Small samples (about 45 fought wars per variant): watch it in the next
+long run.
+
+The Ottoman war itself, same 1807 save, 0.10 vs A: Ottoman war enthusiasm when they accepted 0.08 vs 0.33 (median over
+the war 0.39 vs 0.46), the accepted cession cost 79 war score at a war score of 34 vs 42 at 27, Ottoman land lost 43 vs
+25 (10-year runs: 43 vs 25). The Mamluk side still did all the sieging (siege score 2.8 vs 0.02), so the Ottomans hold
+out longer and pay less, but they still do not win back their land.
+
+# Sea Raid casus belli (PP, 2026-10-23, Jan; not tested in game)
+
+A naval war for pirates and every country that may hire privateers. Files: `casus_belli/pp_naval_raid_cb.txt`,
+`wargoals/pp_naval_raid_wargoal.txt`, `peace_treaties/pp_naval_raid_treaties.txt`,
+`scripted_relations/pp_naval_raid_relations.txt`, `unit_abilities/pp_coastal_raid.txt`,
+`scripted_effects/pp_coastal_raid_effects.txt`, `scripted_triggers/pp_naval_raid_triggers.txt`, localization
+`pp_naval_raid_l_english.yml`; `tests/test_naval_raid_cb.py`.
+
+- **Who and against whom:** `modifier:can_hire_privateers` and own ports (pirate republics, privateering laws, policies
+  and advances); it builds up (speed 15, like Anti-Piracy) only against a country whose land borders a sea zone of a
+  sea area where one of our privateers sails (`scripted_triggers/pp_naval_raid_triggers.txt`, from our privateers, so
+  cheap), no truce; the same check again to declare (withdrawn privateers close it). No `ai_will_do`: the AI values it
+  by the war goal like any other CB.
+- **War goal:** vanilla's naval superiority type with vanilla `naval` numbers (land and subjugation x10 cost, ticking
+  0.5). The engine already does the rest: ticking war score while we blockade ports and the enemy blockades none of
+  ours, bonus war score per won naval battle. PP's blockade capacity x10 (`ppc blockade`) makes blockades easy.
+- **Treaties (only in a war of this CB, base cost 10):** Open Harbours (the winner's markets pull the loser's locations
+  like Preferred Market Access, trade protection lifted, 10 years), Sack the Market (destroys one coastal market of the
+  loser; cost 10 + half its trade income, max 50; AI desire -10 until seen in game). Vanilla treaties stay as they are.
+  Tribute of the Seas was removed the same day (Jan): it equalled vanilla war reparations (cost 10, 10 % of income,
+  10 years); its relation `pp_sea_tribute` was removed before release (2026-10-24).
+- **Coastal Raid (navy toggle, tested in game as a 30-day click ability):** while on, the navy raids when switched on and
+  each time it enters a sea zone: one adjacent coastal location whose owner fights us in this war (war participants
+  only), with peasants and not Recently Razed: its peasants -1 %, 0.4 % of them arrive as slaves in the raider's capital
+  (vanilla wokou ratios), Recently Razed for a year. A navy that sits still raids nothing more (no periodic hook);
+  naval morale -25 % while on; ends by itself at peace. AI weight 25; whether AI navies switch it on is unknown.

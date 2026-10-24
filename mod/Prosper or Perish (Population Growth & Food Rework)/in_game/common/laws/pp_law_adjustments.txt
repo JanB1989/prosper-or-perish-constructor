@@ -843,3 +843,48 @@ TRY_REPLACE:republican_electorate_law = {
 		years = 2
 	}
 }
+
+# Dahsala system: Ghalla Bakshi (crop share taken in kind) fills the state granaries instead of food purchase
+# efficiency, which does nothing in PP (markets hold no food; 2026-10-17, Jan).
+TRY_REPLACE:dahsala_system = {
+	unique = yes
+	law_category = administrative
+	potential = {
+		has_unlocked_law_trigger = {
+			type = dahsala_system
+		}
+	}
+
+	zabiti = {
+		country_modifier = {
+			peasants_estate_max_tax = 0.1
+			peasants_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+			global_peasants_food_consumption = -0.1
+		}
+		estate_preferences = {
+			crown_estate
+		}
+		years = 2
+	}
+	ghalla_bakshi = {
+		country_modifier = {
+			peasants_estate_target_satisfaction = medium_permanent_target_satisfaction
+			global_food_capacity = 10 # was food_purchase_efficiency = 0.1
+		}
+		estate_preferences = {
+			peasants_estate
+		}
+		years = 2
+	}
+
+	nasaq = {
+		country_modifier = {
+			peasants_estate_max_tax = 0.1
+			peasants_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+		}
+		estate_preferences = {
+			crown_estate
+		}
+		years = 2
+	}
+}

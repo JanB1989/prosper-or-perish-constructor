@@ -16,7 +16,7 @@ from prosper_or_perish_constructor.rural_capacity import (
     FOREST_CAP_BUILDINGS,
     LAND_FARM_BUILDINGS,
     capacity_max_omitted_buildings_by_building,
-    farm_capacity_modifier_for_building,
+    farm_level_counter_for_building,
 )
 
 
@@ -89,31 +89,6 @@ def _capacity_building_subtract_rows(
     return rows
 
 
-def _farm_modifier_rows(
-    *,
-    prefix: str,
-    buildings: Iterable[str],
-    omit_building: str | None = None,
-    omit_buildings: Iterable[str] = (),
-) -> list[str]:
-    rows: list[str] = []
-    omitted = set(omit_buildings)
-    if omit_building is not None:
-        omitted.add(omit_building)
-    for building in buildings:
-        if building in omitted:
-            continue
-        rows.extend(
-            [
-                _line("add = {", 1),
-                _line(f'desc = "BUILDING_LEVEL_{prefix}_{building.upper()}"', 2),
-                _line(f"value = modifier:{farm_capacity_modifier_for_building(building)}", 2),
-                _line("}", 1),
-            ]
-        )
-    return rows
-
-
 def _building_level_pressure_rows(*, prefix: str) -> list[str]:
     return [
         _line("subtract = {", 1),
@@ -167,9 +142,9 @@ def _farm_source_rows(
     """Farm capacity = remaining farmland: (flat population capacity - reserve) / land per level.
 
     The flat already contains -land per built farm level (raw_modifier on each farm building), so the
-    public value is the land still held by subsistence farmers in farming-village levels. Per-building
-    max values add the building's own levels back (its level counter modifier is -1 per level) so the
-    max is the same number no matter how many of it exist; replaceable lower tiers are added back too.
+    public value is the land still free for farms, in farm levels. Per-building max values add the building's
+    own levels back (its level counter pp_levels_<farm> is +1 per level) so the max is the same number no matter
+    how many of it exist; replaceable lower tiers are added back too.
     """
     per_building, default = _farm_land_constants()
     # ordered: the building whose max this is comes first (its own land constants apply), then replaceable tiers
@@ -177,38 +152,32 @@ def _farm_source_rows(
     if not omitted:
         land, reserve = default
         return _free_land_rows(land, reserve, "BUILDING_LEVEL_WB_FREE_FARMLAND") + [_line('min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }', 1)]
-    # Max-level tooltip, in levels of this farm (2026-10-03, Jan): "Farmland for this farm" (the free farmland plus the
-    # land every farm here already uses) minus "Used by other farms" (that land less this farm's own levels and its
-    # replaceable lower tiers). The difference is the old sum, floor((flat - reserve) / land) + own levels, exactly.
-    # Each row reads its helper through this., so the game shows it as one number (cap_tooltips.py); the farms carry
-    # local_pp_farmland_used = land per level (worldbuilder/buildings.py patch_farm_blueprints).
+    # Max-level tooltip, in levels of this farm (2026-10-23, Jan: one name for the land on a farm, so no second land
+    # record): "Free Arable Land" floor((flat - reserve) / land) plus "This farm" (its own levels and those of its
+    # replaceable lower tiers, from their level counters; the counters are scaled like the land they take, so the cap is
+    # exact). Each row reads its helper through this., so the game shows it as one number (cap_tooltips.py).
     target = omitted[0]
     land, reserve = per_building.get(target, default)
-    farmland = _farmland_helper(land, reserve)
-    others = f"farm_capacity_max_{target}_other_farms"
-    FARM_HELPERS[others] = _script_value(
-        others,
-        [
-            _line(f"value = modifier:{FARMLAND_USED}", 1),
-            _line(f"divide = {land:g}", 1),
-            *(_line(f"add = modifier:{farm_capacity_modifier_for_building(b)}", 1) for b in omitted),
-        ],
+    free = _free_farmland_helper(land, reserve)
+    own = f"farm_capacity_max_{target}_own_levels"
+    FARM_HELPERS[own] = _script_value(
+        own,
+        [_line("value = 0", 1), *(_line(f"add = modifier:{farm_level_counter_for_building(b)}", 1) for b in omitted)],
     )
     return [
-        _line(f'add = {{ desc = "PP_BUILDING_LEVEL_FARMLAND" value = this.{farmland} }}', 1),
-        _line(f'subtract = {{ desc = "PP_BUILDING_LEVEL_FARMLAND_OTHER_FARMS" value = this.{others} }}', 1),
+        _line(f'add = {{ desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.{free} }}', 1),
+        _line(f'add = {{ desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.{own} }}', 1),
         _line('min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }', 1),
     ]
 
 
-FARMLAND_USED = "local_pp_farmland_used"
 FARM_HELPERS: dict[str, str] = {}   # tooltip helpers of the farm max levels, written after them
 
 
-def _farmland_helper(land: float, reserve: float) -> str:
-    """Farmland for a farm with this land per level and reserve, in its levels: the free farmland (floored, as the
-    cap always had it) plus the land all farms here already use."""
-    name = f"pp_farmland_levels_land_{land:g}_reserve_{reserve:g}".replace(".", "_")
+def _free_farmland_helper(land: float, reserve: float) -> str:
+    """Free arable land for a farm with this land per level and reserve, in its levels (floored, as the cap always
+    had it)."""
+    name = f"pp_free_farmland_levels_land_{land:g}_reserve_{reserve:g}".replace(".", "_")
     FARM_HELPERS[name] = _script_value(
         name,
         [
@@ -216,7 +185,6 @@ def _farmland_helper(land: float, reserve: float) -> str:
             _line(f"subtract = {reserve:g}", 1),
             _line(f"divide = {land:g}", 1),
             _line("floor = yes", 1),
-            _line(f"add = {{ value = modifier:{FARMLAND_USED} divide = {land:g} }}", 1),
         ],
     )
     return name

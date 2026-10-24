@@ -912,10 +912,9 @@
 														production_method_good_price_diff = {}
 													}
 												}
-												dynamicgridbox = { # HIDES PRICES IF NUMBER OF INPUTS > 5 (PP: 14 per line)
+												dynamicgridbox = { # HIDES PRICES IF NUMBER OF INPUTS > 5 (PP: 14 per line; a dynamicgridbox takes no spacing)
 													flipdirection = yes
 													datamodel_wrap = 14
-													spacing = 4
 													datamodel = "[PossibleProductionMethodsItem.GetActiveInputs]"
 													visible = "[Or(
 														And( 
@@ -1155,23 +1154,27 @@
 				blockoverride "sort_buttons_filtered_list" {
 					sort_by_key_button = {
 						name = "name"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 55 -1 }
 					}
 
 					sort_by_key_button = {
 						name = "goods"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 55 -1 }
 					}
 
 					sort_by_key_button = {
 						name = "employment"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 55 -1 }
 					}
 					sort_by_key_button = {
 						name = "population"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 55 -1 }
 					}
@@ -1180,8 +1183,9 @@
 
 					sort_by_key_button = {
 						name = "production_efficiency"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
-						size = { 100 -1 }
+						size = { 70 -1 }
 						visible = "[BuildInLocationLateralView.GetBuildingType.IsProducing]"
 						blockoverride "sort_by_key_button_texture" {
 							texture = "gfx/interface/icons/sort/efficiency.dds"
@@ -1198,22 +1202,61 @@
 					# 	}
 					# }
 
+					sort_by_key_button = { # PP: the engine's cost key (vanilla has no button for it)
+						name = "cost"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
+						layoutpolicy_vertical = expanding
+						size = { 60 -1 }
+						visible = "[BuildInLocationLateralView.GetBuildingType.IsProducing]"
+						blockoverride "sort_by_key_button_texture" {
+							texture = "gfx/interface/icons/sort/cost.dds"
+						}
+					}
+
+					button = { # PP: payback order (no engine sort key: the list is drawn in payback bands)
+						name = "pp_payback_order"
+						layoutpolicy_vertical = expanding
+						size = { 55 -1 }
+						visible = "[BuildInLocationLateralView.GetBuildingType.IsProducing]"
+						down = "[GetVariableSystem.Exists('pp_build_payback_order')]"
+						background = {
+							visible = "[GetVariableSystem.Exists('pp_build_payback_order')]"
+							texture = "gfx/interface/component_masks/mask_fade_vertical_up.dds"
+							texture_density = 2
+							alpha = 0.4
+							modify_texture = {
+								using = color_sortby_off
+								blend_mode = multiply
+							}
+						}
+						onclick = "[GetVariableSystem.Toggle('pp_build_payback_order')]"
+						tooltip = "PP_BUILD_PAYBACK_ORDER_TT"
+						icon = {
+							size = { 20 20 }
+							parentanchor = center
+							texture = "gfx/interface/icons/sort/time.dds"
+						}
+					}
+
 					sort_by_key_button = {
 						name = "profit"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
-						size = { 35 -1 }
+						size = { 60 -1 }
 						visible = "[BuildInLocationLateralView.GetBuildingType.IsProducing]"
 					}
 
 					sort_by_key_button = {
 						name = "income"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
-						size = { 35 -1 }
+						size = { 65 -1 }
 						visible = "[BuildInLocationLateralView.GetBuildingType.IsProducing]"
 					}
 
 					sort_by_key_button = {
 						name = "control_income"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 88 -1 }
 						visible = "[BuildInLocationLateralView.GetBuildingType.GrantsControl]"
@@ -1221,6 +1264,7 @@
 
 					sort_by_key_button = {
 						name = "current_control"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 88 -1 }
 						visible = "[BuildInLocationLateralView.GetBuildingType.GrantsControl]"
@@ -1231,6 +1275,7 @@
 
 					sort_by_key_button = {
 						name = "number_building"
+						onclick = "[GetVariableSystem.Clear('pp_build_payback_order')]" # PP: a sort leaves the payback order
 						layoutpolicy_vertical = expanding
 						size = { 125 -1 }
 					}
@@ -1242,21 +1287,443 @@
 				blockoverride "scroll_list_is_empty_text" {
 					text = "[SelectLocalization(BuildInLocationLateralView.GetBuildingType.IsForeign,'BUILD_LOCATION_FOREIGN_EMPTY', 'BUILD_LOCATION_EMPTY')]"
 				}
-				blockoverride "scroll_list_content" {
-					addcolumn = 100%
-					addrow = 60
-					datamodel = "[BuildInLocationLateralView.GetItems]"
-					item = {
-						widget = {
-							size = { 100% 60 }
-							widget = {
-								size = { 100% 58 }
-								parentanchor = center
-								hbox = {
-									using = layoutpolicy_expanding
-									using = bg_cabinet_card_frame
-									margin = {5 5}
-									using = build_location_entry
+				blockoverride "scroll_list_layout" { # PP: the selected sort or the payback order
+					flowcontainer = {
+						direction = vertical
+						ignoreinvisible = yes
+						position = { 0 2 }
+						fixedgridbox = { # the selected sort: vanilla's grid
+							visible = "[Not(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing))]"
+							addcolumn = 930
+							addrow = 60
+							datamodel = "[BuildInLocationLateralView.GetItems]"
+							item = {
+								widget = {
+									size = { 930 60 }
+									widget = {
+										size = { 100% 58 }
+										parentanchor = center
+										hbox = {
+											using = layoutpolicy_expanding
+											using = bg_cabinet_card_frame
+											margin = {5 5}
+											using = build_location_entry
+										}
+									}
+								}
+							}
+						}
+						flowcontainer = { # payback order: shortest first, the last sort inside each band
+							direction = vertical
+							ignoreinvisible = yes
+							visible = "[And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing)]"
+							flowcontainer = { # records each location's payback band (the cost call is too slow for every frame)
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									widget = {
+										size = { 0 0 }
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										widget = {
+											visible_at_creation = no
+											visible = "[And(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), And(LocationToBuildItem.HasConstructedBuildingLevels, IsOdd_int32(GetDataModelSize(Location.GetCivilConstructions))))]"
+											size = { 0 0 }
+											state = {
+												name = _show
+												on_start = "[GetVariableSystem.Set(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)0'), '0', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)1'), '1', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)2'), '2', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)3'), '3', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)4'), '4', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)5'), '5', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)6'), '6', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)7'), '7', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)8'), '8', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)9'), '9', '10')))))))))))]"
+											}
+										}
+										widget = {
+											visible_at_creation = no
+											visible = "[And(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), And(LocationToBuildItem.HasConstructedBuildingLevels, Not(IsOdd_int32(GetDataModelSize(Location.GetCivilConstructions)))))]"
+											size = { 0 0 }
+											state = {
+												name = _show
+												on_start = "[GetVariableSystem.Set(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)0'), '0', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)1'), '1', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)2'), '2', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)3'), '3', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)4'), '4', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)5'), '5', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)6'), '6', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)7'), '7', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)8'), '8', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0.05'))), '(int32)9'), '9', '10')))))))))))]"
+											}
+										}
+										widget = {
+											visible_at_creation = no
+											visible = "[And(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), And(Not(LocationToBuildItem.HasConstructedBuildingLevels), IsOdd_int32(GetDataModelSize(Location.GetCivilConstructions))))]"
+											size = { 0 0 }
+											state = {
+												name = _show
+												on_start = "[GetVariableSystem.Set(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)0'), '0', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)1'), '1', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)2'), '2', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)3'), '3', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)4'), '4', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)5'), '5', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)6'), '6', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)7'), '7', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)8'), '8', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)9'), '9', '10')))))))))))]"
+											}
+										}
+										widget = {
+											visible_at_creation = no
+											visible = "[And(And(GetVariableSystem.Exists('pp_build_payback_order'), BuildInLocationLateralView.GetBuildingType.IsProducing), And(Not(LocationToBuildItem.HasConstructedBuildingLevels), Not(IsOdd_int32(GetDataModelSize(Location.GetCivilConstructions)))))]"
+											size = { 0 0 }
+											state = {
+												name = _show
+												on_start = "[GetVariableSystem.Set(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)0'), '0', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)1'), '1', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)2'), '2', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)3'), '3', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)4'), '4', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)5'), '5', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)6'), '6', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)7'), '7', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)8'), '8', Select_CString(EqualTo_int32(FixedPointToInt(Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), '(CFixedPoint)12'), Max_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0.05'))), '(int32)9'), '9', '10')))))))))))]"
+											}
+										}
+									}
+								}
+							}
+							flowcontainer = { # payback 0 to 1 years
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '0'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
+												widget = {
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							flowcontainer = { # payback 1 to 2 years
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '1'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
+												widget = {
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							flowcontainer = { # payback 2 to 3 years
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '2'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
+												widget = {
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							flowcontainer = { # payback 3 to 4 years
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '3'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
+												widget = {
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							flowcontainer = { # payback 4 to 5 years
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '4'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
+												widget = {
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							flowcontainer = { # payback 5 to 6 years
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '5'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
+												widget = {
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							flowcontainer = { # payback 6 to 7 years
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '6'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
+												widget = {
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							flowcontainer = { # payback 7 to 8 years
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '7'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
+												widget = {
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							flowcontainer = { # payback 8 to 9 years
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '8'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
+												widget = {
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							flowcontainer = { # payback 9 to 10 years
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '9'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
+												widget = {
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							flowcontainer = { # payback 10 years or more, or no profit
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)), '10'), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
+												widget = {
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							flowcontainer = { # not recorded yet
+								direction = vertical
+								ignoreinvisible = yes
+								datamodel = "[BuildInLocationLateralView.GetItems]"
+								item = {
+									flowcontainer = {
+										direction = vertical
+										ignoreinvisible = yes
+										datacontext = "[LocationToBuildItem.GetLocation]"
+										datacontext = "[LocationToBuildItem.GetBuilding]"
+										datacontext = "[LocationToBuildItem.GetBuildingType]"
+										datamodel = "[DataModelRepeatedItem(Select_int32(Not(GetVariableSystem.Exists(Concatenate('pp_pb_', Concatenate(BuildingType.GetName, Location.GetKey)))), '(int32)1', '(int32)0'))]"
+										item = {
+											widget = {
+												size = { 930 60 }
+												widget = {
+													size = { 100% 58 }
+													parentanchor = center
+													hbox = {
+														using = layoutpolicy_expanding
+														using = bg_cabinet_card_frame
+														margin = {5 5}
+														using = build_location_entry
+													}
+												}
+											}
+										}
+									}
 								}
 							}
 						}
@@ -1508,21 +1975,18 @@ template build_location_entry {
 									}
 								}
 
-								text_single = {
+								hbox = { # PP: the construction count, built only with a construction (its tooltip reads the first)
 									datacontext = "[LocationToBuildItem.GetLocation]"
-									visible = "[DataModelHasItems(Location.GetCivilConstructions)]"
-
-									autoresize = yes
-									using = Font_Size_Very_Small
-									raw_text = "(#L +[GetDataModelSize(Location.GetCivilConstructions)]#! @construction!)"
-
-									datacontext_from_model = { 
-										datamodel = "[Location.GetCivilConstructions]"
-										index = 0
-									}
-									
-									tooltipwidget = {
-										using = Construction_tooltip
+									datamodel = "[DataModelFirst(Location.GetCivilConstructions, '(int32)1')]"
+									item = {
+										text_single = {
+											autoresize = yes
+											using = Font_Size_Very_Small
+											raw_text = "(#L +[GetDataModelSize(Location.GetCivilConstructions)]#! @construction!)"
+											tooltipwidget = {
+												using = Construction_tooltip
+											}
+										}
 									}
 								}
 							}
@@ -2164,127 +2628,7 @@ template build_location_entry {
 					visible = "[And(LocationToBuildItem.IsForeignBuilding, LocationToBuildItem.GetLocation.GetOwner.IsValid)]"
 				}
 
-				hbox = {
-					visible = "[LocationToBuildItem.GetBuildingType.IsProducing]"
-					margin = { 5 0 }
-					widget = { #profit
-						size = { 60 39 }
-						hbox = { #built
-							visible = "[And(LocationToBuildItem.ShowProfit, LocationToBuildItem.HasConstructedBuildingLevels)]"
-							expand = {}
-							datacontext = "[LocationToBuildItem.GetBuildingType]"
-							vbox = {  #profitable
-								visible = "[GreaterThan_CFixedPoint(Building.GetProfit, '(CFixedPoint)0')]"
-								spacing = 3
-								tooltipwidget = {
-									using = BuildingProfit_Tooltip
-								}
-								text_single = {
-									size = { 60 18 }
-									align = nobaseline|right
-									autoresize = no
-									fontsize = 14
-									raw_text = "+[Building.GetProfitPerLevel|2]@wealth!"
-									sort_by_highlight = {
-										size = { 105% 100% }
-										name = "profit"
-									}
-								}
-								text_single = {
-									size = { 60 18 }
-									align = nobaseline|right
-									autoresize = no
-									fontsize = 14
-									raw_text = "[Building.GetIncomeToOwnerPerLevel|+=2]@income!"
-									sort_by_highlight = {
-										size = { 105% 100% }
-										name = "income"
-									}
-								}
-							}
-							text_single = { #unprofitable and not subsidized
-								visible = "[And(LessThanOrEqualTo_CFixedPoint(Building.GetProfit, '(CFixedPoint)0'), Not(Building.IsSubsidized))]"
-								maximumsize = { 60 18 }
-								fontsize = 14
-								raw_text = "[Building.GetProfitPerLevel|+=2]@wealth!"
-								sort_by_highlight = {
-									size = { 105% 100% }
-									name = "profit"
-								}
-								tooltipwidget = {
-									using = BuildingProfit_Tooltip
-								}
-							}
-							text_single = { # subsidized
-								visible = "[And(LessThanOrEqualTo_CFixedPoint(Building.GetProfit, '(CFixedPoint)0'), Building.IsSubsidized)]"
-								maximumsize = { 60 18 }
-								fontsize = 14
-								raw_text = "#L [Building.GetProfitPerLevel|2]#!@wealth!"
-								sort_by_highlight = {
-									size = { 105% 100% }
-									name = "income"
-								}
-								tooltipwidget = {
-									using = BuildingProfit_Tooltip
-								}
-							}
-						}
-	
-						hbox = { #unbuilt
-							visible = "[And(LocationToBuildItem.ShowProfit, Not(LocationToBuildItem.HasConstructedBuildingLevels))]"
-							expand = {}
-							vbox = {
-								datacontext = "[LocationToBuildItem.GetBuildingType]"
-								tooltipwidget = {
-									using = BuildingTypeProfit_Tooltip
-								}
-								text_single = {
-									visible = "[Not(LessThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'))]"
-									size = { 60 18 }
-									align = nobaseline|right
-									autoresize = no
-									fontsize = 14
-									raw_text = "+[GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self)|2]@wealth!"
-									sort_by_highlight = {
-										size = { 105% 100% }
-										name = "profit"
-									}
-								}
-								text_single = {
-									visible = "[LessThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0')]"
-									size = { 60 18 }
-									align = nobaseline|right
-									autoresize = no
-									fontsize = 14
-									raw_text = "[GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self)|+=2]@wealth!"
-									sort_by_highlight = {
-										size = { 105% 100% }
-										name = "profit"
-									}
-	
-									sort_by_highlight = {
-										size = { 105% 200% }
-										name = "production_efficiency"
-									}
-								}
-	
-								text_single = {
-									visible = "[Not(LessThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'))]"
-									size = { 60 18 }
-									align = nobaseline|right
-									autoresize = no
-									fontsize = 14
-									raw_text = "[GetBuildingTypeIncomeToOwnerInLocation(BuildingType.Self, Location.Self)|+=<2]@income!"
-									sort_by_highlight = {
-										size = { 105% 100% }
-										name = "income"
-									}
-								}
-
-							}
-						}
-					}
-				}
+				hbox = { using = pp_build_location_values } # PP: build cost, payback, profit, tax income
 
 				widget = { #builder
 					visible = "[Not(And(LocationToBuildItem.HasBuilding, LocationToBuildItem.GetBuilding.CanPlayerUpgrade))]"
@@ -3429,7 +3773,16 @@ template bg_input_good {
 
 lateralview = {
 	name = "build_location_lateralview"
-	size = { 800 100% } # PP: wider than the vanilla left panel (570)
+	size = { 990 100% } # PP: wider than the vanilla left panel (570)
+	widget = { # PP: pp_panel_width for the search filter menu
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[Not(BuildInLocationLateralView.Vars.HasValue('pp_panel_width', '990'))]"
+		state = {
+			name = _show
+			on_start = "[BuildInLocationLateralView.Vars.Set('pp_panel_width', '990')]"
+		}
+	}
 
 	# SOUND - Build Location (Left Panel)
 	blockoverride "snd_panel_identifier" { soundeffect = "UI_panelAux_buildLocation_show" }
@@ -3468,7 +3821,7 @@ lateralview = {
 							layoutpolicy_horizontal = fixed
 							layoutpolicy_vertical = fixed
 							autoresize = yes
-							maximumsize = { 650 -1 }
+							maximumsize = { 840 -1 }
 							text = "BUILD_LOCATION_TITLE"
 						}
 					}
@@ -3491,18 +3844,18 @@ window = { # PP: vanilla select_menu_left (select_menu.gui), opened beside the w
 	allow_outside = yes
 	layer = sidemenu
 	parentanchor = left
-	position = { 800 180 }
+	position = { 990 180 }
 
 	state = {
 		name = _show
 		duration = 0.133
-		position_x = 800
+		position_x = 990
 		alpha = 1
 	}
 	state = {
 		name = _hide
 		duration = 0.133
-		position_x = 755
+		position_x = 945
 		alpha = 0
 	}
 
@@ -3574,6 +3927,204 @@ window = { # PP: vanilla select_menu_left (select_menu.gui), opened beside the w
 							}
 						}
 					}
+				}
+			}
+		}
+	}
+}
+
+template pp_build_location_values { # PP: the value columns of a location row (an hbox)
+	visible = "[LocationToBuildItem.GetBuildingType.IsProducing]"
+	layoutpolicy_vertical = expanding
+	margin = { 5 0 }
+	datacontext = "[LocationToBuildItem.GetLocation]"
+	datacontext = "[LocationToBuildItem.GetBuilding]"
+	datacontext = "[LocationToBuildItem.GetBuildingType]"
+	widget = { # build cost of the next level
+		size = { 55 -1 }
+		layoutpolicy_vertical = expanding
+		widget = { # built
+			visible = "[And(LocationToBuildItem.ShowProfit, LocationToBuildItem.HasConstructedBuildingLevels)]"
+			size = { 100% 100% }
+			text_single = {
+				size = { 100% 18 }
+				parentanchor = vcenter
+				align = nobaseline|right
+				autoresize = no
+				fontsize = 14
+				raw_text = "[GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self)|0]@gold!"
+				tooltip = "PP_BUILD_PAYBACK_TT_BUILT"
+				sort_by_highlight = {
+					size = { 105% 100% }
+					name = "cost"
+				}
+			}
+		}
+		widget = { # unbuilt
+			visible = "[And(LocationToBuildItem.ShowProfit, Not(LocationToBuildItem.HasConstructedBuildingLevels))]"
+			size = { 100% 100% }
+			text_single = {
+				size = { 100% 18 }
+				parentanchor = vcenter
+				align = nobaseline|right
+				autoresize = no
+				fontsize = 14
+				raw_text = "[GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self)|0]@gold!"
+				tooltip = "PP_BUILD_PAYBACK_TT_UNBUILT"
+				sort_by_highlight = {
+					size = { 105% 100% }
+					name = "cost"
+				}
+			}
+		}
+	}
+	widget = { # payback: years of profit per build cost
+		size = { 55 -1 }
+		layoutpolicy_vertical = expanding
+		widget = { # built
+			visible = "[And(LocationToBuildItem.ShowProfit, LocationToBuildItem.HasConstructedBuildingLevels)]"
+			size = { 100% 100% }
+			text_single = {
+				visible = "[GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0')]"
+				size = { 100% 18 }
+				parentanchor = vcenter
+				align = nobaseline|right
+				autoresize = no
+				fontsize = 14
+				raw_text = "[Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), Building.GetProfitPerLevel), '(CFixedPoint)12')|1]@time!"
+				tooltip = "PP_BUILD_PAYBACK_TT_BUILT"
+			}
+			text_single = {
+				visible = "[Not(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'))]"
+				size = { 100% 18 }
+				parentanchor = vcenter
+				align = nobaseline|right
+				autoresize = no
+				fontsize = 14
+				raw_text = "#L -#!"
+			}
+		}
+		widget = { # unbuilt
+			visible = "[And(LocationToBuildItem.ShowProfit, Not(LocationToBuildItem.HasConstructedBuildingLevels))]"
+			size = { 100% 100% }
+			text_single = {
+				visible = "[GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0')]"
+				size = { 100% 18 }
+				parentanchor = vcenter
+				align = nobaseline|right
+				autoresize = no
+				fontsize = 14
+				raw_text = "[Divide_CFixedPoint(Divide_CFixedPoint(GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self), GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self)), '(CFixedPoint)12')|1]@time!"
+				tooltip = "PP_BUILD_PAYBACK_TT_UNBUILT"
+			}
+			text_single = {
+				visible = "[Not(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'))]"
+				size = { 100% 18 }
+				parentanchor = vcenter
+				align = nobaseline|right
+				autoresize = no
+				fontsize = 14
+				raw_text = "#L -#!"
+			}
+		}
+	}
+	widget = { # profit per level
+		size = { 60 -1 }
+		layoutpolicy_vertical = expanding
+		widget = { # built
+			visible = "[And(LocationToBuildItem.ShowProfit, LocationToBuildItem.HasConstructedBuildingLevels)]"
+			size = { 100% 100% }
+			text_single = {
+				visible = "[Not(And(LessThanOrEqualTo_CFixedPoint(Building.GetProfit, '(CFixedPoint)0'), Building.IsSubsidized))]"
+				size = { 100% 18 }
+				parentanchor = vcenter
+				align = nobaseline|right
+				autoresize = no
+				fontsize = 14
+				raw_text = "[Building.GetProfitPerLevel|+=2]@wealth!"
+				tooltipwidget = {
+					using = BuildingProfit_Tooltip
+				}
+				sort_by_highlight = {
+					size = { 105% 100% }
+					name = "profit"
+				}
+			}
+			text_single = {
+				visible = "[And(LessThanOrEqualTo_CFixedPoint(Building.GetProfit, '(CFixedPoint)0'), Building.IsSubsidized)]"
+				size = { 100% 18 }
+				parentanchor = vcenter
+				align = nobaseline|right
+				autoresize = no
+				fontsize = 14
+				raw_text = "#L [Building.GetProfitPerLevel|2]#!@wealth!"
+				tooltipwidget = {
+					using = BuildingProfit_Tooltip
+				}
+				sort_by_highlight = {
+					size = { 105% 100% }
+					name = "profit"
+				}
+			}
+		}
+		widget = { # unbuilt
+			visible = "[And(LocationToBuildItem.ShowProfit, Not(LocationToBuildItem.HasConstructedBuildingLevels))]"
+			size = { 100% 100% }
+			text_single = {
+				size = { 100% 18 }
+				parentanchor = vcenter
+				align = nobaseline|right
+				autoresize = no
+				fontsize = 14
+				raw_text = "[GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self)|+=2]@wealth!"
+				tooltipwidget = {
+					using = BuildingTypeProfit_Tooltip
+				}
+				sort_by_highlight = {
+					size = { 105% 100% }
+					name = "profit"
+				}
+			}
+		}
+	}
+	widget = { # tax income per level
+		size = { 60 -1 }
+		layoutpolicy_vertical = expanding
+		widget = { # built
+			visible = "[And(LocationToBuildItem.ShowProfit, LocationToBuildItem.HasConstructedBuildingLevels)]"
+			size = { 100% 100% }
+			text_single = {
+				size = { 100% 18 }
+				parentanchor = vcenter
+				align = nobaseline|right
+				autoresize = no
+				fontsize = 14
+				raw_text = "[Building.GetIncomeToOwnerPerLevel|+=2]@income!"
+				tooltipwidget = {
+					using = BuildingProfit_Tooltip
+				}
+				sort_by_highlight = {
+					size = { 105% 100% }
+					name = "income"
+				}
+			}
+		}
+		widget = { # unbuilt
+			visible = "[And(LocationToBuildItem.ShowProfit, Not(LocationToBuildItem.HasConstructedBuildingLevels))]"
+			size = { 100% 100% }
+			text_single = {
+				size = { 100% 18 }
+				parentanchor = vcenter
+				align = nobaseline|right
+				autoresize = no
+				fontsize = 14
+				raw_text = "[GetBuildingTypeIncomeToOwnerInLocation(BuildingType.Self, Location.Self)|+=2]@income!"
+				tooltipwidget = {
+					using = BuildingTypeProfit_Tooltip
+				}
+				sort_by_highlight = {
+					size = { 105% 100% }
+					name = "income"
 				}
 			}
 		}

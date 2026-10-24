@@ -126,7 +126,38 @@ def _is_generated_copy(path: Path) -> bool:
         return False
 
 
-def write_compat_patches(vanilla_root: Path, mod_root: Path, repo: Path, families: Families, relative_files: list[str]) -> dict[str, object]:
+def remove_objects(text: str, names: list[str], rel: str) -> str:
+    """``text`` without the named top-level objects; fails when one is missing (vanilla changed, review the removal)."""
+    spans = {name: (a, b) for name, a, b in top_level_objects(text)}
+    missing = [name for name in names if name not in spans]
+    if missing:
+        raise ValueError(f"[worldbuilder.compat] {rel}: objects to remove not found: {', '.join(missing)}; vanilla changed, review removed_objects")
+    for a, b in sorted((spans[name] for name in names), reverse=True):
+        text = text[:a] + text[b:]
+    return text
+
+
+def replace_exact(text: str, replacements: list[tuple[str, str, int]], rel: str) -> str:
+    """Exact text replacements; each must occur exactly its configured number of times."""
+    for find, new, count in replacements:
+        found = text.count(find)
+        if found != count:
+            raise ValueError(f"[worldbuilder.compat] {rel}: expected {count} occurrence(s) of {find!r}, found {found}; vanilla changed, review the replacement")
+        text = text.replace(find, new)
+    return text
+
+
+def removed_vanilla_buildings(repo: Path) -> set[str]:
+    """Vanilla building types the mod deletes (``[worldbuilder.compat] removed_objects`` of building_types files)."""
+    import tomllib
+
+    compat = tomllib.loads((Path(repo) / "constructor.toml").read_text(encoding="utf-8")).get("worldbuilder", {}).get("compat", {})
+    return {str(name) for rel, names in (compat.get("removed_objects") or {}).items() if "/building_types/" in rel for name in names}
+
+
+def write_compat_patches(vanilla_root: Path, mod_root: Path, repo: Path, families: Families, relative_files: list[str],
+                         removed: Mapping[str, list[str]] | None = None,
+                         replacements: Mapping[str, list[tuple[str, str, int]]] | None = None) -> dict[str, object]:
     """Copy the configured vanilla files into the mod with widened tests; drop copies no longer produced.
 
     A copy is a whole-file override and becomes a mod file, so it must not undo the mod's own overrides:
@@ -135,23 +166,35 @@ def write_compat_patches(vanilla_root: Path, mod_root: Path, repo: Path, familie
       where only the Maghreb palm irrigation is widened and its blueprint is a REPLACE);
     - a copy is refused when the mod overrides one of its objects in a file that sorts before it in the same
       folder: the copy's plain definition would load after that override and replace it.
+
+    ``removed`` (``[worldbuilder.compat] removed_objects``) deletes vanilla objects: they are left out of the file's
+    copy, which is then always written (without it the vanilla definition would come back). ``replacements``
+    (``[[worldbuilder.compat.replacements]]``) rewrite the vanilla references to them; a file listed only there is
+    copied with the replacements and no widening.
     """
+    removed = dict(removed or {})
+    replacements = dict(replacements or {})
     manifest_path = repo / MANIFEST_RELATIVE_PATH
     previous = json.loads(manifest_path.read_text(encoding="utf-8")).get("files", {}) if manifest_path.is_file() else {}
     files: dict[str, dict[str, object]] = {}
     unchanged: list[str] = []
-    for rel in relative_files:
+    for rel in dict.fromkeys([*relative_files, *removed, *replacements]):
         source = Path(vanilla_root) / "game" / rel
         if not source.is_file():
             raise FileNotFoundError(f"[worldbuilder.compat] vanilla file not found: {source}")
-        original = source.read_text(encoding="utf-8-sig")
-        expanded, widened = expand_attribute_tests(original, families)
+        vanilla_text = source.read_text(encoding="utf-8-sig")
+        original = replace_exact(remove_objects(vanilla_text, removed.get(rel, []), rel), replacements.get(rel, []), rel)
+        if rel in relative_files:
+            expanded, widened = expand_attribute_tests(original, families)
+        else:
+            expanded, widened = original, 0
         target = mod_root / rel
         overrides = mod_overrides(target.parent, target.name)
         objects = top_level_objects(original)
         replaced = {name for name, uses in overrides.items() if any(kind in _REPLACE_KINDS for kind, _ in uses)}
-        widened -= sum(expand_attribute_tests(original[a:b], families)[1] for name, a, b in objects if name in replaced)
-        if widened == 0:
+        if rel in relative_files:
+            widened -= sum(expand_attribute_tests(original[a:b], families)[1] for name, a, b in objects if name in replaced)
+        if widened == 0 and rel not in removed and rel not in replacements:
             unchanged.append(rel)
             if target.is_file() and (rel in previous or _is_generated_copy(target)):
                 target.unlink()
@@ -162,7 +205,11 @@ def write_compat_patches(vanilla_root: Path, mod_root: Path, repo: Path, familie
                              + ", ".join(clobbered) + "; move them to a file that sorts after it (zz_pp_*) or drop the file from the list")
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text("﻿" + HEADER + "\n" + expanded, encoding="utf-8", newline="\n")
-        files[rel] = {"vanilla_sha256": _sha(original), "tests_widened": widened}
+        files[rel] = {"vanilla_sha256": _sha(vanilla_text), "tests_widened": widened}
+        if rel in removed:
+            files[rel]["removed_objects"] = list(removed[rel])
+        if rel in replacements:
+            files[rel]["replacements"] = len(replacements[rel])
     for rel in previous:
         if rel not in files and (mod_root / rel).is_file():
             (mod_root / rel).unlink()

@@ -1,27 +1,94 @@
-﻿## Prosper or Perish - Pop demand extension (debug-simple)
-## We inject into the vanilla `pop_demand` database object so we don't collide with it.
-INJECT:pop_demand = {
-	victuals = 1
-	# Staple foods (config/goods_categories.csv staple_group) and horses: pops' demand cut ~30 % (2026-10-14, Jan).
-	# The value multiplies the good's demand_add for every pop type; vanilla in the comment.
-	wheat = 0.53 # 0.75
-	rice = 0.7 # 1
-	millet = 0.7 # 1
-	maize = 0.7 # 1
-	potato = 0.7 # 1
-	legumes = 0.7 # 1
-	livestock = 0.7 # 1
-	fish = 0.7 # 1
-	wild_game = 0.7 # 1
-	camels = 0.7 # 1
-	fruit = 0.35 # 0.5
-	olives = 0.7 # 1
+﻿## Prosper or Perish - pop demand
+## REPLACE of vanilla's `pop_demand` (in_game/common/goods_demand/pop_demands.txt): the game rejects an INJECT of a good
+## vanilla already lists ("Goods already specified"), so PP owns the whole object. Vanilla's content with PP's values;
+## a changed value carries vanilla's in the comment. Never INJECT into pop_demand elsewhere: the engine ignores injects
+## into a block the mod replaces. The value multiplies the good's demand_add for every pop type (the per-pop-type
+## objects nobles_demand ... tribesmen_demand copy_from this one).
+REPLACE:pop_demand = {
+
+	#########################
+	# Alcohol
+	#########################
+	wine = 1
+	liquor = 1
+	beer = 1
+
+	############################
+	# Raw Materials
+	############################
+	fur = 1
+	beeswax = 1
+	lumber = 1
+	coal = 1
+	pearls = 1
+	amber = 1
+	silver = 1
+	goods_gold = 1
+	ivory = 1
+	incense = 1
+	gems = 1
+	marble = 1
+	# Horses and camels: pops' demand cut ~30 % (2026-10-14, Jan).
 	horses = 0.7 # 1
+	camels = 0.7 # 1
+	elephants = 1
+	medicaments = 1
+	masonry = 1
+	mercury = 1
+	# Silk: pops demand it (upper classes, goods demand_add in pp_goods_adjustments.txt; 2026-10-14, Jan). Not in vanilla.
+	silk = 1
+
+	############################
+	# Produced Goods
+	############################
+	tools = 1
+	glass = 1
+	pottery = 1
+	furniture = 1
+	porcelain = 1
+	lacquerware = 1
+	jewelry = 1
+	fine_cloth = 1
+	cloth = 1
+	paper = 1
+	books = 1
+	weaponry = 1
+	firearms = 1
 	# Salt: pops demand a third (2026-10-14, Jan).
 	salt = 0.33 # 1
-	# Silk: pops demand it (upper classes, goods demand_add in pp_goods_adjustments.txt; 2026-10-14, Jan).
-	silk = 1
+	leather = 1
+
+	###########################
+	# Luxury Foods & Spice
+	###########################
+	sugar = 1
+	tobacco = 1
 	# Tea and cocoa: half of pops' demand went unmet all game (1837: 48 % / 45 %); about 3/4 met at these.
 	tea = 0.6 # 1
 	cocoa = 0.7 # 1
+	coffee = 1
+	saffron = 1
+	pepper = 1
+	cloves = 1
+	chili = 1
+
+	###########################
+	# Food
+	###########################
+	# Staple foods (config/goods_categories.csv staple_group): pops' demand cut ~30 % (2026-10-14, Jan).
+	potato = 0.7 # 1
+	maize = 0.7 # 1
+	millet = 0.7 # 1
+	wild_game = 0.7 # 1
+	fish = 0.7 # 1
+	legumes = 0.7 # 1
+	olives = 0.7 # 1
+	wheat = 0.53 # 0.75
+	fruit = 0.35 # 0.5
+	livestock = 0.7 # 1
+	rice = 0.7 # 1
+	# Victuals: PP's packed food good. Not in vanilla.
+	victuals = 1
+
+	category = pop_needs
 }

@@ -38,6 +38,56 @@ def test_geography_sync_ships_the_map_ports_and_adjacencies(tmp_path):
     assert export_files(tmp_path) == ["in_game/map_data/adjacencies.csv", "in_game/map_data/default.map", "in_game/map_data/ports.csv"]
 
 
+def test_geography_sync_tests_soil_and_fertility_modifiers_not_variables(tmp_path):
+    # 2026-10-24: the setup's pp_wb_fertility_<class> / pp_wb_soil_<class> modifiers are the one record of a location's
+    # soil and fertility; the export's variable on_actions and the unused triggers and customizable loc stay out
+    import json
+
+    from prosper_or_perish_constructor.worldbuilder import geography
+
+    export, mod = tmp_path / "export", tmp_path / "mod"
+    files = {
+        "in_game/common/on_action/ha1300_global_soils.txt": "on_game_start = { on_actions = { ha1300_assign_soil_types } }\n",
+        "in_game/common/scripted_triggers/ha1300_fertility.txt": "ha1300_fertility_is_low = { has_variable = ha1300_fertility var:ha1300_fertility = 2 }\n",
+        "in_game/common/customizable_localization/ha1300_global_soils.txt":
+            "ha1300_soil_type_name = { type = location\n text = { localization_key = A trigger = { has_variable = ha1300_soil_type var:ha1300_soil_type = 6 } }\n"
+            " text = { localization_key = B fallback = yes } }ha1300_soil_type_evidence = { type = location\n"
+            " text = { localization_key = C trigger = { has_variable = ha1300_soil_inferred } }\n}\n",
+        "in_game/common/customizable_localization/ha1300_native_geography.txt":
+            "ha1300_native_coast = {\n type = location\n}\nha1300_native_lake = {\n type = location\n}\nha1300_native_max_winter = {\n type = location\n}\n",
+        "in_game/gfx/map/map_modes/ha1300_fertility.txt":
+            "ha1300_fertility = { map_color = { if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 5 } value = rgb { 1 2 3 } } } }\n",
+    }
+    for rel, text in files.items():
+        (export / rel).parent.mkdir(parents=True, exist_ok=True)
+        (export / rel).write_text("﻿" + text, encoding="utf-8")
+    (export / "ha1300-build.json").write_text(json.dumps({"files": {rel: "x" for rel in files}}))
+    stale = mod / "in_game/common/on_action/ha1300_fertility.txt"   # an earlier sync's copy
+    stale.parent.mkdir(parents=True)
+    stale.write_text("x")
+    geography.sync_geography(export, mod, tmp_path)
+    assert not stale.exists()
+    assert not (mod / "in_game/common/on_action/ha1300_global_soils.txt").exists()
+    assert not (mod / "in_game/common/scripted_triggers/ha1300_fertility.txt").exists()
+    soils = (mod / "in_game/common/customizable_localization/ha1300_global_soils.txt").read_text(encoding="utf-8-sig")
+    assert "trigger = { has_location_modifier = pp_wb_soil_stony }" in soils
+    assert "ha1300_soil_type_evidence" not in soils and soils.endswith("fallback = yes } }\n")
+    native = (mod / "in_game/common/customizable_localization/ha1300_native_geography.txt").read_text(encoding="utf-8-sig")
+    assert native == "ha1300_native_lake = {\n type = location\n}\n"
+    fertility = (mod / "in_game/gfx/map/map_modes/ha1300_fertility.txt").read_text(encoding="utf-8-sig")
+    assert "limit = { has_location_modifier = pp_wb_fertility_very_high }" in fertility
+
+
+def test_mod_keeps_soil_and_fertility_only_as_location_modifiers():
+    from prosper_or_perish_constructor.worldbuilder.geography import DROPPED_EXPORT_FILES
+
+    for rel in DROPPED_EXPORT_FILES:
+        assert not (MOD_ROOT / rel).exists(), rel
+    for path in [*(MOD_ROOT / "in_game").rglob("*.txt"), *(MOD_ROOT / "in_game").rglob("*.gui")]:
+        text = path.read_text(encoding="utf-8-sig", errors="replace")
+        assert not re.search(r"(?:var:|has_variable = )ha1300_(?:fertility|soil_type|soil_inferred)\b", text), path
+
+
 def test_capitals_and_pop_countries_do_not_own_land(tmp_path):
     start = tmp_path / "mod/main_menu/setup/1337"
     start.mkdir(parents=True)
@@ -92,6 +142,8 @@ def test_the_setup_attribute_modifiers_reach_the_start_placement():
 
 
 def test_setup_rows_failing_rank_or_potential_are_dropped_unless_unresolved():
+    # vanilla's setup_only rank counts only for setup-only buildings (allow = { always = no }); a cathedral anyone can
+    # build goes where its rank forbids it (2026-10-24, Jan: by the book)
     from collections import Counter
 
     from eu5gameparser.clausewitz.parser import parse_text
@@ -110,7 +162,7 @@ def test_setup_rows_failing_rank_or_potential_are_dropped_unless_unresolved():
     sim = SimpleNamespace(rules=rules, locations={"beteta": {}}, trimmed=[], ctx=lambda tag: ctx,
                           counts={"beteta": Counter(tar_kiln=4, pottery_guild=1, cathedral=1, town_hall=1)})
     Simulation.drop_invalid(sim)
-    assert sim.counts["beteta"] == Counter(tar_kiln=0, pottery_guild=0, cathedral=1, town_hall=1)
+    assert sim.counts["beteta"] == Counter(tar_kiln=0, pottery_guild=0, cathedral=0, town_hall=1)
 
 
 def test_the_river_share_of_starting_buildings_moves_to_game_start(tmp_path):
@@ -313,7 +365,7 @@ def test_the_shipped_setup_passed_the_start_placement_audit():
     if not table.is_file():   # no build in this checkout yet
         return
     audit = pl.read_csv(table, schema_overrides={"problem": pl.String, "cap": pl.Int64}).with_columns(pl.col("problem").fill_null(""))
-    errors = audit.filter(~pl.col("problem").is_in(["", "unresolved", ss.KEPT_ABOVE_CAP]))
+    errors = audit.filter(pl.col("problem") != "")   # every rule read, none broken (2026-10-24)
     assert errors.height == 0, errors.head(10)
     audited = {(r["location"], r["building"]): r["levels"] for r in audit.iter_rows(named=True)}
     for line in (MOD_ROOT / START_SETUP_PATH).read_text(encoding="utf-8-sig").splitlines():

@@ -23,6 +23,45 @@ class Unresolved(ValueError):
     pass
 
 
+# Conditions on the country that builds (scope:actor, its range, relations, copies it owns, its cores): they decide who
+# may order a building, not where it may stand. A setup building is ordered by the setup, so in the start check
+# (ctx["placement"]) they hold; every condition on the location itself is evaluated (2026-10-24, Jan: by the book).
+BUILDER_TRIGGERS = frozenset({
+    "owner", "any_foreign_building_countries_in_location", "owner_owns_no_copies_of_building",
+    "country_has_no_other_copy_of_building", "within_diplomatic_range", "within_naval_range_of",
+    "within_colonial_range_of", "giving_scripted_relation", "in_trade_range_of", "is_subject_of",
+    "has_primary_or_accepted_culture",
+})
+
+
+def _any(results):
+    """OR over lazily evaluated branches: true if one is true, even when another cannot be read."""
+    pending = None
+    for result in results:
+        try:
+            if result():
+                return True
+        except Unresolved as exc:
+            pending = exc
+    if pending is not None:
+        raise pending
+    return False
+
+
+def _all(results):
+    """AND over lazily evaluated branches: false if one is false, even when another cannot be read."""
+    pending = None
+    for result in results:
+        try:
+            if not result():
+                return False
+        except Unresolved as exc:
+            pending = exc
+    if pending is not None:
+        raise pending
+    return True
+
+
 def first(node, key, default=None):
     return next(iter(node.values(key)), default) if isinstance(node, CList) else default
 
@@ -47,7 +86,7 @@ class Rules:
         profile = load_profile("constructor", load_order_path=order)
 
         # The parser's merge drops an inject into a replaced block, as the engine does (river_flowing_through_N
-        # counts its fish row once).
+        # carries its fish row once, from the World Builder's replace; the mod keeps no inject there).
         def merged(name, scope="in_game"):
             return {
                 e.key: e.value
@@ -63,6 +102,7 @@ class Rules:
             "static_modifiers"
         )
         self.towns = merged("town_setups")
+        self.cultures = merged("cultures")
         self.ranks = merged("location_ranks")
         self.goods = merged("goods")
         # Location classes carry local_monthly_food_modifier rows (vanilla plus the mod's cancelling injects).
@@ -206,16 +246,41 @@ class Rules:
             raise Unresolved("non-block trigger")
 
         def single(key, op, v):
+            if key in ("and", "or", "not", "nor"):
+                key = key.upper()
             if key == "text":
                 return True
+            if ctx.get("placement") and (key in BUILDER_TRIGGERS or key.startswith("scope:")):
+                return True
+            if key == "dominant_culture" and isinstance(v, CList):
+                return self.test(v, self.culture_scope(ctx), depth + 1)
+            if key == "dominant_culture.language":
+                return self.culture_scope(ctx)["language"] == str(v).split(":")[-1]
+            if key == "has_culture_group":
+                return str(v).split(":")[-1] in ctx.get("culture_groups", ())
+            if key == "any_pop":
+                return any(self.test(v, {"culture": p.culture, "religion": p.religion, "pop_type": p.type}, depth + 1)
+                           for p in ctx.get("pops", ()))
+            if key in ("market", "is_produced_in_location_market", "is_produced_in_market") and "market_goods" not in ctx:
+                raise Unresolved("trigger " + key)
+            if key == "market":
+                return self.test(v, {"market_goods": ctx["market_goods"], "placement": ctx.get("placement")}, depth + 1)
+            if key in ("is_produced_in_location_market", "is_produced_in_market"):
+                return str(v).split(":")[-1] in ctx["market_goods"]
             if key in ("AND", "limit", "custom_tooltip"):
                 return self.test(v, ctx, depth + 1)
             if key == "OR":
-                return any(single(*e) for e in entries(v))
+                return _any(lambda e=e: single(*e) for e in entries(v))
             if key == "NOT":
                 return not self.test(v, ctx, depth + 1)
             if key == "NOR":
-                return not any(single(*e) for e in entries(v))
+                return not _any(lambda e=e: single(*e) for e in entries(v))
+            if key == "trigger_if":
+                limit = first(v, "limit")
+                rest = CList([e for e in v.entries if e.key != "limit"], list(v.items))
+                return not self.test(limit, ctx, depth + 1) or self.test(rest, ctx, depth + 1)
+            if key == "is_core_of" and str(v) in ("owner", "scope:actor") and "integration_level" in ctx:
+                return ctx["integration_level"] == "core"
             if key == "always":
                 return bool(v)
             if key in ctx.get("trigger_values", {}):
@@ -254,9 +319,14 @@ class Rules:
             if key == "current_age_or_later":
                 return first(v, "age") == "age_1_traditions"
             if key == "this":
-                if not str(v).startswith("location:"):
-                    raise Unresolved("trigger this = " + str(v))   # e.g. c:HSA.capital
-                return ctx.get("location_tag") == str(v).split(":")[-1]
+                text = str(v)
+                if text.startswith("culture:") and "culture" in ctx:
+                    return ctx["culture"] == text.split(":")[-1]
+                if text.startswith("c:") and text.endswith(".capital") and "country_capitals" in ctx:
+                    return ctx.get("location_tag") == ctx["country_capitals"].get(text[2:-len(".capital")])
+                if not text.startswith("location:"):
+                    raise Unresolved("trigger this = " + text)
+                return ctx.get("location_tag") == text.split(":")[-1]
             if key in ctx and not isinstance(v, CList):
                 actual = ctx[key]
                 expected = str(v).split(":")[-1] if isinstance(v, str) else v
@@ -279,7 +349,20 @@ class Rules:
                 return actual <= expected
             raise Unresolved("comparison " + op)
 
-        return all(single(*entry) for entry in entries(node))
+        return _all(lambda entry=entry: single(*entry) for entry in entries(node))
+
+    def culture_scope(self, ctx):
+        """The location's dominant culture as a trigger scope: its name, culture groups and language."""
+        culture = ctx.get("dominant_culture")
+        if not culture:
+            raise Unresolved("trigger dominant_culture")
+        body = self.cultures.get(str(culture))
+        if not isinstance(body, CList):
+            raise Unresolved(f"unknown culture {culture}")
+        groups = first(body, "culture_groups")
+        return {"culture": str(culture), "language": str(first(body, "language", "")).split(":")[-1],
+                "culture_groups": set(groups.items) if isinstance(groups, CList) else set(),
+                "placement": ctx.get("placement")}
 
     def _bound_trigger(self, key, args):
         """A scripted trigger with its ``$arg$`` parameters substituted, parsed once per argument set."""

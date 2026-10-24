@@ -46,26 +46,7 @@ pp_tavern_price_cost_modifier={
 	}
 }
 
-# Diagnostic-only value used by the population-capacity density debug map mode.
-# It is deliberately not a gameplay modifier; it only exposes people/km² to
-# map-mode color and tooltip evaluation.
-pp_population_capacity_density={
-	color=good
-	decimals=1
-	game_data={
-		category=location
-	}
-}
-
 pp_field_drainage_price_cost_modifier={
-	color=bad
-	percent=yes
-	game_data={
-		category=country
-	}
-}
-
-pp_irrigation_reservoirs_price_cost_modifier={
 	color=bad
 	percent=yes
 	game_data={

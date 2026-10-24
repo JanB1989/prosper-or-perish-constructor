@@ -14,30 +14,6 @@
 		raw_material = goods:potato
 		raw_material = goods:tea
 		raw_material = goods:olives
-		this = location:changsha
-		this = location:yizhang
-		this = location:hengyang
-		this = location:macheng
-		this = location:xiangyang
-		this = location:xingguo
-		this = location:shangrao
-		this = location:nanchang
-		this = location:dongliu
-		this = location:jiangdu
-		this = location:huaining
-		this = location:linan
-		this = location:tangxian
-		this = location:hezhong
-		this = location:dadu
-		this = location:kaifeng
-		this = location:qixia
-		this = location:pingjin
-		this = location:xinyi_gaozhou
-		this = location:shilong
-		this = location:nanhai
-		this = location:bozhou
-		this = location:jingzhao
-		this = location:fuzhou_sichuan
 	}
 }
 
@@ -56,25 +32,6 @@ pp_general_farmable_food_location_potential = {
 		raw_material = goods:maize
 		raw_material = goods:olives
 		raw_material = goods:potato
-	}
-}
-
-pp_orchard_friendly_location_potential = {
-	is_ownable = yes
-	OR = {
-		raw_material = goods:livestock
-		raw_material = goods:wheat
-		raw_material = goods:millet
-		raw_material = goods:legumes
-		raw_material = goods:fruit
-		raw_material = goods:rice
-		raw_material = goods:beeswax
-		raw_material = goods:maize
-		raw_material = goods:wine
-		raw_material = goods:silk
-		raw_material = goods:potato
-		raw_material = goods:tea
-		raw_material = goods:olives
 	}
 }
 

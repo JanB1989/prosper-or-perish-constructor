@@ -2027,7 +2027,7 @@ lateralview = {
 														parentanchor = right|vcenter
 														maximumsize = {65 20}
 														align = nobaseline
-														raw_text = "[Merchant.GetTotalTradeProfit|+=~]@gold!"
+														raw_text = "[Merchant.GetProjectedTradeProfit|2+=]@gold!"
 													}
 
 													text_single = {

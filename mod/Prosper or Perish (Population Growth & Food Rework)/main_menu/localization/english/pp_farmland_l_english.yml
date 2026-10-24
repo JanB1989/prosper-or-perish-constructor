@@ -1,4 +1,3 @@
 ﻿l_english:
-  # Farm max-level tooltip rows (scripts/generate_rural_capacity_values.py); the rows link Arable Land.
-  PP_BUILDING_LEVEL_FARMLAND: "[population_capacity|e] for this farm"
-  PP_BUILDING_LEVEL_FARMLAND_OTHER_FARMS: "Used by other farms"
+  # Farm max-level tooltip row (scripts/generate_rural_capacity_values.py), after "Free Arable Land".
+  PP_BUILDING_LEVEL_FARM_OWN_LEVELS: "This farm and the lower tiers it replaces"

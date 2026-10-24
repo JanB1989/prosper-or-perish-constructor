@@ -16,7 +16,8 @@ PROJECT_CONFIG = ROOT / "constructor.toml"
 MAP_MODE_REL = Path("in_game/gfx/map/map_modes/pp_goods_output_map_modes_generated.txt")
 SCRIPT_VALUES_REL = Path("in_game/common/script_values/pp_goods_output_map_modes_generated.txt")
 LOCALIZATION_REL = Path("main_menu/localization/english/pp_goods_output_map_modes_l_english.yml")
-IN_GAME_ICON_REL = Path("in_game/gfx/interface/icons/map_modes")
+# map mode picker icons live only in main_menu (docs/mod_authoring_rules.md)
+ICON_REL = Path("main_menu/gfx/interface/icons/map_modes")
 TRADE_GOOD_ICON_REL = Path("main_menu/gfx/interface/icons/trade_goods")
 GOODS_OUTPUT_BUCKETS = (
     ("RANGE_0_10", 0, 10, "define:NMapColors|MAP_COLOR_MIN", "define:NMapColors|MAP_COLOR_LOW"),
@@ -306,7 +307,7 @@ def _land_tooltip_text(good: str) -> str:
 
 def _ensure_icons(mod_root: Path, goods: Iterable[str], project: dict) -> None:
     vanilla_root = _vanilla_root(project)
-    target = mod_root / IN_GAME_ICON_REL
+    target = mod_root / ICON_REL
     target.mkdir(parents=True, exist_ok=True)
 
     missing: list[str] = []

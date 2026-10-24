@@ -240,8 +240,9 @@ TRY_INJECT:ha1300_climate_dry_summer_continental = {
 		local_tobacco_output_modifier = -0.08
 		local_wheat_output_modifier = 0.05
 		local_wine_output_modifier = 0.13
-		local_build_buildings_efficiency = -0.02
-		local_construction_speed = -0.02
+		free_building_levels = -3
+		local_build_buildings_efficiency = -0.08
+		local_construction_speed = -0.08
 	}
 }
 

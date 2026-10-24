@@ -2,7 +2,8 @@
 # (pp_cannot_create_subjects), so its pieces go through this action, by the same rule as create_province_subject
 # (pp_enclave_kept_location: cut off from the capital, max_control under 0.5 everywhere). A subject's piece joins a
 # subject of its overlord that it borders, else becomes a new subject of that overlord; a union junior's piece becomes
-# independent. AI only; not offered to players.
+# independent. AI only; not offered to players. Never for colonial nations or subjects of a player
+# (pp_enclave_release_exempt).
 pp_release_enclave_independence = {
 	type = owncountry
 	show_in_gui_list = no
@@ -21,6 +22,7 @@ pp_release_enclave_independence = {
 	ai_prerequisite = {
 		pp_cannot_create_subjects = yes
 		pp_enclave_release_paused = no
+		pp_enclave_release_exempt = no
 		num_locations > 1
 		trigger_if = {
 			limit = { exists = international_organization:hre }

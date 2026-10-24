@@ -7,7 +7,8 @@
 # else a vassal; a samanta in India). The target is a province, but the AI releases by location
 # (create_country_from_location), since a piece often shares its province with kept land of the nation. Subjects and
 # union juniors cannot create subjects (pp_cannot_create_subjects); their pieces go through
-# pp_release_enclave_independence. The player's action is unchanged.
+# pp_release_enclave_independence. Never for colonial nations or subjects of a player (pp_enclave_release_exempt).
+# The player's action is unchanged.
 create_province_subject = {
 	type = owncountry
 
@@ -26,6 +27,7 @@ create_province_subject = {
 	ai_prerequisite = {
 		pp_cannot_create_subjects = no
 		pp_enclave_release_paused = no
+		pp_enclave_release_exempt = no
 		num_locations > 1
 		trigger_if = {
 			limit = { exists = international_organization:hre }

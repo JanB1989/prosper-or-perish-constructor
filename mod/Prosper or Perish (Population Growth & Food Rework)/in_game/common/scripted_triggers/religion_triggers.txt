@@ -50,6 +50,35 @@ crusade_allow_trigger = {
 	NOT = { unique_international_organization_type_exists = international_organization_type:crusade }
 }
 
+can_call_crusade_trigger = {
+	crusade_potential_trigger = yes
+	crusade_allow_trigger = yes
+	papacy_active = yes
+	is_member_of_international_organization = international_organization:catholic_church
+	religion:catholic = { modifier:curia_actions_blocked = no }
+	current_papal_authority = { value = 50 }
+	has_regent = no
+}
+
+crusade_target_relations_valid_trigger = {
+	save_temporary_scope_as = crusade_target
+	$ACTOR$ = {
+		NOT = { is_at_war_with = scope:crusade_target }
+		NOT = { has_truce_with = scope:crusade_target }
+		NOT = { is_allied_with = { target = scope:crusade_target } }
+	}
+	NOT = { top_overlord ?= { religion = $ACTOR$.religion } }
+}
+
+holy_war_overwhelms_target = {
+	exists = international_organization_target
+	holy_war_members_strength > 0
+	holy_war_members_strength >= {
+		value = holy_war_target_side_strength
+		multiply = 2
+	}
+}
+
 is_valid_target_for_jihad = {
 	is_rebel_country = no
 	NOT = { religion.group = religion_group:muslim }

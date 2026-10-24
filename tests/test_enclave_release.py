@@ -54,3 +54,18 @@ def test_release_runs_outside_the_target_province(action):
     assert "pp_enclave_pick_piece" not in release
     # nothing in the release may lean on the current (province) scope: every land move goes through saved scopes/lists
     assert not re.search(r"^\t(?:random|every|any)_location_in_province\b", release, re.MULTILINE)
+
+
+def test_colonial_nations_and_player_subjects_are_exempt():
+    """Colonial nations released their islands as one-location vassals of the overlord (Jan, Portugal 1492: 16 in the
+    Caribbean); a player's subjects would hand the player new subjects."""
+    body = _block((COMMON / "scripted_triggers" / "pp_enclave_triggers.txt").read_text(encoding="utf-8-sig"),
+                  "pp_enclave_release_exempt")
+    assert re.search(r"\bsubject_type = subject_type:colonial_nation\b", body)
+    assert re.search(r"\boverlord \?= \{ is_ai = no \}", body)
+
+
+@pytest.mark.parametrize("action", ["create_province_subject", "pp_release_enclave_independence"])
+def test_release_actions_check_the_exemption(action):
+    text = (COMMON / "generic_actions" / f"{action}.txt").read_text(encoding="utf-8-sig")
+    assert re.search(r"\bpp_enclave_release_exempt = no\b", _block(text, "ai_prerequisite"))

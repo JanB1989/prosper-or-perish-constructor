@@ -1,19 +1,19 @@
 ﻿ha1300_soil_types = {
  map_color = {
- if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 1 } value = rgb { 226 190 91 } }
- else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 2 } value = rgb { 105 160 83 } }
- else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 3 } value = rgb { 85 176 195 } }
- else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 4 } value = rgb { 200 108 80 } }
- else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 5 } value = rgb { 137 105 178 } }
- else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 6 } value = rgb { 155 163 171 } }
+ if = { limit = { has_location_modifier = pp_wb_soil_sand } value = rgb { 226 190 91 } }
+ else_if = { limit = { has_location_modifier = pp_wb_soil_loam } value = rgb { 105 160 83 } }
+ else_if = { limit = { has_location_modifier = pp_wb_soil_silt } value = rgb { 85 176 195 } }
+ else_if = { limit = { has_location_modifier = pp_wb_soil_clay } value = rgb { 200 108 80 } }
+ else_if = { limit = { has_location_modifier = pp_wb_soil_peat } value = rgb { 137 105 178 } }
+ else_if = { limit = { has_location_modifier = pp_wb_soil_stony } value = rgb { 155 163 171 } }
  else = { value = rgb { 45 60 72 } } }
  tooltip_key = {
- if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 1 } value = HA1300_SOIL_SAND_MAP }
- else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 2 } value = HA1300_SOIL_LOAM_MAP }
- else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 3 } value = HA1300_SOIL_SILT_MAP }
- else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 4 } value = HA1300_SOIL_CLAY_MAP }
- else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 5 } value = HA1300_SOIL_PEAT_MAP }
- else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 6 } value = HA1300_SOIL_STONY_MAP }
+ if = { limit = { has_location_modifier = pp_wb_soil_sand } value = HA1300_SOIL_SAND_MAP }
+ else_if = { limit = { has_location_modifier = pp_wb_soil_loam } value = HA1300_SOIL_LOAM_MAP }
+ else_if = { limit = { has_location_modifier = pp_wb_soil_silt } value = HA1300_SOIL_SILT_MAP }
+ else_if = { limit = { has_location_modifier = pp_wb_soil_clay } value = HA1300_SOIL_CLAY_MAP }
+ else_if = { limit = { has_location_modifier = pp_wb_soil_peat } value = HA1300_SOIL_PEAT_MAP }
+ else_if = { limit = { has_location_modifier = pp_wb_soil_stony } value = HA1300_SOIL_STONY_MAP }
  else_if = { limit = { is_land = no } value = HA1300_SOIL_WATER } else = { value = HA1300_SOIL_MAP_UNKNOWN } }
  legend_key = { desc = "HA1300_SOIL_SAND" color = rgb { 226 190 91 } }
  legend_key = { desc = "HA1300_SOIL_LOAM" color = rgb { 105 160 83 } }

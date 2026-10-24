@@ -39,11 +39,9 @@ types PPInternalGoods {
 			}
 		}
 
-		scrollvbox = { # the first 5 visible rows
+		scrollvbox = { # the first 5 visible rows (takes no scrollbar policy; a scrollarea misaligned the columns in game, 2026-10-17)
 			layoutpolicy_horizontal = expanding
 			maximumsize = { -1 150 }
-			scrollbarpolicy_horizontal = always_off
-			scrollbarpolicy_vertical = always_off
 
 			vbox = {
 				layoutpolicy_horizontal = expanding

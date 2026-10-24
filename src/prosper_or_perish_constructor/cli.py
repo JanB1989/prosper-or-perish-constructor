@@ -56,6 +56,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/crop_farms.py",
     "src/prosper_or_perish_constructor/free_building_levels.py",
     "src/prosper_or_perish_constructor/goods_categories.py",      # crop_farms (start crop allocation) imports these
+    "src/prosper_or_perish_constructor/interface_dds.py",         # the geography sync copies icons in the game format
     "src/prosper_or_perish_constructor/location_baseline.py",
     "src/prosper_or_perish_constructor/logistics.py",            # production_labour skips its network methods
     "src/prosper_or_perish_constructor/production_gate.py",
@@ -103,8 +104,6 @@ WORLDBUILDER_MOD_INPUTS = (
     "in_game/common/expedition_types/circumnavigation_expedition.txt",
     "in_game/common/expedition_types/pacific_crossing.txt",
     "in_game/common/expedition_types/treasure_fleet.txt",
-    "in_game/common/on_action/ha1300_fertility.txt",
-    "in_game/common/on_action/ha1300_global_soils.txt",
     "in_game/common/religious_order_callings/00_iberian_military.txt",
     "in_game/common/religious_order_zeal_modifiers/00_catholic.txt",
     "in_game/common/scripted_effects/on_action_effects.txt",
@@ -392,9 +391,21 @@ def _build_parser() -> argparse.ArgumentParser:
     ship_upkeep.add_argument(
         "action",
         choices=("apply", "check"),
-        help="apply writes the price file from vanilla unit types, goods demands and default prices; check reports whether it is current.",
+        help="apply writes the price file (and the new prices' modifier types, icons and names) from vanilla unit types, goods demands and default prices; check reports whether they are current.",
     )
     ship_upkeep.add_argument("--verbose", action="store_true", help="also print every ship with its old and new base upkeep.")
+    blockade = _add_command(
+        subcommands,
+        "blockade",
+        "Blockade capacity x [blockade_capacity] factor for every ship that is not a levy ship (in_game/common/unit_types/pp_blockade_capacity.txt).",
+        _blockade,
+    )
+    blockade.add_argument(
+        "action",
+        choices=("apply", "check"),
+        help="apply writes the unit type injects from vanilla unit types; check reports whether they are current.",
+    )
+    blockade.add_argument("--verbose", action="store_true", help="also print every ship with its old and new blockade capacity.")
     gate = _add_command(
         subcommands,
         "gate",
@@ -467,7 +478,7 @@ def _build_parser() -> argparse.ArgumentParser:
     crop_farms_mode.add_argument(
         "--write",
         action="store_true",
-        help="Regenerate the 32 crop farm blueprints, the farming_village tombstone and the gate triggers.",
+        help="Regenerate the 32 crop farm blueprints and the gate triggers; delete the retired farm blueprints.",
     )
     _add_command(
         subcommands,
@@ -712,7 +723,15 @@ def _build_parser() -> argparse.ArgumentParser:
     sync.add_argument(
         "--while-running",
         action="store_true",
-        help="Deploy even while EU5 is running (its debug-mode filewatcher then hot-reloads the mod).",
+        help="Deploy even while EU5 is running (its debug-mode filewatcher then hot-reloads the mod). Only interface, "
+        "text and graphics files: changed game data (building types, common/, events ...) is refused, a hot reload "
+        "of it corrupted a running game and its saves (2026-10-18).",
+    )
+    sync.add_argument(
+        "--reload-game-data",
+        action="store_true",
+        help="With --while-running: deploy changed game data into the running game anyway (it and its next saves "
+        "may break).",
     )
     vanilla_mirror = _add_command(
         subcommands,
@@ -1225,7 +1244,21 @@ def _ship_upkeep(args: argparse.Namespace, extra: Sequence[str], repo: Path, pro
         for ship in sorted(ships, key=lambda s: (s.category, s.age_index, s.unit)):
             print(f"{ship.unit:40s} {ship.category:16s} age {ship.age_index + 1}: {ship.old_base:7.2f} -> {ship.new_base:6.2f}")
     state = ("written" if changed else "unchanged") if args.action == "apply" else ("OFF (run ppc ship-upkeep apply)" if changed else "current")
-    print(f"ship upkeep: {len(ships)} navy unit types, {ship_upkeep.OUTPUT} {state}.")
+    print(f"ship upkeep: {len(ships)} navy unit types, {ship_upkeep.OUTPUT} (+ modifier types, icons, names) {state}.")
+    return 0 if args.action == "apply" or not changed else 1
+
+
+def _blockade(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("blockade does not accept extra arguments.")
+    from prosper_or_perish_constructor import blockade_capacity
+
+    ships, changed = blockade_capacity.apply(repo, project, write=args.action == "apply")
+    if args.verbose:
+        for ship in sorted(ships, key=lambda s: (s.category, s.unit)):
+            print(f"{ship.unit:40s} {ship.category:16s} {ship.vanilla:5.2f} -> {ship.new:6.2f}{' (levy)' if ship.levy else ''}")
+    state = ("written" if changed else "unchanged") if args.action == "apply" else ("OFF (run ppc blockade apply)" if changed else "current")
+    print(f"blockade: {len(ships)} navy unit types, {sum(s.levy for s in ships)} levy kept, {blockade_capacity.OUTPUT} {state}.")
     return 0 if args.action == "apply" or not changed else 1
 
 
@@ -1360,6 +1393,14 @@ def _print_logistics_zones(repo: Path, project: Path) -> None:
     triggers = logistics.load_zone_triggers(mod_root / logistics.ZONE_TRIGGERS_RELATIVE)
     zones = logistics.zone_membership(logistics.load_locations(repo, project), triggers)
     print("logistics zones (land locations): " + ", ".join(f"{zone.removeprefix(logistics.ZONE_PREFIX)} {len(tags)}" for zone, tags in zones.items()))
+
+
+def _normalize_interface_dds(mod_root: Path) -> None:
+    """Every interface DDS in the game format (DXT, full mip chain, icons at vanilla size); runs last, after every
+    step that writes icons (interface_dds.py)."""
+    from prosper_or_perish_constructor import interface_dds
+
+    print(interface_dds.summary(interface_dds.apply(mod_root)), flush=True)
 
 
 def _install_good_icons(repo: Path, project: Path, mod_root: Path) -> None:
@@ -1666,6 +1707,26 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
             f"{'; removed ' + ', '.join(nil.removed) if nil.removed else ''}).",
             flush=True,
         )
+    from prosper_or_perish_constructor import loc_replace
+
+    overrides = loc_replace.apply(mod_root, cap_tooltips.game_root(vanilla_root(repo, project)))
+    print(
+        f"Vanilla text overrides: moved {overrides.moved_count} keys vanilla also defines from "
+        f"{len(overrides.moved)} English files into {loc_replace.GENERATED_RELATIVE_PATH.name} "
+        f"({overrides.kept} kept, {len(overrides.dropped_equal)} dropped as word-for-word vanilla).",
+        flush=True,
+    )
+    from prosper_or_perish_constructor import seasonal_harvests
+
+    harvests = seasonal_harvests.apply(mod_root)
+    moved = sum(len(keys) for keys in harvests.moved.values())
+    print(
+        f"Seasonal Harvests: standalone mod holds the main mod's {harvests.copied} harvest files "
+        f"({len(harvests.changed)} changed, {len(harvests.removed)} stale removed); {harvests.keys} shared texts in "
+        f"{Path(seasonal_harvests.SHARED_LOCALIZATION).name} ({moved} moved from other English files).",
+        flush=True,
+    )
+    _normalize_interface_dds(mod_root)
     _ensure_constructor_text_boms(mod_root)
 
 
@@ -1704,25 +1765,28 @@ def _ensure_farming_capacity_raw_modifier_bridges(repo: Path, mod_root: Path) ->
     from eu5gameparser.domain.building_types import load_building_type_data
 
     from prosper_or_perish_constructor.rural_capacity import (
-        FARM_WATER_CONTROL_BUILDINGS,
         LAND_FARM_BUILDINGS,
-        farm_capacity_modifier_for_building,
+        farm_level_counter_for_building,
     )
 
-    data = load_building_type_data(
-        profile=CONSTRUCTOR_PROFILE,
-        load_order_path=repo / CONSTRUCTOR_LOAD_ORDER,
-    )
-    building_keys = sorted(str(key) for key in data.building_types["name"].to_list())
     accepted_blueprint_keys = {
         path.stem
         for path in (repo / "blueprints" / "accepted" / "buildings").glob("*.yml")
     }
-    land_farms = set(LAND_FARM_BUILDINGS)
-    water_controls = dict(FARM_WATER_CONTROL_BUILDINGS)
-    fallback_building_keys = [
-        building for building in building_keys if building not in accepted_blueprint_keys
-    ]
+    # Accepted blueprints own their level counter; the fallback file exists only while a land farm has no blueprint
+    # (never written header-only; the game data is parsed only then).
+    fallback_building_keys: list[str] = []
+    if any(building not in accepted_blueprint_keys for building in LAND_FARM_BUILDINGS):
+        data = load_building_type_data(
+            profile=CONSTRUCTOR_PROFILE,
+            load_order_path=repo / CONSTRUCTOR_LOAD_ORDER,
+        )
+        building_keys = {str(key) for key in data.building_types["name"].to_list()}
+        fallback_building_keys = sorted(
+            building
+            for building in LAND_FARM_BUILDINGS
+            if building in building_keys and building not in accepted_blueprint_keys
+        )
 
     bridge_lines = [
         "# Prosper or Perish - generated farming-capacity raw modifier fallbacks.",
@@ -1730,49 +1794,25 @@ def _ensure_farming_capacity_raw_modifier_bridges(repo: Path, mod_root: Path) ->
         "# Generated by ppc finalize; do not edit by hand.",
         "",
     ]
-    generated_bridge_count = 0
     for building in fallback_building_keys:
-        updates: dict[str, str] = {}
-        if building in land_farms:
-            updates[farm_capacity_modifier_for_building(building)] = "-1"
-        if building in water_controls:
-            updates[farm_capacity_modifier_for_building(building)] = water_controls[building]
-        if not updates:
-            continue
-        generated_bridge_count += 1
         bridge_lines.append(f"TRY_INJECT:{building} = {{")
         bridge_lines.append("\traw_modifier = {")
-        for key, value in updates.items():
-            bridge_lines.append(f"\t\t{key} = {value}")
+        bridge_lines.append(f"\t\t{farm_level_counter_for_building(building)} = 1")
         bridge_lines.append("\t}")
         bridge_lines.append("}")
         bridge_lines.append("")
+    generated_bridge_count = len(fallback_building_keys)
 
-    _write_text_if_changed(
-        mod_root / FARMING_CAPACITY_RAW_MODIFIER_BRIDGES,
-        "\n".join(bridge_lines).rstrip() + "\n",
-        encoding="utf-8-sig",
-    )
+    bridge_path = mod_root / FARMING_CAPACITY_RAW_MODIFIER_BRIDGES
+    if generated_bridge_count:
+        _write_text_if_changed(bridge_path, "\n".join(bridge_lines).rstrip() + "\n", encoding="utf-8-sig")
+    elif bridge_path.is_file():
+        bridge_path.unlink()
 
-    capacity_modifier_keys = [
-        *(farm_capacity_modifier_for_building(building) for building, _ in FARM_WATER_CONTROL_BUILDINGS),
-        *(farm_capacity_modifier_for_building(building) for building in LAND_FARM_BUILDINGS),
-    ]
-    _write_farming_capacity_modifier_types(mod_root, capacity_modifier_keys)
-    _write_farming_capacity_modifier_icons(
-        mod_root,
-        building_modifiers={
-            **{farm_capacity_modifier_for_building(building): building for building, _ in FARM_WATER_CONTROL_BUILDINGS},
-            **{farm_capacity_modifier_for_building(building): building for building in LAND_FARM_BUILDINGS},
-        },
-    )
-    _write_farming_capacity_modifier_localization(
-        mod_root,
-        building_modifiers={
-            **{farm_capacity_modifier_for_building(building): building for building, _ in FARM_WATER_CONTROL_BUILDINGS},
-            **{farm_capacity_modifier_for_building(building): building for building in LAND_FARM_BUILDINGS},
-        },
-    )
+    counters = {farm_level_counter_for_building(building): building for building in LAND_FARM_BUILDINGS}
+    _write_farming_capacity_modifier_types(mod_root, list(counters))
+    _write_farming_capacity_modifier_icons(mod_root, building_modifiers=counters)
+    _write_farming_capacity_modifier_localization(mod_root, building_modifiers=counters)
     print(
         "Generated farming capacity raw modifier fallbacks for "
         f"{generated_bridge_count} non-blueprint building types.",
@@ -1782,7 +1822,8 @@ def _ensure_farming_capacity_raw_modifier_bridges(repo: Path, mod_root: Path) ->
 
 def _write_farming_capacity_modifier_types(mod_root: Path, modifier_keys: Sequence[str]) -> None:
     lines = [
-        "# Prosper or Perish - generated farming-capacity bridge modifier types.",
+        "# Prosper or Perish - generated farm level counters: raw_modifier pp_levels_<farm> = 1 per level; the farm's",
+        "# max level adds its own (and its replaceable lower tiers') levels back (generate_rural_capacity_values.py).",
         "# Generated by ppc finalize; do not edit by hand.",
         "",
     ]
@@ -1790,7 +1831,8 @@ def _write_farming_capacity_modifier_types(mod_root: Path, modifier_keys: Sequen
         lines.extend(
             (
                 f"{key} = {{",
-                "\tdecimals = 2",
+                "\tdecimals = 0",
+                "\tcolor = neutral",
                 "\tgame_data = {",
                 "\t\tcategory = location",
                 "\t}",
@@ -1798,21 +1840,6 @@ def _write_farming_capacity_modifier_types(mod_root: Path, modifier_keys: Sequen
                 "",
             )
         )
-    # The farmland a farm level takes, in people like the population capacity it uses up (a neutral record, not a
-    # bonus): the farm max-level tooltips read it for "Used by other farms" (generate_rural_capacity_values.py).
-    lines.extend(
-        (
-            "local_pp_farmland_used = {",
-            "\tdecimals = 0",
-            "\tcolor = neutral",
-            "\tgame_data = {",
-            "\t\tcategory = location",
-            '\t\tformat = "FormatPopCaps"',
-            "\t}",
-            "}",
-            "",
-        )
-    )
     _write_text_if_changed(
         mod_root / FARMING_CAPACITY_MODIFIER_TYPES,
         "\n".join(lines).rstrip() + "\n",
@@ -1826,7 +1853,7 @@ def _write_farming_capacity_modifier_icons(
     building_modifiers: Mapping[str, str],
 ) -> None:
     lines = [
-        "# Prosper or Perish - generated farming-capacity bridge modifier icons.",
+        "# Prosper or Perish - generated farm level counter icons.",
         "# Generated by ppc finalize; do not edit by hand.",
         "",
     ]
@@ -1841,8 +1868,6 @@ def _write_farming_capacity_modifier_icons(
                 "",
             )
         )
-    capacity_icon = "gfx/interface/icons/modifier_types/global_population_capacity_modifier.dds"
-    lines.extend(("local_pp_farmland_used = {", f'\tpositive = "{capacity_icon}"', f'\tnegative = "{capacity_icon}"', "}", ""))
     _write_text_if_changed(
         mod_root / FARMING_CAPACITY_MODIFIER_ICONS,
         "\n".join(lines).rstrip() + "\n",
@@ -1857,16 +1882,13 @@ def _write_farming_capacity_modifier_localization(
 ) -> None:
     lines = [
         "l_english:",
-        "  # Farming-capacity bridge modifier localization (generated by ppc finalize)",
+        "  # Farm level counters (generated by ppc finalize)",
     ]
     for modifier_key, building in building_modifiers.items():
-        building_link = f"[ShowBuildingTypeName('{building}')|e]"
-        lines.append(f'  MODIFIER_TYPE_NAME_{modifier_key}: "Farming Capacity from {building_link}"')
+        lines.append(f'  MODIFIER_TYPE_NAME_{modifier_key}: "${building}$ levels"')
         lines.append(
-            f'  MODIFIER_TYPE_DESC_{modifier_key}: "Shows how {building_link} changes Farming Capacity in this location."'
+            f'  MODIFIER_TYPE_DESC_{modifier_key}: "Levels of ${building}$ in this location. Its maximum level counts them back in on top of the free [population_capacity|e]."'
         )
-    lines.append('  MODIFIER_TYPE_NAME_local_pp_farmland_used: "Arable Land Used"')
-    lines.append('  MODIFIER_TYPE_DESC_local_pp_farmland_used: "The [population_capacity|e] this building takes from the location."')
     _write_text_if_changed(
         mod_root / FARMING_CAPACITY_MODIFIER_LOCALIZATION,
         "\n".join(lines).rstrip() + "\n",
@@ -4317,7 +4339,45 @@ def _game_running() -> bool:
     return GAME_PROCESS.lower().encode("ascii") in result.stdout.lower()
 
 
-def _deploy_built_mod(repo: Path, project: Path, *, force: bool, while_running: bool = False) -> int:
+# Folders the running game hot-reloads safely: interface, text and graphics (the GUI work of 2026-10-17 reloaded
+# into a running game all day). Everything else is game data: on 2026-10-18 a `--while-running` sync reloaded
+# building_types into Jan's running game, the next autosave held 141 broken constructions (SaveRepair_FixConstructions
+# on every load) and the game crashed in CCancelSpecificConstructionCommand within seconds of play.
+LIVE_SAFE_FOLDERS = frozenset({"gui", "localization", "gfx", "fonts", "music", "sound"})
+
+
+def live_safe(rel: Path) -> bool:
+    """A mod file the running game may hot-reload (its second path part is an interface/text/graphics folder)."""
+    return len(rel.parts) > 2 and rel.parts[1] in LIVE_SAFE_FOLDERS
+
+
+def _unsafe_live_changes(project: Path) -> list[str]:
+    """Files outside LIVE_SAFE_FOLDERS that the deploy (the orchestrator's own dry run: same file comparison,
+    `--clean` deletes included) would copy into or delete from the live target: what it would hot-reload into game
+    data."""
+    from eu5_mod_orchestrator.config import load_project_config
+    from eu5_mod_orchestrator.deploy import deploy as plan_deploy
+
+    plan = plan_deploy(load_project_config(project), dry_run=True, clean=True)
+    changed = [(p, "") for p in plan.planned_copies] + [(p, " (removed)") for p in plan.planned_deletes]
+    out = [f"{rel}{note}" for path, note in changed if not live_safe(rel := path.relative_to(plan.target))]
+    return sorted(out)
+
+
+def _deploy_built_mod(repo: Path, project: Path, *, force: bool, while_running: bool = False,
+                      reload_game_data: bool = False) -> int:
+    if while_running and not reload_game_data and _game_running():
+        unsafe = _unsafe_live_changes(project)
+        if unsafe:
+            listed = "\n  ".join(unsafe[:12]) + ("\n  ..." if len(unsafe) > 12 else "")
+            print(
+                f"EU5 is running and this deploy would hot-reload {len(unsafe)} game-data file(s):\n  {listed}\n"
+                "NOT deployed: a hot reload of game data corrupts the running game and its next saves (2026-10-18: "
+                "broken constructions, crash). Interface, text and graphics deploy while the game runs; close the "
+                "game and re-run `uv run ppc sync --yes`, or pass --reload-game-data if the running game may break.",
+                flush=True,
+            )
+            return 3
     # With -debug_mode the game's filewatcher reloads changed script files. Reloading building types that
     # the mod REPLACEs re-adds vanilla's production methods, so error.log fills with thousands of false
     # "duplicated production method name" and "Unexpected token" lines and the running game is left
@@ -4368,7 +4428,8 @@ def _smart_sync(args: argparse.Namespace, repo: Path, project: Path, clock: "_St
         print("Smart sync: validation inputs unchanged; skipping validation.", flush=True)
     _save_sync_state(repo, state)
     return clock.run(
-        "deploy", _deploy_built_mod, repo, project, force=args.force_deploy, while_running=args.while_running
+        "deploy", _deploy_built_mod, repo, project, force=args.force_deploy, while_running=args.while_running,
+        reload_game_data=args.reload_game_data,
     )
 
 
@@ -4389,7 +4450,8 @@ def _sync(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: P
         if build_result != 0:
             return build_result
         _record_current_sync_state(repo, project)
-        return _deploy_built_mod(repo, project, force=args.force_deploy, while_running=args.while_running)
+        return _deploy_built_mod(repo, project, force=args.force_deploy, while_running=args.while_running,
+                                 reload_game_data=args.reload_game_data)
     clock = _StageClock("ppc sync")
     try:
         return _smart_sync(args, repo, project, clock)

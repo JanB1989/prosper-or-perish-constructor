@@ -328,8 +328,56 @@ def test_urgency_weight_grows_with_building_levels_and_the_access_gap() -> None:
     assert lg.urgency_weight(config, 77, 0.37) == pytest.approx(67.8, abs=0.1)
     assert lg.urgency_weight(config, 15, 0.75) == pytest.approx(3.5, abs=0.1)
     assert lg.urgency_weight(config, 200, 0.0) == pytest.approx(120.0)  # the cap; the food urgency peaks at 90
-    assert lg.urgency_weight(config, 60, 0.85) == 0.0  # the allow gate's line
+    assert lg.urgency_weight(config, 60, 0.85) == 0.0  # the urgency's own line
+    assert lg.urgency_weight(config, 60, 0.95) == 0.0  # below the allow gate (0.99), above the urgency line
     assert lg.urgency_weight(config, 60, 1.10) == 0.0
+
+
+def test_the_urgency_line_follows_the_gate_unless_set(repo: Path) -> None:
+    (repo / "constructor.toml").write_text(URGENCY, encoding="utf-8")
+    assert lg.load_config(repo / "constructor.toml").urgency_line == 0.85
+    (repo / "constructor.toml").write_text(
+        URGENCY.replace("gate_max_market_access = 0.85\n", "gate_max_market_access = 0.99\nurgency_max_market_access = 0.85\n"),
+        encoding="utf-8",
+    )
+    result = lg.apply(repo, repo / "constructor.toml", PRICES)
+    assert result.problems == []
+    assert "market_access < 0.99" in _block(_body(repo), "allow")
+    text = (repo / "mod" / lg.URGENCY_RELATIVE).read_text(encoding="utf-8")
+    assert "multiply = { value = 0.85 subtract = market_access min = 0 divide = 0.85 }" in text
+
+
+ONE_AT_A_TIME = URGENCY.replace(
+    "network_output = 0.30\n", 'network_output = 0.30\none_level_at_a_time = true\nlevel_caps = { inn = "inn_site_cap" }\n'
+)
+
+
+def test_one_level_at_a_time_caps_the_levels_at_built_plus_one(repo: Path) -> None:
+    (repo / "constructor.toml").write_text(ONE_AT_A_TIME, encoding="utf-8")
+    result = lg.apply(repo, repo / "constructor.toml", PRICES)
+    assert result.problems == []
+    assert "max_levels = pp_inn_logistics_max_level" in _body(repo)
+    text = (repo / "mod" / lg.LEVEL_CAPS_RELATIVE).read_text(encoding="utf-8")
+    assert text.startswith("﻿")
+    block = text[text.index("pp_inn_logistics_max_level = {"):]
+    # levels built, +1 while its own level is under way or no logistics building has one, clamped by the site cap
+    assert 'value = "location_building_level(building_type:inn)"' in block
+    assert block.count("building_type = building_type:inn") == 4  # own level (twice), the any-logistics list (twice)
+    assert block.count("building_levels_under_construction >= 1") == 4
+    assert 'add = { desc = "BUILDING_LEVEL_LOGISTICS_NEXT" value = 1 }' in block
+    assert 'max = { desc = "BUILDING_LEVEL_LOGISTICS_SITE" value = this.inn_site_cap }' in block
+    assert not lg.apply(repo, repo / "constructor.toml", PRICES, write=False).problems
+    (repo / "mod" / lg.LEVEL_CAPS_RELATIVE).write_text("edited by hand", encoding="utf-8")
+    assert lg.apply(repo, repo / "constructor.toml", PRICES, write=False).problems == [
+        "pp_logistics_level_caps.txt is stale (run ppc logistics apply)"
+    ]
+
+
+def test_level_caps_must_name_logistics_buildings(repo: Path) -> None:
+    (repo / "constructor.toml").write_text(ONE_AT_A_TIME.replace("{ inn =", "{ tavern ="), encoding="utf-8")
+    assert lg.apply(repo, repo / "constructor.toml", PRICES, write=False).problems == [
+        "[logistics] level_caps names buildings without a logistics tag: ['tavern']"
+    ]
 
 
 def test_every_logistics_building_weighs_the_urgency_and_the_value_is_current() -> None:
@@ -436,4 +484,4 @@ def test_the_scripted_logistics_builder_is_gone() -> None:
     for path in (MOD_ROOT / "in_game").rglob("*.txt"):
         text = path.read_text(encoding="utf-8-sig", errors="replace")
         assert "pp_ai_logistics" not in text, path
-    assert "pp_logistics_debug" not in (MOD_ROOT / "main_menu/localization/english/pp_debug_l_english.yml").read_text(encoding="utf-8-sig")
+    assert not (MOD_ROOT / "main_menu/localization/english/pp_debug_l_english.yml").exists()   # debug loc removed 2026-10-24

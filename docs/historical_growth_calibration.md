@@ -290,9 +290,9 @@ band) looked empty to their buildings. Replaced by the exact form option 1 of 6.
   vanilla uses that as a delta (`value = -1`, then checks the strength), and a set is drift-free.
 - **Old saves**: the 24 tier names stay defined without effects so tier-version saves load; the first refresh removes
   a province's tier modifier and its three variables. The tier version's files are deleted by `ppc build`.
-- **Displays**: `pp_stored_food_years` (location scope, the applied size) and `pp_province_food_storage_growth` (its
-  growth); the location view's Stored Food chip lists each effect as `pp_stored_food_years` x its per-year value and
-  shows the months with one decimal.
+- **Displays**: `pp_province_food_storage_growth` (location scope, the growth of the province's step); since the step
+  modifiers (2026-10-03) the location view's Stored Food chip shows the carried step modifier itself
+  (`pp_stored_food_step`). The old size display `pp_stored_food_years` was removed 2026-10-24 (nothing read it).
 - **Verified in game** (2026-10-01, Jan's 1462 observer save made with the tiers, temporary probe = a marker type
   injected into `pp_stored_food`, read back as the engine's applied size): after one month 3,736 of 3,836 provinces
   carried exactly the size the script applied, 131 of 132 provinces under one stored month got their effects, legacy

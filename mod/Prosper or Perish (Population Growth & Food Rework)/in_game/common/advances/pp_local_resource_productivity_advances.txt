@@ -26,7 +26,8 @@ REPLACE:efficient_mining = {
 	age = age_3_discovery
 	icon = efficient_mining
 	for = adm
-	expand_rgo_mining_cost_modifier = -0.1
+	# RGO cost redirect by hand (was expand_rgo_mining_cost_modifier = -0.1; rgo_cost_redirects.py leaves blocks the mod replaces to their replace)
+	global_rural_build_buildings_efficiency = 0.05
 	global_copper_output_modifier = 0.1
 }
 

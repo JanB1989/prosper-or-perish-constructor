@@ -22,7 +22,9 @@ malaria = {
 			limit = {
 				OR = {
 					climate = arid
+					climate = hot_semi_arid
 					climate = cold_arid
+					climate = cold_semi_arid
 					climate = mediterranean
 				}
 			}
@@ -33,6 +35,7 @@ malaria = {
 				OR = {
 					OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon }
 					climate = arctic
+					climate = subpolar
 				}
 			}
 			multiply = 0
@@ -84,6 +87,14 @@ malaria = {
 		if = {
 			limit = { topography = mountains }
 			multiply = 0
+		}
+		else_if = {
+			limit = {
+				topography = wetlands
+				OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+				continent = continent:europe
+			}
+			multiply = 1.5
 		}
 		else_if = {
 			limit = { topography = wetlands }

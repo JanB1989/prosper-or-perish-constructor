@@ -5,5 +5,5 @@
   pp_qanats_upkeep: "Village Upkeep"
   qanats: "Qanats"
   qanats_desc: "Gently sloping underground galleries tap groundwater and convey it to fields by gravity while limiting evaporation in an arid climate."
-  pp_qanats_price: "Qanats Price"
+  pp_qanats_price: "[ShowBuildingTypeName('qanats')|e] Price"
 # <<< eu5-building-pipeline:qanats:localization

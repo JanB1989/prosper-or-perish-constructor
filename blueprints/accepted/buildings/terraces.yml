@@ -65,7 +65,7 @@ localization:
   entries:
     terraces_slot_0: Upkeep
     pp_terraces_terraces_maintenance: Terraces Maintenance
-    pp_terraces_price: Terraces Price
+    pp_terraces_price: "[ShowBuildingTypeName('terraces')|e] Price"
 evaluation:
   production_methods:
     pp_terraces_terraces_maintenance:

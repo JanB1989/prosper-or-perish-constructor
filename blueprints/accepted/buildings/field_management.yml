@@ -62,7 +62,7 @@ localization:
     field_management_desc: Fields dressed with marl and manure, worked in rotation and terraced where the slope demands it, feed more people than the bare land did. Each level is a lasting improvement of the land already under the plough.
     field_management_slot_0: Upkeep
     pp_field_management_maintenance: None
-    pp_field_management_price: Marled Fields Price
+    pp_field_management_price: '[ShowBuildingTypeName(''field_management'')|e] Price'
 prices:
 - key: pp_field_management_price
   body: '{gold = 130}'

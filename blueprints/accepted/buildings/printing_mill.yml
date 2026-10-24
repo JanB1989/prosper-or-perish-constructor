@@ -104,7 +104,7 @@ building:
     }
 localization:
   entries:
-    printing_mill_slot_0: Printing Mill Work
+    printing_mill_slot_0: "[ShowBuildingTypeName('printing_mill')|e] Work"
     printing_mill_slot_1: Market
     pp_printing_mill_printing_mill_maintenance: Printing Mill Printing Mill Maintenance
     pp_printing_mill_printing_mill_leather_maintenance: $printing_mill_leather_maintenance$

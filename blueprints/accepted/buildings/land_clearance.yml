@@ -54,7 +54,7 @@ localization:
     pp_land_clearance_upkeep: Village Upkeep
     land_clearance: Land Clearance
     land_clearance_desc: Felling, grubbing, burning, stone removal, and continued control of regrowth turn wooded ground into maintained farmland.
-    pp_land_clearance_price: Land Clearance Price
+    pp_land_clearance_price: '[ShowBuildingTypeName(''land_clearance'')|e] Price'
 prices:
 - key: pp_land_clearance_price
   body: '{gold = 145}'

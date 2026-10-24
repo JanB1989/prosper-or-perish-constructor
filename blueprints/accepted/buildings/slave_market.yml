@@ -73,7 +73,7 @@ building:
     increase_per_level_cost = 0.20
 localization:
   entries:
-    slave_market_slot_0: Slave Market Work
+    slave_market_slot_0: "[ShowBuildingTypeName('slave_market')|e] Work"
     pp_slave_market_slave_market_maintenance: Slave Market Slave Market Maintenance
     pp_slave_market_market_sales: Market Sales
     pp_slave_market_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.

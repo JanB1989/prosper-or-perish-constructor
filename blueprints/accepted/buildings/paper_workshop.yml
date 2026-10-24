@@ -80,7 +80,7 @@ building:
     increase_per_level_cost = 0.21
 localization:
   entries:
-    paper_workshop_slot_0: Paper Workshop Work
+    paper_workshop_slot_0: "[ShowBuildingTypeName('paper_workshop')|e] Work"
     pp_paper_workshop_paper_workshop_fiber_pulp_maintenance: Paper Workshop Paper Workshop Fiber Pulp Maintenance
     pp_paper_workshop_paper_workshop_cloth_maintenance: Paper Workshop Paper Workshop Cloth Maintenance
     pp_paper_workshop_market_sales: Market Sales

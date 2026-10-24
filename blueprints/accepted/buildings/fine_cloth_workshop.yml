@@ -134,8 +134,8 @@ building:
     }
 localization:
   entries:
-    fine_cloth_workshop_slot_0: Fine Cloth Workshop Work
-    fine_cloth_workshop_slot_1: Fine Cloth Workshop Work
+    fine_cloth_workshop_slot_0: "[ShowBuildingTypeName('fine_cloth_workshop')|e] Work"
+    fine_cloth_workshop_slot_1: "[ShowBuildingTypeName('fine_cloth_workshop')|e] Work"
     fine_cloth_workshop_slot_2: Market
     pp_fine_cloth_workshop_fine_cloth_workshop_maintenance: Fine Cloth Workshop Fine Cloth Workshop Maintenance
     pp_fine_cloth_workshop_wool_weavers_workshop_maintenance: Fine Cloth Workshop Wool Weavers Workshop Maintenance

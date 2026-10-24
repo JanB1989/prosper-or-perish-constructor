@@ -5,7 +5,7 @@
   field_management_convertible_desc: "Fields alternate between grain and several years of grass and clover leys grazed by stock, so the land rests, is manured where it lies and returns heavier crops. Building it converts a level of Marled Fields."
   field_management_convertible_slot_0: "Upkeep"
   pp_field_management_convertible_leys: "None"
-  pp_field_management_convertible_price: "Ley Fields Price"
+  pp_field_management_convertible_price: "[ShowBuildingTypeName('field_management_convertible')|e] Price"
   pp_field_management_convertible: "Convertible Husbandry"
   pp_field_management_convertible_desc: "Alternating arable and ley pasture on the same fields keeps the soil in heart and lets more people live from the land already under the plough."
 # <<< eu5-building-pipeline:field_management_convertible:localization

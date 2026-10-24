@@ -94,8 +94,8 @@ prices:
       {gold = 100}
 localization:
   entries:
-    pp_tatara_price: Tatara Price
-    tatara_slot_0: Tatara Work
+    pp_tatara_price: "[ShowBuildingTypeName('tatara')|e] Price"
+    tatara_slot_0: "[ShowBuildingTypeName('tatara')|e] Work"
     pp_tatara_tamagahane_blacksmith: Tatara Tamagahane Blacksmith
     pp_tatara_tamagahane_bladesmith: Tatara Tamagahane Bladesmith
     pp_tatara_market_sales: Market Sales

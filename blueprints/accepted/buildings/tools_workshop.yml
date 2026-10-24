@@ -104,7 +104,7 @@ advancements:
     unlock_production_method = pp_tools_workshop_legacy_copper_tools_guild_maintenance
 localization:
   entries:
-    tools_workshop_slot_0: Tools Workshop Work
+    tools_workshop_slot_0: "[ShowBuildingTypeName('tools_workshop')|e] Work"
     pp_tools_workshop_metalwork_workshop_maintenance: Tools Workshop Metalwork Workshop Maintenance
     pp_tools_workshop_market_sales: Market Sales
     pp_tools_workshop_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.

@@ -105,7 +105,7 @@ localization:
     pp_macadam_works_maintenance: Macadam Crews
     pp_macadam_works_hand_broken_stone: Hand-Broken Road Stone
     pp_macadam_works_graded_aggregate: Graded Stone and Rollers
-    pp_macadam_works_price: Macadam Works Price
+    pp_macadam_works_price: "[ShowBuildingTypeName('macadam_works')|e] Price"
 icon:
   source_png: ../assets/icons/macadam_works.png
   output_dds: macadam_works.dds

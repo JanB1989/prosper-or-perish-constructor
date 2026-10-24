@@ -290,7 +290,7 @@ localization:
     mining_village_no_stone: No Stone Haulage
     mining_village_stone_horses: Horse-Drawn Stone
     mining_village_stone_livestock: Ox-Drawn Stone
-    pp_mining_village_price: Mining Village Price
+    pp_mining_village_price: "[ShowBuildingTypeName('mining_village')|e] Price"
 icon:
   source_dds: ../../../mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/icons/buildings/mining_village.dds
   output_dds: mining_village.dds

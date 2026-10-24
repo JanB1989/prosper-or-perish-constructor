@@ -1,7 +1,7 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:dyes_workshop:localization
-  dyes_workshop_slot_0: "Dyes Workshop Work"
+  dyes_workshop_slot_0: "[ShowBuildingTypeName('dyes_workshop')|e] Work"
   pp_dyes_workshop_dyes_workshop_maintenance: "Dyes Workshop Dyes Workshop Maintenance"
   pp_dyes_workshop_market_sales: "Market Sales"
   pp_dyes_workshop_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."

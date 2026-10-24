@@ -82,8 +82,8 @@ prices:
       {gold = 100}
 localization:
   entries:
-    pp_rural_clothmaker_price: Rural Clothmaker Price
-    rural_clothmaker_slot_0: Rural Clothmaker Work
+    pp_rural_clothmaker_price: "[ShowBuildingTypeName('rural_clothmaker')|e] Price"
+    rural_clothmaker_slot_0: "[ShowBuildingTypeName('rural_clothmaker')|e] Work"
     pp_rural_clothmaker_rural_wool_clothmaker: Rural Clothmaker Rural Wool Clothmaker
     pp_rural_clothmaker_rural_cotton_clothmaker: Rural Clothmaker Rural Cotton Clothmaker
     pp_rural_clothmaker_rural_fiber_clothmaker: Rural Clothmaker Rural Fiber Clothmaker

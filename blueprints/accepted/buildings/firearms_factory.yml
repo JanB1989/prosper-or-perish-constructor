@@ -152,7 +152,7 @@ localization:
   entries:
     firearms_factory_slot_0: Ammunition
     pp_firearms_factory_ammunition_maintenance: Firearms Factory Ammunition
-    firearms_factory_slot_1: Firearms Factory Work
+    firearms_factory_slot_1: "[ShowBuildingTypeName('firearms_factory')|e] Work"
     pp_firearms_factory_firearms_factory_maintenance: Firearms Factory Firearms Factory Maintenance
     pp_firearms_factory_market_sales: Market Sales
     pp_firearms_factory_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.

@@ -141,7 +141,7 @@ advancements:
     unlock_production_method = pp_beer_workshop_bavarian_beer_workshop_maintenance
 localization:
   entries:
-    beer_workshop_slot_0: Beer Workshop Work
+    beer_workshop_slot_0: "[ShowBuildingTypeName('beer_workshop')|e] Work"
     beer_workshop_slot_1: Market
     pp_beer_workshop_wheat_beer_workshop_maintenance: Beer Workshop Wheat Beer Workshop Maintenance
     pp_beer_workshop_millet_beer_workshop_maintenance: Beer Workshop Millet Beer Workshop Maintenance

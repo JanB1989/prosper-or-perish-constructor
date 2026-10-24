@@ -102,7 +102,7 @@ building:
     }
 localization:
   entries:
-    printing_manufactory_slot_0: Printing Manufactory Work
+    printing_manufactory_slot_0: "[ShowBuildingTypeName('printing_manufactory')|e] Work"
     printing_manufactory_slot_1: Market
     pp_printing_manufactory_printing_manufactory_maintenance: Printing Manufactory Printing Manufactory Maintenance
     pp_printing_manufactory_printing_manufactory_leather_maintenance: $printing_manufactory_leather_maintenance$

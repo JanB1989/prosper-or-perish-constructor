@@ -137,7 +137,7 @@ advancements:
     unlock_production_method = pp_distiller_mill_scottish_whisky_distillery_mill_maintenance
 localization:
   entries:
-    distiller_mill_slot_0: Distiller Mill Work
+    distiller_mill_slot_0: "[ShowBuildingTypeName('distiller_mill')|e] Work"
     pp_distiller_mill_sugar_distillery_mill_maintenance: Distiller Mill Sugar Distillery Mill Maintenance
     pp_distiller_mill_rice_distillery_mill_maintenance: Distiller Mill Rice Distillery Mill Maintenance
     pp_distiller_mill_potato_distillery_mill_maintenance: Distiller Mill Potato Distillery Mill Maintenance

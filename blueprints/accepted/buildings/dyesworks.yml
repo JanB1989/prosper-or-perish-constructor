@@ -65,7 +65,7 @@ building:
     increase_per_level_cost = 0.20
 localization:
   entries:
-    dyesworks_slot_0: Dyesworks Work
+    dyesworks_slot_0: "[ShowBuildingTypeName('dyesworks')|e] Work"
     pp_dyesworks_dyesworks_maintenance: Dyesworks Dyesworks Maintenance
     pp_dyesworks_market_sales: Market Sales
     pp_dyesworks_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.

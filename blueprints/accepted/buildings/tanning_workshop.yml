@@ -85,7 +85,7 @@ building:
     }
 localization:
   entries:
-    tanning_workshop_slot_0: Tanning Workshop Work
+    tanning_workshop_slot_0: "[ShowBuildingTypeName('tanning_workshop')|e] Work"
     tanning_workshop_slot_1: Market
     pp_tanning_workshop_leather_livestock_workshop_maintenance: Tanning Workshop Leather Livestock Workshop Maintenance
     pp_tanning_workshop_leather_wildgame_workshop_maintenance: Tanning Workshop Leather Wildgame Workshop Maintenance

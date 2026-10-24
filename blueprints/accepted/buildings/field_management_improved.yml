@@ -72,7 +72,7 @@ localization:
     field_management_improved_desc: Turnips and clover take the place of the fallow in a fixed rotation, seed is drilled in rows and hoed by horse, and the stock kept on the fodder manures every field in turn. Building it converts a level of Ley Fields.
     field_management_improved_slot_0: Upkeep
     pp_field_management_improved_four_course: None
-    pp_field_management_improved_price: Four-Course Fields Price
+    pp_field_management_improved_price: '[ShowBuildingTypeName(''field_management_improved'')|e] Price'
     pp_field_management_improved: Improved Husbandry
     pp_field_management_improved_desc: Fodder crops in place of fallow, drilled seed and planned rotations let the same fields feed far more people than the old open-field routine.
 prices:

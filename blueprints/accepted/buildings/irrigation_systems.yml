@@ -58,7 +58,7 @@ localization:
   entries:
     irrigation_systems_slot_0: Upkeep
     pp_irrigation_systems_upkeep: Village Upkeep
-    pp_irrigation_systems_price: Irrigation Systems Price
+    pp_irrigation_systems_price: '[ShowBuildingTypeName(''irrigation_systems'')|e] Price'
 prices:
 - key: pp_irrigation_systems_price
   body: '{gold = 160}'

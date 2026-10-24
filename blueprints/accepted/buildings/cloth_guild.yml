@@ -84,8 +84,8 @@ prices:
       {gold = 100}
 localization:
   entries:
-    pp_cloth_guild_price: Cloth Guild Price
-    cloth_guild_slot_0: Cloth Guild Work
+    pp_cloth_guild_price: "[ShowBuildingTypeName('cloth_guild')|e] Price"
+    cloth_guild_slot_0: "[ShowBuildingTypeName('cloth_guild')|e] Work"
     pp_cloth_guild_cotton_cloth_guild_maintenance: Cloth Guild Cotton Cloth Guild Maintenance
     pp_cloth_guild_wool_cloth_guild_maintenance: Cloth Guild Wool Cloth Guild Maintenance
     pp_cloth_guild_fiber_crops_cloth_guild_maintenance: Cloth Guild Fiber Crops Cloth Guild Maintenance

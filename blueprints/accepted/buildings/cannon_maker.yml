@@ -123,9 +123,9 @@ prices:
       {gold = 200}
 localization:
   entries:
-    pp_cannon_maker_price: Cannon Maker Price
-    cannon_maker_slot_0: Cannon Maker Work
-    cannon_maker_slot_1: Cannon Maker Work
+    pp_cannon_maker_price: "[ShowBuildingTypeName('cannon_maker')|e] Price"
+    cannon_maker_slot_0: "[ShowBuildingTypeName('cannon_maker')|e] Work"
+    cannon_maker_slot_1: "[ShowBuildingTypeName('cannon_maker')|e] Work"
     pp_cannon_maker_cannon_maker_lumber_maintenance: Cannon Maker Cannon Maker Lumber Maintenance
     pp_cannon_maker_cannon_maker_bronze_maintenance: Cannon Maker Cannon Maker Bronze Maintenance
     pp_cannon_maker_cannon_maker_iron_maintenance: Cannon Maker Cannon Maker Iron Maintenance

@@ -602,7 +602,7 @@ def create_field_management_blueprint(repo: Path) -> Path:
     entries["field_management_desc"] = "Rotations, manuring, marling and terracing raise how many people the existing fields can feed. Each level is a lasting improvement of the land already under the plough."
     entries["field_management_slot_0"] = "Maintenance"
     entries["pp_field_management_maintenance"] = "Field Stewards"
-    entries["pp_field_management_price"] = "Field Management Price"
+    entries["pp_field_management_price"] = "[ShowBuildingTypeName('field_management')|e] Price"   # a named building is a link
     icon = data.get("icon") or {}
     icon["output_dds"] = "field_management.dds"
     # placeholder art until field_management.png is drawn: a tinted copy of the land clearance icon so the

@@ -96,7 +96,7 @@ building:
     increase_per_level_cost = 0.23
 localization:
   entries:
-    eng_royal_forest_slot_0: Eng Royal Forest Work
+    eng_royal_forest_slot_0: "[ShowBuildingTypeName('eng_royal_forest')|e] Work"
     eng_royal_forest_slot_1: Provisioning
     eng_royal_forest_slot_2: Market
     pp_eng_royal_forest_provision: Provision with Game

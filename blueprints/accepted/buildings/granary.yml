@@ -65,7 +65,7 @@ prices:
       {gold = 75}
 localization:
   entries:
-    pp_granary_price: Granary Price
+    pp_granary_price: "[ShowBuildingTypeName('granary')|e] Price"
 
 evaluation:
   allow_rules:

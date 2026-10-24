@@ -110,7 +110,7 @@ advancements:
     unlock_production_method = pp_paper_mill_paper_wood_pulp_maintenance
 localization:
   entries:
-    paper_mill_slot_0: Paper Mill Work
+    paper_mill_slot_0: "[ShowBuildingTypeName('paper_mill')|e] Work"
     pp_paper_mill_paper_mill_maintenance: Paper Mill Paper Mill Maintenance
     pp_paper_mill_paper_wood_pulp_maintenance: Paper Mill Paper Wood Pulp Maintenance
     pp_paper_mill_market_sales: Market Sales

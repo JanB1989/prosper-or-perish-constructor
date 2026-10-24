@@ -115,8 +115,8 @@ building:
     }
 localization:
   entries:
-    cannon_workshop_slot_0: Cannon Workshop Work
-    cannon_workshop_slot_1: Cannon Workshop Work
+    cannon_workshop_slot_0: "[ShowBuildingTypeName('cannon_workshop')|e] Work"
+    cannon_workshop_slot_1: "[ShowBuildingTypeName('cannon_workshop')|e] Work"
     cannon_workshop_slot_2: Market
     pp_cannon_workshop_cannon_workshop_bronze_maintenance: Cannon Workshop Cannon Workshop Bronze Maintenance
     pp_cannon_workshop_cannon_workshop_iron_maintenance: Cannon Workshop Cannon Workshop Iron Maintenance

@@ -95,7 +95,7 @@ building:
     }
 localization:
   entries:
-    weapon_manufactory_slot_0: Weapon Manufactory Work
+    weapon_manufactory_slot_0: "[ShowBuildingTypeName('weapon_manufactory')|e] Work"
     pp_weapon_manufactory_weapon_manufactory_maintenance: Weapon Manufactory Weapon Manufactory Maintenance
     pp_weapon_manufactory_market_sales: Market Sales
     pp_weapon_manufactory_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.

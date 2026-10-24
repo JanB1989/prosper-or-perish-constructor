@@ -120,8 +120,8 @@ building:
     }
 localization:
   entries:
-    fine_cloth_manufactory_slot_0: Fine Cloth Manufactory Work
-    fine_cloth_manufactory_slot_1: Fine Cloth Manufactory Work
+    fine_cloth_manufactory_slot_0: "[ShowBuildingTypeName('fine_cloth_manufactory')|e] Work"
+    fine_cloth_manufactory_slot_1: "[ShowBuildingTypeName('fine_cloth_manufactory')|e] Work"
     pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance: Fine Cloth Manufactory Silk Cloth Manufactory Maintenance
     pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance: Fine Cloth Manufactory Fine Cloth Manufactory Maintenance
     pp_fine_cloth_manufactory_standard_cloth_manufactory_maintenance: Fine Cloth Manufactory Standard Cloth Manufactory Maintenance

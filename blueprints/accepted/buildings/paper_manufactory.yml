@@ -96,7 +96,7 @@ building:
     increase_per_level_cost = 0.21
 localization:
   entries:
-    paper_manufactory_slot_0: Paper Manufactory Work
+    paper_manufactory_slot_0: "[ShowBuildingTypeName('paper_manufactory')|e] Work"
     pp_paper_manufactory_paper_manufactory_maintenance: Paper Manufactory Paper Manufactory Maintenance
     pp_paper_manufactory_market_sales: Market Sales
     pp_paper_manufactory_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.

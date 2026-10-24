@@ -75,7 +75,7 @@ localization:
     jiangnan_canal_network_desc: Interconnected canals, sluices and embankments drain and irrigate the low fields of Jiangnan. Dredging crews and dike keepers maintain this water network. Its levels share the available land with Paddy Water Control.
     jiangnan_canal_network_slot_0: Maintenance
     pp_jiangnan_canal_network_maintenance: Canal and Dike Keepers
-    pp_jiangnan_canal_network_price: Jiangnan Canal Network Price
+    pp_jiangnan_canal_network_price: '[ShowBuildingTypeName(''jiangnan_canal_network'')|e] Price'
 prices:
 - key: pp_jiangnan_canal_network_price
   body: '{gold = 400}'

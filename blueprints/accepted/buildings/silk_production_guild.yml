@@ -64,8 +64,8 @@ prices:
       {gold = 100}
 localization:
   entries:
-    pp_silk_production_guild_price: Silk Production Guild Price
-    silk_production_guild_slot_0: Silk Production Guild Work
+    pp_silk_production_guild_price: "[ShowBuildingTypeName('silk_production_guild')|e] Price"
+    silk_production_guild_slot_0: "[ShowBuildingTypeName('silk_production_guild')|e] Work"
     pp_silk_production_guild_silk_production_guild_maintenance: "[ShowBuildingTypeName('silk_production_guild')|e]"
     silk_production_guild_slot_1: Market
     pp_silk_production_guild_market_sales: Market Sales

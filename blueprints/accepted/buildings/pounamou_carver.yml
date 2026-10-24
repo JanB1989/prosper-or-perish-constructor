@@ -68,8 +68,8 @@ prices:
       {gold = 100}
 localization:
   entries:
-    pp_pounamou_carver_price: Pounamou Carver Price
-    pounamou_carver_slot_0: Pounamou Carver Work
+    pp_pounamou_carver_price: "[ShowBuildingTypeName('pounamou_carver')|e] Price"
+    pounamou_carver_slot_0: "[ShowBuildingTypeName('pounamou_carver')|e] Work"
     pp_pounamou_carver_pounamou_carver_maintenance: Pounamou Carver Pounamou Carver Maintenance
     pp_pounamou_carver_market_sales: Market Sales
     pp_pounamou_carver_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.

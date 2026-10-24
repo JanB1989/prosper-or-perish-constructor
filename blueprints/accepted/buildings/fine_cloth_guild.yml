@@ -131,9 +131,9 @@ prices:
       {gold = 100}
 localization:
   entries:
-    pp_fine_cloth_guild_price: Fine Cloth Guild Price
-    fine_cloth_guild_slot_0: Fine Cloth Guild Work
-    fine_cloth_guild_slot_1: Fine Cloth Guild Work
+    pp_fine_cloth_guild_price: "[ShowBuildingTypeName('fine_cloth_guild')|e] Price"
+    fine_cloth_guild_slot_0: "[ShowBuildingTypeName('fine_cloth_guild')|e] Work"
+    fine_cloth_guild_slot_1: "[ShowBuildingTypeName('fine_cloth_guild')|e] Work"
     pp_fine_cloth_guild_fine_cloth_guild_maintenance: Fine Cloth Guild Fine Cloth Guild Maintenance
     pp_fine_cloth_guild_wool_weavers_maintenance: Fine Cloth Guild Wool Weavers Maintenance
     pp_fine_cloth_guild_silk_weavers_maintenance: Fine Cloth Guild Silk Weavers Maintenance

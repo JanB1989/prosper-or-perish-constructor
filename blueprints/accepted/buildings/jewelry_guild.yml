@@ -140,9 +140,9 @@ advancements:
     unlock_production_method = pp_jewelry_guild_copper_base
 localization:
   entries:
-    pp_jewelry_guild_price: Jewelry Guild Price
-    jewelry_guild_slot_0: Jewelry Guild Work
-    jewelry_guild_slot_1: Jewelry Guild Work
+    pp_jewelry_guild_price: "[ShowBuildingTypeName('jewelry_guild')|e] Price"
+    jewelry_guild_slot_0: "[ShowBuildingTypeName('jewelry_guild')|e] Work"
+    jewelry_guild_slot_1: "[ShowBuildingTypeName('jewelry_guild')|e] Work"
     pp_jewelry_guild_gold_base: Jewelry Guild Gold Base
     pp_jewelry_guild_silver_base: Jewelry Guild Silver Base
     pp_jewelry_guild_copper_base: Jewelry Guild Copper Base

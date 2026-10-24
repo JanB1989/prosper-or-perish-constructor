@@ -82,8 +82,8 @@ prices:
       {gold = 100}
 localization:
   entries:
-    pp_tannery_price: Tannery Price
-    tannery_slot_0: Tannery Work
+    pp_tannery_price: "[ShowBuildingTypeName('tannery')|e] Price"
+    tannery_slot_0: "[ShowBuildingTypeName('tannery')|e] Work"
     pp_tannery_leather_guild_maintenance: Tannery Leather Guild Maintenance
     pp_tannery_tannery_maintenance: Tannery Tannery Maintenance
     pp_tannery_market_sales: Market Sales

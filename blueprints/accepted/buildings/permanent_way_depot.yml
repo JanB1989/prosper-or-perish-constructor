@@ -113,7 +113,7 @@ localization:
     pp_permanent_way_depot_maintenance: Permanent Way Crews
     pp_permanent_way_depot_hand_laying: Hand-Laid Permanent Way
     pp_permanent_way_depot_standardized_fittings: Standardized Rails and Fittings
-    pp_permanent_way_depot_price: Permanent Way Depot Price
+    pp_permanent_way_depot_price: "[ShowBuildingTypeName('permanent_way_depot')|e] Price"
 icon:
   source_png: ../assets/icons/permanent_way_depot.png
   output_dds: permanent_way_depot.dds

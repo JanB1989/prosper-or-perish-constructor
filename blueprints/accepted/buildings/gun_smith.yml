@@ -129,9 +129,9 @@ prices:
       {gold = 200}
 localization:
   entries:
-    pp_gun_smith_price: Gun Smith Price
-    gun_smith_slot_0: Gun Smith Work
-    gun_smith_slot_1: Gun Smith Work
+    pp_gun_smith_price: "[ShowBuildingTypeName('gun_smith')|e] Price"
+    gun_smith_slot_0: "[ShowBuildingTypeName('gun_smith')|e] Work"
+    gun_smith_slot_1: "[ShowBuildingTypeName('gun_smith')|e] Work"
     pp_gun_smith_guns_guild_lumber_maintenance: Gun Smith Guns Guild Lumber Maintenance
     pp_gun_smith_guns_guild_bronze_maintenance: Gun Smith Guns Guild Bronze Maintenance
     pp_gun_smith_guns_guild_iron_maintenance: Gun Smith Guns Guild Iron Maintenance

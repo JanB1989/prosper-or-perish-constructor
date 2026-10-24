@@ -122,7 +122,7 @@ building:
     }
 localization:
   entries:
-    textile_mill_slot_0: Textile Mill Work
+    textile_mill_slot_0: "[ShowBuildingTypeName('textile_mill')|e] Work"
     pp_textile_mill_cotton_mill_maintenance: Textile Mill Cotton Mill Maintenance
     pp_textile_mill_wool_mill_maintenance: Textile Mill Wool Mill Maintenance
     pp_textile_mill_fiber_crops_mill_maintenance: Textile Mill Fiber Crops Mill Maintenance

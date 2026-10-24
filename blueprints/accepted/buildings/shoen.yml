@@ -152,7 +152,7 @@ building:
     increase_per_level_cost = 0.14
 localization:
   entries:
-    shoen_slot_0: Shoen Work
+    shoen_slot_0: "[ShowBuildingTypeName('shoen')|e] Work"
     pp_shoen_shoen_quarries_maintenance: Shoen Shoen Quarries Maintenance
     pp_shoen_shoen_lumbermills_maintenance: Shoen Shoen Lumbermills Maintenance
     pp_shoen_shoen_fiber_crops_farm_maintenance: Shoen Shoen Fiber Crops Farm Maintenance

@@ -1735,6 +1735,12 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         f"{Path(seasonal_harvests.SHARED_LOCALIZATION).name} ({moved} moved from other English files).",
         flush=True,
     )
+    from prosper_or_perish_constructor import loc_languages   # last text pass: copies every English file
+
+    standalone = mod_root.parent / seasonal_harvests.STANDALONE_FOLDER
+    shipped = [p for p in (*seasonal_harvests.COPIED, seasonal_harvests.SHARED_LOCALIZATION) if p.endswith("_l_english.yml")]
+    print(loc_languages.summary({"main mod": loc_languages.apply(mod_root, separate=shipped),
+                                 **({"Seasonal Harvests": loc_languages.apply(standalone, separate=shipped)} if standalone.is_dir() else {})}), flush=True)
     _normalize_interface_dds(mod_root)
     _ensure_constructor_text_boms(mod_root)
 
@@ -2103,19 +2109,24 @@ def _append_missing_price_cost_modifier_localization(
             target.read_text(encoding="utf-8-sig"),
             set(modifier_keys),
         ).rstrip()
+        # the names this file holds are rewritten every build: a name typed by hand ("Tavern Cost") becomes the link
+        text = re.sub(
+            r'(?m)^(?P<lead>\s*MODIFIER_TYPE_NAME_(?P<key>pp_[A-Za-z0-9_]+_price_cost_modifier):).*$',
+            lambda m: f'{m["lead"]} "{_price_cost_modifier_name(m["key"])}"' if m["key"] in modifier_keys else m[0],
+            text,
+        )
     else:
         text = "l_english:"
 
     lines: list[str] = []
     for modifier_key in modifier_keys:
-        building_key = modifier_key.removeprefix("pp_").removesuffix("_price_cost_modifier")
-        display_name = _title_from_key(building_key)
+        building_key = _price_cost_modifier_building(modifier_key)
         if modifier_key not in existing_desc_keys:
             lines.append(
                 f'  MODIFIER_TYPE_DESC_{modifier_key}: "Affects the cost of building [ShowBuildingTypeName(\'{building_key}\')|e]."'
             )
         if modifier_key not in existing_name_keys:
-            lines.append(f'  MODIFIER_TYPE_NAME_{modifier_key}: "{display_name} Cost"')
+            lines.append(f'  MODIFIER_TYPE_NAME_{modifier_key}: "{_price_cost_modifier_name(modifier_key)}"')
 
     if not lines:
         if target.is_file():
@@ -2140,8 +2151,13 @@ def _prune_stale_price_cost_modifier_localization_lines(text: str, allowed_keys:
     return re.sub(r"\n{3,}", "\n\n", updated).rstrip()
 
 
-def _title_from_key(key: str) -> str:
-    return " ".join(part.capitalize() for part in key.split("_"))
+def _price_cost_modifier_building(modifier_key: str) -> str:
+    return modifier_key.removeprefix("pp_").removesuffix("_price_cost_modifier")
+
+
+def _price_cost_modifier_name(modifier_key: str) -> str:
+    """``pp_<building>_price_cost_modifier`` -> "<building link> Cost": every building a text names is a link."""
+    return f"[ShowBuildingTypeName('{_price_cost_modifier_building(modifier_key)}')|e] Cost"
 
 
 def _top_level_keys(text: str) -> set[str]:

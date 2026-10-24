@@ -1213,7 +1213,7 @@ pp_caravanserai = { slot = "Caravan Network", method = "Caravan Network", desc =
 pp_oasis_caravan_station = { slot = "Desert Network", method = "Well Keepers", desc = "Families who keep the wells clear and the palms watered make the station a sure halt, so some camel trains keep crossing even when its own stores run dry." }
 pp_yam_station = { slot = "Relay Network", method = "Relay Post", desc = "The station keeps its place in the courier relay, passing news and small loads from stage to stage even when its own horses and sledges are wanting." }
 pp_banjara_tanda = { slot = "Clan Network", method = "Tanda Network", desc = "Kinship ties between the camps let loads pass from one tanda to the next along the grazing routes, even when the camp's own herds are thin." }
-pp_llama_caravan_post = { slot = "Mountain Network", method = "Tambo Relay", desc = "Runners and storekeepers of the tambos pass loads along the mountain roads from one post to the next, even when the post's own llama trains are wanting." }
+pp_llama_caravan_post = { slot = "Mountain Network", method = "Chasqui Relay", desc = "Runners and storekeepers of the tambos pass loads along the mountain roads from one post to the next, even when the post's own llama trains are wanting." }
 
 [stored_food]
 # Stored-food effect carrier (EU5 1.4, stored_food.py; docs/historical_growth_calibration.md 6.2). EU5 1.4 deleted the

@@ -259,7 +259,7 @@ prices:
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_mining_village_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('mining_village')|e].
-    MODIFIER_TYPE_NAME_pp_mining_village_price_cost_modifier: Mining Village Cost
+    MODIFIER_TYPE_NAME_pp_mining_village_price_cost_modifier: "[ShowBuildingTypeName('mining_village')|e] Cost"
     mining_village_slot_0: Mineral Deposit
     mining_village_slot_1: Worked Mine
     mining_village_slot_2: Stone Haulage

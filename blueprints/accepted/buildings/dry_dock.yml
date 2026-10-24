@@ -58,7 +58,7 @@ building:
         }
 localization:
   entries:
-    pp_dry_dock_maintenance: Dry Dock Maintenance
+    pp_dry_dock_maintenance: "[ShowBuildingTypeName('dry_dock')|e] Maintenance"
 
 evaluation:
   allow_rules:

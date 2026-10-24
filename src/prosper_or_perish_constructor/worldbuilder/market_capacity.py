@@ -6,20 +6,24 @@ import re
 from .buildings import river_size_trigger, write_river_size_triggers
 
 
+# every building a text names is a link (2026-10-24)
+YARD = "[ShowBuildingTypeName('victualling_yard')|e]"
+
+
 def write(repo, mod_root):
     cfg = json.loads((repo / "config/victuals_logistics.json").read_text())
     write_river_size_triggers(mod_root)
     labels = {
         "BASE": "Local distribution",
         "DEVELOPMENT": "Development",
-        "POPULATION": "Settlement size",
+        "POPULATION": "[population|e]",
         "HARBOR": "Harbor suitability",
         "COAST": "Coastal access",
         "RIVER": "River access",
         "NAVIGABLE": "Navigable waterway",
         "DIFFICULT": "Difficult waterway",
         "MARKET": "Market centre",
-        "RANK": "Settlement role",
+        "RANK": "[location_rank|e]",
         "RGO": "Food-producing hinterland",
         "FARMLAND": "Cultivated hinterland",
         "TERRAIN": "Land transport difficulty",
@@ -30,12 +34,12 @@ def write(repo, mod_root):
         # (2026-10-01). No floor = yes: the engine floors max_levels to whole levels itself.
         "MINIMUM": "Minimum",
         "MAXIMUM": "Upper limit",
-        "SITE_TAVERN": "Not a province capital",
-        "SITE_YARD": "Not a Victualling Yard site or a market centre",
+        "SITE_TAVERN": "Not a [province_capital|e]",
+        "SITE_YARD": f"Not a {YARD} site or a [market_center|e]",
         "INLAND_MARKET": "Inland market centre",
         "WATER_ACCESS": "River or sea access",
         "STAPLE_PORT": "Urban rights",
-        "SITE_GRANGE": "Not a province capital, or a Victualling Yard site",
+        "SITE_GRANGE": f"Not a [province_capital|e], or a {YARD} site",
     }
 
     def add(label, value):

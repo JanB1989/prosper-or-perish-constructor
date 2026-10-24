@@ -174,7 +174,7 @@ advancements:
 localization:
   entries:
     victualling_yard: Victualling Yard
-    victualling_yard_desc: The merchants' victualling house of a great harbour. It ships in grain, dried pulses, salt fish and salt beef from the wider market and packs it into [ShowGoodsName('victuals')|e] for the fleets and the markets beyond, without touching the province store. Only good harbours and the great river ports can hold one, and each further level costs much more; elsewhere the Grange sends the surplus overland.
+    victualling_yard_desc: The merchants' victualling house of a great harbour. It ships in grain, dried pulses, salt fish and salt beef from the wider market and packs it into [ShowGoodsName('victuals')|e] for the fleets and the markets beyond, without touching the province store. Only good harbours and the great river ports can hold one, and each further level costs much more; elsewhere the [ShowBuildingTypeName('grange')|e] sends the surplus overland.
     victualling_yard_slot_0: Food Shipments
     victuals_trade_construction: Victuals Trade Construction
     pp_victualling_yard_grain_shipment: Grain Shipment

@@ -51,7 +51,7 @@ building:
     	construction_demand = soldier_building_construction
 localization:
   entries:
-    pp_barracks_maintenance: Barracks Maintenance
+    pp_barracks_maintenance: "[ShowBuildingTypeName('barracks')|e] Maintenance"
 
 evaluation:
   allow_rules:

@@ -48,7 +48,7 @@ building:
     	construction_demand = soldier_building_construction
 localization:
   entries:
-    pp_regimental_camp_maintenance: Regimental Camp Maintenance
+    pp_regimental_camp_maintenance: "[ShowBuildingTypeName('regimental_camp')|e] Maintenance"
 
 evaluation:
   allow_rules:

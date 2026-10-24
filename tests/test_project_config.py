@@ -2708,6 +2708,30 @@ def test_price_cost_modifier_finalizer_prunes_stale_generated_assets(tmp_path: P
     assert "MODIFIER_TYPE_NAME_pp_current_price_cost_modifier:" in localization_text
 
 
+def test_price_cost_modifier_names_are_building_links(tmp_path: Path) -> None:
+    """A price cost modifier's name links its building, whether it is new or was typed by hand ("Tavern Cost")."""
+    mod_root = tmp_path / "mod"
+    prices = mod_root / "in_game" / "common" / "prices"
+    prices.mkdir(parents=True)
+    (prices / "pp_x.txt").write_text("pp_tavern_price = { gold = 1 }\npp_grange_price = { gold = 1 }\n", encoding="utf-8")
+    localization = mod_root / cli.PRICE_MODIFIER_LOCALIZATION
+    localization.parent.mkdir(parents=True)
+    localization.write_text(
+        'l_english:\n'
+        '  MODIFIER_TYPE_DESC_pp_tavern_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName(\'tavern\')|e]."\n'
+        '  MODIFIER_TYPE_NAME_pp_tavern_price_cost_modifier: "Tavern Cost"\n',
+        encoding="utf-8-sig",
+    )
+
+    cli._ensure_price_cost_modifier_assets(mod_root)
+
+    text = localization.read_text(encoding="utf-8-sig")
+    assert '  MODIFIER_TYPE_NAME_pp_tavern_price_cost_modifier: "[ShowBuildingTypeName(\'tavern\')|e] Cost"\n' in text
+    assert '  MODIFIER_TYPE_NAME_pp_grange_price_cost_modifier: "[ShowBuildingTypeName(\'grange\')|e] Cost"\n' in text
+    assert "Tavern Cost" not in text
+    assert text.count("MODIFIER_TYPE_NAME_pp_tavern_price_cost_modifier") == 1
+
+
 def test_victuals_pop_demand_modifier_type_is_registered() -> None:
     modifier_types = _database_keys(MODIFIER_TYPE_DEFINITIONS)
     modifier_icons = _database_keys(MODIFIER_ICONS)

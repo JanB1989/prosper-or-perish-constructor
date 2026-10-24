@@ -55,7 +55,7 @@ building:
         }
 localization:
   entries:
-    pp_dock_maintenance: Dock Maintenance
+    pp_dock_maintenance: "[ShowBuildingTypeName('dock')|e] Maintenance"
 
 evaluation:
   allow_rules:

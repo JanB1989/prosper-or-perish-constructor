@@ -53,7 +53,7 @@ building:
     	construction_demand = soldier_building_construction
 localization:
   entries:
-    pp_conscription_center_maintenance: Conscription Center Maintenance
+    pp_conscription_center_maintenance: "[ShowBuildingTypeName('conscription_center')|e] Maintenance"
 
 evaluation:
   allow_rules:

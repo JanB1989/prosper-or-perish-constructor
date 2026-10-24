@@ -1,10 +1,12 @@
 """Building names in player text are links (Jan, 2026-10-24): hovering a building's name shows the building.
 
-A building in localization is ``[ShowBuildingTypeName('<key>')|e]``. Slot titles and price labels were imported as
-typed names ("Beer Workshop Work", "Incamisana Price"); ``apply`` rewrites them in the accepted blueprints, the
-source of the rendered localization: the building's own typed name (its game name or its key in words, "Cloth
-Manufactory") becomes its link, and so does any other building's game name. ``typed_names`` is the check the tests run
-on the built mod (tests/test_building_links.py).
+A building in localization is ``[ShowBuildingTypeName('<key>')|e]``. Slot titles, price labels, method names and
+descriptions were imported or written with typed names ("Beer Workshop Work", "Incamisana Price", "... shares the land
+with Marled Fields"); ``apply`` rewrites every localization entry of the accepted blueprints, the source of the
+rendered localization, except a building's own name entry (key = a building key): the blueprint's own typed name (its
+game name or its key in words, "Cloth Manufactory") becomes its link, and so does any other building's game name. A
+game name two buildings share (Caravanserai, Academy of Sciences) is left for a hand link; so is a multi-line entry
+(``apply`` raises). ``typed_names`` is the check the tests run on the built mod (tests/test_building_links.py).
 
     uv run python -m prosper_or_perish_constructor.building_links [--check]
 """
@@ -83,43 +85,64 @@ def linked(text: str, building: str | None, names: Mapping[str, str]) -> str:
     return "".join(parts)
 
 
-def labels(key: str, entries: Mapping[str, object], prices: Iterable[str]) -> list[str]:
-    """The slot titles (``<key>_slot_<n>``) and price labels of one blueprint's building."""
-    wanted = set(prices)
-    return [k for k in entries if re.fullmatch(rf"{re.escape(key)}_slot_\d+", k) or k in wanted]
-
-
 def _scalar(text: str) -> str:
     return json.dumps(text, ensure_ascii=False) if text.startswith("[") or ": " in text or "#" in text else text
 
 
+def _entries_block(lines: list[str]) -> range:
+    """The line numbers of the ``localization: entries:`` mapping (top-level ``localization``)."""
+    start = next((i for i, line in enumerate(lines) if line.rstrip() == "localization:"), None)
+    if start is None:
+        return range(0)
+    entries = next((i for i in range(start + 1, len(lines)) if lines[i].strip() == "entries:"), None)
+    if entries is None:
+        return range(0)
+    indent = len(lines[entries]) - len(lines[entries].lstrip())
+    end = entries + 1
+    while end < len(lines) and (not lines[end].strip() or len(lines[end]) - len(lines[end].lstrip()) > indent):
+        end += 1
+    return range(entries + 1, end)
+
+
 def apply(repo: Path, names: Mapping[str, str], *, write: bool = True) -> list[str]:
-    """Link the typed building names in every accepted blueprint's slot titles and price labels; the changed keys."""
+    """Link the typed building names in every localization entry of every accepted blueprint (slot titles, price
+    labels, method names, descriptions), except a building's own name entry; the changed keys."""
     changed: list[str] = []
     for path in sorted((repo / BLUEPRINTS).glob("*.yml")):
-        text = path.read_text(encoding="utf-8")
+        text = path.read_bytes().decode("utf-8")   # line endings kept as they are (some blueprints are CRLF)
         data = yaml_io.safe_load(text) or {}
         building = str((data.get("building") or {}).get("key") or "")
         entries = (data.get("localization") or {}).get("entries") or {}
-        prices = [str(p.get("key")) for p in data.get("prices") or [] if isinstance(p, dict)]
         if not building or not isinstance(entries, dict):
             continue
         lines = text.splitlines(keepends=True)
-        for key in labels(building, entries, prices):
-            old = str(entries[key])
-            new = linked(old, building, names)
-            if new == old:
+        block = _entries_block(lines)
+        updated: dict[str, str] = {}
+        for key, value in entries.items():
+            if key == building or key in names or not isinstance(value, str):
+                continue   # a building's own name is plain text
+            new = linked(value, building, names)
+            if new == value:
                 continue
             line = re.compile(rf"^(?P<indent>\s+){re.escape(key)}:\s.*$")
-            for index, current in enumerate(lines):
-                if (m := line.match(current.rstrip("\n"))):
-                    lines[index] = f"{m['indent']}{key}: {_scalar(new)}\n"
+            for index in block:
+                if (m := line.match(lines[index].rstrip("\r\n"))):
+                    if (yaml_io.safe_load(lines[index]) or {}).get(key) != value:
+                        raise ValueError(f"{path.name}: {key} is not on one line; link it by hand")
+                    ending = lines[index][len(lines[index].rstrip("\r\n")):]
+                    lines[index] = f"{m['indent']}{key}: {_scalar(new)}{ending}"
                     break
             else:
                 raise ValueError(f"{path.name}: {key} is not on one line; link it by hand")
-            changed.append(key)
-        if write and "".join(lines) != text:
-            path.write_text("".join(lines), encoding="utf-8")
+            updated[key] = new
+        if not updated:
+            continue
+        written = ((yaml_io.safe_load("".join(lines)) or {}).get("localization") or {}).get("entries") or {}
+        if bad := [key for key, new in updated.items() if written.get(key) != new]:
+            raise ValueError(f"{path.name}: {', '.join(bad)} would not read back as written; link by hand")
+        changed.extend(updated)
+        if write:
+            path.write_bytes("".join(lines).encode("utf-8"))
     return changed
 
 
@@ -129,7 +152,7 @@ def main(argv: list[str]) -> int:
 
     names = building_names(game_root(vanilla_root(ROOT, ROOT / "constructor.toml")), MOD_ROOT)
     changed = apply(ROOT, names, write="--check" not in argv)
-    print(f"building links: {len(changed)} slot titles and price labels {'to link' if '--check' in argv else 'linked'}")
+    print(f"building links: {len(changed)} blueprint texts {'to link' if '--check' in argv else 'linked'}")
     return 1 if changed and "--check" in argv else 0
 
 

@@ -79,10 +79,10 @@
   MODIFIER_TYPE_DESC_irrigant_cap_modifier: "The size of the river flowing through this location."
   pp_river_boatmen_yard_cap_modifier: "River Freight Capacity"
   MODIFIER_TYPE_NAME_pp_river_boatmen_yard_cap_modifier: "River Freight Capacity"
-  MODIFIER_TYPE_DESC_pp_river_boatmen_yard_cap_modifier: "Adds maximum River Boatmen's Yard levels from river size."
+  MODIFIER_TYPE_DESC_pp_river_boatmen_yard_cap_modifier: "Adds maximum [ShowBuildingTypeName('river_boatmen_yard')|e] levels from river size."
   pp_coastal_shipping_office_cap_modifier: "Coastal Shipping Capacity"
   MODIFIER_TYPE_NAME_pp_coastal_shipping_office_cap_modifier: "Coastal Shipping Capacity"
-  MODIFIER_TYPE_DESC_pp_coastal_shipping_office_cap_modifier: "Changes maximum Coastal Shipping Office levels from natural harbor suitability."
+  MODIFIER_TYPE_DESC_pp_coastal_shipping_office_cap_modifier: "Changes maximum [ShowBuildingTypeName('coastal_shipping_office')|e] levels from [natural_harbor_suitability|e]."
   MODIFIER_TYPE_NAME_local_victualling_yard_building_levels: "[ShowBuildingTypeName('victualling_yard')|e] Levels"
   MODIFIER_TYPE_DESC_local_victualling_yard_building_levels: "This increases the Max Level of the [ShowBuildingTypeName('victualling_yard')|e] in this [location|e]."
 

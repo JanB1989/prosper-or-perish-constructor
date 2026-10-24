@@ -50,3 +50,18 @@ def test_tavern_cap_scans_waterways_only_on_coasts_and_stops_at_the_first_match(
         chain = [line.strip() for line in lines if label in line]
         assert len(chain) == count, label
         assert chain[0].startswith("if = ") and all(line.startswith("else_if = ") for line in chain[1:]), label
+
+
+def test_cap_row_labels_link_the_buildings_they_name(tmp_path: Path):
+    """The cap rows name buildings as links (hover shows the building), never as typed names."""
+    from prosper_or_perish_constructor.building_links import typed_names
+    from prosper_or_perish_constructor.worldbuilder import market_capacity
+
+    for folder in ("in_game/common/script_values", "in_game/common/scripted_triggers", "main_menu/localization/english"):
+        (tmp_path / folder).mkdir(parents=True)
+    market_capacity.write(REPO, tmp_path)
+    loc = (tmp_path / "main_menu/localization/english/pp_victuals_logistics_l_english.yml").read_text(encoding="utf-8-sig")
+    names = {"victualling_yard": "Victualling Yard", "settlement_building": "Settlement", "tavern": "Tavern",
+             "grange": "Grange"}
+    assert typed_names(loc, None, names) == []
+    assert "[ShowBuildingTypeName('victualling_yard')|e] site" in loc

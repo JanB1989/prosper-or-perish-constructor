@@ -68,7 +68,7 @@ advancements:
 localization:
   entries:
     field_management_convertible: Ley Fields
-    field_management_convertible_desc: Fields alternate between grain and several years of grass and clover leys grazed by stock, so the land rests, is manured where it lies and returns heavier crops. Building it converts a level of Marled Fields.
+    field_management_convertible_desc: Fields alternate between grain and several years of grass and clover leys grazed by stock, so the land rests, is manured where it lies and returns heavier crops. Building it converts a level of [ShowBuildingTypeName('field_management')|e].
     field_management_convertible_slot_0: Upkeep
     pp_field_management_convertible_leys: None
     pp_field_management_convertible_price: '[ShowBuildingTypeName(''field_management_convertible'')|e] Price'

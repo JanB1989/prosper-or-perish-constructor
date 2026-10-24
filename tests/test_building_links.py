@@ -77,6 +77,39 @@ def test_typed_names_link_to_their_building() -> None:
     assert building_links.typed_names(f"{link('brewery')} Price", "brewery", names) == []
 
 
+def test_apply_links_typed_names_in_every_blueprint_entry(tmp_path: Path) -> None:
+    names = {"brewery": "Brewery", "grange": "Grange", "farm": "Farm"}
+    link = building_links.link
+    folder = tmp_path / building_links.BLUEPRINTS
+    folder.mkdir(parents=True)
+    blueprint = folder / "brewery.yml"
+    blueprint.write_bytes((
+        "building:\r\n  key: brewery\r\n  body: |\r\n    pp_brewery_ale: Brewery Ale\r\n"   # not an entry: left alone
+        "localization:\r\n  entries:\r\n    brewery: Brewery\r\n    brewery_slot_0: Brewery Work\r\n"
+        "    pp_brewery_ale: Brewery Ale\r\n"
+        "    brewery_desc: 'Brews what the Grange sends: ale # and more'\r\n"
+        "    farm: Farm\r\n"
+    ).encode("utf-8"))
+    # every entry links, except a building's own name; line endings stay as they were (CRLF here)
+    assert building_links.apply(tmp_path, names, write=False) == ["brewery_slot_0", "pp_brewery_ale", "brewery_desc"]
+    assert blueprint.read_bytes().count(b"Brewery Ale") == 2   # write=False leaves the file alone
+    building_links.apply(tmp_path, names)
+    text = blueprint.read_bytes().decode("utf-8")
+    assert "\n" not in text.replace("\r\n", "")
+    data = building_links.yaml_io.safe_load(text)
+    assert data["building"]["body"] == "pp_brewery_ale: Brewery Ale\n"
+    entries = data["localization"]["entries"]
+    assert entries["brewery"] == "Brewery" and entries["farm"] == "Farm"
+    assert entries["pp_brewery_ale"] == f"{link('brewery')} Ale"
+    assert entries["brewery_desc"] == f"Brews what the {link('grange')} sends: ale # and more"
+    assert building_links.apply(tmp_path, names, write=False) == []
+    # a multi-line entry is linked by hand
+    blueprint.write_text("building:\n  key: brewery\nlocalization:\n  entries:\n    brewery_desc: >-\n      The Grange\n",
+                         encoding="utf-8")
+    with pytest.raises(ValueError, match="link it by hand"):
+        building_links.apply(tmp_path, names, write=False)
+
+
 def test_every_building_named_in_the_mod_text_is_a_link(buildings: set[str]) -> None:
     offenders = [f"{name}: {key}: {', '.join(found)}" for name, key, text in english_entries() if (found := unlinked(text, buildings))]
     assert offenders == [], f"{len(offenders)} texts name a building without linking it:\n" + "\n".join(offenders[:30])
@@ -98,6 +131,14 @@ def test_slot_titles_and_price_labels_type_no_building_name(buildings: set[str],
         if building and (found := building_links.typed_names(text, building, names)):
             offenders.append(f"{name}: {key}: {text} ({', '.join(found)})")
     assert offenders == [], f"{len(offenders)} slot titles or price labels type a building's name:\n" + "\n".join(offenders[:30])
+
+
+def test_no_text_types_a_building_name(buildings: set[str], names: dict[str, str]) -> None:
+    """Method names, modifier names, descriptions, Europedia: a building's game name is never plain text. Only the
+    building's own name entry holds it."""
+    offenders = [f"{name}: {key}: {', '.join(found)}" for name, key, text in english_entries()
+                 if key not in buildings and (found := building_links.typed_names(text, None, names))]
+    assert offenders == [], f"{len(offenders)} texts type a building's name:\n" + "\n".join(offenders[:40])
 
 
 def test_the_blueprints_hold_no_typed_building_names_in_slot_titles_or_price_labels(names: dict[str, str]) -> None:

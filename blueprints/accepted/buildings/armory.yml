@@ -53,7 +53,7 @@ building:
     	construction_demand = early_soldier_building_construction
 localization:
   entries:
-    pp_armory_maintenance: Armory Maintenance
+    pp_armory_maintenance: "[ShowBuildingTypeName('armory')|e] Maintenance"
 
 evaluation:
   allow_rules:

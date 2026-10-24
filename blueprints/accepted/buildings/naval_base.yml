@@ -58,7 +58,7 @@ building:
         }
 localization:
   entries:
-    pp_naval_base_maintenance: Naval Base Maintenance
+    pp_naval_base_maintenance: "[ShowBuildingTypeName('naval_base')|e] Maintenance"
 
 evaluation:
   allow_rules:

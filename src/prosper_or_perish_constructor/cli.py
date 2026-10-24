@@ -1716,6 +1716,16 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         f"({overrides.kept} kept, {len(overrides.dropped_equal)} dropped as word-for-word vanilla).",
         flush=True,
     )
+    from prosper_or_perish_constructor import seasonal_harvests
+
+    harvests = seasonal_harvests.apply(mod_root)
+    moved = sum(len(keys) for keys in harvests.moved.values())
+    print(
+        f"Seasonal Harvests: standalone mod holds the main mod's {harvests.copied} harvest files "
+        f"({len(harvests.changed)} changed, {len(harvests.removed)} stale removed); {harvests.keys} shared texts in "
+        f"{Path(seasonal_harvests.SHARED_LOCALIZATION).name} ({moved} moved from other English files).",
+        flush=True,
+    )
     _normalize_interface_dds(mod_root)
     _ensure_constructor_text_boms(mod_root)
 

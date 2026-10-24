@@ -24,19 +24,19 @@
 		}
 	}
 	tooltip = {
+		# the location's harvest this year ("Weak Harvest: Western Europe"), as the map colours it
+		if = {
+			limit = {
+				has_owner = yes
+			}
+			custom_tooltip = pp_harvest_map_state_tt
+		}
 		if = {
 			limit = {
 				has_owner = yes
 				province = { is_starving = yes }
 			}
 			custom_tooltip = pp_harvest_province_is_starving_tt
-		}
-		if = {
-			limit = {
-				has_owner = yes
-				this.market ?= { market_monthly_food_balance < 0 }
-			}
-			custom_tooltip = pp_harvest_market_negative_food_balance_tt
 		}
 		if = {
 			limit = {	
@@ -244,6 +244,11 @@
 		desc = "PP_HARVEST_LEGEND_KEY_POOR"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
+	# worst to best, average in the middle like the harvest scale
+	legend_key = {
+		desc = "PP_HARVEST_LEGEND_KEY_AVERAGE"
+		color = define:NMapColors|DEFAULT_COLOR
+	}
 	legend_key = {
 		desc = "PP_HARVEST_LEGEND_KEY_GOOD"
 		color = define:NMapColors|MAP_COLOR_HIGH
@@ -257,15 +262,7 @@
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		desc = "PP_HARVEST_LEGEND_KEY_AVERAGE"
-		color = define:NMapColors|DEFAULT_COLOR
-	}
-	legend_key = {
 		desc = "PP_HARVEST_LEGEND_KEY_STARVING"
 		color = define:NMapColors|POPULATION_STARVING_COLOR_STRIPE
-	}
-	legend_key = { 
-		desc = "PP_HARVEST_LEGEND_KEY_FOOD_NEG"
-		color = define:NMapColors|MAP_COLOR_MID
 	}
 }

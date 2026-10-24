@@ -41,6 +41,8 @@ HARVEST_LOCALIZATION = (
 )
 EUROPEDIA_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_europedia_l_english.yml"
 SITUATION_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_situations_l_english.yml"
+# harvest texts the Seasonal Harvests standalone mod shares live in one file of the same name in both mods
+SHARED_HARVEST_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_seasonal_harvests_l_english.yml"
 MODIFIER_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_modifiers_l_english.yml"
 ENCYCLOPEDIA_LATERALVIEW = MOD_ROOT / "in_game" / "gui" / "encyclopedia_lateralview.gui"
 AGENTS = ROOT / "AGENTS.md"
@@ -239,7 +241,9 @@ def test_variable_harvest_generated_pp_modifiers_are_localized() -> None:
 
 def test_variable_harvest_localization_is_player_facing_and_value_free() -> None:
     generated_text = HARVEST_LOCALIZATION.read_text(encoding="utf-8-sig")
-    europedia_lines = _harvest_localization_lines(EUROPEDIA_LOCALIZATION)
+    europedia_lines = _harvest_localization_lines(EUROPEDIA_LOCALIZATION) + _harvest_localization_lines(
+        SHARED_HARVEST_LOCALIZATION
+    )
     europedia_text = "\n".join(europedia_lines)
     rule_text = AGENTS.read_text(encoding="utf-8-sig")
 
@@ -279,6 +283,7 @@ def test_variable_harvest_situation_text_uses_plain_formatter_text() -> None:
     situation_text = "\n".join(
         _situation_localization_lines(EUROPEDIA_LOCALIZATION)
         + _situation_localization_lines(SITUATION_LOCALIZATION)
+        + _situation_localization_lines(SHARED_HARVEST_LOCALIZATION)
     )
     unsupported_link_pattern = re.compile(r"\[[^\]]+\|[eElL]\]|\[Link\(")
     lowercase_formatter_pattern = re.compile(r"#[a-z][A-Za-z_]*")
@@ -393,7 +398,7 @@ def _harvest_localization_lines(path: Path) -> list[str]:
     return [
         line
         for line in path.read_text(encoding="utf-8-sig").splitlines()
-        if line.startswith(prefixes)
+        if line.strip().startswith(prefixes)
     ]
 
 

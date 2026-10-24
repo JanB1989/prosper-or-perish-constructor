@@ -157,8 +157,9 @@ def test_mod_files_carry_the_markers_types_and_localization():
     used = set(re.findall(r'"(PP_[A-Z_]+)"', gui)) | set(re.findall(r"Localize\('(PP_[A-Z_]+)'\)", gui))
     used |= set(re.findall(r"localization_key = (PP_[A-Z_]+)", location_status.custom_localization(HARVESTS)))
     loc += location_status.harvest_localization(HARVESTS)
+    loc += (MOD_ROOT / "main_menu/localization/english/pp_seasonal_harvests_l_english.yml").read_text(encoding="utf-8-sig")
     loc += (MOD_ROOT / stored_food.LOCALIZATION).read_text(encoding="utf-8-sig")
-    missing = sorted(key for key in used if f"\n  {key}:" not in loc)
+    missing = sorted(key for key in used if not re.search(rf"^[ \t]*{key}:", loc, re.M))
     assert not missing
 
 

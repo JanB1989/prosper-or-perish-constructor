@@ -97,3 +97,19 @@ them. Scene: the Volga below a river town on a high bank (late sixteenth or seve
 team of barge haulers on the towpath drags a loaded barge upstream through the shallows; behind them sailing river
 ships and broad barges, a busy timber wharf, a wooden kremlin with onion domes; the river runs from the foreground into
 the far distance.
+
+## Added later: overview (2026-10-24)
+Painted by Codex (GPT-6.1 Sol, high, its image generation, six sub-agents in parallel) with six of the paintings above
+as style references: twelve candidates from six concepts, two variants each, for Jan to choose from. `overview.jpg` is
+crossroads_tuscany variant a.
+
+**overview**: the title picture of the mod. Every province lives off one food store: a full store means growth and
+newcomers, an empty one hunger, flight and death. No storm front (the harvest banner owns it): want is shown by dry,
+thin land, abandoned houses and people leaving. Concepts: crossroads_tuscany (a family with a handcart at a wayside
+shrine where the road forks, Tuscany in the famine years of the 1340s: up to a thriving walled hill town with grain carts
+and bake ovens, or away across parched fields past an abandoned farmstead with a line of emigrants), crossroads_andes
+(Inca terraces and full qollqa storehouses vs a dry valley and a deserted hamlet), crossroads_persia (Safavid oasis
+town on its qanats vs a village whose wells failed), plenty_and_want_france (a Bruegel-like square: market and feast on
+one half, the almonry bread line and a family leaving on the other), granary_ethiopia (the Gondar town granary as the
+hinge between terraced fields and hungry families from the bare hills), two_villages_joseon (a family crossing a bridge
+from a failing hill village to a thriving one).

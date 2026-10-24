@@ -540,14 +540,16 @@
                                 blockoverride "scrollbox_content" {
                                     vbox = {
 
-	                                        # ---- Overview (Prosper or Perish Mod) ----
-	                                        vbox = {
+                                        # ---- Overview (Prosper or Perish Mod) ----
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: docs/mod_authoring_rules.md)
+                                        vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'overview'))]"
                                             set_parent_size_to_minimum = yes
                                             margin = { 0 10 }
                                             vbox = {
                                                 layoutpolicy_horizontal = expanding
                                                 spacing = 10
+                                                margin_bottom = 24
                                                 using = bg_paper_card
                                                 blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
                                                 max_width = 1450
@@ -565,14 +567,93 @@
                                                         text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_prosper_perish_mod" }
                                                     }
                                                 }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_prosper_perish_mod_desc" margin = { 40 10 } }
-                                                        }
-                                                    }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+
+                                                pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_overview.dds" } }
+                                                pp_eu_lead = { text = "game_concept_prosper_perish_mod_desc" }
+
+                                                # ---- The core loop: the store decides, full store vs empty store ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_OV_LOOP" }
                                                 }
+                                                pp_eu_text = { text = "PP_EU_OV_LOOP_DESC" }
+                                                hbox = {
+                                                    margin = { 40 0 }
+                                                    spacing = 10
+                                                    pp_eu_panel = {
+                                                        blockoverride "panel_icons" {
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/pp_harvest/frame_bountiful.dds" }
+                                                                blockoverride "item_overlay" { pp_eu_medallion_goods = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" } }
+                                                                blockoverride "item_link" { raw_text = "[ShowModifier('pp_food_store_24')]" }
+                                                            }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/location_icons/new/population_growth.dds" }
+                                                                blockoverride "item_link" { raw_text = "[Concept('pp_population_growth', 'Population Growth')|e]" }
+                                                            }
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/location_icons/new/migration.dds" }
+                                                                blockoverride "item_link" { raw_text = "[migration|e]" }
+                                                            }
+                                                        }
+                                                        blockoverride "panel_title" { text = "PP_EU_OV_PROSPER" }
+                                                        blockoverride "panel_text" { text = "PP_EU_OV_PROSPER_DESC" }
+                                                    }
+                                                    pp_eu_sign = { blockoverride "sign_text" { text = "PP_EU_FOOD_OR" } }
+                                                    pp_eu_panel = {
+                                                        blockoverride "panel_icons" {
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" }
+                                                                blockoverride "item_overlay" { pp_eu_medallion_goods = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" } }
+                                                                blockoverride "item_link" { raw_text = "[ShowModifier('pp_food_store_0')]" }
+                                                            }
+                                                            pp_eu_item_arrow = {}
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds" }
+                                                                blockoverride "item_link" { raw_text = "[ShowModifier('province_starving')]" }
+                                                            }
+                                                            pp_eu_item = {
+                                                                blockoverride "item_icon" { texture = "gfx/interface/icons/location_icons/new/migration.dds" }
+                                                                blockoverride "item_link" { raw_text = "[migration|e]" }
+                                                            }
+                                                        }
+                                                        blockoverride "panel_title" { text = "PP_EU_OV_PERISH" }
+                                                        blockoverride "panel_text" { text = "PP_EU_OV_PERISH_DESC" }
+                                                    }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_OV_START" }
+
+                                                # ---- What else the mod changes: one line each, linking its page ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/europedia_flat_icon.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_OV_CHANGES" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_OV_CHANGES_DESC" }
+
+                                                # ---- Game rules ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/laws.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_OV_RULES" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_OV_RULES_DESC" }
+
+                                                # ---- Feedback, how features get in, thanks (the author's own words) ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/parliament_request.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_OV_FEEDBACK" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_OV_FEEDBACK_DESC" }
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/objectives.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_OV_FEATURES" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_OV_FEATURES_DESC" }
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/happy.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_OV_THANKS" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_OV_THANKS_DESC" }
                                             }
                                         }
 

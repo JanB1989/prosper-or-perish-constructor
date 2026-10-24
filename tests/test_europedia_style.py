@@ -29,6 +29,7 @@ CONFIG = ROOT / "variable_harvests.toml"
 SEVERITIES = ("abysmal", "very_poor", "poor", "good", "very_good", "bountiful")
 # card -> (first line, the next card's first line, concept descriptions the card's links open)
 CARDS = {
+    "overview": ("# ---- Overview (Prosper or Perish Mod) ----", "# ---- Food ----", ()),
     "harvest": ("# ---- Variable Harvests ----", "# ---- Arable Land ----",
                 tuple(f"game_concept_{s}_harvest_desc" for s in (*SEVERITIES, "average"))),
     "arable_land": ("# ---- Arable Land ----", "# ---- Population Growth ----",
@@ -172,8 +173,10 @@ def test_card_types_are_defined(name):
 @pytest.mark.parametrize("name", CARDS)
 def test_card_text_has_no_numbers(name):
     """Numbers live behind the links (modifier and concept tooltips), never in the text. Live values the game fills
-    in (`[...]` data functions, e.g. the capital's months of food) are not written numbers."""
+    in (`[...]` data functions, e.g. the capital's months of food) are not written numbers, nor are names (the game
+    and a mod collection in the Overview's thanks)."""
     for key, value in _card_loc(name).items():
+        value = re.sub(r"\bEU5(?: 2\.0)?\b", "", value)
         assert not re.search(r"\d", re.sub(r"\[[^\[\]]*\]", "", value)), key
 
 

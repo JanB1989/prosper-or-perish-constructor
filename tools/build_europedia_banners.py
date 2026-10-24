@@ -13,7 +13,8 @@ README for where they come from and how to add one); this tool cuts the banner s
 - food_consumption: an Aztec market feast, nobles served on the terrace;
 - rural_capacities: woodcutters, net menders and boats on a Norwegian fjord coast;
 - trade_goods: a Portuguese victualling yard, casks and biscuit rolled aboard (New Trade Goods);
-- population_growth: a growing Ashanti town, new houses, a crowded market, newcomers.
+- population_growth: a growing Ashanti town, new houses, a crowded market, newcomers;
+- overview: a Tuscan crossroads in the 1340s, the road up to a thriving hill town and the road away past a deserted farm.
 
     uv run python tools/build_europedia_banners.py                    # write every banner into the mod
     uv run python tools/build_europedia_banners.py labor --preview DIR
@@ -48,6 +49,7 @@ PAINTINGS: dict[str, int] = {
     "trade_goods": 165,
     "population_growth": 165,
     "navigable_rivers": 140,   # the haulers on the towpath, the river running into the distance
+    "overview": 150,           # the wayside shrine at the fork stays whole above the family
 }
 
 

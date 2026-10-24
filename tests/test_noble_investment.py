@@ -20,7 +20,7 @@ from scripts.generate_noble_investment import (
 ON_ACTION_PATH = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_noble_investment.txt"
 CANDIDATE_LINE = re.compile(r"^\t# (\d+): (\w+) \((\w+), (\w+)\)$", re.M)
 BUILD_BRANCH = re.compile(
-    r"best_index = (\d+) \}\n\t\tconstruct_estate_building = \{ building_type = building_type:(\w+) "
+    r"pp_noble_investment_best_index = (\d+) \}\n\t\tconstruct_estate_building = \{ building_type = building_type:(\w+) "
     r"estate_type = estate_type:nobles_estate \}"
 )
 
@@ -339,3 +339,117 @@ no_good = {
     lines = " ".join(gen.method_lines(deep, {"local_iron_output_modifier"}, ""))
     assert "limit = { owner = { has_advance = adv_deep } }" in lines
     assert "multiply = { value = 1 add = modifier:local_iron_output_modifier }" in lines
+
+
+LAND_LINE = re.compile(r"^\t# land (\d+): (\w+) \((\w+), ([\d.]+) arable land\)$", re.M)
+LAND_BRANCH = re.compile(
+    r"pp_noble_land_best_index = (\d+) \}\n\t\tconstruct_estate_building = \{ building_type = building_type:(\w+) "
+    r"estate_type = estate_type:nobles_estate \}"
+)
+
+
+def land_blocks() -> dict[str, str]:
+    text = EFFECTS_PATH.read_text(encoding="utf-8-sig")
+    find = text[text.index("pp_noble_land_find_best = {") : text.index("pp_noble_land_build_best = {")]
+    parts = re.split(r"^\t# land \d+: (\w+) \(.*\)$", find, flags=re.M)
+    return dict(zip(parts[1::2], parts[2::2]))
+
+
+def test_nobles_add_arable_land_where_it_is_full() -> None:
+    # User request (2026-10-24): nobles also build the improvements that add Arable Land, where a location is more than
+    # 90 % full (the engine's own threshold for valuing capacity) or over it.
+    text = EFFECTS_PATH.read_text(encoding="utf-8-sig")
+    found = {building: (int(i), pop) for i, building, pop, _ in LAND_LINE.findall(text)}
+    assert {"field_drainage", "land_clearance", "irrigation_systems", "qanats", "polders", "field_management"} <= set(found)
+    # incamisana is worked by clergy, terraces add no Arable Land per level.
+    assert not {"incamisana", "terraces", "aqueduct_system"} & set(found)
+    footprints = gen.blueprint_footprints()
+    definitions = building_definitions(BUILDING_TYPES)
+    for building, (_, pop_type) in found.items():
+        assert footprints[building] == gen.LAND_FOOTPRINT, building
+        assert field(definitions[building], "pop_type") == pop_type in gen.POP_TYPES, building
+        assert field(definitions[building], "forbidden_for_estates") != "yes", building
+    assert sorted(i for i, _ in found.values()) == list(range(1, len(found) + 1))
+    branches = {int(i): b for i, b in LAND_BRANCH.findall(text)}
+    assert branches == {i: b for b, (i, _) in found.items()}
+    blocks = land_blocks()
+    assert set(blocks) == set(found)
+    for building, block in blocks.items():
+        assert "NOT = { modifier:pp_land_abundant > 0 }" in block, building
+        assert "modifier:pp_land_available < 0.1" in block, building
+        assert f"can_build_building = building_type:{building}" in block, building
+        assert "num_civil_constructions < 1" in block, building
+        assert "NOT = { has_variable = pp_noble_investment_recent }" in block, building
+        assert "estate_gold >=" in block, building
+    assert "has_advance = pp_field_management_convertible" in blocks["field_management_convertible"]
+    assert "unemployed_pops_of_pop_type_in_location" not in blocks["field_drainage"]  # no workers
+    assert '"unemployed_pops_of_pop_type_in_location(pop_type:peasants)" >= 0.15' in blocks["field_management_convertible"]
+    assert "capacity = 7.5 }" in blocks["field_management_convertible"]
+
+
+def test_land_search_has_its_own_cooldown_and_ranks_land_per_gold() -> None:
+    effects = EFFECTS_PATH.read_text(encoding="utf-8-sig")
+    monthly = effects[effects.index("pp_noble_investment_monthly = {") : effects.index("pp_noble_investment_start_block")]
+    assert braces_balance(monthly[: monthly.rindex("}") + 1])
+    assert monthly.index("pp_noble_investment_find_best = yes") < monthly.index("pp_noble_land_find_best = yes")
+    for name in ("pp_noble_investment", "pp_noble_land"):
+        assert f"NOT = {{ has_variable = {name}_cooldown }}" in monthly
+        assert f"scope:{name}_location = {{ {name}_build_best = yes }}" in monthly
+    helper = effects[effects.index("pp_noble_land_keep_better_location = {") :]
+    assert "divide = { value = building_type:$building$.building_base_cost_in_gold min = 1 }" in helper
+    assert "multiply = { value = 1 add = modifier:pp_land_overpopulation }" in helper
+    build = effects[effects.index("pp_noble_land_build_best = {") :]
+    assert f"set_variable = {{ name = pp_noble_investment_recent value = 1 days = {gen.LOCATION_COOLDOWN_DAYS} }}" in build
+
+
+def test_land_candidate_rules(tmp_path) -> None:
+    (tmp_path / "a.txt").write_text(
+        """
+drainage = {
+    pop_type = peasants
+    employment_size = 0
+    raw_modifier = { local_population_capacity = 5 free_building_levels = 1 }
+    modifier = { local_population_capacity = -0.02 }
+}
+managed = {
+    pop_type = peasants
+    employment_size = 0.15 # comment
+    country_potential = { has_advance = adv_x }
+    raw_modifier = {
+        local_population_capacity = 7.5
+    }
+}
+temple_land = {
+    pop_type = clergy
+    employment_size = 0
+    raw_modifier = { local_population_capacity = 5 }
+}
+no_land = {
+    pop_type = laborers
+    employment_size = 1
+    raw_modifier = { local_rice_output_modifier = 0.05 }
+}
+closed = {
+    pop_type = peasants
+    employment_size = 0
+    forbidden_for_estates = yes
+    raw_modifier = { local_population_capacity = 5 }
+}
+farm = {
+    pop_type = peasants
+    employment_size = 1
+    raw_modifier = { local_population_capacity = 5 }
+}
+""",
+        encoding="utf-8",
+    )
+    footprints = {name: gen.LAND_FOOTPRINT for name in ("drainage", "managed", "temple_land", "no_land", "closed")}
+    found = gen.land_candidates(building_definitions(tmp_path), {"managed": ("adv_m",)}, footprints | {"farm": "farm_land"})
+    assert found == [
+        gen.LandCandidate("drainage", "peasants", 5.0),
+        gen.LandCandidate("managed", "peasants", 7.5, ("adv_m",), "has_advance = adv_x", 0.15),
+    ]
+    block = gen.land_find_block(2, found[1])
+    assert braces_balance(block)
+    assert "has_advance = adv_m" in block and "AND = { has_advance = adv_x } # country_potential" in block
+    assert "unemployed_pops_of_pop_type_in_location" not in gen.land_find_block(1, found[0])

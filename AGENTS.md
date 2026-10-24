@@ -549,6 +549,15 @@
   a Market Sales good or the good priced in `ai_construct_weight`, not `forbidden_for_estates`, not `is_special`,
   not in `EXCLUDED_BUILDINGS`: market village, 2026-10-17, user rule; the engine's own noble plans can still pick it).
   Rerun after building changes; `--check` fails when they are stale. Tests: tests/test_noble_investment.py.
+- Arable Land (2026-10-24, user request): a second search in the same pulse, with its own cooldown
+  (`pp_noble_land_cooldown`, same 90 / 180 days; it skips the location the production search just built in), builds a
+  land improvement: blueprint footprint `capacity_source`, peasants or labourers, open to estates, adding
+  `local_population_capacity` in `raw_modifier` (14 buildings: field drainage, land clearance, irrigation, field
+  management, qanats, polders, bund, baray, ...; regional specials count here). Only where the location is more than 90 %
+  full (no Abundant and less than 0.1 Available Arable Land, the `pp_land_*` markers; the engine values capacity only
+  above 0.9 fill) or over capacity. Same gold, research, country_potential, idle-worker (when the improvement employs
+  any), construction and location-cooldown checks; ranked by Arable Land per gold of base price x (1 + Overused Arable
+  Land). Not tested in game.
 - One-off cleanup (2026-10-17): `effect pp_noble_investment_cleanup = yes` in the console removes every tier of the
   potato and maize farms (`CLEANUP_CROPS`, New World crops) in each country that fails their `country_potential`,
   finished or under construction, whoever built them (281 of 584 noble constructions in an Austria 1384 save were

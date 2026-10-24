@@ -12,6 +12,12 @@ over the month), a country whose nobles hold more gold than a reserve plus the p
 
 and has the nobles build the most profitable one with `construct_estate_building` (the estate pays and owns it).
 
+A second search in the same pulse, with its own cooldown, adds Arable Land (user request, 2026-10-24): a land improvement
+(blueprint footprint `capacity_source`, peasants or labourers, `local_population_capacity` in its raw_modifier) where a
+location is more than LAND_FULL_SHARE full (the engine's own threshold for valuing capacity, docs/ai_building_rulebook.md)
+or over capacity. Land improvements earn nothing, so they do not compete with the profit ranking: the most Arable Land
+per gold wins, over-capacity locations scaled up by the share they are over.
+
 Profit is worked out per level at the location's market prices, method by method: for every production-method block
 the best method the country can run (output x price x (1 + the location's output modifier for that good) - inputs x
 prices; methods behind an `allow` are skipped, methods unlocked by an advance need it), summed over the blocks. Wages
@@ -85,6 +91,12 @@ LOCATION_COOLDOWN_DAYS = 730
 CONDITION_KEYS = ("allow", "potential", "location_allow")
 # Block profit before any method was looked at; a block whose methods are all unavailable adds nothing.
 NO_METHOD = -1000000
+# Land improvements: the blueprint footprint class of buildings that add Arable Land, and how full a location must be
+# (population / capacity) before the nobles add more. The engine values capacity only above 0.9 (a fixed engine
+# threshold, docs/ai_building_rulebook.md "Population capacity"); the free-land modifiers it applies carry
+# 1 - population / capacity, so full = no Abundant Arable Land and less than 1 - LAND_FULL_SHARE Available Arable Land.
+LAND_FOOTPRINT = "capacity_source"
+LAND_FULL_SHARE = 0.9
 # Debug instrumentation (variables counting the builds per country, location and world). Off in the shipped mod (no test
 # hooks in normal play); set True for a measuring run.
 DEBUG = False
@@ -125,6 +137,17 @@ class Candidate:
     country_potential: str = ""
     # Workers per level, in thousands (employment_size).
     employment: float = 1.0
+
+
+@dataclass(frozen=True)
+class LandCandidate:
+    building: str
+    pop_type: str
+    # Arable Land per level, in thousands (raw_modifier local_population_capacity).
+    capacity: float
+    advances: tuple[str, ...] = ()
+    country_potential: str = ""
+    employment: float = 0.0
 
 
 def makes_province_food(blocks: tuple[tuple[Method, ...], ...]) -> bool:
@@ -291,16 +314,61 @@ def candidates(
             or building in NO_SHORTAGE_BUILDINGS
             or makes_province_food(blocks)
         )
-        potential = " ".join(
-            " ".join(inner(block).split()) for name, block in top_level_blocks(inner(body)) if name == "country_potential"
-        )
-        size = re.search(r"^\s*employment_size\s*=\s*([\d.]+)", body, re.M)
-        if size is None:
-            raise SystemExit(f"{building}: employment_size is not a number")
         found.append(
             Candidate(
-                building, pop_type, good, blocks, unlocks.get(building, ()), needs_shortage, potential,
-                float(size.group(1)),
+                building, pop_type, good, blocks, unlocks.get(building, ()), needs_shortage,
+                country_potential(body), employment(building, body),
+            )
+        )
+    return found
+
+
+def country_potential(body: str) -> str:
+    return " ".join(
+        " ".join(inner(block).split()) for name, block in top_level_blocks(inner(body)) if name == "country_potential"
+    )
+
+
+def employment(building: str, body: str) -> float:
+    size = re.search(r"^\s*employment_size\s*=\s*([\d.]+)", body, re.M)
+    if size is None:
+        raise SystemExit(f"{building}: employment_size is not a number")
+    return float(size.group(1))
+
+
+def arable_land(body: str) -> float:
+    """Arable Land a level adds: local_population_capacity in the raw_modifier blocks (the modifier block carries the
+    workers' footprint, scaled by staffing)."""
+    return sum(
+        float(amount)
+        for block in re.findall(r"\braw_modifier\s*=\s*\{([^{}]*)\}", body)
+        for amount in re.findall(r"^\s*local_population_capacity\s*=\s*(-?[\d.]+)", block, re.M)
+    )
+
+
+def land_candidates(
+    definitions: dict[str, str],
+    unlocks: dict[str, tuple[str, ...]] | None = None,
+    footprints: dict[str, str] | None = None,
+) -> list[LandCandidate]:
+    """Land improvements the nobles may build: blueprint footprint LAND_FOOTPRINT, peasants or labourers, open to
+    estates, adding Arable Land. Unlike the production candidates, regional specials (polders, bund, baray) count:
+    is_special keeps wonders out of the profit search, and these are ordinary improvements where the land allows them."""
+    unlocks, footprints = unlocks or {}, footprints or {}
+    found = []
+    for building, body in sorted(definitions.items()):
+        pop_type = field(body, "pop_type")
+        if footprints.get(building) != LAND_FOOTPRINT or pop_type not in POP_TYPES or building in EXCLUDED_BUILDINGS:
+            continue
+        if field(body, "forbidden_for_estates") == "yes":
+            continue
+        capacity = arable_land(body)
+        if capacity <= 0:
+            continue
+        found.append(
+            LandCandidate(
+                building, pop_type, capacity, unlocks.get(building, ()), country_potential(body),
+                employment(building, body),
             )
         )
     return found
@@ -311,7 +379,7 @@ def has_any_advance(advances: tuple[str, ...]) -> str:
     return checks if len(advances) == 1 else f"OR = {{ {checks} }}"
 
 
-def researched(candidate: Candidate) -> str:
+def researched(candidate: Candidate | LandCandidate) -> str:
     """Country-scope limit lines: the country has an advance that unlocks the building and passes its own
     country_potential."""
     lines = f"\t\t\t{has_any_advance(candidate.advances)}\n" if candidate.advances else ""
@@ -402,7 +470,7 @@ def find_block(index: int, candidate: Candidate, modifiers: set[str]) -> str:
 \t\t\tlimit = {{
 \t\t\t\texists = market
 {location_need(candidate)}
-\t\t\t\t"unemployed_pops_of_pop_type_in_location(pop_type:{candidate.pop_type})" >= {number(candidate.employment)}
+{free_hands(candidate.pop_type, candidate.employment)}
 \t\t\t\tnum_civil_constructions < 1
 \t\t\t\tNOT = {{ has_variable = pp_noble_investment_recent }}
 \t\t\t\tcan_build_building = building_type:{building}
@@ -445,6 +513,80 @@ def build_branch(index: int, candidate: Candidate, first: bool) -> str:
         f"estate_type = estate_type:nobles_estate }}\n"
         f"\t}}"
     )
+
+
+def free_hands(pop_type: str, size: float) -> str:
+    return f'\t\t\t\t"unemployed_pops_of_pop_type_in_location(pop_type:{pop_type})" >= {number(size)}'
+
+
+def land_is_full() -> str:
+    """Location-scope limit lines: more than LAND_FULL_SHARE full or over capacity. The engine applies Abundant /
+    Available Arable Land scaled by 1 - population / capacity (the pp_land_* markers carry that scale), Overused Arable
+    Land over capacity."""
+    free = number(round(1 - LAND_FULL_SHARE, 6))
+    return (
+        f"\t\t\t\tNOT = {{ modifier:pp_land_abundant > 0 }} # more than {number(LAND_FULL_SHARE * 100)} % full\n"
+        f"\t\t\t\tmodifier:pp_land_available < {free}"
+    )
+
+
+def land_find_block(index: int, candidate: LandCandidate) -> str:
+    building = candidate.building
+    hands = f"{free_hands(candidate.pop_type, candidate.employment)}\n" if candidate.employment > 0 else ""
+    return f"""\t# land {index}: {building} ({candidate.pop_type}, {number(candidate.capacity)} arable land)
+\tif = {{
+\t\tlimit = {{
+{researched(candidate)}\t\t\tscope:pp_noble_investment_nobles = {{
+\t\t\t\testate_gold >= {{
+\t\t\t\t\tvalue = building_type:{building}.building_base_cost_in_gold
+\t\t\t\t\tmultiply = pp_noble_investment_price_multiplier
+\t\t\t\t\tadd = pp_noble_investment_reserve
+\t\t\t\t}}
+\t\t\t}}
+\t\t}}
+\t\tevery_owned_location = {{
+\t\t\tlimit = {{
+{land_is_full()}
+{hands}\t\t\t\tnum_civil_constructions < 1
+\t\t\t\tNOT = {{ has_variable = pp_noble_investment_recent }}
+\t\t\t\tcan_build_building = building_type:{building}
+\t\t\t}}
+\t\t\tpp_noble_land_keep_better_location = {{ index = {index} building = {building} capacity = {number(candidate.capacity)} }}
+\t\t}}
+\t}}
+"""
+
+
+def land_build_branch(index: int, candidate: LandCandidate, first: bool) -> str:
+    keyword = "if" if first else "else_if"
+    return (
+        f"\t{keyword} = {{\n"
+        f"\t\tlimit = {{ local_var:pp_noble_land_best_index = {index} }}\n"
+        f"\t\tconstruct_estate_building = {{ building_type = building_type:{candidate.building} "
+        f"estate_type = estate_type:nobles_estate }}\n"
+        f"\t}}"
+    )
+
+
+LAND_HELPERS = f"""# Location scope: the improvement here becomes the best when it adds more Arable Land per gold than the best so far,
+# scaled up by the share the location is over capacity.
+pp_noble_land_keep_better_location = {{
+\tset_local_variable = {{
+\t\tname = pp_noble_land_score
+\t\tvalue = {{
+\t\t\tvalue = $capacity$
+\t\t\tdivide = {{ value = building_type:$building$.building_base_cost_in_gold min = 1 }}
+\t\t\tmultiply = {{ value = 1 add = modifier:pp_land_overpopulation }}
+\t\t}}
+\t}}
+\tif = {{
+\t\tlimit = {{ local_var:pp_noble_land_score > local_var:pp_noble_land_best_score }}
+\t\tset_local_variable = {{ name = pp_noble_land_best_score value = local_var:pp_noble_land_score }}
+\t\tset_local_variable = {{ name = pp_noble_land_best_index value = $index$ }}
+\t\tsave_scope_as = pp_noble_land_location
+\t}}
+}}
+"""
 
 
 HELPERS = f"""# Location scope helpers for the profit of one building at one location (all in local variables).
@@ -563,34 +705,48 @@ DEBUG_COUNTERS = """\t\tif = {
 """
 
 
-def render(found: list[Candidate], modifiers: set[str]) -> str:
-    out = [
-        "﻿# Prosper or Perish - Noble investment: nobles with surplus gold build peasant and labourer buildings for goods",
-        "# their markets are short of, the most profitable first.",
-        "# Generated by scripts/generate_noble_investment.py from the built mod's building types. Do not edit by hand.",
-        f"# {len(found)} candidates.",
-        "",
-        "# Country scope. Fired by monthly_country_pulse (on_action/pp_noble_investment.txt).",
-        "pp_noble_investment_monthly = {",
+def search(name: str) -> list[str]:
+    """Country-scope lines of one search (`pp_noble_investment` or `pp_noble_land`): while its cooldown is off and the
+    nobles hold the reserve, find the best candidate, build it and wait BUILD_COOLDOWN_DAYS, else IDLE_COOLDOWN_DAYS."""
+    return [
         "\tif = {",
         "\t\tlimit = {",
-        "\t\t\tNOT = { has_variable = pp_noble_investment_cooldown }",
+        f"\t\t\tNOT = {{ has_variable = {name}_cooldown }}",
         "\t\t\tcountry_has_estate = estate_type:nobles_estate",
         '\t\t\t"estate(estate_type:nobles_estate)" = { estate_gold >= pp_noble_investment_reserve }',
         "\t\t}",
         '\t\t"estate(estate_type:nobles_estate)" = { save_scope_as = pp_noble_investment_nobles }',
-        "\t\tset_local_variable = { name = pp_noble_investment_best_score value = 0 }",
-        "\t\tset_local_variable = { name = pp_noble_investment_best_index value = 0 }",
-        "\t\tpp_noble_investment_find_best = yes",
+        f"\t\tset_local_variable = {{ name = {name}_best_score value = 0 }}",
+        f"\t\tset_local_variable = {{ name = {name}_best_index value = 0 }}",
+        f"\t\t{name}_find_best = yes",
         "\t\tif = {",
-        "\t\t\tlimit = { local_var:pp_noble_investment_best_index > 0 }",
-        "\t\t\tscope:pp_noble_investment_location = { pp_noble_investment_build_best = yes }",
-        f"\t\t\tset_variable = {{ name = pp_noble_investment_cooldown value = 1 days = {BUILD_COOLDOWN_DAYS} }}",
+        f"\t\t\tlimit = {{ local_var:{name}_best_index > 0 }}",
+        f"\t\t\tscope:{name}_location = {{ {name}_build_best = yes }}",
+        f"\t\t\tset_variable = {{ name = {name}_cooldown value = 1 days = {BUILD_COOLDOWN_DAYS} }}",
         "\t\t}",
         "\t\telse = {",
-        f"\t\t\tset_variable = {{ name = pp_noble_investment_cooldown value = 1 days = {IDLE_COOLDOWN_DAYS} }}",
+        f"\t\t\tset_variable = {{ name = {name}_cooldown value = 1 days = {IDLE_COOLDOWN_DAYS} }}",
         "\t\t}",
         "\t}",
+    ]
+
+
+def render(found: list[Candidate], modifiers: set[str], land: list[LandCandidate] | None = None) -> str:
+    land = land or []
+    out = [
+        "\ufeff# Prosper or Perish - Noble investment: nobles with surplus gold build peasant and labourer buildings for goods",
+        "# their markets are short of, the most profitable first, and land improvements where the Arable Land is full.",
+        "# Generated by scripts/generate_noble_investment.py from the built mod's building types. Do not edit by hand.",
+        f"# {len(found)} candidates, {len(land)} land improvements.",
+        "",
+        "# Country scope. Fired by monthly_country_pulse (on_action/pp_noble_investment.txt). Production first, then land;",
+        "# each search has its own cooldown, and the land search skips the location the first one just built in.",
+        "pp_noble_investment_monthly = {",
+        *search("pp_noble_investment"),
+    ]
+    if land:
+        out += search("pp_noble_land")
+    out += [
         "}",
         "",
         HELPERS,
@@ -607,20 +763,41 @@ def render(found: list[Candidate], modifiers: set[str]) -> str:
         f"\tset_variable = {{ name = pp_noble_investment_recent value = 1 days = {LOCATION_COOLDOWN_DAYS} }}",
     ]
     out.extend(build_branch(index, candidate, index == 1) for index, candidate in enumerate(found, start=1))
-    if DEBUG:
+    out += debug_lines() + ["}", ""]
+    if land:
         out += [
-            "\tif = {",
-            "\t\tlimit = { NOT = { has_variable = pp_noble_investment_builds } }",
-            "\t\tset_variable = { name = pp_noble_investment_builds value = 0 }",
-            "\t}",
-            "\tchange_variable = { name = pp_noble_investment_builds add = 1 }",
-            "\towner = {",
-            DEBUG_COUNTERS.rstrip("\n"),
-            "\t}",
+            LAND_HELPERS,
+            "# Country scope: the land improvement adding the most Arable Land per gold (local_var:pp_noble_land_best_index)",
+            "# and its location (scope:pp_noble_land_location).",
+            "pp_noble_land_find_best = {",
         ]
-    out += ["}", ""]
+        out.extend(land_find_block(index, candidate) for index, candidate in enumerate(land, start=1))
+        out += [
+            "}",
+            "",
+            "# Location scope (the chosen location): the nobles start the chosen land improvement there.",
+            "pp_noble_land_build_best = {",
+            f"\tset_variable = {{ name = pp_noble_investment_recent value = 1 days = {LOCATION_COOLDOWN_DAYS} }}",
+        ]
+        out.extend(land_build_branch(index, candidate, index == 1) for index, candidate in enumerate(land, start=1))
+        out += debug_lines() + ["}", ""]
     out += render_cleanup(found)
     return "\n".join(out)
+
+
+def debug_lines() -> list[str]:
+    if not DEBUG:
+        return []
+    return [
+        "\tif = {",
+        "\t\tlimit = { NOT = { has_variable = pp_noble_investment_builds } }",
+        "\t\tset_variable = { name = pp_noble_investment_builds value = 0 }",
+        "\t}",
+        "\tchange_variable = { name = pp_noble_investment_builds add = 1 }",
+        "\towner = {",
+        DEBUG_COUNTERS.rstrip("\n"),
+        "\t}",
+    ]
 
 
 def render_values() -> str:
@@ -658,14 +835,12 @@ def main() -> None:
         raise SystemExit(f"EU5 game folder not found: {args.vanilla} (pass --vanilla <install>/game)")
     modifiers = modifier_names([args.vanilla, MOD_ROOT])
     advances = load_definitions(game_folders(args.vanilla, MOD_ROOT, ADVANCES))
+    definitions, unlocks, footprints = building_definitions(BUILDING_TYPES), unlock_map(advances, "unlock_building"), blueprint_footprints()
     found = candidates(
-        building_definitions(BUILDING_TYPES),
-        goods_names(args.vanilla, MOD_ROOT),
-        unlock_map(advances, "unlock_building"),
-        unlock_map(advances, "unlock_production_method"),
-        blueprint_footprints(),
+        definitions, goods_names(args.vanilla, MOD_ROOT), unlocks, unlock_map(advances, "unlock_production_method"), footprints
     )
-    outputs = {EFFECTS_PATH: render(found, modifiers), VALUES_PATH: render_values()}
+    land = land_candidates(definitions, unlocks, footprints)
+    outputs = {EFFECTS_PATH: render(found, modifiers, land), VALUES_PATH: render_values()}
     if args.check:
         stale = [p for p, text in outputs.items() if not p.exists() or p.read_text(encoding="utf-8") != text]
         if stale:
@@ -674,7 +849,7 @@ def main() -> None:
         return
     for path, text in outputs.items():
         path.write_text(text, encoding="utf-8", newline="\n")
-    print(f"{len(found)} candidates -> {EFFECTS_PATH.relative_to(ROOT)}")
+    print(f"{len(found)} candidates, {len(land)} land improvements -> {EFFECTS_PATH.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

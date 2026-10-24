@@ -62,6 +62,7 @@ ATTRIBUTE_TRIGGERS = {
 # One class per location: the engine's climate/vegetation/topography, the setup's single fertility and soil modifier.
 EXCLUSIVE_ATTRIBUTES = frozenset({"climate", "vegetation", "topography", "fertility", "soil_type"})
 LEVELS_MODIFIER = "pp_wb_levels_{key}"
+CAPACITY_MODIFIER = "pp_wb_capacity_{cap}"   # display only: a class's levels of one cap in the attribute tooltips
 LEVELS_TYPES_PATH = Path("main_menu/common/modifier_type_definitions/pp_wb_building_levels.txt")
 LEVELS_ICONS_PATH = Path("main_menu/common/modifier_icons/pp_wb_building_levels.txt")
 LEVELS_LOC_PATH = Path("main_menu/localization/english/pp_wb_building_levels_l_english.yml")
@@ -166,8 +167,18 @@ def gate_trigger(contract: Contract, rules: list[dict[str, list[str]]]) -> list[
 
 
 def cap_script_value(contract: Contract, key: str, equation: Mapping[str, object], scale: float, level_limit: int, *, name: str | None = None) -> str:
+    """A building's own cap: ``<name>_terms`` (the equation's rows) flattened into the tooltip, then its clamps."""
+    name = name or f"pp_wb_cap_{key}"
+    terms = f"{name}_terms"
+    cap = "\n".join([f"{name} = {{", f"\tadd = {terms}", *clamp_rows(terms, equation, scale, level_limit), "}"])
+    return cap + "\n\n" + terms_value(contract, terms, equation, scale)
+
+
+def terms_value(contract: Contract, name: str, equation: Mapping[str, object], scale: float) -> str:
+    """The cap equation without clamps: base, one row per attribute class, development. A cap names it unlabelled
+    (``add = <name>``), so the max-level tooltip shows these rows as its own."""
     base = float(equation["base_levels"]) * scale
-    lines = [f"{name or f'pp_wb_cap_{key}'} = {{", "\tadd = {", '\t\tdesc = "BUILDING_LEVEL_WB_BASE"', f"\t\tvalue = {_fmt(base)}", "\t}"]
+    lines = [f"{name} = {{", "\tadd = {", '\t\tdesc = "BUILDING_LEVEL_WB_BASE"', f"\t\tvalue = {_fmt(base)}", "\t}"]
     previous = None
     for term in equation["class_terms"]:
         levels = float(term["levels"]) * scale
@@ -191,13 +202,49 @@ def cap_script_value(contract: Contract, key: str, equation: Mapping[str, object
         lines.extend(["\tadd = {", '\t\tdesc = "BUILDING_LEVEL_WB_DEVELOPMENT"', "\t\tvalue = development", f"\t\tmultiply = {gamma:.4f}".rstrip("0").rstrip("."), "\t}"])
     # Every operation needs a desc, or the breakdown tooltip shows a "missing key" line; no floor = yes, the engine
     # floors max_levels to whole levels itself (2026-10-01).
-    lines.extend([_clamp("min", "MINIMUM", 0), _clamp("max", "MAXIMUM", int(round(level_limit * scale))), "}"])
+    lines.append("}")
     return "\n".join(lines)
+
+
+def term_bounds(equation: Mapping[str, object], scale: float) -> tuple[float, float, float]:
+    """(lowest, highest) sum of base and class terms any location can have, and the levels per development point."""
+    low = high = float(equation["base_levels"]) * scale
+    by_attribute: dict[str, list[float]] = {}
+    for term in equation["class_terms"]:
+        by_attribute.setdefault(str(term["attribute"]), []).append(float(term["levels"]) * scale)
+    for attribute, levels in by_attribute.items():
+        if attribute in EXCLUSIVE_ATTRIBUTES:   # one class at most, or none (0)
+            low, high = low + min(0.0, *levels), high + max(0.0, *levels)
+        else:
+            low, high = low + sum(min(0.0, v) for v in levels), high + sum(max(0.0, v) for v in levels)
+    return low, high, float(equation["levels_per_development_point"]) * scale
+
+
+def clamp_rows(source: str, equation: Mapping[str, object], scale: float, level_limit: int) -> list[str]:
+    """The equation's clamps as tooltip rows that show only where they cut ``source``: the minimum only if the terms
+    can sum below 0 anywhere, the upper limit only past it (a development test first, which holds wherever the terms
+    could pass it, keeps the usual check cheap)."""
+    low, high, gamma = term_bounds(equation, scale)
+    top = int(round(level_limit * scale))
+    rows = []
+    if low < 0 or gamma < 0:
+        rows.append(f"\tif = {{ limit = {{ {source} < 0 }} {_clamp_op('min', 'MINIMUM', 0)} }}")
+    if gamma > 0 or high > top:
+        tests = [f"{source} > {top}"]
+        if gamma > 0 and top > high:
+            tests.insert(0, f"development > {_fmt((top - high) / gamma)}")
+        rows.append(f"\tif = {{ limit = {{ {' '.join(tests)} }} {_clamp_op('max', 'MAXIMUM', top)} }}")
+    return rows
+
+
+def _clamp_op(op: str, label: str, value: object) -> str:
+    """A described min/max operation of a cap script value (BUILDING_LEVEL_WB_MINIMUM / _MAXIMUM)."""
+    return f'{op} = {{ desc = "BUILDING_LEVEL_WB_{label}" value = {value} }}'
 
 
 def _clamp(op: str, label: str, value: object) -> str:
     """A described min/max line of a cap script value (BUILDING_LEVEL_WB_MINIMUM / _MAXIMUM)."""
-    return f'\t{op} = {{ desc = "BUILDING_LEVEL_WB_{label}" value = {value} }}'
+    return "\t" + _clamp_op(op, label, value)
 
 
 def families(cfg: WorldBuilderConfig) -> dict[str, list[str]]:
@@ -218,34 +265,78 @@ def lower_tiers(cfg: WorldBuilderConfig, key: str) -> list[str]:
     return chain
 
 
-def shared_cap_value(name: str, source: str, siblings: list[str]) -> str:
-    """``name`` = the family's cap equation minus the levels already used by the other family members."""
-    lines = [f"{name} = {{", "\tadd = {", '\t\tdesc = "BUILDING_LEVEL_WB_FAMILY"', f"\t\tvalue = {source}", "\t}"]
-    for sibling in siblings:
-        lines.extend(["\tsubtract = {", f'\t\tdesc = "BUILDING_LEVEL_WB_SHARED_{sibling.upper()}"', f"\t\tvalue = modifier:{LEVELS_MODIFIER.format(key=sibling)}", "\t}"])
-    lines.extend([_clamp("min", "MINIMUM", 0), "}"])
-    return "\n".join(lines)
+def shared_cap_value(name: str, source: str, siblings: list[str], clamps: list[str], top: int, maximum: int | None = None) -> str:
+    """``name`` = the family's cap equation (``source``, its rows flattened into the tooltip, ``clamps`` its clamp rows)
+    minus the levels already used by the other family members. A member's row and the minimum show only where they
+    change the value; ``<name>_open`` (the same sum before this cap's own clamps, no rows) is what the clamps test."""
+    counters = [f"modifier:{LEVELS_MODIFIER.format(key=sibling)}" for sibling in siblings]
+    lines = [f"{name} = {{", f"\tadd = {source}", *clamps]
+    for sibling, counter in zip(siblings, counters):
+        lines.append(f'\tif = {{ limit = {{ {counter} > 0 }} subtract = {{ desc = "BUILDING_LEVEL_WB_SHARED_{sibling.upper()}" value = {counter} }} }}')
+    if counters:
+        used = " ".join(f"{counter} > 0" for counter in counters)
+        lines.append(f"\tif = {{ limit = {{ OR = {{ {used} }} {name}_open < 0 }} {_clamp_op('min', 'MINIMUM', 0)} }}")
+    if maximum is not None:
+        lines.append(f"\tif = {{ limit = {{ {name}_open > {maximum} }} {_clamp_op('max', 'MAXIMUM', maximum)} }}")
+    lines.append("}")
+    # the family's minimum is left out: a sum below 0 stays below 0 after the members' levels come off
+    open_lines = [f"{name}_open = {{", f"\tvalue = {source}", f"\tmax = {top}", *(f"\tsubtract = {c}" for c in counters), "}"]
+    return "\n".join(lines) + "\n\n" + "\n".join(open_lines)
 
 
-def write_level_counters(keys: list[str], mod_root: Path) -> None:
-    """Modifier types (with icon and name) for the per-building level counters of shared families."""
-    types = [GENERATED, "# Level counters of buildings that share a cap: raw_modifier pp_wb_levels_<key> = 1 per level.", ""]
+def _names(keys: list[str]) -> str:
+    """``$a$, $b$ and $c$``: building names for a localization string."""
+    names = [f"${key}$" for key in keys]
+    return names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
+
+
+def write_level_types(counters: Mapping[str, str], capacities: Mapping[str, list[str]], mod_root: Path) -> None:
+    """Modifier types (with icon and name) for the level counters of buildings that share a cap (``counters``: building
+    key -> its cap) and for the capacity rows of the attribute tooltips (``capacities``: cap -> the buildings it
+    limits, the one it is named after first). The capacity rows are display only: the attribute tooltips show them
+    (attribute_tooltips.py), no location ever holds them."""
+    types = [GENERATED, "# Level counters of buildings that share a cap: raw_modifier pp_wb_levels_<key> = 1 per level.",
+             "# pp_wb_capacity_<cap>: the levels an attribute class adds to a cap, shown in the attribute tooltips only.", ""]
     icons = [GENERATED, ""]
     loc = ["l_english:"]
-    for key in keys:
-        modifier = LEVELS_MODIFIER.format(key=key)
-        types.extend([f"{modifier} = {{", "\tdecimals = 0", "\tgame_data = {", "\t\tcategory = location", "\t}", "}", ""])
+
+    def icon(modifier: str, key: str) -> None:
         icons.extend([f"{modifier} = {{", f'\tpositive = "gfx/interface/icons/buildings/{key}.dds"', f'\tnegative = "gfx/interface/icons/buildings/{key}.dds"', "}", ""])
-        loc.append(f'  MODIFIER_TYPE_NAME_{modifier}: "${key}$ levels"')
-        loc.append(f'  MODIFIER_TYPE_DESC_{modifier}: "Levels of ${key}$ in this location. They count against the shared cap of every building of the same kind."')
+
+    for cap, members in capacities.items():
+        modifier, head, others = CAPACITY_MODIFIER.format(cap=cap), members[0], members[1:]
+        types.extend([f"{modifier} = {{", "\tdecimals = 2", "\tgame_data = {", "\t\tcategory = location", "\t}", "}", ""])
+        icon(modifier, head)
+        loc.append(f'  MODIFIER_TYPE_NAME_{modifier}: "${head}$ Capacity"')
+        shared = f" {_names(others)} share this limit." if others else ""
+        loc.append(f'  MODIFIER_TYPE_DESC_{modifier}: "How many levels of ${head}$ this location can hold.{shared}"')
+    for key, cap in sorted(counters.items()):
+        modifier, head = LEVELS_MODIFIER.format(key=key), capacities[cap][0]
+        types.extend([f"{modifier} = {{", "\tdecimals = 0", "\tgame_data = {", "\t\tcategory = location", "\t}", "}", ""])
+        icon(modifier, head)
+        loc.append(f'  MODIFIER_TYPE_NAME_{modifier}: "Uses ${head}$ Capacity"')
+        loc.append(f'  MODIFIER_TYPE_DESC_{modifier}: "Each level of ${key}$ takes one level of the ${head}$ Capacity it shares with related buildings."')
     for path, lines in ((LEVELS_TYPES_PATH, types), (LEVELS_ICONS_PATH, icons), (LEVELS_LOC_PATH, loc)):
         target = mod_root / path
-        if not keys:
+        if not capacities:
             if target.is_file():
                 target.unlink()
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text("\ufeff" + "\n".join(lines).rstrip() + "\n", encoding="utf-8", newline="\n")
+
+
+def term_labels(contract: Contract, equation: Mapping[str, object]) -> dict[str, str]:
+    """Tooltip row label per class term: the game's own name of the class (as on the location window's chips)."""
+    labels = {}
+    for term in equation["class_terms"]:
+        attribute, value = str(term["attribute"]), str(term["value"])
+        key = f"BUILDING_LEVEL_WB_{attribute.upper()}_{value.upper()}"
+        if attribute in ("climate", "vegetation", "topography"):
+            labels[key] = f"${_game_key(contract, attribute, value)}$ ({attribute.capitalize()})"
+        elif attribute == "fertility":
+            labels[key] = f"$STATIC_MODIFIER_NAME_pp_wb_fertility_{value}$"
+    return labels
 
 
 def cap_groups(contract: Contract, cfg: WorldBuilderConfig) -> dict[str, list[str]]:
@@ -267,13 +358,15 @@ def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> d
 
     Buildings that share a cap (a handover cap group, a general building with niche members, or both: the niche members
     of a group member) get one ``pp_wb_cap_<group or key>_shared`` equation; each member's max level is that equation
-    minus the levels of every other building sharing it."""
+    minus the levels of every other building sharing it. A building alone has its equation in ``pp_wb_cap_<key>_terms``."""
     blocks: list[str] = []
     info: dict[str, dict[str, float]] = {}
     shared = families(cfg)
     groups = cap_groups(contract, cfg)
     written: set[str] = set()
-    counted: set[str] = set()
+    counters: dict[str, str] = {}
+    capacities: dict[str, list[str]] = {}
+    labels: dict[str, str] = {}
     for row in contract.building_types.iter_rows(named=True):
         kind = str(row["building"])
         key = cfg.building_map.get(kind)
@@ -287,36 +380,38 @@ def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> d
         group = str(row.get("cap_group") or "")
         generals = groups.get(group, [key]) if group else [key]
         sharers = [*generals, *(n for g in generals for n in shared.get(g, []))]
+        capacities.setdefault(group or key, sharers)
+        labels.update(term_labels(contract, equation))
         if len(sharers) == 1:
             blocks.append(cap_script_value(contract, key, equation, scale, limit))
             continue
         source = f"pp_wb_cap_{group or key}_shared"
         if source not in written:
-            blocks.append(cap_script_value(contract, group or key, equation, scale, limit, name=source))
+            blocks.append(terms_value(contract, source, equation, scale))
             written.add(source)
-        counted.update(sharers)
+        counters.update({k: group or key for k in sharers})
         info[key]["shared"] = True
         if group:
             info[key]["group"] = group
-        blocks.append(shared_cap_value(f"pp_wb_cap_{key}", source, [k for k in sharers if k != key]))
+        clamps, top = clamp_rows(source, equation, scale, limit), int(round(limit * scale))
+        blocks.append(shared_cap_value(f"pp_wb_cap_{key}", source, [k for k in sharers if k != key], clamps, top))
         for niche in shared.get(key, []):
             strength = float(cfg.niche[niche]["strength"])
             niche_people = people * strength
             lower = lower_tiers(cfg, niche)
             siblings = [m for m in sharers if m != niche and m not in lower]
-            block = shared_cap_value(f"pp_wb_cap_{niche}", source, siblings)
-            if cfg.niche[niche].get("maximum_levels"):
-                block = block[:-1] + _clamp("max", "MAXIMUM", int(cfg.niche[niche]["maximum_levels"])) + "\n}"
-            blocks.append(block)
+            maximum = int(cfg.niche[niche]["maximum_levels"]) if cfg.niche[niche].get("maximum_levels") else None
+            blocks.append(shared_cap_value(f"pp_wb_cap_{niche}", source, siblings, clamps, top, maximum))
             info[niche] = {"kind": kind, "unit_people": niche_people, "unit_units": units(niche_people), "scale": scale, "limit": int(round(limit * scale)),
                            "family": key, "strength": strength, "niche": True, "shared": True, **({"group": group} if group else {})}
     missing = [n for n, spec in cfg.niche.items() if spec["family"] not in info]
     if missing:
         raise ValueError(f"[worldbuilder.buildings.niche] family is not a mapped general building: {', '.join(missing)}")
-    write_level_counters(sorted(counted), mod_root)
+    write_level_types(counters, capacities, mod_root)
     text = "\n\n".join([GENERATED, "# Improvement building level caps: base + attribute class terms + levels per development point x development.",
-                          "# Shared caps (cap groups, families with niche members): <group or key>_shared is the equation; each member's cap",
-                          "# subtracts the other members' levels.", *blocks]) + "\n"
+                          "# The equation (<key>_terms, or <group or key>_shared for buildings sharing a cap) is named unlabelled, so the",
+                          "# max-level tooltip lists its rows; a shared cap subtracts the other members' levels. Clamp and member rows show",
+                          "# only where they change the value.", *blocks]) + "\n"
     (mod_root / CAPS_PATH).parent.mkdir(parents=True, exist_ok=True)
     (mod_root / CAPS_PATH).write_text("﻿" + text, encoding="utf-8", newline="\n")
     write_river_size_triggers(mod_root)
@@ -324,15 +419,18 @@ def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> d
     keys = sorted(set(re.findall(r'desc = "(BUILDING_LEVEL_WB_[A-Z0-9_]+)"', text)))
     loc = ["l_english:", '  BUILDING_LEVEL_WB_BASE: "Base levels"', '  BUILDING_LEVEL_WB_DEVELOPMENT: "From [development|e]"',
            '  BUILDING_LEVEL_WB_FREE_FARMLAND: "Free Arable Land"', '  BUILDING_LEVEL_WB_MINIMUM: "Minimum"',
-           '  BUILDING_LEVEL_WB_MAXIMUM: "Upper limit"', '  BUILDING_LEVEL_WB_FAMILY: "Capacity shared with related buildings"']
+           '  BUILDING_LEVEL_WB_MAXIMUM: "Upper limit"']
     fixed = ("BUILDING_LEVEL_WB_BASE", "BUILDING_LEVEL_WB_DEVELOPMENT", "BUILDING_LEVEL_WB_FREE_FARMLAND",
-             "BUILDING_LEVEL_WB_MINIMUM", "BUILDING_LEVEL_WB_MAXIMUM", "BUILDING_LEVEL_WB_FAMILY")
+             "BUILDING_LEVEL_WB_MINIMUM", "BUILDING_LEVEL_WB_MAXIMUM")
     for key in keys:
         if key in fixed:
             continue
+        if key in labels:
+            loc.append(f'  {key}: "{labels[key]}"')
+            continue
         rest = key.removeprefix("BUILDING_LEVEL_WB_")
         if rest.startswith("SHARED_"):
-            loc.append(f'  {key}: "Levels of ${rest.removeprefix("SHARED_").lower()}$"')
+            loc.append(f'''  {key}: "Used by [ShowBuildingTypeName('{rest.removeprefix("SHARED_").lower()}')|e]"''')
             continue
         attribute, _, value = rest.partition("_")
         if attribute == "SOIL":

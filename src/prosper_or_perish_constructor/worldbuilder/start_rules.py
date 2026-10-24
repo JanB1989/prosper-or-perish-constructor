@@ -330,7 +330,10 @@ class Rules:
             if key in ctx and not isinstance(v, CList):
                 actual = ctx[key]
                 expected = str(v).split(":")[-1] if isinstance(v, str) else v
-            elif key.startswith(("modifier:", "var:", "owner.modifier:")):
+                if op != "=" and isinstance(actual, (int, float)):   # a number compared (development > 450)
+                    expected = self.value(v, ctx, depth + 1)
+            elif key.startswith(("modifier:", "var:", "owner.modifier:")) or key in self.values:
+                # a script value compared (the cap clamps: pp_wb_cap_<key>_open < 0)
                 actual = self.value(key, ctx, depth + 1)
                 expected = self.value(v, ctx, depth + 1)
             else:

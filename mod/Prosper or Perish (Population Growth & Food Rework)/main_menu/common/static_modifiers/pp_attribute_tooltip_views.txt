@@ -12,6 +12,10 @@ pp_tt_climate_tropical = {
 	free_building_levels = -2
 	local_build_buildings_efficiency = -0.06
 	local_construction_speed = -0.06
+	pp_wb_capacity_land_clearance = 4
+	pp_wb_capacity_field_management = -1
+	pp_wb_capacity_irrigated_fields = 3
+	pp_wb_capacity_paddy_water_control = 3
 }
 
 pp_tt_climate_arid = {
@@ -23,6 +27,9 @@ pp_tt_climate_arid = {
 	free_building_levels = -2
 	local_build_buildings_efficiency = -0.06
 	local_construction_speed = -0.06
+	pp_wb_capacity_field_management = -6
+	pp_wb_capacity_irrigated_fields = 3
+	pp_wb_capacity_paddy_water_control = 3
 }
 
 pp_tt_climate_cold_arid = {
@@ -33,6 +40,9 @@ pp_tt_climate_cold_arid = {
 	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
+	pp_wb_capacity_field_management = -6
+	pp_wb_capacity_irrigated_fields = 3
+	pp_wb_capacity_paddy_water_control = 3
 }
 
 pp_tt_climate_hot_semi_arid = {
@@ -44,6 +54,10 @@ pp_tt_climate_hot_semi_arid = {
 	free_building_levels = -2
 	local_build_buildings_efficiency = -0.06
 	local_construction_speed = -0.06
+	pp_wb_capacity_land_clearance = 2
+	pp_wb_capacity_field_management = -5
+	pp_wb_capacity_irrigated_fields = 3
+	pp_wb_capacity_paddy_water_control = 3
 }
 
 pp_tt_climate_cold_semi_arid = {
@@ -54,6 +68,10 @@ pp_tt_climate_cold_semi_arid = {
 	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
+	pp_wb_capacity_land_clearance = 1
+	pp_wb_capacity_field_management = -6
+	pp_wb_capacity_irrigated_fields = 3
+	pp_wb_capacity_paddy_water_control = 3
 }
 
 pp_tt_climate_mediterranean = {
@@ -64,6 +82,10 @@ pp_tt_climate_mediterranean = {
 	free_building_levels = 2
 	local_build_buildings_efficiency = 0.03
 	local_construction_speed = 0.03
+	pp_wb_capacity_field_management = -3
+	pp_wb_capacity_water_control = -1
+	pp_wb_capacity_irrigated_fields = 3
+	pp_wb_capacity_paddy_water_control = 3
 }
 
 pp_tt_climate_subtropical = {
@@ -72,6 +94,11 @@ pp_tt_climate_subtropical = {
 	free_capacity_attracts_pops = yes
 	local_population_capacity = 19.5
 	free_building_levels = 1
+	pp_wb_capacity_land_clearance = 3
+	pp_wb_capacity_field_management = 1
+	pp_wb_capacity_water_control = -1
+	pp_wb_capacity_irrigated_fields = 3
+	pp_wb_capacity_paddy_water_control = 3
 }
 
 pp_tt_climate_oceanic = {
@@ -81,6 +108,9 @@ pp_tt_climate_oceanic = {
 	free_building_levels = 1
 	local_build_buildings_efficiency = 0.02
 	local_construction_speed = 0.02
+	pp_wb_capacity_field_management = 1
+	pp_wb_capacity_irrigated_fields = 3
+	pp_wb_capacity_paddy_water_control = 3
 }
 
 pp_tt_climate_continental = {
@@ -101,6 +131,9 @@ pp_tt_climate_subpolar = {
 	free_building_levels = -4
 	local_build_buildings_efficiency = -0.1
 	local_construction_speed = -0.1
+	pp_wb_capacity_field_management = -5
+	pp_wb_capacity_irrigated_fields = 3
+	pp_wb_capacity_paddy_water_control = 3
 }
 
 pp_tt_climate_arctic = {
@@ -113,6 +146,9 @@ pp_tt_climate_arctic = {
 	free_building_levels = -4
 	local_build_buildings_efficiency = -0.1
 	local_construction_speed = -0.1
+	pp_wb_capacity_field_management = -6
+	pp_wb_capacity_irrigated_fields = 3
+	pp_wb_capacity_paddy_water_control = 3
 }
 
 pp_tt_climate_ha1300_climate_tropical_monsoon = {
@@ -125,6 +161,10 @@ pp_tt_climate_ha1300_climate_tropical_monsoon = {
 	free_building_levels = -2
 	local_build_buildings_efficiency = -0.06
 	local_construction_speed = -0.06
+	pp_wb_capacity_land_clearance = 3
+	pp_wb_capacity_field_management = -2
+	pp_wb_capacity_irrigated_fields = 3
+	pp_wb_capacity_paddy_water_control = 3
 }
 
 pp_tt_climate_ha1300_climate_savanna = {
@@ -137,6 +177,10 @@ pp_tt_climate_ha1300_climate_savanna = {
 	free_building_levels = -2
 	local_build_buildings_efficiency = -0.06
 	local_construction_speed = -0.06
+	pp_wb_capacity_land_clearance = 4
+	pp_wb_capacity_field_management = -4
+	pp_wb_capacity_irrigated_fields = 1
+	pp_wb_capacity_paddy_water_control = 1
 }
 
 pp_tt_climate_ha1300_climate_subtropical_monsoon = {
@@ -145,6 +189,10 @@ pp_tt_climate_ha1300_climate_subtropical_monsoon = {
 	free_capacity_attracts_pops = yes
 	local_population_capacity = 18
 	free_building_levels = 1
+	pp_wb_capacity_land_clearance = 4
+	pp_wb_capacity_field_management = -4
+	pp_wb_capacity_irrigated_fields = 1
+	pp_wb_capacity_paddy_water_control = 1
 }
 
 pp_tt_climate_ha1300_climate_highland_monsoon = {
@@ -153,6 +201,9 @@ pp_tt_climate_ha1300_climate_highland_monsoon = {
 	local_population_capacity = 20.7
 	local_build_buildings_efficiency = -0.02
 	local_construction_speed = -0.02
+	pp_wb_capacity_land_clearance = 2
+	pp_wb_capacity_field_management = -4
+	pp_wb_capacity_water_control = -1
 }
 
 pp_tt_climate_ha1300_climate_subpolar_oceanic = {
@@ -162,6 +213,9 @@ pp_tt_climate_ha1300_climate_subpolar_oceanic = {
 	free_building_levels = 1
 	local_build_buildings_efficiency = 0.02
 	local_construction_speed = 0.02
+	pp_wb_capacity_field_management = -5
+	pp_wb_capacity_irrigated_fields = 3
+	pp_wb_capacity_paddy_water_control = 3
 }
 
 pp_tt_climate_ha1300_climate_dry_summer_continental = {
@@ -171,6 +225,9 @@ pp_tt_climate_ha1300_climate_dry_summer_continental = {
 	free_building_levels = -3
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
+	pp_wb_capacity_field_management = -3
+	pp_wb_capacity_irrigated_fields = 3
+	pp_wb_capacity_paddy_water_control = 3
 }
 
 pp_tt_climate_ha1300_climate_continental_monsoon = {
@@ -179,6 +236,9 @@ pp_tt_climate_ha1300_climate_continental_monsoon = {
 	local_population_capacity = 23.5
 	local_build_buildings_efficiency = -0.02
 	local_construction_speed = -0.02
+	pp_wb_capacity_land_clearance = 9
+	pp_wb_capacity_field_management = -6
+	pp_wb_capacity_water_control = -1
 }
 
 pp_tt_vegetation_desert = {
@@ -192,6 +252,9 @@ pp_tt_vegetation_desert = {
 	local_build_buildings_efficiency = -0.2
 	local_construction_speed = -0.2
 	hostile_movement_cost = 0.15
+	pp_wb_capacity_land_clearance = 2
+	pp_wb_capacity_irrigated_fields = 4
+	pp_wb_capacity_paddy_water_control = 4
 }
 
 pp_tt_vegetation_sparse = {
@@ -200,6 +263,9 @@ pp_tt_vegetation_sparse = {
 	free_building_levels = -4
 	local_build_buildings_efficiency = -0.12
 	local_construction_speed = -0.12
+	pp_wb_capacity_land_clearance = 2
+	pp_wb_capacity_irrigated_fields = 4
+	pp_wb_capacity_paddy_water_control = 4
 }
 
 pp_tt_vegetation_grasslands = {
@@ -216,6 +282,10 @@ pp_tt_vegetation_farmland = {
 	local_max_rgo_size_modifier = 0.1
 	local_monthly_food_modifier = monthly_food_productivity_unique_bonus
 	supply_limit = 5
+	pp_wb_capacity_field_management = 2
+	pp_wb_capacity_water_control = 1
+	pp_wb_capacity_irrigated_fields = 4
+	pp_wb_capacity_paddy_water_control = 4
 }
 
 pp_tt_vegetation_woods = {
@@ -230,6 +300,9 @@ pp_tt_vegetation_woods = {
 	local_build_buildings_efficiency = -0.03
 	local_construction_speed = -0.03
 	hostile_movement_cost = 0.07
+	pp_wb_capacity_field_management = 2
+	pp_wb_capacity_irrigated_fields = 4
+	pp_wb_capacity_paddy_water_control = 4
 }
 
 pp_tt_vegetation_forest = {
@@ -244,6 +317,7 @@ pp_tt_vegetation_forest = {
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
 	hostile_movement_cost = 0.2
+	pp_wb_capacity_field_management = 2
 }
 
 pp_tt_vegetation_jungle = {
@@ -259,6 +333,9 @@ pp_tt_vegetation_jungle = {
 	local_build_buildings_efficiency = -0.2
 	local_construction_speed = -0.2
 	hostile_movement_cost = 0.45
+	pp_wb_capacity_field_management = 1
+	pp_wb_capacity_irrigated_fields = 4
+	pp_wb_capacity_paddy_water_control = 4
 }
 
 pp_tt_vegetation_ha1300_veg_scrubland = {
@@ -267,6 +344,8 @@ pp_tt_vegetation_ha1300_veg_scrubland = {
 	free_building_levels = -4
 	local_build_buildings_efficiency = -0.12
 	local_construction_speed = -0.12
+	pp_wb_capacity_irrigated_fields = -1
+	pp_wb_capacity_paddy_water_control = -1
 }
 
 pp_tt_vegetation_ha1300_veg_thicket = {
@@ -279,6 +358,8 @@ pp_tt_vegetation_ha1300_veg_thicket = {
 	blocks_vision_from_sea = yes
 	supply_limit = 2
 	hostile_movement_cost = 0.2
+	pp_wb_capacity_irrigated_fields = -1
+	pp_wb_capacity_paddy_water_control = -1
 }
 
 pp_tt_vegetation_ha1300_veg_savanna = {
@@ -286,6 +367,8 @@ pp_tt_vegetation_ha1300_veg_savanna = {
 	local_population_capacity = 9.2
 	local_monthly_food_modifier = monthly_food_productivity_severe_bonus
 	supply_limit = 2
+	pp_wb_capacity_irrigated_fields = 4
+	pp_wb_capacity_paddy_water_control = 4
 }
 
 pp_tt_vegetation_ha1300_veg_tundra = {
@@ -294,6 +377,9 @@ pp_tt_vegetation_ha1300_veg_tundra = {
 	free_building_levels = -4
 	local_build_buildings_efficiency = -0.12
 	local_construction_speed = -0.12
+	pp_wb_capacity_land_clearance = 2
+	pp_wb_capacity_irrigated_fields = 4
+	pp_wb_capacity_paddy_water_control = 4
 }
 
 pp_tt_vegetation_ha1300_veg_coniferous_forest = {
@@ -308,6 +394,9 @@ pp_tt_vegetation_ha1300_veg_coniferous_forest = {
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
 	hostile_movement_cost = 0.2
+	pp_wb_capacity_field_management = 1
+	pp_wb_capacity_irrigated_fields = -1
+	pp_wb_capacity_paddy_water_control = -1
 }
 
 pp_tt_vegetation_ha1300_veg_mixed_forest = {
@@ -322,6 +411,9 @@ pp_tt_vegetation_ha1300_veg_mixed_forest = {
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
 	hostile_movement_cost = 0.2
+	pp_wb_capacity_field_management = 1
+	pp_wb_capacity_irrigated_fields = 2
+	pp_wb_capacity_paddy_water_control = 2
 }
 
 pp_tt_vegetation_ha1300_veg_dry_forest = {
@@ -337,6 +429,10 @@ pp_tt_vegetation_ha1300_veg_dry_forest = {
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
 	hostile_movement_cost = 0.15
+	pp_wb_capacity_land_clearance = 2
+	pp_wb_capacity_field_management = 2
+	pp_wb_capacity_irrigated_fields = 1
+	pp_wb_capacity_paddy_water_control = 1
 }
 
 pp_tt_vegetation_ha1300_veg_marsh = {
@@ -345,6 +441,11 @@ pp_tt_vegetation_ha1300_veg_marsh = {
 	local_monthly_food_modifier = monthly_food_productivity_severe_bonus
 	supply_limit = 2
 	hostile_movement_cost = 0.3
+	pp_wb_capacity_land_clearance = 1
+	pp_wb_capacity_field_management = 1
+	pp_wb_capacity_water_control = 2
+	pp_wb_capacity_irrigated_fields = 4
+	pp_wb_capacity_paddy_water_control = 4
 }
 
 pp_tt_vegetation_ha1300_veg_swamp = {
@@ -360,6 +461,10 @@ pp_tt_vegetation_ha1300_veg_swamp = {
 	local_build_buildings_efficiency = -0.08
 	local_construction_speed = -0.08
 	hostile_movement_cost = 0.35
+	pp_wb_capacity_field_management = 2
+	pp_wb_capacity_water_control = 1
+	pp_wb_capacity_irrigated_fields = 4
+	pp_wb_capacity_paddy_water_control = 4
 }
 
 pp_tt_topography_flatland = {
@@ -382,6 +487,8 @@ pp_tt_topography_mountains = {
 	local_construction_speed = -0.35
 	local_tribesmen_pop_growth = -1
 	hostile_movement_cost = 0.45
+	pp_wb_capacity_irrigated_fields = 2
+	pp_wb_capacity_paddy_water_control = 2
 }
 
 pp_tt_topography_hills = {
@@ -399,6 +506,8 @@ pp_tt_topography_hills = {
 	local_construction_speed = -0.08
 	local_tribesmen_pop_growth = -1
 	hostile_movement_cost = 0.2
+	pp_wb_capacity_irrigated_fields = -3
+	pp_wb_capacity_paddy_water_control = -3
 }
 
 pp_tt_topography_plateau = {
@@ -414,6 +523,8 @@ pp_tt_topography_plateau = {
 	local_construction_speed = -0.15
 	local_tribesmen_pop_growth = -1
 	hostile_movement_cost = 0.07
+	pp_wb_capacity_irrigated_fields = -2
+	pp_wb_capacity_paddy_water_control = -2
 }
 
 pp_tt_topography_wetlands = {
@@ -429,6 +540,8 @@ pp_tt_topography_wetlands = {
 	local_construction_speed = -0.25
 	local_tribesmen_pop_growth = -1
 	hostile_movement_cost = 0.3
+	pp_wb_capacity_irrigated_fields = 1
+	pp_wb_capacity_paddy_water_control = 1
 }
 
 pp_tt_topography_ocean = {
@@ -486,6 +599,9 @@ pp_tt_topography_atoll = {
 	local_build_buildings_efficiency = -0.25
 	local_construction_speed = -0.25
 	local_tribesmen_pop_growth = -1
+	pp_wb_capacity_water_control = 2
+	pp_wb_capacity_irrigated_fields = 2
+	pp_wb_capacity_paddy_water_control = 2
 }
 
 pp_tt_topography_flatland_wasteland = {
@@ -540,6 +656,10 @@ pp_tt_topography_mountain_wasteland = {
 	local_construction_speed = -0.35
 	local_tribesmen_pop_growth = -1
 	hostile_movement_cost = 0.45
+	pp_wb_capacity_field_management = 1
+	pp_wb_capacity_water_control = 2
+	pp_wb_capacity_irrigated_fields = 2
+	pp_wb_capacity_paddy_water_control = 2
 }
 
 pp_tt_topography_ocean_wasteland = {
@@ -553,6 +673,8 @@ pp_tt_topography_ha1300_topo_rolling = {
 	game_data = { category = location }
 	local_population_capacity = 0.1
 	local_tribesmen_pop_growth = -1
+	pp_wb_capacity_irrigated_fields = 2
+	pp_wb_capacity_paddy_water_control = 2
 }
 
 pp_tt_topography_ha1300_topo_valleys = {
@@ -560,11 +682,15 @@ pp_tt_topography_ha1300_topo_valleys = {
 	local_population_capacity = 2.5
 	local_tribesmen_pop_growth = -1
 	hostile_movement_cost = 0.2
+	pp_wb_capacity_irrigated_fields = -1
+	pp_wb_capacity_paddy_water_control = -1
 }
 
 pp_tt_topography_ha1300_topo_floodplains = {
 	game_data = { category = location }
 	local_tribesmen_pop_growth = -1
+	pp_wb_capacity_irrigated_fields = 1
+	pp_wb_capacity_paddy_water_control = 1
 }
 
 pp_tt_topography_ha1300_topo_deltas = {
@@ -573,6 +699,10 @@ pp_tt_topography_ha1300_topo_deltas = {
 	local_build_buildings_efficiency = -0.25
 	local_construction_speed = -0.25
 	local_tribesmen_pop_growth = -1
+	pp_wb_capacity_field_management = 1
+	pp_wb_capacity_water_control = 2
+	pp_wb_capacity_irrigated_fields = 2
+	pp_wb_capacity_paddy_water_control = 2
 }
 
 pp_tt_topography_pp_river_channel = {
@@ -596,21 +726,37 @@ pp_tt_topography_pp_river_falls = {
 pp_tt_fertility_high = {
 	game_data = { category = location }
 	local_population_capacity = 3.8
+	pp_wb_capacity_land_clearance = 1
+	pp_wb_capacity_field_management = 1
+	pp_wb_capacity_irrigated_fields = 1
+	pp_wb_capacity_paddy_water_control = 1
 }
 
 pp_tt_fertility_low = {
 	game_data = { category = location }
 	local_population_capacity = -4.8
+	pp_wb_capacity_land_clearance = -1
+	pp_wb_capacity_field_management = -1
+	pp_wb_capacity_irrigated_fields = -1
+	pp_wb_capacity_paddy_water_control = -1
 }
 
 pp_tt_fertility_very_high = {
 	game_data = { category = location }
 	local_population_capacity = 5.6
+	pp_wb_capacity_land_clearance = 2
+	pp_wb_capacity_field_management = 2
+	pp_wb_capacity_irrigated_fields = 1
+	pp_wb_capacity_paddy_water_control = 1
 }
 
 pp_tt_fertility_very_low = {
 	game_data = { category = location }
 	local_population_capacity = -11.4
+	pp_wb_capacity_land_clearance = -1
+	pp_wb_capacity_field_management = -3
+	pp_wb_capacity_irrigated_fields = -1
+	pp_wb_capacity_paddy_water_control = -1
 }
 
 pp_tt_soil_clay = {

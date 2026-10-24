@@ -2,11 +2,18 @@
 
 # Improvement building level caps: base + attribute class terms + levels per development point x development.
 
-# Shared caps (cap groups, families with niche members): <group or key>_shared is the equation; each member's cap
+# The equation (<key>_terms, or <group or key>_shared for buildings sharing a cap) is named unlabelled, so the
 
-# subtracts the other members' levels.
+# max-level tooltip lists its rows; a shared cap subtracts the other members' levels. Clamp and member rows show
+
+# only where they change the value.
 
 pp_wb_cap_land_clearance = {
+	add = pp_wb_cap_land_clearance_terms
+	if = { limit = { pp_wb_cap_land_clearance_terms > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+}
+
+pp_wb_cap_land_clearance_terms = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
 		value = 2
@@ -139,14 +146,12 @@ pp_wb_cap_land_clearance = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = this.pp_wb_cap_land_clearance_building_level_wb_development
+		value = this.pp_wb_cap_land_clearance_terms_building_level_wb_development
 	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 }
 }
 
-# Tooltip helpers of pp_wb_cap_land_clearance (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_land_clearance_building_level_wb_development = {
+# Tooltip helpers of pp_wb_cap_land_clearance_terms (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_land_clearance_terms_building_level_wb_development = {
 	value = development
 	multiply = 0.015
 }
@@ -382,99 +387,76 @@ pp_wb_cap_field_management_shared = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = development
-		multiply = 0.03
+		value = this.pp_wb_cap_field_management_shared_building_level_wb_development
 	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 }
+}
+
+# Tooltip helpers of pp_wb_cap_field_management_shared (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_field_management_shared_building_level_wb_development = {
+	value = development
+	multiply = 0.03
 }
 
 pp_wb_cap_field_management = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_field_management_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_CONVERTIBLE"
-		value = modifier:pp_wb_levels_field_management_convertible
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_IMPROVED"
-		value = modifier:pp_wb_levels_field_management_improved
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_HILL_TERRACES"
-		value = modifier:pp_wb_levels_jiangnan_hill_terraces
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	add = pp_wb_cap_field_management_shared
+	if = { limit = { pp_wb_cap_field_management_shared > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+	if = { limit = { modifier:pp_wb_levels_field_management_convertible > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_CONVERTIBLE" value = modifier:pp_wb_levels_field_management_convertible } }
+	if = { limit = { modifier:pp_wb_levels_field_management_improved > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_IMPROVED" value = modifier:pp_wb_levels_field_management_improved } }
+	if = { limit = { modifier:pp_wb_levels_jiangnan_hill_terraces > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_HILL_TERRACES" value = modifier:pp_wb_levels_jiangnan_hill_terraces } }
+	if = { limit = { OR = { modifier:pp_wb_levels_field_management_convertible > 0 modifier:pp_wb_levels_field_management_improved > 0 modifier:pp_wb_levels_jiangnan_hill_terraces > 0 } pp_wb_cap_field_management_open < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }
 }
 
-# Tooltip helpers of pp_wb_cap_field_management (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_field_management_building_level_wb_family = {
+pp_wb_cap_field_management_open = {
 	value = pp_wb_cap_field_management_shared
+	max = 15
+	subtract = modifier:pp_wb_levels_field_management_convertible
+	subtract = modifier:pp_wb_levels_field_management_improved
+	subtract = modifier:pp_wb_levels_jiangnan_hill_terraces
 }
 
 pp_wb_cap_field_management_convertible = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_field_management_convertible_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_IMPROVED"
-		value = modifier:pp_wb_levels_field_management_improved
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_HILL_TERRACES"
-		value = modifier:pp_wb_levels_jiangnan_hill_terraces
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	add = pp_wb_cap_field_management_shared
+	if = { limit = { pp_wb_cap_field_management_shared > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+	if = { limit = { modifier:pp_wb_levels_field_management_improved > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_IMPROVED" value = modifier:pp_wb_levels_field_management_improved } }
+	if = { limit = { modifier:pp_wb_levels_jiangnan_hill_terraces > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_HILL_TERRACES" value = modifier:pp_wb_levels_jiangnan_hill_terraces } }
+	if = { limit = { OR = { modifier:pp_wb_levels_field_management_improved > 0 modifier:pp_wb_levels_jiangnan_hill_terraces > 0 } pp_wb_cap_field_management_convertible_open < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }
 }
 
-# Tooltip helpers of pp_wb_cap_field_management_convertible (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_field_management_convertible_building_level_wb_family = {
+pp_wb_cap_field_management_convertible_open = {
 	value = pp_wb_cap_field_management_shared
+	max = 15
+	subtract = modifier:pp_wb_levels_field_management_improved
+	subtract = modifier:pp_wb_levels_jiangnan_hill_terraces
 }
 
 pp_wb_cap_field_management_improved = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_field_management_improved_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_HILL_TERRACES"
-		value = modifier:pp_wb_levels_jiangnan_hill_terraces
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	add = pp_wb_cap_field_management_shared
+	if = { limit = { pp_wb_cap_field_management_shared > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+	if = { limit = { modifier:pp_wb_levels_jiangnan_hill_terraces > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_HILL_TERRACES" value = modifier:pp_wb_levels_jiangnan_hill_terraces } }
+	if = { limit = { OR = { modifier:pp_wb_levels_jiangnan_hill_terraces > 0 } pp_wb_cap_field_management_improved_open < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }
 }
 
-# Tooltip helpers of pp_wb_cap_field_management_improved (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_field_management_improved_building_level_wb_family = {
+pp_wb_cap_field_management_improved_open = {
 	value = pp_wb_cap_field_management_shared
+	max = 15
+	subtract = modifier:pp_wb_levels_jiangnan_hill_terraces
 }
 
 pp_wb_cap_jiangnan_hill_terraces = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_jiangnan_hill_terraces_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT"
-		value = modifier:pp_wb_levels_field_management
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_CONVERTIBLE"
-		value = modifier:pp_wb_levels_field_management_convertible
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_IMPROVED"
-		value = modifier:pp_wb_levels_field_management_improved
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	add = pp_wb_cap_field_management_shared
+	if = { limit = { pp_wb_cap_field_management_shared > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+	if = { limit = { modifier:pp_wb_levels_field_management > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT" value = modifier:pp_wb_levels_field_management } }
+	if = { limit = { modifier:pp_wb_levels_field_management_convertible > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_CONVERTIBLE" value = modifier:pp_wb_levels_field_management_convertible } }
+	if = { limit = { modifier:pp_wb_levels_field_management_improved > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_IMPROVED" value = modifier:pp_wb_levels_field_management_improved } }
+	if = { limit = { OR = { modifier:pp_wb_levels_field_management > 0 modifier:pp_wb_levels_field_management_convertible > 0 modifier:pp_wb_levels_field_management_improved > 0 } pp_wb_cap_jiangnan_hill_terraces_open < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }
 }
 
-# Tooltip helpers of pp_wb_cap_jiangnan_hill_terraces (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_jiangnan_hill_terraces_building_level_wb_family = {
+pp_wb_cap_jiangnan_hill_terraces_open = {
 	value = pp_wb_cap_field_management_shared
+	max = 15
+	subtract = modifier:pp_wb_levels_field_management
+	subtract = modifier:pp_wb_levels_field_management_convertible
+	subtract = modifier:pp_wb_levels_field_management_improved
 }
 
 pp_wb_cap_water_control_shared = {
@@ -554,273 +536,183 @@ pp_wb_cap_water_control_shared = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = development
-		multiply = 0.02
+		value = this.pp_wb_cap_water_control_shared_building_level_wb_development
 	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 }
+}
+
+# Tooltip helpers of pp_wb_cap_water_control_shared (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_water_control_shared_building_level_wb_development = {
+	value = development
+	multiply = 0.02
 }
 
 pp_wb_cap_irrigation_systems = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_irrigation_systems_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_QANATS"
-		value = modifier:pp_wb_levels_qanats
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_BUND"
-		value = modifier:pp_wb_levels_bund
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE"
-		value = modifier:pp_wb_levels_field_drainage
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_POLDERS"
-		value = modifier:pp_wb_levels_polders
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
-		value = modifier:pp_wb_levels_khmer_baray
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
-		value = modifier:pp_wb_levels_incamisana
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	add = pp_wb_cap_water_control_shared
+	if = { limit = { development > 500 pp_wb_cap_water_control_shared > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+	if = { limit = { modifier:pp_wb_levels_qanats > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_QANATS" value = modifier:pp_wb_levels_qanats } }
+	if = { limit = { modifier:pp_wb_levels_bund > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_BUND" value = modifier:pp_wb_levels_bund } }
+	if = { limit = { modifier:pp_wb_levels_field_drainage > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE" value = modifier:pp_wb_levels_field_drainage } }
+	if = { limit = { modifier:pp_wb_levels_polders > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_POLDERS" value = modifier:pp_wb_levels_polders } }
+	if = { limit = { modifier:pp_wb_levels_khmer_baray > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY" value = modifier:pp_wb_levels_khmer_baray } }
+	if = { limit = { modifier:pp_wb_levels_incamisana > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA" value = modifier:pp_wb_levels_incamisana } }
+	if = { limit = { OR = { modifier:pp_wb_levels_qanats > 0 modifier:pp_wb_levels_bund > 0 modifier:pp_wb_levels_field_drainage > 0 modifier:pp_wb_levels_polders > 0 modifier:pp_wb_levels_khmer_baray > 0 modifier:pp_wb_levels_incamisana > 0 } pp_wb_cap_irrigation_systems_open < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }
 }
 
-# Tooltip helpers of pp_wb_cap_irrigation_systems (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_irrigation_systems_building_level_wb_family = {
+pp_wb_cap_irrigation_systems_open = {
 	value = pp_wb_cap_water_control_shared
+	max = 15
+	subtract = modifier:pp_wb_levels_qanats
+	subtract = modifier:pp_wb_levels_bund
+	subtract = modifier:pp_wb_levels_field_drainage
+	subtract = modifier:pp_wb_levels_polders
+	subtract = modifier:pp_wb_levels_khmer_baray
+	subtract = modifier:pp_wb_levels_incamisana
 }
 
 pp_wb_cap_khmer_baray = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_khmer_baray_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
-		value = modifier:pp_wb_levels_irrigation_systems
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_QANATS"
-		value = modifier:pp_wb_levels_qanats
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_BUND"
-		value = modifier:pp_wb_levels_bund
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE"
-		value = modifier:pp_wb_levels_field_drainage
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_POLDERS"
-		value = modifier:pp_wb_levels_polders
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
-		value = modifier:pp_wb_levels_incamisana
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	add = pp_wb_cap_water_control_shared
+	if = { limit = { development > 500 pp_wb_cap_water_control_shared > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+	if = { limit = { modifier:pp_wb_levels_irrigation_systems > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS" value = modifier:pp_wb_levels_irrigation_systems } }
+	if = { limit = { modifier:pp_wb_levels_qanats > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_QANATS" value = modifier:pp_wb_levels_qanats } }
+	if = { limit = { modifier:pp_wb_levels_bund > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_BUND" value = modifier:pp_wb_levels_bund } }
+	if = { limit = { modifier:pp_wb_levels_field_drainage > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE" value = modifier:pp_wb_levels_field_drainage } }
+	if = { limit = { modifier:pp_wb_levels_polders > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_POLDERS" value = modifier:pp_wb_levels_polders } }
+	if = { limit = { modifier:pp_wb_levels_incamisana > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA" value = modifier:pp_wb_levels_incamisana } }
+	if = { limit = { OR = { modifier:pp_wb_levels_irrigation_systems > 0 modifier:pp_wb_levels_qanats > 0 modifier:pp_wb_levels_bund > 0 modifier:pp_wb_levels_field_drainage > 0 modifier:pp_wb_levels_polders > 0 modifier:pp_wb_levels_incamisana > 0 } pp_wb_cap_khmer_baray_open < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }
 }
 
-# Tooltip helpers of pp_wb_cap_khmer_baray (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_khmer_baray_building_level_wb_family = {
+pp_wb_cap_khmer_baray_open = {
 	value = pp_wb_cap_water_control_shared
+	max = 15
+	subtract = modifier:pp_wb_levels_irrigation_systems
+	subtract = modifier:pp_wb_levels_qanats
+	subtract = modifier:pp_wb_levels_bund
+	subtract = modifier:pp_wb_levels_field_drainage
+	subtract = modifier:pp_wb_levels_polders
+	subtract = modifier:pp_wb_levels_incamisana
 }
 
 pp_wb_cap_incamisana = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_incamisana_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
-		value = modifier:pp_wb_levels_irrigation_systems
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_QANATS"
-		value = modifier:pp_wb_levels_qanats
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_BUND"
-		value = modifier:pp_wb_levels_bund
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE"
-		value = modifier:pp_wb_levels_field_drainage
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_POLDERS"
-		value = modifier:pp_wb_levels_polders
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
-		value = modifier:pp_wb_levels_khmer_baray
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	add = pp_wb_cap_water_control_shared
+	if = { limit = { development > 500 pp_wb_cap_water_control_shared > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+	if = { limit = { modifier:pp_wb_levels_irrigation_systems > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS" value = modifier:pp_wb_levels_irrigation_systems } }
+	if = { limit = { modifier:pp_wb_levels_qanats > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_QANATS" value = modifier:pp_wb_levels_qanats } }
+	if = { limit = { modifier:pp_wb_levels_bund > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_BUND" value = modifier:pp_wb_levels_bund } }
+	if = { limit = { modifier:pp_wb_levels_field_drainage > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE" value = modifier:pp_wb_levels_field_drainage } }
+	if = { limit = { modifier:pp_wb_levels_polders > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_POLDERS" value = modifier:pp_wb_levels_polders } }
+	if = { limit = { modifier:pp_wb_levels_khmer_baray > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY" value = modifier:pp_wb_levels_khmer_baray } }
+	if = { limit = { OR = { modifier:pp_wb_levels_irrigation_systems > 0 modifier:pp_wb_levels_qanats > 0 modifier:pp_wb_levels_bund > 0 modifier:pp_wb_levels_field_drainage > 0 modifier:pp_wb_levels_polders > 0 modifier:pp_wb_levels_khmer_baray > 0 } pp_wb_cap_incamisana_open < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }
 }
 
-# Tooltip helpers of pp_wb_cap_incamisana (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_incamisana_building_level_wb_family = {
+pp_wb_cap_incamisana_open = {
 	value = pp_wb_cap_water_control_shared
+	max = 15
+	subtract = modifier:pp_wb_levels_irrigation_systems
+	subtract = modifier:pp_wb_levels_qanats
+	subtract = modifier:pp_wb_levels_bund
+	subtract = modifier:pp_wb_levels_field_drainage
+	subtract = modifier:pp_wb_levels_polders
+	subtract = modifier:pp_wb_levels_khmer_baray
 }
 
 pp_wb_cap_qanats = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_qanats_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
-		value = modifier:pp_wb_levels_irrigation_systems
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_BUND"
-		value = modifier:pp_wb_levels_bund
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE"
-		value = modifier:pp_wb_levels_field_drainage
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_POLDERS"
-		value = modifier:pp_wb_levels_polders
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
-		value = modifier:pp_wb_levels_khmer_baray
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
-		value = modifier:pp_wb_levels_incamisana
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	add = pp_wb_cap_water_control_shared
+	if = { limit = { development > 500 pp_wb_cap_water_control_shared > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+	if = { limit = { modifier:pp_wb_levels_irrigation_systems > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS" value = modifier:pp_wb_levels_irrigation_systems } }
+	if = { limit = { modifier:pp_wb_levels_bund > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_BUND" value = modifier:pp_wb_levels_bund } }
+	if = { limit = { modifier:pp_wb_levels_field_drainage > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE" value = modifier:pp_wb_levels_field_drainage } }
+	if = { limit = { modifier:pp_wb_levels_polders > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_POLDERS" value = modifier:pp_wb_levels_polders } }
+	if = { limit = { modifier:pp_wb_levels_khmer_baray > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY" value = modifier:pp_wb_levels_khmer_baray } }
+	if = { limit = { modifier:pp_wb_levels_incamisana > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA" value = modifier:pp_wb_levels_incamisana } }
+	if = { limit = { OR = { modifier:pp_wb_levels_irrigation_systems > 0 modifier:pp_wb_levels_bund > 0 modifier:pp_wb_levels_field_drainage > 0 modifier:pp_wb_levels_polders > 0 modifier:pp_wb_levels_khmer_baray > 0 modifier:pp_wb_levels_incamisana > 0 } pp_wb_cap_qanats_open < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }
 }
 
-# Tooltip helpers of pp_wb_cap_qanats (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_qanats_building_level_wb_family = {
+pp_wb_cap_qanats_open = {
 	value = pp_wb_cap_water_control_shared
+	max = 15
+	subtract = modifier:pp_wb_levels_irrigation_systems
+	subtract = modifier:pp_wb_levels_bund
+	subtract = modifier:pp_wb_levels_field_drainage
+	subtract = modifier:pp_wb_levels_polders
+	subtract = modifier:pp_wb_levels_khmer_baray
+	subtract = modifier:pp_wb_levels_incamisana
 }
 
 pp_wb_cap_bund = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_bund_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
-		value = modifier:pp_wb_levels_irrigation_systems
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_QANATS"
-		value = modifier:pp_wb_levels_qanats
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE"
-		value = modifier:pp_wb_levels_field_drainage
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_POLDERS"
-		value = modifier:pp_wb_levels_polders
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
-		value = modifier:pp_wb_levels_khmer_baray
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
-		value = modifier:pp_wb_levels_incamisana
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	add = pp_wb_cap_water_control_shared
+	if = { limit = { development > 500 pp_wb_cap_water_control_shared > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+	if = { limit = { modifier:pp_wb_levels_irrigation_systems > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS" value = modifier:pp_wb_levels_irrigation_systems } }
+	if = { limit = { modifier:pp_wb_levels_qanats > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_QANATS" value = modifier:pp_wb_levels_qanats } }
+	if = { limit = { modifier:pp_wb_levels_field_drainage > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE" value = modifier:pp_wb_levels_field_drainage } }
+	if = { limit = { modifier:pp_wb_levels_polders > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_POLDERS" value = modifier:pp_wb_levels_polders } }
+	if = { limit = { modifier:pp_wb_levels_khmer_baray > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY" value = modifier:pp_wb_levels_khmer_baray } }
+	if = { limit = { modifier:pp_wb_levels_incamisana > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA" value = modifier:pp_wb_levels_incamisana } }
+	if = { limit = { OR = { modifier:pp_wb_levels_irrigation_systems > 0 modifier:pp_wb_levels_qanats > 0 modifier:pp_wb_levels_field_drainage > 0 modifier:pp_wb_levels_polders > 0 modifier:pp_wb_levels_khmer_baray > 0 modifier:pp_wb_levels_incamisana > 0 } pp_wb_cap_bund_open < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }
 }
 
-# Tooltip helpers of pp_wb_cap_bund (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_bund_building_level_wb_family = {
+pp_wb_cap_bund_open = {
 	value = pp_wb_cap_water_control_shared
+	max = 15
+	subtract = modifier:pp_wb_levels_irrigation_systems
+	subtract = modifier:pp_wb_levels_qanats
+	subtract = modifier:pp_wb_levels_field_drainage
+	subtract = modifier:pp_wb_levels_polders
+	subtract = modifier:pp_wb_levels_khmer_baray
+	subtract = modifier:pp_wb_levels_incamisana
 }
 
 pp_wb_cap_field_drainage = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_field_drainage_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
-		value = modifier:pp_wb_levels_irrigation_systems
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_QANATS"
-		value = modifier:pp_wb_levels_qanats
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_BUND"
-		value = modifier:pp_wb_levels_bund
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_POLDERS"
-		value = modifier:pp_wb_levels_polders
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
-		value = modifier:pp_wb_levels_khmer_baray
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
-		value = modifier:pp_wb_levels_incamisana
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	add = pp_wb_cap_water_control_shared
+	if = { limit = { development > 500 pp_wb_cap_water_control_shared > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+	if = { limit = { modifier:pp_wb_levels_irrigation_systems > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS" value = modifier:pp_wb_levels_irrigation_systems } }
+	if = { limit = { modifier:pp_wb_levels_qanats > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_QANATS" value = modifier:pp_wb_levels_qanats } }
+	if = { limit = { modifier:pp_wb_levels_bund > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_BUND" value = modifier:pp_wb_levels_bund } }
+	if = { limit = { modifier:pp_wb_levels_polders > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_POLDERS" value = modifier:pp_wb_levels_polders } }
+	if = { limit = { modifier:pp_wb_levels_khmer_baray > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY" value = modifier:pp_wb_levels_khmer_baray } }
+	if = { limit = { modifier:pp_wb_levels_incamisana > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA" value = modifier:pp_wb_levels_incamisana } }
+	if = { limit = { OR = { modifier:pp_wb_levels_irrigation_systems > 0 modifier:pp_wb_levels_qanats > 0 modifier:pp_wb_levels_bund > 0 modifier:pp_wb_levels_polders > 0 modifier:pp_wb_levels_khmer_baray > 0 modifier:pp_wb_levels_incamisana > 0 } pp_wb_cap_field_drainage_open < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }
 }
 
-# Tooltip helpers of pp_wb_cap_field_drainage (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_field_drainage_building_level_wb_family = {
+pp_wb_cap_field_drainage_open = {
 	value = pp_wb_cap_water_control_shared
+	max = 15
+	subtract = modifier:pp_wb_levels_irrigation_systems
+	subtract = modifier:pp_wb_levels_qanats
+	subtract = modifier:pp_wb_levels_bund
+	subtract = modifier:pp_wb_levels_polders
+	subtract = modifier:pp_wb_levels_khmer_baray
+	subtract = modifier:pp_wb_levels_incamisana
 }
 
 pp_wb_cap_polders = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_polders_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
-		value = modifier:pp_wb_levels_irrigation_systems
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_QANATS"
-		value = modifier:pp_wb_levels_qanats
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_BUND"
-		value = modifier:pp_wb_levels_bund
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE"
-		value = modifier:pp_wb_levels_field_drainage
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
-		value = modifier:pp_wb_levels_khmer_baray
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
-		value = modifier:pp_wb_levels_incamisana
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	add = pp_wb_cap_water_control_shared
+	if = { limit = { development > 500 pp_wb_cap_water_control_shared > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+	if = { limit = { modifier:pp_wb_levels_irrigation_systems > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS" value = modifier:pp_wb_levels_irrigation_systems } }
+	if = { limit = { modifier:pp_wb_levels_qanats > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_QANATS" value = modifier:pp_wb_levels_qanats } }
+	if = { limit = { modifier:pp_wb_levels_bund > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_BUND" value = modifier:pp_wb_levels_bund } }
+	if = { limit = { modifier:pp_wb_levels_field_drainage > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_FIELD_DRAINAGE" value = modifier:pp_wb_levels_field_drainage } }
+	if = { limit = { modifier:pp_wb_levels_khmer_baray > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY" value = modifier:pp_wb_levels_khmer_baray } }
+	if = { limit = { modifier:pp_wb_levels_incamisana > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA" value = modifier:pp_wb_levels_incamisana } }
+	if = { limit = { OR = { modifier:pp_wb_levels_irrigation_systems > 0 modifier:pp_wb_levels_qanats > 0 modifier:pp_wb_levels_bund > 0 modifier:pp_wb_levels_field_drainage > 0 modifier:pp_wb_levels_khmer_baray > 0 modifier:pp_wb_levels_incamisana > 0 } pp_wb_cap_polders_open < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }
 }
 
-# Tooltip helpers of pp_wb_cap_polders (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_polders_building_level_wb_family = {
+pp_wb_cap_polders_open = {
 	value = pp_wb_cap_water_control_shared
+	max = 15
+	subtract = modifier:pp_wb_levels_irrigation_systems
+	subtract = modifier:pp_wb_levels_qanats
+	subtract = modifier:pp_wb_levels_bund
+	subtract = modifier:pp_wb_levels_field_drainage
+	subtract = modifier:pp_wb_levels_khmer_baray
+	subtract = modifier:pp_wb_levels_incamisana
 }
 
 pp_wb_cap_irrigated_fields = {
+	add = pp_wb_cap_irrigated_fields_terms
+	if = { limit = { pp_wb_cap_irrigated_fields_terms > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+}
+
+pp_wb_cap_irrigated_fields_terms = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
 		value = 5
@@ -1128,14 +1020,12 @@ pp_wb_cap_irrigated_fields = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = this.pp_wb_cap_irrigated_fields_building_level_wb_development
+		value = this.pp_wb_cap_irrigated_fields_terms_building_level_wb_development
 	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 }
 }
 
-# Tooltip helpers of pp_wb_cap_irrigated_fields (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_irrigated_fields_building_level_wb_development = {
+# Tooltip helpers of pp_wb_cap_irrigated_fields_terms (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_irrigated_fields_terms_building_level_wb_development = {
 	value = development
 	multiply = 0.05
 }
@@ -1448,43 +1338,38 @@ pp_wb_cap_paddy_water_control_shared = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
-		value = development
-		multiply = 0.05
+		value = this.pp_wb_cap_paddy_water_control_shared_building_level_wb_development
 	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
-	max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 }
+}
+
+# Tooltip helpers of pp_wb_cap_paddy_water_control_shared (cap_tooltips.py): each is one row of the cap, read through this.
+pp_wb_cap_paddy_water_control_shared_building_level_wb_development = {
+	value = development
+	multiply = 0.05
 }
 
 pp_wb_cap_paddy_water_control = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_paddy_water_control_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_CANAL_NETWORK"
-		value = modifier:pp_wb_levels_jiangnan_canal_network
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	add = pp_wb_cap_paddy_water_control_shared
+	if = { limit = { pp_wb_cap_paddy_water_control_shared > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+	if = { limit = { modifier:pp_wb_levels_jiangnan_canal_network > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_CANAL_NETWORK" value = modifier:pp_wb_levels_jiangnan_canal_network } }
+	if = { limit = { OR = { modifier:pp_wb_levels_jiangnan_canal_network > 0 } pp_wb_cap_paddy_water_control_open < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }
 }
 
-# Tooltip helpers of pp_wb_cap_paddy_water_control (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_paddy_water_control_building_level_wb_family = {
+pp_wb_cap_paddy_water_control_open = {
 	value = pp_wb_cap_paddy_water_control_shared
+	max = 15
+	subtract = modifier:pp_wb_levels_jiangnan_canal_network
 }
 
 pp_wb_cap_jiangnan_canal_network = {
-	add = {
-		desc = "BUILDING_LEVEL_WB_FAMILY"
-		value = this.pp_wb_cap_jiangnan_canal_network_building_level_wb_family
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_WB_SHARED_PADDY_WATER_CONTROL"
-		value = modifier:pp_wb_levels_paddy_water_control
-	}
-	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+	add = pp_wb_cap_paddy_water_control_shared
+	if = { limit = { pp_wb_cap_paddy_water_control_shared > 15 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 15 } }
+	if = { limit = { modifier:pp_wb_levels_paddy_water_control > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_PADDY_WATER_CONTROL" value = modifier:pp_wb_levels_paddy_water_control } }
+	if = { limit = { OR = { modifier:pp_wb_levels_paddy_water_control > 0 } pp_wb_cap_jiangnan_canal_network_open < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }
 }
 
-# Tooltip helpers of pp_wb_cap_jiangnan_canal_network (cap_tooltips.py): each is one row of the cap, read through this.
-pp_wb_cap_jiangnan_canal_network_building_level_wb_family = {
+pp_wb_cap_jiangnan_canal_network_open = {
 	value = pp_wb_cap_paddy_water_control_shared
+	max = 15
+	subtract = modifier:pp_wb_levels_paddy_water_control
 }

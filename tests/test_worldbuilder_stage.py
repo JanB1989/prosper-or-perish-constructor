@@ -84,6 +84,43 @@ def test_cap_terms_of_one_exclusive_attribute_chain_with_else_if(tmp_path):
     assert branches == ["if", "else_if", "if", "if", "if"]
 
 
+def test_cap_clamp_rows_show_only_where_they_can_cut(tmp_path):
+    c = _contract(tmp_path)
+    eq = {"base_levels": 1, "levels_per_development_point": 0, "class_terms": [{"attribute": "climate", "value": "arid", "levels": -2}]}
+    text = wb_buildings.cap_script_value(c, "x", eq, 1.0, 20)
+    assert text.startswith("pp_wb_cap_x = {\n\tadd = pp_wb_cap_x_terms\n") and "pp_wb_cap_x_terms = {" in text
+    # 1 - 2 goes below 0 in arid locations; without a development term the sum never passes 1: no upper-limit row
+    assert '\tif = { limit = { pp_wb_cap_x_terms < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }' in text
+    assert "MAXIMUM" not in text
+
+
+def test_shared_caps_keep_their_numbers_with_conditional_rows(tmp_path):
+    from collections import Counter
+
+    from eu5gameparser.clausewitz.parser import parse_text
+
+    from prosper_or_perish_constructor.worldbuilder.start_rules import Rules
+
+    c = _contract(tmp_path)
+    wb_buildings.write_caps(c, _cfg(tmp_path, {"terraces_x": {"family": "land_clearance", "strength": 1.5}}), tmp_path)
+    rules = Rules.__new__(Rules)
+    rules.unsupported = Counter()
+    rules.values = {e.key: e.value for e in parse_text((tmp_path / wb_buildings.CAPS_PATH).read_text(encoding="utf-8-sig")).entries}
+    rules.statics, rules.buildings, rules.triggers = {}, {}, {}
+
+    def cap(key: str, development: float, arid: bool = False, high: bool = False, **levels: int) -> float:
+        ctx = {"development": development, "climate": "arid" if arid else "continental",
+               "static_modifiers": {"pp_wb_fertility_high"} if high else set(),
+               "modifiers": {f"pp_wb_levels_{k}": float(v) for k, v in levels.items()}}
+        return rules.value("pp_wb_cap_" + key, ctx)
+
+    # base 2 + arid 1 + high fertility 2 + 0.03 per development point, clamped to 20, minus the other member's levels, >= 0
+    assert cap("land_clearance", 10, arid=True, high=True) == pytest.approx(5.3)
+    assert cap("land_clearance", 10, arid=True, terraces_x=2) == pytest.approx(1.3)
+    assert cap("terraces_x", 0, land_clearance=7) == 0
+    assert cap("land_clearance", 1000) == 20 and cap("land_clearance", 1000, terraces_x=25) == 0
+
+
 def test_raw_modifier_replacement_merges_duplicate_blocks_and_drops_bridges():
     body = "    max_levels = 5\n    raw_modifier = {\n      farm_capacity_from_land_clearance = 0.60\n      local_population_capacity = 7.65\n    }\n\n      raw_modifier = {\n          farm_capacity_from_x = -1\n        }\n\n    modifier = {\n    }\n"
     out = wb_buildings._replace_raw_modifier(body, {"local_population_capacity": "2.8"}, drop_prefixes=("farm_capacity_from_land",))
@@ -136,14 +173,31 @@ def test_niche_buildings_share_the_family_cap_and_are_stronger(tmp_path):
     cfg = _cfg(tmp_path, {"terraces_x": {"family": "land_clearance", "strength": 1.5, "lock": ["dominant_culture ?= culture:x"]}})
     caps = wb_buildings.write_caps(c, cfg, tmp_path)
     text = (tmp_path / wb_buildings.CAPS_PATH).read_text(encoding="utf-8-sig")
-    assert "pp_wb_cap_land_clearance_shared = {" in text
-    assert "pp_wb_cap_land_clearance = {\n\tadd = {\n\t\tdesc = \"BUILDING_LEVEL_WB_FAMILY\"\n\t\tvalue = pp_wb_cap_land_clearance_shared\n\t}\n\tsubtract = {\n\t\tdesc = \"BUILDING_LEVEL_WB_SHARED_TERRACES_X\"\n\t\tvalue = modifier:pp_wb_levels_terraces_x" in text
-    assert "pp_wb_cap_terraces_x = {\n\tadd = {\n\t\tdesc = \"BUILDING_LEVEL_WB_FAMILY\"\n\t\tvalue = pp_wb_cap_land_clearance_shared\n\t}\n\tsubtract = {\n\t\tdesc = \"BUILDING_LEVEL_WB_SHARED_LAND_CLEARANCE\"\n\t\tvalue = modifier:pp_wb_levels_land_clearance" in text
+    assert "pp_wb_cap_land_clearance_shared = {" in text and 'desc = "BUILDING_LEVEL_WB_FAMILY"' not in text
+    # the family's equation is named unlabelled, so the max-level tooltip lists its rows (base, classes, development)
+    # as the cap's own; another member's levels and the minimum show only where they change the value
+    general = text.split("pp_wb_cap_land_clearance = {")[1].split("\n}")[0]
+    assert general.startswith("\n\tadd = pp_wb_cap_land_clearance_shared\n")
+    assert ('\tif = { limit = { modifier:pp_wb_levels_terraces_x > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_TERRACES_X" '
+            "value = modifier:pp_wb_levels_terraces_x } }") in general
+    assert ("\tif = { limit = { OR = { modifier:pp_wb_levels_terraces_x > 0 } pp_wb_cap_land_clearance_open < 0 } "
+            'min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }') in general
+    assert "pp_wb_cap_land_clearance_open = {\n\tvalue = pp_wb_cap_land_clearance_shared\n\tmax = 20\n\tsubtract = modifier:pp_wb_levels_terraces_x\n}" in text
+    niche = text.split("pp_wb_cap_terraces_x = {")[1].split("\n}")[0]
+    assert niche.startswith("\n\tadd = pp_wb_cap_land_clearance_shared\n") and "modifier:pp_wb_levels_land_clearance > 0" in niche
+    # the family's upper limit (base 2 + 3 class levels + 0.03 per development point) can only bind past development 500
+    assert '\tif = { limit = { development > 500 pp_wb_cap_land_clearance_shared > 20 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 } }' in general
     assert caps["terraces_x"]["unit_units"] == round(5.2 * 1.5, 2) and caps["terraces_x"]["niche"] and caps["terraces_x"]["family"] == "land_clearance"
     types = (tmp_path / wb_buildings.LEVELS_TYPES_PATH).read_text(encoding="utf-8-sig")
-    assert "pp_wb_levels_land_clearance = {" in types and "pp_wb_levels_terraces_x = {" in types
+    assert "pp_wb_levels_land_clearance = {" in types and "pp_wb_levels_terraces_x = {" in types and "pp_wb_capacity_land_clearance = {" in types
     loc = (tmp_path / "main_menu/localization/english/pp_wb_building_caps_l_english.yml").read_text(encoding="utf-8-sig")
-    assert 'BUILDING_LEVEL_WB_SHARED_TERRACES_X: "Levels of $terraces_x$"' in loc
+    assert '''BUILDING_LEVEL_WB_SHARED_TERRACES_X: "Used by [ShowBuildingTypeName('terraces_x')|e]"''' in loc
+    assert 'BUILDING_LEVEL_WB_CLIMATE_ARID: "$arid$ (Climate)"' in loc
+    assert 'BUILDING_LEVEL_WB_FERTILITY_HIGH: "$STATIC_MODIFIER_NAME_pp_wb_fertility_high$"' in loc
+    levels_loc = (tmp_path / wb_buildings.LEVELS_LOC_PATH).read_text(encoding="utf-8-sig")
+    assert 'MODIFIER_TYPE_NAME_pp_wb_capacity_land_clearance: "$land_clearance$ Capacity"' in levels_loc
+    assert "$terraces_x$ share this limit." in levels_loc
+    assert 'MODIFIER_TYPE_NAME_pp_wb_levels_terraces_x: "Uses $land_clearance$ Capacity"' in levels_loc
     # setup rows only come from the general member (the niche shares its kind)
     owners = {"a": "SWE"}
     out = wb_buildings.write_setup(c, cfg, caps, owners, tmp_path)
@@ -167,7 +221,7 @@ def test_cap_group_members_share_one_cap_and_keep_their_1337_works(tmp_path):
     # each member: the group's equation minus every other member's levels, the niche of a member included
     for key, others in (("bund", ("field_drainage", "baray_x")), ("field_drainage", ("bund", "baray_x")), ("baray_x", ("bund", "field_drainage"))):
         block = text.split(f"pp_wb_cap_{key} = {{")[1].split("\n}")[0]
-        assert "value = pp_wb_cap_water_shared" in block and all(f"modifier:pp_wb_levels_{o}" in block for o in others)
+        assert "add = pp_wb_cap_water_shared" in block and all(f"modifier:pp_wb_levels_{o}" in block for o in others)
     assert caps["bund"]["group"] == "water" and caps["baray_x"]["group"] == "water" and caps["baray_x"]["shared"]
     # 1337 works above the cap stop at the cap: no building stands above its cap (2026-10-24, Jan)
     out = wb_buildings.write_setup(c, cfg, caps, {"a": "SWE"}, tmp_path)

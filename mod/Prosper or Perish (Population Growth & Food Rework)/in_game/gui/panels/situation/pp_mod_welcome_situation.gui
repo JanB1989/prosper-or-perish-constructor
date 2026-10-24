@@ -1,7 +1,7 @@
 ﻿# Prosper or Perish: the welcome situation panel (hand-kept). The game opens gui/panels/situation/<situation key>.gui
 # when the player clicks a situation. An introduction, one button that opens the Prosper or Perish section of the
 # Europedia (encyclopedia_lateralview.gui shows it when pp_encyclopedia_active is yes; pp_filter picks its cards) and
-# one that dismisses the welcome for good.
+# one that dismisses the welcome for good (two buttons: players and observers).
 # Built like harvest_situation.gui; texts PP_WELCOME_SIT_* in pp_situations_l_english.yml, no numbers;
 # tests/test_welcome_situation_panel.py.
 
@@ -35,6 +35,8 @@ situation_panel = {
 			layoutpolicy_horizontal = expanding
 			spacing = 14
 			margin_bottom = 10
+			# one of the two dismiss buttons is hidden
+			ignoreinvisible = yes
 
 			text_multi = {
 				max_width = 480
@@ -66,11 +68,24 @@ situation_panel = {
 			}
 
 			# for players who know the Europedia: ends the welcome for good (scripted_guis/pp_welcome_situation.txt)
-			# and closes the panel; root = the situation, which exists in observer mode too (GetPlayer does not)
+			# and closes the panel; the scripted GUI is a game command, so it reaches every machine in multiplayer
 			button_regular = {
+				visible = "[Not(IsPlayerObserver)]"
 				size = { 360 36 }
 				text = "PP_WELCOME_SIT_DISMISS"
-				onclick = "[GetScriptedGui('pp_dismiss_welcome_situation').Execute(GuiScope.SetRoot(SituationView.GetActiveSituation.GetSituation.MakeScope).End)]"
+				onclick = "[GetScriptedGui('pp_dismiss_welcome_situation').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				onclick = "[LateralView.Close]"
+				tooltip = "PP_WELCOME_SIT_DISMISS_TT"
+			}
+
+			# the same for an observer: the game drops every game command an observer sends, scripted GUIs included
+			# (the click only closed the panel, 2026-10-24), so this one runs the effect through the console, which
+			# an observer may use in a single player game that is not ironman
+			button_regular = {
+				visible = "[IsPlayerObserver]"
+				size = { 360 36 }
+				text = "PP_WELCOME_SIT_DISMISS"
+				onclick = "[ExecuteConsoleCommand('effect end_situation = situation:pp_mod_welcome_situation')]"
 				onclick = "[LateralView.Close]"
 				tooltip = "PP_WELCOME_SIT_DISMISS_TT"
 			}

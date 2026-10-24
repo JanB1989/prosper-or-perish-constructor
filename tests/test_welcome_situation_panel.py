@@ -1,8 +1,8 @@
 """The welcome situation panel (in_game/gui/panels/situation/pp_mod_welcome_situation.gui).
 
 The game opens gui/panels/situation/<situation key>.gui when the player clicks a situation. The welcome is an
-introduction, one button that opens the Prosper or Perish section of the Europedia and one that dismisses the welcome;
-the situation never ends by itself. Hand-kept GUI the game checks only when it draws it, so these tests read the files the game loads.
+introduction, one button that opens the Prosper or Perish section of the Europedia and one that dismisses the welcome
+(one for players, one for observers); the situation never ends by itself. Hand-kept GUI the game checks only when it draws it, so these tests read the files the game loads.
 """
 
 from __future__ import annotations
@@ -60,24 +60,29 @@ def test_texts_carry_no_numbers():
 
 def test_the_buttons_open_the_prosper_or_perish_section_and_dismiss_the_welcome():
     """The first button opens the Europedia and sets the two variables its PP section reads (shown, all cards); the
-    second ends the welcome through its scripted GUI and closes the panel."""
+    dismiss button ends the welcome and closes the panel. A player's dismiss runs the scripted GUI (a game command,
+    synced in multiplayer); the game drops every game command an observer sends (2026-10-24: the click only closed the
+    panel), so the observer's own dismiss button runs the same effect through the console."""
     buttons = re.findall(r"button_\w+ = \{", _panel())
-    assert len(buttons) == 2
+    assert len(buttons) == 3
     clicks = re.findall(r'onclick = "\[(.*?)\]"', _panel())
+    effect = "end_situation = situation:pp_mod_welcome_situation"
     assert clicks == [
         "OpenLateralView('encyclopedia')",
         "GetVariableSystem.Set('pp_encyclopedia_active', 'yes')",
         "GetVariableSystem.Set('pp_filter', 'all')",
-        # root = the situation: an observer has no country, GetPlayer is empty there (2026-10-24)
-        "GetScriptedGui('pp_dismiss_welcome_situation').Execute("
-        "GuiScope.SetRoot(SituationView.GetActiveSituation.GetSituation.MakeScope).End)",
+        "GetScriptedGui('pp_dismiss_welcome_situation').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)",
+        "LateralView.Close",
+        f"ExecuteConsoleCommand('effect {effect}')",
         "LateralView.Close",
     ]
-    assert not [click for click in clicks if "GetPlayer" in click]
+    visible = re.findall(r'visible = "\[(.*?)\]"', _panel())
+    assert visible == ["Not(IsPlayerObserver)", "IsPlayerObserver"]
+    assert re.search(r"ignoreinvisible = yes", _panel())
     scripted = SCRIPTED_GUI.read_text(encoding="utf-8-sig")
     assert re.search(r"(?m)^pp_dismiss_welcome_situation = \{", scripted)
-    assert "scope = country" not in scripted
-    assert "end_situation = situation:pp_mod_welcome_situation" in scripted
+    assert "scope = country" in scripted
+    assert effect in scripted
     europedia = EUROPEDIA.read_text(encoding="utf-8-sig")
     assert "GetVariableSystem.HasValue('pp_encyclopedia_active', 'yes')" in europedia
     assert "GetVariableSystem.HasValue('pp_filter', 'all')" in europedia
@@ -88,11 +93,16 @@ def test_the_buttons_open_the_prosper_or_perish_section_and_dismiss_the_welcome(
 
 def test_data_functions_exist_in_the_game():
     used = _calls(_panel()) | {fn for value in _panel_loc().values() for fn in _calls(value)}
-    assert {"OpenLateralView", "GetVariableSystem", "Set"} <= used
+    assert {"OpenLateralView", "GetVariableSystem", "Set", "ExecuteConsoleCommand"} <= used
     vanilla = set()
+    vanilla_text = ""
     for path in _vanilla().glob("*/gui/**/*.gui"):
-        vanilla |= _calls(path.read_text(encoding="utf-8-sig", errors="replace"))
+        text = path.read_text(encoding="utf-8-sig", errors="replace")
+        vanilla |= _calls(text)
+        vanilla_text += text
     assert not sorted(used - vanilla)
+    # a bare name, which _calls does not collect
+    assert "Not(IsPlayerObserver)" in vanilla_text
 
 
 def test_situation_never_ends_by_itself_and_starts_once():

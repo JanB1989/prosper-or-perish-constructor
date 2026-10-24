@@ -1,8 +1,10 @@
 ﻿# Prosper or Perish: the welcome situation's dismiss button (gui/panels/situation/pp_mod_welcome_situation.gui) ends
-# the situation for good. The panel passes the situation itself as root, not the player's country: an observer has no
-# country (GetPlayer is empty there and the button did nothing, 2026-10-24); end_situation runs in any scope. The
-# welcome never starts again (its start flag is removed when it starts, and only a new game sets it).
+# the situation for good. The panel passes the player's country as root, as vanilla's scripted GUIs do. An observer
+# cannot use this: the game drops every game command an observer sends, so the panel shows observers a second button
+# that runs the same end_situation through the console. The welcome never starts again (its start flag is removed
+# when it starts, and only a new game sets it).
 pp_dismiss_welcome_situation = {
+	scope = country
 	is_valid = {
 		situation:pp_mod_welcome_situation = { situation_is_active = yes }
 	}

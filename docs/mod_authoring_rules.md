@@ -55,6 +55,17 @@ The local output modifier map modes (`M/in_game/gfx/map/map_modes/pp_local_outpu
 `tools/generate_pp_goods_output_map_modes.py` writes `pp_goods_output_map_modes_generated.txt`. Edit the generators,
 not the files.
 
+## Buttons that change the game, and observers
+
+A GUI button changes the game only through a game command (a scripted GUI's `Execute`, every vanilla action). The
+game drops every game command an observer sends, without an error (verified 2026-10-24: the welcome situation's
+dismiss button closed the panel and left the situation running). A button an observer needs gets an observer twin
+(`visible = "[IsPlayerObserver]"`, the player's button `visible = "[Not(IsPlayerObserver)]"`, the box
+`ignoreinvisible = yes`) that runs the effect through the console:
+`onclick = "[ExecuteConsoleCommand('effect <effect>')]"`. The console's effect runs at once on this machine only, so
+never use it for players (not synced in multiplayer; blocked in multiplayer and ironman). Example:
+`M/in_game/gui/panels/situation/pp_mod_welcome_situation.gui`.
+
 ## Europedia (in-game documentation)
 
 GUI: `M/in_game/gui/encyclopedia_lateralview.gui` (filter buttons and cards), card types in

@@ -411,9 +411,10 @@ def render_localization() -> str:
 
 # --- GUI ---------------------------------------------------------------------------------------------------------
 
+# min/max state the 0..1 range: without them a progressbar reads 0..100 (in game 2026-10-26, the bars stayed slivers)
 _BAR = ('progressbar = {{ size = {{ 100% 100% }} progresstexture = "gfx/interface/progressbars/{texture}.dds" '
         'noprogresstexture = "{empty}" texture_density = 2 spriteType = Corneredstretched spriteborder = {{ 12 0 }} '
-        'value = "[{value}]" direction = horizontal{extra} }}')
+        'min = 0 max = 1 value = {value} direction = horizontal{extra} }}')
 _EMPTY = "gfx/interface/icons/unit_view/moral_bar_transparent.dds"
 _BACK = "gfx/interface/progressbars/progress_black.dds"
 TEXTURES = {
@@ -431,12 +432,14 @@ def _fraction(name: str) -> str:
 
 
 def _bar(texture: str, value: str, bottom: bool = False, extra: str = "") -> str:
-    return _BAR.format(texture=texture, empty=_BACK if bottom else _EMPTY, value=value, extra=extra)
+    """A bar layer; ``value`` is a data expression, or a plain number for a full swatch."""
+    shown = value if value.replace(".", "").isdigit() else f'"[{value}]"'
+    return _BAR.format(texture=texture, empty=_BACK if bottom else _EMPTY, value=shown, extra=extra)
 
 
 def _legend(part: str, key: str, value: str, visible: str | None = None) -> str:
     gate = f' visible = "[{visible}]"' if visible else ""
-    swatch = (f'widget = {{ size = {{ 22 10 }} {_bar(TEXTURES[part], "(float)1", bottom=True)} }}' if part in TEXTURES
+    swatch = (f'widget = {{ size = {{ 22 10 }} {_bar(TEXTURES[part], "1", bottom=True)} }}' if part in TEXTURES
               else 'widget = { size = { 22 10 } }')
     return (f'hbox = {{{gate} spacing = 4 {swatch} text_single = {{ text = "{key}" fontsize = 13 }} '
             f'text_single = {{ raw_text = "[{_sv(value)}|1]" fontsize = 13 }} }}')

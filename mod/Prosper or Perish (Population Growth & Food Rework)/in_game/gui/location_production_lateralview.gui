@@ -483,6 +483,10 @@
 							layoutpolicy_vertical = expanding
 							size = { 125 -1 }
 						}
+
+						widget = { # PP: the buttons sit over the row's columns (scrollbar, row margins)
+							size = { 36 -1 }
+						}
 					}
 
 					blockoverride "scroll_list_layout" { # PP: the selected sort or the payback order

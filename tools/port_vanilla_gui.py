@@ -84,6 +84,14 @@ LOCATION_ROWS_GUI = "shared/pp_location_building_rows.gui"
 LOCATION_ROW_TYPES = ("location_filtered_header_with_candidate", "location_filtered_header_no_candidate")
 LOCATION_VALUES_UNBUILT = "pp_location_values_unbuilt"
 LOCATION_SORT_BUTTONS = 5
+# the built row's building icon column at a fixed width: vanilla's stretch factor gives it a ninth of the row (~58 in
+# the 570 panel, ~100 in PP's), which pushed a five-slot row's level buttons out of the row (Jan, 2026-10-26)
+LOCATION_ICON_WIDTH = 58
+# a spacer at the right end of the header keeps its value buttons over the row's columns: the list is the panel minus
+# the window margins (15 each side), the header's level button (125) ends 6 inside the row's right edge (builder 120
+# after a spacing of 4, card margins 4 + 3)
+LIST_MARGIN = 15
+LOCATION_HEADER_SPACER = BUILD_PANEL_WIDTH - 2 * LIST_MARGIN - (BUILD_ROW_WIDTH - 6)
 # the building window's header row: slots and efficiencies two per column (vanilla 570 wide; six slots need ~750)
 BUILDING_VIEW = "building_view.gui"
 BUILDING_VIEW_WIDTH = 760
@@ -627,7 +635,14 @@ def _row_recorder(sides: list[tuple[str, str]], contexts: list[str]) -> str:
 def _location_row_with_candidate(t: str, what: str) -> str:
     """The location view's built row: slot circles and production efficiencies two per column (vanilla stacks them out
     of the row), the value columns of the build panel (the candidate's LocationToBuildItem) in place of profit over
-    tax income, upkeep kept for buildings that produce nothing, and the band recorder."""
+    tax income, upkeep kept for buildings that produce nothing, the building icon column at a fixed width and the band
+    recorder."""
+    t = _once(r"^([ \t]*)# icon\n\1vbox = \{\n([ \t]*)layoutpolicy_horizontal = expanding\n"
+              r"\2layoutpolicy_vertical = expanding\n\2layoutstretchfactor_horizontal = 1\n",
+              lambda m: (f"{m.group(1)}# icon\n{m.group(1)}vbox = {{ # PP: fixed width (vanilla: a ninth of the row)\n"
+                         f"{m.group(2)}minimumsize = {{ {LOCATION_ICON_WIDTH} -1 }}\n"
+                         f"{m.group(2)}maximumsize = {{ {LOCATION_ICON_WIDTH} -1 }}\n"
+                         f"{m.group(2)}layoutpolicy_vertical = expanding\n"), t, what)
     start, end, ind = _cut(t, r'^([ \t]*)vbox = \{\n[ \t]*datacontext = "\[BuildingCandidate\.GetLocationToBuildItem\]"\n'
                               r'[ \t]*visible = "\[LocationToBuildItem\.HasConstructedBuildingLevels\]"\n[ \t]*spacing = 1\n'
                               r'[ \t]*datamodel = "\[LocationToBuildItem\.GetBuildingSlots\]"\n', what)
@@ -775,7 +790,8 @@ def port_building_view(t: str) -> str:
 
 def port_location_production(t: str) -> str:
     """The location view (after its food gauges): wider, the pp_ rows, the header's value columns (build cost label,
-    payback button; every sort leaves the payback order) and the list as vanilla's grid or the payback bands."""
+    payback button; every sort leaves the payback order; a spacer keeps them over the row's columns) and the list as
+    vanilla's grid or the payback bands."""
     what = "vanilla location view"
     w = BUILD_PANEL_WIDTH
     t = _once(r'^(lateralview = \{\n\tname = "location_production_lateralview"\n)',
@@ -802,8 +818,12 @@ def port_location_production(t: str) -> str:
                   + "\n" + h.group(0)), t, what)
     t = _once(r'^([ \t]*)(sort_by_key_button = \{\n[^\n]*\n[ \t]*size = \{ 70 -1 \}\n[ \t]*name = "production_efficiency")',
               r"\1expand = {} # PP: the value buttons sit over their columns\n\n\1\2", t, what)
-    t = _once(r'(sort_by_key_button = \{\n[^\n]*\n[ \t]*name = "level"\n)([ \t]*)using = layoutpolicy_expanding\n',
-              r"\1\2layoutpolicy_vertical = expanding\n\2size = { 125 -1 }\n", t, what)
+    t = _once(r'(sort_by_key_button = \{\n[^\n]*\n[ \t]*name = "level"\n)([ \t]*)using = layoutpolicy_expanding\n'
+              r"([ \t]*)\}\n",
+              lambda m: (f"{m.group(1)}{m.group(2)}layoutpolicy_vertical = expanding\n{m.group(2)}size = {{ 125 -1 }}\n"
+                         f"{m.group(3)}}}\n\n{m.group(3)}widget = {{ # PP: the buttons sit over the row's columns "
+                         f"(scrollbar, row margins)\n{m.group(2)}size = {{ {LOCATION_HEADER_SPACER} -1 }}\n"
+                         f"{m.group(3)}}}\n"), t, what)
     # the list: vanilla's grid (selected sort) or the payback bands, rows BUILD_ROW_WIDTH wide (flowcontainers)
     start, end, ind = _cut(t, r'^([ \t]*)blockoverride "scroll_list_layout" \{\n', what)
     block = t[start:end]

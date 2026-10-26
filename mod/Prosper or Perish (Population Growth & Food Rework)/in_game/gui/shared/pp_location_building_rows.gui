@@ -72,10 +72,10 @@ types PPLocationBuildingRows {
 					}
 
 					# icon
-					vbox = {
-						layoutpolicy_horizontal = expanding
+					vbox = { # PP: fixed width (vanilla: a ninth of the row)
+						minimumsize = { 58 -1 }
+						maximumsize = { 58 -1 }
 						layoutpolicy_vertical = expanding
-						layoutstretchfactor_horizontal = 1
 
 						using = bg_building_card_colors
 						blockoverride "building_color" {

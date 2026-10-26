@@ -2,12 +2,13 @@
 
 The engine compares every person of a location with its population capacity (Arable Land), so the vanilla gauge mixes
 land with housing: buildings and town ranks add capacity for the people they employ or house. This bar shows the land
-model instead, on one scale for two rows:
+model instead, as one bullet graph (2026-10-26, Jan: the first two-row version with a legend was too busy):
 
-- Land: the natural land (every capacity row that is neither an improvement, a building's land or housing), the land
-  the standing improvements add, and in grey the land the improvements could still add up to their caps.
-- Use: the land farms and reserved grounds take and the subsistence peasants (peasants without a job) who live off it;
-  the part of the row beyond the land there is now is tinted red.
+- the band is the land: natural land (every capacity row that is neither an improvement, a building's land or housing)
+  plus the land the standing improvements add, in green; in grey the land the improvements could still add at their caps.
+- the thin bar on it is the land in use: the land farms and reserved grounds take plus the subsistence peasants
+  (peasants without a job) who live off it; gold up to the land, red beyond it.
+- one line of text (used of land, %); the breakdown and the game's own count are in the tooltip.
 
 Everything is read from the files the game loads, in finalize (after the footprint and the World Builder caps):
 
@@ -341,13 +342,10 @@ pp_land_bar_scale = {
 	if = { limit = { pp_land_bar_used > pp_land_bar_max } value = pp_land_bar_used }
 	min = 0.001
 }
-pp_land_bar_f_natural = { value = pp_land_bar_natural divide = pp_land_bar_scale }
 pp_land_bar_f_land = { value = pp_land_bar_land divide = pp_land_bar_scale }
 pp_land_bar_f_max = { value = pp_land_bar_max divide = pp_land_bar_scale }
-pp_land_bar_f_farms = { value = pp_land_bar_farms divide = pp_land_bar_scale }
-pp_land_bar_f_taken = { value = pp_land_bar_taken divide = pp_land_bar_scale }
 pp_land_bar_f_used = { value = pp_land_bar_used divide = pp_land_bar_scale }
-pp_land_bar_f_beyond = { value = 1 subtract = pp_land_bar_f_land min = 0 }
+pp_land_bar_f_used_within = { value = pp_land_bar_f_used max = pp_land_bar_f_land }
 """
 
 HEADER = (
@@ -377,29 +375,30 @@ def render_script_values(m: Model) -> str:
     return "\n\n".join(part.strip("\n") if i else part.rstrip("\n") for i, part in enumerate(parts)) + "\n"
 
 
+def _v(name: str, digits: int = 0) -> str:
+    """A script value of the bar in localization (thousands of people, shown like the game's 295K)."""
+    return f"[LocationView.GetLocation.MakeScope.ScriptValue('{name}')|{digits}]K"
+
+
 LOC_TEXT = {
-    "PP_LAND_BAR_TITLE": "[population_capacity|E]: land and use",
-    "PP_LAND_BAR_UNIT": "in thousands of people",
-    "PP_LAND_BAR_LAND": "Land",
-    "PP_LAND_BAR_USE": "Use",
-    "PP_LAND_BAR_NATURAL": "Natural",
-    "PP_LAND_BAR_IMPROVEMENTS": "Improvements",
-    "PP_LAND_BAR_ROOM": "Room for improvements",
-    "PP_LAND_BAR_FARMS": "Farms",
-    "PP_LAND_BAR_RESERVED": "Reserved grounds",
-    "PP_LAND_BAR_SUBSISTENCE": "Subsistence peasants",
-    "PP_LAND_BAR_UNUSED": "Unused",
-    "PP_LAND_BAR_OVERUSED": "#R Overused#!",
-    "PP_LAND_BAR_HOUSING": "Housing",
-    "PP_LAND_BAR_LAND_TT": "The land of this location: its natural land and the land its improvements add. The grey part is "
-                           "the land the improvements could still add at their caps.",
-    "PP_LAND_BAR_USE_TT": "What uses the land: farms and reserved grounds take their land, and every subsistence peasant "
-                          "(a peasant without a job) lives off it. Beyond the red mark the land is overused.",
-    "PP_LAND_BAR_GAME_TT": "The game itself compares every person in this location with [population_capacity|E], those "
-                           "who work in buildings included. Buildings and town ranks add housing to it for them; this "
-                           "housing is not land and the bar leaves it out.",
-    "PP_LAND_BAR_GAME": "Game: [LocationView.GetLocation.GetTotalPopulation] people, [population_capacity|E] "
-                        "[LocationView.GetLocation.GetPopulationCapacity] ([LocationView.GetLocation.GetCapacityPercentage|0]%)",
+    "PP_LAND_BAR_TITLE": "[population_capacity|E]",
+    "PP_LAND_BAR_SUMMARY": f"{_v('pp_land_bar_used')} of {_v('pp_land_bar_land')} used "
+                           "([LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_used_percent')|0]%)",
+    "PP_LAND_BAR_SUMMARY_OVER": f"#R {_v('pp_land_bar_used')} of {_v('pp_land_bar_land')} used "
+                                "([LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_used_percent')|0]%)#!",
+    "PP_LAND_BAR_TT": (
+        "[population_capacity|E]: land and its use\\n"
+        f"Land: {_v('pp_land_bar_natural')} natural + {_v('pp_land_bar_improvements')} from improvements = "
+        f"{_v('pp_land_bar_land')} (green)\\n"
+        f"Improvements could still add {_v('pp_land_bar_room')} (grey)\\n"
+        f"Used: {_v('pp_land_bar_farms')} by farms + {_v('pp_land_bar_reserved')} by reserved grounds + "
+        f"{_v('pp_land_bar_subsistence')} by subsistence peasants = {_v('pp_land_bar_used')} (gold; red beyond the land)\\n\\n"
+        "Farms take their land; subsistence peasants are peasants without a job who live off the land. The game itself "
+        "counts all [LocationView.GetLocation.GetTotalPopulation] people against "
+        "[LocationView.GetLocation.GetPopulationCapacity] [population_capacity|E] "
+        "([LocationView.GetLocation.GetCapacityPercentage|0]%), with housing from buildings and the town rank for the "
+        "people who work there."
+    ),
 }
 
 
@@ -417,10 +416,8 @@ _BAR = ('progressbar = {{ size = {{ 100% 100% }} progresstexture = "gfx/interfac
         'min = 0 max = 1 value = {value} direction = horizontal{extra} }}')
 _EMPTY = "gfx/interface/icons/unit_view/moral_bar_transparent.dds"
 _BACK = "gfx/interface/progressbars/progress_black.dds"
-TEXTURES = {
-    "natural": "progress_bar_green_alt", "improvements": "progress_bar_blue_alt", "room": "progress_bar_grey_alt",
-    "farms": "progress_bar_goldish", "reserved": "progress_bar_brown_alt", "subsistence": "progress_bar_orange",
-}
+TEXTURES = {"land": "progress_bar_green_alt", "room": "progress_bar_grey_alt", "used": "progress_bar_goldish",
+            "overused": "progress_bar_red_alt"}
 
 
 def _sv(name: str) -> str:
@@ -432,95 +429,47 @@ def _fraction(name: str) -> str:
 
 
 def _bar(texture: str, value: str, bottom: bool = False, extra: str = "") -> str:
-    """A bar layer; ``value`` is a data expression, or a plain number for a full swatch."""
-    shown = value if value.replace(".", "").isdigit() else f'"[{value}]"'
-    return _BAR.format(texture=texture, empty=_BACK if bottom else _EMPTY, value=shown, extra=extra)
-
-
-def _legend(part: str, key: str, value: str, visible: str | None = None) -> str:
-    gate = f' visible = "[{visible}]"' if visible else ""
-    swatch = (f'widget = {{ size = {{ 22 10 }} {_bar(TEXTURES[part], "1", bottom=True)} }}' if part in TEXTURES
-              else 'widget = { size = { 22 10 } }')
-    return (f'hbox = {{{gate} spacing = 4 {swatch} text_single = {{ text = "{key}" fontsize = 13 }} '
-            f'text_single = {{ raw_text = "[{_sv(value)}|1]" fontsize = 13 }} }}')
+    return _BAR.format(texture=TEXTURES[texture], empty=_BACK if bottom else _EMPTY, value=f'"[{value}]"', extra=extra)
 
 
 def gui_block(indent: str = "") -> str:
-    """The Arable Land panel, a full-width box under the location view's scene."""
-    land_bars = "\n".join([
-        _bar(TEXTURES["room"], _fraction("pp_land_bar_f_max"), bottom=True),
-        _bar(TEXTURES["improvements"], _fraction("pp_land_bar_f_land")),
-        _bar(TEXTURES["natural"], _fraction("pp_land_bar_f_natural")),
-    ])
-    use_bars = "\n".join([
-        _bar(TEXTURES["subsistence"], _fraction("pp_land_bar_f_used"), bottom=True),
-        _bar(TEXTURES["reserved"], _fraction("pp_land_bar_f_taken")),
-        _bar(TEXTURES["farms"], _fraction("pp_land_bar_f_farms")),
-        # from the right edge back to the end of the land: use beyond it shows tinted red
-        _bar("progress_red_transparent", _fraction("pp_land_bar_f_beyond"), extra=" invertprogress = yes alpha = 0.6"),
-    ])
+    """The Arable Land panel under the location view's scene: one bullet-graph bar and one line of text.
+
+    The band is the land (green, the grey end what improvements could still add); the thin bar on it is the land in
+    use (gold up to the land, red beyond it). The breakdown is in the tooltip.
+    """
     overused = f"GreaterThan_CFixedPoint({_sv('pp_land_bar_overused')}, '(CFixedPoint)0')"
-    block = f"""# PP: the Arable Land bar (arable_land_bar.py): land and its use on one scale, in thousands of people
+    band = "\n".join([_bar("room", _fraction("pp_land_bar_f_max"), bottom=True),
+                      _bar("land", _fraction("pp_land_bar_f_land"))])
+    use = "\n".join([_bar("overused", _fraction("pp_land_bar_f_used")),
+                     _bar("used", _fraction("pp_land_bar_f_used_within"))])
+    block = f"""# PP: the Arable Land bar (arable_land_bar.py): the land (band) and the land in use (thin bar), one scale
 vbox = {{
 	name = "pp_arable_land_bar"
 	layoutpolicy_horizontal = expanding
 	visible = "[HasPopBreakdownIntelOn({_LOC})]"
-	margin = {{ 12 8 }}
-	spacing = 5
+	margin = {{ 12 6 }}
+	spacing = 4
 	background = {{ using = color_dark_blue_texture alpha = 0.85 }}
+	tooltip = "PP_LAND_BAR_TT"
 
 	hbox = {{
 		layoutpolicy_horizontal = expanding
-		spacing = 8
-		text_single = {{ text = "PP_LAND_BAR_TITLE" default_format = "#yellow_titles" fontsize = 16 }}
-		text_single = {{ text = "PP_LAND_BAR_UNIT" fontsize = 12 alpha = 0.7 }}
+		text_single = {{ text = "PP_LAND_BAR_TITLE" default_format = "#yellow_titles" fontsize = 15 }}
 		expand = {{}}
-		text_single = {{ text = "PP_LAND_BAR_GAME" fontsize = 12 tooltip = "PP_LAND_BAR_GAME_TT" }}
+		text_single = {{ visible = "[Not({overused})]" text = "PP_LAND_BAR_SUMMARY" fontsize = 14 }}
+		text_single = {{ visible = "[{overused}]" text = "PP_LAND_BAR_SUMMARY_OVER" fontsize = 14 }}
 	}}
 
-	hbox = {{
+	widget = {{
 		layoutpolicy_horizontal = expanding
-		spacing = 8
-		tooltip = "PP_LAND_BAR_LAND_TT"
-		text_single = {{ text = "PP_LAND_BAR_LAND" size = {{ 44 22 }} autoresize = no fontsize = 14 align = left|vcenter }}
+		size = {{ -1 18 }}
+{_indent(band, 2)}
 		widget = {{
-			layoutpolicy_horizontal = expanding
-			size = {{ -1 22 }}
-{_indent(land_bars, 3)}
+			size = {{ 100% 8 }}
+			parentanchor = vcenter
+{_indent(use, 3)}
 		}}
-		text_single = {{ raw_text = "[{_sv('pp_land_bar_land')}|1] / [{_sv('pp_land_bar_max')}|1]" size = {{ 110 22 }} autoresize = no fontsize = 14 align = right|vcenter }}
-	}}
-
-	hbox = {{
-		layoutpolicy_horizontal = expanding
-		spacing = 8
-		tooltip = "PP_LAND_BAR_USE_TT"
-		text_single = {{ text = "PP_LAND_BAR_USE" size = {{ 44 22 }} autoresize = no fontsize = 14 align = left|vcenter }}
-		widget = {{
-			layoutpolicy_horizontal = expanding
-			size = {{ -1 22 }}
-{_indent(use_bars, 3)}
-		}}
-		text_single = {{ raw_text = "[{_sv('pp_land_bar_used')}|1] ([{_sv('pp_land_bar_used_percent')}|0]%)" size = {{ 110 22 }} autoresize = no fontsize = 14 align = right|vcenter }}
-	}}
-
-	hbox = {{
-		layoutpolicy_horizontal = expanding
-		spacing = 14
-		{_legend("natural", "PP_LAND_BAR_NATURAL", "pp_land_bar_natural")}
-		{_legend("improvements", "PP_LAND_BAR_IMPROVEMENTS", "pp_land_bar_improvements")}
-		{_legend("room", "PP_LAND_BAR_ROOM", "pp_land_bar_room")}
-		expand = {{}}
-	}}
-	hbox = {{
-		layoutpolicy_horizontal = expanding
-		spacing = 14
-		{_legend("farms", "PP_LAND_BAR_FARMS", "pp_land_bar_farms")}
-		{_legend("reserved", "PP_LAND_BAR_RESERVED", "pp_land_bar_reserved")}
-		{_legend("subsistence", "PP_LAND_BAR_SUBSISTENCE", "pp_land_bar_subsistence")}
-		{_legend("unused", "PP_LAND_BAR_UNUSED", "pp_land_bar_unused", f"Not({overused})")}
-		{_legend("overused", "PP_LAND_BAR_OVERUSED", "pp_land_bar_overused", overused)}
-		expand = {{}}
 	}}
 }}"""
     return _indent(block, 0, indent)

@@ -52,13 +52,10 @@ pp_land_bar_scale = {
 	if = { limit = { pp_land_bar_used > pp_land_bar_max } value = pp_land_bar_used }
 	min = 0.001
 }
-pp_land_bar_f_natural = { value = pp_land_bar_natural divide = pp_land_bar_scale }
 pp_land_bar_f_land = { value = pp_land_bar_land divide = pp_land_bar_scale }
 pp_land_bar_f_max = { value = pp_land_bar_max divide = pp_land_bar_scale }
-pp_land_bar_f_farms = { value = pp_land_bar_farms divide = pp_land_bar_scale }
-pp_land_bar_f_taken = { value = pp_land_bar_taken divide = pp_land_bar_scale }
 pp_land_bar_f_used = { value = pp_land_bar_used divide = pp_land_bar_scale }
-pp_land_bar_f_beyond = { value = 1 subtract = pp_land_bar_f_land min = 0 }
+pp_land_bar_f_used_within = { value = pp_land_bar_f_used max = pp_land_bar_f_land }
 
 # Land the standing improvements add (raw_modifier capacity per level)
 pp_land_bar_improvements_flat = {

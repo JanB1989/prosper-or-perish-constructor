@@ -1649,6 +1649,11 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
     view = location_view.apply(repo, project, mod_root, vanilla_root(repo, project))
     print("Location view: " + ("skipped, no geography export." if view.get("skipped") else
                                "location window and geography chip tooltips rebuilt."), flush=True)
+    from prosper_or_perish_constructor import arable_land_bar
+
+    land_bar = arable_land_bar.write(mod_root, cap_tooltips.game_root(vanilla_root(repo, project)))
+    print("Arable Land bar: " + ", ".join(f"{n} {what}" for what, n in land_bar.counts.items())
+          + (f" ({len(land_bar.changed)} files rewritten)." if land_bar.changed else " (unchanged)."), flush=True)
     gui_compat.strip(mod_root)   # the food-storage compile counts its gauge lines per file
     food_storage_gui_result = compile_food_storage_gui(
         repo=repo,

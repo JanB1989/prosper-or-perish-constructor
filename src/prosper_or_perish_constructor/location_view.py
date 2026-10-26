@@ -2,7 +2,8 @@
 
 The window is the World Builder export's (vanilla plus its native geography chips), re-patched with the mod's
 stored-food gauge, population-capacity readout, Water Access and Port chips, RGO and land-potential chips, the status
-chips (location_status.py) and the condition icons moved to the top left. The chip tooltips (attribute_tooltips.py)
+chips (location_status.py), the condition icons moved to the top left and the Arable Land bar under the scene
+(arable_land_bar.py). The chip tooltips (attribute_tooltips.py)
 read back the class injects and static modifiers the World Builder stage writes.
 
 Nothing here changes a game value, so it runs in the constructor's finalize step (every ``ppc build`` and ``ppc sync``)
@@ -15,7 +16,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from prosper_or_perish_constructor import attribute_tooltips, location_status
+from prosper_or_perish_constructor import arable_land_bar, attribute_tooltips, location_status
 from prosper_or_perish_constructor.worldbuilder.geography import EXPORT_BUILD_FILE, LOCATION_WINDOW
 
 _FOOD_PERCENT = 'value = "[FixedPointToFloat(Province.GetFoodCapacityPercent)]"'
@@ -568,7 +569,8 @@ def build_window(export_text: str, mod_root: Path, vanilla: Path | None, stored_
     merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla),
                                             location_status.load_stored_food_rows(mod_root, vanilla, stored_food))
     location_status.write_harvest_files(mod_root, harvests)
-    return show_every_timed_modifier(move_modifier_row(merged), shown_by_chips(mod_root, vanilla, goods, bool(harvests.keys)))
+    merged = show_every_timed_modifier(move_modifier_row(merged), shown_by_chips(mod_root, vanilla, goods, bool(harvests.keys)))
+    return arable_land_bar.add_to_window(merged)
 
 
 def apply(repo: Path, project: Path, mod_root: Path, vanilla: Path) -> dict[str, object]:

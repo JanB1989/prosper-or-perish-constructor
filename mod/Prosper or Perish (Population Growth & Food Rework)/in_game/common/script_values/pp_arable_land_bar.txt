@@ -57,6 +57,20 @@ pp_land_bar_f_max = { value = pp_land_bar_max divide = pp_land_bar_scale }
 pp_land_bar_f_used = { value = pp_land_bar_used divide = pp_land_bar_scale }
 pp_land_bar_f_used_within = { value = pp_land_bar_f_used max = pp_land_bar_f_land }
 
+# The capacity bar: what adds capacity (natural, improvements, housing) and the farms' land laid over it from the right
+pp_land_bar_positive = { value = pp_land_bar_land add = pp_land_bar_housing }
+pp_land_bar_capacity = { value = pp_land_bar_positive subtract = pp_land_bar_taken }
+pp_land_bar_multiplier_percent = { value = pp_land_bar_multiplier subtract = 1 multiply = 100 }
+pp_land_bar_capacity_scale = {
+	value = pp_land_bar_positive
+	if = { limit = { pp_land_bar_taken > pp_land_bar_positive } value = pp_land_bar_taken }
+	min = 0.001
+}
+pp_land_bar_f_natural = { value = pp_land_bar_natural divide = pp_land_bar_capacity_scale }
+pp_land_bar_f_natural_improvements = { value = pp_land_bar_land divide = pp_land_bar_capacity_scale }
+pp_land_bar_f_positive = { value = pp_land_bar_positive divide = pp_land_bar_capacity_scale }
+pp_land_bar_f_taken = { value = pp_land_bar_taken divide = pp_land_bar_capacity_scale }
+
 # Land the standing improvements add (raw_modifier capacity per level)
 pp_land_bar_improvements_flat = {
 	value = 0

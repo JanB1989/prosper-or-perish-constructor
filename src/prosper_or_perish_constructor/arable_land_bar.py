@@ -2,13 +2,15 @@
 
 The engine compares every person of a location with its population capacity (Arable Land), so the vanilla gauge mixes
 land with housing: buildings and town ranks add capacity for the people they employ or house. This bar shows the land
-model instead, as one bullet graph (2026-10-26, Jan: the first two-row version with a legend was too busy):
+model's capacity side (2026-10-26, Jan: first nail the capacity, the population comes later; the land-vs-use versions
+before were too busy):
 
-- the band is the land: natural land (every capacity row that is neither an improvement, a building's land or housing)
-  plus the land the standing improvements add, in green; in grey the land the improvements could still add at their caps.
-- the thin bar on it is the land in use: the land farms and reserved grounds take plus the subsistence peasants
-  (peasants without a job) who live off it; gold up to the land, red beyond it.
-- one line of text (used of land, %); the breakdown and the game's own count are in the tooltip.
+- the bar's length is everything that adds capacity: natural land (green; every capacity row that is neither an
+  improvement, a building's land or housing), improvements (blue) and housing from buildings and the town rank
+  (purple); the land farms and reserved grounds take is laid over it from the right (brown). What stays clear is the
+  location's Arable Land, the engine's capacity.
+- under it the same as an equation of colour swatches and numbers; the words and the room for improvements are in the
+  tooltip. The land-use values (subsistence peasants, used, scale) stay in the script values for the next step.
 
 Everything is read from the files the game loads, in finalize (after the footprint and the World Builder caps):
 
@@ -346,6 +348,20 @@ pp_land_bar_f_land = { value = pp_land_bar_land divide = pp_land_bar_scale }
 pp_land_bar_f_max = { value = pp_land_bar_max divide = pp_land_bar_scale }
 pp_land_bar_f_used = { value = pp_land_bar_used divide = pp_land_bar_scale }
 pp_land_bar_f_used_within = { value = pp_land_bar_f_used max = pp_land_bar_f_land }
+
+# The capacity bar: what adds capacity (natural, improvements, housing) and the farms' land laid over it from the right
+pp_land_bar_positive = { value = pp_land_bar_land add = pp_land_bar_housing }
+pp_land_bar_capacity = { value = pp_land_bar_positive subtract = pp_land_bar_taken }
+pp_land_bar_multiplier_percent = { value = pp_land_bar_multiplier subtract = 1 multiply = 100 }
+pp_land_bar_capacity_scale = {
+	value = pp_land_bar_positive
+	if = { limit = { pp_land_bar_taken > pp_land_bar_positive } value = pp_land_bar_taken }
+	min = 0.001
+}
+pp_land_bar_f_natural = { value = pp_land_bar_natural divide = pp_land_bar_capacity_scale }
+pp_land_bar_f_natural_improvements = { value = pp_land_bar_land divide = pp_land_bar_capacity_scale }
+pp_land_bar_f_positive = { value = pp_land_bar_positive divide = pp_land_bar_capacity_scale }
+pp_land_bar_f_taken = { value = pp_land_bar_taken divide = pp_land_bar_capacity_scale }
 """
 
 HEADER = (
@@ -376,28 +392,22 @@ def render_script_values(m: Model) -> str:
 
 
 def _v(name: str, digits: int = 0) -> str:
-    """A script value of the bar in localization (thousands of people, shown like the game's 295K)."""
+    """A script value of the bar in text (thousands of people, shown like the game's 295K)."""
     return f"[LocationView.GetLocation.MakeScope.ScriptValue('{name}')|{digits}]K"
 
 
 LOC_TEXT = {
     "PP_LAND_BAR_TITLE": "[population_capacity|E]",
-    "PP_LAND_BAR_SUMMARY": f"{_v('pp_land_bar_used')} of {_v('pp_land_bar_land')} used "
-                           "([LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_used_percent')|0]%)",
-    "PP_LAND_BAR_SUMMARY_OVER": f"#R {_v('pp_land_bar_used')} of {_v('pp_land_bar_land')} used "
-                                "([LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_used_percent')|0]%)#!",
     "PP_LAND_BAR_TT": (
-        "[population_capacity|E]: land and its use\\n"
-        f"Land: {_v('pp_land_bar_natural')} natural + {_v('pp_land_bar_improvements')} from improvements = "
-        f"{_v('pp_land_bar_land')} (green)\\n"
-        f"Improvements could still add {_v('pp_land_bar_room')} (grey)\\n"
-        f"Used: {_v('pp_land_bar_farms')} by farms + {_v('pp_land_bar_reserved')} by reserved grounds + "
-        f"{_v('pp_land_bar_subsistence')} by subsistence peasants = {_v('pp_land_bar_used')} (gold; red beyond the land)\\n\\n"
-        "Farms take their land; subsistence peasants are peasants without a job who live off the land. The game itself "
-        "counts all [LocationView.GetLocation.GetTotalPopulation] people against "
-        "[LocationView.GetLocation.GetPopulationCapacity] [population_capacity|E] "
-        "([LocationView.GetLocation.GetCapacityPercentage|0]%), with housing from buildings and the town rank for the "
-        "people who work there."
+        "How this location's [population_capacity|E] is made up:\\n"
+        f"Natural land (green): {_v('pp_land_bar_natural')}\\n"
+        f"Improvements (blue): {_v('pp_land_bar_improvements')}\\n"
+        f"Housing from buildings and the town rank (purple): {_v('pp_land_bar_housing')}\\n"
+        f"Taken by farms (brown strip; the bar is dimmed above it): -{_v('pp_land_bar_taken')}\\n"
+        f"= {_v('pp_land_bar_capacity')}, the bright part of the bar\\n\\n"
+        "Every value includes this location's capacity modifiers "
+        "([LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_multiplier_percent')|+=0]%). "
+        f"Improvements could still add {_v('pp_land_bar_room')}."
     ),
 }
 
@@ -416,8 +426,8 @@ _BAR = ('progressbar = {{ size = {{ 100% 100% }} progresstexture = "gfx/interfac
         'min = 0 max = 1 value = {value} direction = horizontal{extra} }}')
 _EMPTY = "gfx/interface/icons/unit_view/moral_bar_transparent.dds"
 _BACK = "gfx/interface/progressbars/progress_black.dds"
-TEXTURES = {"land": "progress_bar_green_alt", "room": "progress_bar_grey_alt", "used": "progress_bar_goldish",
-            "overused": "progress_bar_red_alt"}
+TEXTURES = {"natural": "progress_bar_green_alt", "improvements": "progress_bar_blue_alt",
+            "housing": "progress_bar_purple", "taken": "progress_bar_brown_alt", "dim": "progress_black"}
 
 
 def _sv(name: str) -> str:
@@ -429,47 +439,77 @@ def _fraction(name: str) -> str:
 
 
 def _bar(texture: str, value: str, bottom: bool = False, extra: str = "") -> str:
-    return _BAR.format(texture=TEXTURES[texture], empty=_BACK if bottom else _EMPTY, value=f'"[{value}]"', extra=extra)
+    """A bar layer; ``value`` is a data expression, or a plain number (a full swatch)."""
+    shown = value if value.replace(".", "").isdigit() else f'"[{value}]"'
+    return _BAR.format(texture=TEXTURES[texture], empty=_BACK if bottom else _EMPTY, value=shown, extra=extra)
+
+
+def _term(part: str, value: str, sign: str = "") -> str:
+    """One term of the equation under the bar: its colour swatch and its value (raw text: numbers only)."""
+    return (f'hbox = {{ spacing = 4 widget = {{ size = {{ 16 10 }} {_bar(part, "1", bottom=True)} }} '
+            f'text_single = {{ raw_text = "{sign}{_v(value)}" fontsize = 14 }} }}')
+
+
+def _op(symbol: str) -> str:
+    return f'text_single = {{ raw_text = "{symbol}" fontsize = 14 alpha = 0.7 }}'
 
 
 def gui_block(indent: str = "") -> str:
-    """The Arable Land panel under the location view's scene: one bullet-graph bar and one line of text.
+    """The Arable Land panel under the location view's scene: what the capacity is made of, as one bar.
 
-    The band is the land (green, the grey end what improvements could still add); the thin bar on it is the land in
-    use (gold up to the land, red beyond it). The breakdown is in the tooltip.
+    The bar's length is everything that adds capacity: natural land (green), improvements (blue) and housing from
+    buildings and the town rank (purple). The farms' land is laid over it from the right (brown); what stays clear is
+    the location's Arable Land. Under it the same as an equation of swatches and numbers; the words are in the tooltip.
     """
-    overused = f"GreaterThan_CFixedPoint({_sv('pp_land_bar_overused')}, '(CFixedPoint)0')"
-    band = "\n".join([_bar("room", _fraction("pp_land_bar_f_max"), bottom=True),
-                      _bar("land", _fraction("pp_land_bar_f_land"))])
-    use = "\n".join([_bar("overused", _fraction("pp_land_bar_f_used")),
-                     _bar("used", _fraction("pp_land_bar_f_used_within"))])
-    block = f"""# PP: the Arable Land bar (arable_land_bar.py): the land (band) and the land in use (thin bar), one scale
+    stack = "\n".join([
+        _bar("housing", _fraction("pp_land_bar_f_positive"), bottom=True),
+        _bar("improvements", _fraction("pp_land_bar_f_natural_improvements")),
+        _bar("natural", _fraction("pp_land_bar_f_natural")),
+        # the farms' share dims the stack from the right, so every part stays visible under it
+        _bar("dim", _fraction("pp_land_bar_f_taken"), extra=" invertprogress = yes alpha = 0.65"),
+    ])
+    strip = _bar("taken", _fraction("pp_land_bar_f_taken"), extra=" invertprogress = yes")
+    bar = f"""widget = {{
+	size = {{ 100% 15 }}
+{_indent(stack, 1)}
+}}
+widget = {{
+	size = {{ 100% 5 }}
+	parentanchor = bottom
+{_indent(strip, 1)}
+}}"""
+    equation = "\n".join([
+        _term("natural", "pp_land_bar_natural"), _op("+"),
+        _term("improvements", "pp_land_bar_improvements"), _op("+"),
+        _term("housing", "pp_land_bar_housing"), _op("-"),
+        _term("taken", "pp_land_bar_taken"), _op("="),
+        f'text_single = {{ raw_text = "{_v("pp_land_bar_capacity")}" fontsize = 15 default_format = "#yellow_titles" }}',
+    ])
+    block = f"""# PP: the Arable Land bar (arable_land_bar.py): what adds capacity, the farms' land laid over it from the right
 vbox = {{
 	name = "pp_arable_land_bar"
 	layoutpolicy_horizontal = expanding
-	visible = "[HasPopBreakdownIntelOn({_LOC})]"
 	margin = {{ 12 6 }}
-	spacing = 4
+	spacing = 5
 	background = {{ using = color_dark_blue_texture alpha = 0.85 }}
 	tooltip = "PP_LAND_BAR_TT"
 
 	hbox = {{
 		layoutpolicy_horizontal = expanding
+		spacing = 10
 		text_single = {{ text = "PP_LAND_BAR_TITLE" default_format = "#yellow_titles" fontsize = 15 }}
-		expand = {{}}
-		text_single = {{ visible = "[Not({overused})]" text = "PP_LAND_BAR_SUMMARY" fontsize = 14 }}
-		text_single = {{ visible = "[{overused}]" text = "PP_LAND_BAR_SUMMARY_OVER" fontsize = 14 }}
+		widget = {{
+			layoutpolicy_horizontal = expanding
+			size = {{ -1 21 }}
+{_indent(bar, 3)}
+		}}
 	}}
 
-	widget = {{
+	hbox = {{
 		layoutpolicy_horizontal = expanding
-		size = {{ -1 18 }}
-{_indent(band, 2)}
-		widget = {{
-			size = {{ 100% 8 }}
-			parentanchor = vcenter
-{_indent(use, 3)}
-		}}
+		spacing = 8
+		expand = {{}}
+{_indent(equation, 2)}
 	}}
 }}"""
     return _indent(block, 0, indent)

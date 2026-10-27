@@ -312,33 +312,46 @@ def _segment(share: str, texture: str, label: str = "") -> str:
         text = (f'\n\ttext_single = {{ parentanchor = center fontsize = 12 raw_text = "{label}" '
                 f"visible = \"[GreaterThan_float({share}, '(float){_LABEL_SHARE}')]\" }}")
     return f"""widget = {{
-	size = "[ToVector2f(Multiply_float({share}, '(float){BAR_WIDTH}'), '(float)16')]"
+	size = "[ToVector2f(Multiply_float({share}, '(float){BAR_WIDTH}'), '(float)18')]"
 	visible = "[GreaterThan_float({share}, '(float)0')]"
 	{_bar(texture, "1", bottom=True)}{text}
 }}"""
 
 
-def _row(label: str, segments: list[str]) -> str:
-    """A labelled bar: the label in a fixed column and a fixed bar width, so both bars start at the same x and their
-    parts line up on one scale."""
+def _label(key: str) -> str:
+    return (f'widget = {{ size = {{ {LABEL_WIDTH} 18 }} text_single = {{ text = "{key}" parentanchor = vcenter fontsize = 14 '
+            f'default_format = "#yellow_titles" }} }}')
+
+
+def _bar_track(segments: list[str]) -> str:
+    """One bar: a BAR_WIDTH x 18 track, its parts laid from the left edge."""
     parts = "\n".join(segments)
+    return f"""widget = {{
+	size = {{ {BAR_WIDTH} 18 }}
+	background = {{ texture = "{_BACK}" alpha = 0.6 }}
+	hbox = {{
+		size = {{ 100% 100% }}
+{_indent(parts, 2)}
+		expand = {{}}
+	}}
+}}"""
+
+
+def _bars(rows: list[tuple[str, list[str]]]) -> str:
+    """The labels in one column and the bars in another, each bar a track of the same width in the same column: both
+    bars start at the same x whatever their labels (in rows of their own they did not, 2026-10-27)."""
+    labels = "\n".join(_label(key) for key, _ in rows)
+    tracks = "\n".join(_bar_track(segments) for _, segments in rows)
     return f"""hbox = {{
-	layoutpolicy_horizontal = expanding
 	spacing = 8
-	widget = {{
-		size = {{ {LABEL_WIDTH} 18 }}
-		text_single = {{ text = "{label}" parentanchor = vcenter fontsize = 14 default_format = "#yellow_titles" }}
+	vbox = {{
+		spacing = 4
+{_indent(labels, 2)}
 	}}
-	widget = {{
-		size = {{ {BAR_WIDTH} 16 }}
-		background = {{ texture = "{_BACK}" alpha = 0.6 }}
-		hbox = {{
-			size = {{ 100% 100% }}
-{_indent(parts, 3)}
-			expand = {{}}
-		}}
+	vbox = {{
+		spacing = 4
+{_indent(tracks, 2)}
 	}}
-	expand = {{}}
 }}"""
 
 
@@ -365,12 +378,12 @@ def gui_block(indent: str = "", land_state: str = "") -> str:
     in the bars' tooltip.
     """
     over = _clamp0(f"Subtract_float({_f('pp_land_bar_population')}, {_f('pp_land_bar_capacity')})")
-    population = _row("PP_LAND_BAR_POPULATION", [
+    population = ("PP_LAND_BAR_POPULATION", [
         _segment(_share("townsfolk"), "townsfolk", _k(_sv("pp_land_bar_townsfolk"))),
         _segment(_part("within", "townsfolk"), "subsistence", _k(_sv("pp_land_bar_subsistence"))),
         _segment(_part("population", "within"), "over", _k(over, "+")),
     ])
-    capacity = _row("PP_LAND_BAR_CAPACITY", [
+    capacity = ("PP_LAND_BAR_CAPACITY", [
         _segment(_share("townsfolk_room"), "townsfolk", _k(_sv("pp_land_bar_townsfolk_room"))),
         _segment(_part("capacity", "townsfolk_room"), "land", _k(_sv("pp_land_bar_left_shown"))),
         _segment(_part("land", "capacity"), "farms", _k(_sv("pp_land_bar_farms"))),
@@ -394,11 +407,10 @@ vbox = {{
 	hbox = {{
 		layoutpolicy_horizontal = expanding
 		spacing = 8
-		vbox = {{
-			spacing = 4
+		widget = {{
+			size = {{ {LABEL_WIDTH + 8 + BAR_WIDTH} 40 }}
 			tooltip = "PP_LAND_BAR_TT"
-{_indent(population, 3)}
-{_indent(capacity, 3)}
+{_indent(_bars([population, capacity]), 3)}
 		}}
 		expand = {{}}
 {_indent(land_state, 2)}

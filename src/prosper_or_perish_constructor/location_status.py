@@ -67,7 +67,7 @@ STORED_FOOD_STEP = "pp_stored_food_step"   # the carried step, -1 without one (s
 _ANCHOR = "\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\t# BOTTOM CONDITIONS\n"
 _SPLIT = len("\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n")   # after the IO/periphora hbox, inside the row widget
 # Three visible chips of 30 px, 5 px apart, inside the card's 10/8 px margins (the bottom card's sizes).
-_CARD_SIZE = "{ 120 46 }"
+_CARD_SIZE = "{ 85 46 }"   # two 30 px chips (food, harvest), 5 apart, 10 margin each side (the land chip left 2026-10-27)
 _LOC = "LocationView.GetLocation"
 _ICONS = "gfx/interface/icons"
 LAND_ICONS = "pp_arable_land"   # abundant / available / overused .dds under _ICONS (tools/build_arable_land_icons.py)

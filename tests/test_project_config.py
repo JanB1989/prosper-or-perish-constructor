@@ -2504,7 +2504,7 @@ def test_pp_law_adjustments_use_existing_modifier_types() -> None:
     assert "trade_sea_efficiency = small_trade_efficiency_bonus" in text
 
 
-def test_prosperity_advances_keep_capacity_without_global_goods_output() -> None:
+def test_prosperity_advances_cut_peasant_food_consumption_without_capacity_or_goods_output() -> None:
     entries = {entry.key: entry.value for entry in parse_file(PROSPERITY_ADVANCES).entries}
     checked_advances = (
         "TRY_INJECT:fertile_lands",
@@ -2515,13 +2515,14 @@ def test_prosperity_advances_keep_capacity_without_global_goods_output() -> None
         "TRY_INJECT:food_advance_absolutism",
         "TRY_INJECT:rotherham_plough",
     )
-    expected_capacity = {
-        "TRY_INJECT:fertile_lands": 0.05,
-        "TRY_INJECT:food_advance_renaissance": 0.05,
-        "TRY_INJECT:new_world_crops": 0.06,
-        "TRY_INJECT:food_advance_reformation": 0.07,
-        "TRY_INJECT:food_advance_absolutism": 0.08,
-        "TRY_INJECT:rotherham_plough": 0.09,
+    # 2026-10-27 (Jan): the former capacity % (5/5/6/7/8/9) at half size, rounded to whole percent
+    expected_consumption = {
+        "TRY_INJECT:fertile_lands": -0.03,
+        "TRY_INJECT:food_advance_renaissance": -0.03,
+        "TRY_INJECT:new_world_crops": -0.03,
+        "TRY_INJECT:food_advance_reformation": -0.04,
+        "TRY_INJECT:food_advance_absolutism": -0.04,
+        "TRY_INJECT:rotherham_plough": -0.05,
     }
 
     for advance in checked_advances:
@@ -2534,9 +2535,19 @@ def test_prosperity_advances_keep_capacity_without_global_goods_output() -> None
             if key.startswith("global_") and key.endswith("_output_modifier")
         ]
         assert output_keys == []
-        assert "global_peasants_food_consumption" not in values
-        if advance in expected_capacity:
-            assert values["global_population_capacity_modifier"] == expected_capacity[advance]
+        assert "global_population_capacity_modifier" not in values
+        assert values.get("global_peasants_food_consumption") == expected_consumption.get(advance), advance
+
+
+def test_capitals_and_colonial_nations_give_no_population_capacity_percent() -> None:
+    profile = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").profile("constructor")
+    statics = {entry.key: entry.value for entry in load_merged_directory(profile, "static_modifiers", scope="main_menu").entries}
+    for name in ("capital", "province_capital"):
+        net = sum(e.value for e in statics[name].entries if e.key == "local_population_capacity_modifier")
+        assert abs(net) < 1e-9, (name, net)
+    subjects = {entry.key: entry.value for entry in load_merged_directory(profile, "subject_types").entries}
+    subject_modifier = _entry_values(subjects["colonial_nation"])["subject_modifier"]
+    assert "global_population_capacity_modifier" not in _entry_values(subject_modifier)
 
 
 def test_land_vs_naval_output_modifiers_are_capped_and_targeted() -> None:

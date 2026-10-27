@@ -98,7 +98,7 @@ REPLACE:colonial_nation = {
 	}
 
 	subject_modifier = {
-		global_population_capacity_modifier = 0.10
+		# PP: no population capacity % (vanilla 0.10; 2026-10-27, Jan: capacity is farmland)
 		allow_rgo_slave_demand = yes
 		loyalty_to_overlord = 20
 		# PP: a raw-material economy. RGOs at 1.5x full yield (the -0.5 country base value in

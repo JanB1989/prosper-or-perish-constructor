@@ -68,14 +68,15 @@ UNLOCK_COLLECTIONS = {
 # A vanilla update that changes a replaced advance shows up here: merge the change into the REPLACE unless the mod
 # overrides that line on purpose, then update this table.
 DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
-    # Public Health (2026-10-05): growth comes only from food, so growth -> disease resistance + population capacity
+    # Public Health (2026-10-05): growth comes only from food, so growth -> disease resistance; the population
+    # capacity % that came with it became more resistance on 2026-10-27 (Jan: capacity is farmland)
     "sanitation_advance": (
         {"global_disease_resistance = 0.07", "global_population_growth = 0.001"},
-        {"global_disease_resistance = 0.1", "global_population_capacity_modifier = 0.05"},
+        {"global_disease_resistance = 0.12"},
     ),
     "vaccination_advance": (
         {"global_disease_resistance = 0.07", "global_population_growth = 0.002"},
-        {"global_disease_resistance = 0.12", "global_population_capacity_modifier = 0.08"},
+        {"global_disease_resistance = 0.15"},
     ),
     # trade (2026-10-07, Jan): a little cheaper merchants for the printing countries
     "printing_press_advance": (

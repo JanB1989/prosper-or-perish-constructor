@@ -23,46 +23,48 @@ TRY_INJECT:thrive_under_persecution = {
 TRY_INJECT:paschal_cycle = {
 	global_devastation_recovery = -0.0015
 }
+# Capacity % -> peasant food consumption (2026-10-27, Jan): no advance gives population capacity any more (capacity is
+# farmland); each former capacity % became a peasant food consumption cut at half its size, rounded to whole percent.
 TRY_INJECT:fertile_lands = {
-	global_population_capacity_modifier = 0.05
+	global_peasants_food_consumption = -0.03   # was global_population_capacity_modifier = 0.05
 }
 # Serfdom: keep the food-pressure change without broad per-good output bonuses
 TRY_INJECT:serfdom = {
 	ai_weight = { add = 15 }
 }
-# Food advances: keep storage/capacity effects without broad per-good output bonuses
+# Food advances: storage and peasant food consumption, without broad per-good output bonuses
 # food_advance_renaissance: Herring Buss (c.1415), cookshop-aligned goods
 TRY_INJECT:food_advance_renaissance = {
 	global_food_capacity_modifier = 0.06
 	ai_weight = { add = 15 }
-	global_population_capacity_modifier = 0.05
+	global_peasants_food_consumption = -0.03   # was global_population_capacity_modifier = 0.05
 }
 # new_world_crops: Columbian Exchange - potato 2-4x caloric yield, maize adoption
 TRY_INJECT:new_world_crops = {
 	global_food_capacity_modifier = 0.08
 	global_food_capacity = 20
 	ai_weight = { add = 15 }
-	global_population_capacity_modifier = 0.06
+	global_peasants_food_consumption = -0.03   # was global_population_capacity_modifier = 0.06
 	global_food_decay = -0.0008   # [age_food] age_3_discovery (age_food.py)
 }
 # food_advance_reformation: Grand Banks Cod, early Columbian adoption
 TRY_INJECT:food_advance_reformation = {
 	global_food_capacity_modifier = 0.10
 	ai_weight = { add = 15 }
-	global_population_capacity_modifier = 0.07
+	global_peasants_food_consumption = -0.04   # was global_population_capacity_modifier = 0.07
 	global_food_decay = -0.0005   # [age_food] age_4_reformation (age_food.py)
 }
 # food_advance_absolutism: Norfolk Four-Course, Seed Drill, Scientific Animal Husbandry
 TRY_INJECT:food_advance_absolutism = {
 	global_food_capacity_modifier = 0.12
 	ai_weight = { add = 15 }
-	global_population_capacity_modifier = 0.08
+	global_peasants_food_consumption = -0.04   # was global_population_capacity_modifier = 0.08
 	global_food_decay = -0.0005   # [age_food] age_5_absolutism (age_food.py)
 }
 # rotherham_plough: Reaper, Steel Plow, Guano, Steam Trawling (fish 50% – pp_steam_trawling adds 100%)
 TRY_INJECT:rotherham_plough = {
 	global_food_capacity_modifier = 0.12
 	ai_weight = { add = 15 }
-	global_population_capacity_modifier = 0.09
+	global_peasants_food_consumption = -0.05   # was global_population_capacity_modifier = 0.09
 }
 # There are other modifiers from gods or religious_aspects maybe worth changing aswell

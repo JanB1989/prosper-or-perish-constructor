@@ -9,10 +9,10 @@ FILE = MOD_ROOT / "in_game/common/advances/pp_public_health_advances_adjustments
 VANILLA_ADVANCES = Path.home() / ".cache/eu5-vanilla/game/in_game/common/advances"
 
 # Public Health (2026-10-05, Jan): growth comes only from food and storage, so the 1.4 growth lines became disease
-# resistance and population capacity.
+# resistance; their population capacity % became more resistance on 2026-10-27 (a third of it: +0.02 / +0.03).
 EXPECTED = {
-    "sanitation_advance": {"global_disease_resistance": 0.10, "global_population_capacity_modifier": 0.05},
-    "vaccination_advance": {"global_disease_resistance": 0.12, "global_population_capacity_modifier": 0.08},
+    "sanitation_advance": {"global_disease_resistance": 0.12},
+    "vaccination_advance": {"global_disease_resistance": 0.15},
 }
 
 
@@ -20,14 +20,15 @@ def _blocks(text: str) -> dict[str, str]:
     return {m.group(1): m.group(2) for m in re.finditer(r"(?ms)^TRY_REPLACE:(\w+) = \{\n(.*?)\n\}", text)}
 
 
-def test_public_health_advances_trade_growth_for_resistance_and_capacity() -> None:
+def test_public_health_advances_trade_growth_and_capacity_for_resistance() -> None:
     raw = FILE.read_bytes()
     assert raw.startswith(b"\xef\xbb\xbf")
     blocks = _blocks(raw.decode("utf-8-sig"))
     assert set(blocks) == set(EXPECTED)
     for name, values in EXPECTED.items():
-        body = blocks[name]
-        assert "population_growth =" not in re.sub(r"#.*", "", body), name
+        body = re.sub(r"#.*", "", blocks[name])
+        assert "population_growth =" not in body, name
+        assert "population_capacity" not in body, name
         for key, value in values.items():
             assert re.search(rf"(?m)^\s*{key} = {value:.2f}\b", body), (name, key)
 

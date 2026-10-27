@@ -464,9 +464,11 @@ TRY_INJECT:is_port = {
 }
 TRY_INJECT:capital = {
 	free_building_levels = 1
+	local_population_capacity_modifier = -0.10   # vanilla 0.10: no capacity % (2026-10-27, Jan: capacity is farmland)
 }
 TRY_INJECT:province_capital = {
 	free_building_levels = 2
+	local_population_capacity_modifier = -0.05   # vanilla 0.05: no capacity % (2026-10-27, Jan: capacity is farmland)
 }
 
 # Vanilla defines this static modifier in main_menu/common/static_modifiers/location.txt.

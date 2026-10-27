@@ -8,9 +8,10 @@ The engine still compares the whole population with that capacity, so the panel 
 - Population: the townsfolk (grey), then the subsistence peasants (yellow, one part with their whole number); the part
   of them beyond the capacity is marked over the yellow (a red tint with red edges), its number in the tooltip.
 - Population capacity: the same townsfolk (grey: they cancel out), then the arable land left (green: the location's
-  land and improvements after the farms), then past the end of the capacity the land the farms use (a darker, olive
-  green: the land is there, the farms take it; a gross bar with the capacity line as its net, 2026-10-27, Jan), then
-  the land the improvements still buildable here could add (a lighter, paler green).
+  land and improvements after the farms), then past the end of the capacity the land the farms hold (green with brown
+  stripes: the land is there, the farms take it; a gross bar with the capacity line as its net, 2026-10-27, Jan), then
+  the land the improvements still buildable here could add (an empty slot: faint green in a green frame; striped like
+  the farms it read alike, 2026-10-27).
 - two thin lines across both bars at the engine's land state thresholds (2026-10-27, Jan): 10 % of the capacity (left
   of it abundant free land, which also needs fewer than 10,000 people) and the capacity (right of it overpopulation),
   labelled "10%" and "100%" above the bars.
@@ -423,11 +424,15 @@ _BAR = ('progressbar = {{ size = {{ 100% 100% }} progresstexture = "gfx/interfac
 _EMPTY = "gfx/interface/icons/unit_view/moral_bar_transparent.dds"
 _BACK = "gfx/interface/progressbars/progress_black.dds"
 TEXTURES = {"townsfolk": "progress_bar_grey_alt", "subsistence": "progress_bar_yellow", "over": "progress_bar_red",
-            "land": "pp_land_bar_land", "farms": "pp_land_bar_farms", "room": "pp_land_bar_room"}
-# the land in three greens (2026-10-27, Jan: three shades, plain, darker than vanilla's for contrast; stripes and an
-# empty slot were convoluted): the arable land left, the land the farms use darker and towards olive, the land
-# improvements could add lighter and paler; vanilla's green recoloured by tools/build_land_bar_shades.py
-SHADES = {part: Path(f"gfx/interface/progressbars/{TEXTURES[part]}.dds") for part in ("land", "farms", "room")}
+            "land": "progress_bar_green_alt", "farms": "progress_bar_green_alt", "room": "progress_bar_green_alt"}
+# the two parts past the capacity, told apart at a glance (2026-10-27, Jan: both striped read alike): the farms' land is
+# used land, the green with brown stripes (tools/build_land_bar_hatch.py); the room for improvements is land that can
+# still be added, an empty slot (a faint green with a green frame)
+ALPHA = {"room": 0.2}
+HATCHES = {"farms": Path("gfx/interface/progressbars/pp_land_bar_farms_hatch.dds")}
+FRAMED = {"room"}
+# numbers on stripes sit on a dark plate (unreadable on the stripes in game, 2026-10-27)
+PLATED = set(HATCHES)
 # the threshold lines: a light 1 px core in a dark 3 px line (reads on the dark panel and on every bar colour)
 _LINE_LIGHT = "gfx/interface/progressbars/progress_bar_whiteish.dds"
 
@@ -440,17 +445,32 @@ def _fraction(name: str) -> str:
     return f"FixedPointToFloat({_sv(name)})"
 
 
-def _bar(texture: str, value: str, bottom: bool = False, extra: str = "") -> str:
-    """A bar layer; ``value`` is a data expression, or a plain number (a full swatch)."""
+def _bar(texture: str, value: str, bottom: bool = False, extra: str = "", edge: int = 1) -> str:
+    """A bar layer; ``value`` is a data expression, or a plain number (a full swatch); a framed part's frame ``edge``
+    px wide."""
     shown = value if value.replace(".", "").isdigit() else f'"[{value}]"'
-    return _BAR.format(texture=TEXTURES[texture], empty=_BACK if bottom else _EMPTY, value=shown, extra=extra)
+    if texture in ALPHA:
+        extra += f" alpha = {ALPHA[texture]}"
+    bar = _BAR.format(texture=TEXTURES[texture], empty=_EMPTY if texture in ALPHA else (_BACK if bottom else _EMPTY),
+                      value=shown, extra=extra)
+    if texture in HATCHES:   # tiled like vanilla's striped overlays (texture density 2)
+        bar += (f' widget = {{ size = {{ 100% 100% }} background = {{ texture = "{HATCHES[texture].as_posix()}" '
+                f'spriteType = Corneredtiled spriteborder = {{ 0 0 }} texture_density = 2 }} }}')
+    if texture in FRAMED:
+        bar += f" widget = {{ size = {{ 100% 100% }} {_frame(TEXTURES[texture], edge)} }}"
+    return bar
 
 
 def _over_mark(edge: int) -> str:
     """The over-capacity mark laid over the yellow: a red frame ``edge`` px wide, nothing inside, so the yellow stays
     yellow (these are subsistence peasants, the ones beyond the capacity). A red tint over the yellow read orange in
     game, like the farms' brown (2026-10-27)."""
-    texture = f"gfx/interface/progressbars/{TEXTURES['over']}.dds"
+    return _frame(TEXTURES["over"], edge)
+
+
+def _frame(texture_name: str, edge: int) -> str:
+    """A frame ``edge`` px wide around the parent in a bar texture, nothing inside."""
+    texture = f"gfx/interface/progressbars/{texture_name}.dds"
     sides = (f"100% {edge}", ""), (f"100% {edge}", " parentanchor = bottom"), (f"{edge} 100%", ""), \
             (f"{edge} 100%", " parentanchor = right")
     return " ".join(f'icon = {{ size = {{ {size} }}{anchor} texture = "{texture}" }}' for size, anchor in sides)
@@ -561,17 +581,18 @@ def _segment(share: str, texture: str) -> str:
     return f"""widget = {{
 	size = "[ToVector2f(Multiply_float({share}, '(float){BAR_WIDTH}'), '(float)18')]"
 	visible = "[GreaterThan_float({share}, '(float)0')]"
-	{_bar(texture, "1", bottom=True)}
+	{_bar(texture, "1", bottom=True, edge=2)}
 }}"""
 
 
-def _number(share: str, label: str) -> str:
+def _number(share: str, label: str, part: str) -> str:
     """A part's number, centred in a box as wide as the part (the numbers lie in a layer above the threshold lines,
-    so a line never crosses one)."""
+    so a line never crosses one); on a dark plate where the part is striped."""
+    plate = f' background = {{ texture = "{_BACK}" alpha = 0.8 }} margin = {{ 3 0 }}' if part in PLATED else ""
     return f"""widget = {{
 	size = "[ToVector2f(Multiply_float({share}, '(float){BAR_WIDTH}'), '(float)18')]"
 	visible = "[GreaterThan_float({share}, '(float)0')]"
-	text_single = {{ parentanchor = center fontsize = 12 raw_text = "{label}" visible = "[GreaterThan_float({share}, '(float){_LABEL_SHARE}')]" }}
+	text_single = {{ parentanchor = center fontsize = 12 raw_text = "{label}"{plate} visible = "[GreaterThan_float({share}, '(float){_LABEL_SHARE}')]" }}
 }}"""
 
 
@@ -616,7 +637,7 @@ def _number_track(segments: list[Segment]) -> str:
     """The numbers of one bar's parts, at the parts' x."""
     return f"""widget = {{
 	size = {{ {BAR_WIDTH} 18 }}
-{_indent(_layer([_number(share, label) for share, _, label in segments]), 1)}
+{_indent(_layer([_number(share, label, part) for share, part, label in segments]), 1)}
 }}"""
 
 
@@ -736,8 +757,7 @@ def gui_block(indent: str = "", land_state: str = "") -> str:
 
     Population: townsfolk (grey) and subsistence peasants (yellow, one part), the ones beyond the capacity marked red
     over the yellow. Capacity: the same townsfolk (grey), the arable land left (green), then past the end of the
-    capacity the land the farms use (darker, olive green) and the room for improvements (lighter green). Every part
-    carries its number; two thin lines across both bars mark the
+    capacity the land the farms hold (green, brown stripes) and the room for improvements (faint green, green frame). Every part carries its number; two thin lines across both bars mark the
     land state thresholds, labelled 10% and 100% of the capacity above the bars. Right of the bars the land state they make (the arable land chip: overused / available / abundant,
     with its strength; its tooltip has the effects), under them a legend of the colours; the breakdown is in the
     bars' tooltip.

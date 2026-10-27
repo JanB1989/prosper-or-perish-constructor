@@ -1,12 +1,12 @@
-"""Build the two green shades of the location view's capacity bar past the capacity (arable_land_bar.py).
+"""Build the three green shades of the location view's capacity bar (arable_land_bar.py).
 
-Three greens on one bar (2026-10-27, Jan: stripes and an empty slot were convoluted): the arable land left is vanilla's
-green bar; the land the farms use is a darker green turned towards olive; the land improvements could still add is a
-lighter, paler green. Both are vanilla's green bar recoloured in HSV, so they keep its shading. Rerun after changing
-them:
+Three greens on one bar (2026-10-27, Jan: stripes and an empty slot were convoluted; all three darker than vanilla's
+green for contrast with the numbers): the arable land left a darkened vanilla green; the land the farms use darker
+still, turned towards olive; the land improvements could still add lighter and paler. All are vanilla's green bar
+recoloured in HSV, so they keep its shading. Rerun after changing them:
 
     uv run python tools/build_land_bar_shades.py                  # write the DDS into the mod
-    uv run python tools/build_land_bar_shades.py --preview X.png  # also the three greens side by side, enlarged
+    uv run python tools/build_land_bar_shades.py --preview X.png  # also vanilla's green and the shades, enlarged
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MOD = ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)"
 SOURCE = "game/main_menu/gfx/interface/progressbars/progress_bar_green_alt.dds"
 # bar part -> (hue it takes, PIL's 0..255 scale; vanilla's green sits at ~74), saturation factor, value factor
-RECOLOUR = {"farms": (52, 0.9, 0.95), "room": (74, 0.55, 1.25)}
+RECOLOUR = {"land": (74, 1.0, 0.75), "farms": (52, 0.9, 0.7), "room": (74, 0.55, 0.95)}
 
 
 def recolour(green: Image.Image, hue: int, saturation: float, value: float) -> Image.Image:
@@ -39,7 +39,7 @@ def recolour(green: Image.Image, hue: int, saturation: float, value: float) -> I
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--preview", type=Path, help="also write the three greens side by side")
+    parser.add_argument("--preview", type=Path, help="also write vanilla's green and the three shades side by side")
     parser.add_argument("--no-write", action="store_true", help="only the preview")
     args = parser.parse_args(argv)
     with Image.open(vanilla_root(ROOT, ROOT / "constructor.toml") / SOURCE) as source:
@@ -47,7 +47,7 @@ def main(argv: list[str] | None = None) -> int:
     shades = {part: recolour(green, *RECOLOUR[part]) for part in SHADES}
     if args.preview:
         width, height = 240, 36
-        shown = [green, shades["farms"], shades["room"]]
+        shown = [green, *shades.values()]
         sheet = Image.new("RGBA", (width * len(shown), height), (34, 38, 46, 255))
         for i, im in enumerate(shown):
             sheet.alpha_composite(im.resize((width, height), Image.LANCZOS), (width * i, 0))

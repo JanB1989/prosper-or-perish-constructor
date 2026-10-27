@@ -119,6 +119,7 @@ def test_threshold_lines_cross_both_bars_at_a_tenth_of_the_capacity_and_at_the_c
     assert column.index('raw_text = "10%"') < column.index('raw_text = "100%"') < column.index("position = { 0 16 }")
     # three greens, plain parts: the arable land left, then past the capacity line the land the farms use (darker) and
     # the room for improvements (lighter): a gross bar whose net is the capacity line
+    assert set(alb.SHADES) == {"land", "farms", "room"} and "progress_bar_green_alt" not in column
     farms, room = (alb.SHADES[part].as_posix() for part in ("farms", "room"))
     assert column.count(farms) == 1 and column.count(room) == 1 and "progress_bar_brown_alt.dds" not in column
     assert column.index("'pp_land_bar_f_capacity'") < column.index(farms) < column.index(room)

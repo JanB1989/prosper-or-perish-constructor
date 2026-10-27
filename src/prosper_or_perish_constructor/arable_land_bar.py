@@ -423,11 +423,11 @@ _BAR = ('progressbar = {{ size = {{ 100% 100% }} progresstexture = "gfx/interfac
 _EMPTY = "gfx/interface/icons/unit_view/moral_bar_transparent.dds"
 _BACK = "gfx/interface/progressbars/progress_black.dds"
 TEXTURES = {"townsfolk": "progress_bar_grey_alt", "subsistence": "progress_bar_yellow", "over": "progress_bar_red",
-            "land": "progress_bar_green_alt", "farms": "pp_land_bar_farms", "room": "pp_land_bar_room"}
-# the two parts past the capacity in their own greens (2026-10-27, Jan: three shades, plain; stripes and an empty slot
-# were convoluted): the land the farms use darker, towards olive; the land improvements could add lighter, paler;
-# vanilla's green recoloured by tools/build_land_bar_shades.py
-SHADES = {part: Path(f"gfx/interface/progressbars/{TEXTURES[part]}.dds") for part in ("farms", "room")}
+            "land": "pp_land_bar_land", "farms": "pp_land_bar_farms", "room": "pp_land_bar_room"}
+# the land in three greens (2026-10-27, Jan: three shades, plain, darker than vanilla's for contrast; stripes and an
+# empty slot were convoluted): the arable land left, the land the farms use darker and towards olive, the land
+# improvements could add lighter and paler; vanilla's green recoloured by tools/build_land_bar_shades.py
+SHADES = {part: Path(f"gfx/interface/progressbars/{TEXTURES[part]}.dds") for part in ("land", "farms", "room")}
 # the threshold lines: a light 1 px core in a dark 3 px line (reads on the dark panel and on every bar colour)
 _LINE_LIGHT = "gfx/interface/progressbars/progress_bar_whiteish.dds"
 

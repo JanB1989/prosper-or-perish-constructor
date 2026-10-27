@@ -37,15 +37,23 @@ pp_land_bar_farms = { value = pp_land_bar_taken_flat multiply = pp_land_bar_mult
 pp_land_bar_natural = { value = pp_land_bar_natural_flat multiply = pp_land_bar_multiplier }
 pp_land_bar_improvements = { value = pp_land_bar_improvements_flat multiply = pp_land_bar_multiplier }
 pp_land_bar_room = { value = pp_land_bar_room_flat multiply = pp_land_bar_multiplier }
+# the land the farms hold, as far as there is land (farms beyond the location's land and improvements hold nothing more)
+pp_land_bar_farms_shown = {
+	value = pp_land_bar_left
+	add = pp_land_bar_farms
+	subtract = pp_land_bar_left_shown
+	min = 0
+}
 pp_land_bar_capacity = { value = pp_land_bar_townsfolk_room add = pp_land_bar_left_shown }
 pp_land_bar_percent = {
 	value = 0
 	if = { limit = { pp_land_bar_capacity > 0 } value = pp_land_bar_population divide = pp_land_bar_capacity multiply = 100 }
 }
 
-# Bar fractions (0..1) on one scale for both bars: the population, or the capacity with the room for improvements past
-# its end
-pp_land_bar_scale_land = { value = pp_land_bar_capacity add = pp_land_bar_room }
+# Bar fractions (0..1) on one scale for both bars: the population, or the capacity with the farms' land and the room
+# for improvements past its end
+pp_land_bar_held = { value = pp_land_bar_capacity add = pp_land_bar_farms_shown }
+pp_land_bar_scale_land = { value = pp_land_bar_held add = pp_land_bar_room }
 pp_land_bar_scale = {
 	value = pp_land_bar_scale_land
 	if = { limit = { pp_land_bar_population > pp_land_bar_scale_land } value = pp_land_bar_population }
@@ -56,6 +64,7 @@ pp_land_bar_f_within = { value = pp_land_bar_f_population max = pp_land_bar_f_ca
 pp_land_bar_f_townsfolk = { value = pp_land_bar_townsfolk divide = pp_land_bar_scale }
 pp_land_bar_f_townsfolk_room = { value = pp_land_bar_townsfolk_room divide = pp_land_bar_scale }
 pp_land_bar_f_capacity = { value = pp_land_bar_capacity divide = pp_land_bar_scale }
+pp_land_bar_f_held = { value = pp_land_bar_held divide = pp_land_bar_scale }
 pp_land_bar_f_land = { value = pp_land_bar_scale_land divide = pp_land_bar_scale }
 
 # Land the standing improvements add (raw_modifier capacity per level)

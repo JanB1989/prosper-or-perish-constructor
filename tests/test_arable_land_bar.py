@@ -71,9 +71,9 @@ def test_window_has_the_panel_under_the_scene_with_balanced_braces():
     assert text.index("# SCENE") < text.index('name = "pp_arable_land_bar"')
     assert text.count("{") == text.count("}")
     panel = _panel()
-    # 5 bar parts + 4 legend swatches + 2 tooltips x 8 row swatches (the over row's: yellow under the over mark; the
+    # 6 bar parts + 5 legend swatches + 2 tooltips x 8 row swatches (the over row's: yellow under the over mark; the
     # room for improvements row); every one on 0..1 (without min/max: 0..100)
-    assert panel.count("progressbar = {") == 25 == panel.count("min = 0 max = 1 value = ")
+    assert panel.count("progressbar = {") == 27 == panel.count("min = 0 max = 1 value = ")
     assert not re.search(r'value = "\[\(float\)', panel)                               # a literal is no data call
     used = set(re.findall(r"ScriptValue\('(pp_land_bar_\w+)'\)", text + alb.render_localization()))
     defined = set(re.findall(r"(?m)^(pp_land_bar_\w+) = \{", (MOD_ROOT / alb.SCRIPT_VALUES).read_text(encoding="utf-8")))
@@ -117,7 +117,15 @@ def test_threshold_lines_cross_both_bars_at_a_tenth_of_the_capacity_and_at_the_c
     assert column.index("alpha = 0.4") < lines_at < column.index("ScriptValue('pp_land_bar_townsfolk')|0]K")
     # labelled above the bars: 10% at the first line, 100% at the second (a 12 px row, bars 16 px lower)
     assert column.index('raw_text = "10%"') < column.index('raw_text = "100%"') < column.index("position = { 0 16 }")
-    assert "progress_bar_brown_alt.dds" not in column                          # the farms are a tooltip row only
+    # the farms' land: green with the hatch, between the capacity line and the room for improvements (a gross bar
+    # whose net is the capacity line)
+    hatch = alb.HATCH.as_posix()
+    assert column.count(hatch) == 1 and "progress_bar_brown_alt.dds" not in column
+    assert column.index("'pp_land_bar_f_capacity'") < column.index(hatch) < column.index("alpha = 0.4")
+    assert ("Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), "
+            "FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')))") in column
+    assert "spriteType = Corneredtiled spriteborder = { 0 0 } texture_density = 2" in column
+    assert (MOD_ROOT / "main_menu" / alb.HATCH).is_file()
     assert alb.ABUNDANT_SHARE == "0.1"
     capacity = "FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))"
     abundant = f"Multiply_float({capacity}, '(float)0.1')"
@@ -166,10 +174,10 @@ def test_every_row_label_is_a_concept_link_with_its_own_entry():
     # the townsfolk are one row in both lists (no "their own room" any more), farms one key for legend and tooltip
     assert "PP_LAND_BAR_TT_TOWNSFOLK_ROOM" not in alb.LOC_TEXT and "PP_LAND_BAR_TT_FARMS" not in alb.LOC_TEXT
     assert "own room" not in alb.render_localization()
-    # the legend uses the same linked keys; the faded room for improvements instead of the farms (no farms in the bars)
+    # the legend uses the same linked keys, in the bars' order
     legend = alb.gui_block()[alb.gui_block().rindex("tooltipwidget"):]
-    assert {"PP_LAND_BAR_TOWNSFOLK", "PP_LAND_BAR_SUBSISTENCE", "PP_LAND_BAR_LAND", "PP_LAND_BAR_ROOM"} <= set(
-        re.findall(r'text_single = \{ text = "(\w+)" fontsize = 12', legend))
+    assert re.findall(r'text_single = \{ text = "(\w+)" fontsize = 12', legend) == [
+        "PP_LAND_BAR_TOWNSFOLK", "PP_LAND_BAR_SUBSISTENCE", "PP_LAND_BAR_LAND", "PP_LAND_BAR_FARMS", "PP_LAND_BAR_ROOM"]
 
 
 def test_new_concepts_have_a_family_an_icon_a_name_and_a_short_text():

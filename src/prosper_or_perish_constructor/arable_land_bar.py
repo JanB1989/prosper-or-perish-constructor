@@ -8,8 +8,9 @@ The engine still compares the whole population with that capacity, so the panel 
 - Population: the townsfolk (grey), then the subsistence peasants (yellow, one part with their whole number); the part
   of them beyond the capacity is marked over the yellow (a red tint with red edges), its number in the tooltip.
 - Population capacity: the same townsfolk (grey: they cancel out), then the arable land left (green: the location's
-  land and improvements after the farms), then past the end of the capacity the land the improvements still buildable
-  here could add (faded green; 2026-10-27, Jan: the bar shows only what gives land, the farms are a tooltip row).
+  land and improvements after the farms), then past the end of the capacity the land the farms hold (green with brown
+  stripes: the land is there, the farms take it; a gross bar with the capacity line as its net, 2026-10-27, Jan), then
+  the land the improvements still buildable here could add (faded green).
 - two thin lines across both bars at the engine's land state thresholds (2026-10-27, Jan): 10 % of the capacity (left
   of it abundant free land, which also needs fewer than 10,000 people) and the capacity (right of it overpopulation),
   labelled "10%" and "100%" above the bars.
@@ -285,15 +286,23 @@ pp_land_bar_farms = { value = pp_land_bar_taken_flat multiply = pp_land_bar_mult
 pp_land_bar_natural = { value = pp_land_bar_natural_flat multiply = pp_land_bar_multiplier }
 pp_land_bar_improvements = { value = pp_land_bar_improvements_flat multiply = pp_land_bar_multiplier }
 pp_land_bar_room = { value = pp_land_bar_room_flat multiply = pp_land_bar_multiplier }
+# the land the farms hold, as far as there is land (farms beyond the location's land and improvements hold nothing more)
+pp_land_bar_farms_shown = {
+	value = pp_land_bar_left
+	add = pp_land_bar_farms
+	subtract = pp_land_bar_left_shown
+	min = 0
+}
 pp_land_bar_capacity = { value = pp_land_bar_townsfolk_room add = pp_land_bar_left_shown }
 pp_land_bar_percent = {
 	value = 0
 	if = { limit = { pp_land_bar_capacity > 0 } value = pp_land_bar_population divide = pp_land_bar_capacity multiply = 100 }
 }
 
-# Bar fractions (0..1) on one scale for both bars: the population, or the capacity with the room for improvements past
-# its end
-pp_land_bar_scale_land = { value = pp_land_bar_capacity add = pp_land_bar_room }
+# Bar fractions (0..1) on one scale for both bars: the population, or the capacity with the farms' land and the room
+# for improvements past its end
+pp_land_bar_held = { value = pp_land_bar_capacity add = pp_land_bar_farms_shown }
+pp_land_bar_scale_land = { value = pp_land_bar_held add = pp_land_bar_room }
 pp_land_bar_scale = {
 	value = pp_land_bar_scale_land
 	if = { limit = { pp_land_bar_population > pp_land_bar_scale_land } value = pp_land_bar_population }
@@ -304,6 +313,7 @@ pp_land_bar_f_within = { value = pp_land_bar_f_population max = pp_land_bar_f_ca
 pp_land_bar_f_townsfolk = { value = pp_land_bar_townsfolk divide = pp_land_bar_scale }
 pp_land_bar_f_townsfolk_room = { value = pp_land_bar_townsfolk_room divide = pp_land_bar_scale }
 pp_land_bar_f_capacity = { value = pp_land_bar_capacity divide = pp_land_bar_scale }
+pp_land_bar_f_held = { value = pp_land_bar_held divide = pp_land_bar_scale }
 pp_land_bar_f_land = { value = pp_land_bar_scale_land divide = pp_land_bar_scale }
 """
 
@@ -413,9 +423,12 @@ _BAR = ('progressbar = {{ size = {{ 100% 100% }} progresstexture = "gfx/interfac
 _EMPTY = "gfx/interface/icons/unit_view/moral_bar_transparent.dds"
 _BACK = "gfx/interface/progressbars/progress_black.dds"
 TEXTURES = {"townsfolk": "progress_bar_grey_alt", "subsistence": "progress_bar_yellow", "over": "progress_bar_red",
-            "land": "progress_bar_green_alt", "farms": "progress_bar_brown_alt", "room": "progress_bar_green_alt"}
+            "land": "progress_bar_green_alt", "farms": "progress_bar_green_alt", "room": "progress_bar_green_alt"}
 # a part drawn faded (the room for improvements: land not there yet)
 ALPHA = {"room": 0.4}
+# a part with the hatch over it (the farms' land: land that is there, held by the farms); tools/build_land_bar_hatch.py
+HATCH = Path("gfx/interface/progressbars/pp_land_bar_farms_hatch.dds")
+HATCHED = {"farms"}
 # the threshold lines: a light 1 px core in a dark 3 px line (reads on the dark panel and on every bar colour)
 _LINE_LIGHT = "gfx/interface/progressbars/progress_bar_whiteish.dds"
 
@@ -433,8 +446,12 @@ def _bar(texture: str, value: str, bottom: bool = False, extra: str = "") -> str
     shown = value if value.replace(".", "").isdigit() else f'"[{value}]"'
     if texture in ALPHA:
         extra += f" alpha = {ALPHA[texture]}"
-    return _BAR.format(texture=TEXTURES[texture], empty=_EMPTY if texture in ALPHA else (_BACK if bottom else _EMPTY),
-                       value=shown, extra=extra)
+    bar = _BAR.format(texture=TEXTURES[texture], empty=_EMPTY if texture in ALPHA else (_BACK if bottom else _EMPTY),
+                      value=shown, extra=extra)
+    if texture in HATCHED:   # tiled like vanilla's striped overlays (texture density 2)
+        bar += (f' widget = {{ size = {{ 100% 100% }} background = {{ texture = "{HATCH.as_posix()}" '
+                f'spriteType = Corneredtiled spriteborder = {{ 0 0 }} texture_density = 2 }} }}')
+    return bar
 
 
 def _over_mark(edge: int) -> str:
@@ -726,8 +743,8 @@ def gui_block(indent: str = "", land_state: str = "") -> str:
     """The panel under the location view's scene: the population on its capacity, as two bars on one scale.
 
     Population: townsfolk (grey) and subsistence peasants (yellow, one part), the ones beyond the capacity marked red
-    over the yellow. Capacity: the same townsfolk (grey), the arable land left (green), then the room for improvements
-    (faded green) past the end of the capacity. Every part carries its number; two thin lines across both bars mark the
+    over the yellow. Capacity: the same townsfolk (grey), the arable land left (green), then past the end of the
+    capacity the land the farms hold (green, brown stripes) and the room for improvements (faded green). Every part carries its number; two thin lines across both bars mark the
     land state thresholds, labelled 10% and 100% of the capacity above the bars. Right of the bars the land state they make (the arable land chip: overused / available / abundant,
     with its strength; its tooltip has the effects), under them a legend of the colours; the breakdown is in the
     bars' tooltip.
@@ -745,12 +762,14 @@ def gui_block(indent: str = "", land_state: str = "") -> str:
     capacity = ("PP_LAND_BAR_CAPACITY", [
         (_share("townsfolk_room"), "townsfolk", _k(_sv("pp_land_bar_townsfolk_room"))),
         (_part("capacity", "townsfolk_room"), "land", _k(_sv("pp_land_bar_left_shown"))),
-        (_part("land", "capacity"), "room", _k(_sv("pp_land_bar_room"))),
+        (_part("held", "capacity"), "farms", _k(_sv("pp_land_bar_farms_shown"))),
+        (_part("land", "held"), "room", _k(_sv("pp_land_bar_room"))),
     ], None)
     legend = "\n".join([
         _term("townsfolk", "PP_LAND_BAR_TOWNSFOLK"),
         _term("subsistence", "PP_LAND_BAR_SUBSISTENCE"),
         _term("land", "PP_LAND_BAR_LAND"),
+        _term("farms", "PP_LAND_BAR_FARMS"),
         _term("room", "PP_LAND_BAR_ROOM"),
         "expand = {}",
     ])

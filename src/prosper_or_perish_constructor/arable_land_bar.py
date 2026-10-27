@@ -5,13 +5,17 @@ back from the subsistence peasants, so the engine's capacity is everyone but the
 each brings their own room) plus the arable land left (the location's land and improvements, minus what the farms take).
 The engine still compares the whole population with that capacity, so the panel shows exactly that, on one scale:
 
-- Population: the townsfolk (grey), then the subsistence peasants (yellow); beyond the capacity red.
+- Population: the townsfolk (grey), then the subsistence peasants (yellow, one part with their whole number); the part
+  of them beyond the capacity is marked over the yellow (a red tint with red edges), its number in the tooltip.
 - Population capacity: the same townsfolk (grey: they cancel out), then the arable land left (green), then the land the
   farms take (brown, past the end of the capacity). The subsistence peasants live on the green; farms grow into it.
+- two thin lines across both bars at the engine's land state thresholds (2026-10-27, Jan): 10 % of the capacity (left
+  of it abundant free land, which also needs fewer than 10,000 people) and the capacity (right of it overpopulation).
 - every part is as wide as its share of the common scale (data-bound pixel sizes on a fixed bar width) and carries
   its number; under the bars a legend of the
   colours and the land state the two bars make (the arable land chip with its strength: the engine's free land or
-  overpopulation from population / capacity); the breakdown of the arable land is in the tooltip.
+  overpopulation from population / capacity); the breakdown of the arable land and one line per land state (what it
+  is, how it is defined) are in the tooltip.
 
 Farm land and improvements are read from the building types the game loads (``raw_modifier``
 ``local_population_capacity`` per level, through the buildings' level counters, which the engine scales like the
@@ -232,28 +236,70 @@ def _v(name: str, digits: int = 0) -> str:
     return f"[LocationView.GetLocation.MakeScope.ScriptValue('{name}')|{digits}]K"
 
 
+# The engine's land states in threshold order (location_status.land_chips draws the one that applies): key (its icon
+# gfx/interface/icons/pp_arable_land/<key>.dds), concept, name, the chip's one-line definition
+LAND_STATES = (
+    ("abundant", "pp_abundant_free_land", "Abundant Arable Land", "PP_LAND_CHIP_ABUNDANT"),
+    ("available", "pp_available_free_land", "Available Arable Land", "PP_LAND_CHIP_AVAILABLE"),
+    ("overused", "pp_overused_arable_land", "Overused Arable Land", "PP_LAND_CHIP_OVERPOPULATION"),
+)
+STATE_ICONS = "gfx/interface/icons/pp_arable_land"
+# Engine (EU5 1.4.4, location growth pass): abundant free land where the free share of the capacity is at least 0.9,
+# i.e. the population at most this share of it (and fewer than 10,000 people); overpopulation beyond the capacity
+ABUNDANT_SHARE = "0.1"
+
+# The parts of the two bars as game concepts, each with a short Europedia entry (2026-10-27, Jan: every row label a
+# link; texts short and technical, no values, no metaphors): key -> (texture under gfx/interface/icons, name, text)
+CONCEPTS = Path("main_menu/common/game_concepts/pp_arable_land_bar.txt")
+CONCEPT_TEXT = {
+    "pp_townsfolk": ("location_icons/population", "Townsfolk",
+                     "Everyone in a [location|e] except the [pp_subsistence_peasants|e]. Townsfolk do not use "
+                     "[population_capacity|e]: in the calculation each townsperson adds 1 Arable Land and uses 1."),
+    "pp_subsistence_peasants": ("location_icons/subsistence_agriculture", "Subsistence Peasants",
+                                "[ShowPopTypeName('peasants')] without [employment|e]. Each uses 1 [population_capacity|e]."),
+    "pp_location_land": ("location_icons/terrain", "Location's Land",
+                         "[population_capacity|E] from a [location|e]'s [climate|e], [topography|e], [vegetation|e], "
+                         "[ha1300_soil_type|e] and [ha1300_fertility|e], and from its [location_rank|e]."),
+    "pp_land_improvements": ("modifier_types/total_population_capacity_modifier", "Land Improvements",
+                             "[buildings|E] that add [population_capacity|e] to their [location|e]."),
+    "pp_farm_land": ("trade_goods/icon_goods_wheat", "Farms",
+                     "Each level of a farm [building|e] takes [population_capacity|e] from its [location|e]."),
+}
+
 LOC_TEXT = {
-    "PP_LAND_BAR_POPULATION": "Population",
+    "PP_LAND_BAR_POPULATION": "[population|E]",
     "PP_LAND_BAR_CAPACITY": "[population_capacity|E]",
-    "PP_LAND_BAR_TOWNSFOLK": "Townsfolk",
-    "PP_LAND_BAR_SUBSISTENCE": "Subsistence peasants",
-    "PP_LAND_BAR_LAND": "Arable land left",
-    "PP_LAND_BAR_FARMS": "Farms",
-    # the bars' tooltip (2026-10-27, Jan: lists, not prose)
+    "PP_LAND_BAR_TOWNSFOLK": "[pp_townsfolk|e]",
+    "PP_LAND_BAR_SUBSISTENCE": "[pp_subsistence_peasants|e]",
+    "PP_LAND_BAR_LAND": "[Concept('population_capacity', 'Arable land left')|e]",
+    "PP_LAND_BAR_FARMS": "[pp_farm_land|e]",
+    # the bars' tooltip (2026-10-27, Jan: lists, not prose; every row label a concept link)
     "PP_LAND_BAR_TT_TITLE": "Population and Arable Land",
     "PP_LAND_BAR_TT_TOTAL": "Total",
-    "PP_LAND_BAR_TT_TOWNSFOLK_ROOM": "Townsfolk, their own room",
-    "PP_LAND_BAR_TT_NATURAL": "The location's land",
-    "PP_LAND_BAR_TT_IMPROVEMENTS": "Improvements",
-    "PP_LAND_BAR_TT_FARMS": "Taken by farms",
-    "PP_LAND_BAR_TT_NOTE": "Everyone but the subsistence peasants brings their own room. The subsistence peasants live "
-                           "on the arable land left; a new farm takes land from them.",
+    "PP_LAND_BAR_TT_NATURAL": "[pp_location_land|e]",
+    "PP_LAND_BAR_TT_IMPROVEMENTS": "[pp_land_improvements|e]",
+    "PP_LAND_BAR_TT_OVER": "Over the [population_capacity|e]",
+    # the land states, one line each (2026-10-27, Jan: what it is, how it is defined); the definitions are the chips'
+    # own lines (pp_location_status_l_english.yml), so the chip beside the bars and this list say the same
+    **{f"PP_LAND_BAR_TT_DEF_{key.upper()}": f"[Concept('{concept}', '{name}')|e]: ${chip}$"
+       for key, concept, name, chip in LAND_STATES},
 }
 
 
 def render_localization() -> str:
     lines = ["﻿l_english:", "  # Generated by ppc finalize (arable_land_bar.py); the population and capacity bars of the location view"]
     lines += [f'  {key}: "{text}"' for key, text in LOC_TEXT.items()]
+    lines.append("  # the bars' parts as game concepts (main_menu/common/game_concepts/pp_arable_land_bar.txt)")
+    for key, (_, name, text) in CONCEPT_TEXT.items():
+        lines += [f'  game_concept_{key}: "{name}"', f'  game_concept_{key}_desc: "{text}"']
+    return "\n".join(lines) + "\n"
+
+
+def render_concepts() -> str:
+    lines = ["﻿# Generated by ppc finalize (arable_land_bar.py); do not edit by hand.",
+             "# The parts of the location view's population and capacity bars, linked from their labels and tooltip rows."]
+    for key, (texture, _, _) in CONCEPT_TEXT.items():
+        lines += [f"{key} = {{", "\tfamily = food", f'\ttexture = "{texture}"', "}"]
     return "\n".join(lines) + "\n"
 
 
@@ -265,8 +311,10 @@ _BAR = ('progressbar = {{ size = {{ 100% 100% }} progresstexture = "gfx/interfac
         'min = 0 max = 1 value = {value} direction = horizontal{extra} }}')
 _EMPTY = "gfx/interface/icons/unit_view/moral_bar_transparent.dds"
 _BACK = "gfx/interface/progressbars/progress_black.dds"
-TEXTURES = {"townsfolk": "progress_bar_grey_alt", "subsistence": "progress_bar_yellow", "over": "progress_bar_red_alt",
+TEXTURES = {"townsfolk": "progress_bar_grey_alt", "subsistence": "progress_bar_yellow", "over": "progress_bar_red",
             "land": "progress_bar_green_alt", "farms": "progress_bar_brown_alt"}
+# the threshold lines: a light 1 px core in a dark 3 px line (reads on the dark panel and on every bar colour)
+_LINE_LIGHT = "gfx/interface/progressbars/progress_bar_whiteish.dds"
 
 
 def _sv(name: str) -> str:
@@ -283,37 +331,78 @@ def _bar(texture: str, value: str, bottom: bool = False, extra: str = "") -> str
     return _BAR.format(texture=TEXTURES[texture], empty=_BACK if bottom else _EMPTY, value=shown, extra=extra)
 
 
-def _tt_row(key: str, value: str, part: str | None, shaded: bool, total: bool = False) -> str:
+def _over_mark(edge: int) -> str:
+    """The over-capacity mark laid over the yellow: a red frame ``edge`` px wide, nothing inside, so the yellow stays
+    yellow (these are subsistence peasants, the ones beyond the capacity). A red tint over the yellow read orange in
+    game, like the farms' brown (2026-10-27)."""
+    texture = f"gfx/interface/progressbars/{TEXTURES['over']}.dds"
+    sides = (f"100% {edge}", ""), (f"100% {edge}", " parentanchor = bottom"), (f"{edge} 100%", ""), \
+            (f"{edge} 100%", " parentanchor = right")
+    return " ".join(f'icon = {{ size = {{ {size} }}{anchor} texture = "{texture}" }}' for size, anchor in sides)
+
+
+def _swatch(part: str | None) -> str:
+    """A 14 x 10 colour swatch of a bar part (empty without one); ``over`` is the mark on the yellow."""
+    if part is None:
+        return "widget = { size = { 14 10 } }"
+    if part == "over":
+        return f'widget = {{ size = {{ 14 10 }} {_bar("subsistence", "1", bottom=True)} widget = {{ size = {{ 100% 100% }} {_over_mark(1)} }} }}'
+    return f'widget = {{ size = {{ 14 10 }} {_bar(part, "1", bottom=True)} }}'
+
+
+def _shading(shaded: bool) -> str:
+    return ('blockoverride "field_background" { background = { using = tooltip_table_field_texture } }' if shaded
+            else 'blockoverride "field_background" {}')
+
+
+def _tt_row(key: str, value: str, part: str | None, shaded: bool, total: bool = False, visible: str = "") -> str:
     """One row of the bars' tooltip, as vanilla's tooltip tables: the bar's colour swatch, the name left, the value
-    right; every second row shaded, a total in the title colour."""
-    background = ('blockoverride "field_background" { background = { using = tooltip_table_field_texture } }' if shaded
-                  else 'blockoverride "field_background" {}')
-    swatch = (f'widget = {{ size = {{ 14 10 }} {_bar(part, "1", bottom=True)} }} ' if part
-              else 'widget = { size = { 14 10 } } ')
+    right; every second row shaded, a total in the title colour; ``visible`` a data test for a row shown only then."""
+    test = f'blockoverride "visibility" {{ visible = "[{visible}]" }} ' if visible else ""
     style = ' default_format = "#yellow_titles"' if total else ""
-    return (f'TooltipTableField = {{ {background} spacing = 6 blockoverride "field_content" {{ {swatch}'
+    return (f'TooltipTableField = {{ {test}{_shading(shaded)} spacing = 6 blockoverride "field_content" {{ {_swatch(part)} '
             f'text_single = {{ layoutpolicy_horizontal = expanding align = left|nobaseline text = "{key}"{style} }} '
             f'text_single = {{ align = right|nobaseline raw_text = "{value}"{style} }} }} }}')
 
 
-def _tt_list(title: str, rows: list[tuple[str, str, str | None]], total: tuple[str, str]) -> str:
+def _tt_list(title: str, rows: list[tuple[str, str, str | None]], total: tuple[str, str], after: str = "") -> str:
     fields = " ".join(_tt_row(key, value, part, index % 2 == 1) for index, (key, value, part) in enumerate(rows))
     fields += " " + _tt_row(total[0], total[1], None, len(rows) % 2 == 1, total=True)
-    return f'TooltipListBase = {{ blockoverride "block_title" {{ text = "{title}" }} {fields} }}'
+    return f'TooltipListBase = {{ blockoverride "block_title" {{ text = "{title}" }} {fields}{after} }}'
+
+
+def _state_list() -> str:
+    """The land states, one row each: its icon, its name (a link) and how it is defined; rows grow to two lines."""
+    rows = []
+    for index, (key, *_rest) in enumerate(LAND_STATES):
+        rows.append(f'TooltipTableField = {{ blockoverride "row_size" {{ minimumsize = {{ -1 30 }} }} {_shading(index % 2 == 1)} '
+                    f'blockoverride "field_content" {{ spacing = 8 '
+                    f'icon = {{ size = {{ 20 20 }} texture = "{STATE_ICONS}/{key}.dds" }} '
+                    f'textbox = {{ using = tooltip_text_block_template minimumsize = {{ 330 -1 }} '
+                    f'margin = {{ 0 4 }} text = "PP_LAND_BAR_TT_DEF_{key.upper()}" }} }} }}')
+    return "TooltipListBase = { " + " ".join(rows) + " }"
+
+
+def _over() -> str:
+    """The subsistence peasants beyond the capacity, in thousands (GUI value)."""
+    return _clamp0(f"Subtract_float({_f('pp_land_bar_population')}, {_f('pp_land_bar_capacity')})")
 
 
 def tooltip_block() -> str:
     """The bars' tooltip: vanilla's contextual tooltip with the Arable Land icon, the population and the capacity as
-    two lists (swatch, name, value; total last) and one line on how the land is used."""
+    two lists (swatch, name, value; total last; the peasants over the capacity under the population's total, only
+    when there are any) and the land states, one line each."""
+    over = _tt_row("PP_LAND_BAR_TT_OVER", _k(_over()), "over", shaded=True,
+                   visible=f"GreaterThan_float({_over()}, '(float)0')")
     population = _tt_list("PP_LAND_BAR_POPULATION", [
         ("PP_LAND_BAR_TOWNSFOLK", _v("pp_land_bar_townsfolk"), "townsfolk"),
         ("PP_LAND_BAR_SUBSISTENCE", _v("pp_land_bar_subsistence"), "subsistence"),
-    ], ("PP_LAND_BAR_TT_TOTAL", _v("pp_land_bar_population")))
+    ], ("PP_LAND_BAR_TT_TOTAL", _v("pp_land_bar_population")), after=" " + over)
     capacity = _tt_list("PP_LAND_BAR_CAPACITY", [
-        ("PP_LAND_BAR_TT_TOWNSFOLK_ROOM", "+" + _v("pp_land_bar_townsfolk_room"), "townsfolk"),
+        ("PP_LAND_BAR_TOWNSFOLK", "+" + _v("pp_land_bar_townsfolk_room"), "townsfolk"),
         ("PP_LAND_BAR_TT_NATURAL", "+" + _v("pp_land_bar_natural"), "land"),
         ("PP_LAND_BAR_TT_IMPROVEMENTS", "+" + _v("pp_land_bar_improvements"), "land"),
-        ("PP_LAND_BAR_TT_FARMS", "-" + _v("pp_land_bar_farms"), "farms"),
+        ("PP_LAND_BAR_FARMS", "-" + _v("pp_land_bar_farms"), "farms"),
     ], ("PP_LAND_BAR_TT_TOTAL", _v("pp_land_bar_capacity")))
     icon = "gfx/interface/icons/modifier_types/total_population_capacity_modifier.dds"
     return f"""tooltipwidget = {{
@@ -322,8 +411,7 @@ def tooltip_block() -> str:
 		blockoverride "concept_link" {{ visible = yes text = "[population_capacity|E]" }}
 		blockoverride "title_icon" {{ icon = {{ using = tooltip_title_icon_size texture = "{icon}" }} }}
 		blockoverride "tooltip_content" {{
-			vbox = {{ layoutpolicy_horizontal = expanding spacing = 10 {population} {capacity} }}
-			TooltipTextBlock = {{ blockoverride "text" {{ text = "PP_LAND_BAR_TT_NOTE" }} }}
+			vbox = {{ layoutpolicy_horizontal = expanding spacing = 10 {population} {capacity} {_state_list()} }}
 		}}
 	}}
 }}"""
@@ -351,16 +439,22 @@ LABEL_WIDTH = 100
 _LABEL_SHARE = "0.06"
 
 
-def _segment(share: str, texture: str, label: str = "") -> str:
-    """A part of a bar: ``share`` (0..1 of the scale) x the bar width wide, with its number in it."""
-    text = ""
-    if label:
-        text = (f'\n\ttext_single = {{ parentanchor = center fontsize = 12 raw_text = "{label}" '
-                f"visible = \"[GreaterThan_float({share}, '(float){_LABEL_SHARE}')]\" }}")
+def _segment(share: str, texture: str) -> str:
+    """A part of a bar: ``share`` (0..1 of the scale) x the bar width wide."""
     return f"""widget = {{
 	size = "[ToVector2f(Multiply_float({share}, '(float){BAR_WIDTH}'), '(float)18')]"
 	visible = "[GreaterThan_float({share}, '(float)0')]"
-	{_bar(texture, "1", bottom=True)}{text}
+	{_bar(texture, "1", bottom=True)}
+}}"""
+
+
+def _number(share: str, label: str) -> str:
+    """A part's number, centred in a box as wide as the part (the numbers lie in a layer above the threshold lines,
+    so a line never crosses one)."""
+    return f"""widget = {{
+	size = "[ToVector2f(Multiply_float({share}, '(float){BAR_WIDTH}'), '(float)18')]"
+	visible = "[GreaterThan_float({share}, '(float)0')]"
+	text_single = {{ parentanchor = center fontsize = 12 raw_text = "{label}" visible = "[GreaterThan_float({share}, '(float){_LABEL_SHARE}')]" }}
 }}"""
 
 
@@ -369,34 +463,100 @@ def _label(key: str) -> str:
             f'default_format = "#yellow_titles" }} }}')
 
 
-def _bar_track(segments: list[str]) -> str:
-    """One bar: a BAR_WIDTH x 18 track, its parts laid from the left edge."""
-    parts = "\n".join(segments)
-    return f"""widget = {{
-	size = {{ {BAR_WIDTH} 18 }}
-	background = {{ texture = "{_BACK}" alpha = 0.6 }}
-	hbox = {{
-		size = {{ 100% 100% }}
-{_indent(parts, 2)}
-		expand = {{}}
-	}}
+def _px(share: str) -> str:
+    return f"Multiply_float({share}, '(float){BAR_WIDTH}')"
+
+
+def _spacer(width: str, height: int) -> str:
+    """An empty widget ``width`` (a GUI pixel value, clamped at 0) wide: lays what follows it in an hbox at that x."""
+    return f"widget = {{ size = \"[ToVector2f({_clamp0(width)}, '(float){height}')]\" }}"
+
+
+def _layer(parts: list[str], attrs: str = "size = { 100% 100% }") -> str:
+    """An hbox over the parent (whole by default), its parts laid from the left edge: a layer over the bars at the same
+    x as their parts."""
+    return f"""hbox = {{
+{_indent(attrs, 1)}
+{_indent(chr(10).join(parts), 1)}
+	expand = {{}}
 }}"""
 
 
-def _bars(rows: list[tuple[str, list[str]]]) -> str:
+Segment = tuple[str, str, str]   # (share 0..1 of the scale, texture part, its number)
+
+
+def _bar_track(segments: list[Segment], overlay: list[str] | None = None) -> str:
+    """One bar: a BAR_WIDTH x 18 track, its parts laid from the left edge; ``overlay`` a layer of parts over them."""
+    layers = [_layer([_segment(share, part) for share, part, _ in segments])] + ([_layer(overlay)] if overlay else [])
+    return f"""widget = {{
+	size = {{ {BAR_WIDTH} 18 }}
+	background = {{ texture = "{_BACK}" alpha = 0.6 }}
+{_indent(chr(10).join(layers), 1)}
+}}"""
+
+
+def _number_track(segments: list[Segment]) -> str:
+    """The numbers of one bar's parts, at the parts' x."""
+    return f"""widget = {{
+	size = {{ {BAR_WIDTH} 18 }}
+{_indent(_layer([_number(share, label) for share, _, label in segments]), 1)}
+}}"""
+
+
+# the threshold lines: 3 px dark with a 1 px light core, from 2 px above the population bar to 2 px under the capacity
+# bar; no tooltip of their own (a line's tooltip never showed over the bars' in game, 2026-10-27: the bars' tooltip
+# defines the states)
+LINE_WIDTH = 3
+_BARS_HEIGHT = 18 + 4 + 18
+
+
+def _line() -> str:
+    return (f'widget = {{ size = {{ {LINE_WIDTH} {_BARS_HEIGHT + 4} }} background = {{ texture = "{_BACK}" alpha = 0.9 }} '
+            f'icon = {{ size = {{ 1 100% }} parentanchor = hcenter texture = "{_LINE_LIGHT}" }} }}')
+
+
+def _threshold_lines() -> str:
+    """Two lines across both bars on their common scale: at ABUNDANT_SHARE of the capacity (left of it the land is
+    abundant) and at the capacity (right of it overused). Laid by spacers of data-bound width, as the bars' parts."""
+    capacity = _share("capacity")
+    abundant = f"Multiply_float({capacity}, '(float){ABUNDANT_SHARE}')"
+    half = LINE_WIDTH / 2
+    parts = [
+        _spacer(f"Subtract_float({_px(abundant)}, '(float){half}')", _BARS_HEIGHT + 4),
+        _line(),
+        _spacer(f"Subtract_float({_px(f'Subtract_float({capacity}, {abundant})')}, '(float){LINE_WIDTH}')", _BARS_HEIGHT + 4),
+        _line(),
+    ]
+    return _layer(parts, f"position = {{ 0 -2 }}\nsize = {{ 100% {_BARS_HEIGHT + 4} }}\n"
+                         f"visible = \"[GreaterThan_float({capacity}, '(float)0')]\"")
+
+
+def _bars(rows: list[tuple[str, list[Segment], list[str] | None]]) -> str:
     """The labels in one column and the bars in another, each bar a track of the same width in the same column: both
-    bars start at the same x whatever their labels (in rows of their own they did not, 2026-10-27)."""
-    labels = "\n".join(_label(key) for key, _ in rows)
-    tracks = "\n".join(_bar_track(segments) for _, segments in rows)
+    bars start at the same x whatever their labels (in rows of their own they did not, 2026-10-27). Over the bars'
+    column, so they move nothing: the threshold lines, then the parts' numbers."""
+    labels = "\n".join(_label(key) for key, _, _ in rows)
+
+    def column(tracks: list[str]) -> str:
+        return f"""vbox = {{
+	size = {{ 100% 100% }}
+	spacing = 4
+{_indent(chr(10).join(tracks), 1)}
+}}"""
+
+    bars = column([_bar_track(segments, overlay) for _, segments, overlay in rows])
+    numbers = column([_number_track(segments) for _, segments, _ in rows])
     return f"""hbox = {{
 	spacing = 8
 	vbox = {{
 		spacing = 4
 {_indent(labels, 2)}
 	}}
-	vbox = {{
-		spacing = 4
-{_indent(tracks, 2)}
+	widget = {{
+		size = {{ {BAR_WIDTH} {_BARS_HEIGHT} }}
+{_indent(bars, 2)}
+{_indent(_threshold_lines(), 2)}
+{_indent(numbers, 2)}
 	}}
 }}"""
 
@@ -417,23 +577,28 @@ def _k(expr: str, sign: str = "") -> str:
 def gui_block(indent: str = "", land_state: str = "") -> str:
     """The panel under the location view's scene: the population on its capacity, as two bars on one scale.
 
-    Population: townsfolk (grey) and subsistence peasants (yellow), red beyond the capacity. Capacity: the same
-    townsfolk (grey), the arable land left (green), then the farms' land (brown) past the end of the capacity. Every
-    part carries its number. Right of the bars the land state they make (the arable land chip: overused / available /
-    abundant, with its strength; its tooltip has the effects), under them a legend of the colours; the breakdown is
-    in the bars' tooltip.
+    Population: townsfolk (grey) and subsistence peasants (yellow, one part), the ones beyond the capacity marked red
+    over the yellow. Capacity: the same townsfolk (grey), the arable land left (green), then the farms' land (brown)
+    past the end of the capacity. Every part carries its number; two thin lines across both bars mark the land state
+    thresholds. Right of the bars the land state they make (the arable land chip: overused / available / abundant,
+    with its strength; its tooltip has the effects), under them a legend of the colours; the breakdown is in the
+    bars' tooltip.
     """
-    over = _clamp0(f"Subtract_float({_f('pp_land_bar_population')}, {_f('pp_land_bar_capacity')})")
+    over_part = _part("population", "within")
+    over_mark = f"""widget = {{
+	size = "[ToVector2f({_px(over_part)}, '(float)18')]"
+	visible = "[GreaterThan_float({over_part}, '(float)0')]"
+	{_over_mark(2)}
+}}"""
     population = ("PP_LAND_BAR_POPULATION", [
-        _segment(_share("townsfolk"), "townsfolk", _k(_sv("pp_land_bar_townsfolk"))),
-        _segment(_part("within", "townsfolk"), "subsistence", _k(_sv("pp_land_bar_subsistence"))),
-        _segment(_part("population", "within"), "over", _k(over, "+")),
-    ])
+        (_share("townsfolk"), "townsfolk", _k(_sv("pp_land_bar_townsfolk"))),
+        (_part("population", "townsfolk"), "subsistence", _k(_sv("pp_land_bar_subsistence"))),
+    ], [_spacer(_px(_share("within")), 18), over_mark])
     capacity = ("PP_LAND_BAR_CAPACITY", [
-        _segment(_share("townsfolk_room"), "townsfolk", _k(_sv("pp_land_bar_townsfolk_room"))),
-        _segment(_part("capacity", "townsfolk_room"), "land", _k(_sv("pp_land_bar_left_shown"))),
-        _segment(_part("land", "capacity"), "farms", _k(_sv("pp_land_bar_farms"))),
-    ])
+        (_share("townsfolk_room"), "townsfolk", _k(_sv("pp_land_bar_townsfolk_room"))),
+        (_part("capacity", "townsfolk_room"), "land", _k(_sv("pp_land_bar_left_shown"))),
+        (_part("land", "capacity"), "farms", _k(_sv("pp_land_bar_farms"))),
+    ], None)
     legend = "\n".join([
         _term("townsfolk", "PP_LAND_BAR_TOWNSFOLK"),
         _term("subsistence", "PP_LAND_BAR_SUBSISTENCE"),
@@ -519,7 +684,7 @@ def _write(path: Path, text: str) -> bool:
 def write(mod_root: Path, vanilla_game: Path | None) -> Result:
     """Write the bars' script values and localization (the window block is added by location_view.build_window)."""
     m = model(mod_root, vanilla_game)
-    changed = [str(rel) for rel, text in ((SCRIPT_VALUES, render_script_values(m)), (LOCALIZATION, render_localization()))
-               if _write(mod_root / rel, text)]
+    files = ((SCRIPT_VALUES, render_script_values(m)), (LOCALIZATION, render_localization()), (CONCEPTS, render_concepts()))
+    changed = [str(rel) for rel, text in files if _write(mod_root / rel, text)]
     counts = {"improvements": len(m.improvements), "farms": len(m.farms), "reserved grounds": len(m.reserved)}
     return Result(counts, changed)

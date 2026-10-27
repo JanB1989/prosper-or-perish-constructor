@@ -321,3 +321,20 @@ def test_no_chip_takes_its_frame_from_the_climate():
     # stored food: one frame layer per band; starving red
     assert window.count("ScriptValue('pp_province_food_storage_months'))") >= 3
     assert f'background = {{ texture = "{location_status.FRAME_RED}" }}' in window
+
+
+def test_location_view_texts_carry_no_list_meta_text():
+    """2026-10-27 (Jan): a tooltip says what a thing is and how it is defined; never what its list shows, how it is
+    sorted or where else to look ("This is documentation. We don't ever want to have this.")."""
+    english = MOD_ROOT / "main_menu/localization/english"
+    meta = re.compile(r"largest first|best first|at this strength|sorted|listed below|shown on|is highlighted|"
+                      r"Current strength|the list (?:shows|below)", re.IGNORECASE)
+    for name in ("pp_location_status_l_english.yml", "pp_water_access_l_english.yml", "pp_attribute_tooltips_l_english.yml",
+                 "pp_arable_land_bar_l_english.yml", "pp_location_status_harvest_l_english.yml"):
+        found = [line.strip() for line in (english / name).read_text(encoding="utf-8-sig").splitlines()
+                 if not line.lstrip().startswith("#") and meta.search(line)]
+        assert not found, (name, found)
+    # each land chip: its one-line definition, then its effects headed by the strength alone
+    status = (english / "pp_location_status_l_english.yml").read_text(encoding="utf-8-sig")
+    for marker in ("pp_land_overpopulation", "pp_land_abundant", "pp_land_available"):
+        assert f"\"Strength: #V [Location.GetModifierValue('{marker}')|0%]#!\"" in status

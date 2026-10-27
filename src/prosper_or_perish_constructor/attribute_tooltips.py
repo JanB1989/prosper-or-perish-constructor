@@ -793,7 +793,7 @@ def render_localization(views: Mapping[str, list[View]]) -> str:
         ' PP_TT_GOODS_OUTPUT: "Goods Output"',
         ' PP_TT_KEY_NONE: "none"',
         ' PP_LAND_POTENTIAL_TITLE: "Land Potential"',
-        ' PP_LAND_POTENTIAL_HELP: "How well the land here suits each good, from its [climate|e], [vegetation|e], [topography|e], soil and fertility, and a coast or lake shore; best first in each row. [winter|e], harvests and the raw material bonus come on top. The raw material produced here is highlighted."',
+        ' PP_LAND_POTENTIAL_HELP: "How well the land here suits each good, from its [climate|e], [vegetation|e], [topography|e], soil and fertility, and a coast or lake shore. [winter|e], harvests and the raw material bonus come on top."',
         *(f' PP_LAND_TIER_{tier.key.upper()}: "{tier_label(tier)}"' for tier in TIERS),
     ]
     for attribute_views in views.values():

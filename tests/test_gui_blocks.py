@@ -14,7 +14,7 @@ from pathlib import Path
 
 from eu5gameparser.load_order import LoadOrderConfig
 
-from prosper_or_perish_constructor import gui_blocks, location_status, stored_food
+from prosper_or_perish_constructor import arable_land_bar, gui_blocks, location_status, stored_food
 
 ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
@@ -143,7 +143,12 @@ def test_chip_data_functions_exist_in_the_game():
     used = _calls(_status_row()) | _calls(STATUS_LOC.read_text(encoding="utf-8-sig"))
     used |= _calls(location_status.land_state(location_status.load_land_effect_rows(MOD_ROOT, _vanilla().parent), "pp_land_bar_state"))
     used |= _calls(ATTRIBUTE_TOOLTIPS.read_text(encoding="utf-8-sig"))
-    assert {"ShowModifierEffect", "GetModifierValueFixed", "Custom", "ScriptValue", "ShowModifierTypeName"} <= used
+    # the population and capacity bars (arable_land_bar.py): data-bound sizes, shares, the over-capacity row
+    window = WINDOW.read_text(encoding="utf-8-sig")
+    start = window.rindex("vbox = {", 0, window.index('name = "pp_arable_land_bar"'))
+    used |= _calls(window[start:arable_land_bar._block_end(window, window.index("{", start)) + 1])
+    assert {"ShowModifierEffect", "GetModifierValueFixed", "Custom", "ScriptValue", "ShowModifierTypeName",
+            "ToVector2f", "Multiply_float", "Subtract_float", "Max_float"} <= used
     vanilla = set()
     for path in [*_vanilla().glob("*/gui/**/*.gui"), *_vanilla().glob("main_menu/localization/english/**/*.yml")]:
         vanilla |= _calls(path.read_text(encoding="utf-8-sig", errors="replace"))

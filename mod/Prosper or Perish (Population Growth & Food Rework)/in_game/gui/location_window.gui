@@ -7024,13 +7024,13 @@ pp_land_potential_chip = {}
 
 				hbox = {
 					layoutpolicy_horizontal = expanding
-					spacing = 12
-					hbox = { spacing = 4 widget = { size = { 16 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_grey_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_TOWNSFOLK" fontsize = 13 } }
-					hbox = { spacing = 4 widget = { size = { 16 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_yellow.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_SUBSISTENCE" fontsize = 13 } }
-					hbox = { spacing = 4 widget = { size = { 16 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_LAND" fontsize = 13 } }
-					hbox = { spacing = 4 widget = { size = { 16 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_brown_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_FARMS" fontsize = 13 } }
+					spacing = 6
+					hbox = { spacing = 3 widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_grey_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_TOWNSFOLK" fontsize = 12 } }
+					hbox = { spacing = 3 widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_yellow.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_SUBSISTENCE" fontsize = 12 } }
+					hbox = { spacing = 3 widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_LAND" fontsize = 12 } }
+					hbox = { spacing = 3 widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_brown_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_FARMS" fontsize = 12 } }
 					expand = {}
-					hbox = { visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')]" spacing = 6
+					hbox = { visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')]" spacing = 4
 					widget = {
 					        name = "pp_land_bar_state_overpopulation"
 					        size = { 30 30 }
@@ -7053,8 +7053,8 @@ pp_land_potential_chip = {}
 					        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
 					        icon = { size = { 30 30 } texture = "gfx/interface/icons/pp_arable_land/overused.dds" }
 					    }
-					text_single = { text = "PP_LAND_CHIP_OVERPOPULATION_TITLE" fontsize = 14 default_format = "#yellow_titles" } text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)1')|0%]" fontsize = 14 } }
-					hbox = { visible = "[And(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0'))]" spacing = 6
+					text_single = { text = "PP_LAND_CHIP_OVERPOPULATION_TITLE" fontsize = 13 default_format = "#yellow_titles" } text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)1')|0%]" fontsize = 13 } }
+					hbox = { visible = "[And(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0'))]" spacing = 4
 					widget = {
 					        name = "pp_land_bar_state_abundant"
 					        size = { 30 30 }
@@ -7077,8 +7077,8 @@ pp_land_potential_chip = {}
 					        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
 					        icon = { size = { 30 30 } texture = "gfx/interface/icons/pp_arable_land/abundant.dds" }
 					    }
-					text_single = { text = "PP_LAND_CHIP_ABUNDANT_TITLE" fontsize = 14 default_format = "#yellow_titles" } text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)1')|0%]" fontsize = 14 } }
-					hbox = { visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0')), GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_available')), '(float)0'))]" spacing = 6
+					text_single = { text = "PP_LAND_CHIP_ABUNDANT_TITLE" fontsize = 13 default_format = "#yellow_titles" } text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)1')|0%]" fontsize = 13 } }
+					hbox = { visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0')), GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_available')), '(float)0'))]" spacing = 4
 					widget = {
 					        name = "pp_land_bar_state_available"
 					        size = { 30 30 }
@@ -7101,8 +7101,8 @@ pp_land_potential_chip = {}
 					        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
 					        icon = { size = { 30 30 } texture = "gfx/interface/icons/pp_arable_land/available.dds" }
 					    }
-					text_single = { text = "PP_LAND_CHIP_AVAILABLE_TITLE" fontsize = 14 default_format = "#yellow_titles" } text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)1')|0%]" fontsize = 14 } }
-					hbox = { visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_available')), '(float)0')))]" spacing = 6
+					text_single = { text = "PP_LAND_CHIP_AVAILABLE_TITLE" fontsize = 13 default_format = "#yellow_titles" } text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)1')|0%]" fontsize = 13 } }
+					hbox = { visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_available')), '(float)0')))]" spacing = 4
 					widget = {
 					        name = "pp_land_bar_state_settled"
 					        size = { 30 30 }
@@ -7125,7 +7125,7 @@ pp_land_potential_chip = {}
 					        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
 					        icon = { size = { 30 30 } texture = "gfx/interface/icons/location_icons/population.dds" }
 					    }
-					text_single = { text = "PP_LAND_CHIP_SETTLED_TITLE" fontsize = 14 default_format = "#yellow_titles" } }
+					text_single = { text = "PP_LAND_CHIP_SETTLED_TITLE" fontsize = 13 default_format = "#yellow_titles" } }
 				}
 			}
 

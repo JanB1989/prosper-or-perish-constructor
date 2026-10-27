@@ -284,8 +284,8 @@ def _bar(texture: str, value: str, bottom: bool = False, extra: str = "") -> str
 
 def _term(part: str, key: str) -> str:
     """One legend entry under the bars: its colour swatch and its name (the numbers are in the bars)."""
-    return (f'hbox = {{ spacing = 4 widget = {{ size = {{ 16 10 }} {_bar(part, "1", bottom=True)} }} '
-            f'text_single = {{ text = "{key}" fontsize = 13 }} }}')
+    return (f'hbox = {{ spacing = 3 widget = {{ size = {{ 14 10 }} {_bar(part, "1", bottom=True)} }} '
+            f'text_single = {{ text = "{key}" fontsize = 12 }} }}')
 
 
 def _f(name: str) -> str:
@@ -386,7 +386,7 @@ vbox = {{
 
 	hbox = {{
 		layoutpolicy_horizontal = expanding
-		spacing = 12
+		spacing = 6
 {_indent(legend, 2)}
 	}}
 }}"""

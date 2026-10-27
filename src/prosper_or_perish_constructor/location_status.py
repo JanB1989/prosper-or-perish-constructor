@@ -508,9 +508,9 @@ def land_state(land_rows: dict[str, str] | None, prefix: str) -> str:
     for title, marker, chip in land_chips(land_rows, prefix):
         visible = re.search(r'^\s*visible = "([^"]*)"', chip, re.M).group(1)
         strength = (f' text_single = {{ raw_text = "[Multiply_CFixedPoint({_LOC}.GetModifierValueFixed(\'{marker}\'), '
-                    f"'(CFixedPoint)1')|0%]\" fontsize = 14 }}" if marker else "")
-        parts.append(f'hbox = {{ visible = "{visible}" spacing = 6\n{chip}'
-                     f'text_single = {{ text = "{title}" fontsize = 14 default_format = "#yellow_titles" }}{strength} }}')
+                    f"'(CFixedPoint)1')|0%]\" fontsize = 13 }}" if marker else "")
+        parts.append(f'hbox = {{ visible = "{visible}" spacing = 4\n{chip}'
+                     f'text_single = {{ text = "{title}" fontsize = 13 default_format = "#yellow_titles" }}{strength} }}')
     return "\n".join(parts)
 
 

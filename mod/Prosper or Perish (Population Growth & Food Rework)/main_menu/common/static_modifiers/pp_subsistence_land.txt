@@ -3,7 +3,8 @@
 # person +1, so the capacity is everyone but the subsistence peasants + the arable land left.
 # It cannot ride the engine's unemployed_peasants static modifier: the growth pass computes free land and
 # overpopulation BEFORE it applies unemployed_peasants, but after the script-added location modifiers. So this
-# modifier is added by script (pp_subsistence_land.txt on_action) with size = the location's idle peasants.
+# modifier is added by script (pp_subsistence_land.txt on_action) with size = the location's idle peasants, refreshed
+# once a year per country (yearly country pulse, spread over the year) and on game start.
 pp_subsistence_land = {
 	game_data = {
 		category = location

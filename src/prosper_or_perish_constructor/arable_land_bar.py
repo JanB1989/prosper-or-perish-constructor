@@ -299,10 +299,10 @@ def _clamp0(expr: str) -> str:
 
 # Both bars are BAR_WIDTH pixels on one scale; each part is its share of the scale in pixels (a data-bound size, as
 # vanilla's ToVector2f sizes; a data-bound stretch factor gave every part the same width in game, 2026-10-27)
-BAR_WIDTH = 260
-LABEL_WIDTH = 105
+BAR_WIDTH = 440
+LABEL_WIDTH = 100
 # a part's number shows where the part is wide enough for it (share of the bar)
-_LABEL_SHARE = "0.1"
+_LABEL_SHARE = "0.06"
 
 
 def _segment(share: str, texture: str, label: str = "") -> str:
@@ -323,6 +323,7 @@ def _row(label: str, segments: list[str]) -> str:
     parts line up on one scale."""
     parts = "\n".join(segments)
     return f"""hbox = {{
+	layoutpolicy_horizontal = expanding
 	spacing = 8
 	widget = {{
 		size = {{ {LABEL_WIDTH} 18 }}

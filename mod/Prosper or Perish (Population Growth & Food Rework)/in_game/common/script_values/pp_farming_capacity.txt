@@ -8,7 +8,7 @@ farm_capacity = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
-		subtract = 5
+		subtract = pp_townsfolk_capacity
 		divide = 5
 		floor = yes
 	}
@@ -20,433 +20,433 @@ farm_capacity = {
 # Selected upgrade targets also omit replaceable lower-tier rows.
 
 farm_capacity_max_wheat_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_wheat_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_wheat_farmstead = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_wheat_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_wheat_rotations = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_wheat_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_wheat_model_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_wheat_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_rice_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_rice_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_rice_farmstead = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_rice_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_rice_rotations = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_rice_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_rice_model_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_rice_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_millet_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_millet_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_millet_farmstead = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_millet_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_millet_rotations = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_millet_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_millet_model_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_millet_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_maize_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_maize_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_maize_farmstead = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_maize_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_maize_rotations = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_maize_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_maize_model_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_maize_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_legume_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_legume_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_legume_farmstead = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_legume_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_legume_rotations = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_legume_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_legume_model_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_legume_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_potato_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_potato_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_potato_farmstead = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_potato_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_potato_rotations = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_potato_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_potato_model_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_potato_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_olive_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_olive_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_olive_farmstead = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_olive_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_olive_rotations = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_olive_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_olive_model_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_olive_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_cattle_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_1 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_cattle_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_cattle_farmstead = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_1 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_cattle_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_cattle_rotations = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_1 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_cattle_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_cattle_model_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_1 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_cattle_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_fruit_orchard = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_fruit_orchard_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_nursery_orchard = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_nursery_orchard_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_pomological_orchard = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_pomological_orchard_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_sheep_farms = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_1 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_sheep_farms_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_hurdled_sheepcotes = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_1 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_hurdled_sheepcotes_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_enclosed_sheep_walks = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_1 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_enclosed_sheep_walks_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_horse_breeders = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_1 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_horse_breeders_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_stud_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_1 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_stud_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_elephant_kraal = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_1 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_elephant_kraal_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_camel_herders = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_1 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_camel_herders_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_camel_stud = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_1 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_camel_stud_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_fiber_crops_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_fiber_crops_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_fiber_dressing_yard = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_fiber_dressing_yard_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_cotton_plantation = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_cotton_plantation_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_cotton_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_cotton_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_market_cotton_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_market_cotton_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_sugar_plantation = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_sugar_plantation_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_sugarcane_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_sugarcane_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_trapiche_sugarcane_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_trapiche_sugarcane_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_tobacco_plantation = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_tobacco_plantation_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_tobacco_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_tobacco_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_market_tobacco_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_market_tobacco_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_dye_plantation = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_dye_plantation_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_chili_plantation = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_chili_plantation_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_clove_grove = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_clove_grove_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_cocoa_grove = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_cocoa_grove_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_managed_cocoa_grove = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_managed_cocoa_grove_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_coffee_grove = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_coffee_grove_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_terraced_coffee_grove = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_terraced_coffee_grove_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_incense_grove = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_incense_grove_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_pepper_garden = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_pepper_garden_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_managed_pepper_garden = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_managed_pepper_garden_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_saffron_croft = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_saffron_croft_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_saffron_kiln_croft = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_saffron_kiln_croft_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_sericulture_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_sericulture_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_regulated_sericulture_farm = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_regulated_sericulture_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_simplers_grove = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_simplers_grove_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_tea_garden = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_tea_garden_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_tea_sorting_garden = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_tea_sorting_garden_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_vineyard_estate = {
-	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_5 }
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_vineyard_estate_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
@@ -879,23 +879,30 @@ farm_capacity_max_wheat_rotations_own_levels = {
 	add = modifier:pp_levels_wheat_farmstead
 }
 
-pp_free_farmland_levels_land_10_reserve_5 = {
+pp_free_farmland_levels_land_10_reserve_0 = {
 	value = modifier:local_population_capacity
-	subtract = 5
+	subtract = pp_townsfolk_capacity
 	divide = 10
 	floor = yes
 }
 
-pp_free_farmland_levels_land_2_reserve_1 = {
+pp_free_farmland_levels_land_2_reserve_0 = {
 	value = modifier:local_population_capacity
-	subtract = 1
+	subtract = pp_townsfolk_capacity
 	divide = 2
 	floor = yes
 }
 
-pp_free_farmland_levels_land_5_reserve_5 = {
+pp_free_farmland_levels_land_5_reserve_0 = {
 	value = modifier:local_population_capacity
-	subtract = 5
+	subtract = pp_townsfolk_capacity
 	divide = 5
 	floor = yes
+}
+
+pp_townsfolk_capacity = {
+	# The capacity everyone but the subsistence peasants brings (total_population +1, unemployed_peasants -1)
+	value = population
+	subtract = "unemployed_pops_of_pop_type_in_location(pop_type:peasants)"
+	min = 0
 }

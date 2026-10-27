@@ -141,6 +141,9 @@ TRY_REPLACE:total_population = {
 	# 7 on 2026-10-06 (af413ddc), 10 the same day: start validator world -0.40 % -> +1.02 % over 96 months.
 	local_food_capacity = 10
 	# local_food_capacity = 300
+	# 2026-10-27 (Jan): every person brings 1 capacity (strength = population in thousands, exact); unemployed_peasants
+	# takes it back from the subsistence peasants, who live on the arable land.
+	local_population_capacity = 1
 }
 # capped at max 100 this value
 TRY_REPLACE:location_exports = {
@@ -246,6 +249,9 @@ TRY_REPLACE:unemployed_peasants = {
 	local_institution_growth_modifier = -0.0050
 	local_construction_speed = 0.0001
 	local_migration_attraction = -0.001
+	# 2026-10-27 (Jan): a subsistence peasant lives on the arable land. With total_population's +1 every person except
+	# the subsistence peasants brings their own capacity, so the capacity is everyone else + the arable land left.
+	local_population_capacity = -1
 }
 
 TRY_INJECT:market_center = {

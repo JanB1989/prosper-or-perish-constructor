@@ -73,9 +73,9 @@ def test_farm_max_levels_read_in_levels_of_the_farm() -> None:
             ("add", "BUILDING_LEVEL_WB_FREE_FARMLAND"), ("add", "PP_BUILDING_LEVEL_FARM_OWN_LEVELS")
         ], building
         free, own = rows[0][2], rows[1][2]
-        # Free Arable Land = floor((flat - reserve) / land); this farm = its own (and its replaceable tiers') level
-        # counters: the sum is the old cap exactly (2026-10-23)
-        assert re.search(rf"(?ms)^{free} = \{{\n\tvalue = modifier:local_population_capacity\n\tsubtract = [\d.]+\n\tdivide = [\d.]+\n\tfloor = yes\n\}}", text)
+        # Free Arable Land = floor((flat - the townsfolk's own capacity) / land) (2026-10-27: no reserve); this farm =
+        # its own (and its replaceable tiers') level counters: the sum is the cap exactly (2026-10-23)
+        assert re.search(rf"(?ms)^{free} = \{{\n\tvalue = modifier:local_population_capacity\n\tsubtract = pp_townsfolk_capacity\n\tdivide = [\d.]+\n\tfloor = yes\n\}}", text)
         body = re.search(rf"(?ms)^{own} = \{{\n(.*?)^\}}", text).group(1)
         assert f"add = modifier:pp_levels_{building}" in body
 

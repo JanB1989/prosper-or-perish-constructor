@@ -732,7 +732,6 @@ def test_foreign_buildings_support_their_own_level() -> None:
         raw = _re.search(r"(?ms)^\s*raw_modifier = \{(?P<inner>.*?)\}", body)
         assert raw is not None, key
         assert _re.search(r"(?m)^\s*free_building_levels = 1\s*$", raw.group("inner")), key
-        assert "local_population_capacity" in raw.group("inner"), key  # the footprint lands in the same block
 
 
 def test_river_restore_sees_the_engine_river() -> None:

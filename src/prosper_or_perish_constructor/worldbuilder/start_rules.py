@@ -188,6 +188,10 @@ class Rules:
             return float(ctx.get("buildings", {}).get(match[1], 0))
         if key == "total_building_levels":
             return sum(ctx.get("buildings", {}).values())
+        if key == "pp_townsfolk_capacity":
+            # the farm caps take the townsfolk's own capacity (total_population +1, unemployed_peasants -1) back out
+            # of the flat; the simulated flat is land only and never had it
+            return 0.0
         if key in self.values:
             return self.value(self.values[key], ctx, depth + 1)
         raise Unresolved("value " + key)

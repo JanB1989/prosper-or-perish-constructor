@@ -4,10 +4,9 @@ Reads the panel from the built ``location_window.gui`` (so the preview follows t
 own bar textures (DDS -> PNG) and fills it with one location of a save:
 
 - buildings and their levels from the save (eu5save), the land per level from ``arable_land_bar.model``;
-- natural land = the World Builder's attribute rows (handover ``location_targets.csv``) + development, as the offline
-  capacity rebuild does; housing = building footprint + rank housing;
-- the capacity multiplier from the owner's researched advances, the traditional-economy societal value and the capital.
-  Missing small terms: reforms, religion, privileges, historical capital, timed modifiers. Whole levels, not the
+- the location's land = the World Builder's attribute rows (handover ``location_targets.csv``) + development + the rank's
+  capacity; townsfolk = population - unemployed peasants (each brings their own capacity);
+- no capacity multiplier unless given (--multiplier): the % sources are gone since 2026-10-27. Whole levels, not the
   engine's input-scaled counters. So the numbers are close, not exact: the game's own figure is printed next to it
   when given (--game-capacity).
 
@@ -43,18 +42,24 @@ WIDTH = 720
 
 # --- values ------------------------------------------------------------------------------------------------------
 
-def _advance_capacity() -> dict[str, float]:
-    found: dict[str, float] = {}
-    for root in (GAME, MOD):
-        for path in sorted((root / "in_game/common/advances").glob("*.txt")):
-            text = path.read_text(encoding="utf-8-sig")
-            for match in re.finditer(r"(?m)^([\w:]+)\s*=\s*\{", text):
-                body = text[match.end():alb._block_end(text, match.end() - 1)]
-                value = re.search(r"global_population_capacity_modifier\s*=\s*(-?[\d.]+)", body)
-                if value:
-                    key = alb._bare(match.group(1))[1]
-                    found[key] = found.get(key, 0.0) + float(value.group(1))
-    return found
+def _rank_capacity() -> dict[str, float]:
+    """Flat capacity of each location rank's rank_modifier (vanilla plus the mod's injects)."""
+    from eu5gameparser.clausewitz.parser import parse_file
+
+    ranks: dict[str, float] = {}
+    for path in sorted((GAME / "in_game/common/location_ranks").glob("*.txt")) + sorted((MOD / "in_game/common/location_ranks").glob("*.txt")):
+        for entry in parse_file(path).entries:
+            if not isinstance(entry.value, CList):
+                continue
+            kind, key = alb._bare(str(entry.key))
+            if kind != "inject":
+                ranks[key] = 0.0
+            for block in entry.value.values("rank_modifier"):
+                if isinstance(block, CList):
+                    for item in block.entries:
+                        if str(item.key) == alb.CAPACITY and isinstance(item.value, (int, float)):
+                            ranks[key] = ranks.get(key, 0.0) + float(item.value)
+    return ranks
 
 
 def save_values(location: str, save: str | None, multiplier: float | None = None) -> dict[str, float]:
@@ -63,48 +68,33 @@ def save_values(location: str, save: str | None, multiplier: float | None = None
     import polars as pl
 
     t = quick.load(save, load_order=ROOT / "constructor.load_order.toml")
-    tables = {name: getattr(t, name) for name in ("locations", "buildings", "country_advances", "country_ai", "countries_raw")}
     print(f"save: {t.save.name}")
-    loc = tables["locations"].filter(pl.col("slug") == location).row(0, named=True)
-    buildings = tables["buildings"].filter(pl.col("location_slug") == location)
+    loc = t.locations.filter(pl.col("slug") == location).row(0, named=True)
     levels: dict[str, float] = {}
-    for row in buildings.iter_rows(named=True):
+    for row in t.buildings.filter(pl.col("location_slug") == location).iter_rows(named=True):
         levels[row["building_type"]] = levels.get(row["building_type"], 0.0) + (row["level"] or 0.0)
     m = alb.model(MOD, GAME)
     improvements = sum(levels.get(b.key, 0) * b.land for b in m.improvements)
-    farms = sum(levels.get(b.key, 0) * -b.land for b in m.farms)
-    reserved = sum(levels.get(b.key, 0) * -b.land for b in m.reserved)
-    housing = sum(levels.get(b.key, 0) * b.land for b in m.housing) + m.rank_housing.get(loc["rank"], 0.0)
+    farms = sum(levels.get(b.key, 0) * -b.land for b in m.farms + m.reserved)
     with HANDOVER.open(encoding="utf-8") as handle:
         target = next(r for r in csv.DictReader(handle) if r["location_tag"] == location)
-    natural = float(target["attribute_flat_people"]) / 1000 + (loc["development"] or 0.0)
-
-    owner = loc["owner_country_id"]
-    advances = _advance_capacity()
-    researched = tables["country_advances"].filter(tables["country_advances"]["country_id"] == owner)["advance"].to_list()
-    global_pct = sum(advances.get(a, 0.0) for a in researched)
-    ai = tables["country_ai"].filter(tables["country_ai"]["country_id"] == owner)
-    if ai.height:
-        sv = ai.row(0, named=True).get("sv_capital_economy_vs_traditional_economy") or 0.0
-        global_pct += -0.25 * max(0.0, sv) / 100
-    capital = tables["countries_raw"].filter(tables["countries_raw"]["country_id"] == owner)
-    local_pct = 0.15 if capital.height and capital.row(0, named=True)["capital"] == loc["location_id"] else 0.0
-    mult = max(0.0, 1 + local_pct + global_pct) if multiplier is None else multiplier
-
-    v = {"natural": natural * mult, "improvements": improvements * mult, "farms": farms * mult,
-         "reserved": reserved * mult, "housing": housing * mult, "subsistence": loc["unemployed_peasants"] or 0.0,
-         "multiplier_percent": (mult - 1) * 100, "room": float("nan")}
-    v["land"] = v["natural"] + v["improvements"]
-    v["taken"] = v["farms"] + v["reserved"]
-    v["positive"] = v["land"] + v["housing"]
-    v["capacity"] = v["positive"] - v["taken"]
-    v["used"] = v["taken"] + v["subsistence"]
-    v["used_percent"] = v["used"] / v["land"] * 100 if v["land"] else 0.0
-    scale = max(v["positive"], v["taken"], 0.001)
-    v.update(f_natural=v["natural"] / scale, f_natural_improvements=v["land"] / scale,
-             f_positive=v["positive"] / scale, f_taken=v["taken"] / scale)
-    v["_population"] = loc["total_population"] or 0.0
-    v["_date"] = 0.0
+    natural = (float(target["attribute_flat_people"]) / 1000 + (loc["development"] or 0.0)
+               + _rank_capacity().get(loc["rank"] or "", 0.0))
+    mult = 1.0 if multiplier is None else multiplier       # the capacity % sources are gone (2026-10-27)
+    population = loc["total_population"] or 0.0
+    subsistence = loc["unemployed_peasants"] or 0.0
+    v = {"population": population, "subsistence": subsistence, "townsfolk": max(0.0, population - subsistence),
+         "natural": natural * mult, "improvements": improvements * mult, "farms": farms * mult}
+    v["townsfolk_room"] = v["townsfolk"] * mult
+    v["left"] = v["natural"] + v["improvements"] - v["farms"]
+    v["capacity"] = v["townsfolk_room"] + max(0.0, v["left"])
+    v["percent"] = population / v["capacity"] * 100 if v["capacity"] else 0.0
+    land = v["capacity"] + v["farms"]
+    scale = max(land, population, 0.001)
+    v.update(f_population=population / scale, f_within=min(population, v["capacity"]) / scale,
+             f_townsfolk=v["townsfolk"] / scale, f_townsfolk_room=v["townsfolk_room"] / scale,
+             f_capacity=v["capacity"] / scale, f_land=land / scale)
+    v["_population"] = population
     return {f"pp_land_bar_{k}" if not k.startswith("_") else k: x for k, x in v.items()}
 
 
@@ -313,7 +303,7 @@ def main() -> None:
     body = element("vbox", block, values, loc, "root")
     note = (f"{args.location}: preview capacity {values['pp_land_bar_capacity']:.1f}K"
             + (f", game {args.game_capacity:.1f}K" if args.game_capacity is not None else "")
-            + f"; multiplier {values['pp_land_bar_multiplier_percent']:+.0f}%. Layout approximated; textures are the game's.")
+            + ". Layout approximated; textures are the game's.")
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(PAGE.format(width=WIDTH, panel=body, note=html.escape(note)), encoding="utf-8")
     print(note)

@@ -903,10 +903,12 @@ buildings = { wheat = "wheat_farm", rice = "rice_farm", millet = "millet_farm", 
 # irrigation systems 2, which let irrigated fields stack to 160 levels).
 
 [worldbuilder.farm_land]
-# capacity units (1 unit = 1,000 people) a farm level takes from subsistence land, and the land that must stay
-arable = { land = 5, reserve = 5 }
-plantation = { land = 10, reserve = 5 }
-herd = { land = 2, reserve = 1 }
+# capacity units (1 unit = 1,000 people) a farm level takes from subsistence land, and the land that must stay.
+# Reserve 0 since 2026-10-27 (Jan): everyone but the subsistence peasants brings their own capacity (total_population
+# +1, unemployed_peasants -1), so farms can take all the arable land without capacity ever reaching zero (was 5 / 5 / 1).
+arable = { land = 5, reserve = 0 }
+plantation = { land = 10, reserve = 0 }
+herd = { land = 2, reserve = 0 }
 
 [worldbuilder.farm_land.classes]
 # cash crops take twice the land of grain; their methods carry the throughput to pay for it (2026-09-26: outputs x4)

@@ -6924,50 +6924,55 @@ pp_land_potential_chip = {}
 				}
 			}
 
-			# PP: the Arable Land bar (arable_land_bar.py): what adds capacity, the farms' land laid over it from the right
+			# PP: population and capacity bars (arable_land_bar.py): the population on its capacity, one scale
 			vbox = {
 				name = "pp_arable_land_bar"
 				layoutpolicy_horizontal = expanding
 				margin = { 12 6 }
-				spacing = 5
+				spacing = 4
 				background = { using = color_dark_blue_texture alpha = 0.85 }
 				tooltip = "PP_LAND_BAR_TT"
 
 				hbox = {
 					layoutpolicy_horizontal = expanding
-					spacing = 10
-					text_single = { text = "PP_LAND_BAR_TITLE" default_format = "#yellow_titles" fontsize = 15 }
+					spacing = 8
+					widget = {
+						size = { 150 18 }
+						text_single = { text = "PP_LAND_BAR_POPULATION" parentanchor = vcenter fontsize = 14 default_format = "#yellow_titles" }
+					}
 					widget = {
 						layoutpolicy_horizontal = expanding
-						size = { -1 21 }
-						widget = {
-							size = { 100% 15 }
-							progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_purple.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = "[FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_positive'))]" direction = horizontal }
-							progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_blue_alt.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = "[FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_natural_improvements'))]" direction = horizontal }
-							progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = "[FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_natural'))]" direction = horizontal }
-							progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_black.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = "[FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_taken'))]" direction = horizontal invertprogress = yes alpha = 0.65 }
-						}
-						widget = {
-							size = { 100% 5 }
-							parentanchor = bottom
-							progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_brown_alt.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = "[FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_taken'))]" direction = horizontal invertprogress = yes }
-						}
+						size = { -1 16 }
+						progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_red_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = "[FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population'))]" direction = horizontal }
+						progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_yellow.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = "[FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_within'))]" direction = horizontal }
+						progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_grey_alt.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = "[FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk'))]" direction = horizontal }
+					}
+				}
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 8
+					widget = {
+						size = { 150 18 }
+						text_single = { text = "PP_LAND_BAR_CAPACITY" parentanchor = vcenter fontsize = 14 default_format = "#yellow_titles" }
+					}
+					widget = {
+						layoutpolicy_horizontal = expanding
+						size = { -1 16 }
+						progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_brown_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = "[FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_land'))]" direction = horizontal alpha = 0.75 }
+						progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = "[FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))]" direction = horizontal }
+						progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_grey_alt.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = "[FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room'))]" direction = horizontal }
 					}
 				}
 
 				hbox = {
 					layoutpolicy_horizontal = expanding
-					spacing = 8
+					spacing = 12
 					expand = {}
-					hbox = { spacing = 4 widget = { size = { 16 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_natural')|0]K" fontsize = 14 } }
-					text_single = { raw_text = "+" fontsize = 14 alpha = 0.7 }
-					hbox = { spacing = 4 widget = { size = { 16 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_blue_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_improvements')|0]K" fontsize = 14 } }
-					text_single = { raw_text = "+" fontsize = 14 alpha = 0.7 }
-					hbox = { spacing = 4 widget = { size = { 16 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_purple.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_housing')|0]K" fontsize = 14 } }
-					text_single = { raw_text = "-" fontsize = 14 alpha = 0.7 }
-					hbox = { spacing = 4 widget = { size = { 16 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_brown_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_taken')|0]K" fontsize = 14 } }
-					text_single = { raw_text = "=" fontsize = 14 alpha = 0.7 }
-					text_single = { raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_capacity')|0]K" fontsize = 15 default_format = "#yellow_titles" }
+					hbox = { spacing = 4 widget = { size = { 16 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_grey_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_TOWNSFOLK" fontsize = 13 } text_single = { raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_townsfolk')|0]K" fontsize = 13 } }
+					hbox = { spacing = 4 widget = { size = { 16 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_yellow.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_SUBSISTENCE" fontsize = 13 } text_single = { raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_subsistence')|0]K" fontsize = 13 } }
+					hbox = { spacing = 4 widget = { size = { 16 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_LAND" fontsize = 13 } text_single = { raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_left')|0]K" fontsize = 13 } }
+					hbox = { spacing = 4 widget = { size = { 16 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_brown_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_FARMS" fontsize = 13 } text_single = { raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_farms')|0]K" fontsize = 13 } }
+					text_single = { raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_percent')|0]%" fontsize = 15 default_format = "#yellow_titles" }
 				}
 			}
 

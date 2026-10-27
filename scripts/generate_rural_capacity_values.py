@@ -123,25 +123,38 @@ def _farm_land_constants() -> tuple[dict[str, tuple[float, float]], tuple[float,
     return per_building, default
 
 
+# The arable land left in the flat capacity: total_population gives every person +1 and unemployed_peasants takes -1
+# from every subsistence peasant (2026-10-27, Jan), so the capacity of everyone else is taken back out here. The farm
+# cap counts land only; without this a town's people would count as farmland. The start simulation models the flat as
+# land only and reads this value as 0 (start_rules.py).
+TOWNSFOLK_CAPACITY = "pp_townsfolk_capacity"
+
+
+def _arable_rows(land: float, reserve: float, depth: int) -> list[str]:
+    FARM_HELPERS[TOWNSFOLK_CAPACITY] = _script_value(
+        TOWNSFOLK_CAPACITY,
+        [_line("value = population", 1), _line('subtract = "unemployed_pops_of_pop_type_in_location(pop_type:peasants)"', 1),
+         _line("min = 0", 1)],
+        ["The capacity everyone but the subsistence peasants brings (total_population +1, unemployed_peasants -1)"],
+    )
+    rows = [_line("value = modifier:local_population_capacity", depth), _line(f"subtract = {TOWNSFOLK_CAPACITY}", depth)]
+    if reserve:
+        rows.append(_line(f"subtract = {reserve:g}", depth))
+    return rows + [_line(f"divide = {land:g}", depth), _line("floor = yes", depth)]
+
+
 def _free_land_rows(land: float, reserve: float, desc: str) -> list[str]:
-    return [
-        _line("add = {", 1),
-        _line(f'desc = "{desc}"', 2),
-        _line("value = modifier:local_population_capacity", 2),
-        _line(f"subtract = {reserve:g}", 2),
-        _line(f"divide = {land:g}", 2),
-        _line("floor = yes", 2),
-        _line("}", 1),
-    ]
+    return [_line("add = {", 1), _line(f'desc = "{desc}"', 2), *_arable_rows(land, reserve, 2), _line("}", 1)]
 
 
 def _farm_source_rows(
     omit_building: str | None = None,
     omit_buildings: Iterable[str] = (),
 ) -> list[str]:
-    """Farm capacity = remaining farmland: (flat population capacity - reserve) / land per level.
+    """Farm capacity = remaining farmland: (arable land left - reserve) / land per level.
 
-    The flat already contains -land per built farm level (raw_modifier on each farm building), so the
+    The arable land left is the flat capacity without the capacity everyone but the subsistence peasants brings. It
+    already contains -land per built farm level (raw_modifier on each farm building), so the
     public value is the land still free for farms, in farm levels. Per-building max values add the building's
     own levels back (its level counter pp_levels_<farm> is +1 per level) so the max is the same number no matter
     how many of it exist; replaceable lower tiers are added back too.
@@ -178,15 +191,7 @@ def _free_farmland_helper(land: float, reserve: float) -> str:
     """Free arable land for a farm with this land per level and reserve, in its levels (floored, as the cap always
     had it)."""
     name = f"pp_free_farmland_levels_land_{land:g}_reserve_{reserve:g}".replace(".", "_")
-    FARM_HELPERS[name] = _script_value(
-        name,
-        [
-            _line("value = modifier:local_population_capacity", 1),
-            _line(f"subtract = {reserve:g}", 1),
-            _line(f"divide = {land:g}", 1),
-            _line("floor = yes", 1),
-        ],
-    )
+    FARM_HELPERS[name] = _script_value(name, _arable_rows(land, reserve, 1))
     return name
 
 

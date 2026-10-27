@@ -503,20 +503,18 @@ def land_chips(land_rows: dict[str, str] | None, prefix: str) -> list[tuple[str,
 
 
 def land_state(land_rows: dict[str, str] | None, prefix: str) -> str:
-    """The land state in a line: its chip (the same tooltip as the status card's), its name and its strength."""
+    """The land state the population bars make: its chip (name, effects and strength in the tooltip) and its strength.
+    Since 2026-10-27 the only place the location view shows it (Jan: show it once, beside the bars)."""
     parts = []
-    for title, marker, chip in land_chips(land_rows, prefix):
+    for _, marker, chip in land_chips(land_rows, prefix):
         visible = re.search(r'^\s*visible = "([^"]*)"', chip, re.M).group(1)
         strength = (f' text_single = {{ raw_text = "[Multiply_CFixedPoint({_LOC}.GetModifierValueFixed(\'{marker}\'), '
-                    f"'(CFixedPoint)1')|0%]\" fontsize = 13 }}" if marker else "")
-        parts.append(f'hbox = {{ visible = "{visible}" spacing = 4\n{chip}'
-                     f'text_single = {{ text = "{title}" fontsize = 13 default_format = "#yellow_titles" }}{strength} }}')
+                    f"'(CFixedPoint)1')|0%]\" fontsize = 14 default_format = \"#yellow_titles\" }}" if marker else "")
+        parts.append(f'hbox = {{ visible = "{visible}" spacing = 4\n{chip}{strength} }}')
     return "\n".join(parts)
 
 
-def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stored_rows: str | None = None) -> str:
-    # Without the modifier types the land chips fall back to the full-strength effects.
-    land_rows = land_rows or {name: _text(LAND_STRENGTH_TEXT[name]) + " " + _scrolled(_row(name)) for name in LAND_MODIFIERS.values()}
+def status_row(harvests: Harvests, stored_rows: str | None = None) -> str:
     starving = f"{_LOC}.GetProvince.IsStarving"
     months = f"[{_LOC}.MakeScope.ScriptValue('pp_province_food_storage_months')|0]"
     overlay = f"""
@@ -531,7 +529,7 @@ def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stor
                   "PP_FOOD_CHIP_STARVING_TITLE", "pp_starvation",
                   _text("PP_FOOD_CHIP_STARVING") + " " + _row("province_starving"))
 
-    land = "".join(chip for _, _, chip in land_chips(land_rows, "pp_status_land"))
+    # the land state sits beside the population bars (arable_land_bar.py, land_state), not in this card
     harvest = harvest_chip(harvests)
 
     return f"""\t\t\t\t\t\t# PP STATUS CHIPS: top right, mirroring the geography card at the bottom left
@@ -545,18 +543,18 @@ def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stor
 \t\t\t\t\t\t\t\tusing = bg_cabinet_card_frame
 \t\t\t\t\t\t\t\thbox = {{
 \t\t\t\t\t\t\t\t\tspacing = 5
-{food}{land}{harvest}\t\t\t\t\t\t\t\t}}
+{food}{harvest}\t\t\t\t\t\t\t\t}}
 \t\t\t\t\t\t\t}}
 \t\t\t\t\t\t}}
 """
 
 
-def add_status_row(text: str, harvests: Harvests, land_rows: dict[str, str] | None = None, stored_rows: str | None = None) -> str:
+def add_status_row(text: str, harvests: Harvests, stored_rows: str | None = None) -> str:
     """Anchor the status card to the top-right corner of the scene, beside the IO and periphora buttons' row."""
     found = text.count(_ANCHOR)
     if found != 1:
         raise ValueError(f"location_window.gui: expected 1 top-row anchor for the status chips, found {found}")
-    return text.replace(_ANCHOR, _ANCHOR[:_SPLIT] + status_row(harvests, land_rows, stored_rows) + _ANCHOR[_SPLIT:])
+    return text.replace(_ANCHOR, _ANCHOR[:_SPLIT] + status_row(harvests, stored_rows) + _ANCHOR[_SPLIT:])
 
 
 def write_harvest_files(mod_root: Path, harvests: Harvests) -> int:

@@ -652,7 +652,7 @@ def test_land_state_icons_exist():
     """The chip, the concepts and the card draw the states with tools/build_arable_land_icons.py's icons."""
     for name in ("abundant", "available", "overused"):
         assert (MOD_ROOT / "main_menu" / f"gfx/interface/icons/{location_status.LAND_ICONS}/{name}.dds").is_file()
-    status = location_status.status_row(location_status.Harvests())
+    status = location_status.land_state(None, "pp_land_bar_state")
     assert all(f"{location_status.LAND_ICONS}/{n}.dds" in status for n in ("abundant", "available", "overused"))
 
 

@@ -299,7 +299,7 @@ def _clamp0(expr: str) -> str:
 
 # Both bars are BAR_WIDTH pixels on one scale; each part is its share of the scale in pixels (a data-bound size, as
 # vanilla's ToVector2f sizes; a data-bound stretch factor gave every part the same width in game, 2026-10-27)
-BAR_WIDTH = 440
+BAR_WIDTH = 370
 LABEL_WIDTH = 100
 # a part's number shows where the part is wide enough for it (share of the bar)
 _LABEL_SHARE = "0.06"
@@ -360,8 +360,9 @@ def gui_block(indent: str = "", land_state: str = "") -> str:
 
     Population: townsfolk (grey) and subsistence peasants (yellow), red beyond the capacity. Capacity: the same
     townsfolk (grey), the arable land left (green), then the farms' land (brown) past the end of the capacity. Every
-    part carries its number; under the bars a legend of the colours and the land state the two bars make (the arable
-    land chip: overused / available / abundant, with its strength); the breakdown is in the tooltip.
+    part carries its number. Right of the bars the land state they make (the arable land chip: overused / available /
+    abundant, with its strength; its tooltip has the effects), under them a legend of the colours; the breakdown is
+    in the bars' tooltip.
     """
     over = _clamp0(f"Subtract_float({_f('pp_land_bar_population')}, {_f('pp_land_bar_capacity')})")
     population = _row("PP_LAND_BAR_POPULATION", [
@@ -380,23 +381,33 @@ def gui_block(indent: str = "", land_state: str = "") -> str:
         _term("land", "PP_LAND_BAR_LAND"),
         _term("farms", "PP_LAND_BAR_FARMS"),
         "expand = {}",
-        land_state,
     ])
-    block = f"""# PP: population and capacity bars (arable_land_bar.py): the population on its capacity, one scale
+    block = f"""# PP: population and capacity bars (arable_land_bar.py): the population on its capacity, one scale, and right of
+# them the land state the two make (the location view's only arable land chip)
 vbox = {{
 	name = "pp_arable_land_bar"
 	layoutpolicy_horizontal = expanding
 	margin = {{ 12 6 }}
 	spacing = 4
 	background = {{ using = color_dark_blue_texture alpha = 0.85 }}
-	tooltip = "PP_LAND_BAR_TT"
 
-{_indent(population, 1)}
-{_indent(capacity, 1)}
+	hbox = {{
+		layoutpolicy_horizontal = expanding
+		spacing = 8
+		vbox = {{
+			spacing = 4
+			tooltip = "PP_LAND_BAR_TT"
+{_indent(population, 3)}
+{_indent(capacity, 3)}
+		}}
+		expand = {{}}
+{_indent(land_state, 2)}
+	}}
 
 	hbox = {{
 		layoutpolicy_horizontal = expanding
 		spacing = 6
+		tooltip = "PP_LAND_BAR_TT"
 {_indent(legend, 2)}
 	}}
 }}"""

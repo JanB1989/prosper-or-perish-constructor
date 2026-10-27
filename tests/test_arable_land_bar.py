@@ -117,15 +117,15 @@ def test_threshold_lines_cross_both_bars_at_a_tenth_of_the_capacity_and_at_the_c
     assert column.index("alpha = 0.4") < lines_at < column.index("ScriptValue('pp_land_bar_townsfolk')|0]K")
     # labelled above the bars: 10% at the first line, 100% at the second (a 12 px row, bars 16 px lower)
     assert column.index('raw_text = "10%"') < column.index('raw_text = "100%"') < column.index("position = { 0 16 }")
-    # the farms' land: green with the hatch, between the capacity line and the room for improvements (a gross bar
-    # whose net is the capacity line)
-    hatch = alb.HATCH.as_posix()
-    assert column.count(hatch) == 1 and "progress_bar_brown_alt.dds" not in column
-    assert column.index("'pp_land_bar_f_capacity'") < column.index(hatch) < column.index("alpha = 0.4")
+    # the farms' land: green with brown stripes, between the capacity line and the room for improvements (faded green,
+    # green stripes): a gross bar whose net is the capacity line
+    farms, room = (alb.HATCHES[part].as_posix() for part in ("farms", "room"))
+    assert column.count(farms) == 1 and column.count(room) == 1 and "progress_bar_brown_alt.dds" not in column
+    assert column.index("'pp_land_bar_f_capacity'") < column.index(farms) < column.index("alpha = 0.4") < column.index(room)
     assert ("Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), "
             "FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')))") in column
     assert "spriteType = Corneredtiled spriteborder = { 0 0 } texture_density = 2" in column
-    assert (MOD_ROOT / "main_menu" / alb.HATCH).is_file()
+    assert all((MOD_ROOT / "main_menu" / path).is_file() for path in alb.HATCHES.values())
     assert alb.ABUNDANT_SHARE == "0.1"
     capacity = "FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))"
     abundant = f"Multiply_float({capacity}, '(float)0.1')"

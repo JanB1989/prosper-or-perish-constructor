@@ -10,7 +10,7 @@ The engine still compares the whole population with that capacity, so the panel 
 - Population capacity: the same townsfolk (grey: they cancel out), then the arable land left (green: the location's
   land and improvements after the farms), then past the end of the capacity the land the farms hold (green with brown
   stripes: the land is there, the farms take it; a gross bar with the capacity line as its net, 2026-10-27, Jan), then
-  the land the improvements still buildable here could add (faded green).
+  the land the improvements still buildable here could add (faded green with green stripes, like the farms' part).
 - two thin lines across both bars at the engine's land state thresholds (2026-10-27, Jan): 10 % of the capacity (left
   of it abundant free land, which also needs fewer than 10,000 people) and the capacity (right of it overpopulation),
   labelled "10%" and "100%" above the bars.
@@ -426,9 +426,10 @@ TEXTURES = {"townsfolk": "progress_bar_grey_alt", "subsistence": "progress_bar_y
             "land": "progress_bar_green_alt", "farms": "progress_bar_green_alt", "room": "progress_bar_green_alt"}
 # a part drawn faded (the room for improvements: land not there yet)
 ALPHA = {"room": 0.4}
-# a part with the hatch over it (the farms' land: land that is there, held by the farms); tools/build_land_bar_hatch.py
-HATCH = Path("gfx/interface/progressbars/pp_land_bar_farms_hatch.dds")
-HATCHED = {"farms"}
+# the parts past the capacity carry stripes (tools/build_land_bar_hatch.py): brown over the farms' land (land that is
+# there, held by the farms), green over the room for improvements (land not there yet)
+HATCHES = {"farms": Path("gfx/interface/progressbars/pp_land_bar_farms_hatch.dds"),
+           "room": Path("gfx/interface/progressbars/pp_land_bar_room_hatch.dds")}
 # the threshold lines: a light 1 px core in a dark 3 px line (reads on the dark panel and on every bar colour)
 _LINE_LIGHT = "gfx/interface/progressbars/progress_bar_whiteish.dds"
 
@@ -448,8 +449,8 @@ def _bar(texture: str, value: str, bottom: bool = False, extra: str = "") -> str
         extra += f" alpha = {ALPHA[texture]}"
     bar = _BAR.format(texture=TEXTURES[texture], empty=_EMPTY if texture in ALPHA else (_BACK if bottom else _EMPTY),
                       value=shown, extra=extra)
-    if texture in HATCHED:   # tiled like vanilla's striped overlays (texture density 2)
-        bar += (f' widget = {{ size = {{ 100% 100% }} background = {{ texture = "{HATCH.as_posix()}" '
+    if texture in HATCHES:   # tiled like vanilla's striped overlays (texture density 2)
+        bar += (f' widget = {{ size = {{ 100% 100% }} background = {{ texture = "{HATCHES[texture].as_posix()}" '
                 f'spriteType = Corneredtiled spriteborder = {{ 0 0 }} texture_density = 2 }} }}')
     return bar
 
@@ -744,7 +745,7 @@ def gui_block(indent: str = "", land_state: str = "") -> str:
 
     Population: townsfolk (grey) and subsistence peasants (yellow, one part), the ones beyond the capacity marked red
     over the yellow. Capacity: the same townsfolk (grey), the arable land left (green), then past the end of the
-    capacity the land the farms hold (green, brown stripes) and the room for improvements (faded green). Every part carries its number; two thin lines across both bars mark the
+    capacity the land the farms hold (green, brown stripes) and the room for improvements (faded green, green stripes). Every part carries its number; two thin lines across both bars mark the
     land state thresholds, labelled 10% and 100% of the capacity above the bars. Right of the bars the land state they make (the arable land chip: overused / available / abundant,
     with its strength; its tooltip has the effects), under them a legend of the colours; the breakdown is in the
     bars' tooltip.

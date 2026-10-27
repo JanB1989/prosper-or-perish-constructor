@@ -71,6 +71,10 @@ _CARD_SIZE = "{ 85 46 }"   # two 30 px chips (food, harvest), 5 apart, 10 margin
 _LOC = "LocationView.GetLocation"
 _ICONS = "gfx/interface/icons"
 LAND_ICONS = "pp_arable_land"   # abundant / available / overused .dds under _ICONS (tools/build_arable_land_icons.py)
+# the land states' round frames: green / gold / red like their badges (the harvest chip's recoloured frames, 2026-10-27,
+# Jan); the settled state keeps the climate frame
+LAND_FRAMES = {"abundant": HARVEST_FRAMES.format(severity="very_good"), "available": HARVEST_FRAMES.format(severity="poor"),
+               "overpopulation": HARVEST_FRAMES.format(severity="abysmal")}
 
 
 def harvest_modifiers(text: str) -> list[str]:
@@ -204,7 +208,10 @@ def _row(modifier: str, visible: str | None = None) -> str:
     return f'TooltipStringPairList = {{ {test}textcontext = "[ShowModifierEffect(\'{modifier}\')]" }}'
 
 
-def _chip(name: str, visible: str, icon: str, title: str, concept: str, content: str, overlay: str = "") -> str:
+def _chip(name: str, visible: str, icon: str, title: str, concept: str, content: str, overlay: str = "",
+          frame: str | None = None) -> str:
+    """A 30 px status chip; its round frame is the location's climate frame unless ``frame`` names a texture."""
+    frame = frame or f"[GetClimateFrame({_LOC}.GetClimate)]"
     return f"""widget = {{
         name = "{name}"
         size = {{ 30 30 }}
@@ -217,14 +224,14 @@ def _chip(name: str, visible: str, icon: str, title: str, concept: str, content:
             blockoverride "title_icon" {{
                 widget = {{
                     using = tooltip_title_icon_size
-                    background = {{ texture = "[GetClimateFrame({_LOC}.GetClimate)]" }}
+                    background = {{ texture = "{frame}" }}
                     icon = {{ using = tooltip_title_icon_size texture = "{icon}" }}
                 }}
             }}
             blockoverride "tooltip_content" {{ {content} }}
         }}
     }}
-        background = {{ texture = "[GetClimateFrame({_LOC}.GetClimate)]" }}
+        background = {{ texture = "{frame}" }}
         icon = {{ size = {{ 30 30 }} texture = "{icon}" }}{overlay}
     }}
 """
@@ -493,7 +500,7 @@ def land_chips(land_rows: dict[str, str] | None, prefix: str) -> list[tuple[str,
     ]
     rows = {"overpopulation": "overpopulation", "abundant": "abundant_free_land", "available": "available_free_land"}
     chips = [(f"{key}_TITLE", marker, _chip(f"{prefix}_{name}", visible, f"{_ICONS}/{LAND_ICONS}/{icon}", f"{key}_TITLE", concept,
-                                           _text(key) + " " + land_rows[rows[name]]))
+                                           _text(key) + " " + land_rows[rows[name]], frame=LAND_FRAMES[name]))
              for name, visible, icon, key, concept, marker in states]
     chips.append(("PP_LAND_CHIP_SETTLED_TITLE", "",
                   _chip(f"{prefix}_settled", f"And3(Not({over}), Not({abundant}), Not({available}))",

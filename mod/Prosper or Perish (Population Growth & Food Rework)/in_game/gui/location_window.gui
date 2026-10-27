@@ -6876,14 +6876,18 @@ pp_land_potential_chip = {}
 							}
 							widget = {
 								size = { 370 56 }
-								hbox = {
-									size = { 100% 12 }
+								widget = {
+									position = { 0 0 }
+									size = { 370 12 }
 									visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0')]"
-									widget = { size = "[ToVector2f(Max_float(Subtract_float(Multiply_float(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1'), '(float)370'), '(float)17.0'), '(float)0'), '(float)12')]" }
-									widget = { visible = "[GreaterThan_float(Multiply_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1')), '(float)370'), '(float)34')]" size = { 34 12 } text_single = { parentanchor = center fontsize = 11 raw_text = "10%" } }
-									widget = { size = "[ToVector2f(Max_float(Subtract_float(Multiply_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1')), '(float)370'), '(float)34'), '(float)0'), '(float)12')]" }
-									widget = { size = { 34 12 } text_single = { parentanchor = center fontsize = 11 raw_text = "100%" } }
-									expand = {}
+									hbox = {
+										size = { 100% 100% }
+										widget = { size = "[ToVector2f(Max_float(Subtract_float(Multiply_float(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1'), '(float)370'), '(float)17.0'), '(float)0'), '(float)12')]" }
+										widget = { size = { 34 12 } text_single = { visible = "[GreaterThan_float(Multiply_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1')), '(float)370'), '(float)34')]" parentanchor = center fontsize = 11 raw_text = "10%" } }
+										widget = { size = "[ToVector2f(Max_float(Subtract_float(Multiply_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1')), '(float)370'), '(float)34'), '(float)0'), '(float)12')]" }
+										widget = { size = { 34 12 } text_single = { parentanchor = center fontsize = 11 raw_text = "100%" } }
+										expand = {}
+									}
 								}
 								widget = {
 									position = { 0 16 }

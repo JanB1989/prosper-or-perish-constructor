@@ -655,14 +655,22 @@ def _threshold_labels() -> str:
     capacity = _share("capacity")
     abundant = f"Multiply_float({capacity}, '(float){ABUNDANT_SHARE}')"
     gap = _px(f"Subtract_float({capacity}, {abundant})")
-    near = _line_label("10%").replace("widget = {", f"widget = {{ visible = \"[GreaterThan_float({gap}, '(float){LABEL_BOX}')]\"", 1)
+    # the 10 % label hides its text, not its box: the box keeps the 100 % label's x
+    near = _line_label("10%").replace("text_single = {", f"text_single = {{ visible = \"[GreaterThan_float({gap}, '(float){LABEL_BOX}')]\"", 1)
     parts = [
         _spacer(f"Subtract_float({_px(abundant)}, '(float){LABEL_BOX / 2}')", LABEL_ROW),
         near,
         _spacer(f"Subtract_float({gap}, '(float){LABEL_BOX}')", LABEL_ROW),
         _line_label("100%"),
     ]
-    return _layer(parts, f"size = {{ 100% {LABEL_ROW} }}\nvisible = \"[GreaterThan_float({capacity}, '(float)0')]\"")
+    # a fixed box at the top of the bars' column: an hbox alone stretched to the column's height and centred the labels
+    # on the population bar (in game, 2026-10-27)
+    return f"""widget = {{
+	position = {{ 0 0 }}
+	size = {{ {BAR_WIDTH} {LABEL_ROW} }}
+	visible = "[GreaterThan_float({capacity}, '(float)0')]"
+{_indent(_layer(parts), 1)}
+}}"""
 
 
 def _bars(rows: list[tuple[str, list[Segment], list[str] | None]]) -> str:

@@ -925,6 +925,6 @@ pp_free_farmland_levels_land_5_reserve_0 = {
 pp_townsfolk_capacity = {
 	# The capacity everyone but the subsistence peasants brings (total_population +1, unemployed_peasants -1)
 	value = population
-	subtract = "unemployed_pops_of_pop_type_in_location(pop_type:peasants)"
+	subtract = pp_subsistence_peasants
 	min = 0
 }

@@ -52,7 +52,15 @@ def test_capacity_is_everyone_but_the_subsistence_peasants():
     static = (MOD_ROOT / "main_menu/common/static_modifiers/pp_subsistence_land.txt").read_text(encoding="utf-8-sig")
     assert re.search(r"(?m)^\s*local_population_capacity = -1\s*$", static)
     effect = (MOD_ROOT / "in_game/common/scripted_effects/pp_subsistence_land_effects.txt").read_text(encoding="utf-8-sig")
-    assert 'size = "unemployed_pops_of_pop_type_in_location(pop_type:peasants)"' in effect
+    assert "size = pp_subsistence_peasants" in effect
+    # never below 0: the game's idle count goes negative where buildings offer more peasant jobs than there are peasants
+    # (Figueira da Foz 1837: -3,258 gave +3,260 Arable Land); the bar and the farm cap read the same floored count
+    values = (MOD_ROOT / "in_game/common/script_values/pp_subsistence_peasants.txt").read_text(encoding="utf-8-sig")
+    assert re.search(r'pp_subsistence_peasants = \{\s*value = "unemployed_pops_of_pop_type_in_location\(pop_type:peasants\)"'
+                     r'\s*min = 0\s*\}', values)
+    assert "pp_land_bar_subsistence = { value = pp_subsistence_peasants }" in alb.render_script_values(alb.model(MOD_ROOT, None))
+    farm_cap = (MOD_ROOT / "in_game/common/script_values/pp_farming_capacity.txt").read_text(encoding="utf-8-sig")
+    assert "subtract = pp_subsistence_peasants" in farm_cap and "unemployed_pops_of_pop_type_in_location" not in farm_cap
     on_action = (MOD_ROOT / "in_game/common/on_action/pp_subsistence_land.txt").read_text(encoding="utf-8-sig")
     # yearly, spread over the year (2026-10-27, Jan: idle peasants move little; a month of refreshes cost 0.02 s)
     assert "yearly_country_pulse" in on_action and "days = { 0 364 }" in on_action and "on_game_start" in on_action

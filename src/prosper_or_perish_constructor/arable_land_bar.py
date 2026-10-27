@@ -169,7 +169,7 @@ pp_land_bar_multiplier = {
 # People, in thousands: the subsistence peasants live on the arable land, everyone else (the townsfolk) brings their
 # own capacity (total_population +1 for every person, unemployed_peasants -1 for every subsistence peasant)
 pp_land_bar_population = { value = population }
-pp_land_bar_subsistence = { value = "unemployed_pops_of_pop_type_in_location(pop_type:peasants)" }
+pp_land_bar_subsistence = { value = pp_subsistence_peasants }
 pp_land_bar_townsfolk = { value = pp_land_bar_population subtract = pp_land_bar_subsistence min = 0 }
 
 # Flat capacity units: the arable land left is the capacity without the townsfolk's own; the farms (and reserved

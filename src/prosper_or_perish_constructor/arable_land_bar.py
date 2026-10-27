@@ -7,10 +7,15 @@ The engine still compares the whole population with that capacity, so the panel 
 
 - Population: the townsfolk (grey), then the subsistence peasants (yellow, one part with their whole number); the part
   of them beyond the capacity is marked over the yellow (a red tint with red edges), its number in the tooltip.
-- Population capacity: the same townsfolk (grey: they cancel out), then the arable land left (green), then the land the
-  farms take (brown, past the end of the capacity). The subsistence peasants live on the green; farms grow into it.
+- Population capacity: the same townsfolk (grey: they cancel out), then the arable land left (green: the location's
+  land and improvements after the farms), then past the end of the capacity the land the improvements still buildable
+  here could add (faded green; 2026-10-27, Jan: the bar shows only what gives land, the farms are a tooltip row).
 - two thin lines across both bars at the engine's land state thresholds (2026-10-27, Jan): 10 % of the capacity (left
-  of it abundant free land, which also needs fewer than 10,000 people) and the capacity (right of it overpopulation).
+  of it abundant free land, which also needs fewer than 10,000 people) and the capacity (right of it overpopulation),
+  labelled "10%" and "100%" above the bars.
+- room for improvements: per improvement cap (one building, or the members of a shared cap) the cap clamped like the
+  members' caps, minus the standing levels, times the land per level of the best member whose ``location_potential``
+  the location passes (geography and culture gates; country gates and research are ignored: what the land allows).
 - every part is as wide as its share of the common scale (data-bound pixel sizes on a fixed bar width) and carries
   its number; under the bars a legend of the
   colours and the land state the two bars make (the arable land chip with its strength: the engine's free land or
@@ -24,6 +29,7 @@ capacity row). Every value includes the location's remaining capacity modifiers.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -33,6 +39,7 @@ from eu5gameparser.clausewitz.syntax import CList
 SCRIPT_VALUES = Path("in_game/common/script_values/pp_arable_land_bar.txt")
 LOCALIZATION = Path("main_menu/localization/english/pp_arable_land_bar_l_english.yml")
 BUILDING_TYPES = Path("in_game/common/building_types")
+CAPS = Path("in_game/common/script_values/pp_wb_building_caps.txt")
 CAPACITY = "local_population_capacity"
 FARM_COUNTER = "pp_levels_"
 IMPROVEMENT_COUNTER = "pp_wb_levels_"
@@ -47,6 +54,7 @@ class Building:
     land: float = 0.0                       # raw_modifier local_population_capacity per level
     counters: set[str] = field(default_factory=set)
     max_levels: str | None = None
+    potential: str | None = None            # location_potential, rendered as trigger text
 
     @property
     def counter(self) -> str | None:
@@ -56,10 +64,18 @@ class Building:
 
 
 @dataclass
+class CapUnit:
+    equation: str                           # the script value the members' caps add
+    limit: float | None                     # the members' level clamp (the World Builder level limit)
+    members: list[Building]
+
+
+@dataclass
 class Model:
     improvements: list[Building]
     farms: list[Building]
     reserved: list[Building]
+    units: list[CapUnit] = field(default_factory=list)
 
 
 def _bare(key: str) -> tuple[str, str]:
@@ -94,8 +110,27 @@ def _block_end(text: str, open_brace: int) -> int:
     raise ValueError("unbalanced block")
 
 
+_TOP_BLOCK = re.compile(r"(?m)^([\w:]+)[ \t]*=[ \t]*\{")
+_POTENTIAL = re.compile(r"(?m)^[ \t]*location_potential[ \t]*=[ \t]*\{")
+
+
+def potentials(text: str) -> dict[str, str]:
+    """building key -> its location_potential as one line of trigger text (the file text itself: the game-data
+    parser does not keep ``?=``)."""
+    found: dict[str, str] = {}
+    for match in _TOP_BLOCK.finditer(text):
+        end = _block_end(text, match.end() - 1)
+        inner = _POTENTIAL.search(text, match.end(), end)
+        if inner:
+            body = text[inner.end():_block_end(text, inner.end() - 1)]
+            body = re.sub(r"#[^\n]*", "", body)
+            found[_bare(match.group(1))[1]] = " ".join(body.split())
+    return found
+
+
 def _read_buildings(paths: list[Path], buildings: dict[str, Building]) -> None:
     for path in paths:
+        gates = potentials(path.read_text(encoding="utf-8-sig"))
         for entry in parse_file(path).entries:
             if not isinstance(entry.value, CList):
                 continue
@@ -115,6 +150,8 @@ def _read_buildings(paths: list[Path], buildings: dict[str, Building]) -> None:
             levels = entry.value.first("max_levels")
             if isinstance(levels, str):
                 building.max_levels = levels
+            if key in gates:
+                building.potential = gates[key]
 
 
 def buildings(mod_root: Path, vanilla_game: Path | None) -> dict[str, Building]:
@@ -126,13 +163,42 @@ def buildings(mod_root: Path, vanilla_game: Path | None) -> dict[str, Building]:
     return found
 
 
+_CAP_EQUATION = re.compile(r"^\s*(?:add|value)\s*=\s*(pp_wb_cap_\w+)\s*$", re.M)
+_CAP_LIMIT = re.compile(r'max\s*=\s*\{\s*desc\s*=\s*"BUILDING_LEVEL_WB_MAXIMUM"\s*value\s*=\s*([\d.]+)')
+
+
+def _cap_blocks(text: str) -> dict[str, str]:
+    blocks: dict[str, str] = {}
+    for match in re.finditer(r"(?m)^(pp_wb_cap_\w+)\s*=\s*\{", text):
+        blocks[match.group(1)] = text[match.end():_block_end(text, match.end() - 1)]
+    return blocks
+
+
+def cap_units(mod_root: Path, improvements: list[Building]) -> list[CapUnit]:
+    """Group the improvement buildings by the equation their caps add (one building, or a shared cap's members)."""
+    path = mod_root / CAPS
+    blocks = _cap_blocks(path.read_text(encoding="utf-8-sig")) if path.is_file() else {}
+    units: dict[str, CapUnit] = {}
+    for building in improvements:
+        body = blocks.get(building.max_levels or "", "")
+        equation = _CAP_EQUATION.search(body)
+        name = equation.group(1) if equation else building.max_levels
+        limit = _CAP_LIMIT.search(body)
+        unit = units.setdefault(name, CapUnit(name, None, []))
+        if limit:
+            unit.limit = max(unit.limit or 0.0, float(limit.group(1)))
+        unit.members.append(building)
+    return sorted(units.values(), key=lambda unit: unit.equation)
+
+
 def model(mod_root: Path, vanilla_game: Path | None) -> Model:
     found = buildings(mod_root, vanilla_game)
     improvements = [b for b in found.values() if (b.max_levels or "").startswith("pp_wb_cap_") and b.land > 0]
     farms = [b for b in found.values() if b.land < 0 and any(c.startswith(FARM_COUNTER) for c in b.counters)]
     reserved = [b for b in found.values() if b.land < 0 and b not in farms]
     key = lambda b: b.key  # noqa: E731
-    return Model(sorted(improvements, key=key), sorted(farms, key=key), sorted(reserved, key=key))
+    return Model(sorted(improvements, key=key), sorted(farms, key=key), sorted(reserved, key=key),
+                 cap_units(mod_root, improvements))
 
 
 def _num(value: float) -> str:
@@ -141,6 +207,34 @@ def _num(value: float) -> str:
 
 def _level(key: str) -> str:
     return f'"location_building_level(building_type:{key})"'
+
+
+def _unit_name(unit: CapUnit) -> str:
+    return "pp_land_bar_room_" + unit.equation.removeprefix("pp_wb_cap_")
+
+
+def _room(unit: CapUnit) -> str:
+    """Land the unit's improvements could still add: (clamped cap - standing levels) x the best member's land."""
+    name = _unit_name(unit)
+    lines = [f"{name} = {{", f"\tvalue = {unit.equation}"]
+    if unit.limit is not None:
+        lines.append(f"\tmax = {_num(unit.limit)}")
+    for b in unit.members:
+        lines.append(f"\tif = {{ limit = {{ has_building = building_type:{b.key} }} subtract = {_level(b.key)} }}")
+    lines.append("\tmin = 0")
+    lines.append(f"\tmultiply = {name}_land")
+    lines.append("}")
+    land = [f"{name}_land = {{", "\tvalue = 0"]
+    first = True
+    for b in sorted(unit.members, key=lambda b: (-b.land, b.key)):   # the best member the location allows
+        if b.potential:
+            land.append(f"\t{'if' if first else 'else_if'} = {{ limit = {{ {b.potential} }} value = {_num(b.land)} }}")
+            first = False
+        else:
+            land.append(f"\tvalue = {_num(b.land)}" if first else f"\telse = {{ value = {_num(b.land)} }}")
+            break
+    land.append("}")
+    return "\n".join(lines) + "\n" + "\n".join(land)
 
 
 def _land_sum(name: str, members: list[Building], comment: str, counters: bool) -> str:
@@ -190,14 +284,16 @@ pp_land_bar_left_shown = { value = pp_land_bar_left min = 0 }
 pp_land_bar_farms = { value = pp_land_bar_taken_flat multiply = pp_land_bar_multiplier }
 pp_land_bar_natural = { value = pp_land_bar_natural_flat multiply = pp_land_bar_multiplier }
 pp_land_bar_improvements = { value = pp_land_bar_improvements_flat multiply = pp_land_bar_multiplier }
+pp_land_bar_room = { value = pp_land_bar_room_flat multiply = pp_land_bar_multiplier }
 pp_land_bar_capacity = { value = pp_land_bar_townsfolk_room add = pp_land_bar_left_shown }
 pp_land_bar_percent = {
 	value = 0
 	if = { limit = { pp_land_bar_capacity > 0 } value = pp_land_bar_population divide = pp_land_bar_capacity multiply = 100 }
 }
 
-# Bar fractions (0..1) on one scale for both bars: the population, or the capacity with the farms' land past its end
-pp_land_bar_scale_land = { value = pp_land_bar_capacity add = pp_land_bar_farms }
+# Bar fractions (0..1) on one scale for both bars: the population, or the capacity with the room for improvements past
+# its end
+pp_land_bar_scale_land = { value = pp_land_bar_capacity add = pp_land_bar_room }
 pp_land_bar_scale = {
 	value = pp_land_bar_scale_land
 	if = { limit = { pp_land_bar_population > pp_land_bar_scale_land } value = pp_land_bar_population }
@@ -227,6 +323,10 @@ def render_script_values(m: Model) -> str:
         _land_sum("pp_land_bar_farms_flat", m.farms, "Land the farms take (raw_modifier capacity per level)", counters=True),
         _land_sum("pp_land_bar_reserved_flat", m.reserved,
                   "Land the reserved grounds take (buildings with negative capacity and no farm counter)", counters=False),
+        "# Room for improvements: per cap, the land its improvements could still add\n"
+        "pp_land_bar_room_flat = {\n\tvalue = 0\n"
+        + "".join(f"\tadd = {_unit_name(unit)}\n" for unit in m.units) + "}",
+        *(_room(unit) for unit in m.units),
     ]
     return "\n\n".join(part.strip("\n") if i else part.rstrip("\n") for i, part in enumerate(parts)) + "\n"
 
@@ -273,6 +373,7 @@ LOC_TEXT = {
     "PP_LAND_BAR_SUBSISTENCE": "[pp_subsistence_peasants|e]",
     "PP_LAND_BAR_LAND": "[Concept('population_capacity', 'Arable land left')|e]",
     "PP_LAND_BAR_FARMS": "[pp_farm_land|e]",
+    "PP_LAND_BAR_ROOM": "[Concept('pp_land_improvements', 'Possible improvements')|e]",
     # the bars' tooltip (2026-10-27, Jan: lists, not prose; every row label a concept link)
     "PP_LAND_BAR_TT_TITLE": "Population and Arable Land",
     "PP_LAND_BAR_TT_TOTAL": "Total",
@@ -312,7 +413,9 @@ _BAR = ('progressbar = {{ size = {{ 100% 100% }} progresstexture = "gfx/interfac
 _EMPTY = "gfx/interface/icons/unit_view/moral_bar_transparent.dds"
 _BACK = "gfx/interface/progressbars/progress_black.dds"
 TEXTURES = {"townsfolk": "progress_bar_grey_alt", "subsistence": "progress_bar_yellow", "over": "progress_bar_red",
-            "land": "progress_bar_green_alt", "farms": "progress_bar_brown_alt"}
+            "land": "progress_bar_green_alt", "farms": "progress_bar_brown_alt", "room": "progress_bar_green_alt"}
+# a part drawn faded (the room for improvements: land not there yet)
+ALPHA = {"room": 0.4}
 # the threshold lines: a light 1 px core in a dark 3 px line (reads on the dark panel and on every bar colour)
 _LINE_LIGHT = "gfx/interface/progressbars/progress_bar_whiteish.dds"
 
@@ -328,7 +431,10 @@ def _fraction(name: str) -> str:
 def _bar(texture: str, value: str, bottom: bool = False, extra: str = "") -> str:
     """A bar layer; ``value`` is a data expression, or a plain number (a full swatch)."""
     shown = value if value.replace(".", "").isdigit() else f'"[{value}]"'
-    return _BAR.format(texture=TEXTURES[texture], empty=_BACK if bottom else _EMPTY, value=shown, extra=extra)
+    if texture in ALPHA:
+        extra += f" alpha = {ALPHA[texture]}"
+    return _BAR.format(texture=TEXTURES[texture], empty=_EMPTY if texture in ALPHA else (_BACK if bottom else _EMPTY),
+                       value=shown, extra=extra)
 
 
 def _over_mark(edge: int) -> str:
@@ -398,12 +504,14 @@ def tooltip_block() -> str:
         ("PP_LAND_BAR_TOWNSFOLK", _v("pp_land_bar_townsfolk"), "townsfolk"),
         ("PP_LAND_BAR_SUBSISTENCE", _v("pp_land_bar_subsistence"), "subsistence"),
     ], ("PP_LAND_BAR_TT_TOTAL", _v("pp_land_bar_population")), after=" " + over)
+    room = _tt_row("PP_LAND_BAR_ROOM", "+" + _v("pp_land_bar_room"), "room", shaded=True,
+                   visible=f"GreaterThan_float({_f('pp_land_bar_room')}, '(float)0')")
     capacity = _tt_list("PP_LAND_BAR_CAPACITY", [
         ("PP_LAND_BAR_TOWNSFOLK", "+" + _v("pp_land_bar_townsfolk_room"), "townsfolk"),
         ("PP_LAND_BAR_TT_NATURAL", "+" + _v("pp_land_bar_natural"), "land"),
         ("PP_LAND_BAR_TT_IMPROVEMENTS", "+" + _v("pp_land_bar_improvements"), "land"),
         ("PP_LAND_BAR_FARMS", "-" + _v("pp_land_bar_farms"), "farms"),
-    ], ("PP_LAND_BAR_TT_TOTAL", _v("pp_land_bar_capacity")))
+    ], ("PP_LAND_BAR_TT_TOTAL", _v("pp_land_bar_capacity")), after=" " + room)
     icon = "gfx/interface/icons/modifier_types/total_population_capacity_modifier.dds"
     return f"""tooltipwidget = {{
 	ContextualTooltipType = {{
@@ -531,11 +639,37 @@ def _threshold_lines() -> str:
                          f"visible = \"[GreaterThan_float({capacity}, '(float)0')]\"")
 
 
+# the lines' labels: a row above the bars, each label LABEL_BOX px wide and centred on its line
+LABEL_ROW = 12
+LABEL_BOX = 34
+
+
+def _line_label(text: str) -> str:
+    return (f'widget = {{ size = {{ {LABEL_BOX} {LABEL_ROW} }} text_single = {{ parentanchor = center fontsize = 11 '
+            f'raw_text = "{text}" }} }}')
+
+
+def _threshold_labels() -> str:
+    """"10%" and "100%" above the threshold lines (share of the capacity): what the lines mark. The 10 % label shows
+    only where the two lines are far enough apart for both."""
+    capacity = _share("capacity")
+    abundant = f"Multiply_float({capacity}, '(float){ABUNDANT_SHARE}')"
+    gap = _px(f"Subtract_float({capacity}, {abundant})")
+    near = _line_label("10%").replace("widget = {", f"widget = {{ visible = \"[GreaterThan_float({gap}, '(float){LABEL_BOX}')]\"", 1)
+    parts = [
+        _spacer(f"Subtract_float({_px(abundant)}, '(float){LABEL_BOX / 2}')", LABEL_ROW),
+        near,
+        _spacer(f"Subtract_float({gap}, '(float){LABEL_BOX}')", LABEL_ROW),
+        _line_label("100%"),
+    ]
+    return _layer(parts, f"size = {{ 100% {LABEL_ROW} }}\nvisible = \"[GreaterThan_float({capacity}, '(float)0')]\"")
+
+
 def _bars(rows: list[tuple[str, list[Segment], list[str] | None]]) -> str:
     """The labels in one column and the bars in another, each bar a track of the same width in the same column: both
     bars start at the same x whatever their labels (in rows of their own they did not, 2026-10-27). Over the bars'
     column, so they move nothing: the threshold lines, then the parts' numbers."""
-    labels = "\n".join(_label(key) for key, _, _ in rows)
+    labels = "\n".join([f"widget = {{ size = {{ {LABEL_WIDTH} {LABEL_ROW} }} }}"] + [_label(key) for key, _, _ in rows])
 
     def column(tracks: list[str]) -> str:
         return f"""vbox = {{
@@ -553,10 +687,15 @@ def _bars(rows: list[tuple[str, list[Segment], list[str] | None]]) -> str:
 {_indent(labels, 2)}
 	}}
 	widget = {{
-		size = {{ {BAR_WIDTH} {_BARS_HEIGHT} }}
-{_indent(bars, 2)}
-{_indent(_threshold_lines(), 2)}
-{_indent(numbers, 2)}
+		size = {{ {BAR_WIDTH} {LABEL_ROW + 4 + _BARS_HEIGHT} }}
+{_indent(_threshold_labels(), 2)}
+		widget = {{
+			position = {{ 0 {LABEL_ROW + 4} }}
+			size = {{ {BAR_WIDTH} {_BARS_HEIGHT} }}
+{_indent(bars, 3)}
+{_indent(_threshold_lines(), 3)}
+{_indent(numbers, 3)}
+		}}
 	}}
 }}"""
 
@@ -578,9 +717,9 @@ def gui_block(indent: str = "", land_state: str = "") -> str:
     """The panel under the location view's scene: the population on its capacity, as two bars on one scale.
 
     Population: townsfolk (grey) and subsistence peasants (yellow, one part), the ones beyond the capacity marked red
-    over the yellow. Capacity: the same townsfolk (grey), the arable land left (green), then the farms' land (brown)
-    past the end of the capacity. Every part carries its number; two thin lines across both bars mark the land state
-    thresholds. Right of the bars the land state they make (the arable land chip: overused / available / abundant,
+    over the yellow. Capacity: the same townsfolk (grey), the arable land left (green), then the room for improvements
+    (faded green) past the end of the capacity. Every part carries its number; two thin lines across both bars mark the
+    land state thresholds, labelled 10% and 100% of the capacity above the bars. Right of the bars the land state they make (the arable land chip: overused / available / abundant,
     with its strength; its tooltip has the effects), under them a legend of the colours; the breakdown is in the
     bars' tooltip.
     """
@@ -597,13 +736,13 @@ def gui_block(indent: str = "", land_state: str = "") -> str:
     capacity = ("PP_LAND_BAR_CAPACITY", [
         (_share("townsfolk_room"), "townsfolk", _k(_sv("pp_land_bar_townsfolk_room"))),
         (_part("capacity", "townsfolk_room"), "land", _k(_sv("pp_land_bar_left_shown"))),
-        (_part("land", "capacity"), "farms", _k(_sv("pp_land_bar_farms"))),
+        (_part("land", "capacity"), "room", _k(_sv("pp_land_bar_room"))),
     ], None)
     legend = "\n".join([
         _term("townsfolk", "PP_LAND_BAR_TOWNSFOLK"),
         _term("subsistence", "PP_LAND_BAR_SUBSISTENCE"),
         _term("land", "PP_LAND_BAR_LAND"),
-        _term("farms", "PP_LAND_BAR_FARMS"),
+        _term("room", "PP_LAND_BAR_ROOM"),
         "expand = {}",
     ])
     block = f"""# PP: population and capacity bars (arable_land_bar.py): the population on its capacity, one scale, and right of
@@ -619,7 +758,7 @@ vbox = {{
 		layoutpolicy_horizontal = expanding
 		spacing = 8
 		widget = {{
-			size = {{ {LABEL_WIDTH + 8 + BAR_WIDTH} 40 }}
+			size = {{ {LABEL_WIDTH + 8 + BAR_WIDTH} {LABEL_ROW + 4 + _BARS_HEIGHT} }}
 {_indent(tooltip_block(), 3)}
 {_indent(_bars([population, capacity]), 3)}
 		}}
@@ -686,5 +825,6 @@ def write(mod_root: Path, vanilla_game: Path | None) -> Result:
     m = model(mod_root, vanilla_game)
     files = ((SCRIPT_VALUES, render_script_values(m)), (LOCALIZATION, render_localization()), (CONCEPTS, render_concepts()))
     changed = [str(rel) for rel, text in files if _write(mod_root / rel, text)]
-    counts = {"improvements": len(m.improvements), "farms": len(m.farms), "reserved grounds": len(m.reserved)}
+    counts = {"improvements": len(m.improvements), "caps": len(m.units), "farms": len(m.farms),
+              "reserved grounds": len(m.reserved)}
     return Result(counts, changed)

@@ -223,6 +223,7 @@
   PP_LAND_BAR_SUBSISTENCE: "[pp_subsistence_peasants|e]"
   PP_LAND_BAR_LAND: "[Concept('population_capacity', 'Arable land left')|e]"
   PP_LAND_BAR_FARMS: "[pp_farm_land|e]"
+  PP_LAND_BAR_ROOM: "[Concept('pp_land_improvements', 'Possible improvements')|e]"
   PP_LAND_BAR_TT_TITLE: "Population and Arable Land"
   PP_LAND_BAR_TT_TOTAL: "Total"
   PP_LAND_BAR_TT_NATURAL: "[pp_location_land|e]"

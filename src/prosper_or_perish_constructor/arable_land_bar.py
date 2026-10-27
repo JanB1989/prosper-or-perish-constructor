@@ -238,16 +238,15 @@ LOC_TEXT = {
     "PP_LAND_BAR_SUBSISTENCE": "Subsistence peasants",
     "PP_LAND_BAR_LAND": "Arable land left",
     "PP_LAND_BAR_FARMS": "Farms",
-    "PP_LAND_BAR_TT": (
-        f"Population: {_v('pp_land_bar_townsfolk')} townsfolk (everyone who is not a subsistence peasant) "
-        f"and {_v('pp_land_bar_subsistence')} subsistence peasants.\\n"
-        f"[population_capacity|E]: {_v('pp_land_bar_townsfolk_room')} for the townsfolk, who each bring their own, "
-        f"and {_v('pp_land_bar_left')} arable land left.\\n\\n"
-        f"Arable land left: the location's land {_v('pp_land_bar_natural')} and its improvements "
-        f"{_v('pp_land_bar_improvements')}, minus {_v('pp_land_bar_farms')} the farms take.\\n\\n"
-        "The subsistence peasants live on the arable land left. Farms can take all of it: a new farm pushes them out, "
-        "and they leave until the location fits its capacity again."
-    ),
+    # the bars' tooltip (2026-10-27, Jan: lists, not prose)
+    "PP_LAND_BAR_TT_TITLE": "Population and Arable Land",
+    "PP_LAND_BAR_TT_TOTAL": "Total",
+    "PP_LAND_BAR_TT_TOWNSFOLK_ROOM": "Townsfolk, their own room",
+    "PP_LAND_BAR_TT_NATURAL": "The location's land",
+    "PP_LAND_BAR_TT_IMPROVEMENTS": "Improvements",
+    "PP_LAND_BAR_TT_FARMS": "Taken by farms",
+    "PP_LAND_BAR_TT_NOTE": "Everyone but the subsistence peasants brings their own room. The subsistence peasants live "
+                           "on the arable land left; a new farm takes land from them.",
 }
 
 
@@ -281,6 +280,52 @@ def _bar(texture: str, value: str, bottom: bool = False, extra: str = "") -> str
     """A bar layer; ``value`` is a data expression, or a plain number (a full swatch)."""
     shown = value if value.replace(".", "").isdigit() else f'"[{value}]"'
     return _BAR.format(texture=TEXTURES[texture], empty=_BACK if bottom else _EMPTY, value=shown, extra=extra)
+
+
+def _tt_row(key: str, value: str, part: str | None, shaded: bool, total: bool = False) -> str:
+    """One row of the bars' tooltip, as vanilla's tooltip tables: the bar's colour swatch, the name left, the value
+    right; every second row shaded, a total in the title colour."""
+    background = ('blockoverride "field_background" { background = { using = tooltip_table_field_texture } }' if shaded
+                  else 'blockoverride "field_background" {}')
+    swatch = (f'widget = {{ size = {{ 14 10 }} {_bar(part, "1", bottom=True)} }} ' if part
+              else 'widget = { size = { 14 10 } } ')
+    style = ' default_format = "#yellow_titles"' if total else ""
+    return (f'TooltipTableField = {{ {background} spacing = 6 blockoverride "field_content" {{ {swatch}'
+            f'text_single = {{ layoutpolicy_horizontal = expanding align = left|nobaseline text = "{key}"{style} }} '
+            f'text_single = {{ align = right|nobaseline raw_text = "{value}"{style} }} }} }}')
+
+
+def _tt_list(title: str, rows: list[tuple[str, str, str | None]], total: tuple[str, str]) -> str:
+    fields = " ".join(_tt_row(key, value, part, index % 2 == 1) for index, (key, value, part) in enumerate(rows))
+    fields += " " + _tt_row(total[0], total[1], None, len(rows) % 2 == 1, total=True)
+    return f'TooltipListBase = {{ blockoverride "block_title" {{ text = "{title}" }} {fields} }}'
+
+
+def tooltip_block() -> str:
+    """The bars' tooltip: vanilla's contextual tooltip with the Arable Land icon, the population and the capacity as
+    two lists (swatch, name, value; total last) and one line on how the land is used."""
+    population = _tt_list("PP_LAND_BAR_POPULATION", [
+        ("PP_LAND_BAR_TOWNSFOLK", _v("pp_land_bar_townsfolk"), "townsfolk"),
+        ("PP_LAND_BAR_SUBSISTENCE", _v("pp_land_bar_subsistence"), "subsistence"),
+    ], ("PP_LAND_BAR_TT_TOTAL", _v("pp_land_bar_population")))
+    capacity = _tt_list("PP_LAND_BAR_CAPACITY", [
+        ("PP_LAND_BAR_TT_TOWNSFOLK_ROOM", "+" + _v("pp_land_bar_townsfolk_room"), "townsfolk"),
+        ("PP_LAND_BAR_TT_NATURAL", "+" + _v("pp_land_bar_natural"), "land"),
+        ("PP_LAND_BAR_TT_IMPROVEMENTS", "+" + _v("pp_land_bar_improvements"), "land"),
+        ("PP_LAND_BAR_TT_FARMS", "-" + _v("pp_land_bar_farms"), "farms"),
+    ], ("PP_LAND_BAR_TT_TOTAL", _v("pp_land_bar_capacity")))
+    icon = "gfx/interface/icons/modifier_types/total_population_capacity_modifier.dds"
+    return f"""tooltipwidget = {{
+	ContextualTooltipType = {{
+		blockoverride "title_text" {{ text = "PP_LAND_BAR_TT_TITLE" }}
+		blockoverride "concept_link" {{ visible = yes text = "[population_capacity|E]" }}
+		blockoverride "title_icon" {{ icon = {{ using = tooltip_title_icon_size texture = "{icon}" }} }}
+		blockoverride "tooltip_content" {{
+			vbox = {{ layoutpolicy_horizontal = expanding spacing = 10 {population} {capacity} }}
+			TooltipTextBlock = {{ blockoverride "text" {{ text = "PP_LAND_BAR_TT_NOTE" }} }}
+		}}
+	}}
+}}"""
 
 
 def _term(part: str, key: str) -> str:
@@ -409,7 +454,7 @@ vbox = {{
 		spacing = 8
 		widget = {{
 			size = {{ {LABEL_WIDTH + 8 + BAR_WIDTH} 40 }}
-			tooltip = "PP_LAND_BAR_TT"
+{_indent(tooltip_block(), 3)}
 {_indent(_bars([population, capacity]), 3)}
 		}}
 		expand = {{}}
@@ -419,7 +464,7 @@ vbox = {{
 	hbox = {{
 		layoutpolicy_horizontal = expanding
 		spacing = 6
-		tooltip = "PP_LAND_BAR_TT"
+{_indent(tooltip_block(), 2)}
 {_indent(legend, 2)}
 	}}
 }}"""

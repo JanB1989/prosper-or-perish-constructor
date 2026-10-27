@@ -65,8 +65,8 @@ def test_window_has_the_panel_under_the_scene_with_balanced_braces():
     assert text.count("{") == text.count("}")
     start = text.rindex("vbox = {", 0, text.index('name = "pp_arable_land_bar"'))
     panel = text[start:alb._block_end(text, text.index("{", start)) + 1]
-    bars = re.findall(r"progressbar = \{[^\n]*", panel)
-    assert len(bars) == 10 and all("min = 0 max = 1 value = " in bar for bar in bars)   # without them 0..100
+    # 6 bar parts + 4 legend swatches + 2 tooltips x 6 row swatches; every one on 0..1 (without min/max: 0..100)
+    assert panel.count("progressbar = {") == 22 == panel.count("min = 0 max = 1 value = ")
     assert not re.search(r'value = "\[\(float\)', panel)                               # a literal is no data call
     used = set(re.findall(r"ScriptValue\('(pp_land_bar_\w+)'\)", text + alb.render_localization()))
     defined = set(re.findall(r"(?m)^(pp_land_bar_\w+) = \{", (MOD_ROOT / alb.SCRIPT_VALUES).read_text(encoding="utf-8")))

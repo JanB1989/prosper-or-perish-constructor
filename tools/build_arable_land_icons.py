@@ -5,9 +5,10 @@
 - Arable Land modifiers: the field with vanilla's capacity symbol (an arrow up to a bar, as on vanilla's capacity
   icons), in vanilla's shared slot modifier_types/global_population_capacity_modifier.dds, which every population
   capacity modifier type points at.
-- The three states (location view land chip, Europedia, concepts, strength markers), from vanilla icon parts: land
-  plates (fresh green, plain, dry brown), the peasants (few, more, a crowd) and vanilla's strength chevrons (two green,
-  one green, two red).
+- The three states (location view land chip, Europedia, concepts, strength markers), redrawn 2026-10-27 (Jan: the
+  land plates with peasants and chevrons were too busy and not distinct): the same field, graded lush / plain /
+  parched, and one round badge in the lower right whose colour and mark tell the state apart at chip size (30 px):
+  green with two chevrons up (abundant), gold with one chevron up (available), red with two chevrons down (overused).
 
 Rerun after a game update:
 
@@ -23,7 +24,6 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 from eu5_building_pipeline.dds import write_game_dds
 
-from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 ROOT = Path(__file__).resolve().parents[1]
 MOD = ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)"
@@ -66,11 +66,6 @@ def base_icons() -> dict[str, Image.Image]:
     return {"field": field, "modifier": modifier}
 
 
-def _load(icons: Path, rel: str, size: int) -> Image.Image:
-    with Image.open(icons / rel) as source:
-        return source.convert("RGBA").resize((size, size), Image.LANCZOS)
-
-
 def _tint(im: Image.Image, rgb: tuple[int, int, int], amount: float) -> Image.Image:
     """Shift the colour toward ``rgb``, keeping the shading and the alpha."""
     lum = im.convert("L")
@@ -80,28 +75,62 @@ def _tint(im: Image.Image, rgb: tuple[int, int, int], amount: float) -> Image.Im
     return mixed
 
 
-def _icon(land: Image.Image, people: list[tuple[Image.Image, tuple[int, int]]], arrow: tuple[Image.Image, tuple[int, int]]) -> Image.Image:
-    canvas = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
-    canvas.alpha_composite(land, (SIZE - land.width, 0))
-    for im, pos in people:
-        canvas.alpha_composite(im, pos)
-    canvas.alpha_composite(*arrow)
-    return canvas
+# state -> field grade (tint, amount, saturation, brightness), badge (light, dark), chevrons (count, pointing up)
+STATES = {
+    "abundant": (((96, 200, 64), 0.45, 1.35, 1.08), ((120, 214, 84), (34, 104, 30)), (2, True)),
+    "available": ((None, 0.0, 1.0, 1.0), ((246, 206, 92), (150, 104, 22)), (1, True)),
+    "overused": (((190, 92, 50), 0.45, 0.65, 0.88), ((236, 88, 70), (126, 22, 18)), (2, False)),
+}
+_SS = 4   # supersampling of the badge
 
 
-def icons(interface_icons: Path) -> dict[str, Image.Image]:
-    load = lambda rel, size: _load(interface_icons, rel, size)  # noqa: E731
-    lush = ImageEnhance.Color(_tint(load("location_icons/terrain.dds", 108), (110, 200, 70), 0.55)).enhance(1.3)
-    plain = load("location_icons/terrain.dds", 100)
-    dry = _tint(load("map_modes/area.dds", 84), (190, 120, 60), 0.35)
-    return {
-        "abundant": _icon(lush, [(load("pops/peasants.dds", 44), (2, 82))],
-                          (load("text_icons/arrow_bonus_tier_2.dds", 62), (66, 66))),
-        "available": _icon(plain, [(load("pops/peasants.dds", 64), (0, 62))],
-                           (load("text_icons/arrow_bonus_tier_1.dds", 62), (66, 70))),
-        "overused": _icon(dry, [(load("location_icons/population.dds", 74), (30, 46)), (load("pops/peasants.dds", 74), (-6, 54))],
-                          (load("text_icons/arrow_malus_tier_2.dds", 62), (66, 66))),
-    }
+def _grade(field: Image.Image, tint: tuple[int, int, int] | None, amount: float, saturation: float, brightness: float) -> Image.Image:
+    out = _tint(field, tint, amount) if tint else field.copy()
+    alpha = out.getchannel("A")
+    out = ImageEnhance.Brightness(ImageEnhance.Color(out).enhance(saturation)).enhance(brightness)
+    out.putalpha(alpha)
+    return out
+
+
+def _badge(light: tuple[int, int, int], dark: tuple[int, int, int], count: int, up: bool) -> Image.Image:
+    """A round badge (radial light-to-dark fill, dark rim, thin light inner ring) with 1-2 bold white chevrons."""
+    n = SIZE * _SS
+    cx, cy, r = 92 * _SS, 92 * _SS, 34 * _SS
+    badge = Image.new("RGBA", (n, n), (0, 0, 0, 0))
+    d = ImageDraw.Draw(badge)
+    d.ellipse((cx - r - 3 * _SS, cy - r - 3 * _SS, cx + r + 3 * _SS, cy + r + 3 * _SS), fill=(30, 24, 18, 255))
+    for i in range(r, 0, -_SS):   # radial fill, lighter toward the upper left
+        t = i / r
+        c = tuple(int(dark[k] + (light[k] - dark[k]) * (1 - t) ** 0.6) for k in range(3))
+        o = int((r - i) * 0.25)
+        d.ellipse((cx - i - o, cy - i - o, cx + i - o, cy + i - o), fill=(*c, 255))
+    d.ellipse((cx - r + 3 * _SS, cy - r + 3 * _SS, cx + r - 3 * _SS, cy + r - 3 * _SS),
+              outline=(255, 255, 255, 70), width=2 * _SS)
+    w, h, stroke, gap = 40 * _SS, 14 * _SS, 9 * _SS, 15 * _SS
+    tops = [cy - h // 2] if count == 1 else [cy - h // 2 - gap // 2, cy - h // 2 + gap // 2]
+    for top in tops:
+        apex, base = (top, top + h) if up else (top + h, top)
+        pts = [(cx - w // 2, base), (cx, apex), (cx + w // 2, base)]
+        d.line(pts, fill=(30, 24, 18, 200), width=stroke + 4 * _SS, joint="curve")   # dark edge
+        d.line(pts, fill=(255, 252, 240, 255), width=stroke, joint="curve")
+    badge = badge.resize((SIZE, SIZE), Image.LANCZOS)
+    shadow = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    shadow.putalpha(badge.getchannel("A").point(lambda a: int(a * 0.6)).filter(ImageFilter.GaussianBlur(3)))
+    out = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    out.alpha_composite(shadow, (2, 3))
+    out.alpha_composite(badge)
+    return out
+
+
+def icons() -> dict[str, Image.Image]:
+    field = _field().resize((112, 112), Image.LANCZOS)
+    built = {}
+    for name, (grade, (light, dark), (count, up)) in STATES.items():
+        canvas = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+        canvas.alpha_composite(_grade(field, *grade), (0, 0))
+        canvas.alpha_composite(_badge(light, dark, count, up))
+        built[name] = canvas
+    return built
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -109,7 +138,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--preview", type=Path, help="also write a preview sheet (full size and chip size)")
     parser.add_argument("--no-write", action="store_true", help="only the preview")
     args = parser.parse_args(argv)
-    built = icons(vanilla_root(ROOT, ROOT / "constructor.toml") / "game/main_menu/gfx/interface/icons")
+    built = icons()
     base = base_icons()
     if args.preview:
         shown = [base["field"], base["modifier"], *built.values()]

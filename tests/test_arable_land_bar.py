@@ -45,7 +45,15 @@ def _block(text: str, name: str) -> str:
 def test_capacity_is_everyone_but_the_subsistence_peasants():
     text = STATIC.read_text(encoding="utf-8-sig")
     assert re.search(r"(?m)^\s*local_population_capacity = 1\s*$", _block(text, "total_population"))
-    assert re.search(r"(?m)^\s*local_population_capacity = -1\s*$", _block(text, "unemployed_peasants"))
+    # the -1 per subsistence peasant is script-added (the growth pass applies unemployed_peasants after free land and
+    # overpopulation): pp_subsistence_land at size = the idle peasants, refreshed monthly
+    assert not re.search(r"(?m)^\s*local_population_capacity", _block(text, "unemployed_peasants"))
+    static = (MOD_ROOT / "main_menu/common/static_modifiers/pp_subsistence_land.txt").read_text(encoding="utf-8-sig")
+    assert re.search(r"(?m)^\s*local_population_capacity = -1\s*$", static)
+    effect = (MOD_ROOT / "in_game/common/scripted_effects/pp_subsistence_land_effects.txt").read_text(encoding="utf-8-sig")
+    assert 'size = "unemployed_pops_of_pop_type_in_location(pop_type:peasants)"' in effect
+    on_action = (MOD_ROOT / "in_game/common/on_action/pp_subsistence_land.txt").read_text(encoding="utf-8-sig")
+    assert "monthly_country_pulse" in on_action and "on_game_start" in on_action
 
 
 def test_window_has_the_panel_under_the_scene_with_balanced_braces():

@@ -1,0 +1,9 @@
+﻿# Location scope: pp_subsistence_land at size = the location's idle peasants (thousands; see pp_subsistence_land.txt).
+pp_refresh_subsistence_land = {
+	add_location_modifier = {
+		modifier = pp_subsistence_land
+		years = -1
+		mode = replace
+		size = "unemployed_pops_of_pop_type_in_location(pop_type:peasants)"
+	}
+}

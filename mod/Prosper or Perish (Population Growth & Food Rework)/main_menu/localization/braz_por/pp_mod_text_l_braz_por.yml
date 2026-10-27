@@ -8120,6 +8120,9 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   pp_stud_farm_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
   stud_farm_slot_2: "Market"
 # <<< eu5-building-pipeline:stud_farm:localization
+ # pp_subsistence_land_l_english.yml
+  STATIC_MODIFIER_NAME_pp_subsistence_land: "Subsistence Peasants"
+  STATIC_MODIFIER_DESC_pp_subsistence_land: "The subsistence peasants live on the arable land."
  # pp_sugar_plantation_l_english.yml
 
 # >>> eu5-building-pipeline:sugar_plantation:localization

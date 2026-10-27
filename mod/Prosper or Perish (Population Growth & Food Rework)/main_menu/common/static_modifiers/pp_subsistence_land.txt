@@ -1,0 +1,12 @@
+﻿# Prosper or Perish - Subsistence Land (2026-10-27, Jan; branch subsistence-land-script, cost test).
+# A subsistence peasant lives on the arable land: -1 capacity per 1,000 idle peasants. total_population gives every
+# person +1, so the capacity is everyone but the subsistence peasants + the arable land left.
+# It cannot ride the engine's unemployed_peasants static modifier: the growth pass computes free land and
+# overpopulation BEFORE it applies unemployed_peasants, but after the script-added location modifiers. So this
+# modifier is added by script (pp_subsistence_land.txt on_action) with size = the location's idle peasants.
+pp_subsistence_land = {
+	game_data = {
+		category = location
+	}
+	local_population_capacity = -1
+}

@@ -249,9 +249,8 @@ TRY_REPLACE:unemployed_peasants = {
 	local_institution_growth_modifier = -0.0050
 	local_construction_speed = 0.0001
 	local_migration_attraction = -0.001
-	# 2026-10-27 (Jan): a subsistence peasant lives on the arable land. With total_population's +1 every person except
-	# the subsistence peasants brings their own capacity, so the capacity is everyone else + the arable land left.
-	local_population_capacity = -1
+	# The -1 capacity per subsistence peasant is NOT here: the growth pass applies this modifier after it computes free
+	# land and overpopulation. It is the script-added pp_subsistence_land (2026-10-27, branch subsistence-land-script).
 }
 
 TRY_INJECT:market_center = {

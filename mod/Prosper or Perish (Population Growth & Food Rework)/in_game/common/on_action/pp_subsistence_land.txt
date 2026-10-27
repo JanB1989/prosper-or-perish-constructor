@@ -1,0 +1,42 @@
+﻿# Prosper or Perish - Subsistence Land refresh (2026-10-27, Jan; branch subsistence-land-script, cost test).
+# Every owned location carries pp_subsistence_land at size = its idle peasants (in thousands). The engine's growth pass
+# reads script-added location modifiers before it computes free land and overpopulation, so the land state follows
+# the subsistence peasants. Each country refreshes its locations once a month; the vanilla monthly country pulse fires
+# this with a random 0-29 day delay, so the countries spread over the month (as the stored food refresh does).
+# Cost test switch: the console line `effect = { set_global_variable = pp_subsistence_land_off }` stops the refresh,
+# `effect = { remove_global_variable = pp_subsistence_land_off }` starts it again.
+
+monthly_country_pulse = {
+	on_actions = {
+		delay = { days = { 0 29 } }
+		pp_subsistence_land_country_refresh
+	}
+}
+
+on_game_start = {
+	on_actions = {
+		pp_subsistence_land_game_start
+	}
+}
+
+# Country scope.
+pp_subsistence_land_country_refresh = {
+	trigger = {
+		NOT = { has_global_variable = pp_subsistence_land_off }
+	}
+	effect = {
+		every_owned_location = {
+			pp_refresh_subsistence_land = yes
+		}
+	}
+}
+
+pp_subsistence_land_game_start = {
+	effect = {
+		every_country = {
+			every_owned_location = {
+				pp_refresh_subsistence_land = yes
+			}
+		}
+	}
+}

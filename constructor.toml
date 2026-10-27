@@ -922,34 +922,37 @@ herd = ["sheep_farms", "hurdled_sheepcotes", "enclosed_sheep_walks", "horse_bree
 # Every accepted blueprint carries `footprint: <class>`. ppc build/sync writes
 # raw_modifier local_population_capacity = share x employment_size per level (rounded to whole people) into the block
 # that owns the building in the compiled mod. A building with a large footprint houses few of its workers (low share);
-# a negative share takes land like a farm. "ignore" leaves the building untouched.
+# a negative share takes land like a farm. "ignore" leaves the building untouched; a share of 0 removes the line.
+# 2026-10-27 (Jan): every share that gave capacity is 0. The pop capacity redesign gives every person one capacity
+# (total_population) and takes it back from every unemployed peasant (unemployed_peasants), so workers house
+# themselves and only land lines stay on buildings. Old shares in the comments.
 [building_footprint.classes]
 farm_land = "ignore"          # farms that take land (worldbuilder.farm_land)
 capacity_source = "ignore"    # improvement buildings and other buildings with their own capacity line
 technical = "ignore"          # dummy buildings
-urban_workshop = 0.75         # guilds, workshops, craft shops
-urban_district = 0.75         # quarters and districts that are housing
-administration = 0.70         # chanceries, councils, courts, offices
-institutional = 0.60          # schools, academies, libraries, theatres, hospitals, missions
-trade = 0.60                  # markets, trade offices, banks, trade company buildings, toll posts
-religious = 0.55              # temples, monasteries, madrasas, churches
-manufactory = 0.55            # urban manufactories and food works
-barracks = 0.50               # barracks, armories, garrisons
-rural_village = 0.50          # fishing, forest and market villages, settlements
-mill_works = 0.40             # mills, foundries, factories, smelters
-fishery = 0.40                # offshore fisheries
-infrastructure = 0.40         # roads, transport, bridges, construction
-maritime = 0.40               # docks, shipyards, admiralties, harbours
-rural_processing = 0.35       # windmills, washmills, stamp mills, granaries
-palace_grounds = 0.30         # palaces, residences and villas with grounds
-monument = 0.20               # monument complexes, festival grounds
-forestry = 0.20               # lumber, charcoal, tar, forest camps
-fortification = 0.20          # walls, castles, forts
-mining = 0.15                 # mines and mining villages
-military_grounds = 0.10       # training fields, camps
-estate_land = 0.10            # manors and estates that hold land
-extractive_open = 0.05        # quarries, pits, diggings, salt pans
-land_reserve = -0.25          # hunting grounds, royal forests and gardens, cattle enclosures
+urban_workshop = 0            # 0.75 guilds, workshops, craft shops
+urban_district = 0            # 0.75 quarters and districts that are housing
+administration = 0            # 0.70 chanceries, councils, courts, offices
+institutional = 0             # 0.60 schools, academies, libraries, theatres, hospitals, missions
+trade = 0                     # 0.60 markets, trade offices, banks, trade company buildings, toll posts
+religious = 0                 # 0.55 temples, monasteries, madrasas, churches
+manufactory = 0               # 0.55 urban manufactories and food works
+barracks = 0                  # 0.50 barracks, armories, garrisons
+rural_village = 0             # 0.50 fishing, forest and market villages, settlements
+mill_works = 0                # 0.40 mills, foundries, factories, smelters
+fishery = 0                   # 0.40 offshore fisheries
+infrastructure = 0            # 0.40 roads, transport, bridges, construction
+maritime = 0                  # 0.40 docks, shipyards, admiralties, harbours
+rural_processing = 0          # 0.35 windmills, washmills, stamp mills, granaries
+palace_grounds = 0            # 0.30 palaces, residences and villas with grounds
+monument = 0                  # 0.20 monument complexes, festival grounds
+forestry = 0                  # 0.20 lumber, charcoal, tar, forest camps
+fortification = 0             # 0.20 walls, castles, forts
+mining = 0                    # 0.15 mines and mining villages
+military_grounds = 0          # 0.10 training fields, camps
+estate_land = 0               # 0.10 manors and estates that hold land
+extractive_open = 0           # 0.05 quarries, pits, diggings, salt pans
+land_reserve = -0.25          # hunting grounds, royal forests and gardens, cattle enclosures (takes land)
 
 # Which buildings WITHOUT goods output may be closed (2026-10-05, Jan): "never" writes can_close = no and
 # ai_forbid_shutdown = yes into the building (finalize step, building_shutdown.py; ppc shutdown apply|check), "keep"

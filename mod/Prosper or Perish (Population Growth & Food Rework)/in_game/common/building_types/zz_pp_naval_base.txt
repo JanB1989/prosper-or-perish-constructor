@@ -35,9 +35,6 @@ REPLACE:naval_base = {
     }
     construction_demand = port_building_construction
 
-    raw_modifier = {
-      local_population_capacity = 2
-    }
 
     modifier = {
         max_ships_built_at_same_time = 12

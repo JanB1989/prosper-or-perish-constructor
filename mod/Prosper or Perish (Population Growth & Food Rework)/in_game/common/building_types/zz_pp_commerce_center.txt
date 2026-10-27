@@ -15,8 +15,5 @@ ai_construct_weight = {
 	if = { limit = { is_market_center = yes } add = 100 }
 	divide = { value = scope:owner.monthly_income_total add = 10 }
 }
-	raw_modifier = {
-		local_population_capacity = 0.06
-	}
 }
 # <<< eu5-building-pipeline:commerce_center:building

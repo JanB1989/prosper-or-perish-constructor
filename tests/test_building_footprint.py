@@ -86,6 +86,25 @@ def test_set_capacity_creates_replaces_and_merges_raw_modifier() -> None:
     assert fp.set_capacity(replaced, "0.5") == replaced
 
 
+def test_zero_share_removes_the_capacity_line() -> None:
+    kept = fp.set_capacity("\n\traw_modifier = {\n\t\tlocal_population_capacity = 3\n\t\tx = 1\n\t}\n", "0")
+    assert "local_population_capacity" not in kept and "\t\tx = 1\n" in kept
+    assert fp.set_capacity("\n\ttown = yes\n\traw_modifier = {\n\t\tlocal_population_capacity = 3\n\t}\n", "0") == "\n\ttown = yes\n"
+    assert fp.set_capacity("\n\ttown = yes\n\traw_modifier = { local_population_capacity = 1 }\n", "0") == "\n\ttown = yes\n"
+    assert fp.set_capacity("\n\ttown = yes\n", "0") == "\n\ttown = yes\n"
+    nested = fp.set_capacity("\n\tpm = {\n\t\traw_modifier = { local_population_capacity = 7 }\n\t}\n", "0")
+    assert "local_population_capacity = 7" in nested
+
+
+def test_apply_with_zero_share_strips_the_line_and_is_idempotent(world: dict[str, Path]) -> None:
+    project = world["project"]
+    project.write_text(project.read_text(encoding="utf-8").replace("mining = 0.15", "mining = 0"), encoding="utf-8")
+    fp.apply(world["repo"], world["mod"], project, world["vanilla"])
+    mine = (world["types"] / "zz_pp_mine.txt").read_text(encoding="utf-8-sig")
+    assert "local_population_capacity" not in mine and "pp_x = 1" in mine
+    assert fp.apply(world["repo"], world["mod"], project, world["vanilla"]).files_changed == 0
+
+
 def test_apply_writes_owner_blocks_and_is_idempotent(world: dict[str, Path]) -> None:
     result = fp.apply(world["repo"], world["mod"], world["project"], world["vanilla"])
     types = world["types"]

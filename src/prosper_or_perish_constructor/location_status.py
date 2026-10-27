@@ -480,6 +480,40 @@ def harvest_chip(harvests: Harvests) -> str:
 """
 
 
+def land_chips(land_rows: dict[str, str] | None, prefix: str) -> list[tuple[str, str, str]]:
+    """The four arable land states as chips, exactly one visible: (title key, strength marker or "", chip)."""
+    land_rows = land_rows or {name: _text(LAND_STRENGTH_TEXT[name]) + " " + _scrolled(_row(name)) for name in LAND_MODIFIERS.values()}
+    over, abundant, available = (_marker(key) for key in LAND_MARKERS)
+    # the arable land states' own icons (tools/build_arable_land_icons.py)
+    states = [
+        ("overpopulation", over, "overused.dds", "PP_LAND_CHIP_OVERPOPULATION", "pp_overused_arable_land", "pp_land_overpopulation"),
+        ("abundant", f"And(Not({over}), {abundant})", "abundant.dds", "PP_LAND_CHIP_ABUNDANT", "pp_abundant_free_land", "pp_land_abundant"),
+        ("available", f"And3(Not({over}), Not({abundant}), {available})", "available.dds", "PP_LAND_CHIP_AVAILABLE",
+         "pp_available_free_land", "pp_land_available"),
+    ]
+    rows = {"overpopulation": "overpopulation", "abundant": "abundant_free_land", "available": "available_free_land"}
+    chips = [(f"{key}_TITLE", marker, _chip(f"{prefix}_{name}", visible, f"{_ICONS}/{LAND_ICONS}/{icon}", f"{key}_TITLE", concept,
+                                           _text(key) + " " + land_rows[rows[name]]))
+             for name, visible, icon, key, concept, marker in states]
+    chips.append(("PP_LAND_CHIP_SETTLED_TITLE", "",
+                  _chip(f"{prefix}_settled", f"And3(Not({over}), Not({abundant}), Not({available}))",
+                        f"{_ICONS}/location_icons/population.dds", "PP_LAND_CHIP_SETTLED_TITLE", "population_capacity",
+                        _text("PP_LAND_CHIP_SETTLED"))))
+    return chips
+
+
+def land_state(land_rows: dict[str, str] | None, prefix: str) -> str:
+    """The land state in a line: its chip (the same tooltip as the status card's), its name and its strength."""
+    parts = []
+    for title, marker, chip in land_chips(land_rows, prefix):
+        visible = re.search(r'^\s*visible = "([^"]*)"', chip, re.M).group(1)
+        strength = (f' text_single = {{ raw_text = "[Multiply_CFixedPoint({_LOC}.GetModifierValueFixed(\'{marker}\'), '
+                    f"'(CFixedPoint)1')|0%]\" fontsize = 14 }}" if marker else "")
+        parts.append(f'hbox = {{ visible = "{visible}" spacing = 6\n{chip}'
+                     f'text_single = {{ text = "{title}" fontsize = 14 default_format = "#yellow_titles" }}{strength} }}')
+    return "\n".join(parts)
+
+
 def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stored_rows: str | None = None) -> str:
     # Without the modifier types the land chips fall back to the full-strength effects.
     land_rows = land_rows or {name: _text(LAND_STRENGTH_TEXT[name]) + " " + _scrolled(_row(name)) for name in LAND_MODIFIERS.values()}
@@ -497,22 +531,7 @@ def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stor
                   "PP_FOOD_CHIP_STARVING_TITLE", "pp_starvation",
                   _text("PP_FOOD_CHIP_STARVING") + " " + _row("province_starving"))
 
-    over, abundant, available = (_marker(key) for key in LAND_MARKERS)
-    # the arable land states' own icons (tools/build_arable_land_icons.py)
-    land = _chip("pp_status_land_overpopulation", over, f"{_ICONS}/{LAND_ICONS}/overused.dds",
-                 "PP_LAND_CHIP_OVERPOPULATION_TITLE", "pp_overused_arable_land",
-                 _text("PP_LAND_CHIP_OVERPOPULATION") + " " + land_rows["overpopulation"])
-    land += _chip("pp_status_land_abundant", f"And(Not({over}), {abundant})", f"{_ICONS}/{LAND_ICONS}/abundant.dds",
-                  "PP_LAND_CHIP_ABUNDANT_TITLE", "pp_abundant_free_land",
-                  _text("PP_LAND_CHIP_ABUNDANT") + " " + land_rows["abundant_free_land"])
-    land += _chip("pp_status_land_available", f"And3(Not({over}), Not({abundant}), {available})",
-                  f"{_ICONS}/{LAND_ICONS}/available.dds",
-                  "PP_LAND_CHIP_AVAILABLE_TITLE", "pp_available_free_land",
-                  _text("PP_LAND_CHIP_AVAILABLE") + " " + land_rows["available_free_land"])
-    land += _chip("pp_status_land_settled", f"And3(Not({over}), Not({abundant}), Not({available}))",
-                  f"{_ICONS}/location_icons/population.dds",
-                  "PP_LAND_CHIP_SETTLED_TITLE", "population_capacity", _text("PP_LAND_CHIP_SETTLED"))
-
+    land = "".join(chip for _, _, chip in land_chips(land_rows, "pp_status_land"))
     harvest = harvest_chip(harvests)
 
     return f"""\t\t\t\t\t\t# PP STATUS CHIPS: top right, mirroring the geography card at the bottom left

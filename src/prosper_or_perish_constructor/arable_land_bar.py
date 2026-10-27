@@ -8,8 +8,9 @@ The engine still compares the whole population with that capacity, so the panel 
 - Population: the townsfolk (grey), then the subsistence peasants (yellow); beyond the capacity red.
 - Population capacity: the same townsfolk (grey: they cancel out), then the arable land left (green), then the land the
   farms take (brown, past the end of the capacity). The subsistence peasants live on the green; farms grow into it.
-- under them a legend of swatches and numbers and the population as a share of the capacity (the vanilla ratio that
-  drives free land and overpopulation); the breakdown of the arable land is in the tooltip.
+- every part is as wide as its number (data-bound stretch factors) and carries it; under the bars a legend of the
+  colours and the land state the two bars make (the arable land chip with its strength: the engine's free land or
+  overpopulation from population / capacity); the breakdown of the arable land is in the tooltip.
 
 Farm land and improvements are read from the building types the game loads (``raw_modifier``
 ``local_population_capacity`` per level, through the buildings' level counters, which the engine scales like the
@@ -281,16 +282,45 @@ def _bar(texture: str, value: str, bottom: bool = False, extra: str = "") -> str
     return _BAR.format(texture=TEXTURES[texture], empty=_BACK if bottom else _EMPTY, value=shown, extra=extra)
 
 
-def _term(part: str, key: str, value: str) -> str:
-    """One legend entry under the bars: its colour swatch, its name and its value."""
+def _term(part: str, key: str) -> str:
+    """One legend entry under the bars: its colour swatch and its name (the numbers are in the bars)."""
     return (f'hbox = {{ spacing = 4 widget = {{ size = {{ 16 10 }} {_bar(part, "1", bottom=True)} }} '
-            f'text_single = {{ text = "{key}" fontsize = 13 }} '
-            f'text_single = {{ raw_text = "{_v(value)}" fontsize = 13 }} }}')
+            f'text_single = {{ text = "{key}" fontsize = 13 }} }}')
 
 
-def _row(label: str, layers: list[str]) -> str:
+def _f(name: str) -> str:
+    return f"FixedPointToFloat({_sv(name)})"
+
+
+def _clamp0(expr: str) -> str:
+    return f"Max_float({expr}, '(float)0')"
+
+
+_SCALE = _f("pp_land_bar_scale")
+# a segment's number shows where the segment is wide enough for it (a share of the bar)
+_LABEL_SHARE = "0.06"
+
+
+def _segment(weight: str, texture: str | None, label: str = "") -> str:
+    """A part of a bar, as wide as its weight in the bar's row (data-bound stretch factor, as vanilla's societal values
+    do), with its number in it. An empty texture is the unfilled rest of the bar."""
+    fill = _bar(texture, "1", bottom=True) if texture else ""
+    text = ""
+    if label:
+        text = (f'\n\ttext_single = {{ parentanchor = center fontsize = 12 raw_text = "{label}" '
+                f"visible = \"[GreaterThan_float({weight}, Multiply_float({_SCALE}, '(float){_LABEL_SHARE}'))]\" }}")
+    return f"""widget = {{
+	size = {{ 0 16 }}
+	layoutpolicy_horizontal = expanding
+	layoutstretchfactor_horizontal = "[{weight}]"
+	visible = "[GreaterThan_float({weight}, '(float)0')]"
+	{fill}{text}
+}}"""
+
+
+def _row(label: str, segments: list[str]) -> str:
     """A labelled bar: the label in a fixed column, so both bars start at the same x and share one scale."""
-    stack = "\n".join(layers)
+    parts = "\n".join(segments)
     return f"""hbox = {{
 	layoutpolicy_horizontal = expanding
 	spacing = 8
@@ -298,37 +328,49 @@ def _row(label: str, layers: list[str]) -> str:
 		size = {{ 150 18 }}
 		text_single = {{ text = "{label}" parentanchor = vcenter fontsize = 14 default_format = "#yellow_titles" }}
 	}}
-	widget = {{
+	hbox = {{
 		layoutpolicy_horizontal = expanding
 		size = {{ -1 16 }}
-{_indent(stack, 2)}
+		background = {{ texture = "{_BACK}" alpha = 0.6 }}
+{_indent(parts, 2)}
 	}}
 }}"""
 
 
-def gui_block(indent: str = "") -> str:
+def _k(expr: str, sign: str = "") -> str:
+    return f"{sign}[{expr}|0]K"
+
+
+def gui_block(indent: str = "", land_state: str = "") -> str:
     """The panel under the location view's scene: the population on its capacity, as two bars on one scale.
 
     Population: townsfolk (grey) and subsistence peasants (yellow), red beyond the capacity. Capacity: the same
-    townsfolk (grey), the arable land left (green), then the farms' land (brown) past the end of the capacity. A legend
-    of swatches and numbers and the population as a share of the capacity under them; the words are in the tooltip.
+    townsfolk (grey), the arable land left (green), then the farms' land (brown) past the end of the capacity. Every
+    part carries its number; under the bars a legend of the colours and the land state the two bars make (the arable
+    land chip: overused / available / abundant, with its strength); the breakdown is in the tooltip.
     """
+    townsfolk, subsistence = _f("pp_land_bar_townsfolk"), _f("pp_land_bar_subsistence")
+    within = f"Min_float({subsistence}, {_f('pp_land_bar_left_shown')})"
+    over = _clamp0(f"Subtract_float({_f('pp_land_bar_population')}, {_f('pp_land_bar_capacity')})")
     population = _row("PP_LAND_BAR_POPULATION", [
-        _bar("over", _fraction("pp_land_bar_f_population"), bottom=True),
-        _bar("subsistence", _fraction("pp_land_bar_f_within")),
-        _bar("townsfolk", _fraction("pp_land_bar_f_townsfolk")),
+        _segment(townsfolk, "townsfolk", _k(_sv("pp_land_bar_townsfolk"))),
+        _segment(within, "subsistence", _k(_sv("pp_land_bar_subsistence"))),
+        _segment(over, "over", _k(over, "+")),
+        _segment(_clamp0(f"Subtract_float({_SCALE}, {_f('pp_land_bar_population')})"), None),
     ])
     capacity = _row("PP_LAND_BAR_CAPACITY", [
-        _bar("farms", _fraction("pp_land_bar_f_land"), bottom=True, extra=" alpha = 0.75"),
-        _bar("land", _fraction("pp_land_bar_f_capacity")),
-        _bar("townsfolk", _fraction("pp_land_bar_f_townsfolk_room")),
+        _segment(_f("pp_land_bar_townsfolk_room"), "townsfolk", _k(_sv("pp_land_bar_townsfolk_room"))),
+        _segment(_f("pp_land_bar_left_shown"), "land", _k(_sv("pp_land_bar_left_shown"))),
+        _segment(_f("pp_land_bar_farms"), "farms", _k(_sv("pp_land_bar_farms"))),
+        _segment(_clamp0(f"Subtract_float({_SCALE}, {_f('pp_land_bar_scale_land')})"), None),
     ])
     legend = "\n".join([
-        _term("townsfolk", "PP_LAND_BAR_TOWNSFOLK", "pp_land_bar_townsfolk"),
-        _term("subsistence", "PP_LAND_BAR_SUBSISTENCE", "pp_land_bar_subsistence"),
-        _term("land", "PP_LAND_BAR_LAND", "pp_land_bar_left"),
-        _term("farms", "PP_LAND_BAR_FARMS", "pp_land_bar_farms"),
-        f'text_single = {{ raw_text = "[{_sv("pp_land_bar_percent")}|0]%" fontsize = 15 default_format = "#yellow_titles" }}',
+        _term("townsfolk", "PP_LAND_BAR_TOWNSFOLK"),
+        _term("subsistence", "PP_LAND_BAR_SUBSISTENCE"),
+        _term("land", "PP_LAND_BAR_LAND"),
+        _term("farms", "PP_LAND_BAR_FARMS"),
+        "expand = {}",
+        land_state,
     ])
     block = f"""# PP: population and capacity bars (arable_land_bar.py): the population on its capacity, one scale
 vbox = {{
@@ -345,7 +387,6 @@ vbox = {{
 	hbox = {{
 		layoutpolicy_horizontal = expanding
 		spacing = 12
-		expand = {{}}
 {_indent(legend, 2)}
 	}}
 }}"""
@@ -360,8 +401,9 @@ def _indent(text: str, tabs: int, prefix: str = "") -> str:
 _SCENE = "# SCENE\n"
 
 
-def add_to_window(text: str) -> str:
-    """Insert the panel right under the location view's scene (once)."""
+def add_to_window(text: str, land_state: str = "") -> str:
+    """Insert the panel right under the location view's scene (once); ``land_state`` is the land chip line
+    (location_status.land_state)."""
     found = text.count(_SCENE)
     if found != 1:
         raise ValueError(f"location_window.gui: expected 1 scene anchor for the Arable Land bar, found {found}")
@@ -378,7 +420,7 @@ def add_to_window(text: str) -> str:
             if depth == 0:
                 break
     indent = text[text.rfind("\n", 0, anchor) + 1:anchor]
-    return text[:end + 1] + "\n\n" + gui_block(indent) + text[end + 1:]
+    return text[:end + 1] + "\n\n" + gui_block(indent, land_state) + text[end + 1:]
 
 
 @dataclass

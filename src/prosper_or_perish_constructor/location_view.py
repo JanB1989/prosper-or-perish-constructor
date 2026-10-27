@@ -566,11 +566,13 @@ def build_window(export_text: str, mod_root: Path, vanilla: Path | None, stored_
     goods = rgo_bonus_goods(bonuses.read_text(encoding="utf-8-sig")) if bonuses.is_file() else []
     merged = add_land_potential_chip(add_rgo_chip(merge_population_capacity(water_access_chips(merge_location_window(export_text))), goods))
     harvests = location_status.load_harvests(mod_root)
-    merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla),
+    land_rows = location_status.load_land_effect_rows(mod_root, vanilla)
+    merged = location_status.add_status_row(merged, harvests, land_rows,
                                             location_status.load_stored_food_rows(mod_root, vanilla, stored_food))
     location_status.write_harvest_files(mod_root, harvests)
     merged = show_every_timed_modifier(move_modifier_row(merged), shown_by_chips(mod_root, vanilla, goods, bool(harvests.keys)))
-    return arable_land_bar.add_to_window(merged)
+    # the bars end in the land state they make: the same chip as the status card's, with its name and strength
+    return arable_land_bar.add_to_window(merged, location_status.land_state(land_rows, "pp_land_bar_state"))
 
 
 def apply(repo: Path, project: Path, mod_root: Path, vanilla: Path) -> dict[str, object]:

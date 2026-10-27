@@ -221,6 +221,16 @@ def scalars(body: Block) -> dict[str, str]:
     return {key: value for key, value in body if key is not None and isinstance(value, str)}
 
 
+def terrain_fields(body: Block) -> dict[str, str]:
+    """A terrain class's scalar fields; a topography's ``proximity = { default = X }`` block (EU5 1.4) reads as ``X``,
+    like a vegetation's plain ``proximity = X``. Costs toward a specific topography are not shown (vanilla sets none)."""
+    fields = scalars(body)
+    for key, value in body:
+        if key == "proximity" and isinstance(value, list) and "default" in (block := scalars(value)):
+            fields["proximity"] = block["default"]
+    return fields
+
+
 def goods_keys(vanilla_root: Path | None, mod_root: Path) -> set[str]:
     return set(definitions(game_files(vanilla_root, mod_root, "in_game/common/goods")))
 
@@ -328,7 +338,7 @@ def class_views(vanilla_root: Path | None, mod_root: Path, goods: set[str], loc:
         views[attribute] = []
         for key, body in definitions(game_files(vanilla_root, mod_root, f"in_game/common/{directory}")).items():
             effects, output = split_goods(modifier_lines(body, "location_modifier"), goods)
-            views[attribute].append(View(attribute, key, class_gate(attribute, key), f"${key}$", effects, output, terrain_lines(scalars(body), loc), f"{attribute} = {key}"))
+            views[attribute].append(View(attribute, key, class_gate(attribute, key), f"${key}$", effects, output, terrain_lines(terrain_fields(body), loc), f"{attribute} = {key}"))
     return views
 
 

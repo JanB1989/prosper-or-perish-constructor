@@ -150,6 +150,15 @@ def test_terrain_lines_word_the_engine_fields_with_vanilla_localization():
     assert tt.terrain_lines({"movement_cost": "1.0"}, loc) == []   # normal ground says nothing
 
 
+def test_topography_proximity_block_reads_as_its_default(tmp_path):
+    path = tmp_path / "t.txt"
+    path.write_text("wetlands = { movement_cost = 1.5 proximity = { default = -0.25 } }\nforest = { proximity = -0.125 }\n", encoding="utf-8")
+    defs = tt.definitions([path])
+    loc = {"TERRAIN_PROXIMITY_COST": "Proximity: $VALUE|+=%$"}
+    assert tt.terrain_lines(tt.terrain_fields(defs["wetlands"]), loc) == ["Proximity: #N -25%#!"]   # EU5 1.4 topography block
+    assert tt.terrain_lines(tt.terrain_fields(defs["forest"]), loc) == ["Proximity: #N -12.5%#!"]   # vegetation's plain line
+
+
 def test_write_builds_views_that_hold_effects_and_goods_apart(trees):
     vanilla, mod = trees
     counts = tt.write(mod, vanilla)

@@ -2197,6 +2197,8 @@
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/horse_breeders.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('horse_breeders')|e]" } }
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/camel_herders.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('camel_herders')|e]" } }
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/elephant_kraal.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('elephant_kraal')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/elephant_hunting_grounds.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('elephant_hunting_grounds')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/eng_royal_forest.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('eng_royal_forest')|e]" } }
                                                         }
                                                     }
                                                     pp_eu_goods_row = {

@@ -532,7 +532,8 @@ def test_rural_capacities_farm_rows_take_arable_land():
         for farm in rows[row]:
             assert land_of.get(farm, farm_land["arable"]["land"]) == share, (row, farm)
             text = (blueprints / f"{farm}.yml").read_text(encoding="utf-8")
-            assert f"max_levels = farm_capacity_max_{farm}" in text, farm
+            # the cap itself, or a block whose value is the cap (the royal forest keeps one level, Ori's +2 elephant grounds)
+            assert re.search(rf"max_levels = (?:\{{\s*value = )?farm_capacity_max_{farm}\b", text), farm
             assert re.search(rf"local_population_capacity = -{share:g}\b", text), farm
 
 

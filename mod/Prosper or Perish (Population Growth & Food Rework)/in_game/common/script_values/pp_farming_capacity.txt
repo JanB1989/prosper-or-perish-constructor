@@ -265,6 +265,18 @@ farm_capacity_max_elephant_kraal = {
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
+farm_capacity_max_elephant_hunting_grounds = {
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_elephant_hunting_grounds_own_levels }
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+}
+
+farm_capacity_max_eng_royal_forest = {
+	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_eng_royal_forest_own_levels }
+	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
+}
+
 farm_capacity_max_camel_herders = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_camel_herders_own_levels }
@@ -525,6 +537,11 @@ farm_capacity_max_dye_plantation_own_levels = {
 	add = modifier:pp_levels_dye_plantation
 }
 
+farm_capacity_max_elephant_hunting_grounds_own_levels = {
+	value = 0
+	add = modifier:pp_levels_elephant_hunting_grounds
+}
+
 farm_capacity_max_elephant_kraal_own_levels = {
 	value = 0
 	add = modifier:pp_levels_elephant_kraal
@@ -535,6 +552,11 @@ farm_capacity_max_enclosed_sheep_walks_own_levels = {
 	add = modifier:pp_levels_enclosed_sheep_walks
 	add = modifier:pp_levels_sheep_farms
 	add = modifier:pp_levels_hurdled_sheepcotes
+}
+
+farm_capacity_max_eng_royal_forest_own_levels = {
+	value = 0
+	add = modifier:pp_levels_eng_royal_forest
 }
 
 farm_capacity_max_fiber_crops_farm_own_levels = {

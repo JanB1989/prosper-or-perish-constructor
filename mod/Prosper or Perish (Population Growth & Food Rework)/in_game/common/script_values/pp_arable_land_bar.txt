@@ -91,8 +91,10 @@ pp_land_bar_farms_flat = {
 	add = { value = modifier:pp_levels_cotton_farm multiply = 10 }
 	add = { value = modifier:pp_levels_cotton_plantation multiply = 10 }
 	add = { value = modifier:pp_levels_dye_plantation multiply = 10 }
+	add = { value = modifier:pp_levels_elephant_hunting_grounds multiply = 2 }
 	add = { value = modifier:pp_levels_elephant_kraal multiply = 2 }
 	add = { value = modifier:pp_levels_enclosed_sheep_walks multiply = 2 }
+	add = { value = modifier:pp_levels_eng_royal_forest multiply = 2 }
 	add = { value = modifier:pp_levels_fiber_crops_farm multiply = 5 }
 	add = { value = modifier:pp_levels_fiber_dressing_yard multiply = 5 }
 	add = { value = modifier:pp_levels_fruit_orchard multiply = 5 }
@@ -155,10 +157,4 @@ pp_land_bar_farms_flat = {
 # Land the reserved grounds take (buildings with negative capacity and no farm counter)
 pp_land_bar_reserved_flat = {
 	value = 0
-	if = { limit = { has_building = building_type:elephant_hunting_grounds } add = { value = "location_building_level(building_type:elephant_hunting_grounds)" multiply = 0.25 } }
-	if = { limit = { has_building = building_type:eng_royal_forest } add = { value = "location_building_level(building_type:eng_royal_forest)" multiply = 0.313 } }
-	if = { limit = { has_building = building_type:fulani_cattle_rearing_pen } add = { value = "location_building_level(building_type:fulani_cattle_rearing_pen)" multiply = 0.25 } }
-	if = { limit = { has_building = building_type:great_enclosure } add = { value = "location_building_level(building_type:great_enclosure)" multiply = 0.013 } }
-	if = { limit = { has_building = building_type:peasants_hunting_grounds } add = { value = "location_building_level(building_type:peasants_hunting_grounds)" multiply = 0.013 } }
-	if = { limit = { has_building = building_type:royal_garden } add = { value = "location_building_level(building_type:royal_garden)" multiply = 0.013 } }
 }

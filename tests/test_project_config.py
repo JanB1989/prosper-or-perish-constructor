@@ -147,6 +147,8 @@ LAND_FARM_BUILDINGS = (
     "horse_breeders",
     "stud_farm",
     "elephant_kraal",
+    "elephant_hunting_grounds",
+    "eng_royal_forest",
     "camel_herders",
     "camel_stud",
     "fiber_crops_farm",
@@ -1197,9 +1199,10 @@ def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
 
     for blueprint in LAND_FARM_BLUEPRINTS:
         text = blueprint.read_text(encoding="utf-8-sig")
-        expected_max = f"max_levels = farm_capacity_max_{blueprint.stem}"
+        # the cap itself, or a block whose value is the cap (the royal forest keeps one level, Ori's +2 elephant grounds)
+        expected_max = rf"max_levels = (?:\{{\s*value = )?farm_capacity_max_{blueprint.stem}\b"
 
-        assert expected_max in text
+        assert re.search(expected_max, text), blueprint.stem
         assert re.search(r"^\s*max_levels\s*=\s*farm_capacity\s*$", text, flags=re.M) is None
         assert "fruit_orchard_max_level" not in text
         assert "farm_space_used" not in text

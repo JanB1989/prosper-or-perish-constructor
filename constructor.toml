@@ -918,7 +918,9 @@ plantation = [
     "tea_garden", "tea_sorting_garden", "sugarcane_farm", "trapiche_sugarcane_farm", "cotton_farm", "market_cotton_farm",
     "clove_grove", "pepper_garden", "managed_pepper_garden", "saffron_croft", "saffron_kiln_croft",
 ]
-herd = ["sheep_farms", "hurdled_sheepcotes", "enclosed_sheep_walks", "horse_breeders", "stud_farm", "elephant_kraal", "camel_herders", "camel_stud", "cattle_farm", "cattle_farmstead", "cattle_rotations", "cattle_model_farm"]
+# the English royal forest and the elephant hunting grounds produce on the land too (2026-10-27, Jan; were the
+# land_reserve footprint class)
+herd = ["sheep_farms", "hurdled_sheepcotes", "enclosed_sheep_walks", "horse_breeders", "stud_farm", "elephant_kraal", "camel_herders", "camel_stud", "cattle_farm", "cattle_farmstead", "cattle_rotations", "cattle_model_farm", "eng_royal_forest", "elephant_hunting_grounds"]
 
 [building_footprint]
 # Every accepted blueprint carries `footprint: <class>`. ppc build/sync writes
@@ -927,7 +929,8 @@ herd = ["sheep_farms", "hurdled_sheepcotes", "enclosed_sheep_walks", "horse_bree
 # a negative share takes land like a farm. "ignore" leaves the building untouched; a share of 0 removes the line.
 # 2026-10-27 (Jan): every share that gave capacity is 0. The pop capacity redesign gives every person one capacity
 # (total_population) and takes it back from every unemployed peasant (unemployed_peasants), so workers house
-# themselves and only land lines stay on buildings. Old shares in the comments.
+# themselves and only land lines stay on buildings. Old shares in the comments. The land_reserve class (-0.25) is gone
+# the same day: its two producers became land farms (herd), the four others (no output) moved to a class at 0.
 [building_footprint.classes]
 farm_land = "ignore"          # farms that take land (worldbuilder.farm_land)
 capacity_source = "ignore"    # improvement buildings and other buildings with their own capacity line
@@ -954,7 +957,6 @@ mining = 0                    # 0.15 mines and mining villages
 military_grounds = 0          # 0.10 training fields, camps
 estate_land = 0               # 0.10 manors and estates that hold land
 extractive_open = 0           # 0.05 quarries, pits, diggings, salt pans
-land_reserve = -0.25          # hunting grounds, royal forests and gardens, cattle enclosures (takes land)
 
 # Which buildings WITHOUT goods output may be closed (2026-10-05, Jan): "never" writes can_close = no and
 # ai_forbid_shutdown = yes into the building (finalize step, building_shutdown.py; ppc shutdown apply|check), "keep"
@@ -988,7 +990,6 @@ mining = "never"
 military_grounds = "keep"
 estate_land = "never"
 extractive_open = "never"
-land_reserve = "never"
 
 [age_food]
 # Food relief by age (2026-10-03, Jan: age 2 stays tough, age 3 brings decent relief, later ages keep the progression;

@@ -31,6 +31,8 @@ LAND_FARM_TAIL = (
     "horse_breeders",
     "stud_farm",
     "elephant_kraal",
+    "elephant_hunting_grounds",
+    "eng_royal_forest",
     "camel_herders",
     "camel_stud",
     "fiber_crops_farm",

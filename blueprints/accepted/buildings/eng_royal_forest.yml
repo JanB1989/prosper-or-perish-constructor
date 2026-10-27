@@ -1,6 +1,6 @@
 version: 2
 tag: eng_royal_forest
-footprint: land_reserve
+footprint: farm_land
 labour:
   class: primary_medieval
   methods:
@@ -25,14 +25,18 @@ building:
     audio_tier = 2
     is_special = yes
     is_foreign = no
-    max_levels = 1
+    # a land farm (herd land, 2026-10-27, Jan): one level, and only while the arable land has room for it
+    max_levels = {
+        value = farm_capacity_max_eng_royal_forest
+        max = 1
+    }
     startup_ramp_target = rural_startup_ramp_target
     pop_type = peasants
     forbidden_for_estates = yes
     category = government_category
     employment_size = 1.25
     # a staple food maker (2026-10-04): staffed with the farms and fisheries (pp_employment_priority.txt)
-    custom_tags = { pp_food_security_priority pp_staple_food_priority }
+    custom_tags = { pp_food_security_priority pp_staple_food_priority farming_capacity }
     rural_settlement = yes
     country_potential = {
         has_or_had_tag = ENG
@@ -84,6 +88,8 @@ building:
     construction_demand = village_construction
     raw_modifier = {
       local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
+      pp_levels_eng_royal_forest = 1
+      local_population_capacity = -2
     }
 
     modifier = {
@@ -93,10 +99,10 @@ building:
         local_monthly_development_modifier = -0.1
         cannot_upgrade_location = yes
     }
-    increase_per_level_cost = 0.23
+    increase_per_level_cost = 0.14
 localization:
   entries:
-    eng_royal_forest_slot_0: "[ShowBuildingTypeName('eng_royal_forest')|e] Work"
+    eng_royal_forest_slot_0: '[ShowBuildingTypeName(''eng_royal_forest'')|e] Work'
     eng_royal_forest_slot_1: Provisioning
     eng_royal_forest_slot_2: Market
     pp_eng_royal_forest_provision: Provision with Game

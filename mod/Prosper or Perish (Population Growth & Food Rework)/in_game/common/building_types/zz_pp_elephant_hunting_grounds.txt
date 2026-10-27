@@ -2,8 +2,9 @@
 REPLACE:elephant_hunting_grounds = {
 audio_tier = 1
 is_foreign = no
+# a land farm (herd land, 2026-10-27, Jan): free arable land sets the cap, Ori's flag still adds two levels
 max_levels = {
-    value = rural_building_cap
+    value = farm_capacity_max_elephant_hunting_grounds
     if = {
         limit = {
             owner ?= {
@@ -20,6 +21,7 @@ startup_ramp_target = rural_startup_ramp_target
 pop_type = peasants
 category = rgo_building_category
 employment_size = 1.0
+custom_tags = { farming_capacity }
 rural_settlement = yes
 country_potential = {
     produced_in_country:elephants > 0
@@ -54,10 +56,11 @@ unique_production_methods = {
     }
 }
 raw_modifier = {
-	local_population_capacity = -0.25
-    local_nobles_desired_pop = 0.01
+  local_nobles_desired_pop = 0.01
+  pp_levels_elephant_hunting_grounds = 1
+  local_population_capacity = -2
 }
 construction_demand = village_construction
-increase_per_level_cost = 0.20
+increase_per_level_cost = 0.12
 }
 # <<< eu5-building-pipeline:elephant_hunting_grounds:building

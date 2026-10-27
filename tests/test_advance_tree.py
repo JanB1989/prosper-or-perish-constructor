@@ -72,11 +72,11 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
     # capacity % that came with it became more resistance on 2026-10-27 (Jan: capacity is farmland)
     "sanitation_advance": (
         {"global_disease_resistance = 0.07", "global_population_growth = 0.001"},
-        {"global_disease_resistance = 0.12"},
+        {"global_disease_resistance = 0.11"},
     ),
     "vaccination_advance": (
         {"global_disease_resistance = 0.07", "global_population_growth = 0.002"},
-        {"global_disease_resistance = 0.15"},
+        {"global_disease_resistance = 0.13"},
     ),
     # trade (2026-10-07, Jan): a little cheaper merchants for the printing countries
     "printing_press_advance": (

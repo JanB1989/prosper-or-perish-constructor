@@ -2518,14 +2518,15 @@ def test_prosperity_advances_cut_peasant_food_consumption_without_capacity_or_go
         "TRY_INJECT:food_advance_absolutism",
         "TRY_INJECT:rotherham_plough",
     )
-    # 2026-10-27 (Jan): the former capacity % (5/5/6/7/8/9) at half size, rounded to whole percent
+    # 2026-10-27 (Jan): the former capacity % (5/5/6/7/8/9) at half size (-3/-3/-3/-4/-4/-5), then a third of that
+    # (world 1.39 bn by 1837 in run 3f8fec0a), rounded to whole percent
     expected_consumption = {
-        "TRY_INJECT:fertile_lands": -0.03,
-        "TRY_INJECT:food_advance_renaissance": -0.03,
-        "TRY_INJECT:new_world_crops": -0.03,
-        "TRY_INJECT:food_advance_reformation": -0.04,
-        "TRY_INJECT:food_advance_absolutism": -0.04,
-        "TRY_INJECT:rotherham_plough": -0.05,
+        "TRY_INJECT:fertile_lands": -0.01,
+        "TRY_INJECT:food_advance_renaissance": -0.01,
+        "TRY_INJECT:new_world_crops": -0.01,
+        "TRY_INJECT:food_advance_reformation": -0.01,
+        "TRY_INJECT:food_advance_absolutism": -0.01,
+        "TRY_INJECT:rotherham_plough": -0.02,
     }
 
     for advance in checked_advances:

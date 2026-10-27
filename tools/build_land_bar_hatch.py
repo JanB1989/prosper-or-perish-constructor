@@ -1,12 +1,11 @@
-"""Build the hatches the location view's capacity bar lays over its parts past the capacity (arable_land_bar.py).
+"""Build the hatch the location view's capacity bar lays over the land the farms hold (arable_land_bar.py).
 
-Both are diagonal stripes (2026-10-27, Jan): the land the farms hold is the arable land's green with dark brown stripes
-(the land is there, the farms take it), the possible improvements the faded green with bright green stripes (land not
-there yet). Each a seamless 32 px tile, drawn tiled at texture density 2 (stripes every 8 px along each axis). Rerun
-after changing them:
+The farms' part is the arable land's green with dark brown diagonal stripes (2026-10-27, Jan: the land is there, the
+farms use it): a seamless 32 px tile, drawn tiled at texture density 2 (stripes every 8 px along each axis). Rerun after
+changing it:
 
     uv run python tools/build_land_bar_hatch.py                  # write the DDS into the mod
-    uv run python tools/build_land_bar_hatch.py --preview X.png  # also both on their bar parts, enlarged
+    uv run python tools/build_land_bar_hatch.py --preview X.png  # also on its bar part, enlarged
 """
 
 from __future__ import annotations
@@ -27,7 +26,7 @@ PERIOD = 16          # texture px between stripes along each axis (divides TILE:
 STRIPE = 6           # stripe width along each axis, texture px
 SUPERSAMPLE = 8
 # bar part -> stripe colour and opacity
-STRIPES = {"farms": ((62, 38, 18), 0.85), "room": ((128, 196, 76), 0.9)}
+STRIPES = {"farms": ((62, 38, 18), 0.85)}
 TRACK = (34, 38, 46)  # the empty bar under a faded part, roughly
 
 

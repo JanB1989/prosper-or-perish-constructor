@@ -380,7 +380,7 @@ def institution_charts(run: RunData, x: pl.DataFrame) -> list[dict[str, Any]]:
 
 
 def _goods_world(run: RunData) -> pl.DataFrame:
-    """Per save and good: world production, use, imports, unmet demand, price ratio, markets short / in surplus."""
+    """Per save and good: world production, use, imports (country trade), burgher trade, unmet demand, price ratio, markets short / in surplus."""
     mg = run.market_goods
     return (
         mg.with_columns(
@@ -394,7 +394,7 @@ def _goods_world(run: RunData) -> pl.DataFrame:
         .agg(
             pl.col("group").first(), pl.col("default_price").first(),
             pl.col("production").sum(), pl.col("use").sum(), pl.col("demand").sum(), pl.col("supply").sum(),
-            pl.col("imports").sum(), pl.col("unmet").sum(),
+            pl.col("imports").sum(), pl.col("burgher_trade").sum(), pl.col("unmet").sum(),
             ((pl.col("price") * pl.col("volume")).sum() / pl.col("volume").sum() / pl.col("default_price").first()).alias("price_ratio"),
             pl.col("short").sum().alias("markets_short"), pl.col("surplus").sum().alias("markets_surplus"),
             (pl.col("demand") > 0.01).sum().alias("markets"),
@@ -527,8 +527,10 @@ def trade_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
             _series("Markets", _aligned(markets, "markets", x), OTHER_GREY, dashed=True)], unit="count")))
     charts = [chart(
         "world_trade", "trade", "World trade",
-        "Goods imported by markets from other markets, valued at base prices (gold per month), by goods group; the "
-        "imported share is imports ÷ (production + imports) of all markets together.", views, goods_legend="goods")]
+        "Goods imported by markets from other markets on the routes countries run (country trade; burgher trade is in "
+        "the next chart), valued at base prices (gold per month), by goods group; the imported share is imports ÷ (production + imports) of all markets together.", views, goods_legend="goods")]
+
+    charts.append(burgher_trade_chart(x, world))
 
     goods = _goods_rows(world, run, x)
     ylabels = [good for good, _, _ in goods]
@@ -553,6 +555,39 @@ def trade_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
                                                  goods_axis=True), fields=tip)],
         height=_heat_height(goods), goods_legend="groups"))
     return charts
+
+
+COUNTRY_TRADE, BURGHER_TRADE = "#5fb8c4", "#eda100"  # the goods page's trade colour, the burghers' pop colour
+
+
+def burgher_trade_chart(x: pl.DataFrame, world: pl.DataFrame) -> dict[str, Any]:
+    """Country trade (routes run by merchants) against burgher trade, world totals at base prices. Both count the
+    goods that arrived (a market's burgher exports are another's burgher imports, so the world sums agree)."""
+    xs = x["x"].to_list()
+    g = world.with_columns((pl.col("imports") * pl.col("default_price")).alias("cv"),
+                           (pl.col("burgher_trade") * pl.col("default_price")).alias("bv"),
+                           (pl.col("production") * pl.col("default_price")).alias("pv"))
+    share = (pl.col("bv") / (pl.col("bv") + pl.col("cv")) * 100).alias("share")
+    total = g.group_by("snapshot_id").agg(pl.col("cv").sum(), pl.col("bv").sum(), pl.col("pv").sum()).with_columns(
+        share, (pl.col("cv") / pl.col("pv") * 100).alias("c_prod"), (pl.col("bv") / pl.col("pv") * 100).alias("b_prod"))
+    by_group = g.group_by("snapshot_id", "group").agg(pl.col("cv").sum(), pl.col("bv").sum()).with_columns(share)
+    shares = _by_key(by_group, "group", "share", x)
+    groups = [(k, label, colour) for k, label, colour, _ in GOODS_GROUPS if k in shares]
+    return chart(
+        "burgher_trade", "trade", "Country trade and burgher trade",
+        "Two ways goods move between markets. Country trade: the routes countries run with their merchant capacity "
+        "(the imports in World trade above). Burgher trade: what the burghers of a market buy from other markets on "
+        "their own, outside merchant capacity. Gold per month at base prices, world totals; burgher share = burgher "
+        "trade ÷ both; share of production = trade value ÷ world production value.",
+        [view("Traded value", "gold", line_option(xs, [
+            _series("Country trade (merchants)", _aligned(total, "cv", x), COUNTRY_TRADE),
+            _series("Burgher trade", _aligned(total, "bv", x), BURGHER_TRADE)], unit="gold", stack=True)),
+         view("Burgher share", "pct", line_option(xs, [_series("All goods", _aligned(total, "share", x), WORLD, width=3)] + [
+             _series(label, shares[k], colour) for k, label, colour in groups], unit="pct", y_max=100, reference=50.0)),
+         view("Share of production", "pct", line_option(xs, [
+             _series("Country trade", _aligned(total, "c_prod", x), COUNTRY_TRADE, width=3),
+             _series("Burgher trade", _aligned(total, "b_prod", x), BURGHER_TRADE, width=3)], unit="pct"))],
+        goods_legend="goods")
 
 
 def region_trade(run: RunData) -> pl.DataFrame:
@@ -1126,3 +1161,13 @@ def world_trade_share(run: RunData) -> dict[str, float]:
         (pl.col("imports") * pl.col("default_price")).sum().alias("iv"),
         (pl.col("production") * pl.col("default_price")).sum().alias("pv"))
     return {s: (iv / (iv + pv) if (iv + pv) else 0.0) for s, iv, pv in g.iter_rows()}
+
+
+def burgher_trade_share(run: RunData) -> dict[str, float]:
+    """snapshot_id -> burgher trade ÷ (burgher + country trade) at base prices, all markets together (for the summary)."""
+    if run.market_goods.is_empty():
+        return {}
+    g = run.market_goods.group_by("snapshot_id").agg(
+        (pl.col("imports") * pl.col("default_price")).sum().alias("cv"),
+        (pl.col("burgher_trade") * pl.col("default_price")).sum().alias("bv"))
+    return {s: (bv / (bv + cv) if (bv + cv) else 0.0) for s, cv, bv in g.iter_rows()}

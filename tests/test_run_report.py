@@ -3,6 +3,7 @@ import subprocess
 from pathlib import Path
 
 import polars as pl
+import pytest
 
 from prosper_or_perish_constructor import run_report as rr
 
@@ -216,6 +217,24 @@ def test_payload_splits_peasants_filters_regions_and_ranks_countries() -> None:
     assert payload["goods"] == {"wheat": {"name": "Wheat", "group": "farming"},
                                 "cloth": {"name": "Cloth", "group": "produced", "icon": "icons/cloth.png"}}
     assert charts["price_heatmap"]["goods_legend"] == "groups" and charts["world_trade"]["goods_legend"] == "goods"
+
+
+def test_burgher_trade_chart_compares_burgher_and_country_trade() -> None:
+    from prosper_or_perish_constructor.run_report_charts import build_payload, burgher_trade_share
+
+    run = _trade_run()
+    # Paris's burghers also sell 2 cloth to other markets: 6 gold against the merchants' 12
+    run.market_goods = run.market_goods.with_columns(
+        pl.when((pl.col("market_id") == 1) & (pl.col("good_id") == "cloth")).then(2.0).otherwise(pl.col("burgher_trade"))
+        .alias("burgher_trade"))
+    chart = {c["key"]: c for c in build_payload(run)["charts"]}["burgher_trade"]
+    value, share, production = ({s["name"]: s["data"][-1][1] for s in v["option"]["series"]} for v in chart["views"])
+    assert value == {"Country trade (merchants)": 12.0, "Burgher trade": 6.0}
+    assert share["All goods"] == pytest.approx(100 / 3, rel=1e-3) and share["Manufactured"] == pytest.approx(100 / 3, rel=1e-3)
+    assert share["Farming"] is None  # no trade at all
+    assert production["Country trade"] == pytest.approx(1200 / 35, rel=1e-3)
+    assert production["Burgher trade"] == pytest.approx(600 / 35, rel=1e-3)
+    assert burgher_trade_share(run) == {"s1": 1 / 3, "s2": 1 / 3}
 
 
 def test_trade_tables_show_market_flows_and_routes() -> None:

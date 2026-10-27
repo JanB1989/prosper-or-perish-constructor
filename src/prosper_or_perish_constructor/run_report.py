@@ -49,6 +49,7 @@ from prosper_or_perish_constructor.run_report_charts import (
     DUMMY_GOODS,
     GOODS_GROUPS,
     build_payload,
+    burgher_trade_share,
     goods_group_expr,
     land_region_expr,
     region_trade,
@@ -1354,6 +1355,7 @@ def _summary(run: RunData) -> dict[str, object]:
         if not run.investment_by_category.is_empty() else {}
     )
     trade = world_trade_share(run)
+    burgher = burgher_trade_share(run)
     urban: dict[str, int] = {}
     if run.urban_saves and last in run.urban_saves:
         def count(frame: pl.DataFrame, snapshot: str) -> int:
@@ -1366,7 +1368,8 @@ def _summary(run: RunData) -> dict[str, object]:
             "investment_first": world_investment.get(first), "investment_last": world_investment.get(last),
             "institutions_first": per_person[0] if per_person else None,
             "institutions_last": per_person[-1] if per_person else None,
-            "trade_first": trade.get(first), "trade_last": trade.get(last), "leaders": leaders, **urban}
+            "trade_first": trade.get(first), "trade_last": trade.get(last),
+            "burgher_first": burgher.get(first), "burgher_last": burgher.get(last), "leaders": leaders, **urban}
 
 
 SECTIONS = (
@@ -1685,6 +1688,9 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
     if summary.get("trade_last") is not None:
         tiles.insert(3, ("Imported share", f"{float(summary['trade_last']) * 100:.1f}%",  # type: ignore[arg-type]
                          f"{float(summary['trade_first'] or 0) * 100:.1f}% in {start}"))  # type: ignore[arg-type]
+    if summary.get("burgher_last") is not None:
+        tiles.insert(4, ("Burgher share of trade", f"{float(summary['burgher_last']) * 100:.0f}%",  # type: ignore[arg-type]
+                         f"{float(summary['burgher_first'] or 0) * 100:.0f}% in {start}"))  # type: ignore[arg-type]
     if summary.get("institutions_last") is not None:
         tiles.insert(3, ("Institutions per person", f"{float(summary['institutions_last']):.1f}",  # type: ignore[arg-type]
                          f"{float(summary['institutions_first'] or 0):.1f} in {start}"))  # type: ignore[arg-type]

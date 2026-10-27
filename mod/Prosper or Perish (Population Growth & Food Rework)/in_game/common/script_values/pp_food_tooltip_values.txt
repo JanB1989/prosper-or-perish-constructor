@@ -1,13 +1,14 @@
 ﻿# Values for the location food tooltip (location scope), read by gui/shared/zz_pp_location_food_tooltip_absolute_sources.gui.
 # Engine: monthly production = (local_monthly_food + subsistence + RGO food + building food goods) x (1 + food productivity);
-# subsistence = SUBSISTENCE_AGRICULTURE (1.5) per 1,000 unemployed peasants and slaves.
+# subsistence = SUBSISTENCE_AGRICULTURE per 1,000 unemployed peasants and slaves, never below 0 (the game's idle count goes
+# negative where buildings offer more jobs than there are pops; the engine floors its subsistence food at 0).
 pp_food_tooltip_production = {
 	value = food_production
 }
 pp_food_tooltip_subsistence = {
-	value = "unemployed_pops_of_pop_type_in_location(pop_type:peasants)"
-	add = "unemployed_pops_of_pop_type_in_location(pop_type:slaves)"
-	multiply = 1.5
+	value = pp_subsistence_peasants
+	add = { value = "unemployed_pops_of_pop_type_in_location(pop_type:slaves)" min = 0 }
+	multiply = define:NLocation|SUBSISTENCE_AGRICULTURE
 }
 pp_food_tooltip_modifiers = {
 	value = modifier:local_monthly_food

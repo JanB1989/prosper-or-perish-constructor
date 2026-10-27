@@ -9,10 +9,11 @@ FILE = MOD_ROOT / "in_game/common/advances/pp_public_health_advances_adjustments
 VANILLA_ADVANCES = Path.home() / ".cache/eu5-vanilla/game/in_game/common/advances"
 
 # Public Health (2026-10-05, Jan): growth comes only from food and storage, so the 1.4 growth lines became disease
-# resistance; their population capacity % became more resistance on 2026-10-27 (a third of it: +0.02 / +0.03).
+# resistance; their population capacity % became more resistance on 2026-10-27 (a third of it: +0.02 / +0.03, then a
+# third of that: +0.01 / +0.01).
 EXPECTED = {
-    "sanitation_advance": {"global_disease_resistance": 0.12},
-    "vaccination_advance": {"global_disease_resistance": 0.15},
+    "sanitation_advance": {"global_disease_resistance": 0.11},
+    "vaccination_advance": {"global_disease_resistance": 0.13},
 }
 
 

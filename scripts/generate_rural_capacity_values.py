@@ -133,7 +133,7 @@ TOWNSFOLK_CAPACITY = "pp_townsfolk_capacity"
 def _arable_rows(land: float, reserve: float, depth: int) -> list[str]:
     FARM_HELPERS[TOWNSFOLK_CAPACITY] = _script_value(
         TOWNSFOLK_CAPACITY,
-        [_line("value = population", 1), _line('subtract = "unemployed_pops_of_pop_type_in_location(pop_type:peasants)"', 1),
+        [_line("value = population", 1), _line("subtract = pp_subsistence_peasants", 1),
          _line("min = 0", 1)],
         ["The capacity everyone but the subsistence peasants brings (total_population +1, unemployed_peasants -1)"],
     )

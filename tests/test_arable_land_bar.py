@@ -117,23 +117,19 @@ def test_threshold_lines_cross_both_bars_at_a_tenth_of_the_capacity_and_at_the_c
     assert column.index("alpha = 0.2") < lines_at < column.index("ScriptValue('pp_land_bar_townsfolk')|0]K")
     # labelled above the bars: 10% at the first line, 100% at the second (a 12 px row, bars 16 px lower)
     assert column.index('raw_text = "10%"') < column.index('raw_text = "100%"') < column.index("position = { 0 16 }")
-    # the farms' land: green with brown stripes, between the capacity line and the room for improvements (an empty
+    # the farms' land: a plain brownish green, between the capacity line and the room for improvements (an empty
     # slot: faint green in a green frame): a gross bar whose net is the capacity line
-    farms = alb.HATCHES["farms"].as_posix()
-    assert set(alb.HATCHES) == {"farms"} and alb.FRAMED == {"room"} and "progress_bar_brown_alt.dds" not in column
-    assert column.count(farms) == 1
+    farms = alb.SHADES["farms"].as_posix()
+    assert alb.FRAMED == {"room"} and "progress_bar_brown_alt.dds" not in column and "Corneredtiled" not in column
+    assert column.count(farms) == 1 and "progress_bar_grey_alt" not in column
     room_at = column.index("alpha = 0.2")
     assert column.index("'pp_land_bar_f_capacity'") < column.index(farms) < room_at
     room = column[room_at:column.index("'pp_land_bar_f_land'", room_at)]
     assert room.count("icon = { size = { 100% 2 }") == 2 and room.count("icon = { size = { 2 100% }") == 2
-    # the farms' number on a dark plate, no other number
-    assert column.count("margin = { 3 0 }") == 1
-    plate = column.index("margin = { 3 0 }")
-    assert column.rindex("ScriptValue('pp_land_bar_farms_shown')", 0, plate) > column.rindex("text_single", 0, plate)
+    assert "margin = { 3 0 }" not in column                                    # no number plates
     assert ("Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), "
             "FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')))") in column
-    assert "spriteType = Corneredtiled spriteborder = { 0 0 } texture_density = 2" in column
-    assert all((MOD_ROOT / "main_menu" / path).is_file() for path in alb.HATCHES.values())
+    assert all((MOD_ROOT / "main_menu" / path).is_file() for path in alb.SHADES.values())
     assert alb.ABUNDANT_SHARE == "0.1"
     capacity = "FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))"
     abundant = f"Multiply_float({capacity}, '(float)0.1')"

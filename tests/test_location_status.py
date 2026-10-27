@@ -297,3 +297,27 @@ def test_modifiers_the_chips_show_get_no_top_row_icon():
     assert window.count(f'visible = "[Not({loc})]"') == 1
     assert window.count(f'visible = "[Not({hidden["province_modifier"]})]"') == 1
     assert "STATIC_MODIFIER_NAME_pp_river_canal_open" not in window
+
+
+def test_no_chip_takes_its_frame_from_the_climate():
+    """2026-10-27 (Jan): chips with a quality scale draw the state colour, descriptive chips the neutral frame."""
+    from prosper_or_perish_constructor import location_view
+
+    window = (MOD_ROOT / "in_game/gui/location_window.gui").read_text(encoding="utf-8-sig")
+    shared = (MOD_ROOT / "in_game/gui/shared/pp_attribute_tooltips.gui").read_text(encoding="utf-8-sig")
+    chip = shared[shared.index("type pp_land_potential_chip"):]
+    chip = chip[:chip.index("\n\t}") + 3]
+    # vanilla's own climate tooltip templates (copied into the shared file) keep the climate's frame for its icon
+    assert "GetClimateFrame" not in window and "GetClimateFrame" not in chip and location_status.NEUTRAL_FRAME in chip
+    # the frame is chosen by the icon drawn on it: fertility red ... green, everything else neutral
+    sample = ('background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" } '
+              'icon = { texture = "gfx/interface/fertility/very_high.dds" } '
+              'background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" } '
+              'icon = { texture = "gfx/interface/soil_types/sand.dds" }')
+    assert location_view.chip_frames(sample).count(location_status.FRAME_GREEN) == 1
+    assert location_view.chip_frames(sample).count(location_status.NEUTRAL_FRAME) == 1
+    for level, frame in (("very_low", "FRAME_RED"), ("moderate", "FRAME_GOLD"), ("very_high", "FRAME_GREEN")):
+        assert re.search(rf'"{getattr(location_status, frame)}" \}}\s*icon = \{{ size = \{{ 30 30 \}} texture = "gfx/interface/fertility/{level}\.dds"', window)
+    # stored food: one frame layer per band; starving red
+    assert window.count("ScriptValue('pp_province_food_storage_months'))") >= 3
+    assert f'background = {{ texture = "{location_status.FRAME_RED}" }}' in window

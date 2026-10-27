@@ -709,7 +709,7 @@ def land_potential_chip(occupied: Mapping[str, set[int]]) -> str:
 \t\t\t\tblockoverride "title_icon" {{
 \t\t\t\t\twidget = {{
 \t\t\t\t\t\tusing = tooltip_title_icon_size
-\t\t\t\t\t\tbackground = {{ texture = "[GetClimateFrame({_LOC}.GetClimate)]" }}
+\t\t\t\t\t\tbackground = {{ texture = "{location_status.NEUTRAL_FRAME}" }}
 \t\t\t\t\t\ticon = {{ using = tooltip_title_icon_size texture = "{LAND_POTENTIAL_ICON}" }}
 \t\t\t\t\t}}
 \t\t\t\t}}
@@ -723,7 +723,7 @@ def land_potential_chip(occupied: Mapping[str, set[int]]) -> str:
 \t\t\t\t}}
 \t\t\t}}
 \t\t}}
-\t\tbackground = {{ texture = "[GetClimateFrame({_LOC}.GetClimate)]" }}
+\t\tbackground = {{ texture = "{location_status.NEUTRAL_FRAME}" }}
 \t\ticon = {{ size = {{ 24 24 }} parentanchor = center texture = "{LAND_POTENTIAL_ICON}" }}
 \t}}"""
 

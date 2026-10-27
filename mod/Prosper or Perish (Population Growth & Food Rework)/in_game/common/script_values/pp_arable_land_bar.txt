@@ -6,7 +6,8 @@
 pp_land_bar_multiplier = {
 	value = 1
 	add = modifier:local_population_capacity_modifier
-	if = { limit = { exists = owner } add = owner.modifier:global_population_capacity_modifier }
+	# owner ?= (vanilla's form): `exists = owner` let a placeholder country through and logged a script error per view
+	owner ?= { add = modifier:global_population_capacity_modifier }
 	multiply = { value = 1 add = modifier:total_population_capacity_modifier }
 	min = 0
 }

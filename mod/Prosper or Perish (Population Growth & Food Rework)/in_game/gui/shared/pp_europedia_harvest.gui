@@ -3,7 +3,7 @@ types pp_europedia_harvest
 {
     type pp_eu_capital_harvest = widget {
         size = { 64 64 }
-        background = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 100% 100% } parentanchor = center texture = "gfx/interface/icons/pp_harvest/frame_poor.dds" visible = "[EqualTo_string(GetPlayer.GetCapital.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR'))]" }
         icon = { size = { 100% 100% } parentanchor = center texture = "gfx/interface/icons/pp_harvest/frame_very_poor.dds" visible = "[EqualTo_string(GetPlayer.GetCapital.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR'))]" }
         icon = { size = { 100% 100% } parentanchor = center texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" visible = "[EqualTo_string(GetPlayer.GetCapital.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL'))]" }

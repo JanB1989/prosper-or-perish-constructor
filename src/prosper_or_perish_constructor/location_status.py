@@ -51,7 +51,9 @@ SEVERITY_COLOURS = {
 }
 SEVERITY_BADGES = {"poor": "-1", "very_poor": "-2", "abysmal": "-3", "good": "+1", "very_good": "+2", "bountiful": "+3"}
 HARVEST_FRAMES = "gfx/interface/icons/pp_harvest/frame_{severity}.dds"
-NEUTRAL_FRAME = "gfx/interface/icons/climate/brown_frame.dds"
+# the neutral chip frame: slate blue (2026-10-27, Jan: vanilla's brown frame melted into the brown card around it)
+NEUTRAL_COLOUR = (92, 112, 140)
+NEUTRAL_FRAME = HARVEST_FRAMES.format(severity="neutral")
 # One recognisable crop per harvest region; plain wheat outside every harvest region.
 REGION_GOODS = {
     "western_europe": "wine", "eastern_europe": "wheat", "north_asia": "wild_game", "central_asia": "cotton",
@@ -73,7 +75,7 @@ _ICONS = "gfx/interface/icons"
 LAND_ICONS = "pp_arable_land"   # abundant / available / overused .dds under _ICONS (tools/build_arable_land_icons.py)
 # No chip takes its round frame from the climate (2026-10-27, Jan): a chip with a quality scale draws the state colour
 # (the harvest chip's recoloured frames: red, orange, gold, light green, green), a descriptive chip vanilla's neutral
-# brown frame (location_view.chip_frames does the same for the exported and vanilla chips).
+# slate frame (location_view.chip_frames does the same for the exported and vanilla chips).
 FRAME_RED, FRAME_ORANGE, FRAME_GOLD, FRAME_LIGHT_GREEN, FRAME_GREEN = (
     HARVEST_FRAMES.format(severity=s) for s in ("abysmal", "very_poor", "poor", "good", "very_good"))
 LAND_FRAMES = {"abundant": FRAME_GREEN, "available": FRAME_GOLD, "overpopulation": FRAME_RED}

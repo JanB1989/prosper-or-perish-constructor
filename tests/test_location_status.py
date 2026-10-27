@@ -64,7 +64,7 @@ def test_harvest_chip_layers_crop_in_a_severity_frame_with_a_signed_badge():
     assert chip.count("PP_HARVEST_REGION_WESTERN_EUROPE')") == 2
     assert chip.count("icon_goods_wheat.dds") == 2 and chip.count("PP_HARVEST_REGION_NONE')") == 2
     # round frames only: the neutral brown one under a recoloured one per severity, no square tints or climate frame
-    assert chip.count("climate/brown_frame.dds") == 2 and "GetClimateFrame" not in chip and "gfx/interface/colors/" not in chip
+    assert chip.count(location_status.NEUTRAL_FRAME) == 2 and "GetClimateFrame" not in chip and "gfx/interface/colors/" not in chip
     for sev in location_status.SEVERITY_COLOURS:
         assert chip.count(f"pp_harvest/frame_{sev}.dds") == 2
     # one badge per severity, in the stored-food chip's number box

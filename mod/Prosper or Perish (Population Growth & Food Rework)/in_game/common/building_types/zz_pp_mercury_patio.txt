@@ -1,9 +1,6 @@
 ﻿# >>> eu5-building-pipeline:mercury_patio:building
 INJECT:mercury_patio = {
 # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
-	raw_modifier = {
-		local_population_capacity = 0.175
-	}
 	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:mercury_patio:building

@@ -45,9 +45,6 @@ REPLACE:urban_parliament_seat = {
 	possible_production_methods = {
 	}
 	construction_demand = pp_capital_jewelry_construction
-	raw_modifier = {
-		local_population_capacity = 0.07
-	}
 	ai_forbid_shutdown = yes # building_shutdown
 }
 
@@ -112,9 +109,6 @@ REPLACE:chancery = {
 		}
 	}
 	construction_demand = pp_early_capital_jewelry_construction
-	raw_modifier = {
-		local_population_capacity = 0.07
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -148,9 +142,6 @@ REPLACE:provincial_chancery = {
 	}
 	possible_production_methods = { pp_chancery_maintenance }
 	construction_demand = town_building_construction
-	raw_modifier = {
-		local_population_capacity = 0.07
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -208,9 +199,6 @@ REPLACE:house_of_parliament = {
 	}
 	graphical_tags = { palace }
 	construction_demand = pp_early_capital_jewelry_construction
-	raw_modifier = {
-		local_population_capacity = 0.14
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -265,9 +253,6 @@ REPLACE:royal_court = {
 	}
 	graphical_tags = { palace }
 	construction_demand = pp_early_capital_jewelry_construction
-	raw_modifier = {
-		local_population_capacity = 0.07
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -414,9 +399,6 @@ REPLACE:local_governor = {
 	modifier = {
 		local_proximity_source = 80
 	}
-	raw_modifier = {
-		local_population_capacity = 0.07
-	}
 	can_close = no # building_shutdown
 }
 
@@ -491,9 +473,6 @@ REPLACE:naval_governor = {
 	modifier = {
 		local_proximity_source = 80
 	}
-	raw_modifier = {
-		local_population_capacity = 0.07
-	}
 	can_close = no # building_shutdown
 }
 
@@ -544,9 +523,6 @@ REPLACE:funduq = {
 			fine_cloth = 0.01
 			category = building_maintenance
 		}
-	}
-	raw_modifier = {
-		local_population_capacity = 0.06
 	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
@@ -603,9 +579,6 @@ REPLACE:republican_assembly = {
 	}
 	graphical_tags = { palace }
 	construction_demand = pp_early_capital_jewelry_construction
-	raw_modifier = {
-		local_population_capacity = 0.07
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -656,9 +629,6 @@ REPLACE:caravan_stop = {
 			camels = 0.01
 			category = building_maintenance
 		}
-	}
-	raw_modifier = {
-		local_population_capacity = 0.06
 	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
@@ -723,9 +693,6 @@ REPLACE:chieftain_hall = {
 	}
 
 	construction_demand = pp_early_capital_jewelry_construction
-	raw_modifier = {
-		local_population_capacity = 0.07
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -789,9 +756,6 @@ REPLACE:khan_ordu = {
 	}
 
 	construction_demand = pp_early_capital_jewelry_construction
-	raw_modifier = {
-		local_population_capacity = 0.07
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -856,9 +820,6 @@ REPLACE:patrician_hall = {
 	graphical_tags = { palace }
 
 	construction_demand = pp_early_capital_jewelry_construction
-	raw_modifier = {
-		local_population_capacity = 0.21
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -923,9 +884,6 @@ REPLACE:sacred_council = {
 	graphical_tags = { palace }
 
 	construction_demand = pp_early_capital_jewelry_construction
-	raw_modifier = {
-		local_population_capacity = 0.07
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -997,7 +955,4 @@ REPLACE:itinerant_court_seat = {
 		}
 	}
 	construction_demand = pp_early_capital_jewelry_construction
-	raw_modifier = {
-		local_population_capacity = 0.035
-	}
 }

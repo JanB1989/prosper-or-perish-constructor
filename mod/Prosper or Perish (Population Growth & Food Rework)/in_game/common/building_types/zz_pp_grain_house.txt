@@ -32,9 +32,6 @@ REPLACE:grain_house = {
 
 	construction_demand = granary_construction
 
-	raw_modifier = {
-		local_population_capacity = 0.018
-	}
 
 	modifier = {
 		local_food_capacity = 100

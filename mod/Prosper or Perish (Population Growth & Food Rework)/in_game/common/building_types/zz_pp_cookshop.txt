@@ -323,9 +323,6 @@ price = pp_cookshop_price
 			category = building_maintenance
 		}
 	}
-	raw_modifier = {
-		local_population_capacity = 0.55
-	}
 
 	modifier = {
 		# the kitchen's food (2026-10-03: was 10 plus about 40 Province Food from the recipes): about five farm levels'

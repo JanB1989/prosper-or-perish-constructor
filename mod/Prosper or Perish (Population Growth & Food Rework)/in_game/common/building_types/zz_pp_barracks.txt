@@ -17,9 +17,6 @@ REPLACE:barracks = {
 	
 	build_time = soldier_building
 	
-	raw_modifier = {
-		local_population_capacity = 0.5
-	}
 
     modifier = {
 		local_manpower = 0.015

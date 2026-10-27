@@ -1,9 +1,6 @@
 ﻿# >>> eu5-building-pipeline:kings_manor:building
 INJECT:kings_manor = {
 # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
-	raw_modifier = {
-		local_population_capacity = 0.03
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }

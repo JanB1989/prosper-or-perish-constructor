@@ -11,7 +11,7 @@ the building in the compiled mod, after the blueprints are rendered:
 - the hand-authored REPLACE for buildings the mod replaces by hand (their blueprint is disabled and only carries the tag).
 
 ``raw_modifier`` is not scaled by staffing, so the capacity stands whether or not the building is filled. A negative
-share takes land away, like a farm.
+share takes land away, like a farm; a share of 0 removes the line.
 """
 
 from __future__ import annotations
@@ -181,8 +181,20 @@ def apply(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> Foot
 
 
 def set_capacity(body: str, value: str) -> str:
-    """Set ``local_population_capacity`` in the body's top-level raw_modifier (one line, first block; created if absent)."""
+    """Set ``local_population_capacity`` in the body's top-level raw_modifier (one line, first block; created if absent).
+    A value of 0 removes the key instead, and a top-level raw_modifier it leaves empty goes with it."""
     raws = [m for m in _RAW_RE.finditer(body) if m.end() - 1 in _depth_zero_opens(body)]
+    if value == "0":
+        pairs = _brace_pairs(body)
+        for match in reversed(raws):
+            open_, close = match.end() - 1, pairs[match.end() - 1]
+            inner = _CAPACITY_LINE_RE.sub("", body[open_ + 1: close])
+            if inner.strip():
+                body = body[: open_ + 1] + inner + body[close:]
+            else:
+                end = close + 1 + (body[close + 1: close + 2] == "\n")
+                body = body[: match.start()] + body[end:]
+        return body
     if not raws:
         indent = _body_indent(body)
         block = f"{indent}raw_modifier = {{\n{indent}{_step(indent)}{CAPACITY_KEY} = {value}\n{indent}}}\n"

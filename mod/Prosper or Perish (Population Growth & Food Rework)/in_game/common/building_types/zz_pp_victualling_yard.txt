@@ -126,7 +126,6 @@ unique_production_methods = {
 # local_pp_victualling_yard_levels: every standing Yard level adds half a Cookshop level to its province
 # (cookshop_max_level, 2026-10-04, Jan): a harbour that packs food also cooks it
 raw_modifier = {
-	local_population_capacity = 0.12
   local_victuals_output_modifier = 0.01
   local_pp_victualling_yard_levels = 1
 }

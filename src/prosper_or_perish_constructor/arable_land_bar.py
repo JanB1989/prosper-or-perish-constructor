@@ -15,9 +15,13 @@ The engine still compares the whole population with that capacity, so the panel 
 - two thin lines across both bars at the engine's land state thresholds (2026-10-27, Jan): 10 % of the capacity (left
   of it abundant free land, which also needs fewer than 10,000 people) and the capacity (right of it overpopulation),
   labelled "10%" and "100%" above the bars.
-- room for improvements: per improvement cap (one building, or the members of a shared cap) the cap clamped like the
-  members' caps, minus the standing levels, times the land per level of the best member whose ``location_potential``
-  the location passes (geography and culture gates; country gates and research are ignored: what the land allows).
+- room for improvements: per improvement cap (one building, or the members of a shared cap) the most land the cap can
+  hold with a member the owner can build here now (``can_build_building`` in the location and for the owner: the
+  location's gates, the owner's research, obsolete tiers), minus the land its standing levels give. With that member
+  the cap (clamped and floored like the members' max levels) holds its levels and those of the tiers it replaces
+  (``obsolete`` chain: Marled Fields upgrade to Improved Fields) at its land, the other members' levels as they are.
+  2026-10-27, Jan: the first version took the best member by geography alone and left out the upgrades (Alexandria
+  1837: 7 Marled Fields under researched Improved Fields showed no room).
 - every part is as wide as its share of the common scale (data-bound pixel sizes on a fixed bar width) and carries
   its number; under the bars a legend of the
   colours and the land state the two bars make (the arable land chip with its strength: the engine's free land or
@@ -56,7 +60,7 @@ class Building:
     land: float = 0.0                       # raw_modifier local_population_capacity per level
     counters: set[str] = field(default_factory=set)
     max_levels: str | None = None
-    potential: str | None = None            # location_potential, rendered as trigger text
+    obsolete: str | None = None             # the building this one replaces (upgrades)
 
     @property
     def counter(self) -> str | None:
@@ -112,27 +116,8 @@ def _block_end(text: str, open_brace: int) -> int:
     raise ValueError("unbalanced block")
 
 
-_TOP_BLOCK = re.compile(r"(?m)^([\w:]+)[ \t]*=[ \t]*\{")
-_POTENTIAL = re.compile(r"(?m)^[ \t]*location_potential[ \t]*=[ \t]*\{")
-
-
-def potentials(text: str) -> dict[str, str]:
-    """building key -> its location_potential as one line of trigger text (the file text itself: the game-data
-    parser does not keep ``?=``)."""
-    found: dict[str, str] = {}
-    for match in _TOP_BLOCK.finditer(text):
-        end = _block_end(text, match.end() - 1)
-        inner = _POTENTIAL.search(text, match.end(), end)
-        if inner:
-            body = text[inner.end():_block_end(text, inner.end() - 1)]
-            body = re.sub(r"#[^\n]*", "", body)
-            found[_bare(match.group(1))[1]] = " ".join(body.split())
-    return found
-
-
 def _read_buildings(paths: list[Path], buildings: dict[str, Building]) -> None:
     for path in paths:
-        gates = potentials(path.read_text(encoding="utf-8-sig"))
         for entry in parse_file(path).entries:
             if not isinstance(entry.value, CList):
                 continue
@@ -152,8 +137,9 @@ def _read_buildings(paths: list[Path], buildings: dict[str, Building]) -> None:
             levels = entry.value.first("max_levels")
             if isinstance(levels, str):
                 building.max_levels = levels
-            if key in gates:
-                building.potential = gates[key]
+            replaces = entry.value.first("obsolete")
+            if isinstance(replaces, str):
+                building.obsolete = replaces
 
 
 def buildings(mod_root: Path, vanilla_game: Path | None) -> dict[str, Building]:
@@ -215,28 +201,53 @@ def _unit_name(unit: CapUnit) -> str:
     return "pp_land_bar_room_" + unit.equation.removeprefix("pp_wb_cap_")
 
 
+def replaced(building: Building, members: list[Building]) -> set[str]:
+    """The members ``building`` replaces: its ``obsolete`` chain within the unit (it upgrades their levels)."""
+    keys = {b.key: b for b in members}
+    found: set[str] = set()
+    key = building.obsolete
+    while key in keys and key not in found:
+        found.add(key)
+        key = keys[key].obsolete
+    return found
+
+
+def _has(key: str, effect: str) -> str:
+    return f"\tif = {{ limit = {{ has_building = building_type:{key} }} {effect} }}"
+
+
 def _room(unit: CapUnit) -> str:
-    """Land the unit's improvements could still add: (clamped cap - standing levels) x the best member's land."""
+    """Land the unit's improvements could still add: the most land the cap holds with one member the owner can build
+    here (its levels and the levels of the tiers it replaces at its land, the other members' levels kept), minus the
+    land the members' standing levels give."""
     name = _unit_name(unit)
-    lines = [f"{name} = {{", f"\tvalue = {unit.equation}"]
+    cap = [f"{name}_cap = {{", f"\tvalue = {unit.equation}"]
     if unit.limit is not None:
-        lines.append(f"\tmax = {_num(unit.limit)}")
+        cap.append(f"\tmax = {_num(unit.limit)}")
+    cap += ["\tfloor = yes", "}"]      # the engine floors max_levels to a level
+    now = [f"{name}_now = {{", "\tvalue = 0"]
+    now += [_has(b.key, f"add = {{ value = {_level(b.key)} multiply = {_num(b.land)} }}") for b in unit.members]
+    now.append("}")
+    total = [f"{name} = {{", "\tvalue = 0"]
+    blocks = []
     for b in unit.members:
-        lines.append(f"\tif = {{ limit = {{ has_building = building_type:{b.key} }} subtract = {_level(b.key)} }}")
-    lines.append("\tmin = 0")
-    lines.append(f"\tmultiply = {name}_land")
-    lines.append("}")
-    land = [f"{name}_land = {{", "\tvalue = 0"]
-    first = True
-    for b in sorted(unit.members, key=lambda b: (-b.land, b.key)):   # the best member the location allows
-        if b.potential:
-            land.append(f"\t{'if' if first else 'else_if'} = {{ limit = {{ {b.potential} }} value = {_num(b.land)} }}")
-            first = False
-        else:
-            land.append(f"\tvalue = {_num(b.land)}" if first else f"\telse = {{ value = {_num(b.land)} }}")
-            break
-    land.append("}")
-    return "\n".join(lines) + "\n" + "\n".join(land)
+        kept = [m for m in unit.members if m is not b and m.key not in replaced(b, unit.members)]
+        total.append(f"\tmin = {name}_to_{b.key}")
+        blocks += [
+            f"{name}_to_{b.key} = {{",
+            "\tvalue = 0",
+            "\tif = {",
+            f"\t\tlimit = {{ can_build_building = building_type:{b.key} owner ?= {{ can_build_building = building_type:{b.key} }} }}",
+            f"\t\tvalue = {name}_cap",
+            *("\t" + _has(m.key, f"subtract = {_level(m.key)}") for m in kept),
+            "\t\tmin = 0",
+            f"\t\tmultiply = {_num(b.land)}",
+            *("\t" + _has(m.key, f"add = {{ value = {_level(m.key)} multiply = {_num(m.land)} }}") for m in kept),
+            "\t}",
+            "}",
+        ]
+    total += [f"\tsubtract = {name}_now", "\tmin = 0", "}"]
+    return "\n".join(total + cap + now + blocks)
 
 
 def _land_sum(name: str, members: list[Building], comment: str, counters: bool) -> str:
@@ -334,7 +345,8 @@ def render_script_values(m: Model) -> str:
         _land_sum("pp_land_bar_farms_flat", m.farms, "Land the farms take (raw_modifier capacity per level)", counters=True),
         _land_sum("pp_land_bar_reserved_flat", m.reserved,
                   "Land the reserved grounds take (buildings with negative capacity and no farm counter)", counters=False),
-        "# Room for improvements: per cap, the land its improvements could still add\n"
+        "# Room for improvements: per cap, the land its improvements could still add (new levels and upgrades of what\n"
+        "# the owner can build here now)\n"
         "pp_land_bar_room_flat = {\n\tvalue = 0\n"
         + "".join(f"\tadd = {_unit_name(unit)}\n" for unit in m.units) + "}",
         *(_room(unit) for unit in m.units),

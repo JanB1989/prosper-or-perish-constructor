@@ -203,18 +203,40 @@ def test_new_concepts_have_a_family_an_icon_a_name_and_a_short_text():
     assert {"pp_subsistence_peasants", "population_capacity", "employment", "location_rank", "buildings"} <= links
 
 
-def test_room_takes_the_best_allowed_member_and_clamps_to_the_cap():
-    """The faded part past the capacity: land the improvements still buildable here could add."""
+def _block(text: str, name: str) -> str:
+    start = text.index(f"{name} = {{")
+    return text[start:alb._block_end(text, text.index("{", start)) + 1]
+
+
+def test_room_is_the_most_land_a_buildable_member_gives_the_cap_minus_the_land_now():
+    """The room for improvements: land the cap can still give with what the owner can build here now, upgrades of the
+    tiers a member replaces included (Alexandria 1837: 7 Marled Fields, Improved Fields researched)."""
     unit = alb.CapUnit("pp_wb_cap_group_shared", 15, [
-        alb.Building("plain", 5.0), alb.Building("niche", 7.5, potential="has_river = yes")])
+        alb.Building("marled", 5.0), alb.Building("better", 7.5, obsolete="marled"),
+        alb.Building("best", 10.0, obsolete="better"), alb.Building("regional", 15.0)])
+    assert alb.replaced(unit.members[2], unit.members) == {"better", "marled"}
     text = alb._room(unit)
-    assert "value = pp_wb_cap_group_shared\n\tmax = 15\n" in text
-    assert text.index('subtract = "location_building_level(building_type:plain)"') < text.index("min = 0")
-    assert "if = { limit = { has_river = yes } value = 7.5 }\n\telse = { value = 5 }" in text
+    room = _block(text, "pp_land_bar_room_group_shared")
+    # the best of the members, each 0 where it cannot be built, minus the land now, never below 0
+    assert room.count("min = pp_land_bar_room_group_shared_to_") == 4
+    assert room.index("subtract = pp_land_bar_room_group_shared_now") < room.rindex("min = 0")
+    # the cap as the engine reads max_levels: clamped, floored
+    assert "pp_land_bar_room_group_shared_cap = {\n\tvalue = pp_wb_cap_group_shared\n\tmax = 15\n\tfloor = yes\n}" in text
+    # with the best tier: its own and the replaced tiers' levels become its land, the regional member keeps its own
+    best = _block(text, "pp_land_bar_room_group_shared_to_best")
+    assert ("limit = { can_build_building = building_type:best owner ?= { can_build_building = building_type:best } }"
+            in best)
+    assert "location_building_level(building_type:marled)" not in best
+    assert "location_building_level(building_type:better)" not in best
+    assert best.count("location_building_level(building_type:regional)") == 2      # subtracted, then its land added
+    assert best.index("multiply = 10") < best.index("multiply = 15")
+    # the regional member replaces nothing: every other member's levels stay as they are
+    regional = _block(text, "pp_land_bar_room_group_shared_to_regional")
+    assert all(f"location_building_level(building_type:{k})" in regional for k in ("marled", "better", "best"))
+    now = _block(text, "pp_land_bar_room_group_shared_now")
+    assert now.count("location_building_level(building_type:") == 4 and "multiply = 7.5" in now
     m = alb.model(MOD_ROOT, None)
     assert m.units and sorted(b.key for u in m.units for b in u.members) == sorted(b.key for b in m.improvements)
-
-
-def test_potentials_keep_question_mark_operators_and_skip_comments():
-    text = 'REPLACE:a = {\n location_potential = {\n  dominant_culture ?= culture:x # note }\n  has_river = yes\n }\n}\nb = { x = 1 }\n'
-    assert alb.potentials(text) == {"a": "dominant_culture ?= culture:x has_river = yes"}
+    field = next(u for u in m.units if u.equation == "pp_wb_cap_field_management_shared")
+    improved = next(b for b in field.members if b.key == "field_management_improved")
+    assert alb.replaced(improved, field.members) == {"field_management", "field_management_convertible"}

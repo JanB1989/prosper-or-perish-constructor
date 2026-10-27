@@ -8,7 +8,8 @@ The engine still compares the whole population with that capacity, so the panel 
 - Population: the townsfolk (grey), then the subsistence peasants (yellow); beyond the capacity red.
 - Population capacity: the same townsfolk (grey: they cancel out), then the arable land left (green), then the land the
   farms take (brown, past the end of the capacity). The subsistence peasants live on the green; farms grow into it.
-- every part is as wide as its number (data-bound stretch factors) and carries it; under the bars a legend of the
+- every part is as wide as its share of the common scale (data-bound pixel sizes on a fixed bar width) and carries
+  its number; under the bars a legend of the
   colours and the land state the two bars make (the arable land chip with its strength: the engine's free land or
   overpopulation from population / capacity); the breakdown of the arable land is in the tooltip.
 
@@ -296,45 +297,57 @@ def _clamp0(expr: str) -> str:
     return f"Max_float({expr}, '(float)0')"
 
 
-_SCALE = _f("pp_land_bar_scale")
-# a segment's number shows where the segment is wide enough for it (a share of the bar)
-_LABEL_SHARE = "0.06"
+# Both bars are BAR_WIDTH pixels on one scale; each part is its share of the scale in pixels (a data-bound size, as
+# vanilla's ToVector2f sizes; a data-bound stretch factor gave every part the same width in game, 2026-10-27)
+BAR_WIDTH = 260
+LABEL_WIDTH = 105
+# a part's number shows where the part is wide enough for it (share of the bar)
+_LABEL_SHARE = "0.1"
 
 
-def _segment(weight: str, texture: str | None, label: str = "") -> str:
-    """A part of a bar, as wide as its weight in the bar's row (data-bound stretch factor, as vanilla's societal values
-    do), with its number in it. An empty texture is the unfilled rest of the bar."""
-    fill = _bar(texture, "1", bottom=True) if texture else ""
+def _segment(share: str, texture: str, label: str = "") -> str:
+    """A part of a bar: ``share`` (0..1 of the scale) x the bar width wide, with its number in it."""
     text = ""
     if label:
         text = (f'\n\ttext_single = {{ parentanchor = center fontsize = 12 raw_text = "{label}" '
-                f"visible = \"[GreaterThan_float({weight}, Multiply_float({_SCALE}, '(float){_LABEL_SHARE}'))]\" }}")
+                f"visible = \"[GreaterThan_float({share}, '(float){_LABEL_SHARE}')]\" }}")
     return f"""widget = {{
-	size = {{ 0 16 }}
-	layoutpolicy_horizontal = expanding
-	layoutstretchfactor_horizontal = "[{weight}]"
-	visible = "[GreaterThan_float({weight}, '(float)0')]"
-	{fill}{text}
+	size = "[ToVector2f(Multiply_float({share}, '(float){BAR_WIDTH}'), '(float)16')]"
+	visible = "[GreaterThan_float({share}, '(float)0')]"
+	{_bar(texture, "1", bottom=True)}{text}
 }}"""
 
 
 def _row(label: str, segments: list[str]) -> str:
-    """A labelled bar: the label in a fixed column, so both bars start at the same x and share one scale."""
+    """A labelled bar: the label in a fixed column and a fixed bar width, so both bars start at the same x and their
+    parts line up on one scale."""
     parts = "\n".join(segments)
     return f"""hbox = {{
-	layoutpolicy_horizontal = expanding
 	spacing = 8
 	widget = {{
-		size = {{ 150 18 }}
+		size = {{ {LABEL_WIDTH} 18 }}
 		text_single = {{ text = "{label}" parentanchor = vcenter fontsize = 14 default_format = "#yellow_titles" }}
 	}}
-	hbox = {{
-		layoutpolicy_horizontal = expanding
-		size = {{ -1 16 }}
+	widget = {{
+		size = {{ {BAR_WIDTH} 16 }}
 		background = {{ texture = "{_BACK}" alpha = 0.6 }}
-{_indent(parts, 2)}
+		hbox = {{
+			size = {{ 100% 100% }}
+{_indent(parts, 3)}
+			expand = {{}}
+		}}
 	}}
+	expand = {{}}
 }}"""
+
+
+def _share(name: str) -> str:
+    return _f(f"pp_land_bar_f_{name}")
+
+
+def _part(upper: str, lower: str) -> str:
+    """The share between two cumulative shares of a bar."""
+    return _clamp0(f"Subtract_float({_share(upper)}, {_share(lower)})")
 
 
 def _k(expr: str, sign: str = "") -> str:
@@ -349,20 +362,16 @@ def gui_block(indent: str = "", land_state: str = "") -> str:
     part carries its number; under the bars a legend of the colours and the land state the two bars make (the arable
     land chip: overused / available / abundant, with its strength); the breakdown is in the tooltip.
     """
-    townsfolk, subsistence = _f("pp_land_bar_townsfolk"), _f("pp_land_bar_subsistence")
-    within = f"Min_float({subsistence}, {_f('pp_land_bar_left_shown')})"
     over = _clamp0(f"Subtract_float({_f('pp_land_bar_population')}, {_f('pp_land_bar_capacity')})")
     population = _row("PP_LAND_BAR_POPULATION", [
-        _segment(townsfolk, "townsfolk", _k(_sv("pp_land_bar_townsfolk"))),
-        _segment(within, "subsistence", _k(_sv("pp_land_bar_subsistence"))),
-        _segment(over, "over", _k(over, "+")),
-        _segment(_clamp0(f"Subtract_float({_SCALE}, {_f('pp_land_bar_population')})"), None),
+        _segment(_share("townsfolk"), "townsfolk", _k(_sv("pp_land_bar_townsfolk"))),
+        _segment(_part("within", "townsfolk"), "subsistence", _k(_sv("pp_land_bar_subsistence"))),
+        _segment(_part("population", "within"), "over", _k(over, "+")),
     ])
     capacity = _row("PP_LAND_BAR_CAPACITY", [
-        _segment(_f("pp_land_bar_townsfolk_room"), "townsfolk", _k(_sv("pp_land_bar_townsfolk_room"))),
-        _segment(_f("pp_land_bar_left_shown"), "land", _k(_sv("pp_land_bar_left_shown"))),
-        _segment(_f("pp_land_bar_farms"), "farms", _k(_sv("pp_land_bar_farms"))),
-        _segment(_clamp0(f"Subtract_float({_SCALE}, {_f('pp_land_bar_scale_land')})"), None),
+        _segment(_share("townsfolk_room"), "townsfolk", _k(_sv("pp_land_bar_townsfolk_room"))),
+        _segment(_part("capacity", "townsfolk_room"), "land", _k(_sv("pp_land_bar_left_shown"))),
+        _segment(_part("land", "capacity"), "farms", _k(_sv("pp_land_bar_farms"))),
     ])
     legend = "\n".join([
         _term("townsfolk", "PP_LAND_BAR_TOWNSFOLK"),

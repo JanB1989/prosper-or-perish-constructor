@@ -46,7 +46,7 @@ def test_capacity_is_everyone_but_the_subsistence_peasants():
     text = STATIC.read_text(encoding="utf-8-sig")
     assert re.search(r"(?m)^\s*local_population_capacity = 1\s*$", _block(text, "total_population"))
     # the -1 per subsistence peasant is script-added (the growth pass applies unemployed_peasants after free land and
-    # overpopulation): pp_subsistence_land at size = the idle peasants, refreshed monthly
+    # overpopulation): pp_subsistence_land at size = the idle peasants, refreshed yearly
     assert not re.search(r"(?m)^\s*local_population_capacity", _block(text, "unemployed_peasants"))
     static = (MOD_ROOT / "main_menu/common/static_modifiers/pp_subsistence_land.txt").read_text(encoding="utf-8-sig")
     assert re.search(r"(?m)^\s*local_population_capacity = -1\s*$", static)

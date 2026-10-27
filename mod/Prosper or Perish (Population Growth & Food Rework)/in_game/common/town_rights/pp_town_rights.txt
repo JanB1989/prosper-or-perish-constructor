@@ -22,3 +22,12 @@ TRY_INJECT:royal_staple_rights = {
 		local_victualling_yard_building_levels = 8
 	}
 }
+
+# Ville Franche (2026-10-27, Jan): flat housing instead of vanilla's +20 % capacity, which grew with every development
+# point and building. 20 = 20,000 people, about 20 % of a French town's or city's flat capacity in an 1832 save (median 110).
+TRY_INJECT:ville_franche_town_rights = {
+	location_modifier = {
+		local_population_capacity_modifier = -0.2   # vanilla 0.2: no capacity %
+		local_population_capacity = 20
+	}
+}

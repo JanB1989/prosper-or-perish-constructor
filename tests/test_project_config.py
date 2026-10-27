@@ -2539,8 +2539,12 @@ def test_prosperity_advances_cut_peasant_food_consumption_without_capacity_or_go
         assert values.get("global_peasants_food_consumption") == expected_consumption.get(advance), advance
 
 
-def test_capitals_and_colonial_nations_give_no_population_capacity_percent() -> None:
+def test_capitals_colonial_nations_and_ville_franche_give_no_population_capacity_percent() -> None:
     profile = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").profile("constructor")
+    rights = {entry.key: entry.value for entry in load_merged_directory(profile, "town_rights").entries}
+    ville_franche = [e for block in rights["ville_franche_town_rights"].values("location_modifier") for e in block.entries]
+    assert abs(sum(e.value for e in ville_franche if e.key == "local_population_capacity_modifier")) < 1e-9
+    assert sum(e.value for e in ville_franche if e.key == "local_population_capacity") == 20   # flat housing instead
     statics = {entry.key: entry.value for entry in load_merged_directory(profile, "static_modifiers", scope="main_menu").entries}
     for name in ("capital", "province_capital"):
         net = sum(e.value for e in statics[name].entries if e.key == "local_population_capacity_modifier")

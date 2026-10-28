@@ -34,6 +34,7 @@ pp_harvest_western_europe_abysmal = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.07
 	local_fur_output_modifier = -0.03
+	local_ivory_output_modifier = -0.03
 }
 
 pp_harvest_western_europe_very_poor = {
@@ -67,6 +68,7 @@ pp_harvest_western_europe_very_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.06
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_western_europe_poor = {
@@ -100,6 +102,7 @@ pp_harvest_western_europe_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.04
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_western_europe_good = {
@@ -133,6 +136,7 @@ pp_harvest_western_europe_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.04
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_western_europe_very_good = {
@@ -166,6 +170,7 @@ pp_harvest_western_europe_very_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.06
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_western_europe_bountiful = {
@@ -199,6 +204,7 @@ pp_harvest_western_europe_bountiful = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.07
 	local_fur_output_modifier = 0.03
+	local_ivory_output_modifier = 0.03
 }
 
 # eastern_europe
@@ -233,6 +239,7 @@ pp_harvest_eastern_europe_abysmal = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.10
 	local_fur_output_modifier = -0.04
+	local_ivory_output_modifier = -0.04
 }
 
 pp_harvest_eastern_europe_very_poor = {
@@ -266,6 +273,7 @@ pp_harvest_eastern_europe_very_poor = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.08
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_eastern_europe_poor = {
@@ -299,6 +307,7 @@ pp_harvest_eastern_europe_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.05
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_eastern_europe_good = {
@@ -332,6 +341,7 @@ pp_harvest_eastern_europe_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.05
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_eastern_europe_very_good = {
@@ -365,6 +375,7 @@ pp_harvest_eastern_europe_very_good = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.08
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_eastern_europe_bountiful = {
@@ -398,6 +409,7 @@ pp_harvest_eastern_europe_bountiful = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.10
 	local_fur_output_modifier = 0.04
+	local_ivory_output_modifier = 0.04
 }
 
 # north_asia
@@ -432,6 +444,7 @@ pp_harvest_north_asia_abysmal = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.12
 	local_fur_output_modifier = -0.04
+	local_ivory_output_modifier = -0.04
 }
 
 pp_harvest_north_asia_very_poor = {
@@ -465,6 +478,7 @@ pp_harvest_north_asia_very_poor = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.10
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_north_asia_poor = {
@@ -498,6 +512,7 @@ pp_harvest_north_asia_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.06
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_north_asia_good = {
@@ -531,6 +546,7 @@ pp_harvest_north_asia_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.06
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_north_asia_very_good = {
@@ -564,6 +580,7 @@ pp_harvest_north_asia_very_good = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.10
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_north_asia_bountiful = {
@@ -597,6 +614,7 @@ pp_harvest_north_asia_bountiful = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.12
 	local_fur_output_modifier = 0.04
+	local_ivory_output_modifier = 0.04
 }
 
 # central_asia
@@ -631,6 +649,7 @@ pp_harvest_central_asia_abysmal = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.12
 	local_fur_output_modifier = -0.03
+	local_ivory_output_modifier = -0.03
 }
 
 pp_harvest_central_asia_very_poor = {
@@ -664,6 +683,7 @@ pp_harvest_central_asia_very_poor = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.10
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_central_asia_poor = {
@@ -697,6 +717,7 @@ pp_harvest_central_asia_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.06
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_central_asia_good = {
@@ -730,6 +751,7 @@ pp_harvest_central_asia_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.06
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_central_asia_very_good = {
@@ -763,6 +785,7 @@ pp_harvest_central_asia_very_good = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.10
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_central_asia_bountiful = {
@@ -796,6 +819,7 @@ pp_harvest_central_asia_bountiful = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.12
 	local_fur_output_modifier = 0.03
+	local_ivory_output_modifier = 0.03
 }
 
 # east_asia
@@ -830,6 +854,7 @@ pp_harvest_east_asia_abysmal = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.07
 	local_fur_output_modifier = -0.03
+	local_ivory_output_modifier = -0.03
 }
 
 pp_harvest_east_asia_very_poor = {
@@ -863,6 +888,7 @@ pp_harvest_east_asia_very_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.06
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_east_asia_poor = {
@@ -896,6 +922,7 @@ pp_harvest_east_asia_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.04
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_east_asia_good = {
@@ -929,6 +956,7 @@ pp_harvest_east_asia_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.04
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_east_asia_very_good = {
@@ -962,6 +990,7 @@ pp_harvest_east_asia_very_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.06
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_east_asia_bountiful = {
@@ -995,6 +1024,7 @@ pp_harvest_east_asia_bountiful = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.07
 	local_fur_output_modifier = 0.03
+	local_ivory_output_modifier = 0.03
 }
 
 # south_asia
@@ -1029,6 +1059,7 @@ pp_harvest_south_asia_abysmal = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.10
 	local_fur_output_modifier = -0.04
+	local_ivory_output_modifier = -0.04
 }
 
 pp_harvest_south_asia_very_poor = {
@@ -1062,6 +1093,7 @@ pp_harvest_south_asia_very_poor = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.08
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_south_asia_poor = {
@@ -1095,6 +1127,7 @@ pp_harvest_south_asia_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.05
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_south_asia_good = {
@@ -1128,6 +1161,7 @@ pp_harvest_south_asia_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.05
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_south_asia_very_good = {
@@ -1161,6 +1195,7 @@ pp_harvest_south_asia_very_good = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.08
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_south_asia_bountiful = {
@@ -1194,6 +1229,7 @@ pp_harvest_south_asia_bountiful = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.10
 	local_fur_output_modifier = 0.04
+	local_ivory_output_modifier = 0.04
 }
 
 # south_east_asia
@@ -1228,6 +1264,7 @@ pp_harvest_south_east_asia_abysmal = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.07
 	local_fur_output_modifier = -0.04
+	local_ivory_output_modifier = -0.04
 }
 
 pp_harvest_south_east_asia_very_poor = {
@@ -1261,6 +1298,7 @@ pp_harvest_south_east_asia_very_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.06
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_south_east_asia_poor = {
@@ -1294,6 +1332,7 @@ pp_harvest_south_east_asia_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.04
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_south_east_asia_good = {
@@ -1327,6 +1366,7 @@ pp_harvest_south_east_asia_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.04
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_south_east_asia_very_good = {
@@ -1360,6 +1400,7 @@ pp_harvest_south_east_asia_very_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.06
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_south_east_asia_bountiful = {
@@ -1393,6 +1434,7 @@ pp_harvest_south_east_asia_bountiful = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.07
 	local_fur_output_modifier = 0.04
+	local_ivory_output_modifier = 0.04
 }
 
 # middle_east
@@ -1427,6 +1469,7 @@ pp_harvest_middle_east_abysmal = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.10
 	local_fur_output_modifier = -0.03
+	local_ivory_output_modifier = -0.03
 }
 
 pp_harvest_middle_east_very_poor = {
@@ -1460,6 +1503,7 @@ pp_harvest_middle_east_very_poor = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.08
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_middle_east_poor = {
@@ -1493,6 +1537,7 @@ pp_harvest_middle_east_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.05
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_middle_east_good = {
@@ -1526,6 +1571,7 @@ pp_harvest_middle_east_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.05
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_middle_east_very_good = {
@@ -1559,6 +1605,7 @@ pp_harvest_middle_east_very_good = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.08
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_middle_east_bountiful = {
@@ -1592,6 +1639,7 @@ pp_harvest_middle_east_bountiful = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.10
 	local_fur_output_modifier = 0.03
+	local_ivory_output_modifier = 0.03
 }
 
 # north_africa
@@ -1626,6 +1674,7 @@ pp_harvest_north_africa_abysmal = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.10
 	local_fur_output_modifier = -0.03
+	local_ivory_output_modifier = -0.03
 }
 
 pp_harvest_north_africa_very_poor = {
@@ -1659,6 +1708,7 @@ pp_harvest_north_africa_very_poor = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.08
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_north_africa_poor = {
@@ -1692,6 +1742,7 @@ pp_harvest_north_africa_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.05
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_north_africa_good = {
@@ -1725,6 +1776,7 @@ pp_harvest_north_africa_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.05
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_north_africa_very_good = {
@@ -1758,6 +1810,7 @@ pp_harvest_north_africa_very_good = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.08
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_north_africa_bountiful = {
@@ -1791,6 +1844,7 @@ pp_harvest_north_africa_bountiful = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.10
 	local_fur_output_modifier = 0.03
+	local_ivory_output_modifier = 0.03
 }
 
 # west_africa
@@ -1825,6 +1879,7 @@ pp_harvest_west_africa_abysmal = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.10
 	local_fur_output_modifier = -0.04
+	local_ivory_output_modifier = -0.04
 }
 
 pp_harvest_west_africa_very_poor = {
@@ -1858,6 +1913,7 @@ pp_harvest_west_africa_very_poor = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.08
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_west_africa_poor = {
@@ -1891,6 +1947,7 @@ pp_harvest_west_africa_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.05
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_west_africa_good = {
@@ -1924,6 +1981,7 @@ pp_harvest_west_africa_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.05
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_west_africa_very_good = {
@@ -1957,6 +2015,7 @@ pp_harvest_west_africa_very_good = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.08
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_west_africa_bountiful = {
@@ -1990,6 +2049,7 @@ pp_harvest_west_africa_bountiful = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.10
 	local_fur_output_modifier = 0.04
+	local_ivory_output_modifier = 0.04
 }
 
 # east_africa
@@ -2024,6 +2084,7 @@ pp_harvest_east_africa_abysmal = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.12
 	local_fur_output_modifier = -0.04
+	local_ivory_output_modifier = -0.04
 }
 
 pp_harvest_east_africa_very_poor = {
@@ -2057,6 +2118,7 @@ pp_harvest_east_africa_very_poor = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.10
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_east_africa_poor = {
@@ -2090,6 +2152,7 @@ pp_harvest_east_africa_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.06
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_east_africa_good = {
@@ -2123,6 +2186,7 @@ pp_harvest_east_africa_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.06
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_east_africa_very_good = {
@@ -2156,6 +2220,7 @@ pp_harvest_east_africa_very_good = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.10
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_east_africa_bountiful = {
@@ -2189,6 +2254,7 @@ pp_harvest_east_africa_bountiful = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.12
 	local_fur_output_modifier = 0.04
+	local_ivory_output_modifier = 0.04
 }
 
 # central_africa
@@ -2223,6 +2289,7 @@ pp_harvest_central_africa_abysmal = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.10
 	local_fur_output_modifier = -0.04
+	local_ivory_output_modifier = -0.04
 }
 
 pp_harvest_central_africa_very_poor = {
@@ -2256,6 +2323,7 @@ pp_harvest_central_africa_very_poor = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.08
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_central_africa_poor = {
@@ -2289,6 +2357,7 @@ pp_harvest_central_africa_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.05
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_central_africa_good = {
@@ -2322,6 +2391,7 @@ pp_harvest_central_africa_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.05
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_central_africa_very_good = {
@@ -2355,6 +2425,7 @@ pp_harvest_central_africa_very_good = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.08
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_central_africa_bountiful = {
@@ -2388,6 +2459,7 @@ pp_harvest_central_africa_bountiful = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.10
 	local_fur_output_modifier = 0.04
+	local_ivory_output_modifier = 0.04
 }
 
 # southern_africa
@@ -2422,6 +2494,7 @@ pp_harvest_southern_africa_abysmal = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.10
 	local_fur_output_modifier = -0.03
+	local_ivory_output_modifier = -0.03
 }
 
 pp_harvest_southern_africa_very_poor = {
@@ -2455,6 +2528,7 @@ pp_harvest_southern_africa_very_poor = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.08
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_southern_africa_poor = {
@@ -2488,6 +2562,7 @@ pp_harvest_southern_africa_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.05
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_southern_africa_good = {
@@ -2521,6 +2596,7 @@ pp_harvest_southern_africa_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.05
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_southern_africa_very_good = {
@@ -2554,6 +2630,7 @@ pp_harvest_southern_africa_very_good = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.08
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_southern_africa_bountiful = {
@@ -2587,6 +2664,7 @@ pp_harvest_southern_africa_bountiful = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.10
 	local_fur_output_modifier = 0.03
+	local_ivory_output_modifier = 0.03
 }
 
 # north_america
@@ -2621,6 +2699,7 @@ pp_harvest_north_america_abysmal = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.10
 	local_fur_output_modifier = -0.04
+	local_ivory_output_modifier = -0.04
 }
 
 pp_harvest_north_america_very_poor = {
@@ -2654,6 +2733,7 @@ pp_harvest_north_america_very_poor = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.08
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_north_america_poor = {
@@ -2687,6 +2767,7 @@ pp_harvest_north_america_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.05
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_north_america_good = {
@@ -2720,6 +2801,7 @@ pp_harvest_north_america_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.05
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_north_america_very_good = {
@@ -2753,6 +2835,7 @@ pp_harvest_north_america_very_good = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.08
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_north_america_bountiful = {
@@ -2786,6 +2869,7 @@ pp_harvest_north_america_bountiful = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.10
 	local_fur_output_modifier = 0.04
+	local_ivory_output_modifier = 0.04
 }
 
 # south_america
@@ -2820,6 +2904,7 @@ pp_harvest_south_america_abysmal = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.10
 	local_fur_output_modifier = -0.04
+	local_ivory_output_modifier = -0.04
 }
 
 pp_harvest_south_america_very_poor = {
@@ -2853,6 +2938,7 @@ pp_harvest_south_america_very_poor = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.08
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_south_america_poor = {
@@ -2886,6 +2972,7 @@ pp_harvest_south_america_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.05
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_south_america_good = {
@@ -2919,6 +3006,7 @@ pp_harvest_south_america_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.05
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_south_america_very_good = {
@@ -2952,6 +3040,7 @@ pp_harvest_south_america_very_good = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.08
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_south_america_bountiful = {
@@ -2985,6 +3074,7 @@ pp_harvest_south_america_bountiful = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.10
 	local_fur_output_modifier = 0.04
+	local_ivory_output_modifier = 0.04
 }
 
 # australasia
@@ -3019,6 +3109,7 @@ pp_harvest_australasia_abysmal = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.10
 	local_fur_output_modifier = -0.03
+	local_ivory_output_modifier = -0.03
 }
 
 pp_harvest_australasia_very_poor = {
@@ -3052,6 +3143,7 @@ pp_harvest_australasia_very_poor = {
 	local_horses_output_modifier = -0.02
 	local_elephants_output_modifier = -0.08
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_australasia_poor = {
@@ -3085,6 +3177,7 @@ pp_harvest_australasia_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.05
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_australasia_good = {
@@ -3118,6 +3211,7 @@ pp_harvest_australasia_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.05
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_australasia_very_good = {
@@ -3151,6 +3245,7 @@ pp_harvest_australasia_very_good = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.08
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_australasia_bountiful = {
@@ -3184,6 +3279,7 @@ pp_harvest_australasia_bountiful = {
 	local_horses_output_modifier = 0.02
 	local_elephants_output_modifier = 0.10
 	local_fur_output_modifier = 0.03
+	local_ivory_output_modifier = 0.03
 }
 
 # pacific_islands
@@ -3218,6 +3314,7 @@ pp_harvest_pacific_islands_abysmal = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.07
 	local_fur_output_modifier = -0.03
+	local_ivory_output_modifier = -0.03
 }
 
 pp_harvest_pacific_islands_very_poor = {
@@ -3251,6 +3348,7 @@ pp_harvest_pacific_islands_very_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.06
 	local_fur_output_modifier = -0.02
+	local_ivory_output_modifier = -0.02
 }
 
 pp_harvest_pacific_islands_poor = {
@@ -3284,6 +3382,7 @@ pp_harvest_pacific_islands_poor = {
 	local_horses_output_modifier = -0.01
 	local_elephants_output_modifier = -0.04
 	local_fur_output_modifier = -0.01
+	local_ivory_output_modifier = -0.01
 }
 
 pp_harvest_pacific_islands_good = {
@@ -3317,6 +3416,7 @@ pp_harvest_pacific_islands_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.04
 	local_fur_output_modifier = 0.01
+	local_ivory_output_modifier = 0.01
 }
 
 pp_harvest_pacific_islands_very_good = {
@@ -3350,6 +3450,7 @@ pp_harvest_pacific_islands_very_good = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.06
 	local_fur_output_modifier = 0.02
+	local_ivory_output_modifier = 0.02
 }
 
 pp_harvest_pacific_islands_bountiful = {
@@ -3383,4 +3484,5 @@ pp_harvest_pacific_islands_bountiful = {
 	local_horses_output_modifier = 0.01
 	local_elephants_output_modifier = 0.07
 	local_fur_output_modifier = 0.03
+	local_ivory_output_modifier = 0.03
 }

@@ -2738,6 +2738,7 @@
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('horses')|e]" } }
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_elephants.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('elephants')|e]" } }
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_fur.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('fur')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_ivory.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('ivory')|e]" } }
                                                         }
                                                     }
                                                     pp_eu_goods_row = {

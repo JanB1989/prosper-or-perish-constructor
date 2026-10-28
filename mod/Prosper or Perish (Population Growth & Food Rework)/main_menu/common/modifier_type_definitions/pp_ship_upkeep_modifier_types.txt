@@ -41,7 +41,23 @@ n_catalan_galley_maintenance_cost_modifier={
 	}
 }
 
+n_galeota_andalusi_maintenance_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
 n_genoese_galley_maintenance_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+n_ghurab_maghribi_maintenance_cost_modifier={
 	color=bad
 	percent=yes
 	game_data={
@@ -289,6 +305,14 @@ n_baochuan_maintenance_cost_modifier={
 	}
 }
 
+n_carraca_portuguesa_maintenance_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
 n_carrack_maintenance_cost_modifier={
 	color=bad
 	percent=yes
@@ -298,6 +322,14 @@ n_carrack_maintenance_cost_modifier={
 }
 
 n_early_iberian_galleon_maintenance_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+n_nao_castellana_maintenance_cost_modifier={
 	color=bad
 	percent=yes
 	game_data={
@@ -458,6 +490,14 @@ n_age_3_discovery_light_ship_maintenance_cost_modifier={
 }
 
 n_caravel_maintenance_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+n_sale_rover_maintenance_cost_modifier={
 	color=bad
 	percent=yes
 	game_data={

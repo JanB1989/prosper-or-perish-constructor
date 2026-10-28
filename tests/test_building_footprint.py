@@ -144,6 +144,40 @@ def test_validate_reports_missing_and_unknown_classes(world: dict[str, Path]) ->
         fp.apply(world["repo"], world["mod"], world["project"], world["vanilla"])
 
 
+def _dlc_building(world: dict[str, Path]) -> None:
+    """A building only a DLC folder defines (UTF-8 BOM like the game's DLC files), its employment a DLC script value."""
+    dlc = world["vanilla"] / "game/dlc/D999_test_pack"
+    (dlc / fp.BUILDING_TYPES_RELATIVE).mkdir(parents=True)
+    (dlc / fp.BUILDING_TYPES_RELATIVE / "d999_forts.txt").write_text(
+        "﻿dlc_fort = {\n\temployment_size = dlc_fort_employment\n}\n", encoding="utf-8"
+    )
+    (dlc / "in_game/common/script_values").mkdir(parents=True)
+    (dlc / "in_game/common/script_values/d999_values.txt").write_text("dlc_fort_employment = 2\n", encoding="utf-8")
+
+
+def test_dlc_buildings_need_a_blueprint_in_a_skip_if_missing_mode(world: dict[str, Path]) -> None:
+    _dlc_building(world)
+    config = fp.load_config(world["project"])
+    assert fp.dlc_only_buildings(world["vanilla"]) == {"dlc_fort"}
+    assert any("dlc_fort has no blueprint" in e for e in fp.validate(world["repo"], config, world["vanilla"]))
+    for mode in ("INJECT", "REPLACE", "CREATE", "INJECT_OR_CREATE"):
+        _blueprint(world["repo"], "dlc_fort", "urban_workshop", mode)
+        errors = fp.validate(world["repo"], config, world["vanilla"])
+        assert any("dlc_fort.yml: dlc_fort is defined only in a DLC folder" in e and mode in e for e in errors), mode
+    for mode in sorted(fp.DLC_SAFE_MODES):
+        _blueprint(world["repo"], "dlc_fort", "urban_workshop", mode)
+        assert fp.validate(world["repo"], config, world["vanilla"]) == []
+
+
+def test_apply_reads_the_dlc_definition_for_a_try_inject_owner(world: dict[str, Path]) -> None:
+    _dlc_building(world)
+    _blueprint(world["repo"], "dlc_fort", "urban_workshop", "TRY_INJECT")
+    (world["types"] / "zz_pp_dlc_fort.txt").write_text("TRY_INJECT:dlc_fort = {\n# x\n}\n", encoding="utf-8")
+    fp.apply(world["repo"], world["mod"], world["project"], world["vanilla"])
+    # employment from the DLC definition and the DLC script value: 0.75 x 2
+    assert "local_population_capacity = 1.5" in (world["types"] / "zz_pp_dlc_fort.txt").read_text(encoding="utf-8-sig")
+
+
 def test_every_accepted_blueprint_has_a_configured_footprint_class() -> None:
     config = fp.load_config(ROOT / "constructor.toml")
     assert fp.validate(ROOT, config, None) == []

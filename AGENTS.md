@@ -412,6 +412,18 @@
   build. No game-start culls: the random estate cull, its vanilla location lists and the invalid-building culls are
   deleted. `tests/test_building_effects.py`: every building the game loads has an effect.
 
+## DLC Content (2026-10-28)
+
+- The game mounts every `game/dlc/<folder>/` like `game/` (after it, before mods). The parser's vanilla layer reads them
+  the same way (eu5-game-parser `dlc_roots`: one file list sorted by name, a DLC file replacing vanilla's same-name
+  file); `building_footprint.vanilla_files` does it for the footprint, shutdown, ship upkeep and blockade passes (Across
+  the Pillars adds 5 ships). Other direct readers of `game/in_game` (cap tooltips, the start simulation's setup rows)
+  still see the base game only.
+- Buildings only a DLC folder defines (Across the Pillars: 9) have footprint blueprints like every vanilla building, in
+  a skip-if-missing mode only (`TRY_INJECT`/`TRY_REPLACE`, never CREATE or plain INJECT/REPLACE), and no DLC-only key
+  may appear outside their own block. `ppc footprint check` fails otherwise; `tests/test_dlc_buildings.py`,
+  `test_inject_targets_exist_in_constructor_load_order` and `tests/test_building_type_references.py` guard it.
+
 ## Ship Upkeep (2026-10-11, Jan)
 
 - A ship's monthly upkeep is the value of its maintenance goods at default market prices. Vanilla charges the category

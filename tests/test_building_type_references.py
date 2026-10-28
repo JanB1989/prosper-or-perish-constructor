@@ -2,7 +2,7 @@
 
 A link to a building that is not in the database logs "Failed to find '<key>' from database for link 'building_type'"
 at load, even inside a `has_dlc` limit (the link is resolved when the script is read). EU5 1.4 vanilla's library
-`allow` names `library_cordoba`, a building of the unreleased DLC d009_across_the_pillars; the mod's hand-written
+`allow` names `library_cordoba`, a building of the DLC d009_across_the_pillars; the mod's hand-written
 REPLACE:library carried that copy over. Buildings that only DLC folders (`game/dlc/...`) define do not count.
 """
 from __future__ import annotations
@@ -16,7 +16,9 @@ from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 REPO = Path(__file__).resolve().parents[1]
 MOD = REPO / "mod/Prosper or Perish (Population Growth & Food Rework)"
-DEFINITION = re.compile(r"^(?:[A-Z_]+:)?([A-Za-z0-9_]+)\s*=\s*\{", re.M)
+# Only a plain block or an *_OR_CREATE defines a building; the mod's TRY_INJECT stubs for DLC buildings (and any other
+# INJECT/REPLACE) add to a building that must already exist, so they do not make a DLC building safe to link.
+DEFINITION = re.compile(r"^(?:(?:INJECT|REPLACE)_OR_CREATE:)?([A-Za-z0-9_]+)\s*=\s*\{", re.M)
 REFERENCE = re.compile(r"building_type:([A-Za-z0-9_]+)")
 
 

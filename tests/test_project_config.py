@@ -2242,6 +2242,10 @@ def test_dhimmi_satisfaction_is_not_overridden_by_estate_adjustments() -> None:
 
 
 def test_inject_targets_exist_in_constructor_load_order() -> None:
+    """Every inject names an existing object. A plain INJECT needs one of the base game (or the mod); an object only a
+    DLC folder (game/dlc/<folder>) defines takes a TRY_INJECT only, which does nothing where that folder is absent."""
+    from eu5gameparser.load_order import dlc_roots
+
     load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
     vanilla_root = load_order.vanilla_root
     offenders: list[str] = []
@@ -2256,12 +2260,20 @@ def test_inject_targets_exist_in_constructor_load_order() -> None:
             existing = _database_keys(vanilla_common / collection)
             if collection == Path("static_modifiers"):
                 existing |= _database_keys(vanilla_root / "game" / "main_menu" / "common" / collection)
+            dlc_only = set()
+            for dlc in dlc_roots(vanilla_root):
+                dlc_only |= _database_keys(dlc / relative_common / collection)
+                if collection == Path("static_modifiers"):
+                    dlc_only |= _database_keys(dlc / "main_menu" / "common" / collection)
+            dlc_only -= existing
 
             for path in sorted(collection_dir.rglob("*.txt")):
                 for entry in parse_file(path).entries:
                     if not isinstance(entry.value, CList):
                         continue
                     mode, key = _entry_mode(entry.key)
+                    if mode == "TRY_INJECT" and key in dlc_only:
+                        continue
                     if mode in {"INJECT", "TRY_INJECT"} and key not in existing:
                         offenders.append(
                             f"{path.relative_to(ROOT)}:{entry.location.line} {mode}:{key}"

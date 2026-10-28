@@ -12,7 +12,7 @@ import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
-from prosper_or_perish_constructor.ship_upkeep import MOD_FOLDER, _blocks, _number, _vanilla_common
+from prosper_or_perish_constructor.ship_upkeep import MOD_FOLDER, _blocks, _number, _vanilla_blocks
 
 OUTPUT = Path("in_game/common/unit_types/pp_blockade_capacity.txt")
 DECIMALS = 5
@@ -34,7 +34,7 @@ def factor(project: Path) -> float:
 
 def plan(repo: Path, project: Path) -> list[Ship]:
     """One entry per navy unit type with a blockade capacity."""
-    units = _blocks(_vanilla_common(repo, project) / "unit_types")
+    units = _vanilla_blocks(repo, project, "unit_types")
     scale = factor(project)
 
     def field(unit: str, key: str, seen: tuple[str, ...] = ()) -> object:

@@ -16,7 +16,13 @@ n_canoe_maintenance_cost_modifier = {
 n_catalan_galley_maintenance_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/navy_galley_maintenance_cost_modifier.dds"
 }
+n_galeota_andalusi_maintenance_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/navy_galley_maintenance_cost_modifier.dds"
+}
 n_genoese_galley_maintenance_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/navy_galley_maintenance_cost_modifier.dds"
+}
+n_ghurab_maghribi_maintenance_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/navy_galley_maintenance_cost_modifier.dds"
 }
 n_long_fada_maintenance_cost_modifier = {
@@ -109,10 +115,16 @@ n_age_3_discovery_heavy_ship_maintenance_cost_modifier = {
 n_baochuan_maintenance_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/navy_heavy_ship_maintenance_cost_modifier.dds"
 }
+n_carraca_portuguesa_maintenance_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/navy_heavy_ship_maintenance_cost_modifier.dds"
+}
 n_carrack_maintenance_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/navy_heavy_ship_maintenance_cost_modifier.dds"
 }
 n_early_iberian_galleon_maintenance_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/navy_heavy_ship_maintenance_cost_modifier.dds"
+}
+n_nao_castellana_maintenance_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/navy_heavy_ship_maintenance_cost_modifier.dds"
 }
 n_age_4_reformation_heavy_ship_maintenance_cost_modifier = {
@@ -173,6 +185,9 @@ n_age_3_discovery_light_ship_maintenance_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/navy_light_ship_maintenance_cost_modifier.dds"
 }
 n_caravel_maintenance_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/navy_light_ship_maintenance_cost_modifier.dds"
+}
+n_sale_rover_maintenance_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/navy_light_ship_maintenance_cost_modifier.dds"
 }
 n_square_rigged_caravel_maintenance_cost_modifier = {

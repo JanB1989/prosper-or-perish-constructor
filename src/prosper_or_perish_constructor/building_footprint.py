@@ -41,6 +41,9 @@ _CAPACITY_LINE_RE = re.compile(rf"^[ \t]*{CAPACITY_KEY}\s*=\s*\S+[^\n]*\n?", re.
 _EMPLOYMENT_RE = re.compile(r"^[ \t]*employment_size\s*=\s*(?P<value>[^\s#{}]+)", re.MULTILINE)
 _SCRIPT_VALUE_RE = re.compile(r"^(?:[A-Z_]+:)?(?P<key>[a-z_0-9]+)\s*=\s*(?P<value>-?[0-9.]+)\s*(?:#.*)?$", re.MULTILINE)
 _INJECT_MODES = {"INJECT", "TRY_INJECT", "INJECT_OR_CREATE"}
+# a building defined only in a DLC folder: a blueprint must do nothing where that folder is absent (no CREATE, no plain
+# INJECT/REPLACE, which log or define the building without the DLC)
+DLC_SAFE_MODES = frozenset({"TRY_INJECT", "TRY_REPLACE"})
 
 
 @dataclass(frozen=True)
@@ -94,7 +97,8 @@ def blueprint_classes(repo: Path) -> dict[str, tuple[str, Path]]:
 
 
 def validate(repo: Path, config: FootprintConfig, vanilla_root: Path | None) -> list[str]:
-    """Every blueprint has a configured class; every vanilla building has a blueprint."""
+    """Every blueprint has a configured class; every vanilla building (base game and DLC folders) has a blueprint, a
+    DLC-only building's in a skip-if-missing mode."""
     errors: list[str] = []
     classes = blueprint_classes(repo)
     for key, (name, path) in sorted(classes.items()):
@@ -107,7 +111,20 @@ def validate(repo: Path, config: FootprintConfig, vanilla_root: Path | None) -> 
 
         for key in sorted(set(vanilla_definitions(vanilla_root)) - set(classes) - removed_vanilla_buildings(repo)):
             errors.append(f"vanilla building {key} has no blueprint (add one with a footprint class)")
+        for key in sorted(dlc_only_buildings(vanilla_root) & set(classes)):
+            mode = blueprint_mode(classes[key][1])
+            if mode not in DLC_SAFE_MODES:
+                errors.append(
+                    f"{classes[key][1].name}: {key} is defined only in a DLC folder; its blueprint must use "
+                    f"{' or '.join(sorted(DLC_SAFE_MODES))} (skipped where the DLC is absent), not {mode}"
+                )
     return errors
+
+
+def blueprint_mode(path: Path) -> str:
+    data = yaml_io.safe_load(path.read_text(encoding="utf-8-sig")) or {}
+    building = data.get("building") if isinstance(data.get("building"), dict) else {}
+    return str(building.get("mode") or "CREATE").upper()
 
 
 def capacity_per_level(share: Decimal, employment: Decimal) -> Decimal:
@@ -289,7 +306,7 @@ def _inject_blocks(mod_root: Path, vanilla_root: Path) -> list[Block]:
 
 def _mod_blocks(mod_root: Path, vanilla_root: Path) -> list[Block]:
     """Top-level building blocks of the mod's own building_types files, in load order."""
-    vanilla_names = {p.name for p in (Path(vanilla_root) / VANILLA_BUILDING_TYPES_RELATIVE).glob("*.txt")}
+    vanilla_names = {p.name for p in vanilla_files(vanilla_root, BUILDING_TYPES_RELATIVE)}
     return [
         block
         for path in sorted((mod_root / BUILDING_TYPES_RELATIVE).glob("*.txt"))
@@ -301,10 +318,27 @@ def _mod_blocks(mod_root: Path, vanilla_root: Path) -> list[Block]:
 # ---------------------------------------------------------------- vanilla data
 
 
+def vanilla_game_roots(vanilla_root: Path) -> tuple[Path, ...]:
+    """``game/`` and every DLC folder (``game/dlc/<name>/``), in the order the game mounts them."""
+    from eu5gameparser.load_order import dlc_roots
+
+    return (Path(vanilla_root) / "game", *dlc_roots(Path(vanilla_root)))
+
+
+def vanilla_files(vanilla_root: Path, relative: Path) -> list[Path]:
+    """The ``*.txt`` files of one game folder over vanilla and its DLC folders, in load order: one list sorted by file
+    name, a DLC file replacing vanilla's file with the same name (as the game loads them)."""
+    by_name: dict[str, Path] = {}
+    for root in vanilla_game_roots(vanilla_root):
+        for path in (root / relative).glob("*.txt"):
+            by_name[path.name] = path
+    return [by_name[name] for name in sorted(by_name)]
+
+
 def vanilla_definitions(vanilla_root: Path) -> dict[str, str]:
-    """Vanilla building key -> definition body."""
+    """Vanilla building key -> definition body (the base game and the DLC folders, e.g. Across the Pillars)."""
     out: dict[str, str] = {}
-    for path in sorted((Path(vanilla_root) / VANILLA_BUILDING_TYPES_RELATIVE).glob("*.txt")):
+    for path in vanilla_files(vanilla_root, BUILDING_TYPES_RELATIVE):
         text = _read(path)
         for block in blocks(path, text):
             if not block.mode:
@@ -312,14 +346,29 @@ def vanilla_definitions(vanilla_root: Path) -> dict[str, str]:
     return out
 
 
+def dlc_only_buildings(vanilla_root: Path) -> set[str]:
+    """Buildings defined only in a DLC folder: their blueprints must use a skip-if-missing mode (TRY_INJECT /
+    TRY_REPLACE), so the mod stays safe where the DLC folder is absent."""
+    base = {
+        block.key
+        for path in sorted((Path(vanilla_root) / VANILLA_BUILDING_TYPES_RELATIVE).glob("*.txt"))
+        for block in blocks(path)
+        if not block.mode
+    }
+    return set(vanilla_definitions(vanilla_root)) - base
+
+
 def script_values(vanilla_root: Path, mod_root: Path) -> dict[str, Decimal]:
-    """Numeric script values (vanilla, then the mod's overrides)."""
+    """Numeric script values (vanilla and its DLC folders, then the mod's overrides)."""
     values: dict[str, Decimal] = {}
-    for root in (Path(vanilla_root) / "game", mod_root):
-        for folder in SCRIPT_VALUE_DIRS:
-            for path in sorted((root / folder).glob("*.txt")):
-                for match in _SCRIPT_VALUE_RE.finditer(_read(path)):
-                    values[match.group("key")] = Decimal(match.group("value"))
+    for folder in SCRIPT_VALUE_DIRS:
+        for path in vanilla_files(vanilla_root, folder):
+            for match in _SCRIPT_VALUE_RE.finditer(_read(path)):
+                values[match.group("key")] = Decimal(match.group("value"))
+    for folder in SCRIPT_VALUE_DIRS:
+        for path in sorted((mod_root / folder).glob("*.txt")):
+            for match in _SCRIPT_VALUE_RE.finditer(_read(path)):
+                values[match.group("key")] = Decimal(match.group("value"))
     return values
 
 

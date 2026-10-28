@@ -28,6 +28,7 @@ from prosper_or_perish_constructor.building_footprint import (
     blocks,
     owner_blocks,
     vanilla_definitions,
+    vanilla_files,
 )
 
 CONFIG_SECTION = "building_shutdown"
@@ -97,14 +98,14 @@ def rule(config: ShutdownConfig, footprint: str, override: str) -> str:
 
 
 def producing_methods(vanilla_root: Path, mod_root: Path) -> dict[str, bool]:
-    """Shared production method name -> has a goods output (vanilla, then the mod's files)."""
+    """Shared production method name -> has a goods output (vanilla and its DLC folders, then the mod's files)."""
     out: dict[str, bool] = {}
-    for root in (Path(vanilla_root) / "game", mod_root):
-        for folder in PRODUCTION_METHOD_DIRS:
-            for path in sorted((root / folder).glob("*.txt")):
-                text = _read(path)
-                for block in blocks(path, text):
-                    out[block.key] = bool(_PRODUCED_RE.search(text[block.open + 1: block.close]))
+    for folder in PRODUCTION_METHOD_DIRS:
+        paths = [*vanilla_files(vanilla_root, folder), *sorted((mod_root / folder).glob("*.txt"))]
+        for path in paths:
+            text = _read(path)
+            for block in blocks(path, text):
+                out[block.key] = bool(_PRODUCED_RE.search(text[block.open + 1: block.close]))
     return out
 
 

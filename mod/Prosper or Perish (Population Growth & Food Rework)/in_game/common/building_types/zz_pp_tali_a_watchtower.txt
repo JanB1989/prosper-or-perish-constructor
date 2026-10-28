@@ -1,0 +1,6 @@
+﻿# >>> eu5-building-pipeline:tali_a_watchtower:building
+TRY_INJECT:tali_a_watchtower = {
+# Across the Pillars (DLC) building; TRY_INJECT does nothing where the DLC folder is absent.
+# ppc build fills in raw_modifier local_population_capacity from the footprint class.
+}
+# <<< eu5-building-pipeline:tali_a_watchtower:building

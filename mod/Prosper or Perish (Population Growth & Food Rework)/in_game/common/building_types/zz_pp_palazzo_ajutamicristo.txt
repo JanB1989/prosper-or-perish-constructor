@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:palazzo_ajutamicristo:building
+TRY_INJECT:palazzo_ajutamicristo = {
+# Across the Pillars (DLC) building; TRY_INJECT does nothing where the DLC folder is absent.
+# ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
+}
+# <<< eu5-building-pipeline:palazzo_ajutamicristo:building

@@ -37,7 +37,7 @@ situation_panel = {
 			layoutpolicy_horizontal = expanding
 			spacing = 10
 
-			# what the harvests are (the Europedia card's lead, also the concept's tooltip)
+			# what the harvests are (the situation's own description, also the Europedia card's lead)
 			text_multi = {
 				max_width = 480
 				min_width = 480
@@ -46,7 +46,7 @@ situation_panel = {
 				align = hcenter|nobaseline
 				using = Font_Type_Flavor
 				fontsize = 15
-				text = "game_concept_pp_variable_harvests_desc"
+				text = "harvest_situation_desc"
 			}
 
 			# ---- This year in the player's realm: the capital, the starving provinces, every province off average ----
@@ -106,7 +106,7 @@ situation_panel = {
 											}
 										}
 										blockoverride "concept_link" {
-											text = "[pp_starvation|e]"
+											text = "[starving|e]"
 										}
 										blockoverride "tooltip_content" {
 											TooltipScrolledStringPairList = {

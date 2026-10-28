@@ -12,9 +12,9 @@
   PP_LAND_BAR_TT_NATURAL: "[pp_location_land|e]"
   PP_LAND_BAR_TT_IMPROVEMENTS: "[pp_land_improvements|e]"
   PP_LAND_BAR_TT_OVER: "Over the [population_capacity|e]"
-  PP_LAND_BAR_TT_DEF_ABUNDANT: "[Concept('pp_abundant_free_land', 'Abundant Arable Land')|e]: $PP_LAND_CHIP_ABUNDANT$"
-  PP_LAND_BAR_TT_DEF_AVAILABLE: "[Concept('pp_available_free_land', 'Available Arable Land')|e]: $PP_LAND_CHIP_AVAILABLE$"
-  PP_LAND_BAR_TT_DEF_OVERUSED: "[Concept('pp_overused_arable_land', 'Overused Arable Land')|e]: $PP_LAND_CHIP_OVERPOPULATION$"
+  PP_LAND_BAR_TT_DEF_ABUNDANT: "[ShowModifier('abundant_free_land')]: $PP_LAND_CHIP_ABUNDANT$"
+  PP_LAND_BAR_TT_DEF_AVAILABLE: "[ShowModifier('available_free_land')]: $PP_LAND_CHIP_AVAILABLE$"
+  PP_LAND_BAR_TT_DEF_OVERUSED: "[ShowModifier('overpopulation')]: $PP_LAND_CHIP_OVERPOPULATION$"
   # the bars' parts as game concepts (main_menu/common/game_concepts/pp_arable_land_bar.txt)
   game_concept_pp_townsfolk: "Townsfolk"
   game_concept_pp_townsfolk_desc: "Everyone in a [location|e] except the [pp_subsistence_peasants|e]. Townsfolk do not use [population_capacity|e]: in the calculation each townsperson adds 1 Arable Land and uses 1."

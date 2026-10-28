@@ -628,12 +628,12 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_food_in_eu5" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_food" }
                                                     }
                                                 }
 
                                                 pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_food.dds" } }
-                                                pp_eu_lead = { text = "game_concept_pp_food_in_eu5_desc" }
+                                                pp_eu_lead = { text = "game_concept_food_desc" }
 
                                                 # Your capital's province store (the stored food chip's script value)
                                                 hbox = {
@@ -719,7 +719,7 @@
                                                         blockoverride "panel_icons" {
                                                             pp_eu_item = {
                                                                 blockoverride "item_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
-                                                                blockoverride "item_link" { raw_text = "[Concept('pp_food_storage', 'Province Store')|e]" }
+                                                                blockoverride "item_link" { raw_text = "[Concept('provincial_food', 'Province Store')|e]" }
                                                             }
                                                             pp_eu_item = {
                                                                 blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_local_food.dds" }
@@ -1058,12 +1058,12 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_food_consumption" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pop_food_consumption" }
                                                     }
                                                 }
 
                                                 pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_food_consumption.dds" } }
-                                                pp_eu_lead = { text = "game_concept_pp_food_consumption_desc" }
+                                                pp_eu_lead = { text = "game_concept_pop_food_consumption_desc" }
 
                                                 # Your capital's province: what it eats a month and how many months of that its store holds
                                                 hbox = {
@@ -1094,7 +1094,7 @@
                                                     pp_eu_arrow = {}
                                                     pp_eu_step = {
                                                         blockoverride "step_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('pp_food_storage', 'Province Store')|e]" } }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('provincial_food', 'Province Store')|e]" } }
                                                         blockoverride "step_title" { text = "PP_EU_CONS_STEP_STORE" }
                                                         blockoverride "step_text" { text = "PP_EU_CONS_STEP_STORE_DESC" }
                                                     }
@@ -1467,7 +1467,7 @@
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/production_methods/_default.dds" } blockoverride "item_link" { raw_text = "[production_method|e]" } }
                                                         }
                                                         blockoverride "entry_title" { text = "PP_EU_GOODS_LABOR_TITLE" }
-                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_LABOR_DESC" }
+                                                        blockoverride "entry_text" { text = "manual_labor_desc" }
                                                     }
                                                 }
 
@@ -1486,8 +1486,8 @@
                                                             pp_eu_item_arrow = {}
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_offset.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('offset')|e]" } }
                                                         }
-                                                        blockoverride "entry_title" { text = "PP_EU_GOODS_DUMMY_OFFSET" }
-                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_DUMMY_OFFSET_DESC" }
+                                                        blockoverride "entry_title" { text = "offset" }
+                                                        blockoverride "entry_text" { text = "offset_desc" }
                                                     }
                                                     pp_eu_entry = {
                                                         blockoverride "entry_icons" {
@@ -1495,8 +1495,8 @@
                                                             pp_eu_item_arrow = {}
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_logistics.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('logistics')|e]" } }
                                                         }
-                                                        blockoverride "entry_title" { text = "PP_EU_GOODS_DUMMY_LOGISTICS" }
-                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_DUMMY_LOGISTICS_DESC" }
+                                                        blockoverride "entry_title" { text = "logistics" }
+                                                        blockoverride "entry_text" { text = "logistics_desc" }
                                                     }
                                                     pp_eu_entry = {
                                                         blockoverride "entry_icons" {
@@ -1504,8 +1504,8 @@
                                                             pp_eu_item_arrow = {}
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_province_food_sales.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('province_food_sales')|e]" } }
                                                         }
-                                                        blockoverride "entry_title" { text = "PP_EU_GOODS_DUMMY_SALES" }
-                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_DUMMY_SALES_DESC" }
+                                                        blockoverride "entry_title" { text = "province_food_sales" }
+                                                        blockoverride "entry_text" { text = "province_food_sales_desc" }
                                                     }
                                                 }
 
@@ -2307,12 +2307,12 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/trade_goods/icon_goods_manual_labor.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_labor" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "manual_labor" }
                                                     }
                                                 }
 
                                                 pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_labor.dds" } }
-                                                pp_eu_lead = { text = "game_concept_pp_labor_desc" }
+                                                pp_eu_lead = { text = "manual_labor_desc" }
 
                                                 # Your capital's market: the labor price (the Manual Labor Price map mode's script value)
                                                 hbox = {
@@ -2510,12 +2510,12 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/alerts_icons/weather_system.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_variable_harvests" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "harvest_situation" }
                                                     }
                                                 }
 
                                                 pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_harvest.dds" } }
-                                                pp_eu_lead = { text = "game_concept_pp_variable_harvests_desc" }
+                                                pp_eu_lead = { text = "harvest_situation_desc" }
 
                                                 # This year at the player's capital (medallion generated by location_status.py)
                                                 hbox = {
@@ -2535,14 +2535,14 @@
                                                     spacing = 8
                                                     pp_eu_step = {
                                                         blockoverride "step_icon" { texture = "gfx/interface/icons/alerts_icons/weather_system.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('harvest_situation', 'Variable Harvests')|e]" } }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowSituationName('harvest_situation')]" } }
                                                         blockoverride "step_title" { text = "PP_EU_HARVEST_STEP_SEPTEMBER" }
                                                         blockoverride "step_text" { text = "PP_EU_HARVEST_STEP_SEPTEMBER_DESC" }
                                                     }
                                                     pp_eu_arrow = {}
                                                     pp_eu_step = {
                                                         blockoverride "step_icon" { texture = "gfx/interface/icons/map_modes/continent.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('harvest_situation', 'Broad Harvest Areas')|e]" } }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('sub_continent', 'Broad Harvest Areas')|e]" } }
                                                         blockoverride "step_title" { text = "PP_EU_HARVEST_STEP_AREA" }
                                                         blockoverride "step_text" { text = "PP_EU_HARVEST_STEP_AREA_DESC" }
                                                     }
@@ -2741,12 +2741,12 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/map_modes/pp_population_capacity.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_population_capacity" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_population_capacity" }
                                                     }
                                                 }
 
                                                 pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_arable_land.dds" } }
-                                                pp_eu_lead = { text = "game_concept_pp_population_capacity_desc" }
+                                                pp_eu_lead = { text = "game_concept_population_capacity_desc" }
 
                                                 # Your capital's arable land: the location view's land chip states (markers in pp_capacity_pressure_effects.txt)
                                                 hbox = {
@@ -2949,11 +2949,11 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/location_icons/new/population_growth.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_population_growth" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_population_growth" }
                                                     }
                                                 }
                                                 pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_population_growth.dds" } }
-                                                pp_eu_lead = { text = "game_concept_pp_population_growth_desc" }
+                                                pp_eu_lead = { text = "game_concept_population_growth_desc" }
 
                                                 # Your capital's province: its store (the Food card's months value, the store's fill) and the capital's growth
                                                 # (the population growth map mode's value)
@@ -2993,14 +2993,14 @@
                                                     pp_eu_sign = { blockoverride "sign_text" { raw_text = "–" } }
                                                     pp_eu_step = {
                                                         blockoverride "step_icon" { texture = "gfx/interface/icons/location_icons/food.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('pp_food_consumption', 'Food Consumption')|e]" } }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('pop_food_consumption', 'Food Consumption')|e]" } }
                                                         blockoverride "step_title" { text = "PP_EU_GROWTH_EATEN" }
                                                         blockoverride "step_text" { text = "PP_EU_GROWTH_EATEN_DESC" }
                                                     }
                                                     pp_eu_sign = { blockoverride "sign_text" { raw_text = "=" } }
                                                     pp_eu_step = {
                                                         blockoverride "step_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('pp_food_storage', 'Province Store')|e]" } }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('provincial_food', 'Province Store')|e]" } }
                                                         blockoverride "step_title" { text = "PP_EU_GROWTH_MONTHS" }
                                                         blockoverride "step_text" { text = "PP_EU_GROWTH_MONTHS_DESC" }
                                                     }
@@ -3131,13 +3131,13 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/flat_icons/balance/trade.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_buildings_in_location" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "STATIC_MODIFIER_NAME_building_levels" }
                                                     }
                                                 }
                                                 TooltipListScrollArea = {
                                                     blockoverride "scrollarea_content" {
                                                         vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_buildings_in_location_desc" margin = { 40 10 } }
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "PP_EU_OTHER_BUILDINGS_DESC" margin = { 40 10 } }
                                                         }
                                                     }
                                                     block "block_scrollarea" { maximumsize = { -1 800 } }
@@ -3167,13 +3167,13 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_available_free_land" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "STATIC_MODIFIER_NAME_available_free_land" }
                                                     }
                                                 }
                                                 TooltipListScrollArea = {
                                                     blockoverride "scrollarea_content" {
                                                         vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_available_free_land_desc" margin = { 40 10 } }
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "PP_EU_OTHER_AVAILABLE_DESC" margin = { 40 10 } }
                                                         }
                                                     }
                                                     block "block_scrollarea" { maximumsize = { -1 800 } }
@@ -3203,13 +3203,13 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_abundant_free_land" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "STATIC_MODIFIER_NAME_abundant_free_land" }
                                                     }
                                                 }
                                                 TooltipListScrollArea = {
                                                     blockoverride "scrollarea_content" {
                                                         vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_abundant_free_land_desc" margin = { 40 10 } }
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "PP_EU_OTHER_ABUNDANT_DESC" margin = { 40 10 } }
                                                         }
                                                     }
                                                     block "block_scrollarea" { maximumsize = { -1 800 } }
@@ -3239,13 +3239,13 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_prosperity" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_prosperity" }
                                                     }
                                                 }
                                                 TooltipListScrollArea = {
                                                     blockoverride "scrollarea_content" {
                                                         vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_prosperity_desc" margin = { 40 10 } }
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "PP_EU_OTHER_PROSPERITY_DESC" margin = { 40 10 } }
                                                         }
                                                     }
                                                     block "block_scrollarea" { maximumsize = { -1 800 } }
@@ -3275,13 +3275,13 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/flat_icons/military/bankruptcy.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_devastation" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "STATIC_MODIFIER_NAME_devastation" }
                                                     }
                                                 }
                                                 TooltipListScrollArea = {
                                                     blockoverride "scrollarea_content" {
                                                         vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_devastation_desc" margin = { 40 10 } }
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "PP_EU_OTHER_DEVASTATION_DESC" margin = { 40 10 } }
                                                         }
                                                     }
                                                     block "block_scrollarea" { maximumsize = { -1 800 } }
@@ -3311,13 +3311,13 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/flat_icons/military/bankruptcy.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_starvation" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_starving" }
                                                     }
                                                 }
                                                 TooltipListScrollArea = {
                                                     blockoverride "scrollarea_content" {
                                                         vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_starvation_desc" margin = { 40 10 } }
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_starving_desc" margin = { 40 10 } }
                                                         }
                                                     }
                                                     block "block_scrollarea" { maximumsize = { -1 800 } }

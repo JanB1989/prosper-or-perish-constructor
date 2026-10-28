@@ -33,22 +33,23 @@ CARDS = {
     "harvest": ("# ---- Variable Harvests ----", "# ---- Arable Land ----",
                 tuple(f"game_concept_{s}_harvest_desc" for s in (*SEVERITIES, "average"))),
     "arable_land": ("# ---- Arable Land ----", "# ---- Population Growth ----",
-                    ("game_concept_pp_population_capacity_desc", "game_concept_pp_overused_arable_land_desc",
-                     "game_concept_pp_abundant_free_land_desc", "game_concept_pp_available_free_land_desc")),
-    "food": ("# ---- Food ----", "# ---- Food Production ----", ("game_concept_pp_staple_foods_desc",)),
+                    ("game_concept_population_capacity_desc", "STATIC_MODIFIER_DESC_overpopulation",
+                     "STATIC_MODIFIER_DESC_abundant_free_land", "STATIC_MODIFIER_DESC_available_free_land")),
+    "food": ("# ---- Food ----", "# ---- Food Production ----",
+             ("game_concept_pp_staple_foods_desc", "game_concept_provincial_food_desc")),
     "food_production": ("# ---- Food Production ----", "# ---- Food Consumption ----", ("game_concept_pp_staple_foods_desc",)),
     "food_consumption": ("# ---- Food Consumption ----", "# ---- New Trade Goods (Victuals) ----",
-                         ("game_concept_pp_staple_foods_desc", "game_concept_pp_food_storage_desc")),
+                         ("game_concept_pp_staple_foods_desc", "game_concept_provincial_food_desc")),
     "labor": ("# ---- Labor ----", "# ---- Variable Harvests ----", ()),
     "logistics": ("# ---- Logistics (Market Access) ----", "# ---- Navigable Rivers ----",
                   ("game_concept_supported_building_levels_desc",)),
     "navigable_rivers": ("# ---- Navigable Rivers ----", "# ---- Farming/Fishing/Forest Capacities ----", ()),
     "trade_goods": ("# ---- New Trade Goods (Victuals) ----", "# ---- Logistics (Market Access) ----",
-                    ("game_concept_pp_staple_foods_desc", "game_concept_pp_labor_desc", "game_concept_pp_building_limits_desc")),
+                    ("game_concept_pp_staple_foods_desc", "game_concept_pp_building_limits_desc")),
     "rural_capacities": ("# ---- Farming/Fishing/Forest Capacities ----", "# ---- Labor ----",
                          ("game_concept_pp_fish_capacity_desc", "game_concept_pp_forest_capacity_desc")),
     "population_growth": ("# ---- Population Growth ----", "# ---- Buildings in Location (Other Changes) ----",
-                          ("game_concept_pp_food_storage_desc", "game_concept_pp_overused_arable_land_desc")),
+                          ("game_concept_provincial_food_desc", "STATIC_MODIFIER_DESC_overpopulation")),
 }
 # Retired player-facing names of the population capacity and its states (renamed to Arable Land 2026-10-10).
 # "Farmland Vegetation" and lower-case "farmland" (the vegetation type, prose about fields) stay.
@@ -98,7 +99,10 @@ def _live_lines(card: str) -> list[tuple[int, int]]:
 @cache
 def _loc(root: Path) -> dict[str, str]:
     keys: dict[str, str] = {}
-    for path in sorted((root / "main_menu/localization/english").rglob("*.yml")):
+    # the mod's overrides of vanilla keys (localization/replace) count: a card may show a vanilla concept's text
+    paths = [*(root / "main_menu/localization/english").rglob("*.yml"),
+             *(root / "main_menu/localization/replace/english").rglob("*.yml")]
+    for path in sorted(paths):
         for key, value in re.findall(r'(?m)^\s*([A-Za-z0-9_.\-]+):\d*\s*"(.*)"\s*$', path.read_text(encoding="utf-8-sig", errors="replace")):
             keys[key] = value
     return keys
@@ -362,7 +366,9 @@ def test_trade_goods_bookkeeping_goods_are_the_dummy_goods():
             continue   # Province Food is real food
         if re.search(rf"(?m)^\s*(?:produced\s*=\s*{good}|{good}\s*=\s*[\d.]+)\s*$", buildings):
             dummies.add(good)
-    shown = {good for title, icons in _entries("trade_goods").items() if title.startswith("PP_EU_GOODS_DUMMY_")
+    # a bookkeeping entry shows the good itself: its own name and description (one thing, one text)
+    shown = {good for title, icons in _entries("trade_goods").items()
+             if (MOD_ROOT / "in_game/common/goods" / f"pp_goods_{title}.txt").is_file()
              for good in re.findall(r"ShowGoodsName\('(\w+)'\)", icons)}
     assert dummies and shown == dummies
 

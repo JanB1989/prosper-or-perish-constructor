@@ -216,7 +216,9 @@ def _row(modifier: str, visible: str | None = None) -> str:
 
 def _chip(name: str, visible: str, icon: str, title: str, concept: str, content: str, overlay: str = "",
           frame: str = NEUTRAL_FRAME, layers: str = "") -> str:
-    """A 30 px status chip on a round ``frame``; ``layers`` (frame icons with their own visibility) sit over it."""
+    """A 30 px status chip on a round ``frame``; ``layers`` (frame icons with their own visibility) sit over it.
+    ``concept`` is the link under the title: a concept key, or a whole link such as ``[ShowModifier('x')]``."""
+    link = concept if concept.startswith("[") else f"[{concept}|E]"
     return f"""widget = {{
         name = "{name}"
         size = {{ 30 30 }}
@@ -225,7 +227,7 @@ def _chip(name: str, visible: str, icon: str, title: str, concept: str, content:
         tooltipwidget = {{
         ContextualTooltipType = {{
             blockoverride "title_text" {{ text = "{title}" }}
-            blockoverride "concept_link" {{ visible = yes text = "[{concept}|E]" }}
+            blockoverride "concept_link" {{ visible = yes text = "{link}" }}
             blockoverride "title_icon" {{
                 widget = {{
                     using = tooltip_title_icon_size
@@ -474,7 +476,7 @@ def harvest_chip(harvests: Harvests) -> str:
         tooltipwidget = {{
         ContextualTooltipType = {{
             blockoverride "title_text" {{ text = "[{state}]" }}
-            blockoverride "concept_link" {{ visible = yes text = "[pp_variable_harvests|E]" }}
+            blockoverride "concept_link" {{ visible = yes text = "[ShowSituationName('harvest_situation')]" }}
             blockoverride "title_icon" {{
                 widget = {{
                     using = tooltip_title_icon_size
@@ -498,10 +500,10 @@ def land_chips(land_rows: dict[str, str] | None, prefix: str) -> list[tuple[str,
     over, abundant, available = (_marker(key) for key in LAND_MARKERS)
     # the arable land states' own icons (tools/build_arable_land_icons.py)
     states = [
-        ("overpopulation", over, "overused.dds", "PP_LAND_CHIP_OVERPOPULATION", "pp_overused_arable_land", "pp_land_overpopulation"),
-        ("abundant", f"And(Not({over}), {abundant})", "abundant.dds", "PP_LAND_CHIP_ABUNDANT", "pp_abundant_free_land", "pp_land_abundant"),
+        ("overpopulation", over, "overused.dds", "PP_LAND_CHIP_OVERPOPULATION", "[ShowModifier('overpopulation')]", "pp_land_overpopulation"),
+        ("abundant", f"And(Not({over}), {abundant})", "abundant.dds", "PP_LAND_CHIP_ABUNDANT", "[ShowModifier('abundant_free_land')]", "pp_land_abundant"),
         ("available", f"And3(Not({over}), Not({abundant}), {available})", "available.dds", "PP_LAND_CHIP_AVAILABLE",
-         "pp_available_free_land", "pp_land_available"),
+         "[ShowModifier('available_free_land')]", "pp_land_available"),
     ]
     rows = {"overpopulation": "overpopulation", "abundant": "abundant_free_land", "available": "available_free_land"}
     chips = [(f"{key}_TITLE", marker, _chip(f"{prefix}_{name}", visible, f"{_ICONS}/{LAND_ICONS}/{icon}", f"{key}_TITLE", concept,
@@ -547,11 +549,11 @@ def status_row(harvests: Harvests, stored_rows: str | None = None) -> str:
             using = bg_number_container_bckg
             raw_text = "{months}" }}"""
     food = _chip("pp_status_food_stored", f"Not({starving})", f"{_ICONS}/flat_icons/trade_market/food_stockpile.dds",
-                 "PP_FOOD_CHIP_TITLE", "pp_food_storage",
+                 "PP_FOOD_CHIP_TITLE", "provincial_food",
                  _text("PP_FOOD_CHIP_STORED") + " " + (stored_rows or stored_food_rows(())), overlay,
                  layers=stored_food_frames())
     food += _chip("pp_status_food_starving", starving, f"{_ICONS}/alerts_icons/starving_provinces.dds",
-                  "PP_FOOD_CHIP_STARVING_TITLE", "pp_starvation",
+                  "PP_FOOD_CHIP_STARVING_TITLE", "starving",
                   _text("PP_FOOD_CHIP_STARVING") + " " + _row("province_starving"), frame=FRAME_RED)
 
     # the land state sits beside the population bars (arable_land_bar.py, land_state), not in this card

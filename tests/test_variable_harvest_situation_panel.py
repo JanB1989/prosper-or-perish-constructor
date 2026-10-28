@@ -68,7 +68,7 @@ def test_links_resolve():
     texts = list(_panel_loc().values()) + [HARVEST_LOC.read_text(encoding="utf-8-sig")]
     concepts = {a or b for value in texts for a, b in re.findall(r"\[(\w+)\|[eE]\]|\[Concept\('(\w+)'", value)}
     concepts |= set(re.findall(r'text = "\[(\w+)\|[eE]\]"', _panel()))
-    assert {"region", "location", "location_modifier", "pp_variable_harvests", "pp_starvation", "average_harvest"} <= concepts
+    assert {"region", "location", "location_modifier", "starving", "average_harvest"} <= concepts
     assert not sorted(concepts - _concepts())
     named = {k for value in texts for k in re.findall(r"Show(?:GoodsName|PopTypeName)\('(\w+)'\)", value)}
     assert named and not sorted(named - set(_all_loc()))

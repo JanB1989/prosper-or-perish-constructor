@@ -22,8 +22,8 @@
   PP_HARVEST_CHIP_AVERAGE: "This year's harvest in the region is average; it neither helps nor hurts farmed goods."
   # Comparison tokens for the harvest chip's icon; never shown.
   MODIFIER_TYPE_NAME_pp_land_abundant: "Abundant Arable Land Strength"
-  MODIFIER_TYPE_DESC_pp_land_abundant: "How strongly [pp_abundant_free_land|e] applies here."
+  MODIFIER_TYPE_DESC_pp_land_abundant: "How strongly [ShowModifier('abundant_free_land')] applies here."
   MODIFIER_TYPE_NAME_pp_land_available: "Available Arable Land Strength"
-  MODIFIER_TYPE_DESC_pp_land_available: "How strongly [pp_available_free_land|e] applies here."
+  MODIFIER_TYPE_DESC_pp_land_available: "How strongly [ShowModifier('available_free_land')] applies here."
   MODIFIER_TYPE_NAME_pp_land_overpopulation: "Overused Arable Land Strength"
-  MODIFIER_TYPE_DESC_pp_land_overpopulation: "How strongly [pp_overused_arable_land|e] applies here."
+  MODIFIER_TYPE_DESC_pp_land_overpopulation: "How strongly [ShowModifier('overpopulation')] applies here."

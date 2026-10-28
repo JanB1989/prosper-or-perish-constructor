@@ -402,11 +402,12 @@ def _v(name: str, digits: int = 0) -> str:
 
 
 # The engine's land states in threshold order (location_status.land_chips draws the one that applies): key (its icon
-# gfx/interface/icons/pp_arable_land/<key>.dds), concept, name, the chip's one-line definition
+# gfx/interface/icons/pp_arable_land/<key>.dds), static modifier (its name and text are the state's), name, the chip's
+# one-line definition
 LAND_STATES = (
-    ("abundant", "pp_abundant_free_land", "Abundant Arable Land", "PP_LAND_CHIP_ABUNDANT"),
-    ("available", "pp_available_free_land", "Available Arable Land", "PP_LAND_CHIP_AVAILABLE"),
-    ("overused", "pp_overused_arable_land", "Overused Arable Land", "PP_LAND_CHIP_OVERPOPULATION"),
+    ("abundant", "abundant_free_land", "Abundant Arable Land", "PP_LAND_CHIP_ABUNDANT"),
+    ("available", "available_free_land", "Available Arable Land", "PP_LAND_CHIP_AVAILABLE"),
+    ("overused", "overpopulation", "Overused Arable Land", "PP_LAND_CHIP_OVERPOPULATION"),
 )
 STATE_ICONS = "gfx/interface/icons/pp_arable_land"
 # Engine (EU5 1.4.4, location growth pass): abundant free land where the free share of the capacity is at least 0.9,
@@ -447,8 +448,8 @@ LOC_TEXT = {
     "PP_LAND_BAR_TT_OVER": "Over the [population_capacity|e]",
     # the land states, one line each (2026-10-27, Jan: what it is, how it is defined); the definitions are the chips'
     # own lines (pp_location_status_l_english.yml), so the chip beside the bars and this list say the same
-    **{f"PP_LAND_BAR_TT_DEF_{key.upper()}": f"[Concept('{concept}', '{name}')|e]: ${chip}$"
-       for key, concept, name, chip in LAND_STATES},
+    **{f"PP_LAND_BAR_TT_DEF_{key.upper()}": f"[ShowModifier('{modifier}')]: ${chip}$"
+       for key, modifier, name, chip in LAND_STATES},
 }
 
 

@@ -7,7 +7,7 @@
   MAPMODE_PP_FISHING_VILLAGE_CAPACITY_HIGH: "High fishing capacity"
   MAPMODE_PP_FISHING_VILLAGE_CAPACITY_CAPPED: "Exceptional fishing capacity"
   mapmode_pp_farming_village_capacity_name: "Farming Capacity"
-  MAPMODE_PP_FARMING_VILLAGE_CAPACITY: "#T $mapmode_pp_farming_village_capacity_name$#!\nShows where farms can still be built and where the people use too much land. The colors count the free [population_capacity|e] left for farms in farm levels (see [pp_farm_capacity|e]): red marks little or none, yellow some, green plenty. Purple stripes show how full the land is with people: they fade in as it fills and turn deep purple on [Concept('pp_overused_arable_land', 'Overused Arable Land')|e]. A farm built under stripes takes land the people already need."
+  MAPMODE_PP_FARMING_VILLAGE_CAPACITY: "#T $mapmode_pp_farming_village_capacity_name$#!\nShows where farms can still be built and where the people use too much land. The colors count the free [population_capacity|e] left for farms in farm levels (see [pp_farm_capacity|e]): red marks little or none, yellow some, green plenty. Purple stripes show how full the land is with people: they fade in as it fills and turn deep purple on [ShowModifier('overpopulation')]. A farm built under stripes takes land the people already need."
   MAPMODE_PP_FARMING_VILLAGE_CAPACITY_VERY_LOW: "Very low farming capacity"
   MAPMODE_PP_FARMING_VILLAGE_CAPACITY_LOW: "Low farming capacity"
   MAPMODE_PP_FARMING_VILLAGE_CAPACITY_MEDIUM: "Moderate farming capacity"

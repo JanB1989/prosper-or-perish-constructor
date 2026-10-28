@@ -1,20 +1,5 @@
-﻿# Prosper or Perish — New trade good Victuals (Rations)
+﻿# Prosper or Perish — the New Trade Goods card (victuals, labor and the bookkeeping goods)
 pp_victuals = {
 	family = food
 	texture = "flat_icons/trade_market/food_stockpile"
-}
-
-pp_province_food_sales = {
-	family = food
-	texture = "flat_icons/trade_market/food_stockpile"
-}
-
-pp_offset = {
-	family = food
-	texture = "flat_icons/trade_market/goods_balance"
-}
-
-pp_logistics = {
-	family = market
-	texture = "flat_icons/trade_market/trade"
 }

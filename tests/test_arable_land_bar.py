@@ -160,11 +160,11 @@ def test_tooltip_ends_with_one_line_per_land_state_shared_with_the_chips():
     tooltip = alb.tooltip_block()
     assert "PP_LAND_BAR_TT_NOTE" not in tooltip and "PP_LAND_BAR_TT_NOTE" not in alb.LOC_TEXT
     status = (MOD_ROOT / "main_menu/localization/english/pp_location_status_l_english.yml").read_text(encoding="utf-8-sig")
-    for key, concept, name, chip in alb.LAND_STATES:
+    for key, modifier, name, chip in alb.LAND_STATES:
         assert (MOD_ROOT / "main_menu" / alb.STATE_ICONS / f"{key}.dds").is_file()
         assert f'texture = "{alb.STATE_ICONS}/{key}.dds"' in tooltip and f'text = "PP_LAND_BAR_TT_DEF_{key.upper()}"' in tooltip
         # a link with the chip's title, then the chip's own one-line definition
-        assert alb.LOC_TEXT[f"PP_LAND_BAR_TT_DEF_{key.upper()}"] == f"[Concept('{concept}', '{name}')|e]: ${chip}$"
+        assert alb.LOC_TEXT[f"PP_LAND_BAR_TT_DEF_{key.upper()}"] == f"[ShowModifier('{modifier}')]: ${chip}$"
         assert f'{chip}_TITLE: "{name}"' in status
         assert re.search(rf'(?m)^\s*{chip}: "\[population\|E\] [^"]*\[population_capacity\|e\][^"]*"$', status)
     assert "at most 10% of the [population_capacity|e] and below 10,000 people" in status

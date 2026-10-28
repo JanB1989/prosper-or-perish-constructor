@@ -134,7 +134,6 @@ BOM_TEXT_RELATIVE_PATHS = (
     Path("main_menu/common/game_concepts/pp_location_potential.txt"),
     Path("main_menu/common/game_concepts/pp_fish_capacity.txt"),
     Path("main_menu/common/game_concepts/pp_forest_capacity.txt"),
-    Path("main_menu/common/game_concepts/pp_population_capacity.txt"),
     Path("main_menu/common/static_modifiers/pp_capacity_pressure_effects.txt"),
     Path("main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt"),
     Path("main_menu/common/static_modifiers/pp_location_modifiers.txt"),
@@ -3584,12 +3583,20 @@ def _europedia(args: argparse.Namespace, extra: Sequence[str], repo: Path, proje
         write_europedia_export,
     )
 
+    from prosper_or_perish_constructor.cap_tooltips import game_root
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
     mod_root = _project_mod_root(repo, project)
+    try:   # cards may show vanilla keys (a vanilla concept's name and text)
+        vanilla = game_root(vanilla_root(repo, project))
+    except (OSError, KeyError):
+        vanilla = None   # no load order: the mod's own keys only
     try:
         html_path, json_path = write_europedia_export(
             mod_root,
             repo / EUROPEDIA_EXPORT,
             repo / EUROPEDIA_ENTRIES,
+            vanilla,
         )
     except EuropediaExportError as error:
         raise SystemExit(str(error)) from error

@@ -5775,7 +5775,7 @@ widget = {
         tooltipwidget = {
         ContextualTooltipType = {
             blockoverride "title_text" { text = "PP_FOOD_CHIP_TITLE" }
-            blockoverride "concept_link" { visible = yes text = "[pp_food_storage|E]" }
+            blockoverride "concept_link" { visible = yes text = "[provincial_food|E]" }
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
@@ -5807,7 +5807,7 @@ widget = {
         tooltipwidget = {
         ContextualTooltipType = {
             blockoverride "title_text" { text = "PP_FOOD_CHIP_STARVING_TITLE" }
-            blockoverride "concept_link" { visible = yes text = "[pp_starvation|E]" }
+            blockoverride "concept_link" { visible = yes text = "[starving|E]" }
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
@@ -5828,7 +5828,7 @@ widget = {
         tooltipwidget = {
         ContextualTooltipType = {
             blockoverride "title_text" { text = "[LocationView.GetLocation.Custom('pp_harvest_state')]" }
-            blockoverride "concept_link" { visible = yes text = "[pp_variable_harvests|E]" }
+            blockoverride "concept_link" { visible = yes text = "[ShowSituationName('harvest_situation')]" }
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
@@ -7018,7 +7018,7 @@ pp_land_potential_chip = {}
 					        tooltipwidget = {
 					        ContextualTooltipType = {
 					            blockoverride "title_text" { text = "PP_LAND_CHIP_OVERPOPULATION_TITLE" }
-					            blockoverride "concept_link" { visible = yes text = "[pp_overused_arable_land|E]" }
+					            blockoverride "concept_link" { visible = yes text = "[ShowModifier('overpopulation')]" }
 					            blockoverride "title_icon" {
 					                widget = {
 					                    using = tooltip_title_icon_size
@@ -7042,7 +7042,7 @@ pp_land_potential_chip = {}
 					        tooltipwidget = {
 					        ContextualTooltipType = {
 					            blockoverride "title_text" { text = "PP_LAND_CHIP_ABUNDANT_TITLE" }
-					            blockoverride "concept_link" { visible = yes text = "[pp_abundant_free_land|E]" }
+					            blockoverride "concept_link" { visible = yes text = "[ShowModifier('abundant_free_land')]" }
 					            blockoverride "title_icon" {
 					                widget = {
 					                    using = tooltip_title_icon_size
@@ -7066,7 +7066,7 @@ pp_land_potential_chip = {}
 					        tooltipwidget = {
 					        ContextualTooltipType = {
 					            blockoverride "title_text" { text = "PP_LAND_CHIP_AVAILABLE_TITLE" }
-					            blockoverride "concept_link" { visible = yes text = "[pp_available_free_land|E]" }
+					            blockoverride "concept_link" { visible = yes text = "[ShowModifier('available_free_land')]" }
 					            blockoverride "title_icon" {
 					                widget = {
 					                    using = tooltip_title_icon_size

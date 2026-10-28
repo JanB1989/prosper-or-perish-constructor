@@ -11,7 +11,7 @@
  # with text_multi widgets like the Europedia cards, so its texts carry hover links; no numbers.
  PP_HARVEST_SIT_THIS_YEAR: "This Year in Your Realm"
  PP_HARVEST_SIT_CAPITAL: "#T Your capital#!\n[GetPlayer.GetCapital.GetName]: [GetPlayer.GetCapital.Custom('pp_harvest_link')]\nHover the harvest for everything it changes until next September."
- PP_HARVEST_SIT_STARVING: "[Concept('pp_starvation', 'Starving provinces')|e]:"
+ PP_HARVEST_SIT_STARVING: "[Concept('starving', 'Starving provinces')|e]:"
  PP_HARVEST_SIT_LEAN: "#T Lean harvests in your provinces#!"
  PP_HARVEST_SIT_FAT: "#T Good harvests in your provinces#!"
  PP_HARVEST_SIT_PROVINCE_NOTE: "Provinces with an average year are not listed. Hover a harvest for its effects."
@@ -29,4 +29,4 @@
  PP_HARVEST_SIT_CHANGES: "What a Harvest Changes"
  PP_HARVEST_SIT_CHANGES_DESC: "$BULLET$ #T The fields:#! farmed goods yield more in a good year and less in a bad one. Grain and rice swing the most: [ShowGoodsName('wheat')|e], [ShowGoodsName('millet')|e], [ShowGoodsName('maize')|e] and [ShowGoodsName('rice')|e]. Herds, flocks, fish and game are spared.\n$BULLET$ #T The villages:#! the [ShowPopTypeName('peasants')] live off their own plots first, so a bad year leaves the province less of their surplus and a good year more.\nA bad harvest therefore strikes twice: smaller crops and less to spare from the villages."
  PP_HARVEST_SIT_WHERE: "Where to See It"
- PP_HARVEST_SIT_WHERE_DESC: "$BULLET$ #T The map:#! the situation colours every location by this year's harvest; hover a location to read it. Starving provinces show the starving colour instead.\n$BULLET$ #T The location view:#! the harvest chip at the top right shows the location's harvest; hover it for every effect.\n$BULLET$ #T The Europedia:#! [pp_variable_harvests|e] explains the harvests in full.\n$BULLET$ #T The game rule:#! Variable Harvests can be switched off when a campaign starts."
+ PP_HARVEST_SIT_WHERE_DESC: "$BULLET$ #T The map:#! the situation colours every location by this year's harvest; hover a location to read it. Starving provinces show the starving colour instead.\n$BULLET$ #T The location view:#! the harvest chip at the top right shows the location's harvest; hover it for every effect.\n$BULLET$ #T The Europedia:#! its Variable Harvests page explains the harvests in full.\n$BULLET$ #T The game rule:#! Variable Harvests can be switched off when a campaign starts."

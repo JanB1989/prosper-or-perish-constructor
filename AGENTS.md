@@ -460,10 +460,14 @@
   can feed, in people; farms take from it, improvements and buildings add to it); its states **Abundant Arable Land**
   (`abundant_free_land`), **Available Arable Land** (`available_free_land`), **Overused Arable Land** (`overpopulation`);
   the World Builder baseline is **Natural Arable Land**. Engine and script keys stay. Link Arable Land in text with
-  `[population_capacity|e]` (vanilla concept, no prefix); the card concept is `pp_population_capacity` (it also gives the
-  arable land map mode its icon). "Subsistence Land", "Farmland" (as a capacity term), "Free Land", "Overpopulation"
+  `[population_capacity|e]` (vanilla concept, no prefix; its description, in `localization/replace`, is also the Arable
+  Land card's lead). "Subsistence Land", "Farmland" (as a capacity term), "Free Land", "Overpopulation"
   and "Settled Land" are retired; `tests/test_europedia_style.py` fails if they come back. State icons:
   `tools/build_arable_land_icons.py`.
+- One thing, one entry, one text (Jan, 2026-10-28): the text sits on the game object (a good's or building's `_desc`,
+  `STATIC_MODIFIER_DESC_`, a situation's `_desc`, a vanilla concept's desc in `localization/replace`) and links open
+  the object; never a "P&P:" concept beside it. A Europedia card shows its object's own name and text
+  (`docs/mod_authoring_rules.md`, "Concept files and entries").
 - Europedia cards use the card style in `in_game/gui/shared/pp_europedia_style.gui` (banner, lead, sections with flows,
   scales and goods rows; rules in `docs/mod_authoring_rules.md`, first card Variable
   Harvests, 2026-10-09). Their text has no numbers at all: values sit behind concept, modifier and goods links.

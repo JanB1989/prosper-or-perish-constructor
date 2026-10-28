@@ -4418,6 +4418,7 @@ template religion_breakdown_tooltip {
 lateralview = {
 	name = "location_window"
 	widgetid = "location_window"
+	size = { 600 100% } # PP: wider than the vanilla left panel (570), location_view.py
 
 	widget = {
 		visible = "[TutorialIsRunning]"
@@ -6855,7 +6856,7 @@ pp_land_potential_chip = {}
 					layoutpolicy_horizontal = expanding
 					spacing = 8
 					widget = {
-						size = { 478 56 }
+						size = { 448 56 }
 						tooltipwidget = {
 							ContextualTooltipType = {
 								blockoverride "title_text" { text = "PP_LAND_BAR_TT_TITLE" }
@@ -6875,32 +6876,32 @@ pp_land_potential_chip = {}
 								widget = { size = { 100 18 } text_single = { text = "PP_LAND_BAR_CAPACITY" parentanchor = vcenter fontsize = 14 default_format = "#yellow_titles" } }
 							}
 							widget = {
-								size = { 370 56 }
+								size = { 340 56 }
 								widget = {
 									position = { 0 0 }
-									size = { 370 12 }
+									size = { 340 12 }
 									visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0')]"
-									widget = { position = "[ToVector2f(Subtract_float(Multiply_float(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1'), '(float)370'), '(float)17.0'), '(float)0')]" size = { 34 12 } text_single = { visible = "[GreaterThan_float(Multiply_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1')), '(float)370'), '(float)34')]" parentanchor = center fontsize = 11 raw_text = "10%" } }
-									widget = { position = "[ToVector2f(Subtract_float(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)370'), '(float)17.0'), '(float)0')]" size = { 34 12 } text_single = { parentanchor = center fontsize = 11 raw_text = "100%" } }
+									widget = { position = "[ToVector2f(Subtract_float(Multiply_float(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1'), '(float)340'), '(float)17.0'), '(float)0')]" size = { 34 12 } text_single = { visible = "[GreaterThan_float(Multiply_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1')), '(float)340'), '(float)34')]" parentanchor = center fontsize = 11 raw_text = "10%" } }
+									widget = { position = "[ToVector2f(Subtract_float(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)340'), '(float)17.0'), '(float)0')]" size = { 34 12 } text_single = { parentanchor = center fontsize = 11 raw_text = "100%" } }
 								}
 								widget = {
 									position = { 0 16 }
-									size = { 370 40 }
+									size = { 340 40 }
 									vbox = {
 										size = { 100% 100% }
 										spacing = 4
 										widget = {
-											size = { 370 18 }
+											size = { 340 18 }
 											background = { texture = "gfx/interface/progressbars/progress_black.dds" alpha = 0.6 }
 											hbox = {
 												size = { 100% 100% }
 												widget = {
-													size = "[ToVector2f(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk')), '(float)370'), '(float)18')]"
+													size = "[ToVector2f(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk')), '(float)340'), '(float)18')]"
 													visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk')), '(float)0')]"
 													progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_townsfolk.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal }
 												}
 												widget = {
-													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk'))), '(float)0'), '(float)370'), '(float)18')]"
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk'))), '(float)0'), '(float)340'), '(float)18')]"
 													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk'))), '(float)0'), '(float)0')]"
 													progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_yellow.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal }
 												}
@@ -6908,9 +6909,9 @@ pp_land_potential_chip = {}
 											}
 											hbox = {
 												size = { 100% 100% }
-												widget = { size = "[ToVector2f(Max_float(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_within')), '(float)370'), '(float)0'), '(float)18')]" }
+												widget = { size = "[ToVector2f(Max_float(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_within')), '(float)340'), '(float)0'), '(float)18')]" }
 												widget = {
-													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_within'))), '(float)0'), '(float)370'), '(float)18')]"
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_within'))), '(float)0'), '(float)340'), '(float)18')]"
 													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_within'))), '(float)0'), '(float)0')]"
 													icon = { size = { 100% 2 } texture = "gfx/interface/progressbars/progress_bar_red.dds" } icon = { size = { 100% 2 } parentanchor = bottom texture = "gfx/interface/progressbars/progress_bar_red.dds" } icon = { size = { 2 100% } texture = "gfx/interface/progressbars/progress_bar_red.dds" } icon = { size = { 2 100% } parentanchor = right texture = "gfx/interface/progressbars/progress_bar_red.dds" }
 												}
@@ -6918,27 +6919,27 @@ pp_land_potential_chip = {}
 											}
 										}
 										widget = {
-											size = { 370 18 }
+											size = { 340 18 }
 											background = { texture = "gfx/interface/progressbars/progress_black.dds" alpha = 0.6 }
 											hbox = {
 												size = { 100% 100% }
 												widget = {
-													size = "[ToVector2f(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room')), '(float)370'), '(float)18')]"
+													size = "[ToVector2f(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room')), '(float)340'), '(float)18')]"
 													visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room')), '(float)0')]"
 													progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_townsfolk.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal }
 												}
 												widget = {
-													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room'))), '(float)0'), '(float)370'), '(float)18')]"
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room'))), '(float)0'), '(float)340'), '(float)18')]"
 													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room'))), '(float)0'), '(float)0')]"
 													progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal }
 												}
 												widget = {
-													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))), '(float)0'), '(float)370'), '(float)18')]"
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))), '(float)0'), '(float)340'), '(float)18')]"
 													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))), '(float)0'), '(float)0')]"
 													progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_farms.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal }
 												}
 												widget = {
-													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_land')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held'))), '(float)0'), '(float)370'), '(float)18')]"
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_land')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held'))), '(float)0'), '(float)340'), '(float)18')]"
 													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_land')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held'))), '(float)0'), '(float)0')]"
 													progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal alpha = 0.2 } widget = { size = { 100% 100% } icon = { size = { 100% 2 } texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 100% 2 } parentanchor = bottom texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 2 100% } texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 2 100% } parentanchor = right texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } }
 												}
@@ -6950,9 +6951,9 @@ pp_land_potential_chip = {}
 										position = { 0 -2 }
 										size = { 100% 44 }
 										visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0')]"
-										widget = { size = "[ToVector2f(Max_float(Subtract_float(Multiply_float(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1'), '(float)370'), '(float)1.5'), '(float)0'), '(float)44')]" }
+										widget = { size = "[ToVector2f(Max_float(Subtract_float(Multiply_float(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1'), '(float)340'), '(float)1.5'), '(float)0'), '(float)44')]" }
 										widget = { size = { 3 44 } background = { texture = "gfx/interface/progressbars/progress_black.dds" alpha = 0.9 } icon = { size = { 1 100% } parentanchor = hcenter texture = "gfx/interface/progressbars/progress_bar_whiteish.dds" } }
-										widget = { size = "[ToVector2f(Max_float(Subtract_float(Multiply_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1')), '(float)370'), '(float)3'), '(float)0'), '(float)44')]" }
+										widget = { size = "[ToVector2f(Max_float(Subtract_float(Multiply_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1')), '(float)340'), '(float)3'), '(float)0'), '(float)44')]" }
 										widget = { size = { 3 44 } background = { texture = "gfx/interface/progressbars/progress_black.dds" alpha = 0.9 } icon = { size = { 1 100% } parentanchor = hcenter texture = "gfx/interface/progressbars/progress_bar_whiteish.dds" } }
 										expand = {}
 									}
@@ -6960,16 +6961,16 @@ pp_land_potential_chip = {}
 										size = { 100% 100% }
 										spacing = 4
 										widget = {
-											size = { 370 18 }
+											size = { 340 18 }
 											hbox = {
 												size = { 100% 100% }
 												widget = {
-													size = "[ToVector2f(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk')), '(float)370'), '(float)18')]"
+													size = "[ToVector2f(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk')), '(float)340'), '(float)18')]"
 													visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk')), '(float)0')]"
 													text_single = { parentanchor = center fontsize = 12 raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_townsfolk')|0]K" visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk')), '(float)0.06')]" }
 												}
 												widget = {
-													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk'))), '(float)0'), '(float)370'), '(float)18')]"
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk'))), '(float)0'), '(float)340'), '(float)18')]"
 													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk'))), '(float)0'), '(float)0')]"
 													text_single = { parentanchor = center fontsize = 12 raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_subsistence')|0]K" visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk'))), '(float)0'), '(float)0.06')]" }
 												}
@@ -6977,26 +6978,26 @@ pp_land_potential_chip = {}
 											}
 										}
 										widget = {
-											size = { 370 18 }
+											size = { 340 18 }
 											hbox = {
 												size = { 100% 100% }
 												widget = {
-													size = "[ToVector2f(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room')), '(float)370'), '(float)18')]"
+													size = "[ToVector2f(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room')), '(float)340'), '(float)18')]"
 													visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room')), '(float)0')]"
 													text_single = { parentanchor = center fontsize = 12 raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_townsfolk_room')|0]K" visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room')), '(float)0.06')]" }
 												}
 												widget = {
-													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room'))), '(float)0'), '(float)370'), '(float)18')]"
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room'))), '(float)0'), '(float)340'), '(float)18')]"
 													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room'))), '(float)0'), '(float)0')]"
 													text_single = { parentanchor = center fontsize = 12 raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_left_shown')|0]K" visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room'))), '(float)0'), '(float)0.06')]" }
 												}
 												widget = {
-													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))), '(float)0'), '(float)370'), '(float)18')]"
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))), '(float)0'), '(float)340'), '(float)18')]"
 													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))), '(float)0'), '(float)0')]"
 													text_single = { parentanchor = center fontsize = 12 raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_farms_shown')|0]K" visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))), '(float)0'), '(float)0.06')]" }
 												}
 												widget = {
-													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_land')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held'))), '(float)0'), '(float)370'), '(float)18')]"
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_land')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held'))), '(float)0'), '(float)340'), '(float)18')]"
 													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_land')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held'))), '(float)0'), '(float)0')]"
 													text_single = { parentanchor = center fontsize = 12 raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_room')|0]K" visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_land')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held'))), '(float)0'), '(float)0.06')]" }
 												}
@@ -7032,7 +7033,7 @@ pp_land_potential_chip = {}
 					        background = { texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" }
 					        icon = { size = { 30 30 } texture = "gfx/interface/icons/pp_arable_land/overused.dds" }
 					    }
-					 text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)1')|0%]" fontsize = 14 default_format = "#yellow_titles" } }
+					 text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)1')|0%]" fontsize = 14 default_format = "#yellow_titles" minimumsize = { 40 -1 } maximumsize = { 40 -1 } } }
 					hbox = { visible = "[And(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0'))]" spacing = 4
 					widget = {
 					        name = "pp_land_bar_state_abundant"
@@ -7056,7 +7057,7 @@ pp_land_potential_chip = {}
 					        background = { texture = "gfx/interface/icons/pp_harvest/frame_very_good.dds" }
 					        icon = { size = { 30 30 } texture = "gfx/interface/icons/pp_arable_land/abundant.dds" }
 					    }
-					 text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)1')|0%]" fontsize = 14 default_format = "#yellow_titles" } }
+					 text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)1')|0%]" fontsize = 14 default_format = "#yellow_titles" minimumsize = { 40 -1 } maximumsize = { 40 -1 } } }
 					hbox = { visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0')), GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_available')), '(float)0'))]" spacing = 4
 					widget = {
 					        name = "pp_land_bar_state_available"
@@ -7080,7 +7081,7 @@ pp_land_potential_chip = {}
 					        background = { texture = "gfx/interface/icons/pp_harvest/frame_poor.dds" }
 					        icon = { size = { 30 30 } texture = "gfx/interface/icons/pp_arable_land/available.dds" }
 					    }
-					 text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)1')|0%]" fontsize = 14 default_format = "#yellow_titles" } }
+					 text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)1')|0%]" fontsize = 14 default_format = "#yellow_titles" minimumsize = { 40 -1 } maximumsize = { 40 -1 } } }
 					hbox = { visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_available')), '(float)0')))]" spacing = 4
 					widget = {
 					        name = "pp_land_bar_state_settled"

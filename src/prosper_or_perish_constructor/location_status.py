@@ -41,6 +41,8 @@ HARVEST_LOCALIZATION = "main_menu/localization/english/pp_location_status_harves
 # encyclopedia_lateralview.gui, card types in pp_europedia_style.gui).
 EUROPEDIA_HARVEST_GUI = "in_game/gui/shared/pp_europedia_harvest.gui"
 _CAPITAL = "GetPlayer.GetCapital"
+# the land state's strength beside the population bars ("100%" at fontsize 14 fits)
+STATE_TEXT_WIDTH = 40
 GOOD_HARVESTS = ("good", "very_good", "bountiful")
 BAD_HARVESTS = ("abysmal", "very_poor", "poor")
 # Severity at a glance: the colour of the round frame around the crop (recoloured vanilla frames, written by
@@ -522,8 +524,10 @@ def land_state(land_rows: dict[str, str] | None, prefix: str) -> str:
     parts = []
     for _, marker, chip in land_chips(land_rows, prefix):
         visible = re.search(r'^\s*visible = "([^"]*)"', chip, re.M).group(1)
+        # a fixed width ("5%" to "100%"): a text-sized chip widened the location view from location to location
         strength = (f' text_single = {{ raw_text = "[Multiply_CFixedPoint({_LOC}.GetModifierValueFixed(\'{marker}\'), '
-                    f"'(CFixedPoint)1')|0%]\" fontsize = 14 default_format = \"#yellow_titles\" }}" if marker else "")
+                    f"'(CFixedPoint)1')|0%]\" fontsize = 14 default_format = \"#yellow_titles\" "
+                    f"minimumsize = {{ {STATE_TEXT_WIDTH} -1 }} maximumsize = {{ {STATE_TEXT_WIDTH} -1 }} }}" if marker else "")
         parts.append(f'hbox = {{ visible = "{visible}" spacing = 4\n{chip}{strength} }}')
     return "\n".join(parts)
 

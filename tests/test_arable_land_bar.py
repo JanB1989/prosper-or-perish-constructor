@@ -12,6 +12,9 @@ from pathlib import Path
 
 from prosper_or_perish_constructor import arable_land_bar as alb
 
+TRACK = f"size = {{ {alb.BAR_WIDTH} 18 }}"
+COLUMN = f"size = {{ {alb.BAR_WIDTH} 56 }}"
+
 ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 WINDOW = MOD_ROOT / "in_game/gui/location_window.gui"
@@ -103,15 +106,15 @@ def test_window_has_the_panel_under_the_scene_with_balanced_braces():
 def test_subsistence_peasants_are_one_part_and_the_ones_over_capacity_are_marked_on_it():
     panel = _panel()
     bars = panel[panel.index('"PP_LAND_BAR_CAPACITY" parentanchor'):]
-    track = bars.index("size = { 370 18 }")
-    first_track = bars[track:bars.index("size = { 370 18 }", track + 1)]
+    track = bars.index(TRACK)
+    first_track = bars[track:bars.index(TRACK, track + 1)]
     # two parts: townsfolk, then every subsistence peasant (population - townsfolk), no separate over part
     assert first_track.count("progressbar = {") == 2 and first_track.count("progress_bar_yellow.dds") == 1
     assert "'pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk'))" in first_track
     # the over mark lies over the yellow from the capacity on (spacer = the part within it), red tint and edges
-    assert "ScriptValue('pp_land_bar_f_within')), '(float)370'), '(float)0'), '(float)18')]" in first_track
+    assert f"ScriptValue('pp_land_bar_f_within')), '(float){alb.BAR_WIDTH}'), '(float)0'), '(float)18')]" in first_track
     assert first_track.count("progress_bar_red.dds") == 4 and "alpha" not in first_track.split("progress_bar_yellow")[1]
-    column = panel[panel.index("size = { 370 56 }"):panel.index('name = "pp_land_bar_state')]
+    column = panel[panel.index(COLUMN):panel.index('name = "pp_land_bar_state')]
     assert "progress_bar_red_alt" not in column and '"+[' not in column        # no red block with its own +number
     # its number is in the tooltip, in the population list, only when there are any
     at = panel.index('text = "PP_LAND_BAR_TT_OVER"')
@@ -124,7 +127,7 @@ def test_subsistence_peasants_are_one_part_and_the_ones_over_capacity_are_marked
 
 def test_threshold_lines_cross_both_bars_at_a_tenth_of_the_capacity_and_at_the_capacity():
     panel = _panel()
-    column = panel[panel.index("size = { 370 56 }"):panel.index('name = "pp_land_bar_state')]
+    column = panel[panel.index(COLUMN):panel.index('name = "pp_land_bar_state')]
     lines_at = column.index("position = { 0 -2 }")
     # drawn over the bars (after both tracks, the second ending in the faded room for improvements) and under the parts'
     # numbers (no line hides a number)
@@ -147,9 +150,9 @@ def test_threshold_lines_cross_both_bars_at_a_tenth_of_the_capacity_and_at_the_c
     assert alb.ABUNDANT_SHARE == "0.1"
     capacity = "FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))"
     abundant = f"Multiply_float({capacity}, '(float)0.1')"
-    # the first line's centre at a tenth of the capacity, the second's at the capacity, on the bars' 370 px scale
-    assert f"Max_float(Subtract_float(Multiply_float({abundant}, '(float)370'), '(float)1.5'), '(float)0')" in column
-    assert f"Max_float(Subtract_float(Multiply_float(Subtract_float({capacity}, {abundant}), '(float)370'), '(float)3'), '(float)0')" in column
+    # the first line's centre at a tenth of the capacity, the second's at the capacity, on the bars' BAR_WIDTH px scale
+    assert f"Max_float(Subtract_float(Multiply_float({abundant}, '(float){alb.BAR_WIDTH}'), '(float)1.5'), '(float)0')" in column
+    assert f"Max_float(Subtract_float(Multiply_float(Subtract_float({capacity}, {abundant}), '(float){alb.BAR_WIDTH}'), '(float)3'), '(float)0')" in column
     # an overlay: positioned from the bars' column, taller than both bars, so it moves nothing
     assert "size = { 100% 44 }" in column and f"visible = \"[GreaterThan_float({capacity}, '(float)0')]\"" in column
     assert column.count("size = { 3 44 }") == 2 and column.count("progress_bar_whiteish.dds") == 2

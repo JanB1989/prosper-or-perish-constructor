@@ -22,6 +22,20 @@ from prosper_or_perish_constructor.worldbuilder.geography import EXPORT_BUILD_FI
 _FOOD_PERCENT = 'value = "[FixedPointToFloat(Province.GetFoodCapacityPercent)]"'
 _FOOD_PERCENT_REST = 'value = "[Subtract_float(\'(float)100.0\', FixedPointToFloat(Province.GetFoodCapacityPercent))]"'
 _FOOD_SCOPES = ("LocationView", "LocationViewSelectProvince.Parent")
+# The view's width: vanilla's left panel is 570, and the population bars' row did not fit it, so the body spilled past
+# the header, its close and arrow buttons (Jan, 2026-10-28). The panel content keeps vanilla's 15 margins
+# (window_main_tabs_margin_alt); the row must fit what is left (tests/test_location_view_width.py).
+WINDOW_WIDTH = 600
+CONTENT_MARGINS = 2 * 15
+_WINDOW_ID = '\twidgetid = "location_window"\n'
+
+
+def widen_window(text: str) -> str:
+    """Give the location view its width, as the build panel does (an instance size past the 570 left layer)."""
+    if text.count(_WINDOW_ID) != 1:
+        raise ValueError("location window: widgetid line not found once")
+    size = f"\tsize = {{ {WINDOW_WIDTH} 100% }} # PP: wider than the vanilla left panel (570), location_view.py\n"
+    return text.replace(_WINDOW_ID, _WINDOW_ID + size)
 
 
 def merge_location_window(text: str) -> str:
@@ -599,7 +613,7 @@ def build_window(export_text: str, mod_root: Path, vanilla: Path | None, stored_
     merged = show_every_timed_modifier(move_modifier_row(merged), shown_by_chips(mod_root, vanilla, goods, bool(harvests.keys)))
     # the land state (abundant / available / overused, with its strength) sits beside the population bars only
     merged = arable_land_bar.add_to_window(merged, location_status.land_state(land_rows, "pp_land_bar_state"))
-    return chip_frames(merged)
+    return widen_window(chip_frames(merged))
 
 
 def apply(repo: Path, project: Path, mod_root: Path, vanilla: Path) -> dict[str, object]:

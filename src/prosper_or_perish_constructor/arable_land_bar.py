@@ -639,8 +639,12 @@ def _clamp0(expr: str) -> str:
 
 # Both bars are BAR_WIDTH pixels on one scale; each part is its share of the scale in pixels (a data-bound size, as
 # vanilla's ToVector2f sizes; a data-bound stretch factor gave every part the same width in game, 2026-10-27)
-BAR_WIDTH = 370
+# (340 since 2026-10-28: the row, with the land state beside it, fits location_view.WINDOW_WIDTH; at 370 it pushed the
+# view's body past its header)
+BAR_WIDTH = 340
 LABEL_WIDTH = 100
+ROW_MARGIN = 12
+ROW_SPACING = 8
 # a part's number shows where the part is wide enough for it (share of the bar)
 _LABEL_SHARE = "0.06"
 
@@ -860,13 +864,13 @@ def gui_block(indent: str = "", land_state: str = "") -> str:
 vbox = {{
 	name = "pp_arable_land_bar"
 	layoutpolicy_horizontal = expanding
-	margin = {{ 12 6 }}
+	margin = {{ {ROW_MARGIN} 6 }}
 	spacing = 4
 	background = {{ using = color_dark_blue_texture alpha = 0.85 }}
 
 	hbox = {{
 		layoutpolicy_horizontal = expanding
-		spacing = 8
+		spacing = {ROW_SPACING}
 		widget = {{
 			size = {{ {LABEL_WIDTH + 8 + BAR_WIDTH} {LABEL_ROW + 4 + _BARS_HEIGHT} }}
 {_indent(tooltip_block(), 3)}

@@ -423,17 +423,16 @@ ABUNDANT_SHARE = "0.1"
 # Names (2026-10-28, Jan): the top bar is the Land Usage (Urban Land + Subsistence Land), the bottom bar the Land
 # Capacity (Urban Land + Free Arable Land, then the Farm Land Usage and the Unimproved Land past its end); Land Usage and
 # Land Capacity are the vanilla population and population_capacity concepts under the panel's own words. The location's
-# own land is the hand-kept Natural Arable Land concept (pp_location_potential).
+# own land is the hand-kept Natural Arable Land concept (pp_location_potential); the Subsistence Land is the static
+# modifier pp_subsistence_land (one thing, one entry: its name and STATIC_MODIFIER_DESC_ are the text, links open it).
 CONCEPTS = Path("main_menu/common/game_concepts/pp_arable_land_bar.txt")
 LAND_USAGE = "[Concept('population', 'Land Usage')|E]"
 LAND_CAPACITY = "Concept('population_capacity', 'Land Capacity')"
+SUBSISTENCE_LAND = "[ShowModifier('pp_subsistence_land')]"
 CONCEPT_TEXT = {
     "pp_townsfolk": ("location_icons/population", "Urban Land",
-                     "The land of everyone in a [location|e] but the peasants on [pp_subsistence_peasants|e]. They "
+                     f"The land of everyone in a [location|e] but the peasants on {SUBSISTENCE_LAND}. They "
                      f"bring their own [{LAND_CAPACITY}|e], so Urban Land adds as much as it uses."),
-    "pp_subsistence_peasants": ("location_icons/subsistence_agriculture", "Subsistence Land",
-                                "The land the [ShowPopTypeName('peasants')] without [employment|e] in a [location|e] "
-                                f"live on. They bring no [{LAND_CAPACITY}|e] of their own, so Subsistence Land uses it."),
     "pp_land_improvements": ("modifier_types/total_population_capacity_modifier", "Land Improvements",
                              "[buildings|E] that add [population_capacity|e] to their [location|e]. Unimproved Land is "
                              "what the improvements its owner can build there now could still add."),
@@ -446,7 +445,7 @@ LOC_TEXT = {
     "PP_LAND_BAR_POPULATION": LAND_USAGE,
     "PP_LAND_BAR_CAPACITY": f"[{LAND_CAPACITY}|E]",
     "PP_LAND_BAR_TOWNSFOLK": "[pp_townsfolk|e]",
-    "PP_LAND_BAR_SUBSISTENCE": "[pp_subsistence_peasants|e]",
+    "PP_LAND_BAR_SUBSISTENCE": SUBSISTENCE_LAND,
     "PP_LAND_BAR_LAND": "[Concept('population_capacity', 'Free Arable Land')|e]",
     "PP_LAND_BAR_FARMS": "[pp_farm_land|e]",
     "PP_LAND_BAR_ROOM": "[Concept('pp_land_improvements', 'Unimproved Land')|e]",

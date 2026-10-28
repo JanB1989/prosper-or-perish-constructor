@@ -187,10 +187,16 @@ def test_every_row_label_is_a_concept_link_with_its_own_entry():
         known |= set(re.findall(r"(?m)^﻿?(\w+) = \{", text))
         known |= {word for alias in re.findall(r"alias = \{([^}]*)\}", text) for word in alias.split()}
     assert {"pp_townsfolk", "population", "population_capacity", "buildings", "employment", "pp_location_potential"} <= known
+    static = MOD_ROOT / "main_menu/common/static_modifiers"
+    modifiers = {k for path in static.glob("*.txt") for k in re.findall(r"(?m)^﻿?(\w+) = \{", path.read_text(encoding="utf-8-sig"))}
     for key in set(labels) | {"PP_LAND_BAR_LAND", "PP_LAND_BAR_POPULATION", "PP_LAND_BAR_CAPACITY"}:
+        # a concept, or the game object itself (a static modifier: Subsistence Land, one thing, one entry)
+        shown = re.findall(r"\[ShowModifier\('(\w+)'\)\]", alb.LOC_TEXT[key])
         found = link.findall(alb.LOC_TEXT[key])
-        assert found, key
+        assert found or shown, key
         assert all((a or b) in known for a, b in found), (key, found)
+        assert all(m in modifiers for m in shown), (key, shown)
+    assert alb.LOC_TEXT["PP_LAND_BAR_SUBSISTENCE"] == "[ShowModifier('pp_subsistence_land')]"
     # the townsfolk are one row in both lists (no "their own room" any more), farms one key for legend and tooltip
     assert "PP_LAND_BAR_TT_TOWNSFOLK_ROOM" not in alb.LOC_TEXT and "PP_LAND_BAR_TT_FARMS" not in alb.LOC_TEXT
     assert "own room" not in alb.render_localization()
@@ -217,12 +223,21 @@ def test_new_concepts_have_a_family_an_icon_a_name_and_a_short_text():
     # every concept a text names is a link; each text links the concepts it builds on
     texts = " ".join(text for _, _, text in alb.CONCEPT_TEXT.values())
     links = set(re.findall(r"\[(\w+)\|[eE]\]", texts)) | set(re.findall(r"\[Concept\('(\w+)'", texts))
-    assert {"pp_subsistence_peasants", "population_capacity", "employment", "buildings"} <= links
-    # the bars' parts in the panel's words (2026-10-28, Jan); the location's own land is the one Natural Arable Land
-    # concept (pp_location_potential, hand-kept), no second entry for it
-    assert [name for _, name, _ in alb.CONCEPT_TEXT.values()] == [
-        "Urban Land", "Subsistence Land", "Land Improvements", "Farm Land Usage"]
-    assert "pp_location_land" not in alb.CONCEPT_TEXT and "pp_location_land" not in loc
+    assert {"population_capacity", "location", "buildings"} <= links
+    assert "[ShowModifier('pp_subsistence_land')]" in alb.CONCEPT_TEXT["pp_townsfolk"][2]
+    # the bars' parts in the panel's words (2026-10-28, Jan); one entry per thing: the location's own land is the
+    # Natural Arable Land concept (pp_location_potential, hand-kept), the Subsistence Land the static modifier
+    # pp_subsistence_land (its own name and text)
+    assert [name for _, name, _ in alb.CONCEPT_TEXT.values()] == ["Urban Land", "Land Improvements", "Farm Land Usage"]
+    for gone in ("pp_location_land", "pp_subsistence_peasants"):
+        assert gone not in alb.CONCEPT_TEXT and gone not in loc and gone not in concepts
+    english = MOD_ROOT / "main_menu/localization/english"
+    assert not [p.name for p in english.glob("*.yml") if re.search(r"\[pp_subsistence_peasants\|[eE]\]|Concept\('pp_subsistence_peasants'",
+                                                                    p.read_text(encoding="utf-8-sig"))]
+    subsistence = (english / "pp_subsistence_land_l_english.yml").read_text(encoding="utf-8-sig")
+    assert 'STATIC_MODIFIER_NAME_pp_subsistence_land: "Subsistence Land"' in subsistence
+    desc = re.search(r'STATIC_MODIFIER_DESC_pp_subsistence_land: "([^"]*)"', subsistence).group(1)
+    assert "Urban Land" in desc and "[" not in desc        # plain text: the modifier tooltip shows no links
     assert alb.LOC_TEXT["PP_LAND_BAR_TT_NATURAL"] == "[pp_location_potential|e]"
     potential = (MOD_ROOT / "main_menu/localization/english/pp_europedia_l_english.yml").read_text(encoding="utf-8-sig")
     assert 'game_concept_pp_location_potential: "Natural Arable Land"' in potential

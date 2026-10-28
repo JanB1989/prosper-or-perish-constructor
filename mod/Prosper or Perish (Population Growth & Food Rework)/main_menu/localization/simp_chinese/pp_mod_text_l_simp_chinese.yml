@@ -220,7 +220,7 @@
   PP_LAND_BAR_POPULATION: "[Concept('population', 'Land Usage')|E]"
   PP_LAND_BAR_CAPACITY: "[Concept('population_capacity', 'Land Capacity')|E]"
   PP_LAND_BAR_TOWNSFOLK: "[pp_townsfolk|e]"
-  PP_LAND_BAR_SUBSISTENCE: "[pp_subsistence_peasants|e]"
+  PP_LAND_BAR_SUBSISTENCE: "[ShowModifier('pp_subsistence_land')]"
   PP_LAND_BAR_LAND: "[Concept('population_capacity', 'Free Arable Land')|e]"
   PP_LAND_BAR_FARMS: "[pp_farm_land|e]"
   PP_LAND_BAR_ROOM: "[Concept('pp_land_improvements', 'Unimproved Land')|e]"
@@ -234,9 +234,7 @@
   PP_LAND_BAR_TT_DEF_OVERUSED: "[ShowModifier('overpopulation')]: $PP_LAND_CHIP_OVERPOPULATION$"
   # the bars' parts as game concepts (main_menu/common/game_concepts/pp_arable_land_bar.txt)
   game_concept_pp_townsfolk: "Urban Land"
-  game_concept_pp_townsfolk_desc: "The land of everyone in a [location|e] but the peasants on [pp_subsistence_peasants|e]. They bring their own [Concept('population_capacity', 'Land Capacity')|e], so Urban Land adds as much as it uses."
-  game_concept_pp_subsistence_peasants: "Subsistence Land"
-  game_concept_pp_subsistence_peasants_desc: "The land the [ShowPopTypeName('peasants')] without [employment|e] in a [location|e] live on. They bring no [Concept('population_capacity', 'Land Capacity')|e] of their own, so Subsistence Land uses it."
+  game_concept_pp_townsfolk_desc: "The land of everyone in a [location|e] but the peasants on [ShowModifier('pp_subsistence_land')]. They bring their own [Concept('population_capacity', 'Land Capacity')|e], so Urban Land adds as much as it uses."
   game_concept_pp_land_improvements: "Land Improvements"
   game_concept_pp_land_improvements_desc: "[buildings|E] that add [population_capacity|e] to their [location|e]. Unimproved Land is what the improvements its owner can build there now could still add."
   game_concept_pp_farm_land: "Farm Land Usage"
@@ -2394,11 +2392,11 @@ PP_EU_LAND_SOURCE_NATURAL_DESC: "[climate|e], [vegetation|e], [topography|e], so
 PP_EU_LAND_SOURCE_IMPROVEMENTS: "Land Improvements"
 PP_EU_LAND_SOURCE_IMPROVEMENTS_DESC: "Clearing, draining, irrigating and terracing win new land. How far a location can be improved depends on its geography and grows with its [development|e]."
 PP_EU_LAND_SOURCE_BUILDINGS: "Work in Town"
-PP_EU_LAND_SOURCE_BUILDINGS_DESC: "Whoever works in a [building|e] no longer lives off a plot of their own: their land is [pp_townsfolk|e], which adds as much as it uses. A job for an idle peasant frees their share of the [pp_subsistence_peasants|e]."
+PP_EU_LAND_SOURCE_BUILDINGS_DESC: "Whoever works in a [building|e] no longer lives off a plot of their own: their land is [pp_townsfolk|e], which adds as much as it uses. A job for an idle peasant frees their share of the [ShowModifier('pp_subsistence_land')]."
 PP_EU_LAND_IMPROVEMENTS_ROW: "#T Land improvements#!\neach where the land suits it"
 PP_EU_LAND_USES: "What Uses It"
 PP_EU_LAND_USE_PEOPLE: "People"
-PP_EU_LAND_USE_PEOPLE_DESC: "Only the [ShowPopTypeName('peasants')] without [employment|e] live off the land: their [pp_subsistence_peasants|e] uses it. Everyone else lives on [pp_townsfolk|e], which adds as much as it uses: a growing town does not crowd its land, idle peasants do."
+PP_EU_LAND_USE_PEOPLE_DESC: "Only the [ShowPopTypeName('peasants')] without [employment|e] live off the land: their [ShowModifier('pp_subsistence_land')] uses it. Everyone else lives on [pp_townsfolk|e], which adds as much as it uses: a growing town does not crowd its land, idle peasants do."
 PP_EU_LAND_USE_FARMS: "Farms"
 PP_EU_LAND_USE_FARMS_DESC: "Each farm level takes a fixed share of land, larger farms a larger share: together they are the location's [pp_farm_land|e]. A location holds only as many farms as its [Concept('population_capacity', 'Free Arable Land')|e] has room for. Farms do not wait for people to leave: built on crowded land, they crowd it further."
 PP_EU_LAND_USE_GROUNDS: "Reserved Grounds"
@@ -8092,11 +8090,11 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
 # <<< eu5-building-pipeline:stud_farm:localization
  # pp_subsistence_land_l_english.yml
   STATIC_MODIFIER_NAME_pp_subsistence_land: "Subsistence Land"
-  STATIC_MODIFIER_DESC_pp_subsistence_land: "The land the peasants without a job live on. They bring no land capacity of their own, so Subsistence Land uses it."
+  STATIC_MODIFIER_DESC_pp_subsistence_land: "The land the peasants without work live on: they feed themselves from their own plots. Unlike Urban Land, whose people bring their own Land Capacity, every subsistence peasant uses Land Capacity and brings none."
  # pp_subsistence_land_modifier_types_l_english.yml
   # Marker of the Subsistence Land modifier (pp_subsistence_land_modifier_types.txt)
-  MODIFIER_TYPE_NAME_pp_subsistence_land_size: "[pp_subsistence_peasants|E]"
-  MODIFIER_TYPE_DESC_pp_subsistence_land_size: "The [pp_subsistence_peasants|e] of this [location|e] in thousands of people, as last counted for its [population_capacity|e]."
+  MODIFIER_TYPE_NAME_pp_subsistence_land_size: "Subsistence Land"
+  MODIFIER_TYPE_DESC_pp_subsistence_land_size: "The Subsistence Land of this [location|e] in thousands of people, as last counted for its [population_capacity|e]."
  # pp_sugar_plantation_l_english.yml
 
 # >>> eu5-building-pipeline:sugar_plantation:localization

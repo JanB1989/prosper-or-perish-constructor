@@ -470,8 +470,9 @@
   `tools/build_arable_land_icons.py`.
 - The location view's land panel (`arable_land_bar.py`, names 2026-10-28, Jan): the top bar is the **Land Usage**
   (`[Concept('population', 'Land Usage')|E]`) = **Urban Land** (`pp_townsfolk`: everyone but the subsistence
-  peasants; brings its own capacity) + **Subsistence Land** (`pp_subsistence_peasants`, also the static modifier
-  `pp_subsistence_land`); the bottom bar the **Land Capacity** (`[Concept('population_capacity', 'Land Capacity')|E]`)
+  peasants; brings its own capacity) + **Subsistence Land** (the static modifier `pp_subsistence_land`, no concept:
+  its name and `STATIC_MODIFIER_DESC_` are the text, links are `[ShowModifier('pp_subsistence_land')]`); the bottom bar
+  the **Land Capacity** (`[Concept('population_capacity', 'Land Capacity')|E]`)
   = Urban Land + **Free Arable Land**, then past its end **Farm Land Usage** (`pp_farm_land`) and **Unimproved Land**
   (links Land Improvements). The land states' one-line definitions (`PP_LAND_CHIP_*`, chip and tooltip) read Land Usage
   against Land Capacity. The legend is one unwrapped line: keep it within the panel's 546 px (game font, 12 px).

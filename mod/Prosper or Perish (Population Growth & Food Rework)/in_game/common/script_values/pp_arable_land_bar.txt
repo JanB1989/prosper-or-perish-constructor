@@ -18,9 +18,12 @@ pp_land_bar_population = { value = population }
 pp_land_bar_subsistence = { value = pp_subsistence_peasants }
 pp_land_bar_townsfolk = { value = pp_land_bar_population subtract = pp_land_bar_subsistence min = 0 }
 
-# Flat capacity units: the arable land left is the capacity without the townsfolk's own; the farms (and reserved
-# grounds) take land, the location's own land is what stays when the improvements and the farms are taken out again
-pp_land_bar_left_flat = { value = modifier:local_population_capacity subtract = pp_land_bar_townsfolk }
+# Flat capacity units: the arable land left is the capacity without the townsfolk's own as the engine counts it
+# (total_population +1 per person, pp_subsistence_land -1 per subsistence peasant at the size it was last given: it is
+# refreshed once a year, its marker reads the size; the farm caps read the same land, 2026-10-28); the farms (and
+# reserved grounds) take land, the location's own land is what stays when the improvements and the farms are taken out
+pp_land_bar_townsfolk_room_flat = { value = pp_land_bar_population subtract = modifier:pp_subsistence_land_size }
+pp_land_bar_left_flat = { value = modifier:local_population_capacity subtract = pp_land_bar_townsfolk_room_flat }
 pp_land_bar_taken_flat = { value = pp_land_bar_farms_flat add = pp_land_bar_reserved_flat }
 pp_land_bar_natural_flat = {
 	value = pp_land_bar_left_flat
@@ -30,7 +33,7 @@ pp_land_bar_natural_flat = {
 }
 
 # In thousands of people (the capacity multiplier applied)
-pp_land_bar_townsfolk_room = { value = pp_land_bar_townsfolk multiply = pp_land_bar_multiplier }
+pp_land_bar_townsfolk_room = { value = pp_land_bar_townsfolk_room_flat multiply = pp_land_bar_multiplier min = 0 }
 pp_land_bar_left = { value = pp_land_bar_left_flat multiply = pp_land_bar_multiplier }
 pp_land_bar_left_shown = { value = pp_land_bar_left min = 0 }
 pp_land_bar_farms = { value = pp_land_bar_taken_flat multiply = pp_land_bar_multiplier }

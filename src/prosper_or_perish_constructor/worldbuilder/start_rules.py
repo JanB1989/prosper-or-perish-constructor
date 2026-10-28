@@ -192,6 +192,9 @@ class Rules:
             # the farm caps take the townsfolk's own capacity (total_population +1, unemployed_peasants -1) back out
             # of the flat; the simulated flat is land only and never had it
             return 0.0
+        if key.startswith("pp_farm_land_queued_outside_"):
+            # land of the farm levels under construction: nothing is under construction at the game start
+            return 0.0
         if key in self.values:
             return self.value(self.values[key], ctx, depth + 1)
         raise Unresolved("value " + key)

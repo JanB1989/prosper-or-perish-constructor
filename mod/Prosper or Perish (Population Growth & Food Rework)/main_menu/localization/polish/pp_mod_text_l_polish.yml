@@ -2890,6 +2890,8 @@ PP_EU_LABOR_WHERE_DESC: "$BULLET$ #T The map:#! the $mapmode_pp_manual_labor_mar
  # pp_farmland_l_english.yml
   # Farm max-level tooltip row (scripts/generate_rural_capacity_values.py), after "Free Arable Land".
   PP_BUILDING_LEVEL_FARM_OWN_LEVELS: "This farm and the lower tiers it replaces"
+  # after "Free Arable Land" while other farms have levels under construction here (2026-10-28)
+  PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION: "Other [pp_farm_land|e] under construction"
  # pp_fiber_crops_farm_l_english.yml
 
 # >>> eu5-building-pipeline:fiber_crops_farm:localization
@@ -8142,6 +8144,10 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
  # pp_subsistence_land_l_english.yml
   STATIC_MODIFIER_NAME_pp_subsistence_land: "Subsistence Peasants"
   STATIC_MODIFIER_DESC_pp_subsistence_land: "The subsistence peasants live on the arable land."
+ # pp_subsistence_land_modifier_types_l_english.yml
+  # Marker of the Subsistence Land modifier (pp_subsistence_land_modifier_types.txt)
+  MODIFIER_TYPE_NAME_pp_subsistence_land_size: "[pp_subsistence_peasants|E] on the land"
+  MODIFIER_TYPE_DESC_pp_subsistence_land_size: "The [pp_subsistence_peasants|e] of this [location|e] in thousands, as last counted for its [population_capacity|e]."
  # pp_sugar_plantation_l_english.yml
 
 # >>> eu5-building-pipeline:sugar_plantation:localization

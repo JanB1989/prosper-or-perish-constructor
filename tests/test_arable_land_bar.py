@@ -59,8 +59,14 @@ def test_capacity_is_everyone_but_the_subsistence_peasants():
     assert re.search(r'pp_subsistence_peasants = \{\s*value = "unemployed_pops_of_pop_type_in_location\(pop_type:peasants\)"'
                      r'\s*min = 0\s*\}', values)
     assert "pp_land_bar_subsistence = { value = pp_subsistence_peasants }" in alb.render_script_values(alb.model(MOD_ROOT, None))
+    # the farm caps and the bar's land take out exactly what the modifier gives, at the size it was last refreshed to
+    # (its marker; today's count differs until the next yearly refresh, 2026-10-28)
+    assert re.search(r"(?m)^\s*pp_subsistence_land_size = 1\s*$", static)
     farm_cap = (MOD_ROOT / "in_game/common/script_values/pp_farming_capacity.txt").read_text(encoding="utf-8-sig")
-    assert "subtract = pp_subsistence_peasants" in farm_cap and "unemployed_pops_of_pop_type_in_location" not in farm_cap
+    assert "subtract = modifier:pp_subsistence_land_size" in farm_cap
+    assert "unemployed_pops_of_pop_type_in_location" not in farm_cap and "pp_subsistence_peasants" not in farm_cap
+    assert ("pp_land_bar_townsfolk_room_flat = { value = pp_land_bar_population subtract = modifier:pp_subsistence_land_size }"
+            in alb.render_script_values(alb.model(MOD_ROOT, None)))
     on_action = (MOD_ROOT / "in_game/common/on_action/pp_subsistence_land.txt").read_text(encoding="utf-8-sig")
     # yearly, spread over the year (2026-10-27, Jan: idle peasants move little; a month of refreshes cost 0.02 s)
     assert "yearly_country_pulse" in on_action and "days = { 0 364 }" in on_action and "on_game_start" in on_action

@@ -7,7 +7,8 @@ The engine still compares the whole population with that capacity, so the panel 
 
 - Population: the townsfolk (neutral grey), then the subsistence peasants (yellow, one part with their whole number); the part
   of them beyond the capacity is marked over the yellow (a red tint with red edges), its number in the tooltip.
-- Population capacity: the same townsfolk (grey: they cancel out), then the arable land left (green: the location's
+- Population capacity: the same townsfolk (grey: they cancel out; the capacity counts them at the yearly refresh of
+  the subsistence land, so the two greys can differ by the peasants hired or laid off since), then the arable land left (green: the location's
   land and improvements after the farms), then past the end of the capacity the land the farms hold (a brownish
   green: the land is there, the farms take it; a gross bar with the capacity line as its net, 2026-10-27, Jan), then
   the land the improvements still buildable here could add (an empty slot: faint green in a green frame; striped like
@@ -279,9 +280,12 @@ pp_land_bar_population = { value = population }
 pp_land_bar_subsistence = { value = pp_subsistence_peasants }
 pp_land_bar_townsfolk = { value = pp_land_bar_population subtract = pp_land_bar_subsistence min = 0 }
 
-# Flat capacity units: the arable land left is the capacity without the townsfolk's own; the farms (and reserved
-# grounds) take land, the location's own land is what stays when the improvements and the farms are taken out again
-pp_land_bar_left_flat = { value = modifier:local_population_capacity subtract = pp_land_bar_townsfolk }
+# Flat capacity units: the arable land left is the capacity without the townsfolk's own as the engine counts it
+# (total_population +1 per person, pp_subsistence_land -1 per subsistence peasant at the size it was last given: it is
+# refreshed once a year, its marker reads the size; the farm caps read the same land, 2026-10-28); the farms (and
+# reserved grounds) take land, the location's own land is what stays when the improvements and the farms are taken out
+pp_land_bar_townsfolk_room_flat = { value = pp_land_bar_population subtract = modifier:pp_subsistence_land_size }
+pp_land_bar_left_flat = { value = modifier:local_population_capacity subtract = pp_land_bar_townsfolk_room_flat }
 pp_land_bar_taken_flat = { value = pp_land_bar_farms_flat add = pp_land_bar_reserved_flat }
 pp_land_bar_natural_flat = {
 	value = pp_land_bar_left_flat
@@ -291,7 +295,7 @@ pp_land_bar_natural_flat = {
 }
 
 # In thousands of people (the capacity multiplier applied)
-pp_land_bar_townsfolk_room = { value = pp_land_bar_townsfolk multiply = pp_land_bar_multiplier }
+pp_land_bar_townsfolk_room = { value = pp_land_bar_townsfolk_room_flat multiply = pp_land_bar_multiplier min = 0 }
 pp_land_bar_left = { value = pp_land_bar_left_flat multiply = pp_land_bar_multiplier }
 pp_land_bar_left_shown = { value = pp_land_bar_left min = 0 }
 pp_land_bar_farms = { value = pp_land_bar_taken_flat multiply = pp_land_bar_multiplier }

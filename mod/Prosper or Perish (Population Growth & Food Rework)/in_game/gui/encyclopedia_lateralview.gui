@@ -571,8 +571,6 @@
                                                 pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_overview.dds" } }
                                                 pp_eu_lead = { text = "game_concept_prosper_perish_mod_desc" }
 
-                                                pp_eu_text = { text = "PP_EU_OV_START" }
-
                                                 # ---- What else the mod changes: one line each, linking its page ----
                                                 pp_eu_section = {
                                                     blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/europedia_flat_icon.dds" }

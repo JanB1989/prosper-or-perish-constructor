@@ -174,8 +174,10 @@ def test_card_types_are_defined(name):
 def test_card_text_has_no_numbers(name):
     """Numbers live behind the links (modifier and concept tooltips), never in the text. Live values the game fills
     in (`[...]` data functions, e.g. the capital's months of food) are not written numbers, nor are names (the game
-    and a mod collection in the Overview's thanks)."""
+    and a mod collection in the Overview's thanks; the thanks list holds people's names only)."""
     for key, value in _card_loc(name).items():
+        if key == "PP_EU_OV_THANKS_DESC":
+            continue
         value = re.sub(r"\bEU5(?: 2\.0)?\b", "", value)
         assert not re.search(r"\d", re.sub(r"\[[^\[\]]*\]", "", value)), key
 

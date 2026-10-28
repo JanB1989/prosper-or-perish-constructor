@@ -2,6 +2,11 @@
 
 Hand-tuned changes for single countries, one entry each: what and why.
 
+- **Prussia is easier to form** (2026-10-28, Jan, not tested in game). `formable_countries/pp_formable_adjustments.txt`
+  TRY_REPLACEs vanilla `PRU_f`: no nobles' Land Rights privilege required, nobles estate power above 10 % (vanilla
+  20 %), clergy estate power below 35 % (vanilla 20 %); German culture, 75 % of `prussia_area`, peace and the military
+  order / Powerful Dioceses rule stay. Why: in run 060ad1de Brandenburg owned all 44 Prussian locations in 1823 and
+  failed only these three (seen in game). Jan: "very annoying".
 - **Brandenburg aims at the Prussian lands too** (2026-10-28, Jan, not tested in game). Beside its marches aim (lucky
   nations, below) and as strong: the conquest preference `pp_brandenburg_prussia` (x3 on `prussia_area`, given at start
   next to `pp_brandenburg_marches` in `on_action/pp_country_finetunes.txt`); BRA/PRU +30 target score on every country

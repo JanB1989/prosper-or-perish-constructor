@@ -367,6 +367,20 @@ per person, world and world regions, and the share of the world's people living 
 and the "Institutions per person" tile. Snapshots whose save was overwritten before the dataset kept the table have
 no institution data.
 
+Land improvements (`src/prosper_or_perish_constructor/improvement_room.py`): the Buildings section's chart "Land
+improvements: built and possible" and the "Land improvements built" tile show, world-wide per save, the levels of the
+World Builder capacity buildings that stand, the levels still possible and the two together, in levels (the cost unit),
+in land (people of arable land) and as the share built per cap (land clearance, field management with its upgrades,
+water control, irrigated fields, paddy water control). A cap is the game's max-level script value: base + the
+location's class terms (handover `cap_equation_json`) + levels per development point x the save's development, clamped
+at 15, floored, 0 where no member's location gate passes; a shared cap holds its members' levels together. Land is
+valued at full research: the best generally available member whose location gate passes; a regional member (every
+unlocking advance in a culture_/country_/region_/religion_/government_/estate_ advance file: incamisana, bund, polders)
+or a culture-locked niche (Khmer baray, Jiangnan works) counts only where it stands. Only owned
+locations count; caps come from today's built mod and handover, so a run played with other caps shows levels above
+them (the caption gives how many). `tests/test_improvement_room.py` checks the caps against the game's own script
+values and gates (`worldbuilder/start_rules.py`) and against the handover's `cap_at_start` / `cap_at_reference_development`.
+
 #### Building investment
 
 The build also keeps the derived table `graphs/dataset/tables/building_investment/playthrough_id=<id>/<snapshot>.parquet`

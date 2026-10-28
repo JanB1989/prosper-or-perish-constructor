@@ -39,7 +39,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, Mapping
+from typing import TYPE_CHECKING, Any, Callable, Mapping
 
 import numpy as np
 import polars as pl
@@ -61,6 +61,9 @@ from prosper_or_perish_constructor.run_report_charts import (
     xaxis,
 )
 from prosper_or_perish_constructor.run_report_urban import UrbanCatalog, industry_colours, industry_label, load_urban_catalog
+
+if TYPE_CHECKING:
+    from prosper_or_perish_constructor.improvement_room import RoomModel
 
 POP_TYPES = ("nobles", "clergy", "burghers", "laborers", "soldiers", "peasants", "slaves", "tribesmen")
 MAP_THREADS = 4  # map videos rendered at a time
@@ -153,6 +156,8 @@ class RunData:
     # when the run has town rights or promotions
     production: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, location_id, good_id, value
     urban: UrbanCatalog = field(default_factory=UrbanCatalog)  # town right and industry type definitions
+    # land improvements built and possible per snapshot and cap (improvement_room.room); empty without the model
+    improvements: pl.DataFrame = field(default_factory=pl.DataFrame)
 
     @property
     def investment_prices(self) -> str:
@@ -198,7 +203,10 @@ def run_snapshots(dataset: Path, playthrough: str) -> pl.DataFrame:
     )
 
 
-def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | None = None) -> RunData:
+def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | None = None,
+             improvements: RoomModel | None = None) -> RunData:
+    """``improvements``: the improvement caps of the built mod (improvement_room.load_model); None leaves the
+    improvements chart out."""
     playthrough = playthrough or latest_playthrough(dataset)
     snapshots = run_snapshots(dataset, playthrough)
     # the game writes playthrough_name only for some starts (e.g. "England #7558ddce"); else the id's first block
@@ -299,6 +307,12 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
         labels.goods = {**{g: n for g, n in names.iter_rows() if n}, **labels.goods}
     run = RunData(playthrough, str(name), snapshots, locations, building_levels, buildings_by_category, countries,
                   market_goods, markets, trades, economy, labels, institutions=institutions)
+    if improvements is not None:
+        from prosper_or_perish_constructor.improvement_room import room
+
+        standing = buildings.filter(pl.col("snapshot_id").is_in(wanted)
+                                    & pl.col("building_type").is_in(improvements.members["building_type"].to_list()))
+        run.improvements = room(improvements, locations, standing.collect())
     _load_investment(run, dataset, wanted)
     _load_urban(run, dataset, wanted)
     return run
@@ -1364,12 +1378,20 @@ def _summary(run: RunData) -> dict[str, object]:
         urban = {"rights_last": count(run.town_rights, last), "rights_first": count(run.town_rights, run.urban_saves[0]),
                  "promotions_last": count(run.promotions, last)}
     per_person = institutions_per_person(run.locations, run.snapshots["snapshot_id"].to_list())
+    improvements: dict[str, float] = {}
+    if not run.improvements.is_empty():
+        from prosper_or_perish_constructor.improvement_room import world
+
+        by = {r["snapshot_id"]: r for r in world(run.improvements).to_dicts()}
+        if first in by and last in by and by[last]["total"]:
+            improvements = {"improvements_built": by[last]["built"], "improvements_total": by[last]["total"],
+                            "improvements_first": by[first]["built"] / by[first]["total"] if by[first]["total"] else 0.0}
     return {"first": at.get(first, {}), "last": at.get(last, {}), "levels_first": lv.get(first, 0), "levels_last": lv.get(last, 0),
             "investment_first": world_investment.get(first), "investment_last": world_investment.get(last),
             "institutions_first": per_person[0] if per_person else None,
             "institutions_last": per_person[-1] if per_person else None,
             "trade_first": trade.get(first), "trade_last": trade.get(last),
-            "burgher_first": burgher.get(first), "burgher_last": burgher.get(last), "leaders": leaders, **urban}
+            "burgher_first": burgher.get(first), "burgher_last": burgher.get(last), "leaders": leaders, **urban, **improvements}
 
 
 SECTIONS = (
@@ -1379,7 +1401,8 @@ SECTIONS = (
     ("trade", "Trade", "What moved between markets and what did not: the routes and the trade balance of every market "
                        "as videos, then trade per goods group, per good and per market."),
     ("prices", "Prices", "Every good's price against its base price, and whether the world uses more than it makes."),
-    ("buildings", "Buildings", "Building levels and what they cost to build."),
+    ("buildings", "Buildings", "Building levels, what they cost to build, and how much of the possible land "
+                               "improvement stands."),
     ("towns", "Town rights & industry", "Which town rights and industry promotions the AI grants, where, and whether they "
                                         "sit where their goods are made."),
     ("countries", "Countries", "The largest countries by population and by income."),
@@ -1700,6 +1723,11 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
     if summary.get("investment_last") is not None:
         tiles.insert(-1, ("Building investment", f"{_format_number(float(summary['investment_last']))} gold",  # type: ignore[arg-type]
                           f"{_format_number(float(summary['investment_first'] or 0))} in {start}"))  # type: ignore[arg-type]
+    if summary.get("improvements_total"):
+        built, total = float(summary["improvements_built"]), float(summary["improvements_total"])  # type: ignore[arg-type]
+        tiles.insert(-1, ("Land improvements built", f"{built / total * 100:.0f}%",
+                          f"{_format_number(built)} of {_format_number(total)} levels · "
+                          f"{float(summary['improvements_first']) * 100:.0f}% in {start}"))  # type: ignore[arg-type]
     tile_html = "".join(f"<div class=tile><div class=label>{esc(a)}</div><div class=value>{esc(b)}</div><div class=sub>{esc(c)}</div></div>"
                         for a, b, c in tiles)
     section_videos = {"trade": TRADE_VIDEOS, "towns": PROMOTION_VIDEOS}
@@ -1761,6 +1789,20 @@ def _backfill_engine_tables(repo: Path, project: Path, dataset: Path, playthroug
         log(f"engine tables added to {done} snapshots")
 
 
+def _improvement_model(repo: Path, project: Path, log: Callable[[str], None]) -> RoomModel | None:
+    """The improvement caps of the built mod and its World Builder handover; None (no chart) when either is missing."""
+    from prosper_or_perish_constructor.improvement_room import load_model
+
+    started = time.perf_counter()
+    try:
+        model = load_model(repo, project)
+    except (OSError, KeyError, ValueError) as exc:
+        log(f"improvements: left out ({exc})")
+        return None
+    log(f"improvements: {len(model.units)} caps, {model.members.height} buildings ({time.perf_counter() - started:.1f}s)")
+    return model
+
+
 def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, playthrough: str | None = None,
                  width: int = 1920, fps: int = 6, log: Callable[[str], None] = print) -> Path:
     if shutil.which("ffmpeg") is None:
@@ -1785,7 +1827,7 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
     goods_cache = out_root / ".goods_cache" / playthrough
     prepared = prepare_goods_flows(playthrough, run_snapshots(dataset, playthrough)["snapshot_id"].to_list(), repo=repo,
                                    project=project, dataset=dataset, cache=goods_cache, log=log)
-    run = load_run(dataset, playthrough, labels=load_labels(repo, project))
+    run = load_run(dataset, playthrough, labels=load_labels(repo, project), improvements=_improvement_model(repo, project, log))
     if run.urban_saves:
         run.urban = load_urban_catalog(repo, project)
     log(f"run {run.name} ({run.playthrough_id}): {run.snapshots.height} saves {run.years[0]}-{run.years[1]}")

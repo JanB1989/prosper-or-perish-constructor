@@ -1636,7 +1636,7 @@
 
 # >>> eu5-building-pipeline:camel_herders:localization
   camel_herders: "Camel Herders"
-  camel_herders_desc: "Herding families drive their camels between desert wells and thorn-scrub grazing, raising calves for the caravans, the armies and the saddle."
+  camel_herders_desc: "Herding families drive their camels between desert wells and thorn-scrub grazing, raising calves for the caravans, the armies and the saddle. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   camel_herders_slot_0: "Desert Grazing"
   camel_herders_slot_1: "Herding and Feeding"
   camel_herders_slot_2: "Provisioning"
@@ -1658,7 +1658,7 @@
 
 # >>> eu5-building-pipeline:camel_stud:localization
   camel_stud: "Camel Stud"
-  camel_stud_desc: "Walled breeding yards with picked sires, fodder stores and trained handlers raise strong baggage camels and swift riding camels for the caravans and the armies."
+  camel_stud_desc: "Walled breeding yards with picked sires, fodder stores and trained handlers raise strong baggage camels and swift riding camels for the caravans and the armies. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   camel_stud_slot_0: "Desert Grazing"
   camel_stud_slot_1: "Stud Work"
   camel_stud_slot_2: "Provisioning"
@@ -1760,7 +1760,7 @@
 
 # >>> eu5-building-pipeline:cattle_farm:localization
   cattle_farm: "Cattle Farm"
-  cattle_farm_desc: "Households graze cattle on common pasture and bring them in at night."
+  cattle_farm_desc: "Households graze cattle on common pasture and bring them in at night. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   cattle_farm_slot_0: "Pastures"
   cattle_farm_slot_1: "Cultivation"
   cattle_farm_slot_2: "Provisioning"
@@ -1777,7 +1777,7 @@
 
 # >>> eu5-building-pipeline:cattle_farmstead:localization
   cattle_farmstead: "Cattle Farmstead"
-  cattle_farmstead_desc: "Stall feeding and manure yards carry the herd through the lean months."
+  cattle_farmstead_desc: "Stall feeding and manure yards carry the herd through the lean months. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   cattle_farmstead_slot_0: "Pastures"
   cattle_farmstead_slot_1: "Cultivation"
   cattle_farmstead_slot_2: "Provisioning"
@@ -1792,7 +1792,7 @@
 
 # >>> eu5-building-pipeline:cattle_rotations:localization
   cattle_rotations: "Cattle Ley Farm"
-  cattle_rotations_desc: "Sown leys and fodder crops let the herd graze fields that rest from grain."
+  cattle_rotations_desc: "Sown leys and fodder crops let the herd graze fields that rest from grain. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   cattle_rotations_slot_0: "Pastures"
   cattle_rotations_slot_1: "Cultivation"
   cattle_rotations_slot_2: "Provisioning"
@@ -1809,7 +1809,7 @@
 
 # >>> eu5-building-pipeline:cattle_model_farm:localization
   cattle_model_farm: "Cattle Model Farm"
-  cattle_model_farm_desc: "Selected breeding stock, dairies and fodder leys raise cattle on a larger managed farm."
+  cattle_model_farm_desc: "Selected breeding stock, dairies and fodder leys raise cattle on a larger managed farm. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   cattle_model_farm_slot_0: "Pastures"
   cattle_model_farm_slot_1: "Cultivation"
   cattle_model_farm_slot_2: "Provisioning"
@@ -2061,7 +2061,7 @@
 # >>> eu5-building-pipeline:cookshop:localization
   cookshop: "Cookshop"
   pp_cookshop_price: "[ShowBuildingTypeName('cookshop')|e] Price"
-  cookshop_desc: "A street kitchen that cooks a little of the farms' produce into hot meals and sells them with a drink at its door. Only the province capital builds them, and the more farm land the province works, the more kitchens it can hold. What it serves adds to the province's food, and less food spoils while people eat it fresh."
+  cookshop_desc: "A street kitchen at the [province_capital|e] that cooks the farms' produce into hot meals; the more [Concept('pp_staple_foods', 'staple food')|e] farms and [ShowBuildingTypeName('victualling_yard')|e] levels the province has, the more levels its kitchens can have. It is almost always worth building: it adds food and makes the province's food consumption more efficient."
   cookshop_slot_0: "Main Dish"
   cookshop_slot_1: "Drink"
   pp_cookshop_beer: "Beer"
@@ -2587,15 +2587,7 @@ PP_EU_PROD_LESS_SURPLUS: "More Eaten, Less Surplus"
 PP_EU_PROD_LESS_SURPLUS_DESC: "Everything that raises it lowers the surplus: [Concept('poor_harvest', 'weak harvests')|e], [ShowModifier('overpopulation')] and more."
 PP_EU_PROD_BUILDINGS: "Buildings"
 PP_EU_PROD_FARMS: "Staple Food Farms"
-PP_EU_PROD_FARMS_DESC: "The [ShowBuildingTypeName('wheat_farm')|e], [ShowBuildingTypeName('rice_farm')|e], [ShowBuildingTypeName('cattle_farm')|e], [ShowBuildingTypeName('fishing_village')|e] and every other building that produces [pp_staple_foods|e] always does both: it feeds its own province with [ShowGoodsName('local_food')|e] and sells its crop on the goods market. While the province store runs low it makes more Province Food and sells less; while the store is full it sells more."
-PP_EU_PROD_COOKSHOPS: "[ShowBuildingTypeName('cookshop')|e]"
-PP_EU_PROD_COOKSHOPS_DESC: "A [ShowBuildingTypeName('cookshop')|e] stands in a town or the province capital and needs farms in its province: the more farms, the more levels it can have. The [ShowBuildingTypeName('cookshop')|e] and its upgrade, the [ShowBuildingTypeName('public_kitchen')|e], are strong food makers, and they even lower peasant food consumption: fresh food that would spoil is eaten where it is cooked."
-PP_EU_PROD_GRANGES: "[ShowBuildingTypeName('grange')|e]"
-PP_EU_PROD_GRANGES_DESC: "The [ShowBuildingTypeName('grange')|e] is a building of the [ShowPopTypeName('nobles')] in the province capital. Once the province store is full, it takes the surplus [ShowGoodsName('local_food')|e] and sells it as [ShowGoodsName('victuals')|e] on the goods market: less food for the province, more victuals for the market."
-PP_EU_PROD_YARDS: "[ShowBuildingTypeName('victualling_yard')|e]"
-PP_EU_PROD_YARDS_DESC: "The main source of [ShowGoodsName('victuals')|e]. A [ShowBuildingTypeName('victualling_yard')|e] stands in market centres and good harbours, buys [pp_staple_foods|e] on the goods market and packs them into victuals for the market. It never touches the province store."
-PP_EU_PROD_TAVERNS: "[ShowBuildingTypeName('tavern')|e]"
-PP_EU_PROD_TAVERNS_DESC: "A [ShowBuildingTypeName('tavern')|e] in the province capital buys [ShowGoodsName('victuals')|e] on the goods market and serves them as [ShowGoodsName('local_food')|e]. It is the main way to feed provinces that grow little food, or whose people you would rather put to other work."
+PP_EU_PROD_FARMS_DESC: "The [ShowBuildingTypeName('wheat_farm')|e], [ShowBuildingTypeName('rice_farm')|e], [ShowBuildingTypeName('cattle_farm')|e], [ShowBuildingTypeName('fishing_village')|e] and every other building that produces [pp_staple_foods|e] always does both: it feeds its own province with [ShowGoodsName('local_food')|e] and sells its crop on the goods market. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
 # Staple Foods (support concept, pp_staple_foods.txt): the goods are config/goods_categories.csv staple_group (tests/test_europedia_style.py)
 game_concept_pp_staple_foods: "Staple Foods"
 game_concept_pp_staple_foods_desc: "The foods people lived on. They are trade goods: on the goods market they feed nobody until a building turns them into [ShowGoodsName('local_food')|e]. Their producers follow the province store: while it is full they send more to the market, while it runs low they make more Province Food.\n\n#T Staple crops:#! [ShowGoodsName('wheat')|e], [ShowGoodsName('rice')|e], [ShowGoodsName('millet')|e], [ShowGoodsName('maize')|e], [ShowGoodsName('potato')|e], [ShowGoodsName('legumes')|e]\n#T Staple animals:#! [ShowGoodsName('livestock')|e], [ShowGoodsName('fish')|e], [ShowGoodsName('wild_game')|e], [ShowGoodsName('wool')|e], [ShowGoodsName('camels')|e]\n#T Staple fruits:#! [ShowGoodsName('fruit')|e], [ShowGoodsName('olives')|e]"
@@ -3358,7 +3350,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   province_food_sales: "Surplus Sales"
   province_food_sales_desc: "What the [ShowBuildingTypeName('grange')|e] earns from a full province store: the fuller the store, the more it earns, and once the store runs low, nothing. A working [ShowBuildingTypeName('tavern')|e] in the same place takes it away, so a [ShowBuildingTypeName('grange')|e] packs only food its province can spare. You can otherwise ignore it."
   local_food: "Province Food"
-  local_food_desc: "Meals eaten where they are made. Province Food feeds the province that produces it and never leaves it. Farms, fisheries and orchards choose whether to provision their province or sell their surplus; the [ShowBuildingTypeName('cookshop')|e] and the [ShowBuildingTypeName('public_kitchen')|e] always serve it."
+  local_food_desc: "Meals eaten where they are made. Province Food feeds the province that produces it and never leaves it. [Concept('pp_staple_foods', 'Staple food')|e] farms, fisheries and orchards make more of it while the province's [Concept('provincial_food', 'food store')|e] is low and more goods for the market while it is high; the [ShowBuildingTypeName('cookshop')|e] and the [ShowBuildingTypeName('public_kitchen')|e] always serve it."
   manual_labor: "Manual Labor"
   manual_labor_desc: "The work of hired hands. Idle [ShowPopTypeName('peasants')] supply it to their own [market|e], and nearly every building pays part of its costs in it. It never leaves its market, so its price is the local wage: cheap where hands are plentiful, dear where towns crowd a market, and there buildings switch to methods that need fewer hands."
   offset: "Offset"
@@ -4232,7 +4224,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
  # pp_grange_l_english.yml
 
 # >>> eu5-building-pipeline:grange:localization
-  grange_desc: "The landowners gather the lasting part of a full province store at the province capital, pack it into [ShowGoodsName('victuals')|e] and send it overland to the regional markets. It pays off when the province store is full, and the dearer victuals are, the more of the store it is willing to pack; carts and wagons save labour where it is dear, and packing goods waste less of the food."
+  grange_desc: "When the province has a lot of food in its [Concept('provincial_food', 'food store')|e], the landowners at its [province_capital|e] pack that [ShowGoodsName('local_food')|e] into [ShowGoodsName('victuals')|e] and sell them on the market. The dearer victuals are, the more of the store they pack."
   grange_slot_0: "Packing"
   grange_slot_1: "Haulage"
   grange_slot_2: "Surplus Sales"
@@ -4642,7 +4634,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 
 # >>> eu5-building-pipeline:legume_farm:localization
   legume_farm: "Legume Farm"
-  legume_farm_desc: "Households grow peas, beans and lentils that feed both the table and the soil."
+  legume_farm_desc: "Households grow peas, beans and lentils that feed both the table and the soil. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   legume_farm_slot_0: "Fields"
   legume_farm_slot_1: "Beekeeping"
   legume_farm_slot_2: "Cultivation"
@@ -4663,7 +4655,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 
 # >>> eu5-building-pipeline:legume_farmstead:localization
   legume_farmstead: "Legume Farmstead"
-  legume_farmstead_desc: "Fodder leys and sealed seed jars tie pulse growing to the village livestock."
+  legume_farmstead_desc: "Fodder leys and sealed seed jars tie pulse growing to the village livestock. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   legume_farmstead_slot_0: "Fields"
   legume_farmstead_slot_1: "Beekeeping"
   legume_farmstead_slot_2: "Cultivation"
@@ -4681,7 +4673,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 
 # >>> eu5-building-pipeline:legume_rotations:localization
   legume_rotations: "Pulse Rotation Farm"
-  legume_rotations_desc: "Pulses move through the rotation and leave the soil richer for the grain that follows."
+  legume_rotations_desc: "Pulses move through the rotation and leave the soil richer for the grain that follows. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   legume_rotations_slot_0: "Fields"
   legume_rotations_slot_1: "Beekeeping"
   legume_rotations_slot_2: "Cultivation"
@@ -4702,7 +4694,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 
 # >>> eu5-building-pipeline:legume_model_farm:localization
   legume_model_farm: "Legume Model Farm"
-  legume_model_farm_desc: "Drilled pulse rows and seed ledgers raise legumes on a larger managed farm."
+  legume_model_farm_desc: "Drilled pulse rows and seed ledgers raise legumes on a larger managed farm. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   legume_model_farm_slot_0: "Fields"
   legume_model_farm_slot_1: "Cultivation"
   legume_model_farm_slot_2: "Provisioning"
@@ -4932,7 +4924,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 
 # >>> eu5-building-pipeline:maize_farm:localization
   maize_farm: "Maize Field"
-  maize_farm_desc: "Households plant maize in hills worked with the hoe."
+  maize_farm_desc: "Households plant maize in hills worked with the hoe. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   maize_farm_slot_0: "Fields"
   maize_farm_slot_1: "Cultivation"
   maize_farm_slot_2: "Provisioning"
@@ -4951,7 +4943,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 
 # >>> eu5-building-pipeline:maize_farmstead:localization
   maize_farmstead: "Maize Farmstead"
-  maize_farmstead_desc: "Manure feeds the maize fields and slatted cribs keep the harvest dry."
+  maize_farmstead_desc: "Manure feeds the maize fields and slatted cribs keep the harvest dry. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   maize_farmstead_slot_0: "Fields"
   maize_farmstead_slot_1: "Cultivation"
   maize_farmstead_slot_2: "Provisioning"
@@ -4966,7 +4958,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 
 # >>> eu5-building-pipeline:maize_rotations:localization
   maize_rotations: "Maize Rotation Farm"
-  maize_rotations_desc: "Ploughed rows and bean rotations raise more maize from the same fields."
+  maize_rotations_desc: "Ploughed rows and bean rotations raise more maize from the same fields. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   maize_rotations_slot_0: "Fields"
   maize_rotations_slot_1: "Cultivation"
   maize_rotations_slot_2: "Provisioning"
@@ -4983,7 +4975,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 
 # >>> eu5-building-pipeline:maize_model_farm:localization
   maize_model_farm: "Maize Model Farm"
-  maize_model_farm_desc: "Horse-hoes, planned cribs and hired hands raise maize on a larger managed farm."
+  maize_model_farm_desc: "Horse-hoes, planned cribs and hired hands raise maize on a larger managed farm. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   maize_model_farm_slot_0: "Fields"
   maize_model_farm_slot_1: "Cultivation"
   maize_model_farm_slot_2: "Provisioning"
@@ -5017,7 +5009,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 
 # >>> eu5-building-pipeline:managed_forest_village:localization
   managed_forest_village: "Managed Forest Village"
-  managed_forest_village_desc: "Managed forest villages use ordinances, marked stands, and recorded rights to organize woodland work. Hides, game, fur, and wax move through the same forest yards."
+  managed_forest_village_desc: "Managed forest villages use ordinances, marked stands, and recorded rights to organize woodland work. Hides, game, fur, and wax move through the same forest yards. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   managed_forest_village_slot_0: "Managed Forest"
   managed_forest_village_slot_1: "Forest Work"
   managed_forest_village_slot_2: "Provisioning"
@@ -5187,7 +5179,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 
 # >>> eu5-building-pipeline:millet_farm:localization
   millet_farm: "Millet Farm"
-  millet_farm_desc: "Households sow millet on light and dry soils that suit little else."
+  millet_farm_desc: "Households sow millet on light and dry soils that suit little else. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   millet_farm_slot_0: "Fields"
   millet_farm_slot_1: "Cultivation"
   millet_farm_slot_2: "Provisioning"
@@ -5204,7 +5196,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 
 # >>> eu5-building-pipeline:millet_farmstead:localization
   millet_farmstead: "Millet Farmstead"
-  millet_farmstead_desc: "Manured plots and sealed seed stores steady the millet harvest."
+  millet_farmstead_desc: "Manured plots and sealed seed stores steady the millet harvest. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   millet_farmstead_slot_0: "Fields"
   millet_farmstead_slot_1: "Cultivation"
   millet_farmstead_slot_2: "Provisioning"
@@ -5219,7 +5211,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 
 # >>> eu5-building-pipeline:millet_rotations:localization
   millet_rotations: "Millet Rotation Farm"
-  millet_rotations_desc: "Millet takes turns with fallow and pulses to keep thin soils working."
+  millet_rotations_desc: "Millet takes turns with fallow and pulses to keep thin soils working. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   millet_rotations_slot_0: "Fields"
   millet_rotations_slot_1: "Cultivation"
   millet_rotations_slot_2: "Provisioning"
@@ -5236,7 +5228,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 
 # >>> eu5-building-pipeline:millet_model_farm:localization
   millet_model_farm: "Millet Model Farm"
-  millet_model_farm_desc: "Drilled rows, horse teams and field accounts raise millet on a larger managed farm."
+  millet_model_farm_desc: "Drilled rows, horse teams and field accounts raise millet on a larger managed farm. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   millet_model_farm_slot_0: "Fields"
   millet_model_farm_slot_1: "Cultivation"
   millet_model_farm_slot_2: "Provisioning"
@@ -6447,7 +6439,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
 
 # >>> eu5-building-pipeline:net_curing_yard:localization
   net_curing_yard: "Net and Curing Yard"
-  net_curing_yard_desc: "Net and curing yards gather hemp nets, salting tables, drying racks, and small stores so village fishers can preserve more catch."
+  net_curing_yard_desc: "Net and curing yards gather hemp nets, salting tables, drying racks, and small stores so village fishers can preserve more catch. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   net_curing_yard_slot_0: "Fishing Grounds"
   net_curing_yard_slot_1: "Fishing Method"
   net_curing_yard_slot_2: "Freshwater Works"
@@ -6474,7 +6466,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
 
 # >>> eu5-building-pipeline:nursery_orchard:localization
   nursery_orchard: "Nursery Orchard"
-  nursery_orchard_desc: "Nursery orchards use young tree rows, waxed grafts, baskets, and storage crocks to replace poor trees and steady fruit harvests."
+  nursery_orchard_desc: "Nursery orchards use young tree rows, waxed grafts, baskets, and storage crocks to replace poor trees and steady fruit harvests. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   nursery_orchard_slot_0: "Fruit Trees"
   nursery_orchard_slot_1: "Beekeeping"
   nursery_orchard_slot_2: "Nursery Rows"
@@ -6497,7 +6489,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
 
 # >>> eu5-building-pipeline:drift_net_fishery:localization
   drift_net_fishery: "Drift-Net Fishery"
-  drift_net_fishery_desc: "Drift-net fisheries organize hemp and flax nets, small sailcloth, shore brining, and light boat repairs for seasonal coastal shoals."
+  drift_net_fishery_desc: "Drift-net fisheries organize hemp and flax nets, small sailcloth, shore brining, and light boat repairs for seasonal coastal shoals. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   drift_net_fishery_slot_0: "Coastal Waters"
   drift_net_fishery_slot_1: "Coastal Drift Nets"
   drift_net_fishery_slot_2: "Provisioning"
@@ -6519,7 +6511,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
   ocean_fishery_slot_1: "Coastal Gear"
   ocean_fishery_slot_2: "Provisioning"
   ocean_fishery: "Coastal Fishery"
-  ocean_fishery_desc: "Coastal crews work small boats, nets, curing barrels, and shore landings. They supply nearby markets from familiar waters."
+  ocean_fishery_desc: "Coastal crews work small boats, nets, curing barrels, and shore landings. They supply nearby markets from familiar waters. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   pp_ocean_fishery_base_catch: "Coastal Waters"
   pp_ocean_fishery_no_coastal_gear: "No Coastal Gear"
   pp_ocean_fishery_coastal_boats: "Coastal Boats"
@@ -6536,7 +6528,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
   offshore_fishery_slot_1: "Offshore Fleet"
   offshore_fishery_slot_2: "Provisioning"
   offshore_fishery: "Offshore Fishery"
-  offshore_fishery_desc: "Offshore fleets use herring busses, bank schooners, and later steam trawlers to reach richer waters. Salt, provisions, and gear keep the catch moving home."
+  offshore_fishery_desc: "Offshore fleets use herring busses, bank schooners, and later steam trawlers to reach richer waters. Salt, provisions, and gear keep the catch moving home. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   pp_offshore_fishery_base_catch: "Offshore Waters"
   pp_offshore_fishery_no_offshore_fleet: "No Offshore Fleet"
   pp_offshore_fishery_herring_busses: "Herring Busses"
@@ -6575,7 +6567,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
 
 # >>> eu5-building-pipeline:olive_farm:localization
   olive_farm: "Olive Grove"
-  olive_farm_desc: "Households prune and harvest olive trees on dry hillsides."
+  olive_farm_desc: "Households prune and harvest olive trees on dry hillsides. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   olive_farm_slot_0: "Groves"
   olive_farm_slot_1: "Cultivation"
   olive_farm_slot_2: "Provisioning"
@@ -6594,7 +6586,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
 
 # >>> eu5-building-pipeline:olive_farmstead:localization
   olive_farmstead: "Olive Farmstead"
-  olive_farmstead_desc: "Manured groves and a small press turn the harvest into stored oil."
+  olive_farmstead_desc: "Manured groves and a small press turn the harvest into stored oil. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   olive_farmstead_slot_0: "Groves"
   olive_farmstead_slot_1: "Cultivation"
   olive_farmstead_slot_2: "Provisioning"
@@ -6609,7 +6601,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
 
 # >>> eu5-building-pipeline:olive_rotations:localization
   olive_rotations: "Olive Estate"
-  olive_rotations_desc: "Grafted trees and tended terraces make the groves bear more evenly."
+  olive_rotations_desc: "Grafted trees and tended terraces make the groves bear more evenly. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   olive_rotations_slot_0: "Groves"
   olive_rotations_slot_1: "Cultivation"
   olive_rotations_slot_2: "Provisioning"
@@ -6626,7 +6618,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
 
 # >>> eu5-building-pipeline:olive_model_farm:localization
   olive_model_farm: "Olive Model Estate"
-  olive_model_farm_desc: "Beam presses, oil stores and hired hands work the groves as one managed estate."
+  olive_model_farm_desc: "Beam presses, oil stores and hired hands work the groves as one managed estate. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   olive_model_farm_slot_0: "Groves"
   olive_model_farm_slot_1: "Cultivation"
   olive_model_farm_slot_2: "Provisioning"
@@ -6768,7 +6760,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
 
 # >>> eu5-building-pipeline:pomological_orchard:localization
   pomological_orchard: "Grafted Orchard"
-  pomological_orchard_desc: "Grafted orchards use nursery stock, pruning, trellises, and cultivar records to raise more reliable fruit crops."
+  pomological_orchard_desc: "Grafted orchards use nursery stock, pruning, trellises, and cultivar records to raise more reliable fruit crops. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   pomological_orchard_slot_0: "Fruit Trees"
   pomological_orchard_slot_1: "Beekeeping"
   pomological_orchard_slot_2: "Grafted Rows"
@@ -6810,7 +6802,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
 
 # >>> eu5-building-pipeline:potato_farm:localization
   potato_farm: "Potato Field"
-  potato_farm_desc: "Households raise potatoes in spade-dug beds on poor and wet ground."
+  potato_farm_desc: "Households raise potatoes in spade-dug beds on poor and wet ground. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   potato_farm_slot_0: "Fields"
   potato_farm_slot_1: "Cultivation"
   potato_farm_slot_2: "Provisioning"
@@ -6829,7 +6821,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
 
 # >>> eu5-building-pipeline:potato_farmstead:localization
   potato_farmstead: "Potato Farmstead"
-  potato_farmstead_desc: "Manured ridges grow the crop and earth clamps keep the seed potatoes through winter."
+  potato_farmstead_desc: "Manured ridges grow the crop and earth clamps keep the seed potatoes through winter. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   potato_farmstead_slot_0: "Fields"
   potato_farmstead_slot_1: "Cultivation"
   potato_farmstead_slot_2: "Provisioning"
@@ -6844,7 +6836,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
 
 # >>> eu5-building-pipeline:potato_rotations:localization
   potato_rotations: "Potato Ridge Farm"
-  potato_rotations_desc: "Potatoes take turns with grain and fodder on ridges that drain well."
+  potato_rotations_desc: "Potatoes take turns with grain and fodder on ridges that drain well. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   potato_rotations_slot_0: "Fields"
   potato_rotations_slot_1: "Cultivation"
   potato_rotations_slot_2: "Provisioning"
@@ -6861,7 +6853,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
 
 # >>> eu5-building-pipeline:potato_model_farm:localization
   potato_model_farm: "Potato Model Farm"
-  potato_model_farm_desc: "Drilled ridges, planned clamps and field accounts raise potatoes on a larger managed farm."
+  potato_model_farm_desc: "Drilled ridges, planned clamps and field accounts raise potatoes on a larger managed farm. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   potato_model_farm_slot_0: "Fields"
   potato_model_farm_slot_1: "Cultivation"
   potato_model_farm_slot_2: "Provisioning"
@@ -6972,7 +6964,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
 
 # >>> eu5-building-pipeline:public_kitchen:localization
   public_kitchen: "Public Kitchen"
-  public_kitchen_desc: "A large town kitchen that feeds workers, the poor and the garrison from the farms' produce and sells meals and drink at its door. The more farm land the province works, the more kitchens it can hold. What it serves adds to the province's food, less food spoils while people eat it fresh, and a fed town is a calmer one."
+  public_kitchen_desc: "A large town kitchen at the [province_capital|e] that replaces the [ShowBuildingTypeName('cookshop')|e] and feeds workers and the poor; the more [Concept('pp_staple_foods', 'staple food')|e] farms and [ShowBuildingTypeName('victualling_yard')|e] levels the province has, the more levels its kitchens can have. It is almost always worth building: it adds food, makes the province's food consumption more efficient and keeps the town calmer."
   public_kitchen_slot_0: "Main Dish"
   public_kitchen_slot_1: "Drink"
   pp_public_kitchen: "Public Kitchens"
@@ -7165,7 +7157,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
 
 # >>> eu5-building-pipeline:rice_farm:localization
   rice_farm: "Rice Paddy"
-  rice_farm_desc: "Households sow and transplant rice on flooded or well-watered plots."
+  rice_farm_desc: "Households sow and transplant rice on flooded or well-watered plots. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   rice_farm_slot_0: "Paddies"
   rice_farm_slot_1: "Cultivation"
   rice_farm_slot_2: "Provisioning"
@@ -7184,7 +7176,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
 
 # >>> eu5-building-pipeline:rice_farmstead:localization
   rice_farmstead: "Rice Farmstead"
-  rice_farmstead_desc: "Earth bunds and wooden sluices hold water on the paddies through the season."
+  rice_farmstead_desc: "Earth bunds and wooden sluices hold water on the paddies through the season. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   rice_farmstead_slot_0: "Paddies"
   rice_farmstead_slot_1: "Cultivation"
   rice_farmstead_slot_2: "Provisioning"
@@ -7199,7 +7191,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
 
 # >>> eu5-building-pipeline:rice_rotations:localization
   rice_rotations: "Rice Paddy Estate"
-  rice_rotations_desc: "Bunded paddies carry more than one crop of rice in a year."
+  rice_rotations_desc: "Bunded paddies carry more than one crop of rice in a year. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   rice_rotations_slot_0: "Paddies"
   rice_rotations_slot_1: "Cultivation"
   rice_rotations_slot_2: "Provisioning"
@@ -7216,7 +7208,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
 
 # >>> eu5-building-pipeline:rice_model_farm:localization
   rice_model_farm: "Rice Model Farm"
-  rice_model_farm_desc: "Levelled paddies, planned channels and hired hands raise rice on a large managed estate."
+  rice_model_farm_desc: "Levelled paddies, planned channels and hired hands raise rice on a large managed estate. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   rice_model_farm_slot_0: "Paddies"
   rice_model_farm_slot_1: "Cultivation"
   rice_model_farm_slot_2: "Provisioning"
@@ -7481,7 +7473,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   pp_hurdled_sheepcotes_provision: "Provision with Mutton"
   pp_hurdled_sheepcotes_provision_desc: "The household buys its own sheep back and cooks for the province. The lower the province store is, the more food it makes of it."
   hurdled_sheepcotes: "Hurdled Sheepcotes"
-  hurdled_sheepcotes_desc: "Hurdled sheepcotes use portable pens, shelter, and managed folding to keep flocks closer to useful pasture and fallow fields."
+  hurdled_sheepcotes_desc: "Hurdled sheepcotes use portable pens, shelter, and managed folding to keep flocks closer to useful pasture and fallow fields. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   pp_foldcourse_husbandry: "Foldcourse Husbandry"
   pp_foldcourse_husbandry_desc: "Portable hurdles, sheltered sheepcotes, and managed breeding let shepherds gather steadier wool clips before full enclosure."
   pp_hurdled_sheepcotes_base_wool: "Wool Pasture"
@@ -7500,7 +7492,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   pp_enclosed_sheep_walks_provision: "Provision with Mutton"
   pp_enclosed_sheep_walks_provision_desc: "The household buys its own sheep back and cooks for the province. The lower the province store is, the more food it makes of it."
   enclosed_sheep_walks: "Enclosed Sheep Walks"
-  enclosed_sheep_walks_desc: "Enclosed sheep walks gather pasture, shearing sheds, wool sorting, and flock records into a larger pastoral estate."
+  enclosed_sheep_walks_desc: "Enclosed sheep walks gather pasture, shearing sheds, wool sorting, and flock records into a larger pastoral estate. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   pp_enclosed_sheep_walks: "Sheep Enclosure"
   pp_enclosed_sheep_walks_base_wool: "Wool Pasture"
   pp_enclosed_sheep_walks_desc: "Enclosure, flock records, shearing sheds, and improved husbandry move more wool through organized pasture."
@@ -8201,7 +8193,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
 
 # >>> eu5-building-pipeline:tavern:localization
   tavern: "Tavern"
-  tavern_desc: "Buys [ShowGoodsName('victuals')|e] from the goods market and serves them to the province as [ShowGoodsName('local_food')|e]. Every province capital may keep one. Its food is worth more the lower the province store is, so it stops serving once the store is filled, and its rooms and stables help armies on the march."
+  tavern_desc: "Brings the trade good [ShowGoodsName('victuals')|e] into the province and turns them into [ShowGoodsName('local_food')|e]; every [province_capital|e] can build one. It works best where the province cannot grow enough food itself and victuals are cheap."
   tavern_slot_0: "Serving"
   tavern_slot_1: "Common Table"
   pp_tavern_serve_victuals: "Serve Victuals"
@@ -8434,7 +8426,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
 
 # >>> eu5-building-pipeline:victualling_yard:localization
   victualling_yard: "Victualling Yard"
-  victualling_yard_desc: "The merchants' victualling house of a great harbour. It ships in grain, dried pulses, salt fish and salt beef from the wider market and packs it into [ShowGoodsName('victuals')|e] for the fleets and the markets beyond, without touching the province store. Only good harbours and the great river ports can hold one, and each further level costs much more; elsewhere the [ShowBuildingTypeName('grange')|e] sends the surplus overland."
+  victualling_yard_desc: "The best way to make [ShowGoodsName('victuals')|e]: merchants buy [Concept('pp_staple_foods', 'staple foods')|e] on the market and pack them into victuals for shipping, without touching the province's [Concept('provincial_food', 'food store')|e]. It can only be built in a good [Concept('natural_harbor_suitability', 'natural harbour')|e] or a [market_center|e], and harbours hold the most levels."
   victualling_yard_slot_0: "Food Shipments"
   victuals_trade_construction: "Victuals Trade Construction"
   pp_victualling_yard_grain_shipment: "Grain Shipment"
@@ -8740,7 +8732,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
 
 # >>> eu5-building-pipeline:wheat_farm:localization
   wheat_farm: "Wheat Farm"
-  wheat_farm_desc: "Peasant households plough and sow wheat on the open village fields."
+  wheat_farm_desc: "Peasant households plough and sow wheat on the open village fields. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   wheat_farm_slot_0: "Fields"
   wheat_farm_slot_1: "Cultivation"
   wheat_farm_slot_2: "Provisioning"
@@ -8759,7 +8751,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
 
 # >>> eu5-building-pipeline:wheat_farmstead:localization
   wheat_farmstead: "Wheat Farmstead"
-  wheat_farmstead_desc: "Manure yards, seed stores and granaries keep the wheat fields in good heart."
+  wheat_farmstead_desc: "Manure yards, seed stores and granaries keep the wheat fields in good heart. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   wheat_farmstead_slot_0: "Fields"
   wheat_farmstead_slot_1: "Cultivation"
   wheat_farmstead_slot_2: "Provisioning"
@@ -8776,7 +8768,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
 
 # >>> eu5-building-pipeline:wheat_rotations:localization
   wheat_rotations: "Wheat Rotation Farm"
-  wheat_rotations_desc: "Clover and pulse leys take turns with the wheat so the fields rest without lying bare."
+  wheat_rotations_desc: "Clover and pulse leys take turns with the wheat so the fields rest without lying bare. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   wheat_rotations_slot_0: "Fields"
   wheat_rotations_slot_1: "Cultivation"
   wheat_rotations_slot_2: "Provisioning"
@@ -8799,7 +8791,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
 
 # >>> eu5-building-pipeline:wheat_model_farm:localization
   wheat_model_farm: "Wheat Model Farm"
-  wheat_model_farm_desc: "Surveyed fields, seed drills and hired hands raise wheat on a larger managed farm."
+  wheat_model_farm_desc: "Surveyed fields, seed drills and hired hands raise wheat on a larger managed farm. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   wheat_model_farm_slot_0: "Fields"
   wheat_model_farm_slot_1: "Cultivation"
   wheat_model_farm_slot_2: "Provisioning"

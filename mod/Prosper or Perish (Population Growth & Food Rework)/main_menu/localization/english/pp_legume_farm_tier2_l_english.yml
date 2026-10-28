@@ -2,7 +2,7 @@
 
 # >>> eu5-building-pipeline:legume_rotations:localization
   legume_rotations: "Pulse Rotation Farm"
-  legume_rotations_desc: "Pulses move through the rotation and leave the soil richer for the grain that follows."
+  legume_rotations_desc: "Pulses move through the rotation and leave the soil richer for the grain that follows. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   legume_rotations_slot_0: "Fields"
   legume_rotations_slot_1: "Beekeeping"
   legume_rotations_slot_2: "Cultivation"

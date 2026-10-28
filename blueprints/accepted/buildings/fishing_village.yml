@@ -217,6 +217,7 @@ advancements:
       ai_weight = { add = 50 }
 localization:
   entries:
+    fishing_village_desc: "Water is the source of life, and thus it is full of life. It is not uncommon for whole villages to be able to develop on any shore by taking advantage of such plentiful environment, and for people there to make their living out of any water creature they can capture. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     fishing_village_slot_0: Fishing grounds
     fishing_village_slot_1: Fishing method
     fishing_village_slot_2: Freshwater Works

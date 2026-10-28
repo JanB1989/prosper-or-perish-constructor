@@ -136,7 +136,7 @@ building:
 localization:
   entries:
     millet_farm: Millet Farm
-    millet_farm_desc: Households sow millet on light and dry soils that suit little else.
+    millet_farm_desc: Households sow millet on light and dry soils that suit little else. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market.
     millet_farm_slot_0: Fields
     millet_farm_slot_1: Cultivation
     millet_farm_slot_2: Provisioning

@@ -248,6 +248,9 @@
   of salt; colonial nations lose their camel bonus) and the Maghreb palm groves and the English royal forest at
   reference size (one-level specials without a base slot). `tests/test_staple_foods.py` pins the list, the makers (Provision,
   tag, counters), the curve factors, the bulk shares, the Yard's salt beef and the Cookshop cap's Yard term.
+- Every staple food maker's description ends with one sentence, `provisioning.STORE_DESC` (2026-10-28, Jan: a high
+  store means more goods for the market, a low one more Province Food): crop_farms.py appends it to the tiers, the
+  other makers carry it in their blueprints, `tests/test_staple_foods.py` checks all of them.
 - The crop farm tier advances' `crop_farm_output` (was `staple_output`) stays on the crop farm goods: farming advances.
 
 ## Logistics

@@ -81,6 +81,14 @@ def test_every_staple_food_maker_provisions_counts_and_is_staffed_as_food() -> N
     assert set(provisioning.PROVISIONED_GOOD_BY_BUILDING.values()) == set(staple_foods.staple_foods())
 
 
+def test_every_staple_food_maker_says_what_the_store_does() -> None:
+    """Every staple food maker's description ends with the one store sentence (Jan, 2026-10-28): a high store means
+    more goods for the market, a low one more Province Food."""
+    for building in provisioning.PROVISIONING_BUILDINGS:
+        raw = yaml.safe_load((BLUEPRINTS / f"{building}.yml").read_text(encoding="utf-8-sig"))
+        assert raw["localization"]["entries"][f"{building}_desc"].endswith(f" {provisioning.STORE_DESC}"), building
+
+
 def test_every_staple_food_is_on_the_store_curve() -> None:
     config = stored_food.load_config(PROJECT)
     assert config.staple_goods == staple_foods.staple_foods()

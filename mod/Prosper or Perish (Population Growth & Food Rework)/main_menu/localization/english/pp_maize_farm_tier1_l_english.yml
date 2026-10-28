@@ -2,7 +2,7 @@
 
 # >>> eu5-building-pipeline:maize_farmstead:localization
   maize_farmstead: "Maize Farmstead"
-  maize_farmstead_desc: "Manure feeds the maize fields and slatted cribs keep the harvest dry."
+  maize_farmstead_desc: "Manure feeds the maize fields and slatted cribs keep the harvest dry. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   maize_farmstead_slot_0: "Fields"
   maize_farmstead_slot_1: "Cultivation"
   maize_farmstead_slot_2: "Provisioning"

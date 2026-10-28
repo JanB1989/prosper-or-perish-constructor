@@ -239,6 +239,7 @@ advancements:
         }
 localization:
   entries:
+    forest_village_desc: "Forests and the wild lands are not as inhospitable as one might think, for their lands are plentiful in animals that can be hunted, both for their meat and their hides. As such, people are usually eager to settle near any forest with abundant animal life they can exploit. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     forest_village_slot_0: Forest Resources
     forest_village_slot_1: Forest Work
     forest_village_slot_2: Provisioning

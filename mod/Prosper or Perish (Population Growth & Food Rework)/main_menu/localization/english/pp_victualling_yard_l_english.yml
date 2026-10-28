@@ -2,7 +2,7 @@
 
 # >>> eu5-building-pipeline:victualling_yard:localization
   victualling_yard: "Victualling Yard"
-  victualling_yard_desc: "The merchants' victualling house of a great harbour. It ships in grain, dried pulses, salt fish and salt beef from the wider market and packs it into [ShowGoodsName('victuals')|e] for the fleets and the markets beyond, without touching the province store. Only good harbours and the great river ports can hold one, and each further level costs much more; elsewhere the [ShowBuildingTypeName('grange')|e] sends the surplus overland."
+  victualling_yard_desc: "The best way to make [ShowGoodsName('victuals')|e]: merchants buy [Concept('pp_staple_foods', 'staple foods')|e] on the market and pack them into victuals for shipping, without touching the province's [Concept('provincial_food', 'food store')|e]. It can only be built in a good [Concept('natural_harbor_suitability', 'natural harbour')|e] or a [market_center|e], and harbours hold the most levels."
   victualling_yard_slot_0: "Food Shipments"
   victuals_trade_construction: "Victuals Trade Construction"
   pp_victualling_yard_grain_shipment: "Grain Shipment"

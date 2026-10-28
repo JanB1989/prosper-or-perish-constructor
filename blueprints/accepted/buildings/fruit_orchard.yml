@@ -133,6 +133,7 @@ building:
         }
 localization:
   entries:
+    fruit_orchard_desc: "Fruits are a bountiful gift from nature, providing our population with a bountiful source of food. Orchards would serve as a steady production of fruit, fulfilling the needs of our people. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     fruit_orchard_slot_0: Fruit Trees
     fruit_orchard_slot_1: Beekeeping
     fruit_orchard_slot_2: Orchard Work

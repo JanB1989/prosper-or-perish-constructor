@@ -967,8 +967,8 @@
                                                                 blockoverride "item_link" { raw_text = "[ShowGoodsName('local_food')|e]" }
                                                             }
                                                         }
-                                                        blockoverride "entry_title" { text = "PP_EU_PROD_COOKSHOPS" }
-                                                        blockoverride "entry_text" { text = "PP_EU_PROD_COOKSHOPS_DESC" }
+                                                        blockoverride "entry_title" { text = "cookshop" }
+                                                        blockoverride "entry_text" { text = "cookshop_desc" }
                                                     }
                                                     pp_eu_entry = {
                                                         blockoverride "entry_icons" {
@@ -987,8 +987,8 @@
                                                                 blockoverride "item_link" { raw_text = "[ShowGoodsName('victuals')|e]" }
                                                             }
                                                         }
-                                                        blockoverride "entry_title" { text = "PP_EU_PROD_GRANGES" }
-                                                        blockoverride "entry_text" { text = "PP_EU_PROD_GRANGES_DESC" }
+                                                        blockoverride "entry_title" { text = "grange" }
+                                                        blockoverride "entry_text" { text = "grange_desc" }
                                                     }
                                                     pp_eu_entry = {
                                                         blockoverride "entry_icons" {
@@ -1007,8 +1007,8 @@
                                                                 blockoverride "item_link" { raw_text = "[ShowGoodsName('victuals')|e]" }
                                                             }
                                                         }
-                                                        blockoverride "entry_title" { text = "PP_EU_PROD_YARDS" }
-                                                        blockoverride "entry_text" { text = "PP_EU_PROD_YARDS_DESC" }
+                                                        blockoverride "entry_title" { text = "victualling_yard" }
+                                                        blockoverride "entry_text" { text = "victualling_yard_desc" }
                                                     }
                                                     pp_eu_entry = {
                                                         blockoverride "entry_icons" {
@@ -1027,8 +1027,8 @@
                                                                 blockoverride "item_link" { raw_text = "[ShowGoodsName('local_food')|e]" }
                                                             }
                                                         }
-                                                        blockoverride "entry_title" { text = "PP_EU_PROD_TAVERNS" }
-                                                        blockoverride "entry_text" { text = "PP_EU_PROD_TAVERNS_DESC" }
+                                                        blockoverride "entry_title" { text = "tavern" }
+                                                        blockoverride "entry_text" { text = "tavern_desc" }
                                                     }
                                                 }
                                             }

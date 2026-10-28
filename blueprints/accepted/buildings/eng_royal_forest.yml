@@ -102,6 +102,7 @@ building:
     increase_per_level_cost = 0.14
 localization:
   entries:
+    eng_royal_forest_desc: "The Charter of the Forest allows great hunting preserves to fall under the direct control of the Crown. A 'forest' in this sense is not necessarily heavily-wooded: just good for hunting. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     eng_royal_forest_slot_0: '[ShowBuildingTypeName(''eng_royal_forest'')|e] Work'
     eng_royal_forest_slot_1: Provisioning
     eng_royal_forest_slot_2: Market

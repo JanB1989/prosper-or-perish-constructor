@@ -5,7 +5,7 @@
   province_food_sales: "Surplus Sales"
   province_food_sales_desc: "What the [ShowBuildingTypeName('grange')|e] earns from a full province store: the fuller the store, the more it earns, and once the store runs low, nothing. A working [ShowBuildingTypeName('tavern')|e] in the same place takes it away, so a [ShowBuildingTypeName('grange')|e] packs only food its province can spare. You can otherwise ignore it."
   local_food: "Province Food"
-  local_food_desc: "Meals eaten where they are made. Province Food feeds the province that produces it and never leaves it. Farms, fisheries and orchards choose whether to provision their province or sell their surplus; the [ShowBuildingTypeName('cookshop')|e] and the [ShowBuildingTypeName('public_kitchen')|e] always serve it."
+  local_food_desc: "Meals eaten where they are made. Province Food feeds the province that produces it and never leaves it. [Concept('pp_staple_foods', 'Staple food')|e] farms, fisheries and orchards make more of it while the province's [Concept('provincial_food', 'food store')|e] is low and more goods for the market while it is high; the [ShowBuildingTypeName('cookshop')|e] and the [ShowBuildingTypeName('public_kitchen')|e] always serve it."
   manual_labor: "Manual Labor"
   manual_labor_desc: "The work of hired hands. Idle [ShowPopTypeName('peasants')] supply it to their own [market|e], and nearly every building pays part of its costs in it. It never leaves its market, so its price is the local wage: cheap where hands are plentiful, dear where towns crowd a market, and there buildings switch to methods that need fewer hands."
   offset: "Offset"

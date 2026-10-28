@@ -145,7 +145,7 @@ building:
 localization:
   entries:
     maize_rotations: Maize Rotation Farm
-    maize_rotations_desc: Ploughed rows and bean rotations raise more maize from the same fields.
+    maize_rotations_desc: Ploughed rows and bean rotations raise more maize from the same fields. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market.
     maize_rotations_slot_0: Fields
     maize_rotations_slot_1: Cultivation
     maize_rotations_slot_2: Provisioning

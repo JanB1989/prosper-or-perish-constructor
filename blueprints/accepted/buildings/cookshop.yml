@@ -344,7 +344,7 @@ localization:
   entries:
     cookshop: Cookshop
     pp_cookshop_price: "[ShowBuildingTypeName('cookshop')|e] Price"
-    cookshop_desc: A street kitchen that cooks a little of the farms' produce into hot meals and sells them with a drink at its door. Only the province capital builds them, and the more farm land the province works, the more kitchens it can hold. What it serves adds to the province's food, and less food spoils while people eat it fresh.
+    cookshop_desc: "A street kitchen at the [province_capital|e] that cooks the farms' produce into hot meals; the more [Concept('pp_staple_foods', 'staple food')|e] farms and [ShowBuildingTypeName('victualling_yard')|e] levels the province has, the more levels its kitchens can have. It is almost always worth building: it adds food and makes the province's food consumption more efficient."
     cookshop_slot_0: Main Dish
     cookshop_slot_1: Drink
     pp_cookshop_beer: Beer

@@ -129,7 +129,7 @@ building:
 localization:
   entries:
     legume_model_farm: Legume Model Farm
-    legume_model_farm_desc: Drilled pulse rows and seed ledgers raise legumes on a larger managed farm.
+    legume_model_farm_desc: Drilled pulse rows and seed ledgers raise legumes on a larger managed farm. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market.
     legume_model_farm_slot_0: Fields
     legume_model_farm_slot_1: Cultivation
     legume_model_farm_slot_2: Provisioning

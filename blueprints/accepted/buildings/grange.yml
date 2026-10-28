@@ -182,7 +182,7 @@ advancements:
 localization:
   entries:
     grange: Grange
-    grange_desc: The landowners gather the lasting part of a full province store at the province capital, pack it into [ShowGoodsName('victuals')|e] and send it overland to the regional markets. It pays off when the province store is full, and the dearer victuals are, the more of the store it is willing to pack; carts and wagons save labour where it is dear, and packing goods waste less of the food.
+    grange_desc: "When the province has a lot of food in its [Concept('provincial_food', 'food store')|e], the landowners at its [province_capital|e] pack that [ShowGoodsName('local_food')|e] into [ShowGoodsName('victuals')|e] and sell them on the market. The dearer victuals are, the more of the store they pack."
     grange_slot_0: Packing
     grange_slot_1: Haulage
     grange_slot_2: Surplus Sales

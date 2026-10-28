@@ -2,7 +2,7 @@
 
 # >>> eu5-building-pipeline:managed_forest_village:localization
   managed_forest_village: "Managed Forest Village"
-  managed_forest_village_desc: "Managed forest villages use ordinances, marked stands, and recorded rights to organize woodland work. Hides, game, fur, and wax move through the same forest yards."
+  managed_forest_village_desc: "Managed forest villages use ordinances, marked stands, and recorded rights to organize woodland work. Hides, game, fur, and wax move through the same forest yards. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   managed_forest_village_slot_0: "Managed Forest"
   managed_forest_village_slot_1: "Forest Work"
   managed_forest_village_slot_2: "Provisioning"

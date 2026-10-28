@@ -2,7 +2,7 @@
 
 # >>> eu5-building-pipeline:net_curing_yard:localization
   net_curing_yard: "Net and Curing Yard"
-  net_curing_yard_desc: "Net and curing yards gather hemp nets, salting tables, drying racks, and small stores so village fishers can preserve more catch."
+  net_curing_yard_desc: "Net and curing yards gather hemp nets, salting tables, drying racks, and small stores so village fishers can preserve more catch. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   net_curing_yard_slot_0: "Fishing Grounds"
   net_curing_yard_slot_1: "Fishing Method"
   net_curing_yard_slot_2: "Freshwater Works"

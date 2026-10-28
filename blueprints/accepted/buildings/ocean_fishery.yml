@@ -120,7 +120,7 @@ localization:
     ocean_fishery_slot_1: Coastal Gear
     ocean_fishery_slot_2: Provisioning
     ocean_fishery: Coastal Fishery
-    ocean_fishery_desc: Coastal crews work small boats, nets, curing barrels, and shore landings. They supply nearby markets from familiar waters.
+    ocean_fishery_desc: "Coastal crews work small boats, nets, curing barrels, and shore landings. They supply nearby markets from familiar waters. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     pp_ocean_fishery_base_catch: Coastal Waters
     pp_ocean_fishery_no_coastal_gear: No Coastal Gear
     pp_ocean_fishery_coastal_boats: Coastal Boats

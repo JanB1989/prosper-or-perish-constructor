@@ -2,7 +2,7 @@
 
 # >>> eu5-building-pipeline:millet_model_farm:localization
   millet_model_farm: "Millet Model Farm"
-  millet_model_farm_desc: "Drilled rows, horse teams and field accounts raise millet on a larger managed farm."
+  millet_model_farm_desc: "Drilled rows, horse teams and field accounts raise millet on a larger managed farm. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   millet_model_farm_slot_0: "Fields"
   millet_model_farm_slot_1: "Cultivation"
   millet_model_farm_slot_2: "Provisioning"

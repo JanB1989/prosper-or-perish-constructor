@@ -8,7 +8,7 @@
   pp_enclosed_sheep_walks_provision: "Provision with Mutton"
   pp_enclosed_sheep_walks_provision_desc: "The household buys its own sheep back and cooks for the province. The lower the province store is, the more food it makes of it."
   enclosed_sheep_walks: "Enclosed Sheep Walks"
-  enclosed_sheep_walks_desc: "Enclosed sheep walks gather pasture, shearing sheds, wool sorting, and flock records into a larger pastoral estate."
+  enclosed_sheep_walks_desc: "Enclosed sheep walks gather pasture, shearing sheds, wool sorting, and flock records into a larger pastoral estate. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   pp_enclosed_sheep_walks: "Sheep Enclosure"
   pp_enclosed_sheep_walks_base_wool: "Wool Pasture"
   pp_enclosed_sheep_walks_desc: "Enclosure, flock records, shearing sheds, and improved husbandry move more wool through organized pasture."

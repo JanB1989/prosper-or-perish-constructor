@@ -133,7 +133,7 @@ building:
 localization:
   entries:
     potato_farmstead: Potato Farmstead
-    potato_farmstead_desc: Manured ridges grow the crop and earth clamps keep the seed potatoes through winter.
+    potato_farmstead_desc: Manured ridges grow the crop and earth clamps keep the seed potatoes through winter. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market.
     potato_farmstead_slot_0: Fields
     potato_farmstead_slot_1: Cultivation
     potato_farmstead_slot_2: Provisioning

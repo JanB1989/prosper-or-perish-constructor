@@ -2,7 +2,7 @@
 
 Prosper or Perish 0.10 Land and Larder
 
-This release is compatible with EU5 1.4.
+This release is compatible with EU5 1.4.5 and works with or without the Across the Pillars DLC.
 
 This is a major update and is not save compatible, so I recommend starting a new campaign.
 

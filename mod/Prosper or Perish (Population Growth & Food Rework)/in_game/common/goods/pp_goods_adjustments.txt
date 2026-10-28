@@ -168,7 +168,7 @@ TRY_INJECT:dyes = {
 	transport_cost = 1
 }
 TRY_INJECT:lumber = {
-	ai_rgo_expansion_priority = 0 # vanilla > 0 skips the AI's profit-margin gate for every producer (2026-10-09)
+	ai_rgo_expansion_priority = 0.025 # vanilla; on again 2026-10-28 (Jan): the AI values producers more where it is short, producers skip the profit-margin gate
 	block_rgo_upgrade = yes
 	default_market_price = 1.75 # 1.5
 	transport_cost = 1
@@ -190,7 +190,7 @@ TRY_INJECT:coal = {
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:iron = {
-	ai_rgo_expansion_priority = 0 # vanilla > 0 skips the AI's profit-margin gate for every producer (2026-10-09)
+	ai_rgo_expansion_priority = 0.025 # vanilla; on again 2026-10-28 (Jan): the AI values producers more where it is short, producers skip the profit-margin gate
 	block_rgo_upgrade = yes
 	default_market_price = 3.5 # 3.0
 	transport_cost = 1

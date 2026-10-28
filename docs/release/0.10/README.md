@@ -41,8 +41,8 @@ Drafts, written 2026-10-28. Nothing here is posted yet.
 1. **Release name:** "Land and Larder" is a placeholder in the style of "Foundations" and "Provisioning".
 2. **Discord invite:** the Workshop page uses `discord.gg/HgFd69Sv83`, the 0.9 GitHub release `discord.gg/WVrSnfuW`; the
    drafts use the first. Check that it still works.
-3. **Launcher text:** `short_description` in `.metadata/metadata.json` still holds the 0.8 description, cut off mid-word.
-   A one-line replacement: *A food, land and population overhaul: stored food drives growth, arable land limits
-   farms, harvests swing, and great rivers carry ships inland.*
+3. **Launcher text (done 2026-10-28):** `short_description` in `.metadata/metadata.json` held the 0.8 description, cut
+   off mid-word; it is now the one-liner *A food, land and population overhaul: stored food drives growth, arable land
+   limits farms, harvests swing, and great rivers carry ships inland.*
 4. **Release steps:** the release checklist in `AGENTS.md` (validation, merge into `main`, final sync, tag, release).
    `main` is at 0.9.1 and fast-forwards to `0.10`.

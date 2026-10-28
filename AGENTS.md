@@ -379,7 +379,7 @@
 - Shared land (2026-10-28, Jan, branch `improvement-room-farm-caps`, tested in game): the engine counts a building's own
   levels under construction against its max level, but not another farm's, so two farms could start levels on the same
   free land (Sanlorenzo 1554: Cattle Farm 21/25 and Horse Breeders 13/17 on land for 4 levels). Every farm max has the
-  row "Other Farms under construction": the land of the farm levels under construction in the location outside the
+  row "Farm Land Usage of other farms under construction": the land of the farm levels under construction in the location outside the
   farm's own upgrade line (`pp_farm_land_queued_outside_<line>`, `building_levels_under_construction` stepped to 5 per
   building, land classes as scripted triggers `pp_farm_land_class_<land>`), only where land is free (a construction
   never lowers a cap below the standing levels). The townsfolk capacity reads `pp_subsistence_land` at its applied
@@ -460,13 +460,21 @@
 - Explain what the player should understand and where to inspect effects; let modifiers carry exact changing numbers.
 - When a linked modifier or concept tooltip already displays food-storage modifier effects, do not restate those values in Europedia prose.
 - Player-facing names of the population capacity (Jan, 2026-10-10): **Arable Land** (the total: what a location's land
-  can feed, in people; farms take from it, improvements and buildings add to it); its states **Abundant Arable Land**
+  can feed, in people; farms take from it, improvements add to it); its states **Abundant Arable Land**
   (`abundant_free_land`), **Available Arable Land** (`available_free_land`), **Overused Arable Land** (`overpopulation`);
-  the World Builder baseline is **Natural Arable Land**. Engine and script keys stay. Link Arable Land in text with
-  `[population_capacity|e]` (vanilla concept, no prefix; its description, in `localization/replace`, is also the Arable
-  Land card's lead). "Subsistence Land", "Farmland" (as a capacity term), "Free Land", "Overpopulation"
-  and "Settled Land" are retired; `tests/test_europedia_style.py` fails if they come back. State icons:
+  the location's own land (World Builder baseline, the land panel's tooltip row) is **Natural Arable Land**, one concept
+  (`pp_location_potential`, hand-kept; "Location's Land" merged into it 2026-10-28). Engine and script keys stay. Link
+  Arable Land in text with `[population_capacity|e]` (vanilla concept, no prefix; its description, in
+  `localization/replace`, is also the Arable Land card's lead). "Farmland" (as a capacity term), "Free Land",
+  "Overpopulation" and "Settled Land" are retired; `tests/test_europedia_style.py` fails if they come back. State icons:
   `tools/build_arable_land_icons.py`.
+- The location view's land panel (`arable_land_bar.py`, names 2026-10-28, Jan): the top bar is the **Land Usage**
+  (`[Concept('population', 'Land Usage')|E]`) = **Urban Land** (`pp_townsfolk`: everyone but the subsistence
+  peasants; brings its own capacity) + **Subsistence Land** (`pp_subsistence_peasants`, also the static modifier
+  `pp_subsistence_land`); the bottom bar the **Land Capacity** (`[Concept('population_capacity', 'Land Capacity')|E]`)
+  = Urban Land + **Free Arable Land**, then past its end **Farm Land Usage** (`pp_farm_land`) and **Unimproved Land**
+  (links Land Improvements). The land states' one-line definitions (`PP_LAND_CHIP_*`, chip and tooltip) read Land Usage
+  against Land Capacity. The legend is one unwrapped line: keep it within the panel's 546 px (game font, 12 px).
 - One thing, one entry, one text (Jan, 2026-10-28): the text sits on the game object (a good's or building's `_desc`,
   `STATIC_MODIFIER_DESC_`, a situation's `_desc`, a vanilla concept's desc in `localization/replace`) and links open
   the object; never a "P&P:" concept beside it. A Europedia card shows its object's own name and text

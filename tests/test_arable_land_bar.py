@@ -119,7 +119,7 @@ def test_subsistence_peasants_are_one_part_and_the_ones_over_capacity_are_marked
     assert over_row.startswith('TooltipTableField = { blockoverride "visibility" { visible = "[GreaterThan_float(Max_float(Subtract_float(')
     assert over_row.index("progress_bar_yellow.dds") < over_row.index("progress_bar_red.dds")   # swatch: the mark on yellow
     assert at > panel.index('text = "PP_LAND_BAR_TT_TOTAL"')                                    # under the total
-    assert "Over the [population_capacity|e]" == alb.LOC_TEXT["PP_LAND_BAR_TT_OVER"]
+    assert "Over the [Concept('population_capacity', 'Land Capacity')|e]" == alb.LOC_TEXT["PP_LAND_BAR_TT_OVER"]
 
 
 def test_threshold_lines_cross_both_bars_at_a_tenth_of_the_capacity_and_at_the_capacity():
@@ -166,8 +166,10 @@ def test_tooltip_ends_with_one_line_per_land_state_shared_with_the_chips():
         # a link with the chip's title, then the chip's own one-line definition
         assert alb.LOC_TEXT[f"PP_LAND_BAR_TT_DEF_{key.upper()}"] == f"[ShowModifier('{modifier}')]: ${chip}$"
         assert f'{chip}_TITLE: "{name}"' in status
-        assert re.search(rf'(?m)^\s*{chip}: "\[population\|E\] [^"]*\[population_capacity\|e\][^"]*"$', status)
-    assert "at most 10% of the [population_capacity|e] and below 10,000 people" in status
+        # in the panel's words (2026-10-28, Jan): the Land Usage against the Land Capacity
+        assert re.search(rf'(?m)^\s*{chip}: "{re.escape(alb.LAND_USAGE)} [^"]*\[{re.escape(alb.LAND_CAPACITY)}\|e\][^"]*"$',
+                         status)
+    assert f"at most 10% of the [{alb.LAND_CAPACITY}|e] and below 10,000 people" in status
     assert tooltip.index("PP_LAND_BAR_TT_DEF_ABUNDANT") > tooltip.index('"PP_LAND_BAR_CAPACITY"')
 
 
@@ -176,7 +178,7 @@ def test_every_row_label_is_a_concept_link_with_its_own_entry():
     rows = re.findall(r'layoutpolicy_horizontal = expanding align = left\|nobaseline text = "(\w+)"', tooltip)
     labels = [key for key in rows if key != "PP_LAND_BAR_TT_TOTAL"]
     assert len(labels) == 8   # townsfolk, subsistence, over | townsfolk, land, improvements, farms, room
-    link = re.compile(r"\[(\w+)\|[eE]\]|\[Concept\('(\w+)', '[^']+'\)\|e\]")
+    link = re.compile(r"\[(\w+)\|[eE]\]|\[Concept\('(\w+)', '[^']+'\)\|[eE]\]")
     vanilla = _game()
     known: set[str] = set()   # concept keys and their aliases, the mod's and the game's
     for path in sorted((MOD_ROOT / "main_menu/common/game_concepts").glob("*.txt")) + (
@@ -184,7 +186,7 @@ def test_every_row_label_is_a_concept_link_with_its_own_entry():
         text = path.read_text(encoding="utf-8-sig")
         known |= set(re.findall(r"(?m)^﻿?(\w+) = \{", text))
         known |= {word for alias in re.findall(r"alias = \{([^}]*)\}", text) for word in alias.split()}
-    assert {"pp_townsfolk", "population", "population_capacity", "buildings", "employment"} <= known
+    assert {"pp_townsfolk", "population", "population_capacity", "buildings", "employment", "pp_location_potential"} <= known
     for key in set(labels) | {"PP_LAND_BAR_LAND", "PP_LAND_BAR_POPULATION", "PP_LAND_BAR_CAPACITY"}:
         found = link.findall(alb.LOC_TEXT[key])
         assert found, key
@@ -213,8 +215,18 @@ def test_new_concepts_have_a_family_an_icon_a_name_and_a_short_text():
         assert not re.search(r"\d", re.sub(r"\[[^\]]*\]", "", text).replace(" 1 ", " ").replace(" 1.", "."))
         assert "room" not in text
     # every concept a text names is a link; each text links the concepts it builds on
-    links = set(re.findall(r"\[(\w+)\|[eE]\]", " ".join(text for _, _, text in alb.CONCEPT_TEXT.values())))
-    assert {"pp_subsistence_peasants", "population_capacity", "employment", "location_rank", "buildings"} <= links
+    texts = " ".join(text for _, _, text in alb.CONCEPT_TEXT.values())
+    links = set(re.findall(r"\[(\w+)\|[eE]\]", texts)) | set(re.findall(r"\[Concept\('(\w+)'", texts))
+    assert {"pp_subsistence_peasants", "population_capacity", "employment", "buildings"} <= links
+    # the bars' parts in the panel's words (2026-10-28, Jan); the location's own land is the one Natural Arable Land
+    # concept (pp_location_potential, hand-kept), no second entry for it
+    assert [name for _, name, _ in alb.CONCEPT_TEXT.values()] == [
+        "Urban Land", "Subsistence Land", "Land Improvements", "Farm Land Usage"]
+    assert "pp_location_land" not in alb.CONCEPT_TEXT and "pp_location_land" not in loc
+    assert alb.LOC_TEXT["PP_LAND_BAR_TT_NATURAL"] == "[pp_location_potential|e]"
+    potential = (MOD_ROOT / "main_menu/localization/english/pp_europedia_l_english.yml").read_text(encoding="utf-8-sig")
+    assert 'game_concept_pp_location_potential: "Natural Arable Land"' in potential
+    assert "[location_rank|e]" in re.search(r'game_concept_pp_location_potential_desc: "([^"]*)"', potential).group(1)
 
 
 def _block(text: str, name: str) -> str:

@@ -7109,7 +7109,6 @@ pp_land_potential_chip = {}
 
 				hbox = {
 					layoutpolicy_horizontal = expanding
-					spacing = 6
 					tooltipwidget = {
 						ContextualTooltipType = {
 							blockoverride "title_text" { text = "PP_LAND_BAR_TT_TITLE" }
@@ -7120,11 +7119,14 @@ pp_land_potential_chip = {}
 							}
 						}
 					}
-					hbox = { spacing = 3 widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_townsfolk.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_TOWNSFOLK" fontsize = 12 } }
-					hbox = { spacing = 3 widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_yellow.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_SUBSISTENCE" fontsize = 12 } }
-					hbox = { spacing = 3 widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_LAND" fontsize = 12 } }
-					hbox = { spacing = 3 widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_farms.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_FARMS" fontsize = 12 } }
-					hbox = { spacing = 3 widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal alpha = 0.2 } widget = { size = { 100% 100% } icon = { size = { 100% 1 } texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 100% 1 } parentanchor = bottom texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 1 100% } texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 1 100% } parentanchor = right texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } } } text_single = { text = "PP_LAND_BAR_ROOM" fontsize = 12 } }
+					hbox = {
+						spacing = 5
+						hbox = { spacing = 2 widget = { size = { 8 8 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_townsfolk.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_TOWNSFOLK" fontsize = 12 } }
+						hbox = { spacing = 2 widget = { size = { 8 8 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_yellow.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_SUBSISTENCE" fontsize = 12 } }
+						hbox = { spacing = 2 widget = { size = { 8 8 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_LAND" fontsize = 12 } }
+						hbox = { spacing = 2 widget = { size = { 8 8 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_farms.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_FARMS" fontsize = 12 } }
+						hbox = { spacing = 2 widget = { size = { 8 8 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal alpha = 0.2 } widget = { size = { 100% 100% } icon = { size = { 100% 1 } texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 100% 1 } parentanchor = bottom texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 1 100% } texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 1 100% } parentanchor = right texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } } } text_single = { text = "PP_LAND_BAR_ROOM" fontsize = 12 } }
+					}
 					expand = {}
 				}
 			}

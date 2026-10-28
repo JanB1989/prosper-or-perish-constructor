@@ -52,8 +52,10 @@ CARDS = {
                           ("game_concept_provincial_food_desc", "STATIC_MODIFIER_DESC_overpopulation")),
 }
 # Retired player-facing names of the population capacity and its states (renamed to Arable Land 2026-10-10).
-# "Farmland Vegetation" and lower-case "farmland" (the vegetation type, prose about fields) stay.
-OLD_LAND_NAMES = re.compile(r"Subsistence Land|subsistence land|Free Land|Overpopulation|Location Potential|Settled Land"
+# "Farmland Vegetation" and lower-case "farmland" (the vegetation type, prose about fields) stay. "Subsistence
+# Land" is a name again since 2026-10-28 (Jan): the land the subsistence peasants live on, the yellow part of the
+# location view's land panel; lower case it still reads as the old name of the whole capacity.
+OLD_LAND_NAMES = re.compile(r"subsistence land|Free Land|Overpopulation|Location Potential|Settled Land"
                             r"|\bFarmland\b(?! Vegetation)|\[pp_farmland\|e\]|\[pp_arable_land\|e\]|pp_settled_land")
 _CONCEPT_LINK = re.compile(r"\[(\w+)\|[eE]\]|\[Concept\('(\w+)'")
 # a hoverable game link: a named object ([ShowGoodsName('x')|e], [ShowModifier('x')], ...) or a concept

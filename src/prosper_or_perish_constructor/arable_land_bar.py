@@ -3,12 +3,16 @@
 Capacity model since 2026-10-27: total_population gives every person +1 capacity and unemployed_peasants takes it
 back from the subsistence peasants, so the engine's capacity is everyone but the subsistence peasants (the townsfolk:
 each brings their own room) plus the arable land left (the location's land and improvements, minus what the farms take).
-The engine still compares the whole population with that capacity, so the panel shows exactly that, on one scale:
+The engine still compares the whole population with that capacity, so the panel shows exactly that, on one scale
+(player names since 2026-10-28, Jan: Land Usage = Urban Land + Subsistence Land; Land Capacity = Urban Land + Free Arable
+Land, then Farm Land Usage and Unimproved Land past its end):
 
-- Population: the townsfolk (neutral grey), then the subsistence peasants (yellow, one part with their whole number); the part
+- Land Usage (the population): the townsfolk (Urban Land, neutral grey), then the subsistence peasants (Subsistence
+  Land, yellow, one part with their whole number); the part
   of them beyond the capacity is marked over the yellow (a red tint with red edges), its number in the tooltip.
-- Population capacity: the same townsfolk (grey: they cancel out; the capacity counts them at the yearly refresh of
-  the subsistence land, so the two greys can differ by the peasants hired or laid off since), then the arable land left (green: the location's
+- Land Capacity (the population capacity): the same townsfolk (grey: they cancel out; the capacity counts them at the
+  yearly refresh of the subsistence land, so the two greys can differ by the peasants hired or laid off since), then
+  the arable land left (Free Arable Land, green: the location's
   land and improvements after the farms), then past the end of the capacity the land the farms hold (a brownish
   green: the land is there, the farms take it; a gross bar with the capacity line as its net, 2026-10-27, Jan), then
   the land the improvements still buildable here could add (an empty slot: faint green in a green frame; striped like
@@ -415,37 +419,43 @@ STATE_ICONS = "gfx/interface/icons/pp_arable_land"
 ABUNDANT_SHARE = "0.1"
 
 # The parts of the two bars as game concepts, each with a short Europedia entry (2026-10-27, Jan: every row label a
-# link; texts short and technical, no values, no metaphors): key -> (texture under gfx/interface/icons, name, text)
+# link; texts short and technical, no values, no metaphors): key -> (texture under gfx/interface/icons, name, text).
+# Names (2026-10-28, Jan): the top bar is the Land Usage (Urban Land + Subsistence Land), the bottom bar the Land
+# Capacity (Urban Land + Free Arable Land, then the Farm Land Usage and the Unimproved Land past its end); Land Usage and
+# Land Capacity are the vanilla population and population_capacity concepts under the panel's own words. The location's
+# own land is the hand-kept Natural Arable Land concept (pp_location_potential).
 CONCEPTS = Path("main_menu/common/game_concepts/pp_arable_land_bar.txt")
+LAND_USAGE = "[Concept('population', 'Land Usage')|E]"
+LAND_CAPACITY = "Concept('population_capacity', 'Land Capacity')"
 CONCEPT_TEXT = {
-    "pp_townsfolk": ("location_icons/population", "Townsfolk",
-                     "Everyone in a [location|e] except the [pp_subsistence_peasants|e]. Townsfolk do not use "
-                     "[population_capacity|e]: in the calculation each townsperson adds 1 Arable Land and uses 1."),
-    "pp_subsistence_peasants": ("location_icons/subsistence_agriculture", "Subsistence Peasants",
-                                "[ShowPopTypeName('peasants')] without [employment|e]. Each uses 1 [population_capacity|e]."),
-    "pp_location_land": ("location_icons/terrain", "Location's Land",
-                         "[population_capacity|E] from a [location|e]'s [climate|e], [topography|e], [vegetation|e], "
-                         "[ha1300_soil_type|e] and [ha1300_fertility|e], and from its [location_rank|e]."),
+    "pp_townsfolk": ("location_icons/population", "Urban Land",
+                     "The land of everyone in a [location|e] but the peasants on [pp_subsistence_peasants|e]. They "
+                     f"bring their own [{LAND_CAPACITY}|e], so Urban Land adds as much as it uses."),
+    "pp_subsistence_peasants": ("location_icons/subsistence_agriculture", "Subsistence Land",
+                                "The land the [ShowPopTypeName('peasants')] without [employment|e] in a [location|e] "
+                                f"live on. They bring no [{LAND_CAPACITY}|e] of their own, so Subsistence Land uses it."),
     "pp_land_improvements": ("modifier_types/total_population_capacity_modifier", "Land Improvements",
-                             "[buildings|E] that add [population_capacity|e] to their [location|e]."),
-    "pp_farm_land": ("trade_goods/icon_goods_wheat", "Farms",
-                     "Each level of a farm [building|e] takes [population_capacity|e] from its [location|e]."),
+                             "[buildings|E] that add [population_capacity|e] to their [location|e]. Unimproved Land is "
+                             "what the improvements its owner can build there now could still add."),
+    "pp_farm_land": ("trade_goods/icon_goods_wheat", "Farm Land Usage",
+                     "The [population_capacity|e] the farms of a [location|e] take: each level of a farm "
+                     "[building|e] takes its share."),
 }
 
 LOC_TEXT = {
-    "PP_LAND_BAR_POPULATION": "[population|E]",
-    "PP_LAND_BAR_CAPACITY": "[population_capacity|E]",
+    "PP_LAND_BAR_POPULATION": LAND_USAGE,
+    "PP_LAND_BAR_CAPACITY": f"[{LAND_CAPACITY}|E]",
     "PP_LAND_BAR_TOWNSFOLK": "[pp_townsfolk|e]",
     "PP_LAND_BAR_SUBSISTENCE": "[pp_subsistence_peasants|e]",
-    "PP_LAND_BAR_LAND": "[Concept('population_capacity', 'Arable land left')|e]",
+    "PP_LAND_BAR_LAND": "[Concept('population_capacity', 'Free Arable Land')|e]",
     "PP_LAND_BAR_FARMS": "[pp_farm_land|e]",
-    "PP_LAND_BAR_ROOM": "[Concept('pp_land_improvements', 'Possible improvements')|e]",
+    "PP_LAND_BAR_ROOM": "[Concept('pp_land_improvements', 'Unimproved Land')|e]",
     # the bars' tooltip (2026-10-27, Jan: lists, not prose; every row label a concept link)
-    "PP_LAND_BAR_TT_TITLE": "Population and Arable Land",
+    "PP_LAND_BAR_TT_TITLE": "Land Usage and Land Capacity",
     "PP_LAND_BAR_TT_TOTAL": "Total",
-    "PP_LAND_BAR_TT_NATURAL": "[pp_location_land|e]",
+    "PP_LAND_BAR_TT_NATURAL": "[pp_location_potential|e]",
     "PP_LAND_BAR_TT_IMPROVEMENTS": "[pp_land_improvements|e]",
-    "PP_LAND_BAR_TT_OVER": "Over the [population_capacity|e]",
+    "PP_LAND_BAR_TT_OVER": f"Over the [{LAND_CAPACITY}|e]",
     # the land states, one line each (2026-10-27, Jan: what it is, how it is defined); the definitions are the chips'
     # own lines (pp_location_status_l_english.yml), so the chip beside the bars and this list say the same
     **{f"PP_LAND_BAR_TT_DEF_{key.upper()}": f"[ShowModifier('{modifier}')]: ${chip}$"
@@ -605,9 +615,18 @@ def tooltip_block() -> str:
 }}"""
 
 
+# The legend is one line the engine does not wrap, as wide as the panel at most (546 px inside its margins): with the
+# 2026-10-28 names its text alone is ~472 px in the game's font (12 px), so the swatches are small squares close to their
+# names and the entries 5 px apart (541.5 px; the 14 x 10 swatches, 3 px to the name and 6 px apart made 580.5)
+LEGEND_SWATCH = 8
+LEGEND_GAP = 2
+LEGEND_SPACING = 5
+
+
 def _term(part: str, key: str) -> str:
     """One legend entry under the bars: its colour swatch and its name (the numbers are in the bars)."""
-    return (f'hbox = {{ spacing = 3 widget = {{ size = {{ 14 10 }} {_bar(part, "1", bottom=True)} }} '
+    size = f"{LEGEND_SWATCH} {LEGEND_SWATCH}"
+    return (f'hbox = {{ spacing = {LEGEND_GAP} widget = {{ size = {{ {size} }} {_bar(part, "1", bottom=True)} }} '
             f'text_single = {{ text = "{key}" fontsize = 12 }} }}')
 
 
@@ -828,14 +847,15 @@ def gui_block(indent: str = "", land_state: str = "") -> str:
         (_part("held", "capacity"), "farms", _k(_sv("pp_land_bar_farms_shown"))),
         (_part("land", "held"), "room", _k(_sv("pp_land_bar_room"))),
     ], None)
-    legend = "\n".join([
+    # the entries in a box of their own: the line's spacing never adds a gap before the trailing expand
+    terms = "\n".join([
         _term("townsfolk", "PP_LAND_BAR_TOWNSFOLK"),
         _term("subsistence", "PP_LAND_BAR_SUBSISTENCE"),
         _term("land", "PP_LAND_BAR_LAND"),
         _term("farms", "PP_LAND_BAR_FARMS"),
         _term("room", "PP_LAND_BAR_ROOM"),
-        "expand = {}",
     ])
+    legend = f"hbox = {{\n\tspacing = {LEGEND_SPACING}\n{_indent(terms, 1)}\n}}\nexpand = {{}}"
     block = f"""# PP: population and capacity bars (arable_land_bar.py): the population on its capacity, one scale, and right of
 # them the land state the two make (the location view's only arable land chip)
 vbox = {{
@@ -859,7 +879,6 @@ vbox = {{
 
 	hbox = {{
 		layoutpolicy_horizontal = expanding
-		spacing = 6
 {_indent(tooltip_block(), 2)}
 {_indent(legend, 2)}
 	}}

@@ -381,7 +381,10 @@
   building, land classes as scripted triggers `pp_farm_land_class_<land>`), only where land is free (a construction
   never lowers a cap below the standing levels). The townsfolk capacity reads `pp_subsistence_land` at its applied
   size (marker `pp_subsistence_land_size`): the modifier refreshes once a year, so today's subsistence count took a
-  hiring farm's peasants' land twice until the refresh. The location view's bars read the same land.
+  hiring farm's peasants' land twice until the refresh. The location view's bars read the same land. Cost (script
+  profiler, Jan's 1554 observer save, 27 game months at speed): the new farm cap parts ~1.1 s of 89 s script time
+  (~1.2 %); the bars with possible improvements ~2.8 ms script time per frame while a location view is open (were ~8 ms
+  before one candidate per upgrade line, `arable_land_bar.candidate_groups`).
 - `script_eval.py` evaluates the generated location script values offline (farm caps, improvement caps, the bars);
   `tests/test_land_script_values.py` checks them by what they compute, anchored on numbers read in game.
 

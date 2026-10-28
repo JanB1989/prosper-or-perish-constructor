@@ -129,7 +129,7 @@ prices:
 localization:
   entries:
     tavern: Tavern
-    tavern_desc: "Brings the trade good [ShowGoodsName('victuals')|e] into the province and turns them into [ShowGoodsName('local_food')|e]; every [province_capital|e] can build one. It works best where the province cannot grow enough food itself and victuals are cheap."
+    tavern_desc: "Brings the trade good [ShowGoodsName('victuals')|e] into the province and turns them into [ShowGoodsName('local_food')|e]; every [province_capital|e] can build one. It works best where the province cannot grow enough food itself and victuals are cheap. It serves for as long as that pays, so the cheaper victuals are in its market, the fuller it keeps the province's store and the faster the province grows. With a [subsidy|e] it keeps serving where victuals no longer pay, up to the fastest growth the store has room for."
     tavern_slot_0: Serving
     tavern_slot_1: Common Table
     pp_tavern_serve_victuals: Serve Victuals

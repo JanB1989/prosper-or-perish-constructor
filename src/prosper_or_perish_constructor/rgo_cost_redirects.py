@@ -461,7 +461,31 @@ def _render_source_replacement_block(
         else:
             rendered.append(line)
     extra = [f"	{key} = {_format_number(value)}" for key, value in compensations]
+    extra.extend(_dlc_inject_lines(profile, scope, collection, top_key))
     return [*rendered[:-1], *extra, rendered[-1]] if extra else rendered
+
+
+def _dlc_inject_lines(profile: DataProfile, scope: str, collection: str, top_key: str) -> list[str]:
+    """Inner lines of the DLC folders' INJECTs into top_key.
+
+    The parser reads no DLC folder, and the replace loads after them, so it would drop what a DLC adds (Across the
+    Pillars' legal code policies). DLC entries gate themselves with has_dlc, so carrying them is safe without the DLC.
+    """
+    vanilla = next((layer for layer in profile.layers if layer.kind == "vanilla"), None)
+    if vanilla is None:
+        return []
+    header = re.compile(rf"^(?:TRY_)?INJECT:{re.escape(top_key)}\s*=\s*\{{")
+    lines: list[str] = []
+    for path in sorted((vanilla.root / "game" / "dlc").glob(f"*/{scope}/common/{collection}/*.txt")):
+        source_lines = path.read_text(encoding="utf-8-sig").splitlines()
+        for index, line in enumerate(source_lines):
+            if not header.match(line):
+                continue
+            body = source_lines[index + 1 : _find_block_end(source_lines, index)]
+            if any(modifier in line for line in body for modifier in RGO_COST_MODIFIERS.values()):
+                raise ValueError(f"{path} injects an RGO expansion cost modifier into {top_key}: redirect it here")
+            lines.extend([f"	# {path.relative_to(vanilla.root / 'game' / 'dlc').parts[0]}", *body])
+    return lines
 
 
 def _merged_entry_for_key(

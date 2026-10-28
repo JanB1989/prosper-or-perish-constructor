@@ -2,6 +2,15 @@
 
 Hand-tuned changes for single countries, one entry each: what and why.
 
+- **Brandenburg aims at the Prussian lands too** (2026-10-28, Jan, not tested in game). Beside its marches aim (lucky
+  nations, below) and as strong: the conquest preference `pp_brandenburg_prussia` (x3 on `prussia_area`, given at start
+  next to `pp_brandenburg_marches` in `on_action/pp_country_finetunes.txt`); BRA/PRU +30 target score on every country
+  ruling from the Prussia area (the Teutonic Order and the Prussian bishoprics;
+  `ai_scripted_expansion_score/pp_lucky_nations.txt`), and those countries are war targets even where they are not
+  neighbours, after 36 months of peace (`ai_scripted_expansion_target/pp_lucky_nations.txt`). The lucky-nation rules
+  still hold (a stronger target counts x0.25, one war at a time). Why: forming Prussia (PRU_f) needs 75 % of
+  `prussia_area` (33 of its 44 locations; no religion required), and across the observer runs Brandenburg held at
+  most 20 of them; Pomerania-Wolgast or Bohemia took them. Jan: "giving Prussia its historic aims. Good."
 - **France bonuses removed** (2026-10-22, Jan): Great Offices of the Crown back to vanilla (no +10 % noble max tax, no +3 diplomatic reputation; `pp_estate_privilege_adjustments.txt`) and no +500 starting gold (`on_action/pp_country_finetunes.txt`). Why: EU5 1.4.3; see whether France holds together without help. Supersedes the France entries of 2026-10-05 and 2026-10-06 below; France's lucky-nation aims stay.
 - **France** (2026-10-05, `pp_estate_privilege_adjustments.txt`): Great Offices of the Crown +10 points noble max tax.
   Why: its powerful nobles were taxable at only 4-5 %, so the crown went bankrupt and France fell apart in observer runs.

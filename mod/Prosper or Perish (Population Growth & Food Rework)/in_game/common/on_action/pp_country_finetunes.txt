@@ -183,9 +183,10 @@ pp_country_finetune_area_preferences = {
 			add_area_preference = pp_castile_no_france_conquest
 			add_area_preference = pp_castile_spare_portugal
 		}
-		# Brandenburg: its marches (pp_lucky_nations.txt).
+		# Brandenburg: its marches and the Prussian lands (pp_lucky_nations.txt).
 		c:BRA ?= {
 			add_area_preference = pp_brandenburg_marches
+			add_area_preference = pp_brandenburg_prussia
 		}
 		# Serbia and Bulgaria look north to Hungary (pp_balkans_north.txt).
 		c:SER ?= {

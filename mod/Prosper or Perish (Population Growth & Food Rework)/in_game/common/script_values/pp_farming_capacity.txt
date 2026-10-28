@@ -21,444 +21,518 @@ farm_capacity = {
 
 farm_capacity_max_wheat_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_wheat_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_wheat_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_wheat_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_wheat_farmstead = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_wheat_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_wheat_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_wheat_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_wheat_rotations = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_wheat_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_wheat_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_wheat_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_wheat_model_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_wheat_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_wheat_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_wheat_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_rice_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_rice_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_rice_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_rice_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_rice_farmstead = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_rice_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_rice_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_rice_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_rice_rotations = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_rice_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_rice_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_rice_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_rice_model_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_rice_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_rice_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_rice_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_millet_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_millet_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_millet_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_millet_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_millet_farmstead = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_millet_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_millet_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_millet_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_millet_rotations = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_millet_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_millet_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_millet_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_millet_model_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_millet_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_millet_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_millet_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_maize_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_maize_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_maize_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_maize_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_maize_farmstead = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_maize_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_maize_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_maize_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_maize_rotations = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_maize_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_maize_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_maize_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_maize_model_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_maize_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_maize_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_maize_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_legume_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_legume_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_legume_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_legume_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_legume_farmstead = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_legume_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_legume_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_legume_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_legume_rotations = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_legume_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_legume_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_legume_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_legume_model_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_legume_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_legume_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_legume_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_potato_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_potato_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_potato_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_potato_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_potato_farmstead = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_potato_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_potato_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_potato_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_potato_rotations = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_potato_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_potato_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_potato_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_potato_model_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_potato_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_potato_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_potato_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_olive_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_olive_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_olive_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_olive_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_olive_farmstead = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_olive_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_olive_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_olive_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_olive_rotations = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_olive_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_olive_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_olive_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_olive_model_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_olive_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_olive_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_olive_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_cattle_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_cattle_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_cattle_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_cattle_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_cattle_farmstead = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_cattle_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_cattle_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_cattle_farmstead_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_cattle_rotations = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_cattle_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_cattle_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_cattle_rotations_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_cattle_model_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_cattle_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_cattle_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_cattle_model_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_fruit_orchard = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_fruit_orchard < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_fruit_orchard } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_fruit_orchard_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_nursery_orchard = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_fruit_orchard < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_fruit_orchard } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_nursery_orchard_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_pomological_orchard = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_fruit_orchard < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_fruit_orchard } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_pomological_orchard_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_sheep_farms = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_sheep_farms < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_sheep_farms } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_sheep_farms_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_hurdled_sheepcotes = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_sheep_farms < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_sheep_farms } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_hurdled_sheepcotes_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_enclosed_sheep_walks = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_sheep_farms < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_sheep_farms } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_enclosed_sheep_walks_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_horse_breeders = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_horse_breeders < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_horse_breeders } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_horse_breeders_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_stud_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_horse_breeders < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_horse_breeders } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_stud_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_elephant_kraal = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_elephant_kraal < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_elephant_kraal } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_elephant_kraal_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_elephant_hunting_grounds = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_elephant_hunting_grounds < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_elephant_hunting_grounds } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_elephant_hunting_grounds_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_eng_royal_forest = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_eng_royal_forest < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_eng_royal_forest } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_eng_royal_forest_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_camel_herders = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_camel_herders < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_camel_herders } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_camel_herders_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_camel_stud = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_2_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_camel_herders < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_camel_herders } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_camel_stud_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_fiber_crops_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_fiber_crops_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_fiber_crops_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_fiber_crops_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_fiber_dressing_yard = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_fiber_crops_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_fiber_crops_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_fiber_dressing_yard_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_cotton_plantation = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_cotton_plantation < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_cotton_plantation } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_cotton_plantation_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_cotton_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_cotton_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_cotton_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_cotton_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_market_cotton_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_cotton_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_cotton_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_market_cotton_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_sugar_plantation = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_sugar_plantation < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_sugar_plantation } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_sugar_plantation_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_sugarcane_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_sugarcane_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_sugarcane_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_sugarcane_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_trapiche_sugarcane_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_sugarcane_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_sugarcane_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_trapiche_sugarcane_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_tobacco_plantation = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_tobacco_plantation < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_tobacco_plantation } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_tobacco_plantation_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_tobacco_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_tobacco_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_tobacco_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_tobacco_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_market_tobacco_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_tobacco_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_tobacco_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_market_tobacco_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_dye_plantation = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_dye_plantation < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_dye_plantation } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_dye_plantation_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_chili_plantation = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_chili_plantation < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_chili_plantation } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_chili_plantation_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_clove_grove = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_clove_grove < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_clove_grove } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_clove_grove_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_cocoa_grove = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_cocoa_grove < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_cocoa_grove } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_cocoa_grove_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_managed_cocoa_grove = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_cocoa_grove < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_cocoa_grove } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_managed_cocoa_grove_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_coffee_grove = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_coffee_grove < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_coffee_grove } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_coffee_grove_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_terraced_coffee_grove = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_coffee_grove < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_coffee_grove } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_terraced_coffee_grove_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_incense_grove = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_incense_grove < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_incense_grove } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_incense_grove_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_pepper_garden = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_pepper_garden < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_pepper_garden } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_pepper_garden_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_managed_pepper_garden = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_pepper_garden < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_pepper_garden } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_managed_pepper_garden_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_saffron_croft = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_saffron_croft < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_saffron_croft } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_saffron_croft_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_saffron_kiln_croft = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_saffron_croft < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_saffron_croft } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_saffron_kiln_croft_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_sericulture_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_sericulture_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_sericulture_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_sericulture_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_regulated_sericulture_farm = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_sericulture_farm < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_sericulture_farm } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_regulated_sericulture_farm_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_simplers_grove = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_simplers_grove < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_simplers_grove } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_simplers_grove_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_tea_garden = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_tea_garden < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_tea_garden } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_tea_garden_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_tea_sorting_garden = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_10_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_tea_garden < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_tea_garden } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_tea_sorting_garden_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
 
 farm_capacity_max_vineyard_estate = {
 	add = { desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.pp_free_farmland_levels_land_5_reserve_0 }
+	if = { limit = { pp_farm_queued_levels_vineyard_estate < 0 } add = { desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" value = this.pp_farm_queued_levels_vineyard_estate } }
 	add = { desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.farm_capacity_max_vineyard_estate_own_levels }
 	min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }
 }
@@ -901,6 +975,890 @@ farm_capacity_max_wheat_rotations_own_levels = {
 	add = modifier:pp_levels_wheat_farmstead
 }
 
+pp_farm_land_queued_outside_camel_herders = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:camel_herders building_type = building_type:camel_stud } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_cattle_farm = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:cattle_farm building_type = building_type:cattle_farmstead building_type = building_type:cattle_rotations building_type = building_type:cattle_model_farm } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_chili_plantation = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:chili_plantation } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_clove_grove = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:clove_grove } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_cocoa_grove = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:cocoa_grove building_type = building_type:managed_cocoa_grove } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_coffee_grove = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:coffee_grove building_type = building_type:terraced_coffee_grove } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_cotton_farm = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:cotton_farm building_type = building_type:market_cotton_farm } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_cotton_plantation = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:cotton_plantation } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_dye_plantation = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:dye_plantation } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_elephant_hunting_grounds = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:elephant_hunting_grounds } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_elephant_kraal = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:elephant_kraal } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_eng_royal_forest = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:eng_royal_forest } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_fiber_crops_farm = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:fiber_crops_farm building_type = building_type:fiber_dressing_yard } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_fruit_orchard = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:fruit_orchard building_type = building_type:nursery_orchard building_type = building_type:pomological_orchard } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_horse_breeders = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:horse_breeders building_type = building_type:stud_farm } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_incense_grove = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:incense_grove } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_legume_farm = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:legume_farm building_type = building_type:legume_farmstead building_type = building_type:legume_rotations building_type = building_type:legume_model_farm } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_maize_farm = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:maize_farm building_type = building_type:maize_farmstead building_type = building_type:maize_rotations building_type = building_type:maize_model_farm } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_millet_farm = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:millet_farm building_type = building_type:millet_farmstead building_type = building_type:millet_rotations building_type = building_type:millet_model_farm } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_olive_farm = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:olive_farm building_type = building_type:olive_farmstead building_type = building_type:olive_rotations building_type = building_type:olive_model_farm } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_pepper_garden = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:pepper_garden building_type = building_type:managed_pepper_garden } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_potato_farm = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:potato_farm building_type = building_type:potato_farmstead building_type = building_type:potato_rotations building_type = building_type:potato_model_farm } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_rice_farm = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:rice_farm building_type = building_type:rice_farmstead building_type = building_type:rice_rotations building_type = building_type:rice_model_farm } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_saffron_croft = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:saffron_croft building_type = building_type:saffron_kiln_croft } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_sericulture_farm = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:sericulture_farm building_type = building_type:regulated_sericulture_farm } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_sheep_farms = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:sheep_farms building_type = building_type:hurdled_sheepcotes building_type = building_type:enclosed_sheep_walks } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_simplers_grove = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:simplers_grove } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_sugar_plantation = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:sugar_plantation } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_sugarcane_farm = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:sugarcane_farm building_type = building_type:trapiche_sugarcane_farm } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_tea_garden = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:tea_garden building_type = building_type:tea_sorting_garden } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_tobacco_farm = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:tobacco_farm building_type = building_type:market_tobacco_farm } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_tobacco_plantation = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:tobacco_plantation } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_vineyard_estate = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:vineyard_estate } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_land_queued_outside_wheat_farm = {
+	# Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:
+	# the engine counts a building's own levels under construction against its max level, not another farm's
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction >= 1 NOT = { OR = { building_type = building_type:wheat_farm building_type = building_type:wheat_farmstead building_type = building_type:wheat_rotations building_type = building_type:wheat_model_farm } } }
+		if = { limit = { pp_farm_land_class_2 = yes } add = 2 if = { limit = { building_levels_under_construction >= 2 } add = 2 } if = { limit = { building_levels_under_construction >= 3 } add = 2 } if = { limit = { building_levels_under_construction >= 4 } add = 2 } if = { limit = { building_levels_under_construction >= 5 } add = 2 } }
+		else_if = { limit = { pp_farm_land_class_5 = yes } add = 5 if = { limit = { building_levels_under_construction >= 2 } add = 5 } if = { limit = { building_levels_under_construction >= 3 } add = 5 } if = { limit = { building_levels_under_construction >= 4 } add = 5 } if = { limit = { building_levels_under_construction >= 5 } add = 5 } }
+		else_if = { limit = { pp_farm_land_class_10 = yes } add = 10 if = { limit = { building_levels_under_construction >= 2 } add = 10 } if = { limit = { building_levels_under_construction >= 3 } add = 10 } if = { limit = { building_levels_under_construction >= 4 } add = 10 } if = { limit = { building_levels_under_construction >= 5 } add = 10 } }
+	}
+}
+
+pp_farm_queued_levels_camel_herders = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_2_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_camel_herders
+		divide = 2
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_2_reserve_0
+	}
+}
+
+pp_farm_queued_levels_cattle_farm = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_2_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_cattle_farm
+		divide = 2
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_2_reserve_0
+	}
+}
+
+pp_farm_queued_levels_chili_plantation = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_10_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_chili_plantation
+		divide = 10
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_10_reserve_0
+	}
+}
+
+pp_farm_queued_levels_clove_grove = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_10_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_clove_grove
+		divide = 10
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_10_reserve_0
+	}
+}
+
+pp_farm_queued_levels_cocoa_grove = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_10_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_cocoa_grove
+		divide = 10
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_10_reserve_0
+	}
+}
+
+pp_farm_queued_levels_coffee_grove = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_10_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_coffee_grove
+		divide = 10
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_10_reserve_0
+	}
+}
+
+pp_farm_queued_levels_cotton_farm = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_10_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_cotton_farm
+		divide = 10
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_10_reserve_0
+	}
+}
+
+pp_farm_queued_levels_cotton_plantation = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_10_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_cotton_plantation
+		divide = 10
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_10_reserve_0
+	}
+}
+
+pp_farm_queued_levels_dye_plantation = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_10_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_dye_plantation
+		divide = 10
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_10_reserve_0
+	}
+}
+
+pp_farm_queued_levels_elephant_hunting_grounds = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_2_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_elephant_hunting_grounds
+		divide = 2
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_2_reserve_0
+	}
+}
+
+pp_farm_queued_levels_elephant_kraal = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_2_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_elephant_kraal
+		divide = 2
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_2_reserve_0
+	}
+}
+
+pp_farm_queued_levels_eng_royal_forest = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_2_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_eng_royal_forest
+		divide = 2
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_2_reserve_0
+	}
+}
+
+pp_farm_queued_levels_fiber_crops_farm = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_5_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_fiber_crops_farm
+		divide = 5
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_5_reserve_0
+	}
+}
+
+pp_farm_queued_levels_fruit_orchard = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_5_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_fruit_orchard
+		divide = 5
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_5_reserve_0
+	}
+}
+
+pp_farm_queued_levels_horse_breeders = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_2_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_horse_breeders
+		divide = 2
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_2_reserve_0
+	}
+}
+
+pp_farm_queued_levels_incense_grove = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_5_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_incense_grove
+		divide = 5
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_5_reserve_0
+	}
+}
+
+pp_farm_queued_levels_legume_farm = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_5_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_legume_farm
+		divide = 5
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_5_reserve_0
+	}
+}
+
+pp_farm_queued_levels_maize_farm = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_5_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_maize_farm
+		divide = 5
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_5_reserve_0
+	}
+}
+
+pp_farm_queued_levels_millet_farm = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_5_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_millet_farm
+		divide = 5
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_5_reserve_0
+	}
+}
+
+pp_farm_queued_levels_olive_farm = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_5_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_olive_farm
+		divide = 5
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_5_reserve_0
+	}
+}
+
+pp_farm_queued_levels_pepper_garden = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_10_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_pepper_garden
+		divide = 10
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_10_reserve_0
+	}
+}
+
+pp_farm_queued_levels_potato_farm = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_5_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_potato_farm
+		divide = 5
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_5_reserve_0
+	}
+}
+
+pp_farm_queued_levels_rice_farm = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_5_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_rice_farm
+		divide = 5
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_5_reserve_0
+	}
+}
+
+pp_farm_queued_levels_saffron_croft = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_10_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_saffron_croft
+		divide = 10
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_10_reserve_0
+	}
+}
+
+pp_farm_queued_levels_sericulture_farm = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_5_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_sericulture_farm
+		divide = 5
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_5_reserve_0
+	}
+}
+
+pp_farm_queued_levels_sheep_farms = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_2_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_sheep_farms
+		divide = 2
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_2_reserve_0
+	}
+}
+
+pp_farm_queued_levels_simplers_grove = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_5_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_simplers_grove
+		divide = 5
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_5_reserve_0
+	}
+}
+
+pp_farm_queued_levels_sugar_plantation = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_10_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_sugar_plantation
+		divide = 10
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_10_reserve_0
+	}
+}
+
+pp_farm_queued_levels_sugarcane_farm = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_10_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_sugarcane_farm
+		divide = 10
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_10_reserve_0
+	}
+}
+
+pp_farm_queued_levels_tea_garden = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_10_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_tea_garden
+		divide = 10
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_10_reserve_0
+	}
+}
+
+pp_farm_queued_levels_tobacco_farm = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_10_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_tobacco_farm
+		divide = 10
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_10_reserve_0
+	}
+}
+
+pp_farm_queued_levels_tobacco_plantation = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_10_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_tobacco_plantation
+		divide = 10
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_10_reserve_0
+	}
+}
+
+pp_farm_queued_levels_vineyard_estate = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_5_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_vineyard_estate
+		divide = 5
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_5_reserve_0
+	}
+}
+
+pp_farm_queued_levels_wheat_farm = {
+	value = 0
+	if = {
+		limit = { pp_free_farmland_levels_land_5_reserve_0 > 0 }
+		value = modifier:local_population_capacity
+		subtract = pp_townsfolk_capacity
+		subtract = pp_farm_land_queued_outside_wheat_farm
+		divide = 5
+		floor = yes
+		min = 0
+		subtract = pp_free_farmland_levels_land_5_reserve_0
+	}
+}
+
 pp_free_farmland_levels_land_10_reserve_0 = {
 	value = modifier:local_population_capacity
 	subtract = pp_townsfolk_capacity
@@ -923,8 +1881,8 @@ pp_free_farmland_levels_land_5_reserve_0 = {
 }
 
 pp_townsfolk_capacity = {
-	# The capacity everyone but the subsistence peasants brings (total_population +1, unemployed_peasants -1)
+	# The capacity total_population (+1 per person) and pp_subsistence_land (-1 per subsistence peasant, at the
+	# size it was last given) add to the flat
 	value = population
-	subtract = pp_subsistence_peasants
-	min = 0
+	subtract = modifier:pp_subsistence_land_size
 }

@@ -950,6 +950,49 @@ def building_charts(run: RunData, x: pl.DataFrame) -> list[dict[str, Any]]:
     return charts
 
 
+def improvement_charts(run: RunData, x: pl.DataFrame) -> list[dict[str, Any]]:
+    """Land improvements built, still possible and possible in total, world-wide (improvement_room): in levels (what
+    they cost), in land, and the share built per cap."""
+    if run.improvements.is_empty():
+        return []
+    from prosper_or_perish_constructor.improvement_room import unit_label, world
+
+    xs = x["x"].to_list()
+    totals = x.select("snapshot_id").join(world(run.improvements), on="snapshot_id", how="left", maintain_order="left")
+
+    def lines(suffix: str, scale: float) -> list[dict[str, Any]]:
+        values = {c: [None if v is None else v * scale for v in totals[c + suffix].to_list()] for c in ("built", "possible", "total")}
+        return [_series("Built", values["built"], CATEGORICAL[0]), _series("Still possible", values["possible"], CATEGORICAL[1]),
+                _series("Possible in total", values["total"], WORLD, width=3)]
+
+    units = sorted(run.improvements["unit"].unique().to_list(), key=unit_label)
+    by_unit = run.improvements.with_columns((pl.col("built") / pl.col("total") * 100).alias("share"))
+    share = _by_key(by_unit, "unit", "share", x)
+    shares = [_series("World", _ratio(totals["built"].to_list(), totals["total"].to_list(), 100), WORLD, width=3)] + [
+        _series(unit_label(u), share.get(u, []), CATEGORICAL[i % len(CATEGORICAL)], width=1.6) for i, u in enumerate(units)]
+    first, last = totals.row(0, named=True), totals.row(totals.height - 1, named=True)
+    pct = lambda row: (row["built"] or 0) / row["total"] * 100 if row["total"] else 0.0  # noqa: E731
+    built, total, over = (float(last[c] or 0) for c in ("built", "total", "over_cap"))
+    caption = (
+        "The land improvements of owned locations (land clearance, field management and its upgrades, water control, "
+        "irrigated fields, paddy water control), by the cap their buildings share. Possible in total: per location and "
+        "cap the max level the game computes from the location's land classes and that save's development (today's "
+        "mod), or what stands where that is more; still possible = total − built. Levels are what is paid for (every "
+        "level costs gold); land is the arable land they give, in people, at full research: the best improvement any "
+        "country may build there once researched (a regional one, from a culture or country advance or locked to a "
+        "culture, only where it stands; upgrading a standing level counts as possible). "
+        f"Built {built:,.0f} of {total:,.0f} levels ({pct(last):.0f}%) at the last save, "
+        f"{pct(first):.0f}% at the first"
+        + (f"; {over:,.0f} of them ({over / built * 100:.1f}%) stand above today's cap (development fell, or the run's mod "
+           "had other caps)." if over >= 0.5 and built else "."))
+    return [chart(
+        "improvements", "buildings", "Land improvements: built and possible", caption,
+        [view("Levels", "num", line_option(xs, lines("", 1.0), unit="num")),
+         # land in capacity units (1 = 1,000 people), shown in millions of people
+         view("Land", "mpeople", line_option(xs, lines("_land", 1 / 1000), unit="mpeople")),
+         view("Share built by cap", "pct", line_option(xs, shares, unit="pct", y_max=100))], height=460)]
+
+
 # --------------------------------------------------------------------------------------------------------
 # Countries
 
@@ -1139,7 +1182,7 @@ def build_payload(run: RunData) -> dict[str, Any]:
         tables += region_trade_tables(run, x, flows)
         tables += trade_tables(run, x, world)
         charts += price_charts(run, x, world)
-    charts += building_charts(run, x)
+    charts += building_charts(run, x) + improvement_charts(run, x)
     from prosper_or_perish_constructor.run_report_urban import urban_charts  # it imports this module
 
     urban, urban_tables = urban_charts(run, x)

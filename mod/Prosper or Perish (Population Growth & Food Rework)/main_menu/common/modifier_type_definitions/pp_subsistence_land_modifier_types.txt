@@ -1,0 +1,11 @@
+﻿# Marker of pp_subsistence_land (pp_subsistence_land.txt): set to 1 there, so its value is the size the modifier was
+# last given (the subsistence peasants at the location's yearly refresh, in thousands). The farm caps read it to take
+# exactly the capacity the modifier gives back out of the flat (generate_rural_capacity_values.py).
+
+pp_subsistence_land_size = {
+	decimals = 2
+	color = neutral
+	game_data = {
+		category = location
+	}
+}

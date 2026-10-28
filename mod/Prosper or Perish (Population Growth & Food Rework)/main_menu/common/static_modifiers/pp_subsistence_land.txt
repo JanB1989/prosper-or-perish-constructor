@@ -10,4 +10,6 @@ pp_subsistence_land = {
 		category = location
 	}
 	local_population_capacity = -1
+	# marker: reads back as the size (2026-10-28), so the farm caps take exactly this modifier's capacity out
+	pp_subsistence_land_size = 1
 }

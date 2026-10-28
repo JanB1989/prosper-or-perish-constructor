@@ -59,8 +59,14 @@ def test_capacity_is_everyone_but_the_subsistence_peasants():
     assert re.search(r'pp_subsistence_peasants = \{\s*value = "unemployed_pops_of_pop_type_in_location\(pop_type:peasants\)"'
                      r'\s*min = 0\s*\}', values)
     assert "pp_land_bar_subsistence = { value = pp_subsistence_peasants }" in alb.render_script_values(alb.model(MOD_ROOT, None))
+    # the farm caps and the bar's land take out exactly what the modifier gives, at the size it was last refreshed to
+    # (its marker; today's count differs until the next yearly refresh, 2026-10-28)
+    assert re.search(r"(?m)^\s*pp_subsistence_land_size = 1\s*$", static)
     farm_cap = (MOD_ROOT / "in_game/common/script_values/pp_farming_capacity.txt").read_text(encoding="utf-8-sig")
-    assert "subtract = pp_subsistence_peasants" in farm_cap and "unemployed_pops_of_pop_type_in_location" not in farm_cap
+    assert "subtract = modifier:pp_subsistence_land_size" in farm_cap
+    assert "unemployed_pops_of_pop_type_in_location" not in farm_cap and "pp_subsistence_peasants" not in farm_cap
+    assert ("pp_land_bar_townsfolk_room_flat = { value = pp_land_bar_population subtract = modifier:pp_subsistence_land_size }"
+            in alb.render_script_values(alb.model(MOD_ROOT, None)))
     on_action = (MOD_ROOT / "in_game/common/on_action/pp_subsistence_land.txt").read_text(encoding="utf-8-sig")
     # yearly, spread over the year (2026-10-27, Jan: idle peasants move little; a month of refreshes cost 0.02 s)
     assert "yearly_country_pulse" in on_action and "days = { 0 364 }" in on_action and "on_game_start" in on_action
@@ -79,9 +85,9 @@ def test_window_has_the_panel_under_the_scene_with_balanced_braces():
     assert text.index("# SCENE") < text.index('name = "pp_arable_land_bar"')
     assert text.count("{") == text.count("}")
     panel = _panel()
-    # 5 bar parts + 4 legend swatches + 2 tooltips x 7 row swatches (the over row's: yellow under the over mark); every
-    # one on 0..1 (without min/max: 0..100)
-    assert panel.count("progressbar = {") == 23 == panel.count("min = 0 max = 1 value = ")
+    # 6 bar parts + 5 legend swatches + 2 tooltips x 8 row swatches (the over row's: yellow under the over mark; the
+    # room for improvements row); every one on 0..1 (without min/max: 0..100)
+    assert panel.count("progressbar = {") == 27 == panel.count("min = 0 max = 1 value = ")
     assert not re.search(r'value = "\[\(float\)', panel)                               # a literal is no data call
     used = set(re.findall(r"ScriptValue\('(pp_land_bar_\w+)'\)", text + alb.render_localization()))
     defined = set(re.findall(r"(?m)^(pp_land_bar_\w+) = \{", (MOD_ROOT / alb.SCRIPT_VALUES).read_text(encoding="utf-8")))
@@ -105,7 +111,7 @@ def test_subsistence_peasants_are_one_part_and_the_ones_over_capacity_are_marked
     # the over mark lies over the yellow from the capacity on (spacer = the part within it), red tint and edges
     assert "ScriptValue('pp_land_bar_f_within')), '(float)370'), '(float)0'), '(float)18')]" in first_track
     assert first_track.count("progress_bar_red.dds") == 4 and "alpha" not in first_track.split("progress_bar_yellow")[1]
-    column = panel[panel.index("size = { 370 40 }"):panel.index('name = "pp_land_bar_state')]
+    column = panel[panel.index("size = { 370 56 }"):panel.index('name = "pp_land_bar_state')]
     assert "progress_bar_red_alt" not in column and '"+[' not in column        # no red block with its own +number
     # its number is in the tooltip, in the population list, only when there are any
     at = panel.index('text = "PP_LAND_BAR_TT_OVER"')
@@ -118,10 +124,26 @@ def test_subsistence_peasants_are_one_part_and_the_ones_over_capacity_are_marked
 
 def test_threshold_lines_cross_both_bars_at_a_tenth_of_the_capacity_and_at_the_capacity():
     panel = _panel()
-    column = panel[panel.index("size = { 370 40 }"):panel.index('name = "pp_land_bar_state')]
+    column = panel[panel.index("size = { 370 56 }"):panel.index('name = "pp_land_bar_state')]
     lines_at = column.index("position = { 0 -2 }")
-    # drawn over the bars (after both tracks) and under the parts' numbers (no line hides a number)
-    assert column.index("progress_bar_brown_alt.dds") < lines_at < column.index("ScriptValue('pp_land_bar_townsfolk')|0]K")
+    # drawn over the bars (after both tracks, the second ending in the faded room for improvements) and under the parts'
+    # numbers (no line hides a number)
+    assert column.index("alpha = 0.2") < lines_at < column.index("ScriptValue('pp_land_bar_townsfolk')|0]K")
+    # labelled above the bars: 10% at the first line, 100% at the second (a 12 px row, bars 16 px lower)
+    assert column.index('raw_text = "10%"') < column.index('raw_text = "100%"') < column.index("position = { 0 16 }")
+    # the farms' land: a plain brownish green, between the capacity line and the room for improvements (an empty
+    # slot: faint green in a green frame): a gross bar whose net is the capacity line
+    farms = alb.SHADES["farms"].as_posix()
+    assert alb.FRAMED == {"room"} and "progress_bar_brown_alt.dds" not in column and "Corneredtiled" not in column
+    assert column.count(farms) == 1 and "progress_bar_grey_alt" not in column
+    room_at = column.index("alpha = 0.2")
+    assert column.index("'pp_land_bar_f_capacity'") < column.index(farms) < room_at
+    room = column[room_at:column.index("'pp_land_bar_f_land'", room_at)]
+    assert room.count("icon = { size = { 100% 2 }") == 2 and room.count("icon = { size = { 2 100% }") == 2
+    assert "margin = { 3 0 }" not in column                                    # no number plates
+    assert ("Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), "
+            "FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')))") in column
+    assert all((MOD_ROOT / "main_menu" / path).is_file() for path in alb.SHADES.values())
     assert alb.ABUNDANT_SHARE == "0.1"
     capacity = "FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))"
     abundant = f"Multiply_float({capacity}, '(float)0.1')"
@@ -153,7 +175,7 @@ def test_every_row_label_is_a_concept_link_with_its_own_entry():
     tooltip = alb.tooltip_block()
     rows = re.findall(r'layoutpolicy_horizontal = expanding align = left\|nobaseline text = "(\w+)"', tooltip)
     labels = [key for key in rows if key != "PP_LAND_BAR_TT_TOTAL"]
-    assert len(labels) == 7   # townsfolk, subsistence, over | townsfolk, land, improvements, farms
+    assert len(labels) == 8   # townsfolk, subsistence, over | townsfolk, land, improvements, farms, room
     link = re.compile(r"\[(\w+)\|[eE]\]|\[Concept\('(\w+)', '[^']+'\)\|e\]")
     vanilla = _game()
     known: set[str] = set()   # concept keys and their aliases, the mod's and the game's
@@ -170,10 +192,10 @@ def test_every_row_label_is_a_concept_link_with_its_own_entry():
     # the townsfolk are one row in both lists (no "their own room" any more), farms one key for legend and tooltip
     assert "PP_LAND_BAR_TT_TOWNSFOLK_ROOM" not in alb.LOC_TEXT and "PP_LAND_BAR_TT_FARMS" not in alb.LOC_TEXT
     assert "own room" not in alb.render_localization()
-    # the legend uses the same linked keys
+    # the legend uses the same linked keys, in the bars' order
     legend = alb.gui_block()[alb.gui_block().rindex("tooltipwidget"):]
-    assert {"PP_LAND_BAR_TOWNSFOLK", "PP_LAND_BAR_SUBSISTENCE", "PP_LAND_BAR_LAND", "PP_LAND_BAR_FARMS"} <= set(
-        re.findall(r'text_single = \{ text = "(\w+)" fontsize = 12', legend))
+    assert re.findall(r'text_single = \{ text = "(\w+)" fontsize = 12', legend) == [
+        "PP_LAND_BAR_TOWNSFOLK", "PP_LAND_BAR_SUBSISTENCE", "PP_LAND_BAR_LAND", "PP_LAND_BAR_FARMS", "PP_LAND_BAR_ROOM"]
 
 
 def test_new_concepts_have_a_family_an_icon_a_name_and_a_short_text():
@@ -193,3 +215,48 @@ def test_new_concepts_have_a_family_an_icon_a_name_and_a_short_text():
     # every concept a text names is a link; each text links the concepts it builds on
     links = set(re.findall(r"\[(\w+)\|[eE]\]", " ".join(text for _, _, text in alb.CONCEPT_TEXT.values())))
     assert {"pp_subsistence_peasants", "population_capacity", "employment", "location_rank", "buildings"} <= links
+
+
+def _block(text: str, name: str) -> str:
+    start = text.index(f"{name} = {{")
+    return text[start:alb._block_end(text, text.index("{", start)) + 1]
+
+
+def test_room_is_the_most_land_a_buildable_member_gives_the_cap_minus_the_land_now():
+    """The room for improvements: land the cap can still give with what the owner can build here now, upgrades of the
+    tiers a member replaces included (Alexandria 1837: 7 Marled Fields, Improved Fields researched)."""
+    unit = alb.CapUnit("pp_wb_cap_group_shared", 15, [
+        alb.Building("marled", 5.0), alb.Building("better", 7.5, obsolete="marled"),
+        alb.Building("best", 10.0, obsolete="better"), alb.Building("regional", 15.0)])
+    assert alb.replaced(unit.members[2], unit.members) == {"better", "marled"}
+    text = alb._room(unit)
+    room = _block(text, "pp_land_bar_room_group_shared")
+    # one candidate per group (the upgrade line, top tier first; the regional alternatives, most land first), each 0
+    # where none of its members can be built, minus the land now, never below 0 (2026-10-28: cost per frame; the
+    # equality with the best of every member is checked in test_land_script_values.py)
+    assert [[b.key for b in g] for g in alb.candidate_groups(unit)] == [["best", "better", "marled"], ["regional"]]
+    assert room.count("min = pp_land_bar_room_group_shared_best_") == 2
+    assert room.index("subtract = pp_land_bar_room_group_shared_now") < room.rindex("min = 0")
+    line = _block(text, "pp_land_bar_room_group_shared_best_1")
+    assert line.index("building_type:best") < line.index("building_type:better") < line.index("building_type:marled")
+    assert ("if = { limit = { can_build_building = building_type:best owner ?= { can_build_building = building_type:best "
+            "} } value = pp_land_bar_room_group_shared_to_best }") in line
+    # the cap as the engine reads max_levels: clamped, floored
+    assert "pp_land_bar_room_group_shared_cap = {\n\tvalue = pp_wb_cap_group_shared\n\tmax = 15\n\tfloor = yes\n}" in text
+    # with the best tier: its own and the replaced tiers' levels become its land, the regional member keeps its own
+    best = _block(text, "pp_land_bar_room_group_shared_to_best")
+    assert "can_build_building" not in best
+    assert "location_building_level(building_type:marled)" not in best
+    assert "location_building_level(building_type:better)" not in best
+    assert best.count("location_building_level(building_type:regional)") == 2      # subtracted, then its land added
+    assert best.index("multiply = 10") < best.index("multiply = 15")
+    # the regional member replaces nothing: every other member's levels stay as they are
+    regional = _block(text, "pp_land_bar_room_group_shared_to_regional")
+    assert all(f"location_building_level(building_type:{k})" in regional for k in ("marled", "better", "best"))
+    now = _block(text, "pp_land_bar_room_group_shared_now")
+    assert now.count("location_building_level(building_type:") == 4 and "multiply = 7.5" in now
+    m = alb.model(MOD_ROOT, None)
+    assert m.units and sorted(b.key for u in m.units for b in u.members) == sorted(b.key for b in m.improvements)
+    field = next(u for u in m.units if u.equation == "pp_wb_cap_field_management_shared")
+    improved = next(b for b in field.members if b.key == "field_management_improved")
+    assert alb.replaced(improved, field.members) == {"field_management", "field_management_convertible"}

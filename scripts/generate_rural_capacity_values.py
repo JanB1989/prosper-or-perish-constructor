@@ -123,19 +123,23 @@ def _farm_land_constants() -> tuple[dict[str, tuple[float, float]], tuple[float,
     return per_building, default
 
 
-# The arable land left in the flat capacity: total_population gives every person +1 and unemployed_peasants takes -1
+# The arable land left in the flat capacity: total_population gives every person +1 and pp_subsistence_land takes -1
 # from every subsistence peasant (2026-10-27, Jan), so the capacity of everyone else is taken back out here. The farm
 # cap counts land only; without this a town's people would count as farmland. The start simulation models the flat as
 # land only and reads this value as 0 (start_rules.py).
 TOWNSFOLK_CAPACITY = "pp_townsfolk_capacity"
+# pp_subsistence_land's size as the engine applies it (marker modifier type, 1 per unit of size). The modifier is
+# refreshed once a year, so between refreshes it differs from today's subsistence peasants: a new farm level hires
+# subsistence peasants at once, and reading them today took their land a second time until the refresh (2026-10-28).
+SUBSISTENCE_SIZE = "modifier:pp_subsistence_land_size"
 
 
 def _arable_rows(land: float, reserve: float, depth: int) -> list[str]:
     FARM_HELPERS[TOWNSFOLK_CAPACITY] = _script_value(
         TOWNSFOLK_CAPACITY,
-        [_line("value = population", 1), _line("subtract = pp_subsistence_peasants", 1),
-         _line("min = 0", 1)],
-        ["The capacity everyone but the subsistence peasants brings (total_population +1, unemployed_peasants -1)"],
+        [_line("value = population", 1), _line(f"subtract = {SUBSISTENCE_SIZE}", 1)],
+        ["The capacity total_population (+1 per person) and pp_subsistence_land (-1 per subsistence peasant, at the",
+         "size it was last given) add to the flat"],
     )
     rows = [_line("value = modifier:local_population_capacity", depth), _line(f"subtract = {TOWNSFOLK_CAPACITY}", depth)]
     if reserve:
@@ -172,6 +176,7 @@ def _farm_source_rows(
     target = omitted[0]
     land, reserve = per_building.get(target, default)
     free = _free_farmland_helper(land, reserve)
+    queued = _queued_levels_helper(target, land, reserve, free)
     own = f"farm_capacity_max_{target}_own_levels"
     FARM_HELPERS[own] = _script_value(
         own,
@@ -179,12 +184,118 @@ def _farm_source_rows(
     )
     return [
         _line(f'add = {{ desc = "BUILDING_LEVEL_WB_FREE_FARMLAND" value = this.{free} }}', 1),
+        _line(f'if = {{ limit = {{ {queued} < 0 }} add = {{ desc = "PP_BUILDING_LEVEL_FARM_UNDER_CONSTRUCTION" '
+              f'value = this.{queued} }} }}', 1),
         _line(f'add = {{ desc = "PP_BUILDING_LEVEL_FARM_OWN_LEVELS" value = this.{own} }}', 1),
         _line('min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 }', 1),
     ]
 
 
 FARM_HELPERS: dict[str, str] = {}   # tooltip helpers of the farm max levels, written after them
+# Every land farm's upgrade line (its tiers, lowest first) and the farms of each land per level; set by main()
+FARM_FAMILIES: dict[str, tuple[str, ...]] = {}
+FARM_LAND_CLASSES: dict[float, tuple[str, ...]] = {}
+# Levels under construction per building counted (building_levels_under_construction is a trigger, so the count is
+# stepped; a farm rarely has more than one level under construction, 2026-10-28 save of 1554: 715 farm constructions)
+QUEUE_STEPS = 5
+FARM_LAND_TRIGGERS_PATH = MOD_ROOT / "in_game" / "common" / "scripted_triggers" / "pp_farm_land_classes.txt"
+
+
+def _land_class_trigger(land: float) -> str:
+    return f"pp_farm_land_class_{land:g}".replace(".", "_")
+
+
+def _queued_outside_helper(target: str) -> str:
+    """Land (capacity units) that the farm levels under construction in the location will take, other than the levels
+    of this farm's own upgrade line: the engine counts a building's own levels under construction against its max
+    level, but not another farm's, so two farms could start levels on the same free land (2026-10-28, Jan)."""
+    family = FARM_FAMILIES.get(target, (target,))
+    name = f"pp_farm_land_queued_outside_{family[0]}"
+    if name in FARM_HELPERS:
+        return name
+    own_line = " ".join(f"building_type = building_type:{b}" for b in family)
+    rows = [
+        _line("value = 0", 1),
+        _line("every_buildings_in_location = {", 1),
+        _line(f"limit = {{ building_levels_under_construction >= 1 NOT = {{ OR = {{ {own_line} }} }} }}", 2),
+    ]
+    for index, land in enumerate(sorted(FARM_LAND_CLASSES)):
+        steps = " ".join(f"if = {{ limit = {{ building_levels_under_construction >= {n} }} add = {land:g} }}"
+                         for n in range(2, QUEUE_STEPS + 1))
+        branch = "if" if index == 0 else "else_if"
+        rows.append(_line(f"{branch} = {{ limit = {{ {_land_class_trigger(land)} = yes }} add = {land:g} {steps} }}", 2))
+    rows.append(_line("}", 1))
+    FARM_HELPERS[name] = _script_value(name, rows, [
+        "Land the farm levels under construction here will take (capacity units), this farm's upgrade line left out:",
+        "the engine counts a building's own levels under construction against its max level, not another farm's"])
+    return name
+
+
+def _queued_levels_helper(target: str, land: float, reserve: float, free: str) -> str:
+    """Levels of this farm that the other farms' levels under construction take from its free arable land (0 or less).
+    Only where land is free: on overused land the cap stays as it was, so a construction never lowers a farm's max
+    below the levels it stands at (the capacity cull removes levels above the max)."""
+    family = FARM_FAMILIES.get(target, (target,))
+    outside = _queued_outside_helper(target)
+    name = f"pp_farm_queued_levels_{family[0]}"
+    if name not in FARM_HELPERS:
+        rows = [
+            _line("value = 0", 1),
+            _line("if = {", 1),
+            _line(f"limit = {{ {free} > 0 }}", 2),
+            *_arable_rows(land, reserve, 2)[:2],
+            _line(f"subtract = {outside}", 2),
+            *_arable_rows(land, reserve, 2)[2:],
+            _line("min = 0", 2),
+            _line(f"subtract = {free}", 2),
+            _line("}", 1),
+        ]
+        FARM_HELPERS[name] = _script_value(name, rows)
+    return name
+
+
+def _farm_land_triggers_file() -> str:
+    lines = ["# Generated by scripts/generate_rural_capacity_values.py; do not edit by hand.",
+             "# Building scope: the land farms by their land per level (capacity units, [worldbuilder.farm_land] in",
+             "# constructor.toml), read by the farm max levels for the farm levels under construction in a location.", ""]
+    for land, members in sorted(FARM_LAND_CLASSES.items()):
+        lines.append(f"{_land_class_trigger(land)} = {{")
+        lines.append(_line("OR = {", 1))
+        lines.extend(_line(f"building_type = building_type:{b}", 2) for b in members)
+        lines.append(_line("}", 1))
+        lines.append("}")
+    return "\n".join(lines) + "\n"
+
+
+def _set_farm_families(omissions: dict[str, tuple[str, ...]]) -> None:
+    """Upgrade lines from the max-level omissions (each farm omits itself and the lower tiers it replaces) and the
+    land classes; every farm of one line must take the same land per level."""
+    per_building, default = _farm_land_constants()
+    parent = {b: b for b in LAND_FARM_BUILDINGS}
+
+    def root(b: str) -> str:
+        while parent[b] != b:
+            b = parent[b]
+        return b
+
+    for building, omitted in omissions.items():
+        for other in omitted:
+            parent[root(other)] = root(building)
+    lines: dict[str, list[str]] = {}
+    for building in LAND_FARM_BUILDINGS:
+        lines.setdefault(root(building), []).append(building)
+    FARM_FAMILIES.clear()
+    for members in lines.values():
+        family = tuple(sorted(members, key=lambda b: len(omissions.get(b, (b,)))))
+        constants = {per_building.get(b, default) for b in family}
+        if len(constants) != 1:
+            raise ValueError(f"farm upgrade line {family} takes different land per level: {sorted(constants)}")
+        FARM_FAMILIES.update({b: family for b in family})
+    classes: dict[float, list[str]] = {}
+    for building in LAND_FARM_BUILDINGS:
+        classes.setdefault(per_building.get(building, default)[0], []).append(building)
+    FARM_LAND_CLASSES.clear()
+    FARM_LAND_CLASSES.update({land: tuple(members) for land, members in classes.items()})
 
 
 def _free_farmland_helper(land: float, reserve: float) -> str:
@@ -434,6 +545,7 @@ def main() -> None:
         blueprint_root=BUILDING_BLUEPRINT_ROOT,
         capacity_buildings=FOREST_CAP_BUILDINGS,
     )
+    _set_farm_families(farm_max_omissions)
     outputs = {
         "pp_farming_capacity.txt": _capacity_file(
             value_name="farm_capacity",
@@ -467,6 +579,8 @@ def main() -> None:
     for filename, text in outputs.items():
         (SCRIPT_VALUES_ROOT / filename).write_text(text, encoding="utf-8-sig")
     CULLING_EFFECTS_PATH.write_text(_culling_effects_file(), encoding="utf-8-sig", newline="\n")
+    FARM_LAND_TRIGGERS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    FARM_LAND_TRIGGERS_PATH.write_text(_farm_land_triggers_file(), encoding="utf-8-sig", newline="\n")
 
 
 if __name__ == "__main__":

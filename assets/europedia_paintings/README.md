@@ -101,7 +101,7 @@ the far distance.
 ## Added later: overview (2026-10-24)
 Painted by Codex (GPT-6.1 Sol, high, its image generation, six sub-agents in parallel) with six of the paintings above
 as style references: twelve candidates from six concepts, two variants each, for Jan to choose from. `overview.jpg` is
-crossroads_tuscany variant a.
+crossroads_tuscany variant b (a Discord vote, 2026-10-28; variant a was the banner before).
 
 **overview**: the title picture of the mod. Every province lives off one food store: a full store means growth and
 newcomers, an empty one hunger, flight and death. No storm front (the harvest banner owns it): want is shown by dry,

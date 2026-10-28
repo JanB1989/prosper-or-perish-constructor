@@ -49,7 +49,7 @@ PAINTINGS: dict[str, int] = {
     "trade_goods": 165,
     "population_growth": 165,
     "navigable_rivers": 140,   # the haulers on the towpath, the river running into the distance
-    "overview": 150,           # the wayside shrine at the fork stays whole above the family
+    "overview": 190,           # the father's hat and the daughter's face both stay in frame
 }
 
 

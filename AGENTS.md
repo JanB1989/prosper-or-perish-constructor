@@ -369,10 +369,21 @@
   A labelled `floor = { ... }` breaks the cap to 0; keep floors inside helpers. The start planner's evaluator
   (`start_rules.py`) reads `this.`/`root.` as the same location.
 - Farm max levels speak in levels of that farm (`scripts/generate_rural_capacity_values.py`): "Free Arable Land"
-  (floor((flat - reserve) / land)) plus "This farm and the lower tiers it replaces" (their level counters
-  `raw_modifier pp_levels_<farm> = 1`, scaled like the land they take, so the cap is exact). A farm shows its land once,
-  as Arable Land (`local_population_capacity = -land`); no second land record (2026-10-23, Jan: `local_pp_farmland_used`
-  and the old "Farming Capacity from X" counters are gone, a test blocks them).
+  (floor((flat - townsfolk capacity - reserve) / land)) plus "This farm and the lower tiers it replaces" (their level
+  counters `raw_modifier pp_levels_<farm> = 1`, scaled like the land they take, so the cap is exact). A farm shows its
+  land once, as Arable Land (`local_population_capacity = -land`); no second land record (2026-10-23, Jan:
+  `local_pp_farmland_used` and the old "Farming Capacity from X" counters are gone, a test blocks them).
+- Shared land (2026-10-28, Jan, branch `improvement-room-farm-caps`, tested in game): the engine counts a building's own
+  levels under construction against its max level, but not another farm's, so two farms could start levels on the same
+  free land (Sanlorenzo 1554: Cattle Farm 21/25 and Horse Breeders 13/17 on land for 4 levels). Every farm max has the
+  row "Other Farms under construction": the land of the farm levels under construction in the location outside the
+  farm's own upgrade line (`pp_farm_land_queued_outside_<line>`, `building_levels_under_construction` stepped to 5 per
+  building, land classes as scripted triggers `pp_farm_land_class_<land>`), only where land is free (a construction
+  never lowers a cap below the standing levels). The townsfolk capacity reads `pp_subsistence_land` at its applied
+  size (marker `pp_subsistence_land_size`): the modifier refreshes once a year, so today's subsistence count took a
+  hiring farm's peasants' land twice until the refresh. The location view's bars read the same land.
+- `script_eval.py` evaluates the generated location script values offline (farm caps, improvement caps, the bars);
+  `tests/test_land_script_values.py` checks them by what they compute, anchored on numbers read in game.
 
 ## Deleted Vanilla Objects and Start Exceptions (2026-10-23, Jan)
 

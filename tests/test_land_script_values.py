@@ -183,6 +183,38 @@ def test_alexandria_upgrades_count_as_room():
     assert EVAL.value("pp_land_bar_room_field_management_shared", ctx) == 0
 
 
+def _full_max_room(unit: alb.CapUnit, levels: dict[str, int], buildable: set[str], cap: float) -> float:
+    """The room as the first version computed it: the best over every buildable member, minus the land now."""
+    now = sum(levels.get(b.key, 0) * b.land for b in unit.members)
+    best = 0.0
+    for b in unit.members:
+        if b.key not in buildable:
+            continue
+        kept = [m for m in unit.members if m is not b and m.key not in alb.replaced(b, unit.members)]
+        held = max(0.0, min(cap, unit.limit or cap) // 1 - sum(levels.get(m.key, 0) for m in kept)) * b.land
+        best = max(best, held + sum(levels.get(m.key, 0) * m.land for m in kept))
+    return max(0.0, best - now)
+
+
+def test_room_from_one_candidate_per_group_is_the_best_of_every_member():
+    """The bars compute one candidate per upgrade line and one for the regional alternatives (cost per frame); over
+    random states that must give the best room any buildable member gives."""
+    import random
+
+    rng = random.Random(1554)
+    units = alb.model(MOD_ROOT, None).units
+    for _ in range(400):
+        unit = rng.choice(units)
+        levels = {b.key: rng.choice((0, 0, 1, 3, 7, 12)) for b in unit.members}
+        buildable = {b.key for b in unit.members if rng.random() < 0.5}
+        ctx = sanlorenzo(can_build=buildable, **{k: {"level": v} for k, v in levels.items()})
+        ctx["game"]["development"] = rng.uniform(0, 300)
+        short = unit.equation.removeprefix("pp_wb_cap_")
+        cap = EVAL.value(unit.equation, ctx)
+        expected = _full_max_room(unit, levels, buildable, cap)
+        assert EVAL.value(f"pp_land_bar_room_{short}", ctx) == pytest.approx(expected), (short, levels, buildable, cap)
+
+
 def test_capacity_bar_is_the_engine_capacity_and_its_parts_fill_one_scale():
     ctx = sanlorenzo(can_build={"field_management", "land_clearance"})
     ctx["modifiers"]["local_population_capacity_modifier"] = 0.1

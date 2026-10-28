@@ -231,15 +231,21 @@ def test_room_is_the_most_land_a_buildable_member_gives_the_cap_minus_the_land_n
     assert alb.replaced(unit.members[2], unit.members) == {"better", "marled"}
     text = alb._room(unit)
     room = _block(text, "pp_land_bar_room_group_shared")
-    # the best of the members, each 0 where it cannot be built, minus the land now, never below 0
-    assert room.count("min = pp_land_bar_room_group_shared_to_") == 4
+    # one candidate per group (the upgrade line, top tier first; the regional alternatives, most land first), each 0
+    # where none of its members can be built, minus the land now, never below 0 (2026-10-28: cost per frame; the
+    # equality with the best of every member is checked in test_land_script_values.py)
+    assert [[b.key for b in g] for g in alb.candidate_groups(unit)] == [["best", "better", "marled"], ["regional"]]
+    assert room.count("min = pp_land_bar_room_group_shared_best_") == 2
     assert room.index("subtract = pp_land_bar_room_group_shared_now") < room.rindex("min = 0")
+    line = _block(text, "pp_land_bar_room_group_shared_best_1")
+    assert line.index("building_type:best") < line.index("building_type:better") < line.index("building_type:marled")
+    assert ("if = { limit = { can_build_building = building_type:best owner ?= { can_build_building = building_type:best "
+            "} } value = pp_land_bar_room_group_shared_to_best }") in line
     # the cap as the engine reads max_levels: clamped, floored
     assert "pp_land_bar_room_group_shared_cap = {\n\tvalue = pp_wb_cap_group_shared\n\tmax = 15\n\tfloor = yes\n}" in text
     # with the best tier: its own and the replaced tiers' levels become its land, the regional member keeps its own
     best = _block(text, "pp_land_bar_room_group_shared_to_best")
-    assert ("limit = { can_build_building = building_type:best owner ?= { can_build_building = building_type:best } }"
-            in best)
+    assert "can_build_building" not in best
     assert "location_building_level(building_type:marled)" not in best
     assert "location_building_level(building_type:better)" not in best
     assert best.count("location_building_level(building_type:regional)") == 2      # subtracted, then its land added

@@ -217,10 +217,36 @@ def _has(key: str, effect: str) -> str:
     return f"\tif = {{ limit = {{ has_building = building_type:{key} }} {effect} }}"
 
 
+def candidate_groups(unit: CapUnit) -> list[list[Building]]:
+    """The unit's members in the groups whose best buildable member is a candidate for the room: each upgrade line
+    (members linked by ``obsolete``), top tier first, and the members that replace nothing and are replaced by nothing
+    (regional alternatives), most land first.
+
+    Within a group the first member the owner can build here gives the most room, so only it is computed (2026-10-28:
+    the bars read the room in every one of their ~70 parts per frame; computing every member cost ~8 ms a frame):
+    - an upgrade tier holds the cap at its land with the lower tiers' levels upgraded, so a higher tier with more land
+      per level gives at least what a lower one gives (room_t - room_b = (cap - others - levels_t) x (land_t - land_b),
+      and both are 0 when the cap is full);
+    - an alternative gives (cap - all levels in the cap) x its land, 0 when the cap is full: most land wins.
+    """
+    keys = {b.key: b for b in unit.members}
+    linked = {b.key for b in unit.members if b.obsolete in keys} | {b.obsolete for b in unit.members if b.obsolete in keys}
+    lines: dict[str, list[Building]] = {}
+    for b in unit.members:
+        if b.key in linked:
+            root = b
+            while root.obsolete in keys:
+                root = keys[root.obsolete]
+            lines.setdefault(root.key, []).append(b)
+    groups = [sorted(line, key=lambda b: (-len(replaced(b, unit.members)), -b.land)) for line in lines.values()]
+    alternatives = sorted((b for b in unit.members if b.key not in linked), key=lambda b: -b.land)
+    return groups + ([alternatives] if alternatives else [])
+
+
 def _room(unit: CapUnit) -> str:
     """Land the unit's improvements could still add: the most land the cap holds with one member the owner can build
     here (its levels and the levels of the tiers it replaces at its land, the other members' levels kept), minus the
-    land the members' standing levels give."""
+    land the members' standing levels give. One candidate per group (candidate_groups)."""
     name = _unit_name(unit)
     cap = [f"{name}_cap = {{", f"\tvalue = {unit.equation}"]
     if unit.limit is not None:
@@ -231,35 +257,46 @@ def _room(unit: CapUnit) -> str:
     now.append("}")
     total = [f"{name} = {{", "\tvalue = 0"]
     blocks = []
-    for b in unit.members:
-        kept = [m for m in unit.members if m is not b and m.key not in replaced(b, unit.members)]
-        total.append(f"\tmin = {name}_to_{b.key}")
-        blocks += [
-            f"{name}_to_{b.key} = {{",
-            "\tvalue = 0",
-            "\tif = {",
-            f"\t\tlimit = {{ can_build_building = building_type:{b.key} owner ?= {{ can_build_building = building_type:{b.key} }} }}",
-            f"\t\tvalue = {name}_cap",
-            *("\t" + _has(m.key, f"subtract = {_level(m.key)}") for m in kept),
-            "\t\tmin = 0",
-            f"\t\tmultiply = {_num(b.land)}",
-            *("\t" + _has(m.key, f"add = {{ value = {_level(m.key)} multiply = {_num(m.land)} }}") for m in kept),
-            "\t}",
-            "}",
-        ]
+    for index, group in enumerate(candidate_groups(unit)):
+        best = f"{name}_best_{index + 1}"
+        total.append(f"\tmin = {best}")
+        choose = [f"{best} = {{", "\tvalue = 0"]
+        for position, b in enumerate(group):
+            branch = "if" if position == 0 else "else_if"
+            choose.append(f"\t{branch} = {{ limit = {{ can_build_building = building_type:{b.key} owner ?= {{ "
+                          f"can_build_building = building_type:{b.key} }} }} value = {name}_to_{b.key} }}")
+        blocks += choose + ["}"]
+        for b in group:
+            kept = [m for m in unit.members if m is not b and m.key not in replaced(b, unit.members)]
+            blocks += [
+                f"{name}_to_{b.key} = {{",
+                f"\tvalue = {name}_cap",
+                *(_has(m.key, f"subtract = {_level(m.key)}") for m in kept),
+                "\tmin = 0",
+                f"\tmultiply = {_num(b.land)}",
+                *(_has(m.key, f"add = {{ value = {_level(m.key)} multiply = {_num(m.land)} }}") for m in kept),
+                "}",
+            ]
     total += [f"\tsubtract = {name}_now", "\tmin = 0", "}"]
     return "\n".join(total + cap + now + blocks)
 
 
 def _land_sum(name: str, members: list[Building], comment: str, counters: bool) -> str:
-    """Sum of land per level x levels; a counter (scaled by input fulfilment like the capacity row) where it has one."""
+    """Sum of land per level x levels; a counter (scaled by input fulfilment like the capacity row) where it has one.
+    Counters of the same land per level are summed first and multiplied once (the bars read this ~70 times a frame)."""
     lines = [f"# {comment}", f"{name} = {{", "\tvalue = 0"]
+    by_land: dict[str, list[str]] = {}
     for b in members:
         land = _num(abs(b.land))
         if counters and b.counter:
-            lines.append(f"\tadd = {{ value = modifier:{b.counter} multiply = {land} }}")
+            by_land.setdefault(land, []).append(b.counter)
         else:
             lines.append(f"\tif = {{ limit = {{ has_building = building_type:{b.key} }} add = {{ value = {_level(b.key)} multiply = {land} }} }}")
+    for land, names in by_land.items():
+        lines.append("\tadd = {")
+        lines.append(f"\t\tvalue = modifier:{names[0]}")
+        lines += [f"\t\tadd = modifier:{counter}" for counter in names[1:]]
+        lines += [f"\t\tmultiply = {land}", "\t}"]
     lines.append("}")
     return "\n".join(lines)
 
@@ -319,9 +356,10 @@ pp_land_bar_percent = {
 # for improvements past its end
 pp_land_bar_held = { value = pp_land_bar_capacity add = pp_land_bar_farms_shown }
 pp_land_bar_scale_land = { value = pp_land_bar_held add = pp_land_bar_room }
+# min is the lower bound: the longer of the two (one evaluation each; an if-limit read the land a second time)
 pp_land_bar_scale = {
 	value = pp_land_bar_scale_land
-	if = { limit = { pp_land_bar_population > pp_land_bar_scale_land } value = pp_land_bar_population }
+	min = pp_land_bar_population
 	min = 0.001
 }
 pp_land_bar_f_population = { value = pp_land_bar_population divide = pp_land_bar_scale }

@@ -57,9 +57,10 @@ pp_land_bar_percent = {
 # for improvements past its end
 pp_land_bar_held = { value = pp_land_bar_capacity add = pp_land_bar_farms_shown }
 pp_land_bar_scale_land = { value = pp_land_bar_held add = pp_land_bar_room }
+# min is the lower bound: the longer of the two (one evaluation each; an if-limit read the land a second time)
 pp_land_bar_scale = {
 	value = pp_land_bar_scale_land
-	if = { limit = { pp_land_bar_population > pp_land_bar_scale_land } value = pp_land_bar_population }
+	min = pp_land_bar_population
 	min = 0.001
 }
 pp_land_bar_f_population = { value = pp_land_bar_population divide = pp_land_bar_scale }
@@ -73,100 +74,124 @@ pp_land_bar_f_land = { value = pp_land_bar_scale_land divide = pp_land_bar_scale
 # Land the standing improvements add (raw_modifier capacity per level)
 pp_land_bar_improvements_flat = {
 	value = 0
-	add = { value = modifier:pp_wb_levels_bund multiply = 5 }
-	add = { value = modifier:pp_wb_levels_field_drainage multiply = 5 }
-	add = { value = modifier:pp_wb_levels_field_management multiply = 5 }
-	add = { value = modifier:pp_wb_levels_field_management_convertible multiply = 7.5 }
-	add = { value = modifier:pp_wb_levels_field_management_improved multiply = 10 }
-	add = { value = modifier:pp_wb_levels_incamisana multiply = 7.5 }
 	if = { limit = { has_building = building_type:irrigated_fields } add = { value = "location_building_level(building_type:irrigated_fields)" multiply = 5 } }
-	add = { value = modifier:pp_wb_levels_irrigation_systems multiply = 5 }
-	add = { value = modifier:pp_wb_levels_jiangnan_canal_network multiply = 12.5 }
-	add = { value = modifier:pp_wb_levels_jiangnan_hill_terraces multiply = 15 }
-	add = { value = modifier:pp_wb_levels_khmer_baray multiply = 7.5 }
 	if = { limit = { has_building = building_type:land_clearance } add = { value = "location_building_level(building_type:land_clearance)" multiply = 5 } }
-	add = { value = modifier:pp_wb_levels_paddy_water_control multiply = 5 }
-	add = { value = modifier:pp_wb_levels_polders multiply = 5 }
-	add = { value = modifier:pp_wb_levels_qanats multiply = 5 }
+	add = {
+		value = modifier:pp_wb_levels_bund
+		add = modifier:pp_wb_levels_field_drainage
+		add = modifier:pp_wb_levels_field_management
+		add = modifier:pp_wb_levels_irrigation_systems
+		add = modifier:pp_wb_levels_paddy_water_control
+		add = modifier:pp_wb_levels_polders
+		add = modifier:pp_wb_levels_qanats
+		multiply = 5
+	}
+	add = {
+		value = modifier:pp_wb_levels_field_management_convertible
+		add = modifier:pp_wb_levels_incamisana
+		add = modifier:pp_wb_levels_khmer_baray
+		multiply = 7.5
+	}
+	add = {
+		value = modifier:pp_wb_levels_field_management_improved
+		multiply = 10
+	}
+	add = {
+		value = modifier:pp_wb_levels_jiangnan_canal_network
+		multiply = 12.5
+	}
+	add = {
+		value = modifier:pp_wb_levels_jiangnan_hill_terraces
+		multiply = 15
+	}
 }
 
 # Land the farms take (raw_modifier capacity per level)
 pp_land_bar_farms_flat = {
 	value = 0
-	add = { value = modifier:pp_levels_camel_herders multiply = 2 }
-	add = { value = modifier:pp_levels_camel_stud multiply = 2 }
-	add = { value = modifier:pp_levels_cattle_farm multiply = 2 }
-	add = { value = modifier:pp_levels_cattle_farmstead multiply = 2 }
-	add = { value = modifier:pp_levels_cattle_model_farm multiply = 2 }
-	add = { value = modifier:pp_levels_cattle_rotations multiply = 2 }
-	add = { value = modifier:pp_levels_chili_plantation multiply = 10 }
-	add = { value = modifier:pp_levels_clove_grove multiply = 10 }
-	add = { value = modifier:pp_levels_cocoa_grove multiply = 10 }
-	add = { value = modifier:pp_levels_coffee_grove multiply = 10 }
-	add = { value = modifier:pp_levels_cotton_farm multiply = 10 }
-	add = { value = modifier:pp_levels_cotton_plantation multiply = 10 }
-	add = { value = modifier:pp_levels_dye_plantation multiply = 10 }
-	add = { value = modifier:pp_levels_elephant_hunting_grounds multiply = 2 }
-	add = { value = modifier:pp_levels_elephant_kraal multiply = 2 }
-	add = { value = modifier:pp_levels_enclosed_sheep_walks multiply = 2 }
-	add = { value = modifier:pp_levels_eng_royal_forest multiply = 2 }
-	add = { value = modifier:pp_levels_fiber_crops_farm multiply = 5 }
-	add = { value = modifier:pp_levels_fiber_dressing_yard multiply = 5 }
-	add = { value = modifier:pp_levels_fruit_orchard multiply = 5 }
-	add = { value = modifier:pp_levels_horse_breeders multiply = 2 }
-	add = { value = modifier:pp_levels_hurdled_sheepcotes multiply = 2 }
-	add = { value = modifier:pp_levels_incense_grove multiply = 5 }
-	add = { value = modifier:pp_levels_legume_farm multiply = 5 }
-	add = { value = modifier:pp_levels_legume_farmstead multiply = 5 }
-	add = { value = modifier:pp_levels_legume_model_farm multiply = 5 }
-	add = { value = modifier:pp_levels_legume_rotations multiply = 5 }
-	add = { value = modifier:pp_levels_maize_farm multiply = 5 }
-	add = { value = modifier:pp_levels_maize_farmstead multiply = 5 }
-	add = { value = modifier:pp_levels_maize_model_farm multiply = 5 }
-	add = { value = modifier:pp_levels_maize_rotations multiply = 5 }
-	add = { value = modifier:pp_levels_managed_cocoa_grove multiply = 10 }
-	add = { value = modifier:pp_levels_managed_pepper_garden multiply = 10 }
-	add = { value = modifier:pp_levels_market_cotton_farm multiply = 10 }
-	add = { value = modifier:pp_levels_market_tobacco_farm multiply = 10 }
-	add = { value = modifier:pp_levels_millet_farm multiply = 5 }
-	add = { value = modifier:pp_levels_millet_farmstead multiply = 5 }
-	add = { value = modifier:pp_levels_millet_model_farm multiply = 5 }
-	add = { value = modifier:pp_levels_millet_rotations multiply = 5 }
-	add = { value = modifier:pp_levels_nursery_orchard multiply = 5 }
-	add = { value = modifier:pp_levels_olive_farm multiply = 5 }
-	add = { value = modifier:pp_levels_olive_farmstead multiply = 5 }
-	add = { value = modifier:pp_levels_olive_model_farm multiply = 5 }
-	add = { value = modifier:pp_levels_olive_rotations multiply = 5 }
-	add = { value = modifier:pp_levels_pepper_garden multiply = 10 }
-	add = { value = modifier:pp_levels_pomological_orchard multiply = 5 }
-	add = { value = modifier:pp_levels_potato_farm multiply = 5 }
-	add = { value = modifier:pp_levels_potato_farmstead multiply = 5 }
-	add = { value = modifier:pp_levels_potato_model_farm multiply = 5 }
-	add = { value = modifier:pp_levels_potato_rotations multiply = 5 }
-	add = { value = modifier:pp_levels_regulated_sericulture_farm multiply = 5 }
-	add = { value = modifier:pp_levels_rice_farm multiply = 5 }
-	add = { value = modifier:pp_levels_rice_farmstead multiply = 5 }
-	add = { value = modifier:pp_levels_rice_model_farm multiply = 5 }
-	add = { value = modifier:pp_levels_rice_rotations multiply = 5 }
-	add = { value = modifier:pp_levels_saffron_croft multiply = 10 }
-	add = { value = modifier:pp_levels_saffron_kiln_croft multiply = 10 }
-	add = { value = modifier:pp_levels_sericulture_farm multiply = 5 }
-	add = { value = modifier:pp_levels_sheep_farms multiply = 2 }
-	add = { value = modifier:pp_levels_simplers_grove multiply = 5 }
-	add = { value = modifier:pp_levels_stud_farm multiply = 2 }
-	add = { value = modifier:pp_levels_sugar_plantation multiply = 10 }
-	add = { value = modifier:pp_levels_sugarcane_farm multiply = 10 }
-	add = { value = modifier:pp_levels_tea_garden multiply = 10 }
-	add = { value = modifier:pp_levels_tea_sorting_garden multiply = 10 }
-	add = { value = modifier:pp_levels_terraced_coffee_grove multiply = 10 }
-	add = { value = modifier:pp_levels_tobacco_farm multiply = 10 }
-	add = { value = modifier:pp_levels_tobacco_plantation multiply = 10 }
-	add = { value = modifier:pp_levels_trapiche_sugarcane_farm multiply = 10 }
-	add = { value = modifier:pp_levels_vineyard_estate multiply = 5 }
-	add = { value = modifier:pp_levels_wheat_farm multiply = 5 }
-	add = { value = modifier:pp_levels_wheat_farmstead multiply = 5 }
-	add = { value = modifier:pp_levels_wheat_model_farm multiply = 5 }
-	add = { value = modifier:pp_levels_wheat_rotations multiply = 5 }
+	add = {
+		value = modifier:pp_levels_camel_herders
+		add = modifier:pp_levels_camel_stud
+		add = modifier:pp_levels_cattle_farm
+		add = modifier:pp_levels_cattle_farmstead
+		add = modifier:pp_levels_cattle_model_farm
+		add = modifier:pp_levels_cattle_rotations
+		add = modifier:pp_levels_elephant_hunting_grounds
+		add = modifier:pp_levels_elephant_kraal
+		add = modifier:pp_levels_enclosed_sheep_walks
+		add = modifier:pp_levels_eng_royal_forest
+		add = modifier:pp_levels_horse_breeders
+		add = modifier:pp_levels_hurdled_sheepcotes
+		add = modifier:pp_levels_sheep_farms
+		add = modifier:pp_levels_stud_farm
+		multiply = 2
+	}
+	add = {
+		value = modifier:pp_levels_chili_plantation
+		add = modifier:pp_levels_clove_grove
+		add = modifier:pp_levels_cocoa_grove
+		add = modifier:pp_levels_coffee_grove
+		add = modifier:pp_levels_cotton_farm
+		add = modifier:pp_levels_cotton_plantation
+		add = modifier:pp_levels_dye_plantation
+		add = modifier:pp_levels_managed_cocoa_grove
+		add = modifier:pp_levels_managed_pepper_garden
+		add = modifier:pp_levels_market_cotton_farm
+		add = modifier:pp_levels_market_tobacco_farm
+		add = modifier:pp_levels_pepper_garden
+		add = modifier:pp_levels_saffron_croft
+		add = modifier:pp_levels_saffron_kiln_croft
+		add = modifier:pp_levels_sugar_plantation
+		add = modifier:pp_levels_sugarcane_farm
+		add = modifier:pp_levels_tea_garden
+		add = modifier:pp_levels_tea_sorting_garden
+		add = modifier:pp_levels_terraced_coffee_grove
+		add = modifier:pp_levels_tobacco_farm
+		add = modifier:pp_levels_tobacco_plantation
+		add = modifier:pp_levels_trapiche_sugarcane_farm
+		multiply = 10
+	}
+	add = {
+		value = modifier:pp_levels_fiber_crops_farm
+		add = modifier:pp_levels_fiber_dressing_yard
+		add = modifier:pp_levels_fruit_orchard
+		add = modifier:pp_levels_incense_grove
+		add = modifier:pp_levels_legume_farm
+		add = modifier:pp_levels_legume_farmstead
+		add = modifier:pp_levels_legume_model_farm
+		add = modifier:pp_levels_legume_rotations
+		add = modifier:pp_levels_maize_farm
+		add = modifier:pp_levels_maize_farmstead
+		add = modifier:pp_levels_maize_model_farm
+		add = modifier:pp_levels_maize_rotations
+		add = modifier:pp_levels_millet_farm
+		add = modifier:pp_levels_millet_farmstead
+		add = modifier:pp_levels_millet_model_farm
+		add = modifier:pp_levels_millet_rotations
+		add = modifier:pp_levels_nursery_orchard
+		add = modifier:pp_levels_olive_farm
+		add = modifier:pp_levels_olive_farmstead
+		add = modifier:pp_levels_olive_model_farm
+		add = modifier:pp_levels_olive_rotations
+		add = modifier:pp_levels_pomological_orchard
+		add = modifier:pp_levels_potato_farm
+		add = modifier:pp_levels_potato_farmstead
+		add = modifier:pp_levels_potato_model_farm
+		add = modifier:pp_levels_potato_rotations
+		add = modifier:pp_levels_regulated_sericulture_farm
+		add = modifier:pp_levels_rice_farm
+		add = modifier:pp_levels_rice_farmstead
+		add = modifier:pp_levels_rice_model_farm
+		add = modifier:pp_levels_rice_rotations
+		add = modifier:pp_levels_sericulture_farm
+		add = modifier:pp_levels_simplers_grove
+		add = modifier:pp_levels_vineyard_estate
+		add = modifier:pp_levels_wheat_farm
+		add = modifier:pp_levels_wheat_farmstead
+		add = modifier:pp_levels_wheat_model_farm
+		add = modifier:pp_levels_wheat_rotations
+		multiply = 5
+	}
 }
 
 # Land the reserved grounds take (buildings with negative capacity and no farm counter)
@@ -187,10 +212,8 @@ pp_land_bar_room_flat = {
 
 pp_land_bar_room_field_management_shared = {
 	value = 0
-	min = pp_land_bar_room_field_management_shared_to_field_management
-	min = pp_land_bar_room_field_management_shared_to_field_management_convertible
-	min = pp_land_bar_room_field_management_shared_to_field_management_improved
-	min = pp_land_bar_room_field_management_shared_to_jiangnan_hill_terraces
+	min = pp_land_bar_room_field_management_shared_best_1
+	min = pp_land_bar_room_field_management_shared_best_2
 	subtract = pp_land_bar_room_field_management_shared_now
 	min = 0
 }
@@ -206,64 +229,58 @@ pp_land_bar_room_field_management_shared_now = {
 	if = { limit = { has_building = building_type:field_management_improved } add = { value = "location_building_level(building_type:field_management_improved)" multiply = 10 } }
 	if = { limit = { has_building = building_type:jiangnan_hill_terraces } add = { value = "location_building_level(building_type:jiangnan_hill_terraces)" multiply = 15 } }
 }
-pp_land_bar_room_field_management_shared_to_field_management = {
+pp_land_bar_room_field_management_shared_best_1 = {
 	value = 0
-	if = {
-		limit = { can_build_building = building_type:field_management owner ?= { can_build_building = building_type:field_management } }
-		value = pp_land_bar_room_field_management_shared_cap
-		if = { limit = { has_building = building_type:field_management_convertible } subtract = "location_building_level(building_type:field_management_convertible)" }
-		if = { limit = { has_building = building_type:field_management_improved } subtract = "location_building_level(building_type:field_management_improved)" }
-		if = { limit = { has_building = building_type:jiangnan_hill_terraces } subtract = "location_building_level(building_type:jiangnan_hill_terraces)" }
-		min = 0
-		multiply = 5
-		if = { limit = { has_building = building_type:field_management_convertible } add = { value = "location_building_level(building_type:field_management_convertible)" multiply = 7.5 } }
-		if = { limit = { has_building = building_type:field_management_improved } add = { value = "location_building_level(building_type:field_management_improved)" multiply = 10 } }
-		if = { limit = { has_building = building_type:jiangnan_hill_terraces } add = { value = "location_building_level(building_type:jiangnan_hill_terraces)" multiply = 15 } }
-	}
-}
-pp_land_bar_room_field_management_shared_to_field_management_convertible = {
-	value = 0
-	if = {
-		limit = { can_build_building = building_type:field_management_convertible owner ?= { can_build_building = building_type:field_management_convertible } }
-		value = pp_land_bar_room_field_management_shared_cap
-		if = { limit = { has_building = building_type:field_management_improved } subtract = "location_building_level(building_type:field_management_improved)" }
-		if = { limit = { has_building = building_type:jiangnan_hill_terraces } subtract = "location_building_level(building_type:jiangnan_hill_terraces)" }
-		min = 0
-		multiply = 7.5
-		if = { limit = { has_building = building_type:field_management_improved } add = { value = "location_building_level(building_type:field_management_improved)" multiply = 10 } }
-		if = { limit = { has_building = building_type:jiangnan_hill_terraces } add = { value = "location_building_level(building_type:jiangnan_hill_terraces)" multiply = 15 } }
-	}
+	if = { limit = { can_build_building = building_type:field_management_improved owner ?= { can_build_building = building_type:field_management_improved } } value = pp_land_bar_room_field_management_shared_to_field_management_improved }
+	else_if = { limit = { can_build_building = building_type:field_management_convertible owner ?= { can_build_building = building_type:field_management_convertible } } value = pp_land_bar_room_field_management_shared_to_field_management_convertible }
+	else_if = { limit = { can_build_building = building_type:field_management owner ?= { can_build_building = building_type:field_management } } value = pp_land_bar_room_field_management_shared_to_field_management }
 }
 pp_land_bar_room_field_management_shared_to_field_management_improved = {
+	value = pp_land_bar_room_field_management_shared_cap
+	if = { limit = { has_building = building_type:jiangnan_hill_terraces } subtract = "location_building_level(building_type:jiangnan_hill_terraces)" }
+	min = 0
+	multiply = 10
+	if = { limit = { has_building = building_type:jiangnan_hill_terraces } add = { value = "location_building_level(building_type:jiangnan_hill_terraces)" multiply = 15 } }
+}
+pp_land_bar_room_field_management_shared_to_field_management_convertible = {
+	value = pp_land_bar_room_field_management_shared_cap
+	if = { limit = { has_building = building_type:field_management_improved } subtract = "location_building_level(building_type:field_management_improved)" }
+	if = { limit = { has_building = building_type:jiangnan_hill_terraces } subtract = "location_building_level(building_type:jiangnan_hill_terraces)" }
+	min = 0
+	multiply = 7.5
+	if = { limit = { has_building = building_type:field_management_improved } add = { value = "location_building_level(building_type:field_management_improved)" multiply = 10 } }
+	if = { limit = { has_building = building_type:jiangnan_hill_terraces } add = { value = "location_building_level(building_type:jiangnan_hill_terraces)" multiply = 15 } }
+}
+pp_land_bar_room_field_management_shared_to_field_management = {
+	value = pp_land_bar_room_field_management_shared_cap
+	if = { limit = { has_building = building_type:field_management_convertible } subtract = "location_building_level(building_type:field_management_convertible)" }
+	if = { limit = { has_building = building_type:field_management_improved } subtract = "location_building_level(building_type:field_management_improved)" }
+	if = { limit = { has_building = building_type:jiangnan_hill_terraces } subtract = "location_building_level(building_type:jiangnan_hill_terraces)" }
+	min = 0
+	multiply = 5
+	if = { limit = { has_building = building_type:field_management_convertible } add = { value = "location_building_level(building_type:field_management_convertible)" multiply = 7.5 } }
+	if = { limit = { has_building = building_type:field_management_improved } add = { value = "location_building_level(building_type:field_management_improved)" multiply = 10 } }
+	if = { limit = { has_building = building_type:jiangnan_hill_terraces } add = { value = "location_building_level(building_type:jiangnan_hill_terraces)" multiply = 15 } }
+}
+pp_land_bar_room_field_management_shared_best_2 = {
 	value = 0
-	if = {
-		limit = { can_build_building = building_type:field_management_improved owner ?= { can_build_building = building_type:field_management_improved } }
-		value = pp_land_bar_room_field_management_shared_cap
-		if = { limit = { has_building = building_type:jiangnan_hill_terraces } subtract = "location_building_level(building_type:jiangnan_hill_terraces)" }
-		min = 0
-		multiply = 10
-		if = { limit = { has_building = building_type:jiangnan_hill_terraces } add = { value = "location_building_level(building_type:jiangnan_hill_terraces)" multiply = 15 } }
-	}
+	if = { limit = { can_build_building = building_type:jiangnan_hill_terraces owner ?= { can_build_building = building_type:jiangnan_hill_terraces } } value = pp_land_bar_room_field_management_shared_to_jiangnan_hill_terraces }
 }
 pp_land_bar_room_field_management_shared_to_jiangnan_hill_terraces = {
-	value = 0
-	if = {
-		limit = { can_build_building = building_type:jiangnan_hill_terraces owner ?= { can_build_building = building_type:jiangnan_hill_terraces } }
-		value = pp_land_bar_room_field_management_shared_cap
-		if = { limit = { has_building = building_type:field_management } subtract = "location_building_level(building_type:field_management)" }
-		if = { limit = { has_building = building_type:field_management_convertible } subtract = "location_building_level(building_type:field_management_convertible)" }
-		if = { limit = { has_building = building_type:field_management_improved } subtract = "location_building_level(building_type:field_management_improved)" }
-		min = 0
-		multiply = 15
-		if = { limit = { has_building = building_type:field_management } add = { value = "location_building_level(building_type:field_management)" multiply = 5 } }
-		if = { limit = { has_building = building_type:field_management_convertible } add = { value = "location_building_level(building_type:field_management_convertible)" multiply = 7.5 } }
-		if = { limit = { has_building = building_type:field_management_improved } add = { value = "location_building_level(building_type:field_management_improved)" multiply = 10 } }
-	}
+	value = pp_land_bar_room_field_management_shared_cap
+	if = { limit = { has_building = building_type:field_management } subtract = "location_building_level(building_type:field_management)" }
+	if = { limit = { has_building = building_type:field_management_convertible } subtract = "location_building_level(building_type:field_management_convertible)" }
+	if = { limit = { has_building = building_type:field_management_improved } subtract = "location_building_level(building_type:field_management_improved)" }
+	min = 0
+	multiply = 15
+	if = { limit = { has_building = building_type:field_management } add = { value = "location_building_level(building_type:field_management)" multiply = 5 } }
+	if = { limit = { has_building = building_type:field_management_convertible } add = { value = "location_building_level(building_type:field_management_convertible)" multiply = 7.5 } }
+	if = { limit = { has_building = building_type:field_management_improved } add = { value = "location_building_level(building_type:field_management_improved)" multiply = 10 } }
 }
 
 pp_land_bar_room_irrigated_fields_terms = {
 	value = 0
-	min = pp_land_bar_room_irrigated_fields_terms_to_irrigated_fields
+	min = pp_land_bar_room_irrigated_fields_terms_best_1
 	subtract = pp_land_bar_room_irrigated_fields_terms_now
 	min = 0
 }
@@ -276,19 +293,19 @@ pp_land_bar_room_irrigated_fields_terms_now = {
 	value = 0
 	if = { limit = { has_building = building_type:irrigated_fields } add = { value = "location_building_level(building_type:irrigated_fields)" multiply = 5 } }
 }
-pp_land_bar_room_irrigated_fields_terms_to_irrigated_fields = {
+pp_land_bar_room_irrigated_fields_terms_best_1 = {
 	value = 0
-	if = {
-		limit = { can_build_building = building_type:irrigated_fields owner ?= { can_build_building = building_type:irrigated_fields } }
-		value = pp_land_bar_room_irrigated_fields_terms_cap
-		min = 0
-		multiply = 5
-	}
+	if = { limit = { can_build_building = building_type:irrigated_fields owner ?= { can_build_building = building_type:irrigated_fields } } value = pp_land_bar_room_irrigated_fields_terms_to_irrigated_fields }
+}
+pp_land_bar_room_irrigated_fields_terms_to_irrigated_fields = {
+	value = pp_land_bar_room_irrigated_fields_terms_cap
+	min = 0
+	multiply = 5
 }
 
 pp_land_bar_room_land_clearance_terms = {
 	value = 0
-	min = pp_land_bar_room_land_clearance_terms_to_land_clearance
+	min = pp_land_bar_room_land_clearance_terms_best_1
 	subtract = pp_land_bar_room_land_clearance_terms_now
 	min = 0
 }
@@ -301,20 +318,19 @@ pp_land_bar_room_land_clearance_terms_now = {
 	value = 0
 	if = { limit = { has_building = building_type:land_clearance } add = { value = "location_building_level(building_type:land_clearance)" multiply = 5 } }
 }
-pp_land_bar_room_land_clearance_terms_to_land_clearance = {
+pp_land_bar_room_land_clearance_terms_best_1 = {
 	value = 0
-	if = {
-		limit = { can_build_building = building_type:land_clearance owner ?= { can_build_building = building_type:land_clearance } }
-		value = pp_land_bar_room_land_clearance_terms_cap
-		min = 0
-		multiply = 5
-	}
+	if = { limit = { can_build_building = building_type:land_clearance owner ?= { can_build_building = building_type:land_clearance } } value = pp_land_bar_room_land_clearance_terms_to_land_clearance }
+}
+pp_land_bar_room_land_clearance_terms_to_land_clearance = {
+	value = pp_land_bar_room_land_clearance_terms_cap
+	min = 0
+	multiply = 5
 }
 
 pp_land_bar_room_paddy_water_control_shared = {
 	value = 0
-	min = pp_land_bar_room_paddy_water_control_shared_to_jiangnan_canal_network
-	min = pp_land_bar_room_paddy_water_control_shared_to_paddy_water_control
+	min = pp_land_bar_room_paddy_water_control_shared_best_1
 	subtract = pp_land_bar_room_paddy_water_control_shared_now
 	min = 0
 }
@@ -328,38 +344,29 @@ pp_land_bar_room_paddy_water_control_shared_now = {
 	if = { limit = { has_building = building_type:jiangnan_canal_network } add = { value = "location_building_level(building_type:jiangnan_canal_network)" multiply = 12.5 } }
 	if = { limit = { has_building = building_type:paddy_water_control } add = { value = "location_building_level(building_type:paddy_water_control)" multiply = 5 } }
 }
-pp_land_bar_room_paddy_water_control_shared_to_jiangnan_canal_network = {
+pp_land_bar_room_paddy_water_control_shared_best_1 = {
 	value = 0
-	if = {
-		limit = { can_build_building = building_type:jiangnan_canal_network owner ?= { can_build_building = building_type:jiangnan_canal_network } }
-		value = pp_land_bar_room_paddy_water_control_shared_cap
-		if = { limit = { has_building = building_type:paddy_water_control } subtract = "location_building_level(building_type:paddy_water_control)" }
-		min = 0
-		multiply = 12.5
-		if = { limit = { has_building = building_type:paddy_water_control } add = { value = "location_building_level(building_type:paddy_water_control)" multiply = 5 } }
-	}
+	if = { limit = { can_build_building = building_type:jiangnan_canal_network owner ?= { can_build_building = building_type:jiangnan_canal_network } } value = pp_land_bar_room_paddy_water_control_shared_to_jiangnan_canal_network }
+	else_if = { limit = { can_build_building = building_type:paddy_water_control owner ?= { can_build_building = building_type:paddy_water_control } } value = pp_land_bar_room_paddy_water_control_shared_to_paddy_water_control }
+}
+pp_land_bar_room_paddy_water_control_shared_to_jiangnan_canal_network = {
+	value = pp_land_bar_room_paddy_water_control_shared_cap
+	if = { limit = { has_building = building_type:paddy_water_control } subtract = "location_building_level(building_type:paddy_water_control)" }
+	min = 0
+	multiply = 12.5
+	if = { limit = { has_building = building_type:paddy_water_control } add = { value = "location_building_level(building_type:paddy_water_control)" multiply = 5 } }
 }
 pp_land_bar_room_paddy_water_control_shared_to_paddy_water_control = {
-	value = 0
-	if = {
-		limit = { can_build_building = building_type:paddy_water_control owner ?= { can_build_building = building_type:paddy_water_control } }
-		value = pp_land_bar_room_paddy_water_control_shared_cap
-		if = { limit = { has_building = building_type:jiangnan_canal_network } subtract = "location_building_level(building_type:jiangnan_canal_network)" }
-		min = 0
-		multiply = 5
-		if = { limit = { has_building = building_type:jiangnan_canal_network } add = { value = "location_building_level(building_type:jiangnan_canal_network)" multiply = 12.5 } }
-	}
+	value = pp_land_bar_room_paddy_water_control_shared_cap
+	if = { limit = { has_building = building_type:jiangnan_canal_network } subtract = "location_building_level(building_type:jiangnan_canal_network)" }
+	min = 0
+	multiply = 5
+	if = { limit = { has_building = building_type:jiangnan_canal_network } add = { value = "location_building_level(building_type:jiangnan_canal_network)" multiply = 12.5 } }
 }
 
 pp_land_bar_room_water_control_shared = {
 	value = 0
-	min = pp_land_bar_room_water_control_shared_to_irrigation_systems
-	min = pp_land_bar_room_water_control_shared_to_polders
-	min = pp_land_bar_room_water_control_shared_to_incamisana
-	min = pp_land_bar_room_water_control_shared_to_bund
-	min = pp_land_bar_room_water_control_shared_to_khmer_baray
-	min = pp_land_bar_room_water_control_shared_to_field_drainage
-	min = pp_land_bar_room_water_control_shared_to_qanats
+	min = pp_land_bar_room_water_control_shared_best_1
 	subtract = pp_land_bar_room_water_control_shared_now
 	min = 0
 }
@@ -378,150 +385,132 @@ pp_land_bar_room_water_control_shared_now = {
 	if = { limit = { has_building = building_type:field_drainage } add = { value = "location_building_level(building_type:field_drainage)" multiply = 5 } }
 	if = { limit = { has_building = building_type:qanats } add = { value = "location_building_level(building_type:qanats)" multiply = 5 } }
 }
-pp_land_bar_room_water_control_shared_to_irrigation_systems = {
+pp_land_bar_room_water_control_shared_best_1 = {
 	value = 0
-	if = {
-		limit = { can_build_building = building_type:irrigation_systems owner ?= { can_build_building = building_type:irrigation_systems } }
-		value = pp_land_bar_room_water_control_shared_cap
-		if = { limit = { has_building = building_type:polders } subtract = "location_building_level(building_type:polders)" }
-		if = { limit = { has_building = building_type:incamisana } subtract = "location_building_level(building_type:incamisana)" }
-		if = { limit = { has_building = building_type:bund } subtract = "location_building_level(building_type:bund)" }
-		if = { limit = { has_building = building_type:khmer_baray } subtract = "location_building_level(building_type:khmer_baray)" }
-		if = { limit = { has_building = building_type:field_drainage } subtract = "location_building_level(building_type:field_drainage)" }
-		if = { limit = { has_building = building_type:qanats } subtract = "location_building_level(building_type:qanats)" }
-		min = 0
-		multiply = 5
-		if = { limit = { has_building = building_type:polders } add = { value = "location_building_level(building_type:polders)" multiply = 5 } }
-		if = { limit = { has_building = building_type:incamisana } add = { value = "location_building_level(building_type:incamisana)" multiply = 7.5 } }
-		if = { limit = { has_building = building_type:bund } add = { value = "location_building_level(building_type:bund)" multiply = 5 } }
-		if = { limit = { has_building = building_type:khmer_baray } add = { value = "location_building_level(building_type:khmer_baray)" multiply = 7.5 } }
-		if = { limit = { has_building = building_type:field_drainage } add = { value = "location_building_level(building_type:field_drainage)" multiply = 5 } }
-		if = { limit = { has_building = building_type:qanats } add = { value = "location_building_level(building_type:qanats)" multiply = 5 } }
-	}
-}
-pp_land_bar_room_water_control_shared_to_polders = {
-	value = 0
-	if = {
-		limit = { can_build_building = building_type:polders owner ?= { can_build_building = building_type:polders } }
-		value = pp_land_bar_room_water_control_shared_cap
-		if = { limit = { has_building = building_type:irrigation_systems } subtract = "location_building_level(building_type:irrigation_systems)" }
-		if = { limit = { has_building = building_type:incamisana } subtract = "location_building_level(building_type:incamisana)" }
-		if = { limit = { has_building = building_type:bund } subtract = "location_building_level(building_type:bund)" }
-		if = { limit = { has_building = building_type:khmer_baray } subtract = "location_building_level(building_type:khmer_baray)" }
-		if = { limit = { has_building = building_type:field_drainage } subtract = "location_building_level(building_type:field_drainage)" }
-		if = { limit = { has_building = building_type:qanats } subtract = "location_building_level(building_type:qanats)" }
-		min = 0
-		multiply = 5
-		if = { limit = { has_building = building_type:irrigation_systems } add = { value = "location_building_level(building_type:irrigation_systems)" multiply = 5 } }
-		if = { limit = { has_building = building_type:incamisana } add = { value = "location_building_level(building_type:incamisana)" multiply = 7.5 } }
-		if = { limit = { has_building = building_type:bund } add = { value = "location_building_level(building_type:bund)" multiply = 5 } }
-		if = { limit = { has_building = building_type:khmer_baray } add = { value = "location_building_level(building_type:khmer_baray)" multiply = 7.5 } }
-		if = { limit = { has_building = building_type:field_drainage } add = { value = "location_building_level(building_type:field_drainage)" multiply = 5 } }
-		if = { limit = { has_building = building_type:qanats } add = { value = "location_building_level(building_type:qanats)" multiply = 5 } }
-	}
+	if = { limit = { can_build_building = building_type:incamisana owner ?= { can_build_building = building_type:incamisana } } value = pp_land_bar_room_water_control_shared_to_incamisana }
+	else_if = { limit = { can_build_building = building_type:khmer_baray owner ?= { can_build_building = building_type:khmer_baray } } value = pp_land_bar_room_water_control_shared_to_khmer_baray }
+	else_if = { limit = { can_build_building = building_type:irrigation_systems owner ?= { can_build_building = building_type:irrigation_systems } } value = pp_land_bar_room_water_control_shared_to_irrigation_systems }
+	else_if = { limit = { can_build_building = building_type:polders owner ?= { can_build_building = building_type:polders } } value = pp_land_bar_room_water_control_shared_to_polders }
+	else_if = { limit = { can_build_building = building_type:bund owner ?= { can_build_building = building_type:bund } } value = pp_land_bar_room_water_control_shared_to_bund }
+	else_if = { limit = { can_build_building = building_type:field_drainage owner ?= { can_build_building = building_type:field_drainage } } value = pp_land_bar_room_water_control_shared_to_field_drainage }
+	else_if = { limit = { can_build_building = building_type:qanats owner ?= { can_build_building = building_type:qanats } } value = pp_land_bar_room_water_control_shared_to_qanats }
 }
 pp_land_bar_room_water_control_shared_to_incamisana = {
-	value = 0
-	if = {
-		limit = { can_build_building = building_type:incamisana owner ?= { can_build_building = building_type:incamisana } }
-		value = pp_land_bar_room_water_control_shared_cap
-		if = { limit = { has_building = building_type:irrigation_systems } subtract = "location_building_level(building_type:irrigation_systems)" }
-		if = { limit = { has_building = building_type:polders } subtract = "location_building_level(building_type:polders)" }
-		if = { limit = { has_building = building_type:bund } subtract = "location_building_level(building_type:bund)" }
-		if = { limit = { has_building = building_type:khmer_baray } subtract = "location_building_level(building_type:khmer_baray)" }
-		if = { limit = { has_building = building_type:field_drainage } subtract = "location_building_level(building_type:field_drainage)" }
-		if = { limit = { has_building = building_type:qanats } subtract = "location_building_level(building_type:qanats)" }
-		min = 0
-		multiply = 7.5
-		if = { limit = { has_building = building_type:irrigation_systems } add = { value = "location_building_level(building_type:irrigation_systems)" multiply = 5 } }
-		if = { limit = { has_building = building_type:polders } add = { value = "location_building_level(building_type:polders)" multiply = 5 } }
-		if = { limit = { has_building = building_type:bund } add = { value = "location_building_level(building_type:bund)" multiply = 5 } }
-		if = { limit = { has_building = building_type:khmer_baray } add = { value = "location_building_level(building_type:khmer_baray)" multiply = 7.5 } }
-		if = { limit = { has_building = building_type:field_drainage } add = { value = "location_building_level(building_type:field_drainage)" multiply = 5 } }
-		if = { limit = { has_building = building_type:qanats } add = { value = "location_building_level(building_type:qanats)" multiply = 5 } }
-	}
-}
-pp_land_bar_room_water_control_shared_to_bund = {
-	value = 0
-	if = {
-		limit = { can_build_building = building_type:bund owner ?= { can_build_building = building_type:bund } }
-		value = pp_land_bar_room_water_control_shared_cap
-		if = { limit = { has_building = building_type:irrigation_systems } subtract = "location_building_level(building_type:irrigation_systems)" }
-		if = { limit = { has_building = building_type:polders } subtract = "location_building_level(building_type:polders)" }
-		if = { limit = { has_building = building_type:incamisana } subtract = "location_building_level(building_type:incamisana)" }
-		if = { limit = { has_building = building_type:khmer_baray } subtract = "location_building_level(building_type:khmer_baray)" }
-		if = { limit = { has_building = building_type:field_drainage } subtract = "location_building_level(building_type:field_drainage)" }
-		if = { limit = { has_building = building_type:qanats } subtract = "location_building_level(building_type:qanats)" }
-		min = 0
-		multiply = 5
-		if = { limit = { has_building = building_type:irrigation_systems } add = { value = "location_building_level(building_type:irrigation_systems)" multiply = 5 } }
-		if = { limit = { has_building = building_type:polders } add = { value = "location_building_level(building_type:polders)" multiply = 5 } }
-		if = { limit = { has_building = building_type:incamisana } add = { value = "location_building_level(building_type:incamisana)" multiply = 7.5 } }
-		if = { limit = { has_building = building_type:khmer_baray } add = { value = "location_building_level(building_type:khmer_baray)" multiply = 7.5 } }
-		if = { limit = { has_building = building_type:field_drainage } add = { value = "location_building_level(building_type:field_drainage)" multiply = 5 } }
-		if = { limit = { has_building = building_type:qanats } add = { value = "location_building_level(building_type:qanats)" multiply = 5 } }
-	}
+	value = pp_land_bar_room_water_control_shared_cap
+	if = { limit = { has_building = building_type:irrigation_systems } subtract = "location_building_level(building_type:irrigation_systems)" }
+	if = { limit = { has_building = building_type:polders } subtract = "location_building_level(building_type:polders)" }
+	if = { limit = { has_building = building_type:bund } subtract = "location_building_level(building_type:bund)" }
+	if = { limit = { has_building = building_type:khmer_baray } subtract = "location_building_level(building_type:khmer_baray)" }
+	if = { limit = { has_building = building_type:field_drainage } subtract = "location_building_level(building_type:field_drainage)" }
+	if = { limit = { has_building = building_type:qanats } subtract = "location_building_level(building_type:qanats)" }
+	min = 0
+	multiply = 7.5
+	if = { limit = { has_building = building_type:irrigation_systems } add = { value = "location_building_level(building_type:irrigation_systems)" multiply = 5 } }
+	if = { limit = { has_building = building_type:polders } add = { value = "location_building_level(building_type:polders)" multiply = 5 } }
+	if = { limit = { has_building = building_type:bund } add = { value = "location_building_level(building_type:bund)" multiply = 5 } }
+	if = { limit = { has_building = building_type:khmer_baray } add = { value = "location_building_level(building_type:khmer_baray)" multiply = 7.5 } }
+	if = { limit = { has_building = building_type:field_drainage } add = { value = "location_building_level(building_type:field_drainage)" multiply = 5 } }
+	if = { limit = { has_building = building_type:qanats } add = { value = "location_building_level(building_type:qanats)" multiply = 5 } }
 }
 pp_land_bar_room_water_control_shared_to_khmer_baray = {
-	value = 0
-	if = {
-		limit = { can_build_building = building_type:khmer_baray owner ?= { can_build_building = building_type:khmer_baray } }
-		value = pp_land_bar_room_water_control_shared_cap
-		if = { limit = { has_building = building_type:irrigation_systems } subtract = "location_building_level(building_type:irrigation_systems)" }
-		if = { limit = { has_building = building_type:polders } subtract = "location_building_level(building_type:polders)" }
-		if = { limit = { has_building = building_type:incamisana } subtract = "location_building_level(building_type:incamisana)" }
-		if = { limit = { has_building = building_type:bund } subtract = "location_building_level(building_type:bund)" }
-		if = { limit = { has_building = building_type:field_drainage } subtract = "location_building_level(building_type:field_drainage)" }
-		if = { limit = { has_building = building_type:qanats } subtract = "location_building_level(building_type:qanats)" }
-		min = 0
-		multiply = 7.5
-		if = { limit = { has_building = building_type:irrigation_systems } add = { value = "location_building_level(building_type:irrigation_systems)" multiply = 5 } }
-		if = { limit = { has_building = building_type:polders } add = { value = "location_building_level(building_type:polders)" multiply = 5 } }
-		if = { limit = { has_building = building_type:incamisana } add = { value = "location_building_level(building_type:incamisana)" multiply = 7.5 } }
-		if = { limit = { has_building = building_type:bund } add = { value = "location_building_level(building_type:bund)" multiply = 5 } }
-		if = { limit = { has_building = building_type:field_drainage } add = { value = "location_building_level(building_type:field_drainage)" multiply = 5 } }
-		if = { limit = { has_building = building_type:qanats } add = { value = "location_building_level(building_type:qanats)" multiply = 5 } }
-	}
+	value = pp_land_bar_room_water_control_shared_cap
+	if = { limit = { has_building = building_type:irrigation_systems } subtract = "location_building_level(building_type:irrigation_systems)" }
+	if = { limit = { has_building = building_type:polders } subtract = "location_building_level(building_type:polders)" }
+	if = { limit = { has_building = building_type:incamisana } subtract = "location_building_level(building_type:incamisana)" }
+	if = { limit = { has_building = building_type:bund } subtract = "location_building_level(building_type:bund)" }
+	if = { limit = { has_building = building_type:field_drainage } subtract = "location_building_level(building_type:field_drainage)" }
+	if = { limit = { has_building = building_type:qanats } subtract = "location_building_level(building_type:qanats)" }
+	min = 0
+	multiply = 7.5
+	if = { limit = { has_building = building_type:irrigation_systems } add = { value = "location_building_level(building_type:irrigation_systems)" multiply = 5 } }
+	if = { limit = { has_building = building_type:polders } add = { value = "location_building_level(building_type:polders)" multiply = 5 } }
+	if = { limit = { has_building = building_type:incamisana } add = { value = "location_building_level(building_type:incamisana)" multiply = 7.5 } }
+	if = { limit = { has_building = building_type:bund } add = { value = "location_building_level(building_type:bund)" multiply = 5 } }
+	if = { limit = { has_building = building_type:field_drainage } add = { value = "location_building_level(building_type:field_drainage)" multiply = 5 } }
+	if = { limit = { has_building = building_type:qanats } add = { value = "location_building_level(building_type:qanats)" multiply = 5 } }
+}
+pp_land_bar_room_water_control_shared_to_irrigation_systems = {
+	value = pp_land_bar_room_water_control_shared_cap
+	if = { limit = { has_building = building_type:polders } subtract = "location_building_level(building_type:polders)" }
+	if = { limit = { has_building = building_type:incamisana } subtract = "location_building_level(building_type:incamisana)" }
+	if = { limit = { has_building = building_type:bund } subtract = "location_building_level(building_type:bund)" }
+	if = { limit = { has_building = building_type:khmer_baray } subtract = "location_building_level(building_type:khmer_baray)" }
+	if = { limit = { has_building = building_type:field_drainage } subtract = "location_building_level(building_type:field_drainage)" }
+	if = { limit = { has_building = building_type:qanats } subtract = "location_building_level(building_type:qanats)" }
+	min = 0
+	multiply = 5
+	if = { limit = { has_building = building_type:polders } add = { value = "location_building_level(building_type:polders)" multiply = 5 } }
+	if = { limit = { has_building = building_type:incamisana } add = { value = "location_building_level(building_type:incamisana)" multiply = 7.5 } }
+	if = { limit = { has_building = building_type:bund } add = { value = "location_building_level(building_type:bund)" multiply = 5 } }
+	if = { limit = { has_building = building_type:khmer_baray } add = { value = "location_building_level(building_type:khmer_baray)" multiply = 7.5 } }
+	if = { limit = { has_building = building_type:field_drainage } add = { value = "location_building_level(building_type:field_drainage)" multiply = 5 } }
+	if = { limit = { has_building = building_type:qanats } add = { value = "location_building_level(building_type:qanats)" multiply = 5 } }
+}
+pp_land_bar_room_water_control_shared_to_polders = {
+	value = pp_land_bar_room_water_control_shared_cap
+	if = { limit = { has_building = building_type:irrigation_systems } subtract = "location_building_level(building_type:irrigation_systems)" }
+	if = { limit = { has_building = building_type:incamisana } subtract = "location_building_level(building_type:incamisana)" }
+	if = { limit = { has_building = building_type:bund } subtract = "location_building_level(building_type:bund)" }
+	if = { limit = { has_building = building_type:khmer_baray } subtract = "location_building_level(building_type:khmer_baray)" }
+	if = { limit = { has_building = building_type:field_drainage } subtract = "location_building_level(building_type:field_drainage)" }
+	if = { limit = { has_building = building_type:qanats } subtract = "location_building_level(building_type:qanats)" }
+	min = 0
+	multiply = 5
+	if = { limit = { has_building = building_type:irrigation_systems } add = { value = "location_building_level(building_type:irrigation_systems)" multiply = 5 } }
+	if = { limit = { has_building = building_type:incamisana } add = { value = "location_building_level(building_type:incamisana)" multiply = 7.5 } }
+	if = { limit = { has_building = building_type:bund } add = { value = "location_building_level(building_type:bund)" multiply = 5 } }
+	if = { limit = { has_building = building_type:khmer_baray } add = { value = "location_building_level(building_type:khmer_baray)" multiply = 7.5 } }
+	if = { limit = { has_building = building_type:field_drainage } add = { value = "location_building_level(building_type:field_drainage)" multiply = 5 } }
+	if = { limit = { has_building = building_type:qanats } add = { value = "location_building_level(building_type:qanats)" multiply = 5 } }
+}
+pp_land_bar_room_water_control_shared_to_bund = {
+	value = pp_land_bar_room_water_control_shared_cap
+	if = { limit = { has_building = building_type:irrigation_systems } subtract = "location_building_level(building_type:irrigation_systems)" }
+	if = { limit = { has_building = building_type:polders } subtract = "location_building_level(building_type:polders)" }
+	if = { limit = { has_building = building_type:incamisana } subtract = "location_building_level(building_type:incamisana)" }
+	if = { limit = { has_building = building_type:khmer_baray } subtract = "location_building_level(building_type:khmer_baray)" }
+	if = { limit = { has_building = building_type:field_drainage } subtract = "location_building_level(building_type:field_drainage)" }
+	if = { limit = { has_building = building_type:qanats } subtract = "location_building_level(building_type:qanats)" }
+	min = 0
+	multiply = 5
+	if = { limit = { has_building = building_type:irrigation_systems } add = { value = "location_building_level(building_type:irrigation_systems)" multiply = 5 } }
+	if = { limit = { has_building = building_type:polders } add = { value = "location_building_level(building_type:polders)" multiply = 5 } }
+	if = { limit = { has_building = building_type:incamisana } add = { value = "location_building_level(building_type:incamisana)" multiply = 7.5 } }
+	if = { limit = { has_building = building_type:khmer_baray } add = { value = "location_building_level(building_type:khmer_baray)" multiply = 7.5 } }
+	if = { limit = { has_building = building_type:field_drainage } add = { value = "location_building_level(building_type:field_drainage)" multiply = 5 } }
+	if = { limit = { has_building = building_type:qanats } add = { value = "location_building_level(building_type:qanats)" multiply = 5 } }
 }
 pp_land_bar_room_water_control_shared_to_field_drainage = {
-	value = 0
-	if = {
-		limit = { can_build_building = building_type:field_drainage owner ?= { can_build_building = building_type:field_drainage } }
-		value = pp_land_bar_room_water_control_shared_cap
-		if = { limit = { has_building = building_type:irrigation_systems } subtract = "location_building_level(building_type:irrigation_systems)" }
-		if = { limit = { has_building = building_type:polders } subtract = "location_building_level(building_type:polders)" }
-		if = { limit = { has_building = building_type:incamisana } subtract = "location_building_level(building_type:incamisana)" }
-		if = { limit = { has_building = building_type:bund } subtract = "location_building_level(building_type:bund)" }
-		if = { limit = { has_building = building_type:khmer_baray } subtract = "location_building_level(building_type:khmer_baray)" }
-		if = { limit = { has_building = building_type:qanats } subtract = "location_building_level(building_type:qanats)" }
-		min = 0
-		multiply = 5
-		if = { limit = { has_building = building_type:irrigation_systems } add = { value = "location_building_level(building_type:irrigation_systems)" multiply = 5 } }
-		if = { limit = { has_building = building_type:polders } add = { value = "location_building_level(building_type:polders)" multiply = 5 } }
-		if = { limit = { has_building = building_type:incamisana } add = { value = "location_building_level(building_type:incamisana)" multiply = 7.5 } }
-		if = { limit = { has_building = building_type:bund } add = { value = "location_building_level(building_type:bund)" multiply = 5 } }
-		if = { limit = { has_building = building_type:khmer_baray } add = { value = "location_building_level(building_type:khmer_baray)" multiply = 7.5 } }
-		if = { limit = { has_building = building_type:qanats } add = { value = "location_building_level(building_type:qanats)" multiply = 5 } }
-	}
+	value = pp_land_bar_room_water_control_shared_cap
+	if = { limit = { has_building = building_type:irrigation_systems } subtract = "location_building_level(building_type:irrigation_systems)" }
+	if = { limit = { has_building = building_type:polders } subtract = "location_building_level(building_type:polders)" }
+	if = { limit = { has_building = building_type:incamisana } subtract = "location_building_level(building_type:incamisana)" }
+	if = { limit = { has_building = building_type:bund } subtract = "location_building_level(building_type:bund)" }
+	if = { limit = { has_building = building_type:khmer_baray } subtract = "location_building_level(building_type:khmer_baray)" }
+	if = { limit = { has_building = building_type:qanats } subtract = "location_building_level(building_type:qanats)" }
+	min = 0
+	multiply = 5
+	if = { limit = { has_building = building_type:irrigation_systems } add = { value = "location_building_level(building_type:irrigation_systems)" multiply = 5 } }
+	if = { limit = { has_building = building_type:polders } add = { value = "location_building_level(building_type:polders)" multiply = 5 } }
+	if = { limit = { has_building = building_type:incamisana } add = { value = "location_building_level(building_type:incamisana)" multiply = 7.5 } }
+	if = { limit = { has_building = building_type:bund } add = { value = "location_building_level(building_type:bund)" multiply = 5 } }
+	if = { limit = { has_building = building_type:khmer_baray } add = { value = "location_building_level(building_type:khmer_baray)" multiply = 7.5 } }
+	if = { limit = { has_building = building_type:qanats } add = { value = "location_building_level(building_type:qanats)" multiply = 5 } }
 }
 pp_land_bar_room_water_control_shared_to_qanats = {
-	value = 0
-	if = {
-		limit = { can_build_building = building_type:qanats owner ?= { can_build_building = building_type:qanats } }
-		value = pp_land_bar_room_water_control_shared_cap
-		if = { limit = { has_building = building_type:irrigation_systems } subtract = "location_building_level(building_type:irrigation_systems)" }
-		if = { limit = { has_building = building_type:polders } subtract = "location_building_level(building_type:polders)" }
-		if = { limit = { has_building = building_type:incamisana } subtract = "location_building_level(building_type:incamisana)" }
-		if = { limit = { has_building = building_type:bund } subtract = "location_building_level(building_type:bund)" }
-		if = { limit = { has_building = building_type:khmer_baray } subtract = "location_building_level(building_type:khmer_baray)" }
-		if = { limit = { has_building = building_type:field_drainage } subtract = "location_building_level(building_type:field_drainage)" }
-		min = 0
-		multiply = 5
-		if = { limit = { has_building = building_type:irrigation_systems } add = { value = "location_building_level(building_type:irrigation_systems)" multiply = 5 } }
-		if = { limit = { has_building = building_type:polders } add = { value = "location_building_level(building_type:polders)" multiply = 5 } }
-		if = { limit = { has_building = building_type:incamisana } add = { value = "location_building_level(building_type:incamisana)" multiply = 7.5 } }
-		if = { limit = { has_building = building_type:bund } add = { value = "location_building_level(building_type:bund)" multiply = 5 } }
-		if = { limit = { has_building = building_type:khmer_baray } add = { value = "location_building_level(building_type:khmer_baray)" multiply = 7.5 } }
-		if = { limit = { has_building = building_type:field_drainage } add = { value = "location_building_level(building_type:field_drainage)" multiply = 5 } }
-	}
+	value = pp_land_bar_room_water_control_shared_cap
+	if = { limit = { has_building = building_type:irrigation_systems } subtract = "location_building_level(building_type:irrigation_systems)" }
+	if = { limit = { has_building = building_type:polders } subtract = "location_building_level(building_type:polders)" }
+	if = { limit = { has_building = building_type:incamisana } subtract = "location_building_level(building_type:incamisana)" }
+	if = { limit = { has_building = building_type:bund } subtract = "location_building_level(building_type:bund)" }
+	if = { limit = { has_building = building_type:khmer_baray } subtract = "location_building_level(building_type:khmer_baray)" }
+	if = { limit = { has_building = building_type:field_drainage } subtract = "location_building_level(building_type:field_drainage)" }
+	min = 0
+	multiply = 5
+	if = { limit = { has_building = building_type:irrigation_systems } add = { value = "location_building_level(building_type:irrigation_systems)" multiply = 5 } }
+	if = { limit = { has_building = building_type:polders } add = { value = "location_building_level(building_type:polders)" multiply = 5 } }
+	if = { limit = { has_building = building_type:incamisana } add = { value = "location_building_level(building_type:incamisana)" multiply = 7.5 } }
+	if = { limit = { has_building = building_type:bund } add = { value = "location_building_level(building_type:bund)" multiply = 5 } }
+	if = { limit = { has_building = building_type:khmer_baray } add = { value = "location_building_level(building_type:khmer_baray)" multiply = 7.5 } }
+	if = { limit = { has_building = building_type:field_drainage } add = { value = "location_building_level(building_type:field_drainage)" multiply = 5 } }
 }

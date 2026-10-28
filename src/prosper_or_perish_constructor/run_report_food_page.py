@@ -1,7 +1,7 @@
 """The food page of the run report (`food.html`): how food reaches the province food stores and where it goes.
 
-Static HTML + one script, data fetched when needed: `food/index.json`, `food/summary.json`, `food/<n>.json` per save,
-`food/provinces.json` (when a province is opened) and the goods page's `goods/index.json` and `goods/<n>.json` (the
+Static HTML + one script, data loaded when needed (data scripts, run_report_data): `food/index.js`, `food/summary.js`, `food/<n>.js` per save,
+`food/provinces.js` (when a province is opened) and the goods page's `goods/index.js` and `goods/<n>.js` (the
 buildings, methods, goods and regions, and what each method bought and made).
 
 The flow chart has the province food store in the middle and reads in two layers:
@@ -20,6 +20,7 @@ from __future__ import annotations
 import html
 
 from prosper_or_perish_constructor.run_report import ECHARTS_URL, PAGE_CSS
+from prosper_or_perish_constructor.run_report_data import LOADER_JS
 from prosper_or_perish_constructor.run_report_goods_page import GOODS_CSS
 
 FOOD_CSS = r"""
@@ -87,8 +88,8 @@ FOOD_JS = r"""
   // ---------------------------------------------------------------- data
   function loadSave(i) {
     if (!SAVES.has(i)) {
-      const food = FI.saves[i] ? fetch(FI.saves[i]).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }) : Promise.resolve(null);
-      const goods = fetch(GI.saves[i].file).then(r => r.ok ? r.json() : null).catch(() => null);
+      const food = FI.saves[i] ? loadData(FI.saves[i]) : Promise.resolve(null);
+      const goods = loadData(GI.saves[i].file).catch(() => null);
       SAVES.set(i, Promise.all([food, goods]).then(([f, g]) => prepare(f, g)));
     }
     return SAVES.get(i);
@@ -532,7 +533,7 @@ FOOD_JS = r"""
     $('#btable').innerHTML = buildingsTable(D);
     $('#bcard').hidden = S.p >= 0;
     timeButtons();
-    if (S.p >= 0 && !FP) { FP = await fetch('food/provinces.json').then(r => r.json()).catch(() => ({})); if (my !== token) return; }
+    if (S.p >= 0 && !FP) { FP = await loadData('food/provinces.js').catch(() => ({})); if (my !== token) return; }
     const opt = FS ? timeOption() : null;
     if (opt) chart('time').setOption(opt, true); else chart('time').clear();
     if (S.s > 0 && FI.saves[S.s - 1]) loadSave(S.s - 1);
@@ -541,7 +542,7 @@ FOOD_JS = r"""
 
   async function init() {
     try {
-      [GI, FI] = await Promise.all(['goods/index.json', 'food/index.json'].map(u => fetch(u).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })));
+      [GI, FI] = await Promise.all(['goods/index.js', 'food/index.js'].map(loadData));
     } catch (err) {
       $('#head').innerHTML = '<div class=empty>The food data did not load. This page reads files next to it, so open it from the published site or over a local web server (not as a file).</div>';
       return;
@@ -574,7 +575,7 @@ FOOD_JS = r"""
     });
     window.addEventListener('popstate', () => { readHash(); render(); });
     render();
-    fetch('food/summary.json').then(r => r.json()).then(s => { FS = s; const opt = timeOption(); if (opt) chart('time').setOption(opt, true); }).catch(() => {});
+    loadData('food/summary.js').then(s => { FS = s; const opt = timeOption(); if (opt) chart('time').setOption(opt, true); }).catch(() => {});
   }
   init();
 })();
@@ -637,6 +638,6 @@ def food_page_html(run_name: str, years: tuple[int, int]) -> str:
 </div>
 </div>
 <script src="{ECHARTS_URL}"></script>
-<script>{FOOD_JS}</script>
+<script>{LOADER_JS}{FOOD_JS}</script>
 </body></html>
 """

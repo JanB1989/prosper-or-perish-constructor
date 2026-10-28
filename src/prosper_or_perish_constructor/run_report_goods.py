@@ -2,15 +2,15 @@
 
 `write_goods_page` writes `goods.html` next to the run report and its data under `goods/`:
 
-- `goods/index.json`: saves, world regions, goods (display order, group, icon, base price), buildings, production
+- `goods/index.js`: saves, world regions, goods (display order, group, icon, base price), buildings, production
   methods (name, building, recipe per level) and the demand types;
-- `goods/<n>.json`, one per save: producers ``p`` [good, building, method, region, amount, levels, buildings, workers,
+- `goods/<n>.js`, one per save: producers ``p`` [good, building, method, region, amount, levels, buildings, workers,
   recipe], building inputs ``c`` [good, building, method, region, wanted, received, recipe], other demand ``d``
   [good, bucket, region, wanted, received], trade and other supply ``s`` [good, bucket, region, amount], market
   figures ``m`` [good, region, price x volume, volume, supply, demand, stockpile, markets short, markets in surplus,
   markets] and trade between world regions ``x`` [good, region, imports, exports] (the trade routes that ran and
   cross the region's border); amounts are goods per month, indices point into the index lists (-1 = none);
-- `goods/summary.json`: per good and save the world production, use and price, and production / use by building
+- `goods/summary.js`: per good and save the world production, use and price, and production / use by building
   type, for the charts over the run.
 
 How production is split. A market's totals per good are exact (`supplied_Production`, `demanded_Building`,
@@ -36,6 +36,7 @@ from typing import TYPE_CHECKING, Any, Callable
 import numpy as np
 import polars as pl
 
+from prosper_or_perish_constructor.run_report_data import write_data
 from prosper_or_perish_constructor.run_report_charts import (
     DUMMY_GOODS,
     OTHER_GREY,
@@ -473,7 +474,7 @@ def fill_caches(playthrough: str, snapshots: list[str], dataset: Path, recipes: 
 
 def build_goods_data(run: RunData, dataset: Path, out: Path, recipes: Recipes, *, cache: Path | None = None,
                      log: Callable[[str], None] = print) -> dict[str, Any]:
-    """Write goods/<n>.json per save and goods/summary.json; returns the index payload (written by the caller)."""
+    """Write goods/<n>.js per save and goods/summary.js; returns the index payload (written by the caller)."""
     folder = out / "goods"
     folder.mkdir(parents=True, exist_ok=True)
     index = Index()
@@ -498,8 +499,8 @@ def build_goods_data(run: RunData, dataset: Path, out: Path, recipes: Recipes, *
             flows = save_flows(dataset, run.playthrough_id, snapshot, recipes)
             if cached:
                 _write_flows(cached, flows, FLOW_TABLES)
-        name = f"goods/{n:03d}.json"
-        (out / name).write_text(json.dumps(encode_save(flows, index), separators=(",", ":"), allow_nan=False), encoding="utf-8")
+        name = f"goods/{n:03d}.js"
+        write_data(out, name, encode_save(flows, index))
         summaries.append(_summary_rows(flows))
         saves.append({"id": snapshot, "label": str(snap.get("year") or snap.get("date") or snapshot), "date": snap.get("date"), "file": name})
     log(f"goods page: {len(saves)} saves")
@@ -530,7 +531,7 @@ def build_goods_data(run: RunData, dataset: Path, out: Path, recipes: Recipes, *
             for key in entry[side]:
                 if not key.startswith("@") and key != "_rest":
                     index.of("building", key)
-    (folder / "summary.json").write_text(json.dumps(summary, separators=(",", ":"), allow_nan=False), encoding="utf-8")
+    write_data(out, "goods/summary.js", summary)
     return {"saves": saves, "index": index, "palette": palette}
 
 
@@ -640,7 +641,7 @@ def write_goods_page(run: RunData, out: Path, *, repo: Path, project: Path, data
     write_food(run, out, repo=repo, project=project, dataset=dataset, recipes=recipes, index=built["index"], canvas=canvas,
                fps=fps, cache=food_cache, food=food, log=log)
     payload = index_payload(run, built, recipes, dataset, repo)
-    (out / "goods" / "index.json").write_text(json.dumps(payload, separators=(",", ":"), allow_nan=False), encoding="utf-8")
+    write_data(out, "goods/index.js", payload)
     from prosper_or_perish_constructor.run_report_goods_page import goods_page_html
 
     path = out / "goods.html"

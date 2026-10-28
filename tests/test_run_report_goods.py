@@ -114,4 +114,20 @@ def test_goods_page_reads_its_data_files() -> None:
     from prosper_or_perish_constructor.run_report_goods_page import goods_page_html
 
     page = goods_page_html("Run x", (1337, 1400))
-    assert "goods/index.json" in page and "goods/summary.json" in page and "id=goodlist" in page and "type: 'sankey'" in page
+    assert "goods/index.js" in page and "goods/summary.js" in page and "id=goodlist" in page and "type: 'sankey'" in page
+
+
+def test_report_data_loads_from_disk_and_from_the_site() -> None:
+    """Data scripts, not fetch(): a browser refuses fetch() on a report opened from disk (Jan, 2026-10-28)."""
+    import json
+
+    from prosper_or_perish_constructor.run_report_data import data_script
+    from prosper_or_perish_constructor.run_report_food_page import food_page_html
+    from prosper_or_perish_constructor.run_report_goods_page import goods_page_html
+
+    text = data_script("goods/003.js", {"p": [[1, 2.5]], "name": "a \"b\""})
+    prefix = '(window.PP_DATA=window.PP_DATA||{})["goods/003.js"]='
+    assert text.startswith(prefix) and text.endswith(";\n")
+    assert json.loads(text[len(prefix):-2]) == {"p": [[1, 2.5]], "name": 'a "b"'}
+    for page in (goods_page_html("Run x", (1337, 1400)), food_page_html("Run x", (1337, 1400))):
+        assert "fetch(" not in page and "function loadData(name)" in page and ".json'" not in page

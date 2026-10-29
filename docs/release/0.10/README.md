@@ -8,7 +8,7 @@ Drafts, written 2026-10-28. Nothing here is posted yet.
   posted it replaces `docs/steam_workshop_description.bbcode`, the copy of the live description.
 - **Steam change notes** (`steam_change_notes.bbcode`): the change note of the 0.10 upload (asked for on upload, or added
   later on the Workshop item's "Change Notes" tab).
-- **GitHub release** (`github_release.md`): the body of the release for tag `0.10.0`, title `0.10 Land and Larder Release`.
+- **GitHub release** (`github_release.md`): the body of the release for tag `0.10.0`, title `0.10 The Ox Paradox`.
 
 ## Limits (checked 2026-10-28)
 
@@ -38,7 +38,7 @@ Drafts, written 2026-10-28. Nothing here is posted yet.
 
 ## Check before posting
 
-1. **Release name:** "Land and Larder" is a placeholder in the style of "Foundations" and "Provisioning".
+1. **Release name (Jan, 2026-10-29):** "The Ox Paradox" (was the placeholder "Land and Larder").
 2. **Discord invite:** the Workshop page uses `discord.gg/HgFd69Sv83`, the 0.9 GitHub release `discord.gg/WVrSnfuW`; the
    drafts use the first. Check that it still works.
 3. **Launcher text (done 2026-10-28):** `short_description` in `.metadata/metadata.json` held the 0.8 description, cut
@@ -46,3 +46,9 @@ Drafts, written 2026-10-28. Nothing here is posted yet.
    limits farms, harvests swing, and great rivers carry ships inland.*
 4. **Release steps:** the release checklist in `AGENTS.md` (validation, merge into `main`, final sync, tag, release).
    `main` is at 0.9.1 and fast-forwards to `0.10`.
+5. **Pictures:** the release body and the Workshop texts load `docs/assets/steam/0.10/*.jpg` from the constructor's
+   GitHub Pages site, which serves `main:/docs`. They 404 until `0.10` is merged into `main`; check them after the
+   merge, before posting.
+6. **Example games (Jan, 2026-10-29):** the release body links runs 060ad1de and af7dce96 on the preview site. Publish
+   both pinned so the five-run limit never drops them:
+   `uv run ppc report --no-build --publish --playthrough <id> --pin 0.10 --yes`.

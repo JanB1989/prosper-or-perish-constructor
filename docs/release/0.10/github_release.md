@@ -1,6 +1,6 @@
 ![Prosper or Perish 0.10](https://janb1989.github.io/prosper-or-perish-constructor/assets/steam/0.10/overview.jpg)
 
-Prosper or Perish 0.10 Land and Larder
+Prosper or Perish 0.10 The Ox Paradox
 
 This release is compatible with EU5 1.4.5 and works with or without the Across the Pillars DLC.
 
@@ -155,6 +155,13 @@ If you want to keep playing an older release, download it from the [releases pag
 - The pop demand changes now load (a load error had dropped them).
 - Conquest no longer removes Granaries, Taverns and Granges.
 - Many error-log floods and script errors fixed.
+
+## Two Example Games
+
+Two full observer games on this release, 1337 to 1837, with map videos and charts:
+
+- [Game 1](https://janb1989.github.io/prosper-or-perish-preview/runs/060ad1de_995b_4913_92b1_5eeec0366bc5/): 1.24 billion people in 1837. The Ming unite China early and hold it to the end, a fifth of the world's people. France, Russia, Hungary and Great Britain lead Europe.
+- [Game 2](https://janb1989.github.io/prosper-or-perish-preview/runs/af7dce96_68e1_4bb2_b21d_b272802c9c05/): 1.29 billion people in 1837. China never unites and stays split among several states. The Ottomans grow into the largest realm, Brandenburg becomes Prussia, Castile becomes Spain, and the Huguenot wars break France apart.
 
 ## Links
 

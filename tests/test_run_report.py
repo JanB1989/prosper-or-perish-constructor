@@ -56,6 +56,66 @@ def test_publish_keeps_newest_runs_in_one_commit(tmp_path: Path) -> None:
     assert '<meta name="robots" content="noindex">' in page
 
 
+def _publish(report: Path, remote: str, work: Path, **options) -> rr.PublishPlan:
+    plan = rr.prepare_publish(report, site_repo="Someone/preview", work_root=work, remote=remote, **options)
+    rr.push_publish(plan)
+    return plan
+
+
+def _site_meta(remote: str, root: Path, playthrough: str) -> dict:
+    check = root / f"check_{len(list(root.glob('check_*')))}"
+    subprocess.run(["git", "clone", "-q", remote, str(check)], check=True)
+    return json.loads((check / "runs" / playthrough / "report.json").read_text(encoding="utf-8"))
+
+
+def test_pinned_run_survives_keep_and_does_not_count_against_it(tmp_path: Path) -> None:
+    remote = _bare_site(tmp_path)
+    reports, work = tmp_path / "reports", tmp_path / "work"
+    _publish(_fake_report(reports, "run_a", "Example run"), remote, work, keep=1, pin="0.10")
+    _publish(_fake_report(reports, "run_b", "Second run"), remote, work, keep=1)
+    plan = _publish(_fake_report(reports, "run_c", "Third run"), remote, work, keep=1)
+
+    # keep=1 applies to the unpinned runs only: the pinned run and the newest stay, run_b goes
+    assert [r["playthrough_id"] for r in plan.runs] == ["run_a", "run_c"]
+    assert plan.dropped == ["run_b"]
+    assert plan.runs[0]["pinned"] == "0.10" and "pinned" not in plan.runs[1]
+    assert sorted(p.name for p in (plan.site / "runs").iterdir() if p.is_dir()) == ["run_a", "run_c"]
+
+
+def test_pin_is_kept_on_republish_and_removed_by_unpin(tmp_path: Path) -> None:
+    remote = _bare_site(tmp_path)
+    reports, work = tmp_path / "reports", tmp_path / "work"
+    run_a = _fake_report(reports, "run_a", "Example run")
+    _publish(run_a, remote, work, pin="0.10")
+    plan = _publish(run_a, remote, work)  # re-published without --pin: the site copy's pin stays
+    assert plan.runs[0]["pinned"] == "0.10"
+    assert _site_meta(remote, tmp_path, "run_a")["pinned"] == "0.10"
+    _publish(_fake_report(reports, "run_b", "Second run"), remote, work)  # other runs never touch pins
+    assert _site_meta(remote, tmp_path, "run_a")["pinned"] == "0.10"
+    assert "pinned" not in _site_meta(remote, tmp_path, "run_b")
+    plan = _publish(run_a, remote, work, unpin=True)
+    assert "pinned" not in _site_meta(remote, tmp_path, "run_a")
+    assert [r["playthrough_id"] for r in plan.runs] == ["run_a", "run_b"] and not any(r.get("pinned") for r in plan.runs)
+    assert "pinned" not in json.loads((run_a / "report.json").read_text(encoding="utf-8"))  # the local report stays as built
+
+
+def test_site_index_lists_pinned_runs_first_by_label() -> None:
+    def run(playthrough: str, name: str, pinned: str | None = None) -> dict:
+        meta = {"playthrough_id": playthrough, "name": name, "years": [1337, 1837], "saves": 100}
+        return {**meta, "pinned": pinned} if pinned else meta
+
+    page = rr._site_index(
+        [run("new", "Newest run"), run("ex10", "Example 0.10", "0.10"), run("ex9", "Example 0.9", "0.9")], "Runs"
+    )
+    order = [page.index(text) for text in (
+        "Example games (0.10)", "Example 0.10", "Example games (0.9)", "Example 0.9", "<h2>Newest runs</h2>", "Newest run<",
+    )]
+    assert order == sorted(order)
+    assert page.count("<div class=grid>") == 3
+    plain = rr._site_index([run("new", "Newest run")], "Runs")
+    assert "Example games" not in plain and "<h2>" not in plain and "newest first." in plain
+
+
 def test_wip_replaces_the_root_and_keeps_the_runs(tmp_path: Path) -> None:
     remote = _bare_site(tmp_path)
     reports = tmp_path / "reports"

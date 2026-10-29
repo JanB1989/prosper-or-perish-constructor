@@ -656,7 +656,16 @@ def _build_parser() -> argparse.ArgumentParser:
     report.add_argument("--yes", action="store_true", help="With --publish: push the staged site (the run becomes public).")
     report.add_argument("--create-site", action="store_true", help="Create the public site repository and enable GitHub Pages.")
     report.add_argument("--site-repo", default=None, help="owner/name of the preview site repository (default [report] site_repo).")
-    report.add_argument("--keep", type=int, default=None, help="Runs kept on the site, newest first (default [report] keep, 5).")
+    report.add_argument(
+        "--keep", type=int, default=None,
+        help="Unpinned runs kept on the site, newest first (default [report] keep, 5); pinned runs always stay.",
+    )
+    pinning = report.add_mutually_exclusive_group()
+    pinning.add_argument(
+        "--pin", default=None, metavar="LABEL",
+        help="With --publish: pin this run under LABEL (e.g. 0.10); it stays online, listed first as an example game.",
+    )
+    pinning.add_argument("--unpin", action="store_true", help="With --publish: remove this run's pin.")
     publish_wip = _add_command(
         subcommands,
         "publish-wip",
@@ -3499,6 +3508,11 @@ def _savegame(args: argparse.Namespace, extra: Sequence[str], repo: Path, projec
 def _report(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     if extra:
         raise SystemExit("report does not accept extra arguments.")
+    if (args.pin is not None or args.unpin) and not args.publish:
+        raise SystemExit("--pin and --unpin need --publish.")
+    pin = args.pin.strip() if args.pin is not None else None
+    if pin == "":
+        raise SystemExit("--pin needs a label, e.g. --pin 0.10.")
     from prosper_or_perish_constructor import run_report
 
     with project.open("rb") as handle:
@@ -3527,13 +3541,16 @@ def _report(args: argparse.Namespace, extra: Sequence[str], repo: Path, project:
     if not args.publish:
         return 0
 
-    plan = run_report.prepare_publish(report_dir, site_repo=site_repo, work_root=repo / "artifacts" / "report_site", keep=keep)
+    plan = run_report.prepare_publish(
+        report_dir, site_repo=site_repo, work_root=repo / "artifacts" / "report_site", keep=keep, pin=pin, unpin=args.unpin
+    )
     print(f"site {site_repo} -> {plan.url}", flush=True)
     for run in plan.runs:
         marker = "+" if run["playthrough_id"] == plan.added else " "
-        print(f"  {marker} {run['name']} ({run['years'][0]}-{run['years'][1]}, {run['saves']} saves)", flush=True)
+        pinned = f" [pinned {run['pinned']}]" if run.get("pinned") else ""
+        print(f"  {marker} {run['name']} ({run['years'][0]}-{run['years'][1]}, {run['saves']} saves){pinned}", flush=True)
     for dropped in plan.dropped:
-        print(f"  - {dropped} (removed: only the newest {keep} runs stay online)", flush=True)
+        print(f"  - {dropped} (removed: only the newest {keep} unpinned runs stay online)", flush=True)
     if not args.yes:
         print("dry run: nothing was pushed. Add --yes to make this public.", flush=True)
         return 0

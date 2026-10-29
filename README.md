@@ -426,14 +426,19 @@ change only when a version merges into main; the preview can be overwritten at w
 
 - site root: a work-in-progress copy of `docs/` from the current branch (uncommitted changes included),
   with a banner naming branch and commit;
-- `runs/`: the observer-run reports, newest 5 kept.
+- `runs/`: the observer-run reports, newest 5 kept, plus the pinned example games.
 
 ```bash
 uv run ppc publish-wip                     # dry run: shows what would go online
 uv run ppc publish-wip --yes               # replace the WIP docs (runs/ stays)
 uv run ppc report --no-build --publish     # dry run for the newest run report
 uv run ppc report --no-build --publish --yes
+uv run ppc report --no-build --publish --playthrough <id> --pin 0.10 --yes   # pin as an example game
+uv run ppc report --no-build --publish --playthrough <id> --unpin --yes      # back to the newest-5 rule
 ```
+
+A pinned run never drops off and does not count against `keep`; the runs page lists it first under
+"Example games (0.10)". Re-publishing it keeps the pin; publishing other runs never touches it.
 
 Each publish replaces only its own part and pushes one fresh commit, so the repository never grows. The
 pages carry `noindex`. `--create-site` (on either command) creates the repository once.

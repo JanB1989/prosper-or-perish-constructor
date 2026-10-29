@@ -1869,6 +1869,8 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
 # released docs on main: the site root holds a work-in-progress copy of docs/ (`ppc publish-wip`), runs/
 # the observer-run reports (`ppc report --publish`). Each command replaces only its own part and pushes one
 # fresh commit, so the repository never accumulates history. Both are dry runs unless --yes.
+# A run published with `--pin LABEL` carries `"pinned": LABEL` in its site report.json: it stays online, does
+# not count against `keep` and leads the runs page under "Example games (LABEL)".
 
 DEFAULT_SITE_REPO = "JanB1989/prosper-or-perish-preview"
 RELEASED_DOCS_URL = "https://janb1989.github.io/prosper-or-perish-constructor/"
@@ -1926,25 +1928,52 @@ def _published_runs(runs_dir: Path) -> list[dict[str, object]]:
     return sorted(runs, key=lambda r: str(r.get("published_at", "")), reverse=True)
 
 
+def _pinned_groups(runs: list[dict[str, object]]) -> list[tuple[str, list[dict[str, object]]]]:
+    """Pinned runs by label, the highest label first (0.11 before 0.10 before 0.9); runs keep their order."""
+    groups: dict[str, list[dict[str, object]]] = {}
+    for run in runs:
+        if run.get("pinned"):
+            groups.setdefault(str(run["pinned"]), []).append(run)
+
+    def natural(label: str) -> list[tuple[int, str]]:
+        return [(int(part), "") if part.isdigit() else (-1, part) for part in re.split(r"(\d+)", label)]
+
+    return sorted(groups.items(), key=lambda item: natural(item[0]), reverse=True)
+
+
 def _site_index(runs: list[dict[str, object]], title: str) -> str:
     esc = html.escape
-    cards = "".join(
-        f"<a class=card href='{esc(str(r['playthrough_id']))}/'>"
-        f"<img loading=lazy src='{esc(str(r['playthrough_id']))}/maps/political.png' alt=''>"
-        f"<div><b>{esc(str(r['name']))}</b><br><span>{r['years'][0]}–{r['years'][1]} · {r['saves']} saves</span></div></a>"
-        for r in runs
-    )
+
+    def grid(group: list[dict[str, object]]) -> str:
+        cards = "".join(
+            f"<a class=card href='{esc(str(r['playthrough_id']))}/'>"
+            f"<img loading=lazy src='{esc(str(r['playthrough_id']))}/maps/political.png' alt=''>"
+            f"<div><b>{esc(str(r['name']))}</b><br><span>{r['years'][0]}–{r['years'][1]} · {r['saves']} saves</span></div></a>"
+            for r in group
+        )
+        return f"<div class=grid>{cards}</div>"
+
+    pinned = _pinned_groups(runs)
+    newest = [r for r in runs if not r.get("pinned")]
+    if pinned:
+        sections = "\n".join(f"<h2>Example games ({esc(label)})</h2>{grid(group)}" for label, group in pinned)
+        if newest:
+            sections += f"\n<h2>Newest runs</h2>{grid(newest)}"
+        order = "."
+    else:
+        sections, order = grid(newest), ", newest first."
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex"><title>{esc(title)}</title><style>
 :root{{--bg:#f6f6f4;--card:#fcfcfb;--ink:#1d1d1b;--muted:#6b6b67;--line:#e2e2de}}
 @media (prefers-color-scheme: dark){{:root{{--bg:#121418;--card:#1a1d22;--ink:#eceef0;--muted:#a0a6b0;--line:#2c3038}}}}
 body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}} main{{max-width:1100px;margin:0 auto;padding:28px 16px}}
 a{{color:inherit}} .grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:20px}}
+h2{{margin:32px 0 0;font-size:20px}}
 .card{{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}}
 .card img{{display:block;width:100%;background:#12161c}} .card div{{padding:10px 14px}} .card span{{color:var(--muted);font-size:13px}}
 </style></head><body><main><p><a href="../">← Work-in-progress docs</a></p><h1>{esc(title)}</h1>
-<p style="color:var(--muted)">Observer runs of the Prosper or Perish mod for Europa Universalis V: map videos and progression charts, newest first.</p>
-<div class=grid>{cards}</div></main></body></html>
+<p style="color:var(--muted)">Observer runs of the Prosper or Perish mod for Europa Universalis V: map videos and progression charts{order}</p>
+{sections}</main></body></html>
 """
 
 
@@ -1965,18 +1994,30 @@ def prepare_publish(
     keep: int = 5,
     remote: str | None = None,
     title: str = "Prosper or Perish runs",
+    pin: str | None = None,
+    unpin: bool = False,
 ) -> PublishPlan:
-    """Stage a site checkout with this run added under runs/ (newest `keep` runs kept); nothing is pushed yet."""
+    """Stage a site checkout with this run added under runs/; nothing is pushed yet.
+
+    Pinned runs always stay and do not count against `keep` (the newest `keep` unpinned runs stay). `pin` pins this
+    run under that label, `unpin` removes its pin; without either it keeps the pin its site copy had.
+    """
     report = json.loads((report_dir / "report.json").read_text(encoding="utf-8"))
     site, remote, url = _clone_site(site_repo, work_root, remote)
     runs_dir = site / "runs"
     runs_dir.mkdir(exist_ok=True)
     run_id = str(report["playthrough_id"])
     target = runs_dir / run_id
+    site_meta = target / "report.json"
+    old_pin = json.loads(site_meta.read_text(encoding="utf-8")).get("pinned") if site_meta.is_file() else None
     if target.exists():
         shutil.rmtree(target)
     shutil.copytree(report_dir, target)
     report["published_at"] = datetime.now().isoformat(timespec="microseconds")
+    report.pop("pinned", None)
+    pinned = None if unpin else pin or old_pin
+    if pinned:
+        report["pinned"] = pinned
     (target / "report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     # absolute preview image for link unfurls (Discord and other chat apps)
     page = target / "index.html"
@@ -1988,12 +2029,13 @@ def prepare_publish(
         ),
         encoding="utf-8",
     )
-    # newest first; the run being published always leads
+    # newest first; the run being published always leads its group; pinned runs first and never dropped
     runs = sorted(_published_runs(runs_dir), key=lambda r: str(r["playthrough_id"]) == run_id, reverse=True)
-    dropped = [str(r["playthrough_id"]) for r in runs[keep:]]
+    unpinned = [r for r in runs if not r.get("pinned")]
+    dropped = [str(r["playthrough_id"]) for r in unpinned[keep:]]
     for old in dropped:
         shutil.rmtree(runs_dir / old, ignore_errors=True)
-    runs = runs[:keep]
+    runs = [r for _, group in _pinned_groups(runs) for r in group] + unpinned[:keep]
     (runs_dir / "index.html").write_text(_site_index(runs, title), encoding="utf-8")
     _placeholder_root(site)
     (site / ".nojekyll").write_text("", encoding="utf-8")

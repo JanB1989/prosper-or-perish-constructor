@@ -560,3 +560,69 @@
 - Crop farms are open to estates (`forbidden_for_estates = no` in config/crop_farms.toml); Cookshops and Public
   Kitchens already were. `ESTATE_MAX_PRICE_MULTIPLIER` = 2.0 (a plain multiplier on what an estate pays for its own
   builds, not a cap; was 1.2). Tests: tests/test_employment_cut.py.
+
+## Noble Investment (2026-10-16)
+
+- Nobles with surplus gold build peasant and labourer buildings for goods their market is short of, the most profitable
+  first. The engine's own estate plan (one project per estate, docs/ai_building_rulebook.md section 3) cannot be steered,
+  and nobles mostly plan land improvements, masons and granaries, so this is a pulse script:
+  `on_action/pp_noble_investment.txt` (monthly country pulse, 0-29 day delay) calls `pp_noble_investment_monthly`.
+- A country searches only while its nobles hold more than `pp_noble_investment_reserve`, then waits 90 days after a build
+  and 180 days after a search that found nothing. A candidate needs: the nobles' gold >= reserve + price x
+  `ESTATE_MAX_PRICE_MULTIPLIER`; a market with demand above supply of its main good (country-wide pre-check, then the
+  location's market; masonry from demand > 0.8 x supply, `SHORTAGE_RATIO`; no shortage needed for mines, blueprint
+  footprint `mining` plus gold diggings and the gold stamp mill, nor for farms, every Province Food maker: crop and
+  cattle farms, fisheries, camel herders and their tiers, since their food drives population growth and a market
+  grain surplus kept nobles from building farms, Austria 1384; user rules 2026-10-17); the building's own
+  `country_potential` (`can_build_building` skips it: nobles built potato farms before the potato arrived);
+  one full level of idle pops of the building's own pop type (`unemployed_pops_of_pop_type_in_location` >= its
+  `employment_size`, thousands; the old 1,000 idle of any type let nobles build farms while the farms there had
+  empty jobs, 2026-10-17); no construction under way there (`num_civil_constructions`) and no noble investment there in the last 730
+  days (location variable `pp_noble_investment_recent`; without it the same building was stacked 3-4 times while the
+  first was still being built); `can_build_building`; and `has_advance` for an
+  advance that unlocks it (`can_build_building` let nobles start unresearched buildings in game, 2026-10-16; the
+  generator reads `unlock_building` from vanilla, DLC and mod advances in load order). Rank: profit per level at the
+  location's market prices, summed over the method blocks, each block's best method the country can run (output x
+  price x (1 + `local_<good>_output_modifier` where the game has one) - inputs x prices; methods with `allow` skipped,
+  `unlock_production_method` advances required). Wages are inputs (manual labour), so this is real profit. It must be
+  above 0 with revenue >= `AI_BUILDING_PROFIT_MARGIN_THRESHOLD` x input cost; the highest score (profit x
+  `POP_PRIORITY`: peasants 3, labourers 1, because nobles kept picking labour yards and model farms; x for farms the
+  crop's local signal (1 + local output modifier) x price / default price, the mod's farm AI term, since farm
+  profits are nearly equal and nobles built only legume farms, 2026-10-17) is built with
+  `construct_estate_building` (nobles pay and own it). The first version ranked by the main good's price alone and
+  nobles kept building masons that lose money at default prices (margin 0.55: stone and labour, 2026-10-16).
+- `scripts/generate_noble_investment.py --vanilla "<EU5>/game"` writes `scripted_effects/pp_noble_investment_effects.txt`
+  and `script_values/pp_noble_investment_values.txt` from the built mod's building types (pop_type peasants/laborers,
+  a Market Sales good or the good priced in `ai_construct_weight`, not `forbidden_for_estates`, not `is_special`,
+  not in `EXCLUDED_BUILDINGS`: market village, 2026-10-17, user rule; the engine's own noble plans can still pick it).
+  Rerun after building changes; `--check` fails when they are stale. Tests: tests/test_noble_investment.py.
+- Arable Land (2026-10-24, user request): a second search in the same pulse, with its own cooldown
+  (`pp_noble_land_cooldown`, same 90 / 180 days; it skips the location the production search just built in), builds a
+  land improvement: blueprint footprint `capacity_source`, peasants or labourers, open to estates, adding
+  `local_population_capacity` in `raw_modifier` (14 buildings: field drainage, land clearance, irrigation, field
+  management, qanats, polders, bund, baray, ...; regional specials count here). Only where the location is more than 90 %
+  full (no Abundant and less than 0.1 Available Arable Land, the `pp_land_*` markers; the engine values capacity only
+  above 0.9 fill) or over capacity. Same gold, research, country_potential, idle-worker (when the improvement employs
+  any), construction and location-cooldown checks; ranked by Arable Land per gold of base price x (1 + Overused Arable
+  Land). Not tested in game.
+- One-off cleanup (2026-10-17): `effect pp_noble_investment_cleanup = yes` in the console removes every tier of the
+  potato and maize farms (`CLEANUP_CROPS`, New World crops) in each country that fails their `country_potential`,
+  finished or under construction, whoever built them (281 of 584 noble constructions in an Austria 1384 save were
+  potato farms built before the country check). Rice and olives are left: they are native by original-capital
+  region, so a conqueror's farms there are legitimate.
+- Not tested in game yet. Check that `construct_estate_building` charges the nobles' treasury (the vanilla uses are
+  events) and the monthly cost; `DEBUG = True` in the generator adds build counters (country, location, global
+  `pp_noble_investment_builds`).
+
+## Manpower Buildings AI (2026-10-16)
+
+- The engine AI did not queue manpower buildings: in a 1541 save (playset with AI Army & Manpower Overhaul) no queue of
+  573 held a barracks, camp, training field or conscription centre, 3 held an armory, while the Ottomans sat at 2 % of
+  their manpower and Poland at 7 %. AAMO's yearly script builds only armories and barracks.
+- Armory, barracks, training fields, regimental camp and conscription centre carry `important_for_AI = yes` (vanilla
+  1.4 has it; the 1.4 blueprint merge 417d5aca dropped it on four) and `ai_construct_weight` = 300 x (1 -
+  owner `manpower_percentage`, min 0) / (owner `monthly_income_total` + 10), the Library pattern (EU5 1.4 adds the
+  weight raw after the gate), and `AI_ignore_available_worker_flag = yes` (vanilla sets it on training fields and
+  camps; soldiers are 0.6 % of pops in a 1545 save, and with the weight alone only 8 of 561 queues held one, none
+  of them the Ottomans at 2 % manpower). Blueprints and built files are edited together. Not yet checked in game; the 300 is a
+  first guess. Tests: tests/test_manpower_ai_weight.py.

@@ -322,6 +322,11 @@ replace = [
   { find = "ordered_owned_non_rural_location = {\n\t\t\tlimit = { is_port = yes }", with = "ordered_owned_non_rural_location = {\n\t\t\tlimit = { is_port = yes pp_is_sea_coast = yes }", count = 1 },
   { find = "random_location_in_area = {\n\t\t\t\tlimit = { is_coastal = yes }", with = "random_location_in_area = {\n\t\t\t\tlimit = { is_coastal = yes pp_is_sea_coast = yes }", count = 1 },
   { find = "limit = { is_land = no }", with = "limit = { is_land = no NOT = { region = region:pp_navigation_region } }", count = 1 },
+  # can_start must promise what on_start picks (2026-10-20): vanilla's has_non_rural_port also counts river ports, so a
+  # country without a non-rural sea-coast port (or a target area without a sea-coast landing) started the voyage, the
+  # departure port came back empty (add_new_waypoint target none, create_route "start was null") and the engine failed
+  # the expedition and crashed (three crashes in a row, China 1401).
+  { find = "has_non_rural_port = yes", with = "has_non_rural_port = yes\n\t\tany_owned_non_rural_location = { is_port = yes pp_is_sea_coast = yes }\n\t\thas_variable = chinese_treasure_target_area\n\t\tvar:chinese_treasure_target_area = { any_location_in_area = { is_coastal = yes pp_is_sea_coast = yes } }", count = 1 },
 ]
 
 [[worldbuilder.navigation_scripts.patches]]

@@ -19,6 +19,9 @@ treasure_fleet_expedition = {
 
 	can_start = {
 		has_non_rural_port = yes
+		any_owned_non_rural_location = { is_port = yes pp_is_sea_coast = yes }
+		has_variable = chinese_treasure_target_area
+		var:chinese_treasure_target_area = { any_location_in_area = { is_coastal = yes pp_is_sea_coast = yes } }
 		gold >= 200
 		at_war = no
 		NOT = { has_cooldown = treasure_fleet_cooldown }

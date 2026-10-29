@@ -168,7 +168,6 @@ Two full observer games on this release, 1337 to 1837, with map videos and chart
 - Steam Workshop: [Prosper or Perish](https://steamcommunity.com/sharedfiles/filedetails/?id=3613232232)
 - Discord: [discord.gg/HgFd69Sv83](https://discord.gg/HgFd69Sv83)
 - The Europedia as a website: [Prosper or Perish Europedia](https://janb1989.github.io/prosper-or-perish-constructor/examples/europedia.html)
-- Buildings, production methods and goods: [documentation](https://janb1989.github.io/prosper-or-perish-constructor/)
 
 Thank you to everyone who helped out, gave feedback and tested things.
 

@@ -1,14 +1,17 @@
 # Posting the 0.10 release
 
-Drafts, written 2026-10-28. Nothing here is posted yet.
+Drafts, written 2026-10-28. The GitHub release went out 2026-10-29 (tag `0.10.0`, commit 0e0e285c).
 
-## The three texts
+## The texts
 
 - **Steam Workshop description** (`steam_workshop_description.bbcode`): the Workshop page, "Edit title & description". Once
   posted it replaces `docs/steam_workshop_description.bbcode`, the copy of the live description.
 - **Steam change notes** (`steam_change_notes.bbcode`): the change note of the 0.10 upload (asked for on upload, or added
   later on the Workshop item's "Change Notes" tab).
 - **GitHub release** (`github_release.md`): the body of the release for tag `0.10.0`, title `0.10 The Ox Paradox`.
+- **Discord** (`discord_announcement.md`): the announcement, under Discord's 2,000-character limit. Its manual install
+  names `Prosper.or.Perish.0.10.0.zip`, the mod folder alone (top folder `Prosper or Perish (Population Growth & Food
+  Rework)`), attached to the GitHub release.
 
 ## Limits (checked 2026-10-28)
 

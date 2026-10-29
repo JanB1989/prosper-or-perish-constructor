@@ -9,10 +9,6 @@ This is a major update and is not save compatible, so I recommend starting a new
 If you want to keep playing an older release, download it from the [releases page](https://github.com/JanB1989/prosper-or-perish-constructor/releases), unzip it, and copy the folder `Prosper or Perish (Population Growth & Food Rework)` into your EU5 mod folder, usually here:
 `C:\Users\YourUserName\Documents\Paradox Interactive\Europa Universalis V\mod`
 
-- Discord: https://discord.gg/HgFd69Sv83
-- The Europedia as a website: https://janb1989.github.io/prosper-or-perish-constructor/examples/europedia.html
-- Documentation of buildings, production methods and goods: https://janb1989.github.io/prosper-or-perish-constructor/
-
 ## Highlights
 
 - **Food stays in the province.** The food market is gone: every province lives off its own store of Province Food, and the store decides whether its farms feed the province or sell to the market.
@@ -160,4 +156,13 @@ If you want to keep playing an older release, download it from the [releases pag
 - Conquest no longer removes Granaries, Taverns and Granges.
 - Many error-log floods and script errors fixed.
 
+## Links
+
+- Steam Workshop: [Prosper or Perish](https://steamcommunity.com/sharedfiles/filedetails/?id=3613232232)
+- Discord: [discord.gg/HgFd69Sv83](https://discord.gg/HgFd69Sv83)
+- The Europedia as a website: [Prosper or Perish Europedia](https://janb1989.github.io/prosper-or-perish-constructor/examples/europedia.html)
+- Buildings, production methods and goods: [documentation](https://janb1989.github.io/prosper-or-perish-constructor/)
+
 Thank you to everyone who helped out, gave feedback and tested things.
+
+Prosper or Perish will stay fully available. If you enjoy it and want to leave a small tip: [Prosper or Perish on Ko-fi](https://ko-fi.com/prosperorperish)

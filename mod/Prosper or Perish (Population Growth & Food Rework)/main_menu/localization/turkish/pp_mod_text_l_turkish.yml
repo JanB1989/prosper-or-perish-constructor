@@ -657,6 +657,7 @@
   pp_brewery_manufactory_brewery_manufactory_maintenance: "Wheat Beer"
   pp_brewery_manufactory_market_sales: "Market Sales"
   pp_brewery_manufactory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  brewery_manufactory_slot_1: "Market"
   pp_brewery_manufactory_legacy_fruit_beer_workshop_maintenance: "$fruit_beer_workshop_maintenance$ (Old Ways)"
   pp_brewery_manufactory_legacy_fruit_beer_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('beer_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_brewery_manufactory_legacy_maize_beer_workshop_maintenance: "$maize_beer_workshop_maintenance$ (Old Ways)"
@@ -665,7 +666,6 @@
   pp_brewery_manufactory_legacy_millet_beer_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('beer_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_brewery_manufactory_legacy_rice_beer_workshop_maintenance: "$rice_beer_workshop_maintenance$ (Old Ways)"
   pp_brewery_manufactory_legacy_rice_beer_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('beer_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  brewery_manufactory_slot_1: "Market"
 # <<< eu5-building-pipeline:brewery_manufactory:localization
  # pp_brewery_mill_l_english.yml
 
@@ -674,6 +674,7 @@
   pp_brewery_mill_brewery_mill_maintenance: "Wheat Beer"
   pp_brewery_mill_market_sales: "Market Sales"
   pp_brewery_mill_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  brewery_mill_slot_1: "Market"
   pp_brewery_mill_legacy_fruit_beer_workshop_maintenance: "$fruit_beer_workshop_maintenance$ (Old Ways)"
   pp_brewery_mill_legacy_fruit_beer_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('beer_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_brewery_mill_legacy_maize_beer_workshop_maintenance: "$maize_beer_workshop_maintenance$ (Old Ways)"
@@ -682,7 +683,6 @@
   pp_brewery_mill_legacy_millet_beer_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('beer_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_brewery_mill_legacy_rice_beer_workshop_maintenance: "$rice_beer_workshop_maintenance$ (Old Ways)"
   pp_brewery_mill_legacy_rice_beer_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('beer_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  brewery_mill_slot_1: "Market"
 # <<< eu5-building-pipeline:brewery_mill:localization
  # pp_build_panel_l_english.yml
   # Build panel cost and payback columns and the payback order (tools/port_vanilla_gui.py): build cost / monthly profit, in years
@@ -1682,6 +1682,7 @@
   pp_cannon_foundry_cannon_foundry_maintenance: "Bronze Cannons"
   pp_cannon_foundry_market_sales: "Market Sales"
   pp_cannon_foundry_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  cannon_foundry_slot_2: "Market"
   pp_cannon_foundry_legacy_cannon_workshop_ammunition_iron_maintenance: "$cannon_workshop_ammunition_iron_maintenance$ (Old Ways)"
   pp_cannon_foundry_legacy_cannon_workshop_ammunition_iron_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('cannon_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_cannon_foundry_legacy_cannon_workshop_ammunition_stone_maintenance: "$cannon_workshop_ammunition_stone_maintenance$ (Old Ways)"
@@ -1690,7 +1691,6 @@
   pp_cannon_foundry_legacy_cannon_workshop_bronze_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('cannon_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_cannon_foundry_legacy_cannon_workshop_iron_maintenance: "$cannon_workshop_iron_maintenance$ (Old Ways)"
   pp_cannon_foundry_legacy_cannon_workshop_iron_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('cannon_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  cannon_foundry_slot_2: "Market"
 # <<< eu5-building-pipeline:cannon_foundry:localization
  # pp_cannon_maker_l_english.yml
 
@@ -1727,6 +1727,7 @@
   pp_cannons_factory_gun_factory_maintenance: "Steel Cannons"
   pp_cannons_factory_market_sales: "Market Sales"
   pp_cannons_factory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  cannons_factory_slot_2: "Market"
   pp_cannons_factory_legacy_cannon_foundry_maintenance: "$cannon_foundry_maintenance$ (Old Ways)"
   pp_cannons_factory_legacy_cannon_foundry_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('cannon_foundry')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_cannons_factory_legacy_cannon_workshop_ammunition_iron_maintenance: "$cannon_workshop_ammunition_iron_maintenance$ (Old Ways)"
@@ -1737,7 +1738,6 @@
   pp_cannons_factory_legacy_cannon_workshop_bronze_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('cannon_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_cannons_factory_legacy_cannon_workshop_iron_maintenance: "$cannon_workshop_iron_maintenance$ (Old Ways)"
   pp_cannons_factory_legacy_cannon_workshop_iron_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('cannon_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  cannons_factory_slot_2: "Market"
 # <<< eu5-building-pipeline:cannons_factory:localization
  # pp_carrier_inn_l_english.yml
 
@@ -2171,11 +2171,11 @@
   pp_distiller_manufactory_scottish_whisky_distillery_maintenance: "Scotch Whisky"
   pp_distiller_manufactory_market_sales: "Market Sales"
   pp_distiller_manufactory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  distiller_manufactory_slot_1: "Market"
   pp_distiller_manufactory_legacy_beer_liquor_workshop_maintenance: "$beer_liquor_workshop_maintenance$ (Old Ways)"
   pp_distiller_manufactory_legacy_beer_liquor_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('distillers_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_distiller_manufactory_legacy_wine_liquor_workshop_maintenance: "$wine_liquor_workshop_maintenance$ (Old Ways)"
   pp_distiller_manufactory_legacy_wine_liquor_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('distillers_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  distiller_manufactory_slot_1: "Market"
 # <<< eu5-building-pipeline:distiller_manufactory:localization
  # pp_distiller_mill_l_english.yml
 
@@ -2188,11 +2188,11 @@
   pp_distiller_mill_scottish_whisky_distillery_mill_maintenance: "Scotch Whisky"
   pp_distiller_mill_market_sales: "Market Sales"
   pp_distiller_mill_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  distiller_mill_slot_1: "Market"
   pp_distiller_mill_legacy_beer_liquor_workshop_maintenance: "$beer_liquor_workshop_maintenance$ (Old Ways)"
   pp_distiller_mill_legacy_beer_liquor_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('distillers_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_distiller_mill_legacy_wine_liquor_workshop_maintenance: "$wine_liquor_workshop_maintenance$ (Old Ways)"
   pp_distiller_mill_legacy_wine_liquor_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('distillers_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  distiller_mill_slot_1: "Market"
 # <<< eu5-building-pipeline:distiller_mill:localization
  # pp_distillers_guild_l_english.yml
 
@@ -2265,9 +2265,9 @@
   pp_dyes_mill_dyesmill_maintenance: "Alum-Fixed Dyes"
   pp_dyes_mill_market_sales: "Market Sales"
   pp_dyes_mill_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  dyes_mill_slot_1: "Market"
   pp_dyes_mill_legacy_dyes_guild_maintenance: "$dyes_guild_maintenance$ (Old Ways)"
   pp_dyes_mill_legacy_dyes_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('dyes_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  dyes_mill_slot_1: "Market"
 # <<< eu5-building-pipeline:dyes_mill:localization
  # pp_dyes_workshop_l_english.yml
 
@@ -2276,9 +2276,9 @@
   pp_dyes_workshop_dyes_workshop_maintenance: "Alum-Fixed Dyes"
   pp_dyes_workshop_market_sales: "Market Sales"
   pp_dyes_workshop_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  dyes_workshop_slot_1: "Market"
   pp_dyes_workshop_legacy_dyes_guild_maintenance: "$dyes_guild_maintenance$ (Old Ways)"
   pp_dyes_workshop_legacy_dyes_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('dyes_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  dyes_workshop_slot_1: "Market"
 # <<< eu5-building-pipeline:dyes_workshop:localization
  # pp_dyesworks_l_english.yml
 
@@ -2287,9 +2287,9 @@
   pp_dyesworks_dyesworks_maintenance: "Alum-Fixed Dyes"
   pp_dyesworks_market_sales: "Market Sales"
   pp_dyesworks_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  dyesworks_slot_1: "Market"
   pp_dyesworks_legacy_dyes_guild_maintenance: "$dyes_guild_maintenance$ (Old Ways)"
   pp_dyesworks_legacy_dyes_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('dyes_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  dyesworks_slot_1: "Market"
 # <<< eu5-building-pipeline:dyesworks:localization
  # pp_education_buildings_l_english.yml
   pp_library_maintenance: "[ShowBuildingTypeName('library')|e] Maintenance"
@@ -2936,11 +2936,11 @@ PP_EU_LABOR_WHERE_DESC: "$BULLET$ #T The map:#! the $mapmode_pp_manual_labor_mar
   pp_fine_cloth_manufactory_alum_fine_cloth_manufactory_maintenance: "Dyes with Alum"
   pp_fine_cloth_manufactory_market_sales: "Market Sales"
   pp_fine_cloth_manufactory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  fine_cloth_manufactory_slot_2: "Market"
   pp_fine_cloth_manufactory_legacy_fur_trim_workshop_maintenance: "$fur_trim_workshop_maintenance$ (Old Ways)"
   pp_fine_cloth_manufactory_legacy_fur_trim_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('fine_cloth_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_fine_cloth_manufactory_legacy_wool_weavers_workshop_maintenance: "$wool_weavers_workshop_maintenance$ (Old Ways)"
   pp_fine_cloth_manufactory_legacy_wool_weavers_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('fine_cloth_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  fine_cloth_manufactory_slot_2: "Market"
 # <<< eu5-building-pipeline:fine_cloth_manufactory:localization
  # pp_fine_cloth_mill_l_english.yml
 
@@ -2950,11 +2950,11 @@ PP_EU_LABOR_WHERE_DESC: "$BULLET$ #T The map:#! the $mapmode_pp_manual_labor_mar
   pp_fine_cloth_mill_silk_cloth_mill_maintenance: "Silk Cloth"
   pp_fine_cloth_mill_market_sales: "Market Sales"
   pp_fine_cloth_mill_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  fine_cloth_mill_slot_2: "Market"
   pp_fine_cloth_mill_legacy_fur_trim_workshop_maintenance: "$fur_trim_workshop_maintenance$ (Old Ways)"
   pp_fine_cloth_mill_legacy_fur_trim_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('fine_cloth_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_fine_cloth_mill_legacy_wool_weavers_workshop_maintenance: "$wool_weavers_workshop_maintenance$ (Old Ways)"
   pp_fine_cloth_mill_legacy_wool_weavers_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('fine_cloth_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  fine_cloth_mill_slot_2: "Market"
 # <<< eu5-building-pipeline:fine_cloth_mill:localization
  # pp_fine_cloth_workshop_l_english.yml
 
@@ -2979,6 +2979,7 @@ PP_EU_LABOR_WHERE_DESC: "$BULLET$ #T The map:#! the $mapmode_pp_manual_labor_mar
   pp_firearms_factory_firearms_factory_maintenance: "Steel Firearms"
   pp_firearms_factory_market_sales: "Market Sales"
   pp_firearms_factory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  firearms_factory_slot_2: "Market"
   pp_firearms_factory_legacy_firearms_manufactory_maintenance: "$firearms_manufactory_maintenance$ (Old Ways)"
   pp_firearms_factory_legacy_firearms_manufactory_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('firearms_manufactory')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_firearms_factory_legacy_guns_guild_lumber_maintenance: "$guns_guild_lumber_maintenance$ (Old Ways)"
@@ -2989,7 +2990,6 @@ PP_EU_LABOR_WHERE_DESC: "$BULLET$ #T The map:#! the $mapmode_pp_manual_labor_mar
   pp_firearms_factory_legacy_guns_workshop_bronze_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('guns_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_firearms_factory_legacy_hand_cannon_guild_maintenance: "$hand_cannon_guild_maintenance$ (Old Ways)"
   pp_firearms_factory_legacy_hand_cannon_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('hand_cannon_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  firearms_factory_slot_2: "Market"
 # <<< eu5-building-pipeline:firearms_factory:localization
  # pp_firearms_manufactory_l_english.yml
 
@@ -3000,6 +3000,7 @@ PP_EU_LABOR_WHERE_DESC: "$BULLET$ #T The map:#! the $mapmode_pp_manual_labor_mar
   pp_firearms_manufactory_firearms_manufactory_maintenance: "Iron Firearms"
   pp_firearms_manufactory_market_sales: "Market Sales"
   pp_firearms_manufactory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  firearms_manufactory_slot_2: "Market"
   pp_firearms_manufactory_legacy_guns_guild_lumber_maintenance: "$guns_guild_lumber_maintenance$ (Old Ways)"
   pp_firearms_manufactory_legacy_guns_guild_lumber_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('gun_smith')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_firearms_manufactory_legacy_guns_workshop_ammunition_iron_maintenance: "$guns_workshop_ammunition_iron_maintenance$ (Old Ways)"
@@ -3008,7 +3009,6 @@ PP_EU_LABOR_WHERE_DESC: "$BULLET$ #T The map:#! the $mapmode_pp_manual_labor_mar
   pp_firearms_manufactory_legacy_guns_workshop_bronze_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('guns_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_firearms_manufactory_legacy_hand_cannon_guild_maintenance: "$hand_cannon_guild_maintenance$ (Old Ways)"
   pp_firearms_manufactory_legacy_hand_cannon_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('hand_cannon_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  firearms_manufactory_slot_2: "Market"
 # <<< eu5-building-pipeline:firearms_manufactory:localization
  # pp_fishing_village_l_english.yml
 
@@ -3247,11 +3247,11 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_glass_mill_glassmill_maintenance: "Coal-Fired Glass"
   pp_glass_mill_market_sales: "Market Sales"
   pp_glass_mill_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  glass_mill_slot_1: "Market"
   pp_glass_mill_legacy_glass_guild_maintenance: "$glass_guild_maintenance$ (Old Ways)"
   pp_glass_mill_legacy_glass_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('glass_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_glass_mill_legacy_metal_glass_workshop_maintenance: "$metal_glass_workshop_maintenance$ (Old Ways)"
   pp_glass_mill_legacy_metal_glass_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('glass_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  glass_mill_slot_1: "Market"
 # <<< eu5-building-pipeline:glass_mill:localization
  # pp_glass_workshop_l_english.yml
 
@@ -3260,9 +3260,9 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_glass_workshop_metal_glass_workshop_maintenance: "Lead Glass"
   pp_glass_workshop_market_sales: "Market Sales"
   pp_glass_workshop_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  glass_workshop_slot_1: "Market"
   pp_glass_workshop_legacy_glass_guild_maintenance: "$glass_guild_maintenance$ (Old Ways)"
   pp_glass_workshop_legacy_glass_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('glass_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  glass_workshop_slot_1: "Market"
 # <<< eu5-building-pipeline:glass_workshop:localization
  # pp_glassworks_l_english.yml
 
@@ -3271,11 +3271,11 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_glassworks_glassworks_maintenance: "Coal-Fired Glass"
   pp_glassworks_market_sales: "Market Sales"
   pp_glassworks_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  glassworks_slot_1: "Market"
   pp_glassworks_legacy_glass_guild_maintenance: "$glass_guild_maintenance$ (Old Ways)"
   pp_glassworks_legacy_glass_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('glass_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_glassworks_legacy_metal_glass_workshop_maintenance: "$metal_glass_workshop_maintenance$ (Old Ways)"
   pp_glassworks_legacy_metal_glass_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('glass_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  glassworks_slot_1: "Market"
 # <<< eu5-building-pipeline:glassworks:localization
  # pp_gold_diggings_l_english.yml
 
@@ -4243,9 +4243,9 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_gun_smith_guns_guild_ammunition_iron_maintenance: "Iron Shot"
   pp_gun_smith_market_sales: "Market Sales"
   pp_gun_smith_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  gun_smith_slot_2: "Market"
   pp_gun_smith_legacy_hand_cannon_guild_maintenance: "$hand_cannon_guild_maintenance$ (Old Ways)"
   pp_gun_smith_legacy_hand_cannon_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('hand_cannon_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  gun_smith_slot_2: "Market"
 # <<< eu5-building-pipeline:gun_smith:localization
  # pp_guns_workshop_l_english.yml
 
@@ -4256,11 +4256,11 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_guns_workshop_guns_workshop_ammunition_iron_maintenance: "Iron Shot"
   pp_guns_workshop_market_sales: "Market Sales"
   pp_guns_workshop_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  guns_workshop_slot_2: "Market"
   pp_guns_workshop_legacy_guns_guild_lumber_maintenance: "$guns_guild_lumber_maintenance$ (Old Ways)"
   pp_guns_workshop_legacy_guns_guild_lumber_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('gun_smith')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_guns_workshop_legacy_hand_cannon_guild_maintenance: "$hand_cannon_guild_maintenance$ (Old Ways)"
   pp_guns_workshop_legacy_hand_cannon_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('hand_cannon_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  guns_workshop_slot_2: "Market"
 # <<< eu5-building-pipeline:guns_workshop:localization
  # pp_hand_cannon_guild_l_english.yml
 
@@ -4377,6 +4377,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_iron_foundry_iron_foundry_maintenance: "Iron Tools"
   pp_iron_foundry_market_sales: "Market Sales"
   pp_iron_foundry_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  iron_foundry_slot_1: "Market"
   pp_iron_foundry_legacy_bronze_tools_guild_maintenance: "$bronze_tools_guild_maintenance$ (Old Ways)"
   pp_iron_foundry_legacy_bronze_tools_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('tools_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_iron_foundry_legacy_copper_tools_guild_maintenance: "$copper_tools_guild_maintenance$ (Old Ways)"
@@ -4385,7 +4386,6 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_iron_foundry_legacy_metalwork_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('tools_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_iron_foundry_legacy_stone_tools_guild_maintenance: "$stone_tools_guild_maintenance$ (Old Ways)"
   pp_iron_foundry_legacy_stone_tools_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('tools_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  iron_foundry_slot_1: "Market"
 # <<< eu5-building-pipeline:iron_foundry:localization
  # pp_iron_mill_l_english.yml
 
@@ -4395,6 +4395,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_iron_mill_steel_tools: "Steel Tools"
   pp_iron_mill_market_sales: "Market Sales"
   pp_iron_mill_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  iron_mill_slot_1: "Market"
   pp_iron_mill_legacy_bronze_tools_guild_maintenance: "$bronze_tools_guild_maintenance$ (Old Ways)"
   pp_iron_mill_legacy_bronze_tools_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('tools_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_iron_mill_legacy_copper_tools_guild_maintenance: "$copper_tools_guild_maintenance$ (Old Ways)"
@@ -4403,7 +4404,6 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_iron_mill_legacy_metalwork_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('tools_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_iron_mill_legacy_stone_tools_guild_maintenance: "$stone_tools_guild_maintenance$ (Old Ways)"
   pp_iron_mill_legacy_stone_tools_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('tools_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  iron_mill_slot_1: "Market"
 # <<< eu5-building-pipeline:iron_mill:localization
  # pp_iron_mine_improved_deep_l_english.yml
 
@@ -6649,13 +6649,13 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
   pp_paper_manufactory_paper_manufactory_maintenance: "Fiber Pulp Paper"
   pp_paper_manufactory_market_sales: "Market Sales"
   pp_paper_manufactory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  paper_manufactory_slot_1: "Market"
   pp_paper_manufactory_legacy_paper_guild_leather_maintenance: "$paper_guild_leather_maintenance$ (Old Ways)"
   pp_paper_manufactory_legacy_paper_guild_leather_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('paper_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_paper_manufactory_legacy_paper_workshop_cloth_maintenance: "$paper_workshop_cloth_maintenance$ (Old Ways)"
   pp_paper_manufactory_legacy_paper_workshop_cloth_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('paper_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_paper_manufactory_legacy_paper_workshop_fiber_pulp_maintenance: "$paper_workshop_fiber_pulp_maintenance$ (Old Ways)"
   pp_paper_manufactory_legacy_paper_workshop_fiber_pulp_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('paper_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  paper_manufactory_slot_1: "Market"
 # <<< eu5-building-pipeline:paper_manufactory:localization
  # pp_paper_mill_l_english.yml
 
@@ -6665,13 +6665,13 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
   pp_paper_mill_paper_wood_pulp_maintenance: "Wood Pulp Paper"
   pp_paper_mill_market_sales: "Market Sales"
   pp_paper_mill_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  paper_mill_slot_1: "Market"
   pp_paper_mill_legacy_paper_guild_leather_maintenance: "$paper_guild_leather_maintenance$ (Old Ways)"
   pp_paper_mill_legacy_paper_guild_leather_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('paper_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_paper_mill_legacy_paper_workshop_cloth_maintenance: "$paper_workshop_cloth_maintenance$ (Old Ways)"
   pp_paper_mill_legacy_paper_workshop_cloth_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('paper_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_paper_mill_legacy_paper_workshop_fiber_pulp_maintenance: "$paper_workshop_fiber_pulp_maintenance$ (Old Ways)"
   pp_paper_mill_legacy_paper_workshop_fiber_pulp_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('paper_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  paper_mill_slot_1: "Market"
 # <<< eu5-building-pipeline:paper_mill:localization
  # pp_paper_workshop_l_english.yml
 
@@ -6681,9 +6681,9 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
   pp_paper_workshop_paper_workshop_cloth_maintenance: "Rag Paper"
   pp_paper_workshop_market_sales: "Market Sales"
   pp_paper_workshop_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  paper_workshop_slot_1: "Market"
   pp_paper_workshop_legacy_paper_guild_leather_maintenance: "$paper_guild_leather_maintenance$ (Old Ways)"
   pp_paper_workshop_legacy_paper_guild_leather_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('paper_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  paper_workshop_slot_1: "Market"
 # <<< eu5-building-pipeline:paper_workshop:localization
  # pp_pearl_fishery_l_english.yml
 
@@ -6873,9 +6873,9 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
   pp_pottery_manufactory_pottery_manufactory_maintenance: "Pottery"
   pp_pottery_manufactory_market_sales: "Market Sales"
   pp_pottery_manufactory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  pottery_manufactory_slot_1: "Market"
   pp_pottery_manufactory_legacy_pottery_w_maintenance: "$pottery_w_maintenance$ (Old Ways)"
   pp_pottery_manufactory_legacy_pottery_w_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('pottery_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  pottery_manufactory_slot_1: "Market"
 # <<< eu5-building-pipeline:pottery_manufactory:localization
  # pp_pottery_mill_l_english.yml
 
@@ -6884,9 +6884,9 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
   pp_pottery_mill_pottery_mill_maintenance: "Pottery"
   pp_pottery_mill_market_sales: "Market Sales"
   pp_pottery_mill_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  pottery_mill_slot_1: "Market"
   pp_pottery_mill_legacy_pottery_w_maintenance: "$pottery_w_maintenance$ (Old Ways)"
   pp_pottery_mill_legacy_pottery_w_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('pottery_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  pottery_mill_slot_1: "Market"
 # <<< eu5-building-pipeline:pottery_mill:localization
  # pp_pottery_workshop_l_english.yml
 
@@ -6915,11 +6915,11 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
   pp_printing_manufactory_printing_manufactory_leather_maintenance: "$printing_manufactory_leather_maintenance$"
   pp_printing_manufactory_market_sales: "Market Sales"
   pp_printing_manufactory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  printing_manufactory_slot_1: "Market"
   pp_printing_manufactory_legacy_scriptorium_leather_maintenance: "$scriptorium_leather_maintenance$ (Old Ways)"
   pp_printing_manufactory_legacy_scriptorium_leather_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('scriptorium')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_printing_manufactory_legacy_scriptorium_maintenance: "$scriptorium_maintenance$ (Old Ways)"
   pp_printing_manufactory_legacy_scriptorium_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('scriptorium')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  printing_manufactory_slot_1: "Market"
 # <<< eu5-building-pipeline:printing_manufactory:localization
  # pp_printing_mill_l_english.yml
 
@@ -6929,11 +6929,11 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
   pp_printing_mill_printing_mill_leather_maintenance: "$printing_mill_leather_maintenance$"
   pp_printing_mill_market_sales: "Market Sales"
   pp_printing_mill_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  printing_mill_slot_1: "Market"
   pp_printing_mill_legacy_scriptorium_leather_maintenance: "$scriptorium_leather_maintenance$ (Old Ways)"
   pp_printing_mill_legacy_scriptorium_leather_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('scriptorium')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_printing_mill_legacy_scriptorium_maintenance: "$scriptorium_maintenance$ (Old Ways)"
   pp_printing_mill_legacy_scriptorium_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('scriptorium')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  printing_mill_slot_1: "Market"
 # <<< eu5-building-pipeline:printing_mill:localization
  # pp_printing_press_shop_l_english.yml
 
@@ -6943,11 +6943,11 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
   pp_printing_press_shop_printing_press_leather_maintenance: "$printing_press_leather_maintenance$"
   pp_printing_press_shop_market_sales: "Market Sales"
   pp_printing_press_shop_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  printing_press_shop_slot_1: "Market"
   pp_printing_press_shop_legacy_scriptorium_leather_maintenance: "$scriptorium_leather_maintenance$ (Old Ways)"
   pp_printing_press_shop_legacy_scriptorium_leather_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('scriptorium')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_printing_press_shop_legacy_scriptorium_maintenance: "$scriptorium_maintenance$ (Old Ways)"
   pp_printing_press_shop_legacy_scriptorium_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('scriptorium')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  printing_press_shop_slot_1: "Market"
 # <<< eu5-building-pipeline:printing_press_shop:localization
  # pp_promotion_modifier_types_l_english.yml
   MODIFIER_TYPE_NAME_local_pp_surplus_laborer_jobs: "Open Laborer Jobs"
@@ -8383,13 +8383,13 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   pp_tools_workshop_metalwork_workshop_maintenance: "Iron Tools"
   pp_tools_workshop_market_sales: "Market Sales"
   pp_tools_workshop_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  tools_workshop_slot_1: "Market"
   pp_tools_workshop_legacy_bronze_tools_guild_maintenance: "$bronze_tools_guild_maintenance$ (Old Ways)"
   pp_tools_workshop_legacy_bronze_tools_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('tools_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_tools_workshop_legacy_copper_tools_guild_maintenance: "$copper_tools_guild_maintenance$ (Old Ways)"
   pp_tools_workshop_legacy_copper_tools_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('tools_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_tools_workshop_legacy_stone_tools_guild_maintenance: "$stone_tools_guild_maintenance$ (Old Ways)"
   pp_tools_workshop_legacy_stone_tools_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('tools_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  tools_workshop_slot_1: "Market"
 # <<< eu5-building-pipeline:tools_workshop:localization
  # pp_training_fields_l_english.yml
 
@@ -8689,13 +8689,13 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   pp_weapon_factory_weapon_factory_maintenance: "Steel Weapons"
   pp_weapon_factory_market_sales: "Market Sales"
   pp_weapon_factory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  weapon_factory_slot_1: "Market"
   pp_weapon_factory_legacy_pre_columbian_weapon_smith_maintenance: "$pre_columbian_weapon_smith_maintenance$ (Old Ways)"
   pp_weapon_factory_legacy_pre_columbian_weapon_smith_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('weapon_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_weapon_factory_legacy_weapon_manufactory_maintenance: "$weapon_manufactory_maintenance$ (Old Ways)"
   pp_weapon_factory_legacy_weapon_manufactory_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('weapon_manufactory')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_weapon_factory_legacy_weapon_smith_maintenance: "$weapon_smith_maintenance$ (Old Ways)"
   pp_weapon_factory_legacy_weapon_smith_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('weapon_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  weapon_factory_slot_1: "Market"
 # <<< eu5-building-pipeline:weapon_factory:localization
  # pp_weapon_guild_l_english.yml
 
@@ -8716,11 +8716,11 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   pp_weapon_manufactory_weapon_manufactory_maintenance: "Iron Weapons"
   pp_weapon_manufactory_market_sales: "Market Sales"
   pp_weapon_manufactory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  weapon_manufactory_slot_1: "Market"
   pp_weapon_manufactory_legacy_pre_columbian_weapon_smith_maintenance: "$pre_columbian_weapon_smith_maintenance$ (Old Ways)"
   pp_weapon_manufactory_legacy_pre_columbian_weapon_smith_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('weapon_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_weapon_manufactory_legacy_weapon_smith_maintenance: "$weapon_smith_maintenance$ (Old Ways)"
   pp_weapon_manufactory_legacy_weapon_smith_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('weapon_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  weapon_manufactory_slot_1: "Market"
 # <<< eu5-building-pipeline:weapon_manufactory:localization
  # pp_weapon_workshop_l_english.yml
 
@@ -8729,11 +8729,11 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   pp_weapon_workshop_weapon_workshop_maintenance: "Iron Weapons"
   pp_weapon_workshop_market_sales: "Market Sales"
   pp_weapon_workshop_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  weapon_workshop_slot_1: "Market"
   pp_weapon_workshop_legacy_pre_columbian_weapon_smith_maintenance: "$pre_columbian_weapon_smith_maintenance$ (Old Ways)"
   pp_weapon_workshop_legacy_pre_columbian_weapon_smith_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('weapon_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_weapon_workshop_legacy_weapon_smith_maintenance: "$weapon_smith_maintenance$ (Old Ways)"
   pp_weapon_workshop_legacy_weapon_smith_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('weapon_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  weapon_workshop_slot_1: "Market"
 # <<< eu5-building-pipeline:weapon_workshop:localization
  # pp_wheat_farm_tier0_l_english.yml
 
@@ -8832,9 +8832,9 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   pp_winery_manufactory_honey_winery_manufactory_maintenance: "Mead"
   pp_winery_manufactory_market_sales: "Market Sales"
   pp_winery_manufactory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  winery_manufactory_slot_1: "Market"
   pp_winery_manufactory_legacy_fruit_winery_maintenance: "$fruit_winery_maintenance$ (Old Ways)"
   pp_winery_manufactory_legacy_fruit_winery_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('winery')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_winery_manufactory_legacy_rice_winery_maintenance: "$rice_winery_maintenance$ (Old Ways)"
   pp_winery_manufactory_legacy_rice_winery_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('winery')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
-  winery_manufactory_slot_1: "Market"
 # <<< eu5-building-pipeline:winery_manufactory:localization

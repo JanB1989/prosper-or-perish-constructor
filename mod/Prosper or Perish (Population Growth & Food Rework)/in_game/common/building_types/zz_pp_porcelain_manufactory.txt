@@ -23,7 +23,7 @@ unique_production_methods = {
         manual_labor = 0.714
         produced = porcelain
         output = 3.729
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.022
         category = manufactory_input
     }
 }
@@ -31,7 +31,7 @@ unique_production_methods = {
     pp_porcelain_manufactory_market_sales = {
         icon_type = goods
         icon = porcelain
-        offset = 0.012
+        offset = 0.018
         produced = porcelain
         output = 0.004
         category = building_maintenance

@@ -54,7 +54,7 @@ unique_production_methods = {
         manual_labor = 0.02
         produced = lumber
         output = 0.138
-        debug_max_profit = 0
+        debug_max_profit = 0.098
         category = building_maintenance
     }
     pp_water_sawmill_extra_rations = {
@@ -95,7 +95,7 @@ unique_production_methods = {
         fiber_crops = 0.2 # hauling ropes, rafting lines
         tar = 0.25 # gearing and slide grease, sealing the wheel and flume
         manual_labor = 0.21
-        debug_max_profit = 0
+        debug_max_profit = 0.043
         category = building_maintenance
     }
     pp_water_sawmill_horse_victuals = {
@@ -119,7 +119,7 @@ unique_production_methods = {
         leather = 0.2 # harness and traces for the teams
         tar = 0.3 # gearing and slide grease, sealing the wheel and flume
         manual_labor = 0.22
-        debug_max_profit = 0
+        debug_max_profit = 0.070
         category = building_maintenance
     }
 }
@@ -127,7 +127,7 @@ unique_production_methods = {
     pp_water_sawmill_market_sales = {
         icon_type = goods
         icon = lumber
-        offset = 0.014
+        offset = 0.021
         produced = lumber
         output = 0.008
         category = building_maintenance

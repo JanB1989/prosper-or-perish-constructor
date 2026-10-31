@@ -115,7 +115,7 @@ building:
     }
     unique_production_methods = {
         pp_iron_mine_market_sales = {
-            offset = 0.014
+            offset = 0.021
             produced = iron
             output = 0.004
             category = building_maintenance
@@ -144,9 +144,9 @@ localization:
     pp_iron_mine_ore_dressing_floors: Ore Dressing Floors
     pp_iron_mine_no_secondary: No Ochre Recovery
     pp_iron_mine_ochre: Ochre Washing
-    iron_mine_slot_3: Market
     pp_iron_mine_market_sales: Market Sales
     pp_iron_mine_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    iron_mine_slot_3: Market
 icon:
   source_png: ../assets/icons/iron_mine.png
   output_dds: iron_mine.dds

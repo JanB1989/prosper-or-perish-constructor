@@ -24,7 +24,7 @@ unique_production_methods = {
         manual_labor = 0.24
         produced = firearms
         output = 2.167
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.076
         category = mills_input
     }
     pp_firearms_factory_legacy_guns_workshop_ammunition_iron_maintenance = {
@@ -35,7 +35,7 @@ unique_production_methods = {
         manual_labor = 0.26
         produced = firearms
         output = 1.22
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.027
         category = mills_input
     }
 }
@@ -47,7 +47,7 @@ unique_production_methods = {
         manual_labor = 0.74
         produced = firearms
         output = 6.77
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.077
         category = mills_input
     }
     pp_firearms_factory_legacy_guns_guild_lumber_maintenance = {
@@ -97,7 +97,7 @@ unique_production_methods = {
         manual_labor = 0.92
         produced = firearms
         output = 5.08
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.038
         category = mills_input
     }
 }
@@ -105,7 +105,7 @@ unique_production_methods = {
     pp_firearms_factory_market_sales = {
         icon_type = goods
         icon = firearms
-        offset = 0.012
+        offset = 0.018
         produced = firearms
         output = 0.004
         category = building_maintenance

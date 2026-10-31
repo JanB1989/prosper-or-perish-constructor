@@ -68,7 +68,7 @@ building:
         }
     unique_production_methods = {
         pp_clay_pit_market_sales = {
-            offset = 0.01
+            offset = 0.015
             produced = clay
             output = 0.02
             category = building_maintenance
@@ -84,9 +84,9 @@ localization:
     clay_pit_slot_0: Pit Working
     pp_clay_pit_base_clay: Clay Deposit
     pp_clay_pit_maintenance: Clay Digging
-    clay_pit_slot_1: Market
     pp_clay_pit_market_sales: Market Sales
     pp_clay_pit_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    clay_pit_slot_1: Market
 
 evaluation:
   allow_rules:

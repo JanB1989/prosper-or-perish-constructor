@@ -83,7 +83,7 @@ unique_production_methods = {
         camels = 0.038
         produced = local_food
         output = 1.36
-        debug_max_profit = 4.965
+        debug_max_profit = 1.982
         category = building_maintenance
     }
 }
@@ -91,7 +91,7 @@ unique_production_methods = {
     pp_camel_herders_market_sales = {
         icon_type = goods
         icon = camels
-        offset = 0.012
+        offset = 0.018
         produced = camels
         output = 0.004
         category = building_maintenance

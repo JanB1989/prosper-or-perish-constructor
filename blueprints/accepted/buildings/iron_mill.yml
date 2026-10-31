@@ -98,9 +98,9 @@ building:
     }
     unique_production_methods = {
         pp_iron_mill_market_sales = {
-            offset = 0.013
+            offset = 0.034
             produced = tools
-            output = 0.004
+            output = 0.007
             category = building_maintenance
         }
     }
@@ -125,11 +125,11 @@ advancements:
 localization:
   entries:
     iron_mill_slot_0: "[ShowBuildingTypeName('iron_mill')|e] Work"
-    iron_mill_slot_1: Market
     pp_iron_mill_iron_mill_maintenance: Iron Tools
     pp_iron_mill_steel_tools: Steel Tools
     pp_iron_mill_market_sales: Market Sales
     pp_iron_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    iron_mill_slot_1: Market
     pp_iron_mill_legacy_bronze_tools_guild_maintenance: "$bronze_tools_guild_maintenance$ (Old Ways)"
     pp_iron_mill_legacy_bronze_tools_guild_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('tools_guild')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
     pp_iron_mill_legacy_copper_tools_guild_maintenance: "$copper_tools_guild_maintenance$ (Old Ways)"

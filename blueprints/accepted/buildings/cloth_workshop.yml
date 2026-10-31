@@ -61,7 +61,7 @@ building:
     }
     unique_production_methods = {
         pp_cloth_workshop_market_sales = {
-            offset = 0.012
+            offset = 0.018
             produced = cloth
             output = 0.004
             category = building_maintenance
@@ -88,12 +88,12 @@ building:
 localization:
   entries:
     cloth_workshop_slot_0: "[ShowBuildingTypeName('cloth_workshop')|e] Work"
-    cloth_workshop_slot_1: Market
     pp_cloth_workshop_cotton_cloth_workshop_maintenance: Cotton Cloth
     pp_cloth_workshop_wool_cloth_workshop_maintenance: Wool Cloth
     pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance: Linen Cloth
     pp_cloth_workshop_market_sales: Market Sales
     pp_cloth_workshop_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    cloth_workshop_slot_1: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.

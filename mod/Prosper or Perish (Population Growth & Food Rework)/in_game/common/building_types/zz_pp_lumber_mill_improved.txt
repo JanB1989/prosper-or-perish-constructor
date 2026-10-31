@@ -54,7 +54,7 @@ unique_production_methods = {
         manual_labor = 0.01
         produced = lumber
         output = 0.123
-        debug_max_profit = 0.025
+        debug_max_profit = 0.164
         category = building_maintenance
     }
 }
@@ -85,7 +85,7 @@ unique_production_methods = {
         fiber_crops = 0.3 # hauling ropes, rafting lines
         tar = 0.23 # skid and frame grease, log-end sealing
         manual_labor = 0.19
-        debug_max_profit = 0
+        debug_max_profit = 0.044
         category = building_maintenance
     }
     pp_lumber_mill_improved_horse_victuals = {
@@ -96,7 +96,7 @@ unique_production_methods = {
         horses = 0.19 # fast log hauling
         victuals = 0.62 # sawyer provisions
         manual_labor = 0.19
-        debug_max_profit = 0
+        debug_max_profit = 0.005
         category = building_maintenance
     }
     pp_lumber_mill_improved_horse_tools = {
@@ -109,7 +109,7 @@ unique_production_methods = {
         leather = 0.28 # harness and traces for the teams
         tar = 0.33 # skid and frame grease, log-end sealing
         manual_labor = 0.19
-        debug_max_profit = 0
+        debug_max_profit = 0.082
         category = building_maintenance
     }
 }
@@ -117,7 +117,7 @@ unique_production_methods = {
     pp_lumber_mill_improved_market_sales = {
         icon_type = goods
         icon = lumber
-        offset = 0.014
+        offset = 0.021
         produced = lumber
         output = 0.008
         category = building_maintenance

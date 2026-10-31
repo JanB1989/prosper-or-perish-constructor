@@ -85,7 +85,7 @@ unique_production_methods = {
         manual_labor = 0.1
         produced = wheat
         output = 1.08
-        debug_max_profit = 0
+        debug_max_profit = 0.031
         category = building_maintenance
     }
 }
@@ -96,7 +96,7 @@ unique_production_methods = {
         wheat = 0.016
         produced = local_food
         output = 6.256
-        debug_max_profit = 194.500
+        debug_max_profit = 96.750
         category = building_maintenance
     }
 }

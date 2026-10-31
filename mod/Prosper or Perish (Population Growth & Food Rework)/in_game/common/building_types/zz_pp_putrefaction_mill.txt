@@ -27,7 +27,7 @@ unique_production_methods = {
         manual_labor = 0.16
         produced = saltpeter
         output = 4.0
-        debug_max_profit = 0.688
+        debug_max_profit = 0.843
         category = mills_input
     }
 }
@@ -35,7 +35,7 @@ unique_production_methods = {
     pp_putrefaction_mill_market_sales = {
         icon_type = goods
         icon = saltpeter
-        offset = 0.01
+        offset = 0.015
         produced = saltpeter
         output = 0.005
         category = building_maintenance

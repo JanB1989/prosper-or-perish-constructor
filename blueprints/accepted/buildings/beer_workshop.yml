@@ -110,7 +110,7 @@ building:
     }
     unique_production_methods = {
         pp_beer_workshop_market_sales = {
-            offset = 0.01
+            offset = 0.015
             produced = beer
             output = 0.005
             category = building_maintenance
@@ -142,7 +142,6 @@ advancements:
 localization:
   entries:
     beer_workshop_slot_0: "[ShowBuildingTypeName('beer_workshop')|e] Work"
-    beer_workshop_slot_1: Market
     pp_beer_workshop_wheat_beer_workshop_maintenance: Wheat Beer
     pp_beer_workshop_millet_beer_workshop_maintenance: Millet Beer
     pp_beer_workshop_fruit_beer_workshop_maintenance: Fruit Beer
@@ -152,6 +151,7 @@ localization:
     pp_beer_workshop_rice_beer_workshop_maintenance: Rice Beer
     pp_beer_workshop_market_sales: Market Sales
     pp_beer_workshop_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    beer_workshop_slot_1: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.

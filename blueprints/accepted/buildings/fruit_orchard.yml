@@ -113,7 +113,7 @@ building:
         }
         unique_production_methods = {
             pp_fruit_orchard_market_sales = {
-                offset = 0.01
+                offset = 0.015
                 produced = fruit
                 output = 0.01
                 category = building_maintenance
@@ -138,7 +138,6 @@ localization:
     fruit_orchard_slot_1: Beekeeping
     fruit_orchard_slot_2: Orchard Work
     fruit_orchard_slot_3: Provisioning
-    fruit_orchard_slot_4: Market
     pp_fruit_orchard_base_fruit: Fruit Trees
     pp_fruit_orchard_maintenance: "[ShowBuildingTypeName('fruit_orchard')|e] Maintenance"
     pp_fruit_orchard_no_primary: No Orchard Work
@@ -149,6 +148,7 @@ localization:
     pp_fruit_orchard_provision_desc: The household buys its own fruit back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_fruit_orchard_market_sales: Market Sales
     pp_fruit_orchard_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    fruit_orchard_slot_4: Market
 evaluation:
   allow_rules:
     profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.

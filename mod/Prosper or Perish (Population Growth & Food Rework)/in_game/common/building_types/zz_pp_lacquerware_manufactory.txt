@@ -24,7 +24,7 @@ unique_production_methods = {
         manual_labor = 1.156
         produced = lacquerware
         output = 3.732
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.017
         category = manufactory_input
     }
 }
@@ -32,7 +32,7 @@ unique_production_methods = {
     pp_lacquerware_manufactory_market_sales = {
         icon_type = goods
         icon = lacquerware
-        offset = 0.01
+        offset = 0.015
         produced = lacquerware
         output = 0.002
         category = building_maintenance

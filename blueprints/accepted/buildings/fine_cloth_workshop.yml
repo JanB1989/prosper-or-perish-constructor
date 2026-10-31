@@ -107,7 +107,7 @@ building:
     }
     unique_production_methods = {
         pp_fine_cloth_workshop_market_sales = {
-            offset = 0.012
+            offset = 0.018
             produced = fine_cloth
             output = 0.002
             category = building_maintenance
@@ -136,7 +136,6 @@ localization:
   entries:
     fine_cloth_workshop_slot_0: "[ShowBuildingTypeName('fine_cloth_workshop')|e] Work"
     fine_cloth_workshop_slot_1: "[ShowBuildingTypeName('fine_cloth_workshop')|e] Work"
-    fine_cloth_workshop_slot_2: Market
     pp_fine_cloth_workshop_fine_cloth_workshop_maintenance: Cloth Finishing
     pp_fine_cloth_workshop_wool_weavers_workshop_maintenance: Wool Weaving
     pp_fine_cloth_workshop_silk_weavers_workshop_maintenance: Silk Weaving
@@ -146,6 +145,7 @@ localization:
     pp_fine_cloth_workshop_fur_trim_workshop_maintenance: Fur Trims
     pp_fine_cloth_workshop_market_sales: Market Sales
     pp_fine_cloth_workshop_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    fine_cloth_workshop_slot_2: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.

@@ -25,7 +25,7 @@ unique_production_methods = {
         manual_labor = 0.6
         produced = beer
         output = 8.935
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.084
         category = mills_input
     }
     pp_brewery_mill_legacy_fruit_beer_workshop_maintenance = {
@@ -37,7 +37,7 @@ unique_production_methods = {
         manual_labor = 0.68
         produced = beer
         output = 4.25
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.008
         category = mills_input
     }
     pp_brewery_mill_legacy_maize_beer_workshop_maintenance = {
@@ -80,7 +80,7 @@ unique_production_methods = {
     pp_brewery_mill_market_sales = {
         icon_type = goods
         icon = beer
-        offset = 0.01
+        offset = 0.015
         produced = beer
         output = 0.005
         category = building_maintenance

@@ -127,7 +127,7 @@ REPLACE:fishing_village = {
             fish = 0.067
             produced = local_food
             output = 0.8
-            debug_max_profit = 4.970
+            debug_max_profit = 1.985
             category = building_maintenance
         }
     }
@@ -135,7 +135,7 @@ REPLACE:fishing_village = {
         pp_fishing_village_market_sales = {
             icon_type = goods
             icon = fish
-            offset = 0.01
+            offset = 0.015
             produced = fish
             output = 0.01
             category = building_maintenance

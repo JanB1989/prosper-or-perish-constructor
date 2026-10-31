@@ -78,7 +78,7 @@ REPLACE:forest_village = {
             output = 0.063
             weaponry = 0.0
             manual_labor = 0.013
-            debug_max_profit = 0
+            debug_max_profit = 0.938
             category = building_maintenance
         }
         pp_forest_tannery = {
@@ -122,7 +122,7 @@ REPLACE:forest_village = {
             wild_game = 0.08
             produced = local_food
             output = 0.96
-            debug_max_profit = 5.000
+            debug_max_profit = 2.000
             category = building_maintenance
         }
     }
@@ -130,7 +130,7 @@ REPLACE:forest_village = {
         pp_forest_village_market_sales = {
             icon_type = goods
             icon = beeswax
-            offset = 0.01
+            offset = 0.015
             produced = beeswax
             output = 0.005
             category = building_maintenance

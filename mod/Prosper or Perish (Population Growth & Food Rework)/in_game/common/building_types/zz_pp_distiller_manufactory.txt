@@ -24,7 +24,7 @@ unique_production_methods = {
         produced = liquor
         output = 3.72
         category = manufactory_input
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.051
     }
     pp_distiller_manufactory_rice_distillery_maintenance = {
         icon_type = goods
@@ -35,7 +35,7 @@ unique_production_methods = {
         produced = liquor
         output = 3.72
         category = manufactory_input
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.048
     }
     pp_distiller_manufactory_potato_distillery_maintenance = {
         icon_type = goods
@@ -46,7 +46,7 @@ unique_production_methods = {
         produced = liquor
         output = 3.72
         category = manufactory_input
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.048
     }
     pp_distiller_manufactory_wheat_distillery_maintenance = {
         icon_type = goods
@@ -57,7 +57,7 @@ unique_production_methods = {
         produced = liquor
         output = 3.72
         category = manufactory_input
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.048
     }
     pp_distiller_manufactory_scottish_whisky_distillery_maintenance = {
         icon_type = goods
@@ -68,7 +68,7 @@ unique_production_methods = {
         produced = liquor
         output = 3.72
         category = manufactory_input
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.048
     }
     pp_distiller_manufactory_legacy_beer_liquor_workshop_maintenance = {
         icon_type = goods
@@ -78,7 +78,7 @@ unique_production_methods = {
         manual_labor = 0.63
         produced = liquor
         output = 2.79
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.001
         category = manufactory_input
     }
     pp_distiller_manufactory_legacy_wine_liquor_workshop_maintenance = {
@@ -89,7 +89,7 @@ unique_production_methods = {
         manual_labor = 0.63
         produced = liquor
         output = 2.79
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.001
         category = manufactory_input
     }
 }
@@ -97,7 +97,7 @@ unique_production_methods = {
     pp_distiller_manufactory_market_sales = {
         icon_type = goods
         icon = liquor
-        offset = 0.01
+        offset = 0.015
         produced = liquor
         output = 0.004
         category = building_maintenance

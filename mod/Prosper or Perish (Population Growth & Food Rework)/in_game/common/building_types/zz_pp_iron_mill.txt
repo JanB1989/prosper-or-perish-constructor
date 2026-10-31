@@ -23,7 +23,7 @@ unique_production_methods = {
         category = mills_input
         produced = tools
         output = 8.865
-        debug_max_profit = 0.063
+        debug_max_profit = 0.162
     }
     pp_iron_mill_iron_mill_maintenance = {
         icon_type = goods
@@ -34,7 +34,7 @@ unique_production_methods = {
         category = mills_input
         produced = tools
         output = 8.865
-        debug_max_profit = 0.057
+        debug_max_profit = 0.158
     }
     pp_iron_mill_legacy_stone_tools_guild_maintenance = {
         icon_type = goods
@@ -43,7 +43,7 @@ unique_production_methods = {
         manual_labor = 0.36
         produced = tools
         output = 0.93
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.004
         category = mills_input
     }
     pp_iron_mill_legacy_copper_tools_guild_maintenance = {
@@ -53,7 +53,7 @@ unique_production_methods = {
         manual_labor = 0.81
         produced = tools
         output = 2.09
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.004
         category = mills_input
     }
     pp_iron_mill_legacy_bronze_tools_guild_maintenance = {
@@ -64,7 +64,7 @@ unique_production_methods = {
         manual_labor = 0.82
         produced = tools
         output = 2.24
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.020
         category = mills_input
     }
     pp_iron_mill_legacy_metalwork_workshop_maintenance = {
@@ -74,7 +74,7 @@ unique_production_methods = {
         manual_labor = 1.35
         produced = tools
         output = 4.99
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.067
         category = mills_input
     }
 }
@@ -82,9 +82,9 @@ unique_production_methods = {
     pp_iron_mill_market_sales = {
         icon_type = goods
         icon = tools
-        offset = 0.013
+        offset = 0.034
         produced = tools
-        output = 0.004
+        output = 0.007
         category = building_maintenance
     }
 }

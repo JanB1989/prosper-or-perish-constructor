@@ -88,7 +88,7 @@ building:
         }
         unique_production_methods = {
             pp_sheep_farms_market_sales = {
-                offset = 0.01
+                offset = 0.015
                 produced = wool
                 output = 0.004
                 category = building_maintenance
@@ -117,7 +117,6 @@ localization:
     sheep_farms_slot_0: Wool Pasture
     sheep_farms_slot_1: Sheep Work
     sheep_farms_slot_2: Provisioning
-    sheep_farms_slot_3: Market
     pp_sheep_farms_provision: Provision with Mutton
     pp_sheep_farms_provision_desc: The household buys its own sheep back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_sheep_farm_base_wool: Wool Pasture
@@ -125,6 +124,7 @@ localization:
     pp_sheep_farm_no_primary: No Sheep Work
     pp_sheep_farms_market_sales: Market Sales
     pp_sheep_farms_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    sheep_farms_slot_3: Market
 evaluation:
   allow_rules:
     profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.

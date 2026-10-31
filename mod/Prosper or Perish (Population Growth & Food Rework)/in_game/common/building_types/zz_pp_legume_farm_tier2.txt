@@ -72,7 +72,7 @@ unique_production_methods = {
         manual_labor = 0.055
         produced = beeswax
         output = 0.31
-        debug_max_profit = 0
+        debug_max_profit = 0.038
         category = building_maintenance
     }
 }
@@ -92,7 +92,7 @@ unique_production_methods = {
         manual_labor = 0.093
         produced = legumes
         output = 1.05
-        debug_max_profit = 0
+        debug_max_profit = 0.012
         category = building_maintenance
     }
     pp_legume_rotations_vetch_lentil = {
@@ -105,7 +105,7 @@ unique_production_methods = {
         manual_labor = 0.1
         produced = legumes
         output = 1.09
-        debug_max_profit = 0
+        debug_max_profit = 0.031
         category = building_maintenance
     }
 }
@@ -116,7 +116,7 @@ unique_production_methods = {
         legumes = 0.016
         produced = local_food
         output = 6.256
-        debug_max_profit = 194.500
+        debug_max_profit = 96.750
         category = building_maintenance
     }
 }

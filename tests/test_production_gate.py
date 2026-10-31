@@ -399,12 +399,12 @@ def test_every_market_good_building_gates_on_its_leg_and_no_gate_buys_its_main_g
     assert by_name["mason"].gate == "pp_mason_market_sales"  # masonry no longer skips the check (2026-10-09)
 
 
-def test_only_iron_and_lumber_skip_the_margin_check() -> None:
+def test_no_good_skips_the_margin_check() -> None:
     """Engine (1.4 decompile 2026-10-09): a building that outputs a good with ai_rgo_expansion_priority > 0 skips the
     profit-margin check and gets a construction-shortage bonus; vanilla gives it to seven goods. pp_goods_adjustments
-    sets them to 0 (masonry glut, 10-09), so every producer follows its Market leg, except iron and lumber, which keep
-    vanilla's 0.025 since 2026-10-28 (Jan: the AI answers their shortages). The last entry wins (TRY_INJECT replaces
-    scalars)."""
+    sets them to 0 (masonry glut, 10-09), so every producer follows its Market leg. 0.10 keeps vanilla's 0.025 on iron
+    and lumber (2026-10-28); branch stockpile-prices sets them to 0 too (2026-10-31, Jan: exporters must be able to win
+    against an importer's own mines and mills). The last entry wins (TRY_INJECT replaces scalars)."""
     import json
 
     from eu5gameparser.domain.eu5 import load_eu5_data
@@ -415,4 +415,17 @@ def test_only_iron_and_lumber_skip_the_margin_check() -> None:
         values = [e["value"] for e in json.loads(raw or "{}").get("entries", []) if e["key"] == "ai_rgo_expansion_priority"]
         if values and float(values[-1]) > 0:
             exempt[name] = float(values[-1])
-    assert exempt == {"iron": 0.025, "lumber": 0.025}
+    assert exempt == {}
+
+
+def test_passes_read_prices_before_the_stockpile_raise() -> None:
+    """[stockpile_prices]: the engine reads default prices x2 (dummy goods kept); the passes that turn gold into goods
+    amounts read them divided back, so recipes, legs and upkeep keep their amounts."""
+    from prosper_or_perish_constructor import production_labour, profit_margins
+
+    engine = profit_margins.goods_prices(ROOT / "constructor.load_order.toml", "constructor")
+    passes = production_labour.load_prices(ROOT, ROOT / "constructor.toml")
+    assert (engine["iron"], passes["iron"]) == (7.0, 3.5)
+    assert (engine["victuals"], passes["victuals"]) == (6.0, 3.0)
+    assert engine["offset"] == passes["offset"] == 5.0
+    assert engine["local_food"] == passes["local_food"] == 0.5

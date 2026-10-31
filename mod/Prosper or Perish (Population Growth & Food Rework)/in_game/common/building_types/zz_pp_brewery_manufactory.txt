@@ -24,7 +24,7 @@ unique_production_methods = {
         manual_labor = 0.459
         produced = beer
         output = 3.719
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.052
         category = manufactory_input
     }
     pp_brewery_manufactory_legacy_fruit_beer_workshop_maintenance = {
@@ -36,7 +36,7 @@ unique_production_methods = {
         manual_labor = 0.37
         produced = beer
         output = 2.36
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.028
         category = manufactory_input
     }
     pp_brewery_manufactory_legacy_maize_beer_workshop_maintenance = {
@@ -47,7 +47,7 @@ unique_production_methods = {
         manual_labor = 0.4
         produced = beer
         output = 2.36
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.015
         category = manufactory_input
     }
     pp_brewery_manufactory_legacy_millet_beer_workshop_maintenance = {
@@ -59,7 +59,7 @@ unique_production_methods = {
         manual_labor = 0.41
         produced = beer
         output = 2.36
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.015
         category = manufactory_input
     }
     pp_brewery_manufactory_legacy_rice_beer_workshop_maintenance = {
@@ -71,7 +71,7 @@ unique_production_methods = {
         manual_labor = 0.41
         produced = beer
         output = 2.36
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.015
         category = manufactory_input
     }
 }
@@ -79,7 +79,7 @@ unique_production_methods = {
     pp_brewery_manufactory_market_sales = {
         icon_type = goods
         icon = beer
-        offset = 0.01
+        offset = 0.015
         produced = beer
         output = 0.005
         category = building_maintenance

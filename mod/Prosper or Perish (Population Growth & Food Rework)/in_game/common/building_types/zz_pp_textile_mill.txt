@@ -24,7 +24,7 @@ unique_production_methods = {
         manual_labor = 0.62
         produced = cloth
         output = 5.577
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.090
         category = mills_input
     }
     pp_textile_mill_fiber_crops_mill_maintenance = {
@@ -35,7 +35,7 @@ unique_production_methods = {
         manual_labor = 0.58
         produced = cloth
         output = 5.577
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.094
         category = mills_input
     }
     pp_textile_mill_cotton_mill_maintenance = {
@@ -46,7 +46,7 @@ unique_production_methods = {
         manual_labor = 0.64
         produced = cloth
         output = 6.697
-        debug_max_profit = 0.006
+        debug_max_profit = 0.093
         category = mills_input
     }
     pp_textile_mill_legacy_fiber_crops_cloth_workshop_maintenance = {
@@ -56,7 +56,7 @@ unique_production_methods = {
         manual_labor = 0.79
         produced = cloth
         output = 3.08
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.005
         category = mills_input
     }
     pp_textile_mill_legacy_cotton_cloth_workshop_maintenance = {
@@ -66,7 +66,7 @@ unique_production_methods = {
         manual_labor = 1
         produced = cloth
         output = 3.77
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.002
         category = mills_input
     }
     pp_textile_mill_legacy_wool_cloth_workshop_maintenance = {
@@ -76,7 +76,7 @@ unique_production_methods = {
         manual_labor = 1
         produced = cloth
         output = 3.77
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.001
         category = mills_input
     }
 }
@@ -84,7 +84,7 @@ unique_production_methods = {
     pp_textile_mill_market_sales = {
         icon_type = goods
         icon = cloth
-        offset = 0.012
+        offset = 0.018
         produced = cloth
         output = 0.004
         category = building_maintenance

@@ -22,7 +22,7 @@ unique_production_methods = {
         manual_labor = 0.16
         produced = paper
         output = 2.0
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.013
         category = mills_input
     }
     pp_paper_mill_paper_wood_pulp_maintenance = {
@@ -74,7 +74,7 @@ unique_production_methods = {
     pp_paper_mill_market_sales = {
         icon_type = goods
         icon = paper
-        offset = 0.01
+        offset = 0.015
         produced = paper
         output = 0.005
         category = building_maintenance

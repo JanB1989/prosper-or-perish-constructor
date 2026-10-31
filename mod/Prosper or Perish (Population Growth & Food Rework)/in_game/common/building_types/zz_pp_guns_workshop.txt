@@ -22,7 +22,7 @@ unique_production_methods = {
         manual_labor = 0.052
         produced = firearms
         output = 0.27
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.154
         category = workshop_input
     }
     pp_guns_workshop_guns_workshop_ammunition_iron_maintenance = {
@@ -33,7 +33,7 @@ unique_production_methods = {
         manual_labor = 0.071
         produced = firearms
         output = 0.339
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.055
         category = workshop_input
     }
 }
@@ -94,7 +94,7 @@ unique_production_methods = {
     pp_guns_workshop_market_sales = {
         icon_type = goods
         icon = firearms
-        offset = 0.012
+        offset = 0.018
         produced = firearms
         output = 0.004
         category = building_maintenance

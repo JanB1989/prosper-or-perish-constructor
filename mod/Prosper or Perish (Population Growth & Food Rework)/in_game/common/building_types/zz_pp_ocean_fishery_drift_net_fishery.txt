@@ -59,7 +59,7 @@ unique_production_methods = {
         manual_labor = 0.115
         produced = fish
         output = 1.24
-        debug_max_profit = 0
+        debug_max_profit = 0.156
         category = building_maintenance
     }
 }
@@ -70,7 +70,7 @@ unique_production_methods = {
         fish = 0.137
         produced = local_food
         output = 1.648
-        debug_max_profit = 5.015
+        debug_max_profit = 2.007
         category = building_maintenance
     }
 }
@@ -78,7 +78,7 @@ unique_production_methods = {
     pp_drift_net_fishery_market_sales = {
         icon_type = goods
         icon = fish
-        offset = 0.01
+        offset = 0.015
         produced = fish
         output = 0.01
         category = building_maintenance

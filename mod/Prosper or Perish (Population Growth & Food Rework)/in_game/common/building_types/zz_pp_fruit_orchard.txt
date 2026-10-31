@@ -53,7 +53,7 @@ REPLACE:fruit_orchard = {
             manual_labor = 0.025
             produced = beeswax
             output = 0.063
-            debug_max_profit = 0.008
+            debug_max_profit = 1.016
             category = building_maintenance
         }
     }
@@ -81,7 +81,7 @@ REPLACE:fruit_orchard = {
             fruit = 0.08
             produced = local_food
             output = 0.96
-            debug_max_profit = 5.000
+            debug_max_profit = 2.000
             category = building_maintenance
         }
     }
@@ -89,7 +89,7 @@ REPLACE:fruit_orchard = {
         pp_fruit_orchard_market_sales = {
             icon_type = goods
             icon = fruit
-            offset = 0.01
+            offset = 0.015
             produced = fruit
             output = 0.01
             category = building_maintenance

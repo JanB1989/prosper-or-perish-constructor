@@ -21,7 +21,7 @@ unique_production_methods = {
         dyes = 0.17
         manual_labor = 0.09
         output = 0.162
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.074
         category = workshop_input
     }
     pp_fine_cloth_workshop_alum_fine_cloth_workshop_maintenance = {
@@ -42,7 +42,7 @@ unique_production_methods = {
         manual_labor = 0.169
         produced = fine_cloth
         output = 0.34
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.003
         category = workshop_input
     }
 }
@@ -98,7 +98,7 @@ unique_production_methods = {
     pp_fine_cloth_workshop_market_sales = {
         icon_type = goods
         icon = fine_cloth
-        offset = 0.012
+        offset = 0.018
         produced = fine_cloth
         output = 0.002
         category = building_maintenance

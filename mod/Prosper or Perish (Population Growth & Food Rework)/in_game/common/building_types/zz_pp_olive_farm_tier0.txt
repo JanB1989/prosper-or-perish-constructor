@@ -73,7 +73,7 @@ unique_production_methods = {
         manual_labor = 0.01
         produced = olives
         output = 0.1
-        debug_max_profit = 0.613
+        debug_max_profit = 1.703
         category = building_maintenance
     }
     pp_olive_farm_terraced_grove = {
@@ -84,7 +84,7 @@ unique_production_methods = {
         manual_labor = 0.006
         produced = olives
         output = 0.11
-        debug_max_profit = 0.803
+        debug_max_profit = 1.391
         category = building_maintenance
     }
 }
@@ -95,7 +95,7 @@ unique_production_methods = {
         olives = 0.01
         produced = local_food
         output = 1.5
-        debug_max_profit = 74.000
+        debug_max_profit = 36.500
         category = building_maintenance
     }
 }

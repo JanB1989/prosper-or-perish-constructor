@@ -89,7 +89,7 @@ building:
     }
     unique_production_methods = {
         pp_cannon_workshop_market_sales = {
-            offset = 0.012
+            offset = 0.018
             produced = cannons
             output = 0.003
             category = building_maintenance
@@ -117,7 +117,6 @@ localization:
   entries:
     cannon_workshop_slot_0: "[ShowBuildingTypeName('cannon_workshop')|e] Work"
     cannon_workshop_slot_1: "[ShowBuildingTypeName('cannon_workshop')|e] Work"
-    cannon_workshop_slot_2: Market
     pp_cannon_workshop_cannon_workshop_bronze_maintenance: Cast Bronze Barrels
     pp_cannon_workshop_cannon_workshop_iron_maintenance: Wrought Iron Barrels
     pp_cannon_workshop_cannon_workshop_ammunition_stone_maintenance: Stone Shot
@@ -125,6 +124,7 @@ localization:
     pp_cannon_workshop_cannon_workshop_ammunition_iron_maintenance: Iron Shot
     pp_cannon_workshop_market_sales: Market Sales
     pp_cannon_workshop_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    cannon_workshop_slot_2: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.

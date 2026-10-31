@@ -108,7 +108,7 @@ building:
     }
     unique_production_methods = {
         pp_clay_washmill_market_sales = {
-            offset = 0.01
+            offset = 0.015
             produced = clay
             output = 0.02
             category = building_maintenance
@@ -145,9 +145,9 @@ localization:
     pp_clay_washmill_levigation_ponds: Levigation Ponds
     pp_clay_washmill: Clay Washmills
     pp_clay_washmill_desc: Brick-lined wash pits, settling ponds, and horse- or ox-driven pugmills prepare more consistent clay for ceramic trades.
-    clay_washmill_slot_3: Market
     pp_clay_washmill_market_sales: Market Sales
     pp_clay_washmill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    clay_washmill_slot_3: Market
 icon:
   source_png: ../assets/icons/clay_washmill.png
   output_dds: clay_washmill.dds

@@ -48,7 +48,7 @@ building:
     }
     unique_production_methods = {
         pp_putrefaction_works_market_sales = {
-            offset = 0.01
+            offset = 0.015
             produced = saltpeter
             output = 0.005
             category = building_maintenance

@@ -113,7 +113,7 @@ building:
     }
     unique_production_methods = {
         pp_gold_diggings_market_sales = {
-            offset = 0.018
+            offset = 0.027
             produced = goods_gold
             output = 0.002
             category = building_maintenance
@@ -142,9 +142,9 @@ localization:
     pp_gold_diggings_no_secondary: No Associated Ore Sorting
     pp_gold_diggings_silver: Electrum Sorting
     pp_gold_diggings_copper: Copper Ore Picking
-    gold_diggings_slot_3: Market
     pp_gold_diggings_market_sales: Market Sales
     pp_gold_diggings_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    gold_diggings_slot_3: Market
 icon:
   source_png: ../assets/icons/gold_diggings.png
   output_dds: gold_diggings.dds

@@ -108,7 +108,7 @@ building:
     }
     unique_production_methods = {
         pp_gold_stamp_mill_market_sales = {
-            offset = 0.018
+            offset = 0.027
             produced = goods_gold
             output = 0.002
             category = building_maintenance
@@ -136,9 +136,9 @@ localization:
     pp_gold_stamp_mill_no_secondary: No Assay Sorting
     pp_gold_stamp_mill_silver: Assay Silver Recovery
     pp_gold_stamp_mill_copper: Copper Sulphide Sorting
-    gold_stamp_mill_slot_3: Market
     pp_gold_stamp_mill_market_sales: Market Sales
     pp_gold_stamp_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    gold_stamp_mill_slot_3: Market
 icon:
   source_png: ../assets/icons/gold_stamp_mill.png
   output_dds: gold_stamp_mill.dds

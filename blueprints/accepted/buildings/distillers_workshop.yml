@@ -94,7 +94,7 @@ building:
     }
     unique_production_methods = {
         pp_distillers_workshop_market_sales = {
-            offset = 0.01
+            offset = 0.015
             produced = liquor
             output = 0.004
             category = building_maintenance
@@ -121,7 +121,6 @@ building:
 localization:
   entries:
     distillers_workshop_slot_0: "[ShowBuildingTypeName('distillers_workshop')|e] Work"
-    distillers_workshop_slot_1: Market
     pp_distillers_workshop_sugar_liquor_workshop_maintenance: Distill Sugar
     pp_distillers_workshop_rice_liquor_workshop_maintenance: Distill Rice
     pp_distillers_workshop_potato_liquor_workshop_maintenance: Distill Potatoes
@@ -130,6 +129,7 @@ localization:
     pp_distillers_workshop_wine_liquor_workshop_maintenance: Distill Wine
     pp_distillers_workshop_market_sales: Market Sales
     pp_distillers_workshop_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    distillers_workshop_slot_1: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.

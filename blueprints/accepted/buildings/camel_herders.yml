@@ -112,7 +112,7 @@ building:
     }
     unique_production_methods = {
         pp_camel_herders_market_sales = {
-            offset = 0.012
+            offset = 0.018
             produced = camels
             output = 0.004
             category = building_maintenance
@@ -135,7 +135,6 @@ localization:
     camel_herders_slot_0: Desert Grazing
     camel_herders_slot_1: Herding and Feeding
     camel_herders_slot_2: Provisioning
-    camel_herders_slot_3: Market
     pp_camel_herders_provision: Provision with Camel
     pp_camel_herders_provision_desc: The household buys its own camels back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_camel_herders_base_camels: Desert Grazing
@@ -148,6 +147,7 @@ localization:
     pp_camel_herders_dates_and_fish_desc: Along the coasts, herders feed their camels date stones, spoiled dates and sun-dried sardines when the grazing fails.
     pp_camel_herders_market_sales: Market Sales
     pp_camel_herders_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    camel_herders_slot_3: Market
 icon:
   source_png: ../assets/icons/camel_herders.png
   output_dds: camel_herders.dds

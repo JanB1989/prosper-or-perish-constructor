@@ -26,7 +26,7 @@ unique_production_methods = {
         manual_labor = 1.02
         produced = naval_supplies
         output = 8.937
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.074
         category = mills_input
     }
 }
@@ -34,7 +34,7 @@ unique_production_methods = {
     pp_naval_supplies_mill_market_sales = {
         icon_type = goods
         icon = naval_supplies
-        offset = 0.012
+        offset = 0.018
         produced = naval_supplies
         output = 0.004
         category = building_maintenance

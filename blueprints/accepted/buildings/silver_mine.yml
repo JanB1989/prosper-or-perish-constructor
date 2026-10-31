@@ -115,7 +115,7 @@ building:
     }
     unique_production_methods = {
         pp_silver_mine_market_sales = {
-            offset = 0.012
+            offset = 0.018
             produced = silver
             output = 0.002
             category = building_maintenance
@@ -144,9 +144,9 @@ localization:
     pp_silver_mine_no_secondary: No Associated Recovery
     pp_silver_mine_lead: Argentiferous Galena Picking
     pp_silver_mine_gold: Auriferous Ore Picking
-    silver_mine_slot_3: Market
     pp_silver_mine_market_sales: Market Sales
     pp_silver_mine_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    silver_mine_slot_3: Market
 icon:
   source_png: ../assets/icons/silver_mine.png
   output_dds: silver_mine.dds

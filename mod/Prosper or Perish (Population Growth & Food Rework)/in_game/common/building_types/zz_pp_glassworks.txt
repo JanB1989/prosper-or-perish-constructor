@@ -24,7 +24,7 @@ unique_production_methods = {
         manual_labor = 0.68
         produced = glass
         output = 3.734
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.014
         category = workshop_input
     }
     pp_glassworks_legacy_glass_guild_maintenance = {
@@ -58,7 +58,7 @@ unique_production_methods = {
     pp_glassworks_market_sales = {
         icon_type = goods
         icon = glass
-        offset = 0.012
+        offset = 0.018
         produced = glass
         output = 0.004
         category = building_maintenance

@@ -73,7 +73,7 @@ unique_production_methods = {
         manual_labor = 0.005
         produced = rice
         output = 0.11
-        debug_max_profit = 1.304
+        debug_max_profit = 2.121
         category = building_maintenance
     }
     pp_rice_farm_wet_paddy = {
@@ -84,7 +84,7 @@ unique_production_methods = {
         manual_labor = 0.011
         produced = rice
         output = 0.11
-        debug_max_profit = 0.583
+        debug_max_profit = 1.619
         category = building_maintenance
     }
 }
@@ -95,7 +95,7 @@ unique_production_methods = {
         rice = 0.01
         produced = local_food
         output = 1.5
-        debug_max_profit = 74.000
+        debug_max_profit = 36.500
         category = building_maintenance
     }
 }

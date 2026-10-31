@@ -64,7 +64,7 @@ unique_production_methods = {
         manual_labor = 0.08
         produced = beeswax
         output = 0.45
-        debug_max_profit = 0
+        debug_max_profit = 0.036
         category = building_maintenance
     }
 }
@@ -95,7 +95,7 @@ unique_production_methods = {
         fruit = 0.193
         produced = local_food
         output = 2.32
-        debug_max_profit = 5.010
+        debug_max_profit = 2.005
         category = building_maintenance
     }
 }
@@ -103,7 +103,7 @@ unique_production_methods = {
     pp_pomological_orchard_market_sales = {
         icon_type = goods
         icon = fruit
-        offset = 0.01
+        offset = 0.015
         produced = fruit
         output = 0.01
         category = building_maintenance

@@ -24,7 +24,7 @@ unique_production_methods = {
         manual_labor = 0.117
         produced = pottery
         output = 1.49
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.086
         category = workshop_input
     }
 }
@@ -32,7 +32,7 @@ unique_production_methods = {
     pp_pottery_workshop_market_sales = {
         icon_type = goods
         icon = pottery
-        offset = 0.01
+        offset = 0.015
         produced = pottery
         output = 0.01
         category = building_maintenance

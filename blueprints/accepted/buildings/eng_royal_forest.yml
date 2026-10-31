@@ -79,7 +79,7 @@ building:
     }
     unique_production_methods = {
         pp_eng_royal_forest_market_sales = {
-            offset = 0.01
+            offset = 0.015
             produced = wild_game
             output = 0.01
             category = building_maintenance
@@ -105,12 +105,12 @@ localization:
     eng_royal_forest_desc: "The Charter of the Forest allows great hunting preserves to fall under the direct control of the Crown. A 'forest' in this sense is not necessarily heavily-wooded: just good for hunting. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     eng_royal_forest_slot_0: '[ShowBuildingTypeName(''eng_royal_forest'')|e] Work'
     eng_royal_forest_slot_1: Provisioning
-    eng_royal_forest_slot_2: Market
     pp_eng_royal_forest_provision: Provision with Game
     pp_eng_royal_forest_provision_desc: The household buys its own game back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_eng_royal_forest_eng_royal_forest_maintenance: Royal Hunts
     pp_eng_royal_forest_market_sales: Market Sales
     pp_eng_royal_forest_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    eng_royal_forest_slot_2: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.

@@ -26,7 +26,7 @@ unique_production_methods = {
         produced = pottery
         output = 2.76
         category = manufactory_input
-        debug_max_profit = 0.076
+        debug_max_profit = 0.215
     }
     pp_pottery_manufactory_legacy_pottery_w_maintenance = {
         icon_type = building_type
@@ -37,7 +37,7 @@ unique_production_methods = {
         manual_labor = 0.15
         produced = pottery
         output = 2.07
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.155
         category = manufactory_input
     }
 }
@@ -45,7 +45,7 @@ unique_production_methods = {
     pp_pottery_manufactory_market_sales = {
         icon_type = goods
         icon = pottery
-        offset = 0.01
+        offset = 0.015
         produced = pottery
         output = 0.01
         category = building_maintenance

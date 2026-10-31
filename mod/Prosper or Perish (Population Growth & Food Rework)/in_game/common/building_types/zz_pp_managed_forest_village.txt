@@ -138,7 +138,7 @@ unique_production_methods = {
         wild_game = 0.18
         produced = local_food
         output = 2.16
-        debug_max_profit = 5.000
+        debug_max_profit = 2.000
         category = building_maintenance
     }
 }
@@ -146,7 +146,7 @@ unique_production_methods = {
     pp_managed_forest_village_market_sales = {
         icon_type = goods
         icon = leather
-        offset = 0.012
+        offset = 0.018
         produced = leather
         output = 0.004
         category = building_maintenance

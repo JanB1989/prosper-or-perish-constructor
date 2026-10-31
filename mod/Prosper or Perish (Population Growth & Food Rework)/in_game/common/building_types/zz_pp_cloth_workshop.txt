@@ -23,7 +23,7 @@ unique_production_methods = {
         produced = cloth
         output = 1.223
         category = workshop_input
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.008
     }
     pp_cloth_workshop_wool_cloth_workshop_maintenance = {
         icon_type = goods
@@ -50,7 +50,7 @@ unique_production_methods = {
     pp_cloth_workshop_market_sales = {
         icon_type = goods
         icon = cloth
-        offset = 0.012
+        offset = 0.018
         produced = cloth
         output = 0.004
         category = building_maintenance

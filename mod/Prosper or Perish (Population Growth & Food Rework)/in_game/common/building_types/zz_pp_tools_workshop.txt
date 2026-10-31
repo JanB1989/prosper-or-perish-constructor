@@ -21,7 +21,7 @@ unique_production_methods = {
         manual_labor = 0.403
         produced = tools
         output = 1.492
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.054
         category = workshop_input
     }
     pp_tools_workshop_legacy_stone_tools_guild_maintenance = {
@@ -41,7 +41,7 @@ unique_production_methods = {
         manual_labor = 0.24
         produced = tools
         output = 0.63
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.004
         category = workshop_input
     }
     pp_tools_workshop_legacy_bronze_tools_guild_maintenance = {
@@ -52,7 +52,7 @@ unique_production_methods = {
         manual_labor = 0.25
         produced = tools
         output = 0.67
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.001
         category = workshop_input
     }
 }
@@ -60,9 +60,9 @@ unique_production_methods = {
     pp_tools_workshop_market_sales = {
         icon_type = goods
         icon = tools
-        offset = 0.013
+        offset = 0.034
         produced = tools
-        output = 0.004
+        output = 0.007
         category = building_maintenance
     }
 }

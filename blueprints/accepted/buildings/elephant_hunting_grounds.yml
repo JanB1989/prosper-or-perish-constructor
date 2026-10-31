@@ -62,7 +62,7 @@ building:
     }
     unique_production_methods = {
         pp_elephant_hunting_grounds_market_sales = {
-            offset = 0.012
+            offset = 0.018
             produced = ivory
             output = 0.003
             category = building_maintenance
@@ -79,9 +79,9 @@ localization:
   entries:
     elephant_hunting_grounds_slot_0: '[ShowBuildingTypeName(''elephant_hunting_grounds'')|e] Work'
     pp_elephant_hunting_grounds_elephant_hunting_grounds_maintenance: Elephant Hunting
-    elephant_hunting_grounds_slot_1: Market
     pp_elephant_hunting_grounds_market_sales: Market Sales
     pp_elephant_hunting_grounds_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    elephant_hunting_grounds_slot_1: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.

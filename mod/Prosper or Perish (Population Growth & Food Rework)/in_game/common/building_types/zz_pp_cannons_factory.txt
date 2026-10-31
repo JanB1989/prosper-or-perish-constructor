@@ -24,7 +24,7 @@ unique_production_methods = {
         manual_labor = 0.22
         produced = cannons
         output = 1.566
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.067
         category = mills_input
     }
     pp_cannons_factory_legacy_cannon_workshop_ammunition_stone_maintenance = {
@@ -58,7 +58,7 @@ unique_production_methods = {
         manual_labor = 0.98
         produced = cannons
         output = 7.376
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.079
         category = mills_input
     }
     pp_cannons_factory_legacy_cannon_workshop_bronze_maintenance = {
@@ -94,7 +94,7 @@ unique_production_methods = {
         manual_labor = 1.4
         produced = cannons
         output = 5.53
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.029
         category = mills_input
     }
 }
@@ -102,7 +102,7 @@ unique_production_methods = {
     pp_cannons_factory_market_sales = {
         icon_type = goods
         icon = cannons
-        offset = 0.012
+        offset = 0.018
         produced = cannons
         output = 0.003
         category = building_maintenance

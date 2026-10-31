@@ -128,7 +128,7 @@ building:
     }
     unique_production_methods = {
         pp_pomological_orchard_market_sales = {
-            offset = 0.01
+            offset = 0.015
             produced = fruit
             output = 0.01
             category = building_maintenance
@@ -161,7 +161,6 @@ localization:
     pomological_orchard_slot_1: Beekeeping
     pomological_orchard_slot_2: Grafted Rows
     pomological_orchard_slot_3: Provisioning
-    pomological_orchard_slot_4: Market
     pp_pomological_orchard: Grafted Orchards
     pp_pomological_orchard_base_fruit: Fruit Trees
     pp_pomological_orchard_desc: Grafting, nursery records, and planned orchard rows increase fruit harvests through better management.
@@ -174,6 +173,7 @@ localization:
     pp_pomological_orchard_provision_desc: The household buys its own fruit back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_pomological_orchard_market_sales: Market Sales
     pp_pomological_orchard_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    pomological_orchard_slot_4: Market
 icon:
   source_png: ../assets/icons/pomological_orchard.png
   output_dds: pomological_orchard.dds

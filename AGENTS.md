@@ -424,6 +424,20 @@
   may appear outside their own block. `ppc footprint check` fails otherwise; `tests/test_dlc_buildings.py`,
   `test_inject_targets_exist_in_constructor_load_order` and `tests/test_building_type_references.py` guard it.
 
+## Stockpile Prices (branch stockpile-prices, 2026-10-31, Jan)
+
+- Exploration branch, never merged unasked. Prices follow the market stockpile: `NMarket.STOCKPILE_TRADE_IMPACT_ON_SUPPLY_SCALE`
+  6.7 with the stock bleed from the first unit (`MARKET_MIN_STOCKPILE_TO_ALLOW_EXTRA_TRADE` 0,
+  `MARKET_STOCKPILE_FULL_EXTRA_TRADE_THRESHOLD` 0.01), every default price x2 except the floor-pinned dummy goods
+  (`in_game/common/goods/zz_pp_goods_stockpile_prices.txt`, `[stockpile_prices]`), stockpile cap x10 (development 100,
+  market centre 250). A market with supply = demand sits at the old price at 6 months of stock, at 2x it when empty.
+- `production_labour.load_prices` divides the raise back out, so every pass that turns gold into goods amounts (labour,
+  gate legs, logistics, Old Ways, crop farms, ship upkeep) keeps its amounts; `profit_margins.goods_prices` reads what the
+  engine reads. The Market legs run at margin 0.667 (steel 0.707): they open at 1.575x the old base price, about 1.3
+  months of stock. Iron and lumber lost `ai_rgo_expansion_priority` (0 here, 0.025 on 0.10).
+- Not changed: marketplace building caps (vanilla 20-100), tariffs. Engine costs that scale by market / default price
+  (unit upkeep and the like) run about 35-50 % lower at normal stocks. Simulation: `~/pp_ai_run/tradesim` (private).
+
 ## Ship Upkeep (2026-10-11, Jan)
 
 - A ship's monthly upkeep is the value of its maintenance goods at default market prices. Vanilla charges the category

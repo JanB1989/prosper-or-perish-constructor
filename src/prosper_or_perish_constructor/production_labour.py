@@ -153,8 +153,13 @@ def load_prices(repo: Path, project: Path) -> dict[str, float]:
     parser = raw.get("parser") or {}
     load_order = repo / str(parser.get("load_order", "constructor.load_order.toml"))
     goods = load_goods_data(profile=str(parser.get("profile", "constructor")), load_order_path=load_order).goods
+    # [stockpile_prices]: the mod's default prices are raised x base_price_mult for the engine's price formula; every
+    # pass that turns gold into goods amounts keeps working at the prices before the raise.
+    section = raw.get("stockpile_prices") or {}
+    mult = float(section.get("base_price_mult", 1.0))
+    keep = {str(good) for good in section.get("keep_base_price", [])}
     return {
-        str(row["name"]): float(row["default_market_price"])
+        str(row["name"]): float(row["default_market_price"]) / (1.0 if str(row["name"]) in keep else mult)
         for row in goods.select("name", "default_market_price").to_dicts()
         if row["default_market_price"] is not None
     }

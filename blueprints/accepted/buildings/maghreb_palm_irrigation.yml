@@ -101,7 +101,7 @@ building:
     }
     unique_production_methods = {
         pp_maghreb_palm_irrigation_market_sales = {
-            offset = 0.01
+            offset = 0.015
             produced = fruit
             output = 0.01
             category = building_maintenance
@@ -113,12 +113,12 @@ localization:
     maghreb_palm_irrigation_desc: "The [ShowBuildingTypeName('maghreb_palm_irrigation')|e] offer a viable form of irrigation in even the harshest deserts, especially in oases, where they can help sustain settlements in hot climates. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     maghreb_palm_irrigation_slot_0: Palm Gardens
     maghreb_palm_irrigation_slot_1: Provisioning
-    maghreb_palm_irrigation_slot_2: Market
     pp_maghreb_palm_irrigation_provision: Provision with Fruit
     pp_maghreb_palm_irrigation_provision_desc: The household buys its own fruit back and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_maghreb_palm_irrigation_maghreb_palm_irrigation_maintenance: $maghreb_palm_irrigation_maintenance$
     pp_maghreb_palm_irrigation_market_sales: Market Sales
     pp_maghreb_palm_irrigation_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    maghreb_palm_irrigation_slot_2: Market
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer (EU5 1.4 unique Maghreb building, one level); vanilla production shape kept, margin bands are advisory here.

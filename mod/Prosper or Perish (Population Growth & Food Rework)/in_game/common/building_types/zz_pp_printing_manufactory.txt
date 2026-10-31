@@ -24,7 +24,7 @@ unique_production_methods = {
         manual_labor = 0.68
         produced = books
         output = 3.717
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.059
         category = manufactory_input
     }
     pp_printing_manufactory_printing_manufactory_maintenance = {
@@ -36,7 +36,7 @@ unique_production_methods = {
         manual_labor = 0.68
         produced = books
         output = 3.724
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.040
         category = manufactory_input
     }
     pp_printing_manufactory_legacy_scriptorium_leather_maintenance = {
@@ -68,7 +68,7 @@ unique_production_methods = {
     pp_printing_manufactory_market_sales = {
         icon_type = goods
         icon = books
-        offset = 0.012
+        offset = 0.018
         produced = books
         output = 0.004
         category = building_maintenance

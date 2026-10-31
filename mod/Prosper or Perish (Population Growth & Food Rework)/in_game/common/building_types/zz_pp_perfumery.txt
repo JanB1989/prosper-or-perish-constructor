@@ -26,7 +26,7 @@ unique_production_methods = {
         manual_labor = 0.13
         produced = incense
         output = 1
-        debug_max_profit = 0.099
+        debug_max_profit = 0.282
         category = guild_input
     }
 }
@@ -34,7 +34,7 @@ unique_production_methods = {
     pp_perfumery_market_sales = {
         icon_type = goods
         icon = incense
-        offset = 0.01
+        offset = 0.015
         produced = incense
         output = 0.004
         category = building_maintenance

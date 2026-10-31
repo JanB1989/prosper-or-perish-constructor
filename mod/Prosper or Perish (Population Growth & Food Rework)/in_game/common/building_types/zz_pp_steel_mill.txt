@@ -25,7 +25,7 @@ unique_production_methods = {
         manual_labor = 1.58
         produced = steel
         output = 8.946
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.070
         category = mills_input
     }
 }
@@ -33,9 +33,9 @@ unique_production_methods = {
     pp_steel_mill_market_sales = {
         icon_type = goods
         icon = steel
-        offset = 0.019
+        offset = 0.014
         produced = steel
-        output = 0.004
+        output = 0.002
         category = building_maintenance
     }
 }

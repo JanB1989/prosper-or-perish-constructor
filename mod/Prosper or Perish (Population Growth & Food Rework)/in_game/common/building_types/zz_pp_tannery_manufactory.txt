@@ -24,7 +24,7 @@ unique_production_methods = {
         manual_labor = 0.663
         produced = leather
         output = 3.728
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.033
         category = manufactory_input
     }
     pp_tannery_manufactory_tannery_manufactory_maintenance = {
@@ -37,7 +37,7 @@ unique_production_methods = {
         manual_labor = 0.68
         produced = leather
         output = 3.728
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.029
         category = manufactory_input
     }
 }
@@ -45,7 +45,7 @@ unique_production_methods = {
     pp_tannery_manufactory_market_sales = {
         icon_type = goods
         icon = leather
-        offset = 0.012
+        offset = 0.018
         produced = leather
         output = 0.004
         category = building_maintenance

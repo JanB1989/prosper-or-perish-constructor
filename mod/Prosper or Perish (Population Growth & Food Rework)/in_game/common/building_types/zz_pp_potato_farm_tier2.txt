@@ -78,7 +78,7 @@ unique_production_methods = {
         manual_labor = 0.096
         produced = potato
         output = 1.05
-        debug_max_profit = 0
+        debug_max_profit = 0.008
         category = building_maintenance
     }
     pp_potato_rotations_seed_selection = {
@@ -91,7 +91,7 @@ unique_production_methods = {
         manual_labor = 0.1
         produced = potato
         output = 1.09
-        debug_max_profit = 0
+        debug_max_profit = 0.036
         category = building_maintenance
     }
 }
@@ -102,7 +102,7 @@ unique_production_methods = {
         potato = 0.016
         produced = local_food
         output = 6.256
-        debug_max_profit = 194.500
+        debug_max_profit = 96.750
         category = building_maintenance
     }
 }

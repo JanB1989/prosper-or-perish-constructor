@@ -52,7 +52,7 @@ build_time = rural_build_time
             manual_labor = 0.03
             produced = lumber
             output = 0.123
-            debug_max_profit = 0
+            debug_max_profit = 0.001
             category = building_maintenance
         }
         # 2026-10-03: victuals feed the crews only in a glut. At default lumber (1.75) and labour at its floor
@@ -129,7 +129,7 @@ build_time = rural_build_time
         pp_lumber_mill_market_sales = {
             icon_type = goods
             icon = lumber
-            offset = 0.014
+            offset = 0.021
             produced = lumber
             output = 0.008
             category = building_maintenance

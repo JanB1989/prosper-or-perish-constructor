@@ -21,7 +21,7 @@ unique_production_methods = {
         manual_labor = 0.069
         produced = tools
         output = 0.175
-        debug_max_profit = guild_profit_margin
+        debug_max_profit = 0.057
         category = guild_input
     }
     pp_tools_guild_copper_tools_guild_maintenance = {
@@ -31,7 +31,7 @@ unique_production_methods = {
         manual_labor = 0.161
         produced = tools
         output = 0.392
-        debug_max_profit = guild_profit_margin
+        debug_max_profit = 0.017
         category = guild_input
     }
     pp_tools_guild_bronze_tools_guild_maintenance = {
@@ -42,7 +42,7 @@ unique_production_methods = {
         manual_labor = 0.168
         produced = tools
         output = 0.42
-        debug_max_profit = guild_profit_margin
+        debug_max_profit = 0.008
         category = guild_input
     }
     pp_tools_guild_metalwork_guild_maintenance = {

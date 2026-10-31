@@ -23,7 +23,7 @@ unique_production_methods = {
         manual_labor = 0.27
         produced = paper
         output = 2.0
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.072
         category = manufactory_input
     }
     pp_paper_manufactory_legacy_paper_guild_leather_maintenance = {
@@ -57,7 +57,7 @@ unique_production_methods = {
         manual_labor = 0.34
         produced = paper
         output = 1.5
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.010
         category = manufactory_input
     }
 }

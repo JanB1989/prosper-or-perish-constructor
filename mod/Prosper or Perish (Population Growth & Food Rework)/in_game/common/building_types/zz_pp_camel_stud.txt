@@ -54,7 +54,7 @@ unique_production_methods = {
         manual_labor = 0.145
         produced = camels
         output = 0.527
-        debug_max_profit = 0
+        debug_max_profit = 0.019
         category = building_maintenance
     }
     pp_camel_stud_riding_strains = {
@@ -67,7 +67,7 @@ unique_production_methods = {
         manual_labor = 0.187
         produced = camels
         output = 0.612
-        debug_max_profit = 0
+        debug_max_profit = 0.045
         category = building_maintenance
     }
 }
@@ -78,7 +78,7 @@ unique_production_methods = {
         camels = 0.038
         produced = local_food
         output = 1.36
-        debug_max_profit = 1.982
+        debug_max_profit = 1.711
         category = building_maintenance
     }
 }

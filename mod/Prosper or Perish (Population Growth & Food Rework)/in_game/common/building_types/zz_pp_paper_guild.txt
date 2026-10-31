@@ -21,7 +21,7 @@ unique_production_methods = {
         manual_labor = 0.12
         produced = paper
         output = 0.5
-        debug_max_profit = guild_profit_margin
+        debug_max_profit = 0.001
         category = guild_input
     }
     pp_paper_guild_paper_guild_fiber_pulp_maintenance = {

@@ -43,7 +43,7 @@ unique_production_methods = {
         manual_labor = 0.36
         produced = tools
         output = 0.93
-        debug_max_profit = 0.004
+        debug_max_profit = 0.080
         category = mills_input
     }
     pp_iron_mill_legacy_copper_tools_guild_maintenance = {
@@ -53,7 +53,7 @@ unique_production_methods = {
         manual_labor = 0.81
         produced = tools
         output = 2.09
-        debug_max_profit = 0.004
+        debug_max_profit = 0.080
         category = mills_input
     }
     pp_iron_mill_legacy_bronze_tools_guild_maintenance = {
@@ -64,7 +64,7 @@ unique_production_methods = {
         manual_labor = 0.82
         produced = tools
         output = 2.24
-        debug_max_profit = 0.020
+        debug_max_profit = 0.100
         category = mills_input
     }
     pp_iron_mill_legacy_metalwork_workshop_maintenance = {

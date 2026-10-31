@@ -24,7 +24,7 @@ unique_production_methods = {
         manual_labor = 0.22
         produced = cannons
         output = 1.566
-        debug_max_profit = 0.067
+        debug_max_profit = 0.283
         category = mills_input
     }
     pp_cannons_factory_legacy_cannon_workshop_ammunition_stone_maintenance = {
@@ -35,7 +35,7 @@ unique_production_methods = {
         manual_labor = 0.16
         produced = cannons
         output = 0.44
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.213
         category = mills_input
     }
     pp_cannons_factory_legacy_cannon_workshop_ammunition_iron_maintenance = {
@@ -46,7 +46,7 @@ unique_production_methods = {
         manual_labor = 0.34
         produced = cannons
         output = 0.88
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.110
         category = mills_input
     }
 }
@@ -58,7 +58,7 @@ unique_production_methods = {
         manual_labor = 0.98
         produced = cannons
         output = 7.376
-        debug_max_profit = 0.079
+        debug_max_profit = 0.187
         category = mills_input
     }
     pp_cannons_factory_legacy_cannon_workshop_bronze_maintenance = {
@@ -70,7 +70,7 @@ unique_production_methods = {
         manual_labor = 1.5
         produced = cannons
         output = 4.15
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.173
         category = mills_input
     }
     pp_cannons_factory_legacy_cannon_workshop_iron_maintenance = {
@@ -81,7 +81,7 @@ unique_production_methods = {
         manual_labor = 1.5
         produced = cannons
         output = 4.15
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.086
         category = mills_input
     }
     pp_cannons_factory_legacy_cannon_foundry_maintenance = {
@@ -94,7 +94,7 @@ unique_production_methods = {
         manual_labor = 1.4
         produced = cannons
         output = 5.53
-        debug_max_profit = 0.029
+        debug_max_profit = 0.200
         category = mills_input
     }
 }

@@ -23,7 +23,7 @@ unique_production_methods = {
         manual_labor = 0.323
         produced = cannons
         output = 1.214
-        debug_max_profit = 0.001
+        debug_max_profit = 0.193
         category = manufactory_input
     }
     pp_cannon_foundry_legacy_cannon_workshop_ammunition_stone_maintenance = {
@@ -34,7 +34,7 @@ unique_production_methods = {
         manual_labor = 0.17
         produced = cannons
         output = 0.45
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.165
         category = manufactory_input
     }
     pp_cannon_foundry_legacy_cannon_workshop_ammunition_iron_maintenance = {
@@ -45,7 +45,7 @@ unique_production_methods = {
         manual_labor = 0.36
         produced = cannons
         output = 0.91
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.089
         category = manufactory_input
     }
 }
@@ -60,7 +60,7 @@ unique_production_methods = {
         manual_labor = 0.646
         produced = cannons
         output = 2.519
-        debug_max_profit = 0.013
+        debug_max_profit = 0.182
         category = manufactory_input
     }
     pp_cannon_foundry_legacy_cannon_workshop_bronze_maintenance = {
@@ -72,7 +72,7 @@ unique_production_methods = {
         manual_labor = 0.69
         produced = cannons
         output = 1.89
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.157
         category = manufactory_input
     }
     pp_cannon_foundry_legacy_cannon_workshop_iron_maintenance = {
@@ -83,7 +83,7 @@ unique_production_methods = {
         manual_labor = 0.69
         produced = cannons
         output = 1.89
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.070
         category = manufactory_input
     }
 }

@@ -21,7 +21,7 @@ unique_production_methods = {
         manual_labor = 0.032
         produced = cannons
         output = 0.061
-        debug_max_profit = guild_profit_margin
+        debug_max_profit = 0.113
         category = guild_input
     }
     pp_cannon_maker_cannon_maker_ammunition_lead_maintenance = {
@@ -32,7 +32,7 @@ unique_production_methods = {
         manual_labor = 0.045
         produced = cannons
         output = 0.084
-        debug_max_profit = guild_profit_margin
+        debug_max_profit = 0.026
         category = guild_input
     }
     pp_cannon_maker_cannon_maker_ammunition_iron_maintenance = {

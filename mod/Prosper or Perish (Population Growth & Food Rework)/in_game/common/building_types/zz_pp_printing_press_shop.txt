@@ -24,7 +24,7 @@ unique_production_methods = {
         manual_labor = 0.429
         produced = books
         output = 1.358
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.032
         category = workshop_input
     }
     pp_printing_press_shop_printing_press_maintenance = {
@@ -36,7 +36,7 @@ unique_production_methods = {
         manual_labor = 0.429
         produced = books
         output = 1.36
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.013
         category = workshop_input
     }
     pp_printing_press_shop_legacy_scriptorium_leather_maintenance = {
@@ -48,7 +48,7 @@ unique_production_methods = {
         manual_labor = 0.4
         produced = books
         output = 1.02
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.010
         category = workshop_input
     }
     pp_printing_press_shop_legacy_scriptorium_maintenance = {
@@ -60,7 +60,7 @@ unique_production_methods = {
         manual_labor = 0.39
         produced = books
         output = 1.02
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.008
         category = workshop_input
     }
 }

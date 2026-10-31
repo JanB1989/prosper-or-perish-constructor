@@ -23,7 +23,7 @@ unique_production_methods = {
         manual_labor = 0.045
         produced = firearms
         output = 0.112
-        debug_max_profit = guild_profit_margin
+        debug_max_profit = 0.026
         category = guild_input
     }
     pp_gun_smith_guns_guild_ammunition_iron_maintenance = {
@@ -34,7 +34,7 @@ unique_production_methods = {
         manual_labor = 0.054
         produced = firearms
         output = 0.14
-        debug_max_profit = guild_profit_margin
+        debug_max_profit = 0.010
         category = guild_input
     }
 }

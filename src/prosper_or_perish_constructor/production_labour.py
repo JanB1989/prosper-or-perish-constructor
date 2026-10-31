@@ -35,7 +35,7 @@ import math
 from pathlib import Path
 import re
 import tomllib
-from typing import Any
+from typing import Any, Mapping
 
 
 from eu5gameparser.clausewitz.parser import parse_text
@@ -145,6 +145,14 @@ def load_config(project: Path) -> LabourConfig:
     )
 
 
+def stockpile_price_raise(raw: Mapping[str, Any], good: str) -> float:
+    """[stockpile_prices]: how many times the engine's default price of ``good`` is the base price the passes use."""
+    section = raw.get("stockpile_prices") or {}
+    if good in {str(g) for g in section.get("keep_base_price", [])}:
+        return 1.0
+    return float(section.get("base_price_mult", 1.0)) * float(dict(section.get("price_factor") or {}).get(good, 1.0))
+
+
 def load_prices(repo: Path, project: Path) -> dict[str, float]:
     """Good -> default market price, parsed from the configured load order (vanilla plus the compiled mod)."""
     from eu5gameparser.domain.goods import load_goods_data
@@ -153,13 +161,10 @@ def load_prices(repo: Path, project: Path) -> dict[str, float]:
     parser = raw.get("parser") or {}
     load_order = repo / str(parser.get("load_order", "constructor.load_order.toml"))
     goods = load_goods_data(profile=str(parser.get("profile", "constructor")), load_order_path=load_order).goods
-    # [stockpile_prices]: the mod's default prices are raised x base_price_mult for the engine's price formula; every
-    # pass that turns gold into goods amounts keeps working at the prices before the raise.
-    section = raw.get("stockpile_prices") or {}
-    mult = float(section.get("base_price_mult", 1.0))
-    keep = {str(good) for good in section.get("keep_base_price", [])}
+    # [stockpile_prices]: the mod's default prices are raised (x base_price_mult x the good's price_factor) for the
+    # engine's price formula; every pass that turns gold into goods amounts keeps working at the prices before the raise.
     return {
-        str(row["name"]): float(row["default_market_price"]) / (1.0 if str(row["name"]) in keep else mult)
+        str(row["name"]): float(row["default_market_price"]) / stockpile_price_raise(raw, str(row["name"]))
         for row in goods.select("name", "default_market_price").to_dicts()
         if row["default_market_price"] is not None
     }

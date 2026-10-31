@@ -24,7 +24,7 @@ unique_production_methods = {
         produced = firearms
         output = 0.502
         category = manufactory_input
-        debug_max_profit = 0.068
+        debug_max_profit = 0.282
     }
     pp_firearms_manufactory_legacy_guns_workshop_ammunition_iron_maintenance = {
         icon_type = goods
@@ -34,7 +34,7 @@ unique_production_methods = {
         manual_labor = 0.079
         produced = firearms
         output = 0.38
-        debug_max_profit = 0.058
+        debug_max_profit = 0.218
         category = manufactory_input
     }
 }
@@ -49,7 +49,7 @@ unique_production_methods = {
         category = manufactory_input
         produced = firearms
         output = 3.221
-        debug_max_profit = 0.042
+        debug_max_profit = 0.147
     }
     pp_firearms_manufactory_legacy_guns_guild_lumber_maintenance = {
         icon_type = goods
@@ -60,7 +60,7 @@ unique_production_methods = {
         manual_labor = 0.088
         produced = firearms
         output = 0.27
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.048
         category = manufactory_input
     }
     pp_firearms_manufactory_legacy_hand_cannon_guild_maintenance = {
@@ -73,7 +73,7 @@ unique_production_methods = {
         manual_labor = 0.55
         produced = firearms
         output = 1.36
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.108
         category = manufactory_input
     }
     pp_firearms_manufactory_legacy_guns_workshop_bronze_maintenance = {
@@ -86,7 +86,7 @@ unique_production_methods = {
         manual_labor = 0.62
         produced = firearms
         output = 2.42
-        debug_max_profit = 0.005
+        debug_max_profit = 0.166
         category = manufactory_input
     }
 }

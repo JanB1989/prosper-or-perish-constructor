@@ -1117,6 +1117,45 @@ method_desc = "A few hands carry a small share of the produce straight to market
 base_price_mult = 2.0
 keep_base_price = ["offset", "logistics", "local_food", "manual_labor", "province_food_sales"]
 
+[stockpile_prices.price_factor]
+# On top of the raise (2026-10-31, Jan: oversupplied goods a little cheaper, undersupplied a little dearer). From run
+# 06aedac2 1352-1542: r = the good's median price / the year's all-goods median (drift cancels), r <= 0.6 -> 0.85,
+# <= 0.8 -> 0.9, >= 1.25 -> 1.1, >= 1.6 -> 1.15; goods under 0.1 % of world demand left out unless at the floor in 30 %
+# of their markets. Staple foods are never cut (the run's food fell short; rice, olives, legumes, livestock, wool kept).
+# The passes and the AI weights keep reading the old base price, so only the engine's market price moves.
+beeswax = 0.85
+pepper = 0.85
+saffron = 0.85
+alum = 0.85
+marble = 0.85
+cloves = 0.85
+saltpeter = 0.85
+tin = 0.85
+chili = 0.85
+elephants = 0.85
+fine_cloth = 0.9
+cotton = 0.9
+silk = 0.9
+stone = 0.9
+copper = 0.9
+dyes = 0.9
+masonry = 0.9
+gems = 0.9
+pearls = 0.9
+ivory = 0.9
+medicaments = 0.9
+salt = 1.1
+weaponry = 1.1
+paper = 1.1
+glass = 1.1
+books = 1.1
+pottery = 1.1
+firearms = 1.1
+camels = 1.1
+cannons = 1.1
+fur = 1.15
+amber = 1.15
+
 [legacy_methods]
 # An upgrade never takes a recipe away (2026-10-04, Jan). Vanilla's manufacturing lines drop the older tiers' recipes on
 # upgrade (stone/copper/bronze tools stop at the guild, every beer grain but wheat at the workshop) and the old tier can

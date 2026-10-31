@@ -353,7 +353,7 @@ class RenderContext:
     gate_prices: dict[str, float] = field(default_factory=dict)  # base prices with the evaluation overrides
     farm_cost_factor: tuple[Any, frozenset[str]] = (1, frozenset())  # [farm_level_cost] factor, footprints
     age_food: Any = None  # age_food.AgeFoodConfig: flat food and method throughput per age (None: the table's own values)
-    base_price_mult: float = 1.0  # [stockpile_prices]: the engine's default prices are this times the ones in `prices`
+    price_raise: dict[str, float] = field(default_factory=dict)  # [stockpile_prices]: engine default / the `prices` one
 
     def land_class(self, building: str) -> str:
         """The [worldbuilder.farm_land] class of a farm building, as ``worldbuilder.buildings.farm_constants`` finds it."""
@@ -385,7 +385,7 @@ def load_context(repo: Path, project: Path, table: CropTable, *, gates: bool = T
         farm_cost_factor=farm_level_cost_factor(project),
         farm_land={str(k): {"land": float(v["land"]), "reserve": float(v["reserve"])} for k, v in farm_land_section.items()},
         farm_classes=classes,
-        base_price_mult=float(dict(raw.get("stockpile_prices", {})).get("base_price_mult", 1.0)),
+        price_raise={crop.good: production_labour.stockpile_price_raise(raw, crop.good) for crop in table.crops},
     )
     context.gate_config = production_gate.load_config(project)
     from prosper_or_perish_constructor import age_food
@@ -816,7 +816,7 @@ def ai_construct_weight_lines(table: CropTable, crop: Crop, tier: int = 0, conte
         f'            value = "market.market_price(goods:{good})"',
         f'            divide = "default_price(goods:{good})"',
     ]
-    mult = context.base_price_mult if context is not None else 1.0
+    mult = context.price_raise.get(good, 1.0) if context is not None else 1.0
     if abs(mult - 1.0) > 1e-9:
         # [stockpile_prices]: the engine's default price is raised; the weight keeps reading price / the old default
         lines.append(f"            multiply = {_num(mult)}")

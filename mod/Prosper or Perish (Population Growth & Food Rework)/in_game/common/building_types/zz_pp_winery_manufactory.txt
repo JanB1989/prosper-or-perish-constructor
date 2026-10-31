@@ -50,7 +50,7 @@ unique_production_methods = {
         produced = wine
         output = 2.0
         category = manufactory_input
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.034
     }
     pp_winery_manufactory_legacy_fruit_winery_maintenance = {
         icon_type = goods

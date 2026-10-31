@@ -435,6 +435,10 @@
   gate legs, logistics, Old Ways, crop farms, ship upkeep) keeps its amounts; `profit_margins.goods_prices` reads what the
   engine reads. The Market legs run at margin 0.667 (steel 0.707): they open at 1.575x the old base price, about 1.3
   months of stock. Iron and lumber lost `ai_rgo_expansion_priority` (0 here, 0.025 on 0.10).
+- `[stockpile_prices.price_factor]` (0.85-1.15 per good, from run 06aedac2's relative prices; staple foods never cut)
+  multiplies the raise; the passes and the crop farm weight divide it back out too (`stockpile_price_raise`), so only
+  the engine's market price moves. Crop farm `ai_construct_weight` multiplies price / default by the raise (a weight
+  that read the raised default made farms look half as profitable in run 06aedac2).
 - Not changed: marketplace building caps (vanilla 20-100), tariffs. Engine costs that scale by market / default price
   (unit upkeep and the like) run about 35-50 % lower at normal stocks. Simulation: `~/pp_ai_run/tradesim` (private).
 

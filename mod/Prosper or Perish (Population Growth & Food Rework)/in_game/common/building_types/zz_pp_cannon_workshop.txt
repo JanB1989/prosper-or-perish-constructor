@@ -23,7 +23,7 @@ unique_production_methods = {
         manual_labor = 0.043
         produced = cannons
         output = 0.135
-        debug_max_profit = 0.119
+        debug_max_profit = 0.373
         category = workshop_input
     }
     pp_cannon_workshop_cannon_workshop_ammunition_lead_maintenance = {
@@ -34,7 +34,7 @@ unique_production_methods = {
         manual_labor = 0.052
         produced = cannons
         output = 0.203
-        debug_max_profit = 0.157
+        debug_max_profit = 0.355
         category = workshop_input
     }
     pp_cannon_workshop_cannon_workshop_ammunition_iron_maintenance = {
@@ -45,7 +45,7 @@ unique_production_methods = {
         manual_labor = 0.1
         produced = cannons
         output = 0.272
-        debug_max_profit = 0.017
+        debug_max_profit = 0.161
         category = workshop_input
     }
 }
@@ -58,7 +58,7 @@ unique_production_methods = {
         manual_labor = 0.572
         produced = cannons
         output = 1.5
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.024
         category = workshop_input
     }
     pp_cannon_workshop_cannon_workshop_bronze_maintenance = {
@@ -70,7 +70,7 @@ unique_production_methods = {
         manual_labor = 0.572
         produced = cannons
         output = 1.5
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.107
         category = workshop_input
     }
 }

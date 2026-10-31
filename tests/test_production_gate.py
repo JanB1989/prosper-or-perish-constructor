@@ -427,5 +427,6 @@ def test_passes_read_prices_before_the_stockpile_raise() -> None:
     passes = production_labour.load_prices(ROOT, ROOT / "constructor.toml")
     assert (engine["iron"], passes["iron"]) == (7.0, 3.5)
     assert (engine["victuals"], passes["victuals"]) == (6.0, 3.0)
+    assert (engine["fur"], passes["fur"]) == (4.6, 2.0)   # x2 x the 1.15 price_factor
     assert engine["offset"] == passes["offset"] == 5.0
     assert engine["local_food"] == passes["local_food"] == 0.5

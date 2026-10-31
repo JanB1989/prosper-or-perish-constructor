@@ -256,16 +256,19 @@ def test_every_crop_farm_carries_its_price_weight(table: crop_farms.CropTable) -
 
     import tomllib
 
+    from prosper_or_perish_constructor.production_labour import stockpile_price_raise
+
     # [stockpile_prices]: the engine's default prices are raised, the weight multiplies the raise back in
-    mult = float(tomllib.loads(PROJECT.read_text(encoding="utf-8-sig")).get("stockpile_prices", {}).get("base_price_mult", 1.0))
-    context = SimpleNamespace(age_food=age_food.load_config(PROJECT), base_price_mult=mult)
+    raw = tomllib.loads(PROJECT.read_text(encoding="utf-8-sig"))
+    raises = {crop.good: stockpile_price_raise(raw, crop.good) for crop in table.crops}
+    context = SimpleNamespace(age_food=age_food.load_config(PROJECT), price_raise=raises)
     for crop in table.crops:
         for tier in crop_farms.TIERS:
             body = _blueprint(table.building(crop, tier))["building"]["body"]
             assert "\n".join(crop_farms.ai_construct_weight_lines(table, crop, tier, context)) in body
             rows = [row.strip() for row in body.splitlines()]
             after = rows[rows.index(f'divide = "default_price(goods:{crop.good})"') + 1]
-            assert (after == "multiply = 2") == (mult == 2.0)
+            assert (after == f"multiply = {crop_farms._num(raises[crop.good])}") == (raises[crop.good] != 1.0)
             if tier:   # [age_food] upgrade weight where the previous tier stands
                 assert f"has_building = building_type:{table.building(crop, tier - 1)}" in body
             assert f'"market.market_price(goods:{crop.good})"' in body

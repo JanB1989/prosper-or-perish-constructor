@@ -25,7 +25,7 @@ unique_production_methods = {
         manual_labor = 0.98
         produced = glass
         output = 8.972
-        debug_max_profit = 0.045
+        debug_max_profit = 0.149
         category = guild_input
     }
     pp_glass_mill_legacy_glass_guild_maintenance = {
@@ -38,7 +38,7 @@ unique_production_methods = {
         manual_labor = 1.05
         produced = glass
         output = 2.84
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.010
         category = guild_input
     }
     pp_glass_mill_legacy_metal_glass_workshop_maintenance = {
@@ -51,7 +51,7 @@ unique_production_methods = {
         manual_labor = 1.45
         produced = glass
         output = 5.05
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.050
         category = guild_input
     }
 }

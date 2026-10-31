@@ -22,7 +22,7 @@ unique_production_methods = {
         produced = weaponry
         output = 0.28
         category = guild_input
-        debug_max_profit = guild_profit_margin
+        debug_max_profit = 0.032
     }
     pp_weapon_guild_weapon_guild_obsidian_maintenance = {
         icon_type = goods
@@ -34,7 +34,7 @@ unique_production_methods = {
         produced = weaponry
         output = 0.28
         category = guild_input
-        debug_max_profit = guild_profit_margin
+        debug_max_profit = 0.023
     }
     pp_weapon_guild_weapon_smith_maintenance = {
         icon_type = goods

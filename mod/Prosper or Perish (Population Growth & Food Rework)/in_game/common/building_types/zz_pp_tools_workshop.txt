@@ -31,7 +31,7 @@ unique_production_methods = {
         manual_labor = 0.11
         produced = tools
         output = 0.28
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.069
         category = workshop_input
     }
     pp_tools_workshop_legacy_copper_tools_guild_maintenance = {
@@ -41,7 +41,7 @@ unique_production_methods = {
         manual_labor = 0.24
         produced = tools
         output = 0.63
-        debug_max_profit = 0.004
+        debug_max_profit = 0.080
         category = workshop_input
     }
     pp_tools_workshop_legacy_bronze_tools_guild_maintenance = {
@@ -52,7 +52,7 @@ unique_production_methods = {
         manual_labor = 0.25
         produced = tools
         output = 0.67
-        debug_max_profit = 0.001
+        debug_max_profit = 0.080
         category = workshop_input
     }
 }

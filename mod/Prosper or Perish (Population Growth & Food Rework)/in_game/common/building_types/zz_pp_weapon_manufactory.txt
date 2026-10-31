@@ -26,7 +26,7 @@ unique_production_methods = {
         category = manufactory_input
         produced = weaponry
         output = 3.73
-        debug_max_profit = 0.012
+        debug_max_profit = 0.113
     }
     pp_weapon_manufactory_legacy_pre_columbian_weapon_smith_maintenance = {
         icon_type = goods
@@ -36,7 +36,7 @@ unique_production_methods = {
         manual_labor = 0.32
         produced = weaponry
         output = 0.84
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.091
         category = manufactory_input
     }
     pp_weapon_manufactory_legacy_weapon_smith_maintenance = {
@@ -49,7 +49,7 @@ unique_production_methods = {
         manual_labor = 0.74
         produced = weaponry
         output = 2.1
-        debug_max_profit = manufactory_profit_margin
+        debug_max_profit = 0.037
         category = manufactory_input
     }
 }

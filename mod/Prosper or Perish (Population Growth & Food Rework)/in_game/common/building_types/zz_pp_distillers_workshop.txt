@@ -45,7 +45,7 @@ unique_production_methods = {
         manual_labor = 0.325
         produced = liquor
         output = 1.495
-        debug_max_profit = 0.002
+        debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_distillers_workshop_rice_liquor_workshop_maintenance = {
@@ -56,7 +56,7 @@ unique_production_methods = {
         manual_labor = 0.325
         produced = liquor
         output = 1.495
-        debug_max_profit = 0.003
+        debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_distillers_workshop_potato_liquor_workshop_maintenance = {
@@ -67,7 +67,7 @@ unique_production_methods = {
         manual_labor = 0.325
         produced = liquor
         output = 1.495
-        debug_max_profit = 0.003
+        debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_distillers_workshop_wheat_liquor_workshop_maintenance = {
@@ -78,7 +78,7 @@ unique_production_methods = {
         manual_labor = 0.325
         produced = liquor
         output = 1.495
-        debug_max_profit = 0.003
+        debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
 }

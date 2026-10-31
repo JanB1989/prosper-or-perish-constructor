@@ -24,7 +24,7 @@ unique_production_methods = {
         manual_labor = 0.24
         produced = firearms
         output = 2.167
-        debug_max_profit = 0.076
+        debug_max_profit = 0.293
         category = mills_input
     }
     pp_firearms_factory_legacy_guns_workshop_ammunition_iron_maintenance = {
@@ -35,7 +35,7 @@ unique_production_methods = {
         manual_labor = 0.26
         produced = firearms
         output = 1.22
-        debug_max_profit = 0.027
+        debug_max_profit = 0.182
         category = mills_input
     }
 }
@@ -47,7 +47,7 @@ unique_production_methods = {
         manual_labor = 0.74
         produced = firearms
         output = 6.77
-        debug_max_profit = 0.077
+        debug_max_profit = 0.185
         category = mills_input
     }
     pp_firearms_factory_legacy_guns_guild_lumber_maintenance = {
@@ -59,7 +59,7 @@ unique_production_methods = {
         manual_labor = 0.14
         produced = firearms
         output = 0.43
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.064
         category = mills_input
     }
     pp_firearms_factory_legacy_hand_cannon_guild_maintenance = {
@@ -72,7 +72,7 @@ unique_production_methods = {
         manual_labor = 0.87
         produced = firearms
         output = 2.14
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.096
         category = mills_input
     }
     pp_firearms_factory_legacy_guns_workshop_bronze_maintenance = {
@@ -85,7 +85,7 @@ unique_production_methods = {
         manual_labor = 0.98
         produced = firearms
         output = 3.81
-        debug_max_profit = mills_profit_margin
+        debug_max_profit = 0.159
         category = mills_input
     }
     pp_firearms_factory_legacy_firearms_manufactory_maintenance = {
@@ -97,7 +97,7 @@ unique_production_methods = {
         manual_labor = 0.92
         produced = firearms
         output = 5.08
-        debug_max_profit = 0.038
+        debug_max_profit = 0.142
         category = mills_input
     }
 }

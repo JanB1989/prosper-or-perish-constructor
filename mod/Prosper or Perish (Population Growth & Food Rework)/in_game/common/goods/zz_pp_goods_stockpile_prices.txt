@@ -2,39 +2,40 @@
 # Every default_market_price x2 ([stockpile_prices] base_price_mult in constructor.toml), the floor-pinned dummy goods
 # (offset, logistics, local_food, manual_labor, province_food_sales) excepted. With NMarket.STOCKPILE_TRADE_IMPACT_ON_
 # SUPPLY_SCALE 6.7 a market with supply = demand sits at the old price at 6 months of stock and at 2x it when empty.
-# Loads last (zz_), so it wins over the full copies and pp_goods_adjustments.txt. The value before the raise is the comment.
-TRY_INJECT:alum = { default_market_price = 6 } # 3
-TRY_INJECT:amber = { default_market_price = 8 } # 4
+# Loads last (zz_), so it wins over the full copies and pp_goods_adjustments.txt. The comment is the value before the raise
+# and the [stockpile_prices.price_factor] on top (oversupplied goods a little cheaper, undersupplied dearer).
+TRY_INJECT:alum = { default_market_price = 5.1 } # 3 x 0.85
+TRY_INJECT:amber = { default_market_price = 9.2 } # 4 x 1.15
 TRY_INJECT:beer = { default_market_price = 4 } # 2
-TRY_INJECT:beeswax = { default_market_price = 4 } # 2
-TRY_INJECT:books = { default_market_price = 6 } # 3
-TRY_INJECT:camels = { default_market_price = 6 } # 3
-TRY_INJECT:cannons = { default_market_price = 8 } # 4
-TRY_INJECT:chili = { default_market_price = 10 } # 5
+TRY_INJECT:beeswax = { default_market_price = 3.4 } # 2 x 0.85
+TRY_INJECT:books = { default_market_price = 6.6 } # 3 x 1.1
+TRY_INJECT:camels = { default_market_price = 6.6 } # 3 x 1.1
+TRY_INJECT:cannons = { default_market_price = 8.8 } # 4 x 1.1
+TRY_INJECT:chili = { default_market_price = 8.5 } # 5 x 0.85
 TRY_INJECT:clay = { default_market_price = 1 } # 0.5
 TRY_INJECT:cloth = { default_market_price = 6 } # 3
-TRY_INJECT:cloves = { default_market_price = 10 } # 5
+TRY_INJECT:cloves = { default_market_price = 8.5 } # 5 x 0.85
 TRY_INJECT:coal = { default_market_price = 4 } # 2
 TRY_INJECT:cocoa = { default_market_price = 8 } # 4
 TRY_INJECT:coffee = { default_market_price = 6 } # 3
-TRY_INJECT:copper = { default_market_price = 6 } # 3
-TRY_INJECT:cotton = { default_market_price = 6 } # 3
-TRY_INJECT:dyes = { default_market_price = 8 } # 4
-TRY_INJECT:elephants = { default_market_price = 10 } # 5
+TRY_INJECT:copper = { default_market_price = 5.4 } # 3 x 0.9
+TRY_INJECT:cotton = { default_market_price = 5.4 } # 3 x 0.9
+TRY_INJECT:dyes = { default_market_price = 7.2 } # 4 x 0.9
+TRY_INJECT:elephants = { default_market_price = 8.5 } # 5 x 0.85
 TRY_INJECT:fiber_crops = { default_market_price = 4 } # 2
-TRY_INJECT:fine_cloth = { default_market_price = 12 } # 6
-TRY_INJECT:firearms = { default_market_price = 6 } # 3
+TRY_INJECT:fine_cloth = { default_market_price = 10.8 } # 6 x 0.9
+TRY_INJECT:firearms = { default_market_price = 6.6 } # 3 x 1.1
 TRY_INJECT:fish = { default_market_price = 2 } # 1
 TRY_INJECT:fruit = { default_market_price = 2 } # 1
-TRY_INJECT:fur = { default_market_price = 4 } # 2
+TRY_INJECT:fur = { default_market_price = 4.6 } # 2 x 1.15
 TRY_INJECT:furniture = { default_market_price = 6 } # 3
-TRY_INJECT:gems = { default_market_price = 8 } # 4
-TRY_INJECT:glass = { default_market_price = 6 } # 3
+TRY_INJECT:gems = { default_market_price = 7.2 } # 4 x 0.9
+TRY_INJECT:glass = { default_market_price = 6.6 } # 3 x 1.1
 TRY_INJECT:goods_gold = { default_market_price = 18 } # 9
 TRY_INJECT:horses = { default_market_price = 6 } # 3
 TRY_INJECT:incense = { default_market_price = 5 } # 2.5
 TRY_INJECT:iron = { default_market_price = 7 } # 3.5
-TRY_INJECT:ivory = { default_market_price = 8 } # 4
+TRY_INJECT:ivory = { default_market_price = 7.2 } # 4 x 0.9
 TRY_INJECT:jewelry = { default_market_price = 10 } # 5
 TRY_INJECT:lacquerware = { default_market_price = 10 } # 5
 TRY_INJECT:lead = { default_market_price = 4 } # 2
@@ -44,37 +45,37 @@ TRY_INJECT:liquor = { default_market_price = 5 } # 2.5
 TRY_INJECT:livestock = { default_market_price = 3 } # 1.5
 TRY_INJECT:lumber = { default_market_price = 3.5 } # 1.75
 TRY_INJECT:maize = { default_market_price = 2 } # 1
-TRY_INJECT:marble = { default_market_price = 10 } # 5
-TRY_INJECT:masonry = { default_market_price = 2 } # 1
-TRY_INJECT:medicaments = { default_market_price = 2 } # 1
+TRY_INJECT:marble = { default_market_price = 8.5 } # 5 x 0.85
+TRY_INJECT:masonry = { default_market_price = 1.8 } # 1 x 0.9
+TRY_INJECT:medicaments = { default_market_price = 1.8 } # 1 x 0.9
 TRY_INJECT:mercury = { default_market_price = 6 } # 3
 TRY_INJECT:millet = { default_market_price = 2 } # 1
 TRY_INJECT:naval_supplies = { default_market_price = 6 } # 3
 TRY_INJECT:olives = { default_market_price = 2 } # 1
-TRY_INJECT:paper = { default_market_price = 4 } # 2
-TRY_INJECT:pearls = { default_market_price = 8 } # 4
-TRY_INJECT:pepper = { default_market_price = 10 } # 5
+TRY_INJECT:paper = { default_market_price = 4.4 } # 2 x 1.1
+TRY_INJECT:pearls = { default_market_price = 7.2 } # 4 x 0.9
+TRY_INJECT:pepper = { default_market_price = 8.5 } # 5 x 0.85
 TRY_INJECT:porcelain = { default_market_price = 6 } # 3
 TRY_INJECT:potato = { default_market_price = 2 } # 1
-TRY_INJECT:pottery = { default_market_price = 2 } # 1
+TRY_INJECT:pottery = { default_market_price = 2.2 } # 1 x 1.1
 TRY_INJECT:rice = { default_market_price = 2 } # 1
-TRY_INJECT:saffron = { default_market_price = 10 } # 5
-TRY_INJECT:salt = { default_market_price = 10 } # 5
-TRY_INJECT:saltpeter = { default_market_price = 4 } # 2
+TRY_INJECT:saffron = { default_market_price = 8.5 } # 5 x 0.85
+TRY_INJECT:salt = { default_market_price = 11 } # 5 x 1.1
+TRY_INJECT:saltpeter = { default_market_price = 3.4 } # 2 x 0.85
 TRY_INJECT:sand = { default_market_price = 1 } # 0.5
-TRY_INJECT:silk = { default_market_price = 8 } # 4
+TRY_INJECT:silk = { default_market_price = 7.2 } # 4 x 0.9
 TRY_INJECT:silver = { default_market_price = 12 } # 6
 TRY_INJECT:slaves_goods = { default_market_price = 6 } # 3
 TRY_INJECT:steel = { default_market_price = 10 } # 5
-TRY_INJECT:stone = { default_market_price = 2 } # 1
+TRY_INJECT:stone = { default_market_price = 1.8 } # 1 x 0.9
 TRY_INJECT:sugar = { default_market_price = 6 } # 3
 TRY_INJECT:tar = { default_market_price = 4 } # 2
 TRY_INJECT:tea = { default_market_price = 6 } # 3
-TRY_INJECT:tin = { default_market_price = 4 } # 2
+TRY_INJECT:tin = { default_market_price = 3.4 } # 2 x 0.85
 TRY_INJECT:tobacco = { default_market_price = 6 } # 3
 TRY_INJECT:tools = { default_market_price = 6.5 } # 3.25
 TRY_INJECT:victuals = { default_market_price = 6 } # 3
-TRY_INJECT:weaponry = { default_market_price = 6 } # 3
+TRY_INJECT:weaponry = { default_market_price = 6.6 } # 3 x 1.1
 TRY_INJECT:wheat = { default_market_price = 2 } # 1
 TRY_INJECT:wild_game = { default_market_price = 2 } # 1
 TRY_INJECT:wine = { default_market_price = 4 } # 2

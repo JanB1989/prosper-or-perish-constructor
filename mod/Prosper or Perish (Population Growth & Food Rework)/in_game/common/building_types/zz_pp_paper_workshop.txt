@@ -20,7 +20,7 @@ unique_production_methods = {
         manual_labor = 0.22
         produced = paper
         output = 1.0
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.053
         category = workshop_input
     }
     pp_paper_workshop_paper_workshop_cloth_maintenance = {
@@ -32,7 +32,7 @@ unique_production_methods = {
         manual_labor = 0.24
         produced = paper
         output = 1.1
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.044
         category = workshop_input
     }
     pp_paper_workshop_legacy_paper_guild_leather_maintenance = {
@@ -44,7 +44,7 @@ unique_production_methods = {
         manual_labor = 0.095
         produced = paper
         output = 0.41
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.048
         category = workshop_input
     }
 }

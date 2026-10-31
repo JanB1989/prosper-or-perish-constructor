@@ -23,7 +23,7 @@ unique_production_methods = {
         manual_labor = 0.158
         produced = fine_cloth
         output = 0.738
-        debug_max_profit = 0.066
+        debug_max_profit = 0.055
         category = mills_input
     }
     pp_fine_cloth_mill_legacy_fur_trim_workshop_maintenance = {
@@ -45,7 +45,7 @@ unique_production_methods = {
         manual_labor = 1.74
         produced = fine_cloth
         output = 8.21
-        debug_max_profit = 0.068
+        debug_max_profit = mills_profit_margin
         category = mills_input
     }
     pp_fine_cloth_mill_silk_cloth_mill_maintenance = {
@@ -55,7 +55,7 @@ unique_production_methods = {
         manual_labor = 1.74
         produced = fine_cloth
         output = 8.21
-        debug_max_profit = 0.068
+        debug_max_profit = 0.057
         category = mills_input
     }
     pp_fine_cloth_mill_legacy_wool_weavers_workshop_maintenance = {

@@ -25,7 +25,7 @@ unique_production_methods = {
         category = workshop_input
         produced = weaponry
         output = 1.497
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.040
     }
     pp_weapon_workshop_legacy_pre_columbian_weapon_smith_maintenance = {
         icon_type = goods
@@ -35,7 +35,7 @@ unique_production_methods = {
         manual_labor = 0.17
         produced = weaponry
         output = 0.45
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.079
         category = workshop_input
     }
     pp_weapon_workshop_legacy_weapon_smith_maintenance = {
@@ -48,7 +48,7 @@ unique_production_methods = {
         manual_labor = 0.4
         produced = weaponry
         output = 1.12
-        debug_max_profit = workshop_profit_margin
+        debug_max_profit = 0.019
         category = workshop_input
     }
 }

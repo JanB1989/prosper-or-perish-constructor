@@ -5,14 +5,14 @@ good's picture across the top of its goods panel, behind the header of every mar
 building panels. Until 2026-11-01 offset, logistics, manual labour and surplus sales showed their icon on black there.
 
 Provenance: painted on 2026-11-01 by Codex (GPT-6.1 Sol, high, its image generation), one run per good, three takes
-each, from the brief below. Style references were four vanilla goods pictures (beer, tools, fish, wheat) and the mod's
+each, from the brief below; Jan chose the takes in use the same day. Style references were four vanilla goods pictures (beer, tools, fish, wheat) and the mod's
 victuals and Province Food pictures (`assets/icons/trade_goods/illustrations`).
 
 | Good | a | b | c | Used |
 | --- | --- | --- | --- | --- |
-| offset | Bruges weigh house, a cask balanced against iron weights | Florentine banker's counting table | Ming counting house in Suzhou | a |
+| offset | Bruges weigh house, a cask balanced against iron weights | Florentine banker's counting table | Ming counting house in Suzhou | b |
 | logistics | Rhine river landing, barges and bales | Persian caravanserai at dawn | Banjara bullock caravan to a Deccan hill fort | c |
-| manual_labor | cathedral building site, treadwheel crane | hiring square at dawn, the day's wage on the table | Ming canal dyke earthworks | a |
+| manual_labor | cathedral building site, treadwheel crane | hiring square at dawn, the day's wage on the table | Ming canal dyke earthworks | b |
 | province_food_sales | monastery grange, a loaded cart off to market | Nile granary on an Ottoman quay | Osaka rice warehouses (Edo) | a |
 
 To use another take or add a good: cut the widest 1080 : 440 window around the middle of the painting, scale it to

@@ -9,7 +9,9 @@ For a good ``g`` with ``assets/icons/trade_goods/icon_goods_g.png`` (128 px) and
 
 the icons as DXT5 with a full mip chain (the layout of the hand-converted offset icons), the illustration as BC7 in one
 level (the picture format, interface_dds). A missing PNG is skipped (the build runs before the art exists); a DDS newer
-than its PNG is left alone.
+than its PNG is left alone. The build installs all three for logistics and the illustration of every good that has
+one (:func:`illustration_goods`; the other goods' icons were converted by hand). An illustration PNG is stored at
+1080 x 440 already, so the resize never stretches it (the painted ones are cropped from wider paintings, README there).
 """
 
 from __future__ import annotations
@@ -40,10 +42,17 @@ def targets(good: str) -> list[tuple[Path, Path, tuple[int, int]]]:
     ]
 
 
-def install(repo: Path, mod_root: Path, goods: Iterable[str]) -> IconResult:
+def illustration_goods(repo: Path) -> list[str]:
+    """Every good with a market illustration PNG in ``assets/icons/trade_goods/illustrations``."""
+    return sorted(p.stem.removeprefix("icon_goods_") for p in (repo / ASSET_ROOT / "illustrations").glob("icon_goods_*.png"))
+
+
+def install(repo: Path, mod_root: Path, goods: Iterable[str], *, illustrations_only: bool = False) -> IconResult:
     result = IconResult()
     for good in goods:
         for source, relative, size in targets(good):
+            if illustrations_only and size != ILLUSTRATION_SIZE:
+                continue
             png = repo / source
             dds = mod_root / relative
             if not png.is_file():

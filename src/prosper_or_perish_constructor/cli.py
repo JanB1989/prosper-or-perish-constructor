@@ -1412,12 +1412,14 @@ def _normalize_interface_dds(mod_root: Path) -> None:
 
 
 def _install_good_icons(repo: Path, project: Path, mod_root: Path) -> None:
-    """DDS icons of the internal goods whose art lives in assets/icons/trade_goods (logistics so far)."""
+    """DDS icons of the internal goods whose art lives in assets/icons/trade_goods (logistics so far) and the market
+    illustration of every good that has one there."""
     from prosper_or_perish_constructor import good_icons, logistics
 
     result = good_icons.install(repo, mod_root, [logistics.load_config(project).good])
+    pictures = good_icons.install(repo, mod_root, good_icons.illustration_goods(repo), illustrations_only=True)
     missing = f"; missing art {', '.join(str(p) for p in result.missing)}" if result.missing else ""
-    print(f"Internal good icons: {len(result.written)} DDS written{missing}.", flush=True)
+    print(f"Internal good icons: {len(result.written) + len(pictures.written)} DDS written{missing}.", flush=True)
 
 
 def _legacy(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:

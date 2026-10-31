@@ -2921,6 +2921,21 @@ def test_internal_trade_good_icons_use_game_compatible_dds_layout() -> None:
             assert mip_count == 8, path
 
 
+def test_good_illustrations_are_stored_at_game_size() -> None:
+    """Every market illustration PNG is 1080 x 440 (good_icons resizes, it never crops) and the build installs it."""
+    from PIL import Image
+
+    from prosper_or_perish_constructor import good_icons
+
+    goods = good_icons.illustration_goods(ROOT)
+    assert {"offset", "logistics", "manual_labor", "province_food_sales", "local_food", "victuals"} <= set(goods)
+    for good in goods:
+        with Image.open(ROOT / good_icons.ASSET_ROOT / "illustrations" / f"icon_goods_{good}.png") as image:
+            assert image.size == good_icons.ILLUSTRATION_SIZE, good
+        dds = MOD_ROOT / good_icons.ICON_ROOT / "trade_goods" / "illustrations" / f"icon_goods_{good}.dds"
+        assert dds.read_bytes()[84:88] == b"DX10", good   # BC7, the picture format
+
+
 def test_current_megalopolis_buildings_allow_megalopolis() -> None:
     for blueprint_name in ("dock", "fruit_orchard", "irrigation_systems"):
         template = load_template(ROOT / "blueprints" / "accepted" / "buildings" / f"{blueprint_name}.yml")

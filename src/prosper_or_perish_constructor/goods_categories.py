@@ -113,8 +113,16 @@ def building_increase_cost_assignments(
     band = load_increase_per_level_cost_band(repo / GOODS_CATEGORY_SCALING_RELATIVE)
     costs_by_good = load_good_category_costs(repo / GOODS_CATEGORIES_RELATIVE, band)
     building_data = load_building_data(profile=profile, load_order_path=load_order_path)
+    from prosper_or_perish_constructor.production_labour import stockpile_price_raise
+
+    # [stockpile_prices]: output values at the base prices before the raise, so the per-good factors never move a main good
+    raw = tomllib.loads(project.read_text(encoding="utf-8-sig"))
+    raises = {good: stockpile_price_raise(raw, good) for good in costs_by_good}
+    methods = building_data.production_methods.with_columns(
+        pl.col("output_value") / pl.col("produced").replace_strict(raises, default=1.0, return_dtype=pl.Float64)
+    )
     candidates_by_building = _produced_good_candidates_by_building(
-        building_data.production_methods,
+        methods,
         building_data.buildings,
         set(costs_by_good),
     )

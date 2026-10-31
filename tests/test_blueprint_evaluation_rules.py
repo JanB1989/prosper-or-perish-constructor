@@ -22,8 +22,13 @@ MANIFEST_PATH = ROOT / "blueprints" / "buildings.manifest.yml"
 
 def test_accepted_blueprints_have_no_unallowed_evaluation_rule_violations() -> None:
     config = load_project_config(ROOT / "constructor.toml")
+    from prosper_or_perish_constructor.production_labour import stockpile_base_prices
+
+    # [stockpile_prices]: the bands hold at the base prices before the raise, as the passes balance them
     price_by_good = {
-        **load_balance_prices(profile=config.profile, load_order_path=config.load_order_path),
+        **stockpile_base_prices(
+            ROOT / "constructor.toml", load_balance_prices(profile=config.profile, load_order_path=config.load_order_path)
+        ),
         **config.blueprint_evaluation.price_overrides,
     }
     raw_material_goods = load_raw_material_goods(profile=config.profile, load_order_path=config.load_order_path)

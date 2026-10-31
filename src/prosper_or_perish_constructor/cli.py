@@ -2478,6 +2478,8 @@ def _load_province_food_sales_profitability_rows(
     )
     from eu5_mod_orchestrator.config import load_project_config
 
+    from prosper_or_perish_constructor import production_labour
+
     config = load_project_config(project)
     blueprint_path = config.accepted_blueprints_dir / PROVINCE_FOOD_SALES_PROFITABILITY_BLUEPRINT
     if not blueprint_path.is_file():
@@ -2487,7 +2489,7 @@ def _load_province_food_sales_profitability_rows(
         blueprint_path,
         config,
         price_by_good={
-            **load_balance_prices(profile=profile, load_order_path=load_order_path),
+            **production_labour.stockpile_base_prices(project, load_balance_prices(profile=profile, load_order_path=load_order_path)),
             **config.blueprint_evaluation.price_overrides,
         },
         raw_material_goods=load_raw_material_goods(

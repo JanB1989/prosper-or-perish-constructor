@@ -1611,7 +1611,8 @@ def test_water_control_capacity_buildings_use_scaled_gold_prices() -> None:
 
     for building, (price_key, gold) in expected_prices.items():
         assert buildings[building]["price"] == price_key
-        assert buildings[building]["price_gold"] == gold
+        # branch stockpile-prices: every building price x1.5 (prices/zz_pp_building_price_stockpile.txt)
+        assert buildings[building]["price_gold"] == gold * 1.5
 
 
 def test_excluded_buildings_do_not_use_land_farm_capacity_pool() -> None:
@@ -2300,20 +2301,21 @@ def test_cookshop_building_line_has_resolved_prices() -> None:
     buildings = {row["name"]: row for row in annotated.buildings.to_dicts()}
 
     # [building_price_brake]: the Cookshop pays its own price key, 40 gold since 2026-10-01 (75 on 2026-09-30, the brake's 100)
+    # Branch stockpile-prices: every building price x1.5 (prices/zz_pp_building_price_stockpile.txt).
     assert buildings["cookshop"]["price"] == "pp_cookshop_price"
     assert buildings["cookshop"]["effective_price"] == "pp_cookshop_price"
-    assert buildings["cookshop"]["effective_price_gold"] == 40.0
+    assert buildings["cookshop"]["effective_price_gold"] == 40.0 * 1.5
     assert buildings["cookshop"]["price_kind"] == "explicit"
 
     assert buildings["public_kitchen"]["price"] is None
     assert buildings["public_kitchen"]["effective_price"] == "p_building_age_5_absolutism"
-    assert buildings["public_kitchen"]["effective_price_gold"] == 800.0
+    assert buildings["public_kitchen"]["effective_price_gold"] == 800.0 * 1.5
     assert buildings["public_kitchen"]["price_kind"] == "baseline_age"
 
     assert buildings["tavern"]["price"] == "pp_tavern_price"
-    assert buildings["tavern"]["price_gold"] == 70.0  # doubled 2026-10-01: the expensive urban option
+    assert buildings["tavern"]["price_gold"] == 70.0 * 1.5  # doubled 2026-10-01: the expensive urban option
     assert buildings["tavern"]["effective_price"] == "pp_tavern_price"
-    assert buildings["tavern"]["effective_price_gold"] == 70.0  # doubled 2026-10-01: the expensive urban option
+    assert buildings["tavern"]["effective_price_gold"] == 70.0 * 1.5  # doubled 2026-10-01: the expensive urban option
     assert buildings["tavern"]["price_kind"] == "explicit"
 
 

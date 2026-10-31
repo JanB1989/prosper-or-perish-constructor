@@ -439,6 +439,11 @@
   multiplies the raise; the passes and the crop farm weight divide it back out too (`stockpile_price_raise`), so only
   the engine's market price moves. Crop farm `ai_construct_weight` multiplies price / default by the raise (a weight
   that read the raised default made farms look half as profitable in run 06aedac2).
+- Building prices x1.5 in gold (`in_game/common/prices/zz_pp_building_price_stockpile.txt`, written by hand, old value in
+  each comment): the 12 age prices every building without its own price uses, the estate, HRE army, aqueduct and
+  hippodrome prices and the mod's 55 own building prices. Why: with prices x2 nominal incomes rose (x1.3 at the start, x2
+  by 1542) while gold prices stayed, and the AI built faster than population grew (run 06aedac2). A new blueprint price
+  needs a line there too.
 - Not changed: marketplace building caps (vanilla 20-100), tariffs. Engine costs that scale by market / default price
   (unit upkeep and the like) run about 35-50 % lower at normal stocks. Simulation: `~/pp_ai_run/tradesim` (private).
 

@@ -153,6 +153,12 @@ def stockpile_price_raise(raw: Mapping[str, Any], good: str) -> float:
     return float(section.get("base_price_mult", 1.0)) * float(dict(section.get("price_factor") or {}).get(good, 1.0))
 
 
+def stockpile_base_prices(project: Path, prices: Mapping[str, float]) -> dict[str, float]:
+    """Engine default prices (as the parser reads them) back to the base prices before the [stockpile_prices] raise."""
+    raw = tomllib.loads(project.read_text(encoding="utf-8-sig"))
+    return {str(good): float(price) / stockpile_price_raise(raw, str(good)) for good, price in prices.items()}
+
+
 def load_prices(repo: Path, project: Path) -> dict[str, float]:
     """Good -> default market price, parsed from the configured load order (vanilla plus the compiled mod)."""
     from eu5gameparser.domain.goods import load_goods_data

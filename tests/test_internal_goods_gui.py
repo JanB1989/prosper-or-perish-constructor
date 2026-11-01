@@ -111,13 +111,36 @@ def test_market_stockpile_column_shows_fill_and_amount():
     assert text.count('value = "[GoodsMarketEntry.GetStockpilePercentage]"') == 1
     assert text.count('raw_text = "[GoodsMarketEntry.GetStockpilePercentage|0]%"') == 1
     assert text.count('text = "[GoodsMarketEntry.GetStockpile|0]"') == 2   # the amount; weak when the stock is empty
-    for name, width in tool.MARKET_HEADER_WIDTHS.items():
-        assert re.search(rf'name = "{name}"\n[ \t]*layoutpolicy_vertical = expanding\n[ \t]*size = \{{ {width} -1 \}}',
-                         text), name
     view = _mod(tool.MARKET_VIEW)
     assert f"\tsize = {{ {tool.MARKET_PANEL_WIDTH} 100% }}" in view   # the wider panel holds the wider row
     picker = view[view.index('name = "market_view_select_market"'):]
     assert f"position = {{ {tool.MARKET_PANEL_WIDTH} 180 }}" in picker   # its market picker opens beside it
+
+
+def _header(text: str, index: int) -> list[tuple[str | None, int]]:
+    start = [m.start() for m in re.finditer(r'blockoverride "sort_buttons_filtered_list"', text)][index]
+    block = text[start:text.index("expand = {}", start)]
+    out = []
+    for m in re.finditer(r'(?:name = "(\w+)"\n[ \t]*layoutpolicy_vertical = expanding\n[ \t]*)?size = \{ (\d+) (?:-1|1) \}',
+                         block):
+        out.append((m.group(1), int(m.group(2))))
+    return out
+
+
+def test_market_header_buttons_sit_over_their_cells():
+    """Jan, 2026-11-01: the values under a header button must be the ones it sorts. The rows lay their cells side by
+    side from the left (the free room at the end) and each header button is as wide as its cell."""
+    tool = _tool()
+    text = _mod(tool.MARKET_GOODS)
+    assert text.count("expand = {} # PP: the cells side by side from the left") == 2   # Goods and Regional rows
+    lead = tool.MARKET_ROW_LEAD + 30
+    cells = [tool.STOCKPILE_CELL_WIDTH, 62, 62, 62, 15, 62, tool.MARKET_PRICE_WIDTH, tool.MARKET_PRICE_DIFF_WIDTH]
+    assert _header(text, 0) == [("name", lead), *zip(tool.MARKET_COLUMNS, cells)]
+    assert _header(text, 1) == [("name", lead), *zip(tool.IN_RANGE_COLUMNS, [62, 62, 62, 62, 62, 15, 62])]
+    for key in ('name = "market_price"', 'name = "market_price_diff"'):   # its header button and its own cell
+        assert text.count(key) == 2, key
+    row = 30 + sum(cells) + 2 + tool.MARKET_ACTIONS_WIDTH
+    assert row <= tool.MARKET_PANEL_WIDTH - tool.MARKET_ROW_LOSS   # the actions stay clear of the scrollbar
 
 
 def test_market_row_actions_skip_the_observer():

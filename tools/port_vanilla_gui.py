@@ -109,16 +109,27 @@ INTERNAL_GOODS_TEMPLATE = "pp_hide_internal_goods"
 INTERNAL_GOODS_GUI = "shared/pp_internal_goods.gui"
 MARKET_GOODS = "panels/market/market_goods.gui"
 MARKET_VIEW = "selected_market_view.gui"
-# the market panel (port_market_view): 80 wider than the vanilla left panel, for the stockpile column below
-MARKET_PANEL_WIDTH = 650
+# the market panel (port_market_view): wider than the vanilla left panel (570) for the stockpile column and the split
+# price cell below. A row's cells get the panel's width less MARKET_ROW_LOSS (measured in game 2026-11-01: 568 at
+# 650) and need 586: icon 30, stockpile 92, local balance/imports/exports 3 x 62, arrow 15, balance 62, price 40 + 30,
+# margin 2, actions 129
+MARKET_PANEL_WIDTH = 690
+MARKET_ROW_LOSS = 82
 # the market's stockpile column (port_market_stockpile): cell = bar + 4 spacing + amount (vanilla: 15)
 STOCKPILE_CELL_WIDTH = 92
 STOCKPILE_BAR_WIDTH = 46
-# the goods list's header buttons (fixed widths, laid out in a row; vanilla 35/35/55/70/70/75/45): each icon over its
-# column, set from the row measured in game (2026-11-01) and the room the wider panel adds (the row's columns spread it)
-MARKET_HEADER_WIDTHS = {"stockpile": 105, "goods_local_balance": 50, "goods_imports": 86, "goods_exports": 50,
-                        "goods_balance": 89, "market_price": 41}
 MARKET_ACTIONS_WIDTH = 4 * 30 + 3 * 3   # the row's four action buttons (build, raw goods, import, export), spacing 3
+# the goods lists as columns (port_market_columns, Jan 2026-11-01: "the values I sort are the ones below"): the rows
+# lay their cells out side by side from the left, and each header button is exactly as wide as its cell. Vanilla
+# spread the row's cells over the free room while the header buttons kept fixed widths, so they never lined up.
+MARKET_ROW_LEAD = 3 + 3                 # the row card's inset (99 % of the row, centred) and its margin
+MARKET_PRICE_WIDTH = 40                 # vanilla's 50-wide price cell split: price, then its difference icon
+MARKET_PRICE_DIFF_WIDTH = 30            # the narrowest sort button (its icon and arrows are 30 wide)
+# header buttons in row order; None = the rows' arrow between exports and balance (no sort key)
+MARKET_COLUMNS = ("stockpile", "goods_local_balance", "goods_imports", "goods_exports", None, "goods_balance",
+                  "market_price", "market_price_diff")
+IN_RANGE_COLUMNS = ("in_range_produced", "in_range_locally_demanded", "in_range_local_balance", "in_range_imports",
+                    "in_range_exports", None, "in_range_balance")
 # file -> (datamodel of a goods list, context that gives the row its Goods; "" when the items are Goods)
 INTERNAL_GOODS_LISTS: dict[str, tuple[tuple[str, str], ...]] = {
     MARKET_GOODS: (
@@ -1019,7 +1030,7 @@ def port_market_stockpile(text: str, what: str = f"vanilla {MARKET_GOODS}") -> s
     port_market_view), the header buttons follow the columns (MARKET_HEADER_WIDTHS), and the row's action buttons
     are hidden in observer mode in a box that keeps their room: their checks (CanGoodGetProduced and the like) run
     the producing buildings' country_potential on the observer's empty country and logged about a thousand script
-    errors a second while the panel was open."""
+    errors a second while the panel was open. The header follows the columns (port_market_columns)."""
     opener = list(re.finditer(r"(?m)^([ \t]*)widget = \{\n[ \t]*size = \{15 22\}\n", text))
     if len(opener) != 1:
         raise ValueError(f"{what}: expected 1 stockpile bar widget, found {len(opener)}")
@@ -1050,9 +1061,6 @@ def port_market_stockpile(text: str, what: str = f"vanilla {MARKET_GOODS}") -> s
             "\t\t\tautoresize = no\n\t\t\tsize = { -1 20 }\n\t\t\talign = right|nobaseline\n\t\t\tusing = Font_Size_Small\n"
             f"\t\t\ttext = \"[{amount}|0]\"\n\t\t\tdefault_format = \"#weak\"\n\t\t}}\n\t}}\n}}\n")
     text = text[:opener[0].start()] + _indent(cell, len(ind)).rstrip("\n") + text[end:]
-    for name, width in MARKET_HEADER_WIDTHS.items():
-        text = _once(rf'(name = "{name}"\n[ \t]*layoutpolicy_vertical = expanding\n[ \t]*size = \{{ )\d+( -1 \}})',
-                     rf"\g<1>{width}\g<2>", text, what)
     # the action buttons: in a box of their size, shown to a player only
     actions = list(re.finditer(r"(?m)^([ \t]*)hbox = \{\n[ \t]*spacing = 3\n[ \t]*header_button_left = \{\n", text))
     if len(actions) != 1:
@@ -1068,6 +1076,99 @@ def port_market_stockpile(text: str, what: str = f"vanilla {MARKET_GOODS}") -> s
     return text[:actions[0].start()] + box + text[end:]
 
 
+def _row_cells(text: str, start: int, end: int, ind: str) -> list[tuple[int, int, int]]:
+    """(start, end, width) of the cells of the row box text[start:end] whose lines sit at ``ind``: its direct child
+    widgets, each with its own size line."""
+    cells = []
+    for m in re.finditer(rf"(?m)^{ind}\twidget = \{{", text[start:end]):
+        s = start + m.start()
+        e = _block_end(text, text.index("{", s))
+        size = re.search(rf"(?m)^{ind}\t\tsize = \{{ ?(\d+) ", text[s:e])
+        if not size:
+            raise ValueError(f"a cell of the row at {s} has no size")
+        cells.append((s, e, int(size.group(1))))
+    return cells
+
+
+def _price_cells(cell: str, ind: str, what: str) -> str:
+    """Vanilla's price cell (the price and its difference icon in one 50-wide box) as two cells, each under its own
+    header button."""
+    for key in ('text = "[GoodsMarketEntry.GetPrice|2]"', "GetPriceDifferenceIconName(GoodsMarketEntry.GetPrice)",
+                "using = goods_market_price_tooltip"):
+        if key not in cell:
+            raise ValueError(f"{what}: the price cell has no {key}")
+    tooltip = ("\tdatacontext = \"[SelectedMarketLateralView.GetMarket]\"\n"
+               "\ttooltipwidget = {\n\t\tusing = goods_market_price_tooltip\n\t}\n\n")
+    cells = (f"widget = {{ # PP: the price (vanilla: one {MARKET_PRICE_WIDTH + 10}-wide cell with its difference icon)\n"
+             "\ttooltipmeta = {\n\t\ttexture = \"[GetGoodsIcon(GoodsMarketEntry.GetGoods)]\"\n\t}\n"
+             f"\tsize = {{ {MARKET_PRICE_WIDTH} 20 }}\n" + tooltip +
+             "\thbox = {\n\t\texpand = {}\n\n\t\ttext_single = {\n"
+             f"\t\t\tmaximumsize = {{ {MARKET_PRICE_WIDTH} 20 }}\n\t\t\talign = right|nobaseline\n"
+             "\t\t\tusing = Font_Size_Small\n\t\t\ttext = \"[GoodsMarketEntry.GetPrice|2]\"\n\n"
+             "\t\t\tsort_by_small_highlight = {\n\t\t\t\tname = \"market_price\"\n\t\t\t}\n\t\t}\n\t}\n}\n\n"
+             "widget = { # PP: the price against its default\n"
+             f"\tsize = {{ {MARKET_PRICE_DIFF_WIDTH} 20 }}\n" + tooltip +
+             "\ttext_single = {\n\t\tparentanchor = center\n\t\talign = center|nobaseline\n\t\tusing = Font_Size_Small\n"
+             "\t\traw_text = \"@[GoodsMarketEntry.GetGoods.GetPriceDifferenceIconName(GoodsMarketEntry.GetPrice)]!\"\n\n"
+             "\t\tsort_by_small_highlight = {\n\t\t\tname = \"market_price_diff\"\n\t\t}\n\t}\n}\n")
+    return _indent(cells, len(ind) + 1).rstrip("\n")
+
+
+def _sort_header(ind: str, columns: list[tuple[str | None, int]]) -> str:
+    out = f'{ind}blockoverride "sort_buttons_filtered_list" {{ # PP: each button as wide as its cell in the rows below\n'
+    for name, width in columns:
+        if name is None:
+            out += f"{ind}\twidget = {{ # the rows' arrow between exports and balance\n{ind}\t\tsize = {{ {width} 1 }}\n{ind}\t}}\n\n"
+        else:
+            out += (f'{ind}\tsort_by_key_button = {{\n{ind}\t\tname = "{name}"\n{ind}\t\tlayoutpolicy_vertical = expanding\n'
+                    f"{ind}\t\tsize = {{ {width} -1 }}\n{ind}\t}}\n\n")
+    return out + f"{ind}\texpand = {{}}\n{ind}}}"
+
+
+def port_market_columns(text: str, what: str = f"vanilla {MARKET_GOODS}") -> str:
+    """The market's goods lists (Goods and Regional tabs) as columns (Jan, 2026-11-01: the values under a header
+    button must be the ones it sorts). Vanilla spreads a row's cells over its free room while the header buttons keep
+    fixed widths, so neither list lined up. The rows now lay their cells side by side from the left (the free room
+    goes to the end), the Goods row's price cell is split into the price and its difference icon, and each header
+    button is exactly as wide as its cell (the name button also spans the row's lead, MARKET_ROW_LEAD)."""
+    rows = list(re.finditer(r"(?m)^([ \t]*)hbox = \{\n[ \t]*using = layoutpolicy_expanding\n[ \t]*margin_right = 2\n", text))
+    if len(rows) != 2:
+        raise ValueError(f"{what}: expected 2 goods rows (Goods, Regional), found {len(rows)}")
+    widths: list[list[int]] = [[], []]
+    for i in (1, 0):   # the later row first: the earlier one's offsets stay valid
+        m = rows[i]
+        ind = m.group(1)
+        end = _block_end(text, text.index("{", m.start()))
+        cells = _row_cells(text, m.start(), end, ind)
+        widths[i] = [w for _, _, w in cells]
+        if i == 0:   # Goods: local balance, imports, exports, arrow, balance, price
+            if widths[0] != [62, 62, 62, 15, 62, MARKET_PRICE_WIDTH + 10]:
+                raise ValueError(f"{what}: the Goods row's cells are {widths[0]}")
+            s, e, _ = cells[-1]   # s is the cell's line start
+            text = text[:s] + _price_cells(text[s:e], ind, what) + text[e:]
+            widths[0][-1:] = [MARKET_PRICE_WIDTH, MARKET_PRICE_DIFF_WIDTH]
+        elif widths[1] != [62, 62, 62, 62, 62, 15, 62]:
+            raise ValueError(f"{what}: the Regional row's cells are {widths[1]}")
+        end = _block_end(text, text.index("{", m.start()))
+        close = text.rindex("\n", 0, end - 1) + 1
+        text = (text[:close] + f"\n{ind}\texpand = {{}} # PP: the cells side by side from the left, under their header "
+                "buttons\n" + text[close:])
+    lead = MARKET_ROW_LEAD + 30   # the row's lead and its 30-wide goods icon
+    headers = list(re.finditer(r'(?m)^([ \t]*)blockoverride "sort_buttons_filtered_list" \{\n', text))
+    if len(headers) != 2:
+        raise ValueError(f"{what}: expected 2 sort headers, found {len(headers)}")
+    specs = [list(zip(MARKET_COLUMNS, [STOCKPILE_CELL_WIDTH, *widths[0]])), list(zip(IN_RANGE_COLUMNS, widths[1]))]
+    for i in (1, 0):
+        m = headers[i]
+        end = _block_end(text, text.index("{", m.start()))
+        names = re.findall(r'name = "(\w+)"', text[m.start():end])
+        columns = [c for c, _ in specs[i] if c]
+        if names != ["name", *columns]:
+            raise ValueError(f"{what}: the sort header has {names}")
+        text = text[:m.start()] + _sort_header(m.group(1), [("name", lead), *specs[i]]) + text[end:]
+    return text
+
+
 def port_internal_goods(vanilla: str, rel: str) -> str:
     """Vanilla goods lists of ``rel`` without the internal goods (INTERNAL_GOODS_LISTS, _ICONS, _TABLES); the market's
     goods rows also get the readable stockpile column (port_market_stockpile)."""
@@ -1080,7 +1181,7 @@ def port_internal_goods(vanilla: str, rel: str) -> str:
     for model in INTERNAL_GOODS_TABLES.get(rel, ()):
         t = _hide_table(t, model, what)
     if rel == MARKET_GOODS:
-        t = port_market_stockpile(t, what)
+        t = port_market_columns(port_market_stockpile(t, what), what)
     return t
 
 

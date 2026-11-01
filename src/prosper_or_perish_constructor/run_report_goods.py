@@ -48,7 +48,7 @@ from prosper_or_perish_constructor.run_report_charts import (
 if TYPE_CHECKING:
     from prosper_or_perish_constructor.run_report import RunData
 
-CACHE_VERSION = "goods-6"
+CACHE_VERSION = "goods-7"
 RGO = "rgo"  # pseudo building of the RGO rows
 OTHER = "_other"  # pseudo building for market totals no recipe explains
 IDLE = "_idle"  # pseudo building of the goods' base production by idle peasants
@@ -58,11 +58,18 @@ DEMAND_BUCKETS: tuple[tuple[str, str, str], ...] = (
     ("Construction", "Construction", "#a0522d"),
     ("Units", "Armies & navies", "#e34948"),
     ("Roads", "Roads", "#7d8b2a"),
-    ("Consumption", "Consumption", "#4a3aa7"),
+    ("Minting", "Minting", "#c9a227"),
+    ("SlaveRgos", "Slave RGOs", "#8a4f7d"),
+    ("Consumption", "Religious orders & government", "#4a3aa7"),
     ("Temporary", "Temporary", "#9a9a96"),
     ("Trade", "Exports", "#5fb8c4"),
     ("BurgherTrades", "Burgher trade out", "#00a3a3"),
 )
+# The market's demanded_Consumption is three things, told apart by the good: the coin laws' metals are minted (vanilla
+# laws: <good>_used_for_minting; no other demand in that bucket names them, event demands are Temporary), slaves go to
+# the slave RGOs (slave_rgo_demands), and the rest is religious orders, bureaucracy and colonial charters.
+MINTED_GOODS = frozenset({"goods_gold", "silver", "copper"})
+SPLIT_BUCKETS = frozenset({"Minting", "SlaveRgos"})  # not columns of market_goods: taken out of Consumption per good
 SUPPLY_BUCKETS: tuple[tuple[str, str, str], ...] = (
     ("Trade", "Imports", "#5fb8c4"),
     ("BurgherTrades", "Burgher trade in", "#00a3a3"),
@@ -188,7 +195,7 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
     def read(table: str, columns: list[str]) -> pl.DataFrame:
         return _read(dataset, table, playthrough, snapshot, columns)
 
-    buckets = [b for b, _, _ in DEMAND_BUCKETS]
+    buckets = [b for b, _, _ in DEMAND_BUCKETS if b not in SPLIT_BUCKETS]
     supplies = [b for b, _, _ in SUPPLY_BUCKETS]
     goods = read("market_goods", [
         "market_id", "good_id", "price", "default_price", "supply", "demand", "stockpile", "supplied_Production",
@@ -304,7 +311,11 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
     regional = goods.join(markets, on="market_id", how="left").with_columns(pl.col("region").fill_null(OTHER_REGION))
     demand = pl.concat([
         regional.group_by("good_id", "region").agg(pl.col(f"demanded_{b}").sum().alias("wanted"), pl.col(f"taken_{b}").sum().alias("received")).with_columns(pl.lit(b).alias("bucket"))
-        for b in buckets]).filter(pl.col("wanted") + pl.col("received") > 0)
+        for b in buckets]).filter(pl.col("wanted") + pl.col("received") > 0).with_columns(
+        pl.when(pl.col("bucket") != "Consumption").then(pl.col("bucket"))
+        .when(pl.col("good_id").is_in(sorted(MINTED_GOODS))).then(pl.lit("Minting"))
+        .when(pl.col("good_id") == "slaves_goods").then(pl.lit("SlaveRgos"))
+        .otherwise(pl.col("bucket")).alias("bucket"))
     supply = pl.concat([
         regional.group_by("good_id", "region").agg(pl.col(f"supplied_{b}").sum().alias("amount")).with_columns(pl.lit(b).alias("bucket"))
         for b in supplies]).filter(pl.col("amount") > 0)

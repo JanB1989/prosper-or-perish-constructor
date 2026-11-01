@@ -119,6 +119,24 @@ def test_goods_page_reads_its_data_files() -> None:
     assert "<span>stock</span>" in page and "O.fill[i]" in page
 
 
+def test_consumption_splits_into_minting_slaves_and_orders(tmp_path: Path) -> None:
+    dataset = _dataset(tmp_path)
+    path = dataset / "tables" / "market_goods" / "playthrough_id=run" / "s1.parquet"
+    goods = pl.read_parquet(path)
+    extra = pl.concat([goods.head(1).with_columns(pl.lit(g).alias("good_id")) for g in ("goods_gold", "silver", "copper", "slaves_goods", "wine")])
+    both = pl.concat([goods, extra]).with_columns(
+        pl.when(pl.col("good_id").is_in(["cloth", "wool"])).then(0.0).otherwise(5.0).alias("demanded_Consumption"),
+        pl.when(pl.col("good_id").is_in(["cloth", "wool"])).then(0.0).otherwise(4.0).alias("taken_Consumption"))
+    both.write_parquet(path)
+    flows = rg.save_flows(dataset, "run", "s1", _recipes())
+    split = {g: b for g, b, w in flows["demand"].select("good_id", "bucket", "wanted").iter_rows()
+             if b in ("Minting", "SlaveRgos", "Consumption") and w == 5.0}
+    assert split == {"goods_gold": "Minting", "silver": "Minting", "copper": "Minting", "slaves_goods": "SlaveRgos", "wine": "Consumption"}
+    pops = flows["demand"].filter((pl.col("bucket") == "Pops") & (pl.col("good_id") == "silver"))
+    assert pops.height == 1  # only Consumption is split: a minted good's pop demand stays Pops
+    assert rg.encode_save(flows, rg.Index())["d"]  # every bucket has an index
+
+
 def test_market_figures_carry_the_stock_fill(tmp_path: Path) -> None:
     """Stock ÷ the market's cap x volume per good and region (the page adds regions up, then divides by the volume); the
     cap is the bookkeeping goods' largest stock, and without one the fill stays unknown instead of reading empty."""

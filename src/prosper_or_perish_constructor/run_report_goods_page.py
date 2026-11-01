@@ -722,7 +722,8 @@ def goods_page_html(run_name: str, years: tuple[int, int]) -> str:
       roughly. RGOs: units per 1,000 workers.</p></section>
     <section class=card><header><h3>Users</h3><span class=muted id=ccount></span></header><div class=table-wrap id=ctable></div>
       <p class=caption>Buildings (by method) and the other demand of the markets: pops, construction, armies and navies (upkeep and
-      new units), roads. Got: what they received ÷ what they wanted.</p></section>
+      new units), roads, minting (gold, silver and copper, by each country's coin law), slaves for slave RGOs, religious orders and
+      government (bureaucracy, colonial charters). Got: what they received ÷ what they wanted.</p></section>
   </div>
   <section class=card><header><h3>Over the run</h3><div class=views id=timeviews><button type=button>Producers</button><button type=button>Users</button><button type=button>Made, used, price</button><button type=button>Price across markets</button><button type=button>Stock across markets</button></div></header>
     <div id=time class=chart style="height:400px"></div>

@@ -2,7 +2,8 @@
 quicksilver_retort = {
 is_foreign = no
 increase_per_level_cost = 0.14
-max_levels = rural_building_cap
+price = pp_quicksilver_retort_price
+max_levels = pp_rural_building_cap_tier_1
 pop_type = laborers
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
 category = rgo_building_category
@@ -95,7 +96,7 @@ unique_production_methods = {
 modifier = {
     local_population_growth = -0.00015
     local_migration_attraction = 0.010
-    local_mercury_output_modifier = 0.025
+    local_mercury_output_modifier = 0.01875
 }
 }
 # <<< eu5-building-pipeline:quicksilver_retort:building

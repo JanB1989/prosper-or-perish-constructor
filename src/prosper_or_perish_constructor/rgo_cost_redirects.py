@@ -46,6 +46,8 @@ NON_RGO_LABOUR_CLASS = re.compile(r"^labour:\s*\n\s+class:\s*(craft_\w+|cottage)
 
 
 def _non_rgo_priced_buildings(mod_root: Path) -> set[str]:
+    from prosper_or_perish_constructor.tier_lines import PRICES_OUTPUT
+
     blueprints = mod_root.parent.parent / "blueprints" / "accepted" / "buildings"
     tags: set[str] = set()
     if blueprints.is_dir():
@@ -54,6 +56,10 @@ def _non_rgo_priced_buildings(mod_root: Path) -> set[str]:
             tag = re.search(r"^tag:\s*(\S+)", text, re.M)
             if tag and NON_RGO_LABOUR_CLASS.search(text):
                 tags.add(tag.group(1))
+    # the tier lines' prices (tier_lines.py) change no cost modifier: they keep the rural fallback too
+    tier_prices = mod_root / PRICES_OUTPUT
+    if tier_prices.is_file():
+        tags.update(re.findall(r"(?m)^pp_(\w+)_price\s*=", tier_prices.read_text(encoding="utf-8-sig")))
     return tags
 RGO_COST_REDIRECT_COLLECTIONS: tuple[tuple[str, str], ...] = (
     ("in_game", "advances"),

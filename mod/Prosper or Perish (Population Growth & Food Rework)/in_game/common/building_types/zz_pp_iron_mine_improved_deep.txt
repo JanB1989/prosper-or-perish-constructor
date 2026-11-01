@@ -2,7 +2,8 @@
 iron_mine_deep = {
 is_foreign = no
 increase_per_level_cost = 0.19
-max_levels = rural_building_cap
+price = pp_iron_mine_deep_price
+max_levels = pp_rural_building_cap_tier_2
 pop_type = laborers
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
 category = rgo_building_category
@@ -13,6 +14,7 @@ town = yes
 city = yes
 megalopolis = yes
 obsolete = iron_mine_improved
+obsolete = iron_mine
 build_time = manufactory_build_time
 
 location_potential = {
@@ -120,7 +122,7 @@ unique_production_methods = {
 modifier = {
     local_population_growth = -0.00015
     local_migration_attraction = 0.010
-    local_iron_output_modifier = 0.035
+    local_iron_output_modifier = 0.02625
 }
 }
 # <<< eu5-building-pipeline:iron_mine_deep:building

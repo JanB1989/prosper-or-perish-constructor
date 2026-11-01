@@ -399,6 +399,12 @@ def _build_parser() -> argparse.ArgumentParser:
         "Stockpile prices: the goods' raised default prices and pop demand factors from [stockpile_prices] (in_game/common/goods/zz_pp_goods_stockpile_prices.txt).",
         _stockpile,
     )
+    _add_command(
+        subcommands,
+        "tier-lines",
+        "Upgrade lines bound to a raw material: the price, depth and level bonus of each tier from [tier_lines].",
+        _tier_lines,
+    )
     stockpile.add_argument("action", choices=("apply", "check"), help="apply writes the goods file; check reports it off.")
     blockade = _add_command(
         subcommands,
@@ -1354,6 +1360,19 @@ def _stockpile(args: argparse.Namespace, extra: Sequence[str], repo: Path, proje
     return 0 if args.action == "apply" or not changed else 1
 
 
+def _tier_lines(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("tier-lines does not accept extra arguments.")
+    from prosper_or_perish_constructor import tier_lines
+
+    config = tier_lines.load_config(project)
+    for tier in tier_lines.plan(repo, project):
+        depth = f" {tier_lines.cap_name(tier.tier)}" if tier.deepens else ""
+        bonus = "".join(f" {good} +{value} -> {value * config.level_bonus_factor}" for good, value in tier.bonus)
+        print(f"{tier.line:22} {tier.tier} {tier.tag:32} profit {tier.value:6.2f} price {tier.price:5}{depth}{bonus}")
+    return 0
+
+
 def _print_stockpile_check(repo: Path, project: Path) -> None:
     """Build-time summary; printed, not fatal (ppc stockpile apply brings the goods file back in step)."""
     from prosper_or_perish_constructor import stockpile_prices
@@ -1555,6 +1574,16 @@ def _apply_employment_cut(repo: Path, project: Path, mod_root: Path) -> None:
           flush=True)
 
 
+def _apply_tier_lines(repo: Path, project: Path, mod_root: Path) -> None:
+    from prosper_or_perish_constructor import tier_lines
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    result = tier_lines.apply(repo, project, mod_root, vanilla_root(repo, project))
+    missing = f"; not in the mod: {', '.join(result.not_in_mod)}" if result.not_in_mod else ""
+    print(f"Tier lines ([tier_lines]): {result.buildings} buildings in {result.lines} lines, "
+          f"{result.files_changed} files changed{missing}.", flush=True)
+
+
 def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     clock = _StageClock("ppc build")
     try:
@@ -1648,6 +1677,7 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
     _apply_building_footprint(repo, project, mod_root)
     _apply_building_shutdown(repo, project, mod_root)
     _apply_employment_cut(repo, project, mod_root)
+    _apply_tier_lines(repo, project, mod_root)
     if local_free_building_levels_sheet_csv_path(repo).is_file():
         compile_free_building_level_modifiers(repo, mod_root)
     _ensure_farming_capacity_raw_modifier_bridges(repo, mod_root)

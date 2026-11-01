@@ -2,7 +2,8 @@
 iron_mine_improved = {
 is_foreign = no
 increase_per_level_cost = 0.19
-max_levels = rural_building_cap
+price = pp_iron_mine_improved_price
+max_levels = pp_rural_building_cap_tier_1
 pop_type = laborers
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
 category = rgo_building_category
@@ -120,7 +121,7 @@ unique_production_methods = {
 modifier = {
     local_population_growth = -0.00015
     local_migration_attraction = 0.010
-    local_iron_output_modifier = 0.025
+    local_iron_output_modifier = 0.01875
 }
 }
 # <<< eu5-building-pipeline:iron_mine_improved:building

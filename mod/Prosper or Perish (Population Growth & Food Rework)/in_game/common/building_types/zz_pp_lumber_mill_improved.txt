@@ -2,6 +2,7 @@
 lumber_mill_improved = {
 is_foreign = no
 increase_per_level_cost = 0.20
+price = pp_lumber_mill_improved_price
 max_levels = forest_capacity_max_lumber_mill_improved
 pop_type = laborers
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
@@ -13,6 +14,7 @@ town = yes
 city = yes
 megalopolis = yes
 obsolete = water_sawmill
+obsolete = lumber_mill
 build_time = workshop_build_time
 
 location_potential = {

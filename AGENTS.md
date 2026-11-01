@@ -454,6 +454,14 @@
   hippodrome prices and the mod's 55 own building prices. Why: with prices x2 nominal incomes rose (x1.3 at the start, x2
   by 1542) while gold prices stayed, and the AI built faster than population grew (run 06aedac2). A new blueprint price
   needs a line there too.
+- Tier lines (`tier_lines.py`, `[tier_lines]`, finalize pass, `ppc tier-lines` lists them; 2026-11-01, Jan, from run 6ee05b7e):
+  upgrade lines whose lowest tier needs a raw material, + the extras. A researched successor freezes the old tier, and upper
+  tiers cost 4-24x the base for 1.0-1.5x its profit. Each tier's price = profit per level at base prices x 180 months, lowest
+  tier 75-100 gold, higher tier 1.5-2x the tier below (`pp_<tag>_price` in `prices/pp_tier_line_prices.txt`, final gold, NOT
+  in the x1.5 file); own-good level bonus x0.75; tiers on `rural_building_cap` go deeper (second x1.25, third x1.5,
+  `script_values/pp_tier_line_caps.txt`); every tier also names all older tiers as `obsolete`, so a site two tiers behind
+  can upgrade (blueprints keep the direct predecessor only, the pass adds the rest). `increase_per_level_cost` stays. A new
+  line in scope needs no config; a test pins the list of lines. `[tier_lines.price_overrides]` prices four crafts.
 - Not changed: marketplace building caps (vanilla 20-100), tariffs. Engine costs that scale by market / default price
   (unit upkeep and the like) run about 35-50 % lower at normal stocks. Simulation: `~/pp_ai_run/tradesim` (private).
 

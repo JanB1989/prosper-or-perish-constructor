@@ -2,7 +2,8 @@
 lead_mine_cupola_smelting = {
 is_foreign = no
 increase_per_level_cost = 0.19
-max_levels = rural_building_cap
+price = pp_lead_mine_cupola_smelting_price
+max_levels = pp_rural_building_cap_tier_2
 pop_type = laborers
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
 category = rgo_building_category
@@ -13,6 +14,7 @@ town = yes
 city = yes
 megalopolis = yes
 obsolete = lead_mine_bole_smelting
+obsolete = lead_mine
 build_time = manufactory_build_time
 
 location_potential = {
@@ -99,7 +101,7 @@ unique_production_methods = {
 modifier = {
     local_population_growth = -0.00015
     local_migration_attraction = 0.010
-    local_lead_output_modifier = 0.035
+    local_lead_output_modifier = 0.02625
 }
 }
 # <<< eu5-building-pipeline:lead_mine_cupola_smelting:building

@@ -1116,6 +1116,31 @@ slot_label = "Market"
 method_name = "Market Sales"
 method_desc = "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
 
+[tier_lines]
+# Upgrade lines whose lowest tier needs a raw material, + extra_lines - exclude_lines (tier_lines.py, finalize pass; 2026-11-01,
+# Jan, from run 6ee05b7e). A researched successor freezes the old tier, and upper tiers cost 4-24x the base for 1.0-1.5x its
+# profit, so these lines stopped growing where people could afford them. `ppc tier-lines` lists the result. Gold is final,
+# zz_pp_building_price_stockpile.txt does not touch these keys.
+payback_months = 180    # a tier's worth = its profit per level at base goods prices x this
+base_min = 75           # lowest tier: its worth, inside these
+base_max = 100
+step_min = 1.5          # higher tier: its worth, inside these multiples of the tier below
+step_max = 2.0
+round_to = 25
+extra_lines = ["sand_pit", "fiber_crops_farm", "horse_breeders"]  # no raw material gate, same problem
+# charcoal: its recipe loses money at base prices and it already takes 65 % of clay demand; villages and camels: AI weights
+exclude_lines = ["charcoal_maker", "mining_village", "fishing_village", "forest_village", "camel_herders"]
+level_bonus_factor = 0.75   # the line's own local_<good>_output_modifier per level, where positive
+depth_per_tier = 0.25       # tiers on rural_building_cap: second tier x1.25, third x1.5 (Jan: higher tiers go deeper)
+
+[tier_lines.price_overrides]
+# Crafts without an AI upgrade weight whose upgrade hardly got built (levels at 1837, old tier vs upgrade): the price step
+# back to about the profit step. Only the price changes.
+winery_manufactory = 600    # 1,709 vs 32, was 1200
+paper_manufactory = 600     # 4,084 vs 406, was 1200
+dyes_workshop = 300         # 1,428 vs 48, was 600
+saltpeter_workshop = 300    # 1,023 vs 68, was 600
+
 [stockpile_prices]
 # Branch stockpile-prices (2026-10-31, Jan): prices follow the market stockpile. in_game/common/goods/
 # zz_pp_goods_stockpile_prices.txt (`ppc stockpile apply`) raises every default_market_price x base_price_mult except the

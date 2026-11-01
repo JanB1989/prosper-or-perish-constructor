@@ -2,7 +2,8 @@
 sand_washery = {
 is_foreign = no
 increase_per_level_cost = 0.10
-max_levels = rural_building_cap
+price = pp_sand_washery_price
+max_levels = pp_rural_building_cap_tier_1
 pop_type = laborers
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
 category = rgo_building_category

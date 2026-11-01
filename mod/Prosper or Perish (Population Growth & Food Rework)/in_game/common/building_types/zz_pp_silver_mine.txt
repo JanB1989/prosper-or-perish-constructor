@@ -2,6 +2,7 @@
 silver_mine = {
 is_foreign = no
 increase_per_level_cost = 0.21
+price = pp_silver_mine_price
 max_levels = rural_building_cap
 pop_type = laborers
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1
@@ -106,7 +107,7 @@ unique_production_methods = {
 modifier = {
     local_population_growth = -0.00015
     local_migration_attraction = 0.010
-    local_silver_output_modifier = 0.015
+    local_silver_output_modifier = 0.01125
 }
 }
 # <<< eu5-building-pipeline:silver_mine:building

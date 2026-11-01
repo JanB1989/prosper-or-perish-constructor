@@ -2347,12 +2347,15 @@ def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -
     # [building_price_brake]: non-raw producers carry their own doubled price, every other site the age price
     from prosper_or_perish_constructor.goods_categories import _price_brake, accepted_blueprint_paths_by_building
 
+    from prosper_or_perish_constructor import tier_lines
+
     _factor, braked = _price_brake(ROOT / "constructor.toml", accepted_blueprint_paths_by_building(ROOT))
+    tiered = {tier.tag for tier in tier_lines.plan(ROOT, ROOT / "constructor.toml")}
     assert {"cloth_guild", "cookshop", "tools_guild"} <= braked and "mason" not in braked
     for building in scoped_buildings:
         expected = _rendered_employment(buildings[building]["pop_type"], unit(building))
         assert buildings[building]["employment_size"] == expected, building
-        if building in braked:
+        if building in braked or building in tiered:
             assert buildings[building]["price"] == f"pp_{building}_price", building
             assert buildings[building]["price_kind"] == "explicit", building
         else:

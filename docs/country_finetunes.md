@@ -2,6 +2,12 @@
 
 Hand-tuned changes for single countries, one entry each: what and why.
 
+- **Ottomans: a little more towards the Mamluks, North Africa and Arabia, a little less northeast** (2026-11-01, Jan, not
+  tested in game). `area_preferences/pp_conquest_preferences.txt` REPLACEs vanilla's aims, which keep vanilla's steps: Levant
+  + Egypt, Maghreb, Hejaz + Yemen modifier 1 -> 2; Caucasus and Pontic shore 1 -> 0.5. New `pp_ottoman_less_northeast`
+  (-0.25 on the steppe, Russia, Ruthenia, the Urals, West Siberia), given at start in `on_action/pp_country_finetunes.txt`.
+  Why: run 67859be2, 1,429 locations by 1819, mostly north and east, none in Egypt or the Maghreb. Jan: minor numbers
+  only, no new gates, so the late `pp_ottoman_power_base` switch stays as it is.
 - **Prussia is easier to form** (2026-10-28, Jan, not tested in game). `formable_countries/pp_formable_adjustments.txt`
   TRY_REPLACEs vanilla `PRU_f`: no nobles' Land Rights privilege required, nobles estate power above 10 % (vanilla
   20 %), clergy estate power below 35 % (vanilla 20 %); German culture, 75 % of `prussia_area`, peace and the military

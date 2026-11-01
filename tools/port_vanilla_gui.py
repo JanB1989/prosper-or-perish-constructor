@@ -108,12 +108,17 @@ INTERNAL_GOODS = ("offset", "logistics", "local_food", "province_food_sales")
 INTERNAL_GOODS_TEMPLATE = "pp_hide_internal_goods"
 INTERNAL_GOODS_GUI = "shared/pp_internal_goods.gui"
 MARKET_GOODS = "panels/market/market_goods.gui"
-# the market's stockpile column (port_market_stockpile): cell = bar + 4 spacing + amount; it grows by 77 over vanilla's
-# 15, and the header buttons after it give that back so each stays over its column (the row's columns spread the
-# space left, so the far ones barely move)
+MARKET_VIEW = "selected_market_view.gui"
+# the market panel (port_market_view): 80 wider than the vanilla left panel, for the stockpile column below
+MARKET_PANEL_WIDTH = 650
+# the market's stockpile column (port_market_stockpile): cell = bar + 4 spacing + amount (vanilla: 15)
 STOCKPILE_CELL_WIDTH = 92
 STOCKPILE_BAR_WIDTH = 46
-STOCKPILE_HEADER_WIDTHS = {"stockpile": 105, "goods_local_balance": 40, "goods_exports": 48, "goods_balance": 53}
+# the goods list's header buttons (fixed widths, laid out in a row; vanilla 35/35/55/70/70/75/45): each icon over its
+# column, set from the row measured in game (2026-11-01) and the room the wider panel adds (the row's columns spread it)
+MARKET_HEADER_WIDTHS = {"stockpile": 105, "goods_local_balance": 50, "goods_imports": 86, "goods_exports": 50,
+                        "goods_balance": 89, "market_price": 41}
+MARKET_ACTIONS_WIDTH = 4 * 30 + 3 * 3   # the row's four action buttons (build, raw goods, import, export), spacing 3
 # file -> (datamodel of a goods list, context that gives the row its Goods; "" when the items are Goods)
 INTERNAL_GOODS_LISTS: dict[str, tuple[tuple[str, str], ...]] = {
     MARKET_GOODS: (
@@ -356,26 +361,43 @@ def port_build_location(vanilla: str) -> str:
     t = _constructions_text(t, what)
     t = _value_columns(t, what)
     t = _payback_order(t, what)
-    # the market picker: vanilla's select_menu_left with its offset moved to the panel's new right edge
-    m = re.search(r"(?m)^select_menu_left = \{\n", t)
-    if not m:
-        raise ValueError(f"{what}: no market picker")
+    t = _market_picker_beside(t, "build_location_select_market", BUILD_PANEL_WIDTH, "build panel", what)
+    return _mark_width(t, "BuildInLocationLateralView", BUILD_PANEL_WIDTH, what)
+
+
+def _market_picker_beside(t: str, name: str, x: int, panel: str, what: str) -> str:
+    """The panel's market picker: vanilla's select_menu_left (offset 570) as a window opened at ``x``, the right edge of
+    the wider panel."""
+    found = list(re.finditer(r"(?m)^select_menu_left = \{\n", t))
+    if len(found) != 1:
+        raise ValueError(f"{what}: expected 1 market picker, found {len(found)}")
+    m = found[0]
     end = _block_end(t, t.index("{", m.start()))
     body = t[m.end():end - 1]
     body = _once(r'^\tdatacontext = "\[GetQuickVisibleMarkets\(Player\.Self\)\]"\n', "", body, what)
-    setup = re.search(r'(?m)^\tblockoverride "menu_setup" \{\n[ \t]*name = "build_location_select_market"\n\t\}\n\n?', body)
+    setup = re.search(rf'(?m)^\tblockoverride "menu_setup" \{{\n[ \t]*name = "{name}"\n\t\}}\n\n?', body)
     if not setup:
         raise ValueError(f"{what}: the market picker has no menu_setup name")
     body = body[:setup.start()] + body[setup.end():]
-    x = BUILD_PANEL_WIDTH
-    picker = ("window = { # PP: vanilla select_menu_left (select_menu.gui), opened beside the wider build panel\n"
-              '\tname = "build_location_select_market"\n\tdatacontext = "[GetQuickVisibleMarkets(Player.Self)]"\n'
+    picker = (f"window = {{ # PP: vanilla select_menu_left (select_menu.gui), opened beside the wider {panel}\n"
+              f'\tname = "{name}"\n\tdatacontext = "[GetQuickVisibleMarkets(Player.Self)]"\n'
               "\tmovable = no\n\tvisible_at_creation = no\n\talwaystransparent = no\n\tallow_outside = yes\n"
               f"\tlayer = sidemenu\n\tparentanchor = left\n\tposition = {{ {x} 180 }}\n\n"
               f"\tstate = {{\n\t\tname = _show\n\t\tduration = 0.133\n\t\tposition_x = {x}\n\t\talpha = 1\n\t}}\n"
               f"\tstate = {{\n\t\tname = _hide\n\t\tduration = 0.133\n\t\tposition_x = {x - 45}\n\t\talpha = 0\n\t}}\n\n"
               "\tusing = bg_sidemenu\n\n\tselect_menu_layout = {\n" + _indent(body.strip("\n") + "\n", 1) + "\t}\n}")
-    return _mark_width(t[:m.start()] + picker + t[end:], "BuildInLocationLateralView", BUILD_PANEL_WIDTH, what)
+    return t[:m.start()] + picker + t[end:]
+
+
+def port_market_view(t: str) -> str:
+    """The market panel, wider than the 570 of the left lateral views so the goods rows keep their action buttons
+    beside the readable stockpile column (port_market_stockpile; Jan, 2026-11-01: the last button sat under the
+    scrollbar). Its market picker and the shared search filter menu open at its new right edge."""
+    what = "vanilla market view"
+    t = _once(r'^(lateralview = \{\n\tname = "selected_market_view"\n)',
+              rf"\1\tsize = {{ {MARKET_PANEL_WIDTH} 100% }} # PP: wider than the vanilla left panel (570)\n", t, what)
+    t = _market_picker_beside(t, "market_view_select_market", MARKET_PANEL_WIDTH, "market panel", what)
+    return _mark_width(t, "SelectedMarketLateralView", MARKET_PANEL_WIDTH, what)
 
 
 def payback_years(cost: str, income: str) -> str:
@@ -750,7 +772,7 @@ def port_select_search_filter(t: str) -> str:
     body = body[:setup.start()] + body[setup.end():]
     vars_ = "SelectSearchFilter.AccessSearchBar.Manager.Vars"
     position = "'(CVector2f)570,180'"
-    for width in sorted({BUILD_PANEL_WIDTH, BUILDING_VIEW_WIDTH}):
+    for width in sorted({BUILD_PANEL_WIDTH, BUILDING_VIEW_WIDTH, MARKET_PANEL_WIDTH}):
         position = f"Select_CVector2f({vars_}.HasValue('{PANEL_WIDTH_VARIABLE}', '{width}'), '(CVector2f){width},180', {position})"
     window = ("window = { # PP: vanilla select_menu_left (select_menu.gui), opened beside the PP panels that are wider than 570\n"
               '\tname = "select_search_filter_left"\n'
@@ -993,8 +1015,11 @@ def _hide_table(text: str, model: str, what: str) -> str:
 
 def port_market_stockpile(text: str, what: str = f"vanilla {MARKET_GOODS}") -> str:
     """The market's goods rows: vanilla's 5 px vertical stockpile bar becomes a wide bar with the fill in whole percent
-    on it and the stockpile amount beside it (Jan, 2026-11-01: the thin bar was unreadable). The header buttons after
-    it give back what the wider column takes (STOCKPILE_HEADER_WIDTHS)."""
+    on it and the stockpile amount beside it (Jan, 2026-11-01: the thin bar was unreadable; the panel is wider for it,
+    port_market_view), the header buttons follow the columns (MARKET_HEADER_WIDTHS), and the row's action buttons
+    are hidden in observer mode in a box that keeps their room: their checks (CanGoodGetProduced and the like) run
+    the producing buildings' country_potential on the observer's empty country and logged about a thousand script
+    errors a second while the panel was open."""
     opener = list(re.finditer(r"(?m)^([ \t]*)widget = \{\n[ \t]*size = \{15 22\}\n", text))
     if len(opener) != 1:
         raise ValueError(f"{what}: expected 1 stockpile bar widget, found {len(opener)}")
@@ -1025,10 +1050,22 @@ def port_market_stockpile(text: str, what: str = f"vanilla {MARKET_GOODS}") -> s
             "\t\t\tautoresize = no\n\t\t\tsize = { -1 20 }\n\t\t\talign = right|nobaseline\n\t\t\tusing = Font_Size_Small\n"
             f"\t\t\ttext = \"[{amount}|0]\"\n\t\t\tdefault_format = \"#weak\"\n\t\t}}\n\t}}\n}}\n")
     text = text[:opener[0].start()] + _indent(cell, len(ind)).rstrip("\n") + text[end:]
-    for name, width in STOCKPILE_HEADER_WIDTHS.items():
+    for name, width in MARKET_HEADER_WIDTHS.items():
         text = _once(rf'(name = "{name}"\n[ \t]*layoutpolicy_vertical = expanding\n[ \t]*size = \{{ )\d+( -1 \}})',
                      rf"\g<1>{width}\g<2>", text, what)
-    return text
+    # the action buttons: in a box of their size, shown to a player only
+    actions = list(re.finditer(r"(?m)^([ \t]*)hbox = \{\n[ \t]*spacing = 3\n[ \t]*header_button_left = \{\n", text))
+    if len(actions) != 1:
+        raise ValueError(f"{what}: expected 1 row of action buttons, found {len(actions)}")
+    ind = actions[0].group(1)
+    end = _block_end(text, text.index("{", actions[0].start()))
+    buttons = text[actions[0].start():end]
+    if buttons.count("header_button_left = {") != 4 or "CanGoodGetProduced" not in buttons:
+        raise ValueError(f"{what}: the action buttons are not vanilla's four")
+    buttons = buttons.replace("hbox = {\n", "hbox = {\n" + ind + '\tvisible = "[Not(IsPlayerObserver)]"\n', 1)
+    box = (f"{ind}widget = {{ # PP: the actions only for a player (an observer's empty country fails their checks)\n"
+           f"{ind}\tsize = {{ {MARKET_ACTIONS_WIDTH} 30 }}\n\n" + _indent(buttons, 1) + f"\n{ind}}}")
+    return text[:actions[0].start()] + box + text[end:]
 
 
 def port_internal_goods(vanilla: str, rel: str) -> str:
@@ -1056,6 +1093,7 @@ def ported(vanilla_game: Path, mod_root: Path) -> dict[str, str | None]:
     out: dict[str, str | None] = {}
     for rel, scope in FOOD_GAUGE_FILES.items():
         out[rel] = port_food_gauges(_read(vanilla_game / GUI / rel), scope)
+    out[MARKET_VIEW] = port_market_view(out[MARKET_VIEW])
     out[LOCATION_PRODUCTION] = port_location_production(out[LOCATION_PRODUCTION])
     out[LOCATION_ROWS_GUI] = port_location_rows(_read(vanilla_game / GUI / PRODUCTION))
     out[BUILDING_VIEW] = port_building_view(_read(vanilla_game / GUI / BUILDING_VIEW))

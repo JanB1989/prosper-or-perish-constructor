@@ -544,7 +544,7 @@ window = { # PP: vanilla select_menu_left (select_menu.gui), opened beside the P
 	allow_outside = yes
 	layer = sidemenu
 	parentanchor = left
-	position = "[Select_CVector2f(SelectSearchFilter.AccessSearchBar.Manager.Vars.HasValue('pp_panel_width', '990'), '(CVector2f)990,180', Select_CVector2f(SelectSearchFilter.AccessSearchBar.Manager.Vars.HasValue('pp_panel_width', '760'), '(CVector2f)760,180', '(CVector2f)570,180'))]"
+	position = "[Select_CVector2f(SelectSearchFilter.AccessSearchBar.Manager.Vars.HasValue('pp_panel_width', '990'), '(CVector2f)990,180', Select_CVector2f(SelectSearchFilter.AccessSearchBar.Manager.Vars.HasValue('pp_panel_width', '760'), '(CVector2f)760,180', Select_CVector2f(SelectSearchFilter.AccessSearchBar.Manager.Vars.HasValue('pp_panel_width', '650'), '(CVector2f)650,180', '(CVector2f)570,180')))]"
 
 	state = {
 		name = _show

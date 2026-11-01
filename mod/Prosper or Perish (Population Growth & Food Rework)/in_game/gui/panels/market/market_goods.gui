@@ -373,154 +373,159 @@
 					}
 				}
 
-				hbox = {
-					spacing = 3
-					header_button_left = {
-						size = { 30 30 }
-						blockoverride "button_icon_stretch_sprite" {}
-						blockoverride "header_button_frame_inner" {visible = no}
-						blockoverride "header_button_icon_size" { size = { 30 30 } }
-						blockoverride "header_button_text_layout" {}
-						blockoverride "icon_overlay" {}
-						blockoverride "icon_texture" {
-							texture = "[GetConceptTexture('building')]"
-							texture_density = 2
-						}
+				widget = { # PP: the actions only for a player (an observer's empty country fails their checks)
+					size = { 129 30 }
 
-						enabled = "[And(CanGoodGetProduced(GoodsMarketEntry.GetGoods), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+					hbox = {
+						visible = "[Not(IsPlayerObserver)]"
+						spacing = 3
+						header_button_left = {
+							size = { 30 30 }
+							blockoverride "button_icon_stretch_sprite" {}
+							blockoverride "header_button_frame_inner" {visible = no}
+							blockoverride "header_button_icon_size" { size = { 30 30 } }
+							blockoverride "header_button_text_layout" {}
+							blockoverride "icon_overlay" {}
+							blockoverride "icon_texture" {
+								texture = "[GetConceptTexture('building')]"
+								texture_density = 2
+							}
+
+							enabled = "[And(CanGoodGetProduced(GoodsMarketEntry.GetGoods), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
 					
-						tooltipwidget = {
-							BasicFunctionalTooltip = {}
-						}
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							visible = "[CanGoodGetProduced(GoodsMarketEntry.GetGoods)]"
-							enabled = "[CanGoodGetProduced(GoodsMarketEntry.GetGoods)]"
-							title = "MARKET_BUILDING_SHORTCUT"
-							on_action = "[SetUIFocusMarket(SelectedMarketLateralView.GetMarket.Self)]"
-							on_action = "[OpenLateralViewWithFilter('production', GoodsMarketEntry.GetGoods.GetKey)]"
-						}
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							visible = "[Not(CanGoodGetProduced(GoodsMarketEntry.GetGoods))]"
-							enabled = no
-							title = "MARKET_BUILDING_SHORTCUT_DISABLED"
-						}
-
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							visible = "[Not(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
-							enabled = no
-							title = "MARKET_BUILDING_SHORTCUT_FOREIGN"
-						}
-					}
-
-					# expand raw goods NEW
-					header_button_left = {
-						size = { 30 30 }
-						blockoverride "button_icon_stretch_sprite" {}
-						blockoverride "header_button_frame_inner" {visible = no}
-						blockoverride "header_button_icon_size" { size = { 30 30 } }
-						blockoverride "header_button_text_layout" {}
-						blockoverride "icon_overlay" {}
-						blockoverride "icon_texture" {
-							texture = "gfx/interface/icons/map_modes/raw_material.dds"
-							texture_density = 2
-						}
-
-						enabled = "[And(SelectedMarketLateralView.CanExpandRGO(GoodsMarketEntry.GetGoods), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
-					
-						tooltipwidget = {
-							BasicFunctionalTooltip = {}
-						}
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							visible = "[And(GoodsMarketEntry.GetGoods.IsRawMaterial, GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
-							enabled = "[SelectedMarketLateralView.CanExpandRGO(GoodsMarketEntry.GetGoods)]"
-							title = "MARKET_RGO_SHORTCUT"
-							on_action = "[ShowExpandRawGoodLocationsViewWithMarketAndGoods(SelectedMarketLateralView.GetMarket.Self, GoodsMarketEntry.GetGoods, '(bool)yes')]"
-						}
-
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							visible = "[And(Not(GoodsMarketEntry.GetGoods.IsRawMaterial), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
-							enabled = no
-							title = "MARKET_RGO_SHORTCUT_DISABLED"
-						}
-
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							visible = "[Not(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
-							enabled = no
-							title = "MARKET_BUILDING_SHORTCUT_FOREIGN"
-						}
-					}
-
-			
-					# import button new
-					header_button_left = {
-						size = { 30 30 }
-						blockoverride "button_icon_stretch_sprite" {}
-						blockoverride "header_button_frame_inner" {visible = no}
-						blockoverride "header_button_icon_size" { size = { 30 30 } }
-						blockoverride "header_button_text_layout" {}
-						blockoverride "icon_overlay" {}
-						blockoverride "icon_texture" {
-							texture = "gfx/interface/icons/flat_icons/trade_market/import.dds"
-							texture_density = 2
-						}
-
-						datacontext = "[SelectedMarketLateralView.GetMarket]"
-
-						enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
-
-						tooltipwidget = {
-							BasicFunctionalTooltip = {}
-						}
-						action_tooltip = {
+							tooltipwidget = {
+								BasicFunctionalTooltip = {}
+							}
+							action_tooltip = {
 								click_type = left
 								click_mode = single
-								title = "MARKET_CTXMENU_CREATE_IMPORT_ORDER"
+								visible = "[CanGoodGetProduced(GoodsMarketEntry.GetGoods)]"
+								enabled = "[CanGoodGetProduced(GoodsMarketEntry.GetGoods)]"
+								title = "MARKET_BUILDING_SHORTCUT"
+								on_action = "[SetUIFocusMarket(SelectedMarketLateralView.GetMarket.Self)]"
+								on_action = "[OpenLateralViewWithFilter('production', GoodsMarketEntry.GetGoods.GetKey)]"
+							}
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								visible = "[Not(CanGoodGetProduced(GoodsMarketEntry.GetGoods))]"
+								enabled = no
+								title = "MARKET_BUILDING_SHORTCUT_DISABLED"
+							}
+
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								visible = "[Not(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+								enabled = no
+								title = "MARKET_BUILDING_SHORTCUT_FOREIGN"
+							}
+						}
+
+						# expand raw goods NEW
+						header_button_left = {
+							size = { 30 30 }
+							blockoverride "button_icon_stretch_sprite" {}
+							blockoverride "header_button_frame_inner" {visible = no}
+							blockoverride "header_button_icon_size" { size = { 30 30 } }
+							blockoverride "header_button_text_layout" {}
+							blockoverride "icon_overlay" {}
+							blockoverride "icon_texture" {
+								texture = "gfx/interface/icons/map_modes/raw_material.dds"
+								texture_density = 2
+							}
+
+							enabled = "[And(SelectedMarketLateralView.CanExpandRGO(GoodsMarketEntry.GetGoods), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+					
+							tooltipwidget = {
+								BasicFunctionalTooltip = {}
+							}
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								visible = "[And(GoodsMarketEntry.GetGoods.IsRawMaterial, GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+								enabled = "[SelectedMarketLateralView.CanExpandRGO(GoodsMarketEntry.GetGoods)]"
+								title = "MARKET_RGO_SHORTCUT"
+								on_action = "[ShowExpandRawGoodLocationsViewWithMarketAndGoods(SelectedMarketLateralView.GetMarket.Self, GoodsMarketEntry.GetGoods, '(bool)yes')]"
+							}
+
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								visible = "[And(Not(GoodsMarketEntry.GetGoods.IsRawMaterial), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+								enabled = no
+								title = "MARKET_RGO_SHORTCUT_DISABLED"
+							}
+
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								visible = "[Not(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+								enabled = no
+								title = "MARKET_BUILDING_SHORTCUT_FOREIGN"
+							}
+						}
+
+			
+						# import button new
+						header_button_left = {
+							size = { 30 30 }
+							blockoverride "button_icon_stretch_sprite" {}
+							blockoverride "header_button_frame_inner" {visible = no}
+							blockoverride "header_button_icon_size" { size = { 30 30 } }
+							blockoverride "header_button_text_layout" {}
+							blockoverride "icon_overlay" {}
+							blockoverride "icon_texture" {
+								texture = "gfx/interface/icons/flat_icons/trade_market/import.dds"
+								texture_density = 2
+							}
+
+							datacontext = "[SelectedMarketLateralView.GetMarket]"
+
+							enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
+
+							tooltipwidget = {
+								BasicFunctionalTooltip = {}
+							}
+							action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "MARKET_CTXMENU_CREATE_IMPORT_ORDER"
+									enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
+									conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+									on_action = "[CreateImportOrderForGoodInMarket(GoodsMarketEntry.GetGoods,SelectedMarketLateralView.GetMarket.Self)]"
+
+							}
+						}
+
+						# export button new
+						header_button_left = {
+							size = { 30 30 }
+							blockoverride "button_icon_stretch_sprite" {}
+							blockoverride "header_button_frame_inner" {visible = no}
+							blockoverride "header_button_icon_size" { size = { 30 30 } }
+							blockoverride "header_button_text_layout" {}
+							blockoverride "icon_overlay" {}
+							blockoverride "icon_texture" {
+								texture = "gfx/interface/icons/flat_icons/trade_market/export.dds"
+								texture_density = 2
+							}
+
+							datacontext = "[SelectedMarketLateralView.GetMarket]"
+
+							enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
+
+							tooltipwidget = {
+								BasicFunctionalTooltip = {}
+							}
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								title = "MARKET_CTXMENU_CREATE_EXPORT_ORDER"
 								enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
 								conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
-								on_action = "[CreateImportOrderForGoodInMarket(GoodsMarketEntry.GetGoods,SelectedMarketLateralView.GetMarket.Self)]"
-
-						}
-					}
-
-					# export button new
-					header_button_left = {
-						size = { 30 30 }
-						blockoverride "button_icon_stretch_sprite" {}
-						blockoverride "header_button_frame_inner" {visible = no}
-						blockoverride "header_button_icon_size" { size = { 30 30 } }
-						blockoverride "header_button_text_layout" {}
-						blockoverride "icon_overlay" {}
-						blockoverride "icon_texture" {
-							texture = "gfx/interface/icons/flat_icons/trade_market/export.dds"
-							texture_density = 2
-						}
-
-						datacontext = "[SelectedMarketLateralView.GetMarket]"
-
-						enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
-
-						tooltipwidget = {
-							BasicFunctionalTooltip = {}
-						}
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							title = "MARKET_CTXMENU_CREATE_EXPORT_ORDER"
-							enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
-							conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
-							on_action = "[CreateExportOrderForGoodInMarket(GoodsMarketEntry.GetGoods,SelectedMarketLateralView.GetMarket.Self)]"
+								on_action = "[CreateExportOrderForGoodInMarket(GoodsMarketEntry.GetGoods,SelectedMarketLateralView.GetMarket.Self)]"
+							}
 						}
 					}
 				}
@@ -1041,31 +1046,31 @@ types MarketOverview {
 				sort_by_key_button = {
 					name = "goods_local_balance"
 					layoutpolicy_vertical = expanding
-					size = { 40 -1 }
+					size = { 50 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "goods_imports"
 					layoutpolicy_vertical = expanding
-					size = { 70 -1 }
+					size = { 86 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "goods_exports"
 					layoutpolicy_vertical = expanding
-					size = { 48 -1 }
+					size = { 50 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "goods_balance"
 					layoutpolicy_vertical = expanding
-					size = { 53 -1 }
+					size = { 89 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "market_price"
 					layoutpolicy_vertical = expanding
-					size = { 45 -1 }
+					size = { 41 -1 }
 				}
 
 				sort_by_key_button = {

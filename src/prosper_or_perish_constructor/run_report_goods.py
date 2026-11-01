@@ -648,6 +648,7 @@ def index_payload(run: RunData, built: dict[str, Any], recipes: Recipes, dataset
             regions.append({"id": key, "name": "Seas and other" if key == OTHER_REGION else titleize(key), "color": OTHER_GREY})
     return {
         "run": run.name, "years": list(run.years), "saves": built["saves"], "regions": regions, "goods": goods,
+        "priceScale": {"cheap": run.price_scale.cheap, "normal": run.price_scale.normal, "dear": run.price_scale.dear, "note": run.price_scale.note},
         "goodOrder": good_order, "groups": [{"key": k, "label": label, "color": colour} for k, label, colour in PAGE_GROUPS],
         "buildings": buildings, "methods": methods,
         "demand": [{"id": b, "name": label, "color": colour} for b, label, colour in DEMAND_BUCKETS],

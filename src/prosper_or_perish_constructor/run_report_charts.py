@@ -5,7 +5,7 @@ The page (`run_report.write_page`) renders them with Apache ECharts from one JSO
 - a chart is ``{key, section, title, caption, height, views: [{label, unit, option, fields?}]}``; ``option`` is an
   ECharts option in which strings ``fn:<name>[:<arg>]`` stand for the page's formatter functions (JSON carries no
   functions): ``fn:axis:<unit>`` (axis tooltip), ``fn:heat`` (heatmap tooltip from the view's ``fields``),
-  ``fn:year``, ``fn:unit:<unit>``, ``fn:pow2`` (log2 colour scale labels);
+  ``fn:year``, ``fn:unit:<unit>``, ``fn:pow2[:<centre>]`` (log2 colour scale labels, around ``centre``);
 - a table is ``{key, section, title, caption, columns, snapshots, rows, sort}``: ``rows[i]`` are the rows of save
   ``i`` (one list per row, in column order), the page shows the last save and offers the others;
 - ``goods`` is ``{good_id: {name, group, icon?}}`` (icon: page-relative PNG) in display order and ``groups`` the goods
@@ -21,7 +21,10 @@ from __future__ import annotations
 
 import math
 import statistics
+import tomllib
+from dataclasses import dataclass
 from datetime import datetime
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import polars as pl
@@ -402,6 +405,23 @@ def _goods_world(run: RunData) -> pl.DataFrame:
     )
 
 
+@dataclass(frozen=True)
+class PriceScale:
+    """The report's price colours, as price / default: neutral at ``normal``, full blue at ``cheap``, full red at ``dear``."""
+
+    cheap: float = 0.8
+    normal: float = 1.0
+    dear: float = 1.25
+    note: str = ""  # what the normal price means, for the captions
+
+
+def load_price_scale(project: Path) -> PriceScale:
+    """[stockpile_prices.report_price_scale], or the plain scale around the default price."""
+    raw = tomllib.loads(Path(project).read_text(encoding="utf-8-sig"))
+    section = (raw.get("stockpile_prices") or {}).get("report_price_scale")
+    return PriceScale(float(section["cheap"]), float(section["normal"]), float(section["dear"]), str(section.get("note", ""))) if section else PriceScale()
+
+
 HEAT_ROW = 20  # px per good in the goods heatmaps (fits the 18 px icon)
 
 
@@ -452,6 +472,7 @@ def _heat_data(world: pl.DataFrame, x: pl.DataFrame, goods: list[tuple[str, str,
 def price_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dict[str, Any]]:
     xs = x["x"].to_list()
     labels = x["label"].to_list()
+    scale = run.price_scale
     goods = _goods_rows(world, run, x)
     ylabels = [good for good, _, _ in goods]
     first = world.join(x.head(1).select("snapshot_id"), on="snapshot_id").select("good_id", pl.col("price_ratio").alias("first_ratio"))
@@ -460,14 +481,15 @@ def price_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
               pl.col("markets_short")]
     tip = [["Price ÷ base", 3, "ratio"], ["Change since first save", 4, "ratio"], ["World production", 5, "num"],
            ["World use", 6, "num"], ["Markets short", 7, "count"]]
-    price = heat_option(labels, ylabels, _heat_data(w, x, goods, pl.col("price_ratio").log(2), fields, -1.0, 1.0),
-                        vmin=-1.0, vmax=1.0, colors=PRICE_HEAT, scale_label="fn:pow2", goods_axis=True)
+    price = heat_option(labels, ylabels, _heat_data(w, x, goods, (pl.col("price_ratio") / scale.normal).log(2), fields, -1.0, 1.0),
+                        vmin=-1.0, vmax=1.0, colors=PRICE_HEAT, scale_label=f"fn:pow2:{scale.normal:g}", goods_axis=True)
     change = heat_option(labels, ylabels,
                          _heat_data(w, x, goods, (pl.col("price_ratio") / pl.col("first_ratio")).log(2), fields, -1.0, 1.0),
                          vmin=-1.0, vmax=1.0, colors=PRICE_HEAT, scale_label="fn:pow2", goods_axis=True)
     charts = [chart(
         "price_heatmap", "prices", "Prices of every good",
-        "World price of each good (markets weighted by traded volume) as a multiple of its base price; red = dearer, "
+        "World price of each good (markets weighted by traded volume) as a multiple of its base price, the colours centred on "
+        f"the normal price {scale.normal:g}×{' (' + scale.note + ')' if scale.note else ''}: red = dearer, "
         "blue = cheaper. Goods grouped (the coloured bar: farming, mining, gathering/hunting/forestry, manufactured), "
         "the most produced first; hover a cell or an icon for the name, click an icon for the good's spread of price and "
         "stock over the markets (goods page). Mod bookkeeping goods (offset, logistics, province food, labour) are left out.",
@@ -487,11 +509,11 @@ def price_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
     groups = [(k, label, colour) for k, label, colour, _ in GOODS_GROUPS if k in idx]
     charts.append(chart(
         "price_index", "prices", "Prices, use and production by goods group",
-        "Price index: price ÷ base of every good, weighted by its world use at base price. Use ÷ production: what pops, "
+        "Price index: price ÷ base of every good, weighted by its world use at base price (dashed: the normal price). Use ÷ production: what pops, "
         "buildings, construction and armies take (without trade between markets) against what is produced; above 1 "
         "the world uses more than it makes (stocks run down, prices climb). Production at base prices.",
         [view("Price index", "ratio", line_option(xs, [_series("All goods", _aligned(total, "index", x), WORLD, width=3)] + [
-            _series(label, idx[k], colour) for k, label, colour in groups], unit="ratio", y_min=None, reference=1.0)),
+            _series(label, idx[k], colour) for k, label, colour in groups], unit="ratio", y_min=None, reference=scale.normal)),
          view("Use ÷ production", "ratio", line_option(xs, [_series("All goods", _aligned(total, "use_ratio", x), WORLD, width=3)] + [
              _series(label, use[k], colour) for k, label, colour in groups], unit="ratio", y_min=None, reference=1.0)),
          view("Production value", "gold", line_option(xs, [_series(label, pv[k], colour) for k, label, colour in groups],

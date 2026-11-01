@@ -1127,6 +1127,14 @@ method_desc = "A few hands carry a small share of the produce straight to market
 base_price_mult = 1.6
 keep_base_price = ["offset", "logistics", "local_food", "manual_labor", "province_food_sales"]
 
+[stockpile_prices.report_price_scale]
+# The run report's price colours, as price / default (2026-11-01, Jan): 1x is an empty stock here, not a normal price. Where
+# supply = demand: normal 3 months of stock, cheap 12 months, dear an empty stock. Without this table the report uses 0.8 / 1 / 1.25.
+cheap = 0.38
+normal = 0.63
+dear = 1.0
+note = "about 3 months of stock; at 1× the stock is empty"
+
 [stockpile_prices.pop_demand]
 # A good's pop demand x this, on every pop type (demand_multiply in the same file; 2026-11-01, Jan). The engine's price brake
 # on pop demand has no setting per good or pop type and only acts above the default price, so this is the tuning per good.

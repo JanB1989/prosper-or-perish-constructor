@@ -7,6 +7,8 @@ import pytest
 
 from prosper_or_perish_constructor import run_report as rr
 
+ROOT_PROJECT = Path(__file__).resolve().parents[1] / "constructor.toml"
+
 
 def _fake_report(root: Path, playthrough: str, name: str) -> Path:
     report = root / playthrough
@@ -252,6 +254,31 @@ def _trade_run():
     return rr.RunData("run", "Run", snapshots, locations, levels, by_category, countries, market_goods, markets,
                       trades, economy, rr.Labels(goods={"cloth": "Cloth", "wheat": "Wheat"}),
                       good_icons={"cloth": "icons/cloth.png"})
+
+
+def test_price_colours_centre_on_the_normal_price(tmp_path: Path) -> None:
+    """On stockpile prices 1x is an empty stock: the heatmap's neutral colour is the configured normal price, its legend and
+    tooltip still read price / base, and a project without the table keeps the plain scale around the base price."""
+    import math
+
+    from prosper_or_perish_constructor.run_report_charts import PriceScale, build_payload, load_price_scale
+
+    run = _trade_run()
+    plain = {c["key"]: c for c in build_payload(run)["charts"]}["price_heatmap"]["views"][0]
+    assert plain["option"]["visualMap"]["formatter"] == "fn:pow2:1"
+    run.price_scale = PriceScale(0.38, 0.63, 1.0, "about 3 months of stock")
+    chart = {c["key"]: c for c in build_payload(run)["charts"]}["price_heatmap"]
+    centred = chart["views"][0]["option"]
+    assert centred["visualMap"]["formatter"] == "fn:pow2:0.63" and "0.63×" in chart["caption"] and "about 3 months" in chart["caption"]
+    rows = centred["series"][0]["data"]
+    assert rows
+    for row in rows:
+        assert row[2] == pytest.approx(max(-1.0, min(1.0, math.log2(row[3] / 0.63))), abs=0.002)  # row[3]: the real price / base
+
+    assert load_price_scale(ROOT_PROJECT) == PriceScale(0.38, 0.63, 1.0, "about 3 months of stock; at 1× the stock is empty")
+    bare = tmp_path / "constructor.toml"
+    bare.write_text("[stockpile_prices]\nbase_price_mult = 1.5\n", encoding="utf-8")
+    assert load_price_scale(bare) == PriceScale()
 
 
 def test_payload_splits_peasants_filters_regions_and_ranks_countries() -> None:

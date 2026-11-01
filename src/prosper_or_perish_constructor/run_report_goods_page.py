@@ -25,7 +25,7 @@ body{margin:0}
 .glist h4{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:16px 6px 4px;display:flex;align-items:center;gap:6px}
 .glist h4 i{display:inline-block;width:10px;height:10px;border-radius:2px}
 .glist a{display:flex;align-items:center;gap:8px;padding:3px 6px;border-radius:6px;color:var(--ink);text-decoration:none;font-size:13px;line-height:22px}
-.glist a:hover{background:var(--chip)} .glist a.on{background:var(--accent);color:#fff} .glist a.on .badge{color:#fff}
+.glist a:hover{background:var(--chip)} .glist a.on{background:var(--accent);color:#fff} .glist a.on .badge{color:#fff!important}
 .glist img{width:20px;height:20px} .glist .noicon{display:inline-block;width:20px}
 .glist h4 .gshare{margin-left:auto;font-variant-numeric:tabular-nums;letter-spacing:0;text-transform:none}
 .glist .share{margin-left:auto;font-size:11px;font-variant-numeric:tabular-nums;color:var(--ink);min-width:38px;text-align:right}
@@ -33,7 +33,6 @@ body{margin:0}
 .glist .fill{font-size:11px;font-variant-numeric:tabular-nums;min-width:30px;text-align:right}
 .glist a.on .share{color:#fff} .glist a.on .fill{color:#fff!important} .glist .legend{display:flex;gap:8px;font-size:11px;color:var(--muted);margin:8px 6px 0}
 .glist .legend span:first-child{margin-left:auto;min-width:38px;text-align:right} .glist .legend span:nth-child(2){min-width:30px;text-align:right} .glist .legend span:last-child{min-width:36px;text-align:right}
-.badge.hi{color:var(--neg)!important} .badge.lo{color:var(--pos)!important}
 .main{padding:0 22px 48px;min-width:0}
 .bar{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;position:sticky;top:0;background:var(--bg);padding:12px 0 10px;z-index:5;border-bottom:1px solid var(--line);margin-bottom:16px;font-size:13px;color:var(--muted)}
 .bar select,.bar button{font:inherit;font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink)}
@@ -433,12 +432,12 @@ GOODS_JS = r"""
          {type: 'line', name: 'Price ÷ base', yAxisIndex: 1, showSymbol: false, color: INK, lineStyle: {width: 1.5, type: 'dashed'},
           data: e.price.map((v, j) => [xs[j], v == null ? null : v / goodPrice(g)])}]},
       bandView(e.bands && e.bands.price, '#2a78d6', v => v.toFixed(2) + '×',
-               {type: 'value', min: 0, axisLabel: {formatter: v => v.toFixed(1) + '×'}}, 1),
+               {type: 'value', min: 0, axisLabel: {formatter: v => v.toFixed(1) + '×'}}, [IX.priceScale.normal, 1]),
       bandView(e.bands && e.bands.fill, '#1baf7a', v => Math.round(v * 100) + ' %',
                {type: 'value', min: 0, max: 1, axisLabel: {formatter: v => Math.round(v * 100) + ' %'}}, null),
     ];
     const option = views[S.tv];
-    option.series[0].markLine = option.ref == null ? marker : {...marker, data: [...marker.data, {yAxis: option.ref}]};
+    option.series[0].markLine = option.ref == null ? marker : {...marker, data: [...marker.data, ...[...new Set(option.ref)].map(yAxis => ({yAxis}))]};
     delete option.ref;
     return option;
     // the spread over markets: median line, middle half and 80 % as stacked areas on an invisible 10 % line
@@ -540,15 +539,20 @@ GOODS_JS = r"""
     return {share: made.map(v => total > 0 ? v / total : 0), price, fill, total};
   }
   const fillText = f => f < 0.005 ? '<1%' : Math.round(f * 100) + '%';
+  const mixColor = (token, share) => `color-mix(in srgb,var(${token}) ${Math.round(Math.min(1, Math.max(0, share)) * 100)}%,var(--muted))`;
   // like the price beside it: red = scarce (0 % empty), neutral at 50 %, blue = glut (100 % full)
-  const fillColor = f => f < 0.5 ? `color-mix(in srgb,var(--neg) ${Math.round((1 - 2 * f) * 100)}%,var(--muted))`
-    : `color-mix(in srgb,var(--pos) ${Math.round((2 * f - 1) * 100)}%,var(--muted))`;
+  const fillColor = f => f < 0.5 ? mixColor('--neg', 1 - 2 * f) : mixColor('--pos', 2 * f - 1);
+  // around the normal price, not the base price: blue = cheap, neutral = normal, red = dear (IX.priceScale)
+  const priceColor = p => {
+    const s = IX.priceScale;
+    return p < s.normal ? mixColor('--pos', (s.normal - p) / (s.normal - s.cheap)) : mixColor('--neg', (p - s.normal) / (s.dear - s.normal));
+  };
   const shareText = f => f >= 0.0995 ? (f * 100).toFixed(0) + '%' : f >= 0.00095 ? (f * 100).toFixed(1) + '%' : f > 0 ? '<0.1%' : '–';
   function buildList(D) {
     const q = $('#search').value.trim().toLowerCase();
     const where = S.r >= 0 ? IX.regions[S.r].name : 'the world';
     const O = D ? outputShares(D) : null;
-    let h = `<div class=legend title="Share: the good's production value at base price ÷ the value of everything produced in ${esc(where)}. Stock: the markets' stock of the good ÷ their stockpile cap, on average, each market weighted by its supply + demand of the good; 0 % empty (red), 100 % full (blue). Price: price ÷ base price, weighted the same way."><span>share</span><span>stock</span><span>price</span></div>`;
+    let h = `<div class=legend title="Share: the good's production value at base price ÷ the value of everything produced in ${esc(where)}. Stock: the markets' stock of the good ÷ their stockpile cap, on average, each market weighted by its supply + demand of the good; 0 % empty (red), 100 % full (blue). Price: price ÷ base price, weighted the same way; neutral colour at the normal price ${IX.priceScale.normal}×${IX.priceScale.note ? ' (' + esc(IX.priceScale.note) + ')' : ''}, red dearer, blue cheaper."><span>share</span><span>stock</span><span>price</span></div>`;
     for (const grp of IX.groups) {
       let items = IX.goodOrder.filter(i => IX.goods[i].group === grp.key && (!q || IX.goods[i].name.toLowerCase().includes(q)));
       if (!items.length) continue;
@@ -557,9 +561,8 @@ GOODS_JS = r"""
       h += `<h4><i style="background:${grp.color}"></i>${esc(grp.label)}<span class=gshare title="share of all output in ${esc(where)}">${gshare == null ? '' : shareText(gshare)}</span></h4>`;
       for (const i of items) {
         const pr = O ? O.price[i] : null, sh = O ? O.share[i] : null, fl = O ? O.fill[i] : null;
-        const cls = pr == null ? '' : pr > 1.25 ? ' hi' : pr < 0.8 ? ' lo' : '';
         h += `<a href="#" data-i="${i}" class="${i === S.g ? 'on' : ''}" title="${esc(goodName(i))}: ${sh == null ? '' : shareText(sh) + ' of all output in ' + esc(where) + ', '}${fl == null ? '' : 'stock ' + fillText(fl) + ' of the cap, '}price ${pr == null ? '–' : pr.toFixed(2) + '× base'}">` +
-          `${imgHtml(i) || '<span class=noicon></span>'}<span>${esc(IX.goods[i].name)}</span><span class=share>${sh == null ? '' : shareText(sh)}</span><span class=fill${fl == null ? '' : ` style="color:${fillColor(fl)}"`}>${fl == null ? '' : fillText(fl)}</span><span class="badge${cls}">${pr == null ? '' : pr.toFixed(2) + '×'}</span></a>`;
+          `${imgHtml(i) || '<span class=noicon></span>'}<span>${esc(IX.goods[i].name)}</span><span class=share>${sh == null ? '' : shareText(sh)}</span><span class=fill${fl == null ? '' : ` style="color:${fillColor(fl)}"`}>${fl == null ? '' : fillText(fl)}</span><span class=badge${pr == null ? '' : ` style="color:${priceColor(pr)}"`}>${pr == null ? '' : pr.toFixed(2) + '×'}</span></a>`;
       }
     }
     $('#goodlist').innerHTML = h || '<div class=empty>No good matches.</div>';
@@ -729,7 +732,7 @@ def goods_page_html(run_name: str, years: tuple[int, int]) -> str:
     <div id=time class=chart style="height:400px"></div>
     <p class=caption>World totals per save, the eight largest producers or users and the rest. Price and stock across markets: how the
     markets that trade the good spread, each weighted by its supply + demand of it; the line is the median, the dark band the middle
-    half and the light band 80 % of that volume. Price ÷ the good's base price (dashed: 1×); stock = the market's stock of the good ÷
+    half and the light band 80 % of that volume. Price ÷ the good's base price (dashed: the normal price and 1×); stock = the market's stock of the good ÷
     its stockpile cap (0 % empty, 100 % full). The dashed vertical line marks the chosen save.</p></section>
   <section class=card><header><h3>By world region</h3></header><div id=regions class=chart style="height:320px"></div>
     <p class=caption>Value made and used per world region in the chosen save. Click a region to show only it (again for the world).</p></section>

@@ -117,6 +117,7 @@ def test_goods_page_reads_its_data_files() -> None:
     assert "goods/index.js" in page and "goods/summary.js" in page and "id=goodlist" in page and "type: 'sankey'" in page
     assert "Price across markets" in page and "Stock across markets" in page and "e.bands.fill" in page and "&tv=${S.tv}" in page
     assert "<span>stock</span>" in page and "O.fill[i]" in page
+    assert "priceColor(pr)" in page and "' hi'" not in page  # prices coloured around the normal price, no fixed thresholds
 
 
 def test_consumption_splits_into_minting_slaves_and_orders(tmp_path: Path) -> None:

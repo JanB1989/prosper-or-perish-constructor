@@ -48,10 +48,12 @@ from PIL import Image, ImageDraw, ImageFont
 from prosper_or_perish_constructor.run_report_charts import (
     DUMMY_GOODS,
     GOODS_GROUPS,
+    PriceScale,
     build_payload,
     burgher_trade_share,
     goods_group_expr,
     land_region_expr,
+    load_price_scale,
     region_trade,
     region_trade_totals,
     speed_average,
@@ -149,6 +151,7 @@ class RunData:
     # living where it is present); locations then carry `institutions` (count, null in snapshots without the table)
     institutions: pl.DataFrame = field(default_factory=pl.DataFrame)
     good_icons: dict[str, str] = field(default_factory=dict)  # good_id -> page-relative PNG (write_good_icons)
+    price_scale: PriceScale = field(default_factory=PriceScale)  # the price colours (load_price_scale)
     # engine tables town_rights and industry_promotions (empty for snapshots ingested before the dataset kept them)
     town_rights: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, town_right_id, location_id, type
     promotions: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, promotion_id, country_id, area, type
@@ -1546,7 +1549,7 @@ PAGE_JS = r"""
       if (name === 'heat') return heatTip(view, root);
       if (name === 'year') return v => String(new Date(v).getUTCFullYear());
       if (name === 'unit') return v => fmt(v, arg || view.unit);
-      if (name === 'pow2') return v => Math.pow(2, v).toFixed(Math.abs(v) > 1.5 ? 1 : 2) + '×';
+      if (name === 'pow2') return v => (Math.pow(2, v) * Number(arg || 1)).toFixed(Math.abs(v) > 1.5 ? 1 : 2) + '×';
       if (name === 'pow2n') return v => String(Math.round(Math.pow(2, v)));
       if (name === 'goodlabel') return goodLabel;
       if (name === 'goodrich') return goodRich();
@@ -1842,6 +1845,7 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
     prepared = prepare_goods_flows(playthrough, run_snapshots(dataset, playthrough)["snapshot_id"].to_list(), repo=repo,
                                    project=project, dataset=dataset, cache=goods_cache, log=log)
     run = load_run(dataset, playthrough, labels=load_labels(repo, project), improvements=_improvement_model(repo, project, log))
+    run.price_scale = load_price_scale(project)
     if run.urban_saves:
         run.urban = load_urban_catalog(repo, project)
     log(f"run {run.name} ({run.playthrough_id}): {run.snapshots.height} saves {run.years[0]}-{run.years[1]}")

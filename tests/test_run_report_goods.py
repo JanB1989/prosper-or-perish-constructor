@@ -115,8 +115,9 @@ def test_goods_page_reads_its_data_files() -> None:
 
     page = goods_page_html("Run x", (1337, 1400))
     assert "goods/index.js" in page and "goods/summary.js" in page and "id=goodlist" in page and "type: 'sankey'" in page
-    assert "Price across markets" in page and "Stock across markets" in page and "e.bands.fill" in page and "&tv=${S.tv}" in page
-    assert "<span>stock</span>" in page and "O.fill[i]" in page
+    assert "Price across markets" in page and "Months across markets" in page and "Fill across markets" in page and "&tv=${S.tv}" in page
+    assert "e.bands.months" in page and "e.bands.fill" in page
+    assert "<span>months</span>" in page and "O.months[i]" in page and "monthsColor(mo)" in page
     assert "priceColor(pr)" in page and "' hi'" not in page  # prices coloured around the normal price, no fixed thresholds
 
 
@@ -138,20 +139,28 @@ def test_consumption_splits_into_minting_slaves_and_orders(tmp_path: Path) -> No
     assert rg.encode_save(flows, rg.Index())["d"]  # every bucket has an index
 
 
-def test_market_figures_carry_the_stock_fill(tmp_path: Path) -> None:
-    """Stock ÷ the market's cap x volume per good and region (the page adds regions up, then divides by the volume); the
-    cap is the bookkeeping goods' largest stock, and without one the fill stays unknown instead of reading empty."""
+def test_market_figures_carry_the_months_stored(tmp_path: Path) -> None:
+    """Stock ÷ demand of the typical market per good, in each region and in the world: the median weighted by demand, so a
+    full market that hardly uses the good does not lift it, and a good nobody wants has none instead of reading empty."""
     dataset = _dataset(tmp_path)
-    assert rg.save_flows(dataset, "run", "s1", _recipes())["market"]["fv"].null_count() == 4
     path = dataset / "tables" / "market_goods" / "playthrough_id=run" / "s1.parquet"
     goods = pl.read_parquet(path)
-    offset = goods.filter(pl.col("good_id") == "cloth").with_columns(pl.lit("offset").alias("good_id"), pl.Series("stockpile", [20.0, 40.0]))
-    pl.concat([goods, offset]).write_parquet(path)
+    # linen: Paris uses 10 and holds 20 (2 months), London uses 0.1 and sits on 500; hemp: nobody wants it
+    extra = pl.concat([
+        goods.filter(pl.col("good_id") == "cloth").with_columns(pl.lit("linen").alias("good_id"), pl.Series("demand", [10.0, 0.1]), pl.Series("stockpile", [20.0, 500.0])),
+        goods.head(1).with_columns(pl.lit("hemp").alias("good_id"), pl.lit(0.0).alias("demand"), pl.lit(9.0).alias("stockpile")),
+    ])
+    pl.concat([goods, extra]).write_parquet(path)
     flows = rg.save_flows(dataset, "run", "s1", _recipes())
-    market = {(r["good_id"], r["region"]): r["fv"] for r in flows["market"].iter_rows(named=True)}
-    assert market[("cloth", "western_europe")] == pytest.approx(5 / 20 * 5)  # Paris: 5 cloth, cap 20, volume 5
-    assert market[("wool", "western_europe")] == 0 and ("offset", "western_europe") not in market
-    assert all(len(row) == 11 for row in rg.encode_save(flows, rg.Index())["m"])
+    region = {(r["good_id"], r["region"]): r["months"] for r in flows["market"].iter_rows(named=True)}
+    assert region[("cloth", "western_europe")] == pytest.approx(2.5)  # Paris: 5 cloth, demand 2
+    assert region[("cloth", "british_isles")] == 0
+    assert region[("hemp", "western_europe")] is None
+    world = dict(flows["stock_months"].iter_rows())
+    assert world["linen"] == pytest.approx(2.0)  # world stock ÷ world demand would read 51
+    assert world["cloth"] == pytest.approx(2.5) and "hemp" not in world
+    encoded = rg.encode_save(flows, rg.Index())
+    assert all(len(row) == 11 for row in encoded["m"]) and len(encoded["w"]) == len(world)
 
 
 def test_market_bands_weight_markets_by_volume_and_read_the_stock_cap() -> None:
@@ -170,8 +179,9 @@ def test_market_bands_weight_markets_by_volume_and_read_the_stock_cap() -> None:
     bands = rg.market_bands(mg, ["s1", "s2", "s3"])
     assert bands["cloth"]["price"][0] == [0.5, 1, 1, 1, 2]  # 10 % / 70 % / 20 % of the volume at 0.5x / 1x / 2x
     assert bands["cloth"]["fill"][0] == [0, 0.5, 0.5, 0.5, 1]  # 300 of a 200 cap counts as full
+    assert bands["cloth"]["months"][0] == [0, 1.43, 1.43, 1.43, 24]  # 50 of 35 demand; 30 months read as the chart's top
     assert bands["cloth"]["price"][1] == [1.5] * 5 and bands["cloth"]["price"][2] is None
-    assert bands["wool"]["price"][0] == [0.5] * 5 and bands["wool"]["fill"][0] is None
+    assert bands["wool"]["price"][0] == [0.5] * 5 and bands["wool"]["fill"][0] is None and bands["wool"]["months"][0] == [5] * 5
     assert rg.market_bands(mg.drop("stock_cap"), ["s1"]) == {}
 
 

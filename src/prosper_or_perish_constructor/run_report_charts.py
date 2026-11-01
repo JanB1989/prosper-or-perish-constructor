@@ -407,19 +407,26 @@ def _goods_world(run: RunData) -> pl.DataFrame:
 
 @dataclass(frozen=True)
 class PriceScale:
-    """The report's price colours, as price / default: neutral at ``normal``, full blue at ``cheap``, full red at ``dear``."""
+    """The report's price colours, as price / default: neutral at ``normal``, full blue at ``cheap``, full red at ``dear``.
+    The months stored beside them read the same way: full red at an empty stock, neutral at ``normal_months``, full blue at
+    ``cheap_months``."""
 
     cheap: float = 0.8
     normal: float = 1.0
     dear: float = 1.25
     note: str = ""  # what the normal price means, for the captions
+    normal_months: float = 3.0
+    cheap_months: float = 12.0
 
 
 def load_price_scale(project: Path) -> PriceScale:
     """[stockpile_prices.report_price_scale], or the plain scale around the default price."""
     raw = tomllib.loads(Path(project).read_text(encoding="utf-8-sig"))
     section = (raw.get("stockpile_prices") or {}).get("report_price_scale")
-    return PriceScale(float(section["cheap"]), float(section["normal"]), float(section["dear"]), str(section.get("note", ""))) if section else PriceScale()
+    if not section:
+        return PriceScale()
+    return PriceScale(float(section["cheap"]), float(section["normal"]), float(section["dear"]), str(section.get("note", "")),
+                      float(section.get("normal_months", PriceScale.normal_months)), float(section.get("cheap_months", PriceScale.cheap_months)))
 
 
 HEAT_ROW = 20  # px per good in the goods heatmaps (fits the 18 px icon)

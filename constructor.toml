@@ -1134,6 +1134,8 @@ cheap = 0.38
 normal = 0.63
 dear = 1.0
 note = "about 3 months of stock; at 1× the stock is empty"
+normal_months = 3
+cheap_months = 12
 
 [stockpile_prices.pop_demand]
 # A good's pop demand x this, on every pop type (demand_multiply in the same file; 2026-11-01, Jan). The engine's price brake

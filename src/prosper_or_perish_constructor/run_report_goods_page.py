@@ -30,8 +30,8 @@ body{margin:0}
 .glist h4 .gshare{margin-left:auto;font-variant-numeric:tabular-nums;letter-spacing:0;text-transform:none}
 .glist .share{margin-left:auto;font-size:11px;font-variant-numeric:tabular-nums;color:var(--ink);min-width:38px;text-align:right}
 .glist .badge{font-size:11px;font-variant-numeric:tabular-nums;color:var(--muted);min-width:36px;text-align:right}
-.glist .fill{font-size:11px;font-variant-numeric:tabular-nums;min-width:30px;text-align:right}
-.glist a.on .share{color:#fff} .glist a.on .fill{color:#fff!important} .glist .legend{display:flex;gap:8px;font-size:11px;color:var(--muted);margin:8px 6px 0}
+.glist .months{font-size:11px;font-variant-numeric:tabular-nums;min-width:30px;text-align:right}
+.glist a.on .share{color:#fff} .glist a.on .months{color:#fff!important} .glist .legend{display:flex;gap:8px;font-size:11px;color:var(--muted);margin:8px 6px 0}
 .glist .legend span:first-child{margin-left:auto;min-width:38px;text-align:right} .glist .legend span:nth-child(2){min-width:30px;text-align:right} .glist .legend span:last-child{min-width:36px;text-align:right}
 .main{padding:0 22px 48px;min-width:0}
 .bar{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;position:sticky;top:0;background:var(--bg);padding:12px 0 10px;z-index:5;border-bottom:1px solid var(--line);margin-bottom:16px;font-size:13px;color:var(--muted)}
@@ -116,7 +116,9 @@ GOODS_JS = r"""
       for (const r of by[g].m) { pv += r[2] || 0; vol += r[3] || 0; }
       if (vol > 0) price[g] = pv / vol / goodPrice(g);
     }
-    return {by, mIn, mOut, price};
+    const months = new Array(n).fill(null);
+    for (const r of raw.w || []) months[r[0]] = r[1];
+    return {by, mIn, mOut, price, months};
   }
   function loadSave(i) {
     if (!SAVES.has(i)) SAVES.set(i, loadData(IX.saves[i].file).then(prepare));
@@ -433,7 +435,9 @@ GOODS_JS = r"""
           data: e.price.map((v, j) => [xs[j], v == null ? null : v / goodPrice(g)])}]},
       bandView(e.bands && e.bands.price, '#2a78d6', v => v.toFixed(2) + '×',
                {type: 'value', min: 0, axisLabel: {formatter: v => v.toFixed(1) + '×'}}, [IX.priceScale.normal, 1]),
-      bandView(e.bands && e.bands.fill, '#1baf7a', v => Math.round(v * 100) + ' %',
+      bandView(e.bands && e.bands.months, '#1baf7a', v => monthsText(v) + ' months',
+               {type: 'value', min: 0, axisLabel: {formatter: v => v + ' mo'}}, [IX.priceScale.normalMonths]),
+      bandView(e.bands && e.bands.fill, '#8c8c88', v => Math.round(v * 100) + ' %',
                {type: 'value', min: 0, max: 1, axisLabel: {formatter: v => Math.round(v * 100) + ' %'}}, null),
     ];
     const option = views[S.tv];
@@ -525,23 +529,25 @@ GOODS_JS = r"""
   }
   // each good's share of all output (production value at base price) and its price ÷ base, in the chosen region
   function outputShares(D) {
-    const n = IX.goods.length, made = new Array(n).fill(0), price = new Array(n).fill(null), fill = new Array(n).fill(null);
+    const n = IX.goods.length, made = new Array(n).fill(0), price = new Array(n).fill(null), months = S.r >= 0 ? new Array(n).fill(null) : D.months;
     let total = 0;
     for (let g = 0; g < n; g++) {
       const pg = goodPrice(g);
       for (const r of D.by[g].p) if (inRegion(r[3])) made[g] += (r[4] || 0) * pg;
       total += made[g];
-      let pv = 0, vol = 0, fv = null;
-      for (const r of D.by[g].m) if (inRegion(r[1])) { pv += r[2] || 0; vol += r[3] || 0; if (r[10] != null) fv = (fv || 0) + r[10]; }
+      let pv = 0, vol = 0;
+      for (const r of D.by[g].m) if (inRegion(r[1])) { pv += r[2] || 0; vol += r[3] || 0; if (S.r >= 0) months[g] = r[10]; }
       if (vol > 0) price[g] = pv / vol / pg;
-      if (vol > 0 && fv != null) fill[g] = fv / vol;
     }
-    return {share: made.map(v => total > 0 ? v / total : 0), price, fill, total};
+    return {share: made.map(v => total > 0 ? v / total : 0), price, months, total};
   }
-  const fillText = f => f < 0.005 ? '<1%' : Math.round(f * 100) + '%';
+  const monthsText = m => m >= 99.5 ? '99+' : m >= 9.95 ? m.toFixed(0) : m.toFixed(1);
   const mixColor = (token, share) => `color-mix(in srgb,var(${token}) ${Math.round(Math.min(1, Math.max(0, share)) * 100)}%,var(--muted))`;
-  // like the price beside it: red = scarce (0 % empty), neutral at 50 %, blue = glut (100 % full)
-  const fillColor = f => f < 0.5 ? mixColor('--neg', 1 - 2 * f) : mixColor('--pos', 2 * f - 1);
+  // like the price beside it: red = scarce (empty), neutral at the normal months stored, blue = glut (IX.priceScale)
+  const monthsColor = m => {
+    const s = IX.priceScale;
+    return m < s.normalMonths ? mixColor('--neg', 1 - m / s.normalMonths) : mixColor('--pos', (m - s.normalMonths) / (s.cheapMonths - s.normalMonths));
+  };
   // around the normal price, not the base price: blue = cheap, neutral = normal, red = dear (IX.priceScale)
   const priceColor = p => {
     const s = IX.priceScale;
@@ -552,7 +558,7 @@ GOODS_JS = r"""
     const q = $('#search').value.trim().toLowerCase();
     const where = S.r >= 0 ? IX.regions[S.r].name : 'the world';
     const O = D ? outputShares(D) : null;
-    let h = `<div class=legend title="Share: the good's production value at base price ÷ the value of everything produced in ${esc(where)}. Stock: the markets' stock of the good ÷ their stockpile cap, on average, each market weighted by its supply + demand of the good; 0 % empty (red), 100 % full (blue). Price: price ÷ base price, weighted the same way; neutral colour at the normal price ${IX.priceScale.normal}×${IX.priceScale.note ? ' (' + esc(IX.priceScale.note) + ')' : ''}, red dearer, blue cheaper."><span>share</span><span>stock</span><span>price</span></div>`;
+    let h = `<div class=legend title="Share: the good's production value at base price ÷ the value of everything produced in ${esc(where)}. Months: how many months of its demand the typical market holds in stock: the market's stock ÷ its demand, the median of the markets weighted by demand, so stock in markets that hardly use the good barely counts; red empty, neutral at ${IX.priceScale.normalMonths} months, blue from ${IX.priceScale.cheapMonths}. Price: price ÷ base price, each market weighted by its supply + demand of the good; neutral colour at the normal price ${IX.priceScale.normal}×${IX.priceScale.note ? ' (' + esc(IX.priceScale.note) + ')' : ''}, red dearer, blue cheaper."><span>share</span><span>months</span><span>price</span></div>`;
     for (const grp of IX.groups) {
       let items = IX.goodOrder.filter(i => IX.goods[i].group === grp.key && (!q || IX.goods[i].name.toLowerCase().includes(q)));
       if (!items.length) continue;
@@ -560,9 +566,9 @@ GOODS_JS = r"""
       const gshare = O ? IX.goodOrder.filter(i => IX.goods[i].group === grp.key).reduce((a, i) => a + O.share[i], 0) : null;
       h += `<h4><i style="background:${grp.color}"></i>${esc(grp.label)}<span class=gshare title="share of all output in ${esc(where)}">${gshare == null ? '' : shareText(gshare)}</span></h4>`;
       for (const i of items) {
-        const pr = O ? O.price[i] : null, sh = O ? O.share[i] : null, fl = O ? O.fill[i] : null;
-        h += `<a href="#" data-i="${i}" class="${i === S.g ? 'on' : ''}" title="${esc(goodName(i))}: ${sh == null ? '' : shareText(sh) + ' of all output in ' + esc(where) + ', '}${fl == null ? '' : 'stock ' + fillText(fl) + ' of the cap, '}price ${pr == null ? '–' : pr.toFixed(2) + '× base'}">` +
-          `${imgHtml(i) || '<span class=noicon></span>'}<span>${esc(IX.goods[i].name)}</span><span class=share>${sh == null ? '' : shareText(sh)}</span><span class=fill${fl == null ? '' : ` style="color:${fillColor(fl)}"`}>${fl == null ? '' : fillText(fl)}</span><span class=badge${pr == null ? '' : ` style="color:${priceColor(pr)}"`}>${pr == null ? '' : pr.toFixed(2) + '×'}</span></a>`;
+        const pr = O ? O.price[i] : null, sh = O ? O.share[i] : null, mo = O ? O.months[i] : null;
+        h += `<a href="#" data-i="${i}" class="${i === S.g ? 'on' : ''}" title="${esc(goodName(i))}: ${sh == null ? '' : shareText(sh) + ' of all output in ' + esc(where) + ', '}${mo == null ? '' : monthsText(mo) + ' months stored in the typical market, '}price ${pr == null ? '–' : pr.toFixed(2) + '× base'}">` +
+          `${imgHtml(i) || '<span class=noicon></span>'}<span>${esc(IX.goods[i].name)}</span><span class=share>${sh == null ? '' : shareText(sh)}</span><span class=months${mo == null ? '' : ` style="color:${monthsColor(mo)}"`}>${mo == null ? '' : monthsText(mo)}</span><span class=badge${pr == null ? '' : ` style="color:${priceColor(pr)}"`}>${pr == null ? '' : pr.toFixed(2) + '×'}</span></a>`;
       }
     }
     $('#goodlist').innerHTML = h || '<div class=empty>No good matches.</div>';
@@ -580,7 +586,7 @@ GOODS_JS = r"""
       ['Price ÷ base', ratio(priceRatio), `base price ${num(pg)} gold`],
       ['Output ÷ recipe', ratio(X.efficiency), 'buildings, roughly: efficiency, modifiers, inputs, access'],
       ['Markets', `${X.mk.short} short`, `${X.mk.surplus} in surplus of ${X.mk.markets}`],
-      ['Stockpile', num(X.mk.stock), 'in the markets'],
+      ['Months stored', O.months[X.g] == null ? '–' : monthsText(O.months[X.g]), `in the typical market · ${num(X.mk.stock)} in stock in all`],
     ];
     if (S.r >= 0) t.push(['Trade with other regions', `${num(X.imports - X.exports)} net`, `${num(X.imports)} in · ${num(X.exports)} out per month`]);
     return t.map(([a, b, c]) => `<div class=tile><div class=label>${esc(a)}</div><div class=value>${esc(b)}</div><div class=sub>${esc(c)}</div></div>`).join('');
@@ -728,12 +734,13 @@ def goods_page_html(run_name: str, years: tuple[int, int]) -> str:
       new units), roads, minting (gold, silver and copper, by each country's coin law), slaves for slave RGOs, religious orders and
       government (bureaucracy, colonial charters). Got: what they received ÷ what they wanted.</p></section>
   </div>
-  <section class=card><header><h3>Over the run</h3><div class=views id=timeviews><button type=button>Producers</button><button type=button>Users</button><button type=button>Made, used, price</button><button type=button>Price across markets</button><button type=button>Stock across markets</button></div></header>
+  <section class=card><header><h3>Over the run</h3><div class=views id=timeviews><button type=button>Producers</button><button type=button>Users</button><button type=button>Made, used, price</button><button type=button>Price across markets</button><button type=button>Months across markets</button><button type=button>Fill across markets</button></div></header>
     <div id=time class=chart style="height:400px"></div>
-    <p class=caption>World totals per save, the eight largest producers or users and the rest. Price and stock across markets: how the
-    markets that trade the good spread, each weighted by its supply + demand of it; the line is the median, the dark band the middle
-    half and the light band 80 % of that volume. Price ÷ the good's base price (dashed: the normal price and 1×); stock = the market's stock of the good ÷
-    its stockpile cap (0 % empty, 100 % full). The dashed vertical line marks the chosen save.</p></section>
+    <p class=caption>World totals per save, the eight largest producers or users and the rest. Across markets: how the markets that trade
+    the good spread; the line is the median, the dark band the middle half and the light band 80 % of the markets, each weighted by its
+    demand (months) or its supply + demand of the good (price, fill). Price ÷ the good's base price (dashed: the normal price and 1×); months = the
+    market's stock of the good ÷ its demand, 24 or more reads 24 (dashed: normal); fill = its stock ÷ its stockpile cap, the same cap for every
+    good, so it shows which markets are full, not how long a stock lasts. The dashed vertical line marks the chosen save.</p></section>
   <section class=card><header><h3>By world region</h3></header><div id=regions class=chart style="height:320px"></div>
     <p class=caption>Value made and used per world region in the chosen save. Click a region to show only it (again for the world).</p></section>
 </div>

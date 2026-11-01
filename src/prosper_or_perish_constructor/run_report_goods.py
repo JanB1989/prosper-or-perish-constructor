@@ -8,10 +8,11 @@
   recipe], building inputs ``c`` [good, building, method, region, wanted, received, recipe], other demand ``d``
   [good, bucket, region, wanted, received], trade and other supply ``s`` [good, bucket, region, amount], market
   figures ``m`` [good, region, price x volume, volume, supply, demand, stockpile, markets short, markets in surplus,
-  markets, stock fill x volume] and trade between world regions ``x`` [good, region, imports, exports] (the trade routes that ran and
-  cross the region's border); amounts are goods per month, indices point into the index lists (-1 = none);
+  markets, months stored], months stored in the world ``w`` [good, months] and trade between world regions ``x`` [good,
+  region, imports, exports] (the trade routes that ran and cross the region's border); amounts are goods per month,
+  indices point into the index lists (-1 = none); months stored = the typical market's stock ÷ its demand (`_weighted_median`);
 - `goods/summary.js`: per good and save the world production, use and price, production / use by building type,
-  and the spread over markets of the price and the stock fill (`market_bands`), for the charts over the run.
+  and the spread over markets of the price, the months stored and the stock fill (`market_bands`), for the charts over the run.
 
 How production is split. A market's totals per good are exact (`supplied_Production`, `demanded_Building`,
 `taken_Building`). A good's `base_production` x the market's idle peasants (thousands) is part of that production
@@ -48,7 +49,7 @@ from prosper_or_perish_constructor.run_report_charts import (
 if TYPE_CHECKING:
     from prosper_or_perish_constructor.run_report import RunData
 
-CACHE_VERSION = "goods-7"
+CACHE_VERSION = "goods-8"
 RGO = "rgo"  # pseudo building of the RGO rows
 OTHER = "_other"  # pseudo building for market totals no recipe explains
 IDLE = "_idle"  # pseudo building of the goods' base production by idle peasants
@@ -102,7 +103,7 @@ PAGE_GROUP_BY_SUBCATEGORY = {
     "luxury_crafts": "crafts", "books_and_paper": "crafts", "medicinals": "crafts",
     "metal_goods": "industry", "military_goods": "industry", "naval_goods": "industry", "industrial_inputs": "industry",
 }
-FLOW_TABLES = ("producers", "consumers", "demand", "supply", "market", "trade")
+FLOW_TABLES = ("producers", "consumers", "demand", "supply", "market", "stock_months", "trade")
 FACTOR_LIMITS = (0.02, 50.0)
 
 
@@ -189,6 +190,12 @@ def fit_factors(actual: np.ndarray, buildings: np.ndarray, rgos: np.ndarray) -> 
     return (min(high, max(low, fb if fb else 1.0)), min(high, max(low, fr if fr else 1.0)))
 
 
+def _weighted_median(frame: pl.DataFrame, by: list[str], value: str, weight: str) -> pl.DataFrame:
+    """Per group the value that half of the group's weight lies under: the typical market of a good, not the sum of them."""
+    ranked = frame.sort([*by, value]).with_columns((pl.col(weight).cum_sum().over(by) / pl.col(weight).sum().over(by)).alias("_share"))
+    return ranked.group_by(by).agg(pl.col(value).filter(pl.col("_share") >= 0.5 - 1e-9).first())
+
+
 def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes) -> dict[str, Any]:
     """Producers, building inputs, other demand and supply and market figures of one save, keyed by name (the
     caller turns names into indices)."""
@@ -201,9 +208,6 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
         "market_id", "good_id", "price", "default_price", "supply", "demand", "stockpile", "supplied_Production",
         "demanded_Building", "taken_Building", *[f"demanded_{b}" for b in buckets], *[f"taken_{b}" for b in buckets],
         *[f"supplied_{b}" for b in supplies]])
-    # the save keeps no stockpile cap, but the bookkeeping goods always sit at it (as in run_report.load_run)
-    stock_caps = goods.filter(pl.col("good_id").is_in(sorted(DUMMY_GOODS))).group_by("market_id").agg(
-        pl.col("stockpile").max().cast(pl.Float64).alias("stock_cap"))
     goods = goods.filter(~pl.col("good_id").is_in(sorted(DUMMY_GOODS)) & (pl.col("default_price") > 0)).with_columns(
         pl.exclude("market_id", "good_id").cast(pl.Float64).fill_null(0.0))
     locations = read("locations", ["location_id", "slug", "market_id", "raw_material", "rgo_employed", "macro_region",
@@ -319,15 +323,15 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
     supply = pl.concat([
         regional.group_by("good_id", "region").agg(pl.col(f"supplied_{b}").sum().alias("amount")).with_columns(pl.lit(b).alias("bucket"))
         for b in supplies]).filter(pl.col("amount") > 0)
-    market = regional.join(stock_caps, on="market_id", how="left").with_columns((pl.col("supply") + pl.col("demand")).alias("volume")).with_columns(
-        pl.when(pl.col("stock_cap") > 0).then((pl.col("stockpile") / pl.col("stock_cap")).clip(0.0, 1.0) * pl.col("volume")).alias("fv")
-    ).group_by("good_id", "region").agg(
+    stocked = regional.filter(pl.col("demand") > 0).with_columns((pl.col("stockpile") / pl.col("demand")).alias("months"))
+    market = regional.with_columns((pl.col("supply") + pl.col("demand")).alias("volume")).group_by("good_id", "region").agg(
         (pl.col("price") * pl.col("volume")).sum().alias("pv"), pl.col("volume").sum(), pl.col("supply").sum(), pl.col("demand").sum(),
         pl.col("stockpile").sum(),
         ((pl.col("demand") > 0.01) & (pl.col("supply") < 0.9 * pl.col("demand"))).sum().alias("short"),
         ((pl.col("supplied_Production") > 0.01) & (pl.col("supply") > 1.1 * pl.col("demand"))).sum().alias("surplus"),
         ((pl.col("supply") + pl.col("demand")) > 0).sum().alias("markets"),
-        pl.when(pl.col("fv").is_not_null().any()).then(pl.col("fv").sum()).alias("fv"))
+    ).join(_weighted_median(stocked, ["good_id", "region"], "months", "demand"), on=["good_id", "region"], how="left")
+    stock_months = _weighted_median(stocked, ["good_id"], "months", "demand")
     # trade between world regions: the routes that ran, by the regions of their two markets
     routes = read("trades", ["good_id", "from_market", "to_market", "cached", "happened"])
     trade = pl.DataFrame(schema={"good_id": pl.String, "region": pl.String, "imports": pl.Float64, "exports": pl.Float64})
@@ -343,7 +347,7 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
         exports = ran.group_by("good_id", pl.col("from_region").alias("region")).agg(pl.col("cached").sum().alias("exports"))
         trade = imports.join(exports, on=["good_id", "region"], how="full", coalesce=True).with_columns(
             pl.col("imports", "exports").fill_null(0.0)).filter(pl.col("imports") + pl.col("exports") > 0)
-    return {"producers": producers, "consumers": consumers, "demand": demand, "supply": supply, "market": market, "trade": trade}
+    return {"producers": producers, "consumers": consumers, "demand": demand, "supply": supply, "market": market, "stock_months": stock_months, "trade": trade}
 
 
 # --------------------------------------------------------------------------------------------------------
@@ -391,11 +395,12 @@ def encode_save(flows: dict[str, Any], index: Index) -> dict[str, list[list[Any]
     s = [[of("good", r["good_id"]), supplies[r["bucket"]], of("region", r["region"]), _sig(r["amount"])]
          for r in flows["supply"].iter_rows(named=True)]
     m = [[of("good", r["good_id"]), of("region", r["region"]), _sig(r["pv"]), _sig(r["volume"]), _sig(r["supply"]), _sig(r["demand"]),
-          _sig(r["stockpile"]), r["short"], r["surplus"], r["markets"], _sig(r["fv"])]
+          _sig(r["stockpile"]), r["short"], r["surplus"], r["markets"], _sig(r["months"], 3)]
          for r in flows["market"].iter_rows(named=True)]
+    w = [[of("good", r["good_id"]), _sig(r["months"], 3)] for r in flows["stock_months"].iter_rows(named=True)]
     x = [[of("good", r["good_id"]), of("region", r["region"]), _sig(r["imports"]), _sig(r["exports"])]
          for r in flows["trade"].iter_rows(named=True)]
-    return {"p": p, "c": c, "d": d, "s": s, "m": m, "x": x}
+    return {"p": p, "c": c, "d": d, "s": s, "m": m, "w": w, "x": x}
 
 
 def _summary_rows(flows: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -415,29 +420,32 @@ def _summary_rows(flows: dict[str, Any]) -> dict[str, dict[str, Any]]:
 
 
 BAND_SHARES = (0.1, 0.25, 0.5, 0.75, 0.9)
+BAND_MONTHS_MAX = 24.0  # months stored in the charts over the run: a glut reads as this, so the normal range stays readable
 
 
 def market_bands(market_goods: pl.DataFrame, snapshots: list[str]) -> dict[str, dict[str, list[Any]]]:
-    """Per good: {"price": [...], "fill": [...]} with one entry per save, [10, 25, 50, 75, 90 %] of the markets that
-    trade the good (each weighted by its supply + demand of it) or None. Price ÷ the good's default price; fill = the
-    market's stock of the good ÷ its stockpile cap (RunData.market_goods.stock_cap)."""
+    """Per good: {"price": [...], "months": [...], "fill": [...]} with one entry per save, [10, 25, 50, 75, 90 %] of the
+    markets that trade the good or None. Price ÷ the good's default price and fill = the market's stock of the good ÷ its
+    stockpile cap (RunData.market_goods.stock_cap), each market weighted by its supply + demand of the good; months =
+    the market's stock ÷ its demand, up to BAND_MONTHS_MAX, each market weighted by its demand."""
     if market_goods.is_empty() or "stock_cap" not in market_goods.columns:
         return {}
     by = ["snapshot_id", "good_id"]
     frame = market_goods.select(
-        *by, (pl.col("supply") + pl.col("demand")).alias("w"), (pl.col("price") / pl.col("default_price")).alias("price"),
+        *by, (pl.col("supply") + pl.col("demand")).alias("w"), pl.col("demand").alias("d"), (pl.col("price") / pl.col("default_price")).alias("price"),
+        pl.when(pl.col("demand") > 0).then((pl.col("stockpile") / pl.col("demand")).clip(upper_bound=BAND_MONTHS_MAX)).alias("months"),
         pl.when(pl.col("stock_cap") > 0).then((pl.col("stockpile") / pl.col("stock_cap")).clip(0.0, 1.0)).alias("fill"))
     at = {s: i for i, s in enumerate(snapshots)}
     out: dict[str, dict[str, list[Any]]] = {}
-    for value in ("price", "fill"):
-        ranked = frame.filter((pl.col("w") > 0) & pl.col(value).is_finite()).sort([*by, value]).with_columns(
-            (pl.col("w").cum_sum().over(by) / pl.col("w").sum().over(by)).alias("share"))
+    for value, weight in (("price", "w"), ("months", "d"), ("fill", "w")):
+        ranked = frame.filter((pl.col(weight) > 0) & pl.col(value).is_finite()).sort([*by, value]).with_columns(
+            (pl.col(weight).cum_sum().over(by) / pl.col(weight).sum().over(by)).alias("share"))
         bands = ranked.group_by(by).agg(
             *[pl.col(value).filter(pl.col("share") >= q - 1e-9).first().alias(f"q{i}") for i, q in enumerate(BAND_SHARES)])
         for snapshot, good, *values in bands.iter_rows():
             if snapshot in at:
-                entry = out.setdefault(good, {"price": [None] * len(snapshots), "fill": [None] * len(snapshots)})
-                entry[value][at[snapshot]] = [_sig(v, 3) if value == "price" else _sig(round(v, 3), 3) for v in values]
+                entry = out.setdefault(good, {k: [None] * len(snapshots) for k in ("price", "months", "fill")})
+                entry[value][at[snapshot]] = [_sig(round(v, 3), 3) if value == "fill" else _sig(v, 3) for v in values]
     return out
 
 
@@ -648,7 +656,8 @@ def index_payload(run: RunData, built: dict[str, Any], recipes: Recipes, dataset
             regions.append({"id": key, "name": "Seas and other" if key == OTHER_REGION else titleize(key), "color": OTHER_GREY})
     return {
         "run": run.name, "years": list(run.years), "saves": built["saves"], "regions": regions, "goods": goods,
-        "priceScale": {"cheap": run.price_scale.cheap, "normal": run.price_scale.normal, "dear": run.price_scale.dear, "note": run.price_scale.note},
+        "priceScale": {"cheap": run.price_scale.cheap, "normal": run.price_scale.normal, "dear": run.price_scale.dear, "note": run.price_scale.note,
+                       "normalMonths": run.price_scale.normal_months, "cheapMonths": run.price_scale.cheap_months},
         "goodOrder": good_order, "groups": [{"key": k, "label": label, "color": colour} for k, label, colour in PAGE_GROUPS],
         "buildings": buildings, "methods": methods,
         "demand": [{"id": b, "name": label, "color": colour} for b, label, colour in DEMAND_BUCKETS],

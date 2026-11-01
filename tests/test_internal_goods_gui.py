@@ -139,6 +139,9 @@ def test_market_header_buttons_sit_over_their_cells():
     assert _header(text, 1) == [("name", lead), *zip(tool.IN_RANGE_COLUMNS, [62, 62, 62, 62, 62, 15, 62])]
     for key in ('name = "market_price"', 'name = "market_price_diff"'):   # its header button and its own cell
         assert text.count(key) == 2, key
+    # the price against its default as a signed percentage (red above, green below), not vanilla's coin icons
+    assert text.count(f'text = "[{tool.PRICE_AGAINST_DEFAULT}|-=0%]"') == 1
+    assert "GetPriceDifferenceIconName" not in text
     row = 30 + sum(cells) + 2 + tool.MARKET_ACTIONS_WIDTH
     assert row <= tool.MARKET_PANEL_WIDTH - tool.MARKET_ROW_LOSS   # the actions stay clear of the scrollbar
 

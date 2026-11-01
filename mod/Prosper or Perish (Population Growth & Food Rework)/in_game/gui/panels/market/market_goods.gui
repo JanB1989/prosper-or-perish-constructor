@@ -332,21 +332,25 @@
 						}
 					}
 
-					widget = { # PP: the price against its default
-						size = { 30 20 }
+					widget = { # PP: the price against its default in percent, red above, green below (vanilla: coin icons)
+						size = { 42 20 }
 						datacontext = "[SelectedMarketLateralView.GetMarket]"
 						tooltipwidget = {
 							using = goods_market_price_tooltip
 						}
 
-						text_single = {
-							parentanchor = center
-							align = center|nobaseline
-							using = Font_Size_Small
-							raw_text = "@[GoodsMarketEntry.GetGoods.GetPriceDifferenceIconName(GoodsMarketEntry.GetPrice)]!"
+						hbox = {
+							expand = {}
 
-							sort_by_small_highlight = {
-								name = "market_price_diff"
+							text_single = {
+								maximumsize = { 42 20 }
+								align = right|nobaseline
+								using = Font_Size_Small
+								text = "[Subtract_CFixedPoint(Divide_CFixedPoint(GoodsMarketEntry.GetPrice, GoodsMarketEntry.GetGoods.GetDefaultMarketPrice), '(CFixedPoint)1')|-=0%]"
+
+								sort_by_small_highlight = {
+									name = "market_price_diff"
+								}
 							}
 						}
 					}
@@ -1063,7 +1067,7 @@ types MarketOverview {
 				sort_by_key_button = {
 					name = "market_price_diff"
 					layoutpolicy_vertical = expanding
-					size = { 30 -1 }
+					size = { 42 -1 }
 				}
 
 				expand = {}

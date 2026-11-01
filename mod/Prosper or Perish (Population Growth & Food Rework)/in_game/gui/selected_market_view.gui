@@ -1304,6 +1304,16 @@ types SelectedMarketView {
 
 lateralview = {
 	name = "selected_market_view"
+	size = { 650 100% } # PP: wider than the vanilla left panel (570)
+	widget = { # PP: pp_panel_width for the search filter menu
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[Not(SelectedMarketLateralView.Vars.HasValue('pp_panel_width', '650'))]"
+		state = {
+			name = _show
+			on_start = "[SelectedMarketLateralView.Vars.Set('pp_panel_width', '650')]"
+		}
+	}
 
 	blockoverride "panel_header" {
 		
@@ -2381,73 +2391,95 @@ template market_food_scroll {
 	}
 }
 
-select_menu_left = {
+window = { # PP: vanilla select_menu_left (select_menu.gui), opened beside the wider market panel
+	name = "market_view_select_market"
 	datacontext = "[GetQuickVisibleMarkets(Player.Self)]"
-	blockoverride "menu_setup" {
-		name = "market_view_select_market"
+	movable = no
+	visible_at_creation = no
+	alwaystransparent = no
+	allow_outside = yes
+	layer = sidemenu
+	parentanchor = left
+	position = { 650 180 }
+
+	state = {
+		name = _show
+		duration = 0.133
+		position_x = 650
+		alpha = 1
+	}
+	state = {
+		name = _hide
+		duration = 0.133
+		position_x = 605
+		alpha = 0
 	}
 
-	blockoverride "close_on_action" { on_action = "[MarketViewSelectMarket.OnClose]" }
-	blockoverride "select_header_text" {
-		text = "SELECT_MARKET_HEADER"
-	}
+	using = bg_sidemenu
 
-	blockoverride "select_content" {
-		select_menu_header = {
-			blockoverride "select_menu_header_extra" {
-				button_checkbox_visibility = {
-					size = { 32 32 }
-					action_tooltip = {
-						title = "TOGGLE_INRANGE_MARKETS"
-						on_action = "[MarketViewSelectMarket.Parent.Vars.Toggle( 'inrange_markets')]"
-					}
-					tooltipwidget = { BasicFunctionalTooltip = {} }
-					down = "[MarketViewSelectMarket.Parent.Vars.Exists( 'inrange_markets')]"
-				}
-
-				text_single = {
-					using = Font_Type_Headers
-					using = Font_Size_Small
-					align = nobaseline
-					text = "INRANGE_MARKETS"
-				}
-			}
+	select_menu_layout = {
+		blockoverride "close_on_action" { on_action = "[MarketViewSelectMarket.OnClose]" }
+		blockoverride "select_header_text" {
+			text = "SELECT_MARKET_HEADER"
 		}
 
-		vbox = {
-			layoutpolicy_horizontal = expanding
-			spacing = 10
+		blockoverride "select_content" {
+			select_menu_header = {
+				blockoverride "select_menu_header_extra" {
+					button_checkbox_visibility = {
+						size = { 32 32 }
+						action_tooltip = {
+							title = "TOGGLE_INRANGE_MARKETS"
+							on_action = "[MarketViewSelectMarket.Parent.Vars.Toggle( 'inrange_markets')]"
+						}
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+						down = "[MarketViewSelectMarket.Parent.Vars.Exists( 'inrange_markets')]"
+					}
 
-			datamodel = "[QuickVisibleMarkets.GetVisibleMarkets]"
-			item = {
-				widget = {
-					size = { 485 70 }
-					visible = "[Or3(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'), GreaterThan_CFixedPoint(Market.GetTotalMerchantCapacity(Player.Self),'(CFixedPoint)0'), And(MarketViewSelectMarket.Parent.Vars.Exists( 'inrange_markets'), IsMarketInRange(Market.Self)))]"
+					text_single = {
+						using = Font_Type_Headers
+						using = Font_Size_Small
+						align = nobaseline
+						text = "INRANGE_MARKETS"
+					}
+				}
+			}
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 10
+
+				datamodel = "[QuickVisibleMarkets.GetVisibleMarkets]"
+				item = {
+					widget = {
+						size = { 485 70 }
+						visible = "[Or3(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'), GreaterThan_CFixedPoint(Market.GetTotalMerchantCapacity(Player.Self),'(CFixedPoint)0'), And(MarketViewSelectMarket.Parent.Vars.Exists( 'inrange_markets'), IsMarketInRange(Market.Self)))]"
 					
-					hbox = {
-						using = bg_market_card
-						using = bg_cabinet_card_frame
+						hbox = {
+							using = bg_market_card
+							using = bg_cabinet_card_frame
 
-						market_card = {
-							blockoverride "market_card_title_action"{
-								action_tooltip = {
-									click_type = left
-									click_mode = single
-									title = "OPEN_MARKET"
-									on_action = "[ShowMarket(Market.Self)]"
+							market_card = {
+								blockoverride "market_card_title_action"{
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "OPEN_MARKET"
+										on_action = "[ShowMarket(Market.Self)]"
+									}
+			
+									action_tooltip = {
+										click_type = right
+										click_mode = single
+			
+										cursor = "market_menu"
+										title = "CLICK_ACTION_MARKET_CONTEXT_MENU"
+										on_action = "[PdxGuiWidget.ToggleContextMenu]"
+									}
+			
+									onmousehierarchyenter = "[PdxGuiWidget.SetHighlightMarket(Market.Self)]"
+									ondoubleclick = "[PanToLocation(Market.GetCenterLocation)]"
 								}
-			
-								action_tooltip = {
-									click_type = right
-									click_mode = single
-			
-									cursor = "market_menu"
-									title = "CLICK_ACTION_MARKET_CONTEXT_MENU"
-									on_action = "[PdxGuiWidget.ToggleContextMenu]"
-								}
-			
-								onmousehierarchyenter = "[PdxGuiWidget.SetHighlightMarket(Market.Self)]"
-								ondoubleclick = "[PanToLocation(Market.GetCenterLocation)]"
 							}
 						}
 					}

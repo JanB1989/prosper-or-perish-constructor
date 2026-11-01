@@ -111,6 +111,23 @@ def test_market_stockpile_column_shows_fill_and_amount():
     assert text.count('value = "[GoodsMarketEntry.GetStockpilePercentage]"') == 1
     assert text.count('raw_text = "[GoodsMarketEntry.GetStockpilePercentage|0]%"') == 1
     assert text.count('text = "[GoodsMarketEntry.GetStockpile|0]"') == 2   # the amount; weak when the stock is empty
-    for name, width in tool.STOCKPILE_HEADER_WIDTHS.items():
+    for name, width in tool.MARKET_HEADER_WIDTHS.items():
         assert re.search(rf'name = "{name}"\n[ \t]*layoutpolicy_vertical = expanding\n[ \t]*size = \{{ {width} -1 \}}',
                          text), name
+    view = _mod(tool.MARKET_VIEW)
+    assert f"\tsize = {{ {tool.MARKET_PANEL_WIDTH} 100% }}" in view   # the wider panel holds the wider row
+    picker = view[view.index('name = "market_view_select_market"'):]
+    assert f"position = {{ {tool.MARKET_PANEL_WIDTH} 180 }}" in picker   # its market picker opens beside it
+
+
+def test_market_row_actions_skip_the_observer():
+    """An observer has an empty country: the row's action checks (CanGoodGetProduced runs the producers'
+    country_potential) logged about a thousand script errors a second (2026-11-01). Hidden for observers, in a box
+    that keeps their room so the columns stay put."""
+    tool = _tool()
+    text = _mod(tool.MARKET_GOODS)
+    box = re.search(rf"widget = \{{ # PP: the actions only for a player[^\n]*\n[ \t]*size = \{{ {tool.MARKET_ACTIONS_WIDTH} 30 \}}\n"
+                    r'\n[ \t]*hbox = \{\n[ \t]*visible = "\[Not\(IsPlayerObserver\)\]"\n', text)
+    assert box
+    assert "CanGoodGetProduced" not in text[:box.start()]
+    assert text.count("CanGoodGetProduced") == 4 and text.count("header_button_left = {", box.end()) >= 4

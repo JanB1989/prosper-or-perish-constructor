@@ -665,7 +665,7 @@ def _build_parser() -> argparse.ArgumentParser:
     report.add_argument("--site-repo", default=None, help="owner/name of the preview site repository (default [report] site_repo).")
     report.add_argument(
         "--keep", type=int, default=None,
-        help="Unpinned runs kept on the site, newest first (default [report] keep, 5); pinned runs always stay.",
+        help="Unpinned runs kept on the site, newest first (default [report] keep, 3); pinned runs always stay.",
     )
     pinning = report.add_mutually_exclusive_group()
     pinning.add_argument(
@@ -3553,7 +3553,7 @@ def _report(args: argparse.Namespace, extra: Sequence[str], repo: Path, project:
     with project.open("rb") as handle:
         settings = tomllib.load(handle).get("report", {})
     site_repo = args.site_repo or settings.get("site_repo", run_report.DEFAULT_SITE_REPO)
-    keep = args.keep or int(settings.get("keep", 5))
+    keep = args.keep or int(settings.get("keep", 3))
     if args.create_site:
         run_report.create_site_repo(site_repo)
         owner, name = site_repo.split("/", 1)

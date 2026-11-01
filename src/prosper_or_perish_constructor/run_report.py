@@ -2009,7 +2009,7 @@ def prepare_publish(
     *,
     site_repo: str,
     work_root: Path,
-    keep: int = 5,
+    keep: int = 3,
     remote: str | None = None,
     title: str = "Prosper or Perish runs",
     pin: str | None = None,

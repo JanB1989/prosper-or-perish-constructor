@@ -1042,9 +1042,10 @@ def _stock_months_cell() -> str:
     demanded = "GreaterThan_CFixedPoint(Market.GetDemand(GoodsMarketEntry.GetGoods), '(CFixedPoint)0')"
     return (f"widget = {{ # PP: the stock in months of the market's demand, the bar full at {STOCK_MONTHS_BAR_MAX} months\n"
             f"\tsize = {{ {STOCK_MONTHS_CELL_WIDTH} 22 }}\n"
-            "\tdatacontext = \"[SelectedMarketLateralView.GetMarket]\"\n"
-            "\ttooltip = \"PP_MARKET_STOCK_MONTHS_TT\"\n\n"
-            f"\twidget = {{\n\t\tvisible = \"[{demanded}]\"\n\t\tsize = {{ {STOCK_MONTHS_BAR_WIDTH} 20 }}\n\t\tparentanchor = vcenter\n\n"
+            "\tdatacontext = \"[SelectedMarketLateralView.GetMarket]\"\n\n"
+            # the tooltip divides too: only in the widget that a market without demand hides
+            f"\twidget = {{\n\t\tvisible = \"[{demanded}]\"\n\t\ttooltip = \"PP_MARKET_STOCK_MONTHS_TT\"\n"
+            f"\t\tsize = {{ {STOCK_MONTHS_BAR_WIDTH} 20 }}\n\t\tparentanchor = vcenter\n\n"
             "\t\tprogressbar_framed = {\n\t\t\tsize = { 100% 100% }\n\t\t\tusing = progress_bar_green_alt\n"
             f"\t\t\tvalue = \"[FixedPointToFloat({STOCK_MONTHS})]\"\n\t\t\tmin = 0\n\t\t\tmax = {STOCK_MONTHS_BAR_MAX}\n\t\t}}\n\n"
             "\t\ttext_single = {\n\t\t\tsize = { 100% 100% }\n\t\t\tautoresize = no\n"

@@ -115,10 +115,10 @@
 					widget = { # PP: the stock in months of the market's demand, the bar full at 12 months
 						size = { 58 22 }
 						datacontext = "[SelectedMarketLateralView.GetMarket]"
-						tooltip = "PP_MARKET_STOCK_MONTHS_TT"
 
 						widget = {
 							visible = "[GreaterThan_CFixedPoint(Market.GetDemand(GoodsMarketEntry.GetGoods), '(CFixedPoint)0')]"
+							tooltip = "PP_MARKET_STOCK_MONTHS_TT"
 							size = { 50 20 }
 							parentanchor = vcenter
 

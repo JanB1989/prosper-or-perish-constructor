@@ -128,6 +128,10 @@ def test_market_stock_months_column():
     assert text.count(f"max = {tool.STOCK_MONTHS_BAR_MAX}") == 1
     assert text.count("GreaterThan_CFixedPoint(Market.GetDemand(GoodsMarketEntry.GetGoods), '(CFixedPoint)0')") == 1
     assert tool.STOCK_MONTHS_HEADER not in text   # a marker in the tool, never a sort key in the game
+    # every division sits behind the demand check, its tooltip too: a fixed-point divide by zero can crash the game
+    assert re.search(r'visible = "\[GreaterThan_CFixedPoint\(Market\.GetDemand\(GoodsMarketEntry\.GetGoods\), \'\(CFixedPoint\)0\'\)\]"\n'
+                     r'[ \t]*tooltip = "PP_MARKET_STOCK_MONTHS_TT"\n', text)
+    assert text.count('tooltip = "PP_MARKET_STOCK_MONTHS_TT"') == 1
     english = "\n".join(p.read_text(encoding="utf-8-sig") for p in (tool.MOD_ROOT / "main_menu/localization/english").glob("*.yml"))
     for key in ("PP_MARKET_STOCK_MONTHS_TT", "PP_MARKET_STOCK_MONTHS_HEADER_TT"):
         assert key in text and f"{key}:" in english
